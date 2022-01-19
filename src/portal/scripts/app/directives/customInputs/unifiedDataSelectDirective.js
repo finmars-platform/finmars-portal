@@ -414,7 +414,8 @@
                         entityResolverService.getListLight(scope.entityType, {
                             pageSize: 500,
                             filters: {
-                                query: scope.inputText
+                                query: scope.inputText,
+                                user_code: scope.inputText
                             }
                         }).then(function (data) {
 
