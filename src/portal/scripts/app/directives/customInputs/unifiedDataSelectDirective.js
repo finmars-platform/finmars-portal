@@ -180,7 +180,7 @@
 
 
                     var config = {
-                        user_code: item.user_code,
+                        id: item.id,
                         entity_type: scope.entityType
                     };
 
