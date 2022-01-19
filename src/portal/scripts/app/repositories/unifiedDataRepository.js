@@ -20,7 +20,7 @@
             path = 'company'
         }
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/udp/api/' + path + '/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/udp/data/' + path + '/', options),
             {
                 method: 'GET',
                 credentials: 'include',
