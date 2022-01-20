@@ -234,6 +234,23 @@
             })
         }
 
+		var setUpDefaultParametersAsMultitypeCell = function (pricingPolicy, defaultParameters) {
+
+			let typesList = JSON.parse(JSON.stringify(pricingDefaultValueFieldTypes.fieldTypesList));
+
+			const [defaultValue, fieldValueType] = getDefaultParametersVal(pricingPolicy);
+
+			// if (fieldValueType === 70) typesList = getOptionsForPPDefaultValueSel(typesList, policy);
+			typesList = getOptionsForPPDefaultValueSel(typesList, pricingPolicy);
+
+			const fieldData = gridTableHelperService.getMultitypeFieldDataForCell(typesList, defaultParameters, defaultValue, fieldValueType);
+
+			defaultParameters = fieldData.cell;
+
+			return defaultParameters;
+
+		};
+
         var formatDataForPricingGridTable = function () {
 
 			//region assemble header columns
@@ -283,39 +300,34 @@
                     pricingSchemeClarification.settings.value = policy.pricing_scheme_object.notes_for_users;
                 }
 
-
-				//<editor-fold desc="Default parameters column">
+				//region Default parameters column
 				let defaultParameters = gridTableHelperService.getCellFromRowByKey(rowObj, 'edit_default_parameters');
-                let typesList = JSON.parse(JSON.stringify(pricingDefaultValueFieldTypes.fieldTypesList));
 
-                if (policy.pricing_scheme_object && policy.pricing_scheme_object.type_object.input_type == 3) {
-
-                    const multipleParameters = gridTableHelperService.getCellFromRowByKey(rowObj, 'multiple_parameters');
-                    multipleParameters.cellType = 'button';
-                    multipleParameters. settings = {
-                        buttonHtml: '<span class="material-icons multiple-parameters-button">more_horiz</span>'
-                    };
-                    multipleParameters.methods = {
-                        onClick: () => openPricingMultipleParametersDialog(policy)
-                    }
-
-
-                }
-
-				const [defaultValue, fieldValueType] = getDefaultParametersVal(policy);
-
-				if (fieldValueType === 70) typesList = getOptionsForPPDefaultValueSel(typesList, policy);
-
-                const fieldData = gridTableHelperService.getMultitypeFieldDataForCell(typesList, defaultParameters, defaultValue, fieldValueType);
-
-                defaultParameters = fieldData.cell;
+				defaultParameters = setUpDefaultParametersAsMultitypeCell(policy, defaultParameters);
 
                 gridTableHelperService.setCellInsideRow(rowObj, defaultParameters);
+				//endregion Default parameters column
+
+				//region Multiple parameters column
+				if (policy.pricing_scheme_object && policy.pricing_scheme_object.type_object.input_type == 3) {
+
+					const multipleParameters = gridTableHelperService.getCellFromRowByKey(rowObj, 'multiple_parameters');
+					multipleParameters.cellType = 'button';
+					multipleParameters. settings = {
+						buttonHtml: '<span class="material-icons multiple-parameters-button">more_horiz</span>'
+					};
+					multipleParameters.methods = {
+						onClick: () => openPricingMultipleParametersDialog(policy)
+					}
+
+				}
+				//endregion Multiple parameters column
 
                 vm.pricingPoliciesGridTableData.body.push(rowObj);
 
             });
-			//endregion
+			//endregion assemble body rows
+
         };
         // <Event schedules grid Table>
 
@@ -340,6 +352,8 @@
 				}
 				else if (column.key === 'pricing_scheme') { // 'pricing_policy' cell
 
+					const pricingSchemeCell = vm.pricingPoliciesGridTableDataService.getCellByKey(row.order, 'pricing_scheme');
+
 					gridTableHelperService.onGridTableCellChange(vm.entity.pricing_policies, vm.pricingPoliciesGridTableDataService, row.order, column.order);
 
 					vm.pricingSchemeChange(vm.entity.pricing_policies[row.order]);
@@ -353,35 +367,56 @@
 						pricingSchemeClarCell.settings.value = changedPolicy.pricing_scheme_object.notes_for_users;
 					}
 
+					//region Default parameters column
 					let defaultValueCell = vm.pricingPoliciesGridTableDataService.getCellByKey(row.order, 'edit_default_parameters');
 
-					const [defaultValue, fieldValueType] = getDefaultParametersVal(changedPolicy);
+					const selectedPricingScheme = vm.instrumentPricingSchemes.find(ipScheme => {
+						return ipScheme.id === pricingSchemeCell.settings.value;
+					});
 
-					if (fieldValueType === 70) {
-						defaultValueCell.settings.fieldTypesData = getOptionsForPPDefaultValueSel(defaultValueCell.settings.fieldTypesData, changedPolicy);
+					if (selectedPricingScheme.type === 1) {
+
+						defaultValueCell.cellType = 'readonly_text';
+						defaultValueCell.settings = {
+							value: '-'
+						};
+
+					} else {
+
+						defaultValueCell.cellType = 'multitypeField';
+						/* const [defaultValue, fieldValueType] = getDefaultParametersVal(changedPolicy);
+						if (fieldValueType === 70) {
+							defaultValueCell.settings.fieldTypesData = getOptionsForPPDefaultValueSel(defaultValueCell.settings.fieldTypesData, changedPolicy);
+						}
+
+						const fieldData = gridTableHelperService.getMultitypeFieldDataForCell(defaultValueCell.settings.fieldTypesData, defaultValueCell, defaultValue, fieldValueType);
+						defaultValueCell.settings = {...defaultValueCell.settings, ...fieldData.cell.settings}; */
+
+						defaultValueCell = setUpDefaultParametersAsMultitypeCell(changedPolicy, defaultValueCell);
+
 					}
+					//endregion Default parameters column
 
-					const fieldData = gridTableHelperService.getMultitypeFieldDataForCell(defaultValueCell.settings.fieldTypesData, defaultValueCell, defaultValue, fieldValueType);
-					defaultValueCell.settings = {...defaultValueCell.settings, ...fieldData.cell.settings};
+					//region Multiple parameters column
+					const multipleParameters = vm.pricingPoliciesGridTableDataService.getCellByKey(row.order, 'multiple_parameters');
+					if (changedPolicy.pricing_scheme_object && changedPolicy.pricing_scheme_object.type_object.input_type == 3) {
 
-                    const multipleParameters = vm.pricingPoliciesGridTableDataService.getCellByKey(row.order, 'multiple_parameters');
-                    if (changedPolicy.pricing_scheme_object && changedPolicy.pricing_scheme_object.type_object.input_type == 3) {
-
-                        multipleParameters.cellType = 'button';
-                        multipleParameters. settings = {
-                            buttonHtml: '<span class="material-icons multiple-parameters-button">more_horiz</span>'
-                        };
-                        multipleParameters.methods = {
-                            onClick: () => openPricingMultipleParametersDialog(changedPolicy)
-                        }
+						multipleParameters.cellType = 'button';
+						multipleParameters. settings = {
+							buttonHtml: '<span class="material-icons multiple-parameters-button">more_horiz</span>'
+						};
+						multipleParameters.methods = {
+							onClick: () => openPricingMultipleParametersDialog(changedPolicy)
+						}
 
 
-                    } else {
+					} else {
 
-                        multipleParameters.cellType = 'readonly_text';
-                        multipleParameters.settings.value = '-';
+						multipleParameters.cellType = 'readonly_text';
+						multipleParameters.settings.value = '-';
 
-                    }
+					}
+					//endregion Multiple parameters column
 
 				}
 
