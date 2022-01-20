@@ -557,7 +557,7 @@
                             order: 3,
                             cellType: 'button',
                             settings: {
-                                buttonText: 'Open Manager',
+                                buttonContent: 'Open Manager',
                                 callback: openEventActionParametersManager,
                                 gtDataService: item.eventActionsGridTableDataService // TODO maybe a crutch
                             },
