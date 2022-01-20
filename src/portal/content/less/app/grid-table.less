@@ -356,6 +356,21 @@
     }
   }
 
+  .gt-cell-button-holder {
+
+    button.md-button {
+      min-width: 0;
+      min-height: 0;
+      padding: 0 8px;
+      margin: 0;
+
+      color: @orange;
+      font-weight: 700;
+      border-radius: 3px;
+    }
+
+  }
+
   .grid-table-cell-multiselector {
 
     md-input-container {
@@ -394,6 +409,40 @@
 
   }
 
+}
+
+.grid-table-cell.gt-3dots-btn {
+  .gt-cell-button-holder {
+
+    button:not([disabled]) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+
+      span.material-icons {
+        background-color: @paleOrange;
+        border-radius: 100%;
+      }
+
+      &:hover, &:focus {
+        background-color: transparent;
+        outline: none;
+
+        span.material-icons {
+          background-color: @orange;
+          color: #fff;
+        }
+
+      }
+
+    }
+
+    button[disabled] {
+      opacity: .5;
+    }
+
+  }
 }
 
 .grid-table-cell.gt-sorting-on { // header cell with sorting on
