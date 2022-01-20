@@ -777,6 +777,7 @@ export default (function () {
 	portal.directive('expressionInput', ['$mdDialog', require('./app/directives/customInputs/expressionInputDirective')]);
 	portal.directive('dropdownSelect', ['$mdDialog', require('./app/directives/customInputs/dropdownSelectDirective')]);
 	portal.directive('instrumentSelect', ['$mdDialog', require('./app/directives/customInputs/instrumentSelectDirective')]);
+	portal.directive('unifiedDataSelect', ['$mdDialog', require('./app/directives/customInputs/unifiedDataSelectDirective')]);
 	portal.directive('classifierSelect', ['$mdDialog', require('./app/directives/customInputs/classifierSelectDirective')]);
 	portal.directive('multitypeField', [require('./app/directives/customInputs/multitypeFieldDirective')]);
 	portal.directive('complexDropdownSelect', [complexDropdownSelectDirective]);
