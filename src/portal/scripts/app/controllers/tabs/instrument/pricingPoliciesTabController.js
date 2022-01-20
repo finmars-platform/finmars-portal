@@ -440,6 +440,7 @@
 
 						multipleParameters.cellType = 'readonly_text';
 						multipleParameters.settings.value = '-';
+						delete multipleParameters.methods;
 
 					}
 					//endregion Multiple parameters column
