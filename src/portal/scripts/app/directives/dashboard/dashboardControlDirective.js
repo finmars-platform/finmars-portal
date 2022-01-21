@@ -415,6 +415,8 @@
 
                     }
 
+					if (!scope.item.data.store) scope.item.data.store = {};
+
                     if (scope.entityType) {
 
                         scope.getData().then(function () {
@@ -428,8 +430,6 @@
                     }
                     else {
 
-                        scope.item.data.store = {};
-
                         scope.settingUpDefaultValue(scope.componentData);
                         scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
@@ -438,9 +438,9 @@
 
                     if (scope.componentData.settings.multiple) {
 
-                    	if (!scope.item.data.store) {
+                    	/* if (!scope.item.data.store) {
 							scope.item.data.store = {}
-						}
+						} */
 
                     	if (!Array.isArray(scope.item.data.store.value)) {
 							scope.item.data.store.value = [];
