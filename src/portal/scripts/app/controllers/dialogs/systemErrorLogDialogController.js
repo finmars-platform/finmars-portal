@@ -9,7 +9,21 @@
 
         var vm = this;
 
-        vm.errors = window.system_errors;
+        vm.errors = window.system_errors.map(function (item){
+
+            if (item.data.hasOwnProperty('message')) {
+
+                if (item.data.message && item.data.message.hasOwnProperty('url')) {
+                    // structured 500 error here
+                } else {
+                    // other error with various structure
+                    item.textMessage = JSON.stringify(item.data.message, null, 2);
+                }
+
+            }
+
+            return item
+        });
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});

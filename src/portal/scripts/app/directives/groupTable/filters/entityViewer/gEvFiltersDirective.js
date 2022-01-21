@@ -23,7 +23,9 @@
                 scope.entityType = gFiltersVm.entityType;
                 scope.isReport = false;
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
-                scope.shownFiltersType = 'frontend';
+                scope.shownFiltersType = 'backend';
+
+                scope.thereAreFrontendFilters = false; // needed for existing layouts with frontend filters
 
                 scope.readyStatus = {
                     filters: false
@@ -43,6 +45,7 @@
 
                 let filters = scope.evDataService.getFilters();
                 let customFields = scope.attributeDataService.getCustomFieldsByEntityType(scope.entityType);
+                const viewContext = scope.evDataService.getViewContext();
 
                 scope.evGetEntityNameByState = function () {
 
@@ -237,6 +240,13 @@
 
                         }
 
+                        if (scope.shownFiltersType === 'frontend') {
+							filterData.error_data = {
+								code: 20,
+								description: "Outdated filter. Please delete it. "
+							};
+						}
+
                         scope.filtersChips.push(filterData);
 
                     });
@@ -275,6 +285,8 @@
 
                             scope.evDataService.setFilters(filters);
                             scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+							scope.$apply();
 
                         }
 
@@ -394,7 +406,7 @@
 
                 const init = function () {
 
-                    // separateEvFilters();
+					if (viewContext !== 'reconciliation_viewer' && filters.frontend.length) scope.thereAreFrontendFilters = true;
 
                     scope.popupEventService = gFiltersVm.popupEventService;
                     scope.chipsListEventService = gFiltersVm.chipsListEventService;

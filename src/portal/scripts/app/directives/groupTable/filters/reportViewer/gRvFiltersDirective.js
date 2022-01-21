@@ -220,11 +220,13 @@
                         if (res.status === 'agree') {
 
                             for (var i = 0; i < res.data.items.length; i = i + 1) {
-                                filters.push(res.data.items[0]);
+                                filters.push(res.data.items[i]);
                             }
 
                             scope.evDataService.setFilters(filters);
                             scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
+
+							scope.$apply();
 
                         }
 
