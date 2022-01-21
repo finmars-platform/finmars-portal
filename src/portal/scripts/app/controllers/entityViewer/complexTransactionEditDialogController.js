@@ -35,6 +35,8 @@
         var vm = this;
         var sharedLogicHelper = new ComplexTransactionEditorSharedLogicHelper(vm, $scope, $mdDialog);
 
+        vm.sharedLogic = sharedLogicHelper;
+
         vm.entityType = entityType;
         vm.entityId = entityId;
 
@@ -82,6 +84,14 @@
         vm.fieldsDataStore = {}
 
         vm.openedIn = data.openedIn;
+
+        vm.entityTabs = metaService.getEntityTabs(vm.entityType);
+
+        console.log('vm.entityTabs', vm.entityTabs);
+
+        vm.entityTabsMenuTplt = sharedLogicHelper.entityTabsMenuTplt;
+        vm.entityTabsMenuPopupData = {viewModel: vm}
+        vm.entityTablePopupClasses = "border-radius-2"
 
         var contentType = metaContentTypesService.findContentTypeByEntity("complex-transaction", "ui");
 
@@ -482,7 +492,7 @@
 
             var entity = JSON.parse(JSON.stringify(vm.entity));
 
-            if (windowType === 'big_drawer') {
+            if (windowType === 'big-drawer') {
 
                 const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType, isCopy: true}};
                 return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
@@ -1150,7 +1160,7 @@
 
             } else {
 
-                var result = entityEditorHelper.removeNullFields(vm.entity);
+                var result = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                 result.values = {};
 
@@ -1398,7 +1408,7 @@
 
             } else {
 
-                var result = entityEditorHelper.removeNullFields(vm.entity);
+                var result = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                 result.values = {};
 
@@ -1613,7 +1623,7 @@
 
                 // if (hasProhibitNegNums.length === 0) {
 
-                    var result = entityEditorHelper.removeNullFields(vm.entity);
+                    var result = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                     /*result.values = {};
 

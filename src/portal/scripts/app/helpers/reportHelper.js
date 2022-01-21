@@ -129,8 +129,8 @@
                 item.complex_transaction_object = findEntityObject(reportOptions, 'item_complex_transactions', item.complex_transaction);
             }
 
-            if (item.transaction_class) {
-                item.transaction_class_object = findEntityObject({transaction_classes: transactionClassService.getListSync()}, 'transaction_classes', item.transaction_class);
+            if (item.transaction_class && reportOptions.item_transaction_classes.length) {
+                item.transaction_class_object = findEntityObject(reportOptions, 'item_transaction_classes', item.transaction_class);
             }
 
             if (item.portfolio && reportOptions.item_portfolios.length) {
@@ -293,16 +293,16 @@
             }
 
             if (item.market_value) {
-
-                item.market_value_percent = (item.market_value / groupsTotalMarketValue[key] * 100).toFixed(10);
+				var percent = (item.market_value / groupsTotalMarketValue[key] * 100).toFixed(10);
+                item.market_value_percent = parseFloat(percent);
 
             } else {
                 item.market_value_percent = 0;
             }
 
             if (item.exposure) {
-
-                item.exposure_percent = (item.exposure / groupsTotalExposure[key] * 100).toFixed(10);
+				var percent = (item.exposure / groupsTotalExposure[key] * 100).toFixed(10);
+                item.exposure_percent = parseFloat(percent);
 
             } else {
                 item.exposure_percent = 0;
@@ -470,6 +470,7 @@
             'transaction_currency': 'currencies.currency',
             'portfolio': 'portfolios.portfolio',
             'complex_transaction': 'transactions.complextransaction',
+            'transaction_class': 'transactions.transactionclass',
             'responsible': 'counterparties.responsible',
             'counterparty': 'counterparties.counterparty',
             'strategy1': 'strategies.strategy1',
@@ -599,6 +600,7 @@
     var reportOptionsTemporaryPropsList = [
     	'items',
 		'item_complex_transactions',
+		'item_transaction_classes',
 		'item_counterparties',
 		'item_responsibles',
 		'item_strategies3',

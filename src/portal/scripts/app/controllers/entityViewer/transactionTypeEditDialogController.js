@@ -246,30 +246,30 @@
             console.log('copy entity', entity);
 
             // $mdDialog.hide();
-			if (windowType === 'big_drawer') {
+            if (windowType === 'big-drawer') {
 
-				const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType}};
-				return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+                const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType}};
+                return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
-			} else {
+            } else {
 
-				$mdDialog.show({
-					controller: 'TransactionTypeAddDialogController as vm',
-					templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
-					parent: angular.element(document.body),
-					// targetEvent: $event,
-					locals: {
-						entityType: vm.entityType,
-						entity: entity,
-						data: {
-							openedIn: 'dialog'
-						}
-					}
-				});
+                $mdDialog.show({
+                    controller: 'TransactionTypeAddDialogController as vm',
+                    templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
+                    parent: angular.element(document.body),
+                    // targetEvent: $event,
+                    locals: {
+                        entityType: vm.entityType,
+                        entity: entity,
+                        data: {
+                            openedIn: 'dialog'
+                        }
+                    }
+                });
 
-				metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
+                metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
 
-			}
+            }
 
         };
 
@@ -302,6 +302,7 @@
         vm.range = gridHelperService.range;
 
         vm.transactionUserFields = {};
+        vm.transactionUserFieldsState = {};
 
         vm.getTransactionUserFields = sharedLogic.getTransactionUserFields;
 
@@ -499,7 +500,7 @@
 
                 if (isValid) {
 
-                    entityToSave = entityEditorHelper.removeNullFields(entityToSave);
+                    entityToSave = entityEditorHelper.removeNullFields(entityToSave, vm.entityType);
 
                     transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
 
@@ -2428,7 +2429,7 @@
             }
 
         }; */
-		vm.appendFromTemplate = sharedLogic.appendFromTemplate;
+        vm.appendFromTemplate = sharedLogic.appendFromTemplate;
 
         vm.saveAsTemplate = function ($event, type) {
 
@@ -2626,17 +2627,65 @@
         };*/
 
 
-        vm.recalculateUserFields = function ($event) {
+        vm.recalculateUserFields = function ($event, key) {
 
             transactionTypeService.recalculateUserFields(vm.entity.id, {
-                transaction_type_id: vm.entity.id
+                transaction_type_id: vm.entity.id,
+                key: key
             }).then(function (data) {
 
-                toastNotificationService.success("User fields of Transaction Type " + vm.entity.name + ' was successfully recalculated');
+                toastNotificationService.success("User field " + key + " of Transaction Type " + vm.entity.name + ' was successfully recalculated');
 
             })
 
         }
+
+        vm.userTextFields = [];
+        vm.userNumberFields = [];
+        vm.userDateFields = [];
+
+        for (var i = 1; i <= 30; i = i + 1) {
+            vm.userTextFields.push({
+                key: 'user_text_' + i
+            })
+        }
+
+        for (var i = 1; i <= 20; i = i + 1) {
+            vm.userNumberFields.push({
+                key: 'user_number_' + i
+            })
+        }
+
+        for (var i = 1; i <= 5; i = i + 1) {
+            vm.userDateFields.push({
+                key: 'user_date_' + i
+            })
+        }
+
+        // Context Parameters tab start
+
+        vm.deleteContextParameter = function ($event, $index) {
+            vm.entity.context_parameters.splice($index, 1);
+        }
+
+        vm.addContextParameter = function ($event) {
+
+            var order = 1;
+
+            if (vm.entity.context_parameters && vm.entity.context_parameters.length) {
+                order = vm.entity.context_parameters[vm.entity.context_parameters.length - 1].order + 1
+            }
+
+            vm.entity.context_parameters.push({
+                order:order
+            });
+
+
+        }
+
+        // Context Parameters tab end
+
+
 
         vm.init = function () {
 
@@ -2652,7 +2701,7 @@
             /* ecosystemDefaultService.getList().then(function (data) {
                 ecosystemDefaultData = data.results[0];
             }); */
-			sharedLogic.loadEcosystemDefaults();
+            sharedLogic.loadEcosystemDefaults();
 
             var getItemPromise = vm.getItem();
             var getAttrsPromise = vm.getAttrs();
@@ -2681,113 +2730,113 @@
         vm.init();
 
         const some = {
-			"id": 2753,
-			"name": "account_position",
-			"verbose_name": "Account of booking",
-			"value_type": 100,
-			"reference_table": null,
-			"content_type": "accounts.account",
-			"order": 1,
-			"can_recalculate": false,
-			"value_expr": "",
-			"tooltip": "ttyp tooltip here",
-			"is_fill_from_context": false,
-			"context_property": null,
-			"value": "40",
-			"account": null,
-			"instrument_type": null,
-			"instrument": null,
-			"currency": null,
-			"counterparty": null,
-			"responsible": null,
-			"portfolio": null,
-			"strategy1": null,
-			"strategy2": null,
-			"strategy3": null,
-			"daily_pricing_model": null,
-			"payment_size_detail": null,
-			"pricing_policy": null,
-			"periodicity": null,
-			"accrual_calculation_model": null,
-			"settings": {
-				"linked_inputs_names": [
-					"test_account1",
-					"test_account2"
-				],
-				"recalc_on_change_linked_inputs": [
-					"test_account2"
-				]
-			},
-			"button_data": null,
-			"account_object": null,
-			"instrument_object": null,
-			"instrument_type_object": null,
-			"daily_pricing_model_object": null,
-			"payment_size_detail_object": null,
-			"currency_object": null,
-			"counterparty_object": null,
-			"portfolio_object": null,
-			"strategy1_object": null,
-			"strategy2_object": null,
-			"strategy3_object": null,
-			"pricing_policy_object": null,
-			"periodicity_object": null,
-			"accrual_calculation_model_object": null
-		};
+            "id": 2753,
+            "name": "account_position",
+            "verbose_name": "Account of booking",
+            "value_type": 100,
+            "reference_table": null,
+            "content_type": "accounts.account",
+            "order": 1,
+            "can_recalculate": false,
+            "value_expr": "",
+            "tooltip": "ttyp tooltip here",
+            "is_fill_from_context": false,
+            "context_property": null,
+            "value": "40",
+            "account": null,
+            "instrument_type": null,
+            "instrument": null,
+            "currency": null,
+            "counterparty": null,
+            "responsible": null,
+            "portfolio": null,
+            "strategy1": null,
+            "strategy2": null,
+            "strategy3": null,
+            "daily_pricing_model": null,
+            "payment_size_detail": null,
+            "pricing_policy": null,
+            "periodicity": null,
+            "accrual_calculation_model": null,
+            "settings": {
+                "linked_inputs_names": [
+                    "test_account1",
+                    "test_account2"
+                ],
+                "recalc_on_change_linked_inputs": [
+                    "test_account2"
+                ]
+            },
+            "button_data": null,
+            "account_object": null,
+            "instrument_object": null,
+            "instrument_type_object": null,
+            "daily_pricing_model_object": null,
+            "payment_size_detail_object": null,
+            "currency_object": null,
+            "counterparty_object": null,
+            "portfolio_object": null,
+            "strategy1_object": null,
+            "strategy2_object": null,
+            "strategy3_object": null,
+            "pricing_policy_object": null,
+            "periodicity_object": null,
+            "accrual_calculation_model_object": null
+        };
         const another = {
-			"id": 2753,
-			"name": "account_position",
-			"verbose_name": "Account of booking",
-			"value_type": 100,
-			"reference_table": null,
-			"content_type": "accounts.account",
-			"order": 1,
-			"can_recalculate": false,
-			"value_expr": "",
-			"tooltip": "ttyp tooltip here",
-			"is_fill_from_context": false,
-			"context_property": null,
-			"value": 40,
-			"account": null,
-			"instrument_type": null,
-			"instrument": null,
-			"currency": null,
-			"counterparty": null,
-			"responsible": null,
-			"portfolio": null,
-			"strategy1": null,
-			"strategy2": null,
-			"strategy3": null,
-			"daily_pricing_model": null,
-			"payment_size_detail": null,
-			"pricing_policy": null,
-			"periodicity": null,
-			"accrual_calculation_model": null,
-			"settings": {
-				"linked_inputs_names": [
-					"test_account1",
-					"test_account2"
-				],
-				"recalc_on_change_linked_inputs": [
-					"test_account2"
-				]
-			},
-			"button_data": null,
-			"account_object": null,
-			"instrument_object": null,
-			"instrument_type_object": null,
-			"daily_pricing_model_object": null,
-			"payment_size_detail_object": null,
-			"currency_object": null,
-			"counterparty_object": null,
-			"portfolio_object": null,
-			"strategy1_object": null,
-			"strategy2_object": null,
-			"strategy3_object": null,
-			"pricing_policy_object": null,
-			"periodicity_object": null,
-			"accrual_calculation_model_object": null
-		};
+            "id": 2753,
+            "name": "account_position",
+            "verbose_name": "Account of booking",
+            "value_type": 100,
+            "reference_table": null,
+            "content_type": "accounts.account",
+            "order": 1,
+            "can_recalculate": false,
+            "value_expr": "",
+            "tooltip": "ttyp tooltip here",
+            "is_fill_from_context": false,
+            "context_property": null,
+            "value": 40,
+            "account": null,
+            "instrument_type": null,
+            "instrument": null,
+            "currency": null,
+            "counterparty": null,
+            "responsible": null,
+            "portfolio": null,
+            "strategy1": null,
+            "strategy2": null,
+            "strategy3": null,
+            "daily_pricing_model": null,
+            "payment_size_detail": null,
+            "pricing_policy": null,
+            "periodicity": null,
+            "accrual_calculation_model": null,
+            "settings": {
+                "linked_inputs_names": [
+                    "test_account1",
+                    "test_account2"
+                ],
+                "recalc_on_change_linked_inputs": [
+                    "test_account2"
+                ]
+            },
+            "button_data": null,
+            "account_object": null,
+            "instrument_object": null,
+            "instrument_type_object": null,
+            "daily_pricing_model_object": null,
+            "payment_size_detail_object": null,
+            "currency_object": null,
+            "counterparty_object": null,
+            "portfolio_object": null,
+            "strategy1_object": null,
+            "strategy2_object": null,
+            "strategy3_object": null,
+            "pricing_policy_object": null,
+            "periodicity_object": null,
+            "accrual_calculation_model_object": null
+        };
 
     }
 

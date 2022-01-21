@@ -1,11 +1,11 @@
-<div class="custom-input-container dropdown-input-container dropdownSelectInputContainer customInputBackgroundColor"
+<div class="custom-input-container dropdown-input-container instrumentSelectInputContainer"
          data-ng-class="getInputContainerClasses()">
 
     <div ng-if="label" class="custom-input-top-row">
         <span class="custom-input-textarea-span-pan">{{label}}</span>
     </div>
 
-    <div class="custom-input-main-container">
+    <div class="custom-input-main-container customInputBackgroundColor">
         <div class="custom-input-borders">
             <div class="custom-input-content">
 
@@ -26,7 +26,7 @@
                         data-ng-change="onInputTextChange()"
                         data-ng-disabled="isDisabled"
                         data-ng-keypress="selectFirst($event)"
-                        class="custom-input dropdown-select-input dropdownSelectInputElem"
+                        class="custom-input dropdown-select-input instrumentSelectInputElem"
                     />
 
                 </div>

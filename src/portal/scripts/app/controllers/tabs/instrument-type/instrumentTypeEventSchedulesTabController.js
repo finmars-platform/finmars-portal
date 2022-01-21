@@ -428,7 +428,59 @@
         	return {id: ttype.user_code, name: ttype.short_name};
         };
 
-		const getEventsActionGridTableData = function (item){
+        const openEventActionParametersManager = function ($event, row, column) {
+
+            console.log('openEventActionParametersManager row, column', row, column);
+
+            var gtDataService = column.settings.gtDataService
+
+            var tableData = gtDataService.getTableData();
+
+            let event = vm.entity.events.find(event => findEventById(event, tableData.eventId));
+
+            var action = event.data.actions[row.order];
+
+            console.log('openEventActionParametersManager vm.event.data', event.data);
+
+            if (!event.data) {
+                event.data = {}
+            }
+
+            if (!event.data.parameters) {
+                event.data.parameters = []
+            }
+
+            $mdDialog.show({
+                controller: 'InstrumentEventActionParameterDialogController as vm',
+                templateUrl: 'views/dialogs/instrument-event-action-parameter-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        eventParameters: event.data['parameters'],
+                        item: action
+                    }
+                }
+
+            }).then(res => {
+
+                console.log('openEventParametersManager.res', res);
+
+                if (res.status === 'agree') {
+
+                    action = res.data.item
+                }
+
+            });
+
+        }
+
+
+        const getEventsActionGridTableData = function (item){
 
             const rows = item.data.actions;
 
@@ -492,6 +544,22 @@
                             cellType: 'checkbox',
                             settings: {
                                 value: null
+                            },
+                            styles: {
+                                'grid-table-cell': {'width': '130px'},
+                            }
+                        },
+
+                        {
+                            key: null,
+                            objPath: [],
+                            columnName: '-',
+                            order: 3,
+                            cellType: 'button',
+                            settings: {
+                                buttonText: 'Open Manager',
+                                callback: openEventActionParametersManager,
+                                gtDataService: item.eventActionsGridTableDataService // TODO maybe a crutch
                             },
                             styles: {
                                 'grid-table-cell': {'width': '130px'},
@@ -1090,6 +1158,38 @@
 
 		});
 
+		vm.openEventParametersManager = function ($event, item) {
+
+            $mdDialog.show({
+                controller: 'InstrumentEventParameterDialogController as vm',
+                templateUrl: 'views/dialogs/instrument-event-parameter-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        instrumentAttrTypes: instrumentAttrTypes,
+                        item: item
+                    }
+                }
+
+            }).then(res => {
+
+                console.log('openEventParametersManager.res', res);
+
+                if (res.status === 'agree') {
+
+                    item = res.data.item
+                }
+
+            });
+
+        }
+
+
         vm.init = function () {
 
         	vm.popupEventService = new EventService();
@@ -1105,6 +1205,8 @@
 			if (!Array.isArray(vm.entity.events)) vm.entity.events = [];
 
 			Promise.all(dataPromises).then(function (data) {
+
+
 
 				vm.transactionTypes = data[0];
 				instrumentAttrTypes = data[1] || [];

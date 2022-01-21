@@ -12,35 +12,59 @@
     <md-dialog-content>
         <div class="warning-text p-16">
 
-            <div layout="row">
+            <div data-ng-repeat="item in vm.errors" layout="column" style="margin-bottom: 24px; border-bottom: 1px solid #000;"    >
 
-                <div style="width: 360px">
-                    Date
-                </div>
+                <div layout="column">
+                    <div style="width: 360px">
+                        <b>Date</b>: {{item.created | date:'dd/MM/yyyy HH:mm'}}
+                    </div>
 
-                <div style="width:  260px">
-                    Location
-                </div>
+                    <div style="word-break: break-word;">
+                        <b>Website location</b>: {{item.location}}
+                    </div>
 
-                <div>
-                    Text
-                </div>
-
-            </div>
-            <div data-ng-repeat="item in vm.errors" layout="row">
-
-                <div style="width: 360px">
-                    {{item.created}}
-                </div>
-
-                <div style="width:  260px; word-break: break-word;">
-                    {{item.location}}
                 </div>
 
                 <div>
-                    {{item.text}}
-                </div>
+                    <div data-ng-if="item.data" layout="column">
 
+                        <div>
+                            <b>Status</b>: {{item.data.status}} {{item.data.statusText}}
+                        </div>
+
+                        <div data-ng-if="item.data.message.url">
+                            <b>API URL</b>: {{item.data.message.url}}
+                        </div>
+
+                        <div class="m-t-16" data-ng-if="item.data.message.message">
+
+                            <b>Message</b>:
+                            <p>
+                                {{item.data.message.message}}
+                            </p>
+                        </div>
+
+                        <div class="p-b-16" data-ng-if="item.data.message.trace">
+
+                            <div><b >Traceback</b>:</div>
+
+                            <code data-ng-bind-html="item.data.message.trace" style="white-space: pre;">
+                            </code>
+
+                        </div>
+
+                        <div data-ng-if="item.textMessage">
+                            <code data-ng-bind-html="item.textMessage" style="white-space: pre;">
+                            </code>
+                        </div>
+
+
+                    </div>
+
+                    <div data-ng-if="!item.data">
+                        {{item.text}}
+                    </div>
+                </div>
 
             </div>
         </div>
