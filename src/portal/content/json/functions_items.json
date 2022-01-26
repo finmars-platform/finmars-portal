@@ -1,63 +1,177 @@
 [
   {
-    "name": "Get Transaction Type Input Default",
-    "description": "",
-    "groups": "all",
-    "func": "get_ttype_default_input()"
+    "name": "Name",
+    "description": "[instrument].name: Text - name for instrument<br/><br/>[instrument]: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples: <br/>instrument.name - if name of variable is [instrument]<br/>instr.name  - if name of variable is [instr]",
+    "groups": "instr",
+    "func": ".name"
   },
   {
-    "name": "Convert to Number",
-    "description": "",
-    "groups": "all",
-    "func": "convert_to_number()"
+    "name": "Short name",
+    "description": "[instrument].short_name: Text - system short name for instrument<br/><br/>[instrument]: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples: <br/>instrument.short_name - if name of variable is [instrument]<br/>instr_2000.short_name - if name of variable is [instr_2000]",
+    "groups": "instr",
+    "func": ".short_name"
   },
   {
-    "name": "Check if Null",
-    "description": "",
-    "groups": "all",
-    "func": "if_null()"
+    "name": "User code",
+    "description": "[instrument].user_code: Text - system unique user code for instrument<br/><br/>[instrument]: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples: <br/>instrument.user_code - if name of variable is [instrument]<br/>instr_2000.user_code - if name of variable is [instr_2000]",
+    "groups": "instr",
+    "func": ".user_code"
   },
   {
-    "name": "Add price to Database",
-    "description": "",
-    "groups": "all",
-    "func": "add_price_history()"
+    "name": "Name",
+    "description": "[account].name: Text - name for account<br/><br/>[account]: Account - variable contains account (account unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (account) via these functions<br/><br/>Examples: <br/>account.name - if name of variable is [account]<br/>acc.name  - if name of variable is [acc]",
+    "groups": "account",
+    "func": ".name"
   },
   {
-    "name": "Add fx rate to Database",
-    "description": "",
-    "groups": "all",
-    "func": "add_fx_history()"
+    "name": "Short name",
+    "description": "[account].short_name: Text - system short name for account<br/><br/>[account]: Account - variable contains account (account unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (account) via these functions<br/><br/>Examples: <br/>account.short_name - if name of variable is [account]<br/>acc.short_name - if name of variable is [acc]",
+    "groups": "account",
+    "func": ".short_name"
   },
   {
-    "name": "Get FX rate as of <date>",
-    "description": "",
-    "groups": "all",
-    "func": "get_fx_rate()"
+    "name": "User code",
+    "description": "[account].user_code: Text - system unique user code for account<br/><br/>[account]: Account - variable contains account (account unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (account) via these functions<br/><br/>Examples: <br/>account.user_code - if name of variable is [account]<br/>acc.user_code - if name of variable is [acc]",
+    "groups": "account",
+    "func": ".user_code"
   },
   {
-    "name": "Get instrument accrued price as of <date>",
-    "description": "",
-    "groups": "all",
-    "func": "get_accrued_price()"
+    "name": "Name",
+    "description": "[portfolio].name: Text - name for portfolio<br/><br/>[portfolio]: Portfolio - variable contains portfolio (portfolio unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (portfolio) via these functions<br/><br/>Examples: <br/>portfolio.name - if name of variable is [portfolio]<br/>prtf.name  - if name of variable is [prtf]",
+    "groups": "portfolio",
+    "func": ".name"
   },
   {
-    "name": "Get instrument principal price as of <date>",
-    "description": "",
-    "groups": "all",
-    "func": "get_principal_price()"
+    "name": "Short name",
+    "description": "[portfolio].short_name: Text - system short name for portfolio<br/><br/>[portfolio]: Portfolio - variable contains portfolio (portfolio unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (portfolio) via these functions<br/><br/>Examples: <br/>portfolio.short_name - if name of variable is [portfolio]<br/>prtf.short_name - if name of variable is [prtf]",
+    "groups": "portfolio",
+    "func": ".short_name"
   },
   {
-    "name": "Get Instr factor as of <date>",
-    "description": "",
-    "groups": "all",
-    "func": "get_factor()"
+    "name": "User code",
+    "description": "[portfolio].user_code: Text - system unique user code for portfolio<br/><br/>[portfolio]: Portfolio - variable contains portfolio (portfolio unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (portfolio) via these functions<br/><br/>Examples: <br/>portfolio.user_code - if name of variable is [portfolio]<br/>prtf.user_code - if name of variable is [prtf]",
+    "groups": "portfolio",
+    "func": ".user_code"
   },
   {
-    "name": "Generate user code",
-    "description": "",
-    "groups": "all",
-    "func": "generate_user_code()"
+    "name": "Name",
+    "description": "[responsible].name: Text - name for responsible<br/><br/>[responsible]: Responsible - variable contains responsible (responsible unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (responsible) via these functions<br/><br/>Examples: <br/>responsible.name - if name of variable is [responsible]<br/>resp.name  - if name of variable is [resp]",
+    "groups": "responsible",
+    "func": ".name"
+  },
+  {
+    "name": "Short name",
+    "description": "[responsible].short_name: Text - system short name for responsible<br/><br/>[responsible]: Responsible - variable contains responsible (responsible unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (responsible) via these functions<br/><br/>Examples: <br/>responsible.short_name - if name of variable is [responsible]<br/>resp.short_name - if name of variable is [resp]",
+    "groups": "responsible",
+    "func": ".short_name"
+  },
+  {
+    "name": "User code",
+    "description": "[responsible].user_code: Text - system unique user code for responsible<br/><br/>[responsible]: Responsible - variable contains responsible (responsible unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (responsible) via these functions<br/><br/>Examples: <br/>responsible.user_code - if name of variable is [responsible]<br/>resp.user_code - if name of variable is [resp]",
+    "groups": "responsible",
+    "func": ".user_code"
+  },
+  {
+    "name": "Name",
+    "description": "[counterparty].name: Text - name for counterparty<br/><br/>[counterparty]: Counterparty - variable contains counterparty  (counterparty unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (counterparty) via these functions<br/><br/>Examples: <br/>counterparty.name - if name of variable is [counterparty]<br/>ctpy.name  - if name of variable is [ctpy]",
+    "groups": "counterparty",
+    "func": ".name"
+  },
+  {
+    "name": "Short name",
+    "description": "[counterparty].short_name: Text - system short name for counterparty<br/><br/>[counterparty]: Counterparty - variable contains counterparty (counterparty unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (counterparty) via these functions<br/><br/>Examples: <br/>counterparty.short_name - if name of variable is [counterparty]<br/>ctpy.short_name - if name of variable is [ctpy]",
+    "groups": "counterparty",
+    "func": ".short_name"
+  },
+  {
+    "name": "User code",
+    "description": "[counterparty].user_code: Text - system unique user code for counterparty<br/><br/>[counterparty]: Counterparty - variable contains counterparty counterparty unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (counterparty) via these functions<br/><br/>Examples: <br/>counterparty.user_code - if name of variable is [counterparty]<br/>ctpy.user_code - if name of variable is [ctpy]",
+    "groups": "counterparty",
+    "func": ".user_code"
+  },
+  {
+    "name": "System Entities",
+    "description": "The System Entities are the fundamental elements of FinMARS. They include:<br/>- Portfolio<br/>- Account<br/>- Instrument<br/>- Counterparty<br/>- Responsible<br/>- Currency<br/>- Transactions<br/><br/>The user can address any parameter of the System Entities used in the code of the Expression Builder.<br/>For example, if [instr]:Instrument, the user can get [instr] parameter called 'Accrued Price Multiplier' by typing instr.accrued_multiplier. <br/>The list of parameters is provided separately for each entity.",
+    "groups": "data_types",
+    "func": "System Entities"
+  },
+  {
+    "name": "Instrument",
+    "description": "System entity Instrument include these attributes-parameters:<br/>- user_code<br/>- name<br/>- short_name<br/>- pricing_currency.name<br/>- pricing_currency.user_code<br/>- reference_for_pricing<br/>- price_multiplier<br/>- accrued_currency.user_code<br/>- accrued_currency.name<br/>- accrued_multiplier<br/>- default_price<br/>- default_accrued<br/>- maturity_date<br/>- maturity_price<br/><br/>The user can get these parameters for each instrument by using expression [instrument].name_of_parameter where [instrument] is a variable contains instrument (see examples for Instrument)",
+    "groups": "data_types",
+    "func": "System Entities"
+  },
+  {
+    "name": "Portfolio",
+    "description": "System entity Portfolio include these attributes-parameters:<br/>- user_code<br/>- name<br/>- short_name<br/><br/>The user can get these parameters for each instrument by using expression [portfolio].name_of_parameter where [portfolio] is a variable contains portfolio (see examples for portfolio)",
+    "groups": "data_types",
+    "func": "System Entities"
+  },
+  {
+    "name": "Account",
+    "description": "System entity Account include these attributes-parameters:<br/>- user_code<br/>- name<br/>- short_name<br/>- public_name<br/><br/>The user can get these parameters for each account by using expression [account].name_of_parameter where [account] is a variable contains account (see examples for account)",
+    "groups": "data_types",
+    "func": "System Entities"
+  },
+  {
+    "name": "Responsible",
+    "description": "System entity Responsible include these attributes-parameters:<br/>- user_code<br/>- name<br/>- short_name<br/><br/>The user can get these parameters for each responsible by using expression [responsible].name_of_parameter where [responsible] is a variable contains responsible (see examples for responsible)",
+    "groups": "data_types",
+    "func": "System Entities"
+  },
+  {
+    "name": "Counterparty",
+    "description": "System entity Counterparty include these attributes-parameters:<br/>- user_code<br/>- name<br/>- short_name<br/><br/>The user can get these parameters for each counterparty by using expression [counterparty].name_of_parameter where [counterparty] is a variable contains counterparty (see examples for counterparty)",
+    "groups": "data_types",
+    "func": "System Entities"
+  },
+  {
+    "name": "Currency",
+    "description": "System entity Currency include these attributes-parameters:<br/>- user_code<br/>- name<br/>- reference_for_pricing<br/><br/>The user can get these parameters for each currency by using expression [currency].name_of_parameter where [currency] is a variable contains currency (see examples for currency)",
+    "groups": "data_types",
+    "func": "System Entities"
+  },
+  {
+    "name": "Transaction",
+    "description": "System entity Transactions include these attributes-parameters:<br/><br/>- instrument (via request of it`s parameter):<br/> instrument.user_code<br/> instrument.name<br/> instrument.short_name<br/> instrument.maturity_date<br/><br/>- portfolio (via request of it`s parameter):<br/> portfolio.user_code<br/> portfolio.name<br/> portfolio.short_name<br/> <br/>- account_position (via request of it`s parameter):<br/> account_position.user_code<br/> account_position.name<br/> account_position.short_name<br/> account_position.public_name<br/><br/>- account_cash (via request of it`s parameter):<br/> account_cash.user_code<br/> account_cash.name<br/> account_cash.short_name<br/> account_cash.public_name<br/><br/>- account_interim (via request of it`s parameter):<br/> account_interim.user_code<br/> account_interim.name<br/> account_interim.short_name<br/> account_interim.public_name<br/><br/>- responsible (via request of it`s parameter):<br/> responsible.user_code<br/> responsible.name<br/> responsible.short_name<br/><br/>- counterparty (via request of it`s parameter):<br/> counterparty.user_code<br/> counterparty.name<br/> counterparty.short_name<br/><br/>- accounting_date<br/><br/>- cash_date<br/><br/>- transaction_currency<br/>  name<br/>  user_code<br/><br/>- settlement_currency<br/>  name<br/>  user_code<br/><br/>- position_size_with_sign<br/>- principal_with_sign<br/>- carry_with_sign<br/>- overheads_with_sign<br/>- position_size_with_sign<br/>- cash_consideration<br/><br/>- notes<br/><br/>The user can get these parameters for described transaction by using expression transactions[0].name_of_parameter (see examples for Transactions)",
+    "groups": "data_types",
+    "func": "System Entities"
+  },
+  {
+    "name": "Strategy 1",
+    "description": "[strategy1] :: [Result: Strategy]<br/><br/>[Result: Strategy]:  Strategy - variable autofilled from the Context (see Context Variables / Context).  The variable stores the Strategy 1 of the selected Context.",
+    "groups": "context_var",
+    "func": "strategy1"
+  },
+  {
+    "name": "Get Instrument User attribute value",
+    "description": "get_instrument_user_attribute_value([instrument], [User_attribute_reference_name]) :: [Result: attribute value of instrument]<br/><br/>[instrumnet]: String - user code of the instrument<br/>[User_attribute_reference_name]: String - user attribute reference name<br/><br/>[Result: attribute value of instrument]: String, number, date - as attribite value of instrument<br/><br/>Examples:<br/><br/>Get_instrument_User_attribute_value(instrument, user_attr_1) - where instrument and user_attr_1 are variables with names of both parameteres<br/>Get_instrument_User_attribute_value('Angola_2025', 'Area') - where names of both parameteres are specified directly<br/>",
+    "groups": "instr",
+    "func": "get_instrument_user_attribute_value([instrument], [User_attribute_reference_name])"
+  },
+  {
+    "name": "Get principal price of Instrument",
+    "description": "get_principal_price([date],[instrument], [policy], [default_value]) :: [Result: principal price of instrument]<br/><br/>[Result: principal price]: Number - principal price of instrument on specified date and policy<br/>[date] - needed date contained in variable or text (for exapmle tr_date or '2019-01-01')<br/>[instrument] - user_code of instrument contained in variable or text (for exapmle instrument or 'US0378331005')<br/>[policy] - pricing policy for price calculation (for example 'default')<br/>[default_value] - result of function in case of empty price data on specified date (for example 0, 100, 1)<br/><br/>Examples:<br/>get_principal_price('2019-04-29', US0378331005', '-', 100)<br/>get_principal_price(tr_date, instrument, 'default', 0)",
+    "groups": "prices",
+    "func": "get_principal_price([date],[instrument], [policy], [default_value])"
+  },
+  {
+    "name": "Get accrued price of Instrument",
+    "description": "get_accrued_price([date],[instrument], [policy], [default_value]) :: [Result: accrued price of instrument]<br/><br/>[Result: accruedprice]: Number - accrued price of instrument on specified date and policy<br/>[date] - needed date contained in variable or text (for exapmle tr_date or '2019-01-01')<br/>[instrument] - user_code of instrument contained in variable or text (for exapmle instrument or 'US0378331005')<br/>[policy] - pricing policy for price calculation (for example 'default')<br/>[default_value] - result of function in case of empty price data on specified date (for example 0, 0.01)<br/><br/>Examples:<br/>get_accrued_price('2019-04-29', US0378331005', '-', 100)<br/>get_accrued_price(tr_date, instrument, 'default', 0)",
+    "groups": "prices",
+    "func": "get_accrued_price([date],[instrument], [policy], [default_value])"
+  },
+  {
+    "name": "Convert to system number",
+    "description": "convert_to_number([number], [separator], [decimal], [braces_boolean]): [Result: number in system format]<br/><br/>[Result: number in system format]: Number in system format - number that can be used in system calculations<br/>[number]:String - number written as text (for example price_instr or '101,95')<br/>[separator] - separator (for example ''' or ' ' )<br/>[decimal] - decimal (for example ',' or '.')<br/>[braces_boolean] - boolean for negative numbers in braces  (for example true or false)<br/><br/>Examples:<br/>convert_to_number(num, ' ', ',', true) - to convert a number in variable [num] written like 112 230,56<br/>convert_to_number(num, ''', '.', true) - to convert a number in variable [num] written like (113'230.56)<br/>convert_to_number('-113'230.56', ''', '.', false) - to convert a number stricktly added in function",
+    "groups": "text",
+    "func": "convert_to_number([number], [separator], [decimal], [braces_boolean])"
+  },
+  {
+    "name": "Convert Number to Days",
+    "description": "[date]+days([number]) :: [Result: date_after]<br/>[date]-days([number]) :: [Result: date_before]<br/><br/>[Result: date_after, date_before]: Date - date differs from [date] by [number] calendar days<br/><br/>[date]: Date - any date variable, used by user in this expression (eg, transaction_date)<br/>[number]: Number - any number or number variable, used by user in this expression (eg, 1, 2, 3... or number_variable)<br/><br/>Examples:<br/>transaction_date+days(2) - for getting date, which differs from transaction date by 2 days<br/>deposit_date+days(duration) - for getting date, which differs from deposit_date by number of days, which is written in variable with name [duration]<br/>now()-days(10)- for getting date, which differs from current date by 10 days<br/>now()+days(rent_period)- for getting date, which differs from current date by number of days, which is written in variable with name [rent_period]<br/>",
+    "groups": "date",
+    "func": "days([number])"
   },
   {
     "name": "Get today's Date",
@@ -134,7 +248,7 @@
   {
     "name": "Get value depends on logical test",
     "description": "iff([any_variable]==[user_target], [returned_value_if_true], [returned_value_if_false]) :: [Result: returned_value_if_true or returned_value_if_false]<br/><br/>[Result: returned_value_if_true or returned_value_if_false]: String, date, boolean or number - as a value or variable contains any value. In case of true result of [any_variable]==[user_target] the system returns [returned_value_if_true], otherwise it will be [returned_value_if_false]<br/><br/>[any_variable] - String, date, boolean or number - as a variable contains any value<br/>[user_target] - String, date, boolean or number - as a value or variable contains any value<br/><br/>Examples:<br/>iff(3==3, 1, 2)  - in this case result of 3==3 expression is true and the system returns 1<br/>iff(3==4, 1, 2)  - in this case result of 3==4 expression is false and the system returns 2<br/>iff(maturity_price==0, 'set maturity price!', 'maturity price is setted') - in this case the system compare value in variable with name maturity_price and a) if it is 0 returns string 'set maturity price!' b) if it is not 0 returns string  'maturity price is setted'<br/>iff(maturity_date==now(), maturity_price , 0) - in this case the system compare date in variable with name maturity_date and a) if they are equal returns number in variable with name [maturity_price] b) otherwise returns 0<br/>iff(price]target_price, 0) - in this case the system compare date in variable with name maturity_date and a) if they are equal returns number in variable with name [maturity_price] b) otherwise returns 0<br/>iff(5]4, 1, 2)  - in this case result of 5]4 expression is true and the system returns 1 (you can use not only == in expression, but also [ and ])<br/>",
-    "groups": "number",
+    "groups": "condit",
     "func": "iff([any_variable]==[user_target], [returned_value_if_true], [returned_value_if_false])"
   },
   {
@@ -180,160 +294,70 @@
     "func": "simple_price([date], [date1], [price1], [date2], [price2])"
   },
   {
-    "name": "Name",
-    "description": "[instrument].name: Text - name for instrument<br/><br/>[instrument]: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples: <br/>instrument.name - if name of variable is [instrument]<br/>instr.name  - if name of variable is [instr]",
-    "groups": "instr",
-    "func": "[instrument].name"
-  },
-  {
-    "name": "Short name",
-    "description": "[instrument].short_name: Text - system short name for instrument<br/><br/>[instrument]: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples: <br/>instrument.short_name - if name of variable is [instrument]<br/>instr_2000.short_name - if name of variable is [instr_2000]",
-    "groups": "instr",
-    "func": "[instrument].short_name"
-  },
-  {
-    "name": "User code",
-    "description": "[instrument].user_code: Text - system unique user code for instrument<br/><br/>[instrument]: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples: <br/>instrument.user_code - if name of variable is [instrument]<br/>instr_2000.user_code - if name of variable is [instr_2000]",
-    "groups": "instr",
-    "func": "[instrument].user_code"
-  },
-  {
     "name": "Pricing currency user code",
     "description": "[instrument].pricing_currency.user_code: Text - unique user code for instrument pricing currency<br/><br/>[instrument]: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples: <br/>instrument.pricing_currency.user_code - if name of variable is [instrument]<br/>instr.pricing_currency.user_code  - if name of variable is [instr]",
     "groups": "instr",
-    "func": "[instrument].pricing_currency.user_code"
+    "func": ".pricing_currency.user_code"
   },
   {
     "name": "Pricing currency name",
     "description": "[instrument].pricing_currency.name: Text - name for instrument pricing currency<br/><br/>[instrument] - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples: <br/>instrument.pricing_currency.name - if name of variable is [instrument]<br/>instr.accrued_currency.name  - if name of variable is [instr]",
     "groups": "instr",
-    "func": "[instrument].pricing_currency.name"
+    "func": ".pricing_currency.name"
   },
   {
     "name": "Accrued currency user code",
     "description": "[instrument].accrued_currency.user_code: Text - unique user code for instrument accrued currency<br/><br/>[instrument]: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples: <br/>instrument.accrued_currency.user_code - if name of variable is [instrument]<br/>instr.accrued_currency.name  - if name of variable is [instr]",
     "groups": "instr",
-    "func": "[instrument].accrued_currency.user_code"
+    "func": ".accrued_currency.user_code"
   },
   {
     "name": "Accrued currency name",
     "description": "[instrument].accrued_currency.name: Text - name for instrument accrued currency<br/><br/>[instrument]: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples: <br/>instrument.accrued_currency.name - if name of variable is [instrument]<br/>instr.accrued_currency.name  - if name of variable is [instr]",
     "groups": "instr",
-    "func": "[instrument].accrued_currency.name"
+    "func": ".accrued_currency.name"
   },
   {
     "name": "Reference for pricing",
     "description": "[instrument].reference_for_pricing: Text - system reference for pricing for instrument, used in downloading prices from external providers<br/><br/>[instrument]: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions. For example for bond instrument YPF SOCIEDAD ANONIMA  3.75%  30-Sep-2019 (with user_code CH0336352825 - it's ISIN) result  of instrument.reference_for_pricing is 'CH0336352825 Corp' - code used in downloading prices from external providers<br/><br/>Examples: <br/>instrument.reference_for_pricing - if name of variable is [instrument]<br/>instr.reference_for_pricing - if name of variable is [instr]",
     "groups": "instr",
-    "func": "[instrument].reference_for_pricing"
+    "func": ".reference_for_pricing"
   },
   {
     "name": "Price multiplier",
     "description": "[instrument].price_multiplier: Number - multiplier applied for the Instrument price when valuing the Instrument. For example, for bonds which are priced as % of notional, the  price_multiplier should be  0.01<br/><br/>[instrument]: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples:<br/>instrument.price_multiplier<br/>instr.price_multiplier<br/><br/>! If this parameter was not specified in Instrument settings then result equal to 1",
     "groups": "instr",
-    "func": "[instrument].price_multiplier"
+    "func": ".price_multiplier"
   },
   {
     "name": "Accrued price multiplier",
     "description": "[instrument].accrued_multiplier: Number  - multiplier applied for the Instrument accrued price<br/><br/>[instrument]: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples:<br/>instrument.accrued_multiplier<br/>instr.accrued_multiplier<br/><br/>! If this parameter was not specified in Instrument settings then result equal to 1",
     "groups": "instr",
-    "func": "[instrument].accrued_multiplier"
+    "func": ".accrued_multiplier"
   },
   {
     "name": "Maturity date",
     "description": "[instrument].maturity_date: Date - date of maturity (redemption) of the instrument. Maturity date allows user and system to create maturity transaction at this date and prompt the user to book it automatically<br/><br/>[instrument]: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples:<br/>instrument.maturity_date<br/>instr.maturity_date",
     "groups": "instr",
-    "func": "[instrument].maturity_date"
+    "func": ".maturity_date"
   },
   {
     "name": "Maturity price",
     "description": "[instrument].maturity_price: Number - price of maturity (redemption) of the instrument, this parameter can be used in transaction types for instruments maturity<br/><br/>[instrument]: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples:<br/>instrument.maturity_price<br/>instr.maturity_price<br/><br/>! If this parameter was not specified in Instrument settings then result equal to 0",
     "groups": "instr",
-    "func": "[instrument].maturity_price"
+    "func": ".maturity_price"
   },
   {
     "name": "Default price",
     "description": "[instrument].default_price: Number - default price of instrument, it ca у used in cases when current prices for the instrument are unavailable<br/><br/>[instrument]: Instrument - variable contains instrument (instrument unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (instrument) via these functions<br/><br/>Examples:<br/>instrument.default_price<br/>instr.default_price<br/><br/>! If this parameter was not specified in Instrument settings then result equal to 0",
     "groups": "instr",
-    "func": "[instrument].default_price"
-  },
-  {
-    "name": "Name",
-    "description": "[account].name: Text - name for account<br/><br/>[account]: Account - variable contains account (account unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (account) via these functions<br/><br/>Examples: <br/>account.name - if name of variable is [account]<br/>acc.name  - if name of variable is [acc]",
-    "groups": "account",
-    "func": "[account].name"
-  },
-  {
-    "name": "Short name",
-    "description": "[account].short_name: Text - system short name for account<br/><br/>[account]: Account - variable contains account (account unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (account) via these functions<br/><br/>Examples: <br/>account.short_name - if name of variable is [account]<br/>acc.short_name - if name of variable is [acc]",
-    "groups": "account",
-    "func": "[account].short_name"
-  },
-  {
-    "name": "User code",
-    "description": "[account].user_code: Text - system unique user code for account<br/><br/>[account]: Account - variable contains account (account unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (account) via these functions<br/><br/>Examples: <br/>account.user_code - if name of variable is [account]<br/>acc.user_code - if name of variable is [acc]",
-    "groups": "account",
-    "func": "[account].user_code"
+    "func": ".default_price"
   },
   {
     "name": "Public name",
     "description": "[account].public_name: Text - system public name for account shown when the user has no rights to see it`s real name<br/><br/>[account]: Account - variable contains account (account unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (account) via these functions<br/><br/>Examples: <br/>account.public_name - if name of variable is [account]<br/>acc.public_name - if name of variable is [acc]",
     "groups": "account",
-    "func": "[account].public_name"
-  },
-  {
-    "name": "Name",
-    "description": "[portfolio].name: Text - name for portfolio<br/><br/>[portfolio]: Portfolio - variable contains portfolio (portfolio unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (portfolio) via these functions<br/><br/>Examples: <br/>portfolio.name - if name of variable is [portfolio]<br/>prtf.name  - if name of variable is [prtf]",
-    "groups": "portfolio",
-    "func": "[portfolio].name"
-  },
-  {
-    "name": "Short name",
-    "description": "[portfolio].short_name: Text - system short name for portfolio<br/><br/>[portfolio]: Portfolio - variable contains portfolio (portfolio unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (portfolio) via these functions<br/><br/>Examples: <br/>portfolio.short_name - if name of variable is [portfolio]<br/>prtf.short_name - if name of variable is [prtf]",
-    "groups": "portfolio",
-    "func": "[portfolio].short_name"
-  },
-  {
-    "name": "User code",
-    "description": "[portfolio].user_code: Text - system unique user code for portfolio<br/><br/>[portfolio]: Portfolio - variable contains portfolio (portfolio unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (portfolio) via these functions<br/><br/>Examples: <br/>portfolio.user_code - if name of variable is [portfolio]<br/>prtf.user_code - if name of variable is [prtf]",
-    "groups": "portfolio",
-    "func": "[portfolio].user_code"
-  },
-  {
-    "name": "Name",
-    "description": "[responsible].name: Text - name for responsible<br/><br/>[responsible]: Responsible - variable contains responsible (responsible unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (responsible) via these functions<br/><br/>Examples: <br/>responsible.name - if name of variable is [responsible]<br/>resp.name  - if name of variable is [resp]",
-    "groups": "responsible",
-    "func": "[responsible].name"
-  },
-  {
-    "name": "Short name",
-    "description": "[responsible].short_name: Text - system short name for responsible<br/><br/>[responsible]: Responsible - variable contains responsible (responsible unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (responsible) via these functions<br/><br/>Examples: <br/>responsible.short_name - if name of variable is [responsible]<br/>resp.short_name - if name of variable is [resp]",
-    "groups": "responsible",
-    "func": "[responsible].short_name"
-  },
-  {
-    "name": "User code",
-    "description": "[responsible].user_code: Text - system unique user code for responsible<br/><br/>[responsible]: Responsible - variable contains responsible (responsible unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (responsible) via these functions<br/><br/>Examples: <br/>responsible.user_code - if name of variable is [responsible]<br/>resp.user_code - if name of variable is [resp]",
-    "groups": "responsible",
-    "func": "[responsible].user_code"
-  },
-  {
-    "name": "Name",
-    "description": "[counterparty].name: Text - name for counterparty<br/><br/>[counterparty]: Counterparty - variable contains counterparty  (counterparty unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (counterparty) via these functions<br/><br/>Examples: <br/>counterparty.name - if name of variable is [counterparty]<br/>ctpy.name  - if name of variable is [ctpy]",
-    "groups": "counterparty",
-    "func": "[counterparty].name"
-  },
-  {
-    "name": "Short name",
-    "description": "[counterparty].short_name: Text - system short name for counterparty<br/><br/>[counterparty]: Counterparty - variable contains counterparty (counterparty unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (counterparty) via these functions<br/><br/>Examples: <br/>counterparty.short_name - if name of variable is [counterparty]<br/>ctpy.short_name - if name of variable is [ctpy]",
-    "groups": "counterparty",
-    "func": "[counterparty].short_name"
-  },
-  {
-    "name": "User code",
-    "description": "[counterparty].user_code: Text - system unique user code for counterparty<br/><br/>[counterparty]: Counterparty - variable contains counterparty counterparty unique user code) defined by user in scheme, transaction type - user can address to the attributes of this object/entity (counterparty) via these functions<br/><br/>Examples: <br/>counterparty.user_code - if name of variable is [counterparty]<br/>ctpy.user_code - if name of variable is [ctpy]",
-    "groups": "counterparty",
-    "func": "[counterparty].user_code"
+    "func": ".public_name"
   },
   {
     "name": "Name",
@@ -589,13 +613,13 @@
   },
   {
     "name": "Text",
-    "description": "any sequence of symbols, max 256 symbols. String should start and end with apostrophe (')",
+    "description": "any sequence of symbols, max 256 symbols. String should start and end with apostrophe (') or ditto-mark (')",
     "groups": "data_types",
     "func": " "
   },
   {
-    "name": "List",
-    "description": "fixed list of the possible parameter values",
+    "name": "Arrays",
+    "description": "List of the objacts having same Data Type. The elements of the n-th element of the list is referred as: List[n]<br/>The numeration alwas starts from [0]<br/><br/>For Example:<br/>transaction[0], transaction[1]",
     "groups": "data_types",
     "func": " "
   },
@@ -606,94 +630,46 @@
     "func": " "
   },
   {
-    "name": "System Entities",
-    "description": "The System Entities are the fundamental elements of FinMARS. They include:<br/>- Portfolio<br/>- Account<br/>- Instrument<br/>- Counterparty<br/>- Responsible<br/>- Currency<br/>- Transactions<br/><br/>The user can address any parameter of the System Entities used in the code of the Expression Builder.<br/>For example, if [instr]:Instrument, the user can get [instr] parameter called 'Accrued Price Multiplier' by typing instr.accrued_multiplier. <br/>The list of parameters is provided separately for each entity.",
-    "groups": "data_types",
-    "func": "System Entities"
-  },
-  {
-    "name": "Instrument",
-    "description": "System entity Instrument include these attributes-parameters:<br/>- user_code<br/>- name<br/>- short_name<br/>- pricing_currency.name<br/>- pricing_currency.user_code<br/>- reference_for_pricing<br/>- price_multiplier<br/>- accrued_currency.user_code<br/>- accrued_currency.name<br/>- accrued_multiplier<br/>- default_price<br/>- default_accrued<br/>- maturity_date<br/>- maturity_price<br/><br/>The user can get these parameters for each instrument by using expression [instrument].name_of_parameter where [instrument] is a variable contains instrument (see examples for Instrument)",
-    "groups": "data_types",
-    "func": "System Entities"
-  },
-  {
-    "name": "Portfolio",
-    "description": "System entity Portfolio include these attributes-parameters:<br/>- user_code<br/>- name<br/>- short_name<br/><br/>The user can get these parameters for each instrument by using expression [portfolio].name_of_parameter where [portfolio] is a variable contains portfolio (see examples for portfolio)",
-    "groups": "data_types",
-    "func": "System Entities"
-  },
-  {
-    "name": "Account",
-    "description": "System entity Account include these attributes-parameters:<br/>- user_code<br/>- name<br/>- short_name<br/>- public_name<br/><br/>The user can get these parameters for each account by using expression [account].name_of_parameter where [account] is a variable contains account (see examples for account)",
-    "groups": "data_types",
-    "func": "System Entities"
-  },
-  {
-    "name": "Responsible",
-    "description": "System entity Responsible include these attributes-parameters:<br/>- user_code<br/>- name<br/>- short_name<br/><br/>The user can get these parameters for each responsible by using expression [responsible].name_of_parameter where [responsible] is a variable contains responsible (see examples for responsible)",
-    "groups": "data_types",
-    "func": "System Entities"
-  },
-  {
-    "name": "Counterparty",
-    "description": "System entity Counterparty include these attributes-parameters:<br/>- user_code<br/>- name<br/>- short_name<br/><br/>The user can get these parameters for each counterparty by using expression [counterparty].name_of_parameter where [counterparty] is a variable contains counterparty (see examples for counterparty)",
-    "groups": "data_types",
-    "func": "System Entities"
-  },
-  {
-    "name": "Currency",
-    "description": "System entity Currency include these attributes-parameters:<br/>- user_code<br/>- name<br/>- reference_for_pricing<br/><br/>The user can get these parameters for each currency by using expression [currency].name_of_parameter where [currency] is a variable contains currency (see examples for currency)",
-    "groups": "data_types",
-    "func": "System Entities"
-  },
-  {
-    "name": "Transaction",
-    "description": "System entity Transactions include these attributes-parameters:<br/><br/>- instrument (via request of it`s parameter):<br/> instrument.user_code<br/> instrument.name<br/> instrument.short_name<br/> instrument.maturity_date<br/><br/>- portfolio (via request of it`s parameter):<br/> portfolio.user_code<br/> portfolio.name<br/> portfolio.short_name<br/> <br/>- account_position (via request of it`s parameter):<br/> account_position.user_code<br/> account_position.name<br/> account_position.short_name<br/> account_position.public_name<br/><br/>- account_cash (via request of it`s parameter):<br/> account_cash.user_code<br/> account_cash.name<br/> account_cash.short_name<br/> account_cash.public_name<br/><br/>- account_interim (via request of it`s parameter):<br/> account_interim.user_code<br/> account_interim.name<br/> account_interim.short_name<br/> account_interim.public_name<br/><br/>- responsible (via request of it`s parameter):<br/> responsible.user_code<br/> responsible.name<br/> responsible.short_name<br/><br/>- counterparty (via request of it`s parameter):<br/> counterparty.user_code<br/> counterparty.name<br/> counterparty.short_name<br/><br/>- accounting_date<br/><br/>- cash_date<br/><br/>- transaction_currency<br/>  name<br/>  user_code<br/><br/>- settlement_currency<br/>  name<br/>  user_code<br/><br/>- position_size_with_sign<br/>- principal_with_sign<br/>- carry_with_sign<br/>- overheads_with_sign<br/>- position_size_with_sign<br/>- cash_consideration<br/><br/>- notes<br/><br/>The user can get these parameters for described transaction by using expression transactions[0].name_of_parameter (see examples for Transactions)",
-    "groups": "data_types",
-    "func": "System Entities"
-  },
-  {
     "name": "Position",
     "description": "[position] :: [Result: [position]]<br/><br/>[Result: [position]]:  Number - number variable autofilled from context, in this case context is an event generated by the system for instrument with predefined events in settings. Each event contains user code of instrument - then the system check in which portfolios and accounts this instrument is detected on the date of event - and what is the position of this instrument. And this position is transmitted from context variable to user`s variable [position] used in transaction type for event transaction<br/><br/>[position]: Number - any position variable, used by user in this expression<br/><br/>Examples:<br/>[position]<br/>[pos]<br/>[pos_coupon_event]",
     "groups": "context_var",
-    "func": "[position]"
+    "func": "position"
   },
   {
     "name": "Instrument",
-    "description": "[instrument] :: [Result: [instrument]]<br/><br/>[Result: [instrument]]:  Instrument - variable of Instrument type autofilled from context, in this case context is an event  generated by the system for instrument with predefined events in settings. Each event contains user code of instrument. And this user code is transmitted from context variable to user`s variable [instrument] <br/><br/>[instrument]: Instrument - any instrument variable, used by user in this expression<br/><br/>Examples:<br/>[instrument]<br/>[instr]<br/>[instrument_coupon_event]<br/>[instrument_maturity]",
+    "description": "[instrument/instr] :: [Result: [instrument]]<br/><br/>[Result: [instrument]]:  Instrument - variable of Instrument type autofilled from context, in this case context is an event  generated by the system for instrument with predefined events in settings. Each event contains user code of instrument. And this user code is transmitted from context variable to user`s variable [instrument] <br/><br/>[instr]: Instrument - any instrument variable, used by user in this expression<br/><br/>Examples:<br/>[instrument]<br/>[instr]<br/>[instrument_coupon_event]<br/>[instrument_maturity]",
     "groups": "context_var",
-    "func": "[instrument]"
+    "func": "instrument"
   },
   {
     "name": "Portfolio",
-    "description": "[portfolio] :: [Result: [portfolio]]<br/><br/>[Result: [portfolio]]:  Portfolio - portfolio variable autofilled from context, in this case context is an event generated by the system for instrument with predefined events in settings. Each event contains user code of instrument - then the system check in which portfolios and accounts this instrument is detected on the date of event. And portfolios (it`s user code) with instrument in it is transmitted from context variable to user`s variable [portfolio] used in transaction type for event transaction<br/><br/>[portfolio]: Portfolio - any portfolio variable, used by user in this expression<br/><br/>Examples:<br/>[portfolio]<br/>[prt]<br/>[prt_coupon_event]",
+    "description": "[portfolio/portf] :: [Result: [portfolio]]<br/><br/>[Result: [portfolio]]:  Portfolio - portfolio variable autofilled from context, in this case context is an event generated by the system for instrument with predefined events in settings. Each event contains user code of instrument - then the system check in which portfolios and accounts this instrument is detected on the date of event. And portfolios (it`s user code) with instrument in it is transmitted from context variable to user`s variable [portfolio] used in transaction type for event transaction<br/><br/>[portfolio]: Portfolio - any portfolio variable, used by user in this expression<br/><br/>Examples:<br/>[portfolio]<br/>[prt]<br/>[prt_coupon_event]",
     "groups": "context_var",
-    "func": "[portfolio]"
+    "func": "portfolio"
   },
   {
     "name": "Account",
-    "description": "[account] :: [Result: [account]]<br/><br/>[Result: [account]]:  Account - account variable autofilled from context, in this case context is an event generated by the system for instrument with predefined events in settings. Each event contains user code of instrument - then the system check in which portfolios and accounts this instrument is detected on the date of event. And account with instrument is transmitted from context variable to user`s variable [account] used in transaction type for event transaction<br/><br/>[account]: Account - any account variable, used by user in this expression<br/><br/>Examples:<br/>[account]<br/>[acc]<br/>[acc_coupon_event]",
+    "description": "[account/acc] :: [Result: [account]]<br/><br/>[Result: [account]]:  Account - account variable autofilled from context, in this case context is an event generated by the system for instrument with predefined events in settings. Each event contains user code of instrument - then the system check in which portfolios and accounts this instrument is detected on the date of event. And account with instrument is transmitted from context variable to user`s variable [account] used in transaction type for event transaction<br/><br/>[account]: Account - any account variable, used by user in this expression<br/><br/>Examples:<br/>[account]<br/>[acc]<br/>[acc_coupon_event]",
     "groups": "context_var",
-    "func": "[account]"
+    "func": "account"
   },
   {
-    "name": "Currency",
-    "description": "[currency] :: [Result: [currency]]<br/><br/>[Result: [currency]]:  Currency - account variable autofilled from context, in this case context is an event generated by the system for instrument with predefined events in settings. Each instrument has the parameter accrued_currency. And this parameter is transmitted from context variable to user`s variable [currency] used in transaction type for event transaction<br/><br/>[currency]: Currency - any currency variable, used by user in this expression<br/><br/>Examples:<br/>[currency]<br/>[ccy]",
+    "name": "Accruals Currency",
+    "description": "[accrued_currency] :: [Result: [currency]]<br/><br/>[Result: [currency]]:  Currency - account variable autofilled from context, in this case context is an event generated by the system for instrument with predefined events in settings. Each instrument has the parameter accrued_currency. And this parameter is transmitted from context variable to user`s variable [currency] used in transaction type for event transaction<br/><br/>[currency]: Currency - any currency variable, used by user in this expression<br/><br/>Examples:<br/>[currency]<br/>[ccy]",
     "groups": "context_var",
-    "func": "[currency]"
+    "func": "accrued_currency"
   },
   {
     "name": "Effective Date",
     "description": "[effective_date] :: [Result: [effective_date]]<br/><br/>[Result: [effective_date]]:  Effective_date - variable autofilled from context, in this case context is an event generated by the system for instrument with predefined events in settings. Events are generated on a specific date according to a schedule of events (for example, a coupon payment schedule) created in the settings of each instrument. And this date is transmitted from context variable to user`s variable [effective_date] used in transaction type for event transaction<br/><br/>[effective_date]: Date  - any date variable, used by user in this expression<br/><br/>Examples:<br/>[effective_date]<br/>[e_date]<br/>[coupon_date]",
     "groups": "context_var",
-    "func": "[effective_date]"
+    "func": "effective_date"
   },
   {
     "name": "Notification date",
     "description": "[notification_date] :: [Result: [notification_date]]<br/><br/>[Result: [notification_date]]:  Notification date - variable autofilled from context, in this case context is an event (notification) generated by the system for instrument with predefined events in settings.  Date of notification (according to settings of notification for each instrument) is transmitted from context variable to user`s variable [notification_date] used in transaction type for event transaction<br/><br/>[notification_date]: Date  - any date variable, used by user in this expression<br/><br/>Examples:<br/>[notification_date]<br/>[not_date]",
     "groups": "context_var",
-    "func": "[notification_date]"
+    "func": "notification_date"
   },
   {
     "name": "Convert String to Number",
@@ -709,16 +685,524 @@
   },
   {
     "name": "Formats",
-    "description": "The following reserved combinations of the symbols are used in Date formatting either to parse date or to convert Date variable to String <br/><br/>%a  : Weekday as locale’s abbreviated name. (Ex: Mon)<br/>%A  : Weekday as locale’s full name. (Ex: Monday)<br/>%d  : Day of the month. (Ex: 30)<br/>%b  : Month as locale’s abbreviated name. (Ex: Sep)<br/>%B  : Month as locale’s full name. (Ex: September)<br/>%m  : Month as a number. (Ex: 9)<br/>%y  : Year without century number. (Ex: 13)<br/>%Y  : Year with century number. (Ex: 2013)<br/>%j  : Day of the year. (Ex: 273)<br/>%W  : Week number of the year. All days [ first Monday are considered to be in week 0. (Ex: 39)<br/>%x  : Locale’s appropriate date representation. (Ex: 9/30/2018)",
+    "description": "The following reserved combinations of the symbols are used in Date formatting either to parse date or to convert Date variable to String <br/><br/>%a  : Weekday as locale’s abbreviated name. (Ex: Mon)<br/>%A  : Weekday as locale’s full name. (Ex: Monday)<br/>%d  : Day of the month as zero-padded. (Ex: 02)<br/>%b  : Month as locale’s abbreviated name. (Ex: Sep)<br/>%B  : Month as locale’s full name. (Ex: September)<br/>%m  : Month as a number as zero-padded. (Ex: 09)<br/>%y  : Year without century number. (Ex: 13)<br/>%Y  : Year with century number. (Ex: 2013)<br/>%j  : Day of the year as zero-padded. (Ex: 005)<br/>%W  : Week number of the year. All days [ first Monday are considered to be in week 0. (Ex: 39)<br/>%w   :  Weekday as a decimal number, where 0 is Sunday and 6 is Saturday - 0, 1, ..., 6<br/>%x  : Locale’s appropriate date representation. (Ex: 9/30/2018)",
     "groups": "date",
     "func": " "
+  },
+  {
+    "name": "Language Operators",
+    "description": "Numeric operators: +, -, / (division), *, % (mod)<br/>Text concatenation: +<br/>Date operators: <Date> + days(<n days>)<br/>Variable Parameters:  instrument.price_multiplier , instrument['price_multiplier'], context['instrument']['price_multiplier']<br/>Comparison: ==, !=, >, >=, <, <=<br/>If operator:  iif(<expression>,<value if true>,<value if false>)",
+    "groups": "",
+    "func": " "
+  },
+  {
+    "name": "Language Basics",
+    "description": "The Expressions Language syntax resembles syntax of Python. For ease of compiling Expressions one can use Notepad++ freeware which applies colour scheme to the text and helps in writing complex Expressions.<br/><br/>Function description:   function_name(arg1, arg2=<default value for arg>)<br/>Data types: see Data Types tab",
+    "groups": "",
+    "func": " "
+  },
+  {
+    "name": "contains(a,b)",
+    "description": "contains(a,b)",
+    "groups": "text",
+    "func": "contains(a,b)"
+  },
+  {
+    "name": "date(year, month=1, day=1)",
+    "description": "date(year, month=1, day=1)",
+    "groups": "date",
+    "func": "date(year, month=1, day=1)"
+  },
+  {
+    "name": "timedelta(years=0, months=0, days=0, leapdays=0, weeks=0)",
+    "description": "timedelta(years=0, months=0, days=0, leapdays=0, weeks=0)<br/>general timedelta creation<br/><br/>   years, months, weeks, days:<br/>       Relative information, may be negative (argument is plural); adding<br/>       or subtracting a relativedelta with relative information performs<br/>       the corresponding aritmetic operation on the original datetime value<br/>       with the information in the relativedelta.<br/>   leapdays:<br/>       Will add given days to the date found, if year is a leap<br/>       year, and the date found is post 28 of february",
+    "groups": "date",
+    "func": "timedelta(years=0, months=0, days=0, leapdays=0, weeks=0)"
+  },
+  {
+    "name": "add_weeks(date, days)",
+    "description": "add_weeks(date, days) same as d + days(x * 7)",
+    "groups": "date",
+    "func": "add_weeks(date, days)"
+  },
+  {
+    "name": "format_number",
+    "description": "format_number(number, decimal_sep='.', decimal_pos=None, grouping=3, thousand_sep='', use_grouping=False)<br/>format float number<br/><br/>   decimal_sep:<br/>       Decimal separator symbol (for example '.')<br/>   decimal_pos:<br/>       Number of decimal positions<br/>   grouping:<br/>       Number of digits in every group limited by thousand separator<br/>   thousand_sep:<br/>       Thousand separator symbol (for example ',')<br/>   use_grouping:<br/>       use thousand separator",
+    "groups": "number",
+    "func": "format_number(number, decimal_sep='.', decimal_pos=None, grouping=3, thousand_sep='', use_grouping=False)"
+  },
+  {
+    "name": "simple_price(date, date1, value1, date2, value2)",
+    "description": "simple_price(date, date1, value1, date2, value2)<br/>   calculate price on date using 2 point (date1, value1) and (date2, value2)<br/><br/><br/>if dates is string then that try parse use '%Y-%m-%d'",
+    "groups": "pricing",
+    "func": "simple_price(date, date1, value1, date2, value2)"
+  },
+  {
+    "name": "dynamic attributes ",
+    "description": "dynamic attributes (in future releases):<br/>       value_string: str - used for string type<br/>       value_float: float - used for number type<br/>       value_date: date - used for date type<br/>       classifier: null - used for classifier type<br/>           name: str<br/>           level: int<br/>           parent: recursive classifier data",
+    "groups": "user_attr",
+    "func": "dynamic attributes "
+  },
+  {
+    "name": "With Text",
+    "description": "The most common issues:<br/>1. make sure that in text expression all summands are text variables or cinverte to text (if date/number)",
+    "groups": "issues",
+    "func": " "
+  },
+  {
+    "name": "With Dates",
+    "description": "0",
+    "groups": "issues",
+    "func": " "
+  },
+  {
+    "name": "Strategy 2",
+    "description": "[strategy2] :: [Result: Strategy]<br/><br/>[Result: Strategy]:  Strategy - variable autofilled from the Context (see Context Variables / Context).  The variable stores the Strategy 2 of the selected Context.",
+    "groups": "context_var",
+    "func": "strategy2"
+  },
+  {
+    "name": "Strategy 3",
+    "description": "[strategy3] :: [Result: Strategy]<br/><br/>[Result: Strategy]:  Strategy - variable autofilled from the Context (see Context Variables / Context).  The variable stores the Strategy 3 of the selected Context.",
+    "groups": "context_var",
+    "func": "strategy3"
+  },
+  {
+    "name": "Context",
+    "description": "The notion of Context appears in the following situations:<br/> 1. When some Instrument on the balance triggers an Event and this Event should be booked automatically, the Context means which Instrument, in which Portfolio, on which Account, which Strategy, having Position, on which Date etc. has triggered the Event. Context here is the set of parameters using which one understands all the details on the source of the Event<br/> 2. When one tries to book a Transaction there is a place from which he has clicked the button to book the transaction. In this case the  Context contains the available information on this location. For example, if users was viewing an Instrument in the Entity Viewer and decided to book a Transactions with this Instrument, the Context would contain an information on the Instrument which the user has been viewing. ",
+    "groups": "context_var",
+    "func": " "
+  },
+  {
+    "name": "Get Transaction type default input",
+    "description": "get_ttype_default_input([input])) :: [Result: default input]<br/><br/>[input]: String - input name<br/>[Result: default input]: String, number, date or entity - as a default input of transaction type<br/><br/>Examples:<br/>get_ttype_default_input('price')<br/>get_ttype_default_input('currency')<br/>get_ttype_default_input('currency').user_code - attribute [user_code] of default currency<br/>get_ttype_default_input('maturity_date')<br/>get_ttype_default_input('notes')",
+    "groups": "transaction",
+    "func": "get_ttype_default_input([input])"
+  },
+  {
+    "name": "Add FX rate",
+    "description": "add_fx_history([date], [currency], [pricing_policy], [fx_rate], [Overwrite]) :: [Result: FX rate on specified date added to the system]<br/><br/>[Result: rate]: Number - FX rate of currency on specified date and policy<br/>[date]: Date - needed date contained in variable or text (for exapmle tr_date or '2019-01-01')<br/>[currency]: Text - user_code of currency contained in variable or text (for exapmle tr_currency or 'GBP')<br/>[policy]: Text - pricing policy (user_code) for calculation contained in variable or text (for example pr_policy or 'default')<br/>[fx_rate]: - Number - needed result of function - added FX rate on specified date contained in variable or text (for example tr_fx_rate or 1, 1.3, 0.76)<br/>[Overwrite]: Boolean - parameter for overwriting mode if fx rate on specified date already exists (for example true or false, true by default)<br/><br/>Examples:<br/>add_fx_history('2019-12-31', 'GBP', 'default', 2, true) - function to add rate of GBP to USD on 2019-12-31 used in default pricing policy, if rate already exists it will be overwritten<br/>add_fx_history('2019-12-31', 'GBP', 'default', 2) - the same example, rate will be overwritten bc true-parameter is used by default<br/>add_fx_history(tr_date, tr_currency, 'default', tr_fx_rate) - function to add rate of currency on transaction date used in default pricing policy which are contained in used variables (tr_date, tr_currency and tr_fx_rate)<br/><br/>",
+    "groups": "number",
+    "func": "add_fx_history([date], [currency], [pricing_policy], [fx_rate], [Overwrite])"
+  },
+  {
+    "name": "Get FX rate",
+    "description": "get_fx_rate([date], [currency], [pricing_policy], [Default]) :: [Result: FX rate on specified date]<br/><br/>[Result: FX rate]: Number - FX rate of currency on specified date and policy saved in the system<br/>[date]: Date - needed date contained in variable or text (for exapmle tr_date or '2019-01-01')<br/>[currency]: Text - user_code of currency contained in variable or text (for exapmle tr_currency or 'GBP')<br/>[policy]: Text - pricing policy (user_code) for calculation contained in variable or text (for example pr_policy or 'default')<br/>[Default]: - Number - default FX rate returned in case of missed FX history for needed currency in the system (for example tr_fx_rate or 1, 1.3, 0.76)<br/><br/>Examples:<br/>get_fx_rate('2019-12-31', 'GBP', 'default', 1.3) - function to get rate of GBP to USD on 2019-12-31 saved in the system for default pricing policy<br/>get_fx_rate(tr_date, tr_currency, 'default', tr_fx_rate) - function to get rate of currency on transaction date (for default pricing policy) which are contained in used variables (tr_date, tr_currency), if it is missed the function will returns rate saved in variable [tr_fx_rate]",
+    "groups": "number",
+    "func": "get_fx_rate([date], [currency], [pricing_policy], [Default])"
+  },
+  {
+    "name": "Add price history",
+    "description": "add_price_history([date], [instrument], [pricing_policy], [principal_price], [accrued_price], [Overwrite]) :: [Result: Principal and accrued price of instrument on specified date added to the system]<br/><br/>[Result: Price]: Numbers - Principal and accrued price of instrument on specified date and policy<br/>[date]: Date - needed date contained in variable or text (for exapmle tr_date or '2019-01-01')<br/>[instrument]: Text - user_code of instrument contained in variable or text (for exapmle tr_instrument or 'XS784567239')<br/>[policy]: Text - pricing policy (user_code) for calculation contained in variable or text (for example pr_policy or 'default')<br/>[principal_price], [accrued_price]: - Numbers - needed result of function - added price (principal and accrued parts) on specified date contained in variable or text (for example tr_principal and tr_accrued or 99.5 and 0.07)<br/>[Overwrite]: Boolean - parameter for overwriting mode if price on specified date already exists (for example true or false, true by default)<br/><br/>Examples:<br/>add_price_history('2019-12-31', 'XS784567239', 'default', 99.5, 0.07, true) - function to add price of instrument (with user code XS784567239) on 2019-12-31 used in default pricing policy, if price already exists it will be overwritten<br/>add_price_history('2019-12-31', 'XS784567239', 'default', 99.5, 0.07) - the same example, price will be overwritten bc true-parameter is used by default<br/>add_price_history(tr_date, instrument, 'default', tr_principal, tr_accrued) - function to add instrument price on transaction date used in default pricing policy which are contained in used variables (tr_date, instrument, tr_principal and tr_accrued)<br/><br/>",
+    "groups": "number",
+    "func": "add_price_history([date], [instrument], [pricing_policy], [principal_price], [accrued_price], [Overwrite])"
+  },
+  {
+    "name": "Get instrument factor",
+    "description": "get_factor([date], [instrument], [Default]) :: [Result: instrument factor on specified date]<br/><br/>[Result: instrument factor]: Number - instrument factor on specified date saved in the system<br/>[date]: Date - needed date contained in variable or text (for example tr_date or '2019-01-01')<br/>[instrument]: Text - user_code of instrument contained in variable or text (for exapmle tr_instrument or 'T-Bills_2027')<br/>[Default]: - Number - default factor returned in case of no factor history for needed instrument in the system (for example tr_factor or 1, 0.5)<br/><br/>Examples:<br/>get_factor('2019-12-31', 'T-Bills_2027', 1) - function to get factor of instrument (with user code T-Bills_2027) on 2019-12-31 saved in the system, if it is no factor for instrument on this date the function will return 1<br/>get_factor(tr_date, tr_instrument, tr_factor) - function to get instrument factor on transaction date which are contained in used variables (tr_date, tr_instrument), if it is missed the function will return factor saved in variable [tr_factor]",
+    "groups": "number",
+    "func": "get_factor([date], [instrument], [Default])"
+  },
+  {
+    "name": "Replace default value if null",
+    "description": "if_null([input], [default_value]): [Result: value in input or default value for this input (if input is empty)]<br/><br/>[Result: Not-null input value]: Number, text or date that can be used in import of transactions or instruments<br/>[input] - Input used in import of transactions or instruments - column or field imported from file or provider<br/>[default_value] - value used in case of empty input<br/><br/>Examples:<br/>if_null(transaction_date,  '01/01/2019') - the system will use value in input [transaction_date] or fixed date if it is empty<br/>if_null(accrued_currency,  'USD') - the system will use value in input [accrued_currency] or fixed user code of currency if it is empty<br/>if_null(price,  100) - 100 will be used in case of empty input [price]<br/>if_null(RTG_FITCH, 'CCC') - CCC will be used in case of empty field [RTG_FITCH] imported from provider for instrument",
+    "groups": "condit",
+    "func": "if_null([input], [value if null])"
+  },
+  {
+    "name": "Less / Equal or less",
+    "description": "[number1]<=[number2] :: [Result: boolean]<br/>[date1]<=[date2] :: [Result: boolean]<br/><br/>[Result: boolean]: Boolean - true or false as a system parameter which can be used in any function<br/>[number1], [number2]: Number - number or variable contains number<br/>[date1], [date2]: Date - date or variable contains date in system format<br/><br/>Examples: <br/>[number1]<=[number2] for number variable with names number1 and number2, it returns [true] if number1 equal or less than number2 ([false] otherwise)<br/>iff([number1]<=[number2], 'number1 is equal or less!', 'number2 is greater!') returns the text with the result of the comparison numer1 and number2<br/>iff(90<=transaction_price, transaction_price, 90) returns of the comparison price in variable [transaction_price] and 90 as a target price - if transaction price less than such target price this function returns target price (ie 90)<br/>iff(accounting_date<=now(), accounting_date, now()) returns of the comparison transaction date in variable [accounting_date] and current date - if transaction date less than current date this function returns transaction date (ie current date)",
+    "groups": "logic",
+    "func": "[number1]<=[number2][date1]<=[date2]"
+  },
+  {
+    "name": "Greater / Equal or greater",
+    "description": "[number1]=>[number2] :: [Result: boolean]<br/>[date1]=>[date2] :: [Result: boolean]<br/><br/>[Result: boolean]: Boolean - true or false as a system parameter which can be used in any function<br/>[number1], [number2]: Number - number or variable contains number<br/>[date1], [date2]: Date - date or variable contains date in system format<br/><br/>Examples: <br/>[number1]=>[number2] for number variable with names number1 and number2, it returns [true] if number1 equal or greater than number2 ([false] otherwise)<br/>iff([number1]=>[number2], 'number1 is equal or greater!', 'number2 is less!') returns the text with the result of the comparison numer1 and number2<br/>iff(90=>transaction_price, transaction_price, maturity_price) returns of the comparison price in variable [transaction_price] and 90 as a target price - if transaction price less than such target price this function returns transaction price (ie price in variable [maturity_price ])<br/>iff(accounting_date=>'2018-01-01', accounting_date, '2018-01-01') returns of the comparison transaction date in variable [accounting_date] and 2018-01-01 - if transaction date equal or greater than target date this function returns transaction date (ie target date 2018-01-01)",
+    "groups": "logic",
+    "func": "[number1]=>[number2][date1]=>[date2]"
+  },
+  {
+    "name": "Get the latest principal price of instrument",
+    "description": "get_latest_principal_price([date-from], [date-to], [instrument], [policy], [default_value]): [Result: number in system format]<br/><br/><br/><br/>[Result: number in system format]: Number in system format - number that can be used in system calculations<br/>[date-from] - Date contained in variable or text (for example book_date or '2019-01-01')<br/>[date-to] - Date contained in variable or text (for example maturity_date or '2019-12-31')<br/>[instrument] - Instrument (user code of instrument) contained in variable or text (for example instrument or 'XS765432100US')<br/>[default_value] - number contained in variable or text (for example default_price or '100')<br/><br/>Examples:<br/><br/>get_latest_principal_price('2019-01-01', '2019-12-31', 'UC11', '-', 99) - to get latest principal price (in the period from 2019-01-01 to 2019-12-31) of instrument with user code UC11, price should be under default pricing policy ('-'), in case of clear pricing history this function will return 99<br/>get_latest_principal_price(issue_date, book_date, instrument, book_policy, default_price) - to get latest principal price (the period = dates in variables [issue_date] and [book_date]) user code of instrument is in variable [instrument], pricing policy is in variable [book_policy], in case of clear pricing history this function will return number in variable [default_price]<br/>",
+    "groups": "number",
+    "func": "get_latest_principal_price([date-from],[date-to],[instrument], [policy], [default_value])"
+  },
+  {
+    "name": "Operator AND",
+    "description": "[condition_1] and [condition_2]: [Result: execution of expression if both conditions are met]<br/>[condition_1], [condition_2] - Any condition written in expression language (for example price==1, position=!0)<br/><br/>Examples:<br/>price==1 and position=!0 - action will be executed if both conditions are met - variable [price] contains 1 and variable [position] contains 0<br/>transaction_date==now() and account=!'Equities' - action will be executed if both conditions are met - variable [transaction_date] contains current date and variable [account] contains 'Equities'",
+    "groups": "logic",
+    "func": "[condition_1] and [condition_2]"
+  },
+  {
+    "name": "Operator OR",
+    "description": "[condition_1] or [condition_2]: [Result: execution of expression if at least one condition is met]<br/>[condition_1], [condition_2] - Any condition written in expression language (for example price==1, position=!0)<br/><br/>Examples:<br/>price==1 and position=!0 - action will be executed if one or both conditions are met - variable [price] contains 1 or variable [position] contains 0<br/>transaction_date==now() or account=!'Equities' - action will be executed if variable [transaction_date] contains current date or variable [account] contains 'Equities'",
+    "groups": "logic",
+    "func": "[condition_1] or [condition_2]"
+  },
+  {
+    "name": "Operator NOT",
+    "description": "[condition_1] and not [condition_2]: [Result: execution of expression if one condition is met and other is not met]<br/>[condition_1], [condition_2] - Any condition written in expression language (for example price==1, position=!0)<br/><br/>Examples:<br/>price==1 and not position==0 - action will be executed if variable [price] contains 1 and variable [position] doesn`t contain 0<br/>transaction_date==now() and not account=!'Equities' - action will be executed if variable [transaction_date] contains current date, but variable [account] doesn`t contain 'Equities'",
+    "groups": "logic",
+    "func": "[condition_1] and not [condition_2]"
+  },
+  {
+    "name": "Set instrument field",
+    "description": "set_instrument_field( [instrumentID], [parameter_name], [parameter_value]): [Result: action - setting of instrument field]<br/>[Result: action - setting of instrument field]: Filled parameter (attribute) of instrument (for example short name, default price, maturity date etc)<br/>[instrumentID] - Instrument (user code of instrument) contained in variable or text (for example instrument or 'XS765432100US')<br/>[parameter_name] - parameter of instrument contained in variable or text (for example param_var or 'default_price')<br/>[parameter_value] - number, text or date contained in variable or text (for example trans_price or 100)<br/><br/>Examples:<br/><br/>set_instrument_field('XS123456900', 'default_price', 100) - to set default price (100) of instrument with user code XS123456900<br/>set_instrument_field(instrument, default_price, def_pr) - to set parameter (in variable [default_price]) of instrument (in variable [default_price]), value is in variable [def_pr])",
+    "groups": "instr",
+    "func": "set_instrument_field( [instrumentID], [parameter_name], [parameter_value])"
+  },
+  {
+    "name": "Set currency field",
+    "description": "set_currency_field([currencyID], [parameter_name], [parameter_value]): [Result: action - setting of currency field]<br/>[Result: action - setting of currency field]: Filled parameter (attribute) of currency (for example short name, default rate etc)<br/>[currencyID] - currency (user code of currency) contained in variable or text (for example tr_currency or 'AUD')<br/>[parameter_name] - parameter of currency contained in variable or text (for example param_var or 'default_fx_rate')<br/>[parameter_value] - number, text or date contained in variable or text (for example trans_rate or 1)<br/><br/>Examples:<br/><br/>set_currency_field('AUD', 'default_fx_rate', 1) - to set default fx rate (1) of currency with user code AUD<br/>set_currency_field(tr_currency, def_param, def_pr) - to set parameter (in variable [def_param]) of currency (in variable [tr_currency]), value is in variable [def_pr])",
+    "groups": "currency",
+    "func": "set_currency_field([currencyID], [parameter_name], [parameter_value])"
+  },
+  {
+    "name": "Get instrument field",
+    "description": "get_instrument_field( [instrumentID], [parameter_name): [Result: Value of instrument field]<br/>[Result: value of instrument field]: Number, date or text in parameter (attribute) of instrument (for example short name, default price, maturity date etc)<br/>[instrumentID] - Instrument (user code of instrument) contained in variable or text (for example instrument or 'XS765432100US')<br/>[parameter_name] - parameter of instrument contained in variable or text (for example param_var or 'default_price')<br/><br/>Examples:<br/><br/>get_instrument_field('XS123456900', 'default_price') - to get default price of instrument with user code XS123456900<br/>get_instrument_field(instrument, default_price) - to get parameter (in variable [default_price]) of instrument (in variable [instrument])",
+    "groups": "instr",
+    "func": "get_instrument_field( [instrumentID], [parameter_name])"
+  },
+  {
+    "name": "Get currency field",
+    "description": "get_currency_field([currencyID], [parameter_name]): [Result: value of currency field]<br/>[Result: value of currency field]: Number, date or text in parameter (attribute) of currency (for example short name, default rate etc)<br/>[currencyID] - currency (user code of currency) contained in variable or text (for example tr_currency or 'AUD')<br/>[parameter_name] - parameter of currency contained in variable or text (for example param_var or 'default_fx_rate')<br/><br/>Examples:<br/><br/>get_currency_field('AUD', 'default_fx_rate') - to get default fx rate of currency with user code AUD<br/>get_currency_field(tr_currency, def_param) - to get parameter (in variable [def_param]) of currency (in variable [tr_currency])",
+    "groups": "currency",
+    "func": "get_currency_field([currencyID], [parameter_name])"
+  },
+  {
+    "name": "Get Instrument accrual size",
+    "description": "TBD",
+    "groups": "instr",
+    "func": "get_instr_accrual_size()"
+  },
+  {
+    "name": "Get Instrument accrual factor",
+    "description": "TBD",
+    "groups": "instr",
+    "func": "get_instr_accrual_factor()"
+  },
+  {
+    "name": "Get Instrument accrual price",
+    "description": "TBD",
+    "groups": "instr",
+    "func": "get_instr_accrued_price()"
+  },
+  {
+    "name": "Get Instrument factor",
+    "description": "TBD",
+    "groups": "instr",
+    "func": "get_instr_factor()"
+  },
+  {
+    "name": "Get Instrument coupon factor",
+    "description": "TBD",
+    "groups": "instr",
+    "func": "get_instr_coupon_factor()"
+  },
+  {
+    "name": "Get Instrument coupon",
+    "description": "TBD",
+    "groups": "instr",
+    "func": "get_instr_coupon()"
+  },
+  {
+    "name": "Format Date",
+    "description": "TBD",
+    "groups": "date",
+    "func": "format_date2()"
+  },
+  {
+    "name": "Parse Date",
+    "description": "TBD",
+    "groups": "date",
+    "func": "parse_date2()"
+  },
+  {
+    "name": "Get Date last month end business",
+    "description": "TBD",
+    "groups": "date",
+    "func": "get_date_last_month_end_business()"
+  },
+  {
+    "name": "Get Date last quarter end business",
+    "description": "TBD",
+    "groups": "date",
+    "func": "get_date_last_quarter_end_business()"
+  },
+  {
+    "name": "Get Date last year end business",
+    "description": "TBD",
+    "groups": "date",
+    "func": "get_date_last_year_end_business()"
+  },
+  {
+    "name": "Get next coupon date",
+    "description": "TBD",
+    "groups": "instr",
+    "func": "get_next_coupon_date()"
+  },
+  {
+    "name": "Generate User code",
+    "description": "TBD",
+    "groups": "text",
+    "func": "generate_user_code()"
+  },
+  {
+    "name": "Get rt value",
+    "description": "TBD",
+    "groups": "text",
+    "func": "get_rt_value()"
+  },
+  {
+    "name": "Add days",
+    "description": "TBD",
+    "groups": "date",
+    "func": "add_days()"
+  },
+  {
+    "name": "Add FX History",
+    "description": "TBD",
+    "groups": "fx_rates",
+    "func": "add_FXHistory()"
+  },
+  {
+    "name": "Add Price History",
+    "description": "TBD",
+    "groups": "prices",
+    "func": "add_PriceHistory()"
+  },
+  {
+    "name": "Get Date group",
+    "description": "TBD",
+    "groups": "date",
+    "func": "date_group()"
+  },
+  {
+    "name": "Get Date max",
+    "description": "TBD",
+    "groups": "date",
+    "func": "date_max()"
+  },
+  {
+    "name": "Get Date min",
+    "description": "TBD",
+    "groups": "date",
+    "func": "date_min()"
+  },
+  {
+    "name": "Find Name",
+    "description": "TBD",
+    "groups": "text",
+    "func": "find_name()"
+  },
+  {
+    "name": "Generate User Code",
+    "description": "TBD",
+    "groups": "text",
+    "func": "generateUserCode()"
+  },
+  {
+    "name": "get_AccruedPrice",
+    "description": "TBD",
+    "groups": "prices",
+    "func": "get_AccruedPrice()"
+  },
+  {
+    "name": "Get Factor",
+    "description": "TBD",
+    "groups": "instr",
+    "func": "get_Factor()"
+  },
+  {
+    "name": "Get FX Rate",
+    "description": "TBD",
+    "groups": "fx_rates",
+    "func": "get_FXRate()"
+  },
+  {
+    "name": "Get Instrument accrual factor",
+    "description": "TBD",
+    "groups": "instr",
+    "func": "get_instrument_accrual_factor()"
+  },
+  {
+    "name": "Get Instrument accrual size",
+    "description": "TBD",
+    "groups": "instr",
+    "func": "get_instrument_accrual_size()"
+  },
+  {
+    "name": "Get Instrument coupon factor",
+    "description": "TBD",
+    "groups": "instr",
+    "func": "get_instrument_coupon_factor()"
+  },
+  {
+    "name": "Get Instrument factor",
+    "description": "TBD",
+    "groups": "instr",
+    "func": "get_instrument_factor()"
+  },
+  {
+    "name": "Get Principal Price",
+    "description": "TBD",
+    "groups": "prices",
+    "func": "get_PrincipalPrice()"
+  },
+  {
+    "name": "Get variable",
+    "description": "TBD",
+    "groups": "context_var",
+    "func": "get_var()"
+  },
+  {
+    "name": "Has variable",
+    "description": "TBD",
+    "groups": "context_var",
+    "func": "has_var()"
+  },
+  {
+    "name": "Is leap",
+    "description": "TBD",
+    "groups": "date",
+    "func": "isleap()"
+  },
+  {
+    "name": "Len",
+    "description": "TBD",
+    "groups": "text",
+    "func": "len()"
+  },
+  {
+    "name": "Months",
+    "description": "TBD",
+    "groups": "date",
+    "func": "months()"
+  },
+  {
+    "name": "Parse Number",
+    "description": "TBD",
+    "groups": "number",
+    "func": "parse_number()"
+  },
+  {
+    "name": "Range",
+    "description": "TBD",
+    "groups": "number",
+    "func": "range()"
+  },
+  {
+    "name": "Simple group",
+    "description": "TBD",
+    "groups": "text",
+    "func": "simple_group()"
+  },
+  {
+    "name": "Weeks",
+    "description": "TBD",
+    "groups": "date",
+    "func": "weeks()"
+  },
+  {
+    "name": "Substr",
+    "description": "TBD",
+    "groups": "text",
+    "func": "substr()"
+  },
+  {
+    "name": "Reg search",
+    "description": "TBD",
+    "groups": "text",
+    "func": "reg_search()"
+  },
+  {
+    "name": "Reg replace",
+    "description": "TBD",
+    "groups": "text",
+    "func": "reg_replace()"
+  },
+  {
+    "name": "Bool",
+    "description": "TBD",
+    "groups": "logic",
+    "func": "bool()"
+  },
+  {
+    "name": "Get default portfolio",
+    "description": "TBD",
+    "groups": "transaction",
+    "func": "get_default_portfolio()"
+  },
+  {
+    "name": "Get default instrument",
+    "description": "TBD",
+    "groups": "transaction",
+    "func": "get_default_instrument()"
+  },
+  {
+    "name": "Get default account",
+    "description": "TBD",
+    "groups": "transaction",
+    "func": "get_default_account()"
+  },
+  {
+    "name": "Get default currency",
+    "description": "TBD",
+    "groups": "transaction",
+    "func": "get_default_currency()"
+  },
+  {
+    "name": "Get default transaction type",
+    "description": "TBD",
+    "groups": "transaction",
+    "func": "get_default_transaction_type()"
+  },
+  {
+    "name": "Get default instrument type",
+    "description": "TBD",
+    "groups": "transaction",
+    "func": "get_default_instrument_type()"
+  },
+  {
+    "name": "Get default account type",
+    "description": "TBD",
+    "groups": "transaction",
+    "func": "get_default_account_type()"
+  },
+  {
+    "name": "Get default pricing policy",
+    "description": "TBD",
+    "groups": "transaction",
+    "func": "get_default_pricing_policy()"
+  },
+  {
+    "name": "Get default responsible",
+    "description": "TBD",
+    "groups": "transaction",
+    "func": "get_default_responsible()"
+  },
+  {
+    "name": "Get default counterparty",
+    "description": "TBD",
+    "groups": "transaction",
+    "func": "get_default_counterparty()"
+  },
+  {
+    "name": "Get default strategy1",
+    "description": "TBD",
+    "groups": "transaction",
+    "func": "get_default_strategy1()"
+  },
+  {
+    "name": "Get default strategy2",
+    "description": "TBD",
+    "groups": "transaction",
+    "func": "get_default_strategy2()"
+  },
+  {
+    "name": "Get default strategy3",
+    "description": "TBD",
+    "groups": "transaction",
+    "func": "get_default_strategy3()"
   }
 ]
-
-
-
-
-
-
-
-
