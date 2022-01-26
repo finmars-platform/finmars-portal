@@ -73,6 +73,8 @@
                     scope.selectedItem.item = item;
                     scope.item = item.id;
 
+					if (scope.error) scope.error = null; // if option was selected, turn off error mode
+
                     _$popup.cancel();
 
                 };
@@ -120,7 +122,7 @@
 
                 };
 
-                scope.onPopupClose = function () {
+                scope.onPopupCancel = function () {
 
                     scope.options.forEach(item => item.___edit = false);
                     scope.popupData.currentEditName = '';
@@ -304,6 +306,10 @@
 
 								case "error":
 									scope.error = JSON.parse(JSON.stringify(scope.eventSignal.error))
+									break;
+
+								case "reset": // reset changes done by eventSignal
+									scope.error = "";
 									break;
 
 							}

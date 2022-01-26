@@ -54,23 +54,26 @@
                 small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
     </div>
 
-    <!--            Add dialog have not status field-->
-    <!--    <div data-ng-if="popupData.fields.status && popupData.tabColumns < 6">
-            <dropdown-select label="Status"
-                             model="popupData.fields.status.value"
-                             placeholder-text="System List"
-                             menu-options="popupData.fields.status.options"
-                             small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
-                             class="ev-editor-field"></dropdown-select>
-        </div>-->
+    <!--            Popup for add entity viewer does not have field for status -->
 
-    <div data-ng-if="popupData.fields.type && popupData.tabColumns < 3">
-        <dropdown-select label="{{popupData.fields.type.name}}"
+    <div data-ng-if="(popupData.fields.type || popupData.fields.group) && popupData.tabColumns < 3">
+        <!-- For entities except responsible, counterparty, strategy 1,2,3 -->
+        <dropdown-select ng-if="popupData.fields.type"
+                         label="{{popupData.fields.type.name}}"
                          model="popupData.fields.type.value"
                          placeholder-text="{{popupData.fields.type.name}}"
                          menu-options="popupData.fields.type.options"
                          small-options="{tooltipText: '{{popupData.fields.type.name}}', indicatorBtnIcon: 'type1', dialogParent: '.dialog-containers-wrap'}"
                          class="ev-editor-field"></dropdown-select>
+
+        <!-- For responsible, counterparty, strategy 1,2,3 -->
+        <crud-select ng-if="popupData.fields.group"
+                     label="popupData.fields.group.name"
+                     item="popupData.fields.group.value"
+                     entity-type="popupData.entityType"
+                     data-options="popupData.fields.group.options"
+                     event-signal="popupData.fields.group.event"
+                     small-options="{notNull: options.notNull}"></crud-select>
     </div>
 
 </div>

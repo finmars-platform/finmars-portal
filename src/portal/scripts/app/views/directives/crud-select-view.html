@@ -24,9 +24,9 @@
 <div class="custom-input-container crud-select-container crudSelectContainer customInputBackgroundColor"
      data-ng-class="getInputContainerClasses()">
 
-    <!--<div ng-if="label" class="custom-input-top-row">
+    <div ng-if="label" class="custom-input-top-row">
         <span class="custom-input-textarea-span-pan">{{label}}</span>
-    </div>-->
+    </div>
 
     <div class="custom-input-main-container">
         <div class="custom-input-borders">
@@ -40,7 +40,7 @@
                  position-relative-to="element"
                  relative-popup-x="left"
                  popup-classes="'rounded-border'"
-                 on-popup-close="onPopupClose()">
+                 on-cancel="onPopupCancel()">
 
                 <div class="flex-row">
 

@@ -252,7 +252,7 @@
 										stylePreset = 2;
 										break;
 
-									case "reset": // should not reset scope.model, in case of need reset scope.model manually from outside
+									case "reset": // reset changes done by eventSignal
 
 										scope.error = "";
 										stylePreset = "";

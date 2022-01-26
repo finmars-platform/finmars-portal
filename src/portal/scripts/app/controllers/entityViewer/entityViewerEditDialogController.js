@@ -127,6 +127,7 @@
         vm.fixedAreaPopup = vm.sharedLogic.getFixedAreaPopup();
 
         vm.typeSelectorOptions = [];
+		vm.groupSelectorLabel = 'Group';
         vm.groupSelectorOptions = [];
 
         vm.pricingConditions = [
@@ -960,7 +961,7 @@
             if (errors.length) {
 				// vm.sharedLogic.processTabsErrors(errors, $event);
 
-				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
+				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.groupSelectorEventObj);
 
 				if (processResult) {
 					vm.fixedAreaPopup = processResult;
@@ -2015,6 +2016,10 @@
             setTimeout(function () {
                 vm.dialogElemToResize = vm.sharedLogic.onEditorStart();
             }, 100);
+
+			vm.groupSelectorEventObj = {
+				event: {}
+			};
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();

@@ -59,15 +59,29 @@
                                  class="ev-editor-field">
                 </dropdown-select>
 
-                <dropdown-select data-ng-if="vm.entityType === 'strategy-1' || vm.entityType === 'strategy-2' || vm.entityType === 'strategy-3' || vm.entityType === 'responsible' || vm.entityType === 'counterparty'"
+                 <!-- <dropdown-select data-ng-if="vm.entityType === 'strategy-1' || vm.entityType === 'strategy-2' || vm.entityType === 'strategy-3' || vm.entityType === 'responsible' || vm.entityType === 'counterparty'"
                                  label="Group"
                                  model="vm.entity.group"
                                  placeholder-text="Group"
                                  menu-options="vm.groupSelectorOptions"
                                  small-options="{tooltipText: 'Group', indicatorBtnIcon: 'type1'}"
                                  class="ev-editor-field">
-                </dropdown-select>
+                </dropdown-select> -->
+                <crud-select data-ng-if="vm.entityType === 'responsible' || vm.entityType === 'counterparty'"
+                             data-label="vm.groupSelectorLabel"
+                             data-item="vm.entity.group"
+                             data-entity-type="vm.entityType"
+                             data-options="vm.groupSelectorOptions"
+                             event-signal="vm.groupSelectorEventObj.event"
+                             small-options="{notNull: options.notNull}"></crud-select>
 
+                <crud-select data-ng-if="vm.entityType === 'strategy-1' || vm.entityType === 'strategy-2' || vm.entityType === 'strategy-3'"
+                             data-label="vm.groupSelectorLabel"
+                             data-item="vm.entity.subgroup"
+                             data-entity-type="vm.entityType"
+                             data-options="vm.groupSelectorOptions"
+                             event-signal="vm.groupSelectorEventObj.event"
+                             small-options="{notNull: options.notNull}"></crud-select>
 
                 <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type'
                 && vm.entityType !== 'strategy-1' && vm.entityType !== 'strategy-2' && vm.entityType !== 'strategy-3' && vm.entityType !== 'responsible' && vm.entityType !== 'counterparty'"
