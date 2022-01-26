@@ -130,7 +130,7 @@
         }
 
         const onPopupSaveCallback = async function () {
-
+			const test = viewModel.evEditorDataService.getFormErrorsList();
             const fieldsInFixedArea = viewModel.action === 'edit' ? getEditFormFieldsInFixedArea() : getAddFormFieldsInFixedArea();
             // Fixating showByDefault because viewModel.fixedAreaPopup.fields.showByDefault.value can be changed by getAndFormatUserTabs();
             const showByDefaultAfterSave = viewModel.fixedAreaPopup.fields.showByDefault.value;
@@ -150,7 +150,6 @@
 					$scope.$apply();
 					// set 'show by default' that user saved in popup after it was changed by getAndFormatUserTabs()
 					// viewModel.showByDefault = showByDefaultValue;
-
 				}
 
 			}
@@ -161,7 +160,8 @@
                     return;
                 }
 
-                const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key
+                // const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key
+				const fieldKey = entityEditorHelper.getFieldKeyForFAPopup(key, viewModel.entityType);
                 viewModel.entity[key] = viewModel.fixedAreaPopup.fields[fieldKey].value;
 
             });
@@ -191,29 +191,35 @@
 
             	let popupHasNoErrors = true;
 
-				const attributes = {
+				/* const attributes = {
 					entityAttrs: viewModel.entityAttrs,
 					attrsTypes: viewModel.attributeTypes
-				}
+				} */
 
-            	for (const fieldKey in viewModel.originalFixedAreaPopupFields) {
+            	for (const popupFieldKey in viewModel.originalFixedAreaPopupFields) {
 
-					const fieldError = viewModel.originalFixedAreaPopupFields[fieldKey].error;
+					const fieldError = viewModel.originalFixedAreaPopupFields[popupFieldKey].error;
+					const efKey = viewModel.originalFixedAreaPopupFields[popupFieldKey].entityFieldKey;
 
 					if (fieldError) {
 
-						entityEditorHelper.checkTabsForErrorFields(fieldKey, viewModel.evEditorDataService, attributes, viewModel.entity, viewModel.entityType, viewModel.tabs);
+						// entityEditorHelper.checkTabsForErrorFields(efKey, viewModel.evEditorDataService, attributes, viewModel.entity, viewModel.entityType, viewModel.tabs);
+						entityEditorHelper.checkFixedAreaForErrorFields(efKey, viewModel.evEditorDataService, viewModel.entityAttrs, viewModel.entity);
 						const formErrorsList = viewModel.evEditorDataService.getFormErrorsList();
-
-						const fieldErrorNotCorrected = formErrorsList.includes(fieldKey);
+						const fieldErrorNotCorrected = formErrorsList.includes(efKey);
 
 						if (fieldErrorNotCorrected) {
 
-							viewModel.fixedAreaPopup.fields[fieldKey].event = {key: 'error', error: fieldError};
+							viewModel.fixedAreaPopup.fields[popupFieldKey].event = {key: 'error', error: fieldError};
 							popupHasNoErrors = false;
 
 						} else {
-							delete viewModel.fixedAreaPopup.fields[fieldKey].event;
+
+							delete viewModel.fixedAreaPopup.fields[popupFieldKey].event;
+
+							// remove error mode from Group crud selector in case of expanding drawer
+							if (efKey === 'group') viewModel.groupSelectorEventObj.event = {key: 'reset'};
+
 						}
 
 					}
@@ -223,6 +229,9 @@
             	if (popupHasNoErrors) {
             		delete viewModel.fixedAreaPopup.error;
 					viewModel.fixedAreaPopup.event = {key: 'reset'};
+
+				} else { // resending signal about error, in case of error mode was disabled inside textInputDirective
+					viewModel.fixedAreaPopup.event = {key: "error", error: viewModel.fixedAreaPopup.error};
 				}
 
 			}
@@ -240,10 +249,7 @@
 				const fieldData = viewModel.fixedAreaPopup.fields[fieldKey];
 
 				if (fieldData.error) {
-
 					viewModel.fixedAreaPopup.fields[fieldKey].event = {key: 'error', error: fieldData.error};
-					viewModel.fixedAreaPopup.fields[fieldKey].event1 = {key: 'error', error: fieldData.error};
-
 				}
 
 			}
@@ -954,56 +960,42 @@
 
 			// return new Promise(function (resolve, reject) {
 
-				const fields = viewModel.keysOfFixedFieldsAttrs.reduce((acc, key) => {
+			const fields = viewModel.keysOfFixedFieldsAttrs.reduce((acc, key) => {
 
-					const attr = viewModel.entityAttrs.find(entityAttr => entityAttr.key === key);
+				const attr = viewModel.entityAttrs.find(entityAttr => entityAttr.key === key);
 
-					if (!attr) {
-						return acc;
-					}
+				if (!attr) {
+					return acc;
+				}
 
-					const fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key;
-					const field = {
-						[fieldKey]: {name: attr.name, value: viewModel.entity[key]}
-					};
+				// let fieldKey = (key === 'instrument_type' || key === 'instrument_class') ? 'type' : key;
+				const popupFieldKey = entityEditorHelper.getFieldKeyForFAPopup(key, viewModel.entityType);
 
-					if (attr.hasOwnProperty('value_entity')) { // this props need for getting field options
-						field[fieldKey].value_entity = attr.value_entity;
-					}
+				const field = {
+					[popupFieldKey]: {name: attr.name, value: viewModel.entity[key], entityFieldKey: key}
+				};
 
-					return {...acc, ...field};
+				if (attr.hasOwnProperty('value_entity')) { // this props need for getting field options
+					field[popupFieldKey].value_entity = attr.value_entity;
+				}
 
-				}, {});
+				return {...acc, ...field};
 
-				fields.status = {key: 'Status', value: viewModel.entityStatus, options: viewModel.statusSelectorOptions}
-				fields.showByDefault = {key: 'Show by default', value: viewModel.showByDefault, options: viewModel.showByDefaultOptions}
+			}, {});
 
-				if (fields.hasOwnProperty('type')) {
-					// get options for 'type' or 'instrument type' fields
-					/* entityResolverService.getListLight(fields.type.value_entity).then((data) => {
+			fields.status = {key: 'Status', value: viewModel.entityStatus, options: viewModel.statusSelectorOptions}
+			fields.showByDefault = {key: 'Show by default', value: viewModel.showByDefault, options: viewModel.showByDefaultOptions}
 
-						const options = Array.isArray(data) ? data : data.results;
+			if (fields.hasOwnProperty('type')) {
+				fields.type.options = viewModel.typeSelectorOptions;
 
-						fields.type.options = options;
-						viewModel.typeSelectorOptions = options;
-
-						resolve(fields);
-
-					}).catch(error => {
-						console.error("getFieldsForFixedAreaPopup error", error);
-						reject(error);
-					}); */
-
-					// < get options for 'type' or 'instrument type' fields >
-
-					fields.type.options = viewModel.typeSelectorOptions;
-
-				} /* else {
-					resolve(fields);
-				} */
+			} else if (fields.hasOwnProperty('group')) {
+				fields.group.options = viewModel.groupSelectorOptions; // set by getGroupSelectorOptions()
+			}
 
 			// });
-				return fields;
+			return fields;
+
 		};
 
         /* const onSuccessfulEntitySave = function (responseData, isAutoExitAfterSave) {

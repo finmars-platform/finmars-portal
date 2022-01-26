@@ -124,6 +124,8 @@
         vm.fixedAreaPopup = vm.sharedLogic.getFixedAreaPopup();
 
         vm.typeSelectorOptions = [];
+		vm.groupSelectorLabel = 'Group';
+		vm.groupSelectorOptions = [];
 
         vm.pricingConditions = [
             {id: 1, name: "Don't Run Valuation"},
@@ -1136,14 +1138,15 @@
             if (errors.length) {
 
                 // vm.sharedLogic.processTabsErrors(errors, $event);
-                var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
+                var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.groupSelectorEventObj);
 
                 if (processResult) {
                     vm.fixedAreaPopup = processResult;
                     vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));
                 }
 
-            } else {
+            }
+			else {
 
                 // var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
                 var resultEntity = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
@@ -1855,6 +1858,10 @@
                 vm.dialogElemToResize = vm.sharedLogic.onEditorStart();
             }, 100);
 
+			vm.groupSelectorEventObj = { // sending signal to crud select that is inside fixed area but outside popup
+				event: {}
+			};
+
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EventService();
 
@@ -1879,7 +1886,6 @@
             });
 
             getEntityAttrs();
-
             // vm.getFormLayout();
             // evEditorSharedLogicHelper.getFormLayout('addition', formLayoutFromAbove);
 
@@ -1918,11 +1924,12 @@
                     $scope.$apply();
                 }
 
-                if (['responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3'].indexOf(vm.entityType) !== -1) {
+                if (['responsible', 'counterparty'].indexOf(vm.entityType) !== -1) {
+                    vm.entity.group = vm.groupSelectorOptions[0].id;
 
-                    vm.entity.group = vm.groupSelectorOptions[0].id
-
-                }
+                } else if (['strategy-1', 'strategy-2', 'strategy-3'].indexOf(vm.entityType) !== -1) {
+					vm.entity.subgroup = vm.groupSelectorOptions[0].id;
+				}
 
                 /* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 
