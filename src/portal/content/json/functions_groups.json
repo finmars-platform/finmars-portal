@@ -1,7 +1,7 @@
 [
   {
-    "name": "All",
-    "key": "all"
+    "name": "Text",
+    "key": "text"
   },
   {
     "name": "Date",
@@ -12,20 +12,36 @@
     "key": "number"
   },
   {
-    "name": "Text",
-    "key": "text"
+    "name": "Logical",
+    "key": "logic"
   },
   {
     "name": "Instrument Formulas",
     "key": "instr_formulas"
   },
   {
-    "name": "Instrument",
-    "key": "instr"
+    "name": "Data Types",
+    "key": "data_types"
+  },
+  {
+    "name": "Base Transaction",
+    "key": "transact_des"
+  },
+  {
+    "name": "Context Variables",
+    "key": "context_var"
   },
   {
     "name": "Account",
     "key": "account"
+  },
+  {
+    "name": "Currency",
+    "key": "currency"
+  },
+  {
+    "name": "Instrument",
+    "key": "instr"
   },
   {
     "name": "Portfolio",
@@ -40,19 +56,35 @@
     "key": "counterparty"
   },
   {
-    "name": "Currency",
-    "key": "currency"
+    "name": "Expressions Language",
+    "key": ""
   },
   {
-    "name": "Transaction description elements",
-    "key": "transact_des"
+    "name": "Pricing",
+    "key": "pricing"
   },
   {
-    "name": "Data Types",
-    "key": "data_types"
+    "name": "User Attributes",
+    "key": "user_attr"
   },
   {
-    "name": "Context Variables",
-    "key": "context_var"
+    "name": "Issues",
+    "key": "issues"
+  },
+  {
+    "name": "Conditional",
+    "key": "condit"
+  },
+  {
+    "name": "Prices",
+    "key": "prices"
+  },
+  {
+    "name": "FX Rates",
+    "key": "fx_rates"
+  },
+  {
+    "name": "Transaction",
+    "key": "transaction"
   }
 ]
