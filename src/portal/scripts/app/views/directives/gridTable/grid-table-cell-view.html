@@ -19,10 +19,19 @@
         <span ng-bind="column.settings.value"></span>
 
         <md-tooltip ng-if="column.settings.value"
-                    class="tooltip_1"
+                    class="tooltip_1 f-s-14"
                     md-direction="top"
                     ng-bind="column.settings.value"></md-tooltip>
     </div>
+
+<!--    <div ng-if="column.cellType === 'plain_text'" class="gt-cell-content gt-cell-plain-text">
+        <span ng-bind="column.settings.value"></span>
+
+        <md-tooltip ng-if="column.settings.value"
+                    class="tooltip_1 f-s-14"
+                    md-direction="top"
+                    ng-bind="column.settings.value"></md-tooltip>
+    </div>-->
 
     <div data-ng-if="cellWithPopup()" class="gt-cell-content">
 
@@ -30,7 +39,8 @@
                                column="column"
                                gt-data-service="gtDataService"
                                gt-event-service="gtEventService"
-                               on-load-end="onChildrenLoadEnd()"></grid-table-popup-cell>
+                               on-load-end="onChildrenLoadEnd()"
+                               class="gt-popup-cell"></grid-table-popup-cell>
         <!--<div class="gt-cell-text-container">
             <div class="gt-cell-text">
                 <span data-ng-bind="cellValue"></span>
@@ -41,13 +51,13 @@
             </md-button>
         </div>-->
         <md-tooltip ng-if="column.settings.cellText"
-                    class="tooltip_1"
+                    class="tooltip_1 f-s-14"
                     md-direction="top"
                     ng-bind="column.settings.cellText"></md-tooltip>
     </div>
 
     <div ng-if="column.cellType === 'selector'"
-         class="gt-cell-selector-container flex-row">
+         class="gt-cell-selector-container flex-row fi-center">
 
         <div class="gt-cell-selector-holder">
             <md-input-container class="m-0">
@@ -81,11 +91,11 @@
                      ng-class="{'readonly': column.settings.readonly}"></md-checkbox>
     </div>
 
-    <div ng-if="column.cellType === 'button'" class="gt-cell-content flex-i-center gt-cell-button-holder">
+    <div ng-if="column.cellType === 'button'" class="gt-cell-content flex-center gt-cell-button-holder">
         <md-button ng-bind-html="column.settings.buttonContent"
                    ng-disabled="column.settings.isDisabled"
                    class="flex-i-center"
-                   ng-click="column.settings.callback($event, row, column)"></md-button>
+                   ng-click="onButtonClick($event)"></md-button>
     </div>
 
     <div ng-if="column.cellType === 'multiselector'" class="gt-cell-content">

@@ -429,6 +429,57 @@
   }
 }
 
+.instrument-pricing-policies-table {
+
+  .grid-table-row:not(.grid-table-header-row) {
+    height: auto;
+
+    .grid-table-cell {
+      min-height: 47px;
+
+      .gt-cell-content {
+        justify-content: flex-start;
+        box-sizing: border-box;
+
+        &.gt-cell-readonly-text {
+          span {
+            white-space: initial;
+            padding: 15px 0;
+            box-sizing: border-box;
+          }
+        }
+
+      }
+
+      .gt-cell-content.gt-cell-button-holder {
+        justify-content: center;
+      }
+
+      .gt-cell-selector-container {
+        align-items: flex-start;
+        padding-top: 5px;
+        box-sizing: border-box;
+      }
+
+      .gt-popup-cell {
+        .gt-cell-text {
+          padding-top: 13px;
+        }
+      }
+
+    }
+  }
+
+  .multiple-parameters-button {
+
+    border-radius: 50%;
+    background-color: #FDECE5;
+    color: @orange
+
+  }
+
+}
+
 .popup-area-backdrop.back-drop-z-index {
   z-index: 55;
 }

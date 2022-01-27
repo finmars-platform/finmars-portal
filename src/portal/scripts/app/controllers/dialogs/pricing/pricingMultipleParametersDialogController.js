@@ -128,6 +128,34 @@
 
         };
 
+        const getFieldTypeData = (item) => {
+            switch (+item.value_type) {
+                case 10:
+                    return {fieldType: 'textInput', sign: 'T', valueType: +item.value_type};
+                case 20:
+                    return {fieldType: 'numberInput', sign: 'N', valueType: +item.value_type};
+                case 40:
+                    return {fieldType: 'dateInput', sign: 'D', valueType: +item.value_type};
+                case 70:
+                    return {fieldType: 'dropdownSelect', sign: 'L', valueType: +item.value_type};
+            }
+        }
+
+        vm.onValueChange = (item) => {
+            const activeFieldType = item.___fieldTypesData.find(field => field.isActive);
+
+            if (activeFieldType.value_type === 70) {
+                item.attribute_key = activeFieldType.model;
+                item.default_value = null;
+                item.___switch_state = 'attribute_key'
+            } else {
+                item.attribute_key = null;
+                item.default_value = activeFieldType.model;
+                item.___switch_state = 'default_value'
+            }
+
+        }
+
         vm.syncStructure = function () {
 
             if (vm.item.data) {
@@ -141,8 +169,6 @@
                 }
 
             }
-
-            console.log('vm.items', vm.items);
 
             if (vm.schemeParameters) {
 
@@ -171,12 +197,43 @@
 
             }
 
-
             vm.items.forEach(function (item) {
 
                 var value_type = item.value_type;
 
                 vm.optionsForMultipleParameters[item.index] = vm.getOptionsForAttributeKey(value_type);
+
+            })
+
+            vm.items.forEach(item => {
+                const {fieldType, sign, valueType} = getFieldTypeData(item);
+                item.___default_value = item.default_value;
+                item.___attribute_key = item.attribute_key;
+                item.___fieldTypesData = [
+                    {
+                        'model': item.___default_value,
+                        'fieldType': fieldType,
+                        'isDefault': true,
+                        'isActive': item.___switch_state === "default_value",
+                        'sign': `<div class="multitype-field-type-letter type-with-constant">${sign}</div>`,
+                        'value_type': valueType,
+                        'fieldData': {
+                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'}
+                        }
+                    },
+                    {
+                        'model': item.___attribute_key,
+                        'fieldType': 'dropdownSelect',
+                        'isDefault': false,
+                        'isActive': item.___switch_state === "attribute_key",
+                        'sign': '<div class="multitype-field-type-letter">L</div>',
+                        'value_type': 70,
+                        'fieldData': {
+                            'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+                            'menuOptions': vm.optionsForMultipleParameters[item.index].map(({name, user_code}) => ({name, id: user_code})),
+                        }
+                    }
+                ];
 
             })
 

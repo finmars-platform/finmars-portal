@@ -428,11 +428,7 @@
         	return {id: ttype.user_code, name: ttype.short_name};
         };
 
-        const openEventActionParametersManager = function ($event, row, column) {
-
-            console.log('openEventActionParametersManager row, column', row, column);
-
-            var gtDataService = column.settings.gtDataService
+        const openEventActionParametersManager = function ($event, row, column, gtDataService) {
 
             var tableData = gtDataService.getTableData();
 
@@ -554,9 +550,11 @@
                             cellType: 'button',
                             settings: {
                                 buttonContent: 'OPEN MANAGER',
-                                callback: openEventActionParametersManager,
                                 gtDataService: item.eventActionsGridTableDataService // TODO maybe a crutch
                             },
+							methods: {
+								onClick: openEventActionParametersManager,
+							},
                             styles: {
                                 'grid-table-cell': {'width': '158px'},
                             }

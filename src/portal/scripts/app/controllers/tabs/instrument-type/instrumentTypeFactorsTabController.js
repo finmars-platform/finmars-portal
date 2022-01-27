@@ -481,7 +481,7 @@
                 'factor_value2': null, 'factor_value2_value_type': 20,
                 'factor_value3': null, 'factor_value3_value_type': 20,
                 'button_position': '',
-                frontOptions: {newRow: true, gtKey: newRow.key}
+                frontOptions: {newRow: true, gtKey: metaHelper.generateUniqueId('instrumentTypeFactorId')}
             };
 
             vm.entity.instrument_factor_schedules.unshift(newFactor);

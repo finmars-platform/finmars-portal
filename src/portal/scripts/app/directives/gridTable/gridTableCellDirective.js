@@ -100,14 +100,18 @@
 
                 var setCellCustomClasses = function () {
 
-                	var cell = elem[0].querySelector('.grid-table-cell');
+                	var cellElem = elem[0].querySelector('.grid-table-cell');
                 	var cellClasses = scope.column.classes;
 
-                	if (typeof cellClasses === 'string') {
-						cellClasses = cellClasses.split(' ');
-					}
+                	if (cellElem) {
 
-					cell.classList.add(...cellClasses);
+						if (typeof cellClasses === 'string') {
+							cellClasses = cellClasses.split(' ');
+						}
+
+						cellElem.classList.add(...cellClasses);
+
+					}
 
 				};
 
@@ -115,6 +119,10 @@
 
                     if (scope.column.styles) setCellCustomStyles();
                     if (scope.column.classes) setCellCustomClasses();
+
+                    if (scope.column.classes) {
+                        setCellCustomClasses();
+                    }
 
                     if (cellMethods.onInit) {
 
@@ -131,6 +139,17 @@
                     var multiselectorElem = elem[0].querySelector("two-fields-multiselect.grid-table-cell-multiselector");
                     multiselectorElem.click();
                 };
+
+                scope.onButtonClick = function ($event) {
+                    if (scope.column.methods && typeof scope.column.methods.onClick === 'function') {
+
+						var rowData = {key: scope.row.key, order: scope.row.order};
+						var colData = {key: scope.column.key, order: scope.column.order};
+
+						scope.column.methods.onClick($event, rowData, colData, scope.gtDataService, scope.gtEventService);
+
+                    }
+                }
 
                 /*var removeEventListeners = function () {
 

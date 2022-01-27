@@ -103,9 +103,7 @@
 
         };
 
-		const openEventActionParametersManager = function ($event, row, column) {
-
-		    console.log('openEventActionParametersManager row, column', row, column);
+		const openEventActionParametersManager = function ($event, row) {
 
 		    var action = vm.event.actions[row.order];
 
@@ -247,9 +245,11 @@
                         order: 3,
                         cellType: 'button',
                         settings: {
-                            buttonContent: 'OPEN MANAGER',
-                            callback: openEventActionParametersManager
+                            buttonContent: 'OPEN MANAGER'
                         },
+						methods: {
+							onClick: openEventActionParametersManager
+						},
                         styles: {
                             'grid-table-cell': {'width': '158px'},
                         }

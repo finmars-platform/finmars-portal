@@ -257,7 +257,7 @@
 				//endregion
 
 				//region Instrument events
-				const openInstrumentEventActionParametersManager = function ($event, row, column) {
+				const openInstrumentEventActionParametersManager = function ($event, row) {
 
 					const event = JSON.parse(angular.toJson(scope.entity[bfcVm.fieldKey][row.order]));
 					const instrAttrTypes = bfcVm.evEditorDataService.getEntityAttributeTypes();
@@ -371,7 +371,9 @@
 						cellType: 'button',
 						settings: {
 							buttonContent: '<span class="material-icons">more_horiz</span>',
-							callback: openInstrumentEventActionParametersManager
+						},
+						methods: {
+							onClick: openInstrumentEventActionParametersManager
 						},
 						classes: ['gt-3dots-btn']
 					},
