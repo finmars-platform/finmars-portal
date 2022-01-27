@@ -65,11 +65,11 @@ export default function () {
 
                 if (scope.favoriteOptions && scope.favoriteOptions.length) {
 
-                    let prevSelectedFavOpt = scope.favoriteOptions.find(favOpt => favOpt.isActive);
-                    prevSelectedFavOpt.isActive = false;
+					let prevSelectedFavOpt = scope.favoriteOptions.find(favOpt => favOpt.isActive);
+					if (prevSelectedFavOpt) prevSelectedFavOpt.isActive = false;
 
                     let selectedFavOpt = scope.favoriteOptions.find(favOpt => favOpt.id === option.id);
-                    selectedFavOpt.isActive = true;
+                    if (selectedFavOpt) selectedFavOpt.isActive = true;
 
                 }
 

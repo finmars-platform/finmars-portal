@@ -1184,6 +1184,7 @@
 			ttypesList.forEach(function (item) {
 
 				var ttypeItem = {
+					user_code: item.user_code, // this property only used by getFavoriteTTypeOptions function
 					id: item.id,
 					name: item.name,
 				};
@@ -1228,16 +1229,39 @@
 
 		};
 
-		var getFavoriteTTypeOptions = function () {
+		var getFavoriteTTypeOptions = function (transactionGroups) {
 
 			var favTTypeOpts = [];
 			var member = globalDataService.getMember();
 
-			if (member.data && member.favorites && member.favorites.transaction_type) {
+			if (member.data && member.data.favorites && member.data.favorites.transaction_type) {
 
-				favTTypeOpts = member.favorites.transaction_type.map(function (ttypeUserCode) {
+				favTTypeOpts = member.data.favorites.transaction_type.map(function (ttypeUserCode) {
 
-					var ttype = ttypesList.find(function (ttype) {
+					var favOption;
+
+					var i;
+					for (i = 0; i < transactionGroups.length; i++) {
+
+						var tGroup = transactionGroups[i];
+
+						favOption = tGroup.children.find(function (option) {
+							return option.user_code === ttypeUserCode;
+						});
+
+						if (favOption) {
+							return {
+								groupName: tGroup.name,
+								id: favOption.id,
+								name: favOption.name
+							};
+						}
+
+					}
+
+					return null;
+
+					/* var ttype = ttypesList.find(function (ttype) {
 						return ttype.user_code === ttypeUserCode;
 					});
 
@@ -1246,7 +1270,7 @@
 					return {
 						id: ttype.id,
 						name: ttype.name
-					};
+					}; */
 
 				})
 				.filter(function (fTttype) {
@@ -1293,7 +1317,7 @@
             	ttypesList = data.results;
                 vm.transactionGroups = getTransactionGroups(ttypesList);
 
-				vm.favTTypeOpts = getFavoriteTTypeOptions();
+				vm.favTTypeOpts = getFavoriteTTypeOptions(vm.transactionGroups);
 
                 vm.readyStatus.transactionTypes = true;
 
@@ -1314,7 +1338,7 @@
             vm.loadTransactionTypes();
 
         };
-
+		/** @param transactionType {{id: Number, name: String}}*/
         vm.transactionTypeChange = function () {
 
 			// vm.transactionTypeId = selectedTType.id;
