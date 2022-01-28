@@ -140,6 +140,41 @@
 
   .grid-table-row {
     cursor: pointer;
+    height: auto;
+    min-height: 48px;
+    font-size: 14px;
+
+    & > div {
+      height: auto;
+    }
+
+    .pricing-scheme-clarification.gt-cell-plain-text {
+      .gt-cell-readonly-text {
+        span {
+          height: auto;
+          overflow-y: initial;
+        }
+      }
+    }
+
+    .gt-cell-selector-container {
+      padding: 0;
+      .gt-cell-selector-holder {
+        display: flex;
+        align-items: center;
+      }
+    }
+
   }
+
+  .grid-table-header-row {
+    .grid-table-row-actions-wrap {
+      width: 40px;
+    }
+  }
+
+
+
+
 
 }
