@@ -53,7 +53,14 @@
 
                     vm.optionsForPrimaryParameter = vm.getOptionsForAttributeKey(vm.item.type_settings.value_type)
 
-                    resolve()
+					if (vm.item.type_settings.data && vm.item.type_settings.data.parameters) {
+						vm.item.type_settings.data.parameters.forEach((_, index) => {
+							vm.multipleParameterValueTypeUpdate(index);
+						})
+					}
+
+                	// $scope.$apply();
+					resolve();
 
                 })
             })
@@ -108,8 +115,6 @@
                     user_code: 'maturity_date'
                 })
             }
-
-            console.log('vm.attributeTypes', vm.attributeTypes);
 
             var attrs = vm.attributeTypes.filter(function (item) {
 

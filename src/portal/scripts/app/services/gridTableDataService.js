@@ -123,7 +123,7 @@
         function getCellByKey (rowOrder, colKey) {
 
 			if (rowOrder === 'header') {
-				throw("'Can't get data from header row'");
+				throw new Error("This method does not work for header row");
 			}
 
             if (rowOrder === 'templateRow') {
