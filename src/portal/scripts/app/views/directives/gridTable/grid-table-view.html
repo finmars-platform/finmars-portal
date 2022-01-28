@@ -1,15 +1,15 @@
 <div class="grid-table">
     <!-- Top panel with filters will be here -->
-
-    <div data-ng-if="gridTableData.components.topPanel">
-        <grid-table-top-panel data-gt-data-service="gtDataService"
+    <div ng-if="gridTableData.components.topPanel">
+        <grid-table-top-panel data-ng-if="gridTableData.components.topPanel"
+                              data-gt-data-service="gtDataService"
                               data-gt-event-service="gtEventService"></grid-table-top-panel>
     </div>
 
-    <div ng-if="gridTableData.header" class="grid-table-row grid-table-header-row">
+    <div ng-if="gridTableData.header" class="grid-table-row grid-table-header-row" ng-class="{'no-checkbox': gridTableData.components.tableBody.rowCheckboxes === false}">
 
         <div class="grid-table-row-actions-wrap">
-            <div ng-if="gridTableData.components.rowCheckboxes" class="grid-table-row-checkbox">
+            <div ng-if="gridTableData.components.rowCheckboxes !== false" class="grid-table-row-checkbox">
                 <md-checkbox ng-checked="allRowsAreActive"
                              ng-click="toggleAllRows()"></md-checkbox>
             </div>
@@ -38,10 +38,10 @@
     <!--    <div data-ng-repeat="row in gridTableData.body | orderBy: 'order' track by $index"-->
     <div data-ng-repeat="row in gridTableData.body | orderBy:sortRowsByCol:sortRowsReverse track by row.key"
          ng-click="onRowClick($event, row)"
-         class="grid-table-row">
+         class="grid-table-row"  data-ng-class="{'no-checkbox': gridTableData.components.tableBody.rowCheckboxes === false}">
 
         <div class="grid-table-row-actions-wrap">
-            <div ng-if="gridTableData.components.rowCheckboxes" class="grid-table-row-checkbox">
+            <div ng-if="gridTableData.components.rowCheckboxes !== false" class="grid-table-row-checkbox">
                 <md-checkbox ng-checked="row.isActive"
                              ng-click="toggleRowSelection(row)"></md-checkbox>
             </div>
