@@ -128,7 +128,8 @@
 
         vm.typeSelectorOptions = [];
 		vm.groupSelectorLabel = 'Group';
-        vm.groupSelectorOptions = [];
+        vm.groupSelectorOptions = []; // set by getFormLayout()
+		vm.groupSelectorEntityType = vm.sharedLogic.entityTypeForGroupSelectorsData[vm.entityType];
 
         vm.pricingConditions = [
             {id: 1, name: "Don't Run Valuation"},

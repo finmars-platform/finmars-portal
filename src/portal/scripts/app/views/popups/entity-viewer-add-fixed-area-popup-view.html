@@ -9,17 +9,25 @@
     </div>
 
     <div data-ng-if="popupData.fields.short_name &&
-                     popupData.tabColumns < 6 &&
-                     (popupData.tabColumns < 3 ||
-                     popupData.entityType === 'instrument' ||
-                     popupData.entityType === 'account' ||
-                     popupData.entityType === 'instrument-type')">
+                     (['strategy-1', 'strategy-2', 'strategy-3', 'responsible', 'counterparty'].includes(popupData.entityType))">
         <text-input
                 label="System Name (Short Name)"
                 placeholder-text="System Name (Short Name)"
                 model="popupData.fields.short_name.value"
                 small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
     </div>
+
+     <div data-ng-if="popupData.fields.short_name &&
+                     (popupData.tabColumns < 6 ||
+                     popupData.entityType === 'instrument' ||
+                     popupData.entityType === 'account' ||
+                     popupData.entityType === 'instrument-type')">
+         <text-input
+                 label="System Name (Short Name)"
+                 placeholder-text="System Name (Short Name)"
+                 model="popupData.fields.short_name.value"
+                 small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
+     </div>
 
     <div data-ng-if="popupData.fields.user_code && (popupData.tabColumns < 6 || popupData.entityType === 'instrument' || popupData.entityType === 'account' || popupData.entityType === 'instrument-type')">
         <text-input
@@ -70,7 +78,7 @@
         <crud-select ng-if="popupData.fields.group"
                      label="popupData.fields.group.name"
                      item="popupData.fields.group.value"
-                     entity-type="popupData.entityType"
+                     entity-type="popupData.fields.group.entityType"
                      data-options="popupData.fields.group.options"
                      event-signal="popupData.fields.group.event"
                      small-options="{notNull: options.notNull}"></crud-select>
