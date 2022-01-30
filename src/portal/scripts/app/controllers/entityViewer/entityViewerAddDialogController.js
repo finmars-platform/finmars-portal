@@ -1889,59 +1889,63 @@
             getEntityAttrs();
             // vm.getFormLayout();
             // evEditorSharedLogicHelper.getFormLayout('addition', formLayoutFromAbove);
+			const groupValueEntity = vm.sharedLogic.groupSelectorValueEntities[vm.entityType];
+			vm.sharedLogic.getGroupSelectorOptions(groupValueEntity).then(function () {
 
-            vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
+				if (['responsible', 'counterparty'].indexOf(vm.entityType) !== -1) {
+					vm.entity.group = vm.groupSelectorOptions[0].id;
 
-                vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
-                vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
-
-                vm.attributeTypes = formLayoutData.attributeTypes;
-
-                vm.tabs = formLayoutData.tabs;
-                vm.attributesLayout = formLayoutData.attributesLayout;
-
-                vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
-
-                if (vm.entityType === 'instrument') {
-
-                    vm.typeSelectorChange = function () {
-
-                        vm.bookInstrument().then(function () {
-
-                            vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
-
-                                vm.tabs = data.tabs;
-                                vm.attributesLayout = data.attributesLayout;
-
-                                $scope.$apply();
-
-                            });
-                        })
-
-
-                    };
-
-                } else {
-                    $scope.$apply();
-                }
-
-                if (['responsible', 'counterparty'].indexOf(vm.entityType) !== -1) {
-                    vm.entity.group = vm.groupSelectorOptions[0].id;
-
-                } else if (['strategy-1', 'strategy-2', 'strategy-3'].indexOf(vm.entityType) !== -1) {
+				} else if (['strategy-1', 'strategy-2', 'strategy-3'].indexOf(vm.entityType) !== -1) {
 					vm.entity.subgroup = vm.groupSelectorOptions[0].id;
 				}
 
-                /* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
+				vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
 
-                    vm.fixedAreaPopup.fields = fieldsData;
-                    vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
+					vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
+					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
 
-                    $scope.$apply();
+					vm.attributeTypes = formLayoutData.attributeTypes;
 
-                }); */
+					vm.tabs = formLayoutData.tabs;
+					vm.attributesLayout = formLayoutData.attributesLayout;
 
-            });
+					vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
+
+					if (vm.entityType === 'instrument') {
+
+						vm.typeSelectorChange = function () {
+
+							vm.bookInstrument().then(function () {
+
+								vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
+
+									vm.tabs = data.tabs;
+									vm.attributesLayout = data.attributesLayout;
+
+									$scope.$apply();
+
+								});
+							})
+
+
+						};
+
+					} else {
+						$scope.$apply();
+					}
+
+					/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
+
+						vm.fixedAreaPopup.fields = fieldsData;
+						vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
+
+						$scope.$apply();
+
+					}); */
+
+				});
+
+			});
 
             vm.getCurrencies();
 

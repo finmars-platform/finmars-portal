@@ -1106,6 +1106,8 @@
 
 			readyStatusObj: readyStatusObj,
 
+			groupSelectorValueEntities: groupSelectorValueEntities,
+			getGroupSelectorOptions: getGroupSelectorOptions,
             getFixedAreaPopup: getFixedAreaPopup,
             entityTabsMenuTplt: entityTabsMenuTplt,
             onPopupSaveCallback: onPopupSaveCallback,
