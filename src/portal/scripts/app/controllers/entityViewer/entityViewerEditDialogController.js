@@ -1579,7 +1579,7 @@
 
         };
 
-        vm.getInstrumentPricingSchemes = function () {
+        vm.getInstrumentPricingSchemes = function () { // TODO Victor. Must removed after introducing new design with grid table.
 
             instrumentPricingSchemeService.getList().then(function (data) {
 
@@ -1611,7 +1611,7 @@
 
         };
 
-        vm.pricingSchemeChange = function ($event, item) {
+        vm.pricingSchemeChange = function (item) {
 
             item.pricing_scheme_object = null;
             item.default_value = null;
@@ -1630,8 +1630,7 @@
                 })
 
             }
-
-            if (vm.entityType === 'currency') {
+            else if (vm.entityType === 'currency') {
 
                 vm.currencyPricingSchemes.forEach(function (scheme) {
 
@@ -1853,7 +1852,8 @@
 
         };
 
-        vm.runPricingInstrument = function ($event) {
+//  Victor 2020.12.30 transfer t0 pricingPoliciesTabController.js
+/*        vm.runPricingInstrument = function($event) {
 
             $mdDialog.show({
                 controller: 'RunPricingInstrumentDialogController as vm',
@@ -1898,7 +1898,7 @@
 
             });
 
-        };
+        };*/
 
         vm.runPricingCurrency = function ($event) {
 
