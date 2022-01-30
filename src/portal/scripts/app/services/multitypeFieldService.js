@@ -65,7 +65,7 @@
 
 				});
 
-				if (activeTypeNotFound) console.error("setActiveTypeByValueType: activeValueType does not match any type from typesList", typesList, activeValueType)
+				if (activeTypeNotFound) console.error("setActiveTypeByValueType: activeValueType does not match any type from typesList", activeValueType, typesList)
 
 			}
 

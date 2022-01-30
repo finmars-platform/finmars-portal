@@ -1,33 +1,11 @@
-<div>
+<div data-ng-controller="PricingPoliciesTabController as vm">
+<!--<div>-->
 
     <div layout="row">
 
         <div layotu="column">
 
-            <div layout="row">
-
-<!--                <md-input-container class="md-block" style="width: 200px;">-->
-<!--                    <label>Pricing Currency</label>-->
-<!--                    <md-select md-on-close="vm.searchTermCurrency = ''"-->
-<!--                               data-ng-model="vm.entity.pricing_currency"-->
-<!--                               md-container-class="common-select-container">-->
-<!--                        <md-select-header>-->
-<!--                            <input data-ng-model="vm.searchTermCurrency"-->
-<!--                                   type="search"-->
-<!--                                   placeholder="Search for a ..."-->
-<!--                                   class="md-text md-select-search-pattern select-input-filter"-->
-<!--                                   ng-keydown="$event.stopPropagation()">-->
-<!--                        </md-select-header>-->
-<!--                        <div class="select-options-holder">-->
-<!--                            <md-option-->
-<!--                                    data-ng-repeat="item in vm.currencies | orderBy:'-'+item.name | filter:{name: vm.searchTermCurrency} as results track by item.id "-->
-<!--                                    ng-value="item.id">-->
-<!--                                {{item.name}}-->
-<!--                            </md-option>-->
-
-<!--                        </div>-->
-<!--                    </md-select>-->
-<!--                </md-input-container>-->
+            <div layout="row" class="m-b-13">
 
                 <dropdown-select class="p-r-8" label="Pricing Currency"
                                  model="vm.entity.pricing_currency"
@@ -35,10 +13,10 @@
                                  menu-options="vm.currencies"
                                  small-options="{tooltipText: 'Pricing Currency'}"
                                  on-change-callback="vm.onEntityChange()"
-                                 style="width: 50%">
+                                 style="width: 306px">
                 </dropdown-select>
-
-                <dropdown-select class="p-r-8" label="Co-directional exposure currency"
+<!--                on-change-callback="vm.entityChange()"-->
+<!--                <dropdown-select class="p-r-8" label="Co-directional exposure currency"
                                  model="vm.entity.co_directional_exposure_currency"
                                  placeholder-text="Co-directional exposure currency"
                                  menu-options="vm.currencies"
@@ -52,95 +30,53 @@
                                  menu-options="vm.currencies"
                                  small-options="{tooltipText: 'Counter-directional exposure currency'}"
                                  style="width: 200px;">
-                </dropdown-select>
-
-
-                <!--                <md-input-container style="width: 200px;">-->
-<!--                    <label for="">Pricing Multiplier</label>-->
-<!--                    <input type="text" data-ng-model="vm.entity.price_multiplier">-->
-<!--                </md-input-container>-->
+                </dropdown-select>-->
 
                 <number-input class="p-r-8"
                               label="Pricing Multiplier"
                               model="vm.entity.price_multiplier"
                               small-options="{tooltipText: 'Pricing Multiplier'}"
-                              style="width: 200px;">
+                              style="width: 148px;">
                 </number-input>
 
-<!--                <md-input-container style="width: 200px;">-->
-<!--                    <label for="">Default Price!</label>-->
-<!--                    <input type="text" data-ng-model="vm.entity.default_price">-->
-<!--                </md-input-container>-->
-                <number-input label="Default Price"
+                <number-input class="p-r-8"
+                              label="Default Price"
                               model="vm.entity.default_price"
                               small-options="{tooltipText: 'Default Price'}"
-                              style="width: 200px;">
+                              style="width: 148px;">
                 </number-input>
-
-            </div>
-
-            <div layout="row">
-
-<!--                <md-input-container class="md-block" style="width: 550px;">-->
-<!--                    <label>Pricing Condition</label>-->
-<!--                    <md-select md-on-close="vm.searchTermPricingCondition = ''"-->
-<!--                               data-ng-model="vm.entity.pricing_condition"-->
-<!--                               md-container-class="common-select-container">-->
-<!--                        <md-select-header>-->
-<!--                            <input data-ng-model="vm.searchTermPricingCondition"-->
-<!--                                   type="search"-->
-<!--                                   placeholder="Search for a ..."-->
-<!--                                   class="md-text md-select-search-pattern select-input-filter"-->
-<!--                                   ng-keydown="$event.stopPropagation()">-->
-<!--                        </md-select-header>-->
-<!--                        <div class="select-options-holder">-->
-<!--                            <md-option ng-value="1">-->
-<!--                                Don't Run Valuation-->
-<!--                            </md-option>-->
-<!--                            <md-option ng-value="2">-->
-<!--                                Run Valuation: if non-zero position-->
-<!--                            </md-option>-->
-<!--                            <md-option ng-value="3">-->
-<!--                                Run Valuation: always-->
-<!--                            </md-option>-->
-<!--                        </div>-->
-<!--                    </md-select>-->
-<!--                </md-input-container>-->
 
                 <dropdown-select class="p-r-8" label="Pricing Condition"
                                  model="vm.entity.pricing_condition"
                                  placeholder-text="Pricing Condition"
                                  menu-options="vm.pricingConditions"
                                  small-options="{tooltipText: 'Pricing Condition'}"
-                                 style="width: 550px;">
+                                 style="width: 306px;">
                 </dropdown-select>
 
-<!--                <md-input-container style="width: 200px;">-->
-<!--                    <label for="">ID for Price Downloading</label>-->
-<!--                    <input type="text" data-ng-model="vm.entity.reference_for_pricing">-->
-<!--                </md-input-container>-->
+            </div>
 
-                <text-input model="vm.entity.reference_for_pricing"
+            <div layout="row" class="m-b-13">
+
+                <text-input class="p-r-8"
+                            model="vm.entity.reference_for_pricing"
                             label="ID for Price Downloading"
                             placeholder-text="ID for Price Downloading"
-                            style="width: 200px;">
+                            style="width: 306px;">
                 </text-input>
+
+                <md-button data-ng-if="vm.entity.id"
+                           class="md-raised primary-button m-t-0 m-b-0"
+                           data-ng-click="vm.runPricingInstrument($event)">Run Pricing
+                </md-button>
 
             </div>
 
         </div>
 
-        <div>
-
-            <md-button class="md-raised md-primary" data-ng-if="vm.entity.id"
-                       data-ng-click="vm.runPricingInstrument($event)">Run Pricing
-            </md-button>
-
-        </div>
-
     </div>
 
-    <table class="m-t-16">
+    <!--<table class="m-t-16">
 
         <thead>
 
@@ -191,7 +127,7 @@
 
                 <md-input-container class="m-t-16">
                     <md-select data-ng-model="item.pricing_scheme"
-                               data-ng-change="vm.pricingSchemeChange($event, item)">
+                               data-ng-change="vm.pricingSchemeChange(item)">
                         <md-option ng-value="scheme.id" data-ng-repeat="scheme in vm.instrumentPricingSchemes">
                             {{scheme.name}}
                         </md-option>
@@ -250,6 +186,7 @@
 
                 </div>
 
+
             </td>
 
             <td>
@@ -280,7 +217,16 @@
         </tbody>
 
 
-    </table>
+    </table>-->
+    <div ng-if="vm.readyStatus">
+        <grid-table class="instrument-pricing-policies-table"
+                    data-gt-data-service="vm.pricingPoliciesGridTableDataService"
+                    data-gt-event-service="vm.pricingPoliciesGridTableEventService">
+        </grid-table>
+    </div>
 
+    <div ng-if="!vm.readyStatus" class="flex-row flex-c-center width-100" style="height: 100px;">
+        <progress-circular diameter="100"></progress-circular>
+    </div>
 
 </div>
