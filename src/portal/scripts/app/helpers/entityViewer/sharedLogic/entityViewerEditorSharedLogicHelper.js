@@ -956,6 +956,14 @@
 
         };
 
+		const entityTypeForGroupSelectorsData = {
+			'responsible': 'responsible-group',
+			'counterparty': 'counterparty-group',
+			'strategy-1': 'strategy-1-subgroup',
+			'strategy-2': 'strategy-2-subgroup',
+			'strategy-3': 'strategy-3-subgroup',
+		};
+
 		const getFieldsForFixedAreaPopup = function () {
 
 			// return new Promise(function (resolve, reject) {
@@ -990,7 +998,10 @@
 				fields.type.options = viewModel.typeSelectorOptions;
 
 			} else if (fields.hasOwnProperty('group')) {
+
 				fields.group.options = viewModel.groupSelectorOptions; // set by getGroupSelectorOptions()
+				fields.group.entityType = entityTypeForGroupSelectorsData[viewModel.entityType];
+
 			}
 
 			// });
@@ -1100,6 +1111,7 @@
             onPopupSaveCallback: onPopupSaveCallback,
             onFixedAreaPopupCancel: onFixedAreaPopupCancel,
 			typeSelectorChangeFns: typeSelectorChangeFns,
+			entityTypeForGroupSelectorsData: entityTypeForGroupSelectorsData,
 
             checkReadyStatus: checkReadyStatus,
 			bindFlex: bindFlex,

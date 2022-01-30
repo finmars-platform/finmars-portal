@@ -126,6 +126,7 @@
         vm.typeSelectorOptions = [];
 		vm.groupSelectorLabel = 'Group';
 		vm.groupSelectorOptions = [];
+		vm.groupSelectorEntityType = vm.sharedLogic.entityTypeForGroupSelectorsData[vm.entityType];
 
         vm.pricingConditions = [
             {id: 1, name: "Don't Run Valuation"},

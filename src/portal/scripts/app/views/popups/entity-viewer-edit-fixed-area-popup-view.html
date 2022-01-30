@@ -7,7 +7,7 @@
                     small-options="{dialogParent: '.dialog-containers-wrap', notNull: true}"></text-input>
     </div>
 
-    <div data-ng-if="popupData.fields.short_name && (popupData.tabColumns < 3 || popupData.entityType === 'instrument' || popupData.entityType === 'account')">
+    <div data-ng-if="popupData.fields.short_name && (['instrument', 'instrument-type', 'account', 'strategy-1', 'strategy-2', 'strategy-3', 'responsible', 'counterparty'].includes(popupData.entityType))">
         <text-input label="System Name (Short Name)"
                     placeholder-text="System Name (Short Name)"
                     model="popupData.fields.short_name.value"
@@ -22,13 +22,13 @@
                 small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
     </div>
 
-    <div data-ng-if="popupData.fields.short_name">
+    <!--<div data-ng-if="popupData.fields.short_name">
         <text-input
                 label="System Name (Short Name)"
                 placeholder-text="System Name (Short Name)"
                 model="popupData.fields.short_name.value"
                 small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
-    </div>
+    </div>-->
 
     <div data-ng-if="popupData.fields.public_name">
         <text-input
