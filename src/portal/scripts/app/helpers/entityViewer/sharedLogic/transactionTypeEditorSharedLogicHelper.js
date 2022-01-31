@@ -14,6 +14,7 @@
 	const helpExpressionsService = require('../../../services/helpExpressionsService');
 
     'use strict';
+
     module.exports = function (viewModel, $scope, $mdDialog) {
 
     	const gridTableHelperService = new GridTableHelperService();
@@ -112,7 +113,7 @@
                     name: 'Strategy 3'
                 }
             ]
-        }
+        };
 
         const getContextProperties = function () {
             return contextProperties;
@@ -125,7 +126,7 @@
                 "key": 'input'
             }
 
-            if (viewModel.entity.inputs && viewModel.entity.inputs.length > 0) {
+            if (viewModel.entity.inputs.length) {
 
                 viewModel.expressionData.functions[0] = viewModel.entity.inputs.map(function (input) {
 
@@ -139,12 +140,37 @@
                 });
 
             } else {
-
-                viewModel.expressionData.functions = []
-
+                viewModel.expressionData.functions[0] = []
             }
 
         };
+
+		const updateContextParametersFunctions = function () {
+
+			viewModel.expressionData.groups[1] = {
+				"name": "<b>Context Parameters</b>",
+				"key": 'context_parameters'
+			}
+
+			if (viewModel.entity.context_parameters.length) {
+
+				viewModel.expressionData.functions[1] = viewModel.entity.context_parameters.map(function (cParam) {
+
+					return {
+						"name": cParam.name,
+						"description": "Transaction Type Context Parameter: " + cParam.name,
+						"groups": "context_parameters",
+						"func": cParam.name
+					}
+
+				});
+
+			}
+			else {
+				viewModel.expressionData.functions[1] = [];
+			}
+
+		};
 
 		const loadRelation = function (field, noScopeUpdate) {
 
@@ -810,7 +836,7 @@
 
             });
 
-        }
+        };
 
 		const relationItemsResolver = function (contentType) { // Victor: This function I introduce in child dialog to resolve default value items
             return loadRelation(resolveRelation(contentType), true);
@@ -1590,6 +1616,76 @@
 
 		};
 
+		//region Context Parameters tab
+		/** Set front end properties for context parameters data */
+		const getContextParameters = function () {
+
+			if (!Array.isArray(viewModel.entity.context_parameters)) {
+				viewModel.entity.context_parameters = [];
+			}
+
+			viewModel.entity.context_parameters = viewModel.entity.context_parameters.map(param => {
+
+				param.frontOptions = {
+					nameInputEvent: {}
+				};
+
+				return param;
+
+			});
+
+			return viewModel.entity.context_parameters;
+
+		};
+
+		const deleteContextParameter = function ($event, $index) {
+			viewModel.entity.context_parameters.splice($index, 1);
+			updateContextParametersFunctions();
+		};
+
+		const addContextParameter = function ($event) {
+
+			const contextParamsNamesList = viewModel.entity.context_parameters.map(param => param.name);
+
+			$mdDialog.show({
+				controller: 'EnterUserCodeDialogController as vm',
+				templateUrl: 'views/dialogs/enter-user-code-dialog-view.html',
+				targetEvent: $event,
+				locals: {
+					data: {
+						title: "Name new context parameter",
+						occupiedUserCodesList: contextParamsNamesList
+					}
+				},
+				multiple: true
+			})
+			.then(function (res) {
+
+				if (res.status === 'agree') {
+
+					let order = 1;
+
+					if (viewModel.entity.context_parameters.length) {
+						order = viewModel.entity.context_parameters[viewModel.entity.context_parameters.length - 1].order + 1
+					}
+
+					viewModel.entity.context_parameters.push({
+						order:order,
+						name: res.data,
+						frontOptions: {
+							nameInputEvent: {}
+						}
+					});
+
+					updateContextParametersFunctions();
+
+				}
+
+			});
+
+		};
+		//endregion Context Parameters tab
+
         return {
             getValueTypes: getValueTypes,
             getContextProperties: getContextProperties,
@@ -1611,6 +1707,12 @@
 			getTransactionUserFields: getTransactionUserFields,
 
 			appendFromTemplate: appendFromTemplate,
+
+			updateContextParametersFunctions: updateContextParametersFunctions,
+			getContextParameters: getContextParameters,
+			deleteContextParameter: deleteContextParameter,
+			addContextParameter: addContextParameter,
+
             initAfterMainDataLoaded: initAfterMainDataLoaded
         }
 

@@ -12,6 +12,7 @@ import authorizerService from '../../shell/scripts/app/services/authorizerServic
 // import uiService from "./app/services/uiService.js";
 
 import portalController from './app/controllers/portalController.js';
+import enterUserCodeDialogController from "./app/controllers/dialogs/enterUserCodeDialogController.js";
 
 import mainHeaderDirective from "./app/directives/mainHeaderDirective.js";
 
@@ -216,6 +217,7 @@ export default (function () {
 	// Victor 20210601 #115 new design for number format dialog
 	// portal.controller('NumberFormatDialogController', ['$scope', '$element', '$mdDialog', 'data', require('./app/controllers/dialogs/numberFormatDialogController')]);
 	portal.controller('ReportViewerMatrixSettingsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/reportViewerMatrixSettingsDialogController')]);
+	portal.controller('EnterUserCodeDialogController', ['$scope', '$mdDialog', 'data', enterUserCodeDialogController]);
 
 	portal.controller('FillPriceManuallyInstrumentDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/fillPriceManuallyInstrumentDialogController')]);
 	portal.controller('FloatCustomFieldConstructorController', ['$scope', require('./app/controllers/floatCustomFieldConstructorController')]);

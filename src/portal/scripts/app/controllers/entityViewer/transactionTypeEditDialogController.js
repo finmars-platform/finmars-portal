@@ -315,6 +315,7 @@
                     vm.entity = data;
 
                     sharedLogic.updateInputFunctions();
+					sharedLogic.updateContextParametersFunctions();
                     /* vm.expressionData.groups[0] = {
                         "name": "<b>Inputs</b>",
                         "key": 'input'
@@ -961,6 +962,7 @@
         vm.entity.book_transaction_layout = vm.entity.book_transaction_layout || '';
         vm.entity.actions = vm.entity.actions || [];
         vm.entity.inputs = vm.entity.inputs || [];
+		vm.entity.context_parameters = sharedLogic.getContextParameters();
 
         vm.readyStatus = {transactionTypeGroups: false, instrumentTypes: false, portfolios: false};
 
@@ -1622,7 +1624,7 @@
 
         // Transaction Type Recon end
 
-        // Transaction type Actions controller start
+		//region Transaction type Actions controller
 
         vm.relationItems = {};
 
@@ -1770,7 +1772,6 @@
             });
 
         };
-
 
         /* var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
 
@@ -2269,7 +2270,7 @@
 
             return typeName;
         };
-        // Transaction type actions controller end
+		//endregion Transaction type Actions controller
 
 
         // Special case for split-panel
@@ -2662,30 +2663,12 @@
             })
         }
 
-        // Context Parameters tab start
+        //region Context Parameters tab
+		vm.deleteContextParameter = sharedLogic.deleteContextParameter
+        vm.addContextParameter = sharedLogic.addContextParameter;
 
-        vm.deleteContextParameter = function ($event, $index) {
-            vm.entity.context_parameters.splice($index, 1);
-        }
-
-        vm.addContextParameter = function ($event) {
-
-            var order = 1;
-
-            if (vm.entity.context_parameters && vm.entity.context_parameters.length) {
-                order = vm.entity.context_parameters[vm.entity.context_parameters.length - 1].order + 1
-            }
-
-            vm.entity.context_parameters.push({
-                order:order
-            });
-
-
-        }
-
-        // Context Parameters tab end
-
-
+		vm.validateContextParameterName = sharedLogic.validateContextParameterName;
+		//endregion Context Parameters tab
 
         vm.init = function () {
 
@@ -2728,115 +2711,6 @@
         };
 
         vm.init();
-
-        const some = {
-            "id": 2753,
-            "name": "account_position",
-            "verbose_name": "Account of booking",
-            "value_type": 100,
-            "reference_table": null,
-            "content_type": "accounts.account",
-            "order": 1,
-            "can_recalculate": false,
-            "value_expr": "",
-            "tooltip": "ttyp tooltip here",
-            "is_fill_from_context": false,
-            "context_property": null,
-            "value": "40",
-            "account": null,
-            "instrument_type": null,
-            "instrument": null,
-            "currency": null,
-            "counterparty": null,
-            "responsible": null,
-            "portfolio": null,
-            "strategy1": null,
-            "strategy2": null,
-            "strategy3": null,
-            "daily_pricing_model": null,
-            "payment_size_detail": null,
-            "pricing_policy": null,
-            "periodicity": null,
-            "accrual_calculation_model": null,
-            "settings": {
-                "linked_inputs_names": [
-                    "test_account1",
-                    "test_account2"
-                ],
-                "recalc_on_change_linked_inputs": [
-                    "test_account2"
-                ]
-            },
-            "button_data": null,
-            "account_object": null,
-            "instrument_object": null,
-            "instrument_type_object": null,
-            "daily_pricing_model_object": null,
-            "payment_size_detail_object": null,
-            "currency_object": null,
-            "counterparty_object": null,
-            "portfolio_object": null,
-            "strategy1_object": null,
-            "strategy2_object": null,
-            "strategy3_object": null,
-            "pricing_policy_object": null,
-            "periodicity_object": null,
-            "accrual_calculation_model_object": null
-        };
-        const another = {
-            "id": 2753,
-            "name": "account_position",
-            "verbose_name": "Account of booking",
-            "value_type": 100,
-            "reference_table": null,
-            "content_type": "accounts.account",
-            "order": 1,
-            "can_recalculate": false,
-            "value_expr": "",
-            "tooltip": "ttyp tooltip here",
-            "is_fill_from_context": false,
-            "context_property": null,
-            "value": 40,
-            "account": null,
-            "instrument_type": null,
-            "instrument": null,
-            "currency": null,
-            "counterparty": null,
-            "responsible": null,
-            "portfolio": null,
-            "strategy1": null,
-            "strategy2": null,
-            "strategy3": null,
-            "daily_pricing_model": null,
-            "payment_size_detail": null,
-            "pricing_policy": null,
-            "periodicity": null,
-            "accrual_calculation_model": null,
-            "settings": {
-                "linked_inputs_names": [
-                    "test_account1",
-                    "test_account2"
-                ],
-                "recalc_on_change_linked_inputs": [
-                    "test_account2"
-                ]
-            },
-            "button_data": null,
-            "account_object": null,
-            "instrument_object": null,
-            "instrument_type_object": null,
-            "daily_pricing_model_object": null,
-            "payment_size_detail_object": null,
-            "currency_object": null,
-            "counterparty_object": null,
-            "portfolio_object": null,
-            "strategy1_object": null,
-            "strategy2_object": null,
-            "strategy3_object": null,
-            "pricing_policy_object": null,
-            "periodicity_object": null,
-            "accrual_calculation_model_object": null
-        };
 
     }
 
