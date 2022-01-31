@@ -848,6 +848,7 @@
         vm.entity.book_transaction_layout = vm.entity.book_transaction_layout || '';
         vm.entity.actions = vm.entity.actions || [];
         vm.entity.inputs = vm.entity.inputs || [];
+		vm.entity.context_parameters = sharedLogic.getContextParameters();
 
         vm.readyStatus = {transactionTypeGroups: false, instrumentTypes: false, portfolios: false};
 
@@ -1392,7 +1393,7 @@
 
         // Transaction Type Recon end
 
-        // Transaction type Actions controller start
+        //region Transaction type Actions controller
 
         vm.relationItems = {};
 
@@ -2355,31 +2356,12 @@
             })
         }
 
+		//endregion Transaction type Actions controller
 
-        // Transaction type actions controller end
-
-        // Context Parameters tab start
-
-        vm.deleteContextParameter = function ($event, $index) {
-            vm.entity.context_parameters.splice($index, 1);
-        }
-
-        vm.addContextParameter = function ($event) {
-
-            var order = 1;
-
-            if (vm.entity.context_parameters && vm.entity.context_parameters.length) {
-                order = vm.entity.context_parameters[vm.entity.context_parameters.length - 1].order + 1
-            }
-
-            vm.entity.context_parameters.push({
-                order:order
-            });
-
-
-        }
-
-        // Context Parameters tab end
+		//region Context Parameters tab
+		vm.deleteContextParameter = sharedLogic.deleteContextParameter
+		vm.addContextParameter = sharedLogic.addContextParameter;
+		//endregion Context Parameters tab
 
         vm.init = function () {
 

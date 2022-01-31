@@ -32,6 +32,7 @@ import commonDialogsService from "./app/services/commonDialogsService.js";
 
 import shellController from "./app/controllers/shellController.js";
 import warningDialogController from "./app/controllers/dialogs/warningDialogController.js";
+import inputsDialogController from "./app/controllers/dialogs/inputsDialogController.js";
 
 import dndFilesOnPageDirective from "./app/directives/dndFilesOnPageDirective.js";
 
@@ -167,5 +168,7 @@ app.service('commonDialogsService', ['$mdDialog', commonDialogsService]);
 app.controller('ShellController', ['$scope', '$state', '$transitions', '$urlService', '$mdDialog', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'globalDataService', shellController]);
 
 app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', warningDialogController]);
+app.controller('InputsDialogController', ['$scope', '$mdDialog', 'data', inputsDialogController]);
+app.controller('EnterUserCodeDialogController', ['$scope', '$mdDialog', 'data', enterUserCodeDialogController]);
 
 app.directive('dndFilesOnPage', ['$state', 'commonDialogsService', dndFilesOnPageDirective]);

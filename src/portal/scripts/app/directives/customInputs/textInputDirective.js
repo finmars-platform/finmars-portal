@@ -34,7 +34,7 @@
 
 				scope.isReadonly = false;
 				scope.fullTextEnabled = false;
-				scope.fullText = {value: scope.model}
+				scope.fullText = {value: scope.model};
 
 				/*
 				TIPS
@@ -98,7 +98,7 @@
 				scope.onInputChange = function (modelVal) {
 
 					if (modelVal !== undefined) { // needed for textarea.customInputFullText
-						scope.model = modelVal
+						scope.model = modelVal;
 					}
 
 					clearTimeout(onChangeIndex);

@@ -29,9 +29,13 @@
                     </md-input-container>
                 </td>
                 <td class="edit-state-td">
-                    <md-input-container class="no-error-spacer">
+                    <!--<md-input-container class="no-error-spacer">
                         <input type="text" ng-model="item.name">
-                    </md-input-container>
+                    </md-input-container>-->
+                    <text-input model="item.name"
+                                event-signal="item.frontOptions.nameInputEvent"
+                                small-options="{noIndicatorBtn: true, readonly: true}"
+                                on-change-callback="vm.validateContextParameterName(item)"></text-input>
                 </td>
                 <td class="edit-state-td">
                     <md-input-container class="m-t-16">
