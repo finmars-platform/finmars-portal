@@ -186,6 +186,36 @@
 
                 };
 
+                scope.openTransactionTypeDialog = async function () {
+
+                    let editLayout, entity = {};
+
+                    editLayout = await uiService.getDefaultEditLayout(scope.entityType);
+                    evHelperService.openTTypeAddDrawer(
+                        scope.evDataService,
+                        scope.evEventService,
+                        editLayout,
+                        $bigDrawer,
+                        scope.entityType,
+                        entity
+                    );
+
+                };
+
+                scope.openSimpleImportDialog = function ($event){
+
+                    $mdDialog.show({
+                        controller: 'SimpleEntityImportDialogController as vm',
+                        templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-dialog-view.html',
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: {}
+                        }
+                    })
+
+                }
+
                 /* scope.evApplyDatabaseFilters = function () {
                     scope.evDataService.resetTableContent(false);
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
