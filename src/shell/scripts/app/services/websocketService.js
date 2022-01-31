@@ -107,7 +107,7 @@ function connect(isReconnect) {
             window.ws.onerror = function (err) {
                 console.log("WEBSOCKET_ERROR: Error", new Error(err.message));
 
-                if (PROJECT_ENV !== 'local') toastNotificationService.error("Websocket connection is closed");
+                // if (PROJECT_ENV !== 'local') toastNotificationService.error("Websocket connection is closed");
 
                 window.openedSocket = false;
             }
