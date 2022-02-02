@@ -19,9 +19,12 @@ export default function () {
 		templateUrl: "views/directives/customInputs/complex-dropdown-select-menu-view.html",
 		link: function (scope, elem, attrs) {
 
+			if (!scope.hideDescriptionBtn) scope.hideDescriptionBtn = false;
 			if (typeof scope.showDescriptions !== 'boolean') scope.showDescriptions = false;
 
 			scope.filterTerms = '';
+			scope.showDescriptionBtn = true;
+
 			const scrollElem = elem[0].querySelector('.cdsContentScroll');
 
 			scope.filterGroups = function (value, index, array) {
@@ -102,11 +105,38 @@ export default function () {
 
 			};
 
+			const checkOptionsForDescription = function () {
+
+				scope.showDescriptionBtn = false;
+
+				loop: for (const group of scope.menuOptions) {
+
+					for (const option of group.children) {
+
+						if (option.description) {
+							scope.showDescriptionBtn = true;
+							break loop;
+						}
+
+					}
+
+				}
+
+			};
+
 			const onWindowResize = utilsHelper.throttle(function () {
 				scope.hasYScroll = scrollElem.scrollHeight > scrollElem.clientHeight;
 			}, 500);
 
-			window.addEventListener('resize', onWindowResize);
+			const init = function () {
+
+				window.addEventListener('resize', onWindowResize);
+
+				checkOptionsForDescription();
+
+			};
+
+			init();
 
 			scope.$on('$destroy', function () {
 				window.removeEventListener('resize', onWindowResize);
