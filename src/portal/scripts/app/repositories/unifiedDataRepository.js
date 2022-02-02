@@ -31,9 +31,51 @@
             })
     };
 
+    var getConfigurationPackageGroupList = function (options) {
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/udp/data/configuration-package-group/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var getConfigurationPackageList = function (options) {
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/udp/data/configuration-package/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var getConfigurationPackageFile = function (id) {
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/udp/data/configuration-package/' + id + '/view/', {}),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
     module.exports = {
 
         getList: getList,
+        getConfigurationPackageGroupList: getConfigurationPackageGroupList,
+        getConfigurationPackageList: getConfigurationPackageList,
+        getConfigurationPackageFile: getConfigurationPackageFile
 
     }
 
