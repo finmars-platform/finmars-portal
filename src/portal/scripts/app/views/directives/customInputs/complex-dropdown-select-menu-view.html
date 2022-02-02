@@ -13,7 +13,8 @@
     <div class="favorites-area">
         <div class="fav-area-header cdsm-row">
             <div class="fav-area-name">Favorites</div>
-            <md-button class="small-button-icon toggle-descr-btn material-icons"
+            <md-button ng-if="showDescriptionBtn"
+                       class="small-button-icon toggle-descr-btn material-icons"
                        ng-class="{'active': showDescriptions}"
                        ng-click="toggleDescription()">format_align_left</md-button>
         </div>
