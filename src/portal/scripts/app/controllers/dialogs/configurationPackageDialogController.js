@@ -36,7 +36,7 @@
 
         vm.selectItem = function (item) {
 
-            vm.expressions.forEach(function (expr) {
+            vm.packages.forEach(function (expr) {
                 expr.isSelected = false;
             });
 
@@ -89,22 +89,26 @@
 
         var getGroups = function () {
 
-            vm.groups = unifiedDataService.getConfigurationPackageGroupList();
+            unifiedDataService.getConfigurationPackageGroupList().then(function (data) {
 
-            vm.readyStatus.groups = true;
+                vm.groups = data.results;
 
-            vm.selectedGroup = vm.groups[0];
+                vm.readyStatus.groups = true;
 
-            var result = [];
+                vm.selectedGroup = vm.groups[0];
 
-            result = result.concat(vm.groups);
+                var result = [];
 
-            result.unshift({
-                "name": "All",
-                "key": "all"
-            });
+                result = result.concat(vm.groups);
 
-            vm.groups = result;
+                result.unshift({
+                    "name": "All",
+                    "key": "all"
+                });
+
+                vm.groups = result;
+
+            })
 
         }
 
@@ -150,7 +154,7 @@
 
                     vm.importConfiguration(resolve)
 
-                }).then(function (data){
+                }).then(function (data) {
 
                     $mdDialog.hide({status: 'agree', data: {}});
                 })
@@ -216,7 +220,6 @@
         };
 
         init();
-
 
 
     }
