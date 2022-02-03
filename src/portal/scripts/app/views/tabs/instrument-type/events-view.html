@@ -6,7 +6,15 @@
         <v-accordion class="instrument-type-accordion vAccordion-type1 m-b-8" control="vm.eventsAccordion">
 
             <v-pane ng-repeat="item in vm.entity.events | orderBy: 'order'"
-                    expanded="item.isPaneExpanded">
+                    expanded="item.isPaneExpanded"
+                    class="position-relative">
+
+                <div ng-hide="!item.isPaneExpanded" class="accordion-name-input">
+                    <text-input model="item.name"
+                                event-signal="vm.evEditorFieldEvent"
+                                on-change-callback="vm.onRequiredFieldChange('events')"
+                                small-options="{notNull: true}"></text-input>
+                </div>
 
                 <v-pane-header ng-class="{'m-b-0': !$pane.isExpanded()}">
                     <div class="accordion-header-content flex-row fc-space-between fi-center"
@@ -22,11 +30,12 @@
                             <span class="text-weight-bold m-r-8"># {{$index + 1}}</span>
 
                             <div ng-hide="!item.isPaneExpanded" class="accordion-name-input">
-                                <text-input model="item.name"
+
+                                <!--<text-input model="item.name"
                                             event-signal="vm.evEditorFieldEvent"
                                             on-change-callback="vm.onRequiredFieldChange('events')"
                                             small-options="{notNull: true}"
-                                            ng-click="$event.stopPropagation();"></text-input>
+                                            ng-click="$event.stopPropagation();"></text-input>-->
                                 <!--<md-input-container class="no-error-spacer" style="min-height: 35px">
                                     <label></label>
                                     <input type="text"

@@ -139,7 +139,7 @@
 
         }; */
 
-        vm.getEntityPropertyByDefault = function () {
+        vm.getShowByDefaultEntityValue = function () {
             return vm.entity[vm.showByDefault];
         };
 

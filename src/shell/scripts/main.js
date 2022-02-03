@@ -169,6 +169,5 @@ app.controller('ShellController', ['$scope', '$state', '$transitions', '$urlServ
 
 app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', warningDialogController]);
 app.controller('InputsDialogController', ['$scope', '$mdDialog', 'data', inputsDialogController]);
-app.controller('EnterUserCodeDialogController', ['$scope', '$mdDialog', 'data', enterUserCodeDialogController]);
 
 app.directive('dndFilesOnPage', ['$state', 'commonDialogsService', dndFilesOnPageDirective]);
