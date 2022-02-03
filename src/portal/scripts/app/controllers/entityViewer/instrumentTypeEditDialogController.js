@@ -66,10 +66,6 @@
         vm.entityStatus = '';
         vm.evEditorEvent = null;
 
-        if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
-            vm.hasEnabledStatus = false;
-        }
-
         vm.readyStatus = vm.sharedLogic.readyStatusObj;
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
@@ -100,15 +96,8 @@
         vm.typeFieldName = 'type';
         vm.typeFieldLabel = 'Type';
 
-        if (vm.entityType === 'instrument') {
-
-        	vm.typeFieldName = 'instrument_type';
-            vm.typeFieldLabel = 'Instrument type';
-
-        } else if (vm.entityType === 'instrument-type') {
-            vm.typeFieldName = 'instrument_class';
-            vm.typeFieldLabel = 'Instrument class';
-        }
+		vm.typeFieldName = 'instrument_class';
+		vm.typeFieldLabel = 'Instrument class';
 
         vm.showByDefaultOptions = [
             {id: 'name', name: 'Name', visible_name: 'Report Name (Name)'},
@@ -116,10 +105,6 @@
             {id: 'short_name', name: 'Short Name', visible_name: 'Unique Code (User Code)'},
             {id: 'user_code', name: 'User Code', visible_name: 'Name if Hidden (Public Name)'},
         ];
-
-        if (vm.entityType === 'currency') {
-            vm.showByDefaultOptions = vm.showByDefaultOptions.filter((item) => item.id !== 'public_name')
-        }
 
         // id of popup field which value will be shown when popup closed
         vm.showByDefault = vm.showByDefaultOptions[0].id;
@@ -139,10 +124,6 @@
 
         vm.openedIn = data.openedIn;
         vm.originalFixedAreaPopupFields;
-
-		if (vm.entityType === 'instrument') {
-			vm.instrumentTypesList = []; // modified by method resolveEditLayout() inside entityViewerEditorSharedLogicHelper.js
-		}
 
         var formLayoutFromAbove = data.editLayout;
 
@@ -589,16 +570,8 @@
                     vm.readyStatus.entity = true;
                     // vm.readyStatus.permissions = true;
 
-                    if (['price-history', 'currency-history', 'price-history-error', 'currency-history-error'].indexOf(vm.entityType) === -1) {
-
-                        vm.loadPermissions();
-
-                    } else {
-
-                        vm.readyStatus.permissions = true;
-                        vm.hasEditPermission = true;
-
-                    }
+					vm.readyStatus.permissions = true;
+					vm.hasEditPermission = true;
 
                     // vm.getFormLayout();
                     vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
@@ -662,13 +635,9 @@
 
         vm.updateEntityBeforeSave = function () {
 
-            if (vm.entityType === 'instrument-type') {
-
-                if (!vm.entity.instrument_factor_schedule_data) {
-                    vm.entity.instrument_factor_schedule_data = ''
-                }
-
-            }
+			if (!vm.entity.instrument_factor_schedule_data) {
+				vm.entity.instrument_factor_schedule_data = ''
+			}
 
             if (vm.entity.attributes) {
 
@@ -805,64 +774,26 @@
 
             entityResolverService.getByKey(vm.entityType, vm.entity.id).then(function (result) {
 
-                if (vm.entityType === 'instrument') {
+				switch (vm.entityStatus) {
+					case 'enabled':
+						result.is_enabled = true;
+						result.is_deleted = false;
+						vm.entity.is_enabled = true;
+						vm.entity.is_deleted = false;
+						break;
 
-                    switch (vm.entityStatus) {
-                        case 'active':
-                            result.is_active = true;
-                            result.is_enabled = true;
-                            result.is_deleted = false;
-                            vm.entity.is_active = true;
-                            vm.entity.is_enabled = true;
-                            vm.entity.is_deleted = false;
-                            break;
+					case 'disabled':
+						result.is_enabled = false;
+						result.is_deleted = false;
+						vm.entity.is_enabled = false;
+						vm.entity.is_deleted = false;
+						break;
 
-                        case 'inactive':
-                            result.is_active = false;
-                            result.is_enabled = true;
-                            result.is_deleted = false;
-                            vm.entity.is_active = false;
-                            vm.entity.is_enabled = true;
-                            vm.entity.is_deleted = false;
-                            break;
-
-                        case 'disabled':
-                            result.is_enabled = false;
-                            result.is_deleted = false;
-                            vm.entity.is_enabled = false;
-                            vm.entity.is_deleted = false;
-                            break;
-
-                        case 'deleted':
-                            result.is_deleted = true;
-                            vm.entity.is_deleted = true;
-                            break;
-                    }
-
-                } else {
-
-                    switch (vm.entityStatus) {
-                        case 'enabled':
-                            result.is_enabled = true;
-                            result.is_deleted = false;
-                            vm.entity.is_enabled = true;
-                            vm.entity.is_deleted = false;
-                            break;
-
-                        case 'disabled':
-                            result.is_enabled = false;
-                            result.is_deleted = false;
-                            vm.entity.is_enabled = false;
-                            vm.entity.is_deleted = false;
-                            break;
-
-                        case 'deleted':
-                            result.is_deleted = true;
-                            vm.entity.is_deleted = true;
-                            break;
-                    }
-
-                }
+					case 'deleted':
+						result.is_deleted = true;
+						vm.entity.is_deleted = true;
+						break;
+				}
 
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
@@ -876,35 +807,15 @@
 
         var getEntityStatus = function () {
 
-            if (vm.entityType === 'instrument') {
+			vm.entityStatus = 'enabled';
 
-                vm.entityStatus = 'inactive';
+			if (!vm.entity.is_enabled) {
+				vm.entityStatus = 'disabled';
+			}
 
-                if (vm.entity.is_active) {
-                    vm.entityStatus = 'active';
-                }
-
-                if (!vm.entity.is_enabled) {
-                    vm.entityStatus = 'disabled';
-                }
-
-                if (vm.entity.is_deleted) {
-                    vm.entityStatus = 'deleted';
-                }
-
-            } else {
-
-                vm.entityStatus = 'enabled';
-
-                if (!vm.entity.is_enabled) {
-                    vm.entityStatus = 'disabled';
-                }
-
-                if (vm.entity.is_deleted) {
-                    vm.entityStatus = 'deleted';
-                }
-
-            }
+			if (vm.entity.is_deleted) {
+				vm.entityStatus = 'deleted';
+			}
 
             // Victor 2020.11.20 #59 fixed fields popup
             if (vm.fixedAreaPopup.fields.status) {
@@ -1380,59 +1291,29 @@
 
         vm.editPricingScheme = function ($event, item) {
 
-            if (vm.entityType === 'currency') {
+			$mdDialog.show({
+				controller: 'InstrumentPricingSchemeEditDialogController as vm',
+				templateUrl: 'views/dialogs/pricing/instrument-pricing-scheme-edit-dialog-view.html',
+				parent: angular.element(document.body),
+				targetEvent: $event,
+				clickOutsideToClose: false,
+				preserveScope: true,
+				autoWrap: true,
+				skipHide: true,
+				multiple: true,
+				locals: {
+					data: {
+						item: item
+					}
 
-                $mdDialog.show({
-                    controller: 'CurrencyPricingSchemeEditDialogController as vm',
-                    templateUrl: 'views/dialogs/pricing/currency-pricing-scheme-edit-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        data: {
-                            item: item
-                        }
+				}
+			}).then(function (res) {
 
-                    }
-                }).then(function (res) {
+				if (res.status === 'agree') {
+					// Do what?
+				}
 
-                    if (res.status === 'agree') {
-                        // Do what?
-                    }
-
-                })
-
-            } else {
-
-                $mdDialog.show({
-                    controller: 'InstrumentPricingSchemeEditDialogController as vm',
-                    templateUrl: 'views/dialogs/pricing/instrument-pricing-scheme-edit-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        data: {
-                            item: item
-                        }
-
-                    }
-                }).then(function (res) {
-
-                    if (res.status === 'agree') {
-                        // Do what?
-                    }
-
-                })
-
-            }
+			})
 
         };
 
@@ -1618,21 +1499,7 @@
 
         };
 
-        vm.getEntityPricingSchemes = function () {
-
-            if (vm.entityType === 'currency') {
-                vm.getCurrencyPricingSchemes();
-            }
-
-            if (vm.entityType === 'instrument') {
-                vm.getInstrumentPricingSchemes();
-            }
-
-            if (vm.entityType === 'instrument-type') {
-                vm.getInstrumentPricingSchemes();
-            }
-
-        };
+        vm.getEntityPricingSchemes = vm.getInstrumentPricingSchemes;
 
         vm.pricingSchemeChange = function ($event, item) {
 
@@ -1641,32 +1508,14 @@
             item.attribute_key = null;
             item.data = null;
 
-            if (vm.entityType === 'instrument' || vm.entityType === 'instrument-type') {
+			vm.instrumentPricingSchemes.forEach(function (scheme) {
 
-                vm.instrumentPricingSchemes.forEach(function (scheme) {
+				if (scheme.id === item.pricing_scheme) {
 
-                    if (scheme.id === item.pricing_scheme) {
+					item.pricing_scheme_object = scheme;
+				}
 
-                        item.pricing_scheme_object = scheme;
-                    }
-
-                })
-
-            }
-
-            if (vm.entityType === 'currency') {
-
-                vm.currencyPricingSchemes.forEach(function (scheme) {
-
-                    if (scheme.id === item.pricing_scheme) {
-
-                        item.pricing_scheme_object = scheme;
-                    }
-
-                })
-
-            }
-
+			})
 
             if (item.pricing_scheme_object && item.pricing_scheme_object.type_settings) {
 
@@ -2000,27 +1849,19 @@
 
             const disabled = !vm.formIsValid || !vm.hasEditPermission || vm.processing;
 
-            if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
-                return disabled;
-            }
-
             return disabled || !vm.entity.is_enabled;
 
         };
 
         vm.init = function () {
 
-            if (vm.entityType === 'instrument-type') {
+			uiService.getListEditLayout('instrument').then(function (data) {
 
-                uiService.getListEditLayout('instrument').then(function (data) {
+				vm.instrumentFormLayouts = data.results;
 
-                    vm.instrumentFormLayouts = data.results;
+				$scope.$apply()
 
-                    $scope.$apply()
-
-                })
-
-            }
+			})
 
             setTimeout(function () {
                 vm.dialogElemToResize = vm.sharedLogic.onEditorStart();
@@ -2049,87 +1890,39 @@
                 vm.evEditorDataService.setColorPalettesList(palettesList);
             });
 
-            if (vm.entityType === 'instrument') {
-
-                vm.statusSelectorOptions = [
-                    {
-                        id: 'active',
-                        name: 'Active'
-                    },
-                    {
-                        id: 'inactive',
-                        name: 'Inactive'
-                    },
-                    {
-                        id: 'disabled',
-                        name: 'Disabled'
-                    },
-                    {
-                        id: 'deleted',
-                        name: 'Deleted'
-                    }
-                ];
-
-                vm.typeSelectorChange = function () {
-
-					vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
-
-						vm.tabs = data.tabs;
-						vm.attributesLayout = data.attributesLayout;
-
-						$scope.$apply();
-
-					});
-
-				};
-
-
-            }
-            else {
-
-                vm.statusSelectorOptions = [
-                    {
-                        id: 'enabled',
-                        name: 'Enabled'
-                    },
-                    {
-                        id: 'disabled',
-                        name: 'Disabled'
-                    },
-                    {
-                        id: 'deleted',
-                        name: 'Deleted'
-                    }
-                ];
-
-            }
+			vm.statusSelectorOptions = [
+				{
+					id: 'enabled',
+					name: 'Enabled'
+				},
+				{
+					id: 'disabled',
+					name: 'Disabled'
+				},
+				{
+					id: 'deleted',
+					name: 'Deleted'
+				}
+			];
 
             getEntityAttrs();
             vm.getCurrencies();
 
             vm.getItem().then(async function () {
 
-                if (vm.entityType === 'instrument-type') {
+				if (vm.entity.instrument_form_layouts) {
+					vm.instrumentTypeLayouts = vm.entity.instrument_form_layouts.split(',')
+				}
 
-                	if (vm.entity.instrument_form_layouts) {
-                        vm.instrumentTypeLayouts = vm.entity.instrument_form_layouts.split(',')
-                    }
+				vm.sharedLogic.getDailyPricingModelFields().then(data => {
+					vm.dailyPricingModelFields = data;
+				});
 
-                    vm.sharedLogic.getDailyPricingModelFields().then(data => {
-                        vm.dailyPricingModelFields = data;
-                    });
+				vm.sharedLogic.getCurrencyFields().then(data => {
+					vm.currencyFields = data;
+				});
 
-                    vm.sharedLogic.getCurrencyFields().then(data => {
-                        vm.currencyFields = data;
-                    });
-
-                    vm.getDataForInstrumentTypeTabs();
-
-                }
-
-                if (vm.entityType === 'instrument') {
-                    vm.getDataForInstrumentTabs();
-                }
+				vm.getDataForInstrumentTypeTabs();
 
                 getEntityStatus();
 
