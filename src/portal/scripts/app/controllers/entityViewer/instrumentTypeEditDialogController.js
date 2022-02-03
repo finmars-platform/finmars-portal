@@ -140,8 +140,8 @@
             return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
         };
 
-        vm.getEntityPropertyByDefault = function () {
-            return vm.entity[vm.showByDefault];
+        vm.getShowByDefaultEntityValue = function () {
+            return vm.entity[vm.showByDefault] || '';
         };
 
         vm.getPlaceholderByDefault = function () {
