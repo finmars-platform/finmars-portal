@@ -44,6 +44,10 @@
 							actionKey: "activate_transaction",
 							name: "Activate Transaction",
 						},
+						{
+							actionKey: "rebook_transaction",
+							name: "Bulk Rebook",
+						},
 					]);
 
 				}

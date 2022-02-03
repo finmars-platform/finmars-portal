@@ -546,6 +546,30 @@
 
             }
 
+			var rebookComplexTransactions = function (flatList) {
+
+				var selectedRows = flatList.filter(function (row) {
+					return row.___is_activated;
+				});
+
+				selectedRows.forEach(function (row) {
+
+					var cTransactionObj = vm.entityViewerDataService.getObject(row.___id, row.___parentId);
+
+					// rebookComplexTransaction here
+					complexTransactionService.initRebookComplexTransaction(cTransactionObj.id).then(function (cTransactionData) {
+
+						cTransactionData.process_mode = 'rebook';
+						cTransactionData.complex_transaction_status = 1 // status PRODUCTION
+
+						complexTransactionService.rebookComplexTransaction(cTransactionData.id, cTransactionData);
+
+					});
+
+				});
+
+			};
+
             var setEventListeners = function () {
 
                 vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
@@ -780,6 +804,35 @@
 							    editEntity(entitytype, actionData);
 								break;
 
+
+							//region Complex transaction
+							case 'lock_transaction':
+                                manageTransactionsLockedAndCanceledProps('lock');
+                                break;
+
+                            case 'unlock_transaction':
+                                manageTransactionsLockedAndCanceledProps('unlock');
+                                break;
+
+                            case 'ignore_transaction':
+                                manageTransactionsLockedAndCanceledProps('ignore');
+                                break;
+
+                            case 'activate_transaction':
+                                manageTransactionsLockedAndCanceledProps('activate');
+                                break;
+
+							case 'activate_transaction':
+								manageTransactionsLockedAndCanceledProps('activate');
+								break;
+
+							case 'rebook_transaction':
+								rebookComplexTransactions(flatList);
+								break;
+							//endregion
+
+
+							//region Instrument
 							case 'edit_instrument':
 
 								/* $mdDialog.show({
@@ -828,28 +881,14 @@
 
 								break;
 
-                            case 'lock_transaction':
-                                manageTransactionsLockedAndCanceledProps('lock');
-                                break;
-
-                            case 'unlock_transaction':
-                                manageTransactionsLockedAndCanceledProps('unlock');
-                                break;
-
-                            case 'ignore_transaction':
-                                manageTransactionsLockedAndCanceledProps('ignore');
-                                break;
-
-                            case 'activate_transaction':
-                                manageTransactionsLockedAndCanceledProps('activate');
-                                break;
-
                             case 'activate_instrument':
                                 manageInstrumentProps('activate');
                                 break;
+
                             case 'deactivate_instrument':
                                 manageInstrumentProps('deactivate');
                                 break;
+							//endregion
                         }
 
                     }
