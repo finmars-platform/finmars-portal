@@ -65,10 +65,6 @@
         vm.entityStatus = '';
         vm.evEditorEvent = null;
 
-        if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
-            vm.hasEnabledStatus = false;
-        }
-
         if (Object.keys(entity).length) { // make copy option
             vm.entity = entity;
         }
@@ -88,9 +84,6 @@
 
         vm.isInheritRights = false;
 
-        vm.lastAccountType = null;
-        vm.lastInstrumentType = null;
-
         vm.canManagePermissions = false;
 
         vm.attributeTypesByValueTypes = {}; // need for pricing;
@@ -103,21 +96,10 @@
         vm.typeFieldName = 'type';
         vm.typeFieldLabel = 'Type';
 
-        if (vm.entityType === 'instrument') {
-            vm.typeFieldName = 'instrument_type';
-            vm.typeFieldLabel = 'Instrument type';
-        }
-
-        if (vm.entityType === 'instrument-type') {
-            vm.typeFieldName = 'instrument_class';
-            vm.typeFieldLabel = 'Instrument class';
-        }
+		vm.typeFieldName = 'instrument_class';
+		vm.typeFieldLabel = 'Instrument class';
 
         vm.showByDefaultOptions = SHOW_BY_DEFAULT_OPTIONS;
-
-        if (vm.entityType === 'currency') {
-            vm.showByDefaultOptions = vm.showByDefaultOptions.filter(item => item.id !== 'public_name');
-        }
 
         vm.showByDefault = vm.showByDefaultOptions[0].id;
 
@@ -136,12 +118,6 @@
 
         vm.openedIn = data.openedIn; // 'big-drawer', 'dialog'
         vm.originalFixedAreaPopupFields;
-
-        if (vm.entityType === 'instrument') {
-            vm.instrumentTypesList = []; // modified by method resolveEditLayout() inside entityViewerEditorSharedLogicHelper.js
-        }
-
-        vm.typeSelectorChange = null;
 
         var formLayoutFromAbove = data.editLayout;
 
@@ -450,12 +426,6 @@
 
                 vm.setPermissionsDefaults();
 
-                if (vm.entityType === 'account' || vm.entityType === 'instrument') {
-
-                    vm.checkInheritRight();
-
-                }
-
                 if (vm.currentMember && vm.currentMember.is_admin) {
                     vm.canManagePermissions = true;
                 }
@@ -597,148 +567,6 @@
 
         };
 
-        vm.setInheritedPermissions = function () {
-
-            console.log('setInheritedPermissions');
-
-            return new Promise(function (resolve, reject) {
-
-                if (vm.entityType === 'instrument') {
-
-                    console.log('vm.entity', vm.entity);
-
-                    entityResolverService.getByKey('instrument-type', vm.entity.instrument_type).then(function (data) {
-
-                        vm.entity.object_permissions = data.object_permissions.map(function (item) {
-
-                            var result = Object.assign({}, item);
-
-                            result.permission = item.permission.split('_')[0] + '_instrument';
-
-                            return result
-
-                        });
-
-                        console.log('vm.entityPermissions', vm.entity.object_permissions);
-
-                        vm.groups.forEach(function (group) {
-
-                            if (vm.entity.object_permissions) {
-                                vm.entity.object_permissions.forEach(function (permission) {
-
-                                    if (permission.group === group.id) {
-
-                                        if (!group.hasOwnProperty('objectPermissions')) {
-                                            group.objectPermissions = {};
-                                        }
-
-                                        if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
-                                            group.objectPermissions.manage = true;
-                                        }
-                                        if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
-                                            group.objectPermissions.change = true;
-                                        }
-                                        if (permission.permission === "view_" + vm.entityType.split('-').join('')) {
-                                            group.objectPermissions.view = true;
-                                        }
-                                    }
-                                })
-                            }
-
-                        });
-
-                        console.log('vm.groups', vm.groups);
-
-                        $scope.$apply();
-
-                    })
-
-                }
-
-                if (vm.entityType === 'account') {
-
-                    entityResolverService.getByKey('account-type', vm.entity.type).then(function (data) {
-
-                        vm.entity.object_permissions = data.object_permissions.map(function (item) {
-
-                            var result = Object.assign({}, item);
-
-                            result.permission = item.permission.split('_')[0] + '_account';
-
-                            return result
-
-                        });
-
-                        vm.groups.forEach(function (group) {
-
-                            if (vm.entity.object_permissions) {
-                                vm.entity.object_permissions.forEach(function (permission) {
-
-                                    if (permission.group === group.id) {
-
-                                        if (!group.hasOwnProperty('objectPermissions')) {
-                                            group.objectPermissions = {};
-                                        }
-
-                                        if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
-                                            group.objectPermissions.manage = true;
-                                        }
-                                        if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
-                                            group.objectPermissions.change = true;
-                                        }
-                                        if (permission.permission === "view_" + vm.entityType.split('-').join('')) {
-                                            group.objectPermissions.view = true;
-                                        }
-                                    }
-                                })
-                            }
-
-                        });
-
-                        $scope.$apply();
-
-                    })
-
-
-                }
-
-            })
-
-        };
-
-        vm.setInheritedPricing = function () {
-
-            return new Promise(function (resolve, reject) {
-
-                if (vm.entityType === 'instrument' && vm.entity.instrument_type) {
-
-                    console.log('vm.entity', vm.entity);
-
-                    entityResolverService.getByKey('instrument-type', vm.entity.instrument_type).then(function (data) {
-
-                        console.log("get instrument type ", data);
-
-                        vm.entity.pricing_policies = data.pricing_policies.map(function (policy) {
-
-                            var item = Object.assign({}, policy);
-
-                            delete item.id;
-                            delete item.overwrite_default_parameters;
-
-                            return item;
-
-                        });
-
-                        $scope.$apply();
-
-                    })
-
-                }
-
-            });
-
-        };
-
         vm.entityTypeSlug = function () {
             return vm.entityType.split('-').join(' ').capitalizeFirstLetter();
         };
@@ -793,116 +621,6 @@
 
         vm.manageAttrs = vm.sharedLogic.manageAttributeTypes;
 
-        /* vm.getFormLayout = async function () {
-
-			var editLayout;
-			var gotEditLayout = true;
-
-			if (formLayoutFromAbove) {
-				editLayout = formLayoutFromAbove;
-
-			} else {
-
-				try {
-					editLayout = await uiService.getEditLayoutByKey(vm.entityType);
-
-				} catch (error) {
-					gotEditLayout = false;
-				}
-
-			}
-
-			if (gotEditLayout &&
-				editLayout.results.length && editLayout.results[0].data) {
-
-				dataConstructorLayout = JSON.parse(JSON.stringify(editLayout.results[0]));
-
-				if (Array.isArray(editLayout.results[0].data)) {
-					vm.tabs = editLayout.results[0].data;
-
-				} else {
-
-					vm.tabs = editLayout.results[0].data.tabs;
-					vm.fixedArea = editLayout.results[0].data.fixedArea;
-
-				}
-
-			} else {
-
-				vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data.tabs;
-				vm.fixedArea = uiService.getDefaultEditLayout(vm.entityType)[0].data.fixedArea;
-
-			}
-
-			if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
-				vm.tabs.forEach(function (tab, index) {
-					tab.tabOrder = index;
-				});
-			}
-
-			if (vm.openedIn === 'big-drawer') {
-
-				// Victor 2020.11.20 #59 Fixed area popup
-				if (vm.fixedArea && vm.fixedArea.showByDefault) {
-					vm.showByDefault = vm.fixedArea.showByDefault;
-					vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
-				}
-
-				const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
-
-				if (vm.fixedAreaPopup.tabColumns !== columns) {
-
-					vm.fixedAreaPopup.tabColumns = columns;
-					vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
-
-					const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(vm.fixedAreaPopup.tabColumns);
-					$bigDrawer.setWidth(bigDrawerWidth);
-
-					if (vm.fixedAreaPopup.tabColumns !== 6) {
-						bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
-						bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');
-					} else {
-						bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-block');
-						bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
-					}
-
-				}
-				// <Victor 2020.11.20 #59 Fixed area popup>
-
-			} else {
-				vm.fixedAreaPopup.tabColumns = 6 // in dialog window there are always 2 fields outside of popup
-			}
-
-			vm.getAttributeTypes().then(function (value) {
-
-				entityViewerHelperService.transformItem(vm.entity, vm.attributeTypes);
-				//vm.generateAttributesFromLayoutFields();
-				vm.getEntityPricingSchemes();
-
-				mapAttributesAndFixFieldsLayout();
-
-				vm.readyStatus.layout = true;
-				vm.readyStatus.entity = true;
-				// vm.readyStatus.permissions = true;
-
-				console.log("vm.entity", vm.entity);
-
-				$scope.$apply();
-
-			});
-
-        };
-
-        vm.getAttributeTypes = function () {
-            return attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
-                vm.attributeTypes = data.results;
-            });
-        };
-
-        vm.checkReadyStatus = function () {
-            return vm.readyStatus.layout && vm.readyStatus.entity && vm.readyStatus.permissions
-        }; */
-
         vm.checkReadyStatus = vm.sharedLogic.checkReadyStatus;
         vm.bindFlex = vm.sharedLogic.bindFlex;
         vm.checkFieldRender = vm.sharedLogic.checkFieldRender;
@@ -936,19 +654,15 @@
         vm.updateEntityBeforeSave = function () {
 
             console.log('updateEntityBeforeSave vm.entity', vm.entity);
+			vm.entity.attributes = [];
 
-            if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
+			vm.attributeTypes.forEach(function (attributeType) {
 
-                vm.entity.attributes = [];
+				var value = vm.entity[attributeType.user_code];
 
-                vm.attributeTypes.forEach(function (attributeType) {
+				vm.entity.attributes.push(entityEditorHelper.appendAttribute(attributeType, value));
 
-                    var value = vm.entity[attributeType.user_code];
-
-                    vm.entity.attributes.push(entityEditorHelper.appendAttribute(attributeType, value));
-
-                });
-            }
+			});
 
             vm.entity.object_permissions = [];
             console.log('vm.groups', vm.groups);
@@ -1092,26 +806,9 @@
 
         vm.save = async function ($event, isAutoExitAfterSave) {
 
-            /* if (vm.entityType === 'instrument') {
-
-                const instrumentTypeId = vm.entity[vm.typeFieldName];
-                if (instrumentTypeId) {
-
-                    await vm.sharedLogic.injectUserAttributesFromInstrumentType(instrumentTypeId);
-
-                }
-            } */
-            if (vm.entityType === 'instrument') {
-                vm.entity = await setValuesFromInstrumentType(vm.entity);
-            }
-
-            if (vm.entityType === 'instrument-type') {
-
-                if (!vm.entity.instrument_factor_schedule_data) {
-                    vm.entity.instrument_factor_schedule_data = ''
-                }
-
-            }
+			if (!vm.entity.instrument_factor_schedule_data) {
+				vm.entity.instrument_factor_schedule_data = ''
+			}
 
             vm.updateEntityBeforeSave();
 
@@ -1339,29 +1036,7 @@
 
         };
 
-        var instrumentPricingCurrencyChanged = false; // only once
-
         vm.onEntityChange = function (fieldKey) {
-
-            if (vm.lastAccountType !== vm.entity.type) {
-                vm.lastAccountType = vm.entity.type;
-
-                if (vm.isInheritRights && vm.entity.type) {
-                    vm.setInheritedPermissions();
-                }
-            }
-
-            if (vm.lastInstrumentType !== vm.entity.instrument_type) {
-
-                vm.lastInstrumentType = vm.entity.instrument_type;
-
-                if (vm.isInheritRights && vm.entity.instrument_type) {
-                    vm.setInheritedPermissions();
-                }
-
-                vm.setInheritedPricing();
-
-            }
 
             if (fieldKey) {
 
@@ -1371,92 +1046,6 @@
                 }
 
                 entityEditorHelper.checkTabsForErrorFields(fieldKey, vm.evEditorDataService, attributes, vm.entity, vm.entityType, vm.tabs);
-
-                /*var fieldIndex = vm.formErrorsList.indexOf(fieldKey);
-
-                if (fieldIndex > -1) {
-
-                    var entityAttrs = [];
-                    var attrsTypes = [];
-
-                    var i;
-                    if (fieldType === 'entity-attribute') {
-                        for (i = 0; i < vm.entityAttrs.length; i++) {
-
-                            if (vm.entityAttrs[i].key === fieldKey) {
-
-                                entityAttrs.push(vm.entityAttrs[i]);
-                                break;
-
-                            }
-
-                        }
-
-                    } else if (fieldType === 'dynamic-attribute') {
-
-                        for (i = 0; i < vm.attributeTypes.length; i++) {
-                            if (vm.attributeTypes[i].user_code === fieldKey) {
-
-                                attrsTypes.push(vm.attributeTypes[i]);
-                                break;
-
-                            }
-                        }
-
-                    }
-
-                    var errors = entityEditorHelper.validateEntityFields(vm.entity,
-                        vm.entityType,
-                        vm.tabs,
-                        [], entityAttrs, attrsTypes, []);
-
-                    if (!errors.length) {
-                        vm.formErrorsList.splice(fieldIndex, 1);
-
-                        var tabKeys = Object.keys(vm.tabsWithErrors);
-
-                        for (i = 0; i < tabKeys.length; i++) {
-                            var tKey = tabKeys[i];
-                            var tabFields = vm.tabsWithErrors[tKey];
-
-                            var tabFieldIndex = tabFields.indexOf(fieldKey);
-                            if (tabFields.indexOf(fieldKey) > -1) {
-
-                                vm.tabsWithErrors[tKey].splice(tabFieldIndex, 1);
-
-                                if (!vm.tabsWithErrors[tKey].length) {
-
-                                    var selectorString = ".tab-name-elem[data-tab-name='" + tKey + "']";
-                                    var tabNameElem = document.querySelector(selectorString);
-
-                                    tabNameElem.classList.remove('error-tab');
-
-                                }
-
-                                break;
-
-                            }
-
-                        }
-                    }
-                }*/
-
-            }
-
-
-            if (vm.entityType === 'instrument') {
-
-                if (vm.entity.pricing_currency && !instrumentPricingCurrencyChanged) {
-
-                    instrumentPricingCurrencyChanged = true;
-
-                    vm.entity.accrued_currency = vm.entity.pricing_currency;
-                    vm.entity.co_directional_exposure_currency = vm.entity.pricing_currency;
-                    vm.entity.counter_directional_exposure_currency = vm.entity.pricing_currency;
-
-                }
-
-                console.log("Hello?", vm.entity)
 
             }
         };
@@ -1602,21 +1191,7 @@
 
         };
 
-        vm.getEntityPricingSchemes = function () {
-
-            if (vm.entityType === 'currency') {
-                vm.getCurrencyPricingSchemes();
-            }
-
-            if (vm.entityType === 'instrument') {
-                vm.getInstrumentPricingSchemes();
-            }
-
-            if (vm.entityType === 'instrument-type') {
-                vm.getInstrumentPricingSchemes();
-            }
-
-        };
+        vm.getEntityPricingSchemes = vm.getInstrumentPricingSchemes
 
         // Instrument Type Layout Settings tab start
 
@@ -1837,24 +1412,15 @@
 				}
 
             }, 100);*/
+			uiService.getListEditLayout('instrument').then(function (data) {
 
-            if (vm.entityType === 'instrument-type') {
+				vm.instrumentFormLayouts = data.results;
 
-                uiService.getListEditLayout('instrument').then(function (data) {
+				$scope.$apply()
 
-                    vm.instrumentFormLayouts = data.results;
+			})
 
-                    $scope.$apply()
-
-                })
-
-                vm.getDataForInstrumentTypeTabs();
-
-            }
-
-            if (vm.entityType === 'instrument') {
-                vm.getDataForInstrumentTabs();
-            }
+			vm.getDataForInstrumentTypeTabs();
 
             setTimeout(function () {
                 vm.dialogElemToResize = vm.sharedLogic.onEditorStart();
@@ -1900,30 +1466,7 @@
 
                 vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
 
-                if (vm.entityType === 'instrument') {
-
-                    vm.typeSelectorChange = function () {
-
-                        vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
-
-                            vm.tabs = data.tabs;
-                            vm.attributesLayout = data.attributesLayout;
-
-                            $scope.$apply();
-
-                        });
-
-                    };
-
-                } else {
-                    $scope.$apply();
-                }
-
-                if (['responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3'].indexOf(vm.entityType) !== -1) {
-
-                    vm.entity.group = vm.groupSelectorOptions[0].id
-
-                }
+				$scope.$apply();
 
                 /* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 
@@ -1937,12 +1480,7 @@
             });
 
             vm.getCurrencies();
-
-            if (vm.entityType === 'price-history' || vm.entityType === 'currency-history' || vm.entityType === 'portfolio-register' || vm.entityType === 'portfolio-register-record') {
-                vm.readyStatus.permissions = true;
-            } else {
-                vm.loadPermissions();
-            }
+			vm.loadPermissions();
 
             /* vm.sharedLogic.getFieldsForFixedAreaPopup().then(function (fields) {
 
