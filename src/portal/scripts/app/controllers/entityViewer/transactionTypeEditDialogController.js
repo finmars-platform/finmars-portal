@@ -738,7 +738,7 @@
         vm.save = function () {
 
             var saveTTypePromise = new Promise(function (resolve, reject) {
-
+				console.log("inputsDeletion.save entity", JSON.parse(angular.toJson(vm.entity)));
                 var entityToSave = vm.updateEntityBeforeSave(vm.entity);
 
                 /* var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
@@ -749,7 +749,7 @@
                 actionsErrors = actionsErrors.concat(inputsErrors);
 
                 var entityErrors = sharedLogic.checkEntityForEmptyFields(entityToSave);
-
+				console.log("inputsDeletion.save errors", JSON.parse(JSON.stringify(actionsErrors)), JSON.parse(JSON.stringify(entityErrors)));
                 if (actionsErrors.length || entityErrors.length) {
 
                     $mdDialog.show({
