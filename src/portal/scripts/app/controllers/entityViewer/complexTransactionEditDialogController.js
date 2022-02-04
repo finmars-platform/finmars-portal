@@ -1471,9 +1471,10 @@
                         var originValues = JSON.parse(JSON.stringify(result.values));
 
                         result.values = data.values;
-                        result.complex_transaction = data.complex_transaction; // ?
-                        result.complex_transaction.is_locked = result.is_locked; // ?
-                        result.complex_transaction.is_canceled = result.is_canceled; // ?
+						// complex_transaction property required by back in rebook request
+                        result.complex_transaction = data.complex_transaction;
+                        result.complex_transaction.is_locked = result.is_locked;
+                        result.complex_transaction.is_canceled = result.is_canceled;
 
                         var originValuesKeys = Object.keys(originValues);
                         var defaultValuesKeys = Object.keys(result.values);
@@ -1506,103 +1507,105 @@
                             resolve(data);
 
                         })
-                            .catch(function (data) {
+						.catch(function (data) {
 
-                                if (data.hasOwnProperty('message') && data.message.reason == 410) {
+							if (data.hasOwnProperty('message') && data.message.reason == 410) {
 
-                                    vm.processing = false;
+								vm.processing = false;
 
-                                    $mdDialog.show({
-                                        controller: 'BookUniquenessWarningDialogController as vm',
-                                        templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
-                                        targetEvent: $event,
-                                        parent: angular.element(document.body),
-                                        multiple: true,
-                                        locals: {
-                                            data: {
-                                                errorData: data
-                                            }
-                                        }
-                                    }).then(function (response) {
+								$mdDialog.show({
+									controller: 'BookUniquenessWarningDialogController as vm',
+									templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
+									targetEvent: $event,
+									parent: angular.element(document.body),
+									multiple: true,
+									locals: {
+										data: {
+											errorData: data
+										}
+									}
+								}).then(function (response) {
 
-                                        /* if (response.reaction === 'cancel') {
-                                            // do nothing
-                                        } */
+									/* if (response.reaction === 'cancel') {
+										// do nothing
+									} */
 
-                                        if (response.reaction === 'skip') {
-                                            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {
-                                                status: 'agree',
-                                                data: null
-                                            });
-                                        } else if (response.reaction === 'book_without_unique_code') {
+									if (response.reaction === 'skip') {
+										metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {
+											status: 'agree',
+											data: null
+										});
+									} else if (response.reaction === 'book_without_unique_code') {
 
-                                            // TODO refactor here
-                                            // 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
+										// TODO refactor here
+										// 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
 
-                                            result.uniqueness_reaction = 2;
+										result.uniqueness_reaction = 2;
 
-                                            vm.processing = true;
+										vm.processing = true;
 
-                                            transactionTypeService.bookComplexTransaction(result.transaction_type, result).then(function (data) {
+										transactionTypeService.bookComplexTransaction(result.transaction_type, result).then(function (data) {
 
-                                                vm.processing = false;
+											vm.processing = false;
 
-                                                toastNotificationService.success('Transaction was successfully booked');
+											toastNotificationService.success('Transaction was successfully booked');
 
-                                                resolve(data);
+											resolve(data);
 
-                                            })
+										})
 
-                                        } else if (response.reaction === 'overwrite') {
+									} else if (response.reaction === 'overwrite') {
 
-                                            // TODO refactor here
-                                            //  3 (OVERWRITE, ugettext_lazy('Overwrite')),
+										// TODO refactor here
+										//  3 (OVERWRITE, ugettext_lazy('Overwrite')),
 
-                                            result.uniqueness_reaction = 3;
+										result.uniqueness_reaction = 3;
 
-                                            vm.processing = true;
+										vm.processing = true;
 
-                                            transactionTypeService.bookComplexTransaction(result.transaction_type, result).then(function (data) {
+										transactionTypeService.bookComplexTransaction(result.transaction_type, result).then(function (data) {
 
-                                                vm.processing = false;
+											vm.processing = false;
 
-                                                toastNotificationService.success('Transaction was successfully booked');
+											toastNotificationService.success('Transaction was successfully booked');
 
-                                                resolve(data);
+											resolve(data);
 
-                                            })
+										})
 
-                                        }
-
-
-                                    })
+									}
 
 
-                                } else {
+								})
 
-                                    console.log('data', data);
 
-                                    vm.processing = false;
+							}
+							else {
 
-                                    $mdDialog.show({
-                                        controller: 'ValidationDialogController as vm',
-                                        templateUrl: 'views/dialogs/validation-dialog-view.html',
-                                        targetEvent: $event,
-                                        parent: angular.element(document.body),
-                                        multiple: true,
-                                        locals: {
-                                            validationData: {
-                                                errorData: data,
-                                                tableColumnsNames: ['Name of fields', 'Error Cause']
-                                            }
-                                        }
-                                    });
+								console.log('data', data);
 
-                                    reject(data);
+								vm.processing = false;
 
-                                }
+								$mdDialog.show({
+									controller: 'ValidationDialogController as vm',
+									templateUrl: 'views/dialogs/validation-dialog-view.html',
+									targetEvent: $event,
+									parent: angular.element(document.body),
+									multiple: true,
+									locals: {
+										validationData: {
+											errorData: data,
+											tableColumnsNames: ['Name of fields', 'Error Cause']
+										}
+									}
+								});
 
-                            });
+								reject(data);
+
+							}
+
+						});
+
                     });
 
                 })

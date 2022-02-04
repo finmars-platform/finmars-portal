@@ -27,7 +27,7 @@
 
         var transactionTypeService = require('../../services/transactionTypeService');
 
-        module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer, middlewareService, usersService) {
+        module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer, middlewareService, usersService, toastNotificationService) {
 
             var vm = this;
 
@@ -557,12 +557,26 @@
 					var cTransactionObj = vm.entityViewerDataService.getObject(row.___id, row.___parentId);
 
 					// rebookComplexTransaction here
-					complexTransactionService.initRebookComplexTransaction(cTransactionObj.id).then(function (cTransactionData) {
+					complexTransactionService.initRebookComplexTransaction(cTransactionObj.id).then(function (rebookData) {
 
-						cTransactionData.process_mode = 'rebook';
-						cTransactionData.complex_transaction_status = 1 // status PRODUCTION
+						var complexTransaction = rebookData.complex_transaction;
 
-						complexTransactionService.rebookComplexTransaction(cTransactionData.id, cTransactionData);
+						complexTransaction.values = rebookData.values;
+						complexTransaction.complex_transaction = JSON.parse(JSON.stringify(rebookData.complex_transaction));
+
+						complexTransaction.store = true;
+						complexTransaction.calculate = true;
+
+						complexTransaction.process_mode = 'rebook';
+						complexTransaction.complex_transaction_status = 1; // status PRODUCTION
+
+						complexTransactionService.rebookComplexTransaction(complexTransaction.id, complexTransaction).then(function () {
+							toastNotificationService.success("Transaction was successfully rebooked'");
+
+						}).catch(function (error) {
+							console.error("Error occurred while trying ro rebook complex transaction with id: " + complexTransaction.id, error);
+							toastNotificationService.error("Failed to rebook complex transaction with code: ", complexTransaction.code);
+						});
 
 					});
 
