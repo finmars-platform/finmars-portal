@@ -9,7 +9,7 @@
     var popupEvents = require('../../services/events/popupEvents');
     var evDataHelper = require('../../helpers/ev-data.helper');
 
-    var metaService = require('../../services/metaService');
+    // var metaService = require('../../services/metaService');
     var evHelperService = require('../../services/entityViewerHelperService');
     var uiService = require('../../services/uiService');
     var rvDataHelper = require('../../helpers/rv-data.helper');
@@ -18,7 +18,7 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
     var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
-    module.exports = function ($mdDialog) {
+    module.exports = function ($mdDialog, evRvDomManagerService) {
         return {
             restrict: 'AE',
             scope: {
@@ -410,6 +410,41 @@
                 };
 
                 scope.rowFilterColor = localStorageService.getRowTypeFilter(scope.isReport, scope.entityType);
+
+				scope.removeColorMarkFromAllRows = function ($event) {
+
+					$mdDialog.show({
+						controller: 'WarningDialogController as vm',
+						templateUrl: 'views/dialogs/warning-dialog-view.html',
+						parent: angular.element(document.body),
+						targetEvent: $event,
+						multiple: true,
+						locals: {
+							warning: {
+								title: 'Warning',
+								description: "Color marks will be removed for all rows in this table. Proceed?",
+								actionsButtons: [
+									{
+										name: "OK",
+										response: {status: 'agree'}
+									},
+									{
+										name: "CANCEL",
+										response: {status: 'disagree'}
+									}
+								]
+							}
+						}
+
+					}).then(function (res) {
+
+						if (res.status === 'agree') {
+							evRvDomManagerService.removeColorMarkFromAllRows(scope.evDataService, scope.evEventService);
+						}
+
+					});
+
+				};
 
                 // <Victor 2020.12.14 #69 New report viewer design>
 

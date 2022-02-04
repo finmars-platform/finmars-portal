@@ -687,7 +687,7 @@ export default (function () {
 
 	portal.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
 	portal.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]); //2021-12-17 DEPRECATED
-	portal.directive('groupColumns', ['$mdDialog', require('./app/directives/groupTable/gColumnsComponent')]);
+	portal.directive('groupColumns', ['$mdDialog', 'evRvDomManagerService', require('./app/directives/groupTable/gColumnsComponent')]);
 	portal.directive('groupActionsBlock', ['$mdDialog', '$state', '$bigDrawer', 'usersService', require('./app/directives/groupTable/gActionsBlockComponent')]);
 	// portal.directive('groupClipboardHandler', [require('./app/directives/groupTable/gClipboardHandlerComponent')]); // potentially deprecated
 	portal.directive('groupColumnResizer', [require('./app/directives/groupTable/gColumnResizerComponent')]);
