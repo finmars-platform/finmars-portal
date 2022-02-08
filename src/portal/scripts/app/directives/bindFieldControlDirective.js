@@ -727,6 +727,7 @@
                 };
 
                 $scope.onDateChange = function () {
+
                     if ($scope.entity[vm.fieldKey] === "") {
                         $scope.entity[vm.fieldKey] = null;
                     }

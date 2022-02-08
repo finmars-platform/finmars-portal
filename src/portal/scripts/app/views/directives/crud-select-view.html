@@ -11,7 +11,7 @@
              position-relative-to="element"
              relative-popup-x="left"
              popup-classes="rounded-border"
-             on-popup-close="onPopupClose()">
+             on-cancel="onPopupClose()">
 
             <span class="crud-input-name" data-ng-if="selectedItem.item">{{selectedItem.item.name}}</span>
             <span class="crud-input-name" data-ng-if="!selectedItem.item">{{label}}</span>

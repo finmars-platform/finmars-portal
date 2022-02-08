@@ -248,30 +248,30 @@
             console.log('copy entity', entity);
 
             // $mdDialog.hide();
-			if (windowType === 'big_drawer') {
+            if (windowType === 'big-drawer') {
 
-				const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType}};
-				return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
+                const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType}};
+                return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
-			} else {
+            } else {
 
-				$mdDialog.show({
-					controller: 'TransactionTypeAddDialogController as vm',
-					templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
-					parent: angular.element(document.body),
-					// targetEvent: $event,
-					locals: {
-						entityType: vm.entityType,
-						entity: entity,
-						data: {
-							openedIn: 'dialog'
-						}
-					}
-				});
+                $mdDialog.show({
+                    controller: 'TransactionTypeAddDialogController as vm',
+                    templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
+                    parent: angular.element(document.body),
+                    // targetEvent: $event,
+                    locals: {
+                        entityType: vm.entityType,
+                        entity: entity,
+                        data: {
+                            openedIn: 'dialog'
+                        }
+                    }
+                });
 
-				metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
+                metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
 
-			}
+            }
 
         };
 
@@ -304,6 +304,7 @@
         vm.range = gridHelperService.range;
 
         vm.transactionUserFields = {};
+        vm.transactionUserFieldsState = {};
 
         vm.getTransactionUserFields = sharedLogic.getTransactionUserFields;
 
@@ -502,7 +503,7 @@
 
                 if (isValid) {
 
-                    entityToSave = entityEditorHelper.removeNullFields(entityToSave);
+                    entityToSave = entityEditorHelper.removeNullFields(entityToSave, vm.entityType);
 
                     transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
 
@@ -738,8 +739,8 @@
 
         vm.save = function () {
 
-        	var saveTTypePromise = new Promise(function (resolve, reject) {
-
+            var saveTTypePromise = new Promise(function (resolve, reject) {
+				console.log("inputsDeletion.save entity", JSON.parse(angular.toJson(vm.entity)));
                 var entityToSave = vm.updateEntityBeforeSave(vm.entity);
                 // var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
                 // var entityErrors = vm.checkEntityForEmptyFields(vm.entity);
@@ -749,7 +750,7 @@
                 actionsErrors = actionsErrors.concat(inputsErrors);
 
                 var entityErrors = sharedLogic.checkEntityForEmptyFields(entityToSave);
-
+				console.log("inputsDeletion.save errors", JSON.parse(JSON.stringify(actionsErrors)), JSON.parse(JSON.stringify(entityErrors)));
                 if (actionsErrors.length || entityErrors.length) {
 
                     $mdDialog.show({
@@ -2223,9 +2224,8 @@
             }
 
         }; */
-
-		vm.appendFromTemplate = sharedLogic.appendFromTemplate;
-        vm.saveAsTemplate = sharedLogic.saveAsTemplate;
+        vm.appendFromTemplate = sharedLogic.appendFromTemplate;
+		vm.saveAsTemplate = sharedLogic.saveAsTemplate;
 
         /* var updateLinkedInputsOptionsInsideGridTable = function () {
 
@@ -2268,17 +2268,65 @@
 
         }; */
 
-        vm.recalculateUserFields = function ($event) {
+        vm.recalculateUserFields = function ($event, key) {
 
             transactionTypeService.recalculateUserFields(vm.entity.id, {
-                transaction_type_id: vm.entity.id
+                transaction_type_id: vm.entity.id,
+                key: key
             }).then(function (data) {
 
-                toastNotificationService.success("User fields of Transaction Type " + vm.entity.name + ' was successfully recalculated');
+                toastNotificationService.success("User field " + key + " of Transaction Type " + vm.entity.name + ' was successfully recalculated');
 
             })
 
         }
+
+        vm.userTextFields = [];
+        vm.userNumberFields = [];
+        vm.userDateFields = [];
+
+        for (var i = 1; i <= 30; i = i + 1) {
+            vm.userTextFields.push({
+                key: 'user_text_' + i
+            })
+        }
+
+        for (var i = 1; i <= 20; i = i + 1) {
+            vm.userNumberFields.push({
+                key: 'user_number_' + i
+            })
+        }
+
+        for (var i = 1; i <= 5; i = i + 1) {
+            vm.userDateFields.push({
+                key: 'user_date_' + i
+            })
+        }
+
+        // Context Parameters tab start
+
+        vm.deleteContextParameter = function ($event, $index) {
+            vm.entity.context_parameters.splice($index, 1);
+        }
+
+        vm.addContextParameter = function ($event) {
+
+            var order = 1;
+
+            if (vm.entity.context_parameters && vm.entity.context_parameters.length) {
+                order = vm.entity.context_parameters[vm.entity.context_parameters.length - 1].order + 1
+            }
+
+            vm.entity.context_parameters.push({
+                order:order
+            });
+
+
+        }
+
+        // Context Parameters tab end
+
+
 
         vm.init = function () {
 
@@ -2296,7 +2344,7 @@
             /* ecosystemDefaultService.getList().then(function (data) {
                 ecosystemDefaultData = data.results[0];
             }); */
-			sharedLogic.loadEcosystemDefaults();
+            sharedLogic.loadEcosystemDefaults();
 
             var getItemPromise = vm.getItem();
             var getAttrsPromise = vm.getAttrs();

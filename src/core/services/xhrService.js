@@ -37,27 +37,59 @@
                     }
                     else if (response.status >= 400 && response.status < 500) {
 
-                        response.json().then(function (data) {
+                        if (response.headers.get('Content-Type').indexOf('json') !== -1 ) {
 
+                            response.json().then(function (data) {
+
+                                var error = {
+                                    status: response.status,
+                                    statusText: response.statusText,
+                                    message: data
+                                };
+
+                                reject(error)
+
+                            })
+                        } else {
                             var error = {
                                 status: response.status,
                                 statusText: response.statusText,
-                                message: data
+                                message: '-'
                             };
 
                             reject(error)
 
-                        })
+                        }
 
                     } else if (response.status >= 500 && response.status < 600) {
 
-                        var error = {
-                            status: response.status,
-                            statusText: response.statusText,
-                            message: response.statusText
-                        };
+                        console.log('response', response);
 
-                        reject(error)
+                        try {
+
+                            response.json().then(function (data) {
+
+                                var error = {
+                                    status: response.status,
+                                    statusText: response.statusText,
+                                    message: data
+                                };
+
+                                reject(error)
+
+                            })
+
+                        } catch (e) {
+
+                            var error = {
+                                status: response.status,
+                                statusText: response.statusText,
+                                message: response.text()
+                            };
+
+                            reject(error)
+
+                        }
 
                     } else {
 
@@ -83,6 +115,7 @@
                 // if (options.notifyError !== false) errorService.notifyError(reason);
 
                 errorService.recordError(reason)
+                errorService.notifyError(reason)
 
                 console.log('XHR Service catch error', reason);
 

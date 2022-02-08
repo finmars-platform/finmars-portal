@@ -27,7 +27,7 @@
             vm.optionsForPrimaryParameter = vm.getOptionsForAttributeKey(vm.item.type_settings.value_type)
         };
 
-        vm.multipleParameterValueTypeUpdate = function () {
+        vm.multipleParameterValueTypeUpdate = function (index) {
 
             var value_type = vm.item.type_settings.data.parameters[index].value_type;
 
@@ -171,6 +171,8 @@
 
             var index = vm.item.type_settings.data.parameters.length;
 
+            index = index + 1
+
             vm.item.type_settings.data.parameters.push({index: index, ___switch_state: 'default_value'})
 
         };
@@ -227,10 +229,40 @@
             })
         };
 
+        vm.generateFunctionsForExpressionBuilder = function (){
+
+            var result = []
+
+            result.push({
+                "name": "Context Instrument",
+                "description": "-",
+                "groups": "context_var",
+                "func": 'context_instrument'
+            })
+
+            result.push({
+                "name": "Context Pricing Policy",
+                "description": "-",
+                "groups": "context_var",
+                "func": 'context_pricing_policy'
+            })
+
+            result.push({
+                "name": "Context Date",
+                "description": "-",
+                "groups": "context_var",
+                "func": 'context_date'
+            })
+
+            return result
+
+        }
+
         vm.init = function () {
 
             vm.getTypes();
             vm.getAttributeTypes();
+            vm.expressionBuilderFunctions = vm.generateFunctionsForExpressionBuilder();
 
         };
 

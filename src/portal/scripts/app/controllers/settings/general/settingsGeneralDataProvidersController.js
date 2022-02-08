@@ -162,7 +162,7 @@
 
                     $mdDialog.show({
                         controller: 'InfoDialogController as vm',
-                        templateUrl: 'views/dialogs/warning-dialog-view.html',
+                        templateUrl: 'views/dialogs/info-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         preserveScope: true,

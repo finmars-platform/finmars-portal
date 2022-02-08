@@ -30,10 +30,12 @@
     var transactionTypeService = require('../../services/transactionTypeService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function complexTransactionEditDialogController($scope, $mdDialog, $bigDrawer, $state, usersService, usersGroupService, entityType, entityId, data) {
+    module.exports = function complexTransactionEditDialogController($scope, $mdDialog, $bigDrawer, $state, usersService, usersGroupService, globalDataService, entityType, entityId, data) {
 
         var vm = this;
         var sharedLogicHelper = new ComplexTransactionEditorSharedLogicHelper(vm, $scope, $mdDialog);
+
+        vm.sharedLogic = sharedLogicHelper;
 
         vm.entityType = entityType;
         vm.entityId = entityId;
@@ -41,6 +43,8 @@
         vm.entity = {$_isValid: true};
         var dataConstructorLayout = [];
         var dcLayoutHasBeenFixed = false;
+        var notCopiedTransaction = true;
+        var ttypesList;
 
         vm.readyStatus = {attrs: false, permissions: false, entity: false, layout: false, userFields: false};
 
@@ -82,6 +86,14 @@
         vm.fieldsDataStore = {}
 
         vm.openedIn = data.openedIn;
+
+        vm.entityTabs = metaService.getEntityTabs(vm.entityType);
+
+        console.log('vm.entityTabs', vm.entityTabs);
+
+        vm.entityTabsMenuTplt = sharedLogicHelper.entityTabsMenuTplt;
+        vm.entityTabsMenuPopupData = {viewModel: vm}
+        vm.entityTablePopupClasses = "border-radius-2"
 
         var contentType = metaContentTypesService.findContentTypeByEntity("complex-transaction", "ui");
 
@@ -273,6 +285,97 @@
 
         }; */
 
+        vm.getContextParameters = function () {
+
+            var result = {};
+
+            if (vm.contextData) {
+
+                Object.keys(vm.contextData).forEach(function (key) {
+
+                    if (key.indexOf('_object') === -1) {
+                        result['context_' + key] = vm.contextData[key]
+                    }
+
+                })
+
+            }
+
+            return result
+
+        };
+
+        var postBookComplexTransactionActions = function (cTransactionData) {
+
+            var pbraResult = sharedLogicHelper.postBookRebookActions(cTransactionData, vm.recalculate);
+            vm.tabs = pbraResult.tabs;
+            vm.fixedArea = pbraResult.fixedArea;
+            dataConstructorLayout = pbraResult.dataConstructorLayout;
+            vm.inputsWithCalculations = pbraResult.inputsWithCalculations;
+            vm.userInputs = pbraResult.userInputs;
+
+            mapAttributesAndFixFieldsLayout();
+
+            // should be fired after mapAttributesAndFixFieldsLayout()
+            return sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+
+        };
+
+        vm.getFormLayout = function () {
+
+            return new Promise(function (resolve, reject) {
+
+                vm.readyStatus.layout = false;
+
+                var contextParameters = vm.getContextParameters();
+
+                console.log('contextParameters', contextParameters);
+
+                transactionTypeService.initBookComplexTransaction(vm.transactionTypeId, contextParameters).then(async function (data) {
+
+                    vm.transactionType = data.transaction_type_object;
+                    vm.entity = data.complex_transaction;
+
+
+                    vm.specialRulesReady = true;
+                    vm.readyStatus.entity = true;
+
+                    data = vm.mapValuesOnTransactionTypeChange(data);
+
+                    var keys = Object.keys(data.values);
+
+                    keys.forEach(function (item) {
+                        vm.entity[item] = data.values[item];
+                    });
+
+                    if (data.book_transaction_layout) {
+
+                        vm.missingLayoutError = false;
+
+                        await postBookComplexTransactionActions(data);
+                        // Victor 2020.12.01 #64
+                        // await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+                        // <Victor 2020.12.01 #64>
+
+                        /*vm.oldValues = {};
+
+                        vm.userInputs.forEach(function (item) {
+                            vm.oldValues[item.name] = vm.entity[item.name]
+                        });*/
+
+                    } else {
+                        vm.missingLayoutError = true;
+                    }
+
+                    vm.readyStatus.layout = true;
+                    resolve();
+
+
+                });
+
+            })
+        };
+
         vm.rearrangeMdDialogActions = function () {
             var dialogWindowWidth = vm.dialogElemToResize.clientWidth;
 
@@ -326,6 +429,191 @@
 
             fixFieldsLayoutWithMissingSockets();
             mapAttributesToLayoutFields();
+        };
+
+        var getTransactionGroups = function () {
+
+            var groups = {};
+
+            ttypesList.forEach(function (item) {
+
+                var ttypeItem = {
+                    user_code: item.user_code, // this property only used by getFavoriteTTypeOptions function
+                    id: item.id,
+                    name: item.name,
+                };
+
+                if (item.group_object) {
+
+                    if (!groups[item.group_object.id]) {
+                        groups[item.group_object.id] = {
+                            name: item.group_object.name,
+                            children: [],
+                        };
+                    }
+
+                    groups[item.group_object.id].children.push(ttypeItem);
+
+                } else {
+
+                    if (!groups['ungrouped']) {
+
+                        groups['ungrouped'] = {
+                            name: 'Ungrouped',
+                            children: [],
+                        };
+
+                    }
+
+                    groups['ungrouped'].children.push(ttypeItem);
+
+                }
+
+            });
+
+            var groupsList = Object.keys(groups).map(function (key) {
+                return groups[key];
+            });
+
+            groupsList = groupsList.filter(function (item) {
+                return !!item
+            });
+
+            return groupsList;
+
+        };
+
+        var getFavoriteTTypeOptions = function (transactionGroups) {
+
+            var favTTypeOpts = [];
+            var member = globalDataService.getMember();
+
+            if (member.data && member.data.favorites && member.data.favorites.transaction_type) {
+
+                favTTypeOpts = member.data.favorites.transaction_type.map(function (ttypeUserCode) {
+
+                    var favOption;
+
+                    var i;
+                    for (i = 0; i < transactionGroups.length; i++) {
+
+                        var tGroup = transactionGroups[i];
+
+                        favOption = tGroup.children.find(function (option) {
+                            return option.user_code === ttypeUserCode;
+                        });
+
+                        if (favOption) {
+                            return {
+                                groupName: tGroup.name,
+                                id: favOption.id,
+                                name: favOption.name
+                            };
+                        }
+
+                    }
+
+                    return null;
+
+                    /* var ttype = ttypesList.find(function (ttype) {
+                        return ttype.user_code === ttypeUserCode;
+                    });
+
+                    if (!ttype) {return ttype;}
+
+                    return {
+                        id: ttype.id,
+                        name: ttype.name
+                    }; */
+
+                })
+                    .filter(function (fTttype) {
+                        return !!fTttype;
+                    });
+
+            }
+
+            return favTTypeOpts;
+
+        };
+
+
+        vm.saveFavoriteTTypeOptions = function () {
+
+            var member = globalDataService.getMember();
+
+            if (!member.data) {
+                member.data = {};
+            }
+
+            if (!member.data.favorites) {
+                member.data.favorites = {};
+            }
+
+            member.data.favorites.transaction_type = vm.favTTypeOpts.map(function (ttypeOpt) {
+                var ttype = ttypesList.find(ttype => ttype.id === ttypeOpt.id);
+                return ttype.user_code;
+            });
+
+            usersService.updateMember(member.id, member);
+
+        };
+
+        /** @param transactionType {{id: Number, name: String}}*/
+        vm.transactionTypeChange = function () {
+
+            // vm.transactionTypeId = selectedTType.id;
+
+            notCopiedTransaction = true;
+            vm.entity.transaction_type = vm.transactionTypeId;
+
+            vm.dataConstructorData = {
+                entityType: vm.entityType,
+                instanceId: vm.transactionTypeId
+            };
+
+            // show loader while vm.getFormLayout performs
+            vm.readyStatus.layout = false;
+            $scope.$apply();
+
+            vm.getFormLayout().then(function () {
+                $scope.$apply();
+            });
+
+        };
+
+        vm.loadTransactionTypes = function () {
+
+            var options = {
+                pageSize: 1000
+            };
+
+            // transactionTypeService.getList(options).then(function (data) {
+            transactionTypeService.getListLight(options).then(function (data) {
+
+                ttypesList = data.results;
+                vm.transactionGroups = getTransactionGroups(ttypesList);
+
+                vm.favTTypeOpts = getFavoriteTTypeOptions(vm.transactionGroups);
+
+                vm.readyStatus.transactionTypes = true;
+
+                $scope.$apply(function () {
+                    setTimeout(function () {
+                        $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
+                            ev.stopPropagation();
+                        });
+                    }, 100);
+                });
+            })
+
+        };
+
+        vm.filtersChange = function () {
+
+            vm.transactionTypeId = null;
+            vm.loadTransactionTypes();
+
         };
 
         vm.loadPermissions = function () {
@@ -482,7 +770,7 @@
 
             var entity = JSON.parse(JSON.stringify(vm.entity));
 
-            if (windowType === 'big_drawer') {
+            if (windowType === 'big-drawer') {
 
                 const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType, isCopy: true}};
                 return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
@@ -806,6 +1094,9 @@
             return new Promise(function (resolve, reject) {
 
                 complexTransactionService.initRebookComplexTransaction(vm.entityId).then(async function (cTransactionData) {
+
+
+                    vm.originalComplexTransaction = JSON.parse(JSON.stringify(cTransactionData));
 
                     vm.complexTransactionData = cTransactionData;
 
@@ -1150,7 +1441,7 @@
 
             } else {
 
-                var result = entityEditorHelper.removeNullFields(vm.entity);
+                var result = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                 result.values = {};
 
@@ -1398,7 +1689,7 @@
 
             } else {
 
-                var result = entityEditorHelper.removeNullFields(vm.entity);
+                var result = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                 result.values = {};
 
@@ -1613,7 +1904,7 @@
 
                 // if (hasProhibitNegNums.length === 0) {
 
-                    var result = entityEditorHelper.removeNullFields(vm.entity);
+                    var result = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                     /*result.values = {};
 
@@ -1766,6 +2057,26 @@
 
         };
 
+        vm.mapValuesOnTransactionTypeChange = function (newBookData){
+
+            Object.keys(newBookData.values).forEach(function (key){
+
+                Object.keys(vm.originalComplexTransaction.values).forEach(function (ctKey) {
+
+                    if (key === ctKey) {
+
+                        newBookData.values[key] = vm.originalComplexTransaction.values[key]
+
+                    }
+
+                })
+
+
+            })
+
+            return newBookData
+        }
+
         vm.init = function () {
 
             /*
@@ -1798,6 +2109,7 @@
 
             vm.getItem();
             vm.getAttributeTypes();
+            vm.loadTransactionTypes();
 
         };
 

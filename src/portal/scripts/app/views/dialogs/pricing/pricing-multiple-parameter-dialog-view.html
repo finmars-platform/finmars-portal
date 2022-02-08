@@ -17,8 +17,8 @@
 
                     <tr>
 
-                        <th>Name</th>
-                        <th>Type</th>
+                        <th class="width-20">Name</th>
+                        <th class="width-20">Type</th>
                         <th>Value</th>
 
                     </tr>
@@ -37,9 +37,9 @@
                             {{vm.getVerboseValueType(item.value_type)}}
                         </th>
 
-                        <th>
+                        <th class="flex-row flex-i-center fc-space-between">
 
-                            <div layout="row" data-ng-if="item.___switch_state == 'default_value'">
+<!--                            <div layout="row" data-ng-if="item.___switch_state == 'default_value'">
 
                                 <md-input-container>
                                     <label>Default Value</label>
@@ -63,7 +63,9 @@
 
                                 <md-button class="md-raised md-primary" data-ng-click="vm.switch($event, item)">Switch</md-button>
 
-                            </div>
+                            </div>-->
+
+                            <multitype-field class="width-50 custom-input-bottom-space" field-types-data="item.___fieldTypesData" on-value-change="vm.onValueChange(item)"></multitype-field>
 
                         </th>
 

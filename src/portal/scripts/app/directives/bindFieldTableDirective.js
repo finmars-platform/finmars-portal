@@ -58,6 +58,7 @@
 				let thisTableChanged = false;
 				// let thisTableChanged = {value: false}
 				let entitySpecificData;
+				let tableTopPanelIsOn = false;
 				let tableColumnsList;
 				/**
 				 * Fill each grid table row's cell with data from entity
@@ -641,12 +642,16 @@
 
 					}
 
-					if (rowsAddition.to_show || rowsDeletion.to_show) gridTableData.components.topPanel = {};
+					if (rowsAddition.to_show || rowsDeletion.to_show || rowsDeletion.to_show || tableTopPanelIsOn) {
 
-					gridTableData.components.topPanel.addButton = !!rowsAddition.to_show;
+						gridTableData.components.topPanel = {};
 
-					gridTableData.components.topPanel.rowsDeletionPanel = !!rowsDeletion.to_show
-					gridTableData.components.rowCheckboxes = !!rowsDeletion.to_show;
+						gridTableData.components.topPanel.addButton = !!rowsAddition.to_show;
+						gridTableData.components.topPanel.rowsDeletionPanel = !!rowsDeletion.to_show;
+
+						gridTableData.components.rowCheckboxes = !!rowsDeletion.to_show;
+
+					}
 
 				};
 
@@ -881,11 +886,15 @@
 							const buildBtn = scope.item.options.tableData.find(item => item.key === 'build_accruals_btn');
 
 							if (buildBtn.to_show) {
+
+								tableTopPanelIsOn = true;
+
 								buttonsList.push({
 									key: buildBtn.key,
 									name: "Build accruals",
 									onClick: function ($event, _$popup) {_$popup.cancel();console.log("build accruals");}
 								});
+
 							}
 
 							scope.popupData = {
@@ -922,11 +931,15 @@
 							const buildBtn = scope.item.options.tableData.find(item => item.key === 'build_events_btn');
 
 							if (buildBtn.to_show) {
+
+								tableTopPanelIsOn = true;
+
 								buttonsList.push({
 									key: buildBtn.key,
 									name: "Build events",
 									onClick: function ($event, _$popup) {_$popup.cancel();console.log("build events");}
 								});
+
 							}
 
 							scope.popupData = {
