@@ -1,4 +1,4 @@
-<md-dialog aria-label="" ng-cloak class="draggable-dialog width-50" drag-dialog>
+<md-dialog aria-label="instrument pricing scheme edit dialog" ng-cloak class="draggable-dialog width-50" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
@@ -63,14 +63,26 @@
 
                 <h4>Single Parameter Formula</h4>
 
+                <md-input-container class="m-t-16">
+                    <label>Value Type</label>
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                        <md-option value="10">Text</md-option>
+                        <md-option value="20">Number</md-option>
+                        <md-option value="40">Date</md-option>
+                    </md-select>
+                </md-input-container>
+
                 <div layout="row" data-ng-if="vm.switchState == 'default_value'">
 
                     <md-input-container>
                         <label>Default Value</label>
-                        <input type="text" data-ng-model="vm.item.type_settings.default_value">
+                        <input type="text" data-ng-model="vm.item.type_settings.default_value" ng-if="!vm.item.type_settings.default_value">
                     </md-input-container>
 
-                    <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
+                    <md-button class="md-raised md-primary"
+                               data-ng-click="vm.switch($event)"
+                               ng-disabled="!vm.item.type_settings.value_type">Switch</md-button>
 
                 </div>
 
@@ -89,19 +101,33 @@
 
                 </div>
 
-                <md-input-container class="m-t-16">
-                    <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type"
-                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
-                        <md-option value="10">Text</md-option>
-                        <md-option value="20">Number</md-option>
-                        <md-option value="40">Date</md-option>
-                    </md-select>
-                </md-input-container>
-
                 <div class="pricing-scheme-help-box">
 
                     <h4>Available variables:</h4>
+
+                    <div>
+                        <b>context_date</b>
+                    </div>
+
+                    <div>
+                        <b>context_instrument</b>
+                    </div>
+
+                    <div>
+                        <b>context_pricing_policy</b>
+                    </div>
+
+                    <div>
+                        <b>context_date</b>
+                    </div>
+
+                    <div>
+                        <b>context_instrument</b>
+                    </div>
+
+                    <div>
+                        <b>context_pricing_policy</b>
+                    </div>
 
                     <div>
                         <b>parameter</b>
@@ -128,6 +154,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                                               data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -141,6 +168,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.pricing_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -181,6 +209,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -194,6 +223,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -214,14 +244,28 @@
 
                 <h5>Pricing Parameters</h5>
 
+                <md-input-container class="m-t-16">
+                    <label>Value Type</label>
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                        <md-option value="10">Text</md-option>
+                        <md-option value="20">Number</md-option>
+                        <md-option value="40">Date</md-option>
+                    </md-select>
+                </md-input-container>
+
                 <div layout="row" data-ng-if="vm.switchState == 'default_value'">
 
                     <md-input-container>
                         <label>Default Value</label>
-                        <input type="text" data-ng-model="vm.item.type_settings.default_value">
+                        <input type="text"
+                               data-ng-model="vm.item.type_settings.default_value"
+                               ng-disabled="!vm.item.type_settings.default_value">
                     </md-input-container>
 
-                    <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
+                    <md-button class="md-raised md-primary"
+                               data-ng-click="vm.switch($event)"
+                               ng-disabled="!vm.item.type_settings.value_type">Switch</md-button>
 
                 </div>
 
@@ -240,19 +284,9 @@
 
                 </div>
 
-                <md-input-container class="m-t-16">
-                    <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type"
-                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
-                        <md-option value="10">Text</md-option>
-                        <md-option value="20">Number</md-option>
-                        <md-option value="40">Date</md-option>
-                    </md-select>
-                </md-input-container>
-
                 <div class="m-t-16">
 
-                    <div data-ng-repeat="item in vm.item.type_settings.data.parameters" layout="row">
+                    <div data-ng-repeat="item in vm.item.type_settings.data.parameters" layout="row" data-ng-if="item.index != 0">
 
                         <md-input-container>
                             <label>Index</label>
@@ -323,10 +357,22 @@
                     <h4>Available variables:</h4>
 
                     <div>
+                        <b>context_date</b>
+                    </div>
+
+                    <div>
+                        <b>context_instrument</b>
+                    </div>
+
+                    <div>
+                        <b>context_pricing_policy</b>
+                    </div>
+
+                    <div>
                         <b>parameter</b>
                     </div>
 
-                    <div data-ng-repeat="item in vm.item.type_settings.data.parameters">
+                    <div data-ng-repeat="item in vm.item.type_settings.data.parameters" data-ng-if="item.index != 0">
                         <b>parameter{{item.index}}</b>
                     </div>
 
@@ -351,6 +397,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                                               data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -364,6 +411,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.pricing_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -404,6 +452,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -417,6 +466,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -436,14 +486,28 @@
 
                 <h4>Bloomberg</h4>
 
+                <md-input-container class="m-t-16">
+                    <label>Value Type</label>
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                        <md-option value="10">Text</md-option>
+                        <md-option value="20">Number</md-option>
+                        <md-option value="40">Date</md-option>
+                    </md-select>
+                </md-input-container>
+
                 <div layout="row" data-ng-if="vm.switchState == 'default_value'">
 
                     <md-input-container>
                         <label>Default Value</label>
-                        <input type="text" data-ng-model="vm.item.type_settings.default_value">
+                        <input type="text"
+                               data-ng-model="vm.item.type_settings.default_value"
+                               ng-disabled="!vm.item.type_settings.default_value">
                     </md-input-container>
 
-                    <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
+                    <md-button class="md-raised md-primary"
+                               data-ng-click="vm.switch($event)"
+                               ng-disabled="!vm.item.type_settings.value_type">Switch</md-button>
 
                 </div>
 
@@ -461,16 +525,6 @@
                     <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
 
                 </div>
-
-                <md-input-container class="m-t-16">
-                    <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type"
-                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
-                        <md-option value="10">Text</md-option>
-                        <md-option value="20">Number</md-option>
-                        <md-option value="40">Date</md-option>
-                    </md-select>
-                </md-input-container>
 
                 <h4 class="m-t-16">Parameters for T-1 Pricing</h4>
 
@@ -529,6 +583,18 @@
                     <h4>Available variables:</h4>
 
                     <div>
+                        <b>context_date</b>
+                    </div>
+
+                    <div>
+                        <b>context_instrument</b>
+                    </div>
+
+                    <div>
+                        <b>context_pricing_policy</b>
+                    </div>
+
+                    <div>
                         <b>bid</b>
                     </div>
 
@@ -565,6 +631,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                                               data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -578,6 +645,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.pricing_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -618,6 +686,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -631,6 +700,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -649,14 +719,28 @@
 
                 <h4>World Trading Data</h4>
 
+                <md-input-container class="m-t-16">
+                    <label>Value Type</label>
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                        <md-option value="10">Text</md-option>
+                        <md-option value="20">Number</md-option>
+                        <md-option value="40">Date</md-option>
+                    </md-select>
+                </md-input-container>
+
                 <div layout="row" data-ng-if="vm.switchState == 'default_value'">
 
                     <md-input-container>
                         <label>Default Value</label>
-                        <input type="text" data-ng-model="vm.item.type_settings.default_value">
+                        <input type="text"
+                               data-ng-model="vm.item.type_settings.default_value"
+                               ng-disabled="!vm.item.type_settings.default_value">
                     </md-input-container>
 
-                    <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
+                    <md-button class="md-raised md-primary"
+                               data-ng-click="vm.switch($event)"
+                               ng-disabled="!vm.item.type_settings.value_type">Switch</md-button>
 
                 </div>
 
@@ -675,19 +759,21 @@
 
                 </div>
 
-                <md-input-container class="m-t-16">
-                    <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type"
-                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
-                        <md-option value="10">Text</md-option>
-                        <md-option value="20">Number</md-option>
-                        <md-option value="40">Date</md-option>
-                    </md-select>
-                </md-input-container>
-
                 <div class="pricing-scheme-help-box">
 
                     <h4>Available variables:</h4>
+
+                    <div>
+                        <b>context_date</b>
+                    </div>
+
+                    <div>
+                        <b>context_instrument</b>
+                    </div>
+
+                    <div>
+                        <b>context_pricing_policy</b>
+                    </div>
 
                     <div>
                         <b>open</b>
@@ -707,6 +793,26 @@
 
                     <div>
                         <b>volume</b>
+                    </div>
+
+                    <div>
+                        <b>open_error</b>
+                    </div>
+
+                    <div>
+                        <b>close_error</b>
+                    </div>
+
+                    <div>
+                        <b>low_error</b>
+                    </div>
+
+                    <div>
+                        <b>high_error</b>
+                    </div>
+
+                    <div>
+                        <b>volume_error</b>
                     </div>
 
                 </div>
@@ -730,6 +836,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                                               data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -743,6 +850,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.pricing_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -783,6 +891,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -796,6 +905,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -814,14 +924,28 @@
 
                 <h4>Alpha Vantage</h4>
 
+                <md-input-container class="m-t-16">
+                    <label>Value Type</label>
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                        <md-option value="10">Text</md-option>
+                        <md-option value="20">Number</md-option>
+                        <md-option value="40">Date</md-option>
+                    </md-select>
+                </md-input-container>
+
                 <div layout="row" data-ng-if="vm.switchState == 'default_value'">
 
                     <md-input-container>
                         <label>Default Value</label>
-                        <input type="text" data-ng-model="vm.item.type_settings.default_value">
+                        <input type="text"
+                               data-ng-model="vm.item.type_settings.default_value"
+                               ng-disabled="!vm.item.type_settings.default_value">
                     </md-input-container>
 
-                    <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
+                    <md-button class="md-raised md-primary"
+                               data-ng-click="vm.switch($event)"
+                               ng-disabled="!vm.item.type_settings.value_type">Switch</md-button>
 
                 </div>
 
@@ -840,19 +964,21 @@
 
                 </div>
 
-                <md-input-container class="m-t-16">
-                    <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type"
-                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
-                        <md-option value="10">Text</md-option>
-                        <md-option value="20">Number</md-option>
-                        <md-option value="40">Date</md-option>
-                    </md-select>
-                </md-input-container>
-
                 <div class="pricing-scheme-help-box">
 
                     <h4>Available variables:</h4>
+
+                    <div>
+                        <b>context_date</b>
+                    </div>
+
+                    <div>
+                        <b>context_instrument</b>
+                    </div>
+
+                    <div>
+                        <b>context_pricing_policy</b>
+                    </div>
 
                     <!--<div>-->
                     <!--<b>open</b>-->
@@ -860,6 +986,10 @@
 
                     <div>
                         <b>close</b>
+                    </div>
+
+                    <div>
+                        <b>close_error</b>
                     </div>
 
                     <!--<div>-->
@@ -895,6 +1025,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                                               data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -908,6 +1039,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.pricing_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -948,6 +1080,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -961,6 +1094,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -981,14 +1115,28 @@
 
                 <h5>Pricing Parameters</h5>
 
+                <md-input-container class="m-t-16">
+                    <label>Value Type</label>
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                        <md-option value="10">Text</md-option>
+                        <md-option value="20">Number</md-option>
+                        <md-option value="40">Date</md-option>
+                    </md-select>
+                </md-input-container>
+
                 <div layout="row" data-ng-if="vm.switchState == 'default_value'">
 
                     <md-input-container>
-                        <label>Maturity Date</label>
-                        <input type="text" data-ng-model="vm.item.type_settings.default_value">
+                        <label>Default Value</label>
+                        <input type="text"
+                               data-ng-model="vm.item.type_settings.default_value"
+                               ng-disabled="!vm.item.type_settings.default_value">
                     </md-input-container>
 
-                    <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
+                    <md-button class="md-raised md-primary"
+                               data-ng-click="vm.switch($event)"
+                               ng-disabled="!vm.item.type_settings.value_type">Switch</md-button>
 
                 </div>
 
@@ -1004,20 +1152,6 @@
                     </md-input-container>
 
                     <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
-
-                </div>
-
-                <div>
-
-                    <md-input-container class="m-t-16">
-                        <label>Value Type</label>
-                        <md-select data-ng-model="vm.item.type_settings.value_type"
-                                   data-ng-change="vm.primaryParameterValueTypeUpdate()">
-                            <md-option value="10">Text</md-option>
-                            <md-option value="20">Number</md-option>
-                            <md-option value="40">Date</md-option>
-                        </md-select>
-                    </md-input-container>
 
                 </div>
 
@@ -1106,7 +1240,23 @@
                     <h4>Available variables:</h4>
 
                     <div>
+                        <b>context_date</b>
+                    </div>
+
+                    <div>
+                        <b>context_instrument</b>
+                    </div>
+
+                    <div>
+                        <b>context_pricing_policy</b>
+                    </div>
+
+                    <div>
                         <b>price</b>
+                    </div>
+
+                    <div>
+                        <b>price_error</b>
                     </div>
 
                     <div>
@@ -1213,6 +1363,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                                               data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -1226,6 +1377,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.pricing_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -1266,6 +1418,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -1279,6 +1432,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -1339,6 +1493,18 @@
                     <h4>Available variables:</h4>
 
                     <div>
+                        <b>context_date</b>
+                    </div>
+
+                    <div>
+                        <b>context_instrument</b>
+                    </div>
+
+                    <div>
+                        <b>context_pricing_policy</b>
+                    </div>
+
+                    <div>
                         <b>open</b>
                     </div>
 
@@ -1378,6 +1544,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                                               data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -1391,6 +1558,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.pricing_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -1431,6 +1599,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>
@@ -1444,6 +1613,7 @@
                                     </md-input-container>
 
                                     <expression-editor-button data-item="vm.item.type_settings.accrual_error_text_expr"
+                                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                                               style="float: right"></expression-editor-button>
 
                                 </div>

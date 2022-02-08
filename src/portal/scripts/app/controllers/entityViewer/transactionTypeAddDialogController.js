@@ -271,6 +271,7 @@
         };
 
         vm.transactionUserFields = {};
+        vm.transactionUserFieldsState = {};
 
         vm.getTransactionUserFields = sharedLogic.getTransactionUserFields;
 
@@ -302,21 +303,21 @@
 
             if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
 
-				entity.attributes = [];
+                entity.attributes = [];
 
                 vm.attrs.forEach(function (attributeType) {
 
                     var value = entity[attributeType.user_code];
 
-					entity.attributes.push(entityEditorHelper.appendAttribute(attributeType, value));
+                    entity.attributes.push(entityEditorHelper.appendAttribute(attributeType, value));
 
                 });
             }
 
-			entity.object_permissions = [];
+            entity.object_permissions = [];
 
             // code that should be working for Add and Edit complex transaction, add to sharedLogic.updateEntityBeforeSave()
-			return sharedLogic.updateEntityBeforeSave(entity);
+            return sharedLogic.updateEntityBeforeSave(entity);
 
         };
 
@@ -600,11 +601,18 @@
             'user_text_1', 'user_text_2', 'user_text_3', 'user_text_4', 'user_text_5', 'user_text_6',
             'user_text_7', 'user_text_8', 'user_text_9', 'user_text_10', 'user_text_1', 'user_text_11',
             'user_text_12', 'user_text_13', 'user_text_14', 'user_text_15', 'user_text_16', 'user_text_17',
-            'user_text_18', 'user_text_19', 'user_text_20', 'user_number_1', 'user_number_2',
+            'user_text_18', 'user_text_19', 'user_text_20', 'user_text_21', 'user_text_22', 'user_text_23',
+            'user_text_24', 'user_text_25', 'user_text_26', 'user_text_27', 'user_text_28', 'user_text_29',
+            'user_text_30',
+
+            'user_number_1', 'user_number_2',
             'user_number_3', 'user_number_4', 'user_number_5', 'user_number_6', 'user_number_7',
             'user_number_8', 'user_number_9', 'user_number_10', 'user_number_11', 'user_number_12',
             'user_number_13', 'user_number_14', 'user_number_15', 'user_number_16', 'user_number_17',
-            'user_number_18', 'user_number_19', 'user_number_20', 'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'];
+            'user_number_18', 'user_number_19', 'user_number_20',
+
+
+            'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'];
 
         var createDefaultEditLayout = function (ttypeData) {
 
@@ -681,8 +689,8 @@
             addFields("layoutAttrs");
 
             var editLayoutData = {
-            	"name": "Form layout of transaction type: " + ttypeData.name,
-				"user_code": ttypeData.user_code + '_edit_layout',
+                "name": "Form layout of transaction type: " + ttypeData.name,
+                "user_code": ttypeData.user_code + '_edit_layout',
                 "data": [
                     {
                         "layout": {
@@ -696,7 +704,7 @@
                 ]
             };
 
-			return transactionTypeService.patch(instanceId, {
+            return transactionTypeService.patch(instanceId, {
                 book_transaction_layout: editLayoutData
             });
 
@@ -709,8 +717,8 @@
                 vm.entity = vm.updateEntityBeforeSave(vm.entity);
 
                 var actionsErrors = sharedLogic.checkActionsForEmptyFields(vm.entity.actions);
-				var inputsErrors = sharedLogic.validateInputs(vm.entity.inputs);
-				actionsErrors = actionsErrors.concat(inputsErrors);
+                var inputsErrors = sharedLogic.validateInputs(vm.entity.inputs);
+                actionsErrors = actionsErrors.concat(inputsErrors);
 
                 var entityErrors = sharedLogic.checkEntityForEmptyFields(vm.entity);
 
@@ -737,8 +745,7 @@
 
                     reject();
 
-                }
-                else {
+                } else {
 
                     vm.processing = true;
 
@@ -757,7 +764,7 @@
 
                         }
 
-						vm.entity.object_permissions = responseData.object_permissions;
+                        vm.entity.object_permissions = responseData.object_permissions;
 
                         console.log("Creating: book_transaction_layout", vm.entity.book_transaction_layout);
 
@@ -768,11 +775,11 @@
                             $scope.$apply();
 
                             // resolve(resolve(responseData));
-							resolve(responseData);
+                            resolve(responseData);
 
                         } else {
 
-                        	createDefaultEditLayout(responseData).then(function () {
+                            createDefaultEditLayout(responseData).then(function () {
                                 vm.processing = false;
 
                                 $scope.$apply();
@@ -783,26 +790,26 @@
                         }
 
                     })
-					.catch(function (data) {
+                        .catch(function (data) {
 
-                        $mdDialog.show({
-                            controller: 'ValidationDialogController as vm',
-                            templateUrl: 'views/dialogs/validation-dialog-view.html',
-                            targetEvent: $event,
-                            locals: {
-                                validationData: data
-                            },
-                            preserveScope: true,
-                            multiple: true,
-                            autoWrap: true,
-                            skipHide: true
-                        });
+                            $mdDialog.show({
+                                controller: 'ValidationDialogController as vm',
+                                templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                targetEvent: $event,
+                                locals: {
+                                    validationData: data
+                                },
+                                preserveScope: true,
+                                multiple: true,
+                                autoWrap: true,
+                                skipHide: true
+                            });
 
-                        vm.processing = false;
+                            vm.processing = false;
 
-                        reject();
+                            reject();
 
-                    })
+                        })
 
                 }
 
@@ -1594,7 +1601,7 @@
             });
         }; */
 
-        vm.clearPhantoms = function(){
+        vm.clearPhantoms = function () {
 
             console.log('vm.clearPhantoms');
 
@@ -1602,7 +1609,7 @@
 
             vm.entity.actions.forEach(function (action) {
 
-                Object.keys(action).forEach(function(actionKey) {
+                Object.keys(action).forEach(function (actionKey) {
 
                     if (action[actionKey]) {
                         Object.keys(action[actionKey]).forEach(function (key) {
@@ -1876,7 +1883,7 @@
 
             })
         }; */
-		vm.loadRelation = sharedLogic.loadRelation;
+        vm.loadRelation = sharedLogic.loadRelation;
 
         vm.getNameByValueType = function (value) {
 
@@ -2224,8 +2231,53 @@
 
         }; */
 
+        vm.userTextFields = [];
+        vm.userNumberFields = [];
+        vm.userDateFields = [];
+
+        for (var i = 1; i <= 30; i = i + 1) {
+            vm.userTextFields.push({
+                key: 'user_text_' + i
+            })
+        }
+
+        for (var i = 1; i <= 20; i = i + 1) {
+            vm.userNumberFields.push({
+                key: 'user_number_' + i
+            })
+        }
+
+        for (var i = 1; i <= 5; i = i + 1) {
+            vm.userDateFields.push({
+                key: 'user_date_' + i
+            })
+        }
+
 
         // Transaction type actions controller end
+
+        // Context Parameters tab start
+
+        vm.deleteContextParameter = function ($event, $index) {
+            vm.entity.context_parameters.splice($index, 1);
+        }
+
+        vm.addContextParameter = function ($event) {
+
+            var order = 1;
+
+            if (vm.entity.context_parameters && vm.entity.context_parameters.length) {
+                order = vm.entity.context_parameters[vm.entity.context_parameters.length - 1].order + 1
+            }
+
+            vm.entity.context_parameters.push({
+                order:order
+            });
+
+
+        }
+
+        // Context Parameters tab end
 
         vm.init = function () {
 
@@ -2243,7 +2295,7 @@
             /* ecosystemDefaultService.getList().then(function (data) {
                 ecosystemDefaultData = data.results[0];
             }); */
-			sharedLogic.loadEcosystemDefaults();
+            sharedLogic.loadEcosystemDefaults();
 
             var attrsProm = vm.getAttributeTypes(); // this
             var userFieldsProm = vm.getTransactionUserFields();

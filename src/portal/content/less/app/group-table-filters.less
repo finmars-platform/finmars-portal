@@ -13,7 +13,7 @@
   margin: 3px 8px;
 }
 
-// old group table filters
+//region old group table filters
 .g-filter-sidebar.additions-sidebar {
   &::before {
     display: block;
@@ -59,11 +59,11 @@
   }
 }
 
-.g-filters-holder-container {
+/* .g-filters-holder-container {
   padding: 0 8px;
   width: 100%;
   box-sizing: border-box;
-}
+} */
 
 .g-filter-item {
   padding: 16px 10px 0;
@@ -249,7 +249,54 @@ md-checkbox.g-filter-options-checkbox {
     text-transform: none;
   }
 }
-// < old group table filters >
+//endregion old group table filters
+
+.g-filters {
+  position: relative;
+  height: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  // transition: max-height 0.5s linear;
+  color: @gray;
+  font-size: 14px;
+  background-color: white;
+
+  &.open-filters {
+    height: auto;
+    overflow: visible;
+  }
+
+  .g-filter-left-part {
+    display: flex;
+    flex: 0 0 104px;
+
+    &.no-ev-g-filter-switch {
+      flex-basis: 52px;
+    }
+  }
+
+  .g-filters-holder.hide-ev-front-filters {
+    .add-chip-wrap {
+      display: none;
+    }
+  }
+
+  .g-filter-settings-big-left-btn {
+    display: flex;
+    justify-content: center;
+  }
+
+  .g-toggle-filters-btn {
+    border-radius: 100%;
+
+    &:not([disabled]):hover {
+      background-color: @paleOrange;
+      color: @orange;
+    }
+
+  }
+
+}
 
 .g-filter-chips-wrap {
   // max-width: 800px;
@@ -267,14 +314,19 @@ md-checkbox.g-filter-options-checkbox {
 
     // Victor 2021.03.26 #85 only active filters must be orange
     &.active {
-
       background-color: rgba(240, 90, 34, 0.1);
       color: @orange;
 
       &:hover {
         background-color: @orange;
         color: #fff;
+
+        span.error {
+          color: #fff;
+        }
       }
+
+
       // <Victor 2021.03.26 #85 only active filters must be orange>
 
     }
@@ -291,7 +343,7 @@ md-checkbox.g-filter-options-checkbox {
       }
     }
 
-    .material-icons {
+    .material-icons:not(.error) {
       color: inherit;
     }
   }

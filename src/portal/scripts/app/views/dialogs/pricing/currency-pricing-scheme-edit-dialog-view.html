@@ -104,6 +104,18 @@
                     <h4>Available variables:</h4>
 
                     <div>
+                        <b>context_date</b>
+                    </div>
+
+                    <div>
+                        <b>context_currency</b>
+                    </div>
+
+                    <div>
+                        <b>context_pricing_policy</b>
+                    </div>
+
+                    <div>
                         <b>parameter</b>
                     </div>
 
@@ -117,6 +129,7 @@
                     </md-input-container>
 
                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                               style="float: right"></expression-editor-button>
 
                 </div>
@@ -177,7 +190,7 @@
 
                 <div>
 
-                    <div data-ng-repeat="item in vm.item.type_settings.data.parameters" layout="row">
+                    <div data-ng-repeat="item in vm.item.type_settings.data.parameters" layout="row" data-ng-if="item.index != 0">
 
                         <md-input-container>
                             <label>Index</label>
@@ -246,10 +259,22 @@
                     <h4>Available variables:</h4>
 
                     <div>
+                        <b>context_date</b>
+                    </div>
+
+                    <div>
+                        <b>context_currency</b>
+                    </div>
+
+                    <div>
+                        <b>context_pricing_policy</b>
+                    </div>
+
+                    <div>
                         <b>parameter</b>
                     </div>
 
-                    <div data-ng-repeat="item in vm.item.type_settings.data.parameters">
+                    <div data-ng-repeat="item in vm.item.type_settings.data.parameters" data-ng-if="item.index != 0">
                         <b>parameter{{item.index}}</b>
                     </div>
 
@@ -263,6 +288,7 @@
                     </md-input-container>
 
                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                               style="float: right"></expression-editor-button>
 
                 </div>
@@ -332,8 +358,26 @@
                     <h4>Available variables:</h4>
 
                     <div>
-                        <b>bid</b>
+                        <b>context_date</b>
                     </div>
+
+                    <div>
+                        <b>context_currency</b>
+                    </div>
+
+                    <div>
+                        <b>context_pricing_policy</b>
+                    </div>
+
+                    <div>
+                        <b>fx_rate</b>
+                    </div>
+
+                    <div>
+                        <b>fx_rate_error</b>
+                    </div>
+
+
 
                 </div>
 
@@ -345,6 +389,7 @@
                     </md-input-container>
 
                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                               style="float: right"></expression-editor-button>
 
                 </div>
@@ -405,8 +450,25 @@
                     <h4>Available variables:</h4>
 
                     <div>
+                        <b>context_date</b>
+                    </div>
+
+                    <div>
+                        <b>context_currency</b>
+                    </div>
+
+                    <div>
+                        <b>context_pricing_policy</b>
+                    </div>
+
+                    <div>
                         <b>close</b>
                     </div>
+
+                    <div>
+                        <b>close_error</b>
+                    </div>
+
 
                 </div>
 
@@ -418,6 +480,100 @@
                     </md-input-container>
 
                     <expression-editor-button data-item="vm.item.type_settings.expr"
+                                              data-data="{functions: vm.expressionBuilderFunctions}"
+                                              style="float: right"></expression-editor-button>
+
+                </div>
+
+                <div>
+
+                    <md-input-container>
+                        <label>If Error. Error Text</label>
+                        <input type="text" data-ng-model="vm.item.type_settings.error_text_expr">
+                    </md-input-container>
+
+                </div>
+
+
+
+            </div>
+
+            <div data-ng-if="vm.item.type == 9">
+
+                <h4>Cbonds</h4>
+
+                <div layout="row" data-ng-if="vm.switchState == 'default_value'">
+
+                    <md-input-container>
+                        <label>Default Value</label>
+                        <input type="text" data-ng-model="vm.item.type_settings.default_value">
+                    </md-input-container>
+
+                    <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
+
+                </div>
+
+                <div layout="row" data-ng-if="vm.switchState == 'attribute_key'">
+
+                    <md-input-container class="m-t-16">
+                        <label>Options</label>
+                        <md-select data-ng-model="vm.item.type_settings.attribute_key">
+                            <md-option ng-value="item.user_code" data-ng-repeat="item in vm.optionsForPrimaryParameter">
+                                {{item.name}} ({{item.user_code}})
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+
+                    <md-button class="md-raised md-primary" data-ng-click="vm.switch($event)">Switch</md-button>
+
+                </div>
+
+                <md-input-container class="m-t-16">
+                    <label>Value Type</label>
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                        <md-option value="10">Text</md-option>
+                        <md-option value="20">Number</md-option>
+                        <md-option value="40">Date</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <div class="pricing-scheme-help-box">
+
+                    <h4>Available variables:</h4>
+
+                    <div>
+                        <b>context_date</b>
+                    </div>
+
+                    <div>
+                        <b>context_currency</b>
+                    </div>
+
+                    <div>
+                        <b>context_pricing_policy</b>
+                    </div>
+
+                    <div>
+                        <b>close</b>
+                    </div>
+
+                    <div>
+                        <b>close_error</b>
+                    </div>
+
+
+                </div>
+
+                <div>
+
+                    <md-input-container>
+                        <label>Pricing Formula</label>
+                        <input type="text" data-ng-model="vm.item.type_settings.expr">
+                    </md-input-container>
+
+                    <expression-editor-button data-item="vm.item.type_settings.expr"
+                                              data-data="{functions: vm.expressionBuilderFunctions}"
                                               style="float: right"></expression-editor-button>
 
                 </div>

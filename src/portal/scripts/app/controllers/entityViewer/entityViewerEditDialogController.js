@@ -742,7 +742,7 @@
 
                 vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attributeTypes);
 
-                var result = entityEditorHelper.removeNullFields(vm.entity);
+                var result = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
 
@@ -1577,7 +1577,7 @@
 
         };
 
-        vm.getInstrumentPricingSchemes = function () {
+        vm.getInstrumentPricingSchemes = function () { // TODO Victor. Must removed after introducing new design with grid table.
 
             instrumentPricingSchemeService.getList().then(function (data) {
 
@@ -1609,7 +1609,7 @@
 
         };
 
-        vm.pricingSchemeChange = function ($event, item) {
+        vm.pricingSchemeChange = function (item) {
 
             item.pricing_scheme_object = null;
             item.default_value = null;
@@ -1628,8 +1628,7 @@
                 })
 
             }
-
-            if (vm.entityType === 'currency') {
+            else if (vm.entityType === 'currency') {
 
                 vm.currencyPricingSchemes.forEach(function (scheme) {
 
@@ -1851,7 +1850,8 @@
 
         };
 
-        vm.runPricingInstrument = function ($event) {
+//  Victor 2020.12.30 transfer t0 pricingPoliciesTabController.js
+/*        vm.runPricingInstrument = function($event) {
 
             $mdDialog.show({
                 controller: 'RunPricingInstrumentDialogController as vm',
@@ -1896,7 +1896,7 @@
 
             });
 
-        };
+        };*/
 
         vm.runPricingCurrency = function ($event) {
 
@@ -1983,6 +1983,21 @@
 
         };
 
+        vm.bookInstrument = function () {
+
+            return new Promise(function (resolve, reject) {
+                instrumentTypeService.bookInstrument(vm.entity.instrument_type).then(function (data) {
+
+                    vm.entity = data.instrument
+
+                    resolve()
+
+                })
+
+            })
+
+        }
+
         vm.init = function () {
 
             if (vm.entityType === 'instrument-type') {
@@ -2047,14 +2062,18 @@
 
                 vm.typeSelectorChange = function () {
 
-					vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
+                    vm.bookInstrument().then(function () {
 
-						vm.tabs = data.tabs;
-						vm.attributesLayout = data.attributesLayout;
+                        vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
 
-						$scope.$apply();
+                            vm.tabs = data.tabs;
+                            vm.attributesLayout = data.attributesLayout;
 
-					});
+                            $scope.$apply();
+
+                        });
+
+                    })
 
 				};
 

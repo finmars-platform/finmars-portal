@@ -55,8 +55,8 @@
         const contextProperties = {
             'instruments.instrument': [
                 {
-                    id: 'instrument',
-                    name: 'Instrument'
+                    id: 'context_instrument',
+                    name: 'Context Instrument'
                 }
 
                 // TODO is not in use now
@@ -71,46 +71,46 @@
             ],
             'currencies.currency': [
                 {
-                    id: 'pricing_currency',
-                    name: 'Pricing Currency'
+                    id: 'context_pricing_currency',
+                    name: 'Context Pricing Currency'
                 },
                 {
-                    id: 'accrued_currency',
-                    name: 'Accrued Currency'
+                    id: 'context_accrued_currency',
+                    name: 'Context Accrued Currency'
                 },
                 {
-                    id: 'currency',
-                    name: 'Currency'
+                    id: 'context_currency',
+                    name: 'Context Currency'
                 }
             ],
             'portfolios.portfolio': [
                 {
-                    id: 'portfolio',
-                    name: 'Portfolio'
+                    id: 'context_portfolio',
+                    name: 'Context Portfolio'
                 }
             ],
             'accounts.account': [
                 {
-                    id: 'account',
-                    name: 'Account'
+                    id: 'context_account',
+                    name: 'Context Account'
                 }
             ],
             'strategies.strategy1': [
                 {
-                    id: 'strategy1',
-                    name: 'Strategy 1'
+                    id: 'context_strategy1',
+                    name: 'Context Strategy 1'
                 }
             ],
             'strategies.strategy2': [
                 {
-                    id: 'strategy2',
-                    name: 'Strategy 2'
+                    id: 'context_strategy2',
+                    name: 'Context Strategy 2'
                 }
             ],
             'strategies.strategy3': [
                 {
-                    id: 'strategy3',
-                    name: 'Strategy 3'
+                    id: 'context_strategy3',
+                    name: 'Context Strategy 3'
                 }
             ]
         }
@@ -192,14 +192,20 @@
 
 			}
 
-			return relationsList;
+			return relationsList.map(rItem => {
+
+				return {
+					id: rItem.user_code,
+					name: rItem.hasOwnProperty('short_name') ? rItem.short_name : rItem.name
+				};
+
+			});
 
 		};
 
 		const loadRelation = function (field, noScopeUpdate) {
 
 			field = field.replace(/-/g, "_"); // replace all '_' with '-'
-
 			/* if (!loadedRelationsList.includes(field)) {
 
 				return new Promise(function (resolve, reject) {
@@ -1349,7 +1355,7 @@
                         removeInputFromActions(inputName);
 
                     });
-
+					console.log("inputsDeletion.deleteInputsRows selectedRows", selectedRows);
                     getInputsForLinking();
                     updateLinkedInputsOptionsInsideGridTable();
 
@@ -1363,8 +1369,8 @@
 
 					// removeInputsFromLinkedInputs();
                     gtEventService.dispatchEvent(gridTableEvents.ROW_SELECTION_TOGGLED);
-
-                    // $scope.$apply();
+					console.log("inputsDeletion.deleteInputsRows entity", viewModel.entity);
+					// $scope.$apply();
 
                 }
 
@@ -1769,6 +1775,9 @@
 					data.results.forEach(function (field) {
 
 						viewModel.transactionUserFields[field.key] = field.name;
+						viewModel.transactionUserFieldsState[field.key] = field.is_active;
+
+						console.log('transactionUserFieldsState', viewModel.transactionUserFieldsState);
 
 					})
 

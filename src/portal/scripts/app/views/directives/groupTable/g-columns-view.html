@@ -62,6 +62,12 @@
                             </md-button>
                         </md-menu-item>
 
+                        <md-menu-item>
+                            <md-button class="g-cell-button g-row-color-picker-option divider" data-ng-click="removeColorMarkFromAllRows($event)">
+                                <span class="material-icons">label_off</span>
+                            </md-button>
+                        </md-menu-item>
+
                     </md-menu-content>
                 </md-menu>
             </div>
@@ -99,7 +105,7 @@
                  offset-y="-10"
                  popup-classes="{{getPopupMenuClasses(column)}}"
                  backdrop-classes="'low-z-index-backdrop'"
-                 on-popup-close="onSubtotalTypeSelectCancel()"
+                 on-cancel="onSubtotalTypeSelectCancel()"
                  popup-event-service="evEventService">
 
                 <md-tooltip md-direction="top" data-ng-class="{'custom-field-error': column.error_data}">
@@ -121,7 +127,7 @@
                          open-on="click"
                          close-on-click-outside="true"
                          popup-classes="column-sort-popup"
-                         on-popup-close="hideArrowDown()"
+                         on-cancel="hideArrowDown()"
                          popup-event-service="evEventService"
 
                          class="g-column-sort-settings-opener"></div>
@@ -215,9 +221,9 @@
                  popup-data="columnsPopupsData[column.key]"
                  offset-x="-10"
                  offset-y="-10"
-                 popup-classes="{{getPopupMenuClasses(column)}}"
+                 popup-classes="getPopupMenuClasses(column)"
                  backdrop-classes="low-z-index-backdrop"
-                 on-popup-close="onSubtotalTypeSelectCancel()"
+                 on-cancel="onSubtotalTypeSelectCancel()"
                  popup-event-service="evEventService">
 
                 <md-tooltip md-direction="top" data-ng-class="{'custom-field-error': column.error_data}">
@@ -240,7 +246,7 @@
                          open-on="click"
                          close-on-click-outside="true"
                          popup-classes="column-sort-popup"
-                         on-popup-Close="hideArrowDown()"
+                         on-cancel="hideArrowDown()"
                          popup-event-service="evEventService"
                          class="g-column-sort-settings-opener"></div>
 

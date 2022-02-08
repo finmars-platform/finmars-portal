@@ -9,7 +9,7 @@
     var popupEvents = require('../../services/events/popupEvents');
     var evDataHelper = require('../../helpers/ev-data.helper');
 
-    var metaService = require('../../services/metaService');
+    // var metaService = require('../../services/metaService');
     var evHelperService = require('../../services/entityViewerHelperService');
     var uiService = require('../../services/uiService');
     var rvDataHelper = require('../../helpers/rv-data.helper');
@@ -18,7 +18,7 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
     var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
-    module.exports = function ($mdDialog) {
+    module.exports = function ($mdDialog, evRvDomManagerService) {
         return {
             restrict: 'AE',
             scope: {
@@ -410,6 +410,41 @@
                 };
 
                 scope.rowFilterColor = localStorageService.getRowTypeFilter(scope.isReport, scope.entityType);
+
+				scope.removeColorMarkFromAllRows = function ($event) {
+
+					$mdDialog.show({
+						controller: 'WarningDialogController as vm',
+						templateUrl: 'views/dialogs/warning-dialog-view.html',
+						parent: angular.element(document.body),
+						targetEvent: $event,
+						multiple: true,
+						locals: {
+							warning: {
+								title: 'Warning',
+								description: "Color marks will be removed for all rows in this table. Proceed?",
+								actionsButtons: [
+									{
+										name: "OK",
+										response: {status: 'agree'}
+									},
+									{
+										name: "CANCEL",
+										response: {status: 'disagree'}
+									}
+								]
+							}
+						}
+
+					}).then(function (res) {
+
+						if (res.status === 'agree') {
+							evRvDomManagerService.removeColorMarkFromAllRows(scope.evDataService, scope.evEventService);
+						}
+
+					});
+
+				};
 
                 // <Victor 2020.12.14 #69 New report viewer design>
 
@@ -828,10 +863,18 @@
 
                         var selGroups = scope.evDataService.getSelectedGroups();
 
-                        selGroups.forEach(function (sGroup) {
-                            var rawData = scope.evDataService.getData(sGroup.___id);
+                        if (selGroups.length) {
+                            selGroups.forEach(function (sGroup) {
+                                var rawData = scope.evDataService.getData(sGroup.___id);
+                                dataList.push(rawData);
+                            });
+                        } else {
+
+
+                            var rawData = scope.evDataService.getRootGroupData()
+
                             dataList.push(rawData);
-                        });
+                        }
 
                     }
 
@@ -2097,7 +2140,10 @@
                     var availableAttrs;
 
                     availableAttrs = allAttrsList.filter(function (attr) {
-                        for (var i = 0; i < scope.columns.length; i++) {
+
+						if (attr.value_type === "mc_field") return false;
+
+                    	for (var i = 0; i < scope.columns.length; i++) {
                             if (scope.columns[i].key === attr.key) {
                                 return false;
                             }
@@ -2115,7 +2161,8 @@
                             data: {
                                 availableAttrs: availableAttrs,
                                 title: 'Choose column to add',
-                                isReport: scope.isReport
+                                isReport: scope.isReport,
+								multiselector: true
                             }
                         }
                     }).then(function (res) {

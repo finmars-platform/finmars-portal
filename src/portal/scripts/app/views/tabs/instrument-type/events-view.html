@@ -132,6 +132,11 @@
                                     gt-event-service="item.eventItemsGridTableEventService"></grid-table>
 
                         <div class="instrument-type-event-block-items-container">
+
+                            <div>
+                                <md-button class="link-button" data-ng-click="vm.openEventParametersManager($event, item)">Open Parameters Manager</md-button>
+                            </div>
+
                             <!--<md-checkbox ng-model="item.data.items_blocked"
                                          ng-change="vm.toggleEventBlockableItems(item)">Receive the below data from Accruals Schedule</md-checkbox>-->
                             <md-checkbox ng-model="item.data.get_items2_from_accruals" ng-disabled="!item.autogenerate">Receive the below data from Accruals Schedule (in case of autogenerate, for each accrual entry)</md-checkbox>
@@ -148,6 +153,8 @@
                         <grid-table gt-data-service="item.eventActionsGridTableDataService"
                                     gt-event-service="item.eventActionsGridTableEventService"></grid-table>
                     </div>
+
+
 
                 </v-pane-content>
 

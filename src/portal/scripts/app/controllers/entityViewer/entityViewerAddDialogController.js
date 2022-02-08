@@ -88,9 +88,6 @@
 
         vm.isInheritRights = false;
 
-        vm.lastAccountType = null;
-        vm.lastInstrumentType = null;
-
         vm.canManagePermissions = false;
 
         vm.attributeTypesByValueTypes = {}; // need for pricing;
@@ -1145,7 +1142,7 @@
 
             } else {
 
-                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                // var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
                 var resultEntity = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
                 console.log('resultEntity', resultEntity);
 
@@ -1246,7 +1243,7 @@
 
                 if (hasProhibitNegNums.length === 0) {
 
-                    var resultEntity = entityEditorHelper.removeNullFields(vm.entity);
+                    var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                     console.log('resultEntity', resultEntity);
 
@@ -1314,29 +1311,27 @@
 
         };
 
-        var instrumentPricingCurrencyChanged = false; // only once
+        vm.bookInstrument = function () {
+
+            return new Promise(function (resolve, reject) {
+
+                instrumentTypeService.bookInstrument(vm.entity.instrument_type).then(function (data) {
+
+                    vm.entity = data.instrument
+
+                    console.log('vm.bookInstrument.entity', vm.entity)
+
+                    resolve()
+
+                })
+
+            })
+
+        }
+
+		var instrumentPricingCurrencyChanged = false; // only once
 
         vm.onEntityChange = function (fieldKey) {
-
-            if (vm.lastAccountType !== vm.entity.type) {
-                vm.lastAccountType = vm.entity.type;
-
-                if (vm.isInheritRights && vm.entity.type) {
-                    vm.setInheritedPermissions();
-                }
-            }
-
-            if (vm.lastInstrumentType !== vm.entity.instrument_type) {
-
-                vm.lastInstrumentType = vm.entity.instrument_type;
-
-                if (vm.isInheritRights && vm.entity.instrument_type) {
-                    vm.setInheritedPermissions();
-                }
-
-                vm.setInheritedPricing();
-
-            }
 
             if (fieldKey) {
 
@@ -1879,19 +1874,26 @@
 
                     vm.typeSelectorChange = function () {
 
-                        vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
+                        vm.bookInstrument().then(function () {
 
-                            vm.tabs = data.tabs;
-                            vm.attributesLayout = data.attributesLayout;
+                            vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
 
-                            $scope.$apply();
+                                vm.tabs = data.tabs;
+                                vm.attributesLayout = data.attributesLayout;
 
-                        });
+                                $scope.$apply();
+
+                            });
+                        })
+
 
                     };
 
                 } else {
+
+					vm.typeSelectorChange = typeSelectorChangeFns[vm.entityType];
                     $scope.$apply();
+
                 }
 
                 if (['responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3'].indexOf(vm.entityType) !== -1) {

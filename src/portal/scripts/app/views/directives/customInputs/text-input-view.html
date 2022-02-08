@@ -43,6 +43,8 @@
                     </button>
 
 
+                    <!-- TEXTAREA CODE
+
                     <input ng-if="!renderHyperlinks"
                            ng-model="model"
                            ng-readonly="isReadonly"
@@ -56,6 +58,26 @@
                          ng-readonly="isReadonly"
                          ng-disabled="isDisabled"
                          ng-init="elemInited()"
+                         class="custom-input text-input textInputElem">
+                        <span ng-bind-html="getHyperlinks()"></span>
+                    </div>
+
+                           -->
+                    <input ng-if="!renderHyperlinks"
+                           ng-model="model"
+                           ng-readonly="isReadonly"
+                           ng-disabled="isDisabled"
+                           ng-init="init()"
+                           ng-blur="onInputBlur()"
+                           ng-change="onInputChange(model)"
+                           type="text"
+                           placeholder="{{placeholderText}}"
+                           class="custom-input text-input textInputElem" />
+
+                    <div ng-if="renderHyperlinks"
+                         ng-readonly="isReadonly"
+                         ng-disabled="isDisabled"
+                         ng-init="init()"
                          class="custom-input text-input textInputElem">
                         <span ng-bind-html="getHyperlinks()"></span>
                     </div>
@@ -109,7 +131,7 @@
             </div>
         </div>
 
-        <div class="custom-input-full-text-container customInputFullTextWrapper">
+        <!-- <div class="custom-input-full-text-container customInputFullTextWrapper">
 
             <div ng-if="!renderHyperlinks">
                 <textarea ng-model="model"
@@ -124,7 +146,7 @@
                  class="custom-input-full-text customInputBackgroundColor customInputFullText"
                  ng-bind-html="getHyperlinks()"
                  ng-init="elemInited()"></div>
-        </div>
+        </div> -->
 
     </div>
 

@@ -271,7 +271,25 @@
 					var posY = e.pageY;
 
 					if (scope.column.cellType === 'multitypeField') {
+
+						// Sync cell.settings.value and active.model in case cell.settings.value was changed by script
+						var activeType = scope.column.settings.fieldTypesData.find(type => type.isActive);
+						if (!activeType) activeType = scope.column.settings.fieldTypesData.find(type => type.isDefault);
+
+						if (activeType) {
+
+							if (scope.column.hasOwnProperty("objPaths")) {
+								activeType.model = scope.column.settings.value[0];
+
+							} else {
+								activeType.model = scope.column.settings.value;
+							}
+
+						}
+						// < Sync cell.settings.value and active.model in case cell.settings.value was changed by script >
+
 						scope.fieldTypesData = JSON.parse(JSON.stringify(scope.column.settings.fieldTypesData));
+
 					}
 
 					else {
@@ -374,12 +392,24 @@
 
                     if (!scope.column.settings.hasOwnProperty('cellText')) {
 
-                    	scope.column.settings.cellText = scope.column.settings.value;
+                        if (scope.column.cellType === 'multitypeField') {
 
-                        if (scope.column.cellType === 'multitypeField' && scope.column.hasOwnProperty("objPaths")) {
+                        	const activeType = scope.column.settings.fieldTypesData.find(type => type.isActive);
 
-                        	scope.column.settings.cellText = scope.column.settings.value[0];
+                        	if (['textInput', 'numberInput', 'dateInput'].includes(activeType.fieldType)) {
 
+								if (scope.column.hasOwnProperty("objPaths")) { // if column.settings.value === [value, value_type]
+									scope.column.settings.cellText = scope.column.settings.value[0];
+
+								} else {
+									scope.column.settings.cellText = scope.column.settings.value;
+								}
+
+							}
+
+						}
+                        else {
+							scope.column.settings.cellText = scope.column.settings.value;
 						}
 
                     }

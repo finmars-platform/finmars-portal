@@ -1,9 +1,14 @@
 <div layout="column"
-     style="padding: 0 20px">
+     style="padding: 0 20px" class="import-page unified-import-page">
 
-    <h2 class="m-b-35">Unified Instrument Import Manager</h2>
+    <div layout="column" style="margin-bottom: 20px; width: 300px;">
 
-    <div layout="row" style="margin-bottom: 20px">
+        <dropdown-select
+                model="vm.config.mode"
+                placeholder-text="Mode"
+                menu-options="vm.modes"
+                small-options="{noIndicatorBtn: true, dialogParent: '.dialog-containers-wrap'}"
+                class=" m-t-8"></dropdown-select>
 
         <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
             <input type="file" id="importDataUploadInput" input-file-directive
@@ -11,33 +16,25 @@
                    read-file-change="vm.checkExtension(vm.config.file, 'csv', $event)">
         </md-input-container>
         <div class="input-upload-file-container">
-            <p class="importDataUploadInput">Select file</p>
+            <p class="importDataUploadInput">Entity</p>
             <label for="importDataUploadInput" class="md-button md-raised md-primary IFUlabel">
-                <ng-md-icon icon="file_upload"></ng-md-icon>
-                <span>BROWSE</span></label>
+                <span>BROWSE...</span></label>
         </div>
 
 
-        <div layout="row">
+        <div layout="row" layout-align="end center" class="m-t-8">
 
-            <md-input-container>
-                <label>Mode</label>
-                <md-select data-ng-model="vm.config.mode">
-                    <md-option value="skip">Skip</md-option>
-                    <md-option value="overwrite">Overwrite</md-option>
-                </md-select>
-            </md-input-container>
-
-
+            <div data-ng-if="vm.readyStatus.processing" class="m-l-16 m-t-8" style="position: relative; top: -4px;">
+                <progress-circular diameter="20"></progress-circular>
+            </div>
             <md-button
-                    class="md-raised colored-btn {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                    class="md-raised import-button {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
                     data-ng-click="vm.startImport($event)">
                 IMPORT
             </md-button>
-            <div data-ng-if="vm.readyStatus.processing" class="m-l-16 m-t-8">
-                <progress-circular diameter="20"></progress-circular>
-            </div>
+
         </div>
+
     </div>
 
     <div layout="row"

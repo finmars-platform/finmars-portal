@@ -103,6 +103,52 @@
 
         };
 
+		const openEventActionParametersManager = function ($event, row, column) {
+
+		    console.log('openEventActionParametersManager row, column', row, column);
+
+		    var action = vm.event.actions[row.order];
+
+		    console.log('openEventActionParametersManager vm.event.data', vm.event.data);
+
+            if (!vm.event.data) {
+                vm.event.data = {}
+            }
+
+            if (!vm.event.data.parameters) {
+                vm.event.data.parameters = []
+            }
+
+
+            $mdDialog.show({
+                controller: 'InstrumentEventActionParameterDialogController as vm',
+                templateUrl: 'views/dialogs/instrument-event-action-parameter-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        eventParameters: vm.event.data['parameters'],
+                        item: action
+                    }
+                }
+
+            }).then(res => {
+
+                console.log('openEventParametersManager.res', res);
+
+                if (res.status === 'agree') {
+
+                    action = res.data.item
+                }
+
+            });
+
+        }
+
         const onActionsOrderChange = function (rowData, gtDataService, gtEventService) {
 
             const tableData = gtDataService.getTableData();
@@ -195,6 +241,20 @@
                         cellType: 'checkbox',
                         settings: {
                             value: null
+                        },
+                        styles: {
+                            'grid-table-cell': {'width': '130px'},
+                        }
+                    },
+                    {
+                        key: null,
+                        objPath: [],
+                        columnName: '-',
+                        order: 3,
+                        cellType: 'button',
+                        settings: {
+                            buttonContent: 'Open Manager',
+                            callback: openEventActionParametersManager
                         },
                         styles: {
                             'grid-table-cell': {'width': '130px'},
@@ -356,6 +416,39 @@
 			});
 
 		}
+
+        vm.openParametersManager = function ($event) {
+
+            $mdDialog.show({
+                controller: 'InstrumentEventParameterDialogController as vm',
+                templateUrl: 'views/dialogs/instrument-event-parameter-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        instrumentAttrTypes: instrAttrTypes,
+                        item: vm.event
+                    }
+                }
+
+            }).then(res => {
+
+                console.log('openEventParametersManager.res', res);
+
+                if (res.status === 'agree') {
+
+                    vm.event = res.data.item
+                }
+
+            });
+
+        }
+
+
 
         vm.init = function () {
 

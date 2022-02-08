@@ -72,6 +72,7 @@
             "instruments.instrument": require('../models/instrumentPropsModel').getAttributes(),
             "instruments.generatedevent": require('../models/generatedEventPropsModel').getAttributes(),
             "transactions.transaction": require('../models/transactionPropsModel').getAttributes(),
+            "transactions.transactionclass": require('../models/transactionClassPropsModel').getAttributes(),
             "transactions.transactiontypegroup": require('../models/transactionTypeGroupPropsModel').getAttributes(),
             "transactions.transactiontype": require('../models/transactionTypePropsModel').getAttributes(),
             "transactions.complextransaction": require('../models/complexTransactionPropsModel').getAttributes(),

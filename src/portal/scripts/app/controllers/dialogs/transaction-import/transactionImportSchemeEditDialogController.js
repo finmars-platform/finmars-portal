@@ -339,6 +339,7 @@
             vm.mapFields.push({
                 value: '',
                 transaction_type: null,
+                is_default_rule_scenario: false,
                 fields: []
             })
         };
@@ -460,13 +461,23 @@
 
         vm.agree = function ($event) {
 
-            vm.scheme.calculated_inputs = vm.calculatedFields;
-            vm.scheme.inputs = vm.providerFields;
-            vm.scheme.rule_scenarios = vm.mapFields;
+            var result = JSON.parse(JSON.stringify(vm.scheme))
 
-            vm.scheme.rule_scenarios.push(vm.defaultRuleScenario)
+            // vm.scheme.calculated_inputs = vm.calculatedFields;
+            // vm.scheme.inputs = vm.providerFields;
+            // vm.scheme.rule_scenarios = vm.mapFields;
+            //
+            // vm.scheme.rule_scenarios.push(vm.defaultRuleScenario)
+            //
+            // vm.scheme.recon_scenarios = vm.reconFields;
 
-            vm.scheme.recon_scenarios = vm.reconFields;
+            result.calculated_inputs = vm.calculatedFields;
+            result.inputs = vm.providerFields;
+            result.rule_scenarios = vm.mapFields;
+
+            result.rule_scenarios.push(vm.defaultRuleScenario)
+
+            result.recon_scenarios = vm.reconFields;
 
             var warningMessage = '';
             var warningTitle = '';
@@ -538,7 +549,7 @@
 
                 vm.processing = true;
 
-                transactionImportSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
+                transactionImportSchemeService.update(result.id, result).then(function (data) {
 
                     toastNotificationService.success("Transaction Import Scheme " + vm.scheme.user_code + ' was successfully saved');
 
@@ -555,7 +566,11 @@
                         templateUrl: 'views/dialogs/validation-dialog-view.html',
                         targetEvent: $event,
                         locals: {
-                            validationData: reason.message
+                            validationData: {
+                                errorData: {
+                                    message: reason.message
+                                }
+                            }
                         },
                         preserveScope: true,
                         autoWrap: true,

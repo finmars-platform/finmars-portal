@@ -13,12 +13,26 @@
                         item-object="entity[fieldKey + '_object']"
                         on-change-callback="changeHandler()"
                         item-name="inputTextObj.value"
-
+                        custom-styles="customStyles"
                 ></instrument-select>
 
             </div>
 
-            <div data-ng-if="modelKeyEntity != 'instrument'">
+            <div data-ng-if="modelKeyEntity == 'counterparty'">
+
+                <unified-data-select
+                        label="{{getName()}}"
+                        model="entity[fieldKey]"
+                        item-object="entity[fieldKey + '_object']"
+                        on-change-callback="changeHandler()"
+                        item-name="inputTextObj.value"
+                        custom-styles="customStyles"
+                        entity-type="'counterparty'"
+                ></unified-data-select>
+
+            </div>
+
+            <div data-ng-if="modelKeyEntity != 'instrument' && modelKeyEntity != 'counterparty'">
                 <entity-search-select item="entity[fieldKey]"
                                       label="getName()"
                                       item-name="inputTextObj.value"

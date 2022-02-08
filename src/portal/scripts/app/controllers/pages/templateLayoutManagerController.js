@@ -108,8 +108,8 @@
 
             'instruments.instrument': [
                 {
-                    key: 'instrument',
-                    name: 'Instrument'
+                    key: 'context_instrument',
+                    name: 'Context Instrument'
                 }
 
                 // TODO is not in use now
@@ -124,42 +124,42 @@
             ],
             'currencies.currency': [
                 {
-                    key: 'pricing_currency',
-                    name: 'Pricing Currency'
+                    key: 'context_pricing_currency',
+                    name: 'Context Pricing Currency'
                 },
                 {
-                    key: 'accrued_currency',
-                    name: 'Accrued Currency'
+                    key: 'context_accrued_currency',
+                    name: 'Context Accrued Currency'
                 }
             ],
             'portfolios.portfolio': [
                 {
-                    key: 'portfolio',
-                    name: 'Portfolio'
+                    key: 'context_portfolio',
+                    name: 'Context Portfolio'
                 }
             ],
             'accounts.account': [
                 {
-                    key: 'account',
-                    name: 'Account'
+                    key: 'context_account',
+                    name: 'Context Account'
                 }
             ],
             'strategies.strategy1': [
                 {
-                    key: 'strategy1',
-                    name: 'Strategy 1'
+                    key: 'context_strategy1',
+                    name: 'Context Strategy 1'
                 }
             ],
             'strategies.strategy2': [
                 {
-                    key: 'strategy2',
-                    name: 'Strategy 2'
+                    key: 'context_strategy2',
+                    name: 'Context Strategy 2'
                 }
             ],
             'strategies.strategy3': [
                 {
-                    key: 'strategy3',
-                    name: 'Strategy 3'
+                    key: 'context_strategy3',
+                    name: 'Context Strategy 3'
                 }
             ]
 
