@@ -2253,6 +2253,28 @@
             })
         }
 
+        vm.userTextFields = [];
+        vm.userNumberFields = [];
+        vm.userDateFields = [];
+
+        for (var i = 1; i <= 30; i = i + 1) {
+            vm.userTextFields.push({
+                key: 'user_text_' + i
+            })
+        }
+
+        for (var i = 1; i <= 20; i = i + 1) {
+            vm.userNumberFields.push({
+                key: 'user_number_' + i
+            })
+        }
+
+        for (var i = 1; i <= 5; i = i + 1) {
+            vm.userDateFields.push({
+                key: 'user_date_' + i
+            })
+        }
+
 
         // Transaction type actions controller end
 
