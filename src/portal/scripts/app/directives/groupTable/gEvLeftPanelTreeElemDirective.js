@@ -257,6 +257,14 @@
 
                 var init = async function () {
 
+                    scope.getGroupType()
+
+                    scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
+
+                        scope.getGroupType()
+
+                    });
+
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                         scope.getGroupType()
