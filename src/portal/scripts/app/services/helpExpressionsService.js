@@ -707,7 +707,6 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
         return new Promise(function (resolve, reject) {
 
             var expressionsList = getFunctionsItems();
-			expressionsList.push({func: "get_instrument_factor()"}); // TO DELETE: after AK will add get_instrument_factor() into functions_items.json
 			expressionsList = filterExpressions(expressionsList, data);
 
             var htmlExpressionData = null;

@@ -824,6 +824,19 @@
 
 		};
 
+		const onAccountTypeChange = function () {
+
+			if (viewModel.isInheritRights && viewModel.entity.type) {
+				viewModel.setInheritedPermissions();
+			}
+
+		};
+
+		const typeSelectorChangeFns = {
+			'instrument': getAndFormatUserTabs,
+			'account': onAccountTypeChange,
+		};
+
         const manageAttributeTypes = function (ev) {
 
         	$mdDialog.show({
@@ -1054,10 +1067,6 @@
 
             return currencyFields;
         }
-
-		const typeSelectorChangeFns = {
-			'instrument': getAndFormatUserTabs
-		};
 
         const isTabWithErrors = (tab) => {
 

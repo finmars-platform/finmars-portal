@@ -989,14 +989,14 @@
                         removeInputFromActions(inputName);
 
                     });
-
+					console.log("inputsDeletion.deleteInputsRows selectedRows", selectedRows);
                     getInputsForLinking();
                     updateLinkedInputsOptionsInsideGridTable();
 
                     // removeInputsFromLinkedInputs();
                     gtEventService.dispatchEvent(gridTableEvents.ROW_SELECTION_TOGGLED);
-
-                    // $scope.$apply();
+					console.log("inputsDeletion.deleteInputsRows entity", viewModel.entity);
+					// $scope.$apply();
 
                 }
 
