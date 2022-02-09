@@ -87,6 +87,12 @@
         <span>Export</span>
     </div>
 
+    <div class="layout-menu-item" package-manager-button data-ng-click="parentPopup.cancel()"
+         content-type="'ui.listlayout'" target-content-type="targetContentType">
+        <span class="material-icons">system_update_alt</span>
+        <span>Select from list</span>
+    </div>
+
     <div class="layout-menu-item" data-ng-click="openInvites($event)" data-ng-class="{'disabled-btn': !invites.length}">
         <span class="material-icons">email</span>
         <span>Invites ({{invites.length}})</span>

@@ -67,10 +67,19 @@
 
             vm.readyStatus.packages = true;
 
+            var filters = {}
+
+
+            if (data.contentType) {
+                filters.content_type = data.contentType
+            }
+
+            if (data.targetContentType) {
+                filters.target_content_type = data.targetContentType
+            }
+
             unifiedDataService.getConfigurationPackageList({
-                filters: {
-                    content_type: data.contentType
-                }
+                filters: filters
             }).then(function (data) {
 
                 vm.packages = data.results
