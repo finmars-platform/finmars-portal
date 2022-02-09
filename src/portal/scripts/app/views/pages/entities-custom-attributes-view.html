@@ -16,9 +16,31 @@
                      layout-wrap
                      class="all-am-manager-container">
                     <div layout="row" flex="50" layout-align="start center">
-                        <md-button class="md-raised" data-ng-click="vm.addAttribute('portfolio', $event)">
-                            ADD NEW
-                        </md-button>
+                        <md-menu>
+                            <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
+                                Add New
+                            </md-button>
+
+                            <md-menu-content>
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               data-ng-click="vm.addAttribute('portfolio', $event)">Add Blank
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               package-manager-button
+                                               content-type="'obj_attrs.genericattributetype'"
+                                               target-content-type="'portfolios.portfolio'">
+                                        Select from List
+                                    </md-button>
+                                </md-menu-item>
+
+                            </md-menu-content>
+                        </md-menu>
+
+
                     </div>
                     <div layout="row" flex="50" layout-align="end center">
                         <md-button class="md-raised"
@@ -120,9 +142,32 @@
                      layout-wrap
                      class="all-am-manager-container">
                     <div layout="row" flex="50" layout-align="start center">
-                        <md-button class="md-raised" data-ng-click="vm.addAttribute('account', $event)">
-                            ADD NEW
-                        </md-button>
+
+                        <md-menu>
+                            <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
+                                Add New
+                            </md-button>
+
+                            <md-menu-content>
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               data-ng-click="vm.addAttribute('account', $event)">Add Blank
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               package-manager-button
+                                               content-type="'obj_attrs.genericattributetype'"
+                                               target-content-type="'portfolios.portfolio'">
+                                        Select from List
+                                    </md-button>
+                                </md-menu-item>
+
+                            </md-menu-content>
+                        </md-menu>
+
+
                     </div>
                     <div layout="row" flex="50" layout-align="end center">
                         <md-button class="md-raised"
@@ -224,9 +269,31 @@
                      layout-wrap
                      class="all-am-manager-container">
                     <div layout="row" flex="50" layout-align="start center">
-                        <md-button class="md-raised" data-ng-click="vm.addAttribute('instrument', $event)">
-                            ADD NEW
-                        </md-button>
+
+                        <md-menu>
+                            <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
+                                Add New
+                            </md-button>
+
+                            <md-menu-content>
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               data-ng-click="vm.addAttribute('instrument', $event)">Add Blank
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               package-manager-button
+                                               content-type="'obj_attrs.genericattributetype'"
+                                               target-content-type="'instruments.instrument'">
+                                        Select from List
+                                    </md-button>
+                                </md-menu-item>
+
+                            </md-menu-content>
+                        </md-menu>
+
                     </div>
                     <div layout="row" flex="50" layout-align="end center">
                         <md-button class="md-raised"
@@ -328,9 +395,31 @@
                      layout-wrap
                      class="all-am-manager-container">
                     <div layout="row" flex="50" layout-align="start center">
-                        <md-button class="md-raised" data-ng-click="vm.addAttribute('responsible', $event)">
-                            ADD NEW
-                        </md-button>
+
+                        <md-menu>
+                            <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
+                                Add New
+                            </md-button>
+
+                            <md-menu-content>
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               data-ng-click="vm.addAttribute('responsible', $event)">Add Blank
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               package-manager-button
+                                               content-type="'obj_attrs.genericattributetype'"
+                                               target-content-type="'counterparties.responsible'">
+                                        Select from List
+                                    </md-button>
+                                </md-menu-item>
+
+                            </md-menu-content>
+                        </md-menu>
+
                     </div>
                     <div layout="row" flex="50" layout-align="end center">
                         <md-button class="md-raised"
@@ -432,9 +521,31 @@
                      layout-wrap
                      class="all-am-manager-container">
                     <div layout="row" flex="50" layout-align="start center">
-                        <md-button class="md-raised" data-ng-click="vm.addAttribute('counterparty', $event)">
-                            ADD NEW
-                        </md-button>
+
+                        <md-menu>
+                            <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
+                                Add New
+                            </md-button>
+
+                            <md-menu-content>
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               data-ng-click="vm.addAttribute('counterparty', $event)">Add Blank
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               package-manager-button
+                                               content-type="'obj_attrs.genericattributetype'"
+                                               target-content-type="'counterparties.counterparty'">
+                                        Select from List
+                                    </md-button>
+                                </md-menu-item>
+
+                            </md-menu-content>
+                        </md-menu>
+
                     </div>
                     <div layout="row" flex="50" layout-align="end center">
                         <md-button class="md-raised"
@@ -536,9 +647,32 @@
                      layout-wrap
                      class="all-am-manager-container">
                     <div layout="row" flex="50" layout-align="start center">
-                        <md-button class="md-raised" data-ng-click="vm.addAttribute('currency', $event)">
-                            ADD NEW
-                        </md-button>
+
+                        <md-menu>
+                            <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
+                                Add New
+                            </md-button>
+
+                            <md-menu-content>
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               data-ng-click="vm.addAttribute('currency', $event)">Add Blank
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               package-manager-button
+                                               content-type="'obj_attrs.genericattributetype'"
+                                               target-content-type="'currencies.currency'">
+                                        Select from List
+                                    </md-button>
+                                </md-menu-item>
+
+                            </md-menu-content>
+                        </md-menu>
+
+
                     </div>
                     <div layout="row" flex="50" layout-align="end center">
                         <md-button class="md-raised"
@@ -640,9 +774,30 @@
                      layout-wrap
                      class="all-am-manager-container">
                     <div layout="row" flex="50" layout-align="start center">
-                        <md-button class="md-raised" data-ng-click="vm.addAttribute('strategy-1', $event)">
-                            ADD NEW
-                        </md-button>
+                        <md-menu>
+                            <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
+                                Add New
+                            </md-button>
+
+                            <md-menu-content>
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               data-ng-click="vm.addAttribute('strategy-1', $event)">Add Blank
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               package-manager-button
+                                               content-type="'obj_attrs.genericattributetype'"
+                                               target-content-type="'strategies.strategy1'">
+                                        Select from List
+                                    </md-button>
+                                </md-menu-item>
+
+                            </md-menu-content>
+                        </md-menu>
+
                     </div>
                     <div layout="row" flex="50" layout-align="end center">
                         <md-button class="md-raised"
@@ -744,9 +899,31 @@
                      layout-wrap
                      class="all-am-manager-container">
                     <div layout="row" flex="50" layout-align="start center">
-                        <md-button class="md-raised" data-ng-click="vm.addAttribute('strategy-2', $event)">
-                            ADD NEW
-                        </md-button>
+
+                        <md-menu>
+                            <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
+                                Add New
+                            </md-button>
+
+                            <md-menu-content>
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               data-ng-click="vm.addAttribute('strategy-2', $event)">Add Blank
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               package-manager-button
+                                               content-type="'obj_attrs.genericattributetype'"
+                                               target-content-type="'strategies.strategy2'">
+                                        Select from List
+                                    </md-button>
+                                </md-menu-item>
+
+                            </md-menu-content>
+                        </md-menu>
+
                     </div>
                     <div layout="row" flex="50" layout-align="end center">
                         <md-button class="md-raised"
@@ -848,9 +1025,29 @@
                      layout-wrap
                      class="all-am-manager-container">
                     <div layout="row" flex="50" layout-align="start center">
-                        <md-button class="md-raised" data-ng-click="vm.addAttribute('strategy-3', $event)">
-                            ADD NEW
-                        </md-button>
+                        <md-menu>
+                            <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
+                                Add New
+                            </md-button>
+
+                            <md-menu-content>
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               data-ng-click="vm.addAttribute('strategy-3', $event)">Add Blank
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               package-manager-button
+                                               content-type="'obj_attrs.genericattributetype'"
+                                               target-content-type="'strategies.strategy3'">
+                                        Select from List
+                                    </md-button>
+                                </md-menu-item>
+
+                            </md-menu-content>
+                        </md-menu>
                     </div>
                     <div layout="row" flex="50" layout-align="end center">
                         <md-button class="md-raised"
@@ -952,9 +1149,31 @@
                      layout-wrap
                      class="all-am-manager-container">
                     <div layout="row" flex="50" layout-align="start center">
-                        <md-button class="md-raised" data-ng-click="vm.addAttribute('account-type', $event)">
-                            ADD NEW
-                        </md-button>
+
+                        <md-menu>
+                            <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
+                                Add New
+                            </md-button>
+
+                            <md-menu-content>
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               data-ng-click="vm.addAttribute('account-type', $event)">Add Blank
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               package-manager-button
+                                               content-type="'obj_attrs.genericattributetype'"
+                                               target-content-type="'accounts.accounttype'">
+                                        Select from List
+                                    </md-button>
+                                </md-menu-item>
+
+                            </md-menu-content>
+                        </md-menu>
+
                     </div>
                     <div layout="row" flex="50" layout-align="end center">
                         <md-button class="md-raised"
@@ -1056,9 +1275,29 @@
                      layout-wrap
                      class="all-am-manager-container">
                     <div layout="row" flex="50" layout-align="start center">
-                        <md-button class="md-raised" data-ng-click="vm.addAttribute('instrument-type', $event)">
-                            ADD NEW
-                        </md-button>
+                        <md-menu>
+                            <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
+                                Add New
+                            </md-button>
+
+                            <md-menu-content>
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               data-ng-click="vm.addAttribute('instrument-type', $event)">Add Blank
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               package-manager-button
+                                               content-type="'obj_attrs.genericattributetype'"
+                                               target-content-type="'instruments.instrumenttype'">
+                                        Select from List
+                                    </md-button>
+                                </md-menu-item>
+
+                            </md-menu-content>
+                        </md-menu>
                     </div>
                     <div layout="row" flex="50" layout-align="end center">
                         <md-button class="md-raised"
@@ -1160,9 +1399,29 @@
                      layout-wrap
                      class="all-am-manager-container">
                     <div layout="row" flex="50" layout-align="start center">
-                        <md-button class="md-raised" data-ng-click="vm.addAttribute('transaction-type', $event)">
-                            ADD NEW
-                        </md-button>
+                        <md-menu>
+                            <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
+                                Add New
+                            </md-button>
+
+                            <md-menu-content>
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               data-ng-click="vm.addAttribute('transaction-type', $event)">Add Blank
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-item>
+                                    <md-button class="md-raised"
+                                               package-manager-button
+                                               content-type="'obj_attrs.genericattributetype'"
+                                               target-content-type="'transactions.transactiontype'">
+                                        Select from List
+                                    </md-button>
+                                </md-menu-item>
+
+                            </md-menu-content>
+                        </md-menu>
                     </div>
                     <div layout="row" flex="50" layout-align="end center">
                         <md-button class="md-raised"
