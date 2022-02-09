@@ -63,6 +63,7 @@
 
         vm.hasEnabledStatus = true;
         vm.entityStatus = '';
+		vm.allowFormLayoutEdition = true;
         vm.evEditorEvent = null;
 
         if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
