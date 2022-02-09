@@ -95,7 +95,7 @@
 
 			});
 
-			//<editor-fold desc="Remove dropdown related listeners">
+			//region Remove dropdown related listeners
 			for (const prop in eventListenerFn2Args) {
 				eventListenerFn2Args[prop] = null;
 			}
@@ -104,7 +104,7 @@
 			clearDropdownsAndRowsArgs.evDataService = null;
 			clearDropdownsAndRowsArgs.evEventService = null;
 			window.removeEventListener('contextmenu', callClearDropdownsAndRowsFn);
-			//</editor-fold>
+			//endregion
 			/* window.removeEventListener('click', executeContextMenuAction);
 			window.removeEventListener('click', executeSubtotalContextMenuAction);
 
@@ -324,16 +324,10 @@
 
 			}
 
-			// var markedReportRows = localStorage.getItem("marked_report_rows");
 			var entityType = evDataService.getEntityType();
 			var markedReportRows = localStorageService.getMarkedRows(isReport, entityType);
 
-			/* if (markedReportRows) {
-				markedReportRows = JSON.parse(markedReportRows);
-			} else {
-				markedReportRows = {};
-			} */
-			var rowId = typeof obj.id === 'number' ? '' + obj.id : obj;
+			// var rowId = typeof obj.id === 'number' ? '' + obj.id : obj;
 
 			if (color === 'undo_mark_row') {
 				delete markedReportRows[obj.id];
@@ -349,6 +343,20 @@
 
 		}
 
+		function removeColorMarkFromAllRows (evDataService, evEventService) {
+
+			var isReport = evDataService.isEntityReport();
+			var entityType = evDataService.getEntityType();
+
+			localStorageService.cacheMarkedRows(isReport, entityType, {});
+			localStorageService.cacheRowTypeFilter(isReport, entityType, 'none');
+
+			if (isReport) evDataService.setMarkedSubtotals({}); // removing color mark from all subtotal rows for specific table
+
+			evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+		}
+
 		function createRowColorPickerMenu (clickData, evDataService, evEventService, clearDropdownsFn) {
 
 			// var menuElem = clickData.actionElem;
@@ -359,7 +367,7 @@
 
 			calculateStaticMenuPosition(popup, menuElem, 208);
 
-			//<editor-fold desc="Color picker content div">
+			//region Color picker content div
 			popup.innerHTML = '<div class="ev-dropdown-content g-row-color-picker-content">' +
 				'<button class="g-row-color-picker-option gPopupMenuOption" data-color="undo_mark_row">' +
 				'<span class="material-icons">label_outline</span>' +
@@ -374,7 +382,7 @@
 				'<span class="material-icons">label</span>' +
 				'</button>' +
 				'</div>'
-			//</editor-fold>
+			//endregion
 
 			document.body.appendChild(popup);
 
@@ -408,6 +416,7 @@
 			calculateStaticMenuPosition: calculateStaticMenuPosition,
 
 			markRowByColor: markRowByColor,
+			removeColorMarkFromAllRows: removeColorMarkFromAllRows,
 			createRowColorPickerMenu: createRowColorPickerMenu
 			//endregion
         };
