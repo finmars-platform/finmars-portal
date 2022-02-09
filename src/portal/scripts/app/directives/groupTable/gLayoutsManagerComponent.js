@@ -3,6 +3,7 @@
     'use strict';
 
     const metaService = require('../../services/metaService');
+    const metaContentTypesService = require('../../services/metaContentTypesService');
     // const middlewareService = require('../../services/middlewareService');
     const evEvents = require("../../services/entityViewerEvents");
     const evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
@@ -40,6 +41,8 @@
             link: function (scope) {
 
             	scope.isReport = metaService.isReport(scope.entityType);
+
+                scope.targetContentType = metaContentTypesService.findContentTypeByEntity(scope.entityType, 'ui');
             	scope.isNewLayout = scope.evDataService.isLayoutNew();
             	scope.viewContext = scope.evDataService.getViewContext();
 
