@@ -88,9 +88,6 @@
 
         vm.isInheritRights = false;
 
-        vm.lastAccountType = null;
-        vm.lastInstrumentType = null;
-
         vm.canManagePermissions = false;
 
         vm.attributeTypesByValueTypes = {}; // need for pricing;
@@ -1314,8 +1311,6 @@
 
         };
 
-        var instrumentPricingCurrencyChanged = false; // only once
-
         vm.bookInstrument = function () {
 
             return new Promise(function (resolve, reject) {
@@ -1334,29 +1329,9 @@
 
         }
 
+		var instrumentPricingCurrencyChanged = false; // only once
+
         vm.onEntityChange = function (fieldKey) {
-
-            if (vm.lastAccountType !== vm.entity.type) {
-                vm.lastAccountType = vm.entity.type;
-
-                if (vm.isInheritRights && vm.entity.type) {
-                    vm.setInheritedPermissions();
-                }
-            }
-
-            if (vm.lastInstrumentType !== vm.entity.instrument_type) {
-
-                vm.lastInstrumentType = vm.entity.instrument_type;
-
-                vm.bookInstrument();
-
-                // if (vm.isInheritRights && vm.entity.instrument_type) {
-                //     vm.setInheritedPermissions();
-                // }
-                //
-                // vm.setInheritedPricing();
-
-            }
 
             if (fieldKey) {
 
@@ -1915,7 +1890,10 @@
                     };
 
                 } else {
+
+					vm.typeSelectorChange = typeSelectorChangeFns[vm.entityType];
                     $scope.$apply();
+
                 }
 
                 if (['responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3'].indexOf(vm.entityType) !== -1) {
