@@ -1,6 +1,6 @@
 <div>
 
-    <div layout="row" class="m-t-8 m-b-8">
+    <!-- <div layout="row" class="m-t-8 m-b-8">
 
         <div style="width: 200px;" class="p-l-8 p-r-8">
             <number-input label="Default Price"
@@ -29,8 +29,103 @@
             </date-input>
         </div>
 
-    </div>
+    </div> -->
+    <div layotu="column">
 
+        <div layout="row" class="m-b-13">
+
+            <dropdown-select class="p-r-8" label="Pricing Currency"
+                             model="vm.entity.pricing_currency"
+                             placeholder-text="Pricing Currency"
+                             menu-options="vm.currencies"
+                             small-options="{tooltipText: 'Pricing Currency'}"
+                             on-change-callback="vm.onEntityChange()"
+                             style="width: 306px">
+            </dropdown-select>
+            <!--                on-change-callback="vm.entityChange()"-->
+            <!--                <dropdown-select class="p-r-8" label="Co-directional exposure currency"
+                                             model="vm.entity.co_directional_exposure_currency"
+                                             placeholder-text="Co-directional exposure currency"
+                                             menu-options="vm.currencies"
+                                             small-options="{tooltipText: 'Co-directional exposure currency'}"
+                                             style="width: 200px;">
+                            </dropdown-select>
+
+                            <dropdown-select class="p-r-8" label="Counter-directional exposure currency"
+                                             model="vm.entity.counter_directional_exposure_currency"
+                                             placeholder-text="Counter-directional exposure currency"
+                                             menu-options="vm.currencies"
+                                             small-options="{tooltipText: 'Counter-directional exposure currency'}"
+                                             style="width: 200px;">
+                            </dropdown-select>-->
+
+            <number-input class="p-r-8"
+                          label="Pricing Multiplier"
+                          model="vm.entity.price_multiplier"
+                          small-options="{tooltipText: 'Pricing Multiplier'}"
+                          style="width: 148px;">
+            </number-input>
+
+            <number-input class="p-r-8"
+                          label="Default Price"
+                          model="vm.entity.default_price"
+                          small-options="{tooltipText: 'Default Price'}"
+                          style="width: 148px;">
+            </number-input>
+
+            <dropdown-select class="p-r-8" label="Pricing Condition"
+                             model="vm.entity.pricing_condition"
+                             placeholder-text="Pricing Condition"
+                             menu-options="vm.pricingConditions"
+                             small-options="{tooltipText: 'Pricing Condition'}"
+                             style="width: 306px;">
+            </dropdown-select>
+
+        </div>
+
+        <div layout="row" class="m-b-13">
+
+            <text-input class="p-r-8"
+                        model="vm.entity.reference_for_pricing"
+                        label="ID for Price Downloading"
+                        placeholder-text="ID for Price Downloading"
+                        style="width: 306px;">
+            </text-input>
+
+            <div style="width: 148px;" class="p-r-8">
+                <number-input label="Default Price"
+                              model="vm.entity.default_price"
+                              event-signal="vm.evEditorFieldEvent"
+                              small-options="{tooltipText: 'Default Price'}">
+                </number-input>
+            </div>
+
+            <div style="width: 148px;" class="p-r-8">
+                <number-input label="Maturity Price"
+                              model="vm.entity.maturity_price"
+                              event-signal="vm.evEditorFieldEvent"
+                              small-options="{tooltipText: 'Maturity Price'}"
+                              style="width: 200px;">
+                </number-input>
+            </div>
+
+            <div style="width: 148px;" class="p-r-8">
+                <date-input label="Maturity Date"
+                            model="vm.entity.maturity_date"
+                            event-signal="vm.evEditorFieldEvent"
+                            small-options="{tooltipText: 'Maturity Date'}"
+                            style="width: 200px;">
+                </date-input>
+            </div>
+
+            <md-button data-ng-if="vm.entity.id"
+                       class="md-raised primary-button m-t-0 m-b-0"
+                       data-ng-click="vm.runPricingInstrument($event)">Run Pricing
+            </md-button>
+
+        </div>
+
+    </div>
 
     <table>
 
