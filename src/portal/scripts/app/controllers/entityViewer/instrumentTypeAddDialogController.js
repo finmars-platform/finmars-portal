@@ -61,7 +61,7 @@
         vm.dataConstructorLayout = {};
         vm.dcLayoutHasBeenFixed = false;
 
-        vm.hasEnabledStatus = true;
+        vm.hasEnabledStatus = false;
         vm.entityStatus = '';
         vm.evEditorEvent = null;
 
