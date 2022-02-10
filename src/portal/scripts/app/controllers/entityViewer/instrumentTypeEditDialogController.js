@@ -62,7 +62,7 @@
         vm.dataConstructorLayout = {};
         vm.dcLayoutHasBeenFixed = false;
 
-        vm.hasEnabledStatus = true;
+        vm.hasEnabledStatus = false;
         vm.entityStatus = '';
         vm.evEditorEvent = null;
 
@@ -831,14 +831,6 @@
 
             vm.updateEntityBeforeSave();
 
-            /* var errors = entityEditorHelper.validateEntityFields(vm.entity,
-                vm.entityType,
-                vm.tabs,
-                vm.keysOfFixedFieldsAttrs,
-                vm.entityAttrs,
-                vm.attributeTypes,
-                []); */
-
 			var errors = entityEditorHelper.validateEntity(
 				vm.entity,
 				vm.entityType,
@@ -928,31 +920,6 @@
                 });
 
             }
-
-        };
-
-        vm.saveAndExit = function (action) {
-
-            vm.save().then(function (responseData) {
-
-                let responseObj = {status: 'disagree'};
-
-                if (action === 'edit') {
-
-                    vm.entity = {...vm.entity, ...responseData};
-                    vm.entity.$_isValid = true;
-
-                    responseObj = {
-                        status: 'edit',
-                        data: {
-                            entityType: vm.entityType,
-                            entity: vm.entity
-                        }
-                    };
-                }
-
-                metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
-            })
 
         };
 

@@ -25,7 +25,7 @@
 
         <md-menu-content class="universal-editor-menu-content optional-entity-menu" width="3">
 
-            <md-menu-item>
+            <md-menu-item ng-if="vm.allowFormLayoutEdition">
                 <md-button ng-click="vm.editLayout($event)"
                            data-ng-class="{'disabled-btn': !vm.checkReadyStatus()}">
                     <div class="flex-row flex-i-center">
