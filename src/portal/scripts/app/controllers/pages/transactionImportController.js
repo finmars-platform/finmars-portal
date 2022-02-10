@@ -49,7 +49,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
                 var ext = file.name.split('.')[1]
 
-                if (ext !== extension) {
+                if (ext !== 'csv' && ext !== 'xlsx' ) {
 
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
