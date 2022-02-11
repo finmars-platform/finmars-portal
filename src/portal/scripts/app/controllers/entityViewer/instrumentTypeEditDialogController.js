@@ -37,7 +37,6 @@
     var currencyPricingSchemeService = require('../../services/pricing/currencyPricingSchemeService');
     var instrumentPricingSchemeService = require('../../services/pricing/instrumentPricingSchemeService');
 
-    var instrumentTypeService = require('../../services/instrumentTypeService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, authorizerService, usersService, usersGroupService, entityType, entityId, data) {
@@ -69,7 +68,7 @@
         vm.readyStatus = vm.sharedLogic.readyStatusObj;
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
-
+		console.log("testing vm.entityTabs", vm.entityTabs);
         vm.formIsValid = true;
 
         vm.attributeTypes = [];
@@ -451,111 +450,6 @@
 
         };
 
-        /* vm.getFormLayout = async function () {
-
-        	var editLayout;
-        	var gotEditLayout = true;
-
-			if (formLayoutFromAbove) {
-        		editLayout = formLayoutFromAbove;
-
-			} else {
-
-				try {
-					editLayout = await uiService.getEditLayoutByKey(vm.entityType);
-
-				} catch (error) {
-					gotEditLayout = false;
-				}
-
-			}
-
-			if (gotEditLayout && editLayout.results.length && editLayout.results.length && editLayout.results[0].data) {
-
-				dataConstructorLayout = JSON.parse(JSON.stringify(editLayout.results[0]));
-
-				if (Array.isArray(editLayout.results[0].data)) {
-					vm.tabs = editLayout.results[0].data;
-
-				} else {
-
-					vm.tabs = editLayout.results[0].data.tabs;
-					vm.fixedArea = editLayout.results[0].data.fixedArea;
-
-				}
-
-			} else {
-
-				vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data.tabs;
-				vm.fixedArea = uiService.getDefaultEditLayout(vm.entityType)[0].data.fixedArea;
-
-			}
-
-			if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
-				vm.tabs.forEach(function (tab, index) {
-					tab.tabOrder = index;
-				});
-			}
-
-			if (vm.openedIn === 'big-drawer') {
-
-				// Victor 2020.11.20 #59 Fixed area popup
-				if (vm.fixedArea && vm.fixedArea.showByDefault) {
-					vm.showByDefault = vm.fixedArea.showByDefault;
-					vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
-				}
-
-				const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
-
-				if (vm.fixedAreaPopup.tabColumns !== columns) {
-
-					vm.fixedAreaPopup.tabColumns = columns;
-					vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
-
-					const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(vm.fixedAreaPopup.tabColumns);
-					$bigDrawer.setWidth(bigDrawerWidth);
-
-					if (vm.fixedAreaPopup.tabColumns !== 6) {
-						bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
-						bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');
-					} else {
-						bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-block');
-						bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
-					}
-
-				}
-				// <Victor 2020.11.20 #59 Fixed area popup>
-
-			} else {
-				vm.fixedAreaPopup.tabColumns = 6 // in dialog window there are always 2 fields outside of popup
-			}
-
-
-			vm.getAttributeTypes().then(function () {
-
-				entityViewerHelperService.transformItem(vm.entity, vm.attributeTypes);
-
-				//vm.generateAttributesFromLayoutFields();
-				mapAttributesAndFixFieldsLayout();
-
-				vm.readyStatus.layout = true;
-				vm.readyStatus.attributeTypes = true;
-
-				if (vm.entityType === 'instrument') {
-					vm.getInstrumentUserFields();
-				} else {
-					vm.readyStatus.userFields = true;
-				}
-
-				vm.getEntityPricingSchemes();
-
-				$scope.$apply();
-
-			});
-
-        }; */
-
-
         vm.getItem = function () {
 
             return new Promise(function (res, rej) {
@@ -831,14 +725,6 @@
 
             vm.updateEntityBeforeSave();
 
-            /* var errors = entityEditorHelper.validateEntityFields(vm.entity,
-                vm.entityType,
-                vm.tabs,
-                vm.keysOfFixedFieldsAttrs,
-                vm.entityAttrs,
-                vm.attributeTypes,
-                []); */
-
 			var errors = entityEditorHelper.validateEntity(
 				vm.entity,
 				vm.entityType,
@@ -988,44 +874,6 @@
             });
 
         };
-
-        /* vm.getInstrumentUserFields = function () {
-
-            uiService.getInstrumentFieldList().then(function (data) {
-
-                data.results.forEach(function (userField) {
-
-                    vm.tabs.forEach(function (tab) {
-
-                        tab.layout.fields.forEach(function (field) {
-
-                            if (field.attribute && field.attribute.key) {
-
-                                if (field.attribute.key === userField.key) {
-
-
-                                    if (!field.options) {
-                                        field.options = {};
-                                    }
-
-                                    field.options.fieldName = userField.name;
-                                }
-
-                            }
-
-                        })
-
-                    })
-
-                });
-
-                vm.readyStatus.userFields = true;
-
-                $scope.$apply();
-
-            })
-
-        }; */
 
         vm.recalculatePermissions = function ($event) {
 
@@ -1330,34 +1178,6 @@
 
         };
 
-        vm.applyPricingToAllInstruments = function ($event, item) {
-
-            console.log('vm.applyPricingToAllInstruments', item);
-
-            instrumentTypeService.updatePricing(vm.entity.id, item).then(function (data) {
-
-                $mdDialog.show({
-                    controller: 'InfoDialogController as vm',
-                    templateUrl: 'views/info-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        info: {
-                            title: 'Success',
-                            description: "New Pricing Settings were applied"
-                        }
-                    }
-                });
-
-            })
-
-        };
-
         vm.generateCurrencyAttributeTypesByValueTypes = function () {
 
             vm.attributeTypesByValueTypes = {
@@ -1478,9 +1298,6 @@
 
             }));
 
-            console.log('vm.attributeTypesByValueTypes', vm.attributeTypesByValueTypes);
-
-
         };
 
         vm.getInstrumentPricingSchemes = function () {
@@ -1501,7 +1318,7 @@
 
         vm.getEntityPricingSchemes = vm.getInstrumentPricingSchemes;
 
-        vm.pricingSchemeChange = function ($event, item) {
+        /* vm.pricingSchemeChange = function ($event, item) {
 
             item.pricing_scheme_object = null;
             item.default_value = null;
@@ -1535,7 +1352,10 @@
 
             })
 
-        };
+        }; */
+		vm.pricingSchemeChange = function (pricingPolicy) {
+			evHelperService.onPricingSchemeChangeInsidePricingPolicy(pricingPolicy, vm.instrumentPricingSchemes, vm.entity);
+		};
 
         // Instrument Type Layout Settings tab start
 

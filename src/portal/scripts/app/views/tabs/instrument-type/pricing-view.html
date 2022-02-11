@@ -1,4 +1,4 @@
-<div>
+<div data-ng-controller="InstrumentTypePricingPoliciesTabController as vm">
 
     <div layout="row" class="m-t-8 m-b-8">
 
@@ -32,7 +32,7 @@
     </div>
 
 
-    <table>
+    <!--<table>
 
         <thead>
 
@@ -199,7 +199,16 @@
         </tbody>
 
 
-    </table>
+    </table>-->
+    <div ng-if="vm.readyStatus">
+        <grid-table class="instrument-pricing-policies-table"
+                    data-gt-data-service="vm.pricingPoliciesGridTableDataService"
+                    data-gt-event-service="vm.pricingPoliciesGridTableEventService">
+        </grid-table>
+    </div>
 
+    <div ng-if="!vm.readyStatus" class="flex-row flex-c-center width-100" style="height: 100px;">
+        <progress-circular diameter="100"></progress-circular>
+    </div>
 
 </div>

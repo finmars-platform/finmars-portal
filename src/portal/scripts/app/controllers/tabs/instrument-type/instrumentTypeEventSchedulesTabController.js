@@ -381,7 +381,6 @@
                 if (row.defaultValueType === 'selector') {
 					rowObj.columns[2].settings.selectorOptions = vm.selectorOptionsMap[row.key];
 				}
-
                 else if (row.defaultValueType === 'multitypeField') {
 
                     rowObj.columns[2].cellType = 'multitypeField';
