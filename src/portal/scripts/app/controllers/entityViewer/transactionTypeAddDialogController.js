@@ -1522,7 +1522,7 @@
             return false;
         };
 
-        vm.entity.actions.forEach(function (action) {
+        /* vm.entity.actions.forEach(function (action) {
 
             var keys;
 
@@ -1542,7 +1542,7 @@
 
             })
 
-        });
+        }); */
 
         /* var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
 
@@ -1609,24 +1609,7 @@
 
         };
 
-        vm.resetPropertyBtn = function (item, propertyName, fieldName) {
-
-            item[propertyName][fieldName] = null;
-            item[propertyName][fieldName + '_input'] = null;
-
-            if (item[propertyName].hasOwnProperty(fieldName + '_phantom')) {
-                item[propertyName][fieldName + '_phantom'] = null;
-            }
-
-            item[propertyName][fieldName + '_toggle'] = !item[propertyName][fieldName + '_toggle'];
-
-            if (item[propertyName][fieldName + '_toggle'] && !item[propertyName][fieldName]) {
-
-                setDefaultValueForRelation(item, propertyName, fieldName);
-
-            }
-
-        };
+        vm.resetPropertyBtn = sharedLogic.resetPropertyBtn;
 
         vm.findInputs = function (entity) {
 
@@ -2424,6 +2407,7 @@
 
             Promise.all(allDataPromises).then(function () {
 
+				sharedLogic.setStateInActionsControls();
                 sharedLogic.initAfterMainDataLoaded(); // grid table assembled here
 
                 vm.readyStatus.entity = true;
