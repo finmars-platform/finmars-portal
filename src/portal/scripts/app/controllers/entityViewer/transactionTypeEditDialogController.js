@@ -406,7 +406,7 @@
                         vm.readyStatus.layout = true;
                         $scope.$apply();
 
-                        vm.setStateInActionsControls();
+                        sharedLogic.setStateInActionsControls();
 
                         res();
 
@@ -1735,7 +1735,7 @@
             }
         ];
 
-        vm.setStateInActionsControls = function () {
+        /* vm.setStateInActionsControls = function () {
 
             vm.actionsKeysList = [
                 'instrument',
@@ -1769,7 +1769,7 @@
 
             });
 
-        };
+        }; */
 
 
         /* var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
@@ -1837,53 +1837,7 @@
 
         };
 
-        vm.resetPropertyBtn = function (item, propertyName, fieldName) {
-
-            item[propertyName][fieldName] = null;
-            item[propertyName][fieldName + '_input'] = null;
-
-            if (item[propertyName].hasOwnProperty(fieldName + '_phantom')) {
-                item[propertyName][fieldName + '_phantom'] = null;
-            }
-
-            item[propertyName][fieldName + '_toggle'] = !item[propertyName][fieldName + '_toggle'];
-
-            if (item[propertyName][fieldName + '_toggle'] && !item[propertyName][fieldName]) {
-
-                setDefaultValueForRelation(item, propertyName, fieldName);
-
-                /*vm.loadRelation(relationType).then(function (data) {
-
-                    var defaultPropertyName = 'name';
-                    if (fieldName === 'price_download_scheme') {
-                        defaultPropertyName = 'user_code';
-                    }
-
-                    vm.relationItems[relationType].forEach(function (relation) {
-
-                        if (relation[defaultPropertyName] === "-" || relation[defaultPropertyName] === 'Default') {
-                            item[propertyName][fieldName] = relation.id;
-
-                            item[propertyName][fieldName + '_object'] = {};
-                            item[propertyName][fieldName + '_object']['name'] = relation[defaultPropertyName];
-
-                        }
-
-                    });
-
-                    $scope.$apply(function () {
-                        setTimeout(function () {
-                            $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
-                                ev.stopPropagation();
-                            });
-                        }, 100);
-                    });
-
-                });*/
-
-            }
-
-        };
+		vm.resetPropertyBtn = sharedLogic.resetPropertyBtn;
 
         vm.findInputs = function (entity) {
 
