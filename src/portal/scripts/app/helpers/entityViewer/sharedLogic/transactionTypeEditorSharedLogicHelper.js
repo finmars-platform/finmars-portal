@@ -146,6 +146,49 @@
 
         };
 
+		const relations2KeysObj = {
+			'transaction_class': {
+				id: 'value',
+				name: 'name'
+			},
+			/*'price_download_scheme': {
+				id: 'id',
+				name: 'user_code'
+			},*/
+			'price_download_scheme': {
+				id: 'id',
+				name: 'scheme_name'
+			},
+		};
+
+		const useIdForRelList = ['daily_pricing_model', 'payment_size_detail', 'accrual_calculation_model', 'notification_class', 'event_class', 'periodicity'];
+
+		const formatRelationForSelector = function (key, relationsList) {
+
+			if (relations2KeysObj.hasOwnProperty(key)) { // relations with specific properties to use as 'id' or (and) 'name'
+
+				var propertyForId = relations2KeysObj[key].id;
+				var propertyForName = relations2KeysObj[key].name;
+
+				return relationsList.map(rItem => {
+					return {id: rItem[propertyForId], name: rItem[propertyForName]};
+				});
+
+			}
+
+			const propForId = useIdForRelList.includes(key) ? 'id' : 'user_code';
+
+			return relationsList.map(rItem => {
+
+				return {
+					id: rItem[propForId],
+					name: rItem.hasOwnProperty('short_name') ? rItem.short_name : rItem.name
+				};
+
+			});
+
+		};
+
 		const loadRelation = function (field, noScopeUpdate) {
 
 			field = field.replace(/-/g, "_"); // replace all '_' with '-'
@@ -157,13 +200,8 @@
 
 					fieldResolverService.getFields(field).then(function (data) {
 
-						viewModel.relationItems[field] = data.data.map(function(item){
+						viewModel.relationItems[field] = formatRelationForSelector(field, data.data);
 
-                            item._id  = item.id
-                            item.id = item.user_code
-
-						    return item
-                        });
 						loadedRelationsList.push(field);
 
 						if (noScopeUpdate) {
@@ -1482,6 +1520,87 @@
 
 		};
 
+		const setStateInActionsControls = function () {
+
+			const actionsKeysList = [
+				'instrument',
+				'transaction',
+				'instrument_factor_schedule',
+				'instrument_manual_pricing_formula',
+				'instrument_accrual_calculation_schedules',
+				'instrument_event_schedule',
+				'instrument_event_schedule_action'
+			];
+
+			viewModel.entity.actions.forEach(function (action) {
+
+				var keys;
+
+				/* actionsKeysList.forEach(function (actionKey) {
+
+					if (action[actionKey] !== null) {
+						keys = Object.keys(action[actionKey]);
+
+						keys.forEach(function (key) {
+							if (action[actionKey].hasOwnProperty(key + '_input')) {
+								if (action[actionKey][key] !== "") {
+									action[actionKey][key + '_toggle'] = true;
+								}
+							}
+						})
+					}
+
+				}) */
+
+				for (const actionKey of actionsKeysList) {
+
+					if (action[actionKey] !== null) {
+
+						keys = Object.keys(action[actionKey]);
+
+						keys.forEach(function (key) {
+
+							if (action[actionKey].hasOwnProperty(key + '_input')) {
+
+								const relationSelNotEmpty = action[actionKey][key] !== "";
+
+								if (relationSelNotEmpty) {
+									action[actionKey][key + '_toggle'] = true;
+								}
+
+							}
+
+						})
+
+						break;
+
+					}
+
+				}
+
+			});
+
+		};
+
+		const resetPropertyBtn = function (item, propertyName, fieldName) {
+
+			item[propertyName][fieldName] = null;
+			item[propertyName][fieldName + '_input'] = null;
+
+			if (item[propertyName].hasOwnProperty(fieldName + '_phantom')) {
+				item[propertyName][fieldName + '_phantom'] = null;
+			}
+
+			item[propertyName][fieldName + '_toggle'] = !item[propertyName][fieldName + '_toggle'];
+
+			if (item[propertyName][fieldName + '_toggle'] && !item[propertyName][fieldName]) {
+
+				setDefaultValueForRelation(item, propertyName, fieldName);
+
+			}
+
+		};
+
         const appendFromTemplate = function ($event, template) {
 
 			console.log("Append from Template", template);
@@ -1610,6 +1729,8 @@
 			loadEcosystemDefaults: loadEcosystemDefaults,
 			getTransactionUserFields: getTransactionUserFields,
 
+			setStateInActionsControls: setStateInActionsControls,
+			resetPropertyBtn: resetPropertyBtn,
 			appendFromTemplate: appendFromTemplate,
             initAfterMainDataLoaded: initAfterMainDataLoaded
         }

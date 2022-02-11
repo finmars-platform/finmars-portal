@@ -28,6 +28,7 @@
 
                     <div data-ng-if="item.transaction.portfolio_toggle">
                         <entity-search-select data-item="item.transaction.portfolio"
+                                              data-user-code-for-item="true"
                                               data-label="'Portfolio'"
                                               data-item-name="item.transaction.portfolio_object.name"
                                               data-entity-type="'portfolio'"
@@ -125,6 +126,7 @@
 
                         <div data-ng-if="item.transaction.instrument_toggle">
                             <entity-search-select data-item="item.transaction.instrument"
+                                                  data-user-code-for-item="true"
                                                   data-label="'Instrument'"
                                                   data-item-name="item.transaction.instrument_object.name"
                                                   data-entity-type="'instrument'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
@@ -329,6 +331,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.account_position_toggle">
                         <entity-search-select data-item="item.transaction.account_position"
+                                              data-user-code-for-item="true"
                                               data-label="'Account position'"
                                               data-item-name="item.transaction.account_position_object.name"
                                               data-entity-type="'account'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
@@ -373,6 +376,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.account_cash_toggle">
                         <entity-search-select data-item="item.transaction.account_cash"
+                                              data-user-code-for-item="true"
                                               data-label="'Account cash'"
                                               data-item-name="item.transaction.account_cash_object.name"
                                               data-entity-type="'account'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
@@ -424,6 +428,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.account_interim_toggle">
                         <entity-search-select data-item="item.transaction.account_interim"
+                                              data-user-code-for-item="true"
                                               data-label="'Account interim'"
                                               data-item-name="item.transaction.account_interim_object.name"
                                               data-entity-type="'account'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
@@ -455,6 +460,7 @@
                     <div flex="80">
                         <div data-ng-if="item.transaction.linked_instrument_toggle">
                             <entity-search-select data-item="item.transaction.linked_instrument"
+                                                  data-user-code-for-item="true"
                                                   data-label="'Linked instrument'"
                                                   data-item-name="item.transaction.linked_instrument_object.name"
                                                   data-entity-type="'instrument'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
@@ -503,6 +509,7 @@
                     <div flex="80">
                         <div data-ng-if="item.transaction.allocation_pl_toggle">
                             <entity-search-select data-item="item.transaction.allocation_pl"
+                                                  data-user-code-for-item="true"
                                                   data-label="'Allocation-P&L'"
                                                   data-item-name="item.transaction.allocation_pl_object.name"
                                                   data-entity-type="'instrument'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
@@ -551,6 +558,7 @@
                     <div flex="80">
                         <div data-ng-if="item.transaction.allocation_balance_toggle">
                             <entity-search-select data-item="item.transaction.allocation_balance"
+                                                  data-user-code-for-item="true"
                                                   data-label="'Allocation-Balance'"
                                                   data-item-name="item.transaction.allocation_balance_object.name"
                                                   data-entity-type="'instrument'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
@@ -606,6 +614,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy1_position_toggle">
                         <entity-search-select data-item="item.transaction.strategy1_position"
+                                              data-user-code-for-item="true"
                                               data-label="'Strategy1 position'"
                                               data-item-name="item.transaction.strategy1_position_object.name"
                                               data-entity-type="'strategy-1'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
@@ -633,6 +642,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy2_position_toggle">
                         <entity-search-select data-item="item.transaction.strategy2_position"
+                                              data-user-code-for-item="true"
                                               data-label="'Strategy2 position'"
                                               data-item-name="item.transaction.strategy2_position_object.name"
                                               data-entity-type="'strategy-2'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
@@ -660,6 +670,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy3_position_toggle">
                         <entity-search-select data-item="item.transaction.strategy3_position"
+                                              data-user-code-for-item="true"
                                               data-label="'Strategy3 position'"
                                               data-item-name="item.transaction.strategy3_position_object.name"
                                               data-entity-type="'strategy-3'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
@@ -690,6 +701,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy1_cash_toggle">
                         <entity-search-select data-item="item.transaction.strategy1_cash"
+                                              data-user-code-for-item="true"
                                               data-label="'Strategy1 cash'"
                                               data-item-name="item.transaction.strategy1_cash_object.name"
                                               data-entity-type="'strategy-1'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
@@ -716,6 +728,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy2_cash_toggle">
                         <entity-search-select data-item="item.transaction.strategy2_cash"
+                                              data-user-code-for-item="true"
                                               data-label="'Strategy2 cash'"
                                               data-item-name="item.transaction.strategy2_cash_object.name"
                                               data-entity-type="'strategy-2'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
@@ -743,6 +756,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.strategy3_cash_toggle">
                         <entity-search-select data-item="item.transaction.strategy3_cash"
+                                              data-user-code-for-item="true"
                                               data-label="'Strategy3 cash'"
                                               data-item-name="item.transaction.strategy3_cash_object.name"
                                               data-entity-type="'strategy-3'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
@@ -774,6 +788,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.counterparty_toggle">
                         <entity-search-select data-item="item.transaction.counterparty"
+                                              data-user-code-for-item="true"
                                               data-label="'Counterparty'"
                                               data-item-name="item.transaction.counterparty_object.name"
                                               data-entity-type="'counterparty'" is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
@@ -801,6 +816,7 @@
                 <div flex="80">
                     <div data-ng-if="item.transaction.responsible_toggle">
                         <entity-search-select data-item="item.transaction.responsible"
+                                              data-user-code-for-item="true"
                                               data-label="'Responsible'"
                                               data-item-name="item.transaction.responsible_object.name"
                                               data-entity-type="'responsible'"

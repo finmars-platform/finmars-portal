@@ -15,6 +15,7 @@
                 label: '=',
                 item: '=',
                 itemName: '=',
+				userCodeForItem: '@',
                 itemObject: '=',
                 entityType: '=',
                 customButtons: '=',
@@ -49,6 +50,7 @@
 
                 }
 
+                var idProperty = scope.userCodeForItem ? 'user_code' : 'id';
                 var stylePreset;
 
                 var inputContainer = elem[0].querySelector('.smartSearchInputContainer');
@@ -130,14 +132,14 @@
 
                 scope.selectOption = function (item) {
 
-                    if (item.id !== scope.item) {
+                    if (item[idProperty] !== scope.item) {
 
                         stylePreset = '';
                         scope.error = '';
                         //scope.item.value = item.id;
-                        scope.item = item.id;
+                        scope.item = item[idProperty];
 
-                        scope.itemObject = item;
+                        if (scope.itemObject !== undefined) scope.itemObject = item;
 
                         scope.valueIsValid = true;
 
@@ -270,7 +272,7 @@
 
                                 stylePreset = '';
                                 //scope.item.value = res.data.item.id;
-                                scope.item = res.data.item.id;
+                                scope.item = res.data.item[idProperty];
 
                                 if (scope.itemObject !== undefined) {
                                     scope.itemObject = res.data.item;
