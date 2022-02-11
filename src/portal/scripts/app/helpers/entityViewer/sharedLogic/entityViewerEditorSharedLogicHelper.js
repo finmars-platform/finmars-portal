@@ -3,7 +3,7 @@
 	const metaService = require('../../../services/metaService');
     const uiService = require('../../../services/uiService');
 	const entityResolverService = require('../../../services/entityResolverService');
-    const entityViewerHelperService = require('../../../services/entityViewerHelperService');
+    const evHelperService = require('../../../services/entityViewerHelperService');
 
     const instrumentService = require('../../../services/instrumentService');
     const attributeTypeService = require('../../../services/attributeTypeService');
@@ -451,7 +451,7 @@
             // viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, viewModel.entityType);
 
             $scope.$apply();
-            const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(6);
+            const bigDrawerWidth = evHelperService.getBigDrawerWidth(6);
 
             $bigDrawer.setWidth(bigDrawerWidth);
 
@@ -803,7 +803,7 @@
 
 			if (viewModel.entityType === 'instrument') await applyInstrumentUserFieldsAliases(tabs);
 
-        	entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
+			evHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
 
 			/* if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
 
@@ -897,7 +897,7 @@
 				}
 
                 // Instrument-type always open in max big drawer window
-                let columns = entityViewerHelperService.getEditLayoutMaxColumns(tabs);
+                let columns = evHelperService.getEditLayoutMaxColumns(tabs);
 
                 if (viewModel.entityType === 'instrument-type') columns = 6;
 
@@ -906,7 +906,7 @@
                     viewModel.fixedAreaPopup.tabColumns = columns;
                     viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(viewModel.fixedAreaPopup.tabColumns, viewModel.entityType);
 
-                    const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(viewModel.fixedAreaPopup.tabColumns);
+                    const bigDrawerWidth = evHelperService.getBigDrawerWidth(viewModel.fixedAreaPopup.tabColumns);
                     $bigDrawer.setWidth(bigDrawerWidth);
 
                     if (viewModel.fixedAreaPopup.tabColumns !== 6) {
@@ -938,7 +938,7 @@
 
 				Promise.allSettled(promises).then(async function (testData) {
 
-					entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes); // needed to go after synchronous getAttributeTypes()
+					evHelperService.transformItem(viewModel.entity, viewModel.attributeTypes); // needed to go after synchronous getAttributeTypes()
 
 					if (viewModel.getEntityPricingSchemes) viewModel.getEntityPricingSchemes(); // in entityViewerFormsPreviewDialogController.js there is no pricing tab
 

@@ -157,10 +157,10 @@
 				viewModel.expressionData.functions[1] = viewModel.entity.context_parameters.map(function (cParam) {
 
 					return {
-						"name": cParam.name,
-						"description": "Transaction Type Context Parameter: " + cParam.name,
+						"name": "Context Parameter: " + cParam.name + " (" + cParam.user_code + ")",
+						"description": "Transaction Type Context Parameter: " + cParam.name + " (" + cParam.user_code + ")",
 						"groups": "context_parameters",
-						"func": cParam.name
+						"func": cParam.user_code
 					}
 
 				});
@@ -423,19 +423,19 @@
 
 					switch (validationResult.status) {
 						case 'error':
-							actionFieldLocation.message = 'Invalid expression. ' + validationResult.result;
+							actionFieldLocation.message = 'Invalid expression.\n Expression: ' + validationResult.result;
 							break;
 
 						case 'functions-error':
-							actionFieldLocation.message = 'Not all variables are identified expression. ' + validationResult.result;
+							actionFieldLocation.message = 'Not all variables are identified expression.\n Expression: ' + validationResult.result;
 							break;
 
 						case 'inputs-error':
-							actionFieldLocation.message = 'Not all variables are identified inputs. ' + validationResult.result;
+							actionFieldLocation.message = 'Not all variables are identified inputs.\n Expression: ' + validationResult.result;
 							break;
 
 						case 'bracket-error':
-							actionFieldLocation.message = 'Mismatch in the opening and closing braces. ' + validationResult.result;
+							actionFieldLocation.message = 'Mismatch in the opening and closing braces.\n Expression: ' + validationResult.result;
 							break;
 					}
 
@@ -1624,16 +1624,6 @@
 				viewModel.entity.context_parameters = [];
 			}
 
-			viewModel.entity.context_parameters = viewModel.entity.context_parameters.map(param => {
-
-				param.frontOptions = {
-					nameInputEvent: {}
-				};
-
-				return param;
-
-			});
-
 			return viewModel.entity.context_parameters;
 
 		};
@@ -1645,7 +1635,7 @@
 
 		const addContextParameter = function ($event) {
 
-			const contextParamsNamesList = viewModel.entity.context_parameters.map(param => param.name);
+			const contextParamsUserCodesList = viewModel.entity.context_parameters.map(param => param.user_code);
 
 			$mdDialog.show({
 				controller: 'EnterUserCodeDialogController as vm',
@@ -1653,8 +1643,8 @@
 				targetEvent: $event,
 				locals: {
 					data: {
-						title: "Name new context parameter",
-						occupiedUserCodesList: contextParamsNamesList
+						title: "Enter user code for new context parameter",
+						occupiedUserCodesList: contextParamsUserCodesList
 					}
 				},
 				multiple: true
@@ -1671,10 +1661,8 @@
 
 					viewModel.entity.context_parameters.push({
 						order:order,
-						name: res.data,
-						frontOptions: {
-							nameInputEvent: {}
-						}
+						user_code: res.data,
+						name: '',
 					});
 
 					updateContextParametersFunctions();

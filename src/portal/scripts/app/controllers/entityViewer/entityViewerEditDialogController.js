@@ -1424,34 +1424,6 @@
 
         };
 
-        vm.applyPricingToAllInstruments = function ($event, item) {
-
-            console.log('vm.applyPricingToAllInstruments', item);
-
-            instrumentTypeService.updatePricing(vm.entity.id, item).then(function (data) {
-
-                $mdDialog.show({
-                    controller: 'InfoDialogController as vm',
-                    templateUrl: 'views/info-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        info: {
-                            title: 'Success',
-                            description: "New Pricing Settings were applied"
-                        }
-                    }
-                });
-
-            })
-
-        };
-
         vm.generateCurrencyAttributeTypesByValueTypes = function () {
 
             vm.attributeTypesByValueTypes = {
@@ -1609,7 +1581,7 @@
 
         };
 
-        vm.pricingSchemeChange = function (item) {
+        /* vm.pricingSchemeChange = function (item) {
 
             item.pricing_scheme_object = null;
             item.default_value = null;
@@ -1660,7 +1632,10 @@
 
             })
 
-        };
+        }; */
+		vm.pricingSchemeChange = function (pricingPolicy) {
+			evHelperService.onPricingSchemeChangeInsidePricingPolicy(pricingPolicy, vm.instrumentPricingSchemes, vm.entity);
+		}
 
         // Instrument Type Layout Settings tab start
 
@@ -1958,7 +1933,7 @@
 
             }
 
-        }
+        };
 
         vm.onNameInputBlur = function () {
 

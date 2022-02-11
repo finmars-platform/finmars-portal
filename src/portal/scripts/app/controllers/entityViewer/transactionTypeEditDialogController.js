@@ -305,6 +305,7 @@
         vm.transactionUserFieldsState = {};
 
         vm.getTransactionUserFields = sharedLogic.getTransactionUserFields;
+		vm.updateContextParameters = sharedLogic.updateContextParametersFunctions;
 
         vm.getItem = function () {
 
@@ -315,7 +316,7 @@
                     vm.entity = data;
 
                     sharedLogic.updateInputFunctions();
-					sharedLogic.updateContextParametersFunctions();
+					vm.updateContextParameters();
                     /* vm.expressionData.groups[0] = {
                         "name": "<b>Inputs</b>",
                         "key": 'input'
@@ -2666,8 +2667,6 @@
         //region Context Parameters tab
 		vm.deleteContextParameter = sharedLogic.deleteContextParameter
         vm.addContextParameter = sharedLogic.addContextParameter;
-
-		vm.validateContextParameterName = sharedLogic.validateContextParameterName;
 		//endregion Context Parameters tab
 
         vm.init = function () {

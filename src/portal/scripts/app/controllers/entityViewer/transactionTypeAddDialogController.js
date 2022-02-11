@@ -92,8 +92,9 @@
         vm.inputsForMultiselector = [];
 
         vm.openedIn = data.openedIn;
+		vm.updateContextParameters = sharedLogic.updateContextParametersFunctions;
 
-        // var ecosystemDefaultData = {};
+		// var ecosystemDefaultData = {};
 
         vm.loadPermissions = function () {
 
@@ -1078,42 +1079,10 @@
         };*/
         vm.resolveRelation = sharedLogic.resolveRelation;
 
-        vm.updateInputFunctions = function () {
-
-            /*vm.inputsGroup = {
-                "name": "<b>Inputs</b>",
-                "key": 'input'
-            };*/
-            vm.expressionData.groups[0] = {
-                "name": "<b>Inputs</b>",
-                "key": 'input'
-            }
-
-            if (vm.entity.inputs && vm.entity.inputs.length > 0) {
-
-                //vm.inputsFunctions = vm.entity.inputs.map(function (input) {
-                vm.expressionData.functions[0] = vm.entity.inputs.map(function (input) {
-
-                    return {
-                        "name": "Input: " + input.verbose_name + " (" + input.name + ")",
-                        "description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
-                        "groups": "input",
-                        "func": input.name
-                    }
-
-                });
-
-            } else {
-
-                vm.expressionData.functions = []
-
-            }
-
-        };
-
         vm.saveItem = function (item) {
 
             sharedLogic.updateInputFunctions();
+			vm.updateContextParameters();
 
             item.editStatus = false;
         };
@@ -2395,6 +2364,7 @@
             vm.getActionTemplates();
 
             sharedLogic.updateInputFunctions();
+			vm.updateContextParameters();
 
             var allDataPromises = [
                 attrsProm,

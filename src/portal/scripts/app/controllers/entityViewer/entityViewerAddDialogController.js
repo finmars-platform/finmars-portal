@@ -15,7 +15,7 @@
     var evEditorEvents = require('../../services/ev-editor/entityViewerEditorEvents')
 
     var gridHelperService = require('../../services/gridHelperService');
-    var entityViewerHelperService = require('../../services/entityViewerHelperService');
+    var evHelperService = require('../../services/entityViewerHelperService');
 
     var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
     var EventService = require('../../services/eventService');
@@ -139,6 +139,8 @@
         }
 
         vm.typeSelectorChange = null;
+		/** Tracking fields that have been changed by user */
+		var changedEntityProperties = {};
 
         var formLayoutFromAbove = data.editLayout;
 
@@ -845,14 +847,14 @@
 					vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
 				}
 
-				const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
+				const columns = evHelperService.getEditLayoutMaxColumns(vm.tabs);
 
 				if (vm.fixedAreaPopup.tabColumns !== columns) {
 
 					vm.fixedAreaPopup.tabColumns = columns;
 					vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
 
-					const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(vm.fixedAreaPopup.tabColumns);
+					const bigDrawerWidth = evHelperService.getBigDrawerWidth(vm.fixedAreaPopup.tabColumns);
 					$bigDrawer.setWidth(bigDrawerWidth);
 
 					if (vm.fixedAreaPopup.tabColumns !== 6) {
@@ -872,7 +874,7 @@
 
 			vm.getAttributeTypes().then(function (value) {
 
-				entityViewerHelperService.transformItem(vm.entity, vm.attributeTypes);
+				evHelperService.transformItem(vm.entity, vm.attributeTypes);
 				//vm.generateAttributesFromLayoutFields();
 				vm.getEntityPricingSchemes();
 
@@ -1316,8 +1318,36 @@
             return new Promise(function (resolve, reject) {
 
                 instrumentTypeService.bookInstrument(vm.entity.instrument_type).then(function (data) {
+					console.log("testing.bookInstrument data", data);
+                    Object.keys(data.instrument).forEach(function (prop) {
 
-                    vm.entity = data.instrument
+						if (prop === 'attributes') {
+
+							data.instrument[prop].forEach(function (attrType) {
+
+								// Finish after SZ changed back
+
+								/* var atProp = attrType.attribute_type_object.user_code;
+								var atVal = evHelperService.getDynamicAttrValue(attrType);
+
+								vm.entity[atProp] = atVal;*/
+
+							});
+
+						}
+						else if (['accrual_calculation_schedules', 'event_schedules'].indexOf < 0) {
+
+							var notChangeByUser = !changedEntityProperties[prop] || !changedEntityProperties[prop].byUser;
+
+							if (!vm.entity[prop] || notChangeByUser) {
+
+								vm.entity[prop] = data.instrument[prop];
+
+							}
+
+						}
+
+					});
 
                     console.log('vm.bookInstrument.entity', vm.entity)
 
@@ -1334,12 +1364,18 @@
         vm.onEntityChange = function (fieldKey) {
 
             if (fieldKey) {
-
+				console.log("testing.onEntityChange fieldKey", fieldKey);
                 var attributes = {
                     entityAttrs: vm.entityAttrs,
                     attrsTypes: vm.attributeTypes
                 }
 
+				if (!changedEntityProperties[fieldKey]) {
+					changedEntityProperties[fieldKey] = {};
+				}
+
+				changedEntityProperties[fieldKey].byUser = true;
+				console.log("testing.onEntityChange changedEntityProperties", changedEntityProperties);
                 entityEditorHelper.checkTabsForErrorFields(fieldKey, vm.evEditorDataService, attributes, vm.entity, vm.entityType, vm.tabs);
 
                 /*var fieldIndex = vm.formErrorsList.indexOf(fieldKey);
@@ -1413,7 +1449,6 @@
 
             }
 
-
             if (vm.entityType === 'instrument') {
 
                 if (vm.entity.pricing_currency && !instrumentPricingCurrencyChanged) {
@@ -1426,9 +1461,8 @@
 
                 }
 
-                console.log("Hello?", vm.entity)
-
             }
+
         };
 
         vm.generateCurrencyAttributeTypesByValueTypes = function () {

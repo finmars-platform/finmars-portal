@@ -1236,14 +1236,7 @@
     };
 
 
-    var openInstrumentTypeEditDrawer = function (
-        evDataService,
-        evEventService,
-        layout,
-        $bigDrawer,
-        entitytype,
-        entityId
-    ) {
+    var openInstrumentTypeEditDrawer = function (evDataService, evEventService, layout, $bigDrawer, entitytype, entityId) {
 
         var bigDrawerWidth = getBigDrawerWidth(6);
 
@@ -1270,14 +1263,7 @@
     };
 
 
-    var openEntityViewerAddDrawer = function (
-        evDataService,
-        evEventService,
-        layout,
-        $bigDrawer,
-        entityType,
-        entity
-    ) {
+    var openEntityViewerAddDrawer = function (evDataService, evEventService, layout, $bigDrawer, entityType, entity) {
 
 /* $mdDialog.show({
     controller: 'EntityViewerAddDialogController as vm',
@@ -1319,14 +1305,7 @@
     };
 
 
-    var openEntityViewerEditDrawer = function (
-        evDataService,
-        evEventService,
-        layout,
-        $bigDrawer,
-		entityType,
-        entityId
-    ) {
+    var openEntityViewerEditDrawer = function (evDataService, evEventService, layout, $bigDrawer, entityType, entityId) {
 
         var bigDrawerOptions = getBigDrawerOptions(layout, entityType);
 
@@ -1481,6 +1460,47 @@
 
     };
 
+	/**
+	 * @param {Object} pricingPolicy
+	 * @param {Array<Object>} instrumentPricingSchemes
+	 * @param {Object} entity - data of ev entity
+	 */
+	var onPricingSchemeChangeInsidePricingPolicy = function (pricingPolicy, instrumentPricingSchemes, entity) {
+		console.log("testing.onPricingSchemeChangeInsidePricingPolicy", pricingPolicy);
+		pricingPolicy.pricing_scheme_object = null;
+		pricingPolicy.default_value = null;
+		pricingPolicy.attribute_key = null;
+		pricingPolicy.data = null;
+
+		instrumentPricingSchemes.forEach(function (scheme) {
+
+			if (scheme.id === pricingPolicy.pricing_scheme) {
+
+				pricingPolicy.pricing_scheme_object = scheme;
+			}
+
+		})
+
+		if (pricingPolicy.pricing_scheme_object && pricingPolicy.pricing_scheme_object.type_settings) {
+
+			pricingPolicy.data = pricingPolicy.pricing_scheme_object.type_settings.data;
+			pricingPolicy.attribute_key = pricingPolicy.pricing_scheme_object.type_settings.attribute_key;
+			pricingPolicy.default_value = pricingPolicy.pricing_scheme_object.type_settings.default_value;
+
+		}
+
+		entity.pricing_policies = entity.pricing_policies.map(function (policy) {
+
+			if (policy.id === pricingPolicy.id) {
+				return Object.assign({}, pricingPolicy);
+			}
+
+			return policy;
+
+		});
+		console.log("testing.onPricingSchemeChangeInsidePricingPolicy end");
+	};
+
     module.exports = {
         transformItem: transformItem,
         checkForLayoutConfigurationChanges: checkForLayoutConfigurationChanges,
@@ -1509,6 +1529,8 @@
         openComplexTransactionAddDrawer: openComplexTransactionAddDrawer,
 
         postAdditionActions: postAdditionActions,
+
+		onPricingSchemeChangeInsidePricingPolicy: onPricingSchemeChangeInsidePricingPolicy,
     }
 
 }());
