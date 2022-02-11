@@ -18,52 +18,52 @@
             options = {};
         }
 
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'system-messages/message/', options),
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'system-messages/message/', options),
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
     };
 
     var getByKey = function (id) {
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'system-messages/message/' + id + '/',
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'system-messages/message/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
     };
 
     var update = function (id, item) {
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'system-messages/message/' + id + '/',
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'system-messages/message/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
- Accept: 'application/json',
+                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(currency)
