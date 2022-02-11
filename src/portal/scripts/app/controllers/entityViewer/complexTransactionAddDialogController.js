@@ -272,6 +272,7 @@
                     vm.transactionType = data.transaction_type_object;
                     vm.entity = data.complex_transaction;
 
+                    data = vm.mapValuesOnTransactionTypeChange(data);
 
                     vm.specialRulesReady = true;
                     vm.readyStatus.entity = true;
@@ -1361,6 +1362,26 @@
 
         };
 
+        vm.mapValuesOnTransactionTypeChange = function (newBookData){
+
+            Object.keys(newBookData.values).forEach(function (key){
+
+                Object.keys(vm.originalComplexTransaction.values).forEach(function (ctKey) {
+
+                    if (key === ctKey) {
+
+                        newBookData.values[key] = vm.originalComplexTransaction.values[key]
+
+                    }
+
+                })
+
+
+            })
+
+            return newBookData
+        }
+
         vm.init = function () {
             setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.cTransactionEditorDialogElemToResize');
@@ -1432,6 +1453,8 @@
                     vm.entity = entity;
 
                     var copy = JSON.parse(JSON.stringify(entity));
+
+                    vm.originalComplexTransaction = JSON.parse(JSON.stringify(data.originalComplexTransaction));
 
                     vm.transactionTypeId = vm.entity.transaction_type;
 
