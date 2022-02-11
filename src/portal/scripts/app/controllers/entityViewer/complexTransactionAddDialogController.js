@@ -26,8 +26,8 @@
 
     var metaHelper = require('../../helpers/meta.helper');
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
-	var ComplexTransactionEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/complexTransactionEditorSahredLogicHelper');
-	var transactionHelper = require('../../helpers/transaction.helper');
+    var ComplexTransactionEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/complexTransactionEditorSahredLogicHelper');
+    var transactionHelper = require('../../helpers/transaction.helper');
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
@@ -35,7 +35,7 @@
     module.exports = function complexTransactionAddDialogController($scope, $mdDialog, $bigDrawer, $state, usersService, usersGroupService, globalDataService, entityType, entity, data) {
 
         var vm = this;
-		var sharedLogicHelper = new ComplexTransactionEditorSharedLogicHelper(vm, $scope, $mdDialog);
+        var sharedLogicHelper = new ComplexTransactionEditorSharedLogicHelper(vm, $scope, $mdDialog);
 
         vm.readyStatus = {content: false, entity: true, permissions: true, transactionTypes: false, layout: false};
         vm.entityType = entityType;
@@ -63,17 +63,17 @@
         vm.attributesLayout = [];
         vm.fixedAreaAttributesLayout = [];
 
-		vm.locsWithErrors = {};
-		vm.errorFieldsList = [];
-		vm.inputsWithCalculations = null;
+        vm.locsWithErrors = {};
+        vm.errorFieldsList = [];
+        vm.inputsWithCalculations = null;
 
-		vm.openedIn = data.openedIn;
+        vm.openedIn = data.openedIn;
 
-		vm.fieldsDataStore = {}
+        vm.fieldsDataStore = {}
 
         var notCopiedTransaction = true;
         var contentType = metaContentTypesService.findContentTypeByEntity('complex-transaction', 'ui');
-		var ttypesList;
+        var ttypesList;
         //var tooltipsList = [];
 
         vm.rearrangeMdDialogActions = function () {
@@ -227,33 +227,33 @@
                 });
 
             } */
-			var pbraResult = sharedLogicHelper.postBookRebookActions(cTransactionData, vm.recalculate);
-			vm.tabs = pbraResult.tabs;
-			vm.fixedArea = pbraResult.fixedArea;
-			dataConstructorLayout = pbraResult.dataConstructorLayout;
-			vm.inputsWithCalculations = pbraResult.inputsWithCalculations;
-			vm.userInputs = pbraResult.userInputs;
+            var pbraResult = sharedLogicHelper.postBookRebookActions(cTransactionData, vm.recalculate);
+            vm.tabs = pbraResult.tabs;
+            vm.fixedArea = pbraResult.fixedArea;
+            dataConstructorLayout = pbraResult.dataConstructorLayout;
+            vm.inputsWithCalculations = pbraResult.inputsWithCalculations;
+            vm.userInputs = pbraResult.userInputs;
 
             mapAttributesAndFixFieldsLayout();
 
-			// should be fired after mapAttributesAndFixFieldsLayout()
-			return sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+            // should be fired after mapAttributesAndFixFieldsLayout()
+            return sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
 
-		};
+        };
 
         vm.recalculate = function (paramsObj) {
 
-			var inputs = paramsObj.inputs;
-			sharedLogicHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
+            var inputs = paramsObj.inputs;
+            sharedLogicHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
 
-			if (inputs && inputs.length) {
+            if (inputs && inputs.length) {
 
-				var book = sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
+                var book = sharedLogicHelper.preRecalculationActions(inputs, paramsObj.updateScope);
 
-				var recalcProm = transactionTypeService.recalculateComplexTransaction(book.transaction_type, book);
-				sharedLogicHelper.processRecalculationResolve(recalcProm, inputs, paramsObj.recalculationData);
+                var recalcProm = transactionTypeService.recalculateComplexTransaction(book.transaction_type, book);
+                sharedLogicHelper.processRecalculationResolve(recalcProm, inputs, paramsObj.recalculationData);
 
-			}
+            }
 
         };
 
@@ -288,9 +288,9 @@
                         vm.missingLayoutError = false;
 
                         await postBookComplexTransactionActions(data);
-						// Victor 2020.12.01 #64
-						// await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
-						// <Victor 2020.12.01 #64>
+                        // Victor 2020.12.01 #64
+                        // await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+                        // <Victor 2020.12.01 #64>
 
                         /*vm.oldValues = {};
 
@@ -362,21 +362,21 @@
 
         };
 
-		/* var closeComponent = function (response) {
+        /* var closeComponent = function (response) {
 
-			if (data.openedIn === 'big-drawer') {
-				$bigDrawer.hide(response);
+            if (data.openedIn === 'big-drawer') {
+                $bigDrawer.hide(response);
 
-			} else { // opened in mdDialog
-				$mdDialog.hide(response);
-			}
+            } else { // opened in mdDialog
+                $mdDialog.hide(response);
+            }
 
-		}; */
+        }; */
 
         vm.cancel = function () {
             /* $mdDialog.hide({status: 'disagree'});
 			$bigDrawer.hide({status: 'disagree'}); */
-			metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
+            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
         };
 
         vm.editLayout = function (ev) {
@@ -476,7 +476,7 @@
 
             if (errors.length) {
 
-				vm.locsWithErrors = {};
+                vm.locsWithErrors = {};
 
                 /* errors.forEach(function (errorObj) {
 
@@ -520,45 +520,44 @@
                     }
                 }) */
 
-				entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
+                entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
 
-			}
-            else {
+            } else {
                 // var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                 var resultEntity = vm.entity;
 
-				/* resultEntity.values = {};
+                /* resultEntity.values = {};
 
-				vm.userInputs.forEach(function (userInput) {
+                vm.userInputs.forEach(function (userInput) {
 
-					if (userInput !== null) {
+                    if (userInput !== null) {
 
-						Object.keys(vm.entity).forEach(function (key) {
+                        Object.keys(vm.entity).forEach(function (key) {
 
-							if (key === userInput.name) {
+                            if (key === userInput.name) {
 
-								resultEntity.values[userInput.name] = vm.entity[userInput.name];
+                                resultEntity.values[userInput.name] = vm.entity[userInput.name];
 
-								if (userInput.value_type === 120) { // Victor 2020.12.29 Button is required
-									resultEntity.values[userInput.name] = true;
-								}
+                                if (userInput.value_type === 120) { // Victor 2020.12.29 Button is required
+                                    resultEntity.values[userInput.name] = true;
+                                }
 
-							}
+                            }
 
-						});
+                        });
 
-					}
+                    }
 
-				}); */
-				resultEntity.values = sharedLogicHelper.mapUserInputsOnEntityValues(resultEntity.values);
+                }); */
+                resultEntity.values = sharedLogicHelper.mapUserInputsOnEntityValues(resultEntity.values);
 
                 resultEntity.store = true;
                 resultEntity.calculate = true;
 
                 console.log('resultEntity', resultEntity);
 
-				vm.processing = true;
+                vm.processing = true;
 
                 new Promise(function (resolve, reject) {
 
@@ -588,129 +587,135 @@
                             resolve(data);
 
                         })
-						.catch(function (data) {
+                            .catch(function (data) {
 
-                            console.log('here?', data);
+                                console.log('here?', data);
 
-                            if (data.hasOwnProperty('message') && data.message.reason == 410) {
+                                if (data.hasOwnProperty('message') && data.message.reason == 410) {
 
-                                vm.processing = false;
+                                    vm.processing = false;
 
-                                $mdDialog.show({
-                                    controller: 'BookUniquenessWarningDialogController as vm',
-                                    templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
-                                    targetEvent: $event,
-                                    parent: angular.element(document.body),
-                                    multiple: true,
-                                    locals: {
-                                        data: {
-                                            errorData: data
+                                    $mdDialog.show({
+                                        controller: 'BookUniquenessWarningDialogController as vm',
+                                        templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
+                                        targetEvent: $event,
+                                        parent: angular.element(document.body),
+                                        multiple: true,
+                                        locals: {
+                                            data: {
+                                                errorData: data
+                                            }
                                         }
-                                    }
-                                }).then(function (response) {
+                                    }).then(function (response) {
 
-                                    console.log('response', response);
+                                        console.log('response', response);
 
-                                    if(response.reaction === 'cancel') {
-                                        // do nothing
-                                    }
-
-                                    if(response.reaction === 'skip') {
-										metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: null});
-									}
-
-                                    if(response.reaction === 'book_without_unique_code') {
-
-                                        // TODO refactor here
-                                        // 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
-
-                                        res.uniqueness_reaction = 2;
-
-                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
-
-                                            vm.processing = false;
-
-                                            toastNotificationService.success('Transaction was successfully booked');
-
-                                            resolve(data);
-
-                                        })
-
-                                    }
-
-                                    if (response.reaction === 'overwrite') {
-
-                                        // TODO refactor here
-                                        //  3 (OVERWRITE, ugettext_lazy('Overwrite')),
-
-                                        res.uniqueness_reaction = 3;
-
-                                        transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
-
-                                            vm.processing = false;
-
-                                            toastNotificationService.success('Transaction was successfully booked');
-
-                                            resolve(data);
-
-                                        })
-
-                                    }
-
-                                })
-
-
-                            } else {
-
-                                vm.processing = false;
-
-                                $mdDialog.show({
-                                    controller: 'ValidationDialogController as vm',
-                                    templateUrl: 'views/dialogs/validation-dialog-view.html',
-                                    targetEvent: $event,
-                                    parent: angular.element(document.body),
-                                    multiple: true,
-                                    locals: {
-                                        validationData: {
-                                            errorData: data,
-                                            tableColumnsNames: ['Name of fields', 'Error Cause'],
-                                            entityType: 'complex-transaction'
+                                        if (response.reaction === 'cancel') {
+                                            // do nothing
                                         }
-                                    }
-                                });
 
-                                reject(data);
+                                        if (response.reaction === 'skip') {
+                                            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {
+                                                status: 'agree',
+                                                data: null
+                                            });
+                                        }
 
-                            }
+                                        if (response.reaction === 'book_without_unique_code') {
 
-                        });
+                                            // TODO refactor here
+                                            // 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
+
+                                            res.uniqueness_reaction = 2;
+
+                                            transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+
+                                                vm.processing = false;
+
+                                                toastNotificationService.success('Transaction was successfully booked');
+
+                                                resolve(data);
+
+                                            })
+
+                                        }
+
+                                        if (response.reaction === 'overwrite') {
+
+                                            // TODO refactor here
+                                            //  3 (OVERWRITE, ugettext_lazy('Overwrite')),
+
+                                            res.uniqueness_reaction = 3;
+
+                                            transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+
+                                                vm.processing = false;
+
+                                                toastNotificationService.success('Transaction was successfully booked');
+
+                                                resolve(data);
+
+                                            })
+
+                                        }
+
+                                    })
+
+
+                                } else {
+
+                                    vm.processing = false;
+
+                                    $mdDialog.show({
+                                        controller: 'ValidationDialogController as vm',
+                                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                        targetEvent: $event,
+                                        parent: angular.element(document.body),
+                                        multiple: true,
+                                        locals: {
+                                            validationData: {
+                                                errorData: data,
+                                                tableColumnsNames: ['Name of fields', 'Error Cause'],
+                                                entityType: 'complex-transaction'
+                                            }
+                                        }
+                                    });
+
+                                    reject(data);
+
+                                }
+
+                            });
 
                     });
 
                 })
-				.then(function (data) {
+                    .then(function (data) {
 
-                    if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
+                        if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
-                        $mdDialog.show({
-                            controller: 'ValidationDialogController as vm',
-                            templateUrl: 'views/dialogs/validation-dialog-view.html',
-                            targetEvent: $event,
-                            locals: {
-                                validationData: {
-                                    errorData: data,
-                                    tableColumnsNames: ['Name of fields', 'Error Cause'],
-                                    entityType: 'complex-transaction'
-                                }
-                            },
-                            multiple: true
-                        })
+                            $mdDialog.show({
+                                controller: 'ValidationDialogController as vm',
+                                templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                targetEvent: $event,
+                                locals: {
+                                    validationData: {
+                                        errorData: data,
+                                        tableColumnsNames: ['Name of fields', 'Error Cause'],
+                                        entityType: 'complex-transaction'
+                                    }
+                                },
+                                multiple: true
+                            })
 
-                    } else {
-						metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: data});
-					}
+                        } else {
+                            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {
+                                status: 'agree',
+                                data: data
+                            });
+                        }
 
-                });
+                    });
 
             }
 
@@ -774,8 +779,7 @@
                 }) */
                 entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event);
 
-            }
-            else {
+            } else {
                 // var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
                 var resultEntity = vm.entity;
@@ -820,7 +824,7 @@
 
                         res.complex_transaction.is_locked = resultEntity.is_locked;
                         res.complex_transaction.is_canceled = resultEntity.is_canceled;
-                        
+
                         res.complex_transaction_status = 3 // status IGNORED
 
                         if (dcLayoutHasBeenFixed) {
@@ -840,102 +844,105 @@
                             resolve(data);
 
                         })
-						.catch(function (data) {
+                            .catch(function (data) {
 
-							console.log('here?', data);
+                                console.log('here?', data);
 
-							if (data.hasOwnProperty('message') && data.message.reason == 410) {
+                                if (data.hasOwnProperty('message') && data.message.reason == 410) {
 
-								vm.processing = false;
+                                    vm.processing = false;
 
-								$mdDialog.show({
-									controller: 'BookUniquenessWarningDialogController as vm',
-									templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
-									targetEvent: $event,
-									parent: angular.element(document.body),
-									multiple: true,
-									locals: {
-										data: {
-											errorData: data
-										}
-									}
-								}).then(function (response) {
+                                    $mdDialog.show({
+                                        controller: 'BookUniquenessWarningDialogController as vm',
+                                        templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
+                                        targetEvent: $event,
+                                        parent: angular.element(document.body),
+                                        multiple: true,
+                                        locals: {
+                                            data: {
+                                                errorData: data
+                                            }
+                                        }
+                                    }).then(function (response) {
 
-									console.log('response', response);
+                                        console.log('response', response);
 
-									if(response.reaction === 'cancel') {
-										// do nothing
-									}
+                                        if (response.reaction === 'cancel') {
+                                            // do nothing
+                                        }
 
-									if(response.reaction === 'skip') {
-										metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: null});
-									}
+                                        if (response.reaction === 'skip') {
+                                            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {
+                                                status: 'agree',
+                                                data: null
+                                            });
+                                        }
 
-									if(response.reaction === 'book_without_unique_code') {
+                                        if (response.reaction === 'book_without_unique_code') {
 
-										// TODO refactor here
-										// 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
+                                            // TODO refactor here
+                                            // 2 (BOOK_WITHOUT_UNIQUE_CODE, ugettext_lazy('Book without Unique Code ')),
 
-										res.uniqueness_reaction = 2;
+                                            res.uniqueness_reaction = 2;
 
-										transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+                                            transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
 
-											vm.processing = false;
+                                                vm.processing = false;
 
-											toastNotificationService.success('Transaction was successfully booked');
+                                                toastNotificationService.success('Transaction was successfully booked');
 
-											resolve(data);
+                                                resolve(data);
 
-										})
+                                            })
 
-									}
+                                        }
 
-									if (response.reaction === 'overwrite') {
+                                        if (response.reaction === 'overwrite') {
 
-										// TODO refactor here
-										//  3 (OVERWRITE, ugettext_lazy('Overwrite')),
+                                            // TODO refactor here
+                                            //  3 (OVERWRITE, ugettext_lazy('Overwrite')),
 
-										res.uniqueness_reaction = 3;
+                                            res.uniqueness_reaction = 3;
 
-										transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+                                            transactionTypeService.bookComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
 
-											vm.processing = false;
+                                                vm.processing = false;
 
-											toastNotificationService.success('Transaction was successfully booked');
+                                                toastNotificationService.success('Transaction was successfully booked');
 
-											resolve(data);
+                                                resolve(data);
 
-										})
+                                            })
 
-									}
+                                        }
 
-								})
+                                    })
 
 
-							} else {
+                                } else {
 
-								vm.processing = false;
+                                    vm.processing = false;
 
-								$mdDialog.show({
-									controller: 'ValidationDialogController as vm',
-									templateUrl: 'views/dialogs/validation-dialog-view.html',
-									targetEvent: $event,
-									parent: angular.element(document.body),
-									multiple: true,
-									locals: {
-										validationData: {
-											errorData: data,
-											tableColumnsNames: ['Name of fields', 'Error Cause'],
-											entityType: 'complex-transaction'
-										}
-									}
-								});
+                                    $mdDialog.show({
+                                        controller: 'ValidationDialogController as vm',
+                                        templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                        targetEvent: $event,
+                                        parent: angular.element(document.body),
+                                        multiple: true,
+                                        locals: {
+                                            validationData: {
+                                                errorData: data,
+                                                tableColumnsNames: ['Name of fields', 'Error Cause'],
+                                                entityType: 'complex-transaction'
+                                            }
+                                        }
+                                    });
 
-								reject(data);
+                                    reject(data);
 
-							}
+                                }
 
-						});
+                            });
 
                     });
 
@@ -959,7 +966,10 @@
                             })
 
                         } else {
-                            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree', data: data});
+                            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {
+                                status: 'agree',
+                                data: data
+                            });
                         }
 
                     });
@@ -992,77 +1002,53 @@
 
                 // if (vm.entity.$_isValid) {
 
-                    // if (hasProhibitNegNums.length === 0) {
+                // if (hasProhibitNegNums.length === 0) {
 
-                        var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
+                var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
-                        /*resultEntity.values = {};
+                /*resultEntity.values = {};
 
-                        vm.userInputs.forEach(function (userInput) {
+                vm.userInputs.forEach(function (userInput) {
 
-                            if (userInput !== null) {
-                                var keys = Object.keys(vm.entity);
-                                keys.forEach(function (key) {
-                                    if (key === userInput.name) {
-                                        resultEntity.values[userInput.name] = vm.entity[userInput.name];
-                                    }
-                                });
+                    if (userInput !== null) {
+                        var keys = Object.keys(vm.entity);
+                        keys.forEach(function (key) {
+                            if (key === userInput.name) {
+                                resultEntity.values[userInput.name] = vm.entity[userInput.name];
                             }
-                        });*/
-                        resultEntity.values = sharedLogicHelper.mapUserInputsOnEntityValues(resultEntity.values);
+                        });
+                    }
+                });*/
+                resultEntity.values = sharedLogicHelper.mapUserInputsOnEntityValues(resultEntity.values);
 
-                        resultEntity.store = true;
-                        resultEntity.calculate = true;
+                resultEntity.store = true;
+                resultEntity.calculate = true;
 
-                        vm.processing = true;
+                vm.processing = true;
 
-                        new Promise(function (resolve, reject) {
+                new Promise(function (resolve, reject) {
 
-                            transactionTypeService.initBookPendingComplexTransaction(resultEntity.transaction_type).then(function (data) {
+                    transactionTypeService.initBookPendingComplexTransaction(resultEntity.transaction_type).then(function (data) {
 
-                                var res = Object.assign(data, resultEntity);
+                        var res = Object.assign(data, resultEntity);
 
-                                res.complex_transaction.is_locked = resultEntity.is_locked;
-                                res.complex_transaction.is_canceled = resultEntity.is_canceled;
+                        res.complex_transaction.is_locked = resultEntity.is_locked;
+                        res.complex_transaction.is_canceled = resultEntity.is_canceled;
 
-                                transactionTypeService.bookPendingComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
+                        transactionTypeService.bookPendingComplexTransaction(resultEntity.transaction_type, res).then(function (data) {
 
-                                    vm.processing = false;
+                            vm.processing = false;
 
-                                    toastNotificationService.success('Transaction was successfully booked');
+                            toastNotificationService.success('Transaction was successfully booked');
 
-                                    resolve(data);
-                                });
-                            });
+                            resolve(data);
+                        });
+                    });
 
-                        })
-                        .then(function (data) {
+                })
+                    .then(function (data) {
 
-                            if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
-
-                                $mdDialog.show({
-                                    controller: 'ValidationDialogController as vm',
-                                    templateUrl: 'views/dialogs/validation-dialog-view.html',
-                                    targetEvent: $event,
-                                    locals: {
-                                        validationData: {
-                                            errorData: data,
-                                            tableColumnsNames: ['Name of fields', 'Error Cause'],
-                                            entityType: 'complex-transaction'
-                                        }
-                                    },
-                                    multiple: true,
-                                    preserveScope: true,
-                                    autoWrap: true,
-                                    skipHide: true
-                                })
-
-                            } else {
-                                metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree'});
-                            }
-
-                        })
-                        .catch(function (data) {
+                        if (data.hasOwnProperty('has_errors') && data.has_errors === true) {
 
                             $mdDialog.show({
                                 controller: 'ValidationDialogController as vm',
@@ -1081,42 +1067,66 @@
                                 skipHide: true
                             })
 
-                        });
+                        } else {
+                            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'agree'});
+                        }
 
-                    // }
-                    // else {
-                    //
-                    //     var warningDescription = '<p>Next fields should have positive number value to proceed:';
-                    //
-                    //     hasProhibitNegNums.forEach(function (field) {
-                    //         warningDescription = warningDescription + '<br>' + field;
-                    //     });
-                    //
-                    //     warningDescription = warningDescription + '</p>';
-                    //
-                    //     $mdDialog.show({
-                    //         controller: "WarningDialogController as vm",
-                    //         templateUrl: "views/dialogs/warning-dialog-view.html",
-                    //         multiple: true,
-                    //         clickOutsideToClose: false,
-                    //         locals: {
-                    //             warning: {
-                    //                 title: "Warning",
-                    //                 description: warningDescription,
-                    //                 actionsButtons: [
-                    //                     {
-                    //                         name: "CLOSE",
-                    //                         response: {status: 'disagree'}
-                    //                     }
-                    //                 ]
-                    //             }
-                    //         }
-                    //
-                    //     });
-                    //
-                    // }
+                    })
+                    .catch(function (data) {
 
-                }
+                        $mdDialog.show({
+                            controller: 'ValidationDialogController as vm',
+                            templateUrl: 'views/dialogs/validation-dialog-view.html',
+                            targetEvent: $event,
+                            locals: {
+                                validationData: {
+                                    errorData: data,
+                                    tableColumnsNames: ['Name of fields', 'Error Cause'],
+                                    entityType: 'complex-transaction'
+                                }
+                            },
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true
+                        })
+
+                    });
+
+                // }
+                // else {
+                //
+                //     var warningDescription = '<p>Next fields should have positive number value to proceed:';
+                //
+                //     hasProhibitNegNums.forEach(function (field) {
+                //         warningDescription = warningDescription + '<br>' + field;
+                //     });
+                //
+                //     warningDescription = warningDescription + '</p>';
+                //
+                //     $mdDialog.show({
+                //         controller: "WarningDialogController as vm",
+                //         templateUrl: "views/dialogs/warning-dialog-view.html",
+                //         multiple: true,
+                //         clickOutsideToClose: false,
+                //         locals: {
+                //             warning: {
+                //                 title: "Warning",
+                //                 description: warningDescription,
+                //                 actionsButtons: [
+                //                     {
+                //                         name: "CLOSE",
+                //                         response: {status: 'disagree'}
+                //                     }
+                //                 ]
+                //             }
+                //         }
+                //
+                //     });
+                //
+                // }
+
+            }
 
         };
 
@@ -1138,172 +1148,172 @@
 
         };
 
-		/* function getGroupsFromItems(items) {
+        /* function getGroupsFromItems(items) {
 
-			var groups = {};
+            var groups = {};
 
-			items.forEach(function (item) {
+            items.forEach(function (item) {
 
-				if (item.group_object) {
+                if (item.group_object) {
 
-					if (!groups[item.group_object.id]) {
-						groups[item.group_object.id] = item.group_object;
-						groups[item.group_object.id].items = [];
-					}
+                    if (!groups[item.group_object.id]) {
+                        groups[item.group_object.id] = item.group_object;
+                        groups[item.group_object.id].items = [];
+                    }
 
-					groups[item.group_object.id].items.push(item);
+                    groups[item.group_object.id].items.push(item);
 
-				} else {
+                } else {
 
-					if (!groups['ungrouped']) {
-						groups['ungrouped'] = {name: 'Ungrouped'};
-						groups['ungrouped'].items = [];
-					}
+                    if (!groups['ungrouped']) {
+                        groups['ungrouped'] = {name: 'Ungrouped'};
+                        groups['ungrouped'].items = [];
+                    }
 
-					groups['ungrouped'].items.push(item);
+                    groups['ungrouped'].items.push(item);
 
-				}
+                }
 
 
-			});
+            });
 
-			var groupsList = Object.keys(groups).map(function (key) {
-				return groups[key]
-			});
+            var groupsList = Object.keys(groups).map(function (key) {
+                return groups[key]
+            });
 
-			groupsList = groupsList.filter(function (item) {
-				return !!item
-			});
+            groupsList = groupsList.filter(function (item) {
+                return !!item
+            });
 
-			return groupsList;
+            return groupsList;
 
-		} */
-		var getTransactionGroups = function () {
+        } */
+        var getTransactionGroups = function () {
 
-			var groups = {};
+            var groups = {};
 
-			ttypesList.forEach(function (item) {
+            ttypesList.forEach(function (item) {
 
-				var ttypeItem = {
-					user_code: item.user_code, // this property only used by getFavoriteTTypeOptions function
-					id: item.id,
-					name: item.name,
-				};
+                var ttypeItem = {
+                    user_code: item.user_code, // this property only used by getFavoriteTTypeOptions function
+                    id: item.id,
+                    name: item.name,
+                };
 
-				if (item.group_object) {
+                if (item.group_object) {
 
-					if (!groups[item.group_object.id]) {
-						groups[item.group_object.id] = {
-							name: item.group_object.name,
-							children: [],
-						};
-					}
+                    if (!groups[item.group_object.id]) {
+                        groups[item.group_object.id] = {
+                            name: item.group_object.name,
+                            children: [],
+                        };
+                    }
 
-					groups[item.group_object.id].children.push(ttypeItem);
+                    groups[item.group_object.id].children.push(ttypeItem);
 
-				} else {
+                } else {
 
-					if (!groups['ungrouped']) {
+                    if (!groups['ungrouped']) {
 
-						groups['ungrouped'] = {
-							name: 'Ungrouped',
-							children: [],
-						};
+                        groups['ungrouped'] = {
+                            name: 'Ungrouped',
+                            children: [],
+                        };
 
-					}
+                    }
 
-					groups['ungrouped'].children.push(ttypeItem);
+                    groups['ungrouped'].children.push(ttypeItem);
 
-				}
+                }
 
-			});
+            });
 
-			var groupsList = Object.keys(groups).map(function (key) {
-				return groups[key];
-			});
+            var groupsList = Object.keys(groups).map(function (key) {
+                return groups[key];
+            });
 
-			groupsList = groupsList.filter(function (item) {
-				return !!item
-			});
+            groupsList = groupsList.filter(function (item) {
+                return !!item
+            });
 
-			return groupsList;
+            return groupsList;
 
-		};
+        };
 
-		var getFavoriteTTypeOptions = function (transactionGroups) {
+        var getFavoriteTTypeOptions = function (transactionGroups) {
 
-			var favTTypeOpts = [];
-			var member = globalDataService.getMember();
+            var favTTypeOpts = [];
+            var member = globalDataService.getMember();
 
-			if (member.data && member.data.favorites && member.data.favorites.transaction_type) {
+            if (member.data && member.data.favorites && member.data.favorites.transaction_type) {
 
-				favTTypeOpts = member.data.favorites.transaction_type.map(function (ttypeUserCode) {
+                favTTypeOpts = member.data.favorites.transaction_type.map(function (ttypeUserCode) {
 
-					var favOption;
+                    var favOption;
 
-					var i;
-					for (i = 0; i < transactionGroups.length; i++) {
+                    var i;
+                    for (i = 0; i < transactionGroups.length; i++) {
 
-						var tGroup = transactionGroups[i];
+                        var tGroup = transactionGroups[i];
 
-						favOption = tGroup.children.find(function (option) {
-							return option.user_code === ttypeUserCode;
-						});
+                        favOption = tGroup.children.find(function (option) {
+                            return option.user_code === ttypeUserCode;
+                        });
 
-						if (favOption) {
-							return {
-								groupName: tGroup.name,
-								id: favOption.id,
-								name: favOption.name
-							};
-						}
+                        if (favOption) {
+                            return {
+                                groupName: tGroup.name,
+                                id: favOption.id,
+                                name: favOption.name
+                            };
+                        }
 
-					}
+                    }
 
-					return null;
+                    return null;
 
-					/* var ttype = ttypesList.find(function (ttype) {
-						return ttype.user_code === ttypeUserCode;
-					});
+                    /* var ttype = ttypesList.find(function (ttype) {
+                        return ttype.user_code === ttypeUserCode;
+                    });
 
-					if (!ttype) {return ttype;}
+                    if (!ttype) {return ttype;}
 
-					return {
-						id: ttype.id,
-						name: ttype.name
-					}; */
+                    return {
+                        id: ttype.id,
+                        name: ttype.name
+                    }; */
 
-				})
-				.filter(function (fTttype) {
-					return !!fTttype;
-				});
+                })
+                    .filter(function (fTttype) {
+                        return !!fTttype;
+                    });
 
-			}
+            }
 
-			return favTTypeOpts;
+            return favTTypeOpts;
 
-		};
+        };
 
-		vm.saveFavoriteTTypeOptions = function () {
+        vm.saveFavoriteTTypeOptions = function () {
 
-			var member = globalDataService.getMember();
+            var member = globalDataService.getMember();
 
-			if (!member.data) {
-				member.data = {};
-			}
+            if (!member.data) {
+                member.data = {};
+            }
 
-			if (!member.data.favorites) {
-				member.data.favorites = {};
-			}
+            if (!member.data.favorites) {
+                member.data.favorites = {};
+            }
 
-			member.data.favorites.transaction_type = vm.favTTypeOpts.map(function (ttypeOpt) {
-				var ttype = ttypesList.find(ttype => ttype.id === ttypeOpt.id);
-				return ttype.user_code;
-			});
+            member.data.favorites.transaction_type = vm.favTTypeOpts.map(function (ttypeOpt) {
+                var ttype = ttypesList.find(ttype => ttype.id === ttypeOpt.id);
+                return ttype.user_code;
+            });
 
-			usersService.updateMember(member.id, member);
+            usersService.updateMember(member.id, member);
 
-		};
+        };
 
         vm.loadTransactionTypes = function () {
 
@@ -1315,10 +1325,10 @@
             // transactionTypeService.getList(options).then(function (data) {
             transactionTypeService.getListLight(options).then(function (data) {
 
-            	ttypesList = data.results;
+                ttypesList = data.results;
                 vm.transactionGroups = getTransactionGroups(ttypesList);
 
-				vm.favTTypeOpts = getFavoriteTTypeOptions(vm.transactionGroups);
+                vm.favTTypeOpts = getFavoriteTTypeOptions(vm.transactionGroups);
 
                 vm.readyStatus.transactionTypes = true;
 
@@ -1339,12 +1349,12 @@
             vm.loadTransactionTypes();
 
         };
-		/** @param transactionType {{id: Number, name: String}}*/
+        /** @param transactionType {{id: Number, name: String}}*/
         vm.transactionTypeChange = function () {
 
-			// vm.transactionTypeId = selectedTType.id;
+            // vm.transactionTypeId = selectedTType.id;
 
-			notCopiedTransaction = true;
+            notCopiedTransaction = true;
             vm.entity.transaction_type = vm.transactionTypeId;
 
             vm.dataConstructorData = {
@@ -1354,7 +1364,7 @@
 
             // show loader while vm.getFormLayout performs
             vm.readyStatus.layout = false;
-			$scope.$apply();
+            $scope.$apply();
 
             vm.getFormLayout().then(function () {
                 $scope.$apply();
@@ -1362,22 +1372,26 @@
 
         };
 
-        vm.mapValuesOnTransactionTypeChange = function (newBookData){
+        vm.mapValuesOnTransactionTypeChange = function (newBookData) {
 
-            Object.keys(newBookData.values).forEach(function (key){
+            if (vm.originalComplexTransaction) {
 
-                Object.keys(vm.originalComplexTransaction.values).forEach(function (ctKey) {
+                Object.keys(newBookData.values).forEach(function (key) {
 
-                    if (key === ctKey) {
+                    Object.keys(vm.originalComplexTransaction.values).forEach(function (ctKey) {
 
-                        newBookData.values[key] = vm.originalComplexTransaction.values[key]
+                        if (key === ctKey) {
 
-                    }
+                            newBookData.values[key] = vm.originalComplexTransaction.values[key]
+
+                        }
+
+                    })
+
 
                 })
 
-
-            })
+            }
 
             return newBookData
         }
@@ -1446,7 +1460,7 @@
                     })
 
                 } */
-				else if (data.isCopy) { // if copy
+                else if (data.isCopy) { // if copy
 
                     console.log("Apply from make copy", entity);
                     notCopiedTransaction = false;
@@ -1583,7 +1597,7 @@
             }
 
         }; */
-		vm.onEntityChange = sharedLogicHelper.onFieldChange;
+        vm.onEntityChange = sharedLogicHelper.onFieldChange;
 
 
         vm.init();
