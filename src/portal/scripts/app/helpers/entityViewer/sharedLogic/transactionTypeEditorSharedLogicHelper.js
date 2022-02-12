@@ -164,38 +164,24 @@
 
         };
 
-        const relations2KeysObj = {
-			'transaction_class': {
-				id: 'value',
-				name: 'name'
-			},
-			/*'price_download_scheme': {
-				id: 'id',
-				name: 'user_code'
-			},*/
-			'price_download_scheme': {
-				id: 'id',
-				name: 'scheme_name'
-			},
-		}
+		const useIdForRelList = ['daily_pricing_model', 'payment_size_detail', 'accrual_calculation_model', 'notification_class', 'event_class', 'periodicity'];
 
 		const formatRelationForSelector = function (key, relationsList) {
 
-        	if (relations2KeysObj.hasOwnProperty(key)) { // relations with specific properties to use as 'id' or (and) 'name'
+			if (key === 'transaction_class') { // relations with specific properties to use as 'id' or (and) 'name'
 
-        		var propertyForId = relations2KeysObj[key].id;
-				var propertyForName = relations2KeysObj[key].name;
-
-        		return relationsList.map(rItem => {
-        			return {id: rItem[propertyForId], name: rItem[propertyForName]};
+				return relationsList.map(rItem => {
+					return {id: rItem.id, name: rItem.name};
 				});
 
 			}
 
+			const propForId = useIdForRelList.includes(key) ? 'id' : 'user_code';
+
 			return relationsList.map(rItem => {
 
 				return {
-					id: rItem.user_code,
+					id: rItem[propForId],
 					name: rItem.hasOwnProperty('short_name') ? rItem.short_name : rItem.name
 				};
 
@@ -366,7 +352,7 @@
 				'daily_pricing_model', 'daily_pricing_model_input', 'default_accrued',
 				'default_price', 'instrument_type', 'instrument_type_input', 'maturity_date',
 				'maturity_price', 'name', 'notes', 'payment_size_detail', 'payment_size_detail_input',
-				'price_download_scheme', 'price_download_scheme_input', 'price_multiplier',
+				'price_multiplier',
 				'pricing_currency', 'pricing_currency_input', 'public_name', 'reference_for_pricing',
 				'short_name', 'user_code', 'user_text_1', 'user_text_2', 'user_text_3'],
 			'instrument_accrual_calculation_schedules': [
@@ -1074,7 +1060,6 @@
                 strategy3: null,
                 daily_pricing_model: null,
                 payment_size_detail: null,
-                price_download_scheme: null,
                 pricing_policy: null,
                 value: null,
                 value_expr: null,
@@ -2102,7 +2087,8 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'portfolio',
-						'itemName': action.transaction.portfolio_object ? action.transaction.portfolio_object.name : ''
+						'itemName': action.transaction.portfolio_object ? action.transaction.portfolio_object.name : '',
+						'itemProperty': 'user_code'
 					}
 				}
 			];
@@ -2120,7 +2106,7 @@
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': currencyInputs
+						'menuOptions': currencyInputs,
 					}
 				},
 				{
@@ -2135,7 +2121,7 @@
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'menuOptions': [],
 						'itemName': action.transaction.settlement_currency_object ? action.transaction.settlement_currency_object.name : '',
-						'loadMenuOptions': loadSettlementCurrency
+						'loadMenuOptions': loadSettlementCurrency,
 					}
 				}
 			];
@@ -2199,7 +2185,8 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'instrument',
-						'itemName': action.transaction.instrument_object ? action.transaction.instrument_object.name : ''
+						'itemName': action.transaction.instrument_object ? action.transaction.instrument_object.name : '',
+						'itemProperty': 'user_code',
 					}
 				}
 			];
@@ -2231,7 +2218,8 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'account',
-						'itemName': action.transaction.account_position_object ? action.transaction.account_position_object.name : ''
+						'itemName': action.transaction.account_position_object ? action.transaction.account_position_object.name : '',
+						'itemProperty': 'user_code',
 					}
 				}
 			];
@@ -2261,7 +2249,8 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'account',
-						'itemName': action.transaction.account_cash_object ? action.transaction.account_cash_object.name : ''
+						'itemName': action.transaction.account_cash_object ? action.transaction.account_cash_object.name : '',
+						'itemProperty': 'user_code',
 					}
 				}
 			];
@@ -2291,7 +2280,8 @@
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'account',
-						'itemName': action.transaction.account_interim_object ? action.transaction.account_interim_object.name : ''
+						'itemName': action.transaction.account_interim_object ? action.transaction.account_interim_object.name : '',
+						'itemProperty': 'user_code',
 					}
 				}
 			];
@@ -2323,8 +2313,9 @@
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'instrument',
 						'itemName': action.transaction.linked_instrument_object ? action.transaction.linked_instrument_object.name : '',
+						'itemProperty': 'user_code',
 						'onMenuOpen': onESMenuOpen,
-						'onMenuClose': onESMenuClose
+						'onMenuClose': onESMenuClose,
 					}
 				}
 			];
@@ -2356,8 +2347,9 @@
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'instrument',
 						'itemName': action.transaction.allocation_pl_object ? action.transaction.allocation_pl_object.name : '',
+						'itemProperty': 'user_code',
 						'onMenuOpen': onESMenuOpen,
-						'onMenuClose': onESMenuClose
+						'onMenuClose': onESMenuClose,
 					}
 				}
 			];
@@ -2389,6 +2381,7 @@
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'instrument',
 						'itemName': action.transaction.allocation_balance_object ? action.transaction.allocation_balance_object.name : '',
+						'itemProperty': 'user_code',
 						'onMenuOpen': onESMenuOpen,
 						'onMenuClose': onESMenuClose
 					}
@@ -2425,6 +2418,7 @@
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'strategy-1',
 						'itemName': action.transaction.strategy1_position_object ? action.transaction.strategy1_position_object.name : '',
+						'itemProperty': 'user_code',
 						'onMenuOpen': onESMenuOpen,
 						'onMenuClose': onESMenuClose
 					}
@@ -2457,6 +2451,7 @@
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'strategy-2',
 						'itemName': action.transaction.strategy2_position_object ? action.transaction.strategy2_position_object.name : '',
+						'itemProperty': 'user_code',
 						'onMenuOpen': onESMenuOpen,
 						'onMenuClose': onESMenuClose
 					}
@@ -2489,6 +2484,7 @@
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'strategy-3',
 						'itemName': action.transaction.strategy3_position_object ? action.transaction.strategy3_position_object.name : '',
+						'itemProperty': 'user_code',
 						'onMenuOpen': onESMenuOpen,
 						'onMenuClose': onESMenuClose
 					}
@@ -2521,6 +2517,7 @@
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'strategy-1',
 						'itemName': action.transaction.strategy1_cash_object ? action.transaction.strategy1_cash_object.name : '',
+						'itemProperty': 'user_code',
 						'onMenuOpen': onESMenuOpen,
 						'onMenuClose': onESMenuClose
 					}
@@ -2553,6 +2550,7 @@
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'strategy-2',
 						'itemName': action.transaction.strategy2_cash_object ? action.transaction.strategy2_cash_object.name : '',
+						'itemProperty': 'user_code',
 						'onMenuOpen': onESMenuOpen,
 						'onMenuClose': onESMenuClose
 					}
@@ -2585,6 +2583,7 @@
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'strategy-3',
 						'itemName': action.transaction.strategy3_cash_object ? action.transaction.strategy3_cash_object.name : '',
+						'itemProperty': 'user_code',
 						'onMenuOpen': onESMenuOpen,
 						'onMenuClose': onESMenuClose
 					}
@@ -2617,6 +2616,7 @@
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'counterparty',
 						'itemName': action.transaction.counterparty_object ? action.transaction.counterparty_object.name : '',
+						'itemProperty': 'user_code',
 						'onMenuOpen': onESMenuOpen,
 						'onMenuClose': onESMenuClose
 					}
@@ -2649,6 +2649,7 @@
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'responsible',
 						'itemName': action.transaction.responsible_object ? action.transaction.responsible_object.name : '',
+						'itemProperty': 'user_code',
 						'onMenuOpen': onESMenuOpen,
 						'onMenuClose': onESMenuClose
 					}
@@ -2666,7 +2667,7 @@
 			};
 
 			const loadPricingCurrency = function () {
-				return loadRelation('instrument_type');
+				return loadRelation('pricing_currency');
 			};
 
 			const loadAccruedCurrency = function () {
@@ -2677,9 +2678,9 @@
 				return loadRelation('daily_pricing_model');
 			};
 
-			const loadPriceDownloadScheme = function () {
+			/* const loadPriceDownloadScheme = function () {
 				return loadRelation('price_download_scheme');
-			};
+			}; */
 
 			const loadPaymentSizeDetail = function () {
 				return loadRelation('payment_size_detail');
@@ -2813,7 +2814,7 @@
 				}
 			];
 
-			multitypeFieldsData.price_download_scheme = [
+			/* multitypeFieldsData.price_download_scheme = [
 				{
 					'key': 'input',
 					'model': action.instrument.price_download_scheme_input,
@@ -2842,7 +2843,7 @@
 						'loadMenuOptions': loadPriceDownloadScheme
 					}
 				}
-			];
+			]; */
 
 			multitypeFieldsData.payment_size_detail = [
 				{
@@ -2910,6 +2911,7 @@
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'instrument',
 						'itemName': action.instrument_factor_schedule.instrument_object ? action.instrument_factor_schedule.instrument_object.name : '',
+						'itemProperty': 'user_code',
 						'onMenuOpen': function () {
 							addEmptySpaceToAction(actionIndex);
 						},
@@ -2956,6 +2958,7 @@
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'instrument',
 						'itemName': action.instrument_manual_pricing_formula.instrument_object ? action.instrument_manual_pricing_formula.instrument_object.name : '',
+						'itemProperty': 'user_code',
 						'onMenuOpen': function () {
 							addEmptySpaceToAction(actionIndex);
 						},
@@ -3034,6 +3037,7 @@
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'instrument',
 						'itemName': action.instrument_accrual_calculation_schedules.instrument_object ? action.instrument_accrual_calculation_schedules.instrument_object.name : '',
+						'itemProperty': 'user_code',
 						'onMenuOpen': function () {
 							addEmptySpaceToAction(actionIndex);
 						},
@@ -3147,6 +3151,7 @@
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'entityType': 'instrument',
 						'itemName': action.instrument_event_schedule.instrument_object ? action.instrument_event_schedule.instrument_object.name : '',
+						'itemProperty': 'user_code',
 						'onMenuOpen': function () {
 							addEmptySpaceToAction(actionIndex);
 						},
@@ -3492,6 +3497,45 @@
 			return result;
 
         };
+
+		const setStateInActionsControls = function () {
+
+			const actionsKeysList = ['instrument', 'transaction', 'instrument_factor_schedule', 'instrument_manual_pricing_formula', 'instrument_accrual_calculation_schedules', 'instrument_event_schedule', 'instrument_event_schedule_action'];
+
+			viewModel.entity.actions.forEach(function (action) {
+
+				var keys;
+
+				for (const actionKey of actionsKeysList) {
+
+					if (action[actionKey] !== null) {
+
+						keys = Object.keys(action[actionKey]);
+
+						keys.forEach(function (key) {
+
+							if (action[actionKey].hasOwnProperty(key + '_input')) {
+
+								const relationSelNotEmpty = !!action[actionKey][key];
+
+								if (relationSelNotEmpty) {
+									action[actionKey][key + '_toggle'] = true;
+								}
+
+							}
+
+						})
+
+						break;
+
+					}
+
+				}
+
+			});
+
+		};
+
 		/**
 		 *
 		 * @param actionData {Object} - ttype action
@@ -3544,9 +3588,9 @@
 			if (ecosystemDefaultData.hasOwnProperty(defaultValueKey)) {
 
 				var nameProperty = 'name';
-				if (fieldName === 'price_download_scheme') {
+				/*if (fieldName === 'price_download_scheme') {
 					nameProperty = 'user_code';
-				}
+				}*/
 
 				var defaultName = ecosystemDefaultData[defaultValueKey + '_object'][nameProperty];
 
@@ -3897,6 +3941,7 @@
 			onActionMultitypeFieldToggle: onActionMultitypeFieldToggle,
 			onMultitypeFieldValChange: onMultitypeFieldValChange,
 
+			setStateInActionsControls: setStateInActionsControls,
 			saveAsTemplate: saveAsTemplate,
 			appendFromTemplate: appendFromTemplate,
 			setDefaultValueForRelation: setDefaultValueForRelation,

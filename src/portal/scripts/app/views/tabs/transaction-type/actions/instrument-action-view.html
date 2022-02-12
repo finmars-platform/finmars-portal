@@ -343,7 +343,6 @@
                                                         model="item.instrument.price_download_scheme"
                                                         relation-items="vm.relationItems['price_download_scheme']"
                                                         load-relation="vm.loadRelation('price_download_scheme')"
-                                                        property-name="user_code"
                                                         selected-value="item.instrument.price_download_scheme_object.id"
                                                         selected-name="item.instrument.price_download_scheme_object.user_code"
                                                         is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
@@ -356,12 +355,13 @@
                                                     is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div> -->
-                <multitype-field label="Price download scheme"
+
+                <!-- <multitype-field label="Price download scheme"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].price_download_scheme"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
                                  on-value-change="vm.onMultitypeFieldValChange('price_download_scheme', item, $index, 'instrument')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('price_download_scheme', item, $index, 'instrument')"
-                                 class="ttype-action-input p-r-0"></multitype-field>
+                                 class="ttype-action-input p-r-0"></multitype-field> -->
             </div>
 
         </div>

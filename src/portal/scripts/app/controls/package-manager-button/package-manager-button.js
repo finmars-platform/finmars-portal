@@ -4,18 +4,14 @@
 
     module.exports = function ($mdDialog) {
         return {
-            restriction: 'AE',
-            templateUrl: 'controls/package-manager-button/package-manager-button.html',
+            restriction: 'A',
             scope: {
                 contentType: '=',
-                buttonText: '@',
+                targetContentType: '=',
                 callbackFn: '&'
             },
             link: function (scope, elem, attr) {
 
-                if (scope.buttonText === undefined) {
-                    scope.buttonText = 'Select from List';
-                }
 
                 scope.openExpressionDialog = function ($event) {
 
@@ -30,7 +26,8 @@
                         skipHide: true,
                         locals: {
                             data: {
-                                contentType: scope.contentType
+                                contentType: scope.contentType,
+                                targetContentType: scope.targetContentType
                             }
                         }
                     }).then(function (res) {
@@ -44,6 +41,12 @@
                     });
 
                 };
+
+                elem.on('click', function ($event) {
+
+                    scope.openExpressionDialog($event)
+
+                })
 
             }
         }
