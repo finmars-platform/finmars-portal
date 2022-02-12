@@ -67,10 +67,19 @@
 
             vm.readyStatus.packages = true;
 
+            var filters = {}
+
+
+            if (data.contentType) {
+                filters.content_type = data.contentType
+            }
+
+            if (data.targetContentType) {
+                filters.target_content_type = data.targetContentType
+            }
+
             unifiedDataService.getConfigurationPackageList({
-                filters: {
-                    content_type: data.contentType
-                }
+                filters: filters
             }).then(function (data) {
 
                 vm.packages = data.results
@@ -139,7 +148,7 @@
 
         };
 
-        vm.agree = function () {
+        vm.agree = function ($event) {
 
             unifiedDataService.getConfigurationPackageFile(vm.selectedItem.id).then(function (data) {
 
@@ -150,14 +159,26 @@
                     mode: 'overwrite'
                 };
 
-                new Promise(function (resolve, reject) {
+                var blob = new Blob([JSON.stringify(data)], {type: 'application/json'})
+                var fileOfBlob = new File([blob], 'configuration.fcfg');
 
-                    vm.importConfiguration(resolve)
-
-                }).then(function (data) {
-
-                    $mdDialog.hide({status: 'agree', data: {}});
+                $mdDialog.show({
+                    controller: 'ConfigurationImportDialogController as vm',
+                    templateUrl: 'views/dialogs/configuration-import/configuration-import-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    locals: {
+                        data: {
+                            file: data,
+                            rawFile: fileOfBlob
+                        }
+                    }
                 })
+
+                $mdDialog.hide({status: 'agree', data: {}});
 
             })
 

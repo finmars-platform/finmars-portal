@@ -67,7 +67,7 @@ app.factory('$exceptionHandler', [function () {
             window.system_errors = []
         }
         
-        console.log('exception', exception);
+        console.error('exception', exception);
         console.log('cause', cause);
 
         window.system_errors.push({

@@ -11,6 +11,7 @@
 
     var entityResolverService = require('../../services/entityResolverService');
     var metaService = require('../../services/metaService');
+    var metaContentTypesService = require('../../services/metaContentTypesService');
 
     var gridHelperService = require('../../services/gridHelperService');
     var ScrollHelper = require('../../helpers/scrollHelper');
@@ -43,6 +44,7 @@
         vm.fixedArea = null;
 
         vm.entityType = data.entityType;
+        vm.targetContentType = metaContentTypesService.findContentTypeByEntity(vm.entityType, 'ui');
 
         vm.instanceId = (data.hasOwnProperty('instanceId')) ? data.instanceId : null;
         vm.layoutId = data.layoutId ? data.layoutId : null;
@@ -1999,6 +2001,9 @@
         };
 
         vm.init = function () {
+
+
+
 
             window.addEventListener('resize', vm.setTabsHolderHeight);
 

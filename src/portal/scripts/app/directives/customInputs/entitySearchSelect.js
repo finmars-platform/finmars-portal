@@ -15,6 +15,7 @@
                 label: '=',
                 item: '=',
                 itemName: '=',
+				itemProperty: '@', // is 'id' by default
                 itemObject: '=',
                 entityType: '=',
                 customButtons: '=',
@@ -34,6 +35,7 @@
                 scope.inputValue = '';
                 scope.placeholderText = 'Relation';
                 //scope.tooltipText = 'Tooltip text';
+				if (!scope.itemProperty) scope.itemProperty = 'id';
 				let itemName = scope.itemName || '';
 
                 if (scope.itemName) { // itemName and inputText needed for resetting selected option name
@@ -203,14 +205,14 @@
 
                 scope.selectOption = function (item) {
 
-                    if (item.id !== scope.item) {
+                    if (item[scope.itemProperty] !== scope.item) {
 
                         stylePreset = '';
                         scope.error = '';
                         //scope.item.value = item.id;
-                        scope.item = item.id;
+                        scope.item = item[scope.itemProperty];
 
-                        scope.itemObject = item;
+                        if (scope.itemObject !== undefined) scope.itemObject = item;
 
                         scope.valueIsValid = true;
 
@@ -348,7 +350,7 @@
 
                                 stylePreset = '';
                                 //scope.item.value = res.data.item.id;
-                                scope.item = res.data.item.id;
+                                scope.item = res.data.item[scope.itemProperty];
 
                                 if (scope.itemObject !== undefined) {
                                     scope.itemObject = res.data.item;

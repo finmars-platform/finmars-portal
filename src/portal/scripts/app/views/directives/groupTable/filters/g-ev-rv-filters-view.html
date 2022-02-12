@@ -22,7 +22,8 @@
 
                     <md-menu-content width="4">
                         <md-menu-item data-ng-repeat="item in addMenu.data.menu.root.items">
-                            <md-button data-ng-click="dispatchAddMenuAction($event, item)" class="g-settings-option-btn">
+                            <md-button data-ng-click="dispatchAddMenuAction($event, item)"
+                                       class="g-settings-option-btn">
                                 <span>{{item.name}}</span>
                             </md-button>
                         </md-menu-item>
@@ -37,30 +38,25 @@
                 </md-button>
             </div>
 
-            <div data-ng-if="!isReport"  layout="row">
+            <div data-ng-if="!isReport" layout="row">
 
                 <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
-                           data-ng-click="evAddEntity($event)" data-ng-if="entityType != 'instrument'">
+                           data-ng-click="evAddEntity($event)" data-ng-if="entityType != 'instrument' && entityType != 'instrument-type' && entityType != 'account-type' && entityType != 'transaction-type'">
                     <span class="material-icons">add</span>
                     <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
                 </md-button>
 
                 <md-menu data-ng-if="entityType == 'instrument'">
                     <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
-                               data-ng-click="$mdOpenMenu($event)"">
-                        <span class="material-icons">add</span>
-                        <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
+                               data-ng-click="$mdOpenMenu($event)">
+                    <span class="material-icons">add</span>
+                    <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
                     </md-button>
 
                     <md-menu-content width="4">
                         <md-menu-item>
                             <md-button data-ng-click="evAddEntity($event)" class="g-settings-option-btn">
                                 <span>Add Blank</span>
-                            </md-button>
-                        </md-menu-item>
-                        <md-menu-item>
-                            <md-button data-ng-click="evAddEntity($event)" class="g-settings-option-btn">
-                                <span>Select From List</span>
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
@@ -81,8 +77,74 @@
                     </md-menu-content>
                 </md-menu>
 
+                <md-menu data-ng-if="entityType == 'instrument-type'">
+                    <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
+                               data-ng-click="$mdOpenMenu($event)">
+                    <span class="material-icons">add</span>
+                    <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
+                    </md-button>
 
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button data-ng-click="evAddEntity($event)" class="g-settings-option-btn">
+                                <span>Add Blank</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button class="md-raised"
+                                       package-manager-button
+                                       content-type="'instruments.instrumenttype'">
+                                Select from List
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
 
+                <md-menu data-ng-if="entityType == 'account-type'">
+                    <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
+                               data-ng-click="$mdOpenMenu($event)">
+                    <span class="material-icons">add</span>
+                    <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
+                    </md-button>
+
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button data-ng-click="evAddEntity($event)" class="g-settings-option-btn">
+                                <span>Add Blank</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button class="md-raised"
+                                       package-manager-button
+                                       content-type="'accounts.accounttype'">
+                                Select from List
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+
+                <md-menu data-ng-if="entityType == 'transaction-type'">
+                    <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
+                               data-ng-click="$mdOpenMenu($event)">
+                    <span class="material-icons">add</span>
+                    <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
+                    </md-button>
+
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button data-ng-click="evAddEntity($event)" class="g-settings-option-btn">
+                                <span>Add Blank</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button class="md-raised"
+                                       package-manager-button
+                                       content-type="'transactions.transactiontype'">
+                                Select from List
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
 
                 <md-button ng-if="thereAreFrontendFilters"
                            class="g-toggle-filters-btn md-icon-button"
@@ -207,7 +269,8 @@
                     <md-button data-ng-click="toggleSplitPanel($event, 'transaction-report')"
                                class="g-settings-option-btn">
 
-                        <span class="material-icons" data-ng-show="currentAdditions.type === 'transaction-report'">done</span>
+                        <span class="material-icons"
+                              data-ng-show="currentAdditions.type === 'transaction-report'">done</span>
                         <span class="material-icons" data-ng-show="currentAdditions.type !== 'transaction-report'"
                               style="visibility: hidden;">done</span>
 
