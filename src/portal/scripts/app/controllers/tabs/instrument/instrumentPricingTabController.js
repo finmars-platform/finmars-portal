@@ -17,7 +17,7 @@
 
 	const pricingPolicyService = require('../../../services/pricingPolicyService');
 
-    module.exports = function instrmentPricingTabController($scope, $mdDialog) {
+    module.exports = function InstrmentPricingTabController($scope, $mdDialog) {
 
         var vm = this;
 
@@ -44,7 +44,7 @@
         vm.entityChange = $scope.$parent.vm.entityChange;
 		//endregion
 
-		const pricingDefaultValueFieldTypes = {
+		/*const pricingDefaultValueFieldTypes = {
 			fieldTypesList: [
 				{
 					'model': "",
@@ -71,7 +71,9 @@
 					}
 				}
 			]
-		};
+		};*/
+
+		const pricingDefaultValueFieldTypes = pricingPolicyService.pricingDefaultValueFieldTypes;
 
 		//region Pricing policies grid table
 
@@ -235,7 +237,7 @@
 
 		};
 
-		const openPricingMultipleParametersDialog = (policy) => {
+		/* const openPricingMultipleParametersDialog = (policy) => {
 
             $mdDialog.show({
                 controller: 'PricingMultipleParametersDialogController as vm',
@@ -262,7 +264,10 @@
                 }
 
             })
-        }
+        } */
+		const openPricingMultipleParametersDialog = (pricingPolicy) => {
+			pricingPolicyService.openPricingMultipleParametersDialog($mdDialog, pricingPolicy, vm.entityType, vm.attributeTypes);
+		};
 
 		var setUpDefaultParametersAsMultitypeCell = function (pricingPolicy, defaultParametersCell) {
 

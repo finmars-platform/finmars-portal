@@ -40,14 +40,16 @@
 
     module.exports = function instrumentTypeEventSchedulesTabController($scope, $mdDialog, multitypeFieldService) {
 
-        var vm = this;
+        let vm = this;
 		const gridTableHelperService = new GridTableHelperService();
 
         vm.entity = $scope.$parent.vm.entity;
+		vm.entityType = 'instrument-type';
         if (!vm.entity.events) vm.entity.events = [];
 
 		vm.evEditorDataService = $scope.$parent.vm.evEditorDataService;
 		vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
+		vm.onEntityChange = $scope.$parent.vm.onEntityChange;
 
         vm.readyStatus = {
             notificationClasses: false,
@@ -74,7 +76,11 @@
 		vm.selectorOptionsMap = {
 			'notification_class': [],
 			'periodicity': []
-		}
+		};
+
+		const entityAttrs = $scope.$parent.vm.entityAttrs;
+		vm.maturityDateAttr = entityAttrs.find(eAttr => eAttr.key === 'maturity_date');
+		vm.maturityPriceAttr = entityAttrs.find(eAttr => eAttr.key === 'maturity_price');
 
         const getTransactionTypes = function () {
 
@@ -755,7 +761,7 @@
 			const locsWithErrors = vm.evEditorDataService.getLocationsWithErrors();
 
 			if (locsWithErrors['system_tab'].hasOwnProperty('events')) {
-				$scope.$parent.vm.onEntityChange(fieldKey);
+				vm.onEntityChange(fieldKey);
 			}
 
 		}

@@ -4,6 +4,8 @@
 
 'use strict';
 
+const pricingPolicyService = require('../../../services/pricingPolicyService');
+const instrumentTypeService = require('../../../services/instrumentTypeService')
 const instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
 const attributeTypeService = require('../../../services/attributeTypeService');
 
@@ -14,13 +16,11 @@ const gridTableEvents = require('../../../services/gridTableEvents');
 const metaHelper = require('../../../helpers/meta.helper');
 const GridTableHelperService = require('../../../helpers/gridTableHelperService');
 
-const pricingPolicyService = require('../../../services/pricingPolicyService');
-
-export default function instrmentTypePricingTabController($scope, $mdDialog) {
+export default function InstrmentTypePricingTabController($scope, $mdDialog) {
 
 	var vm = this;
 
-	const gridTableHelperService = new GridTableHelperService();
+	// const gridTableHelperService = new GridTableHelperService();
 
 	vm.readyStatus = false;
 	vm.instrumentPricingSchemes = null;
@@ -33,7 +33,10 @@ export default function instrmentTypePricingTabController($scope, $mdDialog) {
 	//region Inherit from a parent controller
 
 	vm.attributeTypesByValueTypes = $scope.$parent.vm.attributeTypesByValueTypes; // Parent controller can be entityViewerEditDialogController, entityViewerAddDialogController, instrumentTypeEditDialogController, instrumentTypeAddDialogController
-	vm.pricingSchemeChange = $scope.$parent.vm.pricingSchemeChange;	// Have to leave pricingSchemeChange one level above because of currency entity viewer
+	// Methods below are located one level above because of currency entity viewer
+	vm.pricingSchemeChange = $scope.$parent.vm.pricingSchemeChange;
+	vm.switchPricingPolicyParameter = $scope.$parent.vm.switchPricingPolicyParameter;
+	vm.editPricingScheme = $scope.$parent.vm.editPricingScheme;
 
 	vm.contextData = $scope.$parent.vm.contextData;
 	vm.entityAttrs = $scope.$parent.vm.entityAttrs;
@@ -43,9 +46,13 @@ export default function instrmentTypePricingTabController($scope, $mdDialog) {
 	vm.entityChange = $scope.$parent.vm.entityChange;
 	//endregion
 
-	const pricingDefaultValueFieldTypes = pricingPolicyService.pricingDefaultValueFieldTypes;
+	vm.openPricingMultipleParametersDialog = function (pricingPolicy) {
+		pricingPolicyService.openPricingMultipleParametersDialog($mdDialog, pricingPolicy, vm.entityType, vm.attributeTypes);
+	};
 
 	//region Pricing policies grid table
+
+	/* const pricingDefaultValueFieldTypes = pricingPolicyService.pricingDefaultValueFieldTypes;
 
 	var getPpTemplateRow = function () {
 
@@ -77,84 +84,6 @@ export default function instrmentTypePricingTabController($scope, $mdDialog) {
 		},
 		body:[],
 		templateRow: getPpTemplateRow(),
-		/* {
-			isActive: false,
-			columns: [
-				{
-					key: 'pricing_policy',
-					columnName: 'Pricing Policy',
-					order: 0,
-					cellType: 'readonly_text',
-					settings: {
-						value: null,
-					},
-					styles: {
-						'grid-table-cell-elem': {'width': '10%'}
-					},
-					classes: 'pricing-policy'
-				},
-				{
-					key: 'pricing_scheme',
-					objPath: ['pricing_scheme'],
-					columnName: 'Pricing Scheme',
-					order: 1,
-					cellType: 'selector',
-					settings: {
-						value: null,
-						selectorOptions: [],
-					},
-					styles: {
-						'grid-table-cell-elem': {'width': '20%'}
-					},
-					classes: 'pricing-scheme'
-				},
-				{
-					key: 'pricing_scheme_clarification',
-					objPath: ['pricing_scheme_object', 'notes_for_users'],
-					columnName: 'Pricing Scheme Clarification',
-					order: 2,
-					cellType: 'readonly_text',
-					settings: {
-						value: null
-					},
-					styles: {
-						'grid-table-cell-elem': {'width': '40%'}
-					},
-					classes: 'gt-cell-multi-lined-text gt-cell-plain-text'
-				},
-				{
-					key: 'edit_default_parameters',
-					objPath: ['default_value'],
-					columnName: 'Edit Default Parameters',
-					order: 3,
-					cellType: 'multitypeField',
-					settings: {
-						value: null,
-						fieldTypesData: []
-					},
-					styles: {
-						'grid-table-cell-elem': {'width': '20%'}
-					},
-					classes: 'edit-default-parameters'
-				},
-				{
-					key: 'multiple_parameters',
-					// objPath: ['default_value'],
-					columnName: 'Multiple Parameters',
-					order: 4,
-					cellType: 'readonly_text',
-					settings: {
-						value: '-'
-					},
-					styles: {
-						'grid-table-cell-elem': {'width': '10%'}
-					},
-					// classes: 'edit-default-parameters'
-				},
-
-			],
-			styles: {'grid-table-row': {'cursor': 'pointer'}}
-		}, */
 
 		tableMethods: {
 			addRow: '' //onEventsTableAddRow
@@ -182,11 +111,6 @@ export default function instrmentTypePricingTabController($scope, $mdDialog) {
 
 	};
 
-	/**
-	 *
-	 * @param policy {object} - pricing policy
-	 * @returns {[*, number]} - value and value_type for default parameters of pricing policy
-	 */
 	var getDefaultParametersVal = function (policy) {
 
 		var value, valueType;
@@ -206,35 +130,6 @@ export default function instrmentTypePricingTabController($scope, $mdDialog) {
 		return [value, valueType];
 
 	};
-
-	const openPricingMultipleParametersDialog = (policy) => {
-
-		$mdDialog.show({
-			controller: 'PricingMultipleParametersDialogController as vm',
-			templateUrl: 'views/dialogs/pricing/pricing-multiple-parameter-dialog-view.html',
-			parent: angular.element(document.body),
-			// targetEvent: $event,
-			clickOutsideToClose: false,
-			preserveScope: true,
-			autoWrap: true,
-			skipHide: true,
-			multiple: true,
-			locals: {
-				data: {
-					item: policy,
-					entityType: vm.entityType,
-					attributeTypes: vm.attributeTypes
-				}
-
-			}
-		}).then(function (res) {
-
-			if (res.status === 'agree') {
-				policy.data = res.data.item.data
-			}
-
-		})
-	}
 
 	var setUpDefaultParametersAsMultitypeCell = function (pricingPolicy, defaultParametersCell) {
 
@@ -333,16 +228,6 @@ export default function instrmentTypePricingTabController($scope, $mdDialog) {
 			if (policy.pricing_scheme_object && policy.pricing_scheme_object.type_object.input_type == 3) {
 
 				let multipleParameters = gridTableHelperService.getCellFromRowByKey(rowObj, 'multiple_parameters');
-				/* multipleParameters.cellType = 'button';
-				multipleParameters.settings = {
-					buttonContent: '<span class="material-icons multiple-parameters-button">more_horiz</span>'
-				};
-
-				multipleParameters.methods = {
-					onClick: () => openPricingMultipleParametersDialog(policy)
-				};
-
-				multipleParameters.classes = ['gt-3dots-btn']; */
 
 				setUpMultipleParametersAsButtonCell(policy, multipleParameters);
 
@@ -355,7 +240,6 @@ export default function instrmentTypePricingTabController($scope, $mdDialog) {
 		//endregion assemble body rows
 
 	};
-	//endregion Pricing policies grid table
 
 	var initGridTableEvents = function () {
 
@@ -408,18 +292,7 @@ export default function instrmentTypePricingTabController($scope, $mdDialog) {
 					};
 
 				} else {
-
-					/* defaultValueCell.cellType = 'multitypeField';
-					const [defaultValue, fieldValueType] = getDefaultParametersVal(changedPolicy);
-					if (fieldValueType === 70) {
-						defaultValueCell.settings.fieldTypesData = getOptionsForPPDefaultValueSel(defaultValueCell.settings.fieldTypesData, changedPolicy);
-					}
-
-					const fieldData = gridTableHelperService.getMultitypeFieldDataForCell(defaultValueCell.settings.fieldTypesData, defaultValueCell, defaultValue, fieldValueType);
-					defaultValueCell.settings = {...defaultValueCell.settings, ...fieldData.cell.settings}; */
-
 					defaultValueCell = setUpDefaultParametersAsMultitypeCell(changedPolicy, defaultValueCell);
-
 				}
 				//endregion Default parameters column
 
@@ -427,15 +300,7 @@ export default function instrmentTypePricingTabController($scope, $mdDialog) {
 				let multipleParameters = vm.pricingPoliciesGridTableDataService.getCellByKey(row.order, 'multiple_parameters');
 				if (changedPolicy.pricing_scheme_object && changedPolicy.pricing_scheme_object.type_object.input_type == 3) {
 
-					/*multipleParameters.cellType = 'button';
-					multipleParameters.settings = {
-						buttonContent: '<span class="material-icons multiple-parameters-button">more_horiz</span>'
-					};
-					multipleParameters.methods = {
-						onClick: () => openPricingMultipleParametersDialog(changedPolicy)
-					}*/
 					multipleParameters = setUpMultipleParametersAsButtonCell(changedPolicy, multipleParameters);
-
 
 				} else {
 
@@ -450,7 +315,8 @@ export default function instrmentTypePricingTabController($scope, $mdDialog) {
 
 		});
 
-	};
+	}; */
+	//endregion Pricing policies grid table
 
 	vm.applyPricingToAllInstruments = function ($event, item) {
 
@@ -475,28 +341,6 @@ export default function instrmentTypePricingTabController($scope, $mdDialog) {
 			});
 
 		})
-
-	};
-
-	vm.editPricingScheme = function ($event, item) {
-
-		$mdDialog.show({
-			controller: 'InstrumentPricingSchemeEditDialogController as vm',
-			templateUrl: 'views/dialogs/pricing/instrument-pricing-scheme-edit-dialog-view.html',
-			parent: angular.element(document.body),
-			targetEvent: $event,
-			clickOutsideToClose: false,
-			preserveScope: true,
-			autoWrap: true,
-			skipHide: true,
-			multiple: true,
-			locals: {
-				data: {
-					item: item
-				}
-
-			}
-		});
 
 	};
 
@@ -592,17 +436,17 @@ export default function instrmentTypePricingTabController($scope, $mdDialog) {
 
 	vm.init = function () {
 
-		vm.pricingPoliciesGridTableDataService = new GridTableDataService();
+		/* vm.pricingPoliciesGridTableDataService = new GridTableDataService();
 		vm.pricingPoliciesGridTableEventService = new GridTableEventService();
 
-		initGridTableEvents();
+		initGridTableEvents(); */
 
 		Promise.all([getInstrumentPricingSchemes, getAttributeTypes]).then(function () {
 
 			generateInstrumentAttributeTypesByValueTypes();
-			formatDataForPricingGridTable();
+			/* formatDataForPricingGridTable();
 
-			vm.pricingPoliciesGridTableDataService.setTableData(vm.pricingPoliciesGridTableData);
+			vm.pricingPoliciesGridTableDataService.setTableData(vm.pricingPoliciesGridTableData); */
 			vm.readyStatus = true;
 
 		});

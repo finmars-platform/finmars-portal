@@ -68,7 +68,7 @@
         vm.readyStatus = vm.sharedLogic.readyStatusObj;
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
-		console.log("testing vm.entityTabs", vm.entityTabs);
+
         vm.formIsValid = true;
 
         vm.attributeTypes = [];

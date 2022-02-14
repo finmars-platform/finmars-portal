@@ -220,11 +220,40 @@
 			col.order = index;
 			return col;
 		});
-		console.log("testing.getPPGTTemplateRow return", templateRowData);
+
 		return templateRowData;
 
 	};
-	//endregion
+
+	var openPricingMultipleParametersDialog = function ($mdDialog, pricingPolicy, entityType, attributeTypes) {
+
+		$mdDialog.show({
+			controller: 'PricingMultipleParametersDialogController as vm',
+			templateUrl: 'views/dialogs/pricing/pricing-multiple-parameter-dialog-view.html',
+			parent: angular.element(document.body),
+			// targetEvent: $event,
+			clickOutsideToClose: false,
+			preserveScope: true,
+			autoWrap: true,
+			skipHide: true,
+			multiple: true,
+			locals: {
+				data: {
+					item: pricingPolicy,
+					entityType: entityType,
+					attributeTypes: attributeTypes
+				}
+
+			}
+		}).then(function (res) {
+
+			if (res.status === 'agree') {
+				pricingPolicy.data = res.data.item.data;
+			}
+
+		})
+	};
+	//endregion Pricing Policies table
 
 	//endregion PRICING tab
 
@@ -240,7 +269,9 @@
         deleteBulk: deleteBulk,
 
 		pricingDefaultValueFieldTypes: pricingDefaultValueFieldTypes,
-		getPpGtTemplateRow: getPpGtTemplateRow
+		getPpGtTemplateRow: getPpGtTemplateRow,
+		openPricingMultipleParametersDialog: openPricingMultipleParametersDialog,
+
     }
 
 }());

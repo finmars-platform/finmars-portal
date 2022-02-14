@@ -1466,7 +1466,7 @@
 	 * @param {Object} entity - data of ev entity
 	 */
 	var onPricingSchemeChangeInsidePricingPolicy = function (pricingPolicy, instrumentPricingSchemes, entity) {
-		console.log("testing.onPricingSchemeChangeInsidePricingPolicy", pricingPolicy);
+
 		pricingPolicy.pricing_scheme_object = null;
 		pricingPolicy.default_value = null;
 		pricingPolicy.attribute_key = null;
@@ -1498,7 +1498,7 @@
 			return policy;
 
 		});
-		console.log("testing.onPricingSchemeChangeInsidePricingPolicy end");
+
 	};
 
     module.exports = {
