@@ -1,4 +1,4 @@
-<div data-ng-controller="InstrumentPricingPoliciesTabController as vm">
+<div data-ng-controller="InstrumentPricingTabController as vm">
 
     <div layout="row">
 
@@ -6,12 +6,14 @@
 
             <div layout="row" class="m-b-13">
 
-                <dropdown-select class="p-r-8" label="Pricing Currency"
+                <dropdown-select label="Pricing Currency"
                                  model="vm.entity.pricing_currency"
                                  placeholder-text="Pricing Currency"
                                  menu-options="vm.currencies"
                                  small-options="{tooltipText: 'Pricing Currency'}"
                                  on-change-callback="vm.entityChange()"
+
+                                 class="p-r-8"
                                  style="width: 306px">
                 </dropdown-select>
                 <!--                on-change-callback="vm.entityChange()"-->

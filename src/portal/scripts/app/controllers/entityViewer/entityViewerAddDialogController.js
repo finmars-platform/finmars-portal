@@ -1318,7 +1318,7 @@
             return new Promise(function (resolve, reject) {
 
                 instrumentTypeService.bookInstrument(vm.entity.instrument_type).then(function (data) {
-					console.log("testing.bookInstrument data", data);
+
                     Object.keys(data.instrument).forEach(function (prop) {
 
 						if (prop === 'attributes') {
@@ -1330,16 +1330,16 @@
 								/* var atProp = attrType.attribute_type_object.user_code;
 								var atVal = evHelperService.getDynamicAttrValue(attrType);
 
-								vm.entity[atProp] = atVal;*/
+								vm.entity[atProp] = atVal; */
 
 							});
 
 						}
-						else if (['accrual_calculation_schedules', 'event_schedules'].indexOf < 0) {
+						else if (['accrual_calculation_schedules', 'event_schedules'].indexOf(prop) < 0) {
 
 							var notChangeByUser = !changedEntityProperties[prop] || !changedEntityProperties[prop].byUser;
 
-							if (!vm.entity[prop] || notChangeByUser) {
+							if (!vm.entity[prop] && vm.entity[prop] !== 0 && notChangeByUser) {
 
 								vm.entity[prop] = data.instrument[prop];
 
@@ -1364,7 +1364,7 @@
         vm.onEntityChange = function (fieldKey) {
 
             if (fieldKey) {
-				console.log("testing.onEntityChange fieldKey", fieldKey);
+
                 var attributes = {
                     entityAttrs: vm.entityAttrs,
                     attrsTypes: vm.attributeTypes
@@ -1375,7 +1375,7 @@
 				}
 
 				changedEntityProperties[fieldKey].byUser = true;
-				console.log("testing.onEntityChange changedEntityProperties", changedEntityProperties);
+
                 entityEditorHelper.checkTabsForErrorFields(fieldKey, vm.evEditorDataService, attributes, vm.entity, vm.entityType, vm.tabs);
 
                 /*var fieldIndex = vm.formErrorsList.indexOf(fieldKey);
