@@ -146,48 +146,31 @@
 
         };
 
-		const relations2KeysObj = {
-			'transaction_class': {
-				id: 'value',
-				name: 'name'
-			},
-			/*'price_download_scheme': {
-				id: 'id',
-				name: 'user_code'
-			},*/
-			'price_download_scheme': {
-				id: 'id',
-				name: 'scheme_name'
-			},
-		};
-
-		const useIdForRelList = ['daily_pricing_model', 'payment_size_detail', 'accrual_calculation_model', 'notification_class', 'event_class', 'periodicity'];
+		// const useIdForRelList = ['pricing_condition', 'payment_size_detail', 'accrual_calculation_model', 'notification_class', 'event_class', 'periodicity'];
 
 		const formatRelationForSelector = function (key, relationsList) {
 
-			if (relations2KeysObj.hasOwnProperty(key)) { // relations with specific properties to use as 'id' or (and) 'name'
-
-				var propertyForId = relations2KeysObj[key].id;
-				var propertyForName = relations2KeysObj[key].name;
+			if (key === 'transaction_class') { // relations with specific properties to use as 'id' or (and) 'name'
 
 				return relationsList.map(rItem => {
-					return {id: rItem[propertyForId], name: rItem[propertyForName]};
+					return {id: rItem.id, name: rItem.name};
 				});
 
 			}
 
-			const propForId = useIdForRelList.includes(key) ? 'id' : 'user_code';
+			// const propForId = useIdForRelList.includes(key) ? 'id' : 'user_code';
 
 			return relationsList.map(rItem => {
 
 				return {
-					id: rItem[propForId],
+					id: rItem.user_code,
 					name: rItem.hasOwnProperty('short_name') ? rItem.short_name : rItem.name
 				};
 
 			});
 
 		};
+		// needed because back does not send _object for selected transaction_class
 
 		const loadRelation = function (field, noScopeUpdate) {
 
@@ -196,7 +179,7 @@
 			// if (!viewModel.relationItems.hasOwnProperty(field)) {
 			if (!loadedRelationsList.includes(field)) {
 
-				return new Promise(function (resolve, reject) {
+				return new Promise(async function (resolve, reject) {
 
 					fieldResolverService.getFields(field).then(function (data) {
 
@@ -209,7 +192,8 @@
 						}
 
 						resolve(viewModel.relationItems[field]);
-					})
+
+					});
 
 				});
 
@@ -767,7 +751,7 @@
                 strategy1: null,
                 strategy2: null,
                 strategy3: null,
-                daily_pricing_model: null,
+				pricing_condition: null,
                 payment_size_detail: null,
                 price_download_scheme: null,
                 pricing_policy: null,
@@ -1508,13 +1492,14 @@
 			if (ecosystemDefaultData.hasOwnProperty(defaultValueKey)) {
 
 				var defaultName = ecosystemDefaultData[defaultValueKey + '_object'][nameProperty];
+				var defaultUserCode = ecosystemDefaultData[defaultValueKey + '_object']['user_code'];
 
-				actionData[propertyName][fieldName] = ecosystemDefaultData[defaultValueKey];
+				actionData[propertyName][fieldName] = defaultUserCode;
 
 				// needed for displaying default value after turning on 'relation' field
 				actionData[propertyName][fieldName + '_object'] = {};
 				actionData[propertyName][fieldName + '_object'][nameProperty] = defaultName;
-				actionData[propertyName][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
+				actionData[propertyName][fieldName + '_object']['user_code'] = defaultUserCode;
 
 			}
 
@@ -1526,7 +1511,7 @@
 				'instrument',
 				'transaction',
 				'instrument_factor_schedule',
-				'instrument_manual_pricing_formula',
+				// 'instrument_manual_pricing_formula',
 				'instrument_accrual_calculation_schedules',
 				'instrument_event_schedule',
 				'instrument_event_schedule_action'
@@ -1580,6 +1565,38 @@
 
 			});
 
+		};
+
+		const getActionTypeName = function (action) {
+
+			if (action.instrument) {
+				return "Create Instrument";
+			}
+
+			else if (action.transaction) {
+				return "Create Transaction";
+			}
+
+			else if (action.instrument_factor_schedule) {
+				return "Create Factor Schedule";
+			}
+
+			else if (action.instrument_manual_pricing_formula) {
+				return "This action obsolete. Please delete it.";
+                // return "Create Manual Pricing Formula";
+            }
+
+			else if (action.instrument_accrual_calculation_schedules) {
+				return "Create Accrual Calculation Schedules";
+			}
+
+			else if (action.instrument_event_schedule) {
+				return "Create Event Schedule";
+			}
+
+			else if (action.instrument_event_schedule_action) {
+				return "Create Event Schedule Action"
+			}
 		};
 
 		const resetPropertyBtn = function (item, propertyName, fieldName) {
@@ -1730,6 +1747,7 @@
 			getTransactionUserFields: getTransactionUserFields,
 
 			setStateInActionsControls: setStateInActionsControls,
+			getActionTypeName: getActionTypeName,
 			resetPropertyBtn: resetPropertyBtn,
 			appendFromTemplate: appendFromTemplate,
             initAfterMainDataLoaded: initAfterMainDataLoaded
