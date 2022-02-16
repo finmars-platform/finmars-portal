@@ -120,7 +120,7 @@
 
             $mdDialog.show({
                 controller: 'SimpleEntityImportSchemeCreateDialogController as vm',
-                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-create-dialog-view.html',
+                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-dialog-view.html',
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,
@@ -140,7 +140,7 @@
         vm.editScheme = function ($event) {
             $mdDialog.show({
                 controller: 'SimpleEntityImportSchemeEditDialogController as vm',
-                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-edit-dialog-view.html',
+                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-dialog-view.html',
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,
