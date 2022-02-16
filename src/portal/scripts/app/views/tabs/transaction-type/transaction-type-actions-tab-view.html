@@ -74,10 +74,11 @@
                          data-ng-include="'views/tabs/transaction-type/actions/instrument-factor-schedule-action-view.html'">
                     </div>
 
-                    <div data-ng-if="item.instrument_manual_pricing_formula != null"
+                    <!--<div data-ng-if="item.instrument_manual_pricing_formula != null"
                          data-ng-include="'views/tabs/transaction-type/actions/instrument-manual-pricing-formula-action-view.html'">
 
-                    </div>
+                    </div>-->
+                    <div data-ng-if="item.instrument_manual_pricing_formula != null">This action obsolete. Please delete it.</div>
 
                     <div data-ng-if="item.instrument_accrual_calculation_schedules != null"
                          data-ng-include="'views/tabs/transaction-type/actions/instrument-accrual-calculation-schedules-action-view.html'">

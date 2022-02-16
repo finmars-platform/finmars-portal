@@ -1409,37 +1409,7 @@
 
         };
 
-        vm.getActionTypeName = function (action) {
-
-            if (action.instrument) {
-                return "Create Instrument";
-            }
-
-            if (action.transaction) {
-                return "Create Transaction";
-            }
-
-            if (action.instrument_factor_schedule) {
-                return "Create Factor Schedule";
-            }
-
-            if (action.instrument_manual_pricing_formula) {
-                return "Create Manual Pricing Formula";
-            }
-
-            if (action.instrument_accrual_calculation_schedules) {
-                return "Create Accrual Calculation Schedules";
-            }
-
-            if (action.instrument_event_schedule) {
-                return "Create Event Schedule";
-            }
-
-            if (action.instrument_event_schedule_action) {
-                return "Create Event Schedule Action"
-            }
-
-        };
+        vm.getActionTypeName = sharedLogic.getActionTypeName;
 
         vm.preventSpace = function ($event) {
 
@@ -1512,7 +1482,7 @@
             'instrument',
             'transaction',
             'instrument_factor_schedule',
-            'instrument_manual_pricing_formula',
+            // 'instrument_manual_pricing_formula',
             'instrument_accrual_calculation_schedules',
             'instrument_event_schedule',
             'instrument_event_schedule_action'
@@ -1729,7 +1699,7 @@
                 ],
                 'instrument': [
                     'accrued_currency', 'accrued_currency_input', 'accrued_multiplier',
-                    'daily_pricing_model', 'daily_pricing_model_input', 'default_accrued',
+                    'pricing_condition', 'pricing_condition_input', 'default_accrued',
                     'default_price', 'instrument_type', 'instrument_type_input', 'maturity_date',
                     'maturity_price', 'name', 'notes', 'payment_size_detail', 'payment_size_detail_input',
                     'price_download_scheme', 'price_download_scheme_input', 'price_multiplier',
@@ -1749,9 +1719,9 @@
                     'button_position', 'event_schedule', 'event_schedule_input', 'event_schedule_phantom', 'is_book_automatic',
                     'is_sent_to_pending', 'text', 'transaction_type_from_instrument_type'
                 ],
-                'instrument_manual_pricing_formula': [
+                /* 'instrument_manual_pricing_formula': [
                     'expr', 'instrument', 'instrument_input', 'instrument_phantom', 'notes', 'pricing_policy', 'pricing_policy_input'
-                ],
+                ], */
                 'instrument_factor_schedule': [
                     'instrument', 'instrument_input', 'instrument_phantom', 'effective_date', 'factor_value'
                 ],
