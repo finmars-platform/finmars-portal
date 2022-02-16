@@ -28,6 +28,48 @@
             entity_fields: []
         };
 
+        //TODO really bad implementation, dialog renders too long
+        vm.instrumentGeneralAttributes = [
+            'instrument_type',
+            'name',
+            'user_code',
+            'short_name',
+            'public_name',
+            'notes',
+        ]
+
+        vm.instrumentPricingAttributes = [
+            'pricing_currency',
+            'price_multiplier',
+            'default_price',
+            'reference_for_pricing'
+        ]
+
+        vm.instrumentAccrualsAttributes = [
+            'accrual_currency',
+            'accrual_multiplier',
+            'default_accrued'
+        ]
+
+        vm.instrumentExposureAttributes = [
+            'position_reporting',
+            'exposure_calculation_model',
+            'long_underlying_instrument',
+            'underlying_long_multiplier',
+            'short_underlying_instrument',
+            'underlying_short_multiplier',
+            'long_underlying_exposure',
+            'short_underlying_exposure',
+
+            'co_directional_exposure_currency',
+            'counter_directional_exposure_currency'
+        ]
+
+        vm.isInsideTab = function (tab, key) {
+            return tab.indexOf(key) !== -1
+        }
+
+
         vm.inputsGroup = {
             "name": "<b>Imported</b>",
             "key": 'input'
@@ -561,7 +603,7 @@
             vm.scheme.calculated_inputs.splice($index, 1);
         };
 
-        vm.addCalculatedField = function(){
+        vm.addCalculatedField = function () {
 
             var fieldsLength = vm.scheme.calculated_inputs.length;
             var lastFieldNumber;
@@ -583,7 +625,7 @@
 
         };
 
-        vm.init = function(){
+        vm.init = function () {
 
             if (data && data.hasOwnProperty('scheme')) {
                 vm.scheme = data.scheme;
