@@ -37,6 +37,7 @@
         //TODO really bad implementation, dialog renders too long
         vm.instrumentGeneralAttributes = [
             'instrument_type',
+            'maturity_date',
             'name',
             'user_code',
             'short_name',
