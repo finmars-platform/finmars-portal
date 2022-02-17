@@ -1547,7 +1547,7 @@
 
 							if (action[actionKey].hasOwnProperty(key + '_input')) {
 
-								const relationSelNotEmpty = action[actionKey][key] !== "";
+								const relationSelNotEmpty = !!action[actionKey][key];
 
 								if (relationSelNotEmpty) {
 									action[actionKey][key + '_toggle'] = true;
@@ -1599,10 +1599,17 @@
 			}
 		};
 
+		/**
+		 *
+		 * @param item {Object} - entity
+		 * @param propertyName {string} - property with data that matches action
+		 * @param fieldName {string} - property for field inside action
+		 */
 		const resetPropertyBtn = function (item, propertyName, fieldName) {
 
 			item[propertyName][fieldName] = null;
 			item[propertyName][fieldName + '_input'] = null;
+			delete item[propertyName][fieldName + '_object'];
 
 			if (item[propertyName].hasOwnProperty(fieldName + '_phantom')) {
 				item[propertyName][fieldName + '_phantom'] = null;
