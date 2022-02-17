@@ -52,8 +52,8 @@
         ]
 
         vm.instrumentAccrualsAttributes = [
-            'accrual_currency',
-            'accrual_multiplier',
+            'accrued_currency',
+            'accrued_multiplier',
             'default_accrued'
         ]
 
