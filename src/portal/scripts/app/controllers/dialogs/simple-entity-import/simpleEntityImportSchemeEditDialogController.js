@@ -38,6 +38,7 @@
         vm.instrumentGeneralAttributes = [
             'instrument_type',
             'maturity_date',
+            'maturity_price',
             'name',
             'user_code',
             'short_name',
