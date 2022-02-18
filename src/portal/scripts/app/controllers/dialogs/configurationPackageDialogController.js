@@ -173,7 +173,8 @@
                     locals: {
                         data: {
                             file: data,
-                            rawFile: fileOfBlob
+                            rawFile: fileOfBlob,
+                            selectAll: true
                         }
                     }
                 })
