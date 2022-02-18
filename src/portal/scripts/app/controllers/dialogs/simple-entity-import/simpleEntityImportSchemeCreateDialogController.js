@@ -31,6 +31,8 @@
         //TODO really bad implementation, dialog renders too long
         vm.instrumentGeneralAttributes = [
             'instrument_type',
+            'maturity_date',
+            'maturity_price',
             'name',
             'user_code',
             'short_name',
@@ -46,8 +48,8 @@
         ]
 
         vm.instrumentAccrualsAttributes = [
-            'accrual_currency',
-            'accrual_multiplier',
+            'accrued_currency',
+            'accrued_multiplier',
             'default_accrued'
         ]
 
