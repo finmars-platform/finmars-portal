@@ -1318,7 +1318,15 @@
 
                 instrumentTypeService.bookInstrument(vm.entity.instrument_type).then(function (data) {
 
-                    vm.entity = data.instrument
+					Object.keys(data.instrument).forEach(function (property) {
+
+						if (!['attributes', 'accrual_calculation_schedules', 'event_schedules'].includes(property)) {
+
+							vm.entity[property] = data.instrument[property];
+
+						}
+
+					});
 
                     console.log('vm.bookInstrument.entity', vm.entity)
 

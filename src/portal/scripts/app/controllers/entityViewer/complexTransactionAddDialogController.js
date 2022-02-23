@@ -236,8 +236,8 @@
 
             mapAttributesAndFixFieldsLayout();
 
-            // should be fired after mapAttributesAndFixFieldsLayout()
-            return sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+            /* // should be fired after mapAttributesAndFixFieldsLayout()
+            return sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType); */
 
         };
 
@@ -287,16 +287,8 @@
 
                         vm.missingLayoutError = false;
 
-                        await postBookComplexTransactionActions(data);
-                        // Victor 2020.12.01 #64
-                        // await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
-                        // <Victor 2020.12.01 #64>
-
-                        /*vm.oldValues = {};
-
-                        vm.userInputs.forEach(function (item) {
-                            vm.oldValues[item.name] = vm.entity[item.name]
-                        });*/
+                        // await postBookComplexTransactionActions(data);
+						postBookComplexTransactionActions(data);
 
                     } else {
                         vm.missingLayoutError = true;
