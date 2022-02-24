@@ -62,55 +62,83 @@
 	};
 
 	var getTransactionClassList = function () {
-		return new Promise(function (resolve, reject) {
+		/* return new Promise(function (resolve, reject) {
 			resolve([
 				{
-					id: 1,
-					"value": "1",
-					"name": "Buy"
+					"id": 1,
+					"user_code": "BUY",
+					"name": "Buy",
+					"description": "Buy"
 				},
 				{
-					id: 2,
-					"value": "2",
-					"name": "Sell"
+					"id": 8,
+					"user_code": "CASH_INFLOW",
+					"name": "Cash-Inflow",
+					"description": "Cash-Inflow"
 				},
 				{
-					id: 3,
-					"value": "3",
-					"name": "FX Trade"
+					"id": 9,
+					"user_code": "CASH_OUTFLOW",
+					"name": "Cash-Outflow",
+					"description": "Cash-Outflow"
 				},
 				{
-					id: 4,
-					"value": "4",
-					"name": "Instrument PL"
+					"id": 10,
+					"user_code": "PLACEHOLDER",
+					"name": "Default",
+					"description": "Default"
 				},
 				{
-					id: 5,
-					"value": "5",
-					"name": "Transaction PL"
+					"id": 3,
+					"user_code": "FX_TRADE",
+					"name": "FX Trade",
+					"description": "FX Trade"
 				},
 				{
-					id: 6,
-					"value": "6",
-					"name": "Transfer"
+					"id": 7,
+					"user_code": "FX_TRANSFER",
+					"name": "FX Transfer",
+					"description": "FX Transfer"
 				},
 				{
-					id: 7,
-					"value": "7",
-					"name": "FX Transfer"
+					"id": 4,
+					"user_code": "INSTRUMENT_PL",
+					"name": "Instrument PL",
+					"description": "Instrument PL"
 				},
 				{
-					id: 8,
-					"value": "8",
-					"name": "Cash-Inflow"
+					"id": 2,
+					"user_code": "SELL",
+					"name": "Sell",
+					"description": "Sell"
 				},
 				{
-					id: 9,
-					"value": "9",
-					"name": "Cash-Outflow"
+					"id": 5,
+					"user_code": "TRANSACTION_PL",
+					"name": "Transaction PL",
+					"description": "Transaction PL"
+				},
+				{
+					"id": 6,
+					"user_code": "TRANSFER",
+					"name": "Transfer",
+					"description": "Transfer"
 				}
-			])
-		})
+			]);
+		}); */
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-class/',
+			{
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				}
+			});
 	};
 
 	module.exports = {

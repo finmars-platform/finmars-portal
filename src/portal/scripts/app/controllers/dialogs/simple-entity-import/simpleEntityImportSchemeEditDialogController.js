@@ -34,6 +34,49 @@
 
         vm.dynamicAttributes = [];
 
+        //TODO really bad implementation, dialog renders too long
+        vm.instrumentGeneralAttributes = [
+            'instrument_type',
+            'maturity_date',
+            'maturity_price',
+            'name',
+            'user_code',
+            'short_name',
+            'public_name',
+            'notes',
+        ]
+
+        vm.instrumentPricingAttributes = [
+            'pricing_currency',
+            'price_multiplier',
+            'default_price',
+            'reference_for_pricing'
+        ]
+
+        vm.instrumentAccrualsAttributes = [
+            'accrued_currency',
+            'accrued_multiplier',
+            'default_accrued'
+        ]
+
+        vm.instrumentExposureAttributes = [
+            'position_reporting',
+            'exposure_calculation_model',
+            'long_underlying_instrument',
+            'underlying_long_multiplier',
+            'short_underlying_instrument',
+            'underlying_short_multiplier',
+            'long_underlying_exposure',
+            'short_underlying_exposure',
+
+            'co_directional_exposure_currency',
+            'counter_directional_exposure_currency'
+        ]
+
+        vm.isInsideTab = function (tab, key) {
+            return tab.indexOf(key) !== -1
+        }
+
         vm.inputsGroup = {
             "name": "<b>Imported</b>",
             "key": 'input'
@@ -368,7 +411,7 @@
 
             $mdDialog.show({
                 controller: 'SimpleEntityImportSchemeCreateDialogController as vm',
-                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-create-dialog-view.html',
+                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 locals: {

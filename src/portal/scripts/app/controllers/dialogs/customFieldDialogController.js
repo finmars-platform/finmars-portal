@@ -205,6 +205,19 @@
         vm.init = function () {
 
             //vm.attributeDataService = new AttributeDataService();
+
+            if (vm.entityType === 'balance-report') {
+               vm.customFieldContentType = 'reports.balancereportcustomfield'
+            }
+
+            if (vm.entityType === 'pl-report') {
+                vm.customFieldContentType = 'reports.plreportcustomfield'
+            }
+
+            if (vm.entityType === 'transaction-report') {
+                vm.customFieldContentType = 'reports.balancereportcustomfield'
+            }
+
             vm.downloadAttributes();
             vm.getList();
 

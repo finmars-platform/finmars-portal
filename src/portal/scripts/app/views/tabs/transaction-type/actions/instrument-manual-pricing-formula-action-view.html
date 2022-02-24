@@ -26,6 +26,7 @@
                     <div flex="80">
                         <div data-ng-if="item.instrument_manual_pricing_formula.instrument_toggle">
                             <entity-search-select data-item="item.instrument_manual_pricing_formula.instrument"
+                                                  data-user-code-for-item="true"
                                                   data-label="'Instrument'"
                                                   data-item-name="item.instrument_manual_pricing_formula.instrument_object.name"
                                                   data-entity-type="'instrument'"
@@ -111,7 +112,7 @@
                                                     model="item.instrument_manual_pricing_formula.pricing_policy"
                                                     load-relation="vm.loadRelation('pricing_policy')"
                                                     relation-items="vm.relationItems['pricing_policy']"
-                                                    selected-value="item.instrument_manual_pricing_formula.pricing_policy_object.id"
+                                                    selected-value="item.instrument_manual_pricing_formula.pricing_policy_object.user_code"
                                                     selected-name="item.instrument_manual_pricing_formula.pricing_policy_object.name"
                                                     is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                 </div>

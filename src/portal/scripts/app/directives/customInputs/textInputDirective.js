@@ -28,13 +28,16 @@
 				var inputContainer; // = elem[0].querySelector(".textInputContainer");
 
 				var inputElem; // = elem[0].querySelector(".textInputElem");
+				var stylePreset;
+
+				/* TEXTAREA CODE
+
 				var fullTextWrapper;
 				var fullTextElem;
-				var stylePreset;
 
 				scope.isReadonly = false;
 				scope.fullTextEnabled = false;
-				scope.fullText = {value: scope.model}
+				scope.fullText = {value: scope.model}*/
 
 				/*
 				TIPS
@@ -212,6 +215,19 @@
 					});
 				};
 
+				scope.onInputBlur = function () {
+
+					if (scope.onBlurCallback) {
+
+						setTimeout(function () {
+							// without timeout changes will be discarded on fast blur
+							scope.onBlurCallback();
+						}, 250);
+
+					}
+
+				}
+
 				let initScopeWatchers = function () {
 
 					scope.$watch("model", function () {
@@ -267,6 +283,8 @@
 					}
 				};
 
+				/* TEXTAREA CODE
+
 				let closeFulltext = function () {
 
 					inputContainer.classList.remove("custom-input-full-text-focused");
@@ -285,7 +303,7 @@
 
 					}
 
-				};
+				};*/
 
 				let initEventListeners = function () {
 
@@ -308,19 +326,24 @@
 							} else {
 
 								inputContainer.classList.add("custom-input-full-text-focused");
+
+								/* TEXTAREA CODE
+
 								fullTextElem.focus();
 
 								if (scope.renderHyperlinks) {
 									document.addEventListener("keyup", closeFulltext);
-								}
+								}*/
 
 							}
 
 
 						});
 
+						/* TEXTAREA CODE
+
 						fullTextWrapper.addEventListener("mouseleave", closeFulltext);
-						fullTextElem.addEventListener("click", metaHelper.openLinkInNewTab);
+						fullTextElem.addEventListener("click", metaHelper.openLinkInNewTab); */
 
 					}
 					else {
@@ -328,19 +351,20 @@
 						inputElem.addEventListener("focus", function () {
 
 							inputContainer.classList.add("custom-input-full-text-focused");
-							fullTextElem.focus();
 
-							/* fullTextWrapper.addEventListener("mouseleave", function () {
+							/* TEXTAREA CODE
 
-								fullTextElem.blur();
-
-							}, {once: true}); */
+							fullTextElem.focus();*/
 
 						});
 
-						fullTextElem.addEventListener("blur", closeFulltext);
+						/* TEXTAREA CODE
+
+						fullTextElem.addEventListener("blur", closeFulltext);*/
 
 					}
+
+					/* TEXTAREA CODE
 
 					fullTextElem.addEventListener("blur", function () {
 
@@ -367,9 +391,11 @@
 
 						fullTextElem.addEventListener("focus", scope.onFocus);
 
-					}
+					} */
 
 				};
+
+				/* TEXTAREA CODE
 
 				let elemsInintedNum = 0;
 
@@ -381,15 +407,17 @@
 						scope.init();
 					}
 
-				};
+				}; */
 
 				scope.init = function () { // called from view by ngInit
 
 					inputContainer = elem[0].querySelector(".textInputContainer");
 					inputElem = elem[0].querySelector(".textInputElem");
 
+					/* TEXTAREA CODE
+
 					fullTextWrapper = elem[0].querySelector(".customInputFullTextWrapper");
-					fullTextElem = fullTextWrapper.querySelector(".customInputFullText");
+					fullTextElem = fullTextWrapper.querySelector(".customInputFullText");*/
 
 					initScopeWatchers();
 

@@ -63,6 +63,7 @@
 
         vm.hasEnabledStatus = true;
         vm.entityStatus = '';
+		vm.allowFormLayoutEdition = true;
         vm.evEditorEvent = null;
 
         if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
@@ -87,9 +88,6 @@
         vm.fixedAreaAttributesLayout = [];
 
         vm.isInheritRights = false;
-
-        vm.lastAccountType = null;
-        vm.lastInstrumentType = null;
 
         vm.canManagePermissions = false;
 
@@ -1318,15 +1316,21 @@
 
         };
 
-        var instrumentPricingCurrencyChanged = false; // only once
-
         vm.bookInstrument = function () {
 
             return new Promise(function (resolve, reject) {
 
                 instrumentTypeService.bookInstrument(vm.entity.instrument_type).then(function (data) {
 
-                    vm.entity = data.instrument
+					Object.keys(data.instrument).forEach(function (property) {
+
+						if (!['attributes', 'accrual_calculation_schedules', 'event_schedules'].includes(property)) {
+
+							vm.entity[property] = data.instrument[property];
+
+						}
+
+					});
 
                     console.log('vm.bookInstrument.entity', vm.entity)
 
@@ -1338,29 +1342,9 @@
 
         }
 
+		var instrumentPricingCurrencyChanged = false; // only once
+
         vm.onEntityChange = function (fieldKey) {
-
-            if (vm.lastAccountType !== vm.entity.type) {
-                vm.lastAccountType = vm.entity.type;
-
-                if (vm.isInheritRights && vm.entity.type) {
-                    vm.setInheritedPermissions();
-                }
-            }
-
-            if (vm.lastInstrumentType !== vm.entity.instrument_type) {
-
-                vm.lastInstrumentType = vm.entity.instrument_type;
-
-                vm.bookInstrument();
-
-                // if (vm.isInheritRights && vm.entity.instrument_type) {
-                //     vm.setInheritedPermissions();
-                // }
-                //
-                // vm.setInheritedPricing();
-
-            }
 
             if (fieldKey) {
 
@@ -1930,9 +1914,12 @@
 
 						};
 
-					} else {
-						$scope.$apply();
-					}
+                } else {
+
+					vm.typeSelectorChange = typeSelectorChangeFns[vm.entityType];
+                    $scope.$apply();
+
+                }
 
 					/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 

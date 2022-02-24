@@ -9,7 +9,9 @@ export default function ($state, commonDialogsService) {
 	return {
 		restrict: 'A',
 		scope: {
-			dndElem: '=', // string or HTMLElem
+			dndElem: '=', // HTMLElem
+			dndElemString: '@', // parameter for querySelector
+
 			isDisabled: '='
 		},
 		link: function (scope, elem, attrs) {
@@ -18,13 +20,16 @@ export default function ($state, commonDialogsService) {
 
 			if (scope.dndElem) {
 
-				if (typeof scope.dndElem === 'string') { // if scope.dndElem selectors for querySelector()
+				/*if (typeof scope.dndElem === 'string') { // if scope.dndElem selectors for querySelector()
 					elementForDropping = document.querySelector(scope.dndElem);
 
 				} else { // if scope.dndElem HTMLElem
 					elementForDropping = scope.dndElem;
-				}
+				}*/
+				elementForDropping = scope.dndElem;
 
+			} else if (scope.dndElemString) {
+				elementForDropping = document.querySelector(scope.dndElemString);
 			}
 
 			const openImportConfigurationManager = function (fileToRead) {
