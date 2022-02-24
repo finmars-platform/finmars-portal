@@ -478,6 +478,9 @@
                     	vm.tabs = formLayoutData.tabs;
                         console.log('# vm.tabs', vm.tabs);
 						vm.attributesLayout = formLayoutData.attributesLayout;
+
+						vm.readyStatus.layout = true;
+						vm.readyStatus.entity = true;
 						/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 
 							vm.fixedAreaPopup.fields = fieldsData;
@@ -864,7 +867,9 @@
 
                     formLayoutFromAbove = null; // forcing getFormLayout() to download layout from server
 
-                    vm.getItem();
+                    vm.getItem().then(function () {
+                    	$scope.$apply();
+					});
 
                     vm.layoutAttrs = layoutService.getLayoutAttrs();
                     getEntityAttrs();

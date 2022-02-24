@@ -869,6 +869,7 @@
 
                         vm.entity = {...vm.entity, ...responseData};
                         vm.entity.$_isValid = true;
+						vm.evEditorEventService.dispatchEvent(evEditorEvents.ENTITY_UPDATED);
 
                         const responseObj = {
                             status: 'edit',
@@ -1347,24 +1348,6 @@
 
         // Instrument tab Exposure end
 
-        vm.instrumentTypeChange = function ($event) {
-
-            console.log('instrumentTypeChange', vm.entity)
-
-            vm.sharedLogic.getFormLayout().then(formLayoutData => {
-
-                vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
-                vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
-
-                vm.attributeTypes = formLayoutData.attributeTypes;
-
-                vm.tabs = formLayoutData.tabs;
-                vm.attributesLayout = formLayoutData.attributesLayout;
-
-            });
-
-        }
-
         vm.openPricingMultipleParametersDialog = function ($event, item) {
 
             $mdDialog.show({
@@ -1465,6 +1448,9 @@
                 vm.attributesLayout = formLayoutData.attributesLayout;
 
                 vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
+
+				vm.readyStatus.layout = true;
+				vm.readyStatus.entity = true;
 
 				$scope.$apply();
 

@@ -611,6 +611,9 @@
                     	vm.tabs = formLayoutData.tabs;
                         console.log('# vm.tabs', vm.tabs);
 						vm.attributesLayout = formLayoutData.attributesLayout;
+
+						vm.readyStatus.layout = true;
+						vm.readyStatus.entity = true;
 						/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 
 							vm.fixedAreaPopup.fields = fieldsData;
@@ -1042,7 +1045,9 @@
 
                     formLayoutFromAbove = null; // forcing getFormLayout() to download layout from server
 
-                    vm.getItem();
+                    vm.getItem().then(function () {
+                    	$scope.$apply();
+					});
 
                     vm.layoutAttrs = layoutService.getLayoutAttrs();
                     getEntityAttrs();
@@ -1958,12 +1963,69 @@
 
         };
 
+		/**
+		 * Set default value for empty dynamic attributes of instrument from instrument type.
+		 *
+		 * @param entity {Object}
+		 * @param dynamicAttributeData {Object}
+		 */
+		const setDynamicAttrValue = function (entity, dynamicAttributeData) {
+
+			var dAttrUserCode = dynamicAttributeData.attribute_type_object.user_code;
+			var dAttrValue = evHelperService.getDynamicAttrValue(dynamicAttributeData);
+
+			var notInsideUserTab = !!!entityEditorHelper.getLocationOfAttributeInsideUserTabs(dAttrUserCode, vm.tabs);
+
+			if (notInsideUserTab && (dAttrValue || dAttrValue === 0)) {
+
+				if (dynamicAttributeData.attribute_type_object.value_type === 30) {
+
+					const EDAIndex = entity.attributes.findIndex(entityDAttr => {
+						return entityDAttr.attribute_type_object.user_code === dAttrUserCode;
+					});
+
+					entity.attributes[EDAIndex].classifier = dynamicAttributeData.classifier;
+					entity.attributes[EDAIndex].classifier_object = dynamicAttributeData.classifier_object;
+
+				} else {
+					entity.attributes = evHelperService.setDynamicAttrValueByUserCode(dAttrUserCode, entity.attributes, dAttrValue);
+				}
+
+			}
+
+			return entity;
+
+		};
+
         vm.bookInstrument = function () {
 
             return new Promise(function (resolve, reject) {
                 instrumentTypeService.bookInstrument(vm.entity.instrument_type).then(function (data) {
 
-                    vm.entity = data.instrument
+					Object.keys(data.instrument).forEach(function (prop) {
+
+						if (prop === 'attributes') {
+
+							data.instrument.attributes.forEach(function (dAttr) {
+
+								vm.entity = setDynamicAttrValue(vm.entity, dAttr);
+
+							});
+
+						}
+						else if (['accrual_calculation_schedules', 'event_schedules'].indexOf(prop) < 0) {
+
+							const notInsideUserTab = !!!entityEditorHelper.getLocationOfAttributeInsideUserTabs(prop, vm.tabs);
+
+							if (notInsideUserTab && (data.instrument[prop] || data.instrument[prop] === 0)) {
+								vm.entity[prop] = data.instrument[prop];
+							}
+
+						}
+
+					});
+
+					vm.evEditorEventService.dispatchEvent(evEditorEvents.ENTITY_UPDATED);
 
                     resolve()
 

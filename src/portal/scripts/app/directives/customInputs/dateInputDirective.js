@@ -462,14 +462,14 @@
 
                     scope.$watch("model", function () {
                         //if (scope.model && scope.model.value) {
-                        if (dateChangedFromOutside) { // don't execute if date changed by input itself
+                        if (dateChangedFromOutside) { // don't execute if date was entered into input manually
 
                             if (scope.model) {
 
                                 if (scope.model !== scope.dateValue) {
 
                                     scope.error = "";
-                                    scope.dateValue = JSON.parse(JSON.stringify(scope.model));
+									scope.dateValue = scope.model;
                                     prevDateValue = scope.dateValue;
 
                                     if (!moment(scope.dateValue, "YYYY-MM-DD", true).isValid()) {

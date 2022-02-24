@@ -6,7 +6,7 @@
 
             <div layout="row" class="m-b-13">
 
-                <dropdown-select label="Pricing Currency"
+                <!--<dropdown-select label="Pricing Currency"
                                  model="vm.entity.pricing_currency"
                                  placeholder-text="Pricing Currency"
                                  menu-options="vm.currencies"
@@ -15,7 +15,15 @@
 
                                  class="p-r-8"
                                  style="width: 306px">
-                </dropdown-select>
+                </dropdown-select>-->
+                <div class="ev-data-field" style="width: 306px">
+                    <bind-field-control entity-type="vm.entityType"
+                                        entity="vm.entity"
+                                        entity-change="vm.onEntityChange(fieldKey, fieldType)"
+                                        ev-editor-data-service="vm.evEditorDataService"
+                                        ev-editor-event-service="vm.evEditorEventService"
+                                        item="vm.pricingCurrencyAttr"></bind-field-control>
+                </div>
                 <!--                on-change-callback="vm.entityChange()"-->
                 <!--                <dropdown-select class="p-r-8" label="Co-directional exposure currency"
                                              model="vm.entity.co_directional_exposure_currency"
