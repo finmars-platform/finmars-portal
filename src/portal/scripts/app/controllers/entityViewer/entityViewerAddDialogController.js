@@ -1916,7 +1916,7 @@
 
                 } else {
 
-					vm.typeSelectorChange = typeSelectorChangeFns[vm.entityType];
+					vm.typeSelectorChange = vm.sharedLogic.typeSelectorChangeFns[vm.entityType];
                     $scope.$apply();
 
                 }
