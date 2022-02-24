@@ -60,8 +60,31 @@
             </div>
 
             <div class="m-t-16">
-                <md-button class="md-raised" data-ng-click="vm.addProcedure($event)">Add New
-                </md-button>
+
+                <md-menu>
+                    <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
+                        Add New
+                    </md-button>
+
+                    <md-menu-content>
+                        <md-menu-item>
+                            <md-button class="md-raised"
+                                       data-ng-click="vm.addProcedure($event)">Add Blank
+                            </md-button>
+                        </md-menu-item>
+
+                        <md-menu-item>
+                            <md-button class="md-raised"
+                                       package-manager-button
+                                       content-type="'procedures.requestdatafileprocedure'">
+                                Select from List
+                            </md-button>
+                        </md-menu-item>
+
+                    </md-menu-content>
+                </md-menu>
+
+
             </div>
 
         </div>

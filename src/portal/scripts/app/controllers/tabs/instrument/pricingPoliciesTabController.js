@@ -100,7 +100,7 @@
                             selectorOptions: [],
                         },
                         styles: {
-                            'grid-table-cell-elem': {'width': '30%'}
+                            'grid-table-cell-elem': {'width': '20%'}
                         },
                         classes: 'pricing-scheme'
                     },
@@ -114,7 +114,7 @@
                             value: null
                         },
                         styles: {
-                            'grid-table-cell-elem': {'width': '30%'}
+                            'grid-table-cell-elem': {'width': '40%'}
                         },
                         classes: 'pricing-scheme-clarification gt-cell-plain-text'
                     },

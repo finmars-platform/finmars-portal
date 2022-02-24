@@ -576,7 +576,8 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                     };
 
                     editEntity(actionData.event, locals);
-                } else if (action === 'edit_account') {
+                }
+                else if (action === 'edit_account') {
 
                     var locals = {
                         entityType: 'account',
@@ -586,7 +587,8 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     editEntity(actionData.event, locals);
 
-                } else if (action === 'edit_portfolio') {
+                }
+                else if (action === 'edit_portfolio') {
 
                     var locals = {
                         entityType: 'portfolio',
@@ -596,7 +598,8 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     editEntity(actionData.event, locals);
 
-                } else if (action === 'edit_currency') {
+                }
+                else if (action === 'edit_currency') {
 
                     var locals = {
                         entityType: 'currency',
@@ -606,7 +609,8 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     editEntity(actionData.event, locals);
 
-                } else if (action === 'edit_pricing_currency') {
+                }
+                else if (action === 'edit_pricing_currency') {
 
                     var locals = {
                         entityType: 'currency',
@@ -616,7 +620,8 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     editEntity(actionData.event, locals);
 
-                } else if (action === 'edit_accrued_currency') {
+                }
+                else if (action === 'edit_accrued_currency') {
 
                     var locals = {
                         entityType: 'currency',
@@ -626,7 +631,8 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     editEntity(actionData.event, locals);
 
-                } else if (action === 'edit_price') {
+                }
+                else if (action === 'edit_price') {
 
                     var filters = {
                         instrument: actionData.object['instrument.id'],
@@ -677,7 +683,8 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                     })
 
 
-                } else if (action === 'edit_fx_rate') {
+                }
+                else if (action === 'edit_fx_rate') {
 
                     var filters = {
                         currency: actionData.object['currency.id'],
@@ -729,7 +736,8 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     })
 
-                } else if (action === 'edit_pricing_currency_price' && actionData.object.id) {
+                }
+                else if (action === 'edit_pricing_currency_price' && actionData.object.id) {
 
                     var filters = {
                         currency: actionData.object['instrument.pricing_currency'],
@@ -776,7 +784,8 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     })
 
-                } else if (action === 'edit_accrued_currency_fx_rate' && actionData.object.id) {
+                }
+                else if (action === 'edit_accrued_currency_fx_rate' && actionData.object.id) {
 
                     var filters = {
                         currency: actionData.object['instrument.accrued_currency.id'],
@@ -824,7 +833,8 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     })
 
-                } else if (action === 'edit_pricing_currency_fx_rate' && actionData.object.id) {
+                }
+                else if (action === 'edit_pricing_currency_fx_rate' && actionData.object.id) {
 
                     var filters = {
                         currency: actionData.object['instrument.pricing_currency.id'],
@@ -872,7 +882,8 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     })
 
-                } else if (action === 'book_transaction') {
+                }
+                else if (action === 'book_transaction') {
 
                     var locals = {
                         entityType: 'complex-transaction',
@@ -892,7 +903,8 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     createEntity(actionData.event, locals);
 
-                } else if (action === 'book_transaction_specific') {
+                }
+                else if (action === 'book_transaction_specific') {
 
                     const contextData = getContextDataForRowAction(reportOptions, actionData.object);
 
@@ -910,7 +922,8 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     createEntity(actionData.event, locals);
 
-                } else if (action === 'rebook_transaction') {
+                }
+                else if (action === 'rebook_transaction') {
 
                     var complex_transaction_id = actionData.object['complex_transaction.id'] || actionData.object['complex_transaction']
 

@@ -1141,6 +1141,10 @@
 
             vm.items = [];
             var mappingItems = [];
+            
+            if (data.selectAll) {
+                vm.toggleSelectAll();
+            }
 
             vm.sections.forEach(function (item) {
 

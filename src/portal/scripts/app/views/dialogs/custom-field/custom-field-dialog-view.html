@@ -20,9 +20,30 @@
                     </div>
                     <div layout="row">
                         <div layout="row" flex="50" layout-align="start center">
-                            <md-button class="md-raised" data-ng-click="vm.addCustomField($event)">
-                                ADD NEW
-                            </md-button>
+
+                            <md-menu>
+                                <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
+                                    Add New
+                                </md-button>
+
+                                <md-menu-content>
+                                    <md-menu-item>
+                                        <md-button class="md-raised"
+                                                   data-ng-click="vm.addCustomField($event)">Add Blank
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item>
+                                        <md-button class="md-raised"
+                                                   package-manager-button
+                                                   content-type="vm.customFieldContentType">
+                                            Select from List
+                                        </md-button>
+                                    </md-menu-item>
+
+                                </md-menu-content>
+                            </md-menu>
+
                         </div>
                         <div layout="row" flex="50" layout-align="end center">
                             <md-button class="md-raised md-primary" data-ui-sref="app.portal.reports.balance-report">

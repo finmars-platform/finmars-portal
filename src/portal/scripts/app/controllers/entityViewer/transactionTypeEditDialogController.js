@@ -406,7 +406,7 @@
                         vm.readyStatus.layout = true;
                         $scope.$apply();
 
-                        vm.setStateInActionsControls();
+                        sharedLogic.setStateInActionsControls();
 
                         res();
 
@@ -737,7 +737,7 @@
         vm.save = function () {
 
             var saveTTypePromise = new Promise(function (resolve, reject) {
-
+				console.log("inputsDeletion.save entity", JSON.parse(angular.toJson(vm.entity)));
                 var entityToSave = vm.updateEntityBeforeSave(vm.entity);
 
                 /* var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
@@ -748,7 +748,7 @@
                 actionsErrors = actionsErrors.concat(inputsErrors);
 
                 var entityErrors = sharedLogic.checkEntityForEmptyFields(entityToSave);
-
+				console.log("inputsDeletion.save errors", JSON.parse(JSON.stringify(actionsErrors)), JSON.parse(JSON.stringify(entityErrors)));
                 if (actionsErrors.length || entityErrors.length) {
 
                     $mdDialog.show({
@@ -1637,36 +1637,7 @@
 
         };
 
-        vm.getActionTypeName = function (action) {
-
-            if (action.instrument) {
-                return "Create Instrument";
-            }
-
-            if (action.transaction) {
-                return "Create Transaction";
-            }
-
-            if (action.instrument_factor_schedule) {
-                return "Create Factor Schedule";
-            }
-
-            if (action.instrument_manual_pricing_formula) {
-                return "Create Manual Pricing Formula";
-            }
-
-            if (action.instrument_accrual_calculation_schedules) {
-                return "Create Accrual Calculation Schedules";
-            }
-
-            if (action.instrument_event_schedule) {
-                return "Create Event Schedule";
-            }
-
-            if (action.instrument_event_schedule_action) {
-                return "Create Event Schedule Action"
-            }
-        };
+        vm.getActionTypeName = sharedLogic.getActionTypeName;
 
         vm.preventSpace = function ($event) {
 
@@ -1735,7 +1706,7 @@
             }
         ];
 
-        vm.setStateInActionsControls = function () {
+        /* vm.setStateInActionsControls = function () {
 
             vm.actionsKeysList = [
                 'instrument',
@@ -1769,7 +1740,7 @@
 
             });
 
-        };
+        }; */
 
 
         /* var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
@@ -1837,53 +1808,7 @@
 
         };
 
-        vm.resetPropertyBtn = function (item, propertyName, fieldName) {
-
-            item[propertyName][fieldName] = null;
-            item[propertyName][fieldName + '_input'] = null;
-
-            if (item[propertyName].hasOwnProperty(fieldName + '_phantom')) {
-                item[propertyName][fieldName + '_phantom'] = null;
-            }
-
-            item[propertyName][fieldName + '_toggle'] = !item[propertyName][fieldName + '_toggle'];
-
-            if (item[propertyName][fieldName + '_toggle'] && !item[propertyName][fieldName]) {
-
-                setDefaultValueForRelation(item, propertyName, fieldName);
-
-                /*vm.loadRelation(relationType).then(function (data) {
-
-                    var defaultPropertyName = 'name';
-                    if (fieldName === 'price_download_scheme') {
-                        defaultPropertyName = 'user_code';
-                    }
-
-                    vm.relationItems[relationType].forEach(function (relation) {
-
-                        if (relation[defaultPropertyName] === "-" || relation[defaultPropertyName] === 'Default') {
-                            item[propertyName][fieldName] = relation.id;
-
-                            item[propertyName][fieldName + '_object'] = {};
-                            item[propertyName][fieldName + '_object']['name'] = relation[defaultPropertyName];
-
-                        }
-
-                    });
-
-                    $scope.$apply(function () {
-                        setTimeout(function () {
-                            $('body').find('.md-select-search-pattern').on('keydown', function (ev) {
-                                ev.stopPropagation();
-                            });
-                        }, 100);
-                    });
-
-                });*/
-
-            }
-
-        };
+		vm.resetPropertyBtn = sharedLogic.resetPropertyBtn;
 
         vm.findInputs = function (entity) {
 
@@ -2003,7 +1928,7 @@
                 ],
                 'instrument': [
                     'accrued_currency', 'accrued_currency_input', 'accrued_multiplier',
-                    'daily_pricing_model', 'daily_pricing_model_input', 'default_accrued',
+                    'pricing_condition', 'pricing_condition_input', 'default_accrued',
                     'default_price', 'instrument_type', 'instrument_type_input', 'maturity_date',
                     'maturity_price', 'name', 'notes', 'payment_size_detail', 'payment_size_detail_input',
                     'price_download_scheme', 'price_download_scheme_input', 'price_multiplier',
@@ -2023,9 +1948,9 @@
                     'button_position', 'event_schedule', 'event_schedule_input', 'event_schedule_phantom', 'is_book_automatic',
                     'is_sent_to_pending', 'text', 'transaction_type_from_instrument_type'
                 ],
-                'instrument_manual_pricing_formula': [
+                /* 'instrument_manual_pricing_formula': [
                     'expr', 'instrument', 'instrument_input', 'instrument_phantom', 'notes', 'pricing_policy', 'pricing_policy_input'
-                ],
+                ], */
                 'instrument_factor_schedule': [
                     'instrument', 'instrument_input', 'instrument_phantom', 'effective_date', 'factor_value'
                 ],
@@ -2753,7 +2678,7 @@
             "strategy1": null,
             "strategy2": null,
             "strategy3": null,
-            "daily_pricing_model": null,
+            "pricing_condition": null,
             "payment_size_detail": null,
             "pricing_policy": null,
             "periodicity": null,
@@ -2771,7 +2696,7 @@
             "account_object": null,
             "instrument_object": null,
             "instrument_type_object": null,
-            "daily_pricing_model_object": null,
+            "pricing_condition_object": null,
             "payment_size_detail_object": null,
             "currency_object": null,
             "counterparty_object": null,
@@ -2807,7 +2732,7 @@
             "strategy1": null,
             "strategy2": null,
             "strategy3": null,
-            "daily_pricing_model": null,
+            "pricing_condition": null,
             "payment_size_detail": null,
             "pricing_policy": null,
             "periodicity": null,
@@ -2825,7 +2750,7 @@
             "account_object": null,
             "instrument_object": null,
             "instrument_type_object": null,
-            "daily_pricing_model_object": null,
+            "pricing_condition_object": null,
             "payment_size_detail_object": null,
             "currency_object": null,
             "counterparty_object": null,

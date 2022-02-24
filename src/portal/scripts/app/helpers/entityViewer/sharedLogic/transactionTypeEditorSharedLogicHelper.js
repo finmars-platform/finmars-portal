@@ -54,8 +54,8 @@
         const contextProperties = {
             'instruments.instrument': [
                 {
-                    id: 'instrument',
-                    name: 'Instrument'
+                    id: 'context_instrument',
+                    name: 'Context Instrument'
                 }
 
                 // TODO is not in use now
@@ -70,46 +70,46 @@
             ],
             'currencies.currency': [
                 {
-                    id: 'pricing_currency',
-                    name: 'Pricing Currency'
+                    id: 'context_pricing_currency',
+                    name: 'Context Pricing Currency'
                 },
                 {
-                    id: 'accrued_currency',
-                    name: 'Accrued Currency'
+                    id: 'context_accrued_currency',
+                    name: 'Context Accrued Currency'
                 },
                 {
-                    id: 'currency',
-                    name: 'Currency'
+                    id: 'context_currency',
+                    name: 'Context Currency'
                 }
             ],
             'portfolios.portfolio': [
                 {
-                    id: 'portfolio',
-                    name: 'Portfolio'
+                    id: 'context_portfolio',
+                    name: 'Context Portfolio'
                 }
             ],
             'accounts.account': [
                 {
-                    id: 'account',
-                    name: 'Account'
+                    id: 'context_account',
+                    name: 'Context Account'
                 }
             ],
             'strategies.strategy1': [
                 {
-                    id: 'strategy1',
-                    name: 'Strategy 1'
+                    id: 'context_strategy1',
+                    name: 'Context Strategy 1'
                 }
             ],
             'strategies.strategy2': [
                 {
-                    id: 'strategy2',
-                    name: 'Strategy 2'
+                    id: 'context_strategy2',
+                    name: 'Context Strategy 2'
                 }
             ],
             'strategies.strategy3': [
                 {
-                    id: 'strategy3',
-                    name: 'Strategy 3'
+                    id: 'context_strategy3',
+                    name: 'Context Strategy 3'
                 }
             ]
         }
@@ -146,6 +146,32 @@
 
         };
 
+		// const useIdForRelList = ['pricing_condition', 'payment_size_detail', 'accrual_calculation_model', 'notification_class', 'event_class', 'periodicity'];
+
+		const formatRelationForSelector = function (key, relationsList) {
+
+			if (key === 'transaction_class') { // relations with specific properties to use as 'id' or (and) 'name'
+
+				return relationsList.map(rItem => {
+					return {id: rItem.id, name: rItem.name};
+				});
+
+			}
+
+			// const propForId = useIdForRelList.includes(key) ? 'id' : 'user_code';
+
+			return relationsList.map(rItem => {
+
+				return {
+					id: rItem.user_code,
+					name: rItem.hasOwnProperty('short_name') ? rItem.short_name : rItem.name
+				};
+
+			});
+
+		};
+		// needed because back does not send _object for selected transaction_class
+
 		const loadRelation = function (field, noScopeUpdate) {
 
 			field = field.replace(/-/g, "_"); // replace all '_' with '-'
@@ -153,17 +179,12 @@
 			// if (!viewModel.relationItems.hasOwnProperty(field)) {
 			if (!loadedRelationsList.includes(field)) {
 
-				return new Promise(function (resolve, reject) {
+				return new Promise(async function (resolve, reject) {
 
 					fieldResolverService.getFields(field).then(function (data) {
 
-						viewModel.relationItems[field] = data.data.map(function(item){
+						viewModel.relationItems[field] = formatRelationForSelector(field, data.data);
 
-                            item._id  = item.id
-                            item.id = item.user_code
-
-						    return item
-                        });
 						loadedRelationsList.push(field);
 
 						if (noScopeUpdate) {
@@ -171,7 +192,8 @@
 						}
 
 						resolve(viewModel.relationItems[field]);
-					})
+
+					});
 
 				});
 
@@ -729,7 +751,7 @@
                 strategy1: null,
                 strategy2: null,
                 strategy3: null,
-                daily_pricing_model: null,
+				pricing_condition: null,
                 payment_size_detail: null,
                 price_download_scheme: null,
                 pricing_policy: null,
@@ -989,14 +1011,14 @@
                         removeInputFromActions(inputName);
 
                     });
-
+					console.log("inputsDeletion.deleteInputsRows selectedRows", selectedRows);
                     getInputsForLinking();
                     updateLinkedInputsOptionsInsideGridTable();
 
                     // removeInputsFromLinkedInputs();
                     gtEventService.dispatchEvent(gridTableEvents.ROW_SELECTION_TOGGLED);
-
-                    // $scope.$apply();
+					console.log("inputsDeletion.deleteInputsRows entity", viewModel.entity);
+					// $scope.$apply();
 
                 }
 
@@ -1470,13 +1492,134 @@
 			if (ecosystemDefaultData.hasOwnProperty(defaultValueKey)) {
 
 				var defaultName = ecosystemDefaultData[defaultValueKey + '_object'][nameProperty];
+				var defaultUserCode = ecosystemDefaultData[defaultValueKey + '_object']['user_code'];
 
-				actionData[propertyName][fieldName] = ecosystemDefaultData[defaultValueKey];
+				actionData[propertyName][fieldName] = defaultUserCode;
 
 				// needed for displaying default value after turning on 'relation' field
 				actionData[propertyName][fieldName + '_object'] = {};
 				actionData[propertyName][fieldName + '_object'][nameProperty] = defaultName;
-				actionData[propertyName][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
+				actionData[propertyName][fieldName + '_object']['user_code'] = defaultUserCode;
+
+			}
+
+		};
+
+		const setStateInActionsControls = function () {
+
+			const actionsKeysList = [
+				'instrument',
+				'transaction',
+				'instrument_factor_schedule',
+				// 'instrument_manual_pricing_formula',
+				'instrument_accrual_calculation_schedules',
+				'instrument_event_schedule',
+				'instrument_event_schedule_action'
+			];
+
+			viewModel.entity.actions.forEach(function (action) {
+
+				var keys;
+
+				/* actionsKeysList.forEach(function (actionKey) {
+
+					if (action[actionKey] !== null) {
+						keys = Object.keys(action[actionKey]);
+
+						keys.forEach(function (key) {
+							if (action[actionKey].hasOwnProperty(key + '_input')) {
+								if (action[actionKey][key] !== "") {
+									action[actionKey][key + '_toggle'] = true;
+								}
+							}
+						})
+					}
+
+				}) */
+
+				for (const actionKey of actionsKeysList) {
+
+					if (action[actionKey] !== null) {
+
+						keys = Object.keys(action[actionKey]);
+
+						keys.forEach(function (key) {
+
+							if (action[actionKey].hasOwnProperty(key + '_input')) {
+
+								const relationSelNotEmpty = !!action[actionKey][key];
+
+								if (relationSelNotEmpty) {
+									action[actionKey][key + '_toggle'] = true;
+								}
+
+							}
+
+						})
+
+						break;
+
+					}
+
+				}
+
+			});
+
+		};
+
+		const getActionTypeName = function (action) {
+
+			if (action.instrument) {
+				return "Create Instrument";
+			}
+
+			else if (action.transaction) {
+				return "Create Transaction";
+			}
+
+			else if (action.instrument_factor_schedule) {
+				return "Create Factor Schedule";
+			}
+
+			else if (action.instrument_manual_pricing_formula) {
+				return "This action obsolete. Please delete it.";
+                // return "Create Manual Pricing Formula";
+            }
+
+			else if (action.instrument_accrual_calculation_schedules) {
+				return "Create Accrual Calculation Schedules";
+			}
+
+			else if (action.instrument_event_schedule) {
+				return "Create Event Schedule";
+			}
+
+			else if (action.instrument_event_schedule_action) {
+				return "Create Event Schedule Action"
+			}
+		};
+
+		/**
+		 *
+		 * @param item {Object} - entity
+		 * @param propertyName {string} - property with data that matches action
+		 * @param fieldName {string} - property for field inside action
+		 */
+		const resetPropertyBtn = function (item, propertyName, fieldName) {
+
+			item[propertyName][fieldName] = null;
+			item[propertyName][fieldName + '_input'] = null;
+			delete item[propertyName][fieldName + '_object'];
+
+			if (item[propertyName].hasOwnProperty(fieldName + '_phantom')) {
+				item[propertyName][fieldName + '_phantom'] = null;
+			}
+
+			item[propertyName][fieldName + '_toggle'] = !item[propertyName][fieldName + '_toggle'];
+
+			if (item[propertyName][fieldName + '_toggle'] && !item[propertyName][fieldName]) {
+
+				setDefaultValueForRelation(item, propertyName, fieldName);
 
 			}
 
@@ -1610,6 +1753,9 @@
 			loadEcosystemDefaults: loadEcosystemDefaults,
 			getTransactionUserFields: getTransactionUserFields,
 
+			setStateInActionsControls: setStateInActionsControls,
+			getActionTypeName: getActionTypeName,
+			resetPropertyBtn: resetPropertyBtn,
 			appendFromTemplate: appendFromTemplate,
             initAfterMainDataLoaded: initAfterMainDataLoaded
         }

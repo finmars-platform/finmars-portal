@@ -1,5 +1,6 @@
 <div>
     <div class="transaction-type-actions-tab-view">
+
         <v-accordion class="vAccordion--default" multiple control="vm.accordion">
 
             <v-pane data-ng-repeat="item in vm.entity.actions track by $index" expanded="item.isPaneExpanded">
@@ -73,10 +74,11 @@
                          data-ng-include="'views/tabs/transaction-type/actions/instrument-factor-schedule-action-view.html'">
                     </div>
 
-                    <div data-ng-if="item.instrument_manual_pricing_formula != null"
+                    <!--<div data-ng-if="item.instrument_manual_pricing_formula != null"
                          data-ng-include="'views/tabs/transaction-type/actions/instrument-manual-pricing-formula-action-view.html'">
 
-                    </div>
+                    </div>-->
+                    <div data-ng-if="item.instrument_manual_pricing_formula != null">This action obsolete. Please delete it.</div>
 
                     <div data-ng-if="item.instrument_accrual_calculation_schedules != null"
                          data-ng-include="'views/tabs/transaction-type/actions/instrument-accrual-calculation-schedules-action-view.html'">

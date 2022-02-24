@@ -64,6 +64,7 @@
 
         vm.hasEnabledStatus = true;
         vm.entityStatus = '';
+		vm.allowFormLayoutEdition = true;
         vm.evEditorEvent = null;
 
         if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
@@ -1988,13 +1989,22 @@
         vm.bookInstrument = function () {
 
             return new Promise(function (resolve, reject) {
-                instrumentTypeService.bookInstrument(vm.entity.instrument_type).then(function (data) {
+                /* instrumentTypeService.bookInstrument(vm.entity.instrument_type).then(function (data) {
 
-                    vm.entity = data.instrument
+                	Object.keys(data.instrument).forEach(function (property) {
+
+                		if (!['attributes', 'accrual_calculation_schedules', 'event_schedules'].includes(property)) {
+
+                			vm.entity[property] = data.instrument[property];
+
+						}
+
+					});
 
                     resolve()
 
-                })
+                }) */
+				resolve();
 
             })
 
