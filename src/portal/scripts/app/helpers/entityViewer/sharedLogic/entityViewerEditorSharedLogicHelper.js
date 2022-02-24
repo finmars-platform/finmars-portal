@@ -351,7 +351,7 @@
 
             let readyStatus = true;
 
-            Object.keys(viewModel.readyStatus).forEach(key => { // checking that all properties of viewModel.readyStatus have value true
+            Object.keys(viewModel.readyStatus).forEach(key => { // checking that all properties of viewModel.readyStatus have value set to true
             	readyStatus = readyStatus && viewModel.readyStatus[key];
 			});
 
@@ -803,7 +803,7 @@
 
 			if (viewModel.entityType === 'instrument') await applyInstrumentUserFieldsAliases(tabs);
 
-			evHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
+			// evHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
 
 			/* if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
 
@@ -938,7 +938,7 @@
 
 				Promise.allSettled(promises).then(async function (testData) {
 
-					evHelperService.transformItem(viewModel.entity, viewModel.attributeTypes); // needed to go after synchronous getAttributeTypes()
+					// evHelperService.transformItem(viewModel.entity, viewModel.attributeTypes); // needed to go after synchronous getAttributeTypes()
 
 					if (viewModel.getEntityPricingSchemes) viewModel.getEntityPricingSchemes(); // in entityViewerFormsPreviewDialogController.js there is no pricing tab
 
@@ -951,9 +951,6 @@
 					};
 
 					if (viewModel.fixedAreaPopup) resolveData.fixedAreaData = getFieldsForFixedAreaPopup();  // in entityViewerFormsPreviewDialogController.js there is no pricing fixed area
-
-					viewModel.readyStatus.layout = true;
-					viewModel.readyStatus.entity = true;
 
 					resolve(resolveData);
 

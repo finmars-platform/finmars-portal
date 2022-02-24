@@ -140,7 +140,9 @@
 
         vm.typeSelectorChange = null;
 		/** Tracking fields that have been changed by user */
-		var changedEntityProperties = {};
+		var changedEntityProperties = {
+			attributes: {}
+		};
 
         var formLayoutFromAbove = data.editLayout;
 
@@ -175,8 +177,8 @@
         };
 
         vm.entityTabsMenuTplt = vm.sharedLogic.entityTabsMenuTplt;
-        vm.entityTabsMenuPopupData = {viewModel: vm}
-        vm.entityTablePopupClasses = "border-radius-2"
+        vm.entityTabsMenuPopupData = {viewModel: vm};
+        vm.entityTablePopupClasses = "border-radius-2";
         vm.onPopupSaveCallback = vm.sharedLogic.onPopupSaveCallback;
         vm.onFixedAreaPopupCancel = vm.sharedLogic.onFixedAreaPopupCancel;
         // < Victor 20020.11.20 #59: fields below needs for new design an fixed area popup >
@@ -792,116 +794,6 @@
 
         vm.manageAttrs = vm.sharedLogic.manageAttributeTypes;
 
-        /* vm.getFormLayout = async function () {
-
-			var editLayout;
-			var gotEditLayout = true;
-
-			if (formLayoutFromAbove) {
-				editLayout = formLayoutFromAbove;
-
-			} else {
-
-				try {
-					editLayout = await uiService.getEditLayoutByKey(vm.entityType);
-
-				} catch (error) {
-					gotEditLayout = false;
-				}
-
-			}
-
-			if (gotEditLayout &&
-				editLayout.results.length && editLayout.results[0].data) {
-
-				dataConstructorLayout = JSON.parse(JSON.stringify(editLayout.results[0]));
-
-				if (Array.isArray(editLayout.results[0].data)) {
-					vm.tabs = editLayout.results[0].data;
-
-				} else {
-
-					vm.tabs = editLayout.results[0].data.tabs;
-					vm.fixedArea = editLayout.results[0].data.fixedArea;
-
-				}
-
-			} else {
-
-				vm.tabs = uiService.getDefaultEditLayout(vm.entityType)[0].data.tabs;
-				vm.fixedArea = uiService.getDefaultEditLayout(vm.entityType)[0].data.fixedArea;
-
-			}
-
-			if (vm.tabs.length && !vm.tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
-				vm.tabs.forEach(function (tab, index) {
-					tab.tabOrder = index;
-				});
-			}
-
-			if (vm.openedIn === 'big-drawer') {
-
-				// Victor 2020.11.20 #59 Fixed area popup
-				if (vm.fixedArea && vm.fixedArea.showByDefault) {
-					vm.showByDefault = vm.fixedArea.showByDefault;
-					vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
-				}
-
-				const columns = evHelperService.getEditLayoutMaxColumns(vm.tabs);
-
-				if (vm.fixedAreaPopup.tabColumns !== columns) {
-
-					vm.fixedAreaPopup.tabColumns = columns;
-					vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
-
-					const bigDrawerWidth = evHelperService.getBigDrawerWidth(vm.fixedAreaPopup.tabColumns);
-					$bigDrawer.setWidth(bigDrawerWidth);
-
-					if (vm.fixedAreaPopup.tabColumns !== 6) {
-						bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-none');
-						bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-block');
-					} else {
-						bigDrawerResizeButton && bigDrawerResizeButton.classList.remove('display-block');
-						bigDrawerResizeButton && bigDrawerResizeButton.classList.add('display-none');
-					}
-
-				}
-				// <Victor 2020.11.20 #59 Fixed area popup>
-
-			} else {
-				vm.fixedAreaPopup.tabColumns = 6 // in dialog window there are always 2 fields outside of popup
-			}
-
-			vm.getAttributeTypes().then(function (value) {
-
-				evHelperService.transformItem(vm.entity, vm.attributeTypes);
-				//vm.generateAttributesFromLayoutFields();
-				vm.getEntityPricingSchemes();
-
-				mapAttributesAndFixFieldsLayout();
-
-				vm.readyStatus.layout = true;
-				vm.readyStatus.entity = true;
-				// vm.readyStatus.permissions = true;
-
-				console.log("vm.entity", vm.entity);
-
-				$scope.$apply();
-
-			});
-
-        };
-
-        vm.getAttributeTypes = function () {
-            return attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
-                vm.attributeTypes = data.results;
-            });
-        };
-
-        vm.checkReadyStatus = function () {
-            return vm.readyStatus.layout && vm.readyStatus.entity && vm.readyStatus.permissions
-        }; */
-
         vm.checkReadyStatus = vm.sharedLogic.checkReadyStatus;
         vm.bindFlex = vm.sharedLogic.bindFlex;
         vm.checkFieldRender = vm.sharedLogic.checkFieldRender;
@@ -936,7 +828,7 @@
 
             console.log('updateEntityBeforeSave vm.entity', vm.entity);
 
-            if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
+            /* if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
 
                 vm.entity.attributes = [];
 
@@ -947,7 +839,7 @@
                     vm.entity.attributes.push(entityEditorHelper.appendAttribute(attributeType, value));
 
                 });
-            }
+            } */
 
             vm.entity.object_permissions = [];
             console.log('vm.groups', vm.groups);
@@ -1016,7 +908,7 @@
 
                     propsToSetList.forEach(function (prop) {
 
-                        if (fullInstrType[prop] || fullInstrType[prop] === 0 &&
+                        if ((fullInstrType[prop] || fullInstrType[prop] === 0) &&
                             !entity[prop] && entity[prop] !== 0) {
 
                             entity[prop] = fullInstrType[prop];
@@ -1171,6 +1063,7 @@
 
                         vm.entity = {...vm.entity, ...responseData};
                         vm.entity.$_isValid = true;
+						vm.evEditorEventService.dispatchEvent(evEditorEvents.ENTITY_UPDATED);
 
                         const responseObj = {
                             status: 'edit',
@@ -1313,6 +1206,49 @@
 
         };
 
+		/**
+		 * Set default value for empty dynamic attributes of instrument from instrument type.
+		 *
+		 * @param entity {Object}
+		 * @param dynamicAttributeData {Object}
+		 */
+		const setDynamicAttrValue = function (entity, dynamicAttributeData) {
+
+			var dAttrUserCode = dynamicAttributeData.attribute_type_object.user_code;
+			var dAttrInsideEntity = entity.attributes.find(entityDAttr => {
+				return entityDAttr.attribute_type_object.user_code === dAttrUserCode;
+			});
+
+			var dAttrValue = evHelperService.getDynamicAttrValue(dynamicAttributeData);
+			var dAttrInsideEntityVal = evHelperService.getDynamicAttrValue(dAttrInsideEntity);
+			var notInsideUserTab = !!!entityEditorHelper.getLocationOfAttributeInsideUserTabs(dAttrUserCode, vm.tabs);
+
+			var changedByUser = changedEntityProperties.attributes[dAttrUserCode] && changedEntityProperties.attributes[dAttrUserCode].byUser;
+			var fieldHasNoUserValue = !((dAttrInsideEntityVal || dAttrInsideEntityVal === 0) && changedByUser);
+
+			var acceptsInstrTypeVal = notInsideUserTab || fieldHasNoUserValue;
+
+			if ((dAttrValue || dAttrValue === 0) && acceptsInstrTypeVal) {
+
+				if (dynamicAttributeData.attribute_type_object.value_type === 30) {
+
+					const EDAIndex = entity.attributes.findIndex(entityDAttr => {
+						return entityDAttr.attribute_type_object.user_code === dAttrUserCode;
+					});
+
+					entity.attributes[EDAIndex].classifier = dynamicAttributeData.classifier;
+					entity.attributes[EDAIndex].classifier_object = dynamicAttributeData.classifier_object;
+
+				} else {
+					entity.attributes = evHelperService.setDynamicAttrValueByUserCode(dAttrUserCode, entity.attributes, dAttrValue);
+				}
+
+			}
+
+			return entity;
+
+		};
+
         vm.bookInstrument = function () {
 
             return new Promise(function (resolve, reject) {
@@ -1323,23 +1259,22 @@
 
 						if (prop === 'attributes') {
 
-							data.instrument[prop].forEach(function (attrType) {
+							data.instrument.attributes.forEach(function (dAttr) {
 
-								// Finish after SZ changed back
-
-								/* var atProp = attrType.attribute_type_object.user_code;
-								var atVal = evHelperService.getDynamicAttrValue(attrType);
-
-								vm.entity[atProp] = atVal; */
+								vm.entity = setDynamicAttrValue(vm.entity, dAttr);
 
 							});
 
 						}
 						else if (['accrual_calculation_schedules', 'event_schedules'].indexOf(prop) < 0) {
 
-							var notChangeByUser = !changedEntityProperties[prop] || !changedEntityProperties[prop].byUser;
+							var changedByUser = changedEntityProperties[prop] && changedEntityProperties[prop].byUser;
+							var fieldHasNoUserValue = !(!!(vm.entity[prop] || vm.entity[prop] === 0) && changedByUser);
+							var notInsideUserTab = !!!entityEditorHelper.getLocationOfAttributeInsideUserTabs(prop, vm.tabs);
 
-							if (!vm.entity[prop] && vm.entity[prop] !== 0 && notChangeByUser) {
+							var acceptsInstrTypeVal = notInsideUserTab || fieldHasNoUserValue;
+
+							if ((data.instrument[prop] || data.instrument[prop] === 0) && acceptsInstrTypeVal) {
 
 								vm.entity[prop] = data.instrument[prop];
 
@@ -1349,7 +1284,7 @@
 
 					});
 
-                    console.log('vm.bookInstrument.entity', vm.entity)
+                    vm.evEditorEventService.dispatchEvent(evEditorEvents.ENTITY_UPDATED);
 
                     resolve()
 
@@ -1361,7 +1296,7 @@
 
 		var instrumentPricingCurrencyChanged = false; // only once
 
-        vm.onEntityChange = function (fieldKey) {
+        vm.onEntityChange = function (fieldKey, fieldType) {
 
             if (fieldKey) {
 
@@ -1370,11 +1305,47 @@
                     attrsTypes: vm.attributeTypes
                 }
 
-				if (!changedEntityProperties[fieldKey]) {
-					changedEntityProperties[fieldKey] = {};
-				}
+                switch (fieldType) {
 
-				changedEntityProperties[fieldKey].byUser = true;
+                	case 'systemAttribute':
+
+						if (!changedEntityProperties[fieldKey]) {
+							changedEntityProperties[fieldKey] = {};
+						}
+
+						changedEntityProperties[fieldKey].byUser = true;
+
+						break;
+
+					case 'dynamicAttribute':
+
+						if (!changedEntityProperties.attributes) {
+							changedEntityProperties.attributes = {};
+						}
+
+						if (!changedEntityProperties.attributes[fieldKey]) {
+							changedEntityProperties.attributes[fieldKey] = {};
+						}
+
+						changedEntityProperties.attributes[fieldKey].byUser = true;
+
+						break;
+
+					case 'userInput':
+
+						if (!changedEntityProperties.values) {
+							changedEntityProperties.values = {};
+						}
+
+						if (!changedEntityProperties.values[fieldKey]) {
+							changedEntityProperties.values[fieldKey] = {};
+						}
+
+						changedEntityProperties.values[fieldKey].byUser = true;
+
+						break;
+
+				}
 
                 entityEditorHelper.checkTabsForErrorFields(fieldKey, vm.evEditorDataService, attributes, vm.entity, vm.entityType, vm.tabs);
 
@@ -1790,6 +1761,9 @@
                 vm.tabs = formLayoutData.tabs;
                 vm.attributesLayout = formLayoutData.attributesLayout;
 
+				vm.readyStatus.layout = true;
+				vm.readyStatus.entity = true;
+
             });
 
         }
@@ -1899,6 +1873,16 @@
 
                 vm.attributeTypes = formLayoutData.attributeTypes;
 
+				if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
+
+					vm.entity.attributes = [];
+
+					vm.attributeTypes.forEach(function (attributeType) {
+						vm.entity.attributes.push(entityEditorHelper.appendAttribute(attributeType, null));
+					});
+
+				}
+
                 vm.tabs = formLayoutData.tabs;
                 vm.attributesLayout = formLayoutData.attributesLayout;
 
@@ -1925,8 +1909,7 @@
 
                 } else {
 
-					vm.typeSelectorChange = typeSelectorChangeFns[vm.entityType];
-                    $scope.$apply();
+					vm.typeSelectorChange = vm.sharedLogic.typeSelectorChangeFns[vm.entityType];
 
                 }
 
@@ -1935,6 +1918,11 @@
                     vm.entity.group = vm.groupSelectorOptions[0].id
 
                 }
+
+				vm.readyStatus.layout = true;
+				vm.readyStatus.entity = true;
+
+				$scope.$apply();
 
                 /* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 

@@ -114,12 +114,10 @@
 
 				inputs.forEach(inputName => {
 
-					viewModel.entity[inputName] = data.values[inputName]
+					viewModel.entity.values[inputName] = data.values[inputName]
 
 					if (data.values[inputName + '_object']) {
-
-						viewModel.entity[inputName + '_object'] = data.values[inputName + '_object']
-
+						viewModel.entity.values[inputName + '_object'] = data.values[inputName + '_object'];
 					}
 
 					let recalculatedUserInput = viewModel.userInputs.find(input => input.name === inputName);
@@ -145,9 +143,9 @@
 
 				if (uInput !== null) {
 
-					if (viewModel.entity.hasOwnProperty(uInput.name)) {
+					if (viewModel.entity.values.hasOwnProperty(uInput.name)) {
 
-						entityValues[uInput.name] = viewModel.entity[uInput.name];
+						entityValues[uInput.name] = viewModel.entity.values[uInput.name];
 
 						if (uInput.value_type === 120) entityValues[uInput.name] = true; // Required for button user input
 

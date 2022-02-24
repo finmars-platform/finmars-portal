@@ -237,7 +237,7 @@
             mapAttributesAndFixFieldsLayout();
 
 			// should be fired after mapAttributesAndFixFieldsLayout()
-			return sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+			// return sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
 
 		};
 
@@ -271,6 +271,12 @@
 
                     vm.transactionType = data.transaction_type_object;
                     vm.entity = data.complex_transaction;
+					vm.entity.values = data.values;
+
+					vm.entity.frontOptions = {
+						dynamicAttributesValues: {},
+						userInputsValues: {}
+					};
 
 
                     vm.specialRulesReady = true;
@@ -286,16 +292,7 @@
 
                         vm.missingLayoutError = false;
 
-                        await postBookComplexTransactionActions(data);
-						// Victor 2020.12.01 #64
-						// await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
-						// <Victor 2020.12.01 #64>
-
-                        /*vm.oldValues = {};
-
-                        vm.userInputs.forEach(function (item) {
-                            vm.oldValues[item.name] = vm.entity[item.name]
-                        });*/
+                        postBookComplexTransactionActions(data);
 
                     } else {
                         vm.missingLayoutError = true;
@@ -1430,6 +1427,10 @@
                     console.log("Apply from make copy", entity);
                     notCopiedTransaction = false;
                     vm.entity = entity;
+					vm.entity.frontOptions = {
+						dynamicAttributesValues: {},
+						userInputsValues: {}
+					};
 
                     var copy = JSON.parse(JSON.stringify(entity));
 

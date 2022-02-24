@@ -44,6 +44,8 @@
         vm.entityChange = $scope.$parent.vm.entityChange;
 		//endregion
 
+		vm.pricingCurrencyAttr = vm.entityAttrs.find(eAttr => eAttr.key === 'pricing_currency');
+
 		/*const pricingDefaultValueFieldTypes = {
 			fieldTypesList: [
 				{

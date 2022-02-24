@@ -220,39 +220,92 @@
      * Get value of dynamic attribute by it's user_code
      * @param {object} dAttrData - Data of dynamic attribute
      * @memberOf module:entityViewerHelperService
-     * @return {string|float|date} Return value of dynamic attribute
+     * @return {*} Return value of dynamic attribute
      */
-    let getDynamicAttrValue = function (dAttrData) {
+    const getDynamicAttrValue = function (dAttrData) {
 
-        let attrVal;
+        // let attrVal;
 
         if (dAttrData.attribute_type_object.value_type === 30) {
 
-            if (dAttrData.classifier_object) {
+            /* if (dAttrData.classifier_object) {
                 attrVal = dAttrData.classifier_object.name;
+
             } else {
                 attrVal = '';
-            }
+            } */
+			if (dAttrData.classifier_object) {
+				return {
+					classifier: dAttrData.classifier, // can be changed on a form of entity and be different from dAttrData.classifier_object.id
+					classifier_object: dAttrData.classifier_object
+				};
+			}
+
+			return null;
+
 
         } else {
 
             switch (dAttrData.attribute_type_object.value_type) {
                 case 10:
-                    attrVal = dAttrData.value_string;
-                    break;
+                    return dAttrData.value_string;
+
                 case 20:
-                    attrVal = dAttrData.value_float;
-                    break;
+                    return dAttrData.value_float;
+
                 case 40:
-                    attrVal = dAttrData.value_date;
-                    break;
+                    return  dAttrData.value_date;
+
             }
 
         }
 
-        return attrVal;
-
     };
+
+    const setDynamicAttrValue = function (dAttrData, value) {
+
+		/* if (dAttrData.attribute_type_object.value_type === 30) {
+
+			if (dAttrData.classifier_object) {
+				attrVal = dAttrData.classifier_object.name;
+			} else {
+				attrVal = '';
+			}
+
+		} else {
+
+			switch (dAttrData.attribute_type_object.value_type) {
+				case 10:
+					attrVal = dAttrData.value_string;
+					break;
+				case 20:
+					attrVal = dAttrData.value_float;
+					break;
+				case 40:
+					attrVal = dAttrData.value_date;
+					break;
+			}
+
+		} */
+
+		switch (dAttrData.attribute_type_object.value_type) {
+			case 10:
+				dAttrData.value_string = value;
+				break;
+			case 20:
+				dAttrData.value_float = value;
+				break;
+			case 30:
+				dAttrData.classifier = value;
+				break;
+			case 40:
+				dAttrData.value_date = value;
+				break;
+		}
+
+		return dAttrData;
+
+	};
 
     /**
      * Get value of dynamic attribute by it's user_code
@@ -261,7 +314,7 @@
      * @memberOf module:entityViewerHelperService
      * @return {string|float|date} Return value of dynamic attribute
      */
-    let getValueFromDynamicAttrsByUserCode = function (userCode, dAttrsList) {
+	const getValueFromDynamicAttrsByUserCode = function (userCode, dAttrsList) {
 
         let cellValue;
 
@@ -280,6 +333,34 @@
         return cellValue;
 
     };
+
+	/**
+	 * Find dynamic attribute by user_code and set its value
+	 *
+	 * @param {string} userCode - Dynamic attribute user code
+	 * @param {array} dAttrsList - Array of objects with data of dynamic attribute
+	 * @param {string|number|null|undefined} value - value to set into dynamic attribute
+	 * @memberOf module:entityViewerHelperService
+	 * @return {Array} - list of dynamic attributes
+	 */
+	const setDynamicAttrValueByUserCode = function (userCode, dAttrsList, value) {
+
+		let da;
+		for (da = 0; da < dAttrsList.length; da++) {
+			let dynamicAttributeData = dAttrsList[da];
+
+			if (dynamicAttributeData.attribute_type_object.user_code === userCode) {
+
+				dAttrsList[da] = setDynamicAttrValue(dynamicAttributeData, value);
+				break;
+
+			}
+
+		}
+
+		return dAttrsList;
+
+	};
 
 	/**
 	 * Try to get layout by user code and use it. If no layout with such user code was found, get default layout.
@@ -1507,9 +1588,11 @@
         getTableAttrInFormOf: getTableAttrInFormOf,
 
         getDynamicAttrValue: getDynamicAttrValue,
+		setDynamicAttrValue: setDynamicAttrValue,
         getLayoutByUserCode: getLayoutByUserCode,
         getDefaultLayout: getDefaultLayout,
         getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
+		setDynamicAttrValueByUserCode: setDynamicAttrValueByUserCode,
 
         getEditLayoutMaxColumns: getEditLayoutMaxColumns,
         getBigDrawerWidth: getBigDrawerWidth,
