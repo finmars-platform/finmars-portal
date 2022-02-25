@@ -28,9 +28,9 @@
     </div>
   </md-toolbar>
   <md-dialog-content style="height: 100%;" class="position-relative">
-    <div style="min-width: 1450px;">
-      <div>
-        <div data-ng-if="vm.checkReadyStatus()">
+    <div data-ng-include="'views/entity-viewer/complex-transaction-add-content-view.html'" style="min-width: 1450px;">
+
+        <!--<div data-ng-if="vm.checkReadyStatus()">
           <div class="p-24">
             <div layout="row" style="height: 90px;">
               <div
@@ -43,38 +43,7 @@
                                          model="vm.transactionTypeId"
                                          menu-options="vm.transactionGroups"
                                          on-change="vm.transactionTypeChange()"></complex-dropdown-select>
-<!--                <md-input-container style="font-size: 18px;" class="width-100">-->
-<!--                  <label for="">Transaction type</label>-->
-<!--                  <md-select-->
-<!--                    data-ng-model="vm.transactionTypeId"-->
-<!--                    md-container-class="big-select"-->
-<!--                    data-ng-change="vm.transactionTypeChange()"-->
-<!--                    md-on-close="searchTerm = ''"-->
-<!--                  >-->
-<!--                    <md-select-header>-->
-<!--                      <input-->
-<!--                        data-ng-model="searchTerm"-->
-<!--                        type="search"-->
-<!--                        placeholder="Search for a ..."-->
-<!--                        class="md-text md-select-search-pattern"-->
-<!--                      />-->
-<!--                    </md-select-header>-->
 
-<!--                    <div class="big-select-optgroup-container">-->
-<!--                      <md-optgroup-->
-<!--                        label="{{group.name}}"-->
-<!--                        data-ng-repeat="group in vm.transactionGroups"-->
-<!--                      >-->
-<!--                        <md-option-->
-<!--                          data-ng-repeat="item in group.items | orderBy: 'name' | filter:{name: searchTerm}"-->
-<!--                          ng-value="item.id"-->
-<!--                        >-->
-<!--                          {{item.name}}-->
-<!--                        </md-option>-->
-<!--                      </md-optgroup>-->
-<!--                    </div>-->
-<!--                  </md-select>-->
-<!--                </md-input-container>-->
               </div>
 
               <div flex="50">
@@ -247,7 +216,7 @@
                   layout-align="space-around"
                   class="m-large"
                 >
-                  <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
+
                   <progress-circular diameter="100"></progress-circular>
                 </div>
               </div>
@@ -276,7 +245,7 @@
               layout-align="space-around"
               class="m-large"
             >
-              <!--<md-progress-circular md-mode="indeterminate" md-diameter="64"></md-progress-circular>-->
+              &lt;!&ndash;<md-progress-circular md-mode="indeterminate" md-diameter="64"></md-progress-circular>&ndash;&gt;
               <progress-circular diameter="60"></progress-circular>
             </div>
           </div>
@@ -289,11 +258,10 @@
             layout-align="space-around"
             class="m-large"
           >
-            <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
+
             <progress-circular diameter="100"></progress-circular>
-          </div>
-        </div>
-      </div>
+          </div>-->
+    </div>
     </div>
   </md-dialog-content>
   <md-dialog-actions layout="row" layout-align="space-between center">

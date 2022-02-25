@@ -41,8 +41,7 @@
                 scope.sortedFields = [];
                 scope.schemeSortedFields = []
 
-                scope.sorted = true
-
+                scope.sorted = true;
 
                 scope.ciEventObj = {
                     event: {}
@@ -384,7 +383,8 @@
 
                             });
 
-                        } else {
+                        }
+                        else {
 
                             return fieldResolverService.getFields(scope.item.key, options, scope.fieldsDataStore).then(function (res) {
 

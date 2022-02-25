@@ -16,6 +16,7 @@
                 label: '@',
                 placeholderText: '@',
                 model: '=',
+				customButtons: '=',
                 customStyles: '=',
                 eventSignal: '=',
                 smallOptions: '=',
