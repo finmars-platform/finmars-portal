@@ -13,6 +13,7 @@
                         item-object="entity[fieldKey + '_object']"
                         on-change-callback="changeHandler()"
                         item-name="inputTextObj.value"
+                        custom-buttons="item.buttons"
                         custom-styles="customStyles"
                 ></instrument-select>
 
@@ -26,6 +27,7 @@
                         item-object="entity[fieldKey + '_object']"
                         on-change-callback="changeHandler()"
                         item-name="inputTextObj.value"
+                        custom-buttons="item.buttons"
                         custom-styles="customStyles"
                         entity-type="'counterparty'"
                 ></unified-data-select>
@@ -151,13 +153,14 @@
 
                     <div data-ng-if="checkForCrudSelects()">
 
-                        <div>
-                            <crud-select
-                                    data-label="getName()"
-                                    data-item="entity[fieldKey]"
-                                    data-entity-type="crudEntityType"
-                                    data-options="fields"
-                                    data-ng-click="getData()"
+                        <div data-ng-if="readyStatus.content">
+                            <crud-select data-label="getName()"
+                                         data-item="entity[fieldKey]"
+                                         data-entity-type="crudEntityType"
+                                         data-options="fields"
+                                         data-ng-click="getData()"
+                                         event-signal="ciEventObj.event"
+                                         small-options="{notNull: options.notNull}"
                             ></crud-select>
                         </div>
 

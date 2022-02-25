@@ -530,10 +530,14 @@
 
             case 'counterparty':
             case 'responsible':
+				return ['name', 'short_name', 'user_code', 'group', 'public_name'];
+				break;
+
             case 'strategy-1':
             case 'strategy-2':
             case 'strategy-3':
-                return ['name', 'short_name', 'user_code', null, 'public_name'];
+                // return ['name', 'short_name', 'user_code', null, 'public_name'];
+				return ['name', 'short_name', 'user_code', 'subgroup', 'public_name'];
                 break;
 
             case 'currency':

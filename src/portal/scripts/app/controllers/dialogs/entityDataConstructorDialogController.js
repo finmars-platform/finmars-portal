@@ -1308,6 +1308,14 @@
 
                         break;
 
+					case 'strategy-1':
+					case 'strategy-2':
+					case 'strategy-3':
+					case 'responsible':
+					case 'counterparty':
+						doNotShowAttrs = ['group', 'subgroup'];
+						break;
+
                     /* case 'instrument':
 
                         doNotShowAttrs = ['accrued_currency', 'payment_size_detail',
