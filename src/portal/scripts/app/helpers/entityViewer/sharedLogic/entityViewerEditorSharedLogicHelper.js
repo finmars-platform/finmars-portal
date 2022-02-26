@@ -333,13 +333,13 @@
         };
 
         const getAttributeTypes = function () { // dynamic attributes
-			console.log("testing.getAttributeTypes called");
+
         	return new Promise((res, rej) => {
 
         		const options = {page: 1, pageSize: 1000};
 
         		metaService.loadDataFromAllPages(attributeTypeService.getList, [viewModel.entityType, options]).then(attrTypeData => {
-        			console.log("testing.getAttributeTypes ", attrTypeData);
+
         			viewModel.attributeTypes = attrTypeData;
 					res();
 
@@ -515,7 +515,7 @@
 		 * @returns {Promise<unknown>} - returns array of entities on resolve and error object on reject
 		 */
 		const getTypeSelectorOptions = function (entityType) {
-			console.log("testing.getTypeSelectorOptions", entityType);
+
 			let selectorOptions = [];
 			let options = {pageSize: 1000, page: 1};
 			let getOptionsPromise;
@@ -597,7 +597,7 @@
 		 * @returns {Promise<unknown>} - returns array of entities on resolve and error object on reject
 		 */
 		/* const getGroupSelectorOptions = function (entityType) {
-			console.log("testing.getGroupSelectorOptions ", entityType);
+
 			let resData = {};
 			let options = {pageSize: 1000, page: 1};
 
