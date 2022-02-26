@@ -64,6 +64,7 @@
 
         vm.hasEnabledStatus = true;
         vm.entityStatus = '';
+		vm.allowFormLayoutEdition = true;
         vm.evEditorEvent = null;
 
         if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
@@ -127,7 +128,9 @@
         vm.fixedAreaPopup = vm.sharedLogic.getFixedAreaPopup();
 
         vm.typeSelectorOptions = [];
-        vm.groupSelectorOptions = [];
+		vm.groupSelectorLabel = 'Group';
+        vm.groupSelectorOptions = []; // set by getFormLayout()
+		vm.groupSelectorEntityType = vm.sharedLogic.entityTypeForGroupSelectorsData[vm.entityType];
 
         vm.pricingConditions = [
             {id: 1, name: "Don't Run Valuation"},
@@ -603,6 +606,9 @@
                     // vm.getFormLayout();
                     vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
 
+						vm.typeSelectorOptions = formLayoutData.typeSelectorOptions;
+						vm.groupSelectorOptions = formLayoutData.groupSelectorOptions;
+
 						vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
 						vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
 
@@ -963,7 +969,7 @@
             if (errors.length) {
 				// vm.sharedLogic.processTabsErrors(errors, $event);
 
-				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
+				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.groupSelectorEventObj);
 
 				if (processResult) {
 					vm.fixedAreaPopup = processResult;
@@ -2053,6 +2059,10 @@
                 vm.dialogElemToResize = vm.sharedLogic.onEditorStart();
             }, 100);
 
+			vm.groupSelectorEventObj = {
+				event: {}
+			};
+
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
 
@@ -2113,7 +2123,6 @@
                     })
 
 				};
-
 
             }
             else {

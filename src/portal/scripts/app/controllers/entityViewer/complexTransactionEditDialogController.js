@@ -795,7 +795,7 @@
 
             if (windowType === 'big-drawer') {
 
-                const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType, isCopy: true}};
+                const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType, isCopy: true, originalComplexTransaction: vm.originalComplexTransaction}};
                 return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
             } else {
@@ -808,6 +808,7 @@
                         entityType: vm.entityType,
                         entity: entity,
                         data: {
+                            originalComplexTransaction: vm.originalComplexTransaction,
                             isCopy: true
                         }
                     }

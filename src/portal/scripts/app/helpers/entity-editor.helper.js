@@ -242,6 +242,29 @@
         return null;
     }
 
+	/**
+	 * Returns property name for fixed area popup object based on field property
+	 *
+	 * @param fieldKey {string} - property name
+	 * @param entityType {string}
+	 * @returns {string}
+	 */
+	const getFieldKeyForFAPopup = function (fieldKey, entityType) {
+
+		if (fieldKey === 'instrument_type' || fieldKey === 'instrument_class') {
+			return 'type';
+
+		} else if (['strategy-1', 'strategy-2', 'strategy-3'].includes(entityType) &&
+			fieldKey === 'subgroup') {
+
+			return 'group';
+
+		}
+
+		return fieldKey;
+
+	};
+
     var systemTabLocationOfAttribute = {
         'instrument': {
             'maturity_date': {type: 'system_tab', name: 'Events', validatorText: 'tab: EVENTS'},
@@ -639,29 +662,31 @@
 
     var getErrorMessageByValueType = function (value, valueType) {
 
-        var errosMessageObj = {
-            10: 'Field should not be empty.',
-            30: 'Field should not be empty.',
-            20: 'Field should contain positive number.',
-            40: 'Field should contain date in YYYY-MM-DD format.',
-            100: 'Field should not be empty.'
-        }
-
         if (value && valueType === 40) {
 
             if (!moment(value, 'YYYY-MM-DD', true).isValid()) {
                 return 'Date has wrong format. Use one of these formats instead: YYYY-MM-DD.'
             }
 
-        } else {
+        }
+		else {
 
-            return errosMessageObj[valueType];
+			switch (valueType) {
+				case 20:
+					return 'Field should contain positive number.';
+
+				case 40:
+					return 'Field should contain date in YYYY-MM-DD format.';
+
+				default:
+					return 'Field should not be empty.';
+			}
 
         }
 
     }
 
-    var validateRequiredEntityFields = function (key, value, entityAttrs) {
+    var validateRequiredEntityField = function (key, value, entityAttrs) {
 
         for (var i = 0; i < entityAttrs.length; i++) {
 
@@ -690,7 +715,6 @@
 
                     } else {
                         errorObj.fieldName = entityAttrs[i].name;
-
                     }
 
                     return errorObj;
@@ -787,7 +811,7 @@
      * @param entity {Object}
      * @param entityType {string}
      * @param tabs {Object} - tabs from edit layout
-     * @param fixedFieldsAttrs
+     * @param fixedFieldsAttrs {Array}
      * @param entityAttrs {Array.<Object>} - entity attributes
      * @param attrsTypes {Array.<Object>} - attribute types created by user
      * @returns {Array.<Object>} - list of errors
@@ -805,15 +829,18 @@
 
             if (requiredAttrs.indexOf(key) > -1) {
 
-                var reqFieldError = validateRequiredEntityFields(key, fieldValue, entityAttrs);
+                var reqFieldError = validateRequiredEntityField(key, fieldValue, entityAttrs);
 
                 if (reqFieldError) {
 
                     reqFieldError.key = key;
+
                     reqFieldError.locationData = getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType);
                     errors.push(reqFieldError);
 
-					if (reqFieldError.locationData.type === 'system_tab') {
+					if (!reqFieldError.locationData) console.error("location for field '" + key + "' was not found");
+
+					if (reqFieldError.locationData && reqFieldError.locationData.type === 'system_tab') {
 						copySystemTabErrorForUserTab(key, tabs, reqFieldError, errors);
 					}
 
@@ -1226,6 +1253,38 @@
     };
 
 	/**
+	 * If field inside popup has an error, mark it.
+	 *
+	 * @param fixedAreaPopup {Object} - popup data
+	 * @param faFieldProp {string} - property name by which field stored inside fixedAreaPopup
+	 * @returns {boolean} - whether field has and error
+	 */
+	const markErrorInsideFAPopup = function (fixedAreaPopup, faFieldProp, errorMessage) {
+
+		var popupFieldsKeysList = [];
+		if (fixedAreaPopup) popupFieldsKeysList = Object.keys(fixedAreaPopup.fields);
+
+		var errorIsInsidePopup = popupFieldsKeysList.length && popupFieldsKeysList.includes(faFieldProp);
+
+		if (errorIsInsidePopup) {
+
+			// fixedAreaPopupChanged = true;
+			// Trigger error mode of the field inside popup of fixed area
+			fixedAreaPopup.fields[faFieldProp].event = {key: "error", error: errorMessage};
+			fixedAreaPopup.fields[faFieldProp].error = errorMessage;
+
+			fixedAreaPopup.event = {key: "error", error: "There are fields with errors inside"};
+			fixedAreaPopup.error = "There are fields with errors inside";
+
+			return true;
+
+		}
+
+		return false;
+
+	};
+
+	/**
 	 * Highlight errors on the form
 	 *
 	 * @param errors {Array.<Object>} - data for dialog with validator results
@@ -1234,9 +1293,11 @@
 	 * @param $mdDialog {Object}
 	 * @param $event {Object} - event object
 	 * @param fixedAreaPopup {?Object} - fields inside of popup
+	 * @param entityType {string}
+	 * @param groupSelectorEventObject {{event: Object}} - used to highlight 'Group' crud selector
 	 * @returns {Object|null} - changed fixedAreaPopup or null
 	 */
-	const processTabsErrors = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event, fixedAreaPopup) {
+	const processTabsErrors = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event, fixedAreaPopup, entityType, groupSelectorEventObject) {
 
 		const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
 
@@ -1293,29 +1354,21 @@
 				else if (errorObj.locationData.type === 'fixed_area') {
 
 					var fieldProp = errorObj.key;
-					var popupFieldsKeysList = [];
+					var fixedAreaFieldProp = getFieldKeyForFAPopup(fieldProp, entityType);
 
-					if (fixedAreaPopup) popupFieldsKeysList = Object.keys(fixedAreaPopup.fields);
+					var errorIsNotRegistered = !locsWithErrors.fixed_area.fields.includes(fieldProp);
 
-					var errorIsInsidePopup = popupFieldsKeysList.length && popupFieldsKeysList.includes(fieldProp);
-
-					if (!locsWithErrors.fixed_area.fields.includes(fieldProp)) {
+					if (errorIsNotRegistered) {
 
 						locsWithErrors.fixed_area.fields.push(fieldProp);
 
-						if (errorIsInsidePopup) {
+						if (['strategy-1', 'strategy-2', 'strategy-3', 'responsible', 'counterparty'].includes(entityType) && fieldProp === 'group') { // subgroup used as group for strategy 1,2,3
 
-							fixedAreaPopupChanged = true;
-							// Trigger error mode of the field inside popup of fixed area
-							fixedAreaPopup.fields[fieldProp].event = {key: "error", error: errorObj.message};
-							fixedAreaPopup.fields[fieldProp].error = errorObj.message;
-
-							/* const popupElem = document.querySelector('.entityEditorFixedAreaPopup');
-							popupElem.classList.add("error"); */
-							fixedAreaPopup.event = {key: "error", error: "There are fields with errors inside"}
-							fixedAreaPopup.error = "There are fields with errors inside";
+							groupSelectorEventObject.event = {key: "error", error: "Field should not be empty"};
 
 						}
+
+						fixedAreaPopupChanged = markErrorInsideFAPopup(fixedAreaPopup, fixedAreaFieldProp, errorObj.message);
 
 					}
 
@@ -1420,29 +1473,13 @@
                 else if (errorObj.locationData.type === 'fixed_area') {
 
                     var fieldProp = errorObj.key;
-                    var popupFieldsKeysList = [];
+					var fixedAreaFieldProp = getFieldKeyForFAPopup(fieldProp, 'instrument-type');
 
-                    if (fixedAreaPopup) popupFieldsKeysList = Object.keys(fixedAreaPopup.fields);
-
-                    var errorIsInsidePopup = popupFieldsKeysList.length && popupFieldsKeysList.includes(fieldProp);
-
-                    if (!locsWithErrors.fixed_area.fields.includes(fieldProp)) {
+					if (!locsWithErrors.fixed_area.fields.includes(fieldProp)) {
 
                         locsWithErrors.fixed_area.fields.push(fieldProp);
 
-                        if (errorIsInsidePopup) {
-
-                            fixedAreaPopupChanged = true;
-                            // Trigger error mode of the field inside popup of fixed area
-                            fixedAreaPopup.fields[fieldProp].event = {key: "error", error: errorObj.message};
-                            fixedAreaPopup.fields[fieldProp].error = errorObj.message;
-
-                            /* const popupElem = document.querySelector('.entityEditorFixedAreaPopup');
-                            popupElem.classList.add("error"); */
-                            fixedAreaPopup.event = {key: "error", error: "There are fields with errors inside"}
-                            fixedAreaPopup.error = "There are fields with errors inside";
-
-                        }
+						fixedAreaPopupChanged = markErrorInsideFAPopup(fixedAreaPopup, fixedAreaFieldProp, errorObj.message);
 
                     }
 
@@ -1634,16 +1671,60 @@
 
 			}
 
-			errors = validateEntityFields(entity, entityType, tabs, [], eAttrsToCheck, attrTypesToCheck, uInputsToCheck);
+			errors = validateEntityFields(entity, entityType, tabs, [], eAttrsToCheck, attrTypesToCheck);
 
 		}
 
 		return errors;
 
-	}
+	};
 
 	/**
-	 * Deregister error. Remove error mark from tab if all it's errors has been fixed.
+	 * Deregister field error inside fixed area.
+	 *
+	 * @param errorKey {string} - name of property inside entity object
+	 * @param evEditorDataService {Object}
+	 * @param entityAttrs {Array}
+	 * @param entity {Object}
+	 */
+	var checkFixedAreaForErrorFields = function (errorKey, evEditorDataService, entityAttrs, entity) {
+
+		var formErrorsList = evEditorDataService.getFormErrorsList();
+		var locsWithErrors = evEditorDataService.getLocationsWithErrors();
+
+		if (formErrorsList.length) {
+
+			var fieldValue = entity[errorKey];
+			var error = validateRequiredEntityField(errorKey, fieldValue, entityAttrs);
+
+			if (locsWithErrors.fixed_area.fields.includes(errorKey)) {
+
+				if (!error) { // if no errors left, remove marking from field
+
+					var felIndex = formErrorsList.indexOf(errorKey);
+					formErrorsList.splice(felIndex, 1);
+
+					var lweIndex = locsWithErrors.fixed_area.fields.indexOf(errorKey);
+					locsWithErrors.fixed_area.fields.splice(lweIndex, 1);
+
+				}
+
+			} else if (error.length) { // check for new error inside tab of errors
+
+				formErrorsList.push(errorKey);
+				locsWithErrors.fixed_area.fields.push(errorKey);
+
+			}
+
+		}
+
+		evEditorDataService.setFormErrorsList(formErrorsList);
+		evEditorDataService.setLocationsWithErrors(locsWithErrors);
+
+	};
+
+	/**
+	 * Deregister field error inside tabs. Remove error mark from tab if all it's errors has been fixed.
 	 *
 	 * @param errorKey {string} - name of property inside entity object
 	 * @param evEditorDataService {Object}
@@ -2196,6 +2277,7 @@
 
         findAttributeByKey: findAttributeByKey,
 		getLocationOfAttributeInsideUserTabs: getLocationOfAttributeInsideUserTabs,
+		getFieldKeyForFAPopup: getFieldKeyForFAPopup,
 
         checkForNotNullRestriction: checkForNotNullRestriction,
         checkForNegNumsRestriction: checkForNegNumsRestriction,
@@ -2205,6 +2287,7 @@
         processTabsErrors: processTabsErrors,
         processTabsErrorsInstrumentType: processTabsErrorsInstrumentType,
 
+		checkFixedAreaForErrorFields: checkFixedAreaForErrorFields,
         checkTabsForErrorFields: checkTabsForErrorFields,
 
         generateAttributesFromLayoutFields: generateAttributesFromLayoutFields,

@@ -61,7 +61,7 @@
         vm.dataConstructorLayout = {};
         vm.dcLayoutHasBeenFixed = false;
 
-        vm.hasEnabledStatus = true;
+        vm.hasEnabledStatus = false;
         vm.entityStatus = '';
         vm.evEditorEvent = null;
 
@@ -654,7 +654,7 @@
         vm.updateEntityBeforeSave = function () {
 
             console.log('updateEntityBeforeSave vm.entity', vm.entity);
-			vm.entity.attributes = [];
+			/*vm.entity.attributes = [];
 
 			vm.attributeTypes.forEach(function (attributeType) {
 
@@ -662,7 +662,7 @@
 
 				vm.entity.attributes.push(entityEditorHelper.appendAttribute(attributeType, value));
 
-			});
+			});*/
 
             vm.entity.object_permissions = [];
             console.log('vm.groups', vm.groups);
@@ -1439,10 +1439,21 @@
 
             vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
 
+				vm.typeSelectorOptions = formLayoutData.typeSelectorOptions; // list of instrument classes
                 vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
                 vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
 
                 vm.attributeTypes = formLayoutData.attributeTypes;
+
+				if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
+
+					vm.entity.attributes = [];
+
+					vm.attributeTypes.forEach(function (attributeType) {
+						vm.entity.attributes.push(entityEditorHelper.appendAttribute(attributeType, null));
+					});
+
+				}
 
                 vm.tabs = formLayoutData.tabs;
                 vm.attributesLayout = formLayoutData.attributesLayout;

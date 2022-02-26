@@ -385,7 +385,8 @@
 
                             });
 
-                        } else {
+                        }
+                        else {
 
                             return fieldResolverService.getFields(scope.item.key, options, scope.fieldsDataStore).then(function (res) {
 
@@ -611,6 +612,8 @@
 						}
 
 					}
+
+					scope.options = bfcVm.checkForNotNull(scope.options);
 
                 };
 

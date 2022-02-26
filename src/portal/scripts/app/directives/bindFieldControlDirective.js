@@ -508,29 +508,31 @@
                                                 $scope.numericInputValue.numberVal = formatNumber(itemNumberValue);
                                         }
                                 };*/
-                var checkForNotNull = function () {
+                vm.checkForNotNull = function (options) {
 
                     if ($scope.item.options && $scope.item.options.notNull) {
-                        $scope.options.notNull = true;
+						options.notNull = true;
 
                     } else if (
                         $scope.item.frontOptions &&
                         ($scope.item.frontOptions.notNull || $scope.item.frontOptions.usedInExpr)
                     ) {
 
-                        $scope.options.notNull = true;
+						options.notNull = true;
 
-                    } else if ($scope.item.key) {
+                    } else if ($scope.item.key && vm.fieldType.type === 'systemAttribute') {
 
                         var requiredAttrs = metaService.getRequiredEntityAttrs(
                             vm.entityType
                         );
 
                         if (requiredAttrs.indexOf($scope.item.key) > -1) {
-                            $scope.options.notNull = true;
+							options.notNull = true;
                         }
 
                     }
+
+                    return options;
 
                 };
 
@@ -967,7 +969,7 @@
 
 					}
 
-                    checkForNotNull();
+                    $scope.options = vm.checkForNotNull($scope.options);
 
                     /* if (vm.fieldType && vm.fieldType.value === 20) {
 
