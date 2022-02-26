@@ -13,6 +13,7 @@
                         item-object="entity[fieldKey + '_object']"
                         on-change-callback="changeHandler()"
                         item-name="inputTextObj.value"
+                        custom-buttons="item.buttons"
                         custom-styles="customStyles"
                 ></instrument-select>
 
@@ -26,6 +27,7 @@
                         item-object="entity[fieldKey + '_object']"
                         on-change-callback="changeHandler()"
                         item-name="inputTextObj.value"
+                        custom-buttons="item.buttons"
                         custom-styles="customStyles"
                         entity-type="'counterparty'"
                 ></unified-data-select>
@@ -137,11 +139,12 @@
                                         </md-select>
                                       </md-input-container>-->
 
-                        <dropdown-select class="p-r-8" label="{{getName()}}"
+                        <dropdown-select label="{{getName()}}"
                                          model="modelObj.model"
                                          placeholder-text="{{getName()}}"
+                                         event-signal="ciEventObj.event"
                                          menu-options="sortedFields"
-                                         small-options="{tooltipText: '{{getName()}}'}"
+                                         small-options="{notNull: options.notNull, tooltipText: '{{getName()}}'}"
                                          sorted="sorted"
                                          on-change-callback="changeHandler()"
                                          style="{{inputBackgroundColor()}}">
@@ -151,13 +154,15 @@
 
                     <div data-ng-if="checkForCrudSelects()">
 
-                        <div>
+                        <div data-ng-if="readyStatus.content">
                             <crud-select
                                     data-label="getName()"
                                     data-item="modelObj.model"
                                     data-entity-type="crudEntityType"
                                     data-options="fields"
                                     data-ng-click="getData()"
+                                    event-signal="ciEventObj.event"
+                                    small-options="{notNull: options.notNull}"
                             ></crud-select>
                         </div>
 
@@ -195,11 +200,12 @@
                                             </div>
                                         </md-select>
                                     </md-input-container>-->
-                    <dropdown-select class="p-r-8" label="{{getName()}}"
+                    <dropdown-select label="{{getName()}}"
                                      model="modelObj.model"
                                      placeholder-text="{{getName()}}"
+                                     event-signal="ciEventObj.event"
                                      menu-options="schemeSortedFields"
-                                     small-options="{tooltipText: '{{getName()}}'}"
+                                     small-options="{notNull: options.notNull, tooltipText: '{{getName()}}'}"
                                      sorted="sorted"
                                      on-change-callback="changeHandler()"
                                      style="{{inputBackgroundColor()}}">
@@ -339,12 +345,12 @@
                           </md-select>
                         </md-input-container>-->
 
-                <dropdown-select class="p-r-8"
-                                 label="{{getName()}}"
+                <dropdown-select label="{{getName()}}"
                                  model="modelObj.model"
                                  placeholder-text="{{getName()}}"
+                                 event-signal="ciEventObj.event"
                                  menu-options="sortedFields"
-                                 small-options="{tooltipText: '{{getName()}}'}"
+                                 small-options="{notNull: options.notNull, tooltipText: '{{getName()}}'}"
                                  sorted="sorted"
                                  on-change-callback="changeHandler()"
                                  style="{{inputBackgroundColor()}}">

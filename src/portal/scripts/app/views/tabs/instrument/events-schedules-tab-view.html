@@ -2,22 +2,24 @@
     <div data-ng-if="vm.checkReadyStatus()">
 
         <div layout="row" class="m-b-16">
-            <div class="ev-data-field">
+            <div class="p-r-8">
                 <bind-field-control entity-type="vm.entityType"
                                     entity="vm.entity"
                                     entity-change="vm.onEntityChange(fieldKey, fieldType)"
                                     ev-editor-data-service="vm.evEditorDataService"
                                     ev-editor-event-service="vm.evEditorEventService"
-                                    item="vm.maturityDateAttr"></bind-field-control>
+                                    item="vm.maturityDateAttr"
+                                    class="cic-no-padding"></bind-field-control>
             </div>
 
-            <div class="ev-data-field">
+            <div>
                 <bind-field-control entity-type="vm.entityType"
                                     entity="vm.entity"
                                     entity-change="vm.onEntityChange(fieldKey, fieldType)"
                                     ev-editor-data-service="vm.evEditorDataService"
                                     ev-editor-event-service="vm.evEditorEventService"
-                                    item="vm.maturityPriceAttr"></bind-field-control>
+                                    item="vm.maturityPriceAttr"
+                                    class="cic-no-padding"></bind-field-control>
             </div>
 
             <div data-ng-if="vm.entity.id">

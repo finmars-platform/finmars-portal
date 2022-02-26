@@ -61,7 +61,7 @@
         vm.dataConstructorLayout = {};
         vm.dcLayoutHasBeenFixed = false;
 
-        vm.hasEnabledStatus = true;
+        vm.hasEnabledStatus = false;
         vm.entityStatus = '';
         vm.evEditorEvent = null;
 
@@ -470,6 +470,7 @@
                     // vm.getFormLayout();
                     vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
 
+						vm.typeSelectorOptions = formLayoutData.typeSelectorOptions; // list of instrument classes
 						vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
 						vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
 
@@ -817,31 +818,6 @@
                 });
 
             }
-
-        };
-
-        vm.saveAndExit = function (action) {
-
-            vm.save().then(function (responseData) {
-
-                let responseObj = {status: 'disagree'};
-
-                if (action === 'edit') {
-
-                    vm.entity = {...vm.entity, ...responseData};
-                    vm.entity.$_isValid = true;
-
-                    responseObj = {
-                        status: 'edit',
-                        data: {
-                            entityType: vm.entityType,
-                            entity: vm.entity
-                        }
-                    };
-                }
-
-                metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
-            })
 
         };
 

@@ -28,8 +28,7 @@
             <v-accordion class="instrument-type-accordion vAccordion-type1 m-b-8" control="vm.eventsAccordion">
 
                 <v-pane ng-repeat="item in vm.entity.events | orderBy: 'order'"
-                        expanded="item.isPaneExpanded"
-                        class="position-relative">
+                        expanded="item.isPaneExpanded">
 
                     <div ng-hide="!item.isPaneExpanded" class="accordion-name-input">
                         <text-input model="item.name"

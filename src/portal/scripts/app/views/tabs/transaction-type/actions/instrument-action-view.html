@@ -32,7 +32,7 @@
                                                             model="item.instrument.instrument_type"
                                                             load-relation="vm.loadRelation('instrument_type')"
                                                             relation-items="vm.relationItems['instrument_type']"
-                                                            selected-value="item.instrument.instrument_type_object.id"
+                                                            selected-value="item.instrument.instrument_type_object.user_code"
                                                             selected-name="item.instrument.instrument_type_object.name"
                                                             is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                         </div>
@@ -178,7 +178,7 @@
                                                         model="item.instrument.pricing_currency"
                                                         load-relation="vm.loadRelation('pricing_currency')"
                                                         relation-items="vm.relationItems['pricing_currency']"
-                                                        selected-value="item.instrument.pricing_currency_object.id"
+                                                        selected-value="item.instrument.pricing_currency_object.user_code"
                                                         selected-name="item.instrument.pricing_currency_object.name"
                                                         is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                     </div>
@@ -210,7 +210,7 @@
                                                         model="item.instrument.accrued_currency"
                                                         load-relation="vm.loadRelation('accrued_currency')"
                                                         relation-items="vm.relationItems['accrued_currency']"
-                                                        selected-value="item.instrument.accrued_currency_object.id"
+                                                        selected-value="item.instrument.accrued_currency_object.user_code"
                                                         selected-name="item.instrument.accrued_currency_object.name"
                                                         is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                     </div>
@@ -227,28 +227,28 @@
             <div flex="33" layout="row">
                 <div flex="20">
                     <md-button
-                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument.daily_pricing_model_toggle ? 'ref' : ''}}"
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument.pricing_condition_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
-                            data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'daily_pricing_model')">
-                        <span data-ng-if="!!item.instrument.daily_pricing_model_toggle">R</span>
-                        <span data-ng-if="!!!item.instrument.daily_pricing_model_toggle">I</span>
+                            data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'pricing_condition')">
+                        <span data-ng-if="!!item.instrument.pricing_condition_toggle">R</span>
+                        <span data-ng-if="!!!item.instrument.pricing_condition_toggle">I</span>
                     </md-button>
                 </div>
                 <div flex="80">
-                    <div data-ng-if="item.instrument.daily_pricing_model_toggle">
+                    <div data-ng-if="item.instrument.pricing_condition_toggle">
 
-                        <ttype-actions-relations-select label-title="Daily pricing model"
-                                                        model="item.instrument.daily_pricing_model"
-                                                        load-relation="vm.loadRelation('daily_pricing_model')"
-                                                        relation-items="vm.relationItems['daily_pricing_model']"
-                                                        selected-value="item.instrument.daily_pricing_model_object.id"
-                                                        selected-name="item.instrument.daily_pricing_model_object.name"
+                        <ttype-actions-relations-select label-title="Pricing condition"
+                                                        model="item.instrument.pricing_condition"
+                                                        load-relation="vm.loadRelation('pricing_condition')"
+                                                        relation-items="vm.relationItems['pricing_condition']"
+                                                        selected-value="item.instrument.pricing_condition_object.user_code"
+                                                        selected-name="item.instrument.pricing_condition_object.name"
                                                         is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                     </div>
-                    <div data-ng-if="!item.instrument.daily_pricing_model_toggle">
+                    <div data-ng-if="!item.instrument.pricing_condition_toggle">
 
-                        <ttype-actions-input-select label-title="Daily pricing model"
-                                                    model="item.instrument.daily_pricing_model_input"
+                        <ttype-actions-input-select label-title="Pricing condition"
+                                                    model="item.instrument.pricing_condition_input"
                                                     find-inputs="vm.findInputs('daily-pricing-model')"
                                                     is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
@@ -285,7 +285,7 @@
             </div>
 
             <div flex="33" layout="row">
-                <div flex="20">
+                <!-- <div flex="20">
                     <md-button
                             class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument.price_download_scheme_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
@@ -301,8 +301,7 @@
                                                         model="item.instrument.price_download_scheme"
                                                         relation-items="vm.relationItems['price_download_scheme']"
                                                         load-relation="vm.loadRelation('price_download_scheme')"
-                                                        property-name="user_code"
-                                                        selected-value="item.instrument.price_download_scheme_object.id"
+                                                        selected-value="item.instrument.price_download_scheme_object.user_code"
                                                         selected-name="item.instrument.price_download_scheme_object.user_code"
                                                         is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                     </div>
@@ -313,7 +312,7 @@
                                                     find-inputs="vm.findInputs('price-download-scheme')"
                                                     is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
-                </div>
+                </div> -->
             </div>
 
         </div>
@@ -378,7 +377,7 @@
                                                         model="item.instrument.payment_size_detail"
                                                         load-relation="vm.loadRelation('payment_size_detail')"
                                                         relation-items="vm.relationItems['payment_size_detail']"
-                                                        selected-value="item.instrument.payment_size_detail_object.id"
+                                                        selected-value="item.instrument.payment_size_detail_object.user_code"
                                                         selected-name="item.instrument.payment_size_detail_object.name"
                                                         is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                     </div>

@@ -63,6 +63,7 @@
 
         vm.hasEnabledStatus = true;
         vm.entityStatus = '';
+		vm.allowFormLayoutEdition = true;
         vm.evEditorEvent = null;
 
         if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
@@ -121,6 +122,9 @@
         vm.fixedAreaPopup = vm.sharedLogic.getFixedAreaPopup();
 
         vm.typeSelectorOptions = [];
+		vm.groupSelectorLabel = 'Group';
+		vm.groupSelectorOptions = [];
+		vm.groupSelectorEntityType = vm.sharedLogic.entityTypeForGroupSelectorsData[vm.entityType];
 
         vm.pricingConditions = [
             {id: 1, name: "Don't Run Valuation"},
@@ -1027,14 +1031,15 @@
             if (errors.length) {
 
                 // vm.sharedLogic.processTabsErrors(errors, $event);
-                var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
+                var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.groupSelectorEventObj);
 
                 if (processResult) {
                     vm.fixedAreaPopup = processResult;
                     vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));
                 }
 
-            } else {
+            }
+			else {
 
                 // var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
                 var resultEntity = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
@@ -1798,7 +1803,7 @@
 
         };
 
-        vm.init = function () {
+        vm.init = async function () {
 
             /* setTimeout(function () {
 
@@ -1838,6 +1843,10 @@
                 vm.dialogElemToResize = vm.sharedLogic.onEditorStart();
             }, 100);
 
+			vm.groupSelectorEventObj = { // sending signal to crud select that is inside fixed area but outside popup
+				event: {}
+			};
+
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EventService();
 
@@ -1862,16 +1871,26 @@
             });
 
             getEntityAttrs();
-
             // vm.getFormLayout();
             // evEditorSharedLogicHelper.getFormLayout('addition', formLayoutFromAbove);
+			// vm.sharedLogic.getGroupSelectorOptions(groupValueEntity).then(function () {
 
-            vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
+			vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
 
-                vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
-                vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
+				vm.typeSelectorOptions = formLayoutData.typeSelectorOptions;
+				vm.groupSelectorOptions = formLayoutData.groupSelectorOptions;
 
-                vm.attributeTypes = formLayoutData.attributeTypes;
+				if (['responsible', 'counterparty'].indexOf(vm.entityType) !== -1) {
+					vm.entity.group = vm.groupSelectorOptions[0].id;
+
+				} else if (['strategy-1', 'strategy-2', 'strategy-3'].indexOf(vm.entityType) !== -1) {
+					vm.entity.subgroup = vm.groupSelectorOptions[0].id;
+				}
+
+				vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
+				vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
+
+				vm.attributeTypes = formLayoutData.attributeTypes;
 
 				if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
 
@@ -1882,58 +1901,58 @@
 					});
 
 				}
+				console.log("testing entity", vm.entity);
+				vm.tabs = formLayoutData.tabs;
+				vm.attributesLayout = formLayoutData.attributesLayout;
 
-                vm.tabs = formLayoutData.tabs;
-                vm.attributesLayout = formLayoutData.attributesLayout;
+					vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
 
-                vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
+					if (vm.entityType === 'instrument') {
 
-                if (vm.entityType === 'instrument') {
+						vm.typeSelectorChange = function () {
 
-                    vm.typeSelectorChange = function () {
+							vm.bookInstrument().then(function () {
 
-                        vm.bookInstrument().then(function () {
+								vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
 
-                            vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
+									vm.tabs = data.tabs;
+									vm.attributesLayout = data.attributesLayout;
 
-                                vm.tabs = data.tabs;
-                                vm.attributesLayout = data.attributesLayout;
+									$scope.$apply();
 
-                                $scope.$apply();
-
-                            });
-                        })
+								});
+							})
 
 
-                    };
+						};
 
-                } else {
+				} else {
 
 					vm.typeSelectorChange = vm.sharedLogic.typeSelectorChangeFns[vm.entityType];
 
-                }
+				}
 
-                if (['responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3'].indexOf(vm.entityType) !== -1) {
+				if (['responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3'].indexOf(vm.entityType) !== -1) {
 
-                    vm.entity.group = vm.groupSelectorOptions[0].id
+					vm.entity.group = vm.groupSelectorOptions[0].id
 
-                }
+				}
 
 				vm.readyStatus.layout = true;
 				vm.readyStatus.entity = true;
 
 				$scope.$apply();
 
-                /* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
+				/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 
-                    vm.fixedAreaPopup.fields = fieldsData;
-                    vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
+						vm.fixedAreaPopup.fields = fieldsData;
+						vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
 
-                    $scope.$apply();
+						$scope.$apply();
 
-                }); */
+					}); */
 
-            });
+			});
 
             vm.getCurrencies();
 

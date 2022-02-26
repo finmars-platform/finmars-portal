@@ -7,7 +7,7 @@
                     small-options="{dialogParent: '.dialog-containers-wrap', notNull: true}"></text-input>
     </div>
 
-    <div data-ng-if="popupData.fields.short_name && (popupData.tabColumns < 3 || popupData.entityType === 'instrument' || popupData.entityType === 'account')">
+    <div data-ng-if="popupData.fields.short_name && (['instrument', 'instrument-type', 'account', 'strategy-1', 'strategy-2', 'strategy-3', 'responsible', 'counterparty'].includes(popupData.entityType))">
         <text-input label="System Name (Short Name)"
                     placeholder-text="System Name (Short Name)"
                     model="popupData.fields.short_name.value"
@@ -22,13 +22,13 @@
                 small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
     </div>
 
-    <div data-ng-if="popupData.fields.short_name">
+    <!--<div data-ng-if="popupData.fields.short_name">
         <text-input
                 label="System Name (Short Name)"
                 placeholder-text="System Name (Short Name)"
                 model="popupData.fields.short_name.value"
                 small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
-    </div>
+    </div>-->
 
     <div data-ng-if="popupData.fields.public_name">
         <text-input
@@ -64,13 +64,24 @@
                          class="ev-editor-field"></dropdown-select>
     </div>
 
-    <div data-ng-if="popupData.fields.type && popupData.tabColumns < 3">
-        <dropdown-select label="{{popupData.fields.type.name}}"
+    <div data-ng-if="(popupData.fields.type || popupData.fields.group) && popupData.tabColumns < 3">
+        <!-- For entities except responsible, counterparty, strategy 1,2,3 -->
+        <dropdown-select ng-if="popupData.fields.type"
+                         label="{{popupData.fields.type.name}}"
                          model="popupData.fields.type.value"
                          placeholder-text="{{popupData.fields.type.name}}"
                          menu-options="popupData.fields.type.options"
                          small-options="{tooltipText: '{{popupData.fields.type.name}}', indicatorBtnIcon: 'type1', dialogParent: '.dialog-containers-wrap', notNull: true}"
                          class="ev-editor-field"></dropdown-select>
+
+        <!-- For responsible, counterparty, strategy 1,2,3 -->
+        <crud-select ng-if="popupData.fields.group"
+                     label="popupData.fields.group.name"
+                     item="popupData.fields.group.value"
+                     entity-type="popupData.entityType"
+                     data-options="popupData.fields.group.options"
+                     event-signal="popupData.fields.group.event"
+                     small-options="{notNull: options.notNull}"></crud-select>
     </div>
 
 </div>

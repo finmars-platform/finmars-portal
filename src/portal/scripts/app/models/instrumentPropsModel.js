@@ -101,7 +101,7 @@
             },
             {
                 "key": "payment_size_detail",
-                "name": "Payment size detail",
+                "name": "Accrual Size Clarification",
                 "value_content_type": "instruments.paymentsizedetail",
                 "value_entity": "payment-size-detail",
                 "code": "user_code",

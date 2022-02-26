@@ -346,6 +346,37 @@
   }
 }
 
+.crud-select-container {
+
+  .custom-input-content {
+    cursor: pointer;
+  }
+
+  .crud-input-name-holder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 0 1 100%;
+    overflow: hidden;
+    padding-left: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    .crud-input-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+}
+
+.crud-select-container.custom-input-is-disabled {
+  .custom-input-content {
+    cursor: default;
+  }
+}
+
 .custom-input-container.custom-input-set-from-outside {
   .custom-input-borders,
   .custom-input-full-text-container {
@@ -448,7 +479,7 @@
 
 }
 
-//<editor-fold desc="Multitype field">
+//region Multitype field
 .multitype-field-container {
   .multitype-field-inputs-wrap {
     position: absolute;
@@ -515,6 +546,7 @@
     outline: none;
   }
 }
+//endregion
 
 .multitype-field-type-selector-popup {
   padding: 8px 0;
@@ -549,7 +581,7 @@
 }
 //</editor-fold>
 
-// should always be at the bottom
+//region Should always be at the bottom
 .custom-input-container.no-indicator-btn {
   .custom-input {
     border-radius: 6px;
@@ -789,7 +821,7 @@
     z-index: 11;
   }*/
 }
-//endregion
+//endregion When input focused
 
 //region When input in error mode
 .custom-input-container.custom-input-error {
@@ -851,7 +883,7 @@
 .md-panel.md-tooltip.error-tooltip {
   background-color: @orange;
 }
-//endregion
+//endregion When input in error mode
 
 .custom-input-container.custom-input-is-disabled {
   opacity: 0.5;
@@ -865,4 +897,4 @@
     display: none;
   }
 }
-// < should always be at the bottom >
+//endregion Should always be at the bottom >
