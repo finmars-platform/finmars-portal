@@ -584,7 +584,6 @@
 				if (data.next) {
 
 					optionsArg.page = optionsArg.page + 1; // number of page to request
-					console.log("testing.loadDataFromAllPages optionsArg 2", optionsArg);
 					loadAllPages(resolve, reject);
 
 				} else {

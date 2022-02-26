@@ -1901,7 +1901,7 @@
 					});
 
 				}
-				console.log("testing entity", vm.entity);
+
 				vm.tabs = formLayoutData.tabs;
 				vm.attributesLayout = formLayoutData.attributesLayout;
 
