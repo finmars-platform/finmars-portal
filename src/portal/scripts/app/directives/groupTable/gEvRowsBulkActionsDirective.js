@@ -25,6 +25,11 @@
 					name: "Delete",
 				}];
 
+				const bulkRestoreDeleted = {
+					name: "Restore",
+					actionKey: "bulk_restore_deleted"
+				};
+
 				if (entityType === 'complex-transaction') {
 
 					optionsList = optionsList.concat([
@@ -57,15 +62,15 @@
 						{
 							name: "Activate",
 							actionKey: "activate_instrument"
-						},
+						}
 					]);
 
-				} else if (!['complex-transaction', 'price-history', 'currency-history'].includes(entityType)) {
+					optionsList.push(bulkRestoreDeleted);
 
-					optionsList = optionsList.push({
-						name: "Restore",
-						actionKey: "restore_deleted"
-					});
+				}
+				else if (!['complex-transaction', 'price-history', 'currency-history'].includes(entityType)) {
+
+					optionsList.push(bulkRestoreDeleted);
 
 				}
 
