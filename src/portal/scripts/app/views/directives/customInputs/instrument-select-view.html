@@ -1,4 +1,4 @@
-<div class="custom-input-container dropdown-input-container instrumentSelectInputContainer"
+<div class="custom-input-container instrument-input-container instrumentSelectInputContainer"
          data-ng-class="getInputContainerClasses()">
 
     <div ng-if="label" class="custom-input-top-row">
@@ -24,9 +24,10 @@
                         data-ng-model="inputText"
                         data-ng-model-options="{debounce: 1000}"
                         data-ng-change="onInputTextChange()"
+                        data-ng-focus="onInputFocus()"
                         data-ng-disabled="isDisabled"
                         data-ng-keypress="selectFirst($event)"
-                        class="custom-input dropdown-select-input instrumentSelectInputElem"
+                        class="custom-input instrument-input instrumentSelectInputElem"
                     />
 
                 </div>
@@ -39,9 +40,12 @@
                                             data-ng-click="callFnForCustomBtn(button.action)">
                                 {{button.caption}}
                                 <ng-md-icon data-ng-if="button.iconObj.type === 'angularjs-material'"
-                                                        size="24"
-                                                        icon="{{button.iconObj.icon}}"
-                                                        class="ci-custom-btn-icon"></ng-md-icon>
+                                            size="24"
+                                            icon="{{button.iconObj.icon}}"
+                                            class="ci-icon-color"></ng-md-icon>
+
+                                <span data-ng-if="button.iconObj.type === 'angular-material'"
+                                      class="material-icons ci-icon-color">{{button.iconObj.icon}}</span>
 
                                 <md-tooltip data-ng-if="button.tooltip"
                                                         class="tooltip_1"
@@ -70,7 +74,7 @@
     <div ng-if="dropdownMenuShown"
          class="custom-input-sel-menu-container custom-input-dropdown-div selectMenuContainer" >
 
-        <div class="custom-input-sel-menu-block"  data-ng-if="inputText.length > 2" >
+        <div class="custom-input-sel-menu-block" >
 
             <div data-ng-if="!processing" style="height: 369px; overflow-y: auto">
 

@@ -8,6 +8,7 @@
                                                 model="item.transaction.transaction_class"
                                                 load-relation="vm.loadRelation('transaction_class')"
                                                 relation-items="vm.relationItems['transaction_class']"
+                                                selected-value="item.transaction.transaction_class_object.id"
                                                 selected-name="item.transaction.transaction_class_object.name"
                                                 is-disabled="vm.isRelationInputFieldDisabled()"
                                                 class="p-l-0"></ttype-actions-relations-select> -->
@@ -82,7 +83,7 @@
                                                         model="item.transaction.settlement_currency"
                                                         load-relation="vm.loadRelation('settlement_currency')"
                                                         relation-items="vm.relationItems['settlement_currency']"
-                                                        selected-value="item.transaction.settlement_currency_object.id"
+                                                        selected-value="item.transaction.settlement_currency_object.user_code"
                                                         selected-name="item.transaction.settlement_currency_object.name"
                                                         is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                     </div>
@@ -120,7 +121,7 @@
                                                         model="item.transaction.transaction_currency"
                                                         load-relation="vm.loadRelation('transaction_currency')"
                                                         relation-items="vm.relationItems['transaction_currency']"
-                                                        selected-value="item.transaction.transaction_currency_object.id"
+                                                        selected-value="item.transaction.transaction_currency_object.user_code"
                                                         selected-name="item.transaction.transaction_currency_object.name"
                                                         is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-relations-select>
                     </div>

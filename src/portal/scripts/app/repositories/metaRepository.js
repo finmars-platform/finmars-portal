@@ -107,36 +107,33 @@
             case 'portfolio':
             case 'account':
             case 'currency':
-            case 'strategy-1':
-            case 'strategy-2':
-            case 'strategy-3':
             case 'account-type':
             case 'pricing-policy':
                 return evRequiredAttrs.requiredAttrs;
-                break;
 
             case 'counterparty':
             case 'responsible':
                 return evRequiredAttrs.requiredAttrs2;
-                break;
+
+			case 'strategy-1':
+			case 'strategy-2':
+			case 'strategy-3':
+				return evRequiredAttrs.strategiesAttrs;
 
             case 'instrument':
                 return evRequiredAttrs.instrumentAttrs;
-                break;
+
             case 'instrument-type':
                 return evRequiredAttrs.instrumentTypeAttrs;
-                break;
 
             case 'price-history':
                 return evRequiredAttrs.pricesAttrs;
-                break;
+
             case 'currency-history':
                 return evRequiredAttrs.currenciesAttrs;
-                break;
 
             default:
                 return [];
-                break;
         }
 
 

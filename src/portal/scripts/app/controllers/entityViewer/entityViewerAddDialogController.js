@@ -122,6 +122,9 @@
         vm.fixedAreaPopup = vm.sharedLogic.getFixedAreaPopup();
 
         vm.typeSelectorOptions = [];
+		vm.groupSelectorLabel = 'Group';
+		vm.groupSelectorOptions = [];
+		vm.groupSelectorEntityType = vm.sharedLogic.entityTypeForGroupSelectorsData[vm.entityType];
 
         vm.pricingConditions = [
             {id: 1, name: "Don't Run Valuation"},
@@ -1134,14 +1137,15 @@
             if (errors.length) {
 
                 // vm.sharedLogic.processTabsErrors(errors, $event);
-                var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
+                var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.groupSelectorEventObj);
 
                 if (processResult) {
                     vm.fixedAreaPopup = processResult;
                     vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));
                 }
 
-            } else {
+            }
+			else {
 
                 // var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
                 var resultEntity = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
@@ -1318,7 +1322,15 @@
 
                 instrumentTypeService.bookInstrument(vm.entity.instrument_type).then(function (data) {
 
-                    vm.entity = data.instrument
+					Object.keys(data.instrument).forEach(function (property) {
+
+						if (!['attributes', 'accrual_calculation_schedules', 'event_schedules'].includes(property)) {
+
+							vm.entity[property] = data.instrument[property];
+
+						}
+
+					});
 
                     console.log('vm.bookInstrument.entity', vm.entity)
 
@@ -1831,6 +1843,10 @@
                 vm.dialogElemToResize = vm.sharedLogic.onEditorStart();
             }, 100);
 
+			vm.groupSelectorEventObj = { // sending signal to crud select that is inside fixed area but outside popup
+				event: {}
+			};
+
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EventService();
 
@@ -1855,64 +1871,68 @@
             });
 
             getEntityAttrs();
-
             // vm.getFormLayout();
             // evEditorSharedLogicHelper.getFormLayout('addition', formLayoutFromAbove);
+			const groupValueEntity = vm.sharedLogic.groupSelectorValueEntities[vm.entityType];
+			vm.sharedLogic.getGroupSelectorOptions(groupValueEntity).then(function () {
 
-            vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
+				if (['responsible', 'counterparty'].indexOf(vm.entityType) !== -1) {
+					vm.entity.group = vm.groupSelectorOptions[0].id;
 
-                vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
-                vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
+				} else if (['strategy-1', 'strategy-2', 'strategy-3'].indexOf(vm.entityType) !== -1) {
+					vm.entity.subgroup = vm.groupSelectorOptions[0].id;
+				}
 
-                vm.attributeTypes = formLayoutData.attributeTypes;
+				vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
 
-                vm.tabs = formLayoutData.tabs;
-                vm.attributesLayout = formLayoutData.attributesLayout;
+					vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
+					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
 
-                vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
+					vm.attributeTypes = formLayoutData.attributeTypes;
 
-                if (vm.entityType === 'instrument') {
+					vm.tabs = formLayoutData.tabs;
+					vm.attributesLayout = formLayoutData.attributesLayout;
 
-                    vm.typeSelectorChange = function () {
+					vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
 
-                        vm.bookInstrument().then(function () {
+					if (vm.entityType === 'instrument') {
 
-                            vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
+						vm.typeSelectorChange = function () {
 
-                                vm.tabs = data.tabs;
-                                vm.attributesLayout = data.attributesLayout;
+							vm.bookInstrument().then(function () {
 
-                                $scope.$apply();
+								vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
 
-                            });
-                        })
+									vm.tabs = data.tabs;
+									vm.attributesLayout = data.attributesLayout;
+
+									$scope.$apply();
+
+								});
+							})
 
 
-                    };
+						};
 
                 } else {
 
-					vm.typeSelectorChange = typeSelectorChangeFns[vm.entityType];
+					vm.typeSelectorChange = vm.sharedLogic.typeSelectorChangeFns[vm.entityType];
                     $scope.$apply();
 
                 }
 
-                if (['responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3'].indexOf(vm.entityType) !== -1) {
+					/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 
-                    vm.entity.group = vm.groupSelectorOptions[0].id
+						vm.fixedAreaPopup.fields = fieldsData;
+						vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
 
-                }
+						$scope.$apply();
 
-                /* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
+					}); */
 
-                    vm.fixedAreaPopup.fields = fieldsData;
-                    vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
+				});
 
-                    $scope.$apply();
-
-                }); */
-
-            });
+			});
 
             vm.getCurrencies();
 
