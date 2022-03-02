@@ -16,6 +16,7 @@
                 label: '@',
                 placeholderText: '@',
                 model: '=',
+				customButtons: '=',
                 customStyles: '=',
                 eventSignal: '=',
                 smallOptions: '=',
@@ -240,6 +241,10 @@
                     scope.getList();
 
                 };
+
+                scope.onInputFocus = function (){
+                    scope.getList();
+                }
 
                 var closeDropdownMenu = function (updateScope) {
 

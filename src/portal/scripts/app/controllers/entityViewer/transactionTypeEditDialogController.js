@@ -409,7 +409,7 @@
                         $scope.$apply();
 
 						sharedLogic.setStateInActionsControls();
-						vm.paneActionsMenuPopups = vm.createSelectorPopupDataListForActions();
+						vm.paneActionsMenuPopups = vm.createSelectorPopupDataForActions();
 
                         res();
 
@@ -1631,36 +1631,7 @@
 		vm.onActionAccordionCollapse = sharedLogic.onActionAccordionCollapse;
         vm.toggleItem = sharedLogic.toggleItem;
 
-        vm.getActionTypeName = function (action) {
-
-            if (action.instrument) {
-                return "Create Instrument";
-            }
-
-            if (action.transaction) {
-                return "Create Transaction";
-            }
-
-            if (action.instrument_factor_schedule) {
-                return "Create Factor Schedule";
-            }
-
-            if (action.instrument_manual_pricing_formula) {
-                return "Create Manual Pricing Formula";
-            }
-
-            if (action.instrument_accrual_calculation_schedules) {
-                return "Create Accrual Calculation Schedules";
-            }
-
-            if (action.instrument_event_schedule) {
-                return "Create Event Schedule";
-            }
-
-            if (action.instrument_event_schedule_action) {
-                return "Create Event Schedule Action"
-            }
-        };
+        vm.getActionTypeName = sharedLogic.getActionTypeName;
 
         vm.rebookInstrumentReactions = [
             {
@@ -1737,7 +1708,7 @@
         vm.paneActionsMenuPopups = [];
 
 		// vm.createActionsMenuPopupsList
-		vm.createSelectorPopupDataListForActions = sharedLogic.createSelectorPopupDataListForActions;
+		vm.createSelectorPopupDataForActions = sharedLogic.createSelectorPopupDataForActions;
 
         /* vm.deletePane = function ($index, $event) {
 
@@ -1806,7 +1777,7 @@
         vm.generateOperationPopupData = sharedLogic.generateOperationPopupData;
         vm.generateInstrumentOperationPopupData = sharedLogic.generateInstrumentOperationPopupData;
 
-		/*vm.makeCopyOfAction = function (actionToCopy, index, $event) {
+		/* vm.makeCopyOfAction = function (actionToCopy, index, $event) {
 
 			$event.stopPropagation();
 			var actionCopy = JSON.parse(JSON.stringify(actionToCopy));

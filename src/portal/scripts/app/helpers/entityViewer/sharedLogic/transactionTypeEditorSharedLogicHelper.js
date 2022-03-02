@@ -136,35 +136,34 @@
 
         const updateInputFunctions = function () {
 
-            viewModel.expressionData.groups[0] = {
-                "name": "<b>Inputs</b>",
-                "key": 'input'
-            }
+			viewModel.expressionData.groups[0] = {
+				"name": "<b>Inputs</b>",
+				"key": 'input'
+			}
 
-            if (viewModel.entity.inputs && viewModel.entity.inputs.length > 0) {
+			if (viewModel.entity.inputs && viewModel.entity.inputs.length > 0) {
 
-                viewModel.expressionData.functions[0] = viewModel.entity.inputs.map(function (input) {
+				viewModel.expressionData.functions[0] = viewModel.entity.inputs.map(function (input) {
 
-                    return {
-                        "name": "Input: " + input.verbose_name + " (" + input.name + ")",
-                        "description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
-                        "groups": "input",
-                        "func": input.name
-                    }
+					return {
+						"name": "Input: " + input.verbose_name + " (" + input.name + ")",
+						"description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
+						"groups": "input",
+						"func": input.name
+					}
 
-                });
+				});
 
-            } else {
+			} else {
 
-                viewModel.expressionData.functions = []
+				viewModel.expressionData.functions = []
 
-            }
+			}
 
-            return viewModel.expressionData;
+			return viewModel.expressionData;
+		};
 
-        };
-
-		const useIdForRelList = ['daily_pricing_model', 'payment_size_detail', 'accrual_calculation_model', 'notification_class', 'event_class', 'periodicity'];
+		// const useIdForRelList = ['pricing_condition', 'payment_size_detail', 'accrual_calculation_model', 'notification_class', 'event_class', 'periodicity'];
 
 		const formatRelationForSelector = function (key, relationsList) {
 
@@ -176,18 +175,19 @@
 
 			}
 
-			const propForId = useIdForRelList.includes(key) ? 'id' : 'user_code';
+			// const propForId = useIdForRelList.includes(key) ? 'id' : 'user_code';
 
 			return relationsList.map(rItem => {
 
 				return {
-					id: rItem[propForId],
+					id: rItem.user_code,
 					name: rItem.hasOwnProperty('short_name') ? rItem.short_name : rItem.name
 				};
 
 			});
 
 		};
+		// needed because back does not send _object for selected transaction_class
 
 		const loadRelation = function (field, noScopeUpdate) {
 
@@ -326,7 +326,7 @@
 
 			}
 
-			viewModel.paneActionsMenuPopups = createSelectorPopupDataListForActions();
+			viewModel.paneActionsMenuPopups = createSelectorPopupDataForActions();
 
 		};
 
@@ -349,10 +349,10 @@
 			],
 			'instrument': [
 				'accrued_currency', 'accrued_currency_input', 'accrued_multiplier',
-				'daily_pricing_model', 'daily_pricing_model_input', 'default_accrued',
+				'pricing_condition', 'pricing_condition_input', 'default_accrued',
 				'default_price', 'instrument_type', 'instrument_type_input', 'maturity_date',
 				'maturity_price', 'name', 'notes', 'payment_size_detail', 'payment_size_detail_input',
-				'price_multiplier',
+				'price_download_scheme', 'price_download_scheme_input', 'price_multiplier',
 				'pricing_currency', 'pricing_currency_input', 'public_name', 'reference_for_pricing',
 				'short_name', 'user_code', 'user_text_1', 'user_text_2', 'user_text_3'],
 			'instrument_accrual_calculation_schedules': [
@@ -369,9 +369,9 @@
 				'button_position', 'event_schedule', 'event_schedule_input', 'event_schedule_phantom', 'is_book_automatic',
 				'is_sent_to_pending', 'text', 'transaction_type_from_instrument_type'
 			],
-			'instrument_manual_pricing_formula': [
+			/* 'instrument_manual_pricing_formula': [
 				'expr', 'instrument', 'instrument_input', 'instrument_phantom', 'notes', 'pricing_policy', 'pricing_policy_input'
-			],
+			], */
 			'instrument_factor_schedule': [
 				'instrument', 'instrument_input', 'instrument_phantom', 'effective_date', 'factor_value'
 			],
@@ -389,7 +389,7 @@
 			actionToAdd[actionType] = {};
 
 			actionFieldsByType[actionType].forEach(function (key) {
-				actionToAdd[actionType][key] = null;
+				actionToAdd[actionType][key] = '';
 			});
 
 			return actionToAdd;
@@ -467,7 +467,7 @@
 			const multitypeFieldsData = getMultitypeFieldsDataForAction(result);
 			viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
 
-			viewModel.paneActionsMenuPopups = createSelectorPopupDataListForActions();*/
+			viewModel.paneActionsMenuPopups = createSelectorPopupDataForActions();*/
 			var result = createNewAction(actionType);
 
 			insertActions(result);
@@ -506,10 +506,10 @@
 					key: "instrument_factor_schedule",
 					name: "Create factor"
 				},
-				{
+				/* {
 					key: "instrument_manual_pricing_formula",
 					name: "Create pricing"
-				},
+				}, */
 				{
 					key: "instrument_accrual_calculation_schedules",
 					name: "Create accrual"
@@ -1058,7 +1058,7 @@
                 strategy1: null,
                 strategy2: null,
                 strategy3: null,
-                daily_pricing_model: null,
+				pricing_condition: null,
                 payment_size_detail: null,
                 pricing_policy: null,
                 value: null,
@@ -1914,7 +1914,7 @@
 					viewModel.clearPhantoms();
 
 					viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
-					createSelectorPopupDataListForActions();
+					createSelectorPopupDataForActions();
 
 				}
 			});
@@ -1978,11 +1978,11 @@
 
 			viewModel.findPhantoms();
 
-			viewModel.paneActionsMenuPopups = createSelectorPopupDataListForActions();
+			viewModel.paneActionsMenuPopups = createSelectorPopupDataForActions();
 
 		};
 
-		const createSelectorPopupDataListForActions = function () {
+		const createSelectorPopupDataForActions = function () {
 
 			viewModel.paneActionsMenuPopups = [];
 
@@ -2927,7 +2927,7 @@
 
 		};
 
-		const createInstrumentManualPricingFormulaMFData = function (action, actionIndex) {
+		/* const createInstrumentManualPricingFormulaMFData = function (action, actionIndex) {
 
 			let multitypeFieldsData = {};
 
@@ -3004,7 +3004,7 @@
 
 			return multitypeFieldsData;
 
-		};
+		}; */
 
 		const createInstrumentAccrualCalculationSchedulesMFData = function (action, actionIndex) {
 
@@ -3278,9 +3278,9 @@
 			else if (action.instrument_factor_schedule) {
 				multitypeFieldsData = createInstrumentFactorScheduleMFData(action, actionIndex);
 			}
-			else if (action.instrument_manual_pricing_formula) {
+			/* else if (action.instrument_manual_pricing_formula) {
 				multitypeFieldsData = createInstrumentManualPricingFormulaMFData(action, actionIndex);
-			}
+			} */
 			else if (action.instrument_accrual_calculation_schedules) {
 				multitypeFieldsData = createInstrumentAccrualCalculationSchedulesMFData(action, actionIndex);
 			}
@@ -3500,7 +3500,7 @@
 
 		const setStateInActionsControls = function () {
 
-			const actionsKeysList = ['instrument', 'transaction', 'instrument_factor_schedule', 'instrument_manual_pricing_formula', 'instrument_accrual_calculation_schedules', 'instrument_event_schedule', 'instrument_event_schedule_action'];
+			const actionsKeysList = ['instrument', 'transaction', 'instrument_factor_schedule', /* 'instrument_manual_pricing_formula', */ 'instrument_accrual_calculation_schedules', 'instrument_event_schedule', 'instrument_event_schedule_action'];
 
 			viewModel.entity.actions.forEach(function (action) {
 
@@ -3593,13 +3593,14 @@
 				}*/
 
 				var defaultName = ecosystemDefaultData[defaultValueKey + '_object'][nameProperty];
+				var defaultUserCode = ecosystemDefaultData[defaultValueKey + '_object']['user_code'];
 
-				actionData[actionType][fieldName] = ecosystemDefaultData[defaultValueKey];
+				actionData[actionType][fieldName] = defaultUserCode;
 
-				// needed to display default value name inside selector after toggling 'relation' field
+				// needed for displaying default value after turning on 'relation' field
 				actionData[actionType][fieldName + '_object'] = {};
 				actionData[actionType][fieldName + '_object'][nameProperty] = defaultName;
-				actionData[actionType][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
+				actionData[actionType][fieldName + '_object']['user_code'] = defaultUserCode;
 
 				if (relationSelData) {
 					relationSelData.model = ecosystemDefaultData[defaultValueKey];
@@ -3615,6 +3616,7 @@
 
 			item[actionType][fieldName] = null;
 			item[actionType][fieldName + '_input'] = null;
+			delete item[actionType][fieldName + '_object'];
 
 			if (item[actionType].hasOwnProperty(fieldName + '_phantom')) {
 				item[actionType][fieldName + '_phantom'] = null;
@@ -3788,6 +3790,38 @@
 
 		};
 
+		const getActionTypeName = function (action) {
+
+			if (action.instrument) {
+				return "Create Instrument";
+			}
+
+			else if (action.transaction) {
+				return "Create Transaction";
+			}
+
+			else if (action.instrument_factor_schedule) {
+				return "Create Factor Schedule";
+			}
+
+			else if (action.instrument_manual_pricing_formula) {
+				return "This action obsolete. Please delete it.";
+				// return "Create Manual Pricing Formula";
+			}
+
+			else if (action.instrument_accrual_calculation_schedules) {
+				return "Create Accrual Calculation Schedules";
+			}
+
+			else if (action.instrument_event_schedule) {
+				return "Create Event Schedule";
+			}
+
+			else if (action.instrument_event_schedule_action) {
+				return "Create Event Schedule Action"
+			}
+		};
+
         const appendFromTemplate = function ($event, template) {
 
 			console.log("Append from Template", template);
@@ -3931,7 +3965,7 @@
 			loadEcosystemDefaults: loadEcosystemDefaults,
 			getTransactionUserFields: getTransactionUserFields,
 
-			createSelectorPopupDataListForActions: createSelectorPopupDataListForActions,
+			createSelectorPopupDataForActions: createSelectorPopupDataForActions,
 			moveDown: moveDown,
 			moveUp: moveUp,
 			resolveInstrumentProp: resolveInstrumentProp,
@@ -3942,6 +3976,8 @@
 			onMultitypeFieldValChange: onMultitypeFieldValChange,
 
 			setStateInActionsControls: setStateInActionsControls,
+			getActionTypeName: getActionTypeName,
+			// resetPropertyBtn: resetPropertyBtn,
 			saveAsTemplate: saveAsTemplate,
 			appendFromTemplate: appendFromTemplate,
 			setDefaultValueForRelation: setDefaultValueForRelation,

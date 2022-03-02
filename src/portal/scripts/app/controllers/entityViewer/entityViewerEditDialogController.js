@@ -128,7 +128,9 @@
         vm.fixedAreaPopup = vm.sharedLogic.getFixedAreaPopup();
 
         vm.typeSelectorOptions = [];
-        vm.groupSelectorOptions = [];
+		vm.groupSelectorLabel = 'Group';
+        vm.groupSelectorOptions = []; // set by getFormLayout()
+		vm.groupSelectorEntityType = vm.sharedLogic.entityTypeForGroupSelectorsData[vm.entityType];
 
         vm.pricingConditions = [
             {id: 1, name: "Don't Run Valuation"},
@@ -961,7 +963,7 @@
             if (errors.length) {
 				// vm.sharedLogic.processTabsErrors(errors, $event);
 
-				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
+				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.groupSelectorEventObj);
 
 				if (processResult) {
 					vm.fixedAreaPopup = processResult;
@@ -1987,13 +1989,22 @@
         vm.bookInstrument = function () {
 
             return new Promise(function (resolve, reject) {
-                instrumentTypeService.bookInstrument(vm.entity.instrument_type).then(function (data) {
+                /* instrumentTypeService.bookInstrument(vm.entity.instrument_type).then(function (data) {
 
-                    vm.entity = data.instrument
+                	Object.keys(data.instrument).forEach(function (property) {
+
+                		if (!['attributes', 'accrual_calculation_schedules', 'event_schedules'].includes(property)) {
+
+                			vm.entity[property] = data.instrument[property];
+
+						}
+
+					});
 
                     resolve()
 
-                })
+                }) */
+				resolve();
 
             })
 
@@ -2016,6 +2027,10 @@
             setTimeout(function () {
                 vm.dialogElemToResize = vm.sharedLogic.onEditorStart();
             }, 100);
+
+			vm.groupSelectorEventObj = {
+				event: {}
+			};
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
@@ -2077,7 +2092,6 @@
                     })
 
 				};
-
 
             }
             else {

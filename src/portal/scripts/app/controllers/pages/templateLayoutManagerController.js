@@ -296,7 +296,7 @@
         		vm.setStateInActionsControls();
 				vm.actionsMultitypeFieldsList = createDataForActionsMultitypeFieldsList();
 
-				vm.paneActionsMenuPopups = createSelectorPopupDataListForActions();
+				vm.paneActionsMenuPopups = createSelectorPopupDataForActions();
 
         	}
 
@@ -526,7 +526,7 @@
             var multitypeFieldsData = ttypeSharedLogic.getMultitypeFieldsDataForAction(result);
             vm.actionsMultitypeFieldsList.push(multitypeFieldsData);
 
-			vm.paneActionsMenuPopups = createSelectorPopupDataListForActions();
+			vm.paneActionsMenuPopups = createSelectorPopupDataForActions();
 
         };
 
@@ -554,7 +554,7 @@
 
         };
 
-        var createSelectorPopupDataListForActions = function () {
+        var createSelectorPopupDataForActions = function () {
 
 			vm.paneActionsMenuPopups = [];
 
@@ -611,7 +611,7 @@
                 	vm.activeActionTemplate.data.actions.splice($index, 1);
                     vm.actionsMultitypeFieldsList.splice($index, 1);
 
-					vm.paneActionsMenuPopups = createSelectorPopupDataListForActions();
+					vm.paneActionsMenuPopups = createSelectorPopupDataForActions();
 
                 }
 
@@ -1019,7 +1019,7 @@
 
 				vm.actionsMultitypeFieldsList = createDataForActionsMultitypeFieldsList();
 
-				vm.paneActionsMenuPopups = createSelectorPopupDataListForActions();
+				vm.paneActionsMenuPopups = createSelectorPopupDataForActions();
 
 			}
 
