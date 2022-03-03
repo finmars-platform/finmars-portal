@@ -108,7 +108,10 @@
                             "name": "Custom Column: " + item.name,
                             "description": "Custom Column: " + item.name + " (" + item.user_code + ") :: " + captions[item.value_type] + '\n' + item.notes + '\nExpression: \n' + item.expr,
                             "groups": "custom_field",
-                            "func": 'custom_fields.' + item.user_code
+                            "func": "custom_fields." + item.user_code,
+							"validation": {
+								"func": "custom_fields." + item.user_code
+							}
                         }
 
                     });
@@ -190,7 +193,10 @@
                         "name": "Column: " + attr.name + ' (' + attr.key + ')',
                         "description": "Column Name: " + attr.name + "\nReference (key ID): " + attr.key + '\nValue Type: ' + captions[attr.value_type],
                         "groups": "input",
-                        "func": attr.key
+                        "func": attr.key,
+						"validation": {
+							"func": attr.key
+						}
                     }
 
                 });
@@ -341,7 +347,10 @@
                         "name": "Column: " + attr.name + ' (' + attr.key + ')',
                         "description": "Column Name: " + attr.name + "\nReference (key ID): " + attr.key + '\nValue Type: ' + captions[attr.value_type],
                         "groups": "input",
-                        "func": attr.key
+                        "func": attr.key,
+						"validation": {
+							"func": attr.key
+						}
                     }
 
                 });
