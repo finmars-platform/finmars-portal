@@ -299,21 +299,30 @@
                 "name": "Context Instrument",
                 "description": "-",
                 "groups": "context_var",
-                "func": 'context_instrument'
+                "func": "context_instrument",
+				"validation": {
+					"func": "context_instrument"
+				}
             })
 
             result.push({
                 "name": "Context Pricing Policy",
                 "description": "-",
                 "groups": "context_var",
-                "func": 'context_pricing_policy'
+                "func": "context_pricing_policy",
+				"validation": {
+					"func": "context_pricing_policy"
+				}
             })
 
             result.push({
                 "name": "Context Date",
                 "description": "-",
                 "groups": "context_var",
-                "func": 'context_date'
+                "func": "context_date",
+				"validation": {
+					"func": "context_date"
+				}
             })
 
             return result

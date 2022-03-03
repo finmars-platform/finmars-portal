@@ -23,11 +23,12 @@
           </button>
 
           <input data-ng-model="model"
-                 data-ng-change="onInputChange()"
-                 placeholder="Expression"
-                 class="custom-input expression-input textInputElem"
                  ng-readonly="isReadonly"
-                 ng-disabled="isDisabled" />
+                 ng-disabled="isDisabled"
+                 data-ng-change="onInputChange()"
+                 type="text"
+                 placeholder="Expression"
+                 class="custom-input expression-input textInputElem" />
 
         </div>
 
@@ -70,13 +71,14 @@
       </div>
     </div>
 
-    <div class="custom-input-full-text-container customInputFullText">
+    <!-- <div class="custom-input-full-text-container customInputFullText">
       <textarea data-ng-model="model"
                 data-ng-change="onInputChange()"
                 ng-readonly="isReadonly"
                 ng-disabled="isDisabled"
                 class="custom-input-full-text customInputBackgroundColor"></textarea>
-    </div>
+    </div> -->
+
   </div>
 
   <div ng-if="error"
