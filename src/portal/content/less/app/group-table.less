@@ -2967,23 +2967,35 @@ body.md-dialog-is-showing {
 }
 
 .g-report-settings-dialog-view {
+  min-width: 570px;
+  max-width: 95%;
+  width: 570px;
+  max-height: 100%;
+  box-sizing: border-box;
 
-  md-card {
-    padding-top: 16px;
+  md-dialog-content {
+    width: 570px;
+    border-top: 1px solid @borderPale;
+    border-bottom: 1px solid @borderPale;
+    padding-right: 2px;
+    padding-left: 20px;
+    box-sizing: border-box;
   }
 
-  hr {
-    margin: 16px 0;
+  h5 {
+    margin: 20px 0;
   }
 
-  md-input-container {
-    min-width: 190px;
-    height: 34px;
+  .g-report-settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 20px;
   }
 
-  .multiselector-input-container {
-    min-width: 190px;
-    margin: 0 10px;
+  .g-report-settings-field {
+    display: block;
+    width: 280px;
   }
 
 }
