@@ -22,13 +22,15 @@
             vm.title = '';
         } */
 
-        vm.nameProperty = data.nameProperty
-        vm.strictOrder = data.strictOrder
-        vm.optionsCheckboxes = data.optionsCheckboxes
-        vm.readyStatus = false
-        vm.selectedItems = []
+        vm.nameProperty = data.nameProperty;
+        vm.strictOrder = data.strictOrder;
+        vm.optionsCheckboxes = data.optionsCheckboxes;
+        vm.readyStatus = false;
+        vm.selectedItems = [];
 
-		vm.orderOptions = data.orderOptions || null
+		vm.orderOptions = data.orderOptions || null;
+
+		vm.draggerElem = document.querySelector('.two-fields-multiselector-dialog .twoFieldsDragger');
 
         var separateUnselectedItems = function (items, selectedItems) {
 
