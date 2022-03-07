@@ -7,11 +7,13 @@
 
     var entityResolverService = require('../../services/entityResolverService');
 
-    module.exports = function EntityViewerRestoreDeletedBulkDialogController($scope, $mdDialog, evDataService, evEventService) {
+    module.exports = function EntityViewerRestoreDeletedBulkDialogController($scope, $mdDialog, data) {
 
         var vm = this;
 
-        vm.entityType = evDataService.getEntityType();
+        // vm.entityType = evDataService.getEntityType();
+		var entityType = data.entityType;
+		var restoredItems = data.items;
 
         vm.isDeleted = false;
 
@@ -22,16 +24,15 @@
 
         vm.delete = function ($event) {
 
-            var objects = evDataService.getObjects();
-
+            /* var objects = evDataService.getObjects();
 
             var restoredItems  = objects
                 .filter(function (item) {
-                    return item.___is_activated && item.is_deleted
+                    return item.___is_activated && item.is_deleted;
                 }).map(function (item) {
 
-                    var name = item.name.split('(del) ')[1]
-                    var short_name = item.short_name.split('(del) ')[1]
+                    var name = item.name.split('(del) ')[1];
+                    var short_name = item.short_name.split('(del) ')[1];
 
                     return {
                         id: item.id,
@@ -42,20 +43,43 @@
                         is_enabled: true,
                         is_active: true
                     }
-                });
+                });*/
+
+			var itemsIds = [];
+
+			restoredItems = restoredItems.map(function (item) {
+
+				var name = item.name.split('(del) ')[1];
+				var short_name = item.short_name.split('(del) ')[1];
+
+				itemsIds.push(item.id);
+
+				return {
+					id: item.id,
+					name: name,
+					short_name: short_name,
+					user_code: item.deleted_user_code,
+					is_deleted: false,
+					is_enabled: true,
+					is_active: true
+				};
+
+			});
 
             console.log('restoredItems', restoredItems);
 
             vm.processing = true;
             vm.isDeleted = true;
 
-            entityResolverService.updateBulk(vm.entityType, restoredItems).then(function (data) {
+            entityResolverService.updateBulk(entityType, restoredItems).then(function (data) {
 
                 vm.processing = false;
 
-                $mdDialog.hide({status: 'agree', data: {}});
 
-            }).catch(function (reason) {
+                $mdDialog.hide({status: 'agree', data: {itemsIds: itemsIds}});
+
+            })
+			.catch(function (reason) {
 
                 $mdDialog.show({
                     controller: 'InfoDialogController as vm',

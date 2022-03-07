@@ -626,6 +626,8 @@
 							vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
 
 						}); */
+						vm.readyStatus.layout = true;
+						vm.readyStatus.entity = true;
 
                     	// Resolving promise to inform child about end of editor building
 						res();
