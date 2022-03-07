@@ -16,8 +16,6 @@
 			templateUrl: 'views/directives/groupTable/g-ev-rows-bulk-actions-view.html',
 			link: function (scope, elem, attrs, ctrlVm) {
 
-				scope.closeOnClickOutside = true;
-
 				const entityType = scope.evDataService.getEntityType();
 
 				let optionsList = [{
