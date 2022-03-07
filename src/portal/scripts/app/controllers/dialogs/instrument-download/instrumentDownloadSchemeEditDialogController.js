@@ -34,7 +34,10 @@
                     "name": "Downloaded: " + input.name,
                     "description": "Downloaded: " + input.name + " -> " + input.name_expr,
                     "groups": "input",
-                    "func": input.name
+                    "func": input.name,
+					"validation": {
+						"func": input.name
+					}
                 }
 
             })

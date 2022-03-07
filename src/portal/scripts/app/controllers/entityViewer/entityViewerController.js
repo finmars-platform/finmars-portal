@@ -544,7 +544,73 @@
 
 				}
 
-            }
+            };
+
+            var restoreDeletedEntities = function (event, entityType, entitiesToRestore) {
+
+            	$mdDialog.show({
+					controller: 'EntityViewerRestoreDeletedBulkDialogController as vm',
+					templateUrl: 'views/entity-viewer/entity-viewer-entity-restore-deleted-bulk-dialog-view.html',
+					parent: angular.element(document.body),
+					targetEvent: event,
+					//clickOutsideToClose: false,
+					locals: {
+						evDataService: vm.entityViewerDataService,
+						evEventService: vm.entityViewerEventService,
+						data: {
+							entityType: entityType,
+							items: entitiesToRestore
+						}
+					}
+				}).then(function (res) {
+
+					/* vm.entityViewerDataService.setActiveObjectAction(null);
+					vm.entityViewerDataService.setActiveObjectActionData(null); */
+					vm.entityViewerDataService.setRowsActionData(null);
+
+					if (res.status === 'agree') {
+
+						var evOptions = vm.entityViewerDataService.getEntityViewerOptions();
+						var objects = vm.entityViewerDataService.getObjects();
+						var restoredEntitiesIds = res.data.itemsIds;
+
+						objects.forEach(function (obj) {
+
+							if (restoredEntitiesIds.includes(obj.id)) {
+
+								var parent = vm.entityViewerDataService.getData(obj.___parentId);
+								var passesFilters = evOptions.entity_filters && (evOptions.entity_filters.includes('active') || evOptions.entity_filters.includes('enabled'));
+
+								if (passesFilters) {
+									// remove mark from restored entity inside ev table
+									parent.results.forEach(function (resultItem) {
+
+										if (restoredEntitiesIds.includes(resultItem.id)) {
+											resultItem.is_deleted = false;
+										}
+
+									});
+
+								} else { // if entity does not pass filter, remove it from ev table
+
+									parent.results = parent.results.filter(function (resultItem) {
+										return !resultItem.includes(resultItem.id);
+									});
+
+								}
+
+								vm.entityViewerDataService.setData(parent);
+
+							}
+
+						});
+
+						vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+					}
+				});
+
+			};
 
             var setEventListeners = function () {
 
@@ -748,33 +814,20 @@
 
                                 break;
 
-                            case 'restore_deleted':
+                            case 'bulk_restore_deleted':
 
-                                $mdDialog.show({
-                                    controller: 'EntityViewerRestoreDeletedBulkDialogController as vm',
-                                    templateUrl: 'views/entity-viewer/entity-viewer-entity-restore-deleted-bulk-dialog-view.html',
-                                    parent: angular.element(document.body),
-                                    targetEvent: actionData.event,
-                                    //clickOutsideToClose: false,
-                                    locals: {
-                                        evDataService: vm.entityViewerDataService,
-                                        evEventService: vm.entityViewerEventService
-                                    }
-                                }).then(function (res) {
+								var objects = vm.entityViewerDataService.getObjects();
+								var itemsToRestore = objects.filter(function (item) {
+									return item.___is_activated && item.is_deleted;
+								});
 
-                                    /* vm.entityViewerDataService.setActiveObjectAction(null);
-                                    vm.entityViewerDataService.setActiveObjectActionData(null); */
-									vm.entityViewerDataService.setRowsActionData(null);
-
-                                    if (res.status === 'agree') {
-
-                                        // evHelperService.updateTableAfterEntitiesDeletion(vm, res.data.ids);
-                                        evHelperService.updateTableAfterEntitiesDeletion(vm.entityViewerDataService, vm.entityViewerEventService, res.data.ids);
-
-                                    }
-                                });
+								restoreDeletedEntities(actionData.event, entitytype, itemsToRestore);
 
                                 break;
+
+							case 'restore_deleted':
+								restoreDeletedEntities(actionData.event, entitytype, [actionData.object]);
+								break;
 
 							case 'edit':
 							    editEntity(entitytype, actionData);

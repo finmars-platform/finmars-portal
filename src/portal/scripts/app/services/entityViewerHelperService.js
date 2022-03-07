@@ -1483,7 +1483,7 @@
 
             if (deletedEntitiesIds.includes(obj.id)) {
 
-                var parent = evDataService.getData(obj.___parentId)
+                var parent = evDataService.getData(obj.___parentId);
 
                 // if deleted entities shown, mark them
                 if (evOptions.entity_filters && evOptions.entity_filters.includes('deleted')) {
@@ -1491,7 +1491,7 @@
                     parent.results.forEach(function (resultItem) {
 
                         if (deletedEntitiesIds.includes(resultItem.id)) {
-                            resultItem.is_deleted = true
+                            resultItem.is_deleted = true;
                         }
 
                     });

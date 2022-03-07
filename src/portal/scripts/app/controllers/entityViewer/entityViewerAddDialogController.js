@@ -1752,7 +1752,7 @@
 
         // Instrument tab Exposure end
 
-        vm.instrumentTypeChange = function ($event) {
+        /* vm.instrumentTypeChange = function ($event) {
 
             console.log('instrumentTypeChange', vm.entity)
 
@@ -1769,9 +1769,9 @@
 				vm.readyStatus.layout = true;
 				vm.readyStatus.entity = true;
 
-            });
+			});
 
-        }
+        } */
 
         vm.openPricingMultipleParametersDialog = function ($event, item) {
 
@@ -1905,26 +1905,26 @@
 				vm.tabs = formLayoutData.tabs;
 				vm.attributesLayout = formLayoutData.attributesLayout;
 
-					vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
+				vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
 
-					if (vm.entityType === 'instrument') {
+				if (vm.entityType === 'instrument') {
 
-						vm.typeSelectorChange = function () {
+					vm.typeSelectorChange = function () {
 
-							vm.bookInstrument().then(function () {
+						vm.bookInstrument().then(function () {
 
-								vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
+							vm.sharedLogic.typeSelectorChangeFns[vm.entityType]().then(data => {
 
-									vm.tabs = data.tabs;
-									vm.attributesLayout = data.attributesLayout;
+								vm.tabs = data.tabs;
+								vm.attributesLayout = data.attributesLayout;
 
-									$scope.$apply();
+								$scope.$apply();
 
-								});
-							})
+							});
+						})
 
 
-						};
+					};
 
 				} else {
 
@@ -1945,12 +1945,12 @@
 
 				/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 
-						vm.fixedAreaPopup.fields = fieldsData;
-						vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
+					vm.fixedAreaPopup.fields = fieldsData;
+					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
 
-						$scope.$apply();
+					$scope.$apply();
 
-					}); */
+				}); */
 
 			});
 
