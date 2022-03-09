@@ -1,6 +1,8 @@
 /**
  * Created by szhitenev on 13.01.2017.
  */
+import { contextVariablesWords } from "../../../content/services/expressionsData";
+
 (function () {
 
     var expressionService = require('../services/expression.service');
@@ -129,7 +131,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
         return expressionsList
             .filter(function (item) {
                 // return item.func.includes('(') || (item.validation_data && item.validation_data.type === "function");
-				return item.func.includes('(');
+				return item.validation.func.includes('(');
             })
             .map(function (item) {
 
@@ -137,7 +139,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 					return item.validation_data.key_words[0];
 				} */
 
-                return item.func.split('(')[0];
+                return item.validation.func.split('(')[0];
 
             });
 
@@ -149,12 +151,11 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
         var propertiesWordsTmp = expressionsList
             .filter(function (item) {
-                return item.func.indexOf(']') !== -1;
+                return item.validation.func.indexOf(']') !== -1;
             })
             .map(function (item) {
-                return item.func.split('].')[1];
+                return item.validation.func.split('].')[1];
             });
-
 
         propertiesWordsTmp.forEach(function (word) {
 
@@ -178,12 +179,11 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
             if (item.groups === 'custom_field') {
 
-                var pieces = item.func.split('custom_fields.');
+                var pieces = item.validation.func.split('custom_fields.');
 
                 if (pieces.length > 1) {
                     propertiesWords.push(pieces[1])
                 }
-
 
             }
 
@@ -203,14 +203,16 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
                 funcGroup.forEach(function (item) {
 
-                    if (item.func.indexOf('[') !== -1) {
+                	var itemFunc = item.hasOwnProperty('validation') ? item.validation.func : item.func;
 
-                        var func = item.func.split('[').join('').split(']').join('')
+                    if (itemFunc.indexOf('[') !== -1) {
+
+                        var func = itemFunc.split('[').join('').split(']').join('')
 
                         result.push(func)
 
                     } else {
-                        result.push(item.func)
+                        result.push(itemFunc)
                     }
 
                 });
@@ -287,7 +289,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
         return result
 
-    }
+    };
 
     var eatNumber = function (expression, index) {
 
@@ -385,7 +387,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
         return token;
 
-    }
+    };
 
     var eatProperty = function (expression, index) {
 
@@ -408,7 +410,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
         return token;
 
-    }
+    };
 
     var eatSpecialSymbol = function (expression, index) {
 
@@ -423,7 +425,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
         return token
 
-    }
+    };
 
     var eatEmptySpace = function (expression, index) {
 
@@ -444,7 +446,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
         return token;
 
-    }
+    };
 
     var eatSingleQuoteString = function (expression, index) {
 
@@ -468,7 +470,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
         return token;
 
-    }
+    };
 
     var eatDoubleQuoteString = function (expression, index) {
 
@@ -492,7 +494,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
         return token;
 
-    }
+    };
 
     var getHtmlExpression = function (expression, data, expressionsList) {
 
@@ -505,7 +507,6 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
         var inputWords = getInputWords(data);
 
         var reservedWords = ['decimal_pos', 'thousand_sep', 'use_grouping', 'True', 'False', 'format']; // TODO remove 'format' if allowed to make validation of function arguments
-        var contextVariablesWords = functionsItemsService.contextVariablesWords;
 
         var processing = true;
         var currentIndex = 0;
@@ -739,7 +740,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
 		return getHtmlExpression(exprItem.expression, data, expressionsList);
 
-	}
+	};
     
     module.exports = {
         getFunctionsItems: getFunctionsItems,

@@ -16,14 +16,17 @@
 			templateUrl: 'views/directives/groupTable/g-ev-rows-bulk-actions-view.html',
 			link: function (scope, elem, attrs, ctrlVm) {
 
-				scope.closeOnClickOutside = true;
-
 				const entityType = scope.evDataService.getEntityType();
 
 				let optionsList = [{
 					actionKey: "delete",
 					name: "Delete",
 				}];
+
+				const bulkRestoreDeleted = {
+					name: "Restore",
+					actionKey: "bulk_restore_deleted"
+				};
 
 				if (entityType === 'complex-transaction') {
 
@@ -57,15 +60,15 @@
 						{
 							name: "Activate",
 							actionKey: "activate_instrument"
-						},
+						}
 					]);
 
-				} else if (!['complex-transaction', 'price-history', 'currency-history'].includes(entityType)) {
+					optionsList.push(bulkRestoreDeleted);
 
-					optionsList = optionsList.push({
-						name: "Restore",
-						actionKey: "restore_deleted"
-					});
+				}
+				else if (!['complex-transaction', 'price-history', 'currency-history'].includes(entityType)) {
+
+					optionsList.push(bulkRestoreDeleted);
 
 				}
 
