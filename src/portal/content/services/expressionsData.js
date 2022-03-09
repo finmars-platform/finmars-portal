@@ -1,5 +1,5 @@
 export const contextVariablesWords = [
-	"instrument", "portfolio", "account", "strategy1", "strategy2", "strategy3", "position", "currency",
-	"effective_date", "notification_date", "final_date", "maturity_date", "report_date", "report_start_date",
-	"accrued_currency", "pricing_currency", "pricing_policy", "allocation_balance", "allocation_pl"
+	"context_instrument", "context_portfolio", "context_account", "context_strategy1", "context_strategy2", "context_strategy3", "context_position", "context_currency",
+	"context_effective_date", "context_notification_date", "context_final_date", "context_maturity_date", "context_report_date", "context_report_start_date",
+	"context_accrued_currency", "context_pricing_currency", "context_pricing_policy", "context_allocation_balance", "context_allocation_pl"
 ];
