@@ -1,4 +1,4 @@
-// two-fields-multiselect-view
+//region two-fields-multiselect-view
 .two-fields-multiselect {
 
   .two-fields-multiselect-input {
@@ -62,9 +62,26 @@
   position: absolute;
   top: 0;
 }
-// < two-fields-multiselect-view >
+//endregion
 
-// two-fields-multiselect-dialog-view
+//region two-fields-multiselect-dialog-view
+.two-fields-multiselector-dialog {
+
+  md-toolbar {
+    position: absolute;
+    height: 29px;
+    min-height: 29px;
+    background-color: initial;
+
+    is-draggable-sign {
+      position: relative;
+      top: 5px;
+      left: 10px;
+    }
+  }
+
+}
+
 .two-fields-left-b-txt {
   flex: 0 0 450px;
   padding-left: 6px;
@@ -79,7 +96,7 @@
   font-size: 14px;
   box-sizing: border-box;
 }
-// < two-fields-multiselect-dialog-view >
+//endregion
 
 .two-fields-options-content {
   padding-bottom: 15px;

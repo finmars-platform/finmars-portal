@@ -560,13 +560,20 @@
 
 	/**
 	 *
-	 * @param dataRequest {function} - asynchronous method that returns array of items
-	 * @param argumentsList {array} - array of arguments for dataRequest method. Must contain argument with options {pageSize: 1000, page: 1}
+	 * @param {function} dataRequest - asynchronous method that returns array of items
+	 * @param {array} argumentsList - array of arguments for dataRequest method. Must contain argument with options {pageSize: 1000, page: 1}
+	 * @param {array} [dataList] - array where requested data will be placed
 	 * @returns {Promise<unknown>}
 	 */
-    var loadDataFromAllPages = function (dataRequest, argumentsList) {
+	var loadDataFromAllPages = function (dataRequest, argumentsList, dataList) {
 
-		var dataList = [];
+		if (!Array.isArray(dataList)) dataList = [];
+
+		let optionsArg = argumentsList.find(arg => {
+			return typeof arg === 'object' && arg.hasOwnProperty('page');
+		});
+
+		if (!optionsArg) throw new Error('No options with page number were specified in argumentsList');
 
 		var loadAllPages = (resolve, reject) => {
 
@@ -576,7 +583,7 @@
 
 				if (data.next) {
 
-					options.page = options.page + 1;
+					optionsArg.page = optionsArg.page + 1; // number of page to request
 					loadAllPages(resolve, reject);
 
 				} else {

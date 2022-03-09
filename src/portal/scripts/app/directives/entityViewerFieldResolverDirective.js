@@ -175,8 +175,8 @@
                 };
 
                 scope.getName = function () {
-                    if (scope.item.frontOptions && scope.item.frontOptions.fieldName) {
-                        return scope.item.frontOptions.fieldName;
+                    if (scope.item.options && scope.item.options.fieldName) {
+                        return scope.item.options.fieldName;
 
                     } else if (scope.item.hasOwnProperty('verbose_name')) {
                         return scope.item.verbose_name;
