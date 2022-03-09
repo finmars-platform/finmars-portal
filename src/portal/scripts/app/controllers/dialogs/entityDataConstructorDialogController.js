@@ -181,9 +181,8 @@
 
                 };
 
-                if (vm.isCreateNew) { // There is no layout yet, so create one
+                if (vm.formLayoutIsNew) { // There is no layout yet, so create one
 
-                    vm.formLayoutIsNew = true;
                     vm.ui = {
                         data: {}
                     }
@@ -219,7 +218,7 @@
                         }
 
                     }
-                    else { // For not complex-transaction entities
+                    else {
 
                         if (vm.layoutId || vm.layoutId === 0) {
 
@@ -236,11 +235,10 @@
 
                                 if (data.results.length) {
                                     vm.ui = data.results[0];
-                                }
 
-                                // There is no layout yet, so create one
-                                else {
-                                    vm.formLayoutIsNew = true;
+                                }
+                                else { // There is no layout yet, so create one
+                                	vm.formLayoutIsNew = true;
                                     vm.ui = {
                                         data: {}
                                     }
@@ -658,9 +656,22 @@
 
                 vm.ui.data.fixedArea = JSON.parse(JSON.stringify(vm.fixedArea));
 
-                var onSavingEnd = function () {
-                    $scope.$apply();
-                    $mdDialog.hide({status: 'agree'});
+                var onSavingEnd = function (responseData) {
+
+                	$scope.$apply(); // update scope in case of error from backend
+
+					var layoutId = vm.formLayoutIsNew ? responseData.id : vm.ui.id;
+
+					$mdDialog.hide({
+						status: 'agree',
+						data: {
+							id: layoutId,
+							user_code: vm.ui.user_code,
+							name: vm.ui.name,
+							is_default: vm.ui.is_default
+						}
+                    });
+
                 };
 
                 if (vm.entityType === "complex-transaction") {
@@ -2070,7 +2081,7 @@
             window.addEventListener('resize', vm.setTabsHolderHeight);
 
             if (data.isCreateNew) {
-                vm.isCreateNew = data.isCreateNew
+				vm.formLayoutIsNew = data.isCreateNew;
             }
 
             vm.getLayout().then(function () {

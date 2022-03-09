@@ -145,7 +145,7 @@
             return name;
         }; */
 
-        vm.newItem = JSON.parse(JSON.stringify(eventObj));
+        // vm.newItem = JSON.parse(JSON.stringify(eventObj));
 
         // Victor 01.10.2020 I use EVENT_INIT_OBJECT
         /* vm.newItem = {
@@ -365,13 +365,15 @@
 
         var onEventsTableAddRow = function () {
 
-            vm.openEventEditDialog(vm.newItem).then(function (res) {
+			var newEventData = JSON.parse(JSON.stringify(eventObj));
+
+			vm.openEventEditDialog(newEventData).then(function (res) {
 
                 if (res.status !== 'agree') {
                     return;
                 }
 
-                vm.newItem = JSON.parse(JSON.stringify(eventObj));
+                // vm.newItem = JSON.parse(JSON.stringify(eventObj));
 
                 var event = res.data.event;
 

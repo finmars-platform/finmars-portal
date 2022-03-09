@@ -126,7 +126,7 @@
 
             $mdDialog.hide({
                 status: 'agree', data: {
-                    item: vm.item
+                    item: JSON.parse(angular.toJson(vm.item)) // using angular.toJson to remove angular properties
                 }
             });
 

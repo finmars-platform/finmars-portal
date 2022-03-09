@@ -24,7 +24,11 @@
 		};
 
         vm.event = data.event;
-        vm.eventClasses = data.eventClasses;
+
+        var eventHasId = vm.event.hasOwnProperty('id') || vm.event.frontOptions && vm.event.frontOptions.hasOwnProperty('gtKey');
+		vm.regime = eventHasId ? 'edition' : 'addition';
+
+		vm.eventClasses = data.eventClasses;
         vm.notificationClasses = data.notificationClasses;
         vm.periodicityItems = data.periodicityItems;
 
@@ -195,6 +199,12 @@
                             value: null,
                             selectorOptions: [],
                         },
+						methods: {
+                        	onChange: function (rowData, colData, gtDataService, gtEventService) {
+                        		let paramsCell = gtDataService.getCellByKey(rowData.order, 'parameters');
+								paramsCell.settings.isDisabled = false;
+							}
+						},
                         styles: {
                             'grid-table-cell': {'width': '342px'}
                         }
@@ -245,7 +255,8 @@
                         order: 3,
                         cellType: 'button',
                         settings: {
-                            buttonContent: 'OPEN MANAGER'
+                            buttonContent: 'OPEN MANAGER',
+							isDisabled: true
                         },
 						methods: {
 							onClick: openEventActionParametersManager
@@ -275,7 +286,7 @@
 
 		const formatDataForActionsGridTable = function () {
 
-            // assemble header columns
+            //region Assemble header columns
             var rowObj = metaHelper.recursiveDeepCopy(vm.eventActionsGridTableData.templateRow, true);
 
             vm.eventActionsGridTableData.header.columns = rowObj.columns.map(function (column) {
@@ -298,9 +309,9 @@
                 return headerData;
 
             });
-            // < assemble header columns >
+            //endregion
 
-            // assemble body rows
+            //region assemble body rows
             vm.event.actions.forEach(function (action, actionIndex) {
                 action.button_position = actionIndex;
 
@@ -328,10 +339,13 @@
                 var isBookAutomatic = gridTableHelperService.getCellFromRowByKey(rowObj, 'is_book_automatic');
                 isBookAutomatic.settings.value = action.is_book_automatic;
 
+				var parameters = gridTableHelperService.getCellFromRowByKey(rowObj, 'parameters');
+				parameters.settings.isDisabled = false;
+
                 vm.eventActionsGridTableData.body.push(rowObj);
 
             });
-            // < assemble body rows >
+            //endregion
         };
         // < Event actions grid table >
 

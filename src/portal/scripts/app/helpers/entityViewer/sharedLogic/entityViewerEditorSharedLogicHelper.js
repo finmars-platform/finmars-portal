@@ -1128,6 +1128,159 @@
 
 			})
 		}; */
+		//region Instrument type
+
+		const getInstrFormLayoutsOptions = () => {
+
+			return viewModel.instrumentFormLayouts
+				.filter(ifLayout => {
+
+					const notInsideInstrType = !!!viewModel.instrLayoutsFromItype.find(fLayout => fLayout.user_code === ifLayout.user_code);
+					return notInsideInstrType;
+
+				})
+				.map(ifLayout => {
+					return {
+						id: ifLayout.user_code,
+						name: ifLayout.user_code
+					};
+				});
+
+		};
+
+		const getInstrumentFormLayouts = function () {
+
+			return new Promise((resolve, reject) => {
+
+				uiService.getListEditLayout('instrument').then(function (data) {
+
+					viewModel.instrumentFormLayouts = data.results;
+
+					viewModel.instrumentFormLayoutsOptions = getInstrFormLayoutsOptions();
+
+					resolve();
+
+				}).catch(error => reject(error));
+
+			});
+
+		};
+
+		const instrumentTypeMoveLayoutUp = function ($event, item, index) {
+
+			viewModel.instrLayoutsFromItype.splice(index, 1); // remove old one
+
+			var newIndex = index - 1;
+
+			if (newIndex < 0) {
+				newIndex = 0;
+			}
+
+			viewModel.instrLayoutsFromItype.splice(newIndex, 0, item);
+
+			viewModel.entity.instrument_form_layouts = viewModel.instrLayoutsFromItype.map(layout => layout.user_code).join(',');
+
+		};
+
+		const instrumentTypeMoveLayoutDown = function ($event, item) {
+
+			var index = viewModel.instrLayoutsFromItype.indexOf(item);
+
+			viewModel.instrLayoutsFromItype.splice(index, 1); // remove old one
+
+			var newIndex = index + 1
+
+			viewModel.instrLayoutsFromItype.splice(newIndex, 0, item);
+
+			viewModel.entity.instrument_form_layouts = viewModel.instrLayoutsFromItype.map(layout => layout.user_code).join(',')
+
+		}
+
+		const instrumentTypeDeleteInstrLayout = function ($event, item, index) {
+
+			// var index = viewModel.instrLayoutsFromItype.indexOf(item)
+
+			viewModel.instrLayoutsFromItype.splice(index, 1);
+
+			viewModel.entity.instrument_form_layouts = viewModel.instrLayoutsFromItype.map(layout => layout.user_code).join(',');
+
+			viewModel.instrumentFormLayoutsOptions.push({
+				id: item.user_code,
+				name: item.user_code
+			});
+
+		};
+
+		const addInstrLayoutToInstrumentType = function () {
+
+			const newInstrFormLayout = viewModel.instrumentFormLayouts.find(ifLayout => ifLayout.user_code === viewModel.newInstrFormLayoutUserCode);
+			viewModel.instrLayoutsFromItype.unshift(newInstrFormLayout);
+
+			const index = viewModel.instrumentFormLayoutsOptions.findIndex(lOption => lOption.id === viewModel.newInstrFormLayoutUserCode);
+			viewModel.instrumentFormLayoutsOptions.splice(index, 1);
+
+			viewModel.newInstrFormLayoutUserCode = '';
+
+			viewModel.entity.instrument_form_layouts = viewModel.instrLayoutsFromItype.map(layout => layout.user_code).join(',');
+
+		};
+
+		const editInstrFormLayout = function (ev, layout) {
+
+			$mdDialog.show({
+				controller: 'EntityDataConstructorDialogController as vm',
+				templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+				targetEvent: ev,
+				multiple: true,
+				locals: {
+					data: {
+						entityType: 'instrument',
+						layoutId: layout.id
+					}
+				}
+
+			}).then(function (res) {
+
+				if (res.status === "agree") {
+
+					layout.user_code = res.data.user_code;
+					layout.name = res.data.name;
+					layout.is_default = res.data.is_default;
+
+				}
+
+			});
+
+		};
+
+		const createInstrFormLayout = function (ev) {
+
+			$mdDialog.show({
+				controller: 'EntityDataConstructorDialogController as vm',
+				templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+				targetEvent: ev,
+				multiple: true,
+				locals: {
+					data: {
+						entityType: 'instrument',
+						isCreateNew: true
+					}
+				}
+
+			}).then(function (res) {
+
+				if (res.status === 'agree') {
+
+					viewModel.instrumentFormLayouts.push(res.data);
+					viewModel.instrumentFormLayoutsOptions = getInstrFormLayoutsOptions();
+
+				}
+
+			});
+
+		};
+
+		//endregion
 
         return {
 
@@ -1156,6 +1309,16 @@
 
 			isTabWithErrors: isTabWithErrors,
 			getTabBtnClasses: getTabBtnClasses,
+
+			//region Instrument type
+			getInstrumentFormLayouts: getInstrumentFormLayouts,
+			instrumentTypeMoveLayoutUp: instrumentTypeMoveLayoutUp,
+			instrumentTypeMoveLayoutDown: instrumentTypeMoveLayoutDown,
+			instrumentTypeDeleteInstrLayout: instrumentTypeDeleteInstrLayout,
+			addInstrLayoutToInstrumentType: addInstrLayoutToInstrumentType,
+			editInstrFormLayout: editInstrFormLayout,
+			createInstrFormLayout: createInstrFormLayout,
+			//endregion
 
 			// injectUserAttributesFromInstrumentType: injectUserAttributesFromInstrumentType
 
