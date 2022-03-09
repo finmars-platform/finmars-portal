@@ -1097,7 +1097,10 @@
                         "name": "Input: " + input.verbose_name + " (" + input.name + ")",
                         "description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
                         "groups": "input",
-                        "func": input.name
+                        "func": input.name,
+						"validation": {
+							"func": input.name
+						}
                     }
 
                 });

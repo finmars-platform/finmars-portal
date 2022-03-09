@@ -128,7 +128,9 @@
         vm.fixedAreaPopup = vm.sharedLogic.getFixedAreaPopup();
 
         vm.typeSelectorOptions = [];
-        vm.groupSelectorOptions = [];
+		vm.groupSelectorLabel = 'Group';
+        vm.groupSelectorOptions = []; // set by getFormLayout()
+		vm.groupSelectorEntityType = vm.sharedLogic.entityTypeForGroupSelectorsData[vm.entityType];
 
         vm.pricingConditions = [
             {id: 1, name: "Don't Run Valuation"},
@@ -618,6 +620,8 @@
 							vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
 
 						}); */
+						vm.readyStatus.layout = true;
+						vm.readyStatus.entity = true;
 
                     	// Resolving promise to inform child about end of editor building
 						res();
@@ -961,7 +965,7 @@
             if (errors.length) {
 				// vm.sharedLogic.processTabsErrors(errors, $event);
 
-				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
+				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.groupSelectorEventObj);
 
 				if (processResult) {
 					vm.fixedAreaPopup = processResult;
@@ -1043,7 +1047,9 @@
 
                     formLayoutFromAbove = null; // forcing getFormLayout() to download layout from server
 
-                    vm.getItem();
+                    vm.getItem().then(function () {
+                    	$scope.$apply();
+					});
 
                     vm.layoutAttrs = layoutService.getLayoutAttrs();
                     getEntityAttrs();
@@ -2026,6 +2032,10 @@
                 vm.dialogElemToResize = vm.sharedLogic.onEditorStart();
             }, 100);
 
+			vm.groupSelectorEventObj = {
+				event: {}
+			};
+
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
 
@@ -2086,7 +2096,6 @@
                     })
 
 				};
-
 
             }
             else {

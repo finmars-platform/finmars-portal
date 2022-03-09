@@ -268,7 +268,7 @@
 										stylePreset = 2;
 										break;
 
-									case "reset": // should not reset scope.model, in case of need reset scope.model manually from outside
+									case "reset": // reset changes done by eventSignal
 
 										scope.error = "";
 										stylePreset = "";
@@ -323,19 +323,18 @@
 
 								metaHelper.openLinkInNewTab(event);
 
-							} else {
+							} /* TEXTAREA CODE
+							else {
 
 								inputContainer.classList.add("custom-input-full-text-focused");
-
-								/* TEXTAREA CODE
 
 								fullTextElem.focus();
 
 								if (scope.renderHyperlinks) {
 									document.addEventListener("keyup", closeFulltext);
-								}*/
+								}
 
-							}
+							} */
 
 
 						});
@@ -346,23 +345,22 @@
 						fullTextElem.addEventListener("click", metaHelper.openLinkInNewTab); */
 
 					}
+					/* TEXTAREA CODE
 					else {
 
 						inputElem.addEventListener("focus", function () {
 
 							inputContainer.classList.add("custom-input-full-text-focused");
 
-							/* TEXTAREA CODE
 
-							fullTextElem.focus();*/
+
+							fullTextElem.focus();
 
 						});
 
-						/* TEXTAREA CODE
+						fullTextElem.addEventListener("blur", closeFulltext);
 
-						fullTextElem.addEventListener("blur", closeFulltext);*/
-
-					}
+					} */
 
 					/* TEXTAREA CODE
 
