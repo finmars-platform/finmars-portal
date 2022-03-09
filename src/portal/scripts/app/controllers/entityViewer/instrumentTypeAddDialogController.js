@@ -49,7 +49,7 @@
 
         var vm = this;
 
-        vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
+        var sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
 
         vm.processing = false;
 
@@ -103,7 +103,7 @@
 
         vm.showByDefault = vm.showByDefaultOptions[0].id;
 
-        vm.fixedAreaPopup = vm.sharedLogic.getFixedAreaPopup();
+        vm.fixedAreaPopup = sharedLogic.getFixedAreaPopup();
 
         vm.typeSelectorOptions = [];
 
@@ -151,11 +151,11 @@
             return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
         };
 
-        vm.entityTabsMenuTplt = vm.sharedLogic.entityTabsMenuTplt;
+        vm.entityTabsMenuTplt = sharedLogic.entityTabsMenuTplt;
         vm.entityTabsMenuPopupData = {viewModel: vm}
         vm.entityTablePopupClasses = "border-radius-2"
-        vm.onPopupSaveCallback = vm.sharedLogic.onPopupSaveCallback;
-        vm.onFixedAreaPopupCancel = vm.sharedLogic.onFixedAreaPopupCancel;
+        vm.onPopupSaveCallback = sharedLogic.onPopupSaveCallback;
+        vm.onFixedAreaPopupCancel = sharedLogic.onFixedAreaPopupCancel;
         // < Victor 20020.11.20 #59: fields below needs for new design an fixed area popup >
 
         vm.keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
@@ -619,13 +619,13 @@
 
         };
 
-        vm.manageAttrs = vm.sharedLogic.manageAttributeTypes;
+        vm.manageAttrs = sharedLogic.manageAttributeTypes;
 
-        vm.checkReadyStatus = vm.sharedLogic.checkReadyStatus;
-        vm.bindFlex = vm.sharedLogic.bindFlex;
-        vm.checkFieldRender = vm.sharedLogic.checkFieldRender;
+        vm.checkReadyStatus = sharedLogic.checkReadyStatus;
+        vm.bindFlex = sharedLogic.bindFlex;
+        vm.checkFieldRender = sharedLogic.checkFieldRender;
 
-        vm.checkReadyStatus = vm.sharedLogic.checkReadyStatus;
+        vm.checkReadyStatus = sharedLogic.checkReadyStatus;
 
         vm.bindFlex = function (tab, field) {
             /*var totalColspans = 0;
@@ -832,7 +832,7 @@
 
             if (errors.length) {
 
-                // vm.sharedLogic.processTabsErrors(errors, $event);
+                // sharedLogic.processTabsErrors(errors, $event);
                 var processResult = entityEditorHelper.processTabsErrorsInstrumentType(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
 
                 if (processResult) {
@@ -1194,65 +1194,18 @@
 
         vm.getEntityPricingSchemes = vm.getInstrumentPricingSchemes
 
-        // Instrument Type Layout Settings tab start
+		//region Instrument Type Layout Settings tab start
+		vm.instrLayoutsFromItype = [];
 
-        vm.instrumentTypeLayouts = [];
+		const getInstrumentFormLayouts = sharedLogic.getInstrumentFormLayouts;
+		vm.instrumentTypeMoveLayoutUp = sharedLogic.instrumentTypeMoveLayoutUp;
+		vm.instrumentTypeMoveLayoutDown = sharedLogic.instrumentTypeMoveLayoutDown;
+		vm.instrumentTypeDeleteInstrLayout = sharedLogic.instrumentTypeDeleteInstrLayout;
+		vm.addInstrLayoutToInstrumentType = sharedLogic.addInstrLayoutToInstrumentType;
+		vm.editInstrFormLayout = sharedLogic.editInstrFormLayout;
+		vm.createInstrFormLayout = sharedLogic.createInstrFormLayout;
 
-        vm.instrumentTypeMoveLayoutUp = function ($event, item) {
-
-            var index = vm.instrumentTypeLayouts.indexOf(item)
-
-            vm.instrumentTypeLayouts.splice(index, 1); // remove old one
-
-            console.log('old index', index)
-
-            var newIndex = index - 1
-
-            if (newIndex < 0) {
-                newIndex = 0;
-            }
-
-            vm.instrumentTypeLayouts.splice(newIndex, 0, item);
-
-            vm.entity.instrument_form_layouts = vm.instrumentTypeLayouts.join(',')
-
-        }
-
-        vm.instrumentTypeMoveLayoutDown = function ($event, item) {
-
-            var index = vm.instrumentTypeLayouts.indexOf(item)
-
-            vm.instrumentTypeLayouts.splice(index, 1); // remove old one
-
-            var newIndex = index + 1
-
-            vm.instrumentTypeLayouts.splice(newIndex, 0, item);
-
-            vm.entity.instrument_form_layouts = vm.instrumentTypeLayouts.join(',')
-
-        }
-
-        vm.instrumentTypeDeleteLayout = function ($event, item) {
-
-            var index = vm.instrumentTypeLayouts.indexOf(item)
-
-            vm.instrumentTypeLayouts.splice(index, 1);
-
-            vm.entity.instrument_form_layouts = vm.instrumentTypeLayouts.join(',')
-
-        }
-
-        vm.instrumentTypeMoveAddLayout = function ($event) {
-
-            vm.instrumentTypeLayouts.unshift(vm.instrumentTypeNewLayoutUserCode)
-
-            vm.instrumentTypeNewLayoutUserCode = '';
-
-            vm.entity.instrument_form_layouts = vm.instrumentTypeLayouts.join(',')
-
-        }
-
-        // Instrument Type Layout Settings tab end
+		//endregion Instrument Type Layout Settings tab end
 
         // Instrument Type Exposure tab start
 
@@ -1406,7 +1359,7 @@
 			vm.getDataForInstrumentTypeTabs();
 
             setTimeout(function () {
-                vm.dialogElemToResize = vm.sharedLogic.onEditorStart();
+                vm.dialogElemToResize = sharedLogic.onEditorStart();
             }, 100);
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
@@ -1436,9 +1389,9 @@
 
             // vm.getFormLayout();
             // evEditorSharedLogicHelper.getFormLayout('addition', formLayoutFromAbove);
+			Promise.all([getInstrumentFormLayouts(), sharedLogic.getFormLayout(formLayoutFromAbove)]).then(responseData => {
 
-            vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
-
+				const formLayoutData = responseData[1];
 				vm.typeSelectorOptions = formLayoutData.typeSelectorOptions; // list of instrument classes
                 vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
                 vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
@@ -1465,7 +1418,7 @@
 
 				$scope.$apply();
 
-                /* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
+                /* sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
 
                     vm.fixedAreaPopup.fields = fieldsData;
                     vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
@@ -1479,7 +1432,7 @@
             vm.getCurrencies();
 			vm.loadPermissions();
 
-            /* vm.sharedLogic.getFieldsForFixedAreaPopup().then(function (fields) {
+            /* sharedLogic.getFieldsForFixedAreaPopup().then(function (fields) {
 
                 vm.fixedAreaPopup.fields = fields;
                 vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fields));

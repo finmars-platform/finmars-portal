@@ -472,7 +472,8 @@
 
                 if (res.status === 'agree') {
 
-					event.data.actions[row.order] = res.data.item
+					event.data.actions[row.order] = res.data.item;
+
                 }
 
             });
@@ -1180,8 +1181,7 @@
                 console.log('openEventParametersManager.res', res);
 
                 if (res.status === 'agree') {
-
-                    item = res.data.item
+                    item.data.parameters = res.data.item.data.parameters;
                 }
 
             });
