@@ -35,7 +35,9 @@
                 scope.smallOptions probable properties
                     tooltipText: custom tolltip text
                     indicatorBtnIcon: sets icon for indicator button
-                    dialogParent: 'string' - querySelector content for element to insert mdDialog into */
+                    dialogParent: 'string' - querySelector content for element to insert mdDialog into
+                    notNull: selector should not be empty
+                */
 
                 if (scope.smallOptions) {
 

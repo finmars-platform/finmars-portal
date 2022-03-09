@@ -244,6 +244,10 @@
 
                 };
 
+                scope.onInputFocus = function (){
+                    scope.getList();
+                }
+
                 var closeDropdownMenu = function (updateScope) {
 
                     console.trace();

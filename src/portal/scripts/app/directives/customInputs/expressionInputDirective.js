@@ -24,50 +24,52 @@
 
                 var inputContainer = elem[0].querySelector('.textInputContainer');
                 var inputElem = elem[0].querySelector('.textInputElem');
-                var fullTextElem = elem[0].querySelector('.customInputFullText');
-                var fullTextTextarea = fullTextElem.querySelector('textarea');
                 var stylePreset;
 
-                scope.isReadonly = false;
-                scope.fullTextEnabled = false;
+				/* TEXTAREA CODE
+				var fullTextElem = elem[0].querySelector('.customInputFullText');
+				var fullTextTextarea = fullTextElem.querySelector('textarea'); */
 
-                // TIPS
-                // scope.smallOptions probable properties
-                    // tooltipText: custom tolltip text
-                    // notNull: turn on error mode if field is not filled
-                    // noIndicatorBtn: whether to show button at the right part of input
-                    // readonly: making input readonly
-                    // dialogParent: 'string' - querySelector content for element to insert mdDialog into
+				scope.isReadonly = false;
+				scope.fullTextEnabled = false;
+
+				// TIPS
+				// scope.smallOptions probable properties
+					// tooltipText: custom tolltip text
+					// notNull: turn on error mode if field is not filled
+					// noIndicatorBtn: whether to show button at the right part of input
+					// readonly: making input readonly
+					// dialogParent: 'string' - querySelector content for element to insert mdDialog into
 
 
-                if (scope.smallOptions) {
+				if (scope.smallOptions) {
 
-                    scope.tooltipText = scope.smallOptions.tooltipText
-                    scope.isReadonly = scope.smallOptions.readonly
-                    scope.dialogParent = scope.smallOptions.dialogParent
+					scope.tooltipText = scope.smallOptions.tooltipText
+					scope.isReadonly = scope.smallOptions.readonly
+					scope.dialogParent = scope.smallOptions.dialogParent
 
-                    if (scope.smallOptions.noIndicatorBtn) {
-                        scope.noIndicatorBtn = true
-                    }
+					if (scope.smallOptions.noIndicatorBtn) {
+						scope.noIndicatorBtn = true
+					}
 
-                }
+				}
 
-                scope.getInputContainerClasses = function () {
-                    var classes = '';
+				scope.getInputContainerClasses = function () {
+					var classes = '';
 
-                    if (scope.isDisabled) {
-                        classes += "custom-input-is-disabled";
+					if (scope.isDisabled) {
+						classes += "custom-input-is-disabled";
 
-                    } else if (scope.error) {
-                        classes = 'custom-input-error';
+					} else if (scope.error) {
+						classes = 'custom-input-error';
 
-                    } else if (stylePreset) {
-                        classes = 'custom-input-preset' + stylePreset;
+					} else if (stylePreset) {
+						classes = 'custom-input-preset' + stylePreset;
 
-                    }/* else if (scope.valueIsValid) {
-                        classes = 'custom-input-is-valid';
+					}/* else if (scope.valueIsValid) {
+						classes = 'custom-input-is-valid';
 
-                    }*/
+					}*/
 
                     if (scope.noIndicatorBtn) {
                         classes += " no-indicator-btn";
@@ -278,30 +280,33 @@
                         inputContainer.classList.remove('custom-input-hovered');
                     });
 
-                    inputElem.addEventListener('focus', function () {
+					/* TEXTAREA CODE
+					inputElem.addEventListener('focus', function () {
 
-                        //inputContainer.classList.add('custom-input-focused');
-                        inputContainer.classList.add('custom-input-full-text-focused');
-                        fullTextTextarea.focus();
+						inputContainer.classList.add('custom-input-full-text-focused');
 
-                    });
+						fullTextTextarea.focus();
 
+                    }); */
+
+					/* TEXTAREA CODE
                     fullTextTextarea.addEventListener('blur', function () {
 
                         inputContainer.classList.remove('custom-input-full-text-focused');
-                        /*if (scope.onBlurCallback) {
-
-                            setTimeout(function () { // without timeout changes will be discarded on fast blur
-                                scope.onBlurCallback();
-                            }, 250);
-
-                        }*/
 
                         if (scope.model && !scope.error) {
                             validateExpressionSyntax();
                         }
 
-                    });
+                    }); */
+
+					inputElem.addEventListener('blur', function () {
+
+						if (scope.model && !scope.error) {
+							validateExpressionSyntax();
+						}
+
+					});
 
                 }
 
