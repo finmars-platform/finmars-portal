@@ -1466,6 +1466,9 @@
 
                 vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
 
+				vm.readyStatus.layout = true;
+				vm.readyStatus.entity = true;
+
 				$scope.$apply();
 
                 /* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
