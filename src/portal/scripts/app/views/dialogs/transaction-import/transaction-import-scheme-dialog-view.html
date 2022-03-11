@@ -87,6 +87,19 @@
                                     <input type="text" data-ng-model="vm.scheme.spreadsheet_active_tab_name">
                                 </md-input-container>
 
+
+
+                            </div>
+
+                            <div>
+                                <md-input-container style="width: 245px;">
+                                    <label>Column Matcher</label>
+                                    <md-select
+                                            data-ng-model="vm.scheme.column_matcher">
+                                        <md-option value="index">Index</md-option>
+                                        <md-option value="name">Name</md-option>
+                                    </md-select>
+                                </md-input-container>
                             </div>
 
                         </md-card-content>
@@ -183,10 +196,18 @@
                                                            ng-model="item.column"
                                                            aria-label="provider field column number">
                                                 </md-input-container>
-                                                <md-input-container flex="70">
+                                                <md-input-container flex="35">
+                                                    <!--<label for="">Name</label>-->
+                                                    <input type="text"
+                                                           placeholder="column name"
+                                                           data-ng-model="item.column_name"
+                                                           aria-label="provider field name">
+                                                </md-input-container>
+                                                <md-input-container flex="35">
                                                     <!--<label for="">Name</label>-->
                                                     <input type="text"
                                                            data-ng-model="item.name"
+                                                           placeholder="name"
                                                            ng-blur="vm.setProviderFieldExpression(item)"
                                                            aria-label="provider field name">
                                                 </md-input-container>
