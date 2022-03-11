@@ -516,13 +516,23 @@
 		 */
 		const getTypeSelectorOptions = function (entityType) {
 
+			let selectorOptions = [];
 			let options = {pageSize: 1000, page: 1};
+			let getOptionsPromise;
 
-			const loadAllPages = (resolve, reject) => {
+			if (viewModel.groupSelectorEntityType) {
+				getOptionsPromise = entityResolverService.getList(entityType, options);
 
-				entityResolverService.getListLight(entityType, options).then(function (typesData) {
+			} else {
+				getOptionsPromise = entityResolverService.getListLight(entityType, options);
+			}
 
-					viewModel.typeSelectorOptions = viewModel.typeSelectorOptions.concat(typesData.results);
+			/* const loadAllPages = (resolve, reject) => {
+
+				getOptionsPromise.then(function (typesData) {
+
+					// viewModel.typeSelectorOptions = viewModel.typeSelectorOptions.concat(typesData.results);
+					selectorOptions = selectorOptions.concat(typesData.results);
 
 					if (typesData.next) {
 
@@ -530,40 +540,50 @@
 						loadAllPages(resolve, reject);
 
 					} else {
-						resolve();
+						resolve(selectorOptions);
 					}
 
-				}).catch(error => reject(error));
+				}).catch(error => {
+					console.error("getFieldsForFixedAreaPopup error", error);
+					resolve([]);
+					// reject(error)
+				});
 
-			};
+			}; */
 
-        	return new Promise((res, rej) => {
+			return new Promise((res, rej) => {
 
-				entityResolverService.getListLight(entityType, options).then(typesData => {
+				getOptionsPromise.then(typesData => {
 
 					// const options = Array.isArray(typesData) ? typesData : typesData.results;
 					if (Array.isArray(typesData)) {
 
-						viewModel.typeSelectorOptions = typesData;
-						res();
+						// viewModel.typeSelectorOptions = typesData;
+						selectorOptions = typesData;
+						res(selectorOptions);
 
 					} else {
 
-						viewModel.typeSelectorOptions = typesData.results;
+						// viewModel.typeSelectorOptions = typesData.results;
+						selectorOptions = typesData.results;
 
 						if (typesData.next) {
 							options.page = options.page + 1;
-							loadAllPages(res, rej);
+							// loadAllPages(res, rej);
+							metaService.loadDataFromAllPages(getOptionsPromise, [options], selectorOptions).then(selectorOptions => {
+								res(selectorOptions);
+							});
 
 						} else {
-							res();
+							res(selectorOptions);
 						}
 
 					}
 
 				}).catch(error => {
 					console.error("getFieldsForFixedAreaPopup error", error);
-					rej(error);
+					// rej(error);
+					res(selectorOptions);
 				});
 
 			});
@@ -878,15 +898,10 @@
 
 			if (hasRelationSelectorInFixedArea) {
 				const valueEntity = typeSelectorValueEntities[viewModel.entityType];
-				await getTypeSelectorOptions(valueEntity);
-
+				viewModel.typeSelectorOptions = await getTypeSelectorOptions(valueEntity);
 			}
-
-			const hasGroupRelationSelectorInFixedArea = groupSelectorValueEntities.hasOwnProperty(viewModel.entityType);
-
-			if (hasGroupRelationSelectorInFixedArea) {
-				const groupValueEntity = groupSelectorValueEntities[viewModel.entityType];
-				await getGroupSelectorOptions(groupValueEntity);
+			else if (viewModel.groupSelectorEntityType) {
+				viewModel.groupSelectorOptions = await getTypeSelectorOptions(viewModel.groupSelectorEntityType);
 			}
 
 			const tabs = await getUserTabsAndFixedAreaData(formLayoutFromAbove);
@@ -951,6 +966,8 @@
 					const attributesLayout = mapAttributesAndFixFieldsLayout(tabs);
 
 					let resolveData = {
+						typeSelectorOptions: viewModel.typeSelectorOptions,
+						groupSelectorOptions: viewModel.groupSelectorOptions,
 						tabs: tabs,
 						attributeTypes: viewModel.attributeTypes,
 						attributesLayout: attributesLayout

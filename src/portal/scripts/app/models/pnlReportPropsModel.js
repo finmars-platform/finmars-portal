@@ -181,6 +181,11 @@
                 "name": "Last notes",
                 "value_type": 10
             },
+            {
+                "key": "mismatch",
+                "name": "Mismatch",
+                "value_type": 20
+            },
             //{
             //    "key": "gross_cost_price",
             //    "name": "Gross cost price",
