@@ -28,7 +28,7 @@
                 scope.dropdownMenuFilter = '';
 
                 if (scope.itemName) { // itemName and inputText needed for resetting selected option name
-                    scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+                    scope.inputText = scope.itemName;
                 }
 
                 /* TIPS
@@ -133,7 +133,7 @@
 
 					inputContainer.classList.remove('custom-input-focused');
 
-					if (scope.itemName) scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+					if (scope.itemName) scope.inputText = scope.itemName;
 
                     scope.dropdownMenuShown = false;
 
@@ -230,7 +230,7 @@
 
                     scope.$watch('model', function () {
 
-                        if (scope.model && scope.menuOptions) {
+                        if ((scope.model || scope.model === 0) && scope.menuOptions) {
 
                             for (var i = 0; i < scope.menuOptions.length; i++) {
 
@@ -303,7 +303,7 @@
                     scope.$watch('itemName', function () {
 
                         if (scope.itemName) {
-                            scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+                            scope.inputText = scope.itemName;
 
                         } else {
                             scope.inputText = '';
@@ -354,10 +354,11 @@
 
                 var init = function () {
 
-                    if (scope.menuOptions) {
+                    if (scope.menuOptions && scope.menuOptions.length) {
 
                         for (var i = 0; i < scope.menuOptions.length; i++) {
-                            if (scope.menuOptions[i].id === scope.model) {
+
+                        	if (scope.menuOptions[i].id === scope.model) {
 
                                 scope.itemName = scope.menuOptions[i].name;
                                 scope.inputText = scope.menuOptions[i].name;
