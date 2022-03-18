@@ -390,7 +390,7 @@
 
                             unifiedDataService.getList(scope.entityType, {
                                 filters: {
-                                    user_code: scope.inputText
+                                    query: scope.inputText
                                 }
                             }).then(function (data) {
 
