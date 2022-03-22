@@ -16,7 +16,7 @@
         var vm = this;
 
         vm.pageState = 'default';
-        vm.mode = 'skip';
+        vm.settings = {mode: 'skip'}
 
         vm.configurationFile = null;
 
