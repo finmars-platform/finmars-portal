@@ -448,6 +448,7 @@
                         locals: {
                             validationData: reason.message
                         },
+                        multiple: true,
                         preserveScope: true,
                         autoWrap: true,
                         skipHide: true

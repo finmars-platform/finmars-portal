@@ -1663,6 +1663,10 @@
             {
                 name: "Find the Instrument. If not found: create on the first booking. On rebook: nothing is created, Phantom = Default Instrument.",
                 id: 5
+            },
+            {
+                name: 'Try to download from provider, if error, create default',
+                id: 8
             }
         ];
 
