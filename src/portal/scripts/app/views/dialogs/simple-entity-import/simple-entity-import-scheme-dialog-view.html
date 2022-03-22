@@ -107,7 +107,10 @@
                                     <input type="text" data-ng-model="vm.scheme.spreadsheet_active_tab_name">
                                 </md-input-container>
 
-
+                                <md-input-container class="md-block" data-ng-if="vm.scheme.content_type === 'instruments.instrument'">
+                                    <label for="">Reference column</label>
+                                    <input type="text" data-ng-model="vm.scheme.instrument_reference_column">
+                                </md-input-container>
 
 
                             </div>
