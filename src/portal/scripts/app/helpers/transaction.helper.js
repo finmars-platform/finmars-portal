@@ -171,7 +171,7 @@
 
 	};
 
-    // updating user inputs from input form editor layout using user inputs inside transaction type
+    /** Updating user inputs from input form editor layout using user inputs inside transaction type **/
     var updateTransactionUserInputs = function (userInputs, tabs, fixedArea, ttype) {
 
 		userInputs = [];
@@ -227,7 +227,131 @@
         return userInputs;
 
     };
-    // < updating user inputs from input form editor layout using user inputs inside transaction type >
+
+	var getTransactionGroups = function (ttypesList) {
+
+		var groups = {};
+
+		ttypesList.forEach(function (item) {
+
+			var ttypeItem = {
+				userCode: item.user_code,
+				id: item.id,
+				name: item.name,
+			};
+
+			if (item.group_object) {
+
+				if (!groups[item.group_object.id]) {
+					groups[item.group_object.id] = {
+						name: item.group_object.name,
+						children: [],
+					};
+				}
+
+				groups[item.group_object.id].children.push(ttypeItem);
+
+			} else {
+
+				if (!groups['ungrouped']) {
+
+					groups['ungrouped'] = {
+						name: 'Ungrouped',
+						children: [],
+					};
+
+				}
+
+				groups['ungrouped'].children.push(ttypeItem);
+
+			}
+
+		});
+
+		var groupsList = Object.keys(groups).map(function (key) {
+			return groups[key];
+		});
+
+		groupsList = groupsList.filter(function (item) {
+			return !!item
+		});
+
+		return groupsList;
+
+	};
+
+    var getFavoriteTTypeOptions = function (member, ttypeGroups) {
+
+		var favTTypeOpts = [];
+		// var member = globalDataService.getMember();
+		if (member.data && member.data.favorites && member.data.favorites.transaction_type) {
+
+			favTTypeOpts = member.data.favorites.transaction_type.map(function (ttypeUserCode) {
+
+				var favOption;
+
+				var i;
+				for (i = 0; i < ttypeGroups.length; i++) {
+
+					var tGroup = ttypeGroups[i];
+
+					favOption = tGroup.children.find(function (option) {
+						return option.userCode === ttypeUserCode;
+					});
+
+					if (favOption) {
+						return {
+							userCode: favOption.userCode,
+							groupName: tGroup.name,
+							id: favOption.id,
+							name: favOption.name
+						};
+					}
+
+				}
+
+				return null;
+
+				/* var ttype = ttypesList.find(function (ttype) {
+					return ttype.user_code === ttypeUserCode;
+				});
+
+				if (!ttype) {return ttype;}
+
+				return {
+					id: ttype.id,
+					name: ttype.name
+				}; */
+
+			}).filter(function (fTttype) {
+				return !!fTttype;
+			});
+
+		}
+
+		return favTTypeOpts;
+
+	};
+
+	var saveFavoriteTTypeOptions = function (member, favoriteTtypeOpts, usersService) {
+
+		// var member = globalDataService.getMember();
+
+		if (!member.data) {
+			member.data = {};
+		}
+
+		if (!member.data.favorites) {
+			member.data.favorites = {};
+		}
+
+		member.data.favorites.transaction_type = favoriteTtypeOpts.map(function (ttypeOpt) {
+			return ttypeOpt.userCode;
+		});
+
+		return usersService.updateMember(member.id, member);
+
+	};
 
     module.exports = {
         isUserInputUsedInTTypeExpr: isUserInputUsedInTTypeExpr,
@@ -235,6 +359,10 @@
 		updateEntityBeforeSave: updateEntityBeforeSave,
 
 		removeUserInputsInvalidForRecalculation: removeUserInputsInvalidForRecalculation,
+
+		getTransactionGroups: getTransactionGroups,
+		getFavoriteTTypeOptions: getFavoriteTTypeOptions,
+		saveFavoriteTTypeOptions: saveFavoriteTTypeOptions,
 
     }
 

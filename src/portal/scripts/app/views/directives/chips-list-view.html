@@ -16,7 +16,7 @@
                  data-ng-class="{'custom-field-error': !!chip.error_data}"
                  class="chip-list-content"></div>
 
-            <md-button ng-if="chipsDeletion"
+            <md-button ng-if="chipsDeletion && !isDisabled"
                        ng-click="deleteChips(chip, $event)"
                        class="chip-deletion-btn">
                 <span class="material-icons">cancel</span>
@@ -51,7 +51,7 @@
         </div>
     </div>
 
-    <div class="add-chip-wrap chipWrapElem" ng-if="chipsAddition">
+    <div class="add-chip-wrap chipWrapElem" ng-if="chipsAddition && !isDisabled">
         <div class="chip-div" ng-click="onAddChipClick({event: $event})" ng-init="onAddChipInit()">
             <div class="chip-list-content" ng-bind="chipsAddition"></div>
         </div>

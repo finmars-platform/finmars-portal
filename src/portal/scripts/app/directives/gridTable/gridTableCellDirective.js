@@ -140,10 +140,17 @@
                     multiselectorElem.click();
                 };
 
-                scope.onButtonClick = function () {
-                    if (scope.column.methods && typeof scope.column.methods.onClick === 'function') {
-                        scope.column.methods.onClick();
+                scope.onButtonClick = function ($event) {
+
+                	if (typeof scope.column.settings.onClick === 'function') {
+
+                    	var rowData = {key: scope.row.key, order: scope.row.order};
+						var colData = {key: scope.column.key, order: scope.column.order};
+
+                        scope.column.settings.onClick($event, rowData, colData, scope.gtDataService, scope.gtEventService);
+
                     }
+
                 }
 
                 /*var removeEventListeners = function () {
@@ -157,21 +164,6 @@
                     if (scope.row.order !== 'header' && !scope.cellWithPopup()) { // if no child directive initialized
                         scope.onChildrenLoadEnd();
                     }
-
-                    /* if (scope.column.settings && scope.column.settings.value) {
-                        scope.cellValue = scope.column.settings.value;
-                    }
-
-					scope.gtEventService.addEventListener(gtEvents.UPDATE_CELLS_CONTENT, function () {
-
-						if (scope.row && scope.column && scope.row.order !== 'header') {
-
-							scope.row = scope.gtDataService.getRow(scope.row.order);
-							scope.column = scope.gtDataService.getCell(scope.row.order, scope.column.order);
-
-						}
-
-					}); */
 
 					if (scope.row.order === 'header') {
 

@@ -71,7 +71,7 @@
 						data: chipData
 					};
 
-					if (scope.onChipClick) {
+					if (scope.onChipClick && !scope.isDisabled) {
 						scope.onChipClick({chipsData: chipsData, event: $event});
 					}
 

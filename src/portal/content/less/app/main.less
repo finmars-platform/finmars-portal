@@ -1052,7 +1052,7 @@ md-menu-bar.header-logout-menu {
 
 .sidenav-collapsed {
 
-  //<editor-fold desc="New sidemenu styles">
+  //region desc="New sidemenu styles"
   .space-for-sidenav {
     padding-left: @collapsedLeftSidenavWidth;
   }
@@ -1115,9 +1115,9 @@ md-menu-bar.header-logout-menu {
     padding-left: @collapsedLeftSidenavWidth;
   }
 
-  //</editor-fold>
+  //endregion
 
-  //<editor-fold desc="Old sidemenu styles">
+  //region desc="Old sidemenu styles"
   /*.sidenav-wrapper {
     width: 55px;
     position: absolute;
@@ -1139,7 +1139,7 @@ md-menu-bar.header-logout-menu {
   .g-table-dial {
     left: 70px;
   }*/
-  //</editor-fold>
+  //endregion
 }
 
 .separate-side-menu {
@@ -1385,6 +1385,21 @@ th {
 
 .table-misc-cell {
   width: 5%;
+}
+
+md-tabs {
+  md-ink-bar {
+    color: @orange;
+    background: @orange;
+  }
+
+  md-tab-item.md-tab {
+    .btn-font1();
+
+    &.md-active {
+      color: @orange;
+    }
+  }
 }
 
 .tabs-colored {
@@ -1908,7 +1923,7 @@ md-menu-content md-menu.md-menu {
 }
 
 .transaction-scheme-manager-dialog-view {
-  width: 75%;
+  // width: 75%;
 
   .tsm-step-first-row {
     margin: 10px 0;
@@ -1926,6 +1941,48 @@ md-menu-content md-menu.md-menu {
 
   .step-first-row-text-padding {
     padding-top: 10px;
+  }
+
+  .tsm-ttype-general-settings {
+
+    .tsm-ttype-field-holder {
+     width: 425px;
+    }
+
+    .tsm-ttype-field {
+      display: block;
+      width: 264px;
+    }
+  }
+
+  .selector-button-popup.tsm-ttype-col-matcher-sel {
+    display: block;
+    position: absolute;
+    top: 12px;
+    left: 6px; // optimal position when 'Col.number' selected
+    z-index: 1;
+  }
+
+  .tsm-ttype-matching-scenarios {
+    position: relative;
+    width: 675px;
+
+    .tsm-ttype-ms-h {
+      position: absolute;
+      margin: 0;
+      top: 15px;
+    }
+
+    md-tabs md-pagination-wrapper {
+      left: auto;
+      right: 0;
+    }
+
+    .table1-container {
+      .table1-cell {
+        color: @gray;
+      }
+    }
   }
 }
 
@@ -3057,7 +3114,7 @@ button.md-raised.md-warn.md-button {
   font-display: block;
 }
 
-//<editor-fold desc="Chips multiselector">
+//region desc="Chips multiselector"
 .chips-list-container {
   display: flex;
   flex-direction: row;
@@ -3170,7 +3227,7 @@ button.md-raised.md-warn.md-button {
 
 }
 
-//</editor-fold>
+//endregion
 
 // < chips >
 
@@ -3496,4 +3553,55 @@ span.highlight {
 
 .entity-tabs-menu.complex-transaction-entity-tabs-menu button.entity-tabs-menu-btn {
   margin-top: 90px;
+}
+
+//region Table1
+.table1-container {
+
+  .table1-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid @borderPale;
+    box-sizing: border-box;
+  }
+
+  .table1-cell {
+    display: flex;
+    align-items: center;
+    height: 49px;
+    padding-left: 10px;
+    font-size: 14px;
+    box-sizing: border-box;
+    color: @gray;
+
+    &:not(:last-child) {
+      border-right: 1px solid @borderPale;
+    }
+  }
+
+  .table1-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    .table1-row {
+      border-bottom: 1px solid @borderPale;
+    }
+
+    .table1-cell {
+      color: #555555;
+      background-color: #f2f2f2;
+      .h-font1();
+    }
+
+  }
+}
+//endregion
+
+.input-row1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 20px;
 }

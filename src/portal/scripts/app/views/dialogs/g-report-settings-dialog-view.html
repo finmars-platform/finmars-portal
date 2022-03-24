@@ -19,18 +19,18 @@
 
                 <div class="flex-column">
 
-                    <div class="g-report-settings-row p-b-8" data-ng-if="vm.entityType == 'pl-report'">
+                    <div class="input-row1 p-b-8" data-ng-if="vm.entityType == 'pl-report'">
                         <div class="default-f-s">First Date</div>
                         <date-input model="vm.reportOptions.pl_first_date" class="g-report-settings-field"></date-input>
                     </div>
 
 
-                    <div class="g-report-settings-row p-b-8">
+                    <div class="input-row1 p-b-8">
                         <div class="default-f-s">Date</div>
                         <date-input model="vm.reportOptions.report_date" class="g-report-settings-field"></date-input>
                     </div>
 
-                    <div class="g-report-settings-row p-b-8">
+                    <div class="input-row1 p-b-8">
                         <div class="default-f-s">Currency</div>
                         <dropdown-select model="vm.reportOptions.report_currency"
                                          menu-options="vm.currencies"
@@ -39,7 +39,7 @@
                         </dropdown-select>
                     </div>
 
-                    <div class="g-report-settings-row p-b-8">
+                    <div class="input-row1 p-b-8">
                         <div class="default-f-s">Cost method</div>
 
                         <dropdown-select model="vm.reportOptions.cost_method"
@@ -48,7 +48,7 @@
                         </dropdown-select>
                     </div>
 
-                    <div class="g-report-settings-row p-b-8">
+                    <div class="input-row1 p-b-8">
                         <div class="default-f-s">Pricing Policy</div>
 
                         <dropdown-select model="vm.reportOptions.pricing_policy"
@@ -57,7 +57,7 @@
                         </dropdown-select>
                     </div>
 
-                    <div class="g-report-settings-row p-b-8">
+                    <div class="input-row1 p-b-8">
                         <div class="default-f-s">Table font size</div>
 
                         <dropdown-select model="vm.tableFontSize"

@@ -28,7 +28,7 @@
 				popupWidth: '@', // [ 'element', 'content' ] Default - 'content'
 				//endregion
 
-				popupClasses: '<', // add css classes to popup-container, example: popup-classes="class1 class2"
+				popupClasses: '@', // add css classes to popup-container, example: popup-classes="class1 class2"
 				backdropClasses: '=', // add css classes to backdrop
 
 				// obj with property 'value'

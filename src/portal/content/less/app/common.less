@@ -21,24 +21,24 @@
   padding-bottom: 0 !important;
 }
 
+.p-t-4 {
+  padding-top: 4px;
+}
+
+.p-l-4 {
+  padding-left: 4px;
+}
+
+.p-r-4 {
+  padding-right: 4px;
+}
+
+.p-b-4 {
+  padding-bottom: 4px;
+}
+
 .p-8 {
   padding: 8px;
-}
-
-.p-t-10 {
-  padding-top: 10px;
-}
-
-.p-r-10 {
-  padding-right: 10px;
-}
-
-.p-b-10 {
-  padding-bottom: 10px;
-}
-
-.p-l-10 {
-  padding-left: 10px;
 }
 
 .p-t-8 {
@@ -55,6 +55,22 @@
 
 .p-b-8 {
   padding-bottom: 8px;
+}
+
+.p-t-10 {
+  padding-top: 10px;
+}
+
+.p-r-10 {
+  padding-right: 10px;
+}
+
+.p-b-10 {
+  padding-bottom: 10px;
+}
+
+.p-l-10 {
+  padding-left: 10px;
 }
 
 .p-16 {
@@ -309,6 +325,31 @@
   text-overflow: ellipsis;
 }
 
+.no-borders-btn {
+  border: none;
+
+  &:not([disabled]):hover {
+    background-color: initial;
+  }
+}
+
+.btn-font1 {
+  font-family: 'Roboto-Bold', 'Roboto Bold', 'Roboto', sans-serif;
+  font-weight: 700;
+}
+
+.small-icon-btn {
+  min-width: 24px;
+  min-height: 24px;
+  height: 24px;
+}
+
+.h-font1 {
+  font-size: 14px;
+  font-family: "Roboto-Medium", "Roboto Medium", "Roboto", sans-serif;
+  font-weight: 500;
+}
+
 .f-s-10 {
   font-size: 10px;
 }
@@ -355,6 +396,11 @@
 
 .default-f-s {
   font-size: 14px;
+}
+
+.h-text1 {
+  .h-font1();
+  color: #333333;
 }
 
 .float-left {
@@ -938,7 +984,6 @@ button.md-button[disabled] {
   }
 
 } */
-
 
 .usercode-input {
   border: 1px solid #7d7d7d;

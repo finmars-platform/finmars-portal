@@ -10,8 +10,13 @@
 
     var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
 
+	var gridTableEvents = require('../../../services/gridTableEvents');
 
-    module.exports = function transactionImportSchemeAddDialogController ($scope, $mdDialog, data, importSchemesMethodsService) {
+	var GridTableDataService = require('../../../services/gridTableDataService');
+	var GridTableEventService = require('../../../services/gridTableEventService');
+
+
+    module.exports = function transactionImportSchemeAddDialogController ($scope, $mdDialog, gridTableHelperService, importSchemesMethodsService, data) {
 
         var vm = this;
 
@@ -19,7 +24,7 @@
 
         vm.dataProviders = [];
 
-        vm.readyStatus = {dataProviders: false, scheme: true, transactionTypes: false};
+        vm.readyStatus = {dataProviders: false, scheme: false, transactionTypes: false};
 
         vm.defaultRuleScenario = {
             name: '-',
@@ -31,20 +36,23 @@
             "key": 'input'
         };
 
+		vm.exprEditorData = {
+			groups: [vm.inputsGroup],
+			functions: []
+		};
+
         vm.inputsFunctions = [];
-        vm.selector_values_projection = [];
+        vm.selectorValuesProjection = [];
+
+		vm.errorHandlingOptions = importSchemesMethodsService.errorHandlingOptions;
+		vm.separatorOptions = importSchemesMethodsService.separatorOptions;
+		vm.bookUniquenessSettingsOptions = importSchemesMethodsService.bookUniquenessSettingsOptions;
 
         vm.scheme = {
             selector_values: []
         };
 
-        vm.mapFields = [
-            // {
-            //     value: '',
-            //     transaction_type: null,
-            //     fields: []
-            // }
-        ];
+        vm.mapFields = [];
 
         vm.providerFields = [
             {
@@ -54,58 +62,22 @@
             }
         ];
 
-        vm.calculatedFields = [
-            // {
-            //     name: '',
-            //     column: '',
-            //     name_expr: ''
-            // }
-        ];
+        vm.calculatedFields = [];
+        vm.reconFields = [];
+		vm.importedColsRefName = "Col.number";
 
-        vm.reconFields = [
-            // {
-            //     name: '',
-            //     selector_values: [],
-            //     line_reference_id: '',
-            //     reference_date: '',
-            //     fields: []
-            // }
-        ];
+		vm.openSelectorManager = function ($event) {
 
-        vm.openSelectorManager = function ($event) {
+			importSchemesMethodsService.openSelectorManager($event, vm.scheme).then(function (selectorValuesProjection) {
 
-            // Open Selector Dialog Here
+				if (selectorValuesProjection) {
+					vm.selectorValuesProjection = selectorValuesProjection;
+					importSchemesMethodsService.updateSelectorValuesInsideGridTable(vm.mapFieldsGtDataService, vm.selectorValuesProjection);
+				}
 
-            $mdDialog.show({
-                controller: 'TransactionImportSchemeSelectorValuesDialogController as vm',
-                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-selector-values-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true,
-                locals: {
-                    data: {
-                        scheme: vm.scheme
-                    }
-                }
-            }).then(function (res) {
+			});
 
-                if(res && res.status === 'agree') {
-
-                    vm.selector_values_projection = vm.scheme.selector_values.map(function (item) {
-                        return {
-                            id: item.value,
-                            value: item.value
-                        }
-                    });
-
-                }
-
-            })
-
-        };
+		};
 
         vm.openScenarioFieldsManager = function ($event, item) {
 
@@ -127,231 +99,91 @@
 
         };
 
-        vm.addScenario = function ($event) {
-
-            vm.reconFields.push({
-                scenario_name: '',
-                selector_values: [],
-                line_reference_id: '',
-                reference_date: '',
-                fields: []
-            })
-
+        vm.addScenario = function () {
+			vm.reconFields = importSchemesMethodsService.addScenario(vm.reconFields);
         };
 
         vm.deleteScenario = function (item, $index) {
             vm.reconFields.splice($index, 1);
         };
 
-        vm.getFunctions = function () {
+		vm.getTransactionTypes = function () {
 
-            return vm.providerFields.map(function (input) {
+			return new Promise(function (resolve) {
 
-                return {
-                    "name": "Imported: " + input.name + " (column #" + input.column + ")",
-                    "description": "Imported: " + input.name + " (column #" + input.column + ") " + "-> " + input.name_expr,
-                    "groups": "input",
-                    "func": input.name,
-					"validation": {
-						"func": input.name
-					}
-                }
+				transactionTypeService.getListLight({
+					pageSize: 1000
 
-            });
+				}).then(function (data) {
 
-        };
+					vm.transactionTypes = data.results;
+					vm.readyStatus.transactionTypes = true;
+					// $scope.$apply();
 
-        vm.getTransactionTypes = function () {
+					resolve();
 
-            transactionTypeService.getListLight({
-                pageSize: 1000
-            }).then(function (data) {
-                vm.transactionTypes = data.results;
-                vm.readyStatus.transactionTypes = true;
-                $scope.$apply();
-            });
+				}).catch(function (error) {
+					resolve();
+				});
 
-        };
+			});
 
-        vm.openInputs = function (item, $event) {
+		};
 
-
-            if (!item.fields) {
-                item.fields = []
-            }
-
-            $mdDialog.show({
-                controller: 'TransactionImportSchemeInputsDialogController as vm',
-                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-inputs-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true,
-                locals: {
-                    data: {
-                        fields: vm.providerFields,
-                        item: item
-                    }
-                }
-            }).then(function (res) {
-                if (res.status === 'agree') {
-                    item.fields = res.data.item.fields;
-                }
-            });
-        };
+        /* vm.openInputs = function ($event, row) {
+			importSchemesMethodsService.openInputs($event, vm.mapFields, vm.providerFields, row);
+        }; */
 
         vm.checkReadyStatus = function () {
             return vm.readyStatus.scheme && vm.readyStatus.transactionTypes;
         };
 
-        vm.createEmptyScheme = function () {
-            vm.scheme.inputs = [];
-            vm.scheme.rules = [];
-            vm.scheme.rule_expr = 'a + b';
-            vm.scheme.user_code = '';
-        };
-
         vm.addProviderField = function () {
-            var fieldsLength = vm.providerFields.length;
-            var lastFieldNumber;
-            var nextFieldNumber;
-            if (fieldsLength === 0) {
-                nextFieldNumber = 1;
-            } else {
-                lastFieldNumber = parseInt(vm.providerFields[fieldsLength - 1].column);
-                if (isNaN(lastFieldNumber) || lastFieldNumber === null) {
-                    lastFieldNumber = 0
-                }
-                nextFieldNumber = lastFieldNumber + 1;
-            }
-
-            vm.providerFields.push({
-                name: '',
-                column: nextFieldNumber,
-                name_expr: ''
-            })
+			var res = importSchemesMethodsService.addProviderField(vm.providerFields, vm.providerFieldsGtData.templateRow, vm.scheme, vm.exprEditorData);
+			vm.providerFields.push(res[0]);
+			vm.providerFieldsGtData.body.push(res[1]);
         };
 
         vm.addCalculatedField = function(){
-
-            var fieldsLength = vm.calculatedFields.length;
-            var lastFieldNumber;
-            var nextFieldNumber;
-            if (fieldsLength === 0) {
-                nextFieldNumber = 1;
-            } else {
-                lastFieldNumber = parseInt(vm.calculatedFields[fieldsLength - 1].column);
-                if (isNaN(lastFieldNumber) || lastFieldNumber === null) {
-                    lastFieldNumber = 0
-                }
-                nextFieldNumber = lastFieldNumber + 1;
-            }
-
-            vm.calculatedFields.push({
-                name: '',
-                column: nextFieldNumber
-            })
-
-
+			var res = importSchemesMethodsService.addField(vm.calculatedFields, vm.calcFieldsGtData.templateRow, vm.exprEditorData);
+			vm.calculatedFields.push(res[0]);
+			vm.calcFieldsGtData.body.push(res[1]);
         };
 
         vm.addMapField = function () {
-            vm.mapFields.push({
-                value: '',
-                transaction_type: null,
-                is_default_rule_scenario: false,
-                fields: []
-            })
+			var res = importSchemesMethodsService.addMapField(vm.mapFieldsGtData.templateRow, vm.mapFields.length, vm.selectorValuesProjection, vm.transactionTypes);
+			vm.mapFields.push(res[0]);
+			vm.mapFieldsGtData.body.push(res[1]);
         };
 
-        /*vm.setProviderFieldExpression = function (item) {
+		var selectColumnMatcher = function (option, _$popup) {
 
-            if (!item.name_expr || item.name_expr === '') {
-                item.name_expr = item.name;
-                vm.inputsFunctions = vm.getFunctions();
-            }
+			_$popup.cancel();
 
-        };*/
-        vm.setProviderFieldExpression = function (item) {
+			if (vm.scheme.column_matcher === option.id) return;
+
+			var res = importSchemesMethodsService.onColumnMatcherChange(vm.scheme, option, vm.columnMatcherSelData, vm.providerFieldsGtDataService, vm.providerFields);
+			vm.scheme = res.scheme;
+			vm.importedColsRefName = res.importedColsRefName;
+			vm.columnMatcherSelData = res.columnMatcherSelData;
+
+			vm.providerFieldsGtEventService.dispatchEvent(gridTableEvents.REDRAW_TABLE);
+
+		};
+
+        /* vm.setProviderFieldExpression = function (item) {
             importSchemesMethodsService.setProviderFieldExpression(vm, item);
-        }
-
-        vm.onCalculatedFieldNameBlur = function (item) {
-            importSchemesMethodsService.onTTypeCalcFielNamedBlur(item);
         }
 
         vm.setCalculatedFieldExpression = function (item) {
             importSchemesMethodsService.setCalculatedFieldExpression(vm, item);
         }
 
-        /*vm.openProviderFieldExpressionBuilder = function (item, $event) {
-
-            $mdDialog.show({
-                controller: 'ExpressionEditorDialogController as vm',
-                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
-                targetEvent: $event,
-                multiple: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    item: {expression: item.name_expr},
-                    data: {
-                        groups: [vm.inputsGroup],
-                        functions: [vm.inputsFunctions]
-                    }
-                }
-            }).then(function (res) {
-
-                if (res.status === 'agree') {
-
-                    item.name_expr = res.data.item.expression;
-                    vm.inputsFunctions = vm.getFunctions();
-
-                }
-
-            });
-
-        };*/
         vm.openProviderFieldExpressionBuilder = function (item, $event) {
             importSchemesMethodsService.openFxBtnExprBuilder(item, vm, $event);
         }
 
-        /*vm.openCalculatedFieldExpressionBuilder = function (item, $event) {
-
-            $mdDialog.show({
-                controller: 'ExpressionEditorDialogController as vm',
-                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
-                targetEvent: $event,
-                multiple: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    item: {expression: item.name_expr},
-                    data: {
-                        groups: [vm.inputsGroup],
-                        functions: [vm.inputsFunctions]
-                    }
-                }
-            }).then(function (res) {
-
-                if (res.status === 'agree') {
-
-                    item.name_expr = res.data.item.expression;
-                    vm.inputsFunctions = vm.getFunctions();
-
-                }
-
-            });
-
-        };*/
-        vm.openCalcFieldFxBtnExprBuilder = function (item, $event) {
-            importSchemesMethodsService.openCalcFieldFxBtnExprBuilder(item, vm, $event);
-        }
-
-
-        /*vm.checkForUserExpr = function (item) {
+        vm.checkForUserExpr = function (item) {
             if (item.name_expr) {
                 if (item.name && item.name === item.name_expr) {
                     return false;
@@ -361,7 +193,7 @@
             }
 
             return false;
-        };*/
+        };
         vm.checkForUserExpr = function (item) {
             return importSchemesMethodsService.checkForUserExpr(item);
         }
@@ -371,9 +203,7 @@
         }
 
         vm.removeProviderField = function (item, $index) {
-
             vm.providerFields.splice($index, 1);
-
         };
 
         vm.removeCalculatedField = function (item, $index) {
@@ -382,7 +212,7 @@
 
         vm.removeMappingField = function (item, $index) {
             vm.mapFields.splice($index, 1);
-        };
+        }; */
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
@@ -526,115 +356,87 @@
             });
         };*/
 
-        vm.editTransactionType = function (ttypeId, $event) {
+		var initEventListeners = function () {
 
-            $mdDialog.show({
-                controller: 'TransactionTypeEditDialogController as vm',
-                templateUrl: 'views/entity-viewer/transaction-type-edit-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                multiple: true,
-                locals: {
-                    entityType: 'transaction-type',
-                    entityId: ttypeId,
-                    data: {
-                        openedIn: 'dialog'
-                    }
-                }
-            })
+			vm.calcFieldsGtEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
+				gridTableHelperService.onGridTableCellChange(vm.calculatedFields, vm.calcFieldsGtDataService, argumentsObj.row.order, argumentsObj.column.order);
+			});
 
-        };
+			vm.providerFieldsGtEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
+
+				gridTableHelperService.onGridTableCellChange(vm.providerFields, vm.providerFieldsGtDataService, argumentsObj.row.order, argumentsObj.column.order);
+
+				if (argumentsObj.column.key === 'name') {
+					vm.inputsFunctions = importSchemesMethodsService.getTransactionFunctions(vm.providerFields);
+					vm.exprEditorData.functions = [vm.inputsFunctions]; // updates provider fields for expression editors inside "GENERAL SETTINGS" and grid tables
+				}
+
+			});
+
+			vm.mapFieldsGtEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
+				vm.mapFields = importSchemesMethodsService.onMapFieldsGtCellChange(argumentsObj, vm.mapFields, vm.mapFieldsGtDataService);
+				if (argumentsObj.column.key === 'transaction_type') $scope.$apply();
+			});
+
+		};
 
         vm.init = function () {
 
-            vm.createEmptyScheme();
-            vm.getTransactionTypes();
+			vm.scheme = {
+				inputs: [],
+				rules: [],
+				rule_expr: 'a + b',
+				user_code: '',
+				column_matcher: 'index',
+				selector_values: []
+			};
 
-            if (data && data.hasOwnProperty('scheme')) {
+			vm.calcFieldsGtDataService = new GridTableDataService();
+			vm.calcFieldsGtEventService = new GridTableEventService();
+			vm.providerFieldsGtDataService = new GridTableDataService();
+			vm.providerFieldsGtEventService = new GridTableEventService();
+			vm.mapFieldsGtDataService = new GridTableDataService();
+			vm.mapFieldsGtEventService = new GridTableEventService();
 
-                vm.scheme = data.scheme;
+            vm.getTransactionTypes().then(function () {
 
-                if (vm.scheme.inputs.length) {
+				if (data && data.hasOwnProperty('scheme')) {
 
-                    vm.providerFields = [];
+					vm.scheme = data.scheme;
 
-                    vm.scheme.inputs.forEach(function (input) {
-                        vm.providerFields.push(input);
-                    });
+					var procSchemeResult = importSchemesMethodsService.processScheme(vm.scheme);
 
-                    vm.providerFields = vm.providerFields.sort(function (a, b) {
-                        if (a.column > b.column) {
-                            return 1;
-                        }
-                        if (a.column < b.column) {
-                            return -1;
-                        }
+					if (procSchemeResult.hasOwnProperty('providerFields')) vm.providerFields = procSchemeResult.providerFields;
+					if (procSchemeResult.hasOwnProperty('inputsFunctions')) {
+						vm.inputsFunctions = procSchemeResult.inputsFunctions;
+						vm.exprEditorData.functions = [vm.inputsFunctions];
+					}
+					if (procSchemeResult.hasOwnProperty('calculatedFields')) vm.calculatedFields = procSchemeResult.calculatedFields;
+					if (procSchemeResult.hasOwnProperty('mapFields')) vm.mapFields = procSchemeResult.mapFields;
+					if (procSchemeResult.hasOwnProperty('defaultRuleScenario')) vm.defaultRuleScenario = procSchemeResult.defaultRuleScenario;
+					if (procSchemeResult.hasOwnProperty('reconFields')) vm.reconFields = procSchemeResult.reconFields;
+					vm.selectorValuesProjection = procSchemeResult.selectorValuesProjection;
 
-                        return 0;
-                    });
+				}
 
-                    vm.inputsFunctions = vm.getFunctions();
+				vm.readyStatus.scheme = true;
 
-                }
+				vm.columnMatcherSelData = importSchemesMethodsService.getColumnMatcherSelData(vm.scheme.column_matcher, selectColumnMatcher);
 
-                if (vm.scheme.calculated_inputs && vm.scheme.calculated_inputs.length) {
+				vm.calcFieldsGtData = importSchemesMethodsService.assembleDataForCalcFieldsGt(vm.calculatedFields, vm.calcFieldsGtDataService, vm.exprEditorData);
+				vm.calcFieldsGtDataService.setTableData(vm.calcFieldsGtData);
 
-                    vm.calculatedFields = [];
+				vm.providerFieldsGtData = importSchemesMethodsService.assembleDataForProviderFieldsGt(vm.providerFields, vm.providerFieldsGtDataService, vm.exprEditorData, vm.scheme.column_matcher);
+				vm.providerFieldsGtDataService.setTableData(vm.providerFieldsGtData);
 
-                    vm.scheme.calculated_inputs.forEach(function (input) {
-                        vm.calculatedFields.push(input);
-                    });
+				vm.mapFieldsGtData = importSchemesMethodsService.assembleDataForMapFieldsGt(vm.mapFields, vm.providerFields, vm.mapFieldsGtDataService, vm.selectorValuesProjection, vm.transactionTypes);
+				vm.mapFieldsGtDataService.setTableData(vm.mapFieldsGtData);
 
-                    vm.calculatedFields = vm.calculatedFields.sort(function (a, b) {
-                        if (a.column > b.column) {
-                            return 1;
-                        }
-                        if (a.column < b.column) {
-                            return -1;
-                        }
+				initEventListeners();
 
-                        return 0;
-                    });
+            	$scope.$apply();
 
-                    vm.inputsFunctions = vm.getFunctions();
-
-                }
-
-                if (vm.scheme.rule_scenarios.length) {
-                    vm.mapFields = [];
-
-                    vm.scheme.rule_scenarios.forEach(function (item) {
-
-                        if (item.is_default_rule_scenario) {
-                            vm.defaultRuleScenario = item
-                        } else {
-                            vm.mapFields.push(item);
-                        }
-
-                    })
-
-
-
-
-                }
-
-                if (vm.scheme.recon_scenarios.length) {
-                    vm.reconFields = [];
-
-                    vm.scheme.recon_scenarios.forEach(function (item) {
-                        vm.reconFields.push(item)
-                    })
-                }
-
-
-
-                vm.selector_values_projection = vm.scheme.selector_values.map(function (item) {
-                    return {
-                        id: item.value,
-                        value: item.value
-                    }
-                });
-            }
+            });
 
         };
 

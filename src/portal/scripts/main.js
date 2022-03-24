@@ -18,6 +18,8 @@ import mainHeaderDirective from "./app/directives/mainHeaderDirective.js";
 import complexDropdownSelectDirective from "./app/directives/customInputs/complexDropdownSelectDirective";
 import complexDropdownSelectMenuDirective from "./app/directives/customInputs/complexDropdownSelectMenuDirective";
 
+import gridTableTtypeSelectorCellDirective from "./app/directives/gridTable/cells/gridTableTtypeSelectorCellDirective";
+
 // noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
 
@@ -76,7 +78,7 @@ export default (function () {
 
 	// portal.service('uiService', ['localStorageService', uiService]);
 	portal.service('multitypeFieldService', [require('./app/services/multitypeFieldService')]);
-	portal.service('importSchemesMethodsService', ['$mdDialog', require('./app/services/import/importSchemesMethodsService')]);
+	portal.service('importSchemesMethodsService', ['$mdDialog', 'gridTableHelperService', require('./app/services/import/importSchemesMethodsService')]);
 	portal.service('evRvDomManagerService', [require('./app/services/evRvDomManagerService')]);
 	portal.service('entityDataConstructorService', [require('./app/services/entity-data-constructor/entityDataConstructorService')]);
 
@@ -274,8 +276,8 @@ export default (function () {
 
 	// Transaction Import
 
-	portal.controller('TransactionImportSchemeAddDialogController', ['$scope', '$mdDialog', 'data', 'importSchemesMethodsService', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeAddDialogController')]);
-	portal.controller('TransactionImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', 'importSchemesMethodsService', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeEditDialogController')]);
+	portal.controller('TransactionImportSchemeAddDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'importSchemesMethodsService', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeAddDialogController')]);
+	portal.controller('TransactionImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', 'gridTableHelperService', 'importSchemesMethodsService', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeEditDialogController')]);
 	portal.controller('TransactionImportSchemeInputsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeInputsDialogController')]);
 	portal.controller('TransactionImportDialogController', ['$scope', '$mdDialog', 'data', 'usersService', require('./app/controllers/dialogs/transaction-import/transactionImportDialogController')]);
 	portal.controller('TransactionImportErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportErrorsDialogController')]);
@@ -792,6 +794,7 @@ export default (function () {
 	portal.directive('gridTableHeaderCell', [require('./app/directives/gridTable/cells/gridTableHeaderCellDirective')]);
 	portal.directive('gridTablePopupCell', ['$compile', '$mdDialog', require('./app/directives/gridTable/cells/gridTablePopupCellDirective')]);
 	portal.directive('gridTableMultiselectorCell', ['$mdDialog', require('./app/directives/gridTable/cells/gridTableMultiselectorCellDirective')]);
+	portal.directive('gridTableTtypeSelectorCell', ['globalDataService', 'usersService', gridTableTtypeSelectorCellDirective]);
 	//</editor-fold>
 
 	portal.filter('trustAsHtml', ['$sce', require('./app/filters/trustAsHtmlFilter')]);

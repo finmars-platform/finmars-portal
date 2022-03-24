@@ -41,12 +41,12 @@
 					'text': "<text-input label='{{column.columnName}}' " +
 										"placeholder-text='{{column.columnName}}' " +
 										"model='popupModel.value' " +
-										"small-options='{dialogParent: \".dialog-containers-wrap\"}'>" +
+										"small-options='{dialogParent: \".dialog-containers-wrap\", autofocus: true}'>" +
 							"</text-input>",
 
 					'number': "<number-input label='{{column.columnName}}' " +
 											"model='popupModel.value' " +
-											"small-options='{dialogParent: \".dialog-containers-wrap\"}'>" +
+											"small-options='{dialogParent: \".dialog-containers-wrap\", autofocus: true}'>" +
 						      "</number-input>",
 
 					'multitypeField': "<multitype-field field-types-data='fieldTypesData'></multitype-field>"

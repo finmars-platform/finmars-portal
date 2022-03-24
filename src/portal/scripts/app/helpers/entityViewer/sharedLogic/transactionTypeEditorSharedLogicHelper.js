@@ -1126,7 +1126,6 @@
                         cellType: 'text',
                         settings: {
                             value: null,
-                            closeOnMouseOut: false,
                             isDisabled: true
                         },
                         styles: {

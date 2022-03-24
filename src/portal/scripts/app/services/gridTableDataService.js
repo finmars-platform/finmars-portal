@@ -81,7 +81,8 @@
 
                 });
 
-            } else {
+            }
+            else { // data about single row passed
 
             	if (rows.order === 'header') {
 					throw("'Header row deletion is prohibited'");

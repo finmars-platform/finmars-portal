@@ -431,7 +431,7 @@
             mapAttributesToLayoutFields();
         };
 
-        var getTransactionGroups = function () {
+        /* var getTransactionGroups = function () {
 
             var groups = {};
 
@@ -515,17 +515,6 @@
 
                     return null;
 
-                    /* var ttype = ttypesList.find(function (ttype) {
-                        return ttype.user_code === ttypeUserCode;
-                    });
-
-                    if (!ttype) {return ttype;}
-
-                    return {
-                        id: ttype.id,
-                        name: ttype.name
-                    }; */
-
                 })
                     .filter(function (fTttype) {
                         return !!fTttype;
@@ -550,16 +539,24 @@
                 member.data.favorites = {};
             }
 
-            member.data.favorites.transaction_type = vm.favTTypeOpts.map(function (ttypeOpt) {
-                var ttype = ttypesList.find(ttype => ttype.id === ttypeOpt.id);
-                return ttype.user_code;
-            });
+            //  member.data.favorites.transaction_type = vm.favTTypeOpts.map(function (ttypeOpt) {
+            //     var ttype = ttypesList.find(ttype => ttype.id === ttypeOpt.id);
+            //     return ttype.user_code;
+            // });
+			member.data.favorites.transaction_type = vm.favTTypeOpts.map(function (ttypeOpt) {
+				return ttypeOpt.userCode;
+			});
 
             usersService.updateMember(member.id, member);
 
-        };
+        }; */
 
-        /** @param transactionType {{id: Number, name: String}}*/
+		vm.saveFavoriteTTypeOptions = function () {
+			var member = globalDataService.getMember();
+			transactionHelper.saveFavoriteTTypeOptions(member, vm.favTTypeOpts, usersService);
+		};
+
+        /** @param transactionType {{id: Number, name: String}} */
         vm.transactionTypeChange = function () {
 
             // vm.transactionTypeId = selectedTType.id;
@@ -592,9 +589,10 @@
             transactionTypeService.getListLight(options).then(function (data) {
 
                 ttypesList = data.results;
-                vm.transactionGroups = getTransactionGroups(ttypesList);
+                vm.transactionGroups = transactionHelper.getTransactionGroups(ttypesList);
 
-                vm.favTTypeOpts = getFavoriteTTypeOptions(vm.transactionGroups);
+				var member = globalDataService.getMember();
+                vm.favTTypeOpts = transactionHelper.getFavoriteTTypeOptions(member, vm.transactionGroups);
 
                 vm.readyStatus.transactionTypes = true;
 

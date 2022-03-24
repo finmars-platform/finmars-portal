@@ -28,6 +28,7 @@
 
                 var inputLoaded = false;  // prevents not null inputs highlight from start
                 var stylePreset;
+				var autofocus = false;
 
                 // TIPS
                 // scope.smallOptions probable properties
@@ -42,6 +43,7 @@
                     scope.tooltipText = scope.smallOptions.tooltipText;
                     scope.dialogParent = scope.smallOptions.dialogParent;
                     scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
+					autofocus = scope.smallOptions.autofocus;
 
                 }
 
@@ -409,6 +411,9 @@
                         applyCustomStyles();
                     }
 
+                    if (autofocus) {
+                    	inputElem.focus();
+					}
                     /*if (scope.smallOptions && scope.smallOptions.notNull &&
                         !scope.numberToShow && scope.numberToShow !== 0) {
 

@@ -1,0 +1,10 @@
+<div class="gt-ttype-selector-cell">
+    <complex-dropdown-select ng-if="readyStatus"
+                             model="column.settings.value"
+                             menu-options="ttypeGroupsList"
+                             favorite-options="ttypeFavOptionsList"
+                             event-service="cdsEventService"
+
+                             on-selected-option-change="onChange()"
+                             on-favorite-options-change="onFavTTypeOptionsChange()"></complex-dropdown-select>
+</div>

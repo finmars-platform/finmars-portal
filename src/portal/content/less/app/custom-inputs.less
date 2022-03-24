@@ -615,9 +615,15 @@
     position: relative;
     padding-right: 24px;
 
+    .cds-sel-option-name {
+      padding-left: 10px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
     .cds-selector-icon {
       position: absolute;
-      top: 0;
       right: 0;
       top: 50%;
       transform: translateY(-50%);
@@ -626,6 +632,10 @@
 
   }
 
+}
+
+.cds-popup-container {
+  min-width: 230px;
 }
 
 .complex-dropdown-select-popup {

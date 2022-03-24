@@ -131,6 +131,19 @@ export default function () {
 					if (scope.model || scope.model === 0) findSelectedOption();
 				});
 
+				scope.eventService.addEventListener(directivesEvents.DROPDOWN_MENU_OPTIONS_CHANGED, function (argumentsObj) {
+
+					scope.menuOptions = argumentsObj.menuOptions;
+					scope.favoriteOptions = argumentsObj.favoriteOptions;
+					originalFavoriteOptsList = JSON.parse(angular.toJson(scope.favoriteOptions));
+
+					scope.popupData.menuOptions = scope.menuOptions;
+					scope.popupData.favoriteOptions = scope.favoriteOptions;
+
+					if (scope.model || scope.model === 0) findSelectedOption();
+
+				});
+
 			}
 
         }

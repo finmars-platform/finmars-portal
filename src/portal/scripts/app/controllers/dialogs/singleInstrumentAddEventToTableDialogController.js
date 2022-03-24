@@ -254,7 +254,7 @@
                         cellType: 'button',
                         settings: {
                             buttonContent: 'Open Manager',
-                            callback: openEventActionParametersManager
+                            onClick: openEventActionParametersManager
                         },
                         styles: {
                             'grid-table-cell': {'width': '130px'},

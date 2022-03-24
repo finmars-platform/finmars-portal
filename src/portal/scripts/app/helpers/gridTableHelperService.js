@@ -29,9 +29,10 @@
 
 		const getCellFromRowByKey = (row, colKey) => {
 
-			for (var i = 0; i < row.columns.length; i++) {
+			/*for (var i = 0; i < row.columns.length; i++) {
                 if (row.columns[i].key === colKey) return row.columns[i];
-            }
+            }*/
+			return row.columns.find(column => column.key === colKey);
 
         };
 

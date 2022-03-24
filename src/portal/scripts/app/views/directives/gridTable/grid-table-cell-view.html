@@ -84,6 +84,14 @@
 
     </div>
 
+    <div ng-if="column.cellType === 'transactionTypeSelector'" class="gt-cell-content">
+        <grid-table-ttype-selector-cell row="row"
+                                        column="column"
+                                        gt-data-service="gtDataService"
+                                        gt-event-service="gtEventService"
+                                        on-load-end="onChildrenLoadEnd()"></grid-table-ttype-selector-cell>
+    </div>
+
     <div ng-if="column.cellType === 'checkbox'" class="gt-cell-content flex-i-center gt-cell-checkbox-holder">
         <md-checkbox ng-model="column.settings.value"
                      ng-change="onCellValueChange()"
@@ -92,10 +100,12 @@
     </div>
 
     <div ng-if="column.cellType === 'button'" class="gt-cell-content flex-center gt-cell-button-holder">
-        <md-button ng-bind-html="column.settings.buttonContent"
-                   ng-disabled="column.settings.isDisabled"
+        <md-button ng-disabled="column.settings.isDisabled"
                    class="flex-i-center"
-                   ng-click="onButtonClick()"></md-button>
+                   ng-click="onButtonClick($event)">
+            <span ng-bind-html="column.settings.buttonContent"></span>
+            <md-tooltip ng-if="column.settings.tooltipText" class="tooltip_1" md-direction="top" ng-bind="column.settings.tooltipText"></md-tooltip>
+        </md-button>
     </div>
 
     <div ng-if="column.cellType === 'multiselector'" class="gt-cell-content">

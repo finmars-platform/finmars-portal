@@ -12,15 +12,17 @@
 				label: "@",
 				placeholderText: "@",
 				model: "=",
+
 				customButtons: '=',
 				customStyles: "=",
 				eventSignal: "=",
 				smallOptions: "=",
 				isDisabled: "=",
 				renderHyperlinks: "=",
+
+				onFocus: "=", // I can't bind as "&?" because onFocus need event argument
 				onChangeCallback: "&?",
 				onBlurCallback: "&?",
-				onFocus: "=" // I can't bind as "&?" because onFocus need event argument
 			},
 			templateUrl: "views/directives/customInputs/text-input-view.html",
 			link: function (scope, elem, attr) {
@@ -29,6 +31,7 @@
 
 				var inputElem; // = elem[0].querySelector(".textInputElem");
 				var stylePreset;
+				var autofocus = false;
 
 				/* TEXTAREA CODE
 
@@ -64,6 +67,7 @@
 					scope.isReadonly = scope.smallOptions.readonly;
 					scope.dialogParent = scope.smallOptions.dialogParent;
 					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
+					autofocus = scope.smallOptions.autofocus;
 
 				}
 
@@ -423,6 +427,10 @@
 
 					if (scope.customStyles) {
 						applyCustomStyles();
+					}
+
+					if (autofocus) {
+						inputElem.focus();
 					}
 
 				};

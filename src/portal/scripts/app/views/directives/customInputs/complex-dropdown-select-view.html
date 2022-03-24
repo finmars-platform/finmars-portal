@@ -14,6 +14,7 @@
          popup-width="element"
          offset-y="-10"
          on-cancel="onPopupClose()"
+         popup-classes="cds-popup-container"
 
          class="custom-input-main-container cursor-pointer">
 
@@ -22,7 +23,7 @@
 
                 <div class="cds-content-row">
 
-                    <div ng-bind="selectedOption.name" style="padding-left: 10px;"></div>
+                    <div class="cds-sel-option-name" ng-bind="selectedOption.name"></div>
 
                     <span class="cds-selector-icon material-icons">arrow_drop_down</span>
 

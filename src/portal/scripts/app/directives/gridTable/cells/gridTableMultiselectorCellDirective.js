@@ -21,6 +21,8 @@
 
 				let cellMethods = scope.column.methods || {};
 
+				if (!Array.isArray(scope.column.settings.value)) scope.column.settings.value = [];
+
 				let onCellValueChange = function () {
 
 					let rowData = {
@@ -92,10 +94,7 @@
 
 				};
 
-				let onCellClick = function (event) {
-
-					event.preventDefault();
-					event.stopPropagation();
+				const openMultiselector = function (event) {
 
 					$mdDialog.show({
 						controller: "TwoFieldsMultiselectDialogController as vm",
@@ -137,6 +136,20 @@
 
 					});
 
+				};
+
+				const onCellClick = function (event) {
+
+					event.stopPropagation();
+					event.preventDefault();
+
+					openMultiselector(event);
+
+				};
+
+				scope.onChipClick = function (chipsData, event) {
+					event.preventDefault();
+					openMultiselector(event);
 				};
 
 				let init = async function () {
