@@ -426,7 +426,7 @@
 				],
 				'instrument': [
 					'accrued_currency', 'accrued_currency_input', 'accrued_multiplier',
-					'daily_pricing_model', 'daily_pricing_model_input', 'default_accrued',
+					'pricing_condition', 'pricing_condition_input', 'default_accrued',
 					'default_price', 'instrument_type', 'instrument_type_input', 'maturity_date',
 					'maturity_price', 'name', 'notes', 'payment_size_detail', 'payment_size_detail_input',
 					'price_download_scheme', 'price_download_scheme_input', 'price_multiplier',
@@ -2674,8 +2674,8 @@
 				return loadRelation('accrued_currency');
 			};
 
-			const loadDailyPricingPricingModel = function () {
-				return loadRelation('daily_pricing_model');
+			const loadPricingConditionModel = function () {
+				return loadRelation('pricing_condition');
 			};
 
 			/* const loadPriceDownloadScheme = function () {
@@ -2783,33 +2783,33 @@
 				}
 			];
 
-			multitypeFieldsData.daily_pricing_model = [
+			multitypeFieldsData.pricing_condition = [
 				{
 					'key': 'input',
-					'model': action.instrument.daily_pricing_model_input,
+					'model': action.instrument.pricing_condition_input,
 					'fieldType': 'dropdownSelect',
 					'isDefault': true,
-					'isActive': !!!action.instrument.daily_pricing_model_toggle,
+					'isActive': !!!action.instrument.pricing_condition_toggle,
 					'sign': '<div class="multitype-field-type-letter">I</div>',
 					'value_type': 70,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-						'menuOptions': findInputs('daily-pricing-model')
+						'menuOptions': findInputs('pricing-condition')
 					}
 				},
 				{
 					'key': 'relation',
-					'model': action.instrument.daily_pricing_model,
+					'model': action.instrument.pricing_condition,
 					'fieldType': 'dropdownSelect',
 					'isDefault': false,
-					'isActive': !!action.instrument.daily_pricing_model_toggle,
+					'isActive': !!action.instrument.pricing_condition_toggle,
 					'sign': '<div class="multitype-field-type-letter highlight">R</div>',
 					'value_type': 100,
 					'fieldData': {
 						'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
 						'menuOptions': [],
-						'itemName': action.instrument.daily_pricing_model_object ? action.instrument.daily_pricing_model_object.name : '',
-						'loadMenuOptions': loadDailyPricingPricingModel
+						'itemName': action.instrument.pricing_condition_object ? action.instrument.pricing_condition_object.name : '',
+						'loadMenuOptions': loadPricingConditionModel
 					}
 				}
 			];
