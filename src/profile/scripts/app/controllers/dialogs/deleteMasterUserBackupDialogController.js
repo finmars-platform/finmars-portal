@@ -24,55 +24,24 @@
 
         vm.agree = function ($event) {
 
-            /*$mdDialog.show({
-                controller: 'WarningDialogController as vm',
-                templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
-                locals: {
-                    warning: {
-                        title: 'Confirmation',
-                        description: 'Database ' + vm.masterUser.name + ' is going to be deleted.'
-                    }
-                },
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true,
-                targetEvent: $event
+            vm.processing = true;
 
-            })*/
-			const warningLocals = {
-				warning: {
-					title: 'Confirmation',
-					description: 'Database ' + vm.backup.name + ' is going to be deleted.'
-				}
-			};
+            masterUserBackupsService.deleteMasterUserBackup(vm.backup.id).then(function () {
 
-			commonDialogsService.warning(warningLocals, {targetEvent: $event}).then(function (res) {
+                vm.processing = false;
 
-                if (res.status === 'agree') {
+                $scope.$apply();
 
-                    vm.processing = true;
+                toastNotificationService.success("Ecosystem " + vm.backup.name + ' was deleted');
 
-                    masterUserBackupsService.deleteMasterUserBackup(vm.backup.id).then(function () {
+                $mdDialog.hide({status: 'agree'});
 
-                        vm.processing = false;
+            }).catch(function (error) {
 
-                        $scope.$apply();
+                vm.processing = false;
+                $scope.$apply();
 
-                        toastNotificationService.success("Ecosystem " + vm.backup.name + ' was deleted');
-
-                        $mdDialog.hide({status: 'agree'});
-
-                    }).catch(function (error) {
-
-                        vm.processing = false;
-                        $scope.$apply();
-
-                    })
-                }
-
-            });
+            })
 
         };
     }

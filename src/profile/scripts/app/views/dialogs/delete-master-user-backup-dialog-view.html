@@ -18,18 +18,7 @@
         <div data-ng-if="!vm.processing">
 
             <div class="warning-text">
-                <p>Are you sure you want to delete <b>{{vm.backup.name}}</b> database?</p>
-
-                <p>Type the Database name to delete it:</p>
-
-                <div>
-
-                    <md-input-container>
-                        <label>Database name</label>
-                        <input type="text" data-ng-model="vm.nameCheck">
-                    </md-input-container>
-                </div>
-
+                <p>Are you sure you want to delete <b>{{vm.backup.name}}</b> backup?</p>
             </div>
 
         </div>
@@ -40,7 +29,6 @@
             Cancel
         </md-button>
         <md-button class="md-raised md-warn"
-                   data-ng-class="{'disabled-btn': vm.nameCheck != vm.masterUser.name || vm.processing}"
                    ng-click="vm.agree()" style="margin-right:20px;">
             Delete
         </md-button>
