@@ -269,6 +269,16 @@
                     </md-button>
                 </div>
                 <div flex="80">
+                    <div flex="20">
+                    <md-button
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument.pricing_condition_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'instrument', 'pricing_condition')">
+                        <span data-ng-if="!!item.instrument.pricing_condition_toggle">R</span>
+                        <span data-ng-if="!!!item.instrument.pricing_condition_toggle">I</span>
+                    </md-button>
+                </div>
+                <div flex="80">
                     <div data-ng-if="item.instrument.pricing_condition_toggle">
 
                         <ttype-actions-relations-select label-title="Pricing condition"
@@ -287,11 +297,11 @@
                                                     is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
                 </div>-->
-                <multitype-field label="Daily pricing model"
-                                 field-types-data="vm.actionsMultitypeFieldsList[$index].daily_pricing_model"
+                <multitype-field label="Pricing condition"
+                                 field-types-data="vm.actionsMultitypeFieldsList[$index].pricing_condition"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
-                                 on-value-change="vm.onMultitypeFieldValChange('daily_pricing_model', item, $index, 'instrument')"
-                                 on-type-change="vm.onActionMultitypeFieldToggle('daily_pricing_model', item, $index, 'instrument')"
+                                 on-value-change="vm.onMultitypeFieldValChange('pricing_condition', item, $index, 'instrument')"
+                                 on-type-change="vm.onActionMultitypeFieldToggle('pricing_condition', item, $index, 'instrument')"
                                  class="ttype-action-input p-r-0"></multitype-field>
             </div>
 
