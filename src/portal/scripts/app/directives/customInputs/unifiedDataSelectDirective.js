@@ -468,7 +468,7 @@
 
                     }).catch(function () {
 
-                        vm.processing = false;
+                        scope.processing = false;
                         scope.$apply();
 
                     })

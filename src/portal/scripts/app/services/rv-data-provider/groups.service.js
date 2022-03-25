@@ -197,6 +197,8 @@
 
                 var groups = getUniqueGroups(items, group);
 
+                console.log('groups', groups);
+
                 const groupSortProperty = options.groups_order === 'desc' ? '-___group_name' : '___group_name';
 
                 if (options.ordering_mode === 'manual') {
