@@ -647,10 +647,12 @@
 
     };
 
-	const getMarkedRowsAndSubtotals = function (color, evDataService) {
+	const getMarkedRowsAndSubtotals = function (color, evDataService, globalDataService) {
 
         const entityType = evDataService.getEntityType();
-        const markedReportRows = localStorageService.getMarkedRows(true, entityType);
+        // const markedReportRows = localStorageService.getMarkedRows(true, entityType);
+		const rvSettings = globalDataService.getMemberEntityViewersSettings(true, entityType);
+		const markedReportRows = rvSettings.marked_rows;
 
 		const markedSubtotals = evDataService.getMarkedSubtotals();
 
@@ -664,7 +666,7 @@
 
 	};
 
-	const filterByRowColor = function (list, evDataService) {
+	const filterByRowColor = function (list, evDataService, globalDataService) {
 
 		const rowTypeFilters = evDataService.getRowTypeFilters();
 		const color = rowTypeFilters.markedRowFilters;
@@ -673,7 +675,7 @@
 			return list;
 		}
 
-		const markedRowsAndSubtotals = getMarkedRowsAndSubtotals(color, evDataService);
+		const markedRowsAndSubtotals = getMarkedRowsAndSubtotals(color, evDataService, globalDataService);
 		const notDeletedKeys = [];
 
 		list.forEach(item => {
@@ -713,7 +715,7 @@
 
 	};
 
-    var getFlatStructure = function (evDataService) {
+    var getFlatStructure = function (evDataService, globalDataService) {
 
         var rootGroupOptions = evDataService.getRootGroupOptions();
 
@@ -786,7 +788,7 @@
 
         list = removeItemsFromFoldedGroups(list, evDataService);
 
-        list = filterByRowColor(list, evDataService);
+        list = filterByRowColor(list, evDataService, globalDataService);
 
         return list;
 

@@ -130,7 +130,7 @@
         }
 
         const onPopupSaveCallback = async function () {
-			const test = viewModel.evEditorDataService.getFormErrorsList();
+
             const fieldsInFixedArea = viewModel.action === 'edit' ? getEditFormFieldsInFixedArea() : getAddFormFieldsInFixedArea();
             // Fixating showByDefault because viewModel.fixedAreaPopup.fields.showByDefault.value can be changed by getAndFormatUserTabs();
             const showByDefaultAfterSave = viewModel.fixedAreaPopup.fields.showByDefault.value;
