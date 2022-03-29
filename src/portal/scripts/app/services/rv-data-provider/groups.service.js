@@ -38,20 +38,20 @@
         var pieces = key.split('.');
 
         var last_key;
+
+        console.log('convertNameKeyToUserCodeKey.pieces', pieces)
         if (pieces.length > 1) {
             last_key = pieces.pop()
-        } else {
-            last_key = pieces[0]
+
+            if (['short_name', 'name', 'public_name'].indexOf(last_key) !== -1) {
+
+                pieces.push('user_code')
+
+                result = pieces.join('.')
+
+            }
+
         }
-
-        if (['short_name', 'name', 'public_name'].indexOf(last_key) !== -1) {
-
-            pieces.push('user_code')
-
-            result = pieces.join('.')
-
-        }
-
 
         return result
 
@@ -70,6 +70,8 @@
 
         var resultGroup;
 
+        console.log('getUniqueGroups.group', group)
+
         items.forEach(function (item) {
 
             resultGroup = {
@@ -83,6 +85,8 @@
 
             identifier_key = convertNameKeyToUserCodeKey(group.key)
             identifier_value = item[identifier_key];
+
+            console.log('identifier_key', identifier_key);
 
             if (identifier_value !== null && identifier_value !== undefined && identifier_value !== '-') {
 
@@ -137,6 +141,8 @@
             }
 
         });
+
+        console.log('result',result);
 
         return result;
 
@@ -195,7 +201,11 @@
 
                 var group = options.groups_types[options.groups_types.length - 1];
 
+                console.log('before groups ', items);
+
                 var groups = getUniqueGroups(items, group);
+
+                console.log('groups', groups);
 
                 const groupSortProperty = options.groups_order === 'desc' ? '-___group_name' : '___group_name';
 

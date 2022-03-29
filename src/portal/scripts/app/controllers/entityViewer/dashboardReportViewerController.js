@@ -355,7 +355,9 @@
 
                 var column_key = vm.componentData.settings.grand_total_column;
 
-                var val = root.subtotal[column_key];
+                    var val = root.subtotal[column_key];
+
+                console.log('val', val);
 
                 vm.grandTotalNegative = false;
 
