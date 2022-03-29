@@ -20,7 +20,7 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
     const localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
-    var RvScrollManager = require('./rv-scroll.manager');
+    var RvScrollManager = require('./rv-scroll.manager'); // TODO initialize RvScrollManager instance from level above rv-dom.manager.js into angularjs dependencies
 
     var rvScrollManager = new RvScrollManager();
 
@@ -997,7 +997,7 @@
 
 	}
 
-    var initEventDelegation = async function (elem, evDataService, evEventService) {
+    var initEventDelegation = async function (elem, evDataService, evEventService, usersService, globalDataService) {
 
         const ttypes = await getAllTTypes();
         const contextMenu = await getContextMenu();
@@ -1044,7 +1044,7 @@
                 }
 
             }
-            else if (event.detail === 1) {
+            else if (event.detail === 1) { // click
 
                 if (clickData.isFoldButtonPressed) {
                     handleFoldButtonClick(clickData, evDataService, evEventService);
@@ -1057,7 +1057,7 @@
 						case 'open_row_color_picker':
 
 							event.stopPropagation();
-							evRvDomManagerService.createRowColorPickerMenu(clickData, evDataService, evEventService, clearDropdowns);
+							evRvDomManagerService.createRowColorPickerMenu(clickData, evDataService, evEventService, usersService, globalDataService, clearDropdowns);
 
 							break;
 
@@ -1075,10 +1075,10 @@
 								event.stopPropagation();
 
 								if (subtotalData) { // for subtotal rows
-									createPopupMenuForSubtotal(objectId, subtotalData, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+									createPopupMenuForSubtotal(objectId, subtotalData, parentGroupHashId, evDataService, evEventService, usersService, globalDataService, contextMenuPosition);
 
 								} else {
-									createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+									createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, usersService, globalDataService, contextMenuPosition);
 								}
 
 							}
@@ -1117,7 +1117,6 @@
                         }
 
                     }
-
                     else if (!selection.length) {
 
                         switch (clickData.___type) {
@@ -1189,10 +1188,10 @@
                 var contextMenuPosition = {positionX: ev.pageX, positionY: ev.pageY};
 
                 if (subtotalData) { // for subtotal rows
-                    createPopupMenuForSubtotal(objectId, subtotalData, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+                    createPopupMenuForSubtotal(objectId, subtotalData, parentGroupHashId, evDataService, evEventService, usersService, globalDataService, contextMenuPosition);
 
                 } else {
-                    createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+                    createPopupMenu(objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, usersService, globalDataService, contextMenuPosition);
                 }
 
                 return false;
@@ -1774,11 +1773,13 @@
 
 	};
 	/**
-	 * transfer data into event listener callback executeContextMenuAction() or executeSubtotalContextMenuAction()
+	 * transfer data into event listener callback ( executeContextMenuAction() or executeSubtotalContextMenuAction() )
 	 *
 	 * @type {Object} eventListenerFn2Args
 	 * eventListenerFn2Args.evDataService {Object|null}
 	 * eventListenerFn2Args.evEventService {Object|null}
+	 * eventListenerFn2Args.usersService {Object|null}
+	 * eventListenerFn2Args.globalDataService {Object|null}
 	 * eventListenerFn2Args.subtotalType {string|null} - type or subtype of subtotal. Can be 'line' or 'area'.
 	 */
     var eventListenerFn2Args = {
@@ -1789,11 +1790,14 @@
 
 	function executeContextMenuAction(event) {
 
-		var objectId = event.target.dataset.objectId;
-		var parentGroupHashId = event.target.dataset.parentGroupHashId;
-		var dropdownAction = event.target.dataset.evDropdownAction;
-		var evDataService = eventListenerFn2Args.evDataService;
-		var evEventService = eventListenerFn2Args.evEventService;
+		var objectId = event.target.dataset.objectId,
+			parentGroupHashId = event.target.dataset.parentGroupHashId,
+			dropdownAction = event.target.dataset.evDropdownAction,
+			evDataService = eventListenerFn2Args.evDataService,
+			evEventService = eventListenerFn2Args.evEventService,
+			usersService = eventListenerFn2Args.usersService,
+			globalDataService = eventListenerFn2Args.globalDataService;
+
 		var dropdownActionData = {};
 
 		if (event.target.dataset.hasOwnProperty('evDropdownActionDataId')) {
@@ -1806,7 +1810,7 @@
 
 			if (objectId && color && parentGroupHashId) {
 
-				evRvDomManagerService.markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, color);
+				evRvDomManagerService.markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, usersService, globalDataService, color);
 				/* var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
 				var markedReportRows = localStorage.getItem("marked_report_rows");
 
@@ -1987,12 +1991,16 @@
 	 *
 	 * @param evDataService {Object}
 	 * @param evEventService {Object}
+	 * @param usersService {Object}
+	 * @param globalDataService {Object}
 	 * @param type {any=} - Type or subtype of subtotal Can be 'line' or 'area'.
 	 */
-    var addEventListenersForContextMenu = function (evDataService, evEventService, type) {
+    var addEventListenersForContextMenu = function (evDataService, evEventService, usersService, globalDataService, type) {
 
 		eventListenerFn2Args.evDataService = evDataService;
 		eventListenerFn2Args.evEventService = evEventService;
+		eventListenerFn2Args.usersService = usersService;
+		eventListenerFn2Args.globalDataService = globalDataService;
 
 		if (type) {
 
@@ -2009,7 +2017,7 @@
 
     };
 
-    var createPopupMenu = function (objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, menuPosition) {
+    var createPopupMenu = function (objectId, contextMenu, ttypes, parentGroupHashId, evDataService, evEventService, usersService, globalDataService, menuPosition) {
 
 		clearDropdownsAndRows(evDataService, evEventService);
 
@@ -2024,7 +2032,7 @@
 
 			document.body.appendChild(popup);
 
-			addEventListenersForContextMenu(evDataService, evEventService);
+			addEventListenersForContextMenu(evDataService, evEventService, usersService, globalDataService);
 
 		}
 
@@ -2039,9 +2047,11 @@
 	 * @param parentGroupHashId {Number}
 	 * @param evDataService {Object}
 	 * @param evEventService {Object}
+	 * @param usersService {Object}
+	 * @param globalDataService {Object}
 	 * @param menuPosition {{positionX: number, positionY: number}} - coordinates of mouse click on row
 	 */
-	var createPopupMenuForSubtotal = function (groupId, subtotalData, parentGroupHashId, evDataService, evEventService, menuPosition) {
+	var createPopupMenuForSubtotal = function (groupId, subtotalData, parentGroupHashId, evDataService, evEventService, usersService, globalDataService, menuPosition) {
 
 		clearDropdownsAndRows(evDataService, evEventService);
 
@@ -2058,7 +2068,7 @@
 
 			document.body.appendChild(popup);
 
-			addEventListenersForContextMenu(evDataService, evEventService, type);
+			addEventListenersForContextMenu(evDataService, evEventService, usersService, globalDataService, type);
 
 		}
 

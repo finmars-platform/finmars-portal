@@ -21,11 +21,11 @@
         var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
         // var middlewareService = require('../../services/middlewareService');
 
-        module.exports = function ($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
+        module.exports = function ($scope, $mdDialog, $transitions, globalDataService, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
 
             var vm = this;
 
-            var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
+            var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService);
 
             console.log('parentEntityViewerDataService', parentEntityViewerDataService);
             console.log('parentEntityViewerEventService', parentEntityViewerEventService);

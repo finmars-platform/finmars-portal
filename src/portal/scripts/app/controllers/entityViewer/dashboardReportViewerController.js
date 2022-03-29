@@ -33,11 +33,11 @@
         var dashboardEvents = require('../../services/dashboard/dashboardEvents');
         var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-        module.exports = function ($scope, $mdDialog, toastNotificationService, usersService, gFiltersHelper) {
+        module.exports = function ($scope, $mdDialog, toastNotificationService, usersService, globalDataService, gFiltersHelper) {
 
             var vm = this;
 
-            var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
+            var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService);
 
             vm.readyStatus = {
                 attributes: false,

@@ -18,7 +18,7 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
     var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
-    module.exports = function ($mdDialog, evRvDomManagerService) {
+    module.exports = function ($mdDialog, usersService, globalDataService, evRvDomManagerService) {
         return {
             restrict: 'AE',
             scope: {
@@ -409,7 +409,7 @@
 
                 };
 
-                scope.rowFilterColor = localStorageService.getRowTypeFilter(scope.isReport, scope.entityType);
+                // scope.rowFilterColor = localStorageService.getRowTypeFilter(scope.isReport, scope.entityType);
 
 				scope.removeColorMarkFromAllRows = function ($event) {
 
@@ -439,7 +439,7 @@
 					}).then(function (res) {
 
 						if (res.status === 'agree') {
-							evRvDomManagerService.removeColorMarkFromAllRows(scope.evDataService, scope.evEventService);
+							evRvDomManagerService.removeColorMarkFromAllRows(scope.evDataService, scope.evEventService, usersService, globalDataService);
 						}
 
 					});
@@ -814,7 +814,7 @@
                         }; */
 
                     } else {
-                        flatList = evDataHelper.getObjectsFromSelectedGroups(scope.evDataService);
+                        flatList = evDataHelper.getObjectsFromSelectedGroups(scope.evDataService, globalDataService);
                         /* activateItems = function (item) {
                             item.___is_activated = scope.isAllSelected;
                         };*/
@@ -2406,6 +2406,9 @@
                         getColsAvailableForAdditions();
                         // keysOfColsToHide = scope.evDataService.getKeysOfColumnsToHide();
                     }
+
+                    var evSettings = globalDataService.getMemberEntityViewersSettings(scope.isReport, scope.entityType);
+					scope.rowFilterColor = evSettings.row_type_filter;
 
                     initEventListeners();
 

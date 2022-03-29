@@ -28,11 +28,11 @@
         var expressionService = require('../../services/expression.service');
         // var middlewareService = require('../../services/middlewareService');
 
-        module.exports = function ($scope, $mdDialog, $stateParams, $transitions, toastNotificationService, middlewareService, usersService) {
+        module.exports = function ($scope, $mdDialog, $stateParams, $transitions, toastNotificationService, middlewareService, usersService, globalDataService) {
 
             var vm = this;
 
-            var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
+            var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService);
 
             vm.readyStatus = {
                 attributes: false,
