@@ -7,6 +7,7 @@
 
     var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
     var transactionTypeService = require('../../../services/transactionTypeService');
+	var ecosystemDefaultService = require('../../../services/ecosystemDefaultService');
 
     var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
 
@@ -28,7 +29,8 @@
 
         vm.defaultRuleScenario = {
             name: '-',
-            is_default_rule_scenario: true
+            is_default_rule_scenario: true,
+			fields: []
         };
 
         vm.inputsGroup = {
@@ -65,6 +67,8 @@
         vm.calculatedFields = [];
         vm.reconFields = [];
 		vm.importedColsRefName = "Col.number";
+
+		var ecosystemDefaultData;
 
 		vm.openSelectorManager = function ($event) {
 
@@ -127,6 +131,22 @@
 				});
 
 			});
+
+		};
+
+		var loadEcosystemDefaults = function () {
+
+			return new Promise(function (resolve, reject) {
+
+				ecosystemDefaultService.getList().then(function (data) {
+					ecosystemDefaultData = data.results[0];
+					resolve(ecosystemDefaultData);
+
+				}).catch(function (error) {
+					reject(error);
+				});
+
+			})
 
 		};
 
@@ -224,6 +244,7 @@
             vm.scheme.inputs = vm.providerFields;
             vm.scheme.rule_scenarios = vm.mapFields;
 
+            var defRuleScenarioIndex = vm.scheme.rule_scenarios.length;
             vm.scheme.rule_scenarios.push(vm.defaultRuleScenario);
 
             vm.scheme.recon_scenarios = vm.reconFields;
@@ -233,7 +254,6 @@
 
             var importedColumnsNumberZero = false;
             var importedColumnsNumberEmpty = false;
-
 
             for (var i = 0; i < vm.providerFields.length; i++) {
                 var field = vm.providerFields[i];
@@ -267,6 +287,8 @@
 
             if (warningMessage) {
 
+				vm.scheme.rule_scenarios.splice(defRuleScenarioIndex, 1);
+
                 if (importedColumnsNumberZero || importedColumnsNumberEmpty) {
 
                     warningTitle = 'Incorrect Imported Columns field #';
@@ -296,40 +318,43 @@
                     multiple: true
                 });
 
-            } else {
+            }
+            else {
 
-                vm.processing = true;
+            	vm.processing = true;
 
-                transactionImportSchemeService.create(vm.scheme).then(function (data) {
+				transactionImportSchemeService.create(vm.scheme).then(function (data) {
 
-                    toastNotificationService.success("Transaction Import Scheme " + vm.scheme.user_code + ' was successfully created');
+					toastNotificationService.success("Transaction Import Scheme " + vm.scheme.user_code + ' was successfully created');
 
-                    vm.processing = false;
+					vm.processing = false;
 
-                    $mdDialog.hide({status: 'agree'});
+					$mdDialog.hide({status: 'agree'});
 
-                }).catch(function (reason) {
+				}).catch(function (reason) {
 
-                    vm.processing = false;
+					vm.scheme.rule_scenarios.splice(defRuleScenarioIndex, 1);
 
-                    $mdDialog.show({
-                        controller: 'ValidationDialogController as vm',
-                        templateUrl: 'views/dialogs/validation-dialog-view.html',
-                        targetEvent: $event,
-                        locals: {
-                            validationData: {
-                                errorData: {
-                                    message: reason.message
-                                }
-                            }
-                        },
-                        preserveScope: true,
-                        autoWrap: true,
-                        multiple: true,
-                        skipHide: true
-                    })
+					vm.processing = false;
 
-                })
+					$mdDialog.show({
+						controller: 'ValidationDialogController as vm',
+						templateUrl: 'views/dialogs/validation-dialog-view.html',
+						targetEvent: $event,
+						locals: {
+							validationData: {
+								errorData: {
+									message: reason.message
+								}
+							}
+						},
+						preserveScope: true,
+						autoWrap: true,
+						multiple: true,
+						skipHide: true
+					})
+
+				})
 
             }
 
@@ -368,6 +393,7 @@
 
 				if (argumentsObj.column.key === 'name') {
 					vm.inputsFunctions = importSchemesMethodsService.getTransactionFunctions(vm.providerFields);
+
 					vm.exprEditorData.functions = [vm.inputsFunctions]; // updates provider fields for expression editors inside "GENERAL SETTINGS" and grid tables
 				}
 
@@ -398,7 +424,9 @@
 			vm.mapFieldsGtDataService = new GridTableDataService();
 			vm.mapFieldsGtEventService = new GridTableEventService();
 
-            vm.getTransactionTypes().then(function () {
+			Promise.all([vm.getTransactionTypes(), loadEcosystemDefaults()]).then(function () {
+
+				vm.defaultRuleScenario.transaction_type = ecosystemDefaultData.transaction_type;
 
 				if (data && data.hasOwnProperty('scheme')) {
 

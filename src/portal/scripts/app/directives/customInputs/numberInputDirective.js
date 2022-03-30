@@ -351,7 +351,9 @@
 
                         if (!scope.error && (scope.model || scope.model === 0)) {
                             scope.numberToShow = scope.model;
-                            scope.$apply();
+                            setTimeout(function () {
+                            	scope.$apply();
+							}, 0);
                         }
                     });
 
