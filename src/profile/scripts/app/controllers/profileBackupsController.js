@@ -32,7 +32,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
         vm.getBackupsList = function () {
 
-            vm.readyStatus.masterUsers = false;
+            vm.readyStatus.data = false;
 
             masterUserBackupsService.getMasterUserBackupsList().then(function (data) {
                 vm.items = data.results;
@@ -40,7 +40,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
                 vm.items = vm.items.map(function (item) {
 
                     item.download_url = vm.getFileUrl(item.id)
-                    item.file_size_mb = item.file_size / 1024 / 1024
+                    item.file_size_mb = Math.round(item.file_size / 1024 / 1024)
 
                     return item;
                 })

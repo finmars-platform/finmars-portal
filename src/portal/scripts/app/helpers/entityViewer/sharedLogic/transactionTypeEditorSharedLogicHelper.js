@@ -502,7 +502,7 @@
 
                         actionItemKeys = actionItemKeys.filter(function (key) {
 
-                            return key.indexOf('_object') === -1 && key.indexOf('_input') === -1 && key.indexOf('_phantom') === -1 && key !== 'action_notes';
+                            return key.indexOf('_object') === -1 && key.indexOf('_input') === -1 && key.indexOf('_phantom') === -1 && key !== 'action_notes' && key !== 'price_download_scheme';
 
                         });
 

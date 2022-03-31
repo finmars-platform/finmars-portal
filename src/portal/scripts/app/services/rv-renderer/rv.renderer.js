@@ -12,8 +12,6 @@
 
     var render = function (elem, projection, evDataService, evEventService) {
 
-        // console.log('render.projection.length', projection.length);
-
         console.time("Generating projection as HTML");
 
         var columns = evDataService.getColumns();

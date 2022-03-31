@@ -5,7 +5,7 @@
         <div data-ng-if="isSpecialSearchRelation()">
 
 
-            <div data-ng-if="modelKeyEntity == 'instrument'">
+            <div data-ng-if="valueEntity == 'instrument'">
 
                 <instrument-select
                         label="{{getName()}}"
@@ -19,7 +19,7 @@
 
             </div>
 
-            <div data-ng-if="modelKeyEntity == 'counterparty'">
+            <div data-ng-if="valueEntity == 'counterparty' || valueEntity == 'currency'">
 
                 <unified-data-select
                         label="{{getName()}}"
@@ -29,12 +29,12 @@
                         item-name="inputTextObj.value"
                         custom-buttons="item.buttons"
                         custom-styles="customStyles"
-                        entity-type="'counterparty'"
+                        entity-type="valueEntity"
                 ></unified-data-select>
 
             </div>
 
-            <div data-ng-if="modelKeyEntity !== 'instrument' && modelKeyEntity !== 'counterparty'">
+            <div data-ng-if="valueEntity !== 'instrument' && valueEntity !== 'counterparty' && valueEntity !== 'currency'">
                 <entity-search-select item="modelObj.model"
                                       label="getName()"
                                       item-name="inputTextObj.value"
@@ -44,7 +44,7 @@
                                       custom-styles="customStyles"
                                       event-signal="ciEventObj.event"
                                       small-options="{notNull: options.notNull, tooltipText: tooltipText}"
-                                      entity-type="modelKeyEntity"
+                                      entity-type="valueEntity"
                                       on-change-callback="changeHandler()"></entity-search-select>
             </div>
         </div>
