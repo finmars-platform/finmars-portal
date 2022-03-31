@@ -1,5 +1,11 @@
 <div>
 
+    <div style="max-width: 960px; margin: 0 auto; overflow:hidden; padding-bottom: 80px;">
+        <md-button class="md-raised md-primary float-right"  data-ng-click="vm.getBackupsList($event)">
+            Refresh
+        </md-button>
+    </div>
+
     <div data-ng-if="vm.readyStatus.data">
 
         <div style="max-width: 960px; margin: 0 auto; overflow:hidden; padding-bottom: 80px;">

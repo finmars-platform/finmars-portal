@@ -126,49 +126,49 @@
                         </ng-md-icon>
                     </md-button>
 
-<!--                    Deprecated -->
-<!--                    <md-menu class="full-width dashboard-control-menu" layout="row">-->
-<!--                        <md-button class="dashboard-control-button"-->
-<!--                                   ng-click="$mdOpenMenu($event)"-->
-<!--                                   type="button">-->
-<!--                            <ng-md-icon icon="list"-->
-<!--                                        size="20"-->
-<!--                                        style="fill: #777777">-->
-<!--                                <md-tooltip class="tooltip_1" md-direction="bottom">Layouts</md-tooltip>-->
-<!--                            </ng-md-icon>-->
+                    <!--                    Deprecated -->
+                    <!--                    <md-menu class="full-width dashboard-control-menu" layout="row">-->
+                    <!--                        <md-button class="dashboard-control-button"-->
+                    <!--                                   ng-click="$mdOpenMenu($event)"-->
+                    <!--                                   type="button">-->
+                    <!--                            <ng-md-icon icon="list"-->
+                    <!--                                        size="20"-->
+                    <!--                                        style="fill: #777777">-->
+                    <!--                                <md-tooltip class="tooltip_1" md-direction="bottom">Layouts</md-tooltip>-->
+                    <!--                            </ng-md-icon>-->
 
-<!--                        </md-button>-->
+                    <!--                        </md-button>-->
 
-<!--                        <md-menu-content width="4">-->
-<!--                            <md-menu-item>-->
-<!--                                <md-button ng-click="vm.openLayoutList($event)" class="g-settings-option-btn">-->
-<!--                                    <span>Open Layout Manager</span>-->
-<!--                                </md-button>-->
-<!--                            </md-menu-item>-->
-<!--                            <md-menu-item>-->
-<!--                                <md-button ng-click="vm.saveDashboardLayout($event)" class="g-settings-option-btn" data-ng-class="{'disabled-btn': vm.layout.sourced_from_global_layout && !vm.layout.origin_for_global_layout}">-->
-<!--                                    <span>Save Dashboard Layout</span>-->
-<!--                                </md-button>-->
-<!--                            </md-menu-item>-->
-<!--                            <md-menu-item>-->
-<!--                                <md-button ng-click="vm.makeCopyDashboardLayout($event)" class="g-settings-option-btn">-->
-<!--                                    <span>Duplicate Layout</span>-->
-<!--                                </md-button>-->
-<!--                            </md-menu-item>-->
-<!--                            <md-menu-item>-->
-<!--                                <md-button data-ui-sref="app.portal.dashboard-constructor({id: vm.layout.id})"-->
-<!--                                           class="g-settings-option-btn">-->
-<!--                                    <span>Edit Layout</span>-->
-<!--                                </md-button>-->
-<!--                            </md-menu-item>-->
-<!--                            <md-menu-item>-->
-<!--                                <md-button data-ng-click="vm.exportDashboardLayout($event)"-->
-<!--                                           class="g-settings-option-btn">-->
-<!--                                    <span>Export Layout</span>-->
-<!--                                </md-button>-->
-<!--                            </md-menu-item>-->
-<!--                        </md-menu-content>-->
-<!--                    </md-menu>-->
+                    <!--                        <md-menu-content width="4">-->
+                    <!--                            <md-menu-item>-->
+                    <!--                                <md-button ng-click="vm.openLayoutList($event)" class="g-settings-option-btn">-->
+                    <!--                                    <span>Open Layout Manager</span>-->
+                    <!--                                </md-button>-->
+                    <!--                            </md-menu-item>-->
+                    <!--                            <md-menu-item>-->
+                    <!--                                <md-button ng-click="vm.saveDashboardLayout($event)" class="g-settings-option-btn" data-ng-class="{'disabled-btn': vm.layout.sourced_from_global_layout && !vm.layout.origin_for_global_layout}">-->
+                    <!--                                    <span>Save Dashboard Layout</span>-->
+                    <!--                                </md-button>-->
+                    <!--                            </md-menu-item>-->
+                    <!--                            <md-menu-item>-->
+                    <!--                                <md-button ng-click="vm.makeCopyDashboardLayout($event)" class="g-settings-option-btn">-->
+                    <!--                                    <span>Duplicate Layout</span>-->
+                    <!--                                </md-button>-->
+                    <!--                            </md-menu-item>-->
+                    <!--                            <md-menu-item>-->
+                    <!--                                <md-button data-ui-sref="app.portal.dashboard-constructor({id: vm.layout.id})"-->
+                    <!--                                           class="g-settings-option-btn">-->
+                    <!--                                    <span>Edit Layout</span>-->
+                    <!--                                </md-button>-->
+                    <!--                            </md-menu-item>-->
+                    <!--                            <md-menu-item>-->
+                    <!--                                <md-button data-ng-click="vm.exportDashboardLayout($event)"-->
+                    <!--                                           class="g-settings-option-btn">-->
+                    <!--                                    <span>Export Layout</span>-->
+                    <!--                                </md-button>-->
+                    <!--                            </md-menu-item>-->
+                    <!--                        </md-menu-content>-->
+                    <!--                    </md-menu>-->
 
                 </div>
             </div>
@@ -182,7 +182,8 @@
                      tab-number="'fixed_area'">
 
 
-                    <div class="dashboard-rows-holder" data-row="{{row.row_number}}" data-ng-repeat="row in vm.layout.data.fixed_area.layout.rows">
+                    <div class="dashboard-rows-holder" data-row="{{row.row_number}}"
+                         data-ng-repeat="row in vm.layout.data.fixed_area.layout.rows">
 
                         <div data-ng-repeat="item in row.columns"
                              class="dashboard-cell dashboardCell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}} {{item.data && item.data.type == 'control' ? 'z-index-2' : ''}}"
@@ -347,8 +348,9 @@
 
             <div class="dashboard-tab-headers-holder">
 
-                <div class="tab-header {{tab.active ? 'active' : ''}} " data-ng-repeat="tab in vm.projection | orderBy: 'tab_number' track by tab.tab_number"
-                        data-ng-click="vm.setActiveTab(tab)">
+                <div class="tab-header {{tab.active ? 'active' : ''}} "
+                     data-ng-repeat="tab in vm.projection | orderBy: 'tab_number' track by tab.tab_number"
+                     data-ng-click="vm.setActiveTab(tab)">
                    <span>
                                 {{tab.name}}
                             </span>
@@ -360,7 +362,8 @@
             <div class="dashboard-tabs-holder">
                 <div class="dashboard-tabs height-100 width-100">
 
-                    <div data-ng-repeat="tab in vm.projection | orderBy: 'tab_number' track by tab.tab_number" data-ng-show="tab.active" class="height-100 width-100 display-block">
+                    <div data-ng-repeat="tab in vm.projection | orderBy: 'tab_number' track by tab.tab_number"
+                         data-ng-show="tab.active" class="height-100 width-100 display-block">
 
 
                         <div class="tab-body height-100 width-100">
@@ -372,7 +375,8 @@
                                  tab-number="tab.tab_number">
 
 
-                                <div class="dashboard-rows-holder" data-row="{{row.row_number}}"  data-ng-repeat="row in tab.layout.rows">
+                                <div class="dashboard-rows-holder" data-row="{{row.row_number}}"
+                                     data-ng-repeat="row in tab.layout.rows">
 
                                     <div data-ng-repeat="item in row.columns"
                                          class="dashboard-cell dashboardCell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}}  {{item.data && item.data.type == 'control' ? 'z-index-2' : ''}}"
@@ -548,11 +552,14 @@
 
                             </div>
 
-                        </divmd-tab-body>
-                    </div>
+                            </divmd-tab-body>
+                        </div>
 
+                    </div>
                 </div>
+
             </div>
+
 
         </div>
 
@@ -563,7 +570,8 @@
                 <h2>No Default Layout Found</h2>
 
                 Please,
-                <md-button class="md-raised md-primary" data-ui-sref="app.portal.dashboard-constructor({id: 'new'})">Create new
+                <md-button class="md-raised md-primary"
+                           data-ui-sref="app.portal.dashboard-constructor({id: 'new'})">Create new
                     Layout
                 </md-button>
                 or select
@@ -573,13 +581,13 @@
 
         </div>
 
-    </div>
-
-    <div data-ng-if="!vm.readyStatus.data">
-        <div layout="row" layout-sm="column" layout-align="space-around" class="dashboard-loader">
-            <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
-            <progress-circular diameter="100"></progress-circular>
+        <div data-ng-if="!vm.readyStatus.data">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="dashboard-loader">
+                <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
+                <progress-circular diameter="100"></progress-circular>
+            </div>
         </div>
+
     </div>
 
 </div>

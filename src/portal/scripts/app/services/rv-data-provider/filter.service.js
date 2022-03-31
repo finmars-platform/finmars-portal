@@ -410,19 +410,14 @@
 
         var last_key;
         if (pieces.length > 1) {
-            last_key = pieces.pop()
-        } else {
-            last_key = pieces[0]
+            if (['short_name', 'name', 'public_name'].indexOf(last_key) !== -1) {
+
+                pieces.push('user_code')
+
+                result = pieces.join('.')
+
+            }
         }
-
-        if (['short_name', 'name', 'public_name'].indexOf(last_key) !== -1) {
-
-            pieces.push('user_code')
-
-            result = pieces.join('.')
-
-        }
-
 
         return result
 

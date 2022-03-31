@@ -30,7 +30,7 @@
             },
             templateUrl: 'views/directives/entity-viewer-field-resolver-view.html',
             link: function (scope, elem, attrs, bfcVm) {
-
+				console.log("testing entityViewerFieldResolver item", scope.item);
 
                 // scope.readyStatus = {content: false};
                 scope.readyStatus = bfcVm.readyStatus;
@@ -70,40 +70,40 @@
                     return [
                         'instrument', 'portfolio', 'account', 'responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3',
                         'currency'
-                    ].indexOf(scope.getModelKeyEntity()) !== -1;
+                    ].indexOf(scope.getValueEntity()) !== -1;
                 };
 
-                scope.getModelKeyEntity = function () {
+                scope.getValueEntity = function () {
 
                     // console.log('scope.getModelKeyEntity scope.item.key', scope.item.key)
 
                     //var key;
-                    var modelKeyEntity = scope.item.key;
+                    var valueEntity = scope.item.key;
 
                     if (scope.entityType === 'complex-transaction') {
 
-                        modelKeyEntity = metaContentTypesService.findEntityByContentType(scope.item.content_type);
+                        valueEntity = metaContentTypesService.findEntityByContentType(scope.item.content_type);
 
-                        // console.log('modelKeyEntity', modelKeyEntity);
+                        // console.log('valueEntity', valueEntity);
 
                     } else {
 
                         if (scope.item.key && ['linked_instrument', 'allocation_balance', 'allocation_pl'].indexOf(scope.item.key) !== -1) {
-                            modelKeyEntity = 'instrument';
+                            valueEntity = 'instrument';
                         } else {
 
                             switch (scope.item.name) {
                                 case 'account_interim':
                                 case 'account_cash':
                                 case 'account_position':
-                                    modelKeyEntity = 'account';
+                                    valueEntity = 'account';
                                     break;
                             }
 
                         }
                     }
 
-                    return modelKeyEntity;
+                    return valueEntity;
                 };
 
                 /*scope.resolveMultiple = function () {
@@ -605,7 +605,7 @@
 						scope.modelObj.model = bfcVm.getValueFromEntity();
 						scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
-						scope.modelKeyEntity = scope.getModelKeyEntity();
+						scope.valueEntity = scope.getValueEntity();
 
 						if (scope.evEditorEventService) {
 							initListeners();

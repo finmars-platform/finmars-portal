@@ -1666,6 +1666,10 @@
             {
                 name: "Find the Instrument. If not found: create on the first booking. On rebook: nothing is created, Phantom = Default Instrument.",
                 id: 5
+            },
+            {
+                name: 'Try to download from provider, if error, create default',
+                id: 8
             }
         ];
 
@@ -1939,7 +1943,7 @@
                     'pricing_condition', 'pricing_condition_input', 'default_accrued',
                     'default_price', 'instrument_type', 'instrument_type_input', 'maturity_date',
                     'maturity_price', 'name', 'notes', 'payment_size_detail', 'payment_size_detail_input',
-                    'price_download_scheme', 'price_download_scheme_input', 'price_multiplier',
+                    'price_multiplier',
                     'pricing_currency', 'pricing_currency_input', 'public_name', 'reference_for_pricing',
                     'short_name', 'user_code', 'user_text_1', 'user_text_2', 'user_text_3'],
                 'instrument_accrual_calculation_schedules': [
