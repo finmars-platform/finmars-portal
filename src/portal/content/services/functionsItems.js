@@ -1172,6 +1172,15 @@
 			}
 		},
 		{
+			"name": "Get relation by user code",
+			"description": "get_relation_by_user_code([content_type], [user_code])) :: [Result: relation object]<br/><br/>[content_type]: String - input name<br/>[user_code]: String - relation user code<br/>[[Result: relation object]: String, number, date or entity<br/><br/>Examples:<br/>get_relation_by_user_code('currencies.currency', 'USD')<br/>get_relation_by_user_code('instruments.instrumenttype', 'bonds')<br/>get_relation_by_user_code('currencies.currency', 'USD').user_code - attribute [user_code]",
+			"groups": "transaction",
+			"func": "get_relation_by_user_code([content_type], [user_code])",
+			"validation": {
+				"func": "get_relation_by_user_code([content_type], [user_code])"
+			}
+		},
+		{
 			"name": "Add FX rate",
 			"description": "add_fx_history([date], [currency], [pricing_policy], [fx_rate], [Overwrite]) :: [Result: FX rate on specified date added to the system]<br/><br/>[Result: rate]: Number - FX rate of currency on specified date and policy<br/>[date]: Date - needed date contained in variable or text (for exapmle tr_date or '2019-01-01')<br/>[currency]: Text - user_code of currency contained in variable or text (for exapmle tr_currency or 'GBP')<br/>[policy]: Text - pricing policy (user_code) for calculation contained in variable or text (for example pr_policy or 'default')<br/>[fx_rate]: - Number - needed result of function - added FX rate on specified date contained in variable or text (for example tr_fx_rate or 1, 1.3, 0.76)<br/>[Overwrite]: Boolean - parameter for overwriting mode if fx rate on specified date already exists (for example true or false, true by default)<br/><br/>Examples:<br/>add_fx_history('2019-12-31', 'GBP', 'default', 2, true) - function to add rate of GBP to USD on 2019-12-31 used in default pricing policy, if rate already exists it will be overwritten<br/>add_fx_history('2019-12-31', 'GBP', 'default', 2) - the same example, rate will be overwritten bc true-parameter is used by default<br/>add_fx_history(tr_date, tr_currency, 'default', tr_fx_rate) - function to add rate of currency on transaction date used in default pricing policy which are contained in used variables (tr_date, tr_currency and tr_fx_rate)<br/><br/>",
 			"groups": "number",
