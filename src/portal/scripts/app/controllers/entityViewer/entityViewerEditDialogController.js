@@ -1910,7 +1910,6 @@
 					vm.entity.object_permissions = result.objectPermissions;
 					vm.groups = result.groups;
 					// vm.entity.object_permissions = data.instrument_type_object.object_permissions;
-
 					vm.evEditorEventService.dispatchEvent(evEditorEvents.ENTITY_UPDATED);
 
                     resolve()
