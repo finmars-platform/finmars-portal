@@ -906,9 +906,14 @@
 
 			});
 
-			viewModel.groups.forEach(function (group) {
+			if (viewModel.entity.object_permissions) {
 
-				if (viewModel.entity.object_permissions) {
+				viewModel.groups.forEach(function (group) {
+
+					group.objectPermissions.manage = false;
+					group.objectPermissions.change = false;
+					group.objectPermissions.view = false;
+
 					viewModel.entity.object_permissions.forEach(function (permission) {
 
 						if (permission.group === group.id) {
@@ -916,10 +921,6 @@
 							if (!group.hasOwnProperty('objectPermissions')) {
 								group.objectPermissions = {};
 							}
-
-							group.objectPermissions.manage = false;
-							group.objectPermissions.change = false;
-							group.objectPermissions.view = false;
 
 							if (permission.permission === "manage_" + viewModel.entityType.split('-').join('')) {
 								group.objectPermissions.manage = true;
@@ -933,9 +934,10 @@
 
 						}
 					})
-				}
 
-			});
+				});
+
+			}
 
 			return {objectPermissions: viewModel.entity.object_permissions, groups: viewModel.groups};
 
