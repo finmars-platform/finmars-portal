@@ -910,6 +910,10 @@
 
 				viewModel.groups.forEach(function (group) {
 
+					if (!group.hasOwnProperty('objectPermissions')) {
+						group.objectPermissions = {};
+					}
+
 					group.objectPermissions.manage = false;
 					group.objectPermissions.change = false;
 					group.objectPermissions.view = false;
@@ -917,10 +921,6 @@
 					viewModel.entity.object_permissions.forEach(function (permission) {
 
 						if (permission.group === group.id) {
-
-							if (!group.hasOwnProperty('objectPermissions')) {
-								group.objectPermissions = {};
-							}
 
 							if (permission.permission === "manage_" + viewModel.entityType.split('-').join('')) {
 								group.objectPermissions.manage = true;
