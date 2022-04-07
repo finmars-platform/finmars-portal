@@ -868,6 +868,79 @@
 			'account': onAccountTypeChange,
 		};
 
+		/**
+		 * Map permissions from instrument type to instrument
+		 *
+		 * @param {Array} iTypePermissions
+		 */
+		const mapPermissionsToInstrument = iTypePermissions => {
+
+			/* viewModel.groups.forEach(group => {
+
+				iTypePermissions.forEach(pData => {
+
+					if (pData.group === group.id) {
+
+						let permissionToDo = ['manage_', 'change_', 'view_'].find(action => pData.permission.startsWith(action));
+						permissionToDo = permissionToDo + viewModel.entityType.split('-').join('');
+
+						objectPermissions.push({
+							member: null,
+							group: group.id,
+							permission: permissionToDo
+						});
+
+					}
+
+				})
+
+			}); */
+
+			viewModel.entity.object_permissions = iTypePermissions.map(function (item) {
+
+				var result = Object.assign({}, item);
+
+				result.permission = item.permission.split('_')[0] + '_instrument';
+
+				return result
+
+			});
+
+			viewModel.groups.forEach(function (group) {
+
+				if (viewModel.entity.object_permissions) {
+					viewModel.entity.object_permissions.forEach(function (permission) {
+
+						if (permission.group === group.id) {
+
+							if (!group.hasOwnProperty('objectPermissions')) {
+								group.objectPermissions = {};
+							}
+
+							group.objectPermissions.manage = false;
+							group.objectPermissions.change = false;
+							group.objectPermissions.view = false;
+
+							if (permission.permission === "manage_" + viewModel.entityType.split('-').join('')) {
+								group.objectPermissions.manage = true;
+							}
+							if (permission.permission === "change_" + viewModel.entityType.split('-').join('')) {
+								group.objectPermissions.change = true;
+							}
+							if (permission.permission === "view_" + viewModel.entityType.split('-').join('')) {
+								group.objectPermissions.view = true;
+							}
+
+						}
+					})
+				}
+
+			});
+
+			return {objectPermissions: viewModel.entity.object_permissions, groups: viewModel.groups};
+
+		};
+
         const manageAttributeTypes = function (ev) {
 
         	$mdDialog.show({
@@ -1128,6 +1201,92 @@
 
 			})
 		}; */
+
+		const exposureCalculationModelSelectorOptions = [
+			{id: 1, name: "Market Value"},
+			{id: 2, name: "Price exposure"},
+			{id: 3, name: "Delta adjusted price exposure"},
+			{id: 4, name: "Underlying long short exposure net"},
+			{id: 5, name: "Underlying long short exposure split"},
+		];
+
+		const longUnderlyingExposureSelectorOptions = [
+			{id: 1, name: "Zero"},
+			{id: 2, name: "Long Underlying Instrument Price Exposure"},
+			{id: 3, name: "Long Underlying Instrument Price Delta"},
+			{id: 4, name: "Long Underlying Currency FX Rate Exposure"},
+			{id: 5, name: "Long Underlying Currency FX Rate Delta-adjusted Exposure"},
+		]
+
+		const shortUnderlyingExposureSelectorOptions = [
+			{id: 1, name: "Zero"},
+			{id: 2, name: "Short Underlying Instrument Price Exposure"},
+			{id: 3, name: "Short Underlying Instrument Price Delta"},
+			{id: 4, name: "Short Underlying Currency FX Rate Exposure"},
+			{id: 5, name: "Short Underlying Currency FX Rate Delta-adjusted Exposure"},
+		]
+
+		const positionReportingSelectorOptions = [
+			{
+				id: 1,
+				name: 'Direct Position'
+			},
+			{
+				id: 2,
+				name: 'Factor-adjusted Position'
+			},
+			{
+				id: 3,
+				name: 'Do not show'
+			}
+		];
+
+		const getDataForInstrumentExposureTab = function () {
+
+			let mapOption;
+
+			if (viewModel.entityType === 'instrument') {
+
+				mapOption = item => {
+					return {
+						id: item.id,
+						name: item.short_name
+					}
+				};
+
+			} else { // instrument type
+
+				mapOption = item => {
+					return {
+						id: item.user_code,
+						name: item.short_name
+					}
+				};
+
+			}
+			// let result = {};
+			const instrSelOpts = new Promise(function (resolve) {
+
+				entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data){
+					const options = data.results.map(mapOption)
+					resolve(options);
+				});
+
+			});
+
+			const currSelOpts = new Promise(function (resolve) {
+
+				entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data){
+					const options = data.results.map(mapOption)
+					resolve(options);
+				})
+
+			});
+
+			return Promise.all([instrSelOpts, currSelOpts]);
+
+		};
+
 		//region Instrument type
 
 		const getInstrFormLayoutsOptions = () => {
@@ -1294,6 +1453,8 @@
 			typeSelectorChangeFns: typeSelectorChangeFns,
 			entityTypeForGroupSelectorsData: entityTypeForGroupSelectorsData,
 
+			mapPermissionsToInstrument: mapPermissionsToInstrument,
+
             checkReadyStatus: checkReadyStatus,
 			bindFlex: bindFlex,
 			checkFieldRender: checkFieldRender,
@@ -1309,6 +1470,12 @@
 
 			isTabWithErrors: isTabWithErrors,
 			getTabBtnClasses: getTabBtnClasses,
+
+			exposureCalculationModelSelectorOptions: exposureCalculationModelSelectorOptions,
+			longUnderlyingExposureSelectorOptions: longUnderlyingExposureSelectorOptions,
+			shortUnderlyingExposureSelectorOptions: shortUnderlyingExposureSelectorOptions,
+			positionReportingSelectorOptions: positionReportingSelectorOptions,
+			getDataForInstrumentExposureTab: getDataForInstrumentExposureTab,
 
 			//region Instrument type
 			getInstrumentFormLayouts: getInstrumentFormLayouts,

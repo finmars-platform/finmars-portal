@@ -138,9 +138,16 @@
         vm.openedIn = data.openedIn; // 'big-drawer', 'dialog'
         vm.originalFixedAreaPopupFields;
 
-        if (vm.entityType === 'instrument') {
-            vm.instrumentTypesList = []; // modified by method resolveEditLayout() inside entityViewerEditorSharedLogicHelper.js
-        }
+		if (vm.entityType === 'instrument') {
+
+			vm.instrumentTypesList = []; // modified by method resolveEditLayout() inside entityViewerEditorSharedLogicHelper.js
+
+			vm.exposureCalculationModelSelectorOptions = vm.sharedLogic.exposureCalculationModelSelectorOptions;
+			vm.longUnderlyingExposureSelectorOptions = vm.sharedLogic.longUnderlyingExposureSelectorOptions;
+			vm.shortUnderlyingExposureSelectorOptions = vm.sharedLogic.shortUnderlyingExposureSelectorOptions;
+			vm.positionReportingSelectorOptions = vm.sharedLogic.positionReportingSelectorOptions;
+
+		}
 
         vm.typeSelectorChange = null;
 		/** Tracking fields that have been changed by user */
@@ -602,9 +609,7 @@
 
         };
 
-        vm.setInheritedPermissions = function () {
-
-            console.log('setInheritedPermissions');
+        /* vm.setInheritedPermissions = function () {
 
             return new Promise(function (resolve, reject) {
 
@@ -614,43 +619,46 @@
 
                     entityResolverService.getByKey('instrument-type', vm.entity.instrument_type).then(function (data) {
 
-                        vm.entity.object_permissions = data.object_permissions.map(function (item) {
-
-                            var result = Object.assign({}, item);
-
-                            result.permission = item.permission.split('_')[0] + '_instrument';
-
-                            return result
-
-                        });
-
-                        console.log('vm.entityPermissions', vm.entity.object_permissions);
-
-                        vm.groups.forEach(function (group) {
-
-                            if (vm.entity.object_permissions) {
-                                vm.entity.object_permissions.forEach(function (permission) {
-
-                                    if (permission.group === group.id) {
-
-                                        if (!group.hasOwnProperty('objectPermissions')) {
-                                            group.objectPermissions = {};
-                                        }
-
-                                        if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
-                                            group.objectPermissions.manage = true;
-                                        }
-                                        if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
-                                            group.objectPermissions.change = true;
-                                        }
-                                        if (permission.permission === "view_" + vm.entityType.split('-').join('')) {
-                                            group.objectPermissions.view = true;
-                                        }
-                                    }
-                                })
-                            }
-
-                        });
+                        //  vm.entity.object_permissions = data.object_permissions.map(function (item) {
+						//
+                        //     var result = Object.assign({}, item);
+						//
+                        //     result.permission = item.permission.split('_')[0] + '_instrument';
+						//
+                        //     return result
+						//
+                        // });
+						//
+                        // console.log('vm.entityPermissions', vm.entity.object_permissions);
+						//
+                        // vm.groups.forEach(function (group) {
+						//
+                        //     if (vm.entity.object_permissions) {
+                        //         vm.entity.object_permissions.forEach(function (permission) {
+						//
+                        //             if (permission.group === group.id) {
+						//
+                        //                 if (!group.hasOwnProperty('objectPermissions')) {
+                        //                     group.objectPermissions = {};
+                        //                 }
+						//
+                        //                 if (permission.permission === "manage_" + vm.entityType.split('-').join('')) {
+                        //                     group.objectPermissions.manage = true;
+                        //                 }
+                        //                 if (permission.permission === "change_" + vm.entityType.split('-').join('')) {
+                        //                     group.objectPermissions.change = true;
+                        //                 }
+                        //                 if (permission.permission === "view_" + vm.entityType.split('-').join('')) {
+                        //                     group.objectPermissions.view = true;
+                        //                 }
+                        //             }
+                        //         })
+                        //     }
+						//
+                        // });
+						const result = vm.sharedLogic.mapPermissionsToInstrument(data.object_permissions);
+						vm.entity.object_permissions = result.objectPermissions;
+						vm.groups = result.groups;
 
                         console.log('vm.groups', vm.groups);
 
@@ -709,7 +717,7 @@
 
             })
 
-        };
+        }; */
 
         vm.setInheritedPricing = function () {
 
@@ -1289,7 +1297,12 @@
 
 					});
 
-                    vm.evEditorEventService.dispatchEvent(evEditorEvents.ENTITY_UPDATED);
+					// vm.entity.object_permissions = data.instrument_type_object.object_permissions;
+					const result = vm.sharedLogic.mapPermissionsToInstrument(data.instrument_type_object.object_permissions);
+					vm.entity.object_permissions = result.objectPermissions;
+					vm.groups = result.groups;
+
+					vm.evEditorEventService.dispatchEvent(evEditorEvents.ENTITY_UPDATED);
 
                     resolve()
 
@@ -1600,22 +1613,17 @@
 
         // Instrument tab Exposure start
 
-        vm.getDataForInstrumentTabs = function () {
+        /*vm.getDataForInstrumentTabs = function () {
 
             entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data) {
-
                 vm.instrumentInstrumentsSelectorOptions = data.results
-
             })
 
             entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data) {
-
                 vm.instrumentCurrenciesSelectorOptions = data.results
-
             })
 
-
-        }
+        }*/
 
         // Instrument tab Exposure end
 
@@ -1689,7 +1697,12 @@
             }, 100);*/
 
             if (vm.entityType === 'instrument') {
-                vm.getDataForInstrumentTabs();
+                // vm.getDataForInstrumentTabs();
+				vm.sharedLogic.getDataForInstrumentExposureTab().then(function (data) {
+					vm.instrumentsSelectorOptions = data[0];
+					vm.currenciesSelectorOptions = data[1];
+				});
+
             }
 
             setTimeout(function () {

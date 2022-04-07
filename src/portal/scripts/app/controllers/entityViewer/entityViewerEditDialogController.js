@@ -144,7 +144,14 @@
         vm.originalFixedAreaPopupFields;
 
 		if (vm.entityType === 'instrument') {
+
 			vm.instrumentTypesList = []; // modified by method resolveEditLayout() inside entityViewerEditorSharedLogicHelper.js
+
+			vm.exposureCalculationModelSelectorOptions = vm.sharedLogic.exposureCalculationModelSelectorOptions;
+			vm.longUnderlyingExposureSelectorOptions = vm.sharedLogic.longUnderlyingExposureSelectorOptions;
+			vm.shortUnderlyingExposureSelectorOptions = vm.sharedLogic.shortUnderlyingExposureSelectorOptions;
+			vm.positionReportingSelectorOptions = vm.sharedLogic.positionReportingSelectorOptions;
+
 		}
 
         var formLayoutFromAbove = data.editLayout;
@@ -1652,7 +1659,7 @@
 
         // Instrument tab Exposure start
 
-        vm.getDataForInstrumentTabs = function () {
+        /*vm.getDataForInstrumentTabs = function () {
 
             entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data){
 
@@ -1667,7 +1674,7 @@
             })
 
 
-        }
+        }*/
 
         // Instrument tab Exposure end
 
@@ -1899,6 +1906,11 @@
 
 					});
 
+					const result = vm.sharedLogic.mapPermissionsToInstrument(data.instrument_type_object.object_permissions);
+					vm.entity.object_permissions = result.objectPermissions;
+					vm.groups = result.groups;
+					// vm.entity.object_permissions = data.instrument_type_object.object_permissions;
+
 					vm.evEditorEventService.dispatchEvent(evEditorEvents.ENTITY_UPDATED);
 
                     resolve()
@@ -2005,27 +2017,14 @@
 
             vm.getItem().then(async function () {
 
-                if (vm.entityType === 'instrument-type') {
+				if (vm.entityType === 'instrument') {
+					// vm.getDataForInstrumentTabs();
+					vm.sharedLogic.getDataForInstrumentExposureTab().then(function (data) {
+						vm.instrumentsSelectorOptions = data[0];
+						vm.currenciesSelectorOptions = data[1];
+					});
 
-                	if (vm.entity.instrument_form_layouts) {
-                        vm.instrumentTypeLayouts = vm.entity.instrument_form_layouts.split(',')
-                    }
-
-                    vm.sharedLogic.getDailyPricingModelFields().then(data => {
-                        vm.dailyPricingModelFields = data;
-                    });
-
-                    vm.sharedLogic.getCurrencyFields().then(data => {
-                        vm.currencyFields = data;
-                    });
-
-                    vm.getDataForInstrumentTypeTabs();
-
-                }
-
-                if (vm.entityType === 'instrument') {
-                    vm.getDataForInstrumentTabs();
-                }
+				}
 
                 getEntityStatus();
 

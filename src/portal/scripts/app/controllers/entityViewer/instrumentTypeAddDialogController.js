@@ -119,6 +119,11 @@
         vm.openedIn = data.openedIn; // 'big-drawer', 'dialog'
         vm.originalFixedAreaPopupFields;
 
+		vm.exposureCalculationModelSelectorOptions = sharedLogic.exposureCalculationModelSelectorOptions;
+		vm.longUnderlyingExposureSelectorOptions = sharedLogic.longUnderlyingExposureSelectorOptions;
+		vm.shortUnderlyingExposureSelectorOptions = sharedLogic.shortUnderlyingExposureSelectorOptions;
+		vm.positionReportingSelectorOptions = sharedLogic.positionReportingSelectorOptions;
+
         var formLayoutFromAbove = data.editLayout;
 
         /* var getShowByDefaultOptions = function (columns, entityType) {
@@ -1387,9 +1392,19 @@
 
             getEntityAttrs();
 
+			var exposureTabProm = new Promise(function (resolve) {
+
+				sharedLogic.getDataForInstrumentExposureTab().then(function (data) {
+
+					vm.instrumentsSelectorOptions = data[0];
+					vm.currenciesSelectorOptions = data[1];
+					resolve();
+				});
+
+			});
             // vm.getFormLayout();
             // evEditorSharedLogicHelper.getFormLayout('addition', formLayoutFromAbove);
-			Promise.all([getInstrumentFormLayouts(), sharedLogic.getFormLayout(formLayoutFromAbove)]).then(responseData => {
+			Promise.all([getInstrumentFormLayouts(), sharedLogic.getFormLayout(formLayoutFromAbove), exposureTabProm]).then(responseData => {
 
 				const formLayoutData = responseData[1];
 				vm.typeSelectorOptions = formLayoutData.typeSelectorOptions; // list of instrument classes

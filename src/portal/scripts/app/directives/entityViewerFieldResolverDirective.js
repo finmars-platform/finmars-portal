@@ -30,7 +30,6 @@
             },
             templateUrl: 'views/directives/entity-viewer-field-resolver-view.html',
             link: function (scope, elem, attrs, bfcVm) {
-				console.log("testing entityViewerFieldResolver item", scope.item);
 
                 // scope.readyStatus = {content: false};
                 scope.readyStatus = bfcVm.readyStatus;

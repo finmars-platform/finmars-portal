@@ -36,7 +36,7 @@
                 scope.dropdownMenuShown = false;
                 scope.dropdownMenuFilter = '';
                 scope.processing = false;
-				if (scope.label === 'Currency') console.log("testing entityType", scope.entityType);
+
                 scope.localItemsTotal = 0;
                 scope.databaseItemsTotal = 0;
                 scope.hoverItem = null;
