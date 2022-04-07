@@ -124,6 +124,11 @@
         vm.openedIn = data.openedIn;
         vm.originalFixedAreaPopupFields;
 
+		vm.exposureCalculationModelSelectorOptions = sharedLogic.exposureCalculationModelSelectorOptions;
+		vm.longUnderlyingExposureSelectorOptions = sharedLogic.longUnderlyingExposureSelectorOptions;
+		vm.shortUnderlyingExposureSelectorOptions = sharedLogic.shortUnderlyingExposureSelectorOptions;
+		vm.positionReportingSelectorOptions = sharedLogic.positionReportingSelectorOptions;
+
         var formLayoutFromAbove = data.editLayout;
 
         /* var getShowByDefaultOptions = function (columns, entityType) {
@@ -255,6 +260,7 @@
 
                 vm.readyStatus.permissions = true;
                 $scope.$apply();
+
             });
 
         };
@@ -463,8 +469,6 @@
                     vm.entity.$_isValid = true;
                     vm.readyStatus.entity = true;
                     // vm.readyStatus.permissions = true;
-
-					vm.readyStatus.permissions = true;
 					vm.hasEditPermission = true;
 
                     // vm.getFormLayout();
@@ -1305,37 +1309,37 @@
 			evHelperService.onPricingSchemeChangeInsidePricingPolicy(pricingPolicy, vm.instrumentPricingSchemes, vm.entity);
 		};
 
-        // Instrument Type Exposure tab start
+        //region Exposure tab
 
-        vm.instrumentTypeInstrumentsSelectorOptions = []
-        vm.instrumentTypeCurrenciesSelectorOptions = []
+		/* vm.instrumentTypeInstrumentsSelectorOptions = []
+		vm.instrumentTypeCurrenciesSelectorOptions = []
 
-        vm.getDataForInstrumentTypeTabs = function () {
+		vm.getDataForExposureTab = function () {
 
-            entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data){
+			entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data){
 
-                vm.instrumentTypeInstrumentsSelectorOptions = data.results.map(function (item){
-                    return {
-                        id: item.user_code,
-                        name: item.name
-                    }
-                })
+				vm.instrumentTypeInstrumentsSelectorOptions = data.results.map(function (item){
+					return {
+						id: item.user_code,
+						name: item.name
+					}
+				})
 
-            })
+			})
 
-            entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data){
+			entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data){
 
-                vm.instrumentTypeCurrenciesSelectorOptions = data.results.map(function (item){
-                    return {
-                        id: item.user_code,
-                        name: item.name
-                    }
-                })
+				vm.instrumentTypeCurrenciesSelectorOptions = data.results.map(function (item){
+					return {
+						id: item.user_code,
+						name: item.name
+					}
+				})
 
-            })
+			})
 
 
-        }
+		}
 
 
         vm.exposureCalculationModelSelectorOptions = [
@@ -1375,30 +1379,10 @@
                 id: 3,
                 name: 'Do not show'
             }
-        ]
+        ] */
 
-        // Instrument Type Exposure tab end
+        //endregion < Exposure tab >
 
-        // Instrument tab Exposure start
-
-        vm.getDataForInstrumentTabs = function () {
-
-            entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data){
-
-                vm.instrumentInstrumentsSelectorOptions = data.results
-
-            })
-
-            entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data){
-
-                vm.instrumentCurrenciesSelectorOptions = data.results
-
-            })
-
-
-        }
-
-        // Instrument tab Exposure end
 
 		vm.typeSelectorChange = null;
 		vm.groupSelectorChange = null;
@@ -1622,12 +1606,25 @@
             vm.getCurrencies();
 
             // vm.getItem().then(async function () {
+			var exposureTabProm = new Promise(function (resolve) {
 
-			Promise.allSettled([getInstrumentFormLayouts(), vm.getItem()]).then(function () {
+				sharedLogic.getDataForInstrumentExposureTab().then(function (data) {
+
+					vm.instrumentsSelectorOptions = data[0];
+					vm.currenciesSelectorOptions = data[1];
+					resolve();
+
+				});
+
+			});
+
+			Promise.allSettled([getInstrumentFormLayouts(), vm.getItem(), exposureTabProm]).then(function () {
+
+				vm.loadPermissions();
 
 				if (vm.entity.instrument_form_layouts) {
 					// vm.instrLayoutsFromItype = vm.entity.instrument_form_layouts.split(',')
-					vm.instrLayoutsFromItype = vm.entity.instrument_form_layouts
+					vm.instrLayoutsFromItype = vm.entity.instrument_form_layouts.split(',')
 						.map(userCode => {
 							return vm.instrumentFormLayouts.find(ifLayout => ifLayout.user_code === userCode);
 						})
@@ -1643,7 +1640,8 @@
 					vm.currencyFields = data;
 				});
 
-				vm.getDataForInstrumentTypeTabs();
+				// vm.getDataForInstrumentTypeTabs();
+
 
                 getEntityStatus();
 

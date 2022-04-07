@@ -25,12 +25,15 @@
         var vm = this;
 
         vm.entity = $scope.$parent.vm.entity;
+		vm.entityType = 'instrument';
+		vm.entityAttrs = $scope.$parent.vm.entityAttrs;
 
 		vm.evEditorDataService = $scope.$parent.vm.evEditorDataService;
 		vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
+		vm.onEntityChange = $scope.$parent.vm.onEntityChange;
 
-        vm.currencyFields = [];
-        vm.dailyPricingModelFields = [];
+        /* vm.currencyFields = [];
+        vm.dailyPricingModelFields = []; */
 
         vm.readyStatus = {accrualModals: false, periodicityItems: false, accrualSchedules: false};
 
@@ -90,6 +93,21 @@
             });
 
         };*/
+
+		var getAttributeByKey = function (key) {
+
+			for (var i = 0; i < vm.entityAttrs.length; i++) {
+
+				if (vm.entityAttrs[i].key === key) {
+					return vm.entityAttrs[i];
+				}
+
+			}
+
+		};
+
+		vm.accruedCurrencyAttr = getAttributeByKey('accrued_currency');
+		vm.paymentSizeDetailAttr = getAttributeByKey('payment_size_detail');
 
         vm.checkReadyStatus = function () {
 
@@ -186,40 +204,31 @@
 
         }; */
 
-        vm.getCurrencyFields = function () {
+		/* vm.getCurrencyFields = function () {
 
 			fieldResolverService.getFields('accrued_currency', {
 				entityType: 'instrument',
 				key: 'accrued_currency',
 				pageSize: 1000
 			}).then(function (res) {
-
-				// Victor 19.10.2020
-				// vm.currencyFields = res.data;
 				vm.currencyFields = metaHelper.textWithDashSort(res.data);
-				// $scope.$apply();
+			});
+
+		};
+
+		vm.getPaymentSizeDetailFields = function () {
+
+			fieldResolverService.getFields('payment_size_detail', {
+				entityType: 'instrument',
+				key: 'payment_size_detail',
+				pageSize: 1000
+			}).then(function (res) {
+
+				vm.dailyPricingModelFields = metaHelper.textWithDashSort(res.data);
 
 			});
 
-        };
-
-        vm.getPaymentSizeDetailFields = function () {
-
-            fieldResolverService.getFields('payment_size_detail', {
-                entityType: 'instrument',
-                key: 'payment_size_detail',
-				pageSize: 1000
-            }).then(function (res) {
-
-                // Victor 19.10.2020
-                // vm.dailyPricingModelFields = res.data;
-                vm.dailyPricingModelFields = metaHelper.textWithDashSort(res.data);
-
-                // $scope.$apply();
-
-            });
-
-        };
+		};
 
         vm.setDefaultCurrencyFields = function () {
 
@@ -249,7 +258,7 @@
                 }
             }
 
-        };
+        }; */
 
         vm.generateEventsSchedule = function ($event) {
 
@@ -775,12 +784,11 @@
 
         vm.init = function () {
 
-            vm.setDefaultCurrencyFields();
+            // vm.setDefaultCurrencyFields();
 
             // Victor 19.10.2020
             // vm.setDefaultPaymentSizeDetailFields();
-            vm.getPaymentSizeDetailFields();
-			vm.getCurrencyFields();
+            // vm.getPaymentSizeDetailFields();
 
 			if (!vm.entity.accrual_calculation_schedules) {
 				vm.entity.accrual_calculation_schedules = [];
@@ -794,8 +802,8 @@
 			var initPromises = [
 				accrualCalcModelPromise,
 				instrumentPeriodicPromise,
-				vm.getPaymentSizeDetailFields(),
-				vm.getCurrencyFields()
+				// vm.getPaymentSizeDetailFields(),
+				// vm.getCurrencyFields()
 			];
 
             Promise.all(initPromises).then(function () {
