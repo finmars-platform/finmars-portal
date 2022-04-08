@@ -709,6 +709,10 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
             vm.getSchemeList();
             vm.getMember();
 
+            if (data.scheme) {
+                vm.config.scheme = data.scheme.id
+            }
+
         };
 
         vm.init();
