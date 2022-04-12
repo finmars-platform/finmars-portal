@@ -381,6 +381,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
                 localStorage.setItem('goToSetup', 'true')
 
+
                 profileAuthorizerService.setCurrentMasterUser(item.to_master_user).then(function (data) {
 
                     console.log('vm.activateDatabase.data', data);
