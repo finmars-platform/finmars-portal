@@ -118,7 +118,29 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
                     console.log("Error activate", data)
 
-                    toastNotificationService.error("Something went wrong. Please, try again later")
+                    if (data.message) {
+
+                        if (typeof data.message == 'string') {
+                            toastNotificationService.error(data.message)
+                        } else if (typeof data.message == 'object') {
+
+                            var message = {}
+
+                            Object.keys(data.message).forEach((key)=>{
+                                message = message = ' ' + key + ': ' + data.message[key]
+
+                            })
+
+                            toastNotificationService.error(message)
+
+                        } else {
+                            toastNotificationService.error(data.message)
+                        }
+
+
+                    } else {
+                        toastNotificationService.error("Something went wrong. Please, try again later")
+                    }
 
                 }
 
