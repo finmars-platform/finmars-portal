@@ -256,7 +256,7 @@ export default function (globalDataService) {
 	}
 
 	const setCurrentMasterUser = id => {
-		// return authorizerRepository.setCurrentMasterUser(id);
+
 		return new Promise((resolve, reject) => {
 
 			authorizerRepository.setCurrentMasterUser(id).then(function (masterUserData) {
