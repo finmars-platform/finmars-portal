@@ -40,6 +40,7 @@
                 scope.localItemsTotal = 0;
                 scope.databaseItemsTotal = 0;
                 scope.hoverItem = null;
+                scope.selectedItem = null;
 
                 scope.inputText = '';
 
@@ -149,6 +150,8 @@
                         stylePreset = '';
                         scope.error = '';
 
+                        scope.selectedItem = item;
+
                         scope.model = item.id;
                         scope.itemObject = item;
                         scope.valueIsValid = true;
@@ -185,8 +188,10 @@
                         entity_type: scope.entityType
                     };
 
-                    scope.itemName = item.user_code;
-                    scope.inputText = item.user_code;
+                    scope.selectedItem = item;
+
+                    scope.itemName = item.name;
+                    scope.inputText = item.name;
 
                     scope.processing = true;
                     scope.isDisabled = true;
@@ -240,12 +245,22 @@
                 scope.onInputTextChange = function () {
                     // scope.dropdownMenuFilter = scope.inputText;
 
+                    scope.selectedItem = null;
+
                     scope.getList();
 
                 };
 
                 scope.onInputFocus = function (){
                     scope.getList();
+                }
+
+                scope.onInputBlur = function (){
+
+                    if (!scope.selectedItem) {
+                        scope.inputText = '';
+                    }
+
                 }
 
                 var closeDropdownMenu = function (updateScope) {
