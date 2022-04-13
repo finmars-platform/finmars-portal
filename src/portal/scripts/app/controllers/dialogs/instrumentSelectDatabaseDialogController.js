@@ -343,7 +343,7 @@
                     //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?instrument_type=' + vm.instrument_type
                     // }
 
-                    instrumentDatabaseSearchService.getList(vm.inputText, 1, vm.instrument_type).then(function (data) {
+                    instrumentDatabaseSearchService.getList(vm.inputText, 0, vm.instrument_type).then(function (data) {
 
                         vm.databaseInstrumentsTotal = data.resultCount
 
