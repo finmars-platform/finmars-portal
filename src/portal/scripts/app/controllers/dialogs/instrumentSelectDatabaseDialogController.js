@@ -129,6 +129,11 @@
             }).then(function (data) {
 
                 if (vm.selectedItem) {
+
+                    if (vm.actionType === 'add_instrument_dialog') {
+                        toastNotificationService.success("Instrument has been downloaded")
+                    }
+
                     $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem}});
                 }
 
