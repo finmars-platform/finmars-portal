@@ -259,6 +259,7 @@
 
                     if (!scope.selectedItem) {
                         scope.inputText = '';
+                        scope.itemName = '';
                     }
 
                 }
