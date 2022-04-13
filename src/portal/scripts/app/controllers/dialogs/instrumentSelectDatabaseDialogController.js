@@ -27,6 +27,7 @@
 
         vm.globalPage = 1;
         vm.totalPages = 1;
+        vm.actionType = 'default';
 
         vm.instrumentTypeOptions = [
             {id: 'bonds', name: 'Bonds'},
@@ -272,7 +273,7 @@
 
         }
 
-        vm.loadMoreGlobalInstruments = function (){
+        vm.loadMoreGlobalInstruments = function () {
 
             vm.globalProcessing = true;
 
@@ -444,6 +445,16 @@
         vm.init = function () {
 
             vm.getList();
+
+            if (data.context) {
+
+                if (data.context.action) {
+
+                    vm.actionType = data.context.action;
+
+                }
+
+            }
 
         }
 
