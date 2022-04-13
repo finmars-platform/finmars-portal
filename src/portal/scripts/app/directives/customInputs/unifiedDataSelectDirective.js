@@ -258,6 +258,7 @@
                 scope.onInputBlur = function (){
 
                     if (!scope.selectedItem) {
+                        scope.model = null;
                         scope.inputText = '';
                         scope.itemName = '';
                     }
