@@ -852,7 +852,7 @@
                 changedCell.settings.selectorOptions = viewModel.relationItems[loadRelationRes.field].map(function (item) {
 
                     // contentTypeCell.settings.value = 'portfolios.portfolio'
-                    item.id = "get_relation_by_user_code('" + contentTypeCell.settings.value + "', '" + item.id + "')"
+                    item.id = "get_relation_by_user_code('" + contentTypeCell.settings.value + "', '" + item.id + "').user_code"
 
                     return item
                 });
@@ -864,7 +864,7 @@
                     changedCell.settings.selectorOptions = relItem.map(function (item) {
 
                         // contentTypeCell.settings.value = 'portfolios.portfolio'
-                        item.id = "get_relation_by_user_code('" + contentTypeCell.settings.value + "', '" + item.id + "')"
+                        item.id = "get_relation_by_user_code('" + contentTypeCell.settings.value + "', '" + item.id + "').user_code"
 
                         return item
                     });
