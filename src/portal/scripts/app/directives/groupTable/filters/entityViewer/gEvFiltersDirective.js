@@ -186,6 +186,24 @@
 
                 };
 
+                scope.addFromProvider = function ($event) {
+                    $mdDialog.show({
+                        controller: "InstrumentSelectDatabaseDialogController as vm",
+                        templateUrl: "views/dialogs/instrument-select-database-dialog-view.html",
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                context: {
+                                  action: 'add_instrument_dialog'
+                                },
+                                inputText: ''
+                            }
+                        }
+
+                    })
+                }
+
                 scope.openTransactionTypeDialog = async function () {
 
                     let editLayout, entity = {};

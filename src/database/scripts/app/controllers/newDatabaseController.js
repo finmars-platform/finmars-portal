@@ -98,27 +98,6 @@
 			profileAuthorizerService.createMasterUser(options).then(function (data) {
 
 
-                // authorizerService.setCurrentMasterUser(data.id).then(function (value) {
-                //
-                //     if (vm.activeConfig === 'custom') {
-                //
-                //         setTimeout(function () {
-                //
-                //             $state.go('app.home', {}, {reload: 'app'});
-                //
-                //         }, 100)
-                //
-                //     } else {
-                //
-                //         var item = vm.ecosystemConfigurations.find(function (item) {
-                //             return item.id === vm.activeConfig
-                //         });
-                //
-                //         vm.applyItem($event, item)
-                //     }
-                //
-                // })
-
 
             });
 

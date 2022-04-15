@@ -428,7 +428,12 @@
 
 				vm.transactionsUserDates = [];
 
-				metaService.loadDataFromAllPages(uiService.getTransactionFieldList, [{pageSize: 1000}]).then(function (transactionFields) {
+                let options = {
+                    pageSize: 1000,
+                    page: 1
+                };
+
+				metaService.loadDataFromAllPages(uiService.getTransactionFieldList, [options]).then(function (transactionFields) {
 
 					vm.transactionsUserDates = transactionFields.filter(function (field) {
 						return ['user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'].includes(field.key);
