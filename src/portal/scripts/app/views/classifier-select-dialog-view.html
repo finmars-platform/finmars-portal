@@ -96,10 +96,10 @@
                     data-ng-disabled="vm.isEdit || !vm.readyStatus"><span class="material-icons">add</span></button>
             <button data-ng-if="!vm.isLock"
                     data-ng-click="vm.onEdit()"
-                    data-ng-disabled="!vm.isActiveNodes() || vm.isEdit || !vm.readyStatus"><span class="material-icons">edit</span></button>
+                    data-ng-disabled="!vm.activeNodesExist() || vm.isEdit || !vm.readyStatus"><span class="material-icons">edit</span></button>
             <button data-ng-if="!vm.isLock"
                     data-ng-click="vm.onDelete()"
-                    data-ng-disabled="!vm.isActiveNodes() || vm.isEdit || !vm.readyStatus"><span class="material-icons">delete</span></button>
+                    data-ng-disabled="!vm.activeNodesExist() || vm.isEdit || !vm.readyStatus"><span class="material-icons">delete</span></button>
             <button ng-if="!vm.isLock"
                     ng-hide="vm.showFavorites"
                     ng-click="vm.sortTreeAlphabetically()"
