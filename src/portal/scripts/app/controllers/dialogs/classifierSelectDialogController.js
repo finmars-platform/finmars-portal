@@ -309,14 +309,23 @@
 			if (vm.favoritesList.length) {
 
 				const activeFavNode = vm.favoritesList.find(favNode => favNode.isActive);
-				activeFavNode.editOn = true;
 
-				activeFavNode.newName = activeFavNode.name;
-				const nameInput = document.querySelector(".classifier-select-dialog-view .fav-node-row.active .classifier-name");
+				if (activeFavNode) {
 
-				setTimeout(() => {
-					nameInput.focus();
-				}, 0);
+					activeFavNode.editOn = true;
+
+					activeFavNode.newName = activeFavNode.name;
+					const nameInput = document.querySelector(".classifier-select-dialog-view .fav-node-row.active .classifier-name");
+
+					if (vm.showFavorites) {
+
+						setTimeout(() => {
+							nameInput.focus();
+						}, 0);
+
+					}
+
+				}
 
 			}
 
@@ -328,9 +337,14 @@
 		vm.onEditCancelInsideTree = function () {
 
 			const activeFavNode = vm.favoritesList.find(favNode => favNode.isActive);
-			activeFavNode.editOn = false;
 
-			delete activeFavNode.newName;
+			if (activeFavNode) {
+
+				activeFavNode.editOn = false;
+
+				delete activeFavNode.newName;
+
+			}
 
 			vm.isEdit = false;
 
@@ -341,6 +355,8 @@
             if(!vm.activeNodes.length) {
                 return;
             }
+
+			clearTimeout(treeChangeTimeoutId); // prevent classifier update after order of nodes changed
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
@@ -372,7 +388,7 @@
             vm.classifierTreeEventService.dispatchEvent(classifierEvents.ADD_NODE, {activeNodes: vm.activeNodes});
         };
 
-        vm.isActiveNodes = () => !!vm.activeNodes.length;
+        vm.activeNodesExist = () => !!vm.activeNodes.length;
 		/**
 		 *
 		 * @param treeBranch {Array} - list of nodes inside tree branch
@@ -575,7 +591,7 @@
         };
 
         const updateClassifier = function () {
-			console.trace()
+
         	// clear update timeout after drag and drop
 			clearTimeout(treeChangeTimeoutId);
 			treeChangeTimeoutId = null;
@@ -770,6 +786,7 @@
 
 			getClassifierData().then(() => {
 				vm.showFavorites = !!vm.favoritesList.length;
+				$scope.$apply();
 			});
 
 			vm.classifierTreeEventService.addEventListener(classifierEvents.CLASSIFIER_TREE_CHANGED, argsObj => {

@@ -473,12 +473,17 @@
 
 						nodeFromOriginalTree.name = newName;
 						vm.nodeInEditMode.name = newName;
+
+						vm.nodeInEditMode = null;
+						if ($scope.onEditNodeCancel) $scope.onEditNodeCancel();
+
 						$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CLASSIFIER_TREE_CHANGED, {action: changeActions});
 
+					} else {
+						vm.nodeInEditMode = null;
+						if ($scope.onEditNodeCancel) $scope.onEditNodeCancel();
 					}
 
-					vm.nodeInEditMode = null;
-					if ($scope.onEditNodeCancel) $scope.onEditNodeCancel();
 					// $scope.classifierTreeEventService.dispatchEvent(classifierEvents.CANCEL_EDIT_NODE);
 				};
 
