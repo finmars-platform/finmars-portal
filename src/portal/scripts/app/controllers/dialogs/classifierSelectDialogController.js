@@ -33,6 +33,8 @@
 		let classifiersFlatList = [];
 		let favoriteNodesNames = "";
 		const addToFavIconElem = `<span class="material-icons orange">star_outline</span>`;
+		let nodeDragendIndex;
+		let updateDelay = 1000;
 
 		const getNode = idsList => {
 
@@ -96,7 +98,21 @@
 		vm.showFavorites = true;
 		vm.favoritesList = [];
 		vm.favoritesFilterTerms = "";
-		vm.favNodeNewName = "";
+		// vm.favNodeNewName = "";
+
+		const updateFavoritesNames = function () {
+
+			vm.favoritesList = vm.favoritesList.map(function (fNode) {
+
+				const node = getNode(fNode.pathToNode);
+				fNode.name = node.name;
+				return fNode;
+
+			});
+
+			favoriteNodesNames = vm.favoritesList.reduce(reduceToStringOfNames, "");
+
+		};
 
 		const getFavorites = function () {
 
@@ -115,6 +131,7 @@
 					pathToNode: node.frontOptions.pathToNode,
 					name: node.name,
 					level: node.level,
+					isActive: activeNodesIdsBeforeUpdate.includes(nodeId),
 				};
 
 			});
@@ -156,7 +173,7 @@
 			}
 
 			await updateClassifier();
-			vm.classifierTreeEventService.dispatchEvent(classifierEvents.TREE_CHANGED_FROM_OUTSIDE);
+			// vm.classifierTreeEventService.dispatchEvent(classifierEvents.TREE_CHANGED_FROM_OUTSIDE);
 
 			$scope.$apply();
 
@@ -223,6 +240,45 @@
 			return currentVal.name; // for 0 index
 
 		};
+
+		vm.saveNode = function ($event, favNode) {
+
+			$event.stopPropagation();
+
+			// const nodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData, vm.nodeInEditMode.frontOptions.treePath);
+
+			if (favNode.name !== favNode.newName) {
+
+				favNode.name = favNode.newName;
+
+				const nodeFromTree = getNode(favNode.pathToNode);
+				nodeFromTree.name = favNode.newName;
+
+				delete favNode.newName;
+				favNode.editOn = false;
+
+				vm.isEdit = false;
+				vm.classifierTreeEventService.dispatchEvent(classifierEvents.CANCEL_EDIT_NODE); // should be called before updateClassifier();
+
+				updateClassifier();
+
+			} else {
+				vm.classifierTreeEventService.dispatchEvent(classifierEvents.CANCEL_EDIT_NODE);
+			}
+
+		};
+
+		vm.cancelEdit = function ($event, activeFavNode) {
+
+			$event.stopPropagation();
+
+			delete activeFavNode.newName;
+			activeFavNode.editOn = false;
+
+			vm.isEdit = false;
+			vm.classifierTreeEventService.dispatchEvent(classifierEvents.CANCEL_EDIT_NODE);
+
+		};
 		//endregion
 
 		vm.onEdit = function () {
@@ -231,12 +287,14 @@
                 return;
             }
 
-		    if (vm.showFavorites) {
+		    clearTimeout(treeChangeTimeoutId); // prevent classifier update after order of nodes changed
 
-		    	const activeFavNode = vm.favoritesList.find(favNode => favNode.isActive);
+			/* if (vm.showFavorites) {
+
+				const activeFavNode = vm.favoritesList.find(favNode => favNode.isActive);
 				activeFavNode.editOn = true;
 
-				vm.favNodeNewName = activeFavNode.name;
+				activeFavNode.newName = activeFavNode.name;
 				const nameInput = document.querySelector(".classifier-select-dialog-view .fav-node-row.active .classifier-name");
 
 				setTimeout(() => {
@@ -246,13 +304,35 @@
 			} else {
 				vm.isEdit = true;
 				vm.classifierTreeEventService.dispatchEvent(classifierEvents.EDIT_NODE);
+			}*/
+
+			if (vm.favoritesList.length) {
+
+				const activeFavNode = vm.favoritesList.find(favNode => favNode.isActive);
+				activeFavNode.editOn = true;
+
+				activeFavNode.newName = activeFavNode.name;
+				const nameInput = document.querySelector(".classifier-select-dialog-view .fav-node-row.active .classifier-name");
+
+				setTimeout(() => {
+					nameInput.focus();
+				}, 0);
+
 			}
+
+			vm.isEdit = true;
+			vm.classifierTreeEventService.dispatchEvent(classifierEvents.EDIT_NODE);
 
         };
 
-		vm.cancelEdition = function () {
+		vm.onEditCancelInsideTree = function () {
 
 			const activeFavNode = vm.favoritesList.find(favNode => favNode.isActive);
+			activeFavNode.editOn = false;
+
+			delete activeFavNode.newName;
+
+			vm.isEdit = false;
 
 		};
 
@@ -287,6 +367,7 @@
         }
 
         vm.onAdd = () => {
+			clearTimeout(treeChangeTimeoutId); // prevent classifier update after order of nodes changed
             vm.isEdit = true;
             vm.classifierTreeEventService.dispatchEvent(classifierEvents.ADD_NODE, {activeNodes: vm.activeNodes});
         };
@@ -364,6 +445,18 @@
 
         };
 
+		const processClassifierData = function (data, treeBeforeUpdate) {
+
+			favoriteNodesNames = data.favorites || "";
+
+			vm.tree = setUpTreeNodes(data.classifiers, 0, null, treeBeforeUpdate);
+
+			classifiersFlatList = data.classifiers_flat;
+			// if (data.favorites) vm.favoritesList = getFavorites(data.favorites);
+			getFavorites();
+
+		};
+
         const getClassifierData = function (treeBeforeUpdate) {
 
             // $('#js-tree-select-wrapper').remove();
@@ -373,13 +466,7 @@
 
 				attributeTypeService.getByKey(vm.entityType, vm.classifierId).then(function (data) {
 
-					favoriteNodesNames = data.favorites || "";
-
-					vm.tree = setUpTreeNodes(data.classifiers, 0, null, treeBeforeUpdate);
-
-					classifiersFlatList = data.classifiers_flat;
-					// if (data.favorites) vm.favoritesList = getFavorites(data.favorites);
-					getFavorites();
+					processClassifierData(data, treeBeforeUpdate);
 
 					vm.readyStatus = true;
 
@@ -470,29 +557,59 @@
             })
         }
 
-        vm.onActiveNodesChange = function (activeNodesList) {vm.activeNodes = activeNodesList;};
+        vm.onActiveNodesChange = function (activeNodesList) {
+
+        	vm.activeNodes = activeNodesList;
+
+        	// mark active nodes inside favorites
+			vm.favoritesList = vm.favoritesList.map(fNode => {
+
+				const index = vm.activeNodes.findIndex(aNode => aNode.id === fNode.id);
+				fNode.isActive = index > -1;
+
+				return fNode;
+
+			});
+        	// vm.favoritesList.find(node => node.id === );
+
+        };
 
         const updateClassifier = function () {
+			console.trace()
+        	// clear update timeout after drag and drop
+			clearTimeout(treeChangeTimeoutId);
+			treeChangeTimeoutId = null;
+
+			vm.readyStatus = false;
 
         	return new Promise((res, rej) => {
 
-				vm.readyStatus = false;
 				const classifierBeforeUpdate = JSON.parse(angular.toJson(vm.tree));
+				activeNodesIdsBeforeUpdate = vm.activeNodes.map(({id}) => id);
+
 				const classifiers = getClearTree(vm.tree);
 				// vm.classifier.classifiers = classifiers;
 				vm.classifier.classifiers = classifiers;
-				activeNodesIdsBeforeUpdate = vm.activeNodes.map(({id}) => id);
 
 				vm.classifier.favorites = vm.favoritesList.reduce(reduceToStringOfNames, "") || null;
 
-				attributeTypeService.update(vm.entityType, vm.classifierId, vm.classifier).then(function () {
+				attributeTypeService.update(vm.entityType, vm.classifierId, vm.classifier).then(function (data) {
 
 					vm.activeNodes = [];
-
+					/* // vm.readyStatus changes to true by getClassifierData()
 					getClassifierData(classifierBeforeUpdate).then(() => {
 						res();
 
-					}).catch(error => rej(error));
+					}).catch(error => rej(error)); */
+					processClassifierData(data, classifierBeforeUpdate);
+
+					vm.readyStatus = true;
+
+					$scope.$apply();
+
+					vm.classifierTreeEventService.dispatchEvent(classifierEvents.TREE_CHANGED_FROM_OUTSIDE);
+
+					res();
 
 				}).catch(error => rej(error));
 
@@ -544,7 +661,14 @@
 		};
 
 		vm.sortTreeAlphabetically = function () {
+
 			vm.tree = sortNodesAlphabetically(vm.tree);
+
+			updateClassifier().then(function () {
+				// without this, html of classifier tree does not update after sorting
+				$scope.$apply();
+			});
+
 		};
 
 		/* Old code
@@ -593,6 +717,23 @@
             });
         }; */
 
+		vm.cancel = function () {
+
+			// Execute delayed update classifier after nodes' order change
+			if (treeChangeTimeoutId || treeChangeTimeoutId === 0) {
+
+				const classifiers = getClearTree(vm.tree);
+				vm.classifier.classifiers = classifiers;
+				vm.classifier.favorites = vm.favoritesList.reduce(reduceToStringOfNames, "") || null;
+
+				attributeTypeService.update(vm.entityType, vm.classifierId, vm.classifier);
+
+			}
+
+			$mdDialog.hide({status: 'disagree'});
+
+		};
+
         vm.agree = function () {
             /* setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.classifierSelectorElemToDrag');
@@ -601,17 +742,27 @@
             var item = $('#js-tree-select-wrapper').jstree(true).get_selected(true);
             console.log('ite---------------m', item);
             $mdDialog.hide({status: 'agree', data: {item: item[0].id, name: item[0].text}}); */
+			// Execute delayed update classifier after nodes' order change
 
             if (!vm.activeNodes.length) {
                 return vm.cancel();
             }
 
+			if (treeChangeTimeoutId || treeChangeTimeoutId === 0) {
+
+				const classifiers = getClearTree(vm.tree);
+				vm.classifier.classifiers = classifiers;
+				vm.classifier.favorites = vm.favoritesList.reduce(reduceToStringOfNames, "") || null;
+
+				attributeTypeService.update(vm.entityType, vm.classifierId, vm.classifier);
+
+			}
+
 			$mdDialog.hide({status: 'agree', data: {item: vm.activeNodes[0].id, name: vm.activeNodes[0].text}});
+
         };
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
+        let treeChangeTimeoutId;
 
         const init = function () {
 
@@ -621,14 +772,59 @@
 				vm.showFavorites = !!vm.favoritesList.length;
 			});
 
-			vm.classifierTreeEventService.addEventListener(classifierEvents.CLASSIFIER_TREE_CHANGED, () => {
-				updateClassifier();
-				vm.classifierTreeEventService.dispatchEvent(classifierEvents.EMPTY_FILTER);
-            });
+			vm.classifierTreeEventService.addEventListener(classifierEvents.CLASSIFIER_TREE_CHANGED, argsObj => {
 
-            vm.classifierTreeEventService.addEventListener(classifierEvents.CANCEL_EDIT_NODE, () => {
-                vm.isEdit = false;
-            });
+				if (argsObj.action === 'add' || argsObj.action === 'delete') {
+					vm.classifierTreeEventService.dispatchEvent(classifierEvents.EMPTY_FILTER);
+				}
+
+				if (argsObj.action === 'edit') {
+					updateFavoritesNames();
+				}
+
+				if (argsObj.action === 'move') {
+
+					clearTimeout(treeChangeTimeoutId);
+
+					treeChangeTimeoutId = setTimeout(function () {
+						updateClassifier();
+					}, updateDelay);
+
+				} else {
+					updateClassifier();
+				}
+
+			});
+
+            /*vm.classifierTreeEventService.addEventListener(classifierEvents.CANCEL_EDIT_NODE, () => {
+            	vm.isEdit = false;
+            });*/
+
+            // if DnD started before sending update request, delay request until drag end
+			vm.classifierTreeEventService.addEventListener(classifierEvents.DRAG_START, () => {
+
+				if (treeChangeTimeoutId || treeChangeTimeoutId === 0) {
+
+					clearTimeout(treeChangeTimeoutId);
+					treeChangeTimeoutId = null;
+
+					nodeDragendIndex = vm.classifierTreeEventService.addEventListener(classifierEvents.DRAG_END, () => {
+
+						if (treeChangeTimeoutId === null) {
+
+							treeChangeTimeoutId = setTimeout(function () {
+								updateClassifier();
+							}, updateDelay);
+
+						}
+
+						vm.classifierTreeEventService.removeEventListener(classifierEvents.DRAG_END, nodeDragendIndex)
+
+					});
+
+				}
+
+			});
 
 		};
 

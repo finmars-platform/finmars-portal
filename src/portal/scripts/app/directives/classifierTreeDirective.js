@@ -18,7 +18,9 @@
 				activeNodeId: '<',
 				classifierTreeEventService: '=',
 				multiselector: '@',
-				onActiveNodesChangeCallback: '&?'
+
+				onEditNodeCancel: '&?',
+				onActiveNodesChangeCallback: '&?',
 			},
 			templateUrl: 'views/directives/classifier-tree-view.html',
 			controllerAs: 'vm',
@@ -192,27 +194,6 @@
 					return null;
 				}
 
-				const getShadowClass = (elem) => {
-
-					const noScroll = (elem.scrollHeight - elem.clientHeight) <= 0;
-
-					if (noScroll) {
-						return '';
-					}
-
-					if (elem.scrollTop === 0) {
-						return 'bottom-shadow';
-					}
-
-					const scrollBottom = elem.scrollHeight - elem.clientHeight - elem.scrollTop;
-
-					if (scrollBottom <= 0) {
-						return 'top-shadow';
-					}
-
-					return 'shadow';
-				}
-
 				const filterNode = (node, filterTerms) => {
 
 					const nodeToFilter = metaHelper.recursiveDeepCopy(node, true);
@@ -345,6 +326,27 @@
 
 				vm.selectNode = selectNode;
 
+				const getShadowClass = (elem) => {
+
+					const noScroll = (elem.scrollHeight - elem.clientHeight) <= 0;
+
+					if (noScroll) {
+						return '';
+					}
+
+					if (elem.scrollTop === 0) {
+						return 'bottom-shadow';
+					}
+
+					const scrollBottom = elem.scrollHeight - elem.clientHeight - elem.scrollTop;
+
+					if (scrollBottom <= 0) {
+						return 'top-shadow';
+					}
+
+					return 'shadow';
+				}
+
 				let currentShadow;
 
 				const applyShadow = () => {
@@ -460,6 +462,7 @@
 					$event.stopPropagation();
 
 					vm.editingNode = false;
+					let changeActions = addition ? 'add' : 'edit';
 					addition = false;
 					vm.nodeInEditMode.frontOptions.editOn = false;
 
@@ -470,17 +473,50 @@
 
 						nodeFromOriginalTree.name = newName;
 						vm.nodeInEditMode.name = newName;
-						$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CLASSIFIER_TREE_CHANGED);
+						$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CLASSIFIER_TREE_CHANGED, {action: changeActions});
 
 					}
 
 					vm.nodeInEditMode = null;
-					$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CANCEL_EDIT_NODE);
+					if ($scope.onEditNodeCancel) $scope.onEditNodeCancel();
+					// $scope.classifierTreeEventService.dispatchEvent(classifierEvents.CANCEL_EDIT_NODE);
 				};
 
-				vm.onCancelEdit = function ($event) {
+				vm.cancelEdit = function () {
+					// const nodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData,vm.nodeInEditMode.frontOptions.treePath);
+					const nodeFromOriginalTree = getNode($scope.treeData,vm.nodeInEditMode.frontOptions.pathToNode);
 
-					$event.stopPropagation();
+					vm.nodeInEditMode.name = nodeFromOriginalTree.name;
+
+					if (addition) {
+
+						/* const parentNodeFromOriginalTree = getNearestParentOfNode($scope.treeData, nodeFromOriginalTree);
+						const parent = getNearestParentOfNode(vm.filteredTree, vm.nodeInEditMode); */
+						const parentNodeFromOriginalTree = getParentNode($scope.treeData, nodeFromOriginalTree);
+						const parent = getParentNode(vm.filteredTree, vm.nodeInEditMode);
+
+						if (Array.isArray(parentNodeFromOriginalTree.children)) {
+							parentNodeFromOriginalTree.children.pop();
+							parent.children.pop();
+						} else { // root
+							parentNodeFromOriginalTree.pop();
+							parent.pop();
+						}
+
+						addition = false;
+
+					}
+
+					vm.editingNode = false;
+					vm.nodeInEditMode.frontOptions.editOn = false;
+					vm.nodeInEditMode = null;
+
+					if ($scope.onEditNodeCancel) $scope.onEditNodeCancel();
+					// $scope.classifierTreeEventService.dispatchEvent(classifierEvents.CANCEL_EDIT_NODE);
+
+				};
+
+				const cancelEdit = function () {
 
 					// const nodeFromOriginalTree = metaHelper.getObjectNestedPropVal($scope.treeData,vm.nodeInEditMode.frontOptions.treePath);
 					const nodeFromOriginalTree = getNode($scope.treeData,vm.nodeInEditMode.frontOptions.pathToNode);
@@ -509,7 +545,15 @@
 					vm.editingNode = false;
 					vm.nodeInEditMode.frontOptions.editOn = false;
 					vm.nodeInEditMode = null;
-					$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CANCEL_EDIT_NODE);
+
+				}
+
+				/** Used by classifierTreeNodeDirective */
+				vm.onCancelEdit = function () {
+
+					cancelEdit();
+					if ($scope.onEditNodeCancel) $scope.onEditNodeCancel();
+					// $scope.classifierTreeEventService.dispatchEvent(classifierEvents.CANCEL_EDIT_NODE);
 
 				};
 
@@ -597,21 +641,24 @@
 
 					activeNode = null;
 
-					$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CLASSIFIER_TREE_CHANGED);
+					$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CLASSIFIER_TREE_CHANGED, {action: 'delete'});
+
 				};
 
-				const onTreeChangedFromOutside = () => {
+				const redrawTree = function () {
 
 					vm.filteredTree = metaHelper.recursiveDeepCopy($scope.treeData, true);
 					activeNode = getFirstActiveNodeFromTree(vm.filteredTree);
 
 					if (vm.treeFilterTerms) vm.filterTree(vm.treeFilterTerms);
 
-					vm.editingNode = false;
 					applyShadow();
 
-					// $scope.$apply();
+				};
 
+				const onTreeChangedFromOutside = function () {
+					redrawTree();
+					vm.editingNode = false;
 				};
 
 				const emptyFilter = function () {
@@ -621,7 +668,7 @@
 				//region Node drag and drop
 				let dropInbetweenElemsList = [];
 				let nodeDropElemsList = [];
-				let draggedOverElem;
+				let draggedOverElem, doeParentNodeElem;
 
 				/* const onNodeDragenter = function (ev) {
 					// const nodeRowElem = ev.target.parentNode; // .classifierNode
@@ -647,6 +694,8 @@
 					let draggedOverNewElem;
 					const mouseBetweenNodes = targetElem.classList.contains('dropAtTheBeginning') || targetElem.classList.contains('dropAfterNode');
 
+					const nodeElem = targetElem.closest('.classifierNode');
+
 					if (mouseBetweenNodes) {
 
 						draggedOverNewElem = draggedOverElem !== targetElem;
@@ -658,13 +707,24 @@
 							targetElem.classList.add('dnd-mouse-hover');
 							draggedOverElem = targetElem;
 
+							if (doeParentNodeElem) doeParentNodeElem.classList.remove('dnd-mouse-hover-child');
+
+							if (nodeElem) nodeElem.classList.add('dnd-mouse-hover-child');
+
+							doeParentNodeElem = nodeElem;
+
 						}
 
 
 					}
 					else {
 
-						const nodeElem = targetElem.closest('.classifierNode');
+						if (doeParentNodeElem) {
+
+							doeParentNodeElem.classList.remove('dnd-mouse-hover-child');
+							doeParentNodeElem = null;
+
+						}
 
 						if (nodeElem) { // mouse over node
 
@@ -698,37 +758,54 @@
 				 *
 				 * @param nodeToMove {Object}
 				 * @param moveTo {Object|Array} - other node or root level
-				 * @param index {number=} - index of location to move
+				 * @param leftSiblingNode {Object=}
 				 * @returns {boolean}
 				 */
-				const nodeCanBeMovedToTheLocation = (nodeToMove, moveTo, index) => {
+				const nodeCanBeMovedToTheLocation = (nodeToMove, moveTo, leftSiblingNode) => {
 
-					index = index || 0;
+					// index = index || 0;
 
-					const movingToANewLocation = function (moveToList) {
+					const isLocationNew = function (moveToList) {
 
-						const prevNode = moveToList[index];
-						const nextNode = moveToList[index + 1];
-						let movingToNewLocation = !nodesAreTheSame(nodeToMove, prevNode);
+						/* const leftNode = moveToList[index];
+						const rightNode = moveToList[index + 1];
+						let isANewLocation = !nodesAreTheSame(nodeToMove, leftNode);
 
-						if (index > 0 && nextNode) {
-							movingToNewLocation = movingToNewLocation && !nodesAreTheSame(nodeToMove, nextNode);
+						if (index > 0 && rightNode) {
+							isANewLocation = isANewLocation && !nodesAreTheSame(nodeToMove, rightNode);
+						} */
+						let leftSiblingDifferent = true;
+						let rightSiblingDifferent = true;
+						let rightSiblingNode;
+
+						if (leftSiblingNode) {
+
+							leftSiblingDifferent = !nodesAreTheSame(nodeToMove, leftSiblingNode);
+
+							const leftSiblingIndex = moveToList.findIndex(childNode => nodesAreTheSame(childNode, leftSiblingNode));
+							rightSiblingNode = moveToList[leftSiblingIndex + 1];
+
+						} else {
+							rightSiblingNode = moveToList[0];
 						}
 
-						return movingToNewLocation;
+						if (rightSiblingNode) rightSiblingDifferent = !nodesAreTheSame(nodeToMove, rightSiblingNode);
+
+						return leftSiblingDifferent && rightSiblingDifferent;
 
 					};
 
 					if (Array.isArray(moveTo)) { // move to the root
 
-						if (moveTo.length > 1) return movingToANewLocation(moveTo);
+						if (moveTo.length > 1) return isLocationNew(moveTo);
 
 						return true;
 
 					}
 
 					if (nodeToMove.id === moveTo.id) return false;
-					//region Check for moveTo is a child of nodeToMove
+
+					//region Check whether moveTo is a child of nodeToMove
 					const moveToParents = getAllParentsOfNode(vm.filteredTree, moveTo);
 					const parent = moveToParents.find(parent => nodesAreTheSame(parent, nodeToMove));
 
@@ -736,7 +813,7 @@
 					//endregion
 
 					if (moveTo.children.length > 1) {
-						return movingToANewLocation(moveTo.children)
+						return isLocationNew(moveTo.children)
 					}
 
 					return true;
@@ -771,13 +848,12 @@
 						// $scope.treeData.splice(index, 0, nodeToMove);
 
 					}
-					else { // move to another node
+					else { // move to another node or change order
 
 						if (!index && index !== 0) index = moveTo.children.length;
 
 						nodeToMove.level = moveTo.level + 1;
 						nodeToMove.frontOptions.pathToNode = moveTo.frontOptions.pathToNode.concat([nodeToMove.id]);
-
 						/*if (index >= moveTo.children.length) {
 							moveTo.children.push(nodeToMove);
 
@@ -785,40 +861,43 @@
 							moveTo.children.splice(index, 0, nodeToMove);
 						}*/
 						moveTo.children.splice(index, 0, nodeToMove);
-
 						/* const moveToFromOriginalTree = getNode($scope.treeData, moveTo.frontOptions.pathToNode);
 						moveToFromOriginalTree.children.splice(index, 0, nodeToMove); */
 
 					}
 
-					$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CLASSIFIER_TREE_CHANGED);
+					redrawTree();
+					$scope.$apply();
+
+					$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CLASSIFIER_TREE_CHANGED, {action: 'move'});
 
 				};
 
-				const insertNodeAfterAnotherNode = function (droppedNode, previousNodePath) {
+				const insertNodeAfterAnotherNode = function (droppedNode, leftSiblingNodePath) {
 
-					// const prevNode = metaHelper.getObjectNestedPropVal(vm.filteredTree, previousNodePath);
-					const prevNode = getNode($scope.treeData, previousNodePath);
-					if (nodesAreTheSame(droppedNode, prevNode)) return; // node dropped after itself
-					// const parent = getParentNode(vm.filteredTree, prevNode) || vm.filteredTree;
-					const parent = getParentNode($scope.treeData, prevNode) || $scope.treeData;
+					const leftNode = getNode($scope.treeData, leftSiblingNodePath);
 
-					// const droppedAfterItself = nodesAreTheSame(droppedNode, prevNode);
-					// if (!nodeCanBeMovedToTheLocation(droppedNode, parent) || droppedAfterItself) return;
+					if (nodesAreTheSame(droppedNode, leftNode)) return; // node dropped after itself
 
-					// let nodesList = (prevNode.level > 0) ? parent.children : vm.filteredTree;
-					let nodesList = (prevNode.level > 0) ? parent.children : $scope.treeData;
+					const parent = getParentNode($scope.treeData, leftNode) || $scope.treeData;
+					let nodesList = (leftNode.level > 0) ? parent.children : $scope.treeData;
 
-					const prevNodeIndex = nodesList.findIndex(childNode => nodesAreTheSame(childNode, prevNode));
-					let moveToIndex = prevNodeIndex + 1;
+					const leftNodeIndex = nodesList.findIndex(childNode => nodesAreTheSame(childNode, leftNode));
+					let moveToIndex = leftNodeIndex + 1;
 
-					if (droppedNode.level === prevNode.level) {
+					const dnParentId = droppedNode.frontOptions.pathToNode[droppedNode.frontOptions.pathToNode.length - 2];
+					const sameParent = (droppedNode.level === 0 && leftNode.level === 0) || dnParentId === parent.id;
+
+					if (sameParent) {
+
 						const droppedNodeIndex = nodesList.findIndex(childNode => nodesAreTheSame(childNode, droppedNode));
-						// if droppedNode located before prevNode, moveToIndex will be lesser after removal of droppedNodeIndex from it's current place
-						if (droppedNodeIndex <= prevNodeIndex) moveToIndex = prevNodeIndex;
+
+						// if droppedNode is located before leftNode, moveToIndex will be one less after removal of droppedNode from it's current place
+						if (droppedNodeIndex <= leftNodeIndex) moveToIndex = moveToIndex - 1;
+
 					}
 
-					if (nodeCanBeMovedToTheLocation(droppedNode, parent, moveToIndex)) {
+					if (nodeCanBeMovedToTheLocation(droppedNode, parent, leftNode)) {
 						moveNode(droppedNode, parent, moveToIndex);
 					}
 
@@ -845,10 +924,10 @@
 					// const droppedNode = metaHelper.getObjectNestedPropVal(vm.filteredTree, droppedNodePath);
 					const droppedNode = getNode($scope.treeData, droppedNodePath);
 
-					if (ev.target.classList.contains('dropAfterNode')) { // dropped between nodes
+					if (ev.target.classList.contains('dropAfterNode')) {
 
-						const prevNodePath = getPathToNodeFromString(ev.target.dataset.pathToNode);
-						insertNodeAfterAnotherNode(droppedNode, prevNodePath);
+						const siblingNodePath = getPathToNodeFromString(ev.target.dataset.pathToNode);
+						insertNodeAfterAnotherNode(droppedNode, siblingNodePath);
 
 					}
 					else if (ev.target.classList.contains('dropAtTheBeginning')) {
@@ -862,7 +941,7 @@
 							moveTo = getNode($scope.treeData, moveToPath);
 						}
 
-						if (nodeCanBeMovedToTheLocation(droppedNode, moveTo, 0)) {
+						if (nodeCanBeMovedToTheLocation(droppedNode, moveTo)) {
 							moveNode(droppedNode, moveTo, 0);
 						}
 
@@ -886,7 +965,6 @@
 						if (droppedToNodeElem) {
 
 							const moveToPath = getPathToNodeFromString(droppedToNodeElem.dataset.pathToNode);
-
 							let moveTo = getNode($scope.treeData, moveToPath);
 
 							if (nodeCanBeMovedToTheLocation(droppedNode, moveTo)) {
@@ -903,6 +981,9 @@
 
 				vm.onNodeDragStart = function (ev) {
 
+					if (vm.editingNode) ev.preventDefault();
+
+					$scope.classifierTreeEventService.dispatchEvent(classifierEvents.DRAG_START);
 					const nodeDndBackdrop = document.createElement('div');
 
 					nodeDndBackdrop.classList.add('classifier-node-dnd-backdrop', 'cNodeDndBackdrop');
@@ -958,8 +1039,19 @@
 					dropInbetweenElemsList = [];
 
 					// dndHoverOverElem.classList.remove('dnd-mouse-hover');
-					if (draggedOverElem) draggedOverElem.classList.remove('dnd-mouse-hover');
+					if (draggedOverElem) {
+						draggedOverElem.classList.remove('dnd-mouse-hover');
+						draggedOverElem = null;
+					}
+
+					if (doeParentNodeElem) {
+						doeParentNodeElem.classList.remove('dnd-mouse-hover-child');
+						doeParentNodeElem = null;
+					}
+
 					treeElement.classList.remove('dnd-in-progress');
+
+					$scope.classifierTreeEventService.dispatchEvent(classifierEvents.DRAG_END);
 
 				};
 				//endregion
@@ -991,6 +1083,7 @@
 
 						const treeChangedFromOutsideId = $scope.classifierTreeEventService.addEventListener(classifierEvents.TREE_CHANGED_FROM_OUTSIDE, onTreeChangedFromOutside);
 						const editNodeId = $scope.classifierTreeEventService.addEventListener(classifierEvents.EDIT_NODE, onEditNode);
+						const cancelEditNodeId = $scope.classifierTreeEventService.addEventListener(classifierEvents.CANCEL_EDIT_NODE, cancelEdit);
 						const deleteNodeId = $scope.classifierTreeEventService.addEventListener(classifierEvents.DELETE_NODE, onDeleteNode);
 						const addNodeId = $scope.classifierTreeEventService.addEventListener(classifierEvents.ADD_NODE, onAddNode);
 						const emptyFilterId = $scope.classifierTreeEventService.addEventListener(classifierEvents.EMPTY_FILTER, emptyFilter);
@@ -998,6 +1091,7 @@
 						$scope.$on("$destroy", function () {
 							$scope.classifierTreeEventService.removeEventListener(classifierEvents.TREE_CHANGED_FROM_OUTSIDE, treeChangedFromOutsideId);
 							$scope.classifierTreeEventService.removeEventListener(classifierEvents.EDIT_NODE, editNodeId);
+							$scope.classifierTreeEventService.removeEventListener(classifierEvents.CANCEL_EDIT_NODE, cancelEditNodeId);
 							$scope.classifierTreeEventService.removeEventListener(classifierEvents.ADD_NODE, addNodeId);
 							$scope.classifierTreeEventService.removeEventListener(classifierEvents.DELETE_NODE, deleteNodeId);
 							$scope.classifierTreeEventService.removeEventListener(classifierEvents.EMPTY_FILTER, emptyFilterId);
