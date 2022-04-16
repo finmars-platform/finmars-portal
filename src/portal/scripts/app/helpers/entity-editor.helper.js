@@ -2259,7 +2259,7 @@
             case 20:
                 return entityAttr.value_float;
             case 30:
-                return +entityAttr.value_classifier; // The string comes from the server. Must be number/
+                return entityAttr.value_classifier; // The string comes from the server. Must be number/
             case 40:
                 return entityAttr.value_date;
             default:
