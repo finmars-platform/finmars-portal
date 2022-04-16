@@ -1,0 +1,396 @@
+/**
+ * Created by szhitenev on 15.04.2022.
+ */
+(function () {
+
+    'use strict';
+
+
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var entityResolverService = require('../../services/entityResolverService');
+
+    var unifiedDataService = require('../../services/unifiedDataService')
+    var importUnifiedDataService = require('../../services/import/importUnifiedDataService');
+
+
+    module.exports = function ($scope, $mdDialog, data) {
+
+        var vm = this;
+
+        vm.localItemsTotal = 0;
+        vm.databaseItemsTotal = 0;
+        vm.hoverItem = null;
+
+        vm.databaseItems = [];
+        vm.localItems = [];
+
+        vm.inputText = data.inputText;
+
+        vm.globalPage = 1;
+        vm.totalPages = 1;
+        vm.actionType = 'default';
+
+        vm.entityType = data.entityType;
+
+        vm.instrumentTypeOptions = [
+            {id: 'bonds', name: 'Bonds'},
+            {id: 'stocks', name: 'Stocks'}
+        ]
+
+
+        vm.clearHoverItem = function () {
+
+            setTimeout(function () {
+
+                vm.hoverItem = null
+                console.log('vm.hoverItem', vm.hoverItem)
+
+                $scope.$apply();
+            }, 0)
+
+        }
+
+        vm.setHoverItem = function ($event, option) {
+
+            setTimeout(function () {
+
+                vm.hoverItem = option
+                console.log('scope.hoverItem', vm.hoverItem)
+
+                $scope.$apply();
+            }, 0)
+        }
+
+        vm.agree = function () {
+
+
+            new Promise(function (resolve, reject) {
+
+
+                vm.localItems.forEach(function (item) {
+
+                    if (item.selected) {
+                        vm.selectedItem = item;
+                        resolve()
+                    }
+
+                })
+
+                var selectedDatabaseItem;
+
+                vm.databaseItems.forEach(function (item) {
+
+                    if (item.selected) {
+                        selectedDatabaseItem = item
+                    }
+
+                })
+
+                if (selectedDatabaseItem) {
+                    var config = {
+                        instrument_code: selectedDatabaseItem.referenceId,
+                        mode: 1
+                    };
+
+
+                    vm.isDisabled = true;
+
+                    importUnifiedDataService.download(config).then(function (data) {
+
+
+                        if (data.errors.length) {
+
+                            vm.isDisabled = false;
+
+                            vm.selectedItem = null;
+
+                            toastNotificationService.error(data.errors[0])
+
+                            $scope.$apply();
+
+                            resolve()
+
+                        } else {
+
+                            vm.selectedItem = {
+                                id: data.id,
+                                name: selectedDatabaseItem.name,
+                                user_code: selectedDatabaseItem.user_code
+                            }
+
+                            resolve()
+
+
+                        }
+
+                    })
+
+
+                }
+
+
+            }).then(function (data) {
+
+                if (vm.selectedItem) {
+
+
+                    $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem}});
+                }
+
+            })
+
+
+        };
+
+        vm.cancel = function () {
+            $mdDialog.hide({status: 'disagree'});
+        };
+
+        vm.onInputTextChange = function () {
+
+            vm.getList();
+
+        }
+
+        vm.selectLocalItem = function (item) {
+
+            vm.databaseItems = vm.databaseItems.map(function (item) {
+
+                item.selected = false;
+                return item
+            })
+
+            vm.localItems = vm.localItems.map(function (item) {
+
+                item.selected = false;
+                return item
+            })
+
+            item.selected = true;
+
+        }
+
+        vm.getHighlighted = function (value) {
+
+            var inputTextPieces = vm.inputText.split(' ')
+
+            var resultValue;
+
+            // Regular expression for multiple highlighting case insensitive results
+            var reg = new RegExp("(?![^<]+>)(" + inputTextPieces.join("|") + ")", "ig");
+
+            resultValue = value.replace(reg, '<span class="highlight">$1</span>');
+
+            return resultValue
+
+        }
+
+        vm.selectDatabaseItem = function (item) {
+
+            vm.databaseItems = vm.databaseItems.map(function (item) {
+
+                item.selected = false;
+                return item
+            })
+
+            vm.localItems = vm.localItems.map(function (item) {
+
+                item.selected = false;
+                return item
+            })
+
+            item.selected = true;
+
+        }
+
+        vm.addEntity = function ($event) {
+
+            var dialogParent = document.querySelector('.dialog-containers-wrap');
+
+            $mdDialog
+                .show({
+                    controller: "EntityViewerAddDialogController as vm",
+                    templateUrl: "views/entity-viewer/entity-viewer-add-dialog-view.html",
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    multiple: true,
+                    locals: {
+                        entityType: vm.entityType,
+                        data: {},
+                    },
+                })
+                .then(function (res) {
+                    vm.getList();
+                });
+
+        }
+
+
+        vm.loadMoreGlobalItems = function () {
+
+            vm.globalProcessing = true;
+
+            vm.globalPage = vm.globalPage + 1
+
+            unifiedDataService.getList(vm.entityType, {
+                filters: {
+                    query: vm.inputText
+                }
+            }).then(function (data) {
+
+                vm.globalProcessing = false;
+
+                vm.databaseItemsTotal = data.count;
+
+                vm.databaseItems = data.results;
+
+
+                resolve()
+
+                vm.totalPages = Math.round(data.count / 40)
+
+                $scope.$apply();
+
+            }).catch(function (error) {
+
+                vm.globalProcessing = false;
+
+                console.log("Database error occurred", error)
+
+                $scope.$apply();
+
+            })
+
+        }
+
+        vm.getList = function () {
+
+            vm.processing = true;
+
+            var promises = []
+
+            if (vm.inputText.length > 2) {
+
+                promises.push(new Promise(function (resolve, reject) {
+
+                    unifiedDataService.getList(vm.entityType, {
+                        filters: {
+                            query: vm.inputText
+                        }
+                    }).then(function (data) {
+
+                        vm.databaseItemsTotal = data.count;
+
+                        vm.databaseItems = data.results;
+
+
+                        resolve()
+
+                        vm.totalPages = Math.round(data.count / 40)
+
+                    }).catch(function (error) {
+
+                        console.log("Database error occurred", error)
+
+                        vm.databaseItems = []
+
+                        resolve()
+
+                    })
+
+                }))
+
+            }
+
+            promises.push(new Promise(function (resolve, reject) {
+
+
+                entityResolverService.getListLight(vm.entityType, {
+                    pageSize: 500,
+                    filters: {
+                        user_code: vm.inputText
+                    }
+                }).then(function (data) {
+
+                    vm.localItemsTotal = data.count;
+
+                    vm.localItems = data.results;
+
+                    vm.localItems = vm.localItems.map(function (item) {
+
+                        item.pretty_date = moment(item.modified).format("DD.MM.YYYY")
+
+                        return item;
+
+                    })
+
+                    resolve()
+
+
+                })
+
+            }))
+
+            Promise.all(promises).then(function (data) {
+
+                vm.databaseItems = vm.databaseItems.filter(function (databaseItem) {
+
+                    var exist = false;
+
+                    vm.localItems.forEach(function (localItem) {
+
+                        if (localItem.user_code === databaseItem.referenceId) {
+                            exist = true
+                        }
+
+                        if (localItem.reference_for_pricing === databaseItem.referenceId) {
+                            exist = true
+                        }
+
+
+                    })
+
+                    return !exist;
+
+                })
+
+                vm.processing = false;
+
+                $scope.$apply();
+
+                setTimeout(function () {
+
+                    $('.instrument-select-options-group-title').on('click', function () {
+
+                        $(this).next()[0].scrollIntoView({block: 'start', behavior: 'smooth'});
+                    });
+
+                }, 100)
+
+            })
+
+
+        }
+
+        vm.init = function () {
+
+            vm.getList();
+
+            if (data.context) {
+
+                if (data.context.action) {
+
+                    vm.actionType = data.context.action;
+
+                }
+
+            }
+
+        }
+
+
+        vm.init();
+
+    };
+
+}());
