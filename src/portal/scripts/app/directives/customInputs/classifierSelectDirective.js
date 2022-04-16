@@ -23,6 +23,7 @@
                 classifierAttr: '=',
                 classifierValue: '=',
                 entityType: '=',
+                valueProperty: '=',
 				// < Victor 2020.10.23 Next fields setting up classifiers properties >
 				onChangeCallback: '&?',
             },
@@ -34,6 +35,10 @@
                 scope.dropdownMenuHidden = false;
                 scope.dropdownMenuFilter = '';
                 scope.menuOptions = [];
+
+                if (!scope.valueProperty) {
+                    scope.valueProperty = 'id'
+                }
 
                 if (scope.itemName) { // itemName and inputText needed for resetting selected option name
                     scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
@@ -97,12 +102,12 @@
 
                 scope.selectOption = function (item) {
 
-                    if (item.id !== scope.model) {
+                    if (item[scope.valueProperty] !== scope.model) {
 
                         stylePreset = '';
                         scope.error = '';
 
-                        scope.model = item.id;
+                        scope.model = item[scope.valueProperty];
                         scope.valueIsValid = true;
 
                         if (typeof scope.itemName !== 'undefined') {

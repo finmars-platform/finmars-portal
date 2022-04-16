@@ -221,7 +221,7 @@
                         } else {
 
                             scope.model = data.id;
-                            scope.itemObject = {id: data.id, name: item.mame, user_code: item.user_code}
+                            scope.itemObject = {id: data.id, name: item.name, user_code: item.user_code}
 
                             scope.processing = false;
 
@@ -264,6 +264,51 @@
                     }
 
                 }
+
+                scope.openSelectorDialog = function ($event) {
+
+                    closeDropdownMenu();
+                    // Victor 2020.11.09 If body is parent, then modal window under popup
+                    // var dialogParent = angular.element(document.body);
+                    var dialogParent = document.querySelector('.dialog-containers-wrap');
+
+                    if (scope.dialogParent) {
+
+                        var dialogParentElem = document.querySelector(scope.dialogParent);
+
+                        if (dialogParentElem) {
+                            dialogParent = dialogParentElem
+                        }
+
+                    }
+
+                    $mdDialog.show({
+                        controller: "UnifiedSelectDatabaseDialogController as vm",
+                        templateUrl: "views/dialogs/unified-select-database-dialog-view.html",
+                        targetEvent: $event,
+                        parent: dialogParent,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                inputText: scope.inputText,
+                                entityType: scope.entityType
+                            }
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            scope.model = res.data.item.id;
+                            scope.itemObject = res.data.item;
+
+                            scope.itemName = res.data.item.name;
+                            scope.inputText = res.data.item.name;
+                        }
+
+                    })
+
+                };
 
                 var closeDropdownMenu = function (updateScope) {
 
