@@ -204,6 +204,7 @@ export default (function () {
 
 
 	portal.controller('InstrumentSelectDatabaseDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/instrumentSelectDatabaseDialogController')]);
+	portal.controller('UnifiedSelectDatabaseDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/unifiedSelectDatabaseDialogController')]);
 
 
 
