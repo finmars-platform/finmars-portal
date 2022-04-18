@@ -20,7 +20,18 @@
             path = 'company'
         }
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/udp/data/' + path + '/', options),
+        if (entityType === 'currency') {
+            return new Promise(function (resolve) {
+
+                resolve({
+                    count: 0,
+                    results: []
+                })
+            })
+
+        }
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(   baseUrl  +  '/udp/data/' + path + '/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -59,7 +70,7 @@
 
     var getConfigurationPackageFile = function (id) {
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/udp/data/configuration-package/' + id + '/view/', {}),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/udp/data//configuration-package/' + id + '/view/', {}),
             {
                 method: 'GET',
                 credentials: 'include',
