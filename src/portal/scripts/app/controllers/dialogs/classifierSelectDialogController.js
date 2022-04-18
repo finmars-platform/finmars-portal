@@ -10,7 +10,7 @@
 	var classifierEvents = require('../../services/events/classifierEvents');
     const metaHelper = require('../../helpers/meta.helper');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, commonDialogsService, data) {
 
         var vm = this;
 
@@ -676,12 +676,28 @@
 
 		vm.sortTreeAlphabetically = function () {
 
-			vm.tree = sortNodesAlphabetically(vm.tree);
+			clearTimeout(treeChangeTimeoutId); // prevent classifier update if order of nodes changed
 
-			updateClassifier().then(function () {
-				// without this, html of classifier tree does not update after sorting
-				$scope.$apply();
-			});
+			commonDialogsService.warning({
+				warning: {
+					title: 'Warning',
+					description: 'Are you sure want to sort whole tree alphabetically?',
+				}
+
+			}).then(function (res) {
+
+				if (res.status === 'agree') {
+
+					vm.tree = sortNodesAlphabetically(vm.tree);
+
+					updateClassifier().then(function () {
+						// without this, html of classifier tree does not update after sorting
+						$scope.$apply();
+					});
+
+				}
+
+			})
 
 		};
 
