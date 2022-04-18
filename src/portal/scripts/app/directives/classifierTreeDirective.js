@@ -644,6 +644,11 @@
 					// vm.filteredTree = removeNode(activeNode);
 					removeNode(activeNode);
 
+					const parents = getAllParentsOfNode(vm.filteredTree, activeNode);
+					parents.forEach(node => {
+						node.frontOptions.hasActiveChild = false;
+					});
+
 					activeNode = null;
 
 					$scope.classifierTreeEventService.dispatchEvent(classifierEvents.CLASSIFIER_TREE_CHANGED, {action: 'delete'});

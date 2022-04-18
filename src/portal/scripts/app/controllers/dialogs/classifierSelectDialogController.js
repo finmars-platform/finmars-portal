@@ -306,24 +306,20 @@
 				vm.classifierTreeEventService.dispatchEvent(classifierEvents.EDIT_NODE);
 			}*/
 
-			if (vm.favoritesList.length) {
+			const activeFavNode = vm.favoritesList.find(favNode => favNode.isActive);
 
-				const activeFavNode = vm.favoritesList.find(favNode => favNode.isActive);
+			if (activeFavNode) {
 
-				if (activeFavNode) {
+				activeFavNode.editOn = true;
 
-					activeFavNode.editOn = true;
+				activeFavNode.newName = activeFavNode.name;
+				const nameInput = document.querySelector(".classifier-select-dialog-view .fav-node-row.active .classifier-name");
 
-					activeFavNode.newName = activeFavNode.name;
-					const nameInput = document.querySelector(".classifier-select-dialog-view .fav-node-row.active .classifier-name");
+				if (vm.showFavorites) {
 
-					if (vm.showFavorites) {
-
-						setTimeout(() => {
-							nameInput.focus();
-						}, 0);
-
-					}
+					setTimeout(() => {
+						nameInput.focus();
+					}, 0);
 
 				}
 
@@ -612,7 +608,9 @@
 				attributeTypeService.update(vm.entityType, vm.classifierId, vm.classifier).then(function (data) {
 
 					vm.activeNodes = [];
-					/* // vm.readyStatus changes to true by getClassifierData()
+					/*
+
+					// vm.readyStatus changes to true by getClassifierData()
 					getClassifierData(classifierBeforeUpdate).then(() => {
 						res();
 
@@ -633,7 +631,7 @@
 
         };
 
-        vm.toggleNodeSelection = function (favNode) {
+        /* vm.toggleNodeSelection = function (favNode) {
 
 			if (!favNode.isActive) { // if making node selected
 				vm.favoritesList.forEach(node => node.isActive = false);
@@ -648,7 +646,7 @@
 
 			vm.activeNodes.push(activeNode);
 
-		};
+		}; */
 
         const sortNodesA = (a,b) => {
 			if (a.name.toLowerCase() > b.name.toLowerCase()) {
