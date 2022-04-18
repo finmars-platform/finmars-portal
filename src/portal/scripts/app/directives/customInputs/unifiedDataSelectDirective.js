@@ -244,9 +244,6 @@
 
                 scope.onInputTextChange = function () {
                     // scope.dropdownMenuFilter = scope.inputText;
-
-                    scope.selectedItem = null;
-
                     scope.getList();
 
                 };
@@ -261,6 +258,9 @@
                         scope.model = null;
                         scope.inputText = '';
                         scope.itemName = '';
+                    } else {
+                        scope.inputText = scope.selectedItem.name
+                        scope.itemName = scope.selectedItem.name
                     }
 
                 }
@@ -548,6 +548,9 @@
                     if (scope.customStyles) {
                         applyCustomStyles();
                     }
+
+                    scope.selectedItem = {id: scope.model, name: scope.itemName, user_code: scope.itemName}
+
                 };
 
                 init();
