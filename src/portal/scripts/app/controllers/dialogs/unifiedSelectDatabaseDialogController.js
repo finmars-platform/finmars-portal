@@ -211,11 +211,12 @@
                 .show({
                     controller: "EntityViewerAddDialogController as vm",
                     templateUrl: "views/entity-viewer/entity-viewer-add-dialog-view.html",
-                    parent: angular.element(document.body),
+                    parent: dialogParent,
                     targetEvent: $event,
                     multiple: true,
                     locals: {
                         entityType: vm.entityType,
+                        entity: {},
                         data: {},
                     },
                 })
@@ -232,34 +233,45 @@
 
             vm.globalPage = vm.globalPage + 1
 
-            unifiedDataService.getList(vm.entityType, {
-                filters: {
-                    query: vm.inputText
-                }
-            }).then(function (data) {
+            try {
+
+                unifiedDataService.getList(vm.entityType, {
+                    filters: {
+                        query: vm.inputText
+                    }
+                }).then(function (data) {
+
+                    vm.globalProcessing = false;
+
+                    vm.databaseItemsTotal = data.count;
+
+                    vm.databaseItems = data.results;
+
+
+                    resolve()
+
+                    vm.totalPages = Math.round(data.count / 40)
+
+                    $scope.$apply();
+
+                }).catch(function (error) {
+
+                    vm.globalProcessing = false;
+
+                    vm.databaseItems = []
+
+                    console.log("Database error occurred", error)
+
+                    $scope.$apply();
+
+                })
+
+            } catch (e) {
 
                 vm.globalProcessing = false;
 
-                vm.databaseItemsTotal = data.count;
-
-                vm.databaseItems = data.results;
-
-
-                resolve()
-
-                vm.totalPages = Math.round(data.count / 40)
-
-                $scope.$apply();
-
-            }).catch(function (error) {
-
-                vm.globalProcessing = false;
-
-                console.log("Database error occurred", error)
-
-                $scope.$apply();
-
-            })
+                vm.databaseItems = []
+            }
 
         }
 
@@ -282,7 +294,6 @@
                         vm.databaseItemsTotal = data.count;
 
                         vm.databaseItems = data.results;
-
 
                         resolve()
 
@@ -331,7 +342,7 @@
 
             }))
 
-            Promise.all(promises).then(function (data) {
+            Promise.allSettled(promises).then(function (data) {
 
                 vm.databaseItems = vm.databaseItems.filter(function (databaseItem) {
 
