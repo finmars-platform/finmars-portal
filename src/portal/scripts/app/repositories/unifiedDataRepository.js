@@ -31,7 +31,7 @@
 
         }
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(   'https://finmars.com/udp/data/' + path + '/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(   baseUrl  +  '/udp/data/' + path + '/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -44,7 +44,7 @@
 
     var getConfigurationPackageGroupList = function (options) {
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl('https://finmars.com/udp/data/configuration-package-group/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/udp/data/configuration-package-group/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -57,7 +57,7 @@
 
     var getConfigurationPackageList = function (options) {
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl('https://finmars.com/udp/data/configuration-package/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/udp/data/configuration-package/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -70,7 +70,7 @@
 
     var getConfigurationPackageFile = function (id) {
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl('https://finmars.com/udp/data/configuration-package/' + id + '/view/', {}),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/udp/data//configuration-package/' + id + '/view/', {}),
             {
                 method: 'GET',
                 credentials: 'include',
