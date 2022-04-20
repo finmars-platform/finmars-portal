@@ -1298,151 +1298,31 @@
 
         };
 
-        vm.saveAndApplyPermissionsToInstrumentsByGroup = function ($event, group) {
-
-            vm.updateItem().then(function (value) {
-
-                entityResolverService.getList('instrument', {pageSize: 1000}).then(function (data) {
-
-                    var has_view = group.objectPermissions.view;
-                    var has_change = group.objectPermissions.change;
-                    var has_manage = group.objectPermissions.manage;
-
-                    var instrumentsWithPermissions = data.results.map(function (item) {
-
-                        var permissions = item.object_permissions.filter(function (perm) {
-                            return perm.group !== group.id
-                        });
-
-                        if (has_view) {
-                            permissions.push({
-                                group: group.id,
-                                member: null,
-                                permission: 'view_instrument'
-                            });
-                        }
-
-                        if (has_change) {
-                            permissions.push({
-                                group: group.id,
-                                member: null,
-                                permission: 'change_instrument'
-                            });
-                        }
-
-                        if (has_manage) {
-                            permissions.push({
-                                group: group.id,
-                                member: null,
-                                permission: 'manage_instrument'
-                            });
-                        }
-
-                        return {
-                            id: item.id,
-                            object_permissions: permissions
-                        }
-
-                    });
-
-                    entityResolverService.updateBulk('instrument', instrumentsWithPermissions).then(function () {
-
-                        $mdDialog.show({
-                            controller: 'InfoDialogController as vm',
-                            templateUrl: 'views/info-dialog-view.html',
-                            parent: angular.element(document.body),
-                            targetEvent: $event,
-                            clickOutsideToClose: false,
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            multiple: true,
-                            locals: {
-                                info: {
-                                    title: 'Success',
-                                    description: "Instrument Permissions successfully updated"
-                                }
-                            }
-                        });
-
-                    });
-
-                });
-
-            });
-
-        };
-
+        vm.saveAndApplyPermissionsToInstrumentsByGroup = vm.sharedLogic.saveAndApplyPermissionsToInstrumentsByGroup;
+		/** Used inside "PRICING" tab of edit currency form */
         vm.editPricingScheme = function ($event, item) {
 
-            if (vm.entityType === 'currency') {
+			$mdDialog.show({
+				controller: 'CurrencyPricingSchemeEditDialogController as vm',
+				templateUrl: 'views/dialogs/pricing/currency-pricing-scheme-edit-dialog-view.html',
+				parent: angular.element(document.body),
+				targetEvent: $event,
+				clickOutsideToClose: false,
+				preserveScope: true,
+				autoWrap: true,
+				skipHide: true,
+				multiple: true,
+				locals: {
+					data: {
+						item: item
+					}
 
-                $mdDialog.show({
-                    controller: 'CurrencyPricingSchemeEditDialogController as vm',
-                    templateUrl: 'views/dialogs/pricing/currency-pricing-scheme-edit-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        data: {
-                            item: item
-                        }
-
-                    }
-                }).then(function (res) {
-
-                    if (res.status === 'agree') {
-                        // Do what?
-                    }
-
-                })
-
-            } else {
-
-                $mdDialog.show({
-                    controller: 'InstrumentPricingSchemeEditDialogController as vm',
-                    templateUrl: 'views/dialogs/pricing/instrument-pricing-scheme-edit-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        data: {
-                            item: item
-                        }
-
-                    }
-                }).then(function (res) {
-
-                    if (res.status === 'agree') {
-                        // Do what?
-                    }
-
-                })
-
-            }
+				}
+			})
 
         };
 
-        vm.switchPricingPolicyParameter = function ($event, item) {
-
-            if (item.switchState === 'default_value') {
-                item.switchState = 'attribute_key'
-            } else {
-                item.switchState = 'default_value'
-            }
-
-            item.default_value = null;
-            item.attribute_key = null;
-
-        };
+        vm.switchPricingPolicyParameter = vm.sharedLogic.switchPricingPolicyParameter;
 
         vm.generateCurrencyAttributeTypesByValueTypes = function () {
 
