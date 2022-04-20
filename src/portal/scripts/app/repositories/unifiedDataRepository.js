@@ -70,7 +70,7 @@
 
     var getConfigurationPackageFile = function (id) {
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/udp/data//configuration-package/' + id + '/view/', {}),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/udp/data/configuration-package/' + id + '/view/', {}),
             {
                 method: 'GET',
                 credentials: 'include',
