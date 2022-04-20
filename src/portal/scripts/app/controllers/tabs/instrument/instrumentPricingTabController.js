@@ -7,6 +7,7 @@
 
     const instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
     const attributeTypeService = require('../../../services/attributeTypeService');
+	const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
 
     const GridTableDataService = require('../../../services/gridTableDataService');
     const GridTableEventService = require('../../../services/gridTableEventService');
@@ -102,7 +103,7 @@
 
 		};
 
-        vm.pricingPoliciesGridTableData = {
+        const pricingPoliciesGridTableData = {
             header: {
                 order: 'header',
                 columns: []
@@ -309,6 +310,8 @@
 
         var formatDataForPricingGridTable = function () {
 
+			vm.pricingPoliciesGridTableData = JSON.parse(JSON.stringify(pricingPoliciesGridTableData));
+
 			//region assemble header columns
             var rowObj = metaHelper.recursiveDeepCopy(vm.pricingPoliciesGridTableData.templateRow, true);
 
@@ -318,7 +321,7 @@
                     key: column.key,
                     columnName: column.columnName,
                     order: column.order,
-                    sorting: true,
+                    sorting: column.key !== 'multiple_parameters',
                     styles: {
                         'grid-table-cell-elem': {'width': column.styles['grid-table-cell-elem'].width}
                     },
@@ -338,7 +341,15 @@
 				policy.order = policyIndex;
 
             	rowObj = metaHelper.recursiveDeepCopy(vm.pricingPoliciesGridTableData.templateRow, true);
-                rowObj.key = policy.id;
+
+            	/* var rowKey = policy.id;
+
+            	if (!rowKey && rowKey !== 0) {
+					rowKey = metaHelper.generateUniqueId(policyIndex);
+				} */
+
+				// using user_code of pricing policy helps with row's mapping after change of instrument type
+                rowObj.key = policy.pricing_policy_object.user_code;
                 rowObj.order = policy.order;
 
                 const pricingPolicyCell = gridTableHelperService.getCellFromRowByKey(rowObj, 'pricing_policy');
@@ -388,6 +399,8 @@
 
             });
 			//endregion assemble body rows
+
+			return vm.pricingPoliciesGridTableData;
 
         };
 		//endregion Pricing policies grid table
@@ -624,6 +637,15 @@
             vm.attributeTypes = data.results;
         });
 
+		const entityUpdateId = vm.evEditorEventService.addEventListener(evEditorEvents.ENTITY_UPDATED, function () {
+
+			vm.pricingPoliciesGridTableData = formatDataForPricingGridTable();
+			vm.pricingPoliciesGridTableDataService.setTableData(vm.pricingPoliciesGridTableData);
+
+			vm.pricingPoliciesGridTableEventService.dispatchEvent(gridTableEvents.REDRAW_TABLE);
+
+		});
+
         vm.init = function () {
 
         	vm.pricingPoliciesGridTableDataService = new GridTableDataService();
@@ -634,7 +656,7 @@
             Promise.all([getInstrumentPricingSchemes, getAttributeTypes]).then(function () {
 
 				generateInstrumentAttributeTypesByValueTypes();
-            	formatDataForPricingGridTable();
+				vm.pricingPoliciesGridTableData = formatDataForPricingGridTable();
 
 				vm.pricingPoliciesGridTableDataService.setTableData(vm.pricingPoliciesGridTableData);
 				vm.readyStatus = true;
@@ -644,6 +666,10 @@
         };
 
         vm.init();
+
+        $scope.$on('$destroy', function () {
+			vm.evEditorEventService.removeEventListener(evEditorEvents.ENTITY_UPDATED, entityUpdateId);
+		});
 
     }
 

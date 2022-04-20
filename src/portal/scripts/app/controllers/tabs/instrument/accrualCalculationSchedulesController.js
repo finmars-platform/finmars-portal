@@ -748,12 +748,12 @@
 				});
 
 				schedulesTableChangedHere = true;
-				vm.evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: 'accrual_calculation_schedules'});
+				vm.evEditorEventService.dispatchEvent(evEditorEvents.TABLE_INSTANCE_CHANGED, {key: 'accrual_calculation_schedules'});
 
 			});
 			//</editor-fold>
 
-			vm.evEditorEventService.addEventListener(evEditorEvents.TABLE_CHANGED, argObj => {
+			vm.evEditorEventService.addEventListener(evEditorEvents.TABLE_INSTANCE_CHANGED, argObj => {
 
 				if (argObj && argObj.key === 'accrual_calculation_schedules' && !schedulesTableChangedHere) {
 

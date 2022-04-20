@@ -36,7 +36,6 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog) {
 	// Methods below are located one level above because of currency entity viewer
 	vm.pricingSchemeChange = $scope.$parent.vm.pricingSchemeChange;
 	vm.switchPricingPolicyParameter = $scope.$parent.vm.switchPricingPolicyParameter;
-	vm.editPricingScheme = $scope.$parent.vm.editPricingScheme;
 
 	vm.contextData = $scope.$parent.vm.contextData;
 	vm.entityAttrs = $scope.$parent.vm.entityAttrs;
@@ -45,6 +44,28 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog) {
 	vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
 	vm.entityChange = $scope.$parent.vm.entityChange;
 	//endregion
+
+	vm.editPricingScheme = function ($event, item) {
+
+		$mdDialog.show({
+			controller: 'InstrumentPricingSchemeEditDialogController as vm',
+			templateUrl: 'views/dialogs/pricing/instrument-pricing-scheme-edit-dialog-view.html',
+			parent: angular.element(document.body),
+			targetEvent: $event,
+			clickOutsideToClose: false,
+			preserveScope: true,
+			autoWrap: true,
+			skipHide: true,
+			multiple: true,
+			locals: {
+				data: {
+					item: item
+				}
+
+			}
+		});
+
+	};
 
 	vm.openPricingMultipleParametersDialog = function (pricingPolicy) {
 		pricingPolicyService.openPricingMultipleParametersDialog($mdDialog, pricingPolicy, vm.entityType, vm.attributeTypes);

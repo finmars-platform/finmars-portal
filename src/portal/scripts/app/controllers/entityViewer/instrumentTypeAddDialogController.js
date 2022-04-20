@@ -67,6 +67,7 @@
 
         if (Object.keys(entity).length) { // make copy option
             vm.entity = entity;
+            delete vm.entity.id; // lack of id indicates creation of entity
         }
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
@@ -808,6 +809,9 @@
             }
 
         };*/
+
+		vm.saveAndApplyPermissionsToInstrumentsByGroup = sharedLogic.saveAndApplyPermissionsToInstrumentsByGroup;
+		vm.switchPricingPolicyParameter = sharedLogic.switchPricingPolicyParameter;
 
         vm.save = async function ($event, isAutoExitAfterSave) {
 

@@ -574,7 +574,7 @@
 					});
 
 					thisTableChanged = true;
-					bfcVm.evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: tableKey});
+					bfcVm.evEditorEventService.dispatchEvent(evEditorEvents.TABLE_INSTANCE_CHANGED, {key: tableKey});
 
 					scope.$apply();
 
@@ -1090,7 +1090,7 @@
 						instrumentService.onGtRowDeletion(argObj, scope.entity, bfcVm.evEditorEventService, tableKey);
 					});
 
-					bfcVm.evEditorEventService.addEventListener(evEditorEvents.TABLE_CHANGED, argObj => {
+					bfcVm.evEditorEventService.addEventListener(evEditorEvents.TABLE_INSTANCE_CHANGED, argObj => {
 
 						if (argObj && argObj.key === tableKey && !thisTableChanged) {
 
