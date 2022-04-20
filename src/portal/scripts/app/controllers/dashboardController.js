@@ -183,7 +183,6 @@
                 vm.dashboardDataService.setProjection(vm.projection);
 
 
-
                 vm.initDashboardComponents();
 
                 $scope.$apply();
@@ -444,7 +443,11 @@
 
             vm.dashboardDataService.setActiveTab(tab)
 
-            vm.dashboardEventService.dispatchEvent(dashboardEvents.RESIZE)
+            // vm.dashboardEventService.dispatchEvent(dashboardEvents.RESIZE)
+            setTimeout(function () {
+                vm.dashboardEventService.dispatchEvent(dashboardEvents.RESIZE)
+                window.dispatchEvent(new Event('resize'));
+            }, 0)
         };
 
         vm.updateLayoutOnComponentChange = function (tabNumber, rowNumber, socketData) {

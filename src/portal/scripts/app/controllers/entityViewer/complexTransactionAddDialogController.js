@@ -56,7 +56,7 @@
 
         vm.contextData = null; // data source when we book from report
 
-        vm.entityTabs = metaService.getEntityTabs(vm.entityType);
+        vm.entityTabs = []
 
         vm.transactionTypeId = null;
 

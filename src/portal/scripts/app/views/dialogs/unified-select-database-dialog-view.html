@@ -1,0 +1,266 @@
+<md-dialog aria-label="" ng-cloak class="unified-data-select-database-dialog-view">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Results</h2>
+            <span flex></span>
+        </div>
+
+
+            <span class="material-icons unified-data-select-database-dialog-view-close-button" ng-click="vm.cancel()">close</span>
+
+    </md-toolbar>
+    <md-dialog-content>
+
+        <div>
+
+            <div layout="row">
+
+                <div style="width: 383px; padding-left: 20px;">
+                    <text-input
+                            on-change-callback="vm.onInputTextChange()"
+                            placeholder-text="Search"
+                            model="vm.inputText"
+                            class="m-r-8"></text-input>
+                </div>
+
+            </div>
+
+            <div class="unified-data-select-database-dialog-table-head">
+
+                <div style="width: 50%; padding: 5px;">
+                    Name
+                </div>
+
+                <div style="width: 30%; padding: 5px;">
+                     Code
+                </div>
+
+
+            </div>
+
+            <div class="unified-data-select-database-dialog-table-body">
+
+                <div data-ng-if="!vm.processing" style="height: 359px; overflow-y: auto">
+
+                    <b data-ng-if="vm.localItems.length" class="unified-data-select-options-group-title">Local Records
+                        ({{vm.localItemsTotal}})</b>
+
+                    <div data-ng-if="vm.localItems.length">
+
+                        <div
+                                data-ng-repeat="option in vm.localItems"
+                                data-ng-click="vm.selectLocalItem(option)"
+                                class="unified-data-select-database-dialog-instrument-row {{option.selected ? 'active' : ''}}"
+                                ng-mouseover="vm.setHoverItem($event, option)"
+
+                        >
+
+                            <div class="unified-data-select-instrument-name" title="{{option.name}}" ng-bind-html="vm.getHighlighted(option.name)">
+
+                            </div>
+                            <div class="unified-data-select-instrument-isin" title="{{option.user_code}}" ng-bind-html="vm.getHighlighted(option.user_code)">
+
+                            </div>
+
+                            <div class="unified-data-select-instrument-type"
+                                 title="{{option.instrument_type_object.name}}">
+                                {{option.instrument_type_object.name}}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <b data-ng-if="vm.databaseItems.length" style=" bottom: 0px;"  class="unified-data-select-options-group-title">Global Records
+                        ({{vm.databaseItemsTtotal}})</b>
+
+                    <div data-ng-if="vm.databaseItems.length">
+
+                        <div
+                                data-ng-repeat="option in vm.databaseItems"
+                                data-ng-click="vm.selectDatabaseItem(option)"
+                                class="unified-data-select-database-dialog-instrument-row {{option.selected ? 'active' : ''}}"
+                                ng-mouseover="vm.setHoverItem($event, option)"
+                        >
+
+
+                            <div class="unified-data-select-instrument-name" title="{{option.issueName}}" ng-bind-html="vm.getHighlighted(option.issueName)">
+
+                            </div>
+
+                            <div class="unified-data-select-instrument-isin" title="{{option.referenceId}}" ng-bind-html="vm.getHighlighted(option.referenceId)">
+
+                            </div>
+
+
+                        </div>
+
+                        <button class="control-button load-more {{vm.globalProcessing ? 'disabled-btn' : ''}}" data-ng-if="vm.globalPage < vm.totalPages" data-ng-click="vm.loadMoreGlobalItems($event)">Load more</button>
+
+                    </div>
+
+                    <div data-ng-if="!vm.localItems.length && !vm.databaseItems.length">
+                        <b class="unified-data-select-options-group-title">Not records found</b>
+                    </div>
+
+                </div>
+
+
+                <div data-ng-if="vm.processing" layout="row" layout-sm="column" layout-align="space-around" class="p-8">
+                    <progress-circular diameter="50"></progress-circular>
+                </div>
+
+            </div>
+
+<!--            <div class="unified-data-select-database-dialog-instrument-detail">-->
+
+<!--                <div class="unified-data-select-option-detail-box" data-ng-if="vm.inputText.length > 2">-->
+
+<!--                    <div data-ng-if="vm.hoverItem">-->
+
+<!--                        <div data-ng-if="vm.hoverItem.id" class="unified-data-select-update-instrument-button">-->
+<!--                            <span class="material-icons  {{vm.isUpdatingInstrument ? 'disabled-btn' : ''}}" ng-click="vm.updateLocalInstrument(vm.hoverItem)">autorenew</span>-->
+<!--                        </div>-->
+
+<!--                        <div class="unified-data-select-option-detail-field">-->
+
+<!--                            <div class="unified-data-select-option-detail-label">-->
+<!--                                Instrument-->
+<!--                            </div>-->
+<!--                            <div class="unified-data-select-option-detail-value" style="width: 140px">-->
+
+<!--                                <span data-ng-if="vm.hoverItem.id">{{vm.hoverItem.name}}</span>-->
+<!--                                <span data-ng-if="!vm.hoverItem.id">{{vm.hoverItem.issueName}}</span>-->
+
+<!--                            </div>-->
+
+<!--                        </div>-->
+
+<!--                        <div class="unified-data-select-option-detail-field">-->
+
+<!--                            <div class="unified-data-select-option-detail-label">-->
+<!--                                ISIN-->
+<!--                            </div>-->
+<!--                            <div class="unified-data-select-option-detail-value">-->
+
+<!--                                <span data-ng-if="vm.hoverItem.id">{{vm.hoverItem.user_code}}</span>-->
+<!--                                <span data-ng-if="!vm.hoverItem.id">{{vm.hoverItem.referenceId}}</span>-->
+
+<!--                            </div>-->
+
+<!--                        </div>-->
+
+<!--                        <div class="unified-data-select-option-detail-field">-->
+
+<!--                            <div class="unified-data-select-option-detail-label">-->
+<!--                                Ticker-->
+<!--                            </div>-->
+<!--                            <div class="unified-data-select-option-detail-value">-->
+
+<!--                                <span data-ng-if="vm.hoverItem.id">{{vm.hoverItem.reference_for_pricing}}</span>-->
+<!--                                <span data-ng-if="!vm.hoverItem.id">{{vm.hoverItem.bloombergTicker}}</span>-->
+
+<!--                            </div>-->
+
+<!--                        </div>-->
+
+<!--                        <div class="unified-data-select-option-detail-field">-->
+
+<!--                            <div class="unified-data-select-option-detail-label">-->
+<!--                                Type-->
+<!--                            </div>-->
+<!--                            <div class="unified-data-select-option-detail-value">-->
+
+<!--                                <span data-ng-if="vm.hoverItem.id">{{vm.hoverItem.instrument_type_object.name}}</span>-->
+<!--                                <span data-ng-if="!vm.hoverItem.id">{{vm.hoverItem.instrumentType}}</span>-->
+
+<!--                            </div>-->
+
+<!--                        </div>-->
+
+<!--                        <div class="unified-data-select-option-detail-field">-->
+
+<!--                            <div class="unified-data-select-option-detail-label">-->
+<!--                                FIGI / FIGI RegS-->
+<!--                            </div>-->
+<!--                            <div class="unified-data-select-option-detail-value">-->
+
+<!--                                <span data-ng-if="vm.hoverItem.id">-</span>-->
+<!--                                <span data-ng-if="!vm.hoverItem.id">{{vm.hoverItem.figi}}</span>-->
+
+<!--                            </div>-->
+
+<!--                        </div>-->
+
+<!--                        <div class="unified-data-select-option-detail-field">-->
+
+<!--                            <div class="unified-data-select-option-detail-label">-->
+<!--                                Common Code-->
+<!--                            </div>-->
+<!--                            <div class="unified-data-select-option-detail-value">-->
+
+<!--                                <span data-ng-if="vm.hoverItem.id">-</span>-->
+<!--                                <span data-ng-if="!vm.hoverItem.id">{{vm.hoverItem.commonCode}}</span>-->
+
+<!--                            </div>-->
+
+<!--                        </div>-->
+
+<!--                        <div class="unified-data-select-option-detail-field">-->
+
+<!--                            <div class="unified-data-select-option-detail-label">-->
+<!--                                Updating Date-->
+<!--                            </div>-->
+<!--                            <div class="unified-data-select-option-detail-value">-->
+
+<!--                                <span data-ng-if="vm.hoverItem.id">{{vm.hoverItem.pretty_date}}</span>-->
+<!--                                <span data-ng-if="!vm.hoverItem.id">{{vm.hoverItem.pretty_date}}</span>-->
+
+<!--                            </div>-->
+
+<!--                        </div>-->
+
+<!--                        <div class="unified-data-select-option-detail-field">-->
+
+<!--                            <div class="unified-data-select-option-detail-label">-->
+<!--                                WKN Code-->
+<!--                            </div>-->
+<!--                            <div class="unified-data-select-option-detail-value">-->
+
+<!--                                <span data-ng-if="vm.hoverItem.id">-</span>-->
+<!--                                <span data-ng-if="!vm.hoverItem.id">{{vm.hoverItem.wkn}}</span>-->
+
+<!--                            </div>-->
+
+<!--                        </div>-->
+
+
+<!--                    </div>-->
+
+<!--                </div>-->
+
+<!--            </div>-->
+
+
+        </div>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+
+        <div class="unified-data-select-database-footer">
+
+            <span class="material-icons" data-ng-click="vm.unlock = true" data-ng-if="!vm.unlock">lock</span>
+
+            <span class="material-icons" data-ng-if="vm.unlock" data-ng-click="vm.addEntity($event)">add</span>
+
+        </div>
+
+        <md-button class="link-button md-button md-ink-ripple" ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+        <md-button class="link-button md-button md-ink-ripple {{vm.isDisabled ? 'disabled-btn' : ''}}"
+                   ng-click="vm.agree()" style="margin-right:20px;">
+            <span data-ng-if="vm.actionType == 'default'">Select</span>
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

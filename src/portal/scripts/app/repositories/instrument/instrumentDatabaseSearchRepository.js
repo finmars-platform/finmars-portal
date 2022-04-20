@@ -17,6 +17,10 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
+        if (page === null || page === undefined) {
+            page = 0
+        }
+
         var instrumentDatabaseUrl = baseUrl + '/' + prefix + '/api/'  + 'instruments/instrument-database-search/?name=' + name + '&page=' + page
 
         if (instrument_type) {
