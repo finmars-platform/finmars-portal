@@ -16,7 +16,7 @@
                 label: '@',
                 placeholderText: '@',
                 model: '=',
-				customButtons: '=',
+                customButtons: '=',
                 customStyles: '=',
                 eventSignal: '=',
                 smallOptions: '=',
@@ -92,6 +92,28 @@
                     setTimeout(function () {
 
                         scope.hoverInstrument = option
+
+                        scope.hoverInstrument.available_for_update = true;
+
+                        if (scope.hoverInstrument.id) {
+                            if (scope.hoverInstrument.instrument_type_object.user_code === 'bonds' || scope.hoverInstrument.instrument_type_object.user_code === 'stocks') {
+
+                                let regexp = /^([A-Z]{2})([A-Z0-9]{9})([0-9]{1})/g
+
+                                let result = scope.hoverInstrument.user_code.match(regexp)
+
+                                if (!result) {
+                                    scope.hoverInstrument.available_for_update = false;
+                                }
+
+                            } else {
+                                scope.hoverInstrument.available_for_update = false;
+                            }
+                        } else {
+                            // instrument that is not yet downloaded
+                            scope.hoverInstrument.available_for_update = false;
+                        }
+
                         console.log('scope.hoverInstrument', scope.hoverInstrument)
 
                         scope.$apply();
@@ -242,7 +264,7 @@
 
                 };
 
-                scope.onInputFocus = function (){
+                scope.onInputFocus = function () {
                     scope.getList();
                 }
 

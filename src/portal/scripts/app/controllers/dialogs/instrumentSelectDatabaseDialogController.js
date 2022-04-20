@@ -27,6 +27,7 @@
 
         vm.globalPage = 1;
         vm.totalPages = 1;
+        vm.actionType = 'default';
 
         vm.instrumentTypeOptions = [
             {id: 'bonds', name: 'Bonds'},
@@ -128,6 +129,11 @@
             }).then(function (data) {
 
                 if (vm.selectedItem) {
+
+                    if (vm.actionType === 'add_instrument_dialog') {
+                        toastNotificationService.success("Instrument has been downloaded")
+                    }
+
                     $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem}});
                 }
 
@@ -272,7 +278,7 @@
 
         }
 
-        vm.loadMoreGlobalInstruments = function (){
+        vm.loadMoreGlobalInstruments = function () {
 
             vm.globalProcessing = true;
 
@@ -337,7 +343,7 @@
                     //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?instrument_type=' + vm.instrument_type
                     // }
 
-                    instrumentDatabaseSearchService.getList(vm.inputText, 1, vm.instrument_type).then(function (data) {
+                    instrumentDatabaseSearchService.getList(vm.inputText, 0, vm.instrument_type).then(function (data) {
 
                         vm.databaseInstrumentsTotal = data.resultCount
 
@@ -444,6 +450,16 @@
         vm.init = function () {
 
             vm.getList();
+
+            if (data.context) {
+
+                if (data.context.action) {
+
+                    vm.actionType = data.context.action;
+
+                }
+
+            }
 
         }
 

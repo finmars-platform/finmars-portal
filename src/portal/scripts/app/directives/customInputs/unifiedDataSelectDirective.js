@@ -40,6 +40,7 @@
                 scope.localItemsTotal = 0;
                 scope.databaseItemsTotal = 0;
                 scope.hoverItem = null;
+                scope.selectedItem = null;
 
                 scope.inputText = '';
 
@@ -149,6 +150,8 @@
                         stylePreset = '';
                         scope.error = '';
 
+                        scope.selectedItem = item;
+
                         scope.model = item.id;
                         scope.itemObject = item;
                         scope.valueIsValid = true;
@@ -185,8 +188,10 @@
                         entity_type: scope.entityType
                     };
 
-                    scope.itemName = item.user_code;
-                    scope.inputText = item.user_code;
+                    scope.selectedItem = item;
+
+                    scope.itemName = item.name;
+                    scope.inputText = item.name;
 
                     scope.processing = true;
                     scope.isDisabled = true;
@@ -216,7 +221,7 @@
                         } else {
 
                             scope.model = data.id;
-                            scope.itemObject = {id: data.id, name: item.mame, user_code: item.user_code}
+                            scope.itemObject = {id: data.id, name: item.name, user_code: item.user_code}
 
                             scope.processing = false;
 
@@ -239,7 +244,6 @@
 
                 scope.onInputTextChange = function () {
                     // scope.dropdownMenuFilter = scope.inputText;
-
                     scope.getList();
 
                 };
@@ -247,6 +251,64 @@
                 scope.onInputFocus = function (){
                     scope.getList();
                 }
+
+                scope.onInputBlur = function (){
+
+                    if (!scope.selectedItem) {
+                        scope.model = null;
+                        scope.inputText = '';
+                        scope.itemName = '';
+                    } else {
+                        scope.inputText = scope.selectedItem.name
+                        scope.itemName = scope.selectedItem.name
+                    }
+
+                }
+
+                scope.openSelectorDialog = function ($event) {
+
+                    closeDropdownMenu();
+                    // Victor 2020.11.09 If body is parent, then modal window under popup
+                    // var dialogParent = angular.element(document.body);
+                    var dialogParent = document.querySelector('.dialog-containers-wrap');
+
+                    if (scope.dialogParent) {
+
+                        var dialogParentElem = document.querySelector(scope.dialogParent);
+
+                        if (dialogParentElem) {
+                            dialogParent = dialogParentElem
+                        }
+
+                    }
+
+                    $mdDialog.show({
+                        controller: "UnifiedSelectDatabaseDialogController as vm",
+                        templateUrl: "views/dialogs/unified-select-database-dialog-view.html",
+                        targetEvent: $event,
+                        parent: dialogParent,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                inputText: scope.inputText,
+                                entityType: scope.entityType
+                            }
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            scope.model = res.data.item.id;
+                            scope.itemObject = res.data.item;
+
+                            scope.itemName = res.data.item.name;
+                            scope.inputText = res.data.item.name;
+                        }
+
+                    })
+
+                };
 
                 var closeDropdownMenu = function (updateScope) {
 
@@ -486,6 +548,9 @@
                     if (scope.customStyles) {
                         applyCustomStyles();
                     }
+
+                    scope.selectedItem = {id: scope.model, name: scope.itemName, user_code: scope.itemName}
+
                 };
 
                 init();

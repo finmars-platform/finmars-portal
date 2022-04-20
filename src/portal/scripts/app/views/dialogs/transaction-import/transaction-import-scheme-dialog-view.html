@@ -91,7 +91,7 @@
 
                             </div>
 
-                            <div>
+                            <div layout="row">
                                 <md-input-container style="width: 245px;">
                                     <label>Column Matcher</label>
                                     <md-select
@@ -99,6 +99,19 @@
                                         <md-option value="index">Index</md-option>
                                         <md-option value="name">Name</md-option>
                                     </md-select>
+                                </md-input-container>
+
+                                <md-input-container class="md-block">
+                                    <md-checkbox ng-model="vm.scheme.has_header_row"
+                                                 aria-label="">
+                                        Has header row
+                                    </md-checkbox>
+                                </md-input-container>
+                            </div>
+                            <div>
+                                <md-input-container class="md-block">
+                                    <label for="">Filter Expression</label>
+                                    <input type="text" data-ng-model="vm.scheme.filter_expression">
                                 </md-input-container>
                             </div>
 
