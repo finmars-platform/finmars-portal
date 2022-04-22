@@ -7,6 +7,7 @@
 
     var unifiedDataService = require('../../services/unifiedDataService')
     var importUnifiedDataService = require('../../services/import/importUnifiedDataService');
+    var currencyDatabaseSearchService = require('../../services/currency/currencyDatabaseSearchService');
 
 
     module.exports = function ($mdDialog) {
@@ -450,7 +451,15 @@
                     if (scope.inputText.length > 2) {
                         promises.push(new Promise(function (resolve, reject) {
 
-                            unifiedDataService.getList(scope.entityType, {
+                            var dataSource;
+
+                            dataSource = unifiedDataService
+
+                            if (scope.entityType === 'currency') {
+                                dataSource = currencyDatabaseSearchService
+                            }
+
+                            dataSource.getList(scope.entityType, {
                                 filters: {
                                     query: scope.inputText
                                 }
