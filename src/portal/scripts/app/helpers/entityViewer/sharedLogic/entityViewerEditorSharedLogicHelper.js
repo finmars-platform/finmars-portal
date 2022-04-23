@@ -1252,6 +1252,7 @@
 				mapOption = item => {
 					return {
 						id: item.id,
+						user_code: item.user_code,
 						name: item.short_name
 					}
 				};
