@@ -1263,6 +1263,34 @@
 
 		};
 
+		// replace user_code with id
+		var exposureProperties = ['co_directional_exposure_currency', 'counter_directional_exposure_currency', 'long_underlying_instrument', 'short_underlying_instrument'];
+
+		var getExposureOptionId = function (exposureProp, userCode) {
+
+			var optionsList = []
+
+			switch (exposureProp) {
+				case 'co_directional_exposure_currency':
+				case 'counter_directional_exposure_currency':
+					optionsList = vm.currenciesSelectorOptions;
+					break;
+
+				case 'long_underlying_instrument':
+				case 'short_underlying_instrument':
+					optionsList = vm.instrumentsSelectorOptions;
+					break;
+
+			}
+
+			var eOption = optionsList.find(function (option) {
+				return option.user_code === userCode;
+			})
+
+			return eOption.id;
+
+		};
+
         vm.bookInstrument = function () {
 
             return new Promise(function (resolve, reject) {
@@ -1290,7 +1318,13 @@
 
 							if ((data.instrument[prop] || data.instrument[prop] === 0) && acceptsInstrTypeVal) {
 
-								vm.entity[prop] = data.instrument[prop];
+								if (exposureProperties.includes(prop)) {
+
+									vm.entity[prop] = getExposureOptionId(prop, data.instrument[prop]);
+
+								} else {
+									vm.entity[prop] = data.instrument[prop];
+								}
 
 							}
 

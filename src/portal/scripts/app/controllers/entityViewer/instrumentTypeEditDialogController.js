@@ -1194,7 +1194,7 @@
         }; */
 		vm.pricingSchemeChange = function (pricingPolicy) {
 			evHelperService.onPricingSchemeChangeInsidePricingPolicy(pricingPolicy, vm.instrumentPricingSchemes, vm.entity);
-		};
+		}
 
         //region Exposure tab
 

@@ -131,7 +131,7 @@
             <td>
                 <md-input-container class="m-t-16">
                     <md-select data-ng-model="item.pricing_scheme"
-                               data-ng-change="vm.pricingSchemeChange($event, item)">
+                               data-ng-change="vm.pricingSchemeChange(item)">
                         <md-option ng-value="scheme.id" data-ng-repeat="scheme in vm.instrumentPricingSchemes">
                             {{scheme.name}}
                         </md-option>
@@ -204,7 +204,7 @@
 
                 <div class="m-t-16" data-ng-if="item.pricing_scheme_object.type_object.input_type == 3">
 
-                    <md-button class="md-raised" data-ng-click="vm.openPricingMultipleParametersDialog($event, item)">
+                    <md-button class="md-raised" data-ng-click="vm.openPricingMultipleParametersDialog(item)">
                         ...
                     </md-button>
 
