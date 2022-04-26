@@ -11,6 +11,7 @@
 
     var unifiedDataService = require('../../services/unifiedDataService')
     var importUnifiedDataService = require('../../services/import/importUnifiedDataService');
+    var currencyDatabaseSearchService = require('../../services/currency/currencyDatabaseSearchService');
 
 
     module.exports = function ($scope, $mdDialog, data) {
@@ -285,7 +286,15 @@
 
                 promises.push(new Promise(function (resolve, reject) {
 
-                    unifiedDataService.getList(vm.entityType, {
+                    var dataSource;
+
+                    dataSource = unifiedDataService
+
+                    if (scope.entityType === 'currency') {
+                        dataSource = currencyDatabaseSearchService
+                    }
+
+                    dataSource.getList(vm.entityType, {
                         filters: {
                             query: vm.inputText
                         }
