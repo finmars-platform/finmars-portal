@@ -95,7 +95,10 @@
                     "name": "Imported: " + input.name + " (column # " + input.column + ")",
                     "description": "Imported: " + input.name + " (column #" + input.column + ") " + "-> " + input.name_expr,
                     "groups": "input",
-                    "func": input.name
+                    "func": input.name,
+					"validation": {
+						"func": input.name
+					}
                 }
 
             })
@@ -445,6 +448,7 @@
                         locals: {
                             validationData: reason.message
                         },
+                        multiple: true,
                         preserveScope: true,
                         autoWrap: true,
                         skipHide: true

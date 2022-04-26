@@ -326,6 +326,9 @@
                 }
 
                 function updateTableContent() {
+
+                    scope.firstRender = true; // IF SOMETHING WENT WRONG AND SOMEHOW REPORT IS NOT RENDERER, WE HAVE 1 min timeoout to render
+
                     if (scope.isReport) {
                         renderReportViewer();
 
@@ -506,6 +509,17 @@
                 }
 
                 var init = function () {
+
+                    setTimeout(function () {
+
+                        if (!scope.firstRender) { // Force Table render if not rendered in first 60 second
+
+                            console.log("Special render trigger")
+
+                            updateTableContent();
+                        }
+
+                    }, 60 * 1000)
 
                     window.addEventListener('resize', onWindowResize);
 

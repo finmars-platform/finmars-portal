@@ -1,24 +1,24 @@
 (function () {
 
-	const fieldResolverService = require('../../../services/fieldResolverService');
+    const fieldResolverService = require('../../../services/fieldResolverService');
 
-	const ecosystemDefaultService = require('../../../services/ecosystemDefaultService');
+    const ecosystemDefaultService = require('../../../services/ecosystemDefaultService');
     const referenceTableService = require('../../../services/referenceTablesService');
 
-	const metaHelper = require('../../meta.helper');
+    const metaHelper = require('../../meta.helper');
 
 	const uiService = require('../../../services/uiService');
 	const gridTableEvents = require('../../../services/gridTableEvents');
 	const directiveEvents = require('../../../services/events/directivesEvents');
 
-	const GridTableHelperService = require('../../../helpers/gridTableHelperService');
-	const helpExpressionsService = require('../../../services/helpExpressionsService');
+    const GridTableHelperService = require('../../../helpers/gridTableHelperService');
+    const helpExpressionsService = require('../../../services/helpExpressionsService');
 
     'use strict';
     module.exports = function (viewModel, $scope, $mdDialog) {
 
-    	const gridTableHelperService = new GridTableHelperService();
-		const loadedRelationsList = [];
+        const gridTableHelperService = new GridTableHelperService();
+        const loadedRelationsList = [];
 
         const valueTypes = [
             {
@@ -48,7 +48,7 @@
         ];
         let ecosystemDefaultData = {};
 
-        const getValueTypes = function() {
+        const getValueTypes = function () {
             return valueTypes;
         }
 
@@ -145,12 +145,15 @@
 
 				viewModel.expressionData.functions[0] = viewModel.entity.inputs.map(function (input) {
 
-					return {
-						"name": "Input: " + input.verbose_name + " (" + input.name + ")",
-						"description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
-						"groups": "input",
-						"func": input.name
-					}
+                    return {
+                        "name": "Input: " + input.verbose_name + " (" + input.name + ")",
+                        "description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
+                        "groups": "input",
+                        "func": input.name,
+                        "validation": {
+                            "func": input.name
+                        }
+                    }
 
 				});
 
@@ -163,31 +166,31 @@
 			return viewModel.expressionData;
 		};
 
-		// const useIdForRelList = ['pricing_condition', 'payment_size_detail', 'accrual_calculation_model', 'notification_class', 'event_class', 'periodicity'];
+        // const useIdForRelList = ['pricing_condition', 'payment_size_detail', 'accrual_calculation_model', 'notification_class', 'event_class', 'periodicity'];
 
-		const formatRelationForSelector = function (key, relationsList) {
+        const formatRelationForSelector = function (key, relationsList) {
 
-			if (key === 'transaction_class') { // relations with specific properties to use as 'id' or (and) 'name'
+            if (key === 'transaction_class') { // relations with specific properties to use as 'id' or (and) 'name'
 
-				return relationsList.map(rItem => {
-					return {id: rItem.id, name: rItem.name};
-				});
+                return relationsList.map(rItem => {
+                    return {id: rItem.id, name: rItem.name};
+                });
 
-			}
+            }
 
-			// const propForId = useIdForRelList.includes(key) ? 'id' : 'user_code';
+            // const propForId = useIdForRelList.includes(key) ? 'id' : 'user_code';
 
-			return relationsList.map(rItem => {
+            return relationsList.map(rItem => {
 
-				return {
-					id: rItem.user_code,
-					name: rItem.hasOwnProperty('short_name') ? rItem.short_name : rItem.name
-				};
+                return {
+                    id: rItem.user_code,
+                    name: rItem.hasOwnProperty('short_name') ? rItem.short_name : rItem.name
+                };
 
-			});
+            });
 
-		};
-		// needed because back does not send _object for selected transaction_class
+        };
+        // needed because back does not send _object for selected transaction_class
 
 		const loadRelation = function (field, noScopeUpdate) {
 
@@ -276,7 +279,7 @@
                     return {id: rTable.name, name: rTable.name};
                 });
 
-            });
+            })
 
         };
 
@@ -352,7 +355,7 @@
 				'pricing_condition', 'pricing_condition_input', 'default_accrued',
 				'default_price', 'instrument_type', 'instrument_type_input', 'maturity_date',
 				'maturity_price', 'name', 'notes', 'payment_size_detail', 'payment_size_detail_input',
-				'price_download_scheme', 'price_download_scheme_input', 'price_multiplier',
+				'price_multiplier',
 				'pricing_currency', 'pricing_currency_input', 'public_name', 'reference_for_pricing',
 				'short_name', 'user_code', 'user_text_1', 'user_text_2', 'user_text_3'],
 			'instrument_accrual_calculation_schedules': [
@@ -608,160 +611,158 @@
 
         const updateEntityBeforeSave = function (entity) {
 
-        	if (viewModel.groups) {
+            if (viewModel.groups) {
 
-				viewModel.groups.forEach(function (group) {
+                viewModel.groups.forEach(function (group) {
 
-					if (group.objectPermissions && group.objectPermissions.manage === true) {
-						entity.object_permissions.push({
-							member: null,
-							group: group.id,
-							permission: "manage_" + viewModel.entityType.split('-').join('')
-						})
-					}
+                    if (group.objectPermissions && group.objectPermissions.manage === true) {
+                        entity.object_permissions.push({
+                            member: null,
+                            group: group.id,
+                            permission: "manage_" + viewModel.entityType.split('-').join('')
+                        })
+                    }
 
-					if (group.objectPermissions && group.objectPermissions.change === true) {
-						entity.object_permissions.push({
-							member: null,
-							group: group.id,
-							permission: "change_" + viewModel.entityType.split('-').join('')
-						})
-					}
+                    if (group.objectPermissions && group.objectPermissions.change === true) {
+                        entity.object_permissions.push({
+                            member: null,
+                            group: group.id,
+                            permission: "change_" + viewModel.entityType.split('-').join('')
+                        })
+                    }
 
-					if (group.objectPermissions && group.objectPermissions.view === true) {
-						entity.object_permissions.push({
-							member: null,
-							group: group.id,
-							permission: "view_" + viewModel.entityType.split('-').join('')
-						})
-					}
+                    if (group.objectPermissions && group.objectPermissions.view === true) {
+                        entity.object_permissions.push({
+                            member: null,
+                            group: group.id,
+                            permission: "view_" + viewModel.entityType.split('-').join('')
+                        })
+                    }
 
-				});
+                });
 
-			}
+            }
 
-			entity.inputs.forEach(function (input) {
+            entity.inputs.forEach(function (input) {
 
-				if (input.settings) {
+                if (input.settings) {
 
-					if (input.settings.linked_inputs_names) {
-						input.settings.linked_inputs_names = input.settings.linked_inputs_names.join(',')
-					}
+                    if (input.settings.linked_inputs_names) {
+                        input.settings.linked_inputs_names = input.settings.linked_inputs_names.join(',')
+                    }
 
-					if (input.settings.recalc_on_change_linked_inputs) {
-						input.settings.recalc_on_change_linked_inputs = input.settings.recalc_on_change_linked_inputs.join(',')
-					}
+                    if (input.settings.recalc_on_change_linked_inputs) {
+                        input.settings.recalc_on_change_linked_inputs = input.settings.recalc_on_change_linked_inputs.join(',')
+                    }
 
-				}
+                }
 
-			});
+            });
 
-        	return entity;
+            return entity;
 
-		};
+        };
 
-		//region desc="TRANSACTION VALIDATION"
-		const hasInputInExprs = function (inputs, expr, namesOnly) {
+        //region desc="TRANSACTION VALIDATION"
+        const hasInputInExprs = function (inputs, expr, namesOnly) {
 
-			var inputsList = [];
-			/* var middleOfExpr = '[^A-Za-z_.]' + dInputName + '(?![A-Za-z1-9_])';
-					var beginningOfExpr = '^' + dInputName + '(?![A-Za-z1-9_])'; */
-			for (var i = 0; i < inputs.length; i++) {
+            var inputsList = [];
+            /* var middleOfExpr = '[^A-Za-z_.]' + dInputName + '(?![A-Za-z1-9_])';
+                    var beginningOfExpr = '^' + dInputName + '(?![A-Za-z1-9_])'; */
+            for (var i = 0; i < inputs.length; i++) {
 
-				var inputName = inputs[i];
+                var inputName = inputs[i];
 
-				if (!namesOnly) {
-					inputName = inputs[i].name;
-				}
+                if (!namesOnly) {
+                    inputName = inputs[i].name;
+                }
 
-				var inputRegExp = new RegExp('(?:^|[^A-Za-z_.])' + inputName + '(?![A-Za-z1-9_])', 'g');
+                var inputRegExp = new RegExp('(?:^|[^A-Za-z_.])' + inputName + '(?![A-Za-z1-9_])', 'g');
 
-				if (expr.match(inputRegExp)) {
+                if (expr.match(inputRegExp)) {
 
-					inputsList.push(inputs[i]);
+                    inputsList.push(inputs[i]);
 
-				}
+                }
 
-			}
+            }
 
-			if (inputsList.length) {
-				return inputsList;
-			}
+            if (inputsList.length) {
+                return inputsList;
+            }
 
-			return false;
+            return false;
 
-		};
+        };
 
         const checkFieldExpr = function (inputsToDelete, fieldValue, itemKey, location) {
 
-			var actionFieldLocation = {
-				action_notes: location,
-				key: itemKey, // for actions errors
-				name: itemKey // for entity errors
-			};
+            var actionFieldLocation = {
+                action_notes: location,
+                key: itemKey, // for actions errors
+                name: itemKey // for entity errors
+            };
 
-			var validationResult = helpExpressionsService.validateExpressionOnFrontend(
-				{expression: fieldValue},
-				viewModel.expressionData
-			);
+            var validationResult = helpExpressionsService.validateExpressionOnFrontend(
+                {expression: fieldValue},
+                viewModel.expressionData
+            );
 
-			if (validationResult.status) {
+            if (validationResult.status) {
 
-				var dInputsNames = hasInputInExprs(inputsToDelete, fieldValue, true);
+                var dInputsNames = hasInputInExprs(inputsToDelete, fieldValue, true);
 
-				if (dInputsNames) {
+                if (dInputsNames) {
 
-					var dInputsNames = dInputsNames.join(", ");
-					var stringStart = "The deleted input";
+                    var dInputsNames = dInputsNames.join(", ");
+                    var stringStart = "The deleted input";
 
-					if (dInputsNames.length > 1) {
-						stringStart += "s";
-					}
+                    if (dInputsNames.length > 1) {
+                        stringStart += "s";
+                    }
 
-					actionFieldLocation.message = stringStart + " " + dInputsNames + " is used in the Expression."
+                    actionFieldLocation.message = stringStart + " " + dInputsNames + " is used in the Expression."
 
-				}
+                } else {
 
-				else {
+                    switch (validationResult.status) {
+                        case 'error':
+                            actionFieldLocation.message = 'Invalid expression. ' + validationResult.result;
+                            break;
 
-					switch (validationResult.status) {
-						case 'error':
-							actionFieldLocation.message = 'Invalid expression. ' + validationResult.result;
-							break;
+                        case 'functions-error':
+                            actionFieldLocation.message = 'Not all variables are identified expression. ' + validationResult.result;
+                            break;
 
-						case 'functions-error':
-							actionFieldLocation.message = 'Not all variables are identified expression. ' + validationResult.result;
-							break;
+                        case 'inputs-error':
+                            actionFieldLocation.message = 'Not all variables are identified inputs. ' + validationResult.result;
+                            break;
 
-						case 'inputs-error':
-							actionFieldLocation.message = 'Not all variables are identified inputs. ' + validationResult.result;
-							break;
+                        case 'bracket-error':
+                            actionFieldLocation.message = 'Mismatch in the opening and closing braces. ' + validationResult.result;
+                            break;
+                    }
 
-						case 'bracket-error':
-							actionFieldLocation.message = 'Mismatch in the opening and closing braces. ' + validationResult.result;
-							break;
-					}
+                }
 
-				}
+                return actionFieldLocation;
 
-				return actionFieldLocation;
-
-			}
+            }
 
         };
 
         const actionsFieldsMap = {
-			instrument_event_schedule_action: {
-				transaction_type_from_instrument_type: {
-					field_type: 'selector',
-					value_type: 10
-				},
-				event_schedule_phantom: {
-					field_type: 'selector',
-					value_type: 20
-				}
-			}
-		};
+            instrument_event_schedule_action: {
+                transaction_type_from_instrument_type: {
+                    field_type: 'selector',
+                    value_type: 10
+                },
+                event_schedule_phantom: {
+                    field_type: 'selector',
+                    value_type: 20
+                }
+            }
+        };
 
         const checkActionsForEmptyFields = function (actions) {
 
@@ -780,28 +781,28 @@
 
                         actionItemKeys = actionItemKeys.filter(function (key) {
 
-                            return key.indexOf('_object') === -1 && key.indexOf('_input') === -1 && key.indexOf('_phantom') === -1 && key !== 'action_notes';
+                            return key.indexOf('_object') === -1 && key.indexOf('_input') === -1 && key.indexOf('_phantom') === -1 && key !== 'action_notes' && key !== 'price_download_scheme';
 
                         });
 
                         actionItemKeys.forEach(function (actionItemKey) {
 
-							var fieldWithInvalidExpr;
+                            var fieldWithInvalidExpr;
 
                             if (actionItemKey === 'notes') {
 
                                 if (actionItem[actionItemKey]) {
                                     fieldWithInvalidExpr = checkFieldExpr(
-                                    	viewModel.inputsToDelete,
-										actionItem[actionItemKey],
-										actionItemKey,
-										action.action_notes
-									);
+                                        viewModel.inputsToDelete,
+                                        actionItem[actionItemKey],
+                                        actionItemKey,
+                                        action.action_notes
+                                    );
 
                                 }
 
                             }
-                            else {
+							else {
 
                                 if (actionItem.hasOwnProperty(actionItemKey + '_input')) {
 
@@ -852,17 +853,17 @@
 
                                     } else if (actionItem[actionItemKey] && typeof actionItem[actionItemKey] === 'string') { // field with expression
 
-                                    	var actionFieldsMap = actionsFieldsMap[actionKey];
-                                    	if (actionFieldsMap) var actionFieldData = actionFieldsMap[actionItemKey];
+                                        var actionFieldsMap = actionsFieldsMap[actionKey];
+                                        if (actionFieldsMap) var actionFieldData = actionFieldsMap[actionItemKey];
 
-                                    	if (!actionFieldData || actionFieldData.field_type === 'expression') {
+                                        if (!actionFieldData || actionFieldData.field_type === 'expression') {
 
-                                    		fieldWithInvalidExpr = checkFieldExpr(viewModel.inputsToDelete,
-												actionItem[actionItemKey],
-												actionItemKey,
-												action.action_notes);
+                                            fieldWithInvalidExpr = checkFieldExpr(viewModel.inputsToDelete,
+                                                actionItem[actionItemKey],
+                                                actionItemKey,
+                                                action.action_notes);
 
-										}
+                                        }
 
                                     }
 
@@ -870,9 +871,9 @@
 
                             }
 
-							if (fieldWithInvalidExpr) {
-								result.push(fieldWithInvalidExpr);
-							}
+                            if (fieldWithInvalidExpr) {
+                                result.push(fieldWithInvalidExpr);
+                            }
 
                         })
 
@@ -904,16 +905,16 @@
                 if ((entityKey.indexOf('user_text_') === 0 ||
                     entityKey.indexOf('user_number_') === 0 ||
                     entityKey.indexOf('user_date_') === 0) &&
-					entity[entityKey]) {
+                    entity[entityKey]) {
 
-                	const userFieldName = viewModel.transactionUserFields[entityKey];
+                    const userFieldName = viewModel.transactionUserFields[entityKey];
 
                     var fieldWithInvalidExpr = checkFieldExpr(
-                    	inputsToDelete,
-						entity[entityKey],
-						userFieldName,
-						'FIELDS'
-					);
+                        inputsToDelete,
+                        entity[entityKey],
+                        userFieldName,
+                        'FIELDS'
+                    );
 
                     if (fieldWithInvalidExpr) {
                         result.push(fieldWithInvalidExpr);
@@ -981,63 +982,63 @@
 
         const validateInputs = function (inputs) {
 
-        	var errors = [];
+            var errors = [];
 
-        	inputs.forEach(function (input) {
+            inputs.forEach(function (input) {
 
-				var location;
+                var location;
 
-        		if (input.value_type !== 100 && input.value) { // Default value
+                if (input.value_type !== 100 && input.value) { // Default value
 
-					var defaultExprError;
+                    var defaultExprError;
 
-					var inputsList = hasInputInExprs(viewModel.entity.inputs, input.value);
+                    var inputsList = hasInputInExprs(viewModel.entity.inputs, input.value);
 
                     inputsList = [] // why forbbiden?
 
-					if (inputsList.length) {
+                    if (inputsList.length) {
 
-						defaultExprError = {
-							action_notes: 'INPUTS: ' + input.name,
-							key: 'Default value',
-							name: 'Default value'
-						}
+                        defaultExprError = {
+                            action_notes: 'INPUTS: ' + input.name,
+                            key: 'Default value',
+                            name: 'Default value'
+                        }
 
-						defaultExprError.message = "Using Inputs in expression for the default value is forbidden. Please use the formula which you are using in the Input (to which you are referring) instead."
+                        defaultExprError.message = "Using Inputs in expression for the default value is forbidden. Please use the formula which you are using in the Input (to which you are referring) instead."
 
-					} else {
+                    } else {
 
-						location = 'INPUTS: ' + input.name;
-						defaultExprError = checkFieldExpr(viewModel.inputsToDelete, input.value, 'Default value', location);
+                        location = 'INPUTS: ' + input.name;
+                        defaultExprError = checkFieldExpr(viewModel.inputsToDelete, input.value, 'Default value', location);
 
-					}
+                    }
 
-					if (defaultExprError) {
-						errors.push(defaultExprError);
-					}
+                    if (defaultExprError) {
+                        errors.push(defaultExprError);
+                    }
 
-				}
+                }
 
-				if (input.value_expr) {
+                if (input.value_expr) {
 
-					location = 'INPUTS: ' + input.name;
-					var inputExprError = checkFieldExpr(viewModel.inputsToDelete, input.value_expr, 'Input expr', location);
+                    location = 'INPUTS: ' + input.name;
+                    var inputExprError = checkFieldExpr(viewModel.inputsToDelete, input.value_expr, 'Input expr', location);
 
-					if (inputExprError) {
-						errors.push(inputExprError);
-					}
+                    if (inputExprError) {
+                        errors.push(inputExprError);
+                    }
 
-				}
+                }
 
-			});
+            });
 
-        	return errors;
+            return errors;
 
-		};
-		//endregion
+        };
+        //endregion
 
-		//region desc="INPUTS GRID TABLE"
-		const onInputsGridTableRowAddition = function () {
+        //region desc="INPUTS GRID TABLE"
+        const onInputsGridTableRowAddition = function () {
 
             var newRow = viewModel.inputsGridTableData.body[0];
 
@@ -1058,7 +1059,7 @@
                 strategy1: null,
                 strategy2: null,
                 strategy3: null,
-				pricing_condition: null,
+                pricing_condition: null,
                 payment_size_detail: null,
                 pricing_policy: null,
                 value: null,
@@ -1084,7 +1085,7 @@
 
             getInputsForLinking();
             updateLinkedInputsOptionsInsideGridTable();
-			updateInputFunctions();
+            updateInputFunctions();
 
             viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions); // update options for selectors of instrument inputs
 			setTimeout(function () {
@@ -1095,7 +1096,7 @@
 
         };
 
-		const onInputsGridTableCellChange = function (rowKey) {
+        const onInputsGridTableCellChange = function (rowKey) {
 
             // updating whole row because 'value_type' change causes other cells to change
             var gtRow = viewModel.inputsGridTableDataService.getRowByKey(rowKey);
@@ -1105,28 +1106,28 @@
 
                 if (gtColumn.objPath) {
 
-					if (gtColumn.key === 'linked_inputs_names' && gtColumn.settings.value) {
+                    if (gtColumn.key === 'linked_inputs_names' && gtColumn.settings.value) {
 
-						let linkedInputsNames = [];
-						let recalculateOnChange = [];
-						let recalculateOnChangePath = ['settings', 'recalc_on_change_linked_inputs'];
+                        let linkedInputsNames = [];
+                        let recalculateOnChange = [];
+                        let recalculateOnChangePath = ['settings', 'recalc_on_change_linked_inputs'];
 
-						gtColumn.settings.value.forEach(function (multiselItem) {
+                        gtColumn.settings.value.forEach(function (multiselItem) {
 
-							linkedInputsNames.push(multiselItem.id);
+                            linkedInputsNames.push(multiselItem.id);
 
-							if (multiselItem.isChecked) {
-								recalculateOnChange.push(multiselItem.id);
-							}
+                            if (multiselItem.isChecked) {
+                                recalculateOnChange.push(multiselItem.id);
+                            }
 
-						});
+                        });
 
-						metaHelper.setObjectNestedPropVal(input, gtColumn.objPath, linkedInputsNames);
-						metaHelper.setObjectNestedPropVal(input, recalculateOnChangePath, recalculateOnChange);
+                        metaHelper.setObjectNestedPropVal(input, gtColumn.objPath, linkedInputsNames);
+                        metaHelper.setObjectNestedPropVal(input, recalculateOnChangePath, recalculateOnChange);
 
-					} else {
-						metaHelper.setObjectNestedPropVal(input, gtColumn.objPath, gtColumn.settings.value);
-					}
+                    } else {
+                        metaHelper.setObjectNestedPropVal(input, gtColumn.objPath, gtColumn.settings.value);
+                    }
 
                 } else if (gtColumn.objPaths) {
 
@@ -1147,11 +1148,11 @@
 
         }
 
-		const relationItemsResolver = function (contentType) { // Victor: This function I introduce in child dialog to resolve default value items
+        const relationItemsResolver = function (contentType) { // Victor: This function I introduce in child dialog to resolve default value items
             return loadRelation(resolveRelation(contentType), true);
         }
 
-		const onRelationDefaultValueSelInit = function (rowData, colData, gtDataService) {
+        const onRelationDefaultValueSelInit = function (rowData, colData, gtDataService) {
 
             let changedCell = gtDataService.getCell(rowData.order, colData.order);
 
@@ -1159,14 +1160,28 @@
 
             /* var loadRelationRes = relationItemsResolver(contentTypeCell.settings.value);
 
+            console.log('contentTypeCell.settings.value', contentTypeCell.settings.value);
+
             if (loadRelationRes && loadRelationRes.status === 'item_exist') {
-                changedCell.settings.selectorOptions = viewModel.relationItems[loadRelationRes.field];
+                changedCell.settings.selectorOptions = viewModel.relationItems[loadRelationRes.field].map(function (item) {
+
+                    // contentTypeCell.settings.value = 'portfolios.portfolio'
+                    item.id = "get_relation_by_user_code('" + contentTypeCell.settings.value + "', '" + item.id + "').user_code"
+
+                    return item
+                });
 
             } else {
 
                 loadRelationRes.then(function (relItem) {
 
-                    changedCell.settings.selectorOptions = relItem;
+                    changedCell.settings.selectorOptions = relItem.map(function (item) {
+
+                        // contentTypeCell.settings.value = 'portfolios.portfolio'
+                        item.id = "get_relation_by_user_code('" + contentTypeCell.settings.value + "', '" + item.id + "').user_code"
+
+                        return item
+                    });
                     $scope.$apply();
 
                 });
@@ -1191,7 +1206,7 @@
 
         };
 
-		const changeCellsBasedOnValueType = function (row) {
+        const changeCellsBasedOnValueType = function (row) {
 
             var valueType = gridTableHelperService.getCellFromRowByKey(row, 'value_type'),
                 contentType = gridTableHelperService.getCellFromRowByKey(row, 'content_type'),
@@ -1264,21 +1279,21 @@
 
         };
 
-		const getInputsForLinking = function () {
+        const getInputsForLinking = function () {
 
             viewModel.inputsForMultiselector = viewModel.entity.inputs.map(function (input) {
 
                 return {
                     id: input.name,
                     name: input.name,
-					checked: false
+                    checked: false
                 }
 
             });
 
         };
 
-		const updateLinkedInputsOptionsInsideGridTable = function () {
+        const updateLinkedInputsOptionsInsideGridTable = function () {
 
             var linkedInputsNames = viewModel.inputsGridTableDataService.getCellByKey('templateRow', 'linked_inputs_names');
             linkedInputsNames.settings.selectorOptions = viewModel.inputsForMultiselector
@@ -1293,7 +1308,7 @@
 
         };
 
-		const deleteInputsRows = function (gtDataService, gtEventService) {
+        const deleteInputsRows = function (gtDataService, gtEventService) {
 
             var selectedRows = gtDataService.getSelectedRows();
 
@@ -1363,7 +1378,7 @@
 
         };
 
-		const addInputRow = function (gtDataService, gtEventService) {
+        const addInputRow = function (gtDataService, gtEventService) {
 
             $mdDialog.show({
                 controller: 'TransactionTypeAddInputDialogController as vm',
@@ -1433,7 +1448,7 @@
 
         };
 
-		const initGridTableEvents = function () {
+        const initGridTableEvents = function () {
 
             viewModel.inputsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
                 onInputsGridTableCellChange(argumentsObj.row.key);
@@ -1565,7 +1580,7 @@
                         cellType: 'expression',
                         settings: {
                             value: '',
-							exprData: null,
+                            exprData: null,
                             closeOnMouseOut: false
                         },
                         styles: {
@@ -1598,9 +1613,9 @@
                             selectorOptions: null,
                             strictOrder: true,
                             closeOnMouseOut: false,
-							optionsCheckboxes: {
-								selectedOptions: true
-							}
+                            optionsCheckboxes: {
+                                selectedOptions: true
+                            }
                         },
                         styles: {
                             'grid-table-cell': {'width': '140px'}
@@ -1614,23 +1629,23 @@
             },
             components: {
                 topPanel: {
-					addButton: true,
+                    addButton: true,
                     filters: false,
                     columns: false,
                     search: false
                 },
-				rowCheckboxes: true
+                rowCheckboxes: true
             }
         }
 
-		const createDataForInputsGridTable = function () {
+        const createDataForInputsGridTable = function () {
 
-			viewModel.inputsGridTableData.body = [];
+            viewModel.inputsGridTableData.body = [];
 
             var rowObj = metaHelper.recursiveDeepCopy(viewModel.inputsGridTableData.templateRow, true);
 
-			//region desc="Assemble header columns">
-			var rowsWithSorting = ['name', 'verbose_name', 'tooltip', 'value_type', 'content_type'];
+            //region desc="Assemble header columns">
+            var rowsWithSorting = ['name', 'verbose_name', 'tooltip', 'value_type', 'content_type'];
 
             viewModel.inputsGridTableData.header.columns = rowObj.columns.map(function (column) {
 
@@ -1645,7 +1660,7 @@
                 }
 
             });
-			//endregion
+            //endregion
 
             //region assemble body rows
             viewModel.entity.inputs.forEach(function (input, index) {
@@ -1654,7 +1669,7 @@
 
                 rowObj.order = index;
                 rowObj.key = input.name;
-				rowObj.newRow = !!(rowObj.frontOptions && rowObj.frontOptions.newRow);
+                rowObj.newRow = !!(rowObj.frontOptions && rowObj.frontOptions.newRow);
 
                 // name
                 rowObj.columns[0].settings.value = input.name
@@ -1678,42 +1693,42 @@
                 rowObj.columns[5].settings.value = input.context_property
                 // default_value
                 rowObj.columns[6].settings.value = input.value
-				rowObj.columns[6].settings.exprData = viewModel.expressionData
+                rowObj.columns[6].settings.exprData = viewModel.expressionData
 
-				changeCellsBasedOnValueType(rowObj);
+                changeCellsBasedOnValueType(rowObj);
 
                 // input_calc_expr
                 rowObj.columns[7].settings.value = input.value_expr
-				rowObj.columns[7].settings.exprData = viewModel.expressionData;
+                rowObj.columns[7].settings.exprData = viewModel.expressionData;
                 // linked_inputs_names
-				rowObj.columns[8].settings.value = []
+                rowObj.columns[8].settings.value = []
 
                 if (input.settings && input.settings.linked_inputs_names) {
 
-					rowObj.columns[8].settings.value = input.settings.linked_inputs_names.map(function (linkedInputName) {
+                    rowObj.columns[8].settings.value = input.settings.linked_inputs_names.map(function (linkedInputName) {
 
-						var linkedInput = {
-							id: linkedInputName,
-							isChecked: false
-						};
+                        var linkedInput = {
+                            id: linkedInputName,
+                            isChecked: false
+                        };
 
-						if (input.settings.recalc_on_change_linked_inputs.includes(linkedInputName)) {
+                        if (input.settings.recalc_on_change_linked_inputs.includes(linkedInputName)) {
 
-							linkedInput.isChecked = true;
+                            linkedInput.isChecked = true;
 
-						}
+                        }
 
-						return linkedInput;
+                        return linkedInput;
 
-					});
+                    });
 
-					if (input.value_type === 120) { // Button
+                    if (input.value_type === 120) { // Button
 
                         rowObj.columns[8].settings.optionsCheckboxes.selectedOptions = false; // linked inputs for Button have not checkboxes
 
                     }
 
-				}
+                }
 
                 rowObj.columns[8].settings.selectorOptions = viewModel.inputsForMultiselector
                 // rowObj.columns[8].settings.getDataMethod = getInputsForLinking;
@@ -1725,9 +1740,9 @@
             viewModel.inputsGridTableDataService.setTableData(viewModel.inputsGridTableData);
 
         }
-		//endregion
+        //endregion
 
-		const loadEcosystemDefaults = function () {
+        const loadEcosystemDefaults = function () {
 
         	return new Promise((resolve, reject) => {
 
@@ -1739,40 +1754,40 @@
 
 			});
 
-		};
+        };
 
-		const getTransactionUserFields = function () {
+        const getTransactionUserFields = function () {
 
-			return new Promise(async (resolve) => {
+            return new Promise(async (resolve) => {
 
-				/* return uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
+                /* return uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
 
-					data.results.forEach(function (field) {
+                    data.results.forEach(function (field) {
 
-						viewModel.transactionUserFields[field.key] = field.name;
+                        viewModel.transactionUserFields[field.key] = field.name;
 
-					})
+                    })
 
-				})*/
+                })*/
 
-				uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
+                uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
 
-					data.results.forEach(function (field) {
+                    data.results.forEach(function (field) {
 
-						viewModel.transactionUserFields[field.key] = field.name;
-						viewModel.transactionUserFieldsState[field.key] = field.is_active;
+                        viewModel.transactionUserFields[field.key] = field.name;
+                        viewModel.transactionUserFieldsState[field.key] = field.is_active;
 
-						console.log('transactionUserFieldsState', viewModel.transactionUserFieldsState);
+                        console.log('transactionUserFieldsState', viewModel.transactionUserFieldsState);
 
-					})
+                    })
 
-					resolve();
+                    resolve();
 
-				}).catch(error => resolve());
+                }).catch(error => resolve());
 
-			});
+            });
 
-		};
+        };
 
 		const findInputs = function (entity) {
 
@@ -3538,10 +3553,10 @@
 
 		/**
 		 *
-		 * @param actionData {Object} - ttype action
-		 * @param actionType {string} - can be 'transaction', 'instrument', 'instrument_event_schedule' ...
-		 * @param fieldName {string}
-		 * @param relationSelData {=Object} - data for relation selector inside multitype field
+		 * @param {Object} actionData - ttype action
+		 * @param {string} actionType - can be 'transaction', 'instrument', 'instrument_event_schedule' ...
+		 * @param {string} fieldName
+		 * @param {Object=} relationSelData - data for relation selector inside multitype field
 		 */
 		const setDefaultValueForRelation = function (actionData, actionType, fieldName, relationSelData) {
 
@@ -3608,28 +3623,21 @@
 				}
 				// < needed to display default value name inside selector after toggling 'relation' field >
 
-			}
+            }
 
-		};
-
+        };
 		const onActionMultitypeFieldToggle = function (fieldName, item, itemIndex, actionType) {
-
 			item[actionType][fieldName] = null;
 			item[actionType][fieldName + '_input'] = null;
 			delete item[actionType][fieldName + '_object'];
-
 			if (item[actionType].hasOwnProperty(fieldName + '_phantom')) {
 				item[actionType][fieldName + '_phantom'] = null;
 			}
-
 			item[actionType][fieldName + '_toggle'] = !item[actionType][fieldName + '_toggle'];
-
 			let multitypeFieldData = viewModel.actionsMultitypeFieldsList[itemIndex][fieldName];
-
 			const activeType = multitypeFieldData.find(type => type.isActive);
 			const inactiveType = multitypeFieldData.find(type => !type.isActive);
 			inactiveType.model = null;
-
 			if (item[actionType][fieldName + '_toggle'] && !item[actionType][fieldName]) {
 				setDefaultValueForRelation(item, actionType, fieldName, activeType);
 			}
@@ -3790,7 +3798,7 @@
 
 		};
 
-		const getActionTypeName = function (action) {
+     const getActionTypeName = function (action) {
 
 			if (action.instrument) {
 				return "Create Instrument";
@@ -3824,72 +3832,72 @@
 
         const appendFromTemplate = function ($event, template) {
 
-			console.log("Append from Template", template);
+            console.log("Append from Template", template);
 
-			if (template.type === 'input_template') {
+            if (template.type === 'input_template') {
 
-				$mdDialog.show({
-					controller: 'InputTemplateLayoutViewerDialogController as vm',
-					templateUrl: 'views/dialogs/input-template-layout-viewer-dialog-view.html',
-					targetEvent: $event,
-					locals: {
-						data: {
-							template: template
-						}
-					},
-					preserveScope: true,
-					autoWrap: true,
-					skipHide: true,
-					multiple: true
-				}).then(function (res) {
+                $mdDialog.show({
+                    controller: 'InputTemplateLayoutViewerDialogController as vm',
+                    templateUrl: 'views/dialogs/input-template-layout-viewer-dialog-view.html',
+                    targetEvent: $event,
+                    locals: {
+                        data: {
+                            template: template
+                        }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true
+                }).then(function (res) {
 
-					if (res.status === 'agree') {
+                    if (res.status === 'agree') {
 
-						var template = res.data.template;
+                        var template = res.data.template;
 
-						template.data.inputs.forEach(function (input) {
+                        template.data.inputs.forEach(function (input) {
 
-							if (!input.settings) input.settings = {};
-							if (!input.settings.linked_inputs_names) input.settings.linked_inputs_names = [];
-							if (!input.settings.recalc_on_change_linked_inputs) input.settings.recalc_on_change_linked_inputs = [];
+                            if (!input.settings) input.settings = {};
+                            if (!input.settings.linked_inputs_names) input.settings.linked_inputs_names = [];
+                            if (!input.settings.recalc_on_change_linked_inputs) input.settings.recalc_on_change_linked_inputs = [];
 
-							viewModel.entity.inputs.push(input);
+                            viewModel.entity.inputs.push(input);
 
-						});
+                        });
 
-						getInputsForLinking();
-						createDataForInputsGridTable();
+                        getInputsForLinking();
+                        createDataForInputsGridTable();
 
-						viewModel.inputsGridTableEventService.dispatchEvent(gridTableEvents.REDRAW_TABLE);
+                        viewModel.inputsGridTableEventService.dispatchEvent(gridTableEvents.REDRAW_TABLE);
 
-					}
+                    }
 
-				})
+                })
 
 			}
 			else if (template.type === 'field_template') {
 
-				Object.keys(viewModel.entity).forEach(function (key) {
+                Object.keys(viewModel.entity).forEach(function (key) {
 
-					if (key.indexOf('user_text_') !== -1) {
-						viewModel.entity[key] = '';
-					}
+                    if (key.indexOf('user_text_') !== -1) {
+                        viewModel.entity[key] = '';
+                    }
 
-					if (key.indexOf('user_number_') !== -1) {
-						viewModel.entity[key] = '';
-					}
+                    if (key.indexOf('user_number_') !== -1) {
+                        viewModel.entity[key] = '';
+                    }
 
-					if (key.indexOf('user_date_') !== -1) {
-						viewModel.entity[key] = '';
-					}
+                    if (key.indexOf('user_date_') !== -1) {
+                        viewModel.entity[key] = '';
+                    }
 
-				});
+                });
 
-				Object.keys(template.data.fields).forEach(function (key) {
+                Object.keys(template.data.fields).forEach(function (key) {
 
-					viewModel.entity[key] = template.data.fields[key];
+                    viewModel.entity[key] = template.data.fields[key];
 
-				})
+                })
 
 			}
 			else if (template.type === 'action_template') {
@@ -3897,30 +3905,30 @@
 				//region Formatting actions from template before adding them
 				var actionsToAdd = template.data.actions.map(function (action) {
 
-					Object.keys(action).forEach(function (key) {
+                    Object.keys(action).forEach(function (key) {
 
-						if (typeof action[key] === 'object' && action[key] !== null) {
+                        if (typeof action[key] === 'object' && action[key] !== null) {
 
-							Object.keys(action[key]).forEach(function (actionItemKey) {
+                            Object.keys(action[key]).forEach(function (actionItemKey) {
 
-								if (action[key].hasOwnProperty(actionItemKey + '_input')) {
+                                if (action[key].hasOwnProperty(actionItemKey + '_input')) {
 
-									if (action[key].hasOwnProperty(actionItemKey + '_field_type')) {
+                                    if (action[key].hasOwnProperty(actionItemKey + '_field_type')) {
 
-										action[key][actionItemKey + '_toggle'] = true;
+                                        action[key][actionItemKey + '_toggle'] = true;
 
-										setDefaultValueForRelation(action, key, actionItemKey);
+                                        setDefaultValueForRelation(action, key, actionItemKey);
 
-										delete action[key][actionItemKey + '_field_type']; // remove template specific properties before adding actions
-									}
+                                        delete action[key][actionItemKey + '_field_type']; // remove template specific properties before adding actions
+                                    }
 
-								}
+                                }
 
-							})
+                            })
 
-						}
+                        }
 
-					});
+                    });
 
 					return action;
 
@@ -3930,9 +3938,9 @@
 				insertActions(actionsToAdd);
 				// viewModel.entity.actions = viewModel.entity.actions.concat(actionsToAdd);
 
-			}
+            }
 
-		};
+        };
 
         return {
             getValueTypes: getValueTypes,
@@ -3962,8 +3970,8 @@
 
             initGridTableEvents: initGridTableEvents,
 
-			loadEcosystemDefaults: loadEcosystemDefaults,
-			getTransactionUserFields: getTransactionUserFields,
+            loadEcosystemDefaults: loadEcosystemDefaults,
+            getTransactionUserFields: getTransactionUserFields,
 
 			createSelectorPopupDataForActions: createSelectorPopupDataForActions,
 			moveDown: moveDown,

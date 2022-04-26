@@ -527,7 +527,7 @@
 
                 var init = function () {
 
-                    if (scope.menuOptions) {
+                    if (scope.menuOptions && scope.menuOptions.length) {
 
                     	menuOptionsList = getMenuOptionsAsFlatList();
 

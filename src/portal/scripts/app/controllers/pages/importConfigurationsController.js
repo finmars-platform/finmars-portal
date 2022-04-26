@@ -16,7 +16,7 @@
         var vm = this;
 
         vm.pageState = 'default';
-        vm.mode = 'skip';
+        vm.settings = {mode: 'skip'}
 
         vm.configurationFile = null;
 
@@ -481,6 +481,15 @@
                     return 'Data Procedure';
                 case 'schedules.pricingschedule':
                     return 'Pricing Schedule';
+                case 'obj_attrs.genericattributetype':
+
+                    var result = 'Attribute types'
+
+                    if (item.content && item.content.length) {
+                        result = result + ' (' + item.content[0].content_type + ')'
+                    }
+
+                    return result
                 default:
                     return "Unknown"
             }

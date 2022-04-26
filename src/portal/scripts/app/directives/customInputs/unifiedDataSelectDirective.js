@@ -7,6 +7,7 @@
 
     var unifiedDataService = require('../../services/unifiedDataService')
     var importUnifiedDataService = require('../../services/import/importUnifiedDataService');
+    var currencyDatabaseSearchService = require('../../services/currency/currencyDatabaseSearchService');
 
 
     module.exports = function ($mdDialog) {
@@ -40,6 +41,7 @@
                 scope.localItemsTotal = 0;
                 scope.databaseItemsTotal = 0;
                 scope.hoverItem = null;
+                scope.selectedItem = null;
 
                 scope.inputText = '';
 
@@ -149,6 +151,8 @@
                         stylePreset = '';
                         scope.error = '';
 
+                        scope.selectedItem = item;
+
                         scope.model = item.id;
                         scope.itemObject = item;
                         scope.valueIsValid = true;
@@ -185,8 +189,10 @@
                         entity_type: scope.entityType
                     };
 
-                    scope.itemName = item.user_code;
-                    scope.inputText = item.user_code;
+                    scope.selectedItem = item;
+
+                    scope.itemName = item.name;
+                    scope.inputText = item.name;
 
                     scope.processing = true;
                     scope.isDisabled = true;
@@ -216,7 +222,7 @@
                         } else {
 
                             scope.model = data.id;
-                            scope.itemObject = {id: data.id, name: item.mame, user_code: item.user_code}
+                            scope.itemObject = {id: data.id, name: item.name, user_code: item.user_code}
 
                             scope.processing = false;
 
@@ -239,7 +245,6 @@
 
                 scope.onInputTextChange = function () {
                     // scope.dropdownMenuFilter = scope.inputText;
-
                     scope.getList();
 
                 };
@@ -247,6 +252,64 @@
                 scope.onInputFocus = function (){
                     scope.getList();
                 }
+
+                scope.onInputBlur = function (){
+
+                    if (!scope.selectedItem) {
+                        scope.model = null;
+                        scope.inputText = '';
+                        scope.itemName = '';
+                    } else {
+                        scope.inputText = scope.selectedItem.name
+                        scope.itemName = scope.selectedItem.name
+                    }
+
+                }
+
+                scope.openSelectorDialog = function ($event) {
+
+                    closeDropdownMenu();
+                    // Victor 2020.11.09 If body is parent, then modal window under popup
+                    // var dialogParent = angular.element(document.body);
+                    var dialogParent = document.querySelector('.dialog-containers-wrap');
+
+                    if (scope.dialogParent) {
+
+                        var dialogParentElem = document.querySelector(scope.dialogParent);
+
+                        if (dialogParentElem) {
+                            dialogParent = dialogParentElem
+                        }
+
+                    }
+
+                    $mdDialog.show({
+                        controller: "UnifiedSelectDatabaseDialogController as vm",
+                        templateUrl: "views/dialogs/unified-select-database-dialog-view.html",
+                        targetEvent: $event,
+                        parent: dialogParent,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                inputText: scope.inputText,
+                                entityType: scope.entityType
+                            }
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            scope.model = res.data.item.id;
+                            scope.itemObject = res.data.item;
+
+                            scope.itemName = res.data.item.name;
+                            scope.inputText = res.data.item.name;
+                        }
+
+                    })
+
+                };
 
                 var closeDropdownMenu = function (updateScope) {
 
@@ -385,30 +448,54 @@
 
                     var promises = []
 
-                    if (scope.inputText.length > 2) {
+                    console.log('scope.inputText.length', scope.inputText.length);
+
+                    if (scope.inputText.length > 1) {
                         promises.push(new Promise(function (resolve, reject) {
 
-                            unifiedDataService.getList(scope.entityType, {
-                                filters: {
-                                    user_code: scope.inputText
-                                }
-                            }).then(function (data) {
 
-                                scope.databaseItemsTotal = data.count;
+                            if (scope.entityType === 'currency') {
+                                currencyDatabaseSearchService.getList(scope.inputText, 0).then(function (data) {
 
-                                scope.databaseItems = data.results;
+                                    scope.databaseItemsTotal = data.resultCount;
+                                    scope.databaseItems = data.foundItems;
 
-                                resolve()
+                                    resolve()
 
-                            }).catch(function (error) {
+                                }).catch(function (error) {
 
-                                console.log("Unified Database error occurred", error)
+                                    console.log("Unified Database error occurred", error)
 
-                                scope.databaseItems = []
+                                    scope.databaseItems = []
 
-                                resolve()
+                                    resolve()
 
-                            })
+                                })
+                            } else {
+                                unifiedDataService.getList(scope.entityType, {
+                                    filters: {
+                                        query: scope.inputText
+                                    }
+                                }).then(function (data) {
+
+                                    scope.databaseItemsTotal = data.count;
+
+                                    scope.databaseItems = data.results;
+
+                                    resolve()
+
+                                }).catch(function (error) {
+
+                                    console.log("Unified Database error occurred", error)
+
+                                    scope.databaseItems = []
+
+                                    resolve()
+
+                                })
+                            }
+
+
 
                         }))
                     }
@@ -468,7 +555,7 @@
 
                     }).catch(function () {
 
-                        vm.processing = false;
+                        scope.processing = false;
                         scope.$apply();
 
                     })
@@ -486,6 +573,9 @@
                     if (scope.customStyles) {
                         applyCustomStyles();
                     }
+
+                    scope.selectedItem = {id: scope.model, name: scope.itemName, user_code: scope.itemName}
+
                 };
 
                 init();

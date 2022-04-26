@@ -211,7 +211,7 @@
 
 						} else {*/
 
-						if (items && Array.isArray(items)) {
+						if (Array.isArray(items)) {
 							resolve(items);
 
 						} else if (scope.getDataMethod) {
@@ -228,6 +228,9 @@
 
 							});
 
+						} else {
+							items = [];
+							resolve(items);
 						}
 
 						// }
@@ -402,22 +405,22 @@
 
 					if (scope.selectedItemsIndication === 'chips') {
 
-						scope.dropdownMenuShown = false
-						scope.menuFilterTerms = {}
-						scope.menuFilterTerms[scope.nameProperty] = ""
+						scope.dropdownMenuShown = false;
+						scope.menuFilterTerms = {};
+						scope.menuFilterTerms[scope.nameProperty] = "";
 
-						scope.dropdownMenuOptions = []
-						scope.orderMenuOptions = scope.nameProperty
+						scope.dropdownMenuOptions = [];
+						scope.orderMenuOptions = scope.nameProperty;
 
 						if (scope.orderOptions.options === false) {
-							scope.orderMenuOptions = null
+							scope.orderMenuOptions = null;
 						}
 
 						chipElem = elem[0].querySelector("chips-list");
 
 						scope.onDropdownMenuFilterBlur = function () {
-							scope.dropdownMenuShown = false
-							scope.menuFilterTerms[scope.nameProperty] = ""
+							scope.dropdownMenuShown = false;
+							scope.menuFilterTerms[scope.nameProperty] = "";
 						}
 
 						scope.getChipsContainerWidth = function () {
@@ -427,19 +430,30 @@
 
 						scope.addDropdownMenuListeners = function () {
 
-							let customInputContent = elem[0].querySelector(".twoFieldsChipsWrap");
-							let dropdownMenuFilter = elem[0].querySelector('.dropdownMenuFilter');
+							const customInputContent = elem[0].querySelector(".twoFieldsChipsWrap");
+							const dropdownMenuFilter = elem[0].querySelector('.dropdownMenuFilter');
 
-							customInputContent.addEventListener("click", function (event) {
+							customInputContent.addEventListener("click", async function (event) {
 
 								let targetElem = event.target;
 
 								if (customInputContent === targetElem) {
 
-									scope.dropdownMenuShown = true
+									scope.dropdownMenuShown = true;
 									scope.$apply();
 
 									dropdownMenuFilter.focus();
+
+									if (!Array.isArray(items)) {
+
+										await getItems();
+
+										getAvailableOptions();
+										formatDataForChips();
+
+										scope.$apply();
+
+									}
 
 								}
 
