@@ -182,7 +182,7 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog) {
 			onClick: () => openPricingMultipleParametersDialog(pricingPolicy)
 		};
 
-		multipleParametersCell.classes = ['gt-3dots-btn'];
+		multipleParametersCell.classes = ['gt-more-btn'];
 
 		return multipleParametersCell;
 

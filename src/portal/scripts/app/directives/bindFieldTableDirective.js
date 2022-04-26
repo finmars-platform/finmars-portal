@@ -376,7 +376,7 @@
 						methods: {
 							onClick: openInstrumentEventActionParametersManager
 						},
-						classes: ['gt-3dots-btn']
+						classes: ['gt-more-btn']
 					},
 				};
 
