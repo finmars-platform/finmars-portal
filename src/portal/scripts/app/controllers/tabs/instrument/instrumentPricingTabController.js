@@ -295,14 +295,14 @@
 
 			multipleParametersCell.cellType = 'button';
 			multipleParametersCell.settings = {
-				buttonContent: '<span class="material-icons multiple-parameters-button">more_horiz</span>'
+				buttonContent: '<span class="material-icons more-btn">more_horiz</span>'
 			};
 
 			multipleParametersCell.methods = {
 				onClick: () => openPricingMultipleParametersDialog(pricingPolicy)
 			};
 
-			multipleParametersCell.classes = ['gt-3dots-btn'];
+			multipleParametersCell.classes = ['gt-more-btn'];
 
 			return multipleParametersCell;
 
@@ -388,7 +388,7 @@
 						onClick: () => openPricingMultipleParametersDialog(policy)
 					};
 
-					multipleParameters.classes = ['gt-3dots-btn']; */
+					multipleParameters.classes = ['gt-more-btn']; */
 
 					setUpMultipleParametersAsButtonCell(policy, multipleParameters);
 
@@ -483,7 +483,7 @@
 							onClick: () => openPricingMultipleParametersDialog(changedPolicy)
 						}*/
 						multipleParameters = setUpMultipleParametersAsButtonCell(changedPolicy, multipleParameters);
-
+						vm.pricingPoliciesGridTableEventService.dispatchEvent(gridTableEvents.REDRAW_TABLE); // apply class to multiple_parameters cell
 
 					} else {
 

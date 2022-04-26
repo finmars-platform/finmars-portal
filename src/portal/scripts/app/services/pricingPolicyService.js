@@ -165,7 +165,7 @@
 	};
 
 	var notesCol = {
-		key: 'edit_scheme',
+		key: 'notes',
 		objPath: ['notes'],
 		columnName: 'Notes',
 		cellType: 'text',
