@@ -12,7 +12,7 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function (name, page, instrument_type) {
+    var getList = function (name, page) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
