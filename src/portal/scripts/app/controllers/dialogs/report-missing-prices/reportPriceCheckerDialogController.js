@@ -7,6 +7,7 @@
 
     var convertReportHelper = require('../../../helpers/converters/convertReportHelper');
     var downloadFileHelper = require('../../../helpers/downloadFileHelper');
+    var scheduleService = require('../../../services/scheduleService');
 
     module.exports = function ($scope, $mdDialog, data) {
 
@@ -76,7 +77,6 @@
             downloadFileHelper.downloadFile(blobPartOld, "text/plain", name);
 
         };
-
 
         vm.viewMissingPriceHistory = function ($event) {
 
@@ -150,7 +150,62 @@
 
         }
 
+        vm.runPricing = function () {
+
+            vm.schedules.forEach(function (item) {
+
+                var reportOptions = vm.evDataService.getReportOptions();
+                var entityType = vm.evDataService.getEntityType();
+
+                item.data = {
+
+                }
+
+                if (entityType === 'balance-report') {
+                    item.data.report_date = reportOptions.report_date
+                }
+
+                if (entityType === 'pl-report') {
+                    item.data.pl_first_date = reportOptions.pl_first_date
+                }
+
+                if (entityType === 'transaction-report') {
+                    item.data.begin_date = reportOptions.begin_date
+                    item.data.end_date = reportOptions.end_date
+                }
+
+                scheduleService.runSchedule(item.id, item).then(function (data) {
+
+                    toastNotificationService.success('Success. Schedule ' + item.name + ' is being processed');
+
+
+                })
+
+            })
+
+        }
+
+        vm.schedules = [];
+
+        vm.readyStatus = {schedules: false};
+
+        vm.getList = function () {
+
+            scheduleService.getList().then(function (data) {
+
+                vm.schedules = data.results;
+
+                vm.readyStatus.schedules = true;
+
+                $scope.$apply();
+
+            })
+        };
+
+
         vm.init = function () {
+
+            vm.getList();
 
             // Victor 2021.03.29 #88 fix bug with deleted custom fields
             const missingCustomFields = vm.evDataService.getMissingCustomFields();

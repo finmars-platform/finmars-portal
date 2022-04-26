@@ -1,3 +1,5 @@
+import websocketService from "../../../../../../shell/scripts/app/services/websocketService";
+
 /**
  * Created by szhitenev on 14.03.2018.
  */
@@ -22,61 +24,57 @@
 
         vm.readyStatus = {
             schemes: false,
-            processing: false,
-            dailyModel: false,
-            priceDownloadScheme: false,
-            instrumentType: false,
-            currency: false
+            processing: false
         };
+
         vm.dataIsImported = false;
         vm.activeContentType = null;
 
         vm.config = {
-            delimiter: ',',
-            error_handler: 'break',
-            mode: 'skip',
-            missing_data_handler: 'throw_error',
-            classifier_handler: 'skip'
+            scheme: null
         };
+        vm.validateConfig = {};
 
         vm.processing = false;
         vm.loaderData = {};
 
-        vm.validateConfig = {
-            mode: 1
-        };
-
         vm.hasSchemeEditPermission = false;
 
         vm.loadIsAvailable = function () {
-            if (vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined) {
+            if (vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined && vm.processing === false) {
                 return true;
             }
             return false;
         };
 
-        vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport();
+        vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport().map(function (item){
+
+            item.id = item.key;
+
+            return item
+        })
 
         vm.getSchemeList = function () {
 
             var options = {filters: {'content_type': vm.activeContentType}};
 
             csvImportSchemeService.getListLight(options).then(function (data) {
+
                 vm.entitySchemes = data.results;
                 vm.readyStatus.schemes = true;
                 $scope.$apply();
+
             });
 
         };
 
         vm.checkExtension = function (file, extension, $event) {
-            console.log('file', file);
 
             if (file) {
 
                 var ext = file.name.split('.')[1]
 
-                if (ext !== extension) {
+                if (ext !== 'csv' && ext !== 'xlsx' ) {
 
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
@@ -95,6 +93,7 @@
                     }).then(function () {
 
                         vm.config.file = null;
+
                     });
 
                 }
@@ -107,13 +106,12 @@
             vm.getSchemeList();
         };
 
-        vm.getFileUrl = function(id) {
+        vm.getFileUrl = function (id) {
 
             var prefix = baseUrlService.getMasterUserPrefix();
             var apiVersion = baseUrlService.getApiVersion();
 
             return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
-
         };
 
         vm.createScheme = function ($event) {
@@ -138,6 +136,7 @@
         };
 
         vm.editScheme = function ($event) {
+
             $mdDialog.show({
                 controller: 'SimpleEntityImportSchemeEditDialogController as vm',
                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-dialog-view.html',
@@ -149,11 +148,16 @@
                 locals: {
                     schemeId: vm.config.scheme
                 }
-            })
-        };
+            }).then(function (res) {
 
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
+                if (res && res.status === 'agree') {
+
+                    vm.getSchemeList();
+
+                }
+
+            })
+
         };
 
         vm.validate = function (resolve, $event) {
@@ -170,15 +174,8 @@
 
                 formData.append('file', vm.config.file);
                 formData.append('scheme', vm.config.scheme);
-                formData.append('error_handler', vm.config.error_handler);
-                formData.append('delimiter', vm.config.delimiter);
-                formData.append('mode', vm.config.mode);
-                formData.append('missing_data_handler', vm.config.missing_data_handler);
-                formData.append('classifier_handler', vm.config.classifier_handler);
 
             }
-
-            console.log('vm.validateConfig', vm.validateConfig);
 
             importEntityService.validateImport(formData).then(function (data) {
 
@@ -191,21 +188,55 @@
                     status: vm.validateConfig.task_status
                 };
 
+
                 $scope.$apply();
 
-                if (vm.validateConfig.task_status === 'SUCCESS') {
+                if (websocketService.isOnline()) {
 
-                    console.log('resolve?');
+                    websocketService.addEventListener('simple_import_status', function (data) {
 
-                    resolve(data)
+                        console.log('simple_import_status.data', data);
+
+                        if (vm.validateConfig.task_id === data.task_id) {
+
+                            vm.loaderData = {
+                                current: data.processed_rows,
+                                total: data.total_rows,
+                                text: 'Validation Progress:',
+                                status: data.state
+                            };
+
+                            $scope.$apply();
+
+                            if (data.state === 'D') {
+                                websocketService.removeEventListener('simple_import_status');
+                                resolve(data)
+                            } else {
+                                if (data.state !== 'D' && data.state !== 'P') {
+                                    websocketService.removeEventListener('simple_import_status');
+                                    resolve(data);
+                                }
+                            }
+
+                        }
+
+                    })
 
                 } else {
 
-                    setTimeout(function () {
-                        vm.validate(resolve, $event);
-                    }, 1000)
+                    if (vm.validateConfig.task_status === 'SUCCESS') {
+                        resolve(data)
+
+                    } else {
+
+                        setTimeout(function () {
+                            vm.validate(resolve, $event);
+                        }, 1000)
+
+                    }
 
                 }
+
 
             })
 
@@ -304,7 +335,6 @@
 
                 }
 
-
             });
 
 
@@ -324,15 +354,8 @@
 
                 formData.append('file', vm.config.file);
                 formData.append('scheme', vm.config.scheme);
-                formData.append('error_handler', vm.config.error_handler);
-                formData.append('delimiter', vm.config.delimiter);
-                formData.append('mode', vm.config.mode);
-                formData.append('missing_data_handler', vm.config.missing_data_handler);
-                formData.append('classifier_handler', vm.config.classifier_handler);
 
             }
-
-            console.log('vm.config', vm.config);
 
             importEntityService.startImport(formData).then(function (data) {
 
@@ -347,17 +370,50 @@
 
                 $scope.$apply();
 
-                if (vm.config.task_status === 'SUCCESS') {
+                if (websocketService.isOnline()) {
 
-                    console.log('resolve?');
+                    websocketService.addEventListener('simple_import_status', function (data) {
 
-                    resolve(data)
+                        if (vm.config.task_id === data.task_id) {
+
+                            vm.loaderData = {
+                                current: data.processed_rows,
+                                total: data.total_rows,
+                                text: 'Import Progress:',
+                                status: data.state
+                            };
+
+                            $scope.$apply();
+
+                            if (data.state === 'D') {
+                                websocketService.removeEventListener('simple_import_status');
+                                resolve(data)
+                            } else {
+                                if (data.state !== 'D' && data.state !== 'P') {
+                                    websocketService.removeEventListener('simple_import_status');
+                                    resolve(data);
+                                }
+                            }
+
+                        }
+
+                    })
 
                 } else {
 
-                    setTimeout(function () {
-                        vm.import(resolve, $event);
-                    }, 1000)
+                    if (vm.config.task_status === 'SUCCESS') {
+
+                        console.log('resolve?');
+
+                        resolve(data)
+
+                    } else {
+
+                        setTimeout(function () {
+                            vm.import(resolve, $event);
+                        }, 1000)
+
+                    }
 
                 }
 
@@ -385,6 +441,8 @@
 
             }).then(function (data) {
 
+                vm.config = {};
+
                 vm.processing = false;
 
                 console.log('import.data', data);
@@ -394,42 +452,37 @@
 
                 $scope.$apply();
 
-
                 var errors = data.stats.filter(function (item) {
                     return item.level === 'error'
                 });
 
                 console.log('errors', errors);
 
-
                 var description;
 
-                if (vm.config.error_handler === 'continue') {
+                if (data.scheme_object.error_handler === 'continue') {
 
                     description = '<div>' +
-                        '<div>Rows total: ' + (data.total_rows - 1) + '</div>' +
+                        '<div>Rows total: ' + (data.total_rows) + '</div>' +
                         '<div>Rows success import: ' + (data.stats.length - errors.length) + '</div>' +
                         '<div>Rows fail import: ' + errors.length + '</div>' +
                         '</div><br/>';
 
                 }
 
-                if (vm.config.error_handler === 'break') {
+                if (data.scheme_object.error_handler === 'break') {
 
                     description = '<div>' +
-                        '<div>Rows total: ' + (data.total_rows - 1) + '</div>' +
+                        '<div>Rows total: ' + (data.total_rows) + '</div>' +
                         '<div>Rows success import: ' + (data.stats.length - errors.length) + '</div>' +
                         '<div>Rows fail import: ' + errors.length + '</div>' +
                         '</div><br/>';
 
                 }
-
-                console.log('description', description);
 
                 description = description + '<div> You have successfully imported csv file </div>';
 
-                description = description + '<div><a href="'+ vm.getFileUrl(data.stats_file_report) +'" download>Download Report File</a></div>';
-
+                description = description + '<div><a href="' + vm.getFileUrl(data.stats_file_report) + '" download>Download Report File</a></div>';
 
                 $mdDialog.show({
                     controller: 'SuccessDialogController as vm',
@@ -472,6 +525,8 @@
 
             }).then(function (data) {
 
+                vm.validateConfig = {};
+
                 vm.processing = false;
 
                 console.log('validateImport.data', data);
@@ -482,7 +537,6 @@
                 vm.dataIsImported = true;
 
                 $scope.$apply();
-
 
                 data.stats.forEach(function (item) {
 
@@ -523,13 +577,13 @@
                         locals: {
                             data: {
                                 validationResult: data,
-                                scheme: schemeObject,
                                 config: vm.config
                             }
                         }
                     }).then(function (res) {
 
                         if (res && res.status === 'agree') {
+
                             vm.startImport($event);
                         }
 
@@ -548,17 +602,17 @@
 
                 vm.currentMember = data;
 
-                if(vm.currentMember.is_admin) {
+                if (vm.currentMember.is_admin) {
                     vm.hasSchemeEditPermission = true
                 }
 
                 vm.currentMember.groups_object.forEach(function (group) {
 
-                    if(group.permission_table) {
+                    if (group.permission_table) {
 
                         group.permission_table.configuration.forEach(function (item) {
 
-                            if(item.content_type === 'csv_import.csvimportscheme') {
+                            if (item.content_type === 'csv_import.csvimportscheme') {
                                 if (item.data.creator_change) {
                                     vm.hasSchemeEditPermission = true
                                 }
@@ -581,14 +635,18 @@
             vm.getSchemeList();
             vm.getMember();
 
-            if (data && data.scheme) {
-
-                vm.config.scheme = data.scheme.id;
+            if (data.scheme) {
+                vm.config.scheme = data.scheme.id
             }
 
         };
 
         vm.init();
+
+        vm.cancel = function () {
+            $mdDialog.hide({status: 'disagree'});
+        };
+
 
     };
 

@@ -4,27 +4,24 @@
 
 	const popupEvents = require('../services/events/popupEvents');
 
-	module.exports = function ($rootScope, $compile) {
-		return {
-			restrict: 'A',
-			scope: {
-				popupId: '@',
+    module.exports = function ($rootScope, $compile) {
+        return {
+            restrict: 'A',
+            scope: {
+                // popupId: '@', // for now scope.popupClasses and scope.backdropClasses are enough
 
 				popupTemplate: '@', // all data must be already rendered in template
 				popupTemplateUrl: '@', // can bind data from popupData when compile in createPopup
 				popupData: '=',
 				popupEventService: '=', // can be used to open popup
 
-				openOn: '@', // ('click', 'right_click') - set event listener to open popup
-				closeOnClickOutside: '=',
-				closeOnMouseLeave: '=',
+				openOn: '@', // ('click', 'right_click', 'mouse_over') - set event listener to open popup.
+				closeOnClickOutside: '@', // Default - 'true'
+				closeOnMouseLeave: '@',
 				preventDefault: '@',
 
 				positionRelativeTo: '@', // ('mouse', 'element').
-
-				// If you need to change classes dynamically, do it through template and popupData
-				popupClasses: '@', // add css classes to popup-container, example: "class1" or "class1 class2"
-				backdropClasses: '@', // add css classes to backdrop
+				//region this properties work only if scope.positionRelativeTo === 'element'
 
 				/*
 				position relative to element or mouse
@@ -37,8 +34,13 @@
 				relativePopupY: '@', // [ 'top', 'bottom' ] Default - 'bottom'
 
 				popupWidth: '@', // [ 'element', 'content' ] Default - 'content'
+				//endregion
 
-				// obj with property value
+				// If you need to change classes dynamically, do it through template and popupData
+				popupClasses: '<', // add css classes to popup-container, example: popup-classes="class1 class2"
+				backdropClasses: '=', // add css classes to backdrop
+
+				// obj with property 'value'
 				popupX: '=',
 				popupY: '=',
 
@@ -82,6 +84,11 @@
 					popupElem.classList.add(...classes);
 
 				}
+
+				//region Apply defaults
+				if (!scope.positionRelativeTo) scope.positionRelativeTo = 'mouse';
+				//endregion
+
 
 				let setPopupPosition = function (event) {
 					// const coords = targetElement.getBoundingClientRect();
@@ -153,11 +160,11 @@
 						popupElem.style.right = '0';
 						popupElem.style.left = "";
 
-					} else if (positionX < 20) {
+					} /*else if (positionX < 20) {
 						popupElem.style.left = '0';
 						popupElem.style.right = "";
 
-					} else {
+					}*/ else {
 						popupElem.style.left = positionX + 'px';
 						popupElem.style.right = "";
 					}
@@ -166,11 +173,12 @@
 						popupElem.style.bottom = '0';
 						popupElem.style.top = "";
 
-					} else if (positionY < 20) {
+					}
+					/*else if (positionY < 20) {
 						popupElem.style.top = '0';
 						popupElem.style.bottom = "";
 
-					} else {
+					}*/ else {
 						popupElem.style.top = positionY + 'px';
 						popupElem.style.bottom = "";
 					}
@@ -219,11 +227,11 @@
 
 					}
 
-					if (scope.closeOnClickOutside) {
+					if (scope.closeOnClickOutside !== 'false') {
 						popupBackdropElem.addEventListener("click", scope.cancel);
 					}
 
-					if (scope.closeOnMouseLeave) {
+					if (scope.closeOnMouseLeave === 'true') {
 
 						elem[0].addEventListener('mouseleave', onElementMouseLeave);
 						popupBackdropElem.addEventListener('mouseenter', scope.cancel);
@@ -241,11 +249,11 @@
 
 					}
 
-					if (scope.closeOnClickOutside) {
+					if (scope.closeOnClickOutside !== 'false') {
 						popupBackdropElem.removeEventListener("click", scope.cancel);
 					}
 
-					if (scope.closeOnMouseLeave) {
+					if (scope.closeOnMouseLeave === 'true') {
 
 						elem[0].removeEventListener('mouseleave', onElementMouseLeave);
 						popupBackdropElem.removeEventListener('mouseenter', scope.cancel);
@@ -439,7 +447,7 @@
 						popupBackdropElem.addEventListener("click", removePopUp);
 					}
 
-					if (scope.closeOnMouseLeave) {
+					if (scope.closeOnMouseLeave === 'true') {
 
 						elem[0].addEventListener('mouseleave', onElementMouseLeave);
 						popupBackdropElem.addEventListener('mouseenter', removePopUp);

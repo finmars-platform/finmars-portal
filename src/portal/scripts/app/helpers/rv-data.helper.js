@@ -135,6 +135,7 @@
         if (dataList[0].results) {
 
         	subtotalObj = Object.assign({}, dataList[0].subtotal, {
+                ___group_identifier: dataList[0].___group_identifier,
 				___group_name: dataList[0].___group_name,
 				___type: 'subtotal',
 				___parentId: dataList[0].___id,
@@ -188,6 +189,7 @@
 						group.report_settings.subtotal_type) {
 
 						subtotalObj = Object.assign({}, item.subtotal, {
+                            ___group_identifier: item.___group_identifier,
 							___group_name: item.___group_name,
 							___type: 'subtotal',
 							___parentId: item.___id,
@@ -336,6 +338,7 @@
                     if (item.___level === index + 1 && item.___level <= groups.length) {
 
                         subtotalObj = Object.assign({}, {
+                            ___group_identifier: item.___group_identifier,
                             ___group_name: item.___group_name,
                             ___type: 'blankline',
                             ___parentId: item.___id,
@@ -769,8 +772,11 @@
         var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
 
         console.time("Converting to tree");
+        console.log("Converting to tree data", data);
 
         var tree = utilsHelper.convertToTree(data, rootGroup);
+
+        console.log("getFlatStructure.tree", tree)
 
         console.timeEnd("Converting to tree");
 
@@ -781,6 +787,7 @@
         var list = utilsHelper.convertTreeToList(tree);
 
         console.timeEnd("Converting tree to list");
+        console.log('Converted list length',  list.length);
 
         // console.log('getFlatStructure.list', list);
 
@@ -912,8 +919,6 @@
         var parents = evRvCommonHelper.getParents(group.___parentId, evDataService);
 
         parents.pop() // skip root group
-
-        console.log('parents', parents);
 
         /* var reportData
         var rawReportData = localStorage.getItem('report_data')

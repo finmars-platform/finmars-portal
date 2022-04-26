@@ -1,5 +1,5 @@
 /**
- * Created by szhitenev on 04.05.2016.
+ * Created by szhitenev on 22.04.2022.
  */
 (function () {
 
@@ -12,7 +12,7 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function (name, page, instrument_type) {
+    var getList = function (name, page) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
@@ -21,14 +21,10 @@
             page = 0
         }
 
-        var instrumentDatabaseUrl = baseUrl + '/' + prefix + '/api/'  + 'instruments/instrument-database-search/?name=' + name + '&page=' + page
+        var url = baseUrl + '/' + prefix + '/api/'  + 'currencies/currency-database-search/?name=' + name + '&page=' + page
 
-        if (instrument_type) {
-            instrumentDatabaseUrl = instrumentDatabaseUrl + '&instrument_type=' + instrument_type
 
-        }
-
-        return xhrService.fetch(instrumentDatabaseUrl,
+        return xhrService.fetch(url,
             {
                 method: 'GET',
                 credentials: 'include',

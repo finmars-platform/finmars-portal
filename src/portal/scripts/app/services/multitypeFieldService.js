@@ -99,7 +99,7 @@
 					'fieldType': 'dropdownSelect',
 					'isDefault': true,
 					'isActive': false,
-					'sign': '<div class="multitype-field-type-letter">B</div>',
+					'sign': '<div class="multitype-field-type-letter">BS</div>',
 					'name': 'Balance',
 					'value_type': 100,
 					'fieldData': {
@@ -113,7 +113,7 @@
 					'fieldType': 'dropdownSelect',
 					'isDefault': false,
 					'isActive': false,
-					'sign': '<div class="multitype-field-type-letter">P</div>',
+					'sign': '<div class="multitype-field-type-letter">PL</div>',
 					'name': 'Profit & Loss',
 					'value_type': 100,
 					'fieldData': {
@@ -127,7 +127,7 @@
 					'fieldType': 'dropdownSelect',
 					'isDefault': false,
 					'isActive': false,
-					'sign': '<div class="multitype-field-type-letter">T</div>',
+					'sign': '<div class="multitype-field-type-letter">TR</div>',
 					'name': 'Transactions',
 					'value_type': 100,
 					'fieldData': {

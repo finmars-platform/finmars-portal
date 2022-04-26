@@ -70,9 +70,9 @@ unified-data-select {
     width: 280px;
   }
 
-  .custom-input-indicator-btn {
-    display: none;
-  }
+  //.custom-input-indicator-btn {
+  //  display: none;
+  //}
 }
 
 .unified-data-select-option-detail-box {
@@ -293,3 +293,92 @@ unified-data-select {
     opacity: .7;
   }
 }
+
+.unified-data-select-database-dialog-instrument-row {
+  display: flex;
+  height: 47px;
+  box-sizing: border-box;
+  padding: 0 10px;
+  border-top: 1px solid #ddd;
+
+  &.active {
+    color: #F05A22;
+
+    .unified-data-select-instrument-name {
+      color: #F05A22;
+    }
+
+    .unified-data-select-instrument-isin {
+      color: #F05A22;
+    }
+
+    .unified-data-select-instrument-type {
+      color: #F05A22;
+    }
+
+  }
+
+  &:hover {
+    background: inherit;
+    background-color: rgba(0, 0, 0, 0.027450980392156862);
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  .unified-data-select-instrument-name {
+    width: 50%;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 14px;
+    letter-spacing: normal;
+    color: #333333;
+    padding: 5px;
+  }
+
+  .unified-data-select-instrument-isin {
+    width: 30%;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 14px;
+    letter-spacing: normal;
+    color: #333333;
+    padding: 5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .unified-data-select-instrument-type {
+    width: 20%;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 14px;
+    letter-spacing: normal;
+    color: #333333;
+    padding: 5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-transform: capitalize;
+  }
+
+
+}
+
+.unified-data-select-database-footer {
+  float: left;
+  width: 200px;
+  text-align: left;
+  padding-top: 12px;
+  color: #f05a22;
+
+  span {
+    cursor: pointer;
+
+    &:hover {
+      opacity: .7;
+    }
+  }
+}
+

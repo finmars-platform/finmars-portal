@@ -22,8 +22,6 @@
 
         var vm = this;
 
-        // console.log('reportOptions', reportOptions);
-
         vm.reportOptions = JSON.parse(JSON.stringify(reportOptions));
 
         if (vm.reportOptions.accounts_cash && vm.reportOptions.accounts_cash.length) {
@@ -38,10 +36,7 @@
             vm.accountsPosition = 0;
         }
 
-        // console.log('vm.accountsCash', vm.accountsCash);
-        // console.log('vm.accountsPosition', vm.accountsPosition);
-
-        vm.selectOptions = [
+        /* vm.selectOptions = [
             {
                 value: 0,
                 caption: "Ignore"
@@ -50,9 +45,19 @@
                 value: 1,
                 caption: "Independent"
             }
-        ];
+        ]; */
+		vm.selectOptions = [
+			{
+				id: 0,
+				name: "Ignore"
+			},
+			{
+				id: 1,
+				name: "Independent"
+			}
+		];
 
-        vm.strategiesSelectOptions = [
+        /*vm.strategiesSelectOptions = [
             {
                 value: 0,
                 caption: "Ignore"
@@ -65,13 +70,70 @@
                 value: 2,
                 caption: 'Offsetting (Interdependent - 0/100, 100/0, 50/50)'
             }
-        ];
+        ];*/
+		vm.strategiesSelectOptions = [
+			{
+				id: 0,
+				name: "Ignore"
+			},
+			{
+				id: 1,
+				name: "Independent"
+			},
+			{
+				id: 2,
+				name: 'Offsetting (Interdependent - 0/100, 100/0, 50/50)'
+			}
+		];
 
         vm.tableFontSizeOptions = [
             {id: 'small', name: 'Small'},
             {id: 'medium', name: 'Medium'},
             {id: 'large', name: 'Large'},
         ];
+
+        vm.costMethod = [
+			{id: 1, name: 'AVCO'},
+			{id: 2, name: 'FIFO'},
+		];
+
+		vm.approachMultiplierOptions = [
+			{
+				id: 0,
+				name: "0/100"
+			},
+			{
+				id: 0.5,
+				name: "50/50"
+			},
+			{
+				id: 1,
+				name: "100/0"
+			}
+		];
+
+		vm.calculationGroupOptions = [
+			{
+				id: 'portfolio',
+				name: 'Portfolio'
+			},
+			{
+				id: 'account',
+				name: 'Account'
+			},
+			{
+				id: 'strategy1',
+				name: 'Strategy 1'
+			},
+			{
+				id: 'strategy2',
+				name: 'Strategy 2'
+			},
+			{
+				id: 'strategy3',
+				name: 'Strategy 3'
+			}
+		];
 
         if (vm.reportOptions.table_font_size) {
             vm.tableFontSize = vm.reportOptions.table_font_size;
@@ -93,10 +155,6 @@
             transactionClass: false
         };
 
-        vm.checkGeneralSettings = function () {
-            return vm.entityType == 'balance-report' || vm.entityType == 'pl-report' || vm.entityType == 'performance-report';
-        };
-
         vm.getPricingPolicies = async function () {
 
             vm.readyStatus.pricingPolicy = false;
@@ -108,7 +166,13 @@
 
             await pricingPolicyService.getListLight(opitons).then(function (data) {
 
-                vm.pricingPolicies = data.results;
+                vm.pricingPolicies = data.results.map(function (pPolicy) {
+                	return {
+                		id: pPolicy.id,
+						name: pPolicy.short_name
+					}
+				});
+
                 vm.readyStatus.pricingPolicy = true;
 
                 $scope.$apply();
@@ -131,7 +195,13 @@
 
             await currencyService.getListLight(options).then(function (data) {
 
-                vm.currencies = data.results;
+                vm.currencies = data.results.map(function (currency) {
+                	return {
+                		id: currency.id,
+                		name: currency.short_name,
+					};
+				});
+
                 vm.readyStatus.currency = true;
 
                 $scope.$apply();
@@ -328,11 +398,18 @@
         let ecosystemDefaultData = null;
 
         const getEcosystemDefaultCurrencies = async () => {
-            if (!ecosystemDefaultData) {
+
+        	if (!ecosystemDefaultData) {
                 ecosystemDefaultData = await ecosystemDefaultService.getList().then (res => res.results[0]);
             }
-            vm.currencies.push(ecosystemDefaultData.currency_object);
+
+        	vm.currencies.push({
+				id: ecosystemDefaultData.currency_object.id,
+				name: ecosystemDefaultData.currency_object.short_name,
+			});
+
             vm.reportOptions.report_currency = ecosystemDefaultData.currency_object.id;
+
         };
 
         const getEcosystemDefaultPricingPolicies = async () => {
@@ -351,7 +428,12 @@
 
 				vm.transactionsUserDates = [];
 
-				metaService.loadDataFromAllPages(uiService.getTransactionFieldList, [{pageSize: 1000}]).then(function (transactionFields) {
+                let options = {
+                    pageSize: 1000,
+                    page: 1
+                };
+
+				metaService.loadDataFromAllPages(uiService.getTransactionFieldList, [options]).then(function (transactionFields) {
 
 					vm.transactionsUserDates = transactionFields.filter(function (field) {
 						return ['user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'].includes(field.key);

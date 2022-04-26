@@ -63,7 +63,7 @@
             'instrument_pricing_currency_fx_rate', 'instrument_accrued_currency_fx_rate', 'net_cost_price_loc', 'market_value', 'market_value_loc', 'market_value_percent',
             'exposure', 'exposure_percent', 'exposure_loc', 'instrument_principal_price', 'instrument_accrued_price', 'detail',
 
-            'ytm', 'ytm_at_cost', 'return_annually'
+            'ytm', 'ytm_at_cost', 'return_annually', 'mismatch'
 
 
         ];
@@ -73,11 +73,11 @@
             'overheads', 'overheads_fixed', 'overheads_fx', 'total_loc', 'total_fixed_loc', 'total_fx_loc', 'principal_loc', 'principal_fixed_loc', 'principal_fx_loc',
             'carry_loc', 'carry_fixed_loc', 'carry_fx_loc', 'overheads_loc', 'overheads_fixed_loc',
 
-            'total_closed', 'total_fixed_closed', 'total_fx_closed', 'principal_closed',
-            'principal_fixed_closed', 'principal_fx_closed', 'carry_closed', 'carry_fixed_closed', 'carry_fx_closed', 'overheads_closed', 'overheads_fixed_closed',
-            'overheads_fx_closed', 'total_closed_loc', 'total_fixed_closed_loc', 'total_fx_closed_loc', 'principal_closed_loc', 'principal_fixed_closed_loc',
-            'principal_fx_closed_loc', 'carry_closed_loc', 'carry_fixed_closed_loc', 'carry_fx_closed_loc', 'overheads_closed_loc', 'overheads_fixed_closed_loc',
-            'overheads_fx_closed_loc',
+            // 'total_closed', 'total_fixed_closed', 'total_fx_closed', 'principal_closed',
+            // 'principal_fixed_closed', 'principal_fx_closed', 'carry_closed', 'carry_fixed_closed', 'carry_fx_closed', 'overheads_closed', 'overheads_fixed_closed',
+            // 'overheads_fx_closed', 'total_closed_loc', 'total_fixed_closed_loc', 'total_fx_closed_loc', 'principal_closed_loc', 'principal_fixed_closed_loc',
+            // 'principal_fx_closed_loc', 'carry_closed_loc', 'carry_fixed_closed_loc', 'carry_fx_closed_loc', 'overheads_closed_loc', 'overheads_fixed_closed_loc',
+            // 'overheads_fx_closed_loc',
 
             'time_invested', 'position_return', 'net_position_return'
         ];
