@@ -624,6 +624,8 @@
 
         vm.saveLayout = function () {
 
+            vm.processing = true
+
             var notSavedTabExist = false;
             for (var i = 0; i < vm.tabs.length; i = i + 1) {
                 if (vm.tabs[i].hasOwnProperty('editState') && vm.tabs[i].editState) {
@@ -656,31 +658,51 @@
 
                 vm.ui.data.fixedArea = JSON.parse(JSON.stringify(vm.fixedArea));
 
-                var onSavingEnd = function () {
-                    $scope.$apply();
-                    $mdDialog.hide({status: 'agree'});
-                };
 
                 if (vm.entityType === "complex-transaction") {
 
                     if (vm.instanceId || vm.instanceId === 0) {
-                        transactionTypeService.patch(vm.instanceId, {book_transaction_layout: vm.ui}).then(onSavingEnd);
+                        transactionTypeService.patch(vm.instanceId, {book_transaction_layout: vm.ui}).then(function (data){
+
+                            vm.processing = false;
+
+                            $scope.$apply();
+                            $mdDialog.hide({status: 'agree'});
+
+                        });
                     } else {
                         toastNotificationService.error("Id of transaction type not found");
+                        vm.processing = false;
                     }
 
                 } else {
 
                     if (vm.formLayoutIsNew) {
-                        uiService.createEditLayout(vm.entityType, vm.ui).then(onSavingEnd);
+                        uiService.createEditLayout(vm.entityType, vm.ui).then(function (data){
+
+                            vm.processing = false;
+
+                            $scope.$apply();
+                            $mdDialog.hide({status: 'agree'});
+
+                        });
 
                     } else {
-                        uiService.updateEditLayout(vm.ui.id, vm.ui).then(onSavingEnd);
+                        uiService.updateEditLayout(vm.ui.id, vm.ui).then(function (data){
+
+                            vm.processing = false;
+
+                            $scope.$apply();
+                            $mdDialog.hide({status: 'agree'});
+
+                        });
                     }
 
                 }
 
             } else {
+
+                vm.processing = false;
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
@@ -695,6 +717,8 @@
                         }
                     }
                 });
+
+
 
             }
 
