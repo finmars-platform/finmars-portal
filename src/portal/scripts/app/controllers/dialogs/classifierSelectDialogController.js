@@ -38,6 +38,10 @@
 
 		const getNode = idsList => {
 
+			if (!idsList || (Array.isArray(idsList) && !idsList.length)) {
+				return undefined;
+			}
+
 			const eldestParentId = isNaN(idsList[0]) ? idsList[0] : parseInt(idsList[0]);
 
 			let node = vm.tree.find(childNode => {
@@ -77,18 +81,35 @@
 		const getPathToNodeByName = nodeName => {
 
 			let pathToNode = [];
+			let nodeData;
 
-			let nodeData = classifiersFlatList.find(item => item.name === nodeName);
-			pathToNode.push(nodeData.id);
+			/*try {
 
-			while (nodeData.parent) {
+				nodeData = classifiersFlatList.find(item => item.name === nodeName);
+				if (nodeData) pathToNode.push(nodeData.id);
 
-				nodeData = classifiersFlatList.find(item => item.id === nodeData.parent);
+			} catch (error) {
+				console.log("testing getPathToNodeByName ", nodeName, nodeData, '\n', classifiersFlatList);
+			}*/
+
+			nodeData = classifiersFlatList.find(item => item.name === nodeName);
+
+			if (nodeData) {
+
 				pathToNode.push(nodeData.id);
 
-			}
+				while (nodeData.parent) {
 
-			pathToNode = pathToNode.reverse();
+					nodeData = classifiersFlatList.find(item => item.id === nodeData.parent);
+					pathToNode.push(nodeData.id);
+
+				}
+
+				pathToNode = pathToNode.reverse();
+
+			} else {
+				console.error("Node with name: " + nodeName + " not found");
+			}
 
 			return pathToNode;
 
@@ -118,6 +139,10 @@
 
 			vm.favoritesList = [];
 
+			if (!classifiersFlatList.length) { // there are no nodes
+				return vm.favoritesList;
+			}
+
 			const favoriteNodesNamesList = favoriteNodesNames ? favoriteNodesNames.split(',') : [];
 
 			vm.favoritesList = favoriteNodesNamesList.map(name => {
@@ -135,6 +160,8 @@
 				};
 
 			});
+
+			return vm.favoritesList;
 
 		};
 
