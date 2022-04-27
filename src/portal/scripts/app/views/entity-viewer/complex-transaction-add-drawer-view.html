@@ -6,37 +6,41 @@
     <div class="big-drawer-main"
          data-ng-include="'views/entity-viewer/complex-transaction-add-content-view.html'"></div>
 
-    <div class="big-drawer-footer big-drawer-actions flex-row fc-space-between">
-        <div layout="row">
-            <md-button ng-click="vm.editLayout()"
-                       class="md-raised md-primary"
-                       ng-disabled="!vm.checkReadyStatus() || !vm.entity.transaction_type">
-                Edit Form
-            </md-button>
 
-            <md-button ng-click="vm.manageAttrs($event)" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
-                Manage attributes
-            </md-button>
-        </div>
+    <div class="dialog-footer flex-row fc-space-between" style="background: #fff"
+         data-ng-include="'views/entity-viewer/complex-transaction-add-footer-view.html'"></div>
 
-        <div>
-            <md-button class="md-raised" ng-click="vm.cancel()">
-                Cancel
-            </md-button>
+<!--    <div class="big-drawer-footer big-drawer-actions flex-row fc-space-between">-->
+<!--        <div layout="row">-->
+<!--            <md-button ng-click="vm.editLayout()"-->
+<!--                       class="md-raised md-primary"-->
+<!--                       ng-disabled="!vm.checkReadyStatus() || !vm.entity.transaction_type">-->
+<!--                Edit Form-->
+<!--            </md-button>-->
 
-            <md-button class="md-raised"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid || vm.processing}"
-                       ng-click="vm.bookAsPending()"
-                       style="margin-right:20px;">
-                Book as pending
-            </md-button>
+<!--            <md-button ng-click="vm.manageAttrs($event)" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">-->
+<!--                Manage attributes-->
+<!--            </md-button>-->
+<!--        </div>-->
 
-            <md-button class="md-raised"
-                       data-ng-class="{'disabled-btn': !vm.formIsValid || vm.processing}"
-                       ng-click="vm.book()"
-                       style="margin-right:20px;">
-                Book
-            </md-button>
-        </div>
-    </div>
+<!--        <div>-->
+<!--            <md-button class="md-raised" ng-click="vm.cancel()">-->
+<!--                Cancel-->
+<!--            </md-button>-->
+
+<!--            <md-button class="md-raised"-->
+<!--                       data-ng-class="{'disabled-btn': !vm.formIsValid || vm.processing}"-->
+<!--                       ng-click="vm.bookAsPending()"-->
+<!--                       style="margin-right:20px;">-->
+<!--                Book as pending-->
+<!--            </md-button>-->
+
+<!--            <md-button class="md-raised"-->
+<!--                       data-ng-class="{'disabled-btn': !vm.formIsValid || vm.processing}"-->
+<!--                       ng-click="vm.book()"-->
+<!--                       style="margin-right:20px;">-->
+<!--                Book-->
+<!--            </md-button>-->
+<!--        </div>-->
+<!--    </div>-->
 </div>
