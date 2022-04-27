@@ -625,7 +625,7 @@
                 return doNotUseForEditLayoutAttrs.indexOf(entity.key) === -1;
             });
             var userInputs = getUserInputs(ttypeData.inputs);
-
+			console.log("testing createDefaultEditLayout userInputs", userInputs);
             var addFields = function (attrType) {
 
                 var attributes = [];
@@ -704,6 +704,8 @@
                 ]
             };
 
+			console.log("testing createDefaultEditLayout editLayoutData", editLayoutData, '\n', JSON.parse(JSON.stringify(editLayoutData)));
+
             return transactionTypeService.patch(instanceId, {
                 book_transaction_layout: editLayoutData
             });
@@ -768,7 +770,7 @@
 
                         console.log("Creating: book_transaction_layout", vm.entity.book_transaction_layout);
 
-                        if (vm.entity.book_transaction_layout) {
+                        if (vm.entity.book_transaction_layout) { // if book_transaction_layout was copied from another TType
 
                             vm.processing = false;
 
@@ -778,7 +780,7 @@
                             resolve(responseData);
 
                         } else {
-
+							console.log("testing save responseData", responseData, '\n', JSON.parse(JSON.stringify(responseData)));
                             createDefaultEditLayout(responseData).then(function () {
                                 vm.processing = false;
 

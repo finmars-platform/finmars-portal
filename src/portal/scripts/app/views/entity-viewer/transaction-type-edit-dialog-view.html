@@ -8,8 +8,8 @@
              data-ng-class="{'disabled-input-form': !vm.hasEditPermission}">
             <is-draggable-sign></is-draggable-sign>
 
-            <h2 data-ng-if="vm.hasEditPermission">Edit Transaction type</h2>
-            <h2 data-ng-if="!vm.hasEditPermission">View Transaction type</h2>
+            <h2 data-ng-if="vm.hasEditPermission">Edit Transaction type: {{vm.entity.name}}</h2>
+            <h2 data-ng-if="!vm.hasEditPermission">View Transaction type: {{vm.entity.name}}</h2>
             <span data-ng-if="!vm.hasEditPermission" style="margin-left: 12px;">
                 <ng-md-icon icon="lock" size="24">
                         <md-tooltip md-direction="bottom">You don't have permission to edit this form</md-tooltip>

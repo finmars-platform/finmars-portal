@@ -3865,6 +3865,7 @@
 
                         });
 
+						viewModel.expressionData = updateInputFunctions();
                         getInputsForLinking();
                         createDataForInputsGridTable();
 
