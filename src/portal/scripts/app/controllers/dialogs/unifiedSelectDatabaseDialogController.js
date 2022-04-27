@@ -11,6 +11,7 @@
 
     var unifiedDataService = require('../../services/unifiedDataService')
     var importUnifiedDataService = require('../../services/import/importUnifiedDataService');
+    var currencyDatabaseSearchService = require('../../services/currency/currencyDatabaseSearchService');
 
 
     module.exports = function ($scope, $mdDialog, data) {
@@ -235,36 +236,61 @@
 
             try {
 
-                unifiedDataService.getList(vm.entityType, {
-                    filters: {
-                        query: vm.inputText
-                    }
-                }).then(function (data) {
+                if (vm.entityType === 'currency') {
+                    currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage -1).then(function (data) {
 
-                    vm.globalProcessing = false;
+                        vm.globalProcessing = false;
 
-                    vm.databaseItemsTotal = data.count;
+                        vm.databaseItemsTotal = data.resultCount;
 
-                    vm.databaseItems = data.results;
+                        vm.databaseItems = data.foundItems
+
+                        vm.totalPages = Math.round(data.resultCount / 40)
+
+                        $scope.$apply();
+
+                    }).catch(function (error) {
+
+                        vm.globalProcessing = false;
+
+                        vm.databaseItems = []
+
+                        console.log("Database error occurred", error)
+
+                        $scope.$apply();
+
+                    })
+                } else {
+                    unifiedDataService.getList(vm.entityType, {
+                        filters: {
+                            query: vm.inputText
+                        }
+                    }).then(function (data) {
+
+                        vm.globalProcessing = false;
+
+                        vm.databaseItemsTotal = data.count;
+
+                        vm.databaseItems = data.results;
 
 
-                    resolve()
+                        vm.totalPages = Math.round(data.count / 40)
 
-                    vm.totalPages = Math.round(data.count / 40)
+                        $scope.$apply();
 
-                    $scope.$apply();
+                    }).catch(function (error) {
 
-                }).catch(function (error) {
+                        vm.globalProcessing = false;
 
-                    vm.globalProcessing = false;
+                        vm.databaseItems = []
 
-                    vm.databaseItems = []
+                        console.log("Database error occurred", error)
 
-                    console.log("Database error occurred", error)
+                        $scope.$apply();
 
-                    $scope.$apply();
+                    })
+                }
 
-                })
 
             } catch (e) {
 
@@ -281,33 +307,55 @@
 
             var promises = []
 
-            if (vm.inputText.length > 2) {
+            if (vm.inputText.length > 1) {
 
                 promises.push(new Promise(function (resolve, reject) {
 
-                    unifiedDataService.getList(vm.entityType, {
-                        filters: {
-                            query: vm.inputText
-                        }
-                    }).then(function (data) {
+                    if (vm.entityType === 'currency') {
+                        currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage -1).then(function (data) {
 
-                        vm.databaseItemsTotal = data.count;
+                            vm.databaseItemsTotal = data.resultCount;
 
-                        vm.databaseItems = data.results;
+                            vm.databaseItems = data.foundItems
 
-                        resolve()
+                            vm.totalPages = Math.round(data.resultCount / 40)
 
-                        vm.totalPages = Math.round(data.count / 40)
+                            resolve()
 
-                    }).catch(function (error) {
+                        }).catch(function (error) {
 
-                        console.log("Database error occurred", error)
+                            console.log("Database error occurred", error)
 
-                        vm.databaseItems = []
+                            vm.databaseItems = []
 
-                        resolve()
+                            resolve()
 
-                    })
+                        })
+                    } else {
+                        unifiedDataService.getList(vm.entityType, {
+                            filters: {
+                                query: vm.inputText
+                            }
+                        }).then(function (data) {
+
+                            vm.databaseItemsTotal = data.count;
+
+                            vm.databaseItems = data.results;
+
+                            resolve()
+
+                            vm.totalPages = Math.round(data.count / 40)
+
+                        }).catch(function (error) {
+
+                            console.log("Database error occurred", error)
+
+                            vm.databaseItems = []
+
+                            resolve()
+
+                        })
+                    }
 
                 }))
 
