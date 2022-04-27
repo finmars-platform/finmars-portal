@@ -37,8 +37,8 @@
 				//endregion
 
 				// If you need to change classes dynamically, do it through template and popupData
-				popupClasses: '<', // add css classes to popup-container, example: popup-classes="class1 class2"
-				backdropClasses: '=', // add css classes to backdrop
+				popupClasses: '@', // add css classes to popup-container, example: popup-classes="class1 class2"
+				backdropClasses: '@', // add css classes to backdrop
 
 				// obj with property 'value'
 				popupX: '=',
