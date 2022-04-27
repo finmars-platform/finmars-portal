@@ -392,26 +392,6 @@
 
             Promise.allSettled(promises).then(function (data) {
 
-                vm.databaseItems = vm.databaseItems.filter(function (databaseItem) {
-
-                    var exist = false;
-
-                    vm.localItems.forEach(function (localItem) {
-
-                        if (localItem.user_code === databaseItem.referenceId) {
-                            exist = true
-                        }
-
-                        if (localItem.reference_for_pricing === databaseItem.referenceId) {
-                            exist = true
-                        }
-
-
-                    })
-
-                    return !exist;
-
-                })
 
                 vm.processing = false;
 
