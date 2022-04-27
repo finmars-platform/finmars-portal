@@ -7,6 +7,7 @@
 
     var unifiedDataService = require('../../services/unifiedDataService')
     var importUnifiedDataService = require('../../services/import/importUnifiedDataService');
+    var currencyDatabaseSearchService = require('../../services/currency/currencyDatabaseSearchService');
 
 
     module.exports = function ($mdDialog) {
@@ -447,30 +448,54 @@
 
                     var promises = []
 
-                    if (scope.inputText.length > 2) {
+                    console.log('scope.inputText.length', scope.inputText.length);
+
+                    if (scope.inputText.length > 1) {
                         promises.push(new Promise(function (resolve, reject) {
 
-                            unifiedDataService.getList(scope.entityType, {
-                                filters: {
-                                    query: scope.inputText
-                                }
-                            }).then(function (data) {
 
-                                scope.databaseItemsTotal = data.count;
+                            if (scope.entityType === 'currency') {
+                                currencyDatabaseSearchService.getList(scope.inputText, 0).then(function (data) {
 
-                                scope.databaseItems = data.results;
+                                    scope.databaseItemsTotal = data.resultCount;
+                                    scope.databaseItems = data.foundItems;
 
-                                resolve()
+                                    resolve()
 
-                            }).catch(function (error) {
+                                }).catch(function (error) {
 
-                                console.log("Unified Database error occurred", error)
+                                    console.log("Unified Database error occurred", error)
 
-                                scope.databaseItems = []
+                                    scope.databaseItems = []
 
-                                resolve()
+                                    resolve()
 
-                            })
+                                })
+                            } else {
+                                unifiedDataService.getList(scope.entityType, {
+                                    filters: {
+                                        query: scope.inputText
+                                    }
+                                }).then(function (data) {
+
+                                    scope.databaseItemsTotal = data.count;
+
+                                    scope.databaseItems = data.results;
+
+                                    resolve()
+
+                                }).catch(function (error) {
+
+                                    console.log("Unified Database error occurred", error)
+
+                                    scope.databaseItems = []
+
+                                    resolve()
+
+                                })
+                            }
+
+
 
                         }))
                     }
