@@ -327,8 +327,11 @@
             case 'reference_tables.referencetable':
                 result = 'Reference Table';
                 break;
-            case 'pricing.pricingprocedure':
+            case 'procedures.pricingprocedure':
                 result = 'Pricing Procedure';
+                break;
+            case 'procedures.requestdatafileprocedure':
+                result = 'Data Procedures';
                 break;
             case 'pricing.instrumentpricingscheme':
                 result = 'Instrument Pricing Scheme';
@@ -336,8 +339,8 @@
             case 'pricing.currencypricingscheme':
                 result = 'Currency Pricing Scheme';
                 break;
-            case 'schedules.pricingschedule':
-                result = 'Pricing Schedule';
+            case 'schedules.schedule':
+                result = 'Schedule';
                 break;
         }
 
