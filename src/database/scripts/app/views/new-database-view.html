@@ -110,7 +110,7 @@
                         </md-button>
 
                         <md-button class="md-raised md-primary m-0 float-right"
-                                   data-ng-class="{'disabled-btn': !vm.name || vm.processingCheckName || !vm.nameIsUnique}"
+                                   data-ng-class="{'disabled-btn': !vm.name || vm.processingCheckName || !vm.nameIsUnique || !vm.licenseIsGood}"
                                    data-ng-click="vm.finishStep1()">
                             Next
                         </md-button>
