@@ -78,7 +78,6 @@
 				};
 
 				const activateType = function (type) {
-
 					// previous activeType
 					scope.activeType.model = null;
 					scope.activeType.isActive = false;
@@ -103,7 +102,6 @@
 
 					let nextTypeIndex = scope.activeType.index + 1;
 					if (nextTypeIndex === scope.fieldTypesData.length) nextTypeIndex = 0;
-
 					/* // previous activeType
 					scope.activeType.model = null;
 					scope.activeType.isActive = false;
@@ -159,14 +157,14 @@
 
                     if (!scope.activeType) {
 
-                    	scope.activeType = scope.fieldTypesData.find(type => type.isDefault) || {};
+                    	scope.activeType = scope.fieldTypesData.find(type => type.isDefault);
+
+						if (!scope.activeType) {
+							throw new Error("No type specified as active.", {cause: scope.fieldTypesData});
+						}
+
 						scope.activeType.isActive = true;
 
-					}
-
-
-                    if (!scope.activeType) {
-                    	throw new Error("No type specified as active.", {cause: scope.fieldTypesData});
 					}
 
                     scope.readyStatus = true;

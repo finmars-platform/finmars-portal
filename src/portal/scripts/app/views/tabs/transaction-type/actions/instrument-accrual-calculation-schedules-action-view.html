@@ -67,6 +67,7 @@
             <multitype-field label="Instrument"
                              field-types-data="vm.actionsMultitypeFieldsList[$index].instrument"
                              is-disabled="vm.isRelationInputFieldDisabled()"
+                             event-service="vm.actionsMFEventService"
                              on-value-change="vm.onMultitypeFieldValChange('instrument', item, $index, 'instrument_accrual_calculation_schedules')"
                              on-type-change="vm.onActionMultitypeFieldToggle('instrument', item, $index, 'instrument_accrual_calculation_schedules')"
                              class="ttype-action-input p-l-0"></multitype-field>

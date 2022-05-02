@@ -624,8 +624,9 @@
             var editLayoutEntityAttrs = complTransactionAttrs.filter(function (entity) {
                 return doNotUseForEditLayoutAttrs.indexOf(entity.key) === -1;
             });
-            var userInputs = getUserInputs(ttypeData.inputs);
-			console.log("testing createDefaultEditLayout userInputs", userInputs);
+
+			var userInputs = getUserInputs(ttypeData.inputs);
+
             var addFields = function (attrType) {
 
                 var attributes = [];
@@ -704,8 +705,6 @@
                 ]
             };
 
-			console.log("testing createDefaultEditLayout editLayoutData", editLayoutData, '\n', JSON.parse(JSON.stringify(editLayoutData)));
-
             return transactionTypeService.patch(instanceId, {
                 book_transaction_layout: editLayoutData
             });
@@ -780,7 +779,7 @@
                             resolve(responseData);
 
                         } else {
-							console.log("testing save responseData", responseData, '\n', JSON.parse(JSON.stringify(responseData)));
+
                             createDefaultEditLayout(responseData).then(function () {
                                 vm.processing = false;
 
@@ -1679,6 +1678,8 @@
 
 		vm.generateOperationPopupData = sharedLogic.generateOperationPopupData;
 		vm.generateInstrumentOperationPopupData = sharedLogic.generateInstrumentOperationPopupData;
+
+		vm.getActionPaneId = sharedLogic.getActionPaneId;
 
         vm.makeCopyOfAction = function (actionToCopy, index) {
 
