@@ -120,7 +120,7 @@
         };
 
 		const onActionAccordionCollapse = function (index, id) {
-			removeEmptySpaceFromAction(index);
+			removeEmptySpaceFromAction(id);
 		};
 
 		const toggleItem = function (pane, item, $index, $event) {
@@ -386,7 +386,10 @@
 		const createNewAction = actionType => {
 
 			var actionToAdd = {
-				isPaneExpanded: true
+				isPaneExpanded: true,
+				frontOptions: {
+					id: metaHelper.generateUniqueId(viewModel.entity.user_code)
+				}
 			};
 
 			actionToAdd[actionType] = {};
@@ -476,6 +479,14 @@
 			insertActions(result);
 
 			findPhantoms();
+
+		};
+
+		const getActionPaneId = function (action) {
+
+			const actionId = (action.id || action.id === 0) ? action.id : action.frontOptions.id;
+
+			return 'ttype-action-' + actionId;
 
 		};
 
@@ -658,6 +669,8 @@
                 }
 
             });
+
+			entity = metaHelper.clearFrontendOptions(entity);
 
             return entity;
 
@@ -1839,7 +1852,7 @@
 
 				action.positionOrder = $index;
 
-				if (action.instrument !== null) {
+				if (action.instrument) {
 					result.push({
 						id: $index, // position order of phantom
 						name: action.action_notes || ''
@@ -1869,8 +1882,15 @@
 
 				viewModel.entity.actions.forEach(function (action, $index) {
 					action.positionOrder = $index;
-					if (action.instrument_event_schedule !== null) {
-						result.push(action);
+					if (action.instrument_event_schedule) {
+						/*result.push({
+							id: $index,
+							name: action.action_notes
+						});*/
+						result.push({
+							id: $index,
+							name: action.action_notes || ''
+						});
 					}
 				});
 
@@ -1931,6 +1951,15 @@
 					viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
 					createSelectorPopupDataForActions();
 
+					// update references for objects inside multitypeFieldDirectives
+					setTimeout(function () {
+
+						$scope.$apply();
+						viewModel.actionsMFEventService.dispatchEvent(directiveEvents.FIELD_TYPES_DATA_CHANGED);
+
+					}, 0);
+
+
 				}
 			});
 		};
@@ -1943,6 +1972,12 @@
 			delete actionCopy.$$hashKey;
 			delete actionCopy.id;
 			delete actionCopy.order;
+
+			if (!actionCopy.frontOptions) {
+				actionCopy.frontOptions = {};
+			}
+
+			actionCopy.frontOptions.id = metaHelper.generateUniqueId(viewModel.entity.user_code);
 
 			var actionName = actionCopy.action_notes + ' (Copy)';
 			var actionNameOccupied = true;
@@ -2039,25 +2074,36 @@
 
 		};
 
-		const removeEmptySpaceFromAction = function (actionIndex) {
+		const removeEmptySpaceFromAction = function (actionPaneId) {
 
-			const actionClass = ".ttypeActionsFields" + actionIndex;
+			// const actionClass = ".ttypeActionsFields" + actionIndex;
+			const findById = "#" + actionPaneId;
 
-			const actionOfFieldElem = document.querySelector(actionClass);
-			actionOfFieldElem.classList.remove("actions-entity-selector-menu-opened");
+			const actionPaneElem = document.querySelector(findById);
+
+			// if opened pane deleted, its onCollapse still will be triggered
+			if (actionPaneElem) {
+
+				const paneContentElem = actionPaneElem.querySelector('v-pane-content');
+				paneContentElem.classList.remove("actions-entity-selector-menu-opened");
+
+			}
 
 		};
 
-		const addEmptySpaceToAction = function (actionIndex) {
+		const addEmptySpaceToAction = function (actionPaneId) {
 
-			const actionClass = ".ttypeActionsFields" + actionIndex;
-			const actionOfFieldElem = document.querySelector(actionClass);
+			/* const actionClass = ".ttypeActionsFields" + actionIndex;
+			const actionOfFieldElem = document.querySelector(actionClass); */
+			const findById = "#" + actionPaneId;
+			const actionPaneElem = document.querySelector(findById);
+			const paneContentElem = actionPaneElem.querySelector('v-pane-content');
 
-			actionOfFieldElem.classList.add("actions-entity-selector-menu-opened");
+			paneContentElem.classList.add("actions-entity-selector-menu-opened");
 
 		};
 
-		const createTransactionMFData = function (action, actionIndex) {
+		const createTransactionMFData = function (action, actionPaneId) {
 
 			const loadSettlementCurrency = function () {
 				return loadRelation('settlement_currency');
@@ -2068,11 +2114,11 @@
 			};
 
 			const onESMenuOpen = function () {
-				addEmptySpaceToAction(actionIndex);
+				addEmptySpaceToAction(actionPaneId);
 			};
 
 			const onESMenuClose = function () {
-				removeEmptySpaceFromAction(actionIndex);
+				removeEmptySpaceFromAction(actionPaneId);
 			}
 
 			let multitypeFieldsData = {};
@@ -2895,7 +2941,7 @@
 
 		};
 
-		const createInstrumentFactorScheduleMFData = function (action, actionIndex) {
+		const createInstrumentFactorScheduleMFData = function (action, actionPaneId) {
 
 			let multitypeFieldsData = {};
 
@@ -2928,10 +2974,10 @@
 						'itemName': action.instrument_factor_schedule.instrument_object ? action.instrument_factor_schedule.instrument_object.name : '',
 						'itemProperty': 'user_code',
 						'onMenuOpen': function () {
-							addEmptySpaceToAction(actionIndex);
+							addEmptySpaceToAction(actionPaneId);
 						},
 						'onMenuClose': function () {
-							removeEmptySpaceFromAction(actionIndex);
+							removeEmptySpaceFromAction(actionPaneId);
 						}
 					}
 				}
@@ -3021,7 +3067,7 @@
 
 		}; */
 
-		const createInstrumentAccrualCalculationSchedulesMFData = function (action, actionIndex) {
+		const createInstrumentAccrualCalculationSchedulesMFData = function (action, actionPaneId) {
 
 			let multitypeFieldsData = {};
 
@@ -3054,10 +3100,10 @@
 						'itemName': action.instrument_accrual_calculation_schedules.instrument_object ? action.instrument_accrual_calculation_schedules.instrument_object.name : '',
 						'itemProperty': 'user_code',
 						'onMenuOpen': function () {
-							addEmptySpaceToAction(actionIndex);
+							addEmptySpaceToAction(actionPaneId);
 						},
 						'onMenuClose': function () {
-							removeEmptySpaceFromAction(actionIndex);
+							removeEmptySpaceFromAction(actionPaneId);
 						}
 					}
 				}
@@ -3133,7 +3179,7 @@
 
 		};
 
-		const createInstrumentEventSchedulesMFData = function (action, actionIndex) {
+		const createInstrumentEventSchedulesMFData = function (action, actionPaneId) {
 
 			let multitypeFieldsData = {};
 
@@ -3168,10 +3214,10 @@
 						'itemName': action.instrument_event_schedule.instrument_object ? action.instrument_event_schedule.instrument_object.name : '',
 						'itemProperty': 'user_code',
 						'onMenuOpen': function () {
-							addEmptySpaceToAction(actionIndex);
+							addEmptySpaceToAction(actionPaneId);
 						},
 						'onMenuClose': function () {
-							removeEmptySpaceFromAction(actionIndex);
+							removeEmptySpaceFromAction(actionPaneId);
 						}
 					}
 				}
@@ -3280,27 +3326,29 @@
 
 		};
 
-		const getMultitypeFieldsDataForAction = function (action, actionIndex) {
+		const getMultitypeFieldsDataForAction = function (action) {
 
 			let multitypeFieldsData = {};
 
+			const actionPaneId = getActionPaneId(action);
+
 			if (action.transaction) {
-				multitypeFieldsData = createTransactionMFData(action, actionIndex);
+				multitypeFieldsData = createTransactionMFData(action, actionPaneId);
 			}
 			else if (action.instrument) {
 				multitypeFieldsData = createInstrumentMFData(action);
 			}
 			else if (action.instrument_factor_schedule) {
-				multitypeFieldsData = createInstrumentFactorScheduleMFData(action, actionIndex);
+				multitypeFieldsData = createInstrumentFactorScheduleMFData(action, actionPaneId);
 			}
 			/* else if (action.instrument_manual_pricing_formula) {
 				multitypeFieldsData = createInstrumentManualPricingFormulaMFData(action, actionIndex);
 			} */
 			else if (action.instrument_accrual_calculation_schedules) {
-				multitypeFieldsData = createInstrumentAccrualCalculationSchedulesMFData(action, actionIndex);
+				multitypeFieldsData = createInstrumentAccrualCalculationSchedulesMFData(action, actionPaneId);
 			}
 			else if (action.instrument_event_schedule) {
-				multitypeFieldsData = createInstrumentEventSchedulesMFData(action, actionIndex);
+				multitypeFieldsData = createInstrumentEventSchedulesMFData(action, actionPaneId);
 			}
 
 			return multitypeFieldsData;
@@ -3323,9 +3371,9 @@
 				actionsMultitypeFieldsList.push(multitypeFieldsData);
 
 			}); */
-			actions.forEach(function (action, index) {
+			actions.forEach(function (action) {
 
-				const multitypeFieldsData = getMultitypeFieldsDataForAction(action, index);
+				const multitypeFieldsData = getMultitypeFieldsDataForAction(action);
 
 				actionsMultitypeFieldsList.push(multitypeFieldsData);
 
@@ -3626,7 +3674,9 @@
             }
 
         };
+
 		const onActionMultitypeFieldToggle = function (fieldName, item, itemIndex, actionType) {
+
 			item[actionType][fieldName] = null;
 			item[actionType][fieldName + '_input'] = null;
 			delete item[actionType][fieldName + '_object'];
@@ -3634,9 +3684,12 @@
 				item[actionType][fieldName + '_phantom'] = null;
 			}
 			item[actionType][fieldName + '_toggle'] = !item[actionType][fieldName + '_toggle'];
+
 			let multitypeFieldData = viewModel.actionsMultitypeFieldsList[itemIndex][fieldName];
+
 			const activeType = multitypeFieldData.find(type => type.isActive);
 			const inactiveType = multitypeFieldData.find(type => !type.isActive);
+
 			inactiveType.model = null;
 			if (item[actionType][fieldName + '_toggle'] && !item[actionType][fieldName]) {
 				setDefaultValueForRelation(item, actionType, fieldName, activeType);
@@ -3958,6 +4011,7 @@
 			findEventSchedulePhantoms: findEventSchedulePhantoms,
 
 			createNewAction: createNewAction,
+			getActionPaneId: getActionPaneId,
 			generateOperationPopupData: generateOperationPopupData,
 			generateInstrumentOperationPopupData: generateInstrumentOperationPopupData,
 

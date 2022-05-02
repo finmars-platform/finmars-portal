@@ -1787,6 +1787,8 @@
         vm.generateOperationPopupData = sharedLogic.generateOperationPopupData;
         vm.generateInstrumentOperationPopupData = sharedLogic.generateInstrumentOperationPopupData;
 
+		vm.getActionPaneId = sharedLogic.getActionPaneId;
+
 		/* vm.makeCopyOfAction = function (actionToCopy, index, $event) {
 
 			$event.stopPropagation();
