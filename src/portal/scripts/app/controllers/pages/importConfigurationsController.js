@@ -475,11 +475,11 @@
                     return 'Currency Pricing Scheme';
                 case 'pricing.instrumentpricingscheme':
                     return 'Instrument Pricing Scheme';
-                case 'pricing.pricingprocedure':
+                case 'procedures.pricingprocedure':
                     return 'Pricing Procedure';
                 case 'procedures.requestdatafileprocedure':
                     return 'Data Procedure';
-                case 'schedules.pricingschedule':
+                case 'schedules.schedule':
                     return 'Pricing Schedule';
                 case 'obj_attrs.genericattributetype':
 

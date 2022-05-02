@@ -69,6 +69,19 @@ export default function (xhrService, cookieService) {
 		});
 	};
 
+	const checkUserLicenseKey = function (key) {
+
+		return xhrService.fetch(authorizerUrl + '/user-check-license/?key=' + key, {
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		});
+	};
+
 	const createMasterUser = function (user) {
 
 		return xhrService.fetch(authorizerUrl + '/master-user-create/', {
@@ -292,6 +305,7 @@ export default function (xhrService, cookieService) {
 		setCurrentMasterUser: setCurrentMasterUser,
 
 		checkMasterUserUniqueness: checkMasterUserUniqueness,
+		checkUserLicenseKey: checkUserLicenseKey,
 
 		getInviteFromMasterUserList: getInviteFromMasterUserList,
 		updateInviteFromMasterUserByKey: updateInviteFromMasterUserByKey,
