@@ -3486,6 +3486,12 @@
 
 			viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
 
+			// update references for objects inside multitypeFieldDirectives
+			setTimeout(function () {
+				$scope.$apply();
+				viewModel.actionsMFEventService.dispatchEvent(directiveEvents.FIELD_TYPES_DATA_CHANGED);
+			}, 0);
+
 		};
 
 		const moveUp = function (item, $index, $event) {
@@ -3500,6 +3506,12 @@
 			viewModel.findPhantoms();
 
 			viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
+
+			// update references for objects inside multitypeFieldDirectives
+			setTimeout(function () {
+				$scope.$apply();
+				viewModel.actionsMFEventService.dispatchEvent(directiveEvents.FIELD_TYPES_DATA_CHANGED);
+			}, 0);
 
 		};
 

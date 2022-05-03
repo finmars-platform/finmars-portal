@@ -65,8 +65,10 @@
                 <multitype-field label="Instrument"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].instrument"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('instrument', item, $index, 'instrument_event_schedule')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('instrument', item, $index, 'instrument_event_schedule')"
+
                                  class="ttype-action-input p-l-0"></multitype-field>
             </div>
         </div>
@@ -175,8 +177,10 @@
                 <multitype-field label="Periodicity"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].periodicity"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('periodicity', item, $index, 'instrument_event_schedule')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('periodicity', item, $index, 'instrument_event_schedule')"
+
                                  class="ttype-action-input"></multitype-field>
             </div>
             <div flex="33" layout="row">
@@ -212,8 +216,10 @@
                 <multitype-field label="Notification Class"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].notification_class"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('notification_class', item, $index, 'instrument_event_schedule')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('notification_class', item, $index, 'instrument_event_schedule')"
+
                                  class="ttype-action-input p-r-0"></multitype-field>
             </div>
         </div>
@@ -264,8 +270,10 @@
                 <multitype-field label="Event Class"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].event_class"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('event_class', item, $index, 'instrument_event_schedule')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('event_class', item, $index, 'instrument_event_schedule')"
+
                                  class="ttype-action-input"></multitype-field>
             </div>
             <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-r-0">
