@@ -55,8 +55,10 @@
                 <multitype-field label="Instrument type"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].instrument_type"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('instrument_type', item, $index, 'instrument')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('instrument_type', item, $index, 'instrument')"
+
                                  class="ttype-action-input p-l-0"></multitype-field>
             </div>
 
@@ -216,8 +218,10 @@
                 <multitype-field label="Pricing currency"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].pricing_currency"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('pricing_currency', item, $index, 'instrument')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('pricing_currency', item, $index, 'instrument')"
+
                                  class="ttype-action-input"></multitype-field>
             </div>
 
@@ -253,8 +257,10 @@
                 <multitype-field label="Accrued currency"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].accrued_currency"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('accrued_currency', item, $index, 'instrument')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('accrued_currency', item, $index, 'instrument')"
+
                                  class="ttype-action-input"></multitype-field>
             </div>
 
@@ -300,8 +306,10 @@
                 <multitype-field label="Pricing condition"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].pricing_condition"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('pricing_condition', item, $index, 'instrument')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('pricing_condition', item, $index, 'instrument')"
+
                                  class="ttype-action-input p-r-0"></multitype-field>
             </div>
 
@@ -454,8 +462,10 @@
                 <multitype-field label="Payment size details"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].payment_size_detail"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('payment_size_detail', item, $index, 'instrument')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('payment_size_detail', item, $index, 'instrument')"
+
                                  class="ttype-action-input"></multitype-field>
             </div>
 

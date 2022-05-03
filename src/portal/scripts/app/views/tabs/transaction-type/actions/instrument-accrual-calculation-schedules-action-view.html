@@ -179,8 +179,10 @@
                 <multitype-field label="Periodicity"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].periodicity"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('periodicity', item, $index, 'instrument_accrual_calculation_schedules')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('periodicity', item, $index, 'instrument_accrual_calculation_schedules')"
+
                                  class="ttype-action-input p-l-0"></multitype-field>
             </div>
 
@@ -218,8 +220,10 @@
                 <multitype-field label="Accrual calculation model"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].accrual_calculation_model"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
                                  on-value-change="vm.onMultitypeFieldValChange('accrual_calculation_model', item, $index, 'instrument_accrual_calculation_schedules')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('accrual_calculation_model', item, $index, 'instrument_accrual_calculation_schedules')"
+
                                  class="ttype-action-input p-r-0"></multitype-field>
             </div>
         </div>
