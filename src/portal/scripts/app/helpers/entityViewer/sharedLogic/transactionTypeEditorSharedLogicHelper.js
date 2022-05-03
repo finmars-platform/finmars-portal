@@ -3383,7 +3383,7 @@
 
 		};
 
-		const setTransactionInstrumentInput = function (item, name, prop) {
+		/* const setTransactionInstrumentInput = function (item, name, prop) {
 
 			if (prop === 'instrument') {
 				item.transaction.instrument_input = name;
@@ -3435,6 +3435,41 @@
 				item.transaction.allocation_balance_phantom = positionOrder;
 				item.transaction.allocation_balance = null;
 			}
+
+		}; */
+		/**
+		 * Set values inside action for instrument related properties
+		 *
+		 * @param {Object} action
+		 * @param {string} actionType - 'transaction', 'instrument_factor_schedule', etc
+		 * @param {string} fieldKey - 'instrument', 'linked_instrument', 'allocation_balance', 'allocation_pl'
+		 * @param {string|number} value - name of input or index of instrument's phantom
+		 *
+		 * @returns {Object}
+		 */
+		const setInstrumentInputVal = (action, actionType, fieldKey, value) => {
+
+			const inputProp = fieldKey + '_input';
+			const phantomProp = fieldKey + '_phantom';
+
+			// instrument phantom selected
+			let inputVal = null;
+			let phantomVal = value;
+
+			// instrument input selected
+			if (isNaN(value)) {
+				inputVal = value;
+				phantomVal = null;
+			}
+
+			// object path example: action.transaction.instrument_input
+			action[actionType][inputProp] = inputVal;
+			// object path example: action.transaction.instrument_phantom
+			action[actionType][phantomProp] = phantomVal;
+			// object path example: action.transaction.instrument
+			action[actionType][fieldKey] = null;
+
+			return action;
 
 		};
 
@@ -3518,7 +3553,7 @@
 
 				fieldProp = fieldKey + '_input';
 
-				if (actionType === 'transaction') {
+				/*if (actionType === 'transaction') {
 
 					const instrFieldChanged = ['instrument', 'linked_instrument', 'allocation_pl', 'allocation_balance'].includes(fieldKey);
 
@@ -3526,14 +3561,23 @@
 
 						fieldProp = null; // value will be set by methods below
 
-						if (isNaN(activeType.model)) { // phantom of input selected
+						if (isNaN(activeType.model)) { // input selected
 							setTransactionInstrumentInput(action, activeType.model, fieldKey);
 
-						} else { // input selected
+						} else { // phantom of instrument selected
 							setTransactionInstrumentPhantom(action, activeType.model, fieldKey);
 						}
 
 					}
+
+				}*/
+
+				const instrFieldChanged = ['instrument', 'linked_instrument', 'allocation_pl', 'allocation_balance'].includes(fieldKey);
+
+				if (instrFieldChanged) {
+
+					fieldProp = null; // value will be set by method below
+					action = setInstrumentInputVal(action, actionType, fieldKey, activeType.model);
 
 				}
 

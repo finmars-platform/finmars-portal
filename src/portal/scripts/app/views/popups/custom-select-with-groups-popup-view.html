@@ -1,4 +1,5 @@
-<div class="custom-select-popup popup-menu">
+<div class="custom-select-popup popup-menu"
+     ng-init="popupData.onInit()">
 
     <!--<div class="popup-select-filter-wrap">
         <input type="text"
@@ -10,7 +11,7 @@
 
     <div>
 
-        <div data-ng-repeat="group in popupData.options | orderBy:'name':false:popupData.optionsComparator | filter: popupData.inputText"
+        <div data-ng-repeat="group in popupData.options | orderBy:'name':false:popupData.optionsComparator | filter: popupData.filterTerm"
              class="custom-input-sel-group">
 
             <div ng-if="group.content.length">

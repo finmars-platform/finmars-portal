@@ -238,9 +238,9 @@
 
                 };
 
-                scope.onInputTextChange = function () {
+                /*scope.onInputTextChange = function () {
                     scope.dropdownMenuFilter = scope.menuOptionsPopupData.filterTerm;
-                };
+                };*/
 
                 var closeDropdownMenu = function (updateScope) {
 
