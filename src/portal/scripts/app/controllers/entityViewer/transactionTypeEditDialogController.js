@@ -1715,7 +1715,8 @@
         vm.onMultitypeFieldValChange = sharedLogic.onMultitypeFieldValChange;
 
         vm.actionsMultitypeFieldsList = [];
-        vm.paneActionsMenuPopups = [];
+		vm.eventPhantomsOpts = [];
+		vm.paneActionsMenuPopups = [];
 
 		// vm.createActionsMenuPopupsList
 		vm.createSelectorPopupDataForActions = sharedLogic.createSelectorPopupDataForActions;
@@ -1925,7 +1926,7 @@
         };
 
 		vm.findPhantoms = sharedLogic.findPhantoms;
-		vm.findEventSchedulePhantoms = sharedLogic.findEventSchedulePhantoms;
+		// vm.findEventSchedulePhantoms = sharedLogic.findEventSchedulePhantoms;
         vm.loadRelation = sharedLogic.loadRelation;
 
         vm.getNameByValueType = function (value) {
@@ -2251,6 +2252,7 @@
 
                 var iamdlResult = sharedLogic.initAfterMainDataLoaded();
 				vm.actionsMultitypeFieldsList = iamdlResult.actionsMultitypeFieldsList;
+				vm.eventPhantomsOpts = iamdlResult.eventPhantomsOpts;
 
 				vm.readyStatus.inputs = true;
 

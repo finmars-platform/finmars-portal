@@ -329,6 +329,9 @@
 
 			}
 
+			viewModel.findPhantoms();
+			viewModel.eventPhantomsOpts = findEventSchedulePhantoms();
+
 			viewModel.paneActionsMenuPopups = createSelectorPopupDataForActions();
 
 		};
@@ -369,7 +372,7 @@
 				'notification_class_input', 'notify_in_n_days', 'periodicity', 'periodicity_input', 'periodicity_input'
 			],
 			'instrument_event_schedule_action': [
-				'button_position', 'event_schedule', 'event_schedule_input', 'event_schedule_phantom', 'is_book_automatic',
+				'button_position', 'event_schedule',  'event_schedule_input', 'event_schedule_phantom', 'is_book_automatic',
 				'is_sent_to_pending', 'text', 'transaction_type_from_instrument_type'
 			],
 			/* 'instrument_manual_pricing_formula': [
@@ -395,7 +398,13 @@
 			actionToAdd[actionType] = {};
 
 			actionFieldsByType[actionType].forEach(function (key) {
+
 				actionToAdd[actionType][key] = '';
+
+				if (actionType === 'instrument_event_schedule_action' && (key === 'event_schedule' || key === 'event_schedule_input')) {
+					actionToAdd[actionType][key] = null;
+				}
+
 			});
 
 			return actionToAdd;
@@ -1864,19 +1873,9 @@
 			return result;
 		};
 
-		const findEventSchedulePhantoms = function () {
+		const findEventSchedulePhantoms = () => {
 
-			/*var result = [];
-
-			viewModel.entity.actions.forEach(function (action, $index) {
-				action.positionOrder = $index;
-				if (action.instrument_event_schedule !== null) {
-					result.push(action);
-				}
-			});
-
-			return result;*/
-			return new Promise(res => {
+			// return new Promise(res => {
 
 				let result = [];
 
@@ -1894,9 +1893,11 @@
 					}
 				});
 
-				res(result);
+				return result;
 
-			});
+				// res(result);
+
+			// });
 
 		};
 
@@ -1947,6 +1948,7 @@
 					// viewModel.actionsMultitypeFieldsList.splice($index, 1);
 
 					viewModel.clearPhantoms();
+					viewModel.eventPhantomsOpts = findEventSchedulePhantoms();
 
 					viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
 					createSelectorPopupDataForActions();
@@ -2027,6 +2029,7 @@
 			viewModel.actionsMultitypeFieldsList.splice(coppiedActionIndex, 0, multitypeFieldsData);
 
 			viewModel.findPhantoms();
+			viewModel.eventPhantomsOpts = findEventSchedulePhantoms();
 
 			viewModel.paneActionsMenuPopups = createSelectorPopupDataForActions();
 
@@ -3483,6 +3486,7 @@
 			viewModel.entity.actions[$index + 1] = swap;
 
 			viewModel.findPhantoms();
+			viewModel.eventPhantomsOpts = findEventSchedulePhantoms();
 
 			viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
 
@@ -3504,6 +3508,7 @@
 			viewModel.entity.actions[$index - 1] = swap;
 
 			viewModel.findPhantoms();
+			viewModel.eventPhantomsOpts = findEventSchedulePhantoms();
 
 			viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
 
@@ -3612,6 +3617,7 @@
             createDataForInputsGridTable();
 
 			result.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
+			result.eventPhantomsOpts = findEventSchedulePhantoms();
 
 			return result;
 
