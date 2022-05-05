@@ -15,30 +15,43 @@
                 loadRelation: '&',
                 relationItems: '=',
                 propertyName: '@',
-                propertyValue: '@',
-                selectedValue: '<',
+                // propertyValue: '@',
+                // selectedValue: '<',
                 selectedName: '<',
                 isDisabled: '<'
             },
             templateUrl: 'views/directives/ttype-actions-relations-select-view.html',
             link: function (scope, elem, attrs) {
 
-                if (!scope.propertyValue) {
+                /* if (!scope.propertyValue) {
                     scope.propertyValue = "id";
                 }
 
                 if (!scope.propertyName) {
                     scope.propertyName = "name";
-                }
+                } */
 
                 elem[0].title = scope.labelTitle;
 
                 scope.loadRelationsOnOpen = function () {
-                    if (!scope.relationItems) {
-                        scope.loadRelation().then(function () {
-                            scope.$apply();
-                        });
-                    }
+
+                	return new Promise(function (resolve) {
+
+                		if (!scope.relationItems) {
+							/* scope.loadRelation().then(function () {
+								scope.$apply();
+							}); */
+							scope.loadRelation().then(function (data) {
+								scope.relationItems = data;
+								resolve(scope.relationItems);
+							});
+
+						} else {
+							resolve(scope.relationItems);
+						}
+
+					});
+
                 };
 
                 scope.filterPredicateFunction = function (propertyName, searchTerm) {

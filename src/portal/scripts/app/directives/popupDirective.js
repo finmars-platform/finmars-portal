@@ -10,9 +10,9 @@
             scope: {
                 // popupId: '@', // for now scope.popupClasses and scope.backdropClasses are enough
 
-                popupTemplate: '@', // all data must be already rendered in template
-                popupTemplateUrl: '@', // can bind data from popupData when compile in createPopup
-                popupData: '=',
+				popupTemplate: '@', // all data must be already rendered in template
+				popupTemplateUrl: '@', // can bind data from popupData when compile in createPopup
+				popupData: '=',
 				popupEventService: '=', // can be used to open popup
 
 				openOn: '@', // ('click', 'right_click', 'mouse_over') - set event listener to open popup.
@@ -22,14 +22,23 @@
 
 				positionRelativeTo: '@', // ('mouse', 'element').
 				//region this properties work only if scope.positionRelativeTo === 'element'
+
+				/*
+				position relative to element or mouse
+
+					if positionRelativeTo === 'element'
+						moves popup to element border
+
+				*/
 				relativePopupX: '@', // [ 'left', 'right' ] Default - 'left'
 				relativePopupY: '@', // [ 'top', 'bottom' ] Default - 'bottom'
 
 				popupWidth: '@', // [ 'element', 'content' ] Default - 'content'
 				//endregion
 
-				popupClasses: '<', // add css classes to popup-container, example: popup-classes="class1 class2"
-				backdropClasses: '=', // add css classes to backdrop
+				// If you need to change classes dynamically, do it through template and popupData
+				popupClasses: '@', // add css classes to popup-container, example: popup-classes="class1 class2"
+				backdropClasses: '@', // add css classes to backdrop
 
 				// obj with property 'value'
 				popupX: '=',
@@ -41,8 +50,8 @@
 				onCancel: '&?',
 				onSave: '&?'
 
-            },
-            link: function (scope, elem, attrs) {
+			},
+			link: function (scope, elem, attrs) {
 
 				scope.isPopupOpen = false;
 
@@ -61,7 +70,7 @@
 				let popupElem = document.createElement("div");
 				popupElem.classList.add("popup-container");
 
-				let originalPopupData;
+				// let originalPopupData;
 				let popupContentScope;
 
 				if (scope.popupClasses) {
@@ -83,19 +92,19 @@
 
 				let setPopupPosition = function (event) {
 					// const coords = targetElement.getBoundingClientRect();
-					const popupWidth = popupElem.clientWidth;
-
 					let positionX;
-					if (scope.popupX) positionX = scope.popupX.value;
+
+					if (scope.popupX) { positionX = scope.popupX.value }
 
 					let positionY;
-					if (scope.popupY) positionY = scope.popupY.value;
+
+					if (scope.popupY) { positionY = scope.popupY.value }
 
 					if (scope.positionRelativeTo === 'element') {
 
-/*						if (!coords) { // better for rendering performance to declare it once
-							coords = elem[0].getBoundingClientRect();
-						}*/
+						/*						if (!coords) { // better for rendering performance to declare it once
+													coords = elem[0].getBoundingClientRect();
+												}*/
 
 						coords = elem[0].getBoundingClientRect();
 
@@ -121,6 +130,7 @@
 						}
 
 					}
+
 					else if (scope.positionRelativeTo === 'mouse' && event) {
 
 						if (!positionX) positionX = event.clientX;
@@ -139,6 +149,7 @@
 
 					// Prevents popup from creeping out of window
 					let popupHeight = popupElem.clientHeight;
+					const popupWidth = popupElem.clientWidth;
 
 					const windowHeight = document.body.clientHeight;
 					const windowWidth = document.body.clientWidth;
@@ -317,13 +328,13 @@
 
 				}
 
-                /* scope.onBackdropClick = function () {
+				/* scope.onBackdropClick = function () {
 
 					if (scope.closeOnClickOutside !== false) {
 						removePopUp();
 					}
 
-                } */
+				} */
 
 				scope.onTargetElementClick = function (event) {
 
@@ -462,7 +473,7 @@
 
 				};
 
-                scope.init();
+				scope.init();
 
 			}
 		}
