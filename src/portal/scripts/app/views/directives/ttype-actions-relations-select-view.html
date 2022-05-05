@@ -1,3 +1,4 @@
+<!--
 <md-input-container class="md-block"
                     aria-label="select with filter">
     <label>{{labelTitle}}</label>
@@ -29,4 +30,10 @@
             </div>
 
     </md-select>
-</md-input-container>
+</md-input-container> -->
+<dropdown-select label="{{labelTitle}}"
+                 model="model"
+                 item-name="selectedName"
+                 menu-options="menuOptions"
+                 load-menu-options="loadRelationsOnOpen()">
+</dropdown-select>

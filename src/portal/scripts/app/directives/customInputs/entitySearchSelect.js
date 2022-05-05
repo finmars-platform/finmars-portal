@@ -15,7 +15,7 @@
                 label: '=',
                 item: '=',
                 itemName: '=',
-				userCodeForItem: '@',
+				itemProperty: '@', // is 'id' by default
                 itemObject: '=',
                 entityType: '=',
                 customButtons: '=',
@@ -23,7 +23,10 @@
                 eventSignal: '=',
                 smallOptions: '=',
                 isDisabled: '=',
-                onChangeCallback: '&'
+
+				onMenuOpen: '&',
+				onMenuClose: '&',
+				onChangeCallback: '&',
             },
             templateUrl: 'views/directives/customInputs/entity-search-select-view.html',
             link: function (scope, elem, attrs) {
@@ -32,9 +35,11 @@
                 scope.inputValue = '';
                 scope.placeholderText = 'Relation';
                 //scope.tooltipText = 'Tooltip text';
+				if (!scope.itemProperty) scope.itemProperty = 'id';
+				let itemName = scope.itemName || '';
 
                 if (scope.itemName) { // itemName and inputText needed for resetting selected option name
-                    scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+                    scope.inputText = itemName;
                 }
 
                 // TIPS
@@ -50,7 +55,6 @@
 
                 }
 
-                var idProperty = scope.userCodeForItem ? 'user_code' : 'id';
                 var stylePreset;
 
                 var inputContainer = elem[0].querySelector('.smartSearchInputContainer');
@@ -95,6 +99,75 @@
                     }
 
                 }*/
+				/* scope.menuOptionsPopupData = {
+					options: [],
+					selectOption: function (item, _$popup, $event) {
+
+						_$popup.cancel();
+
+						if (item.id !== scope.item) {
+
+							stylePreset = '';
+							scope.error = '';
+							//scope.item.value = item.id;
+							scope.item = item.id;
+
+							if (scope.itemObject !== undefined) {
+								scope.itemObject = item;
+							}
+
+							scope.valueIsValid = true;
+
+							if (item.short_name) {
+								itemName = item.short_name;
+								scope.inputText = item.short_name;
+
+							} else {
+								itemName = item.name;
+								scope.inputText = item.name;
+							}
+
+							closeDropdownMenu();
+
+							setTimeout(function () {
+
+								scope.onChangeCallback();
+								scope.$apply();
+
+							}, 0);
+
+						}
+
+					},
+					focusInput: function () {
+						setTimeout(() => {
+							const filter = document.querySelector('input.popup-select-filter');
+							filter.focus();
+						}, 100);
+
+					},
+					onInit: async function () {
+
+						// scope.inputText = "";
+						inputContainer.classList.add('custom-input-focused');
+
+						// scope.dropdownMenuShown = true;
+
+						// window.addEventListener('click', closeDDMenuOnClick);
+						document.addEventListener('keydown', onTabKeyPress);
+
+						if (scope.loadMenuOptions) {
+							// scope.menuOptions = await scope.loadMenuOptions();
+							scope.menuOptionsPopupData.options = await scope.loadMenuOptions();
+
+							setTimeout(function () {
+								scope.$apply();
+							}, 100);
+
+						}
+
+					}
+				}; */
 
                 scope.getInputContainerClasses = function () {
                     var classes = '';
@@ -132,23 +205,23 @@
 
                 scope.selectOption = function (item) {
 
-                    if (item[idProperty] !== scope.item) {
+                    if (item[scope.itemProperty] !== scope.item) {
 
                         stylePreset = '';
                         scope.error = '';
                         //scope.item.value = item.id;
-                        scope.item = item[idProperty];
+                        scope.item = item[scope.itemProperty];
 
                         if (scope.itemObject !== undefined) scope.itemObject = item;
 
                         scope.valueIsValid = true;
 
                         if (item.short_name) {
-                            scope.itemName = item.short_name;
+							itemName = item.short_name;
                             scope.inputText = item.short_name;
 
                         } else {
-                            scope.itemName = item.name;
+							itemName = item.name;
                             scope.inputText = item.name;
                         }
 
@@ -185,6 +258,7 @@
                     entityResolverService.getListLight(scope.entityType, options).then(function (data) {
 
                         scope.selectorOptions = data.results;
+						// scope.menuOptionsPopupData.options = data.results;
 
                         window.addEventListener('click', closeDDMenuOnClick);
                         document.addEventListener('keydown', onTabKeyPress);
@@ -205,6 +279,10 @@
 
                     window.removeEventListener('click', closeDDMenuOnClick);
                     document.removeEventListener('keydown', onTabKeyPress);
+
+					if (scope.onMenuClose) {
+						scope.onMenuClose();
+					}
 
                     if (updateScope) {
                         scope.$apply();
@@ -272,13 +350,13 @@
 
                                 stylePreset = '';
                                 //scope.item.value = res.data.item.id;
-                                scope.item = res.data.item[idProperty];
+                                scope.item = res.data.item[scope.itemProperty];
 
                                 if (scope.itemObject !== undefined) {
                                     scope.itemObject = res.data.item;
                                 }
 
-                                scope.itemName = res.data.item.short_name;
+								itemName = res.data.item.short_name;
                                 scope.inputText = res.data.item.short_name;
 
                                 scope.error = '';
@@ -336,14 +414,18 @@
 
                         getOptionsList();
 
+						if (scope.onMenuOpen) {
+							scope.onMenuOpen();
+						}
+
                     });
 
                     inputElem.addEventListener('blur', function (event) {
 
                         inputContainer.classList.remove('custom-input-focused');
 
-                        if (scope.itemName) {
-                            scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+                        if (itemName) {
+                            scope.inputText = itemName;
                             scope.$apply();
                         }
 
@@ -397,14 +479,11 @@
                     scope.$watch('itemName', function () {
 
                         if (scope.itemName) {
-
-                            console.log('itemName', scope.itemName);
-
-                            scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+							scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
 
                         } else {
+                        	itemName = '';
                             scope.inputText = '';
-
                         }
 
                     });

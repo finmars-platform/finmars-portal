@@ -89,6 +89,9 @@
 			bundles = bundles.transform("babelify", {presets: presets});
 
 		}
+		/* console.log("PROJECT_ENV ", PROJECT_ENV);
+		console.log("API_HOST ", API_HOST);
+		console.log("AUTHORIZER_URL ", AUTHORIZER_URL); */
 
 		return bundles
 			.bundle()

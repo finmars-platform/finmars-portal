@@ -304,12 +304,23 @@
   }
 
   .custom-input-sel-option {
+    min-height: 19px;
     padding: 4px 10px;
     cursor: pointer;
     white-space: nowrap;
 
     &:hover {
       background-color: rgba(158, 158, 158, 0.18);
+    }
+  }
+
+  .custom-input-sel-group {
+    .group-name {
+      padding: 4px 10px;
+    }
+
+    .custom-input-sel-option {
+      padding-left: 24px;
     }
   }
 
@@ -519,6 +530,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding: 0;
 
   &:focus {
     outline: none;
@@ -539,7 +551,7 @@
   background-color: @gray;
   cursor: pointer;
 
-  &.type-with-constant {
+  &.type-with-constant, &.highlight {
     background-color: @orange;
   }
 
@@ -552,6 +564,15 @@
   }
 }
 //endregion
+
+.multitype-field-type-sign-wrap[disabled] {
+
+  .multitype-field-type-letter {
+    cursor: default;
+    opacity: .5;
+  }
+
+}
 
 .multitype-field-type-selector-popup {
   padding: 8px 0;
@@ -795,6 +816,14 @@
 
   .custom-input-indicator-btn {
     outline: none;
+  }
+}
+
+.custom-input-container.custom-input-focused.dropdown-input-container {
+  .custom-input-main-container {
+    .custom-input {
+      font-weight: 500;
+    }
   }
 }
 
