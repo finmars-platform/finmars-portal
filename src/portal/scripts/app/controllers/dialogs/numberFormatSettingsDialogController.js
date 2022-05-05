@@ -260,7 +260,7 @@
                 vm.onNumberFormatChange();
 
             }
-        }
+        };
 
         vm.cancel = function () {
 
