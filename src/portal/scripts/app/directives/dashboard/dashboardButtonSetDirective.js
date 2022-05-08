@@ -91,9 +91,6 @@
 
                 scope.handleAction = function ($event, item) {
 
-                    console.log('handleAction $event', $event);
-                    console.log('handleAction item', item);
-
                     setTimeout(function (){
                         scope.componentName = scope.componentData.custom_component_name; // important after click thing
                     }, 0)
@@ -101,6 +98,37 @@
                     if (item.action === 'book_transaction') {
 
                         var contextData = {};
+
+						if (item.settings.get_context) {
+
+							var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputs();
+							var componentsKeysList = Object.keys(componentsOutputs);
+							var lastChangedCompId;
+							var lastOutput;
+
+							for (var i = 0; i < componentsKeysList.length; i++) {
+
+								var cKey = componentsKeysList[i];
+								var cOutput = componentsOutputs[cKey];
+
+								if (cOutput.changedLast) {
+
+									lastChangedCompId = cKey;
+									lastOutput = cOutput
+									break;
+
+								}
+
+							}
+
+							var lastChangedComp = scope.dashboardDataService.getComponentById(lastChangedCompId);
+							console.log("testing handleAction lastChangedComp", lastChangedComp);
+
+							if (lastChangedComp.type === 'report_viewer' && lastOutput && lastOutput.data && typeof lastOutput.data === 'object') {
+
+							}
+
+						}
 
                         if (item.target) {
 

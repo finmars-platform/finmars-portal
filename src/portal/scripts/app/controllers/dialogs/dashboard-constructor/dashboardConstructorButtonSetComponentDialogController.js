@@ -70,7 +70,9 @@
 
                     for (var x = 0; x < 6; x = x + 1) {
 
-                        var button = {};
+                        var button = {
+							options: {}
+						};
 
                         row.items.push(button)
 
@@ -81,6 +83,24 @@
                 }
 
             }
+			else {
+
+				vm.item.settings.grid.rows.forEach(function (row) {
+
+					row.items = row.items.map(function (button) {
+
+						if (!button.options) {
+							button.optiions = {};
+						}
+
+						return button;
+
+					});
+
+				})
+
+			}
+			console.log("testing initGrid vm.item.settings", vm.item.settings);
 
         };
 
@@ -451,7 +471,7 @@
 
                     return {
                         value: item.user_code,
-                        name: item.name
+                        name: item.short_name
                     }
 
                 });
