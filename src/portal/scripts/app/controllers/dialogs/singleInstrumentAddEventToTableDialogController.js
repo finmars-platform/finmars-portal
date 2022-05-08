@@ -30,6 +30,11 @@
 
         vm.transactionTypes = [];
 
+		vm.descriptionExprData = {
+			groups: [],
+			functions: []
+		}
+
         const instrAttrTypes = data.instrumentAttrTypes;
         let multitypeFieldsData = instrumentService.getInstrumentEventsMultitypeFieldsData();
 

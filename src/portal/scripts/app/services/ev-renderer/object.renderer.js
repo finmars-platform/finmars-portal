@@ -455,8 +455,9 @@
 
         }
 
+		var entityType = evDataService.getEntityType();
         var statusIcon = getStatusIcon(obj, currentMember);
-        var rowSettings = renderHelper.getRowSettings(obj.___type, rowColor, statusIcon);
+        var rowSettings = renderHelper.getRowSettings(obj.___type, rowColor, entityType, statusIcon);
 
         addReconColorization(obj, classList, viewContext, verticalAdditions);
 

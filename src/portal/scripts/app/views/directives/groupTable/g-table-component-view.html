@@ -37,8 +37,10 @@
         </div>-->
 
         <div class="g-workarea-wrap">
-            <div class="g-workarea main-area"
-                 data-ng-if="domElemsAreReady"
+            <div data-ng-if="domElemsAreReady"
+                 class="g-workarea main-area"
+                 ng-class="{'generated-events-main-area': entityType === 'generated-event'}"
+
                  ev-data-service="evDataService"
                  ev-event-service="evEventService">
 

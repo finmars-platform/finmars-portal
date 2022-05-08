@@ -670,7 +670,8 @@
 
                 metaHelper.openLinkInNewTab(event);
 
-            } else if (event.detail === 2) { // double click handler
+            }
+			else if (event.detail === 2) { // double click handler
 
                 if (clickData.___type === 'object') {
 
@@ -695,7 +696,8 @@
 
                 }
 
-            } else if (clickData.isShiftPressed) {
+            }
+			else if (clickData.isShiftPressed) {
 
                 if (event.detail === 1) {
 
@@ -715,7 +717,8 @@
 
                 }
 
-            } else if (!selection.length) {
+            }
+			else if (!selection.length) {
 
                 if (event.detail === 1) {
 
@@ -983,116 +986,201 @@
 
     };
 
+	var getToggleRowOptHTML = function (obj, objectId, parentGroupHashId) {
+
+		var toggleRowName = obj.___is_activated ? 'Unselect row' : 'Select row';
+
+		return '<div class="ev-dropdown-option"' +
+			   ' data-ev-dropdown-action="toggle_row"' +
+			   ' data-object-id="' + objectId + '"' +
+			   ' data-parent-group-hash-id="' + parentGroupHashId + '">' + toggleRowName + '</div>';
+
+	};
+
+	/**
+	 * Get HTML for context menu options for reconciliation rows
+	 *
+	 * @param {Object} obj - object of row
+	 * @param {string} objectId
+	 * @param {string} parentGroupHashId
+	 * @param {string} innerHTMLString - HTML for context menu
+	 * @returns {string} - filled HTML for context menu
+	 */
+	var getReconContextMenuHTML = function (obj, objectId, parentGroupHashId, innerHTMLString) {
+
+		var toggleRowOpt = getToggleRowOptHTML(obj, objectId, parentGroupHashId);
+		innerHTMLString = innerHTMLString + toggleRowOpt;
+
+		innerHTMLString = innerHTMLString +
+			'<div class="ev-dropdown-option"' +
+			' data-ev-dropdown-action="recon_view_bank_file_line"' +
+			' data-object-id="' + objectId + '"' +
+			' data-parent-group-hash-id="' + parentGroupHashId + '">View Line</div>';
+
+		innerHTMLString = innerHTMLString +
+			'<div class="ev-dropdown-option"' +
+			' data-ev-dropdown-action="recon_book_selected"' +
+			' data-object-id="' + objectId + '"' +
+			' data-parent-group-hash-id="' + parentGroupHashId + '">Book</div>';
+
+		innerHTMLString = innerHTMLString +
+			'<div class="ev-dropdown-option"' +
+			' data-ev-dropdown-action="recon_hide"' +
+			' data-object-id="' + objectId + '"' +
+			' data-parent-group-hash-id="' + parentGroupHashId + '">Hide</div>';
+
+		return innerHTMLString;
+
+	};
+
+	var getEventsContextMenuHTML = function (obj, objectId, parentGroupHashId, innerHTMLString) {
+
+		innerHTMLString = innerHTMLString +
+			'<div class="ev-dropdown-option text-bold"' +
+			' data-ev-dropdown-action="description"' +
+			' data-object-id="' + objectId + '"' +
+			' data-parent-group-hash-id="' + parentGroupHashId + '">Coupon description</div>';
+
+		innerHTMLString = innerHTMLString +
+			'<div class="ev-dropdown-option text-bold"' +
+			' data-ev-dropdown-action="book_default"' +
+			' data-object-id="' + objectId + '"' +
+			' data-parent-group-hash-id="' + parentGroupHashId + '">Book default transaction</div>';
+
+		innerHTMLString = innerHTMLString +
+			'<div class="ev-dropdown-option text-bold"' +
+			' data-ev-dropdown-action="do_nothing"' +
+			' data-object-id="' + objectId + '"' +
+			' data-parent-group-hash-id="' + parentGroupHashId + '">Do nothing</div>';
+
+		innerHTMLString = innerHTMLString +
+			'<div class="ev-dropdown-option text-bold"' +
+			' data-ev-dropdown-action="skip"' +
+			' data-object-id="' + objectId + '"' +
+			' data-parent-group-hash-id="' + parentGroupHashId + '">Skip</div>';
+
+		innerHTMLString = innerHTMLString +
+			'<div class="ev-dropdown-option text-bold"' +
+			' data-ev-dropdown-action="skip_all"' +
+			' data-object-id="' + objectId + '"' +
+			' data-parent-group-hash-id="' + parentGroupHashId + '">Skip All</div>';
+
+		return innerHTMLString;
+
+	};
+
+	var getContextMenuHTML = function (obj, objectId, parentGroupHashId, innerHTMLString, entityType) {
+
+		var toggleRowOpt = getToggleRowOptHTML(obj, objectId, parentGroupHashId);
+		innerHTMLString = innerHTMLString + toggleRowOpt;
+
+		innerHTMLString = innerHTMLString +
+			'<div class="ev-dropdown-option"' +
+			' data-ev-dropdown-action="edit"' +
+			' data-object-id="' + objectId + '"' +
+			' data-parent-group-hash-id="' + parentGroupHashId + '">Edit</div>';
+
+		if (!obj.is_deleted) {
+			innerHTMLString = innerHTMLString +
+				'<div class="ev-dropdown-option"' +
+				' data-ev-dropdown-action="delete"' +
+				' data-object-id="' + objectId + '"' +
+				' data-parent-group-hash-id="' + parentGroupHashId + '">Delete</div>';
+		}
+
+
+		switch (entityType) {
+
+			case 'price-history':
+
+				innerHTMLString = innerHTMLString +
+					'<div class="ev-dropdown-option"' +
+					' data-ev-dropdown-action="edit_instrument"' +
+					' data-object-id="' + objectId + '"' +
+					' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>';
+
+				break;
+
+			case 'complex-transaction':
+
+				innerHTMLString = innerHTMLString +
+					'<div class="ev-dropdown-option"' +
+					' data-ev-dropdown-action="lock_transaction"' +
+					' data-object-id="' + objectId + '"' +
+					' data-parent-group-hash-id="' + parentGroupHashId + '">Lock Transaction</div>' +
+					'<div class="ev-dropdown-option"' +
+					' data-ev-dropdown-action="unlock_transaction"' +
+					' data-object-id="' + objectId + '"' +
+					' data-parent-group-hash-id="' + parentGroupHashId + '">Unlock Transaction</div>' +
+					'<div class="ev-dropdown-option"' +
+					' data-ev-dropdown-action="ignore_transaction"' +
+					' data-object-id="' + objectId + '"' +
+					' data-parent-group-hash-id="' + parentGroupHashId + '">Ignore Transaction</div>' +
+					'<div class="ev-dropdown-option"' +
+					' data-ev-dropdown-action="activate_transaction"' +
+					' data-object-id="' + objectId + '"' +
+					' data-parent-group-hash-id="' + parentGroupHashId + '">Activate Transaction</div>';
+
+				break;
+
+			case 'instrument':
+
+				innerHTMLString = innerHTMLString +
+					'<div class="ev-dropdown-option"' +
+					' data-ev-dropdown-action="deactivate_instrument"' +
+					' data-object-id="' + objectId + '"' +
+					' data-parent-group-hash-id="' + parentGroupHashId + '">Deactivate</div>' +
+					'<div class="ev-dropdown-option"' +
+					' data-ev-dropdown-action="activate_instrument"' +
+					' data-object-id="' + objectId + '"' +
+					' data-parent-group-hash-id="' + parentGroupHashId + '">Activate</div>';
+
+				break;
+
+		}
+
+
+		if (['complex-transaction', 'price-history', 'currency-history'].indexOf(entityType) === -1) {
+
+			if (obj.is_deleted) {
+
+				innerHTMLString = innerHTMLString +
+					'<div class="ev-dropdown-option"' +
+					' data-ev-dropdown-action="restore_deleted"' +
+					' data-object-id="' + objectId + '"' +
+					' data-parent-group-hash-id="' + parentGroupHashId + '">Restore</div>';
+			}
+		}
+
+		return innerHTMLString;
+
+	};
+
     var generateContextMenu = function (obj, objectId, parentGroupHashId, evDataService) {
 
-        var viewContext = evDataService.getViewContext();
         var entityType = evDataService.getEntityType();
+		var viewContext = evDataService.getViewContext();
 
         var innerHTMLString = '<div class="ev-dropdown-container">';
 
-        var toggleRowName = obj.___is_activated ? 'Unselect row' : 'Select row';
+		/*var toggleRowName = obj.___is_activated ? 'Unselect row' : 'Select row';
 
-        innerHTMLString = innerHTMLString +
-            '<div class="ev-dropdown-option"' +
-            ' data-ev-dropdown-action="toggle_row"' +
-            ' data-object-id="' + objectId + '"' +
-            ' data-parent-group-hash-id="' + parentGroupHashId + '">' + toggleRowName + '</div>';
+		innerHTMLString = innerHTMLString +
+			'<div class="ev-dropdown-option"' +
+			' data-ev-dropdown-action="toggle_row"' +
+			' data-object-id="' + objectId + '"' +
+			' data-parent-group-hash-id="' + parentGroupHashId + '">' + toggleRowName + '</div>';*/
 
-        if (viewContext === 'reconciliation_viewer') {
+		if (viewContext === 'reconciliation_viewer') {
+			innerHTMLString = getReconContextMenuHTML(obj, objectId, parentGroupHashId, innerHTMLString);
 
-            innerHTMLString = innerHTMLString +
-                '<div class="ev-dropdown-option"' +
-                ' data-ev-dropdown-action="recon_view_bank_file_line"' +
-                ' data-object-id="' + objectId + '"' +
-                ' data-parent-group-hash-id="' + parentGroupHashId + '">View Line</div>';
+		} if (entityType === 'generated-event') {
+			innerHTMLString = getEventsContextMenuHTML(obj, objectId, parentGroupHashId, innerHTMLString);
 
-            innerHTMLString = innerHTMLString +
-                '<div class="ev-dropdown-option"' +
-                ' data-ev-dropdown-action="recon_book_selected"' +
-                ' data-object-id="' + objectId + '"' +
-                ' data-parent-group-hash-id="' + parentGroupHashId + '">Book</div>';
+		} else {
+			innerHTMLString = getContextMenuHTML(obj, objectId, parentGroupHashId, innerHTMLString, entityType);
+		}
 
-            innerHTMLString = innerHTMLString +
-                '<div class="ev-dropdown-option"' +
-                ' data-ev-dropdown-action="recon_hide"' +
-                ' data-object-id="' + objectId + '"' +
-                ' data-parent-group-hash-id="' + parentGroupHashId + '">Hide</div>';
-
-        } else {
-
-            innerHTMLString = innerHTMLString +
-                '<div class="ev-dropdown-option"' +
-                ' data-ev-dropdown-action="edit"' +
-                ' data-object-id="' + objectId + '"' +
-                ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit</div>';
-
-            if (!obj.is_deleted) {
-                innerHTMLString = innerHTMLString +
-                    '<div class="ev-dropdown-option"' +
-                    ' data-ev-dropdown-action="delete"' +
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Delete</div>';
-            }
-
-
-            if (entityType === 'price-history') {
-
-                innerHTMLString = innerHTMLString +
-                    '<div class="ev-dropdown-option"' +
-                    ' data-ev-dropdown-action="edit_instrument"' +
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Edit Instrument</div>';
-
-            }
-
-            if (entityType === 'complex-transaction') {
-
-                innerHTMLString = innerHTMLString +
-                    '<div class="ev-dropdown-option"' +
-                    ' data-ev-dropdown-action="lock_transaction"' +
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Lock Transaction</div>' +
-                    '<div class="ev-dropdown-option"' +
-                    ' data-ev-dropdown-action="unlock_transaction"' +
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Unlock Transaction</div>' +
-                    '<div class="ev-dropdown-option"' +
-                    ' data-ev-dropdown-action="ignore_transaction"' +
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Ignore Transaction</div>' +
-                    '<div class="ev-dropdown-option"' +
-                    ' data-ev-dropdown-action="activate_transaction"' +
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Activate Transaction</div>';
-            }
-
-            if (entityType === 'instrument') {
-
-                innerHTMLString = innerHTMLString +
-                    '<div class="ev-dropdown-option"' +
-                    ' data-ev-dropdown-action="deactivate_instrument"' +
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Deactivate</div>' +
-                    '<div class="ev-dropdown-option"' +
-                    ' data-ev-dropdown-action="activate_instrument"' +
-                    ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Activate</div>';
-            }
-
-
-            if (['complex-transaction', 'price-history', 'currency-history'].indexOf(entityType) === -1) {
-
-                if (obj.is_deleted) {
-
-                    innerHTMLString = innerHTMLString +
-                        '<div class="ev-dropdown-option"' +
-                        ' data-ev-dropdown-action="restore_deleted"' +
-                        ' data-object-id="' + objectId + '"' +
-                        ' data-parent-group-hash-id="' + parentGroupHashId + '">Restore</div>';
-                }
-            }
-
-        }
 
         innerHTMLString = innerHTMLString + '</div>';
 

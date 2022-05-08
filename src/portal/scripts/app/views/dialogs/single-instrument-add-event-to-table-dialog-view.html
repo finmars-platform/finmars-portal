@@ -23,12 +23,16 @@
         </div>
 
         <div layout="row" class="m-t-8">
-            <text-input label="Description"
+            <!--<text-input label="Description"
                         placeholder-text="Description"
                         model="vm.event.description"
                         class="custom-input-bottom-space"
                         style="width: 100%"
-            ></text-input>
+            ></text-input>-->
+            <expression-input label="Description"
+                              model="vm.event.description"
+                              data-data="vm.expressionData"
+                              class="custom-input-bottom-space width-100"></expression-input>
         </div>
 
         <div layout="row" class="m-t-8">

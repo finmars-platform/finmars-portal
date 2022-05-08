@@ -5,7 +5,7 @@
             <md-checkbox data-ng-click="selectAllRows()" data-ng-checked="isAllSelected"></md-checkbox>
         </div>
 
-        <div class="g-cell-rows-settings">
+        <div ng-if="entityType !== 'generated-event'" class="g-cell-rows-settings">
 
             <div class="g-row-settings height-100">
                 <!--<md-button ng-if="!isReport"
@@ -79,6 +79,10 @@
                     <span ng-hide="!hideRowSettings" class="material-icons f-s-16">keyboard_arrow_right</span>
                 </div>
             </md-button>
+        </div>
+
+        <div ng-if="entityType === 'generated-event'" class="g-cell-rows-settings">
+            <div class="g-row-settings height-100"></div>
         </div>
 
         <div ng-if="isReport" class="flex-row g-groups-holder gGroupsHolder gcAreaDnD">
