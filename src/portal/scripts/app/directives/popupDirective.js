@@ -93,12 +93,13 @@
 				let setPopupPosition = function (event) {
 					// const coords = targetElement.getBoundingClientRect();
 					let positionX;
-
-					if (scope.popupX) { positionX = scope.popupX.value }
+					if (scope.popupX) positionX = scope.popupX.value;
 
 					let positionY;
+					if (scope.popupY) positionY = scope.popupY.value;
 
-					if (scope.popupY) { positionY = scope.popupY.value }
+					let popupHeight = popupElem.clientHeight;
+					let popupWidth = popupElem.clientWidth;
 
 					if (scope.positionRelativeTo === 'element') {
 
@@ -111,6 +112,7 @@
 						if (scope.popupWidth === 'element') {
 
 							popupElem.style.width = coords.width + 'px';
+							popupWidth = coords.width;
 
 						}
 
@@ -130,7 +132,6 @@
 						}
 
 					}
-
 					else if (scope.positionRelativeTo === 'mouse' && event) {
 
 						if (!positionX) positionX = event.clientX;
@@ -148,9 +149,6 @@
 					}
 
 					// Prevents popup from creeping out of window
-					let popupHeight = popupElem.clientHeight;
-					const popupWidth = popupElem.clientWidth;
-
 					const windowHeight = document.body.clientHeight;
 					const windowWidth = document.body.clientWidth;
 
