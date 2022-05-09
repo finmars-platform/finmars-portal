@@ -11,6 +11,7 @@
 
     var evRvLayoutsHelper = require('../../../helpers/evRvLayoutsHelper');
 	var dashboardHelper = require('../../../helpers/dashboard.helper');
+	var reportHelper = require('../../../helpers/reportHelper');
 
     module.exports = function ($scope, $mdDialog, item, dataService, multitypeFieldService, data) {
 
@@ -227,6 +228,51 @@
 
 		};
 
+		vm.extractReportFieldsFromLayout = function (layoutUserCode) {
+
+			var layout = vm.layouts.find(function (item) {
+
+				return item.user_code === layoutUserCode;
+
+			});
+
+			if (!layout) { // needed for old components where layout was stored as ID
+				layout = vm.layouts.find(item => item.id === layoutUserCode);
+				if (layout) {
+					vm.defaultValue.layout = layout.user_code;
+				}
+
+			}
+
+			// vm.reportFields = getReportFields(vm.defaultValue.entity_type, layout);
+
+			return new Promise(function (resolve) {
+
+				getReportFields(vm.defaultValue.entity_type, layout).then(function (fieldsData) {
+
+					vm.reportFields = fieldsData;
+
+					if (vm.defaultValue.entity_type === 'balance-report') {
+						vm.defaultValue.report_field = vm.reportFields[0];
+
+					} else if (vm.defaultValue.reportOptionsKey) {
+
+						vm.defaultValue.report_field = vm.reportFields.find(function(reportField) {
+
+							return reportField.key === vm.defaultValue.reportOptionsKey;
+
+						});
+
+					}
+
+					resolve();
+
+				});
+
+			});
+
+		};
+
         /* vm.onLayoutChange = function () {
 
             if (!vm.defaultValue.layout) {
@@ -261,7 +307,9 @@
 
 				vm.defaultValue.report_field = null;
 
-				vm.extractReportFieldsFromLayout(vm.defaultValue.layout);
+				vm.extractReportFieldsFromLayout(vm.defaultValue.layout).then(function () {
+					$scope.$apply();
+				});
 
 				// $scope.$apply();
 
@@ -269,65 +317,54 @@
 
 		};
 
-        vm.extractReportFieldsFromLayout = function (layoutUserCode) {
-
-            var layout = vm.layouts.find(function (item) {
-
-                return item.user_code === layoutUserCode;
-
-            });
-
-            if (!layout) { // needed for old components where layout was stored as ID
-                layout = vm.layouts.find(item => item.id === layoutUserCode);
-                if (layout) {
-                    vm.defaultValue.layout = layout.user_code;
-                }
-
-            }
-
-            vm.reportFields = getReportFields(vm.defaultValue.entity_type, layout);
-
-            if (vm.defaultValue.reportOptionsKey) {
-
-                vm.defaultValue.report_field = vm.reportFields.find(function(reportField) {
-
-                    return reportField.key === vm.defaultValue.reportOptionsKey;
-
-                });
-
-            }
-
-            if (vm.defaultValue.entity_type === 'balance-report') {
-
-                vm.defaultValue.report_field = vm.reportFields[0];
-
-            }
-
-        };
+		var defaultValueReportFields = {
+			'balance-report': [
+				{key: 'report_date', name: 'Date'}
+			],
+			'pl-report': [
+				{key: 'pl_first_date', name: 'Date from (excl)'},
+				{key: 'report_date', name: 'Date to (incl)'}
+			],
+			'transaction-report': [
+				{key: 'begin_date', name: 'Date from (incl)'},
+				{key: 'end_date', name: 'Date to (incl)'}
+			]
+		};
 
         var getReportFields = function (reportType, layout) {
 
-            var defaultValueReportFields = {
-                'balance-report': [
-                    {key: 'report_date', name: 'Date'}
-                ],
-                'pl-report': [
-                    {key: 'pl_first_date', name: 'Date from (excl)'},
-                    {key: 'report_date', name: 'Date to (incl)'}
-                ],
-                'transaction-report': [
-                    {key: 'begin_date', name: 'Date from (incl)'},
-                    {key: 'end_date', name: 'Date to (incl)'}
-                ]
-            };
+			var promises = [];
 
-            return defaultValueReportFields[reportType].map(function (field) {
-                return {
-                    key: field.key,
-                    name: field.name,
-                    value: layout.data.reportOptions[field.key]
-                };
-            });
+			var fieldsList = defaultValueReportFields[reportType].map(function (field) {
+				return {
+					key: field.key,
+					name: field.name,
+					// value: layout.data.reportOptions[field.key]
+				};
+			});
+
+			fieldsList.forEach(function (field) {
+
+				var dateValProm = new Promise(function (resolve) {
+
+					reportHelper.getReportDateValue(layout, field.key).then(function (dateValue) {
+						field.value = dateValue;
+						resolve();
+					});
+
+				});
+
+				promises.push(dateValProm);
+
+			})
+
+			return new Promise(function (resolve) {
+
+				Promise.all(promises).then(function () {
+					resolve(fieldsList);
+				});
+
+			});
 
         };
 
@@ -546,34 +583,34 @@
 
         vm.onGetDefaultValueFromLayoutMode = function () {
 
-        	if (vm.defaultValue.mode === 0 && layoutsSelectorDataNotReady) {
+			vm.layoutsSelectorsList = multitypeFieldService.getReportLayoutsSelectorData().map(function (type) {
+				type.custom = {
+					menuOptionsNotLoaded: true,
+				}
+				return type;
+			});
 
-				vm.layoutsSelectorsList = multitypeFieldService.getReportLayoutsSelectorData().map(function (type) {
-					type.custom = {
-						menuOptionsNotLoaded: true,
-					}
-					return type;
-				});
+			vm.defaultValue.entity_type = vm.defaultValue.entity_type || 'balance-report';
 
-				vm.defaultValue.entity_type = vm.defaultValue.entity_type || 'balance-report';
+			vm.readyStatus.layouts = false;
 
-				vm.readyStatus.layouts = false;
+			dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.defaultValue.entity_type, vm.defaultValue.layout, vm.getLayouts()).then(function (layoutsSelectorsList) {
 
-				dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.defaultValue.entity_type, vm.defaultValue.layout, vm.getLayouts()).then(function (layoutsSelectorsList) {
+				vm.layoutsSelectorsList = layoutsSelectorsList;
+				vm.readyStatus.layouts = true;
+				layoutsSelectorDataNotReady = false;
 
-					vm.layoutsSelectorsList = layoutsSelectorsList;
-					vm.readyStatus.layouts = true;
-					layoutsSelectorDataNotReady = false;
+				if (vm.defaultValue.layout) {
 
-					if (vm.defaultValue.layout) {
-						vm.extractReportFieldsFromLayout(vm.defaultValue.layout);
-					}
+					vm.extractReportFieldsFromLayout(vm.defaultValue.layout).then(function () {
+						$scope.$apply();
+					});
 
+				} else {
 					$scope.$apply();
+				}
 
-				});
-
-			}
+			});
 
 		};
 
@@ -666,7 +703,9 @@
                 vm.extractReportFieldsFromLayout(vm.defaultValue.layout);
 
             }) ;*/
-			vm.onGetDefaultValueFromLayoutMode();
+			if (vm.defaultValue.mode === 0 && layoutsSelectorDataNotReady) {
+				vm.onGetDefaultValueFromLayoutMode();
+			}
 
         };
 
