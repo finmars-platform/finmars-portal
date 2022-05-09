@@ -99,7 +99,11 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
             // console.log('item', item);
 
+            vm.openProcessing = true;
+
             profileAuthorizerService.setCurrentMasterUser(item.id).then(function (data) {
+
+                vm.openProcessing = false;
 
                 if (data.base_api_url) {
 
@@ -117,6 +121,8 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
                     $state.go('app.portal.home');
 
                 } else {
+
+                    $scope.$apply();
 
                     console.log("Error activate", data)
 
@@ -148,6 +154,9 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
 
             }).catch(function (error){
+
+                vm.openProcessing = false;
+
                 console.log("Error activate catch", error)
                 toastNotificationService.error("Something went wrong. Please, try again later")
             })
