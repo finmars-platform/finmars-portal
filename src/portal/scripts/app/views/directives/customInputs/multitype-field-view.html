@@ -84,6 +84,8 @@
                                 ng-disabled="isDisabled"></button>
 
                         <button ng-if="typeSwitch === 'selector'"
+
+                                popup
                                 popup-data="typeSelPopupData"
                                 popup-template="{{typeSelPopupTpl}}"
                                 open-on="click"
@@ -94,7 +96,7 @@
                                 offset-y="2"
                                 popup-classes="rounded-border"
 
-                             class="multitype-field-type-sign-wrap"
+                                class="multitype-field-type-sign-wrap"
                                 ng-disabled="isDisabled">
                             <div ng-bind-html="activeType.sign"></div>
                         </button>
