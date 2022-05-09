@@ -197,7 +197,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
         var result = [];
 
-        if (data) {
+        if (data && data.functions) {
 
             data.functions.forEach(function (funcGroup) {
 
