@@ -212,7 +212,7 @@
         border: 2px solid @gCellBorderColor;
         border-radius: 3px;
         box-sizing: border-box;
-        background: rgba(0,0,0,.01960784);
+        background: rgba(0, 0, 0, .01960784);
         margin: 0;
         cursor: pointer;
 
@@ -1084,6 +1084,7 @@
     /* .label-icon {
       color: @gCellBorderColor;
     } */
+
     span.material-icons:not(.arrow-icon) {
       color: @gCellBorderColor;
     }
@@ -1138,7 +1139,7 @@
   }
 
   .md-button {
-    ng-md-icon{
+    ng-md-icon {
       width: @icon-size;
       height: @icon-size;
     }
@@ -1209,6 +1210,7 @@
 
     md-select {
       margin: 0;
+
       md-select-value {
         border-bottom: none;
       }
@@ -1385,6 +1387,7 @@
 
     .left-right-drop-area();
   }
+
   //endregion groups, columns, filters drag and drop
 
   .g-column-bottom-row.g-table-header { // inside column area
@@ -1438,6 +1441,7 @@
       &.md-checked {
         .md-icon {
           border: none;
+
           &:after {
             bottom: 2px;
           }
@@ -1492,7 +1496,7 @@
       &.drop-right {
 
         .g-table-header-cell-wrapper:last-child {
-          box-shadow: inset -8px 0px 0px rgba(0,0,0,0.5);
+          box-shadow: inset -8px 0px 0px rgba(0, 0, 0, 0.5);
         }
 
       }
@@ -1556,10 +1560,10 @@
       border-radius: 50%;
       z-index: 2;
 
-        ng-md-icon {
-          width: auto;
-          height: auto;
-        }
+      ng-md-icon {
+        width: auto;
+        height: auto;
+      }
 
     }
 
@@ -1628,7 +1632,7 @@
           font-weight: 700;
         }
 
-     }
+      }
 
       &:not(.g-table-header-group-cell) {
         padding: 0;
@@ -1647,6 +1651,15 @@
         z-index: 1;
       }
 
+      &:hover {
+        .column-name-wrapper {
+
+          .sort span {
+            display: block;
+          }
+        }
+      }
+
       .column-name-wrapper {
         display: flex;
         flex-direction: row;
@@ -1654,6 +1667,18 @@
         align-items: center;
 
         width: 100%;
+
+
+        .sort span {
+          display: none;
+        }
+
+
+        .sort.has-sort span {
+
+          display: block;
+
+        }
 
         div {
           max-width: 100%;
@@ -1699,7 +1724,6 @@
         }
 
 
-
       }
 
     }
@@ -1708,6 +1732,7 @@
       position: relative;
       box-sizing: border-box;
       cursor: pointer;
+
 
       .resize-slider {
         width: 3px;
@@ -1728,11 +1753,11 @@
       }
 
       &.drop-left {
-        box-shadow: inset 3px 0 0 rgba(0,0,0,0.5);
+        box-shadow: inset 3px 0 0 rgba(0, 0, 0, 0.5);
       }
 
       &.drop-right {
-        box-shadow: inset 3px 0 0 rgba(0,0,0,0.5);
+        box-shadow: inset 3px 0 0 rgba(0, 0, 0, 0.5);
       }
 
       &.sort-menu-opened {
@@ -1791,8 +1816,12 @@
     }
 
     @keyframes flash {
-      from {background-color: rgba(240, 90, 34, 0.2);}
-      to {background-color: rgba(240, 90, 34, 0);}
+      from {
+        background-color: rgba(240, 90, 34, 0.2);
+      }
+      to {
+        background-color: rgba(240, 90, 34, 0);
+      }
     }
 
 
@@ -1811,6 +1840,7 @@
       background: rgba(174, 174, 174, 0.3);
     }
   }
+
   // <Victor 2020.1202 #69 New report viewer interface>
 
 }
@@ -1834,9 +1864,9 @@
 
 .ev-dropdown-popup {
   border-radius: 4px;
-  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2),
-              0 4px 5px 0 rgba(0,0,0,.14),
-              0 1px 10px 0 rgba(0,0,0,.12);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2),
+  0 4px 5px 0 rgba(0, 0, 0, .14),
+  0 1px 10px 0 rgba(0, 0, 0, .12);
   z-index: 1;
 
   .ev-dropdown-content {
@@ -1922,6 +1952,7 @@ md-menu-item > .g-row-color-picker-option, // needed to work inside md-menu
 
   &.red {
     color: @rv-active-color;
+
     span {
       color: @rv-active-color;
     }
@@ -2145,6 +2176,7 @@ md-menu-item > .g-row-color-picker-option, // needed to work inside md-menu
   .settings-btn {
     position: absolute;
     right: 1px;
+
     ng-md-icon {
       top: 0;
     }
@@ -2243,9 +2275,11 @@ md-menu-item > .g-row-color-picker-option, // needed to work inside md-menu
     height: 2px;
     overflow: hidden;
   }
+
   .g-columns-component.g-thead {
     height: 37px;
   }
+
   .g-column-title-row {
     display: none;
   }
@@ -3160,6 +3194,7 @@ button.md-button.toggle-dashboard-filter-btn {
 .test-margin-right {
   margin: 2px 5px 2px 2px !important;
 }
+
 // < test top-right menu >
 
 .layout-settings-layout-name-holder {
@@ -3222,9 +3257,11 @@ button.md-button.toggle-dashboard-filter-btn {
 .column-status-missing {
   opacity: .7;
 }
+
 .g-cell.cell-status-missing {
   opacity: .7;
 }
+
 .group-status-missing {
   opacity: .7;
 }
@@ -3246,6 +3283,7 @@ button.md-button.toggle-dashboard-filter-btn {
       color: #000000;
     }
   }
+
   .number-format-preset-container {
     min-height: 92px;
     padding: 0 24px;
@@ -3324,9 +3362,9 @@ button.md-button.toggle-dashboard-filter-btn {
       font-size: 14px;
       margin-bottom: 10px;
 
-      box-shadow: 2px 0px 2px rgba(0,0,0, 0.1),
-      0px 2px 2px rgba(0,0,0, 0.1),
-      -2px 0px 2px rgba(0,0,0, 0.1);
+      box-shadow: 2px 0px 2px rgba(0, 0, 0, 0.1),
+      0px 2px 2px rgba(0, 0, 0, 0.1),
+      -2px 0px 2px rgba(0, 0, 0, 0.1);
 
       &:first-child {
         border-radius: 4px 4px 0 0;
@@ -3339,8 +3377,8 @@ button.md-button.toggle-dashboard-filter-btn {
       &.cb1-block-collapsed {
         margin-bottom: 0;
 
-        box-shadow: -2px 0px 2px rgba(0,0,0, 0.1),
-        2px 0px 2px rgba(0,0,0, 0.1);
+        box-shadow: -2px 0px 2px rgba(0, 0, 0, 0.1),
+        2px 0px 2px rgba(0, 0, 0, 0.1);
 
 
         .material-icons {
@@ -3402,7 +3440,7 @@ button.md-button.toggle-dashboard-filter-btn {
     }
 
     .cb1-resizing-wrap {
-      box-shadow: 0px -1px 2px rgba(0,0,0, 0.1);
+      box-shadow: 0px -1px 2px rgba(0, 0, 0, 0.1);
 
       .settings {
         margin-left: 218px;

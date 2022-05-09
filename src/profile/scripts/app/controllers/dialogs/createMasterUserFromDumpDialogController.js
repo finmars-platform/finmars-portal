@@ -22,6 +22,7 @@
             var formData = new FormData();
 
             formData.append('name', vm.name);
+            formData.append('license_key', vm.license_key);
             formData.append('file', vm.file);
 
 			profileAuthorizerService.createMasterUserFromBackup(formData).then(function (data) {

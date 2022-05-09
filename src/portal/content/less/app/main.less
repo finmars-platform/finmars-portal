@@ -1702,22 +1702,6 @@ md-input-container.SC-entity-select-container {
   }
 }
 
-.vAccordion--default {
-  v-pane-header.transaction-type-action-pane {
-    padding-top: 20px;
-
-    &::after {
-      display: none;
-      opacity: 0;
-    }
-
-    &::before {
-      display: none;
-      opacity: 0;
-    }
-  }
-}
-
 .vAccordion--default v-pane.is-expanded > v-pane-header {
   border-bottom-color: rgb(63, 81, 181);
 }
@@ -2700,6 +2684,22 @@ expression-editor-button.grey-expression-btn {
   }
 }
 
+expression-editor-button.expression-entered,
+.transaction-type-actions-tab-view expression-editor-button.expression-entered,
+.transaction-type-action-pane expression-editor-button.expression-entered {
+
+  button.md-button.expr-btn {
+    color: #fff;
+    background-color: @orange;
+
+    &:not([disabled]):hover {
+      background-color: rgb(250, 250, 250);
+      opacity: 0.5;
+    }
+  }
+
+}
+
 .draggable-dialog-sign {
   position: absolute;
   width: 20px;
@@ -3379,7 +3379,7 @@ span.websocket-connection-status {
 
 .global-table-filter-container {
   margin-left: 24px;
-  width: 500px;
+  width: 50%;
 }
 
 .global-table-filter-search {
