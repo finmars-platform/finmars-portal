@@ -107,7 +107,7 @@
             var text;
 
             if (procedure.request_data) {
-                text = JSON.stringify(procedure.request_data)
+                text = JSON.stringify(procedure.request_data, null, 4)
             } else {
                 text = 'No request data found'
             }
