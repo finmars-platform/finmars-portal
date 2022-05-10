@@ -199,7 +199,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                         if (data.base_api_url) {
                             baseUrlService.setMasterUserPrefix(data.base_api_url)
 
-                            window.document.title = text.name + ' | Finmars'
+                            window.document.title = master.name + ' | Finmars'
 
 
                             // $state.go('app.portal.home', null, {reload: 'app'});
