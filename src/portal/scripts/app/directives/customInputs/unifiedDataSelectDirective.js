@@ -179,6 +179,9 @@
 
                     closeDropdownMenu();
 
+                    scope.itemName = item.name;
+                    scope.inputText = item.name;
+
                     if (scope.entityType === 'currency') {
 
                         var config = {
@@ -584,13 +587,27 @@
 
                             var exist = false;
 
-                            scope.localItems.forEach(function (localItem) {
+                            if (scope.entityType === 'currency') {
 
-                                if (localItem.user_code === databaseItem.user_code) {
-                                    exist = true
-                                }
+                                scope.localItems.forEach(function (localItem) {
 
-                            })
+                                    if (localItem.user_code === databaseItem.code) {
+                                        exist = true
+                                    }
+
+                                })
+
+                            } else {
+
+                                scope.localItems.forEach(function (localItem) {
+
+                                    if (localItem.user_code === databaseItem.user_code) {
+                                        exist = true
+                                    }
+
+                                })
+
+                            }
 
                             return !exist;
 
