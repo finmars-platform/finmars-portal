@@ -89,6 +89,8 @@
 
                 scope.setHoverInstrument = function ($event, option) {
 
+                    scope.dropdownMenuShown = true;
+
                     setTimeout(function () {
 
                         scope.hoverInstrument = option
@@ -117,7 +119,7 @@
                         console.log('scope.hoverInstrument', scope.hoverInstrument)
 
                         scope.$apply();
-                    }, 0)
+                    }, 100)
                 }
 
                 scope.getInputContainerClasses = function () {
