@@ -612,7 +612,6 @@
                     }).catch(function () {
 
                         scope.processing = false;
-                        scope.$apply();
 
                     })
 
