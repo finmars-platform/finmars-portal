@@ -437,6 +437,36 @@
 
                 vm.processing = false;
 
+                vm.databaseItems = vm.databaseItems.filter(function (databaseItem) {
+
+                    var exist = false;
+
+                    if (vm.entityType === 'currency') {
+
+                        vm.localItems.forEach(function (localItem) {
+
+                            if (localItem.user_code === databaseItem.code) {
+                                exist = true
+                            }
+
+                        })
+
+                    } else {
+
+                        vm.localItems.forEach(function (localItem) {
+
+                            if (localItem.user_code === databaseItem.user_code) {
+                                exist = true
+                            }
+
+                        })
+
+                    }
+
+                    return !exist;
+
+                })
+
                 $scope.$apply();
 
                 setTimeout(function () {
