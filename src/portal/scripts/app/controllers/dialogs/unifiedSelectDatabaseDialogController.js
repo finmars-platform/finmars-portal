@@ -11,6 +11,7 @@
 
     var unifiedDataService = require('../../services/unifiedDataService')
     var importUnifiedDataService = require('../../services/import/importUnifiedDataService');
+    var importCurrencyCbondsService = require('../../services/import/importCurrencyCbondsService');
     var currencyDatabaseSearchService = require('../../services/currency/currencyDatabaseSearchService');
 
 
@@ -88,43 +89,84 @@
                 })
 
                 if (selectedDatabaseItem) {
-                    var config = {
-                        instrument_code: selectedDatabaseItem.referenceId,
-                        mode: 1
-                    };
+
+                    if (vm.entityType === 'currency') {
+
+                        var config = {
+                            currency_code: selectedDatabaseItem.code,
+                            mode: 1
+                        };
 
 
-                    vm.isDisabled = true;
-
-                    importUnifiedDataService.download(config).then(function (data) {
+                        importCurrencyCbondsService.download(config).then(function (data) {
 
 
-                        if (data.errors.length) {
+                            if (data.errors.length) {
 
-                            vm.isDisabled = false;
+                                vm.isDisabled = false;
 
-                            vm.selectedItem = null;
+                                vm.selectedItem = null;
 
-                            toastNotificationService.error(data.errors[0])
+                                toastNotificationService.error(data.errors[0])
 
-                            $scope.$apply();
+                                $scope.$apply();
 
-                            resolve()
+                                resolve()
 
-                        } else {
+                            } else {
 
-                            vm.selectedItem = {
-                                id: data.id,
-                                name: selectedDatabaseItem.name,
-                                user_code: selectedDatabaseItem.user_code
+                                vm.selectedItem = {
+                                    id: data.result_id,
+                                    name: selectedDatabaseItem.name,
+                                    user_code: selectedDatabaseItem.code
+                                }
+
+                                resolve()
+
+
                             }
 
-                            resolve()
+                        })
+
+                    } else {
 
 
-                        }
+                        var config = {
+                            id: selectedDatabaseItem.id,
+                            entity_type: vm.entityType
+                        };
 
-                    })
+                        importUnifiedDataService.download(config).then(function (data) {
+
+                            if (data.errors.length) {
+
+                                vm.isDisabled = false;
+
+                                vm.selectedItem = null;
+
+                                toastNotificationService.error(data.errors[0])
+
+                                $scope.$apply();
+
+                                resolve()
+
+                            } else {
+
+                                vm.selectedItem = {
+                                    id: data.result_id,
+                                    name: selectedDatabaseItem.name,
+                                    user_code: selectedDatabaseItem.user_code
+                                }
+
+                                resolve()
+
+                            }
+
+
+                        })
+
+
+                    }
 
 
                 }
@@ -237,7 +279,7 @@
             try {
 
                 if (vm.entityType === 'currency') {
-                    currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage -1).then(function (data) {
+                    currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage - 1).then(function (data) {
 
                         vm.globalProcessing = false;
 
@@ -312,7 +354,7 @@
                 promises.push(new Promise(function (resolve, reject) {
 
                     if (vm.entityType === 'currency') {
-                        currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage -1).then(function (data) {
+                        currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage - 1).then(function (data) {
 
                             vm.databaseItemsTotal = data.resultCount;
 
