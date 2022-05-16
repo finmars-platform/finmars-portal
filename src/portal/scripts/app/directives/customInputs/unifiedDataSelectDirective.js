@@ -100,7 +100,7 @@
                         console.log('scope.hoverItem', scope.hoverItem)
 
                         scope.$apply();
-                    }, 0)
+                    }, 100)
                 }
 
                 scope.getInputContainerClasses = function () {
