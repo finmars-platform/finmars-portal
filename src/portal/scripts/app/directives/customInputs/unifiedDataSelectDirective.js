@@ -7,6 +7,7 @@
 
     var unifiedDataService = require('../../services/unifiedDataService')
     var importUnifiedDataService = require('../../services/import/importUnifiedDataService');
+    var importCurrencyCbondsService = require('../../services/import/importCurrencyCbondsService');
     var currencyDatabaseSearchService = require('../../services/currency/currencyDatabaseSearchService');
 
 
@@ -178,67 +179,122 @@
 
                     closeDropdownMenu();
 
-                    // Download here?
+                    if (scope.entityType === 'currency') {
 
-                    stylePreset = '';
-                    scope.error = '';
+                        var config = {
+                            currency_code: item.code,
+                            mode: 1
+                        };
 
+                        importCurrencyCbondsService.download(config).then(function (data) {
 
-                    var config = {
-                        id: item.id,
-                        entity_type: scope.entityType
-                    };
+                            scope.isDisabled = false;
 
-                    scope.selectedItem = item;
+                            if (data.errors.length) {
 
-                    scope.itemName = item.name;
-                    scope.inputText = item.name;
+                                toastNotificationService.error(data.errors[0])
 
-                    scope.processing = true;
-                    scope.isDisabled = true;
+                                scope.model = null;
 
-                    importUnifiedDataService.download(config).then(function (data) {
+                                scope.itemName = ''
+                                scope.inputText = ''
 
-                        scope.isDisabled = false;
+                                setTimeout(function () {
 
-                        if (data.errors.length) {
+                                    if (scope.onChangeCallback) scope.onChangeCallback();
 
-                            toastNotificationService.error(data.errors[0])
+                                    scope.$apply();
 
-                            scope.model = null;
-
-                            scope.itemName = ''
-                            scope.inputText = ''
-
-                            setTimeout(function () {
-
-                                if (scope.onChangeCallback) scope.onChangeCallback();
-
-                                scope.$apply();
-
-                            }, 0);
+                                }, 0);
 
 
-                        } else {
+                            } else {
 
-                            scope.model = data.id;
-                            scope.itemObject = {id: data.id, name: item.name, user_code: item.user_code}
+                                scope.model = data.result_id;
+                                scope.itemObject = {id: data.result_id, name: item.name, user_code: item.code}
 
-                            scope.processing = false;
+                                scope.processing = false;
 
-                            scope.valueIsValid = true;
+                                scope.valueIsValid = true;
 
-                            setTimeout(function () {
+                                setTimeout(function () {
 
-                                if (scope.onChangeCallback) scope.onChangeCallback();
+                                    if (scope.onChangeCallback) scope.onChangeCallback();
 
-                                scope.$apply();
+                                    scope.$apply();
 
-                            }, 0);
+                                }, 0);
 
-                        }
+                            }
 
-                    })
+                        })
+
+                    } else {
+
+                        // Download here?
+
+                        stylePreset = '';
+                        scope.error = '';
+
+
+                        var config = {
+                            id: item.id,
+                            entity_type: scope.entityType
+                        };
+
+                        scope.selectedItem = item;
+
+                        scope.itemName = item.name;
+                        scope.inputText = item.name;
+
+                        scope.processing = true;
+                        scope.isDisabled = true;
+
+                        importUnifiedDataService.download(config).then(function (data) {
+
+                            scope.isDisabled = false;
+
+                            if (data.errors.length) {
+
+                                toastNotificationService.error(data.errors[0])
+
+                                scope.model = null;
+
+                                scope.itemName = ''
+                                scope.inputText = ''
+
+                                setTimeout(function () {
+
+                                    if (scope.onChangeCallback) scope.onChangeCallback();
+
+                                    scope.$apply();
+
+                                }, 0);
+
+
+                            } else {
+
+                                scope.model = data.id;
+                                scope.itemObject = {id: data.id, name: item.name, user_code: item.user_code}
+
+                                scope.processing = false;
+
+                                scope.valueIsValid = true;
+
+                                setTimeout(function () {
+
+                                    if (scope.onChangeCallback) scope.onChangeCallback();
+
+                                    scope.$apply();
+
+                                }, 0);
+
+                            }
+
+                        })
+                    }
+
+
 
 
                 };
