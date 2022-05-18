@@ -11,9 +11,10 @@ import baseUrlService from "./baseUrlService";
 /** @module authorizerService */
 export default function (globalDataService) {
 
-	const login = function (login, password) {
-		return authorizerRepository.login(login, password);
-	};
+	// Deprecated
+	// const login = function (login, password) {
+	// 	return authorizerRepository.login(login, password);
+	// };
 
 	const tokenLogin = function (login, password) {
 		return authorizerRepository.tokenLogin(login, password);

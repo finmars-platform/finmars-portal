@@ -60,29 +60,41 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
     /** Used inside shell/.../login-view.html */
     vm.logIn = function ($event) {
         // vm.username, vm.password set inside login-view.html
+
+        vm.processing = true;
         authorizerService.tokenLogin(vm.username, vm.password).then(function (data) {
 
             console.log('authorizerService.login.data', data);
 
-            if (data.two_factor_check) {
+            vm.processing = false;
+            $scope.$apply();
 
-                $mdDialog.show({
-                    controller: 'TwoFactorLoginDialogController as vm',
-                    templateUrl: 'views/dialogs/two-factor-login-dialog-view.html',
-                    parent: angular.element(document.body),
-                    locals: {
-                        username: vm.username
-                    },
-                    multiple: true,
-                    targetEvent: $event
+            if (data.success) {
 
-                })
-                    .then(res => {
-                        if (res.status === 'agree') onLogInSuccess(res.token);
-                    });
+                if (data.two_factor_check) {
+
+                    $mdDialog.show({
+                        controller: 'TwoFactorLoginDialogController as vm',
+                        templateUrl: 'views/dialogs/two-factor-login-dialog-view.html',
+                        parent: angular.element(document.body),
+                        locals: {
+                            username: vm.username
+                        },
+                        multiple: true,
+                        targetEvent: $event
+
+                    })
+                        .then(res => {
+                            if (res.status === 'agree') onLogInSuccess(res.token);
+                        });
+
+                } else {
+                    onLogInSuccess(data.token);
+                }
 
             } else {
-                onLogInSuccess(data.token);
+                vm.error = true;
+                vm.errorMessage = data.message
             }
 
         }).catch(error => {
