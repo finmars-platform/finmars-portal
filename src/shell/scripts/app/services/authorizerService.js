@@ -301,7 +301,6 @@ export default function (globalDataService) {
 
 	return {
 		tokenLogin: tokenLogin,
-		login: login,
 		logout: logout,
 		changePassword: changePassword,
 
