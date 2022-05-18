@@ -720,7 +720,6 @@ const deleteInviteByKey = function (id) {
 // module.exports = {
 export default {
 	tokenLogin: tokenLogin,
-	login: login,
 	logout: logout,
 
 	ping: ping,
