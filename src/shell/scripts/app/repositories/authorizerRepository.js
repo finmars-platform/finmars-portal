@@ -29,19 +29,20 @@ const authorizerUrl = baseUrlService.getAuthorizerUrl();
 	console.log('Method: ' + methodName + '. Cannot get data from server');
 }; */
 
-const login = function (login, password) {
-
-	return xhrService.fetch(authorizerUrl + '/login/', {
-		method: 'POST',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		},
-		body: JSON.stringify({username: login, password: password})
-	})
-};
+// deprecated
+// const login = function (login, password) {
+//
+// 	return xhrService.fetch(authorizerUrl + '/login/', {
+// 		method: 'POST',
+// 		credentials: 'include',
+// 		headers: {
+// 			'X-CSRFToken': cookieService.getCookie('csrftoken'),
+// 			Accept: 'application/json',
+// 			'Content-type': 'application/json'
+// 		},
+// 		body: JSON.stringify({username: login, password: password})
+// 	})
+// };
 
 const tokenLogin = function (login, password) {
 
