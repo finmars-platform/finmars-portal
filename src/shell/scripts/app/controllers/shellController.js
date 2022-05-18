@@ -98,6 +98,7 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
             }
 
         }).catch(error => {
+            vm.error = true;
             console.error(error);
         });
 
