@@ -509,8 +509,7 @@
 
                     console.log('scope.inputText.length', scope.inputText.length);
 
-                    if (scope.inputText.length > 1) {
-                        promises.push(new Promise(function (resolve, reject) {
+                    promises.push(new Promise(function (resolve, reject) {
 
 
                             if (scope.entityType === 'currency') {
@@ -557,7 +556,6 @@
 
 
                         }))
-                    }
 
                     promises.push(new Promise(function (resolve, reject) {
 
