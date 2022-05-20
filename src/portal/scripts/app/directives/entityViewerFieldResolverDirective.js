@@ -362,6 +362,8 @@
 
                             console.log('scope.fieldsDataStore', scope.fieldsDataStore);
 
+                            scope.fieldsDataStore['fieldKeys']['currencies.currency'] = []
+
                             return new Promise(function (resolve, reject) {
 
                                 fieldResolverService.getFieldsByContentType(scope.item.content_type, options, scope.fieldsDataStore).then(function (res) {
@@ -528,7 +530,7 @@
                                 setItemSpecificSettings();
                                 // prepareDataForSelector();
                                 scope.inputTextObj.value = scope.getInputTextForEntitySearch();
-                            
+
 
                             })
 
