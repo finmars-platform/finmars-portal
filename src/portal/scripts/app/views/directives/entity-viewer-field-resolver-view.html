@@ -76,7 +76,7 @@
                             md-on-close="searchTerm = ''"
                             data-ng-model="entity[fieldKey]"
                             data-ng-change="changeHandler()"
-                            md-on-open="getData()"
+                            md-on-open="getDataApply()"
                             md-selected-text="bindFormFields()"
                             md-container-class="common-select-container"
                             style="{{inputBackgroundColor()}}"
@@ -128,7 +128,7 @@
                                           md-on-close="searchTerm = ''"
                                           data-ng-model="entity[fieldKey]"
                                           data-ng-change="changeHandler()"
-                                          md-on-open="getData()"
+                                          md-on-open="getDataApply()"
                                           md-selected-text="bindFormFields()"
                                           md-container-class="common-select-container"
                                           style="{{inputBackgroundColor()}}"
@@ -173,7 +173,7 @@
                                          data-item="entity[fieldKey]"
                                          data-entity-type="crudEntityType"
                                          data-options="fields"
-                                         data-ng-click="getData()"
+                                         data-ng-click="getDataApply()"
                                          event-signal="ciEventObj.event"
                                          small-options="{notNull: options.notNull}"
                             ></crud-select>
@@ -190,7 +190,7 @@
                                                 md-on-close="searchTerm = ''"
                                                 data-ng-model="entity[fieldKey]"
                                                 data-ng-change="changeHandler()"
-                                                md-on-open="getData()"
+                                                md-on-open="getDataApply()"
                                                 md-container-class="common-select-container"
                                                 style="{{inputBackgroundColor()}}"
                                         >
@@ -237,7 +237,7 @@
             <!--        <label data-ng-bind="getName()"></label>-->
             <!--        <md-select-->
             <!--          md-on-close="searchTerm = ''"-->
-            <!--          md-on-open="getData()"-->
+            <!--          md-on-open="getDataApply()"-->
             <!--          data-ng-model="entity[fieldKey]"-->
             <!--          data-ng-change="changeHandler()"-->
             <!--          multiple="true"-->
@@ -296,7 +296,7 @@
                           <label data-ng-bind="getName()"></label>
                           <md-select
                             md-on-close="searchTerm = ''"
-                            md-on-open="getData()"
+                            md-on-open="getDataApply()"
                             data-ng-model="entity[fieldKey]"
                             data-ng-change="changeHandler()"
                             md-selected-text="bindMCField()"
@@ -336,7 +336,7 @@
                           <label data-ng-bind="getName()"></label>
                           <md-select
                             md-on-close="searchTerm = ''"
-                            md-on-open="getData()"
+                            md-on-open="getDataApply()"
                             data-ng-model="entity[fieldKey]"
                             data-ng-change="changeHandler()"
                             md-selected-text="bindFormFields()"
@@ -379,7 +379,7 @@
                           <label data-ng-bind="getName()"></label>
                           <md-select
                             md-on-close="searchTerm = ''"
-                            md-on-open="getData()"
+                            md-on-open="getDataApply()"
                             data-ng-model="entity[fieldKey]"
                             data-ng-change="changeHandler()"
                             md-selected-text="bindMCField()"

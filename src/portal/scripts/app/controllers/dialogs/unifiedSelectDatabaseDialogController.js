@@ -349,59 +349,57 @@
 
             var promises = []
 
-            if (vm.inputText.length > 1) {
+       
+            promises.push(new Promise(function (resolve, reject) {
 
-                promises.push(new Promise(function (resolve, reject) {
+                if (vm.entityType === 'currency') {
+                    currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage - 1).then(function (data) {
 
-                    if (vm.entityType === 'currency') {
-                        currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage - 1).then(function (data) {
+                        vm.databaseItemsTotal = data.resultCount;
 
-                            vm.databaseItemsTotal = data.resultCount;
+                        vm.databaseItems = data.foundItems
 
-                            vm.databaseItems = data.foundItems
+                        vm.totalPages = Math.round(data.resultCount / 40)
 
-                            vm.totalPages = Math.round(data.resultCount / 40)
+                        resolve()
 
-                            resolve()
+                    }).catch(function (error) {
 
-                        }).catch(function (error) {
+                        console.log("Database error occurred", error)
 
-                            console.log("Database error occurred", error)
+                        vm.databaseItems = []
 
-                            vm.databaseItems = []
+                        resolve()
 
-                            resolve()
+                    })
+                } else {
+                    unifiedDataService.getList(vm.entityType, {
+                        filters: {
+                            query: vm.inputText
+                        }
+                    }).then(function (data) {
 
-                        })
-                    } else {
-                        unifiedDataService.getList(vm.entityType, {
-                            filters: {
-                                query: vm.inputText
-                            }
-                        }).then(function (data) {
+                        vm.databaseItemsTotal = data.count;
 
-                            vm.databaseItemsTotal = data.count;
+                        vm.databaseItems = data.results;
 
-                            vm.databaseItems = data.results;
+                        resolve()
 
-                            resolve()
+                        vm.totalPages = Math.round(data.count / 40)
 
-                            vm.totalPages = Math.round(data.count / 40)
+                    }).catch(function (error) {
 
-                        }).catch(function (error) {
+                        console.log("Database error occurred", error)
 
-                            console.log("Database error occurred", error)
+                        vm.databaseItems = []
 
-                            vm.databaseItems = []
+                        resolve()
 
-                            resolve()
+                    })
+                }
 
-                        })
-                    }
+            }))
 
-                }))
-
-            }
 
             promises.push(new Promise(function (resolve, reject) {
 
