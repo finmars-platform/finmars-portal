@@ -19,7 +19,7 @@
                 label: '@',
                 placeholderText: '@',
                 model: '=',
-				customButtons: '=',
+                customButtons: '=',
                 customStyles: '=',
                 eventSignal: '=',
                 smallOptions: '=',
@@ -303,8 +303,6 @@
                     }
 
 
-
-
                 };
 
                 scope.onInputTextChange = function () {
@@ -313,11 +311,11 @@
 
                 };
 
-                scope.onInputFocus = function (){
+                scope.onInputFocus = function () {
                     scope.getList();
                 }
 
-                scope.onInputBlur = function (){
+                scope.onInputBlur = function () {
 
                     if (!scope.selectedItem) {
                         scope.model = null;
@@ -517,50 +515,49 @@
                     promises.push(new Promise(function (resolve, reject) {
 
 
-                            if (scope.entityType === 'currency') {
-                                currencyDatabaseSearchService.getList(scope.inputText, 0).then(function (data) {
+                        if (scope.entityType === 'currency') {
+                            currencyDatabaseSearchService.getList(scope.inputText, 0).then(function (data) {
 
-                                    scope.databaseItemsTotal = data.resultCount;
-                                    scope.databaseItems = data.foundItems;
+                                scope.databaseItemsTotal = data.resultCount;
+                                scope.databaseItems = data.foundItems;
 
-                                    resolve()
+                                resolve()
 
-                                }).catch(function (error) {
+                            }).catch(function (error) {
 
-                                    console.log("Unified Database error occurred", error)
+                                console.log("Unified Database error occurred", error)
 
-                                    scope.databaseItems = []
+                                scope.databaseItems = []
 
-                                    resolve()
+                                resolve()
 
-                                })
-                            } else {
-                                unifiedDataService.getList(scope.entityType, {
-                                    filters: {
-                                        query: scope.inputText
-                                    }
-                                }).then(function (data) {
+                            })
+                        } else {
+                            unifiedDataService.getList(scope.entityType, {
+                                filters: {
+                                    query: scope.inputText
+                                }
+                            }).then(function (data) {
 
-                                    scope.databaseItemsTotal = data.count;
+                                scope.databaseItemsTotal = data.count;
 
-                                    scope.databaseItems = data.results;
+                                scope.databaseItems = data.results;
 
-                                    resolve()
+                                resolve()
 
-                                }).catch(function (error) {
+                            }).catch(function (error) {
 
-                                    console.log("Unified Database error occurred", error)
+                                console.log("Unified Database error occurred", error)
 
-                                    scope.databaseItems = []
+                                scope.databaseItems = []
 
-                                    resolve()
+                                resolve()
 
-                                })
-                            }
+                            })
+                        }
 
 
-
-                        }))
+                    }))
 
                     promises.push(new Promise(function (resolve, reject) {
 
@@ -617,6 +614,10 @@
                         })
 
                         scope.processing = false;
+
+                        setTimeout(function () {
+                            scope.$apply();
+                        }, 0)
 
                         setTimeout(function () {
 
