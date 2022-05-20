@@ -62,10 +62,6 @@
 
                             </div>
 
-                            <div class="unified-data-select-instrument-type"
-                                 title="{{option.instrument_type_object.name}}">
-                                {{option.instrument_type_object.name}}
-                            </div>
 
                         </div>
 
@@ -84,11 +80,15 @@
                         >
 
 
-                            <div class="unified-data-select-instrument-name" title="{{option.issueName}}" ng-bind-html="vm.getHighlighted(option.issueName)">
+                            <div class="unified-data-select-instrument-name" title="{{option.name}}" ng-bind-html="vm.getHighlighted(option.name)">
 
                             </div>
 
-                            <div class="unified-data-select-instrument-isin" title="{{option.referenceId}}" ng-bind-html="vm.getHighlighted(option.referenceId)">
+                            <div data-ng-if="vm.entityType != 'currency'" class="unified-data-select-instrument-isin" title="{{option.user_code}}" ng-bind-html="vm.getHighlighted(option.user_code)">
+
+                            </div>
+
+                            <div data-ng-if="vm.entityType == 'currency'" class="unified-data-select-instrument-isin" title="{{option.code}}" ng-bind-html="vm.getHighlighted(option.user_code)">
 
                             </div>
 
