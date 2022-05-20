@@ -362,46 +362,54 @@
 
                             console.log('scope.fieldsDataStore', scope.fieldsDataStore);
 
-                            return fieldResolverService.getFieldsByContentType(scope.item.content_type, options, scope.fieldsDataStore).then(function (res) {
+                            return new Promise(function (resolve, reject) {
 
-                                console.log('res', res);
+                                fieldResolverService.getFieldsByContentType(scope.item.content_type, options, scope.fieldsDataStore).then(function (res) {
 
-                                scope.type = res.type;
-                                scope.fields = res.data;
-                                scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
+                                    console.log('res', res);
 
-                                if ('price_download_scheme') {
-                                    scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
-                                }
+                                    scope.type = res.type;
+                                    scope.fields = res.data;
+                                    scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
 
-                                scope.readyStatus.content = true;
-                                fieldsDataIsLoaded = true;
+                                    if ('price_download_scheme') {
+                                        scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
+                                    }
 
-                                scope.getFieldsGrouped();
+                                    scope.readyStatus.content = true;
+                                    fieldsDataIsLoaded = true;
 
-                                scope.$apply();
+                                    scope.getFieldsGrouped();
 
-                            });
+                                    resolve();
+                                    scope.$apply();
 
-                        }
-                        else {
 
-                            return fieldResolverService.getFields(scope.item.key, options, scope.fieldsDataStore).then(function (res) {
+                                });
 
-                                scope.type = res.type;
-                                scope.fields = res.data;
-                                scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
+                            })
+                        } else {
 
-                                if ('price_download_scheme') {
-                                    scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
-                                }
+                            return new Promise(function (resolve, reject) {
+                                fieldResolverService.getFields(scope.item.key, options, scope.fieldsDataStore).then(function (res) {
 
-                                scope.readyStatus.content = true;
-                                fieldsDataIsLoaded = true;
+                                    scope.type = res.type;
+                                    scope.fields = res.data;
+                                    scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
 
-                                scope.getFieldsGrouped();
+                                    if ('price_download_scheme') {
+                                        scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
+                                    }
 
-                                scope.$apply();
+                                    scope.readyStatus.content = true;
+                                    fieldsDataIsLoaded = true;
+
+                                    scope.getFieldsGrouped();
+
+                                    resolve();
+                                    scope.$apply();
+                                });
+
                             });
 
                         }
@@ -513,17 +521,16 @@
                             scope.item.frontOptions && scope.item.frontOptions.recalculated &&
                             (scope.entity[scope.fieldKey] || scope.entity[scope.fieldKey] === 0)) {
 
-                            setItemSpecificSettings();
-                            // prepareDataForSelector();
-                            scope.inputTextObj.value = scope.getInputTextForEntitySearch();
-                            /* if (scope.item.frontOptions.recalculated) {
+                            fieldsDataIsLoaded = false;
 
-								// setTimeout removes delay before applying preset1 to custom input
-								setTimeout(function () {
-									scope.ciEventObj.event = {key: 'set_style_preset1'};
-								}, 50);
+                            scope.getData().then(function () {
 
-                            } */
+                                setItemSpecificSettings();
+                                // prepareDataForSelector();
+                                scope.inputTextObj.value = scope.getInputTextForEntitySearch();
+                            
+
+                            })
 
                         }
 
