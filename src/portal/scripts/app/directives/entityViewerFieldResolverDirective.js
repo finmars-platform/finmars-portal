@@ -363,7 +363,7 @@
                             console.log('scope.fieldsDataStore', scope.fieldsDataStore);
 
                             if (scope.fieldsDataStore['fieldKeys']) {
-                                scope.fieldsDataStore['fieldKeys']['currencies.currency'] = []
+                                delete scope.fieldsDataStore['fieldKeys']['currencies.currency']
                             }
 
                             return new Promise(function (resolve, reject) {
