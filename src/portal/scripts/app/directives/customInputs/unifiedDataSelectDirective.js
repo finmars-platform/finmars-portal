@@ -618,8 +618,6 @@
 
                         scope.processing = false;
 
-                        scope.$apply();
-
                         setTimeout(function () {
 
                             $('.unified-data-select-options-group-title').on('click', function () {
