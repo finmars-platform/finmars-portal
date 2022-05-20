@@ -51,7 +51,6 @@
                                 data-ng-repeat="option in vm.localItems"
                                 data-ng-click="vm.selectLocalItem(option)"
                                 class="unified-data-select-database-dialog-instrument-row {{option.selected ? 'active' : ''}}"
-                                ng-mouseover="vm.setHoverItem($event, option)"
 
                         >
 
@@ -76,7 +75,7 @@
                                 data-ng-repeat="option in vm.databaseItems"
                                 data-ng-click="vm.selectDatabaseItem(option)"
                                 class="unified-data-select-database-dialog-instrument-row {{option.selected ? 'active' : ''}}"
-                                ng-mouseover="vm.setHoverItem($event, option)"
+
                         >
 
 
