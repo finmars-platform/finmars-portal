@@ -169,6 +169,11 @@
 
                         }, 0);
 
+                    } else {
+                        scope.model = item.id;
+                        scope.itemObject = item;
+                        scope.itemName = item.name;
+                        scope.inputText = item.name;
                     }
 
                 }
