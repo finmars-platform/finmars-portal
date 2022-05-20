@@ -435,6 +435,22 @@
 
                 var initEventListeners = function () {
 
+                    scope.$watch('itemName', function () {
+                        
+                        console.log('scope.model', scope.model);
+
+                        if (scope.itemName) {
+                            // itemName = scope.itemName;
+                            scope.inputText = scope.itemName;
+
+                        } else {
+                            // itemName = '';
+                            scope.inputText = '';
+                        }
+
+                    });
+
+
                     elem[0].addEventListener('mouseover', function () {
                         inputContainer.classList.add('custom-input-hovered');
                     });
@@ -614,10 +630,8 @@
                         })
 
                         scope.processing = false;
+                        scope.$apply();
 
-                        setTimeout(function () {
-                            scope.$apply();
-                        }, 0)
 
                         setTimeout(function () {
 
