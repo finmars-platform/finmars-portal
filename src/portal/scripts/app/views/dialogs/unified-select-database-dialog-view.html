@@ -51,7 +51,6 @@
                                 data-ng-repeat="option in vm.localItems"
                                 data-ng-click="vm.selectLocalItem(option)"
                                 class="unified-data-select-database-dialog-instrument-row {{option.selected ? 'active' : ''}}"
-                                ng-mouseover="vm.setHoverItem($event, option)"
 
                         >
 
@@ -62,17 +61,13 @@
 
                             </div>
 
-                            <div class="unified-data-select-instrument-type"
-                                 title="{{option.instrument_type_object.name}}">
-                                {{option.instrument_type_object.name}}
-                            </div>
 
                         </div>
 
                     </div>
 
                     <b data-ng-if="vm.databaseItems.length" style=" bottom: 0px;"  class="unified-data-select-options-group-title">Global Records
-                        ({{vm.databaseItemsTtotal}})</b>
+                        ({{vm.databaseItemsTotal}})</b>
 
                     <div data-ng-if="vm.databaseItems.length">
 
@@ -80,15 +75,19 @@
                                 data-ng-repeat="option in vm.databaseItems"
                                 data-ng-click="vm.selectDatabaseItem(option)"
                                 class="unified-data-select-database-dialog-instrument-row {{option.selected ? 'active' : ''}}"
-                                ng-mouseover="vm.setHoverItem($event, option)"
+
                         >
 
 
-                            <div class="unified-data-select-instrument-name" title="{{option.issueName}}" ng-bind-html="vm.getHighlighted(option.issueName)">
+                            <div class="unified-data-select-instrument-name" title="{{option.name}}" ng-bind-html="vm.getHighlighted(option.name)">
 
                             </div>
 
-                            <div class="unified-data-select-instrument-isin" title="{{option.referenceId}}" ng-bind-html="vm.getHighlighted(option.referenceId)">
+                            <div data-ng-if="vm.entityType != 'currency'" class="unified-data-select-instrument-isin" title="{{option.user_code}}" ng-bind-html="vm.getHighlighted(option.user_code)">
+
+                            </div>
+
+                            <div data-ng-if="vm.entityType == 'currency'" class="unified-data-select-instrument-isin" title="{{option.code}}" ng-bind-html="vm.getHighlighted(option.code)">
 
                             </div>
 
