@@ -343,6 +343,7 @@
 							scope.tab.layout.fields[i].occupiesWholeRow = scope.item.occupiesWholeRow;
 
 							scope.tab.layout.fields[i].editable = scope.item.editable !== false;
+							scope.tab.layout.fields[i].required = scope.item.required;
 
 							scope.tab.layout.fields[i].backgroundColor = null;
 
