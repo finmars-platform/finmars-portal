@@ -19,7 +19,7 @@
                 label: '@',
                 placeholderText: '@',
                 model: '=',
-				customButtons: '=',
+                customButtons: '=',
                 customStyles: '=',
                 eventSignal: '=',
                 smallOptions: '=',
@@ -169,6 +169,11 @@
 
                         }, 0);
 
+                    } else {
+                        scope.model = item.id;
+                        scope.itemObject = item;
+                        scope.itemName = item.name;
+                        scope.inputText = item.name;
                     }
 
                 }
@@ -298,8 +303,6 @@
                     }
 
 
-
-
                 };
 
                 scope.onInputTextChange = function () {
@@ -308,11 +311,11 @@
 
                 };
 
-                scope.onInputFocus = function (){
+                scope.onInputFocus = function () {
                     scope.getList();
                 }
 
-                scope.onInputBlur = function (){
+                scope.onInputBlur = function () {
 
                     if (!scope.selectedItem) {
                         scope.model = null;
@@ -432,6 +435,22 @@
 
                 var initEventListeners = function () {
 
+                    scope.$watch('itemName', function () {
+                        
+                        console.log('scope.model', scope.model);
+
+                        if (scope.itemName) {
+                            // itemName = scope.itemName;
+                            scope.inputText = scope.itemName;
+
+                        } else {
+                            // itemName = '';
+                            scope.inputText = '';
+                        }
+
+                    });
+
+
                     elem[0].addEventListener('mouseover', function () {
                         inputContainer.classList.add('custom-input-hovered');
                     });
@@ -509,55 +528,52 @@
 
                     console.log('scope.inputText.length', scope.inputText.length);
 
-                    if (scope.inputText.length > 1) {
-                        promises.push(new Promise(function (resolve, reject) {
+                    promises.push(new Promise(function (resolve, reject) {
 
 
-                            if (scope.entityType === 'currency') {
-                                currencyDatabaseSearchService.getList(scope.inputText, 0).then(function (data) {
+                        if (scope.entityType === 'currency') {
+                            currencyDatabaseSearchService.getList(scope.inputText, 0).then(function (data) {
 
-                                    scope.databaseItemsTotal = data.resultCount;
-                                    scope.databaseItems = data.foundItems;
+                                scope.databaseItemsTotal = data.resultCount;
+                                scope.databaseItems = data.foundItems;
 
-                                    resolve()
+                                resolve()
 
-                                }).catch(function (error) {
+                            }).catch(function (error) {
 
-                                    console.log("Unified Database error occurred", error)
+                                console.log("Unified Database error occurred", error)
 
-                                    scope.databaseItems = []
+                                scope.databaseItems = []
 
-                                    resolve()
+                                resolve()
 
-                                })
-                            } else {
-                                unifiedDataService.getList(scope.entityType, {
-                                    filters: {
-                                        query: scope.inputText
-                                    }
-                                }).then(function (data) {
+                            })
+                        } else {
+                            unifiedDataService.getList(scope.entityType, {
+                                filters: {
+                                    query: scope.inputText
+                                }
+                            }).then(function (data) {
 
-                                    scope.databaseItemsTotal = data.count;
+                                scope.databaseItemsTotal = data.count;
 
-                                    scope.databaseItems = data.results;
+                                scope.databaseItems = data.results;
 
-                                    resolve()
+                                resolve()
 
-                                }).catch(function (error) {
+                            }).catch(function (error) {
 
-                                    console.log("Unified Database error occurred", error)
+                                console.log("Unified Database error occurred", error)
 
-                                    scope.databaseItems = []
+                                scope.databaseItems = []
 
-                                    resolve()
+                                resolve()
 
-                                })
-                            }
+                            })
+                        }
 
 
-
-                        }))
-                    }
+                    }))
 
                     promises.push(new Promise(function (resolve, reject) {
 
@@ -614,8 +630,8 @@
                         })
 
                         scope.processing = false;
-
                         scope.$apply();
+
 
                         setTimeout(function () {
 
