@@ -179,7 +179,16 @@
         tabs.forEach(function (tab) {
             tab.layout.fields.forEach(function (field) {
                 if (field.attribute_class === 'userInput') {
-                    userInputs.push(field.attribute);
+
+                    var res = field.attribute
+
+                    if (!res.frontOptions) {
+                        res.frontOptions = {};
+                    }
+
+                    res.frontOptions.required = field.required
+
+                    userInputs.push(res);
                 }
             });
         });

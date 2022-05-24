@@ -132,8 +132,9 @@
                     $(window).bind('mouseup', function () {
 
                         $(window).unbind('mousemove');
-                        scope.$apply(); // apply scope.sliderButtonState change right away
-
+                        setTimeout(function () {
+                            scope.$apply(); // apply scope.sliderButtonState change right away
+                        }, 100)
                     });
 
                     evLeftPanelSliderButton.addEventListener('click', function (event) {
@@ -172,7 +173,7 @@
 
                 scope.initEventListeners = function () {
 
-                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                         // scope.resize();
 
@@ -480,7 +481,7 @@
 
                     availableAttrs = allAttrsList.filter(function (attr) {
 
-                    	if (attr.value_type === "mc_field" || attr.key === "notes") return false;
+                        if (attr.value_type === "mc_field" || attr.key === "notes") return false;
 
                         for (var i = 0; i < scope.groupTypes.length; i++) {
                             if (scope.groupTypes[i].key === attr.key) {
@@ -501,7 +502,7 @@
                                 availableAttrs: availableAttrs,
                                 title: 'Choose group to add',
                                 isReport: false,
-								multiselector: true
+                                multiselector: true
                             }
                         }
                     }).then(function (res) {
