@@ -2,6 +2,7 @@
 
     var renderHelper = require('../../helpers/render.helper');
     var stringHelper = require('../../helpers/stringHelper');
+	var instrumentEventService = require('../../services/instrumentEventService');
 
     /* var checkIcon = renderHelper.getCheckIcon();
     var lockIcon = renderHelper.getLockIcon();
@@ -95,6 +96,8 @@
         return renderHelper.getIconByKey(result);
 
     }; */
+	var statusesNames = {1: 'Booked', 2: 'Pending', 3: 'Ignored',};
+	var eventsStatuses = instrumentEventService.getEventStatuses();
 
     var getStatusIcon = function (obj, currentMember) {
 
@@ -170,7 +173,7 @@
 
     };
 
-    var getValue = function (obj, column) {
+    var getValue = function (obj, column, entityType) {
 
         if (column.status === 'missing') {
             return "Deleted";
@@ -247,19 +250,55 @@
 
                 }
 
-                if (column.key === 'status') {
+                else if (column.key === 'status') {
 
-                    if (obj[column.key] === 1) {
-                        return 'Booked'
-                    }
+					if (entityType === 'generated-event') {
 
-                    if (obj[column.key] === 2) {
-                        return 'Pending'
-                    }
+						/*switch (obj[column.key]) {
+							case 1:
+								return 'New';
+							case 2:
+								return 'Ignored';
 
-                    if (obj[column.key] === 3) {
-                        return 'Ignored'
-                    }
+							case 3:
+							case 4:
+							case 5:
+							case 6:
+							case 7:
+							case 8:
+								return 'Booked';
+								break;
+
+							case 9:
+								return 'Error';
+								break;
+
+						}*/
+
+						if (eventsStatuses.hasOwnProperty(obj[column.key])) {
+							return eventsStatuses[obj[column.key]]
+						}
+
+					} else {
+
+						/*if (obj[column.key] === 1) {
+							return 'Booked'
+						}
+
+						if (obj[column.key] === 2) {
+							return 'Pending'
+						}
+
+						if (obj[column.key] === 3) {
+							return 'Ignored'
+						}*/
+
+						if (statusesNames.hasOwnProperty(obj[column.key])) {
+							return statusesNames[obj[column.key]]
+						}
+
+					}
+
 
                 }
 
@@ -476,7 +515,7 @@
 
             var columnNumber = columnIndex + 1;
 
-            var cellValue = getValue(obj, column);
+            var cellValue = getValue(obj, column, entityType);
             var textAlign = getCellTextAlign(column);
             var gCellTitle = '';
 

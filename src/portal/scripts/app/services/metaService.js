@@ -359,6 +359,9 @@
                 case 'app.portal.data.strategy':
                     name += "Strategies";
                     break;
+				case 'app.portal.data.generated-event':
+					name += "Events";
+					break;
 				//</editor-fold>
 
                 case 'app.portal.data.complex-transaction':

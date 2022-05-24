@@ -542,33 +542,8 @@ md-backdrop.md-select-backdrop {
   background: #4c334d;
 }
 
-.md-dialog-container.viewConstructorDialog {
-  overflow: visible;
-}
-
-.md-dialog-backdrop {
-  display: none;
-}
-
 .md-button.md-fab.md-mini {
   line-height: 1;
-}
-
-.add-portfolio-dialog,
-.edit-portfolio-dialog {
-  width: 100%;
-}
-
-.delete-portfolio-dialog {
-  .warning-text {
-    padding: 1em;
-  }
-}
-
-.success-dialog {
-  .success-text {
-    padding: 0 20px;
-  }
 }
 
 .header-buttons {
@@ -656,12 +631,6 @@ md-backdrop.md-select-backdrop {
     100% {
       transform: rotate(360deg);
     }
-  }
-}
-
-.instrument-select-dialog-view {
-  md-dialog-content {
-    padding: 25px;
   }
 }
 
@@ -1369,12 +1338,6 @@ th {
   }
 }
 
-.entity-type-mapping-dialog-view {
-  md-input-container {
-    margin: 0;
-  }
-}
-
 .colored-tab {
   background: rgb(255, 238, 232);
 }
@@ -1411,11 +1374,7 @@ th {
   min-width: 90px;
 }
 
-.dialog-table-settings-btns-icons {
-  position: relative;
-  top: 6px;
-  margin-right: 10px;
-}
+
 
 md-input-container {
   margin: 0 10px;
@@ -1592,21 +1551,6 @@ mdp-time-picker.custom-time-picker {
   }
 }
 
-md-dialog {
-  // needed to prevent resize of dialog into too small one
-  min-width: 200px;
-  min-height: 200px;
-}
-
-md-dialog.draggable-dialog {
-  position: absolute;
-  transition: initial;
-
-  /*md-toolbar {
-    cursor: grab;
-  }*/
-}
-
 md-select-header input {
   border: none;
   outline: none;
@@ -1614,21 +1558,6 @@ md-select-header input {
   width: 100%;
   padding: 0;
   padding-left: 5px;
-}
-
-.instrument-select-dialog-view {
-  md-input-container {
-    padding: 0;
-    margin: 0;
-  }
-
-  tr {
-    cursor: pointer;
-  }
-
-  tr:hover {
-    background: rgba(0, 0, 0, 0.1);
-  }
 }
 
 /*.ev-data-field {
@@ -1704,12 +1633,6 @@ md-input-container.SC-entity-select-container {
 
 .vAccordion--default v-pane.is-expanded > v-pane-header {
   border-bottom-color: rgb(63, 81, 181);
-}
-
-.automated-uploads-manager-dialog-view {
-  md-input-container {
-    max-height: inherit;
-  }
 }
 
 .header-help-btn {
@@ -1871,16 +1794,6 @@ md-menu-content md-menu.md-menu {
   padding: 10px;
 }
 
-.instrument-import-manager-dialog-view {
-  .instrument-import-field-bg {
-    padding-top: 20px;
-  }
-
-  .instrument-import-field {
-    padding-top: 20px;
-  }
-}
-
 .text-center {
   text-align: center;
 }
@@ -1889,28 +1802,6 @@ md-menu-content md-menu.md-menu {
   border: 1px solid #666;
   padding: 24px;
   margin: 24px;
-}
-
-.transaction-scheme-manager-dialog-view {
-  width: 75%;
-
-  .tsm-step-first-row {
-    margin: 10px 0;
-  }
-
-  .trans-scheme-manager-notes-ic {
-    width: 70%;
-    max-height: initial;
-    margin-left: 0;
-
-    textarea {
-      border-bottom: 1px solid #000;
-    }
-  }
-
-  .step-first-row-text-padding {
-    padding-top: 10px;
-  }
 }
 
 .scheme-manager-import-columns-header {
@@ -1928,23 +1819,6 @@ md-menu-content md-menu.md-menu {
   md-select-value {
     min-width: 45px;
   }
-}
-
-.transaction-mapping-input-mapping-dialog {
-  width: 65%;
-
-  md-content {
-    padding: 16px;
-
-    h2 {
-      margin-bottom: 36px;
-    }
-  }
-}
-
-.help-dialog {
-  width: 90%;
-  height: 70vh;
 }
 
 .actions-view {
@@ -2007,10 +1881,6 @@ md-menu-content md-menu.md-menu {
     top: 5px;
     fill: #ffffff;
   }
-}
-
-.entity-scheme-manager-dialog-view {
-  width: 75%;
 }
 
 .ui-select-multiple.ui-select-bootstrap input.ui-select-search {
@@ -2328,21 +2198,6 @@ md-menu-content.dropdown-buttons-menu {
   margin-bottom: 15px;
 }
 
-.layouts-list-dialog {
-  md-dialog-content {
-    min-width: 350px;
-  }
-
-  .layouts-list-row {
-    padding: 10px 0;
-    border-bottom: 1px solid #000;
-
-    &:first-child {
-      border-top: 1px solid #000;
-    }
-  }
-}
-
 .automated-uploads-history-input-container {
   md-input-container {
     width: 210px;
@@ -2391,30 +2246,6 @@ md-menu-content.dropdown-buttons-menu {
 .ALS-card {
   padding: 14px;
 }
-
-.loader-dialog {
-  .loader-body {
-    width: 300px;
-    height: 300px;
-    padding: 20px;
-  }
-
-  .loader-description {
-    font-size: 18px;
-    text-align: center;
-  }
-
-  .loader-spinner {
-    margin-top: 64px;
-  }
-}
-
-.dialog-containers-wrap {
-  div.md-dialog-container {
-    z-index: 55;
-  }
-}
-
 
 button.md-button.toggle-calculator-block-btn {
   min-width: 20px;
@@ -2700,61 +2531,6 @@ expression-editor-button.expression-entered,
 
 }
 
-.draggable-dialog-sign {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  overflow: hidden;
-  fill: #929292;
-  cursor: grab;
-
-  .dd-sign-left-icon,
-  .dd-sign-right-icon {
-    position: absolute;
-    top: 0;
-  }
-
-  .dd-sign-left-icon {
-    right: 6px;
-  }
-
-  .dd-sign-right-icon {
-    right: 0;
-  }
-}
-
-.md-toolbar-tools .draggable-dialog-sign {
-  top: 5px;
-  left: 10px;
-}
-
-dialog-window-resizer {
-  position: absolute;
-  height: 24px;
-  overflow: hidden;
-
-  .resize-dialog-icon {
-    display: block;
-    height: 24px;
-    fill: #4c334d;
-    cursor: nwse-resize;
-  }
-}
-
-dialog-window-resizer.dialog-window-resizer_type1 {
-  right: 0;
-  bottom: 0;
-}
-
-md-dialog.two-rows-dialog-actions {
-  padding-bottom: 104px;
-
-  md-dialog-actions {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
 .center-text-message {
   height: 100%;
   display: flex;
@@ -2961,19 +2737,7 @@ md-dialog.two-rows-dialog-actions {
   }
 }
 
-md-dialog-actions {
-  .dialog-footer {
-    width: 100%;
-  }
-
-}
-
 // < big drawer element >
-
-.login-dialog {
-  width: 300px;
-  padding-bottom: 12px;
-}
 
 md-tabs [role="tabpanel"] {
   transition: none;

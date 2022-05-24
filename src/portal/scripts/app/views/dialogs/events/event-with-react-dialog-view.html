@@ -29,14 +29,19 @@
             <md-button aria-label="cancel" class="md-raised md-warn" data-ng-click="vm.skip()">
                 Skip
             </md-button>
-            <md-button aria-label="cancel" class="md-raised" data-ng-click="vm.informed()">
+            <md-button class="md-raised"
+                       data-ng-click="vm.informed()"
+                       aria-label="do nothing with event">
                 OK, do nothing
             </md-button>
-            <md-button aria-label="cancel" class="md-raised {{vm.availableForApplyDefault ? '': 'disabled-btn'}}"" data-ng-click="vm.applyDefault()">
+            <md-button data-ng-click="vm.applyDefault()"
+                       data-ng-disabled="!vm.availableForApplyDefault"
+                       class="md-raised"
+                       aria-label="event apply default">
                 Apply Default
             </md-button>
         </div>
-        <div class="width-100">
+        <div ng-if="vm.showSkipAllBtn" class="width-100">
             <md-button aria-label="cancel" class="md-warn skip-all-button"
                        data-ng-click="vm.skipAll()">
                 Skip All

@@ -1,8 +1,11 @@
 <div class="selector-popup popup-menu">
-    <md-button ng-repeat="option in popupData.options"
-               ng-click="popupData.selectOption(option, _$popup, $event)"
-               class="popup-menu-item">
-        <span class="material-icons" ng-class="{'visibility-hidden': !option.isActive}">done</span>
-        <span ng-bind="option.name"></span>
-    </md-button>
+
+    <div ng-repeat="option in popupData.options" class="popup-menu-item-wrap" ng-class="option.classes">
+        <md-button ng-click="popupData.selectOption(option, _$popup, $event)"
+                   class="popup-menu-item">
+            <span class="material-icons" ng-class="{'visibility-hidden': !option.isActive}">done</span>
+            <span ng-bind="option.name"></span>
+        </md-button>
+    </div>
+
 </div>

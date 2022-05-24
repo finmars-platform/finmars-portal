@@ -9,6 +9,7 @@
         var vm = this;
 
         vm.event = data.event;
+		vm.showSkipAllBtn = data.skipAllButton === false ? data.skipAllButton : true;
 
         console.log('vm.event', vm.event);
 

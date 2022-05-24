@@ -1033,37 +1033,88 @@
 
 	};
 
-	var getEventsContextMenuHTML = function (obj, objectId, parentGroupHashId, innerHTMLString) {
+	var getEventActionsMenuOptions = function (obj, objectId, parentGroupHashId, innerHTMLString) {
 
-		innerHTMLString = innerHTMLString +
-			'<div class="ev-dropdown-option text-bold"' +
+		var getClassForLast = function (index) {
+
+			if (index === obj.event_schedule_object.actions.length - 1) {
+				return ' divider-bottom';
+			}
+
+			return '';
+
+		};
+
+		obj.event_schedule_object.actions.forEach(function (action, index) {
+
+			innerHTMLString = innerHTMLString +
+				`<div class="ev-dropdown-option${getClassForLast(index)}"
+					  data-ev-dropdown-action="run_action"
+					  data-object-id="${objectId}"
+					  data-parent-group-hash-id="${parentGroupHashId}">${action.display_text}</div>`;
+
+		});
+
+		return innerHTMLString;
+
+	};
+
+	var getEventsContextMenuHTML = function (obj, objectId, parentGroupHashId, innerHTMLString, evDataService) {
+
+		/* innerHTMLString = innerHTMLString +
+			'<div class="ev-dropdown-option "' +
 			' data-ev-dropdown-action="description"' +
 			' data-object-id="' + objectId + '"' +
-			' data-parent-group-hash-id="' + parentGroupHashId + '">Coupon description</div>';
+			' data-parent-group-hash-id="' + parentGroupHashId + '">Coupon description</div>'; */
+
+		/*var defaultActionIndex = obj.event_schedule_object.actions.findIndex(function (action) {
+			return action.is_book_automatic;
+		});
+
+		if (defaultActionIndex > -1) { */
+
+		innerHTMLString = getEventActionsMenuOptions(obj, objectId, parentGroupHashId, innerHTMLString);
+
+		//region Book default transaction
+		var flatList = evDataService.getFlatList();
+		var selectedRows = flatList.filter(function (row) {
+			return row.___is_activated;
+		});
+
+		if (!obj.___is_activated) {
+			selectedRows.push(obj);
+		}
+
+		var defActionEventIndex = selectedRows.findIndex(function (row) {
+
+			return row.event_schedule_object.actions.find(function (action) {
+				return action.is_book_automatic;
+			});
+
+		});
+
+		if (defActionEventIndex > -1) {
+
+			innerHTMLString = innerHTMLString +
+				'<div class="ev-dropdown-option divider-top text-bold"' +
+				' data-ev-dropdown-action="book_default"' +
+				' data-object-id="' + objectId + '"' +
+				' data-parent-group-hash-id="' + parentGroupHashId + '">Book default transaction</div>';
+
+		}
+		//endregion
 
 		innerHTMLString = innerHTMLString +
-			'<div class="ev-dropdown-option text-bold"' +
-			' data-ev-dropdown-action="book_default"' +
+			'<div class="ev-dropdown-option divider-bottom"' +
+			' data-ev-dropdown-action="process"' +
 			' data-object-id="' + objectId + '"' +
-			' data-parent-group-hash-id="' + parentGroupHashId + '">Book default transaction</div>';
+			' data-parent-group-hash-id="' + parentGroupHashId + '">Process</div>';
 
 		innerHTMLString = innerHTMLString +
-			'<div class="ev-dropdown-option text-bold"' +
-			' data-ev-dropdown-action="do_nothing"' +
+			'<div class="ev-dropdown-option"' +
+			' data-ev-dropdown-action="ignore"' +
 			' data-object-id="' + objectId + '"' +
-			' data-parent-group-hash-id="' + parentGroupHashId + '">Do nothing</div>';
-
-		innerHTMLString = innerHTMLString +
-			'<div class="ev-dropdown-option text-bold"' +
-			' data-ev-dropdown-action="skip"' +
-			' data-object-id="' + objectId + '"' +
-			' data-parent-group-hash-id="' + parentGroupHashId + '">Skip</div>';
-
-		innerHTMLString = innerHTMLString +
-			'<div class="ev-dropdown-option text-bold"' +
-			' data-ev-dropdown-action="skip_all"' +
-			' data-object-id="' + objectId + '"' +
-			' data-parent-group-hash-id="' + parentGroupHashId + '">Skip All</div>';
+			' data-parent-group-hash-id="' + parentGroupHashId + '">Ignore</div>';
 
 		return innerHTMLString;
 
@@ -1175,7 +1226,7 @@
 			innerHTMLString = getReconContextMenuHTML(obj, objectId, parentGroupHashId, innerHTMLString);
 
 		} if (entityType === 'generated-event') {
-			innerHTMLString = getEventsContextMenuHTML(obj, objectId, parentGroupHashId, innerHTMLString);
+			innerHTMLString = getEventsContextMenuHTML(obj, objectId, parentGroupHashId, innerHTMLString, evDataService);
 
 		} else {
 			innerHTMLString = getContextMenuHTML(obj, objectId, parentGroupHashId, innerHTMLString, entityType);
@@ -1190,7 +1241,7 @@
 
     var createPopupMenu = function (objectId, parentGroupHashId, evDataService, evEventService, menuPosition) {
 
-        // var entityType = evDataService.getEntityType();
+        var entityType = evDataService.getEntityType();
 
         clearDropdownsAndRows(evDataService, evEventService);
 
@@ -1218,8 +1269,13 @@
 
         // var innerHTMLString = '';
         // var viewContext = evDataService.getViewContext();
+		var objHasContextMenu = !!obj;
 
-        if (obj) {
+		if (entityType === 'generated-event') {
+			objHasContextMenu = !!obj && obj.status === 1;
+		}
+
+        if (objHasContextMenu) {
 
             popup.innerHTML = generateContextMenu(obj, objectId, parentGroupHashId, evDataService);
 
@@ -1232,7 +1288,6 @@
             addEventListenerForContextMenu(evDataService, evEventService);
 
         }
-
 
     };
 

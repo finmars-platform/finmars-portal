@@ -100,6 +100,18 @@
   overflow: auto;
 }
 
+.popup-container.selector-popup-no-checkmark {
+
+  .popup-menu.selector-popup {
+    .popup-menu-item {
+      span.material-icons {
+        display: none;
+      }
+    }
+  }
+
+}
+
 //<editor-fold desc="Complex datepicker">
 .complex-datepicker {
   width: 562px;
@@ -476,6 +488,12 @@
   padding: 8px 0;
   overflow-y: auto;
 
+  .popup-menu-item-wrap.border-top {
+    .popup-menu-item {
+      border-top: 1px solid @borderGray;
+    }
+  }
+
   .popup-menu-item {
     text-align: left;
     display: flex;
@@ -681,7 +699,7 @@
 }
 //</editor-fold>
 
-//<editor-fold desc="Table row addition inside user tab of add / edit ev">
+//<editor-fold desc="Row addition for table inside user's tab of add / edit ev">
 .ev-user-tab-add-row-popup-container {
   width: 240px;
   min-height: 37px;

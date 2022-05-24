@@ -1,0 +1,79 @@
+<md-dialog class="process-event-dialog dialog-1 draggable-dialog dialog-actions-bottom"
+           aria-label="process event dialog"
+           drag-dialog>
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+
+            <h2 ng-if="vm.eventsList.length === 1">Process event</h2>
+
+            <h2 ng-if="vm.eventsList.length > 1">Process events ({{vm.activeEventIndex + 1}} of {{vm.eventsList.length}})</h2>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content class="custom-scrollbar">
+        <div class="m-b-35">Event status: <span class="text-bold" ng-bind="vm.statuses[vm.activeEvent.status]"></span></div>
+
+        <div ng-class="{'opacity-05': vm.eventDisabled}">
+            <p ng-bind="vm.activeEvent.event_schedule_object.display_description"></p>
+
+            <p>Please select the reaction.</p>
+        </div>
+
+    </md-dialog-content>
+
+    <md-dialog-actions class="flex-row">
+        <div class="flex-row flex-i-center">
+            <div class="btn-and-dropdown m-r-8">
+                <md-button ng-click="vm.bookDefault()"
+                           ng-disabled="vm.eventDisabled"
+                           class="md-button link-button">BOOK</md-button>
+
+                <md-button class="md-button small-button-icon link-button dropdown-btn"
+                           ng-disabled="vm.eventDisabled"
+
+                           popup
+                           popup-template-url="'views/popups/selector-popup-view.html'"
+                           popup-data="vm.bookSelData"
+                           position-relative-to="element"
+                           relative-popup-y="top"
+                           open-on="click"
+                           close-on-click-outside="true"
+                           popup-classes="selector-popup-no-checkmark">
+
+                    <span class="material-icons">arrow_drop_down</span>
+
+                </md-button>
+            </div>
+
+            <div class="btn-and-dropdown">
+                <md-button ng-click="vm.ignore()"
+                           ng-disabled="vm.eventDisabled"
+                           class="md-button link-button">MARK AS IGNORED</md-button>
+
+                <md-button class="small-button-icon link-button dropdown-btn"
+                           ng-disabled="vm.eventDisabled"
+
+                           popup
+                           popup-template-url="'views/popups/selector-popup-view.html'"
+                           popup-data="vm.ignoreSelData"
+                           position-relative-to="element"
+                           relative-popup-y="top"
+                           open-on="click"
+                           close-on-click-outside="true"
+                           popup-classes="selector-popup-no-checkmark">
+
+                    <span class="material-icons">arrow_drop_down</span>
+
+                </md-button>
+            </div>
+
+            <md-button ng-click="vm.nextEventOrHide()"
+                       class="md-button primary-button">
+<!--                <span ng-if="vm.eventsList.length > 1">NEXT ></span>-->
+                <span>SKIP</span>
+            </md-button>
+        </div>
+    </md-dialog-actions>
+</md-dialog>

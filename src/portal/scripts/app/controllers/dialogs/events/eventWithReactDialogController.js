@@ -14,6 +14,7 @@
         vm.actionButtons = vm.event.event_schedule_object.actions;
 
         vm.availableForApplyDefault = false;
+		vm.showSkipAllBtn = data.skipAllButton === false ? data.skipAllButton : true;
 
         vm.event.event_schedule_object.actions.forEach(function (item) {
 
@@ -114,11 +115,17 @@
 
         vm.informed = function () {
 
-            instrumentEventService.informedEventAction(vm.event.id).then(function () {
 
-                $mdDialog.hide({status: 'agree'});
 
-            });
+				instrumentEventService.informedEventAction(vm.event.id).then(function () {
+
+					$mdDialog.hide({status: 'agree', eventAction: 'ignore'});
+
+				});
+
+			/*} else {
+				$mdDialog.hide({status: 'agree', event_action: 'do_nothing'});
+			}*/
 
         };
 

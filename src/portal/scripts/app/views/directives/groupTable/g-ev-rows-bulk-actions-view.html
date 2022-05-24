@@ -8,7 +8,16 @@
 
                style="margin: 0 0 0 20px;"
                class="selector-btn">
-        Bulk actions
-        <span class="arrow_downward-icon material-icons">arrow_drop_down</span>
+
+        <div class="flex-row flex-i-center" ng-if="popupData.entityType !== 'generated-event'">
+            <span>Bulk actions</span>
+            <span class="arrow_downward-icon material-icons">arrow_drop_down</span>
+        </div>
+
+        <div class="flex-row flex-i-center" ng-if="popupData.entityType === 'generated-event'">
+            <span class="material-icons">flash_on</span>
+            <span>Process</span>
+            <span class="arrow_downward-icon material-icons">arrow_drop_down</span>
+        </div>
     </md-button>
 </div>

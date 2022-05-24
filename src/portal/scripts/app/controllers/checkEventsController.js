@@ -19,6 +19,8 @@
         vm.events = [];
         vm.eventsProjection = [];
 
+		var statuses = instrumentEventService.getEventStatuses();
+
         vm.recursiveOpenDialogs = function (resolve, events, index, $event) {
 
             var doNotReactActionsIds = [6, 9, 14];
@@ -395,7 +397,7 @@
 
         vm.getStatus = function (status) {
 
-            switch (status) {
+            /*switch (status) {
                 case 1:
                     return 'New';
                 case 2:
@@ -417,7 +419,12 @@
                 default:
                     return 'Unknown'
 
-            }
+            }*/
+			if (statuses.hasOwnProperty(status)) {
+				return statuses[status];
+			}
+
+			return 'Undefined';
 
         };
 

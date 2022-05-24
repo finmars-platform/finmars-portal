@@ -1,0 +1,75 @@
+<md-dialog class="events-with-errors-dialog dialog-actions-bottom"
+           aria-label="events errors dialog">
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+<!--            <is-draggable-sign></is-draggable-sign>-->
+
+            <h2>Error</h2>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content class="custom-scrollbar">
+        <h3>Errors occurred while reacting to this events:</h3>
+
+        <div>
+
+            <table class="homepage-events-table">
+                <thead>
+
+                <tr style="height: 40px;">
+
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Instrument
+                    </th>
+                    <th>
+                        Position
+                    </th>
+                    <th>
+                        Portfolio
+                    </th>
+                    <th>
+                        Account
+                    </th>
+
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr data-ng-repeat="item in vm.events" style="height: 40px">
+
+                    <td><span data-ng-bind="vm.statuses[item.status]"></span>&nbsp;</td>
+
+                    <td><span data-ng-if="item.event_schedule_object"
+                              data-ng-bind="item.event_schedule_object.display_description"></span>&nbsp;
+                    </td>
+                    <td>
+                                <span data-ng-if="item.instrument_object"
+                                      data-ng-bind="item.instrument_object.user_code"></span>&nbsp;
+                    </td>
+                    <td><span data-ng-bind="item.position"></span>&nbsp;</td>
+                    <td><span data-ng-if="item.portfolio_object"
+                              data-ng-bind="item.portfolio_object.user_code"></span>&nbsp;
+                    </td>
+                    <td><span data-ng-if="item.account_object"
+                              data-ng-bind="item.account_object.user_code"></span>&nbsp;
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </md-dialog-content>
+
+    <md-dialog-actions class="flex-row">
+        <div>
+            <md-button ng-click="vm.cancel()" class="md-button link-button">CLOSE</md-button>
+        </div>
+    </md-dialog-actions>
+</md-dialog>

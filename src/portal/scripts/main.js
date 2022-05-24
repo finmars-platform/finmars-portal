@@ -11,9 +11,12 @@ import authorizerService from '../../shell/scripts/app/services/authorizerServic
 
 // import uiService from "./app/services/uiService.js";
 
-import portalController from './app/controllers/portalController.js';
+import portalController from "./app/controllers/portalController";
+import bookDefaultDialogController from "./app/controllers/dialogs/events/bookDefaultDialogController";
+import processEventDialogController from "./app/controllers/dialogs/events/processEventDialogController";
+import eventsReactionsErrorsDialogController from "./app/controllers/dialogs/events/reactionsErrorsDialogController";
 
-import mainHeaderDirective from "./app/directives/mainHeaderDirective.js";
+import mainHeaderDirective from "./app/directives/mainHeaderDirective";
 
 import complexDropdownSelectDirective from "./app/directives/customInputs/complexDropdownSelectDirective";
 import complexDropdownSelectMenuDirective from "./app/directives/customInputs/complexDropdownSelectMenuDirective";
@@ -299,8 +302,11 @@ export default (function () {
 	portal.controller('CheckEventsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/events/checkEventsDialogController')]);
 	portal.controller('EventWithReactDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/events/eventWithReactDialogController')]);
 	portal.controller('EventWithReactApplyDefaultConfirmDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/events/eventWithReactApplyDefaultConfirmDialogController')]);
+	portal.controller('EventsBookDefaultDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'data', bookDefaultDialogController]);
 	portal.controller('EventDoNotReactDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/events/eventDoNotReactDialogController')]);
 	portal.controller('EventApplyDefaultDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/events/eventApplyDefaultDialogController')]);
+	portal.controller('ProcessEventDialogController', ['$scope', '$mdDialog', 'data', processEventDialogController]);
+	portal.controller('EventsReactionsErrorsDialogController', ['$scope', '$mdDialog', 'data', eventsReactionsErrorsDialogController]);
 	//</editor-fold>
 
 	// Attribute Manager
@@ -317,7 +323,7 @@ export default (function () {
 
 	// Entity Viewer & Report Viewer
 
-	portal.controller('EntityViewerController', ['$scope', '$mdDialog', '$state', '$stateParams', '$transitions', '$customDialog', '$bigDrawer', 'middlewareService', 'usersService', require('./app/controllers/entityViewer/entityViewerController')]);
+	portal.controller('EntityViewerController', ['$scope', '$mdDialog', '$state', '$stateParams', '$transitions', '$customDialog', '$bigDrawer', 'middlewareService', 'usersService', 'toastNotificationService', require('./app/controllers/entityViewer/entityViewerController')]);
 	portal.controller('ReportViewerController', ['$scope', '$mdDialog', '$stateParams', '$transitions', 'toastNotificationService', 'middlewareService', 'usersService', require('./app/controllers/entityViewer/reportViewerController')]);
 	portal.controller('SplitPanelReportViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/splitPanelReportViewerController')]);
 	portal.controller('ReconciliationViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/reconciliationViewerController')]);

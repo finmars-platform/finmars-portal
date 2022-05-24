@@ -24,6 +24,23 @@
             })
     };
 
+	var getByKey = function (id) {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/generated-event/' + id + '/'),
+			{
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				}
+			})
+	};
+
     // var eventAction = function (eventId, options) {
     // 	
     // var prefix = baseUrlService.getMasterUserPrefix();
@@ -197,6 +214,7 @@
 
     module.exports = {
         getList: getList,
+		getByKey: getByKey,
         getEventAction: getEventAction,
         putEventAction: putEventAction,
         informedEventAction: informedEventAction,

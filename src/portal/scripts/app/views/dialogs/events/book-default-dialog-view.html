@@ -1,0 +1,30 @@
+<md-dialog class="event-book-default-dialog dialog-1 draggable-dialog dialog-actions-bottom"
+           aria-label="apply default to events"
+           drag-dialog>
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+
+            <h2>Book Default Transaction</h2>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content class="custom-scrollbar p-r-24 p-l-24">
+        <div class="gray-text f-s-14 m-b-35">The following transactions will be booked:</div>
+
+        <div class="f-s-14">
+            <div ng-repeat="action in vm.defaultActionsList" class="m-b-20">
+                <div ng-bind="action.display_text"></div>
+            </div>
+        </div>
+    </md-dialog-content>
+
+    <md-dialog-actions class="flex-row">
+        <div>
+            <md-button ng-click="vm.cancel()" class="link-button">CANCEL</md-button>
+
+            <md-button ng-click="vm.agree()" class="link-button">OK</md-button>
+        </div>
+    </md-dialog-actions>
+</md-dialog>

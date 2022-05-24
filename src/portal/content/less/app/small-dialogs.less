@@ -157,7 +157,7 @@ md-card.tab-editor-tab-card {
 }
 // < tabs-editor-dialog-view >
 
-// validation-dialog-view
+//region validation-dialog-view
 .validation-dialog {
 
   .warning-text {
@@ -196,9 +196,9 @@ md-card.tab-editor-tab-card {
     }
   }
 }
-// < validation-dialog-view >
+//endregion validation-dialog-view
 
-// expandable-items-selector-view
+//region expandable-items-selector-view
 .expandable-items-selector-dialog {
 
   .expandable-item {
@@ -237,9 +237,9 @@ md-card.tab-editor-tab-card {
   font-size: 14px;
   margin-bottom: 2px;
 }
-// < expandable-items-selector-view >
+//endregion < expandable-items-selector-view >
 
-// text-editor-dialog
+//region text-editor-dialog
 .text-editor-dialog {
   width: 30%;
   height: 40%;
@@ -255,7 +255,7 @@ md-card.tab-editor-tab-card {
   height: 100%;
   width: 100%;
 }
-// < text-editor-dialog >
+//endregion < text-editor-dialog >
 
 // rename-color-dialog
 .rename-color-textinput-holder {
@@ -271,7 +271,7 @@ md-card.tab-editor-tab-card {
 }
 // < rename-color-dialog >
 
-// expandable-items-selector-dialog-view
+//region expandable-items-selector-dialog-view
 .select-layout-filter-container {
   padding: 0 10px;
   box-sizing: border-box;
@@ -306,9 +306,9 @@ md-card.tab-editor-tab-card {
   padding: 0;
   margin: 19px 0px 0px 11px;
 }
-// < expandable-items-selector-dialog-view >
+//endregion expandable-items-selector-dialog-view
 
-// items selector with groups
+//region Items selector with groups
 @selectorWgItemsLeftSpace: 50px;
 
 .i-selector-wg-filter-container {
@@ -368,4 +368,100 @@ md-checkbox.i-selector-wg-toggle-group {
   padding: 0;
   margin: 19px 0px 0px 8px;
 }
-// < items selector with groups >
+//endregion Items selector with groups
+
+//region Import
+.instrument-select-dialog-view {
+  md-input-container {
+    padding: 0;
+    margin: 0;
+  }
+
+  tr {
+    cursor: pointer;
+  }
+
+  tr:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+
+.automated-uploads-manager-dialog-view {
+  md-input-container {
+    max-height: inherit;
+  }
+}
+
+.instrument-import-manager-dialog-view {
+  .instrument-import-field-bg {
+    padding-top: 20px;
+  }
+
+  .instrument-import-field {
+    padding-top: 20px;
+  }
+}
+
+.transaction-scheme-manager-dialog-view {
+  width: 75%;
+
+  .tsm-step-first-row {
+    margin: 10px 0;
+  }
+
+  .trans-scheme-manager-notes-ic {
+    width: 70%;
+    max-height: initial;
+    margin-left: 0;
+
+    textarea {
+      border-bottom: 1px solid #000;
+    }
+  }
+
+  .step-first-row-text-padding {
+    padding-top: 10px;
+  }
+}
+
+.transaction-mapping-input-mapping-dialog {
+  width: 65%;
+
+  md-content {
+    padding: 16px;
+
+    h2 {
+      margin-bottom: 36px;
+    }
+  }
+}
+
+.entity-scheme-manager-dialog-view {
+  width: 75%;
+}
+//endregion Import
+
+.help-dialog {
+  width: 90%;
+  height: 70vh;
+}
+
+.layouts-list-dialog {
+  md-dialog-content {
+    min-width: 350px;
+  }
+
+  .layouts-list-row {
+    padding: 10px 0;
+    border-bottom: 1px solid #000;
+
+    &:first-child {
+      border-top: 1px solid #000;
+    }
+  }
+}
+
+.login-dialog {
+  width: 300px;
+  padding-bottom: 12px;
+}

@@ -28,48 +28,69 @@
 					actionKey: "bulk_restore_deleted"
 				};
 
-				if (entityType === 'complex-transaction') {
+				switch (entityType) {
 
-					optionsList = optionsList.concat([
-						{
-							actionKey: "lock_transaction",
-							name: "Lock Transaction",
-						},
-						{
-							actionKey: "unlock_transaction",
-							name: "Unlock Transaction",
-						},
-						{
-							actionKey: "ignore_transaction",
-							name: "Ignore Transaction",
-						},
-						{
-							actionKey: "activate_transaction",
-							name: "Activate Transaction",
-						},
-					]);
+					case 'complex-transaction':
 
-				}
-				else if (entityType === "instrument") {
+						optionsList = optionsList.concat([
+							{
+								actionKey: "lock_transaction",
+								name: "Lock Transaction",
+							},
+							{
+								actionKey: "unlock_transaction",
+								name: "Unlock Transaction",
+							},
+							{
+								actionKey: "ignore_transaction",
+								name: "Ignore Transaction",
+							},
+							{
+								actionKey: "activate_transaction",
+								name: "Activate Transaction",
+							},
+						]);
 
-					optionsList = optionsList.concat([
-						{
-							name: "Deactivate",
-							actionKey: "deactivate_instrument"
-						},
-						{
-							name: "Activate",
-							actionKey: "activate_instrument"
+						break;
+
+					case 'instrument':
+
+						optionsList = optionsList.concat([
+							{
+								name: "Deactivate",
+								actionKey: "deactivate_instrument"
+							},
+							{
+								name: "Activate",
+								actionKey: "activate_instrument"
+							},
+							bulkRestoreDeleted,
+						]);
+
+						break;
+
+					case 'generated-event':
+
+						optionsList = optionsList.concat([
+							{
+								name: "Book default transaction",
+								actionKey: "book_default"
+							},
+							{
+								name: "Process",
+								actionKey: "process"
+							},
+						]);
+
+						break;
+
+					default:
+
+						if (!['complex-transaction', 'price-history', 'currency-history'].includes(entityType)) {
+							optionsList.push(bulkRestoreDeleted);
 						}
-					]);
 
-					optionsList.push(bulkRestoreDeleted);
-
-				}
-				else if (!['complex-transaction', 'price-history', 'currency-history'].includes(entityType)) {
-
-					optionsList.push(bulkRestoreDeleted);
-
+						break;
 				}
 
 				const selectOption = function (option, _$popup, $event) {
@@ -89,8 +110,9 @@
 				};
 
 				scope.popupData = {
+					options: optionsList,
+					entityType: entityType,
 					selectOption: selectOption,
-					options: optionsList
 				};
 
 			}

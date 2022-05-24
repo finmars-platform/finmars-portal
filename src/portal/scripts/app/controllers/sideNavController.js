@@ -558,7 +558,6 @@
 
             vm.getMember();
 
-
             if (toastr) {
                 toastr.options.onclick = function (event) {
 
