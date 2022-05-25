@@ -1,5 +1,5 @@
-<div layout="row">
-    <md-input-container class="orange-actions-selector">
+<div layout="row" class="ttype-action-inputs-container">
+    <!-- <md-input-container class="orange-actions-selector">
         <label for="" content-title>Instruction if Transaction is Rebooked</label>
         <md-select data-ng-model="item.rebook_reaction">
             <md-option data-ng-repeat="item in vm.rebookOtherReactions"
@@ -7,62 +7,74 @@
                 {{item.name}}
             </md-option>
         </md-select>
-    </md-input-container>
+    </md-input-container> -->
+    <dropdown-select label="Instruction if Transaction is Rebooked"
+                     model="item.rebook_reaction"
+                     menu-options="vm.rebookOtherReactions"
+                     class="width-100"></dropdown-select>
 </div>
 <div layout="row">
+
     <div flex="50">
-        <div layout="row">
-            <div flex="50">
-                <div layout="row">
-                    <div flex="20">
-                        <md-button
-                                class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument_event_schedule.instrument_toggle ? 'ref' : ''}}"
-                                style="transform: scale(0.7,0.7)"
-                                data-ng-click="vm.resetPropertyBtn(item, 'instrument_event_schedule', 'instrument')">
-                            <span data-ng-if="!!item.instrument_event_schedule.instrument_toggle">R</span>
-                            <span data-ng-if="!!!item.instrument_event_schedule.instrument_toggle">I</span>
-                        </md-button>
-                    </div>
-                    <div flex="80">
-                        <div data-ng-if="item.instrument_event_schedule.instrument_toggle">
-                            <entity-search-select data-item="item.instrument_event_schedule.instrument"
-                                                  data-user-code-for-item="true"
-                                                  data-label="'Instrument'"
-                                                  data-item-name="item.instrument_event_schedule.instrument_object.name"
-                                                  data-entity-type="'instrument'"
-                                                  is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
-                        </div>
-                        <div data-ng-if="!item.instrument_event_schedule.instrument_toggle">
-                            <md-input-container class="ttype-actions-selector-with-phantoms">
-                                <label for="" content-title>Instrument</label>
-                                <md-select
-                                        data-ng-model="item.instrument_event_schedule[vm.resolveInstrumentProp(item, 'instrument_event_schedule', 'instrument')]"
-                                        data-ng-disabled="vm.isRelationInputFieldDisabled()">
-                                    <md-optgroup label="Inputs">
-                                        <md-option
-                                                data-ng-click="vm.setItemInstrumentInput(item, 'instrument_event_schedule', inputItem.name, 'instrument')"
-                                                data-ng-repeat="inputItem in vm.findInputs('instrument')"
-                                                ng-value="inputItem.name">
-                                            {{inputItem.name}}
-                                        </md-option>
-                                    </md-optgroup>
-                                    <md-optgroup label="Phantoms">
-                                        <md-option
-                                                data-ng-click="vm.setItemInstrumentPhantom(item, 'instrument_event_schedule', phantomItem.positionOrder, 'instrument')"
-                                                data-ng-repeat="phantomItem in vm.findPhantoms()"
-                                                ng-value="phantomItem.positionOrder">
-                                            {{phantomItem.action_notes}}
-                                        </md-option>
-                                    </md-optgroup>
-                                </md-select>
-                            </md-input-container>
-                        </div>
-                    </div>
+
+        <div layout="row" class="ttype-action-inputs-container">
+            <div layout="row" flex="66">
+                <!-- <div flex="20">
+                    <md-button
+                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument_event_schedule.instrument_toggle ? 'ref' : ''}}"
+                            style="transform: scale(0.7,0.7)"
+                            data-ng-click="vm.resetPropertyBtn(item, 'instrument_event_schedule', 'instrument')">
+                        <span data-ng-if="!!item.instrument_event_schedule.instrument_toggle">R</span>
+                        <span data-ng-if="!!!item.instrument_event_schedule.instrument_toggle">I</span>
+                    </md-button>
                 </div>
+                <div flex="80">
+                    <div data-ng-if="item.instrument_event_schedule.instrument_toggle">
+                        <entity-search-select data-item="item.instrument_event_schedule.instrument"
+                                              data-label="'Instrument'"
+                                              data-item-name="item.instrument_event_schedule.instrument_object.name"
+                                              data-entity-type="'instrument'"
+                                              is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
+                    </div>
+                    <div data-ng-if="!item.instrument_event_schedule.instrument_toggle">
+                        <md-input-container class="ttype-actions-selector-with-phantoms">
+                            <label for="" content-title>Instrument</label>
+                            <md-select
+                                    data-ng-model="item.instrument_event_schedule[vm.resolveInstrumentProp(item, 'instrument_event_schedule', 'instrument')]"
+                                    data-ng-disabled="vm.isRelationInputFieldDisabled()">
+                                <md-optgroup label="Inputs">
+                                    <md-option
+                                            data-ng-click="vm.setItemInstrumentInput(item, 'instrument_event_schedule', inputItem.name, 'instrument')"
+                                            data-ng-repeat="inputItem in vm.findInputs('instrument')"
+                                            ng-value="inputItem.name">
+                                        {{inputItem.name}}
+                                    </md-option>
+                                </md-optgroup>
+                                <md-optgroup label="Phantoms">
+                                    <md-option
+                                            data-ng-click="vm.setItemInstrumentPhantom(item, 'instrument_event_schedule', phantomItem.positionOrder, 'instrument')"
+                                            data-ng-repeat="phantomItem in vm.findPhantoms()"
+                                            ng-value="phantomItem.positionOrder">
+                                        {{phantomItem.action_notes}}
+                                    </md-option>
+                                </md-optgroup>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div> -->
+                <multitype-field label="Instrument"
+                                 field-types-data="vm.actionsMultitypeFieldsList[$index].instrument"
+                                 is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
+                                 on-value-change="vm.onMultitypeFieldValChange('instrument', item, $index, 'instrument_event_schedule')"
+                                 on-type-change="vm.onActionMultitypeFieldToggle('instrument', item, $index, 'instrument_event_schedule')"
+
+                                 class="ttype-action-input p-l-0"></multitype-field>
             </div>
         </div>
-        <div layout="row">
-            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+
+        <div layout="row" class="ttype-action-inputs-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
                 <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Effective date: Date</label>
                     <input type="text" value-title data-ng-model="item.instrument_event_schedule.effective_date">
@@ -71,7 +83,8 @@
                         data-item="item.instrument_event_schedule.effective_date"></expression-editor-button>-->
                 <expression-input label="Effective date: Date"
                                   model="item.instrument_event_schedule.effective_date"
-                                  data-data="vm.expressionData"></expression-input>
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
             </div>
             <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
                 <!--<md-input-container class="expression-input-container">
@@ -82,11 +95,13 @@
                         data-item="item.instrument_event_schedule.final_date"></expression-editor-button>-->
                 <expression-input label="Final date: Date"
                                   model="item.instrument_event_schedule.final_date"
-                                  data-data="vm.expressionData"></expression-input>
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
             </div>
         </div>
-        <div layout="row">
-            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+
+        <div layout="row" class="ttype-action-inputs-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
                 <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Name: Text</label>
                     <input type="text" value-title data-ng-model="item.instrument_event_schedule.name">
@@ -95,7 +110,8 @@
                         data-item="item.instrument_event_schedule.name"></expression-editor-button>-->
                 <expression-input label="Name: Text"
                                   model="item.instrument_event_schedule.name"
-                                  data-data="vm.expressionData"></expression-input>
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
             </div>
             <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
                 <!--<md-input-container class="expression-input-container">
@@ -106,12 +122,16 @@
                         data-item="item.instrument_event_schedule.description"></expression-editor-button>-->
                 <expression-input label="Description: Text"
                                   model="item.instrument_event_schedule.description"
-                                  data-data="vm.expressionData"></expression-input>
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
             </div>
         </div>
+
     </div>
+
     <div flex="50">
-        <div layout="row">
+
+        <div layout="row" class="ttype-action-inputs-container">
             <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
                 <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Periodicity n: Number</label>
@@ -121,10 +141,11 @@
                         data-item="item.instrument_event_schedule.periodicity_n"></expression-editor-button>-->
                 <expression-input label="Periodicity n: Number"
                                   model="item.instrument_event_schedule.periodicity_n"
-                                  data-data="vm.expressionData"></expression-input>
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
             </div>
             <div flex="33" layout="row">
-                <div flex="20">
+                <!--<div flex="20">
                     <md-button
                             class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument_event_schedule.periodicity_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
@@ -152,10 +173,18 @@
                                                     find-inputs="vm.findInputs('periodicity')"
                                                     is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
-                </div>
+                </div>-->
+                <multitype-field label="Periodicity"
+                                 field-types-data="vm.actionsMultitypeFieldsList[$index].periodicity"
+                                 is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
+                                 on-value-change="vm.onMultitypeFieldValChange('periodicity', item, $index, 'instrument_event_schedule')"
+                                 on-type-change="vm.onActionMultitypeFieldToggle('periodicity', item, $index, 'instrument_event_schedule')"
+
+                                 class="ttype-action-input"></multitype-field>
             </div>
             <div flex="33" layout="row">
-                <div flex="20">
+                <!-- <div flex="20">
                     <md-button
                             class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument_event_schedule.notification_class_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
@@ -183,10 +212,19 @@
                                                     find-inputs="vm.findInputs('notification-class')"
                                                     is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
-                </div>
+                </div> -->
+                <multitype-field label="Notification Class"
+                                 field-types-data="vm.actionsMultitypeFieldsList[$index].notification_class"
+                                 is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
+                                 on-value-change="vm.onMultitypeFieldValChange('notification_class', item, $index, 'instrument_event_schedule')"
+                                 on-type-change="vm.onActionMultitypeFieldToggle('notification_class', item, $index, 'instrument_event_schedule')"
+
+                                 class="ttype-action-input p-r-0"></multitype-field>
             </div>
         </div>
-        <div layout="row">
+
+        <div layout="row" class="ttype-action-inputs-container">
             <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
                 <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Notify in N days: Number</label>
@@ -196,10 +234,11 @@
                         data-item="item.instrument_event_schedule.notify_in_n_days"></expression-editor-button>-->
                 <expression-input label="Notify in N days: Number"
                                   model="item.instrument_event_schedule.notify_in_n_days"
-                                  data-data="vm.expressionData"></expression-input>
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
             </div>
             <div flex="33" layout="row">
-                <div flex="20">
+                <!-- <div flex="20">
                     <md-button
                             class="ttype-action-field-toggle md-icon-button md-raised {{!!item.instrument_event_schedule.event_class_toggle ? 'ref' : ''}}"
                             style="transform: scale(0.7,0.7)"
@@ -227,9 +266,17 @@
                                                     find-inputs="vm.findInputs('event-class')"
                                                     is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
                     </div>
-                </div>
+                </div> -->
+                <multitype-field label="Event Class"
+                                 field-types-data="vm.actionsMultitypeFieldsList[$index].event_class"
+                                 is-disabled="vm.isRelationInputFieldDisabled()"
+                                 event-service="vm.actionsMFEventService"
+                                 on-value-change="vm.onMultitypeFieldValChange('event_class', item, $index, 'instrument_event_schedule')"
+                                 on-type-change="vm.onActionMultitypeFieldToggle('event_class', item, $index, 'instrument_event_schedule')"
+
+                                 class="ttype-action-input"></multitype-field>
             </div>
-            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-r-0">
                 <!--<md-input-container class="expression-input-container">
                     <label for="" class="uncut-text-on-focus-label" content-title>Is auto generated</label>
                     <input type="text" value-title data-ng-model="item.instrument_event_schedule.is_auto_generated">
@@ -238,8 +285,11 @@
                         data-item="item.instrument_event_schedule.is_auto_generated"></expression-editor-button>-->
                 <expression-input label="Is auto generated"
                                   model="item.instrument_event_schedule.is_auto_generated"
-                                  data-data="vm.expressionData"></expression-input>
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
             </div>
         </div>
+
     </div>
+
 </div>

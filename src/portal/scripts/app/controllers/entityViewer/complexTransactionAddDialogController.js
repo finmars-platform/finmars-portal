@@ -436,6 +436,10 @@
                 vm.attrs = data.results;
                 vm.readyStatus.content = true;
                 vm.readyStatus.entity = true;
+                
+                setTimeout(function (){
+                    $scope.$apply();
+                }, 0)
             });
         };
 
@@ -1328,6 +1332,9 @@
                 vm.favTTypeOpts = getFavoriteTTypeOptions(vm.transactionGroups);
 
                 vm.readyStatus.transactionTypes = true;
+                setTimeout(function (){
+                    $scope.$apply();
+                }, 0)
 
                 $scope.$apply(function () {
                     setTimeout(function () {

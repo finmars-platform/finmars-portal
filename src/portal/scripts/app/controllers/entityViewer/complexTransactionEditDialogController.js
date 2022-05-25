@@ -1675,11 +1675,9 @@
                                         }
                                     }).then(function (response) {
 
-                                        /* if (response.reaction === 'cancel') {
-                                            // do nothing
-                                        } */
-
-                                        if (response.reaction === 'skip') {
+                                        if (response.reaction === 'cancel') {
+                                             resolve(data);
+                                        } else if (response.reaction === 'skip') {
                                             metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {
                                                 status: 'agree',
                                                 data: null

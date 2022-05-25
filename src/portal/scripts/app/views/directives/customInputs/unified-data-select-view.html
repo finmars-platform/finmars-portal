@@ -84,7 +84,7 @@
                             data-ng-repeat="option in localItems"
                             data-ng-click="selectLocalItem(option)"
                             class="unified-data-select-input-sel-option"
-                            ng-mouseover="setHoverItem($event, option)"
+
 
                     >
 
@@ -113,14 +113,18 @@
                             data-ng-repeat="option in databaseItems"
                             data-ng-click="selectDatabaseItem(option)"
                             class="unified-data-select-input-sel-option"
-                            ng-mouseover="setHoverItem($event, option)"
+
                             >
 
 
                         <div class="unified-data-select-name" data-ng-bind-html="getHighlighted(option.name)">
 
                         </div>
-                        <div class="unified-data-select-user-code" data-ng-bind-html="getHighlighted(option.user_code)">
+
+                        <div data-ng-if="entityType != 'currency'" class="unified-data-select-user-code" data-ng-bind-html="getHighlighted(option.user_code)">
+
+                        </div>
+                        <div data-ng-if="entityType == 'currency'" class="unified-data-select-user-code" data-ng-bind-html="getHighlighted(option.code)">
 
                         </div>
 

@@ -28,6 +28,20 @@
 
                 </div>
 
+                <div class="width-100 position-relative">
+                    <md-input-container class="width-100">
+                        <label>License key</label>
+                        <input type="text" data-ng-model="vm.license_key" ng-model-options='{ debounce: 500 }'
+                               ng-change='vm.checkLicenseKey()'>
+                    </md-input-container>
+
+                    <div class="text-warning-red position-absolute" data-ng-if="!vm.licenseIsGood"
+                         style="bottom: 0; padding-left: 12px">
+                        {{vm.licenseErrorMessage}}
+                    </div>
+
+                </div>
+
                 <div class="width-100">
                     <md-input-container class="width-100" style="max-height: 108px">
                         <label>Description</label>
@@ -96,7 +110,7 @@
                         </md-button>
 
                         <md-button class="md-raised md-primary m-0 float-right"
-                                   data-ng-class="{'disabled-btn': !vm.name || vm.processingCheckName || !vm.nameIsUnique}"
+                                   data-ng-class="{'disabled-btn': !vm.name || vm.processingCheckName || !vm.nameIsUnique || !vm.licenseIsGood}"
                                    data-ng-click="vm.finishStep1()">
                             Next
                         </md-button>

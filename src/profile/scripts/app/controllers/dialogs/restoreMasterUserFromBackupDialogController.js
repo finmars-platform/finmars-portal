@@ -24,7 +24,8 @@
 
 
             masterUserBackupsService.restoreFromBackup(vm.backup.id, {
-                name: vm.name
+                name: vm.name,
+                license_key: vm.license_key
             }).then(function (data) {
 
                 console.log('data success', data);

@@ -624,6 +624,8 @@
 
         vm.saveLayout = function () {
 
+            vm.processing = true
+
             var notSavedTabExist = false;
             for (var i = 0; i < vm.tabs.length; i = i + 1) {
                 if (vm.tabs[i].hasOwnProperty('editState') && vm.tabs[i].editState) {
@@ -658,6 +660,7 @@
 
                 var onSavingEnd = function (responseData) {
 
+					vm.processing = false;
                 	$scope.$apply(); // update scope in case of error from backend
 
 					var layoutId = vm.formLayoutIsNew ? responseData.id : vm.ui.id;
@@ -694,6 +697,8 @@
                 }
 
             } else {
+
+                vm.processing = false;
 
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
