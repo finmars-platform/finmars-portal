@@ -700,6 +700,8 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
                 vm.transactionSchemes = data.results;
                 vm.readyStatus.schemes = true;
+
+                console.log('transactionSchemes', vm.transactionSchemes);
                 $scope.$apply();
 
             });

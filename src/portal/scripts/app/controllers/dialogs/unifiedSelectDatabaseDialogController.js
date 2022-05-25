@@ -11,6 +11,7 @@
 
     var unifiedDataService = require('../../services/unifiedDataService')
     var importUnifiedDataService = require('../../services/import/importUnifiedDataService');
+    var importCurrencyCbondsService = require('../../services/import/importCurrencyCbondsService');
     var currencyDatabaseSearchService = require('../../services/currency/currencyDatabaseSearchService');
 
 
@@ -88,43 +89,84 @@
                 })
 
                 if (selectedDatabaseItem) {
-                    var config = {
-                        instrument_code: selectedDatabaseItem.referenceId,
-                        mode: 1
-                    };
+
+                    if (vm.entityType === 'currency') {
+
+                        var config = {
+                            currency_code: selectedDatabaseItem.code,
+                            mode: 1
+                        };
 
 
-                    vm.isDisabled = true;
-
-                    importUnifiedDataService.download(config).then(function (data) {
+                        importCurrencyCbondsService.download(config).then(function (data) {
 
 
-                        if (data.errors.length) {
+                            if (data.errors.length) {
 
-                            vm.isDisabled = false;
+                                vm.isDisabled = false;
 
-                            vm.selectedItem = null;
+                                vm.selectedItem = null;
 
-                            toastNotificationService.error(data.errors[0])
+                                toastNotificationService.error(data.errors[0])
 
-                            $scope.$apply();
+                                $scope.$apply();
 
-                            resolve()
+                                resolve()
 
-                        } else {
+                            } else {
 
-                            vm.selectedItem = {
-                                id: data.id,
-                                name: selectedDatabaseItem.name,
-                                user_code: selectedDatabaseItem.user_code
+                                vm.selectedItem = {
+                                    id: data.result_id,
+                                    name: selectedDatabaseItem.name,
+                                    user_code: selectedDatabaseItem.code
+                                }
+
+                                resolve()
+
+
                             }
 
-                            resolve()
+                        })
+
+                    } else {
 
 
-                        }
+                        var config = {
+                            id: selectedDatabaseItem.id,
+                            entity_type: vm.entityType
+                        };
 
-                    })
+                        importUnifiedDataService.download(config).then(function (data) {
+
+                            if (data.errors.length) {
+
+                                vm.isDisabled = false;
+
+                                vm.selectedItem = null;
+
+                                toastNotificationService.error(data.errors[0])
+
+                                $scope.$apply();
+
+                                resolve()
+
+                            } else {
+
+                                vm.selectedItem = {
+                                    id: data.result_id,
+                                    name: selectedDatabaseItem.name,
+                                    user_code: selectedDatabaseItem.user_code
+                                }
+
+                                resolve()
+
+                            }
+
+
+                        })
+
+
+                    }
 
 
                 }
@@ -237,7 +279,7 @@
             try {
 
                 if (vm.entityType === 'currency') {
-                    currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage -1).then(function (data) {
+                    currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage - 1).then(function (data) {
 
                         vm.globalProcessing = false;
 
@@ -307,59 +349,57 @@
 
             var promises = []
 
-            if (vm.inputText.length > 1) {
+       
+            promises.push(new Promise(function (resolve, reject) {
 
-                promises.push(new Promise(function (resolve, reject) {
+                if (vm.entityType === 'currency') {
+                    currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage - 1).then(function (data) {
 
-                    if (vm.entityType === 'currency') {
-                        currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage -1).then(function (data) {
+                        vm.databaseItemsTotal = data.resultCount;
 
-                            vm.databaseItemsTotal = data.resultCount;
+                        vm.databaseItems = data.foundItems
 
-                            vm.databaseItems = data.foundItems
+                        vm.totalPages = Math.round(data.resultCount / 40)
 
-                            vm.totalPages = Math.round(data.resultCount / 40)
+                        resolve()
 
-                            resolve()
+                    }).catch(function (error) {
 
-                        }).catch(function (error) {
+                        console.log("Database error occurred", error)
 
-                            console.log("Database error occurred", error)
+                        vm.databaseItems = []
 
-                            vm.databaseItems = []
+                        resolve()
 
-                            resolve()
+                    })
+                } else {
+                    unifiedDataService.getList(vm.entityType, {
+                        filters: {
+                            query: vm.inputText
+                        }
+                    }).then(function (data) {
 
-                        })
-                    } else {
-                        unifiedDataService.getList(vm.entityType, {
-                            filters: {
-                                query: vm.inputText
-                            }
-                        }).then(function (data) {
+                        vm.databaseItemsTotal = data.count;
 
-                            vm.databaseItemsTotal = data.count;
+                        vm.databaseItems = data.results;
 
-                            vm.databaseItems = data.results;
+                        resolve()
 
-                            resolve()
+                        vm.totalPages = Math.round(data.count / 40)
 
-                            vm.totalPages = Math.round(data.count / 40)
+                    }).catch(function (error) {
 
-                        }).catch(function (error) {
+                        console.log("Database error occurred", error)
 
-                            console.log("Database error occurred", error)
+                        vm.databaseItems = []
 
-                            vm.databaseItems = []
+                        resolve()
 
-                            resolve()
+                    })
+                }
 
-                        })
-                    }
+            }))
 
-                }))
-
-            }
 
             promises.push(new Promise(function (resolve, reject) {
 
@@ -394,6 +434,36 @@
 
 
                 vm.processing = false;
+
+                vm.databaseItems = vm.databaseItems.filter(function (databaseItem) {
+
+                    var exist = false;
+
+                    if (vm.entityType === 'currency') {
+
+                        vm.localItems.forEach(function (localItem) {
+
+                            if (localItem.user_code === databaseItem.code) {
+                                exist = true
+                            }
+
+                        })
+
+                    } else {
+
+                        vm.localItems.forEach(function (localItem) {
+
+                            if (localItem.user_code === databaseItem.user_code) {
+                                exist = true
+                            }
+
+                        })
+
+                    }
+
+                    return !exist;
+
+                })
 
                 $scope.$apply();
 
