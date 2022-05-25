@@ -31,6 +31,8 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
                 scope.currentMasterUser = globalDataService.getMasterUser();
 
+                window.document.title = scope.currentMasterUser.name + ' | Finmars'
+
                 if (scope.currentMasterUser) {
                     websocketService.send({action: "update_user_state", data: {master_user: scope.currentMasterUser}});
                 }
@@ -196,6 +198,8 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
                         if (data.base_api_url) {
                             baseUrlService.setMasterUserPrefix(data.base_api_url)
+
+                            window.document.title = master.name + ' | Finmars'
 
 
                             // $state.go('app.portal.home', null, {reload: 'app'});

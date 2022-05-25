@@ -281,6 +281,16 @@
 			}
 		},
 		{
+			"name": "Convert Unix Time to Date",
+			"description": "unix_to_date([unix_time], [format='%Y-%m-%d'])  :: [Result: date]<br/><br/>[Result: date]: Date - date as a date object, converted from string object<br/>This function may be used in:<br/>- importing any objects (transactions, accounts, portfolio) with date attributes<br/>- converting string attributes to date attributes<br/><br/>[unix_time]: Int - Unix Date<br/>[format]: String - reflects format in which [date_string] is written<br/><br/>",
+			"groups": "date",
+			"func": "unix_to_date([unix_time], [format='%Y-%m-%d'])",
+			"validation": {
+				"func": "unix_to_date([unix_time], [format='%Y-%m-%d'])"
+			}
+		},
+
+		{
 			"name": "Date plus/minus N days",
 			"description": "[date]+days([number]) :: [Result: date_after]<br/>[date]-days([number]) :: [Result: date_before]<br/><br/>[Result: date_after, date_before]: Date - date differs from [date] by [number] calendar days<br/><br/>[date]: Date - any date variable, used by user in this expression (eg, transaction_date)<br/>[number]: Number - any number or number variable, used by user in this expression (eg, 1, 2, 3... or number_variable)<br/><br/>Examples:<br/>transaction_date+days(2) - for getting date, which differs from transaction date by 2 days<br/>deposit_date+days(duration) - for getting date, which differs from deposit_date by number of days, which is written in variable with name [duration]<br/>now()-days(10)- for getting date, which differs from current date by 10 days<br/>now()+days(rent_period)- for getting date, which differs from current date by number of days, which is written in variable with name [rent_period]<br/>",
 			"groups": "date",

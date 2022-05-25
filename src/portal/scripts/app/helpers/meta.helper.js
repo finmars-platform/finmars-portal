@@ -264,9 +264,15 @@
 
 		for (const prop in object) {
 
-			if (object[prop] && typeof object[prop] === 'object') clearFrontendOptions(object[prop]);
+			if (object[prop] && typeof object[prop] === 'object') {
+
+				object[prop] = clearFrontendOptions(object[prop]);
+
+			}
 
 		}
+
+		return object;
 
 	};
 
