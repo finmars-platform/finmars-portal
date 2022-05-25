@@ -11,13 +11,10 @@
         vm.collapsingItems = {};
 
         if (data.items) {
-
             vm.items = JSON.parse(JSON.stringify(data.items));
 
         } else {
-
             vm.items = [];
-
         }
 
         vm.isMultiselector = data.multiselector;

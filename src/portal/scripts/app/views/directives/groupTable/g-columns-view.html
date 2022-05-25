@@ -103,7 +103,7 @@
                  popup-data="columnsPopupsData[column.key]"
                  offset-x="-10"
                  offset-y="-10"
-                 popup-classes="getPopupMenuClasses(column)"
+                 popup-classes="{{getPopupMenuClasses(column)}}"
                  backdrop-classes="'low-z-index-backdrop'"
                  on-cancel="onSubtotalTypeSelectCancel()"
                  popup-event-service="evEventService">
@@ -116,21 +116,21 @@
 
                 <div class="g-cell g-table-header-cell g-table-header-group-cell position-relative">
 
-<!--                    <div data-ng-click="showArrowDown($event)"-->
+                    <!--<div data-ng-click="showArrowDown($event)"
 
-<!--                         popup-->
-<!--                         popup-id="{{column.key}}"-->
-<!--                         popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"-->
-<!--                         popup-data="{column: column, changeSortMode: changeSortMode}"-->
-<!--                         position-relative-to="element"-->
-<!--                         relative-popup-x="left"-->
-<!--                         open-on="click"-->
-<!--                         close-on-click-outside="true"-->
-<!--                         popup-classes="'column-sort-popup'"-->
-<!--                         on-cancel="hideArrowDown()"-->
-<!--                         popup-event-service="evEventService"-->
+                         popup
+                         popup-id="{{column.key}}"
+                         popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"
+                         popup-data="{column: column, changeSortMode: changeSortMode}"
+                         position-relative-to="element"
+                         relative-popup-x="left"
+                         open-on="click"
+                         close-on-click-outside="true"
+                         popup-classes="column-sort-popup"
+                         on-cancel="hideArrowDown()"
+                         popup-event-service="evEventService"
 
-<!--                         class="g-column-sort-settings-opener"></div>-->
+                         class="g-column-sort-settings-opener"></div>-->
 
                     <div ng-if="column.report_settings.is_level_folded"
                          class="g-cell-button"
@@ -221,8 +221,8 @@
                  popup-data="columnsPopupsData[column.key]"
                  offset-x="-10"
                  offset-y="-10"
-                 popup-classes="getPopupMenuClasses(column)"
-                 backdrop-classes="'low-z-index-backdrop'"
+                 popup-classes="{{getPopupMenuClasses(column)}}"
+                 backdrop-classes="low-z-index-backdrop"
                  on-cancel="onSubtotalTypeSelectCancel()"
                  popup-event-service="evEventService">
 
@@ -234,21 +234,21 @@
 
                 <div class="g-cell g-table-header-cell position-relative">
 
-<!--                    <div ng-if="isReport"-->
-<!--                         data-ng-click="showArrowDown($event)"-->
+                    <!--<div ng-if="isReport"
+                         data-ng-click="showArrowDown($event)"
 
-<!--                         popup-->
-<!--                         popup-id="{{column.key}}"-->
-<!--                         popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"-->
-<!--                         popup-data="{column: column, changeSortMode: changeSortMode}"-->
-<!--                         position-relative-to="element"-->
-<!--                         relative-popup-x="left"-->
-<!--                         open-on="click"-->
-<!--                         close-on-click-outside="true"-->
-<!--                         popup-classes="'column-sort-popup'"-->
-<!--                         on-cancel="hideArrowDown()"-->
-<!--                         popup-event-service="evEventService"-->
-<!--                         class="g-column-sort-settings-opener"></div>-->
+                         popup
+                         popup-id="{{column.key}}"
+                         popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"
+                         popup-data="{column: column, changeSortMode: changeSortMode}"
+                         position-relative-to="element"
+                         relative-popup-x="left"
+                         open-on="click"
+                         close-on-click-outside="true"
+                         popup-classes="column-sort-popup"
+                         on-cancel="hideArrowDown()"
+                         popup-event-service="evEventService"
+                         class="g-column-sort-settings-opener"></div>-->
 
                     <div ng-if="!isReport"
                          data-ng-click="sortHandler(column, column.options.sort === 'DESC' ? 'ASC' : 'DESC')"

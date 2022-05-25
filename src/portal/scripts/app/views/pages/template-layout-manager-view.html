@@ -56,7 +56,7 @@
 
                     </div>
 
-                    <div class="template-form-div m-t-8 m-b-8">
+                    <div class="template-form-div m-t-8 m-b-8 p-r-16">
 
                         <table>
 
@@ -694,29 +694,32 @@
 
                 </div>
 
-                <div class="template-form-div m-t-8 m-b-8">
+                <div class="template-form-div m-t-8 m-b-8 p-r-16">
 
 
-                    <div class="template-ttype-actions">
+                    <div class="template-ttype-actions transaction-type-actions-wrapper">
 
-                        <v-accordion class="vAccordion--default" multiple control="vm.accordion">
+                        <v-accordion multiple control="vm.accordion" oncollapse="vm.onActionAccordionCollapse(index, id)"
+                                     class="vAccordion-type1">
 
                             <v-pane data-ng-repeat="item in vm.activeActionTemplate.data.actions track by $index"
                                     expanded="item.isPaneExpanded">
-                                <v-pane-header inactive class="transaction-type-action-pane">
-                                    <div layout="row"
+                                <v-pane-header ng-class="{'m-b-0': !$pane.isExpanded()}" inactive class="transaction-type-action-pane">
+                                    <!--<div layout="row"
                                          layout-align="space-between center"
                                          ng-click="vm.toggleItem($pane, item, $event)">
+
                                         <div layout="row"
                                              class="ttype-action-info-container"
                                              layout-align="start center">
-                            <span class="m-t-16" ng-click="$event.stopPropagation()">
-                                <expression-editor-button
-                                        data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                                        data-item="item.condition_expr"></expression-editor-button>
-                                <md-tooltip class="tooltip_2"
-                                            md-direction="bottom">Condition to execute the Action</md-tooltip>
-                            </span>
+
+                                            <span class="m-t-16" ng-click="$event.stopPropagation()">
+                                                <expression-editor-button
+                                                        data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
+                                                        data-item="item.condition_expr"></expression-editor-button>
+                                                <md-tooltip class="tooltip_2"
+                                                            md-direction="bottom">Condition to execute the Action</md-tooltip>
+                                            </span>
 
                                             <span class="text-bold"># {{$index + 1}}</span>
 
@@ -725,26 +728,27 @@
                                                   style="width: 270px"></span>
 
                                             <span ng-if="item.isPaneExpanded">
-                                <md-input-container class="no-error-spacer" style="min-height: 35px">
-                                    <label></label>
-                                    <input ng-keydown="vm.preventSpace($event)"
-                                           type="text"
-                                           ng-model="item.action_notes"
-                                           class="ttype-action-notes-input"
-                                           placeholder="Action notes">
-                                </md-input-container>
-                            </span>
+                                                <md-input-container class="no-error-spacer" style="min-height: 35px">
+                                                    <label></label>
+                                                    <input ng-keydown="vm.preventSpace($event)"
+                                                           type="text"
+                                                           ng-model="item.action_notes"
+                                                           class="ttype-action-notes-input"
+                                                           placeholder="Action notes">
+                                                </md-input-container>
+                                            </span>
                                             <span ng-if="!item.isPaneExpanded"
                                                   ng-bind="item.action_notes"></span>
                                         </div>
+
                                         <div layout="row">
                                             <md-button class="md-raised"
                                                        style="background: #ffeee8;"
                                                        data-ng-click="vm.deletePane(item, $index, $event)">Delete
                                             </md-button>
-                                            <!--<md-button class="md-raised"
+                                            &lt;!&ndash;<md-button class="md-raised"
                                                        data-ng-click="vm.makeCopyOfAction(item, $index, $event)">Make copy
-                                            </md-button>-->
+                                            </md-button>&ndash;&gt;
                                             <md-button class="md-raised" ng-disabled="$index == 0"
                                                        data-ng-click="vm.moveUp(item, $index, $event)">Move up
                                             </md-button>
@@ -758,10 +762,13 @@
                                                 <span data-ng-if="!item.isPaneExpanded">Expand</span>
                                             </md-button>
                                         </div>
-                                    </div>
+
+                                    </div>-->
+                                    <div ng-include="'views/tabs/transaction-type/transaction-type-action-accordion-header-view.html'"></div>
                                 </v-pane-header>
 
-                                <v-pane-content class="template-ttype-action-pane-content" style="padding: 20px;">
+<!--                                <v-pane-content class="template-ttype-action-pane-content" style="padding: 20px;">-->
+                                <v-pane-content class="transaction-type-actions-fields" ng-class="{'p-t-10': $pane.isExpanded()}">
 
                                     <div data-ng-if="item.transaction != null"
                                          data-ng-include="'views/tabs/transaction-type/actions/transaction-action-view.html'">

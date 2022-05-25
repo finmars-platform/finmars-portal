@@ -12,7 +12,6 @@
         vm.fillFromContext = data.fillFromContext
         vm.defaultValue = data.defaultValue
         vm.relationItems = data.relationItems
-
         vm.valueTypeOptions = data.valueTypeOptions
         vm.contentTypeOptions = []
         vm.textEventSignal = {}
@@ -47,9 +46,17 @@
 
         };
 
-        var relationItemsResolver = function (contentType) {
+        /* var relationItemsResolver = function (contentType) {
             return data.relationItemsResolver(contentType)
-        }
+        } */
+
+		var loadRelation = function (fieldKey) {
+			return data.loadRelationCallback(fieldKey);
+		};
+
+		var resolveRelation = function (contentType) {
+			return data.resolveRelationCallback(contentType);
+		};
 
         vm.onContentTypeChange = function () {
             vm.fillFromContext = null
@@ -65,22 +72,38 @@
                 return;
             }
 
-            var loadRelationRes = relationItemsResolver(vm.contentType);
+			/* var loadRelationRes = relationItemsResolver(vm.contentType);
 
-            if (loadRelationRes && loadRelationRes.status === 'item_exist') {
+			if (loadRelationRes && loadRelationRes.status === 'item_exist') {
 
-                vm.defaultValuesItems = vm.relationItems[loadRelationRes.field]
+				vm.defaultValuesItems = vm.relationItems[loadRelationRes.field]
 
-            } else {
+			} else {
 
-                loadRelationRes.then(function (relItem) {
+				loadRelationRes.then(function (relItem) {
 
-                    vm.defaultValuesItems = relItem
-                    $scope.$apply();
+					vm.defaultValuesItems = relItem
+					$scope.$apply();
 
-                });
+				});
 
-            }
+			} */
+			let fieldKey = resolveRelation(vm.contentType);
+			fieldKey = fieldKey.replace(/-/g, "_");
+
+			if (data.loadedRelationsList.includes(fieldKey)) {
+				vm.defaultValuesItems = vm.relationItems[fieldKey];
+
+			} else {
+
+				loadRelation(fieldKey).then(function (relItem) {
+
+					vm.defaultValuesItems = relItem;
+					$scope.$apply();
+
+				});
+
+			}
 
         };
 
@@ -137,7 +160,7 @@
             if (errorText) {
 
                 vm.textEventSignal = {key: 'error', error: errorText}
-                $scope.$apply();
+                // $scope.$apply();
                 return false;
 
             }

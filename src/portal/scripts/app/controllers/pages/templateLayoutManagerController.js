@@ -7,12 +7,15 @@
 
     var uiService = require('../../services/uiService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
+	var TransactionTypeEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/transactionTypeEditorSharedLogicHelper');
 
-    var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
+	var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
 
     module.exports = function ($scope, $mdDialog) {
 
         var vm = this;
+
+		var ttypeSharedLogic = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog);
 
         vm.items = [];
         vm.readyStatus = {input: false, field: false, action: false};
@@ -164,6 +167,12 @@
 
         vm.transactionUserFields = {};
 
+        vm.actionsMultitypeFieldsList = [];
+		vm.expressionData = { // expression data for action
+			groups: [],
+			functions: []
+		};
+
         var ecosystemDefaultData = {};
 
         vm.getTransactionUserFields = function () {
@@ -184,20 +193,26 @@
 
             vm.readyStatus.input = false;
 
-            return uiService.getTemplateLayoutList({filters: {type: 'input_template'}}).then(function (data) {
+            return new Promise(function (resolve, reject) {
 
-                vm.inputTemplates = data.results;
+            	uiService.getTemplateLayoutList({filters: {type: 'input_template'}}).then(function (data) {
 
-                if (vm.inputTemplates.length) {
-                    vm.activeInputTemplate = vm.inputTemplates[0];
-                    vm.activeInputTemplateId = vm.inputTemplates[0].id;
-                }
+					vm.inputTemplates = data.results;
 
-                vm.readyStatus.input = true;
+					if (vm.inputTemplates.length) {
+						vm.activeInputTemplate = vm.inputTemplates[0];
+						vm.activeInputTemplateId = vm.inputTemplates[0].id;
+					}
 
-                $scope.$apply();
+					vm.readyStatus.input = true;
 
-            })
+					$scope.$apply();
+
+					resolve();
+
+				}).catch(function (error) {reject(error)});
+
+			});
 
         };
 
@@ -205,43 +220,87 @@
 
             vm.readyStatus.field = false;
 
-            return uiService.getTemplateLayoutList({filters: {type: 'field_template'}}).then(function (data) {
+			return new Promise(function (resolve, reject) {
 
-                vm.fieldTemplates = data.results;
+				uiService.getTemplateLayoutList({filters: {type: 'field_template'}}).then(function (data) {
 
-                if (vm.fieldTemplates.length) {
-                    vm.activeFieldTemplate = vm.fieldTemplates[0];
-                    vm.activeFieldTemplateId = vm.fieldTemplates[0].id;
-                }
+					vm.fieldTemplates = data.results;
 
-                vm.readyStatus.field = true;
+					if (vm.fieldTemplates.length) {
+						vm.activeFieldTemplate = vm.fieldTemplates[0];
+						vm.activeFieldTemplateId = vm.fieldTemplates[0].id;
+					}
 
-                $scope.$apply();
+					vm.readyStatus.field = true;
 
-            })
+					$scope.$apply();
 
-        };
+					resolve();
 
-        vm.getActionTemplates = function () {
+				}).catch(function (error) {reject(error)});
 
-            vm.readyStatus.action = false;
-
-            return uiService.getTemplateLayoutList({filters: {type: 'action_template'}}).then(function (data) {
-
-                vm.actionTemplates = data.results;
-
-                if (vm.actionTemplates.length) {
-                    vm.activeActionTemplate = vm.actionTemplates[0];
-                    vm.activeActionTemplateId = vm.actionTemplates[0].id;
-                }
-
-                vm.readyStatus.action = true;
-
-                $scope.$apply();
-
-            })
+			});
 
         };
+
+		vm.getActionTemplates = function () {
+
+			return new Promise(function (resolve, reject) {
+
+				uiService.getTemplateLayoutList({filters: {type: 'action_template'}}).then(function (data) {
+
+					vm.actionTemplates = data.results;
+
+					if (vm.actionTemplates.length) {
+						vm.activeActionTemplate = vm.actionTemplates[0];
+						vm.activeActionTemplateId = vm.actionTemplates[0].id;
+					}
+
+					resolve();
+
+				}).catch(function (error) {reject(error)});
+
+			});
+
+		};
+
+        var createDataForActionsMultitypeFieldsList = function () {
+
+        	vm.actionsMultitypeFieldsList = ttypeSharedLogic.createDataForMultitypeFieldsList(vm.activeActionTemplate.data.actions);
+
+			vm.actionsMultitypeFieldsList.forEach(function (actionFields) {
+
+				Object.keys(actionFields).forEach(function (fieldProp) {
+
+					var fieldData = actionFields[fieldProp];
+					var relField = fieldData.find(function (field) {
+						return field.key === 'relation'
+					});
+
+					relField.fieldData.isDisabled = true;
+
+				});
+
+			});
+
+			return vm.actionsMultitypeFieldsList;
+
+        };
+		/**
+		 * Changes actions and creates data for it before displaying in templates.
+		 */
+        var processActions = function () {
+
+        	if (vm.activeActionTemplate) {
+
+        		vm.setStateInActionsControls();
+				vm.actionsMultitypeFieldsList = createDataForActionsMultitypeFieldsList();
+
+				vm.paneActionsMenuPopups = createSelectorPopupDataForActions();
+
+        	}
+
+		};
 
         // INPUTS TAB START
 
@@ -267,7 +326,7 @@
 
         // ACTIONS TAB START
 
-        vm.toggleItem = function (pane, item, $event) {
+        /* vm.toggleItem = function (pane, item, $event) {
 
             $event.stopPropagation();
 
@@ -276,9 +335,10 @@
                 item.isPaneExpanded = !item.isPaneExpanded;
             }
 
-        };
+        }; */
+		vm.toggleItem = ttypeSharedLogic.toggleItem;
 
-        var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
+        /* var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
 
             var relationType = '';
             switch (fieldName) {
@@ -334,7 +394,7 @@
             actionData[propertyName][fieldName + '_object'][nameProperty] = defaultName;
             actionData[propertyName][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
 
-        };
+        }; */
 
         vm.setStateInActionsControls = function () {
 
@@ -348,17 +408,18 @@
                 'instrument_event_schedule_action'
             ];
 
-            vm.activeActionTemplate.data.actions.forEach(function (action) {
+            vm.activeActionTemplate.data.actions.forEach(function (action, actionIndex) {
 
                 var keys;
 
                 vm.actionsKeysList.forEach(function (actionKey) {
 
-                    if (action[actionKey] !== null) {
+                    if (typeof action[actionKey] === 'object' && action[actionKey] !== null) {
                         keys = Object.keys(action[actionKey]);
 
                         keys.forEach(function (key) {
-                            if (action[actionKey].hasOwnProperty(key + '_input')) {
+
+                        	if (action[actionKey].hasOwnProperty(key + '_input')) {
                                 /*if (action[actionKey][key + '_field_type'] === 'relation') {
                                     action[actionKey][key + '_toggle'] = true;
 
@@ -366,8 +427,18 @@
                                 }*/
                                 action[actionKey][key + '_toggle'] = true;
 
-                                setDefaultValueForRelation(action, actionKey, key);
+								ttypeSharedLogic.setDefaultValueForRelation(action, actionKey, key);
+
+								/*let multitypeFieldData = vm.actionsMultitypeFieldsList[actionIndex][key];
+
+								const activeType = multitypeFieldData.find(type => type.isActive);
+								const inactiveType = multitypeFieldData.find(type => !type.isActive);
+								inactiveType.model = null;
+
+								ttypeSharedLogic.setDefaultValueForRelation(action, actionKey, key, activeType);*/
+
                             }
+
                         })
                     }
 
@@ -381,7 +452,7 @@
 
             vm.accordion.collapseAll();
 
-            var result = {
+            /* var result = {
                 isPaneExpanded: true
             };
 
@@ -439,17 +510,23 @@
 
             fields[actionType].forEach(function (key) {
                 result[actionType][key] = null;
-            });
+            }); */
+			var result = ttypeSharedLogic.createNewAction(actionType);
 
             Object.keys(result[actionType]).forEach(function (key) {
                 if (result[actionType].hasOwnProperty(key + '_input')) {
                     result[actionType][key + '_toggle'] = true;
 
-                    setDefaultValueForRelation(result, actionType, key);
+					ttypeSharedLogic.setDefaultValueForRelation(result, actionType, key);
                 }
             });
 
             vm.activeActionTemplate.data.actions.push(result);
+
+            var multitypeFieldsData = ttypeSharedLogic.getMultitypeFieldsDataForAction(result);
+            vm.actionsMultitypeFieldsList.push(multitypeFieldsData);
+
+			vm.paneActionsMenuPopups = createSelectorPopupDataForActions();
 
         };
 
@@ -461,6 +538,8 @@
             vm.activeActionTemplate.data.actions[$index] = vm.activeActionTemplate.data.actions[$index + 1];
             vm.activeActionTemplate.data.actions[$index + 1] = swap;
 
+			vm.actionsMultitypeFieldsList = createDataForActionsMultitypeFieldsList();
+
         };
 
         vm.moveUp = function (item, $index, $event) {
@@ -471,9 +550,41 @@
             vm.activeActionTemplate.data.actions[$index] = vm.activeActionTemplate.data.actions[$index - 1];
             vm.activeActionTemplate.data.actions[$index - 1] = swap;
 
+			vm.actionsMultitypeFieldsList = createDataForActionsMultitypeFieldsList();
+
         };
 
-        vm.deletePane = function (item, $index, $event) {
+        var createSelectorPopupDataForActions = function () {
+
+			vm.paneActionsMenuPopups = [];
+
+			vm.activeActionTemplate.data.actions.forEach(function (action, index) {
+
+				vm.paneActionsMenuPopups.push({
+					options: [
+						{
+							key: 'delete',
+							name: 'DELETE',
+							actionIndex: index
+						}
+					],
+					selectOption: function (option, _$popup, $event) {
+
+						$event.stopPropagation();
+						_$popup.cancel();
+
+						vm.deletePane(option.actionIndex, $event);
+
+					}
+				});
+
+			});
+
+			return vm.paneActionsMenuPopups;
+
+		};
+
+        vm.deletePane = function ($index, $event) {
 
             $event.stopPropagation();
             var description = 'Are you sure to delete this action?';
@@ -494,13 +605,65 @@
                     }
                 }
             }).then(function (res) {
-                if (res.status === 'agree') {
-                    vm.activeActionTemplate.data.actions.splice($index, 1);
+
+            	if (res.status === 'agree') {
+
+                	vm.activeActionTemplate.data.actions.splice($index, 1);
+                    vm.actionsMultitypeFieldsList.splice($index, 1);
+
+					vm.paneActionsMenuPopups = createSelectorPopupDataForActions();
+
                 }
+
             });
         };
 
         // ACTIONS TAB END
+		/**
+		 *
+		 * @param templateType {string}
+		 * @param data {Object} - template data after save
+		 */
+		var afterTemplateSave = function (templateType, data) {
+
+			vm.accordion = undefined; // prevents console error from v-accordion library
+
+			switch (templateType) {
+				case 'input_template':
+					vm.getInputTemplates().then(function () {
+						vm.activeInputTemplateId = data.id;
+						vm.activeInputTemplate = data;
+					});
+					break;
+
+				case 'field_template':
+					vm.getFieldTemplates().then(function () {
+						vm.activeFieldTemplateId = data.id;
+						vm.activeFieldTemplate = data;
+					});
+					break;
+
+				case 'action_template':
+
+					vm.readyStatus.action = false;
+
+					vm.getActionTemplates().then(function () {
+
+						vm.activeActionTemplateId = data.id;
+						vm.activeActionTemplate = data;
+
+						processActions();
+
+						vm.readyStatus.action = true;
+
+						$scope.$apply();
+
+					});
+
+					break;
+			}
+
+		};
 
         vm.saveTemplate = function ($event, template) {
 
@@ -524,7 +687,7 @@
                     }
                 });
 
-                vm.getData().then(function (value) {
+                /* vm.getData().then(function (value) {
 
 
                     if (template.type === 'input_template') {
@@ -534,14 +697,14 @@
 
                     }
 
-                    if (template.type === 'field_template') {
+                    else if (template.type === 'field_template') {
 
                         vm.activeFieldTemplateId = data.id;
                         vm.activeFieldTemplate = data;
 
                     }
 
-                    if (template.type === 'action_template') {
+                    else if (template.type === 'action_template') {
 
                         vm.activeActionTemplateId = data.id;
                         vm.activeActionTemplate = data;
@@ -550,7 +713,8 @@
                     }
 
 
-                })
+                }) */
+				afterTemplateSave(template.type, data);
 
             });
 
@@ -598,7 +762,7 @@
                             }
                         });
 
-                        vm.getData().then(function (value) {
+                        /* vm.getData().then(function (value) {
 
 
                             if (template.type === 'input_template') {
@@ -608,14 +772,14 @@
 
                             }
 
-                            if (template.type === 'field_template') {
+                            else if (template.type === 'field_template') {
 
                                 vm.activeFieldTemplateId = data.id;
                                 vm.activeFieldTemplate = data;
 
                             }
 
-                            if (template.type === 'action_template') {
+                            else if (template.type === 'action_template') {
 
                                 vm.activeActionTemplateId = data.id;
                                 vm.activeActionTemplate = data;
@@ -624,7 +788,8 @@
                             }
 
 
-                        })
+                        }) */
+						afterTemplateSave(template.type, data);
 
                     })
 
@@ -677,7 +842,7 @@
                             }
                         });
 
-                        vm.getData().then(function (value) {
+                        /*vm.getData().then(function (value) {
 
                             if (template.type === 'input_template') {
 
@@ -702,7 +867,8 @@
                             }
 
 
-                        })
+                        })*/
+						afterTemplateSave(template.type, data);
 
                     })
 
@@ -756,16 +922,20 @@
                             }
                         });
 
+						vm.accordion = undefined; // prevents console error from v-accordion library
+
                         if (type === 'input_template') {
-                            vm.activeInputTemplate = {
+
+                        	vm.activeInputTemplate = {
                                 type: 'input_template',
                                 data: {
                                     inputs: []
                                 }
                             };
+
                         }
 
-                        if (type === 'field_template') {
+						else if (type === 'field_template') {
 
                             vm.activeFieldTemplate = {
                                 type: 'field_template',
@@ -774,9 +944,13 @@
                                 }
                             };
 
+                            vm.getFieldTemplates().then(function () {
+								vm.getTransactionUserFields();
+							});
+
                         }
 
-                        if (type === 'action_template') {
+                        else if (type === 'action_template') {
 
                             vm.activeActionTemplate = {
                                 type: 'action_template',
@@ -785,11 +959,19 @@
                                 }
                             };
 
+                            vm.readyStatus.action = false;
+
+                            vm.getActionTemplates().then(function () {
+								processActions();
+								vm.readyStatus.action = true;
+								$scope.$apply();
+							})
+
                         }
 
-                        vm.getData().then(function () {
+/*                        vm.getData().then(function () {
                             vm.getTransactionUserFields();
-                        });
+                        });*/
 
                     });
 
@@ -817,14 +999,29 @@
 
             });
 
-            vm.actionTemplates.forEach(function (item) {
+            /* vm.actionTemplates.forEach(function (item) {
 
                 if (item.id === vm.activeActionTemplateId) {
                     vm.activeActionTemplate = item;
                     vm.setStateInActionsControls();
                 }
 
-            });
+            }); */
+
+			var newActionTemplate = vm.actionTemplates.find(function (item) {
+				return item.id === vm.activeActionTemplateId;
+			});
+
+			if (newActionTemplate) {
+
+				vm.activeActionTemplate = newActionTemplate;
+				vm.setStateInActionsControls();
+
+				vm.actionsMultitypeFieldsList = createDataForActionsMultitypeFieldsList();
+
+				vm.paneActionsMenuPopups = createSelectorPopupDataForActions();
+
+			}
 
         };
 
@@ -836,10 +1033,17 @@
 
                 promises.push(vm.getInputTemplates());
                 promises.push(vm.getFieldTemplates());
-                promises.push(vm.getActionTemplates());
+
+                vm.readyStatus.action = false;
+				vm.accordion = undefined; // prevents console error from v-accordion library
+
+				promises.push(vm.getActionTemplates());
 
                 Promise.all(promises).then(function (value) {
 
+					processActions();
+					vm.readyStatus.action = true;
+					$scope.$apply();
                     resolve()
 
                 })
@@ -854,13 +1058,17 @@
 
         vm.init = function () {
 
-            ecosystemDefaultService.getList().then(function (data) {
-                ecosystemDefaultData = data.results[0];
+            /* ecosystemDefaultService.getList().then(function (data) {
+
+            	ecosystemDefaultData = data.results[0];
 
                 vm.getData().then(function () {
-                    vm.setStateInActionsControls();
+					vm.setStateInActionsControls();
                 });
-            });
+            }); */
+			ttypeSharedLogic.loadEcosystemDefaults().then(function () {
+				vm.getData();
+			});
 
             vm.getTransactionUserFields();
 

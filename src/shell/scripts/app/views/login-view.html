@@ -11,7 +11,7 @@
 
                 <md-input-container class="width-100 margin-0">
                     <label for="">Username</label>
-                    <input type="text" class="auth-username" data-ng-model="vm.username">
+                    <input type="text" class="auth-username" data-ng-model="vm.username" data-ng-change="vm.error = false">
                 </md-input-container>
 
             </div>
@@ -19,13 +19,13 @@
             <div>
                 <md-input-container class="width-100 margin-0">
                     <label for="">Password</label>
-                    <input type="password" class="auth-password" data-ng-model="vm.password">
+                    <input type="password" class="auth-password" data-ng-model="vm.password" data-ng-change="vm.error = false">
                 </md-input-container>
             </div>
 
-            <!--<div data-ng-if="vm.error" class="m-t-8 m-b-8">
-                <div class="color-danger">The username or password that you have entered is incorrect.</div>
-            </div>-->
+            <div data-ng-if="vm.error" class="m-t-8 m-b-16">
+                <div class="color-danger" title="{{vm.errorMessage}}">The username or password that you have entered is incorrect.</div>
+            </div>
 
         </div>
 
