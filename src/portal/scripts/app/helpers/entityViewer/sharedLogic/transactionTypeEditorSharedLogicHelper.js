@@ -181,7 +181,10 @@
 						"name": "Context Parameter: " + cParam.name + " (" + cParam.user_code + ")",
 						"description": "Transaction Type Context Parameter: " + cParam.name + " (" + cParam.user_code + ")",
 						"groups": "context_parameters",
-						"func": cParam.user_code
+						"func": cParam.user_code,
+						"validation": {
+							"func": cParam.user_code,
+						}
 					}
 
 				});
@@ -1134,7 +1137,7 @@
 
             getInputsForLinking();
             updateLinkedInputsOptionsInsideGridTable();
-            updateInputFunctions();
+			viewModel.expressionData = updateInputFunctions();
 
             viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions); // update options for selectors of instrument inputs
 			setTimeout(function () {
