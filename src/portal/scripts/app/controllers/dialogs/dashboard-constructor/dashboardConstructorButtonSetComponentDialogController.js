@@ -100,7 +100,6 @@
 				})
 
 			}
-			console.log("testing initGrid vm.item.settings", vm.item.settings);
 
         };
 

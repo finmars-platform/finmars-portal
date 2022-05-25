@@ -16,6 +16,8 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
+	var rvHelper = require('../../helpers/rv.helper');
+
     module.exports = function dashboardButtonSetDirective($mdDialog, $state) {
         return {
             restriction: 'E',
@@ -99,7 +101,7 @@
 
                         var contextData = {};
 
-						if (item.settings.get_context) {
+						if (item.options && item.options.get_context) {
 
 							var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputs();
 							var componentsKeysList = Object.keys(componentsOutputs);
@@ -122,9 +124,11 @@
 							}
 
 							var lastChangedComp = scope.dashboardDataService.getComponentById(lastChangedCompId);
-							console.log("testing handleAction lastChangedComp", lastChangedComp);
 
 							if (lastChangedComp.type === 'report_viewer' && lastOutput && lastOutput.data && typeof lastOutput.data === 'object') {
+
+								var reportOptions = lastOutput.data.reportOptions;
+								contextData = rvHelper.getContextDataForRowAction(reportOptions, lastOutput.data, lastChangedComp.settings.entityType);
 
 							}
 
