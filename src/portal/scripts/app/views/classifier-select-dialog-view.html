@@ -16,6 +16,7 @@
                 <div ng-if="vm.tree" class="height-100">
                     <classifier-tree tree-data="vm.tree"
                                      classifier-tree-event-service="vm.classifierTreeEventService"
+                                     on-edit-node-cancel="vm.onEditCancelInsideTree()"
                                      on-active-nodes-change-callback="vm.onActiveNodesChange(activeNodesList)"></classifier-tree>
                 </div>
 
@@ -42,21 +43,21 @@
                                 <span ng-bind="favNode.name"></span>
                             </div>
 
-                             <div ng-show="favNode.editOn" class="flex-row flex-0-1-100 fi-center">
-                                <input class="classifier-name"
-                                       type="text"
-                                       ng-model="vm.favNodeNewName">
-                                <button data-ng-click="onSaveNode($event, currentEdit.name)"
-                                        class="classifier-node-btn flex-row"
-                                        ng-disabled="isSaveDisabled()"><span class="material-icons">done</span></button>
-                                <button data-ng-click="onCancelEdit($event)"
-                                        class="classifier-node-btn flex-row"><span class="material-icons">close</span></button>
-                            </div>
-
-                            <div class="fav-node-btns-holder">
+                            <div ng-show="!favNode.editOn" class="fav-node-btns-holder">
                                 <button ng-click="vm.removeNodeFromFavorites($event, favNode.pathToNode)" class="fav-node-btn">
                                     <span class="material-icons">remove_circle_outline</span>
                                 </button>
+                            </div>
+
+                            <div ng-show="favNode.editOn" class="flex-row flex-0-1-100 fi-center">
+                                <input class="classifier-name"
+                                       type="text"
+                                       ng-model="favNode.newName">
+                                <button data-ng-click="vm.saveNode($event, favNode)"
+                                        class="classifier-node-btn flex-row"
+                                        ng-disabled="isSaveDisabled()"><span class="material-icons">done</span></button>
+                                <button data-ng-click="vm.cancelEdit($event, favNode)"
+                                        class="classifier-node-btn flex-row"><span class="material-icons">close</span></button>
                             </div>
 
 
@@ -92,15 +93,21 @@
             <button data-ng-if="!vm.isLock"
                     ng-hide="vm.showFavorites"
                     data-ng-click="vm.onAdd()"
-                    data-ng-disabled="vm.isEdit"><span class="material-icons">add</span></button>
+                    data-ng-disabled="vm.isEdit || !vm.readyStatus"><span class="material-icons">add</span></button>
             <button data-ng-if="!vm.isLock"
                     data-ng-click="vm.onEdit()"
-                    data-ng-disabled="!vm.isActiveNodes() || vm.isEdit"><span class="material-icons">edit</span></button>
+                    data-ng-disabled="!vm.activeNodesExist() || vm.isEdit || !vm.readyStatus"><span class="material-icons">edit</span></button>
             <button data-ng-if="!vm.isLock"
                     data-ng-click="vm.onDelete()"
-                    data-ng-disabled="!vm.isActiveNodes() || vm.isEdit"><span class="material-icons">delete</span></button>
+                    data-ng-disabled="!vm.activeNodesExist() || vm.isEdit || !vm.readyStatus"><span class="material-icons">delete</span></button>
             <button ng-if="!vm.isLock"
-                    ng-click="vm.sortTreeAlphabetically()"><span class="material-icons">sort_by_alpha</span></button>
+                    ng-hide="vm.showFavorites"
+                    ng-click="vm.sortTreeAlphabetically()"
+                    data-ng-disabled="vm.isEdit || !vm.readyStatus">
+                <span class="material-icons">sort_by_alpha</span>
+                <md-tooltip class="tooltip_1"
+                            md-direction="top">Sort tree alphabetically</md-tooltip>
+            </button>
         </div>
 
         <div>
@@ -108,7 +115,8 @@
                 <span>CANCEL</span>
             </md-button>
 
-            <md-button ng-click="vm.agree()" class="link-button" ng-disabled="vm.isEdit">
+            <md-button ng-click="vm.agree()"
+                       ng-disabled="!vm.readyStatus" class="link-button" ng-disabled="vm.isEdit">
                 <span>OK</span>
             </md-button>
         </div>

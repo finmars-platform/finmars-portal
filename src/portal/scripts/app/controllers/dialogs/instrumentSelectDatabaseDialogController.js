@@ -121,6 +121,12 @@
 
                         }
 
+                    }).catch(function (e){
+                        vm.isDisabled = false;
+                        vm.selectedItem = null;
+                        $scope.$apply();
+
+                        resolve()
                     })
 
 
