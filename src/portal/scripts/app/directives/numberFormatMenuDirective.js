@@ -83,7 +83,7 @@
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
-                            scope.formatSettings = res.data.settings;
+                            scope.formatSettings = res.data;
                         }
 
                     });

@@ -671,7 +671,7 @@
 
                         if (res.status === 'agree') {
 
-                            scope.matrixSettings.number_format = res.data.settings;
+                            scope.matrixSettings.number_format = res.data;
 
                         }
 
