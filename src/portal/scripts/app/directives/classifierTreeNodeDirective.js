@@ -21,9 +21,18 @@
 
 				scope.selectNode = cTreeVm.selectNode;
 				scope.toggleNodeFolding = cTreeVm.toggleNodeFolding;
-				scope.onCancelEdit = cTreeVm.onCancelEdit;
+
+				scope.onCancelEdit = function ($event) {
+
+					$event.stopPropagation();
+
+					cTreeVm.onCancelEdit();
+
+				};
+
 				scope.onSaveNode = cTreeVm.onSaveNode;
-				scope.editableNode = cTreeVm.editableNode;
+				// scope.editableNode = cTreeVm.editableNode;
+				scope.editingNode = cTreeVm.editingNode;
 				scope.currentEdit = {
 					name: ''
 				}
