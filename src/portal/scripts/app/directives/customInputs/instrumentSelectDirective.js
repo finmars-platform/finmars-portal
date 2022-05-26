@@ -255,6 +255,16 @@
 
                         }
 
+                    }).catch(function (e){
+                        scope.processing = true;
+                        scope.isDisabled = true;
+
+                        scope.model = null;
+
+                        scope.itemName = ''
+                        scope.inputText = ''
+
+                        scope.$apply();
                     })
 
 
