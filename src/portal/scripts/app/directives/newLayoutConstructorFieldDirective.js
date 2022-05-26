@@ -727,7 +727,7 @@
 
                         if (res.status === 'agree') {
 
-                            scope.item.options.number_format = res.data.settings;
+                            scope.item.options.number_format = res.data;
                             console.log("number format scope.item", scope.item);
                         }
 
