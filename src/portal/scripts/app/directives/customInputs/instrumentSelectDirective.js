@@ -204,6 +204,8 @@
 
                     var config = {
                         instrument_code: item.referenceId,
+                        instrument_name: item.issueName,
+                        instrument_type_code: item.instrumentType,
                         mode: 1
                     };
 
@@ -216,6 +218,7 @@
                     importInstrumentCbondsService.download(config).then(function (data) {
 
                         scope.isDisabled = false;
+                        scope.processing = false;
 
                         if (data.errors.length) {
 
@@ -239,8 +242,6 @@
 
                             scope.model = data.result_id;
                             scope.itemObject = {id: data.result_id, name: item.issueName, user_code: item.issueName}
-
-                            scope.processing = false;
 
                             scope.valueIsValid = true;
 
