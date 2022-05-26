@@ -443,6 +443,8 @@
                             // itemName = scope.itemName;
                             scope.inputText = scope.itemName;
 
+                            scope.selectedItem = {id: scope.model, name: scope.itemName, user_code: scope.itemName}
+
                         } else {
                             // itemName = '';
                             scope.inputText = '';
