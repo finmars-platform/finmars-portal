@@ -5,7 +5,11 @@ module.exports = {
     'CANCEL_EDIT_NODE': 'CANCEL_EDIT_NODE',
     'DELETE_NODE': 'DELETE_NODE',
     'ADD_NODE': 'ADD_NODE',
-    'CLASSIFIER_TREE_CHANGED': 'CLASSIFIER_TREE_CHANGED',
+
+    'CLASSIFIER_TREE_CHANGED': 'CLASSIFIER_TREE_CHANGED', // call when a node was renamed or an order changed
+
 	'EMPTY_FILTER': 'EMPTY_FILTER',
+	'DRAG_START': 'DRAG_START',
+	'DRAG_END': 'DRAG_END',
 
 };
