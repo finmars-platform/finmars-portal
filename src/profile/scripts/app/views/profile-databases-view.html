@@ -145,7 +145,7 @@
                             Export Backup
                         </md-button>
 
-                        <md-button class="md-raised md-primary" data-ng-click="vm.activateDatabase(item)">Open
+                        <md-button class="md-raised md-primary {{vm.openProcessing ? 'disabled-btn' : ''}}" data-ng-click="vm.activateDatabase(item)">Open
                         </md-button>
                     </md-card-actions>
                     <md-card-actions layout="row" layout-align="space-between center" data-ng-if="!item.is_initialized">
