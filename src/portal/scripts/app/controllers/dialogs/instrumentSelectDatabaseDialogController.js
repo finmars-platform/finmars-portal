@@ -94,10 +94,9 @@
 
                     importInstrumentCbondsService.download(config).then(function (data) {
 
+                        vm.isDisabled = false;
 
                         if (data.errors.length) {
-
-                            vm.isDisabled = false;
 
                             vm.selectedItem = null;
 
