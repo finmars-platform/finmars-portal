@@ -204,6 +204,8 @@
 
                     var config = {
                         instrument_code: item.referenceId,
+                        instrument_name: item.issueName,
+                        instrument_type_code: item.instrumentType,
                         mode: 1
                     };
 
