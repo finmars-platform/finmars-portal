@@ -185,7 +185,9 @@
 						targetEvent: $event,
 						multiple: true,
 						locals: {
-							data: scope.column
+							data: {
+								settings: scope.column.report_settings
+							}
 						}
 					}).then(res => {
 
