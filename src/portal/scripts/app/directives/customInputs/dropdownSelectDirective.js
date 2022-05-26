@@ -2,6 +2,9 @@
 
     'use strict';
 
+    const EventService = require("../../services/eventService");
+	const popupEvents = require("../../services/events/popupEvents");
+
     module.exports = function ($mdDialog) {
 
         return {
@@ -10,12 +13,16 @@
                 label: '@',
                 placeholderText: '@',
                 model: '=',
+				itemName: '=', // used to show selected option without loading menu options
                 menuOptions: '=',
+				groupOptions: '@',
                 customStyles: '=',
                 eventSignal: '=',
-                smallOptions: '=',
+                smallOptions: '<',
                 isDisabled: '=',
-                sorted: '=',
+
+				sorted: '=',
+				loadMenuOptions: '&?',
                 onChangeCallback: '&?'
             },
             templateUrl: 'views/directives/customInputs/dropdown-select-view.html',
@@ -27,13 +34,12 @@
                 scope.dropdownMenuShown = false;
                 scope.dropdownMenuFilter = '';
 
-                if (scope.itemName) { // itemName and inputText needed for resetting selected option name
-                    scope.inputText = scope.itemName;
-                }
+                let itemName = scope.itemName || '';
+                let menuOptionsList = [];
 
                 /* TIPS
                 scope.smallOptions probable properties
-                    tooltipText: custom tolltip text
+                    tooltipText: custom tooltip text
                     indicatorBtnIcon: sets icon for indicator button
                     dialogParent: 'string' - querySelector content for element to insert mdDialog into
                     notNull: selector should not be empty
@@ -50,17 +56,78 @@
                     scope.dialogParent = scope.smallOptions.dialogParent
                 }
 
+                scope.menuOptionsPopupData = {
+                	options: null,
+					selectOption: function (item, _$popup, $event) {
+
+						scope.selectOption(item);
+
+						// IMPORTANT: should be at the end of function because it call scope.$apply() from closeDropdownMenu()
+						_$popup.cancel();
+
+					},
+					focusInput: function () {
+                		setTimeout(() => {
+							const filter = document.querySelector('input.popup-select-filter');
+							filter.focus();
+						}, 100);
+
+					},
+					onInit: async function () {
+
+						scope.menuOptionsPopupData.filterTerm = "";
+						inputContainer.classList.add('custom-input-focused');
+						inputElem.focus();
+						// scope.dropdownMenuShown = true;
+
+						// window.addEventListener('click', closeDDMenuOnClick);
+						document.addEventListener('keydown', closeByKeydownPress);
+
+						if (scope.loadMenuOptions) {
+							// scope.menuOptions = await scope.loadMenuOptions();
+							scope.menuOptionsPopupData.options = await scope.loadMenuOptions();
+
+							setTimeout(function () {
+								scope.$apply();
+							}, 100);
+
+						}
+
+					},
+				};
+
+				if (scope.itemName) { // itemName and inputText needed for resetting selected option name
+					scope.menuOptionsPopupData.filterTerm = itemName;
+				}
+
+                scope.popupEventService = new EventService();
+
+                scope.popupTemplate = scope.groupOptions ? 'views/popups/custom-select-with-groups-popup-view.html' : 'views/popups/custom-select-popup-view.html';
+
                 var stylePreset;
 
                 var inputContainer = elem[0].querySelector('.dropdownSelectInputContainer');
                 var inputElem = elem[0].querySelector('.dropdownSelectInputElem');
 
-                /*var entityIndicatorIcons = {
-                    'type1': {
-                        type: 'class',
-                        icon: 'fas fa-align-justify'
-                    }
-                }*/
+				const getMenuOptionsAsFlatList = function () {
+
+					menuOptionsList = [];
+
+					if (scope.groupOptions) {
+
+						// scope.menuOptions.forEach(function (group) {
+						scope.menuOptionsPopupData.options.forEach(function (group) {
+							menuOptionsList = menuOptionsList.concat(group.content);
+						});
+
+					} else {
+						// menuOptionsList = scope.menuOptions
+						menuOptionsList = scope.menuOptionsPopupData.options;
+					}
+
+					return menuOptionsList;
+
+				};
 
                 scope.getInputContainerClasses = function () {
 
@@ -98,10 +165,52 @@
 
                 };
 
+				scope.orderOptions = null;
+
+				if (!scope.sorted) {
+
+					// scope.optionsComparator = function (o1, o2) {
+					scope.menuOptionsPopupData.optionsComparator = function (o1, o2) {
+
+						if (!o1.value || !o2.value) {
+							return 0;
+						}
+
+						let o1StartsWithDash = o1.type === 'string' && o1.value.startsWith('-');
+						let o2StartsWithDash = o2.type === 'string' && o2.value.startsWith('-');
+
+						if (o1StartsWithDash && o2StartsWithDash) {
+
+							const o1WithoutDash = o1.value.slice(1);
+							const o2WithoutDash = o2.value.slice(1);
+
+							if (o1WithoutDash > o2WithoutDash) {
+								return 1;
+							}
+
+							if (o1WithoutDash < o2WithoutDash) {
+								return -1;
+							}
+
+							return 0;
+
+						}
+
+						if (o1.value > o2.value) {
+							return 1;
+						}
+
+						if (o1.value < o2.value) {
+							return -1;
+						}
+
+					};
+
+				}
+
                 scope.selectOption = function (item) {
 
-					closeDropdownMenu();
-
+					// closeDropdownMenu();
                     if (item.id !== scope.model) {
 
                         stylePreset = '';
@@ -110,41 +219,55 @@
                         scope.model = item.id;
                         scope.valueIsValid = true;
 
-                        scope.itemName = item.name;
-                        scope.inputText = item.name;
+						itemName = item.name;
+                        scope.menuOptionsPopupData.filterTerm = item.name;
 
-                        setTimeout(function () {
+						if (scope.onChangeCallback) {
 
-                            if (scope.onChangeCallback) scope.onChangeCallback();
+							// because of timeout scope.onChangeCallback() will be called after linked to scope.model variable is updated
+							setTimeout(function () {
 
-                            scope.$apply();
+								scope.onChangeCallback();
+								// scope.$apply();
 
-                        }, 0);
+							}, 0);
+
+						}
 
                     }
 
                 };
 
-                scope.onInputTextChange = function () {
-                    scope.dropdownMenuFilter = scope.inputText;
-                };
+                /*scope.onInputTextChange = function () {
+                    scope.dropdownMenuFilter = scope.menuOptionsPopupData.filterTerm;
+                };*/
 
                 var closeDropdownMenu = function (updateScope) {
 
 					inputContainer.classList.remove('custom-input-focused');
+					// if (itemName) scope.inputText = itemName;
 
-					if (scope.itemName) scope.inputText = scope.itemName;
+                    // scope.dropdownMenuShown = false;
 
-                    scope.dropdownMenuShown = false;
+                    // window.removeEventListener('click', closeDDMenuOnClick);
+                    document.removeEventListener('keydown', closeByKeydownPress);
+					scope.menuOptionsPopupData.filterTerm = itemName;
 
-                    window.removeEventListener('click', closeDDMenuOnClick);
-                    document.removeEventListener('keydown', onTabKeyPress);
+                    if (updateScope) {
 
-                    if (updateScope) scope.$apply();
+						setTimeout(function () {
+							scope.$apply();
+						}, 0);
 
-                }
+					}
 
-                var closeDDMenuOnClick = function (event) {
+                };
+
+                scope.onMenuClose = function () {
+					closeDropdownMenu(true);
+				}
+
+                /* var closeDDMenuOnClick = function (event) {
 
                 	var targetElem = event.target;
 
@@ -154,15 +277,24 @@
                         closeDropdownMenu(true);
                     }
 
-                };
+                }; */
 
-                var onTabKeyPress = function (event) {
+                var closeByKeydownPress = function (event) {
 
                     var pressedKey = event.key;
 
-                    if (pressedKey === "Tab") {
-                        closeDropdownMenu(true);
-                    }
+                    switch (pressedKey) {
+						case "Tab":
+							scope.popupEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+							// closeDropdownMenu(true);
+							break;
+
+						case "Esc":
+						case "Escape":
+							scope.popupEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+							// closeDropdownMenu(true);
+							break;
+					}
 
                 }
 
@@ -185,11 +317,12 @@
 
                 };
 
-                scope.openSelectorDialog = function ($event) {
+                scope.openSelectorDialog = async function ($event) {
 
-					closeDropdownMenu();
-                    // Victor 2020.11.09 If body is parent, then modal window under popup
-                    // var dialogParent = angular.element(document.body);
+					$event.stopPropagation();
+					// closeDropdownMenu();
+
+					// Victor 2020.11.09 If body is parent, then modal window under popup
                     var dialogParent =  document.querySelector('.dialog-containers-wrap');
 
                     if (scope.dialogParent) {
@@ -197,10 +330,17 @@
                         var dialogParentElem = document.querySelector(scope.dialogParent);
 
                         if (dialogParentElem) {
-                            dialogParent = dialogParentElem
+                            dialogParent = dialogParentElem;
                         }
 
                     }
+
+					if (scope.loadMenuOptions) {
+						// scope.menuOptions = await scope.loadMenuOptions();
+						scope.menuOptionsPopupData.options = await scope.loadMenuOptions();
+					}
+
+					menuOptionsList = getMenuOptionsAsFlatList();
 
                     $mdDialog.show({
                         controller: "ExpandableItemsSelectorDialogController as vm",
@@ -211,7 +351,8 @@
                         locals: {
                             data: {
                                 dialogTitle: 'Choose layout to open Split Panel with',
-                                items: scope.menuOptions
+                                // items: scope.menuOptions
+								items: menuOptionsList
                             }
                         }
 
@@ -225,32 +366,84 @@
 
                 };
 
+				var getSelOptionName = function () {
+
+					menuOptionsList = getMenuOptionsAsFlatList();
+
+					for (var i = 0; i < menuOptionsList.length; i++) {
+						if (menuOptionsList[i].id === scope.model) {
+
+							return menuOptionsList[i].name;
+
+						}
+
+					}
+
+				};
 
                 var initScopeWatchers = function () {
 
+                	/* IMPORTANT: item name watcher should be called before model watcher. */
+					scope.$watch('itemName', function () {
+
+						if (scope.itemName) {
+							// itemName = scope.itemName;
+							scope.menuOptionsPopupData.filterTerm = itemName;
+
+						} else {
+							// itemName = '';
+							scope.menuOptionsPopupData.filterTerm = '';
+						}
+
+					});
+
                     scope.$watch('model', function () {
 
-                        if ((scope.model || scope.model === 0) && scope.menuOptions) {
+                        if (scope.model || scope.model === 0) {
 
-                            for (var i = 0; i < scope.menuOptions.length; i++) {
+                        	// if (scope.menuOptions) {
+							if (scope.menuOptionsPopupData.options) {
 
-                                if (scope.menuOptions[i].id === scope.model) {
+								menuOptionsList = getMenuOptionsAsFlatList();
 
-                                    scope.inputText = scope.menuOptions[i].name
-                                    // scope.valueIsValid = true
-                                    break;
+                        		for (var i = 0; i < menuOptionsList.length; i++) {
 
-                                }
+									if (menuOptionsList[i].id === scope.model) {
 
-                            }
+										// itemName = menuOptionsList[i].name;
+										scope.menuOptionsPopupData.filterTerm = itemName;
+										// scope.valueIsValid = true
+										break;
+
+									}
+
+								}
+
+							} else if (itemName) {
+								scope.menuOptionsPopupData.filterTerm = itemName;
+							}
 
                         } else {
-                            scope.inputText = "";
-                            scope.itemName = "";
-                            // scope.valueIsValid = false
+							scope.menuOptionsPopupData.filterTerm = "";
+							itemName = "";
                         }
 
                     });
+
+                    if (scope.menuOptions && Array.isArray(scope.menuOptions)) {
+
+                    	scope.$watch('menuOptions', function () {
+
+                    		if (scope.menuOptions && Array.isArray(scope.menuOptions)) {
+								scope.menuOptionsPopupData.options = scope.menuOptions;
+
+                    		} else {
+								scope.menuOptionsPopupData.options = [];
+							}
+
+						});
+
+					}
 
                     if (scope.eventSignal) {
 
@@ -300,17 +493,6 @@
 
                     }
 
-                    scope.$watch('itemName', function () {
-
-                        if (scope.itemName) {
-                            scope.inputText = scope.itemName;
-
-                        } else {
-                            scope.inputText = '';
-                        }
-
-                    });
-
                 };
 
                 var initEventListeners = function () {
@@ -323,7 +505,7 @@
                         inputContainer.classList.remove('custom-input-hovered');
                     });
 
-                    inputElem.addEventListener('focus', function () {
+                    /* inputElem.addEventListener('focus', async function () {
 
 						scope.inputText = "";
 						inputContainer.classList.add('custom-input-focused');
@@ -331,24 +513,16 @@
 						scope.dropdownMenuShown = true;
 
                         window.addEventListener('click', closeDDMenuOnClick);
-                        document.addEventListener('keydown', onTabKeyPress);
+                        document.addEventListener('keydown', closeByKeydownPress);
+
+                        if (scope.loadMenuOptions) {
+                        	scope.menuOptions = await scope.loadMenuOptions();
+							scope.menuOptionsPopupData.options = scope.menuOptions;
+						}
 
                         scope.$apply();
 
-                    }, false);
-
-                    /* inputElem.addEventListener('blur', function (event) {
-
-                        inputContainer.classList.remove('custom-input-focused');
-
-                        if (scope.itemName) {
-
-                        	scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
-                            scope.$apply();
-
-                        }
-
-                    }); */
+                    }, false); */
 
                 };
 
@@ -356,12 +530,14 @@
 
                     if (scope.menuOptions && scope.menuOptions.length) {
 
-                        for (var i = 0; i < scope.menuOptions.length; i++) {
+						scope.menuOptionsPopupData.options = scope.menuOptions;
+                    	menuOptionsList = getMenuOptionsAsFlatList();
 
-                        	if (scope.menuOptions[i].id === scope.model) {
+                        for (var i = 0; i < menuOptionsList.length; i++) {
+                            if (menuOptionsList[i].id === scope.model) {
 
-                                scope.itemName = scope.menuOptions[i].name;
-                                scope.inputText = scope.menuOptions[i].name;
+                                itemName = menuOptionsList[i].name;
+                                scope.menuOptionsPopupData.filterTerm = menuOptionsList[i].name;
 
                                 break;
 
@@ -371,8 +547,7 @@
 
                     }
 
-                    initScopeWatchers();
-
+					initScopeWatchers();
                     initEventListeners();
 
                     /*scope.iconData = entityIndicatorIcons[indicatorBtnIcon];*/
@@ -380,15 +555,15 @@
                     if (scope.customStyles) {
                         applyCustomStyles();
                     }
+
                 };
 
                 init();
 
                 scope.$on("$destroy", function () {
-                    window.removeEventListener('click', closeDDMenuOnClick);
-                    document.removeEventListener('keydown', onTabKeyPress);
+                    // window.removeEventListener('click', closeDDMenuOnClick);
+                    document.removeEventListener('keydown', closeByKeydownPress);
                 });
-
 
             }
         }

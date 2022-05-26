@@ -50,9 +50,10 @@
 
                 const isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 let splitPanelLayoutId = null;
+				let spDefaultLayoutData = null;
 
                 if (!isRootEntityViewer) {
-                    const spDefaultLayoutData = scope.evDataService.getSplitPanelDefaultLayout();
+                    spDefaultLayoutData = scope.evDataService.getSplitPanelDefaultLayout();
                     splitPanelLayoutId = spDefaultLayoutData.layoutId;
                 }
 
@@ -172,11 +173,15 @@
 
 				};
 
-                scope.setAsDefault = (targetLayout) => {
+				scope.layoutIsDefault = layout => {
 
-                    if (targetLayout.is_default) {
-                        return;
-                    }
+					if (isRootEntityViewer) return layout.is_default;
+
+					return spDefaultLayoutData.layoutId === layout.id;
+
+				};
+
+                scope.setAsDefault = targetLayout => {
 
                     if (isRootEntityViewer) {
 
@@ -221,15 +226,16 @@
 
                         }
 
-                    } else if (targetLayout.id !== splitPanelLayoutId) {
+                    }
+					else if (targetLayout.id !== splitPanelLayoutId) {
 
-                        const defaultLayoutData = {
+						spDefaultLayoutData = {
                             layoutId: targetLayout.id,
                             name: targetLayout.name,
                             content_type: targetLayout.content_type
                         };
 
-                        scope.evDataService.setSplitPanelDefaultLayout(defaultLayoutData);
+                        scope.evDataService.setSplitPanelDefaultLayout(spDefaultLayoutData);
                         scope.evEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
                         splitPanelLayoutId = targetLayout.id;
 

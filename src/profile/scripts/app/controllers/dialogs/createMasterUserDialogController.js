@@ -19,7 +19,7 @@
 
         vm.agree = function ($event) {
 
-			profileAuthorizerService.createMasterUser({name: vm.name}).then(function (data) {
+			profileAuthorizerService.createMasterUser({name: vm.name, license_key: vm.license_key}).then(function (data) {
 
                 console.log('data success', data);
 
@@ -36,7 +36,7 @@
                     locals: {
                         data: {
                             title: 'Warning!',
-                            description: "Database with name " + vm.name + ' already exists. Please choose another name.'
+                            description: reason
                         }
                     },
                     multiple: true,
