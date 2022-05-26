@@ -82,7 +82,7 @@
                                 var error = {
                                     status: response.status,
                                     statusText: response.statusText,
-                                    message: response.text()
+                                    message: data
                                 };
 
                                 reject(error)
