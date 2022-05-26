@@ -61,7 +61,7 @@
                     }
 
                     var elements = elem.find('.dashboardCell');
-                    var emptySpace = elem.find('.dashboardEmptySpace')[0];
+                    // var emptySpace = elem.find('.dashboardEmptySpace')[0];
                     var domElem;
                     var layoutElem;
 
@@ -196,13 +196,13 @@
 
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENTS_SIZES_CHANGED);
 
-                    if (emptySpace) {
+                    /* if (emptySpace) {
                         emptySpace.style.position = 'absolute';
                         emptySpace.style.top = scope.rowsTotal * (scope.cellHeight + scope.tabPaddingTop) + 'px';
                         emptySpace.style.left = 0;
                         emptySpace.style.height = '200px';
                         emptySpace.style.width = '100%';
-                    }
+                    } */
 
                 };
 

@@ -86,6 +86,8 @@
                 if (selectedDatabaseInstrument) {
                     var config = {
                         instrument_code: selectedDatabaseInstrument.referenceId,
+                        instrument_name: selectedDatabaseInstrument.issueName,
+                        instrument_type_code: selectedDatabaseInstrument.instrumentType,
                         mode: 1
                     };
 
@@ -94,10 +96,9 @@
 
                     importInstrumentCbondsService.download(config).then(function (data) {
 
+                        vm.isDisabled = false;
 
                         if (data.errors.length) {
-
-                            vm.isDisabled = false;
 
                             vm.selectedItem = null;
 
@@ -120,6 +121,12 @@
 
                         }
 
+                    }).catch(function (e){
+                        vm.isDisabled = false;
+                        vm.selectedItem = null;
+                        $scope.$apply();
+
+                        resolve()
                     })
 
 
