@@ -2013,7 +2013,8 @@
                             fieldsToEmptyList.push(fieldPath);
                         }
 
-                    } else if (field.attribute_class === 'decorationAttr') {
+                    }
+					else if (field.attribute_class === 'decorationAttr') {
 
                         for (l = 0; l < layoutAttrs.length; l = l + 1) {
 
@@ -2031,7 +2032,8 @@
 
                         }
 
-                    } else {
+                    }
+					else {
 
                         for (e = 0; e < entityAttrs.length; e = e + 1) {
 
@@ -2058,12 +2060,14 @@
                             for (u = 0; u < userInputs.length; u = u + 1) {
 
                                 if (field.name === userInputs[u].name) {
-                                    userInputs[u].options = field.options;
 
+									userInputs[u].options = field.options;
                                     fieldResult = userInputs[u];
 
-                                    attrFound = true;
-                                    break;
+									attrFound = true;
+
+									break;
+
                                 }
                             }
 
@@ -2089,7 +2093,6 @@
                 }
 
             }
-
             //tabResult.push(fieldResult);
             tabResult[field.row][field.column] = fieldResult;
 
