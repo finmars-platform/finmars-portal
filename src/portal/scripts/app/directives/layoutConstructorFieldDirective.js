@@ -831,7 +831,7 @@
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
-                            scope.item.options.number_format = res.data.settings;
+                            scope.item.options.number_format = res.data;
                         }
 
                     });
