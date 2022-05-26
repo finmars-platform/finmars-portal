@@ -86,6 +86,8 @@
                 if (selectedDatabaseInstrument) {
                     var config = {
                         instrument_code: selectedDatabaseInstrument.referenceId,
+                        instrument_name: selectedDatabaseInstrument.issueName,
+                        instrument_type_code: selectedDatabaseInstrument.instrumentType,
                         mode: 1
                     };
 
