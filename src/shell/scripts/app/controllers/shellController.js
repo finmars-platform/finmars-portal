@@ -269,6 +269,11 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
             websocketService.addEventListener('master_user_change', function (data) {
 
+				window.document.title = data.master_user.name + ' | Finmars'
+
+				baseUrlService.setMasterUserPrefix(data.base_api_url);
+
+				globalDataService.setCurrentMasterUserStatus(true);
                 console.log('master_user_change data', data);
 
                 /* if (window.location.pathname !== '/') {
