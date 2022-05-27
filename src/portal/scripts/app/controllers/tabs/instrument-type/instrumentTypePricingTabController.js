@@ -372,19 +372,19 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog) {
 			10: [
 				{
 					name: 'Reference For Pricing',
-					id: 'reference_for_pricing'
+					user_code: 'reference_for_pricing'
 				}
 			],
 			20: [
 				{
 					name: 'Default Price',
-					id: 'default_price'
+					user_code: 'default_price'
 				}
 			],
 			40: [
 				{
 					name: 'Maturity Date',
-					id: 'maturity_date'
+					user_code: 'maturity_date'
 				}
 			]
 
@@ -398,7 +398,7 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog) {
 
 				return {
 					name: item.name,
-					id: 'attributes.' + item.id
+					user_code: 'attributes.' + item.id
 				}
 
 			});
@@ -444,7 +444,7 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog) {
 
 		}));*/
 		vm.attributeTypesByValueTypes[40] = vm.attributeTypesByValueTypes[40].concat(getAttributesByValueType(40));
-
+		console.log("testing attributeTypesByValueTypes", vm.attributeTypesByValueTypes);
 	};
 
 	const getInstrumentPricingSchemes = instrumentPricingSchemeService.getList().then(data => {
