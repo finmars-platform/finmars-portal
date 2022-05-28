@@ -86,7 +86,7 @@
 
 		}*/
 
-		evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: tableKey});
+		evEditorEventService.dispatchEvent(evEditorEvents.TABLE_INSTANCE_CHANGED, {key: tableKey});
 
 	};
 
@@ -107,7 +107,7 @@
 
 		});
 
-		evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: tableKey});
+		evEditorEventService.dispatchEvent(evEditorEvents.TABLE_INSTANCE_CHANGED, {key: tableKey});
 
 	};
 

@@ -317,9 +317,41 @@
             mapAttributesAndFixFieldsLayout();
 
             // should be fired after mapAttributesAndFixFieldsLayout()
-            return sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
+            // return sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
 
         };
+
+		/**
+		 * Changes vm.entity, vm.tabs, vm.userInputs
+		 *
+		 * @param cTransactionData {Object} - complex transaction data
+		 * @returns {Promise<void>} - returns promise after all async functions done
+		 */
+		var postRebookComplexTransactionActions = function (cTransactionData) {
+
+			/* var keys = Object.keys(cTransactionData.values);
+
+			keys.forEach(item => vm.entity[item] = cTransactionData.values[item]); */
+			vm.entity.values = cTransactionData.values;
+
+			cTransactionData.complex_transaction.attributes.forEach(function (item) {
+				if (item.attribute_type_object.value_type === 10) {
+					vm.entity[item.attribute_type_object.name] = item.value_string
+				}
+				if (item.attribute_type_object.value_type === 20) {
+					vm.entity[item.attribute_type_object.name] = item.value_float
+				}
+				if (item.attribute_type_object.value_type === 30) {
+					vm.entity[item.attribute_type_object.name] = item.classifier
+				}
+				if (item.attribute_type_object.value_type === 40) {
+					vm.entity[item.attribute_type_object.name] = item.value_date
+				}
+			});
+
+			postBookComplexTransactionActions(cTransactionData);
+
+		};
 
         vm.getFormLayout = function () {
 
@@ -352,16 +384,7 @@
 
                         vm.missingLayoutError = false;
 
-                        await postBookComplexTransactionActions(data);
-                        // Victor 2020.12.01 #64
-                        // await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
-                        // <Victor 2020.12.01 #64>
-
-                        /*vm.oldValues = {};
-
-                        vm.userInputs.forEach(function (item) {
-                            vm.oldValues[item.name] = vm.entity[item.name]
-                        });*/
+                        postBookComplexTransactionActions(data);
 
                     } else {
                         vm.missingLayoutError = true;
@@ -798,128 +821,6 @@
             //$mdDialog.hide({status: 'disagree'});
 
         };
-        /**
-         * Changes vm.entity, vm.tabs, vm.userInputs
-         *
-         * @param cTransactionData {Object} - complex transaction data
-         * @returns {Promise<void>} - returns promise after all async functions done
-         */
-        var postRebookComplexTransactionActions = async function (cTransactionData) {
-
-            var keys = Object.keys(cTransactionData.values);
-
-            /* if (recalculationInfo &&
-				recalculationInfo.recalculatedInputs && recalculationInfo.recalculatedInputs.length) {
-
-				recalculationInfo.recalculatedInputs.forEach(inputName => {
-					vm.entity[inputName] = cTransactionData.values[inputName]
-				});
-
-				vm.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
-
-			} else {
-
-				keys.forEach(item => vm.entity[item] = cTransactionData.values[item]);
-
-			} */
-            keys.forEach(item => vm.entity[item] = cTransactionData.values[item]);
-
-            cTransactionData.complex_transaction.attributes.forEach(function (item) {
-                if (item.attribute_type_object.value_type === 10) {
-                    vm.entity[item.attribute_type_object.name] = item.value_string
-                }
-                if (item.attribute_type_object.value_type === 20) {
-                    vm.entity[item.attribute_type_object.name] = item.value_float
-                }
-                if (item.attribute_type_object.value_type === 30) {
-                    vm.entity[item.attribute_type_object.name] = item.classifier
-                }
-                if (item.attribute_type_object.value_type === 40) {
-                    vm.entity[item.attribute_type_object.name] = item.value_date
-                }
-            });
-
-            /*
-            // ng-repeat with bindFieldControlDirective may not update without this
-            vm.tabs = {};
-            vm.fixedArea = {};
-            // < ng-repeat with bindFieldControlDirective may not update without this >
-            if (Array.isArray(cTransactionData.book_transaction_layout.data)) {
-                vm.tabs = cTransactionData.book_transaction_layout.data;
-            } else {
-                vm.tabs = cTransactionData.book_transaction_layout.data.tabs;
-                vm.fixedArea = cTransactionData.book_transaction_layout.data.fixedArea;
-            }
-
-            dataConstructorLayout = JSON.parse(JSON.stringify(cTransactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
-
-			vm.userInputs = transactionHelper.updateTransactionUserInputs(vm.userInputs, vm.tabs, vm.fixedArea, vm.transactionType);
-
-			vm.inputsWithCalculations = cTransactionData.transaction_type_object.inputs;
-
-			if (vm.inputsWithCalculations) {
-
-				vm.inputsWithCalculations.forEach(function (inputWithCalc) {
-
-					vm.userInputs.forEach(function (userInput) {
-
-				  		if (userInput.name === inputWithCalc.name) {
-
-							if (!userInput.buttons) {
-								userInput.buttons = [];
-							}
-
-                            if (inputWithCalc.can_recalculate === true) {
-                                userInput.buttons.push({
-                                    iconObj: {type: 'angular-material', icon: 'refresh'},
-                                    tooltip: 'Recalculate this field',
-                                    caption: '',
-                                    classes: '',
-                                    action: {
-                                        key: 'input-recalculation',
-                                        callback: vm.recalculate,
-                                        parameters: {inputs: [inputWithCalc.name], recalculationData: 'input'}
-                                    }
-                                })
-                            }
-
-                            if (inputWithCalc.settings && inputWithCalc.settings.linked_inputs_names) {
-
-                            	var linkedInputsList = inputWithCalc.settings.linked_inputs_names.split(',');
-
-                                userInput.buttons.push({
-                                    iconObj: {type: 'angular-material', icon: 'loop'},
-                                    tooltip: 'Recalculate linked fields',
-                                    caption: '',
-                                    classes: '',
-                                    action: {
-                                        key: 'linked-inputs-recalculation',
-                                        callback: vm.recalculate,
-                                        parameters: {inputs: linkedInputsList, recalculationData: 'linked_inputs'}
-                                    }
-                                })
-                            }
-
-                        }
-
-                    })
-
-                });
-
-            } */
-            var pbraResult = sharedLogicHelper.postBookRebookActions(cTransactionData, vm.recalculate);
-            vm.tabs = pbraResult.tabs;
-            vm.fixedArea = pbraResult.fixedArea;
-            dataConstructorLayout = pbraResult.dataConstructorLayout;
-            vm.inputsWithCalculations = pbraResult.inputsWithCalculations;
-            vm.userInputs = pbraResult.userInputs;
-
-            mapAttributesAndFixFieldsLayout();
-
-            // should be fired after mapAttributesAndFixFieldsLayout()
-            return sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
-
-        };
 
         // let recalculateTimeoutID;
 
@@ -1113,7 +1014,7 @@
                     vm.fillTransactionInputs();
 
 
-                    await postRebookComplexTransactionActions(cTransactionData); // vm.tabs changed here
+                    postRebookComplexTransactionActions(cTransactionData); // vm.tabs changed here
                     // Victor 2020.12.01 #64
                     // await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
                     // <Victor 2020.12.01 #64>

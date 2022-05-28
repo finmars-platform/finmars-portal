@@ -167,7 +167,40 @@
             return 0;
 
         });
-    }
+    };
+	/**
+	 *
+	 * @param {string} text - text to use as unique user code, name etc
+	 * @param {array<string>} [listOfTexts] - array of already existing strings
+	 * @param {string} textName - name to use in error
+	 */
+	const validateTextForUserCode = (text, listOfTexts, textName) => {
+
+		if (!textName) textName = "";
+		// let errorText = "";
+		if (!text) {
+			return `${ textName ? textName + ' ' : ''}should not be empty.`;
+		}
+		else if (text.match('[^1-9a-zA-Z_]')) {
+
+			if (textName) textName = ' for ' + textName;
+
+			return `Only english letters and 1-9 numbers allowed${textName}.`;
+		}
+		else if (text.match('^[0-9]')) {
+			return `${ textName ? textName + ' ' : ''}should not start with number.`;
+		}
+		else if (listOfTexts && listOfTexts.length) {
+
+			if (listOfTexts.includes(text)) {
+				return `${ textName ? textName + ' ' : ''}should be unique.`;
+			}
+
+		}
+
+		return false;
+
+	};
 
 	const openLinkInNewTab = function (event) {
 
@@ -249,6 +282,7 @@
         getObjectNestedPropVal: getObjectNestedPropVal,
         deletePropertyByPath: deletePropertyByPath,
         textWithDashSort: textWithDashSort,
+		validateTextForUserCode: validateTextForUserCode,
 		openLinkInNewTab: openLinkInNewTab,
 
         closeComponent: closeComponent,

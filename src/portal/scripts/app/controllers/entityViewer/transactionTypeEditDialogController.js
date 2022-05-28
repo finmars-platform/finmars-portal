@@ -307,6 +307,7 @@
         vm.transactionUserFieldsState = {};
 
         vm.getTransactionUserFields = sharedLogic.getTransactionUserFields;
+		vm.updateContextParameters = sharedLogic.updateContextParametersFunctions;
 
         vm.getItem = function () {
 
@@ -317,7 +318,8 @@
                     vm.entity = data;
 
                     vm.expressionData = sharedLogic.updateInputFunctions();
-                    /* vm.expressionData.groups[0] = {
+					vm.updateContextParameters();
+					/* vm.expressionData.groups[0] = {
                         "name": "<b>Inputs</b>",
                         "key": 'input'
                     }
@@ -965,6 +967,7 @@
         vm.entity.book_transaction_layout = vm.entity.book_transaction_layout || '';
         vm.entity.actions = vm.entity.actions || [];
         vm.entity.inputs = vm.entity.inputs || [];
+		vm.entity.context_parameters = sharedLogic.getContextParameters();
 
         vm.readyStatus = {transactionTypeGroups: false, instrumentTypes: false, portfolios: false};
 
@@ -1630,7 +1633,7 @@
 
         // Transaction Type Recon end
 
-        // Transaction type Actions controller start
+		//region Transaction type Actions controller
 
         vm.relationItems = {};
 
@@ -1949,7 +1952,7 @@
 
             return typeName;
         };
-        // Transaction type actions controller end
+		//endregion Transaction type Actions controller
 
 
         // Special case for split-panel
@@ -2193,30 +2196,10 @@
             })
         }
 
-        // Context Parameters tab start
-
-        vm.deleteContextParameter = function ($event, $index) {
-            vm.entity.context_parameters.splice($index, 1);
-        }
-
-        vm.addContextParameter = function ($event) {
-
-            var order = 1;
-
-            if (vm.entity.context_parameters && vm.entity.context_parameters.length) {
-                order = vm.entity.context_parameters[vm.entity.context_parameters.length - 1].order + 1
-            }
-
-            vm.entity.context_parameters.push({
-                order:order
-            });
-
-
-        }
-
-        // Context Parameters tab end
-
-
+        //region Context Parameters tab
+		vm.deleteContextParameter = sharedLogic.deleteContextParameter
+        vm.addContextParameter = sharedLogic.addContextParameter;
+		//endregion Context Parameters tab
 
         vm.init = function () {
 

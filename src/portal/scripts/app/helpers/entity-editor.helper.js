@@ -182,15 +182,13 @@
         if (attr['value_type'] === 10) {
             attribute['value_string'] = value;
         }
-
-        if (attr['value_type'] === 20) {
+        else if (attr['value_type'] === 20) {
             attribute['value_float'] = value;
         }
-
-        if (attr['value_type'] === 30) {
+		else if (attr['value_type'] === 30) {
             attribute['classifier'] = value;
         }
-        if (attr['value_type'] === 40) {
+		else if (attr['value_type'] === 40) {
             attribute['value_date'] = value;
         }
 
@@ -269,7 +267,8 @@
 
     var systemTabLocationOfAttribute = {
         'instrument': {
-            'maturity_date': {type: 'system_tab', name: 'Events', validatorText: 'tab: EVENTS'}
+            'maturity_date': {type: 'system_tab', name: 'Events', validatorText: 'tab: EVENTS'},
+			'pricing_currency': {type: 'system_tab', name: 'Pricing', validatorText: 'tab: PRICING'}
         },
         'instrument-type': {
             'accrued_currency': {type: 'system_tab', name: 'Accruals', validatorText: 'tab: ACCRUALS'},
@@ -2275,7 +2274,8 @@
         updateValue: updateValue,
 
         findAttributeByKey: findAttributeByKey,
-        getFieldKeyForFAPopup: getFieldKeyForFAPopup,
+		getLocationOfAttributeInsideUserTabs: getLocationOfAttributeInsideUserTabs,
+		getFieldKeyForFAPopup: getFieldKeyForFAPopup,
 
         checkForNotNullRestriction: checkForNotNullRestriction,
         checkForNegNumsRestriction: checkForNegNumsRestriction,

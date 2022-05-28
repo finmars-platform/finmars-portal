@@ -211,7 +211,8 @@
             </td>
 
             <td>
-                <md-button class="md-raised" data-ng-click="vm.editPricingScheme($event, item.pricing_scheme_object)">
+                <md-button class="md-raised" data-ng-click="vm.editPricingScheme($event, item.pricing_scheme_object)"
+                           ng-disabled="!item.pricing_scheme && item.pricing_scheme !== 0">
                     Edit
                 </md-button>
             </td>
