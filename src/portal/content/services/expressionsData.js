@@ -6,6 +6,8 @@ export const contextVariablesWords = [
 
 
 	'phantom_instrument_0', 'phantom_instrument_1', 'phantom_instrument_2', 'phantom_instrument_3', 'phantom_instrument_4', 'phantom_instrument_5',
-	'phantom_instrument_6', 'phantom_instrument_7', 'phantom_instrument_8', 'phantom_instrument_9', 'phantom_instrument_10'
+	'phantom_instrument_6', 'phantom_instrument_7', 'phantom_instrument_8', 'phantom_instrument_9', 'phantom_instrument_10',
+
+	'None'
 
 ];

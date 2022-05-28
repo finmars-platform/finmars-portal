@@ -5,13 +5,18 @@
 
     'use strict';
 
+	var metaHelper = require('../../helpers/meta.helper');
+
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
 
-        // MULTIPLE PARAMETER LOGIC START
+		vm.changeOnlyValue = !!data.changeOnlyValue;
+
+        //region MULTIPLE PARAMETER LOGIC
 
         vm.optionsForMultipleParameters = {};
+		vm.attrsOptsSorted = true;
 
         vm.getOptionsForAttributeKey = function (valueType) {
 
@@ -22,40 +27,47 @@
             if (valueTypeInt === 10) {
                 result.push({
                     name: 'Reference for pricing',
-                    user_code: 'reference_for_pricing'
+                    // user_code: 'reference_for_pricing'
+					id: 'reference_for_pricing'
                 })
             }
-
-            if (valueTypeInt === 20) {
+            else if (valueTypeInt === 20) {
                 result.push({
                     name: 'Default Price',
-                    user_code: 'default_price'
+                    // user_code: 'default_price'
+					id: 'default_price'
                 })
             }
-
-            if (valueTypeInt === 40) {
+            else if (valueTypeInt === 40) {
                 result.push({
                     name: 'Maturity Date',
-                    user_code: 'maturity_date'
+                    // user_code: 'maturity_date'
+					id: 'maturity_date'
                 })
             }
 
-            var attrs = vm.instrumentAttrTypes.filter(function (item) {
+            var attrs = vm.instrumentAttrTypes.filter(function (attr) {
 
-                if (item.value_type === valueTypeInt) {
+                if (attr.value_type === valueTypeInt) {
                     return true;
                 }
 
                 return false;
 
-            }).map(function (item) {
+            }).map(function (attr) {
 
-                return {
+                /* return {
                     name: item.name,
                     user_code: 'attributes.' + item.user_code
-                }
+                } */
+				return {
+					name: attr.name,
+					id: 'attributes.' + attr.user_code
+				}
 
             });
+
+			attrs = metaHelper.textWithDashSort(attrs, 'name');
 
             result = result.concat(attrs);
 
@@ -75,13 +87,13 @@
 
         vm.addParameter = function ($event, item) {
 
-            if (!item.data) {
+            /* if (!item.data) {
                 item.data = {}
             }
 
             if (!item.data.parameters) {
                 item.data.parameters = []
-            }
+            } */
 
             var index = item.data.parameters.length;
 
@@ -104,7 +116,7 @@
 
         };
 
-        // MULTIPLE PARAMETER LOGIC END
+        //endregion MULTIPLE PARAMETER LOGIC
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
@@ -114,7 +126,7 @@
 
             $mdDialog.hide({
                 status: 'agree', data: {
-                    item: vm.item
+                    item: JSON.parse(angular.toJson(vm.item)) // using angular.toJson to remove angular properties
                 }
             });
 
@@ -123,8 +135,20 @@
 
         vm.init = function () {
 
-            vm.instrumentAttrTypes = data.instrumentAttrTypes
-            vm.item = data.item;
+            vm.instrumentAttrTypes = data.instrumentAttrTypes;
+
+			if (!data.item || typeof data.item !== "object") {
+				console.error("Invalid event passed", data.item);
+				throw data.item;
+			}
+
+			vm.item = JSON.parse(angular.toJson(data.item));
+
+			if (!vm.item.data) vm.item.data = {};
+
+			if (!Array.isArray(vm.item.data.parameters)) {
+				vm.item.data.parameters = [];
+			}
 
             vm.optionsForMultipleParameters[10] = vm.getOptionsForAttributeKey(10);
             vm.optionsForMultipleParameters[20] = vm.getOptionsForAttributeKey(20);

@@ -5,11 +5,11 @@
         <div data-ng-if="isSpecialSearchRelation()">
 
 
-            <div data-ng-if="modelKeyEntity == 'instrument'">
+            <div data-ng-if="valueEntity == 'instrument'">
 
                 <instrument-select
                         label="{{getName()}}"
-                        model="entity[fieldKey]"
+                        model="modelObj.model"
                         item-object="entity[fieldKey + '_object']"
                         on-change-callback="changeHandler()"
                         item-name="inputTextObj.value"
@@ -19,38 +19,23 @@
 
             </div>
 
-            <div data-ng-if="modelKeyEntity == 'counterparty'">
+            <div data-ng-if="valueEntity == 'counterparty' || valueEntity == 'currency'">
 
                 <unified-data-select
                         label="{{getName()}}"
-                        model="entity[fieldKey]"
+                        model="modelObj.model"
                         item-object="entity[fieldKey + '_object']"
                         on-change-callback="changeHandler()"
                         item-name="inputTextObj.value"
                         custom-buttons="item.buttons"
                         custom-styles="customStyles"
-                        entity-type="'counterparty'"
+                        entity-type="valueEntity"
                 ></unified-data-select>
 
             </div>
 
-            <div data-ng-if="modelKeyEntity == 'currency'">
-
-                <unified-data-select
-                        label="{{getName()}}"
-                        model="entity[fieldKey]"
-                        item-object="entity[fieldKey + '_object']"
-                        on-change-callback="changeHandler()"
-                        item-name="inputTextObj.value"
-                        custom-buttons="item.buttons"
-                        custom-styles="customStyles"
-                        entity-type="'currency'"
-                ></unified-data-select>
-
-            </div>
-
-            <div data-ng-if="modelKeyEntity != 'instrument' && modelKeyEntity != 'counterparty' && modelKeyEntity != 'currency'">
-                <entity-search-select item="entity[fieldKey]"
+            <div data-ng-if="valueEntity !== 'instrument' && valueEntity !== 'counterparty' && valueEntity !== 'currency'">
+                <entity-search-select item="modelObj.model"
                                       label="getName()"
                                       item-name="inputTextObj.value"
                                       item-object="entity[fieldKey + '_object']"
@@ -59,7 +44,7 @@
                                       custom-styles="customStyles"
                                       event-signal="ciEventObj.event"
                                       small-options="{notNull: options.notNull, tooltipText: tooltipText}"
-                                      entity-type="modelKeyEntity"
+                                      entity-type="valueEntity"
                                       on-change-callback="changeHandler()"></entity-search-select>
             </div>
         </div>
@@ -74,7 +59,7 @@
 
                     <md-select
                             md-on-close="searchTerm = ''"
-                            data-ng-model="entity[fieldKey]"
+                            data-ng-model="modelObj.model"
                             data-ng-change="changeHandler()"
                             md-on-open="getDataApply()"
                             md-selected-text="bindFormFields()"
@@ -154,11 +139,12 @@
                                         </md-select>
                                       </md-input-container>-->
 
-                        <dropdown-select class="p-r-8" label="{{getName()}}"
-                                         model="entity[fieldKey]"
+                        <dropdown-select label="{{getName()}}"
+                                         model="modelObj.model"
                                          placeholder-text="{{getName()}}"
+                                         event-signal="ciEventObj.event"
                                          menu-options="sortedFields"
-                                         small-options="{tooltipText: '{{getName()}}'}"
+                                         small-options="{notNull: options.notNull, tooltipText: '{{getName()}}'}"
                                          sorted="sorted"
                                          on-change-callback="changeHandler()"
                                          style="{{inputBackgroundColor()}}">
@@ -170,7 +156,7 @@
 
                         <div data-ng-if="readyStatus.content">
                             <crud-select data-label="getName()"
-                                         data-item="entity[fieldKey]"
+                                         data-item="modelObj.model"
                                          data-entity-type="crudEntityType"
                                          data-options="fields"
                                          data-ng-click="getDataApply()"
@@ -213,12 +199,12 @@
                                             </div>
                                         </md-select>
                                     </md-input-container>-->
-
-                    <dropdown-select class="p-r-8" label="{{getName()}}"
-                                     model="entity[fieldKey]"
+                    <dropdown-select label="{{getName()}}"
+                                     model="modelObj.model"
                                      placeholder-text="{{getName()}}"
+                                     event-signal="ciEventObj.event"
                                      menu-options="schemeSortedFields"
-                                     small-options="{tooltipText: '{{getName()}}'}"
+                                     small-options="{notNull: options.notNull, tooltipText: '{{getName()}}'}"
                                      sorted="sorted"
                                      on-change-callback="changeHandler()"
                                      style="{{inputBackgroundColor()}}">
@@ -233,56 +219,10 @@
     <div data-ng-if="type === 'multiple-ids'">
 
         <div data-ng-if="checkComplexEntityType()">
-            <!--      <md-input-container class="md-block no-error-spacer">-->
-            <!--        <label data-ng-bind="getName()"></label>-->
-            <!--        <md-select-->
-            <!--          md-on-close="searchTerm = ''"-->
-            <!--          md-on-open="getDataApply()"-->
-            <!--          data-ng-model="entity[fieldKey]"-->
-            <!--          data-ng-change="changeHandler()"-->
-            <!--          multiple="true"-->
-            <!--          md-selected-text="bindMCField()"-->
-            <!--          style="{{inputBackgroundColor()}}"-->
-            <!--        >-->
-            <!--          <md-select-header>-->
-            <!--            <input-->
-            <!--              data-ng-model="searchTerm"-->
-            <!--              type="search"-->
-            <!--              placeholder="Search for a ..."-->
-            <!--              class="md-text md-select-search-pattern"-->
-            <!--              ng-keydown="$event.stopPropagation()"-->
-            <!--            />-->
-            <!--          </md-select-header>-->
 
-            <!--          <div data-ng-if="groups && groups.length" class="select-options-holder">-->
-            <!--            <md-optgroup-->
-            <!--              data-ng-repeat="group in groups | orderBy:'-'+group.name track by group.id"-->
-            <!--              data-ng-if="group.fields.length"-->
-            <!--              label="{{group.name}}"-->
-            <!--            >-->
-            <!--              <md-option-->
-            <!--                data-ng-repeat="field in group.fields | orderBy:resolveSort(field) | filter:{name: searchTerm}"-->
-            <!--                ng-value="field.id"-->
-            <!--              >-->
-            <!--                {{bindListFields(field)}}-->
-            <!--              </md-option>-->
-            <!--            </md-optgroup>-->
-            <!--          </div>-->
-
-            <!--          <div-->
-            <!--            data-ng-if="!groups && field && field[0]"-->
-            <!--            class="select-options-holder"-->
-            <!--          >-->
-            <!--            <md-option data-ng-value="fields[0].id"-->
-            <!--              >{{bindListFields(fields[0])}}</md-option-->
-            <!--            >-->
-            <!--          </div>-->
-            <!--        </md-select>-->
-            <!--      </md-input-container>-->
-
-            <two-fields-multiselect ng-model="entity[fieldKey]"
+            <two-fields-multiselect ng-model="modelObj.model"
                                     title="{{getName()}}"
-                                    model="entity[fieldKey]"
+                                    model="modelObj.model"
                                     items="sortedFields"
                                     name-property="bindFieldsName"
                                     selected-items-indication="chips"
@@ -323,9 +263,9 @@
 
                 <!--TODO ask when to use 2020.10.21 -->
                 <!--Victor: I it got back because server need the array-->
-                <two-fields-multiselect ng-model="entity[fieldKey]"
+                <two-fields-multiselect ng-model="modelObj.model"
                                         title="{{getName()}}"
-                                        model="entity[fieldKey]"
+                                        model="modelObj.model"
                                         name-property="bindFieldsName"
                                         items="sortedFields"
                                         data-selected-items-indication="chips"
@@ -404,12 +344,12 @@
                           </md-select>
                         </md-input-container>-->
 
-                <dropdown-select class="p-r-8"
-                                 label="{{getName()}}"
-                                 model="entity[fieldKey]"
+                <dropdown-select label="{{getName()}}"
+                                 model="modelObj.model"
                                  placeholder-text="{{getName()}}"
+                                 event-signal="ciEventObj.event"
                                  menu-options="sortedFields"
-                                 small-options="{tooltipText: '{{getName()}}'}"
+                                 small-options="{notNull: options.notNull, tooltipText: '{{getName()}}'}"
                                  sorted="sorted"
                                  on-change-callback="changeHandler()"
                                  style="{{inputBackgroundColor()}}">

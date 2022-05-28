@@ -22,7 +22,7 @@
                 scope.sortByCol = false;
                 scope.sortRowsReverse = false;
 
-                scope.setSortByCol = function (colOrder) {
+                /* scope.setSortByCol = function (colOrder) {
 
                     if (colOrder === scope.sortByCol) {
                         scope.sortRowsReverse = !scope.sortRowsReverse;
@@ -32,7 +32,7 @@
                         scope.sortRowsReverse = false;
                     }
 
-                }
+                } */
 
                 scope.sortRowsByCol = function (row) {
 
@@ -152,6 +152,12 @@
                     scope.sortValueOrder = sortSettings.valueOrder
 
                 });
+
+                scope.gtEventService.addEventListener(gtEvents.REDRAW_TABLE, function () {
+
+					scope.gridTableData = scope.gtDataService.getTableData();
+
+				});
 
             }
         }

@@ -57,12 +57,12 @@
                     if (cellMethods.onOpen) {
                         cellMethods.onOpen(scope.row.order, scope.column.order, scope.gtDataService, scope.gtEventService);
                     }
-                }
+                };
 
                 scope.unselectOptions = function () {
-                    scope.column.settings.value = null
+                    scope.column.settings.value = null;
                     scope.onCellValueChange();
-                }
+                };
 
                 scope.cellWithPopup = function () {
                     return cellsWithPopup.includes(scope.column.cellType);
@@ -140,9 +140,14 @@
                     multiselectorElem.click();
                 };
 
-                scope.onButtonClick = function () {
+                scope.onButtonClick = function ($event) {
                     if (scope.column.methods && typeof scope.column.methods.onClick === 'function') {
-                        scope.column.methods.onClick();
+
+						var rowData = {key: scope.row.key, order: scope.row.order};
+						var colData = {key: scope.column.key, order: scope.column.order};
+
+						scope.column.methods.onClick($event, rowData, colData, scope.gtDataService, scope.gtEventService);
+
                     }
                 }
 

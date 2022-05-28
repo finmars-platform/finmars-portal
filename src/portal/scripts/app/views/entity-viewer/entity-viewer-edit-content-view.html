@@ -31,7 +31,7 @@
                  on-save="vm.onPopupSaveCallback()">
 
                 <text-input label="{{vm.entityTypeSlug()}}"
-                            model="vm.getEntityPropertyByDefault()"
+                            model="vm.getShowByDefaultEntityValue()"
                             placeholder-text="{{vm.getPlaceholderByDefault()}}"
                             event-signal="vm.fixedAreaPopup.event"
                             small-options="{dialogParent: '.dialog-containers-wrap', readonly: true}"
