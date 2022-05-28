@@ -181,16 +181,16 @@
 
                 };
 
-                if (vm.isCreateNew) { // There is no layout yet, so create one
+                if (vm.formLayoutIsNew) { // There is no layout yet, so create one
 
-                    vm.formLayoutIsNew = true;
                     vm.ui = {
                         data: {}
                     }
 
                     resolveLayout();
 
-                } else {
+                }
+                else {
 
                     // for complex transaction edit layout stored inside transaction type object
                     if (vm.entityType === "complex-transaction") {
@@ -217,7 +217,8 @@
 
                         }
 
-                    } else { // For not complex-transaction entities
+                    }
+                    else {
 
                         if (vm.layoutId || vm.layoutId === 0) {
 
@@ -234,11 +235,10 @@
 
                                 if (data.results.length) {
                                     vm.ui = data.results[0];
-                                }
 
-                                // There is no layout yet, so create one
-                                else {
-                                    vm.formLayoutIsNew = true;
+                                }
+                                else { // There is no layout yet, so create one
+                                	vm.formLayoutIsNew = true;
                                     vm.ui = {
                                         data: {}
                                     }
@@ -658,44 +658,40 @@
 
                 vm.ui.data.fixedArea = JSON.parse(JSON.stringify(vm.fixedArea));
 
+                var onSavingEnd = function (responseData) {
+
+					vm.processing = false;
+                	$scope.$apply(); // update scope in case of error from backend
+
+					var layoutId = vm.formLayoutIsNew ? responseData.id : vm.ui.id;
+
+					$mdDialog.hide({
+						status: 'agree',
+						data: {
+							id: layoutId,
+							user_code: vm.ui.user_code,
+							name: vm.ui.name,
+							is_default: vm.ui.is_default
+						}
+                    });
+
+                };
 
                 if (vm.entityType === "complex-transaction") {
 
                     if (vm.instanceId || vm.instanceId === 0) {
-                        transactionTypeService.patch(vm.instanceId, {book_transaction_layout: vm.ui}).then(function (data){
-
-                            vm.processing = false;
-
-                            $scope.$apply();
-                            $mdDialog.hide({status: 'agree'});
-
-                        });
+                        transactionTypeService.patch(vm.instanceId, {book_transaction_layout: vm.ui}).then(onSavingEnd);
                     } else {
                         toastNotificationService.error("Id of transaction type not found");
-                        vm.processing = false;
                     }
 
                 } else {
 
                     if (vm.formLayoutIsNew) {
-                        uiService.createEditLayout(vm.entityType, vm.ui).then(function (data){
-
-                            vm.processing = false;
-
-                            $scope.$apply();
-                            $mdDialog.hide({status: 'agree'});
-
-                        });
+                        uiService.createEditLayout(vm.entityType, vm.ui).then(onSavingEnd);
 
                     } else {
-                        uiService.updateEditLayout(vm.ui.id, vm.ui).then(function (data){
-
-                            vm.processing = false;
-
-                            $scope.$apply();
-                            $mdDialog.hide({status: 'agree'});
-
-                        });
+                        uiService.updateEditLayout(vm.ui.id, vm.ui).then(onSavingEnd);
                     }
 
                 }
@@ -717,8 +713,6 @@
                         }
                     }
                 });
-
-
 
             }
 
@@ -1088,7 +1082,8 @@
                             }
                         }
 
-                    } else if (field.attribute_class === 'userInput') {
+                    }
+                    else if (field.attribute_class === 'userInput') {
 
                         for (u = 0; u < vm.userInputs.length; u = u + 1) {
 
@@ -1134,6 +1129,51 @@
 
         };
 
+        var fixTabSockets = function (tab) {
+
+			tab.layout.fields.forEach(function (field, fieldIndex) {
+
+				if (field.type === 'table') {
+
+					var rowsKeys = field.options.tableData.map(function (row) {
+						return row.key;
+					});
+
+					var defaultTableSettings = vm.getTableDefaultSettings(field.attribute.key);
+					defaultTableSettings.tableData.forEach(function (row, index) {
+
+						if (rowsKeys.indexOf(row.key) < 0) {
+							row.to_show = false;
+							field.options.tableData.splice(index, 0, row);
+						}
+
+					});
+
+				}
+
+			});
+
+			return tab;
+
+		};
+
+        var fixSocketsInsideLayout = function () {
+
+        	vm.tabs.forEach(function (tab, index) {
+				vm.tabs[index] = fixTabSockets(tab);
+			});
+
+			if (vm.fixedArea.isActive) {
+				vm.fixedArea = fixTabSockets(vm.fixedArea);
+			}
+
+		};
+
+        /**
+		 * Get items for sockets of form's layout
+		 *
+		 * @returns {Promise<undefined>}
+		 */
         vm.getItems = function () {
 
             return new Promise((resolve, reject) => {
@@ -1514,14 +1554,20 @@
             }
 
         };
-
+		/**
+		 *
+		 * @param attrKey {string}
+		 * @returns {Object|null}
+		 */
         vm.getTableDefaultSettings = function (attrKey) {
 
             const entityTablesData = entityDataConstructorService.dataOfAttributes[vm.entityType];
 
             if (entityTablesData && entityTablesData.hasOwnProperty(attrKey)) {
-                return entityTablesData[attrKey];
+                return JSON.parse(JSON.stringify(entityTablesData[attrKey]));
             }
+
+            return null;
 
         }
 
@@ -2040,7 +2086,7 @@
             window.addEventListener('resize', vm.setTabsHolderHeight);
 
             if (data.isCreateNew) {
-                vm.isCreateNew = data.isCreateNew
+				vm.formLayoutIsNew = data.isCreateNew;
             }
 
             vm.getLayout().then(function () {
@@ -2057,6 +2103,7 @@
 
                 Promise.all([vm.getItems(), palettesPromise]).then(function () {
 
+					fixSocketsInsideLayout();
                     vm.createFieldsTree();
 
                     if (vm.fixedArea.isActive) {

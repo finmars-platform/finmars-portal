@@ -18,7 +18,7 @@
 		vm.evEditorDataService = $scope.$parent.vm.evEditorDataService;
 		vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
 
-        vm.attrs = [];
+        vm.instrumentAttrTypes = [];
         vm.instrumentTypeAttrs = []
 
         if (!vm.entity.instrument_attributes) {
@@ -31,25 +31,31 @@
         };
 
         const mapAttrsFromEntity = (attrs, entityAttrs) => {
-            attrs.forEach(it => it.___classifierName = null)
+
+        	attrs.forEach(it => {
+        		it.___classifierName = null
+			});
 
             const deletedAttrs = []; // Attrs which deleted in user attributes, but it remained in entity.
 
             entityAttrs.forEach(entityAttr => {
-                const user_code = entityAttr.attribute_type_user_code;
+
+            	const user_code = entityAttr.attribute_type_user_code;
                 const attr = attrs.find(attr => attr.user_code === user_code);
                 const value = entityEditorHelper.instrumentTypeAttrValueMapper(entityAttr);
 
-                const additionalProps = {
+                let additionalProps = {
                     value,
-                    ___classifierName: entityAttr.value_type === 30 && attr.value ? attr.value : null,
                 };
+
+                if (entityAttr.value_type === 30) additionalProps.___classifierName = attr.value ? attr.value : '';
 
                 if (attr) {
                     Object.assign(attr, additionalProps);
                 } else {
                     deletedAttrs.push({user_code, name: user_code, ...entityAttr, ...additionalProps, ___isDisabled: true});
                 }
+
             })
 
             return attrs
@@ -70,7 +76,7 @@
 
                 const instrumentAttrs = data.results;
 
-                vm.attrs = mapAttrsFromEntity(instrumentAttrs, vm.entity.instrument_attributes);
+				vm.instrumentAttrTypes = mapAttrsFromEntity(instrumentAttrs, vm.entity.instrument_attributes);
 
                 vm.readyStatus.attrs = true;
 
@@ -118,7 +124,7 @@
 
         vm.attrChange = function () {
 
-            vm.entity.instrument_attributes = vm.attrs
+            vm.entity.instrument_attributes = vm.instrumentAttrTypes
                 .filter(attr => !!attr.value)
                 .map(attr => {
                     const result = {
@@ -149,6 +155,11 @@
                 });
 
         };
+
+        vm.clearSelector = function (attr) {
+			attr.value = null;
+			vm.attrChange();
+		};
 
         const init = function () {
 
