@@ -1191,6 +1191,24 @@
 			}
 		},
 		{
+			"name": "Set Complex Transaction User Field",
+			"description": "set_complex_transaction_user_field([field_key], [value])) :: [Result: None]<br/><br/>[input]: String - field key name<br/>[Result: default input]: String, number, date or entity - as a default input of transaction type<br/><br/>Examples:<br/>get_ttype_default_input('price')<br/>get_ttype_default_input('currency')<br/>get_ttype_default_input('currency').user_code - attribute [user_code] of default currency<br/>get_ttype_default_input('maturity_date')<br/>get_ttype_default_input('notes')",
+			"groups": "transaction",
+			"func": "set_complex_transaction_user_field([field_key], [value])",
+			"validation": {
+				"func": "set_complex_transaction_user_field([field_key], [value])"
+			}
+		},
+		{
+			"name": "Set Complex Transaction Form Data",
+			"description": "set_complex_transaction_form_data([key], [value])) :: [Result: None]<br/><br/>[key]: String - input name<br/>[Result: default input]: String, number, date or entity - as a default input of transaction type<br/><br/>Examples:<br/>get_ttype_default_input('price')<br/>get_ttype_default_input('currency')<br/>get_ttype_default_input('currency').user_code - attribute [user_code] of default currency<br/>get_ttype_default_input('maturity_date')<br/>get_ttype_default_input('notes')",
+			"groups": "transaction",
+			"func": "set_complex_transaction_form_data([key], [value])",
+			"validation": {
+				"func": "set_complex_transaction_form_data([key], [value])"
+			}
+		},
+		{
 			"name": "Get relation by user code",
 			"description": "get_relation_by_user_code([content_type], [user_code])) :: [Result: relation object]<br/><br/>[content_type]: String - input name<br/>[user_code]: String - relation user code<br/>[[Result: relation object]: String, number, date or entity<br/><br/>Examples:<br/>get_relation_by_user_code('currencies.currency', 'USD')<br/>get_relation_by_user_code('instruments.instrumenttype', 'bonds')<br/>get_relation_by_user_code('currencies.currency', 'USD').user_code - attribute [user_code]",
 			"groups": "transaction",
