@@ -183,9 +183,10 @@
             column.key.indexOf("attributes.") === 0) {  // for dynamic attributes
 
             var daKey = column.key.slice(11);
-            cellText = evHelperService.getValueFromDynamicAttrsByUserCode(daKey, flatListItem.attributes);
 
-            if (cellText || cellText === 0) {
+			cellText = evHelperService.getValueFromDynamicAttrsByUserCode(daKey, flatListItem.attributes);
+
+            /* if (cellText || cellText === 0) {
 
                 if (typeof cellText !== 'string') {
                     cellText = String(cellText);
@@ -193,7 +194,17 @@
 
             } else {
                 cellText = '';
-            }
+            } */
+
+			if (!cellText && cellText !== 0) {
+				cellText = '';
+
+			} else if (typeof cellText === 'object' && cellText.hasOwnProperty('classifier')) {
+				cellText = cellText.classifier_object ? cellText.classifier_object.name : '';
+
+			} else if (typeof cellText !== 'string') {
+				cellText = String(cellText);
+			}
 
         } else if (flatListItem[column.key]) {
 

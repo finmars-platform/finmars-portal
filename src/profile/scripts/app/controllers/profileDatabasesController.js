@@ -105,6 +105,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
                 vm.openProcessing = false;
                 console.log("testing_opendatabase activateDatabase", data);
+				// This code may not fire because of websocket reaction to 'master_user_change' inside shellController.js
                 if (data.base_api_url) {
                     console.log("testing_opendatabase activateDatabase 1", data);
                     window.document.title = item.name + ' | Finmars'
@@ -120,7 +121,8 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
                     console.log("testing_opendatabase activateDatabase 1.1", data);
                     $state.go('app.portal.home');
 
-                } else {
+                }
+				else {
                     console.log("testing_opendatabase activateDatabase 2", data);
                     $scope.$apply();
 
