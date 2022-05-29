@@ -298,6 +298,26 @@ const checkUsernameUniqueness = function (username) {
 	});
 
 };
+
+const transferOwner = function (data) {
+
+	var authorizerUrl = baseUrlService.getAuthorizerUrl();
+
+	return xhrService.fetch(authorizerUrl + '/master-user-change-owner/', {
+		method: 'POST',
+		body: JSON.stringify(data),
+		credentials: 'include',
+		headers: {
+			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			Accept: 'application/json',
+			'Content-type': 'application/json'
+		}
+	});
+
+};
+
+
+
 //</editor-fold>
 
 //<editor-fold desc="Master user">
@@ -768,7 +788,10 @@ export default {
 
 	inviteUser: inviteUser,
 	getInvitesList: getInvitesList,
-	deleteInviteByKey: deleteInviteByKey
+	deleteInviteByKey: deleteInviteByKey,
+
+
+	transferOwner: transferOwner
 
 }
 

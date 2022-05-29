@@ -7,13 +7,17 @@
     // var authorizerService = require('../../services/authorizerService');
     // var usersService = require('../../services/usersService');
 
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+
     module.exports = function settingsMembersAndGroupsController($scope, $mdDialog, authorizerService, globalDataService) {
 
         var vm = this;
 
         vm.members = [];
+        vm.ownershipMembers = []
         vm.groups = [];
 		vm.currentMasterUserStatus = null;
+		vm.targetMember = null;
 
         // vm.readyStatus = {content: false, masterUser: false};
 		vm.readyStatus = {content: false};
@@ -21,7 +25,8 @@
 
         vm.processing = false;
 
-        var currentMasterUser;
+        vm.currentMasterUser;
+        vm.currentMember;
 
         vm.getData = function () {
 
@@ -31,6 +36,11 @@
 
                 vm.members = [];
                 vm.members = data.results;
+
+                vm.ownershipMembers = vm.members.filter(function (item){
+                    return item.id !== vm.currentMember.id
+                })
+
 
                 membersAndGroupsService.getGroupsList().then(function (data) {
 
@@ -85,25 +95,21 @@
             });
         };
 
-        vm.getMasterUser = function () {
+        vm.getCurrentMasterUser = function () {
 
-            /* vm.readyStatus.masterUser = false;
+			vm.currentMasterUser = globalDataService.getMasterUser();
+			
+			console.log('currentMasterUser', vm.currentMasterUser);
 
-			authorizerService.getCurrentMasterUser().then(function (data) {
-
-                console.log('getMasterUser data', data);
-
-                vm.masterUser = data;
-
-                vm.readyStatus.masterUser = true;
-
-                $scope.$apply();
-
-            }) */
-			currentMasterUser = globalDataService.getMasterUser();
-			// vm.currentMasterUserStatus = currentMasterUser.status;
 
         };
+
+        vm.getCurrentMember = function (){
+
+            vm.currentMember = globalDataService.getMember();
+
+            console.log('currentMember', vm.currentMember);
+        }
 
         vm.saveMasterUser = function ($event) {
 
@@ -324,11 +330,33 @@
 
         vm.init = function () {
 
+            vm.getCurrentMasterUser()
+            vm.getCurrentMember()
+
             vm.getData();
             // vm.getMasterUser();
 
 
         };
+        
+        vm.transferOwnership = function () {
+
+            vm.processing = true;
+
+            authorizerService.transferOwner({
+                'target_member_username': vm.targetMember.username
+            }).then(function (data){
+                
+                vm.getData();
+
+                toastNotificationService.success("Ownership transferred successfully")
+
+                vm.processing = false;
+                $scope.$apply();
+
+            })
+
+        }
 
         vm.init();
 
