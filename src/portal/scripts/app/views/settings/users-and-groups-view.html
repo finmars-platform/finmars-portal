@@ -179,5 +179,27 @@
 
         </md-tab>
         <!--</editor-fold>-->
+
+        <md-tab label="Ownership" data-ng-if="vm.currentMasterUser.is_owner">
+
+            <div data-ng-if="vm.readyStatus.content">
+
+                <div>
+                    Transfer ownership to
+                </div>
+
+                <md-select data-ng-model="vm.targetMember">
+                    <md-option data-ng-repeat="item in vm.ownershipMembers" ng-value="item">
+                        {{item.name}}
+                    </md-option>
+                </md-select>
+
+                <md-button class="md-raised {{vm.processing || !vm.targetMember ? 'disabled-btn' : ''}}"  data-ng-click="vm.transferOwnership()">Transfer</md-button>
+
+            </div>
+
+        </md-tab>
     </md-tabs>
 </div>
+
+
