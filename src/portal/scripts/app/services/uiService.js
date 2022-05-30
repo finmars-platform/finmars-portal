@@ -396,6 +396,32 @@
         // return uiRepository.getDefaultListLayout(entityType);
     };
 
+	const autosaveListLayout = function (layout) {
+
+		layout = JSON.parse(angular.toJson(layout));
+
+		delete layout.id;
+
+		const userCodeText = layout.content_type.replace('.', '_');
+		layout.user_code = 'system_autosave_' + userCodeText;
+
+
+
+	};
+
+	const getAutosaveListLayout = function (entityType) {
+
+		return new Promise (function (resolve, reject) {
+
+			const contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+			const cachedLayout = localStorageService.getDefaultLayout(contentType);
+
+
+
+		});
+
+	};
+
     /*let getActiveListLayout = function (entity) {
         return uiRepository.getActiveListLayout(entity);
     };*/

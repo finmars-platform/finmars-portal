@@ -741,7 +741,7 @@ export default (function () {
 
 	//</editor-fold desc="GROUP TABLE">
 
-	portal.directive('mainHeader', ['$mdDialog', '$state', '$transitions', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'globalDataService', mainHeaderDirective]);
+	portal.directive('mainHeader', ['$mdDialog', '$state', '$transitions', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'usersService', 'globalDataService', mainHeaderDirective]);
 	portal.directive('evFieldResolver', [require('./app/directives/entityViewerFieldResolverDirective')]);
 	portal.directive('evSelectorResolver', [require('./app/directives/entityViewerSelectorResolverDirective')]);
 	portal.directive('ismFieldResolver', ['$mdDialog', require('./app/directives/instrumentSchemeManagerFieldResolverDirective')]);

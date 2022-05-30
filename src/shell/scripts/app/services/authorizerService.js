@@ -99,7 +99,7 @@ export default function (globalDataService) {
 		return new Promise ((resolve, reject) => {
 
 			 authorizerRepository.getMe().then(userData => {
-
+				userData.layouts_autosave = true;
 				globalDataService.setUser(userData);
 				resolve(userData);
 

@@ -3,8 +3,17 @@
     <div class="toolbar-wrapper flex-row fc-space-between">
 
         <div class="md-toolbar-tools flex-row fc-start fi-center">
-            <div ng-if="openedInside === 'portal'">
-                <h4 class="header-breadcrumbs" ng-bind="currentLocation"></h4>
+            <div ng-if="openedInside === 'portal'" class="flex-row flex-i-center">
+                <div class="header-breadcrumbs">
+                    <h4 ng-bind="currentLocation" class="m-r-20"></h4>
+                </div>
+
+                <md-input-container ng-if="showAutosaveLayoutCheckbox" class="display-block p-0 m-0 layouts-autosave-toggle-container">
+                    <md-checkbox ng-model="member.data.autosave_layouts"
+                                 ng-change="onAutosaveChange()"
+                                 ng-model-options="{debounce: 1000}"
+                                 class="">Autosave</md-checkbox>
+                </md-input-container>
             </div>
         </div>
 
