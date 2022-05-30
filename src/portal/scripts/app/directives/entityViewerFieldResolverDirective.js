@@ -367,6 +367,7 @@
 
 								if (scope.fieldsDataStore['fieldKeys']) {
 									delete scope.fieldsDataStore['fieldKeys']['currencies.currency']
+									delete scope.fieldsDataStore['fieldKeys']['instruments.instrument']
 								}
 
 

@@ -240,8 +240,14 @@
 
                         } else {
 
+                            stylePreset = '';
+                            scope.error = '';
+
                             scope.model = data.result_id;
                             scope.itemObject = {id: data.result_id, name: item.issueName, user_code: item.issueName}
+
+                            scope.itemName = item.issueName;
+                            scope.inputText = item.issueName;
 
                             scope.valueIsValid = true;
 
