@@ -3,18 +3,18 @@
  */
 (function () {
 
-	'use strict';
+    'use strict';
 
-	var evEditorEvents = require('../services/ev-editor/entityViewerEditorEvents');
+    var evEditorEvents = require('../services/ev-editor/entityViewerEditorEvents');
 
-	var fieldResolverService = require('../services/fieldResolverService');
-	var bindFieldsHelper = require('../helpers/bindFieldsHelper');
-	var metaService = require('../services/metaService');
-	var tagService = require('../services/tagService');
-	var metaContentTypesService = require('../services/metaContentTypesService');
-	var metaHelper = require('../helpers/meta.helper');
+    var fieldResolverService = require('../services/fieldResolverService');
+    var bindFieldsHelper = require('../helpers/bindFieldsHelper');
+    var metaService = require('../services/metaService');
+    var tagService = require('../services/tagService');
+    var metaContentTypesService = require('../services/metaContentTypesService');
+    var metaHelper = require('../helpers/meta.helper');
 
-	module.exports = function () {
+    module.exports = function () {
 
         return {
             require: '^^bindFieldControl',
@@ -42,28 +42,28 @@
 
                 scope.sorted = true;
 
-				scope.modelObj = {
-					model: null
-				};
+                scope.modelObj = {
+                    model: null
+                };
 
                 scope.ciEventObj = {
                     event: {}
                 };
 
-                    scope.inputTextObj = {
-                        value: null
-                    };
+                scope.inputTextObj = {
+                    value: null
+                };
 
                 var fieldsDataIsLoaded = false;
-				var eventListenersIndexesData = {};
+                var eventListenersIndexesData = {};
                 // console.log('scope.item.name', scope.item);
                 // console.log('scope.entity', scope.entity);
 
-                    if (['counterparties', 'accounts', 'responsibles', 'transaction_types', 'tags'].indexOf(scope.item.key) !== -1) {
-                        scope.type = 'multiple-ids';
-                    }
+                if (['counterparties', 'accounts', 'responsibles', 'transaction_types', 'tags'].indexOf(scope.item.key) !== -1) {
+                    scope.type = 'multiple-ids';
+                }
 
-                    // console.log('scope.type', scope.type);
+                // console.log('scope.type', scope.type);
 
                 scope.isSpecialSearchRelation = function () {
                     return [
@@ -105,473 +105,473 @@
                     return valueEntity;
                 };
 
-				/*scope.resolveMultiple = function () {
-					if (scope.entityType !== 'instrument-type') { // refactor this
-						return true
-					}
+                /*scope.resolveMultiple = function () {
+                    if (scope.entityType !== 'instrument-type') { // refactor this
+                        return true
+                    }
 
-					if (scope.item.key == 'tags') {
-						return true;
-					}
+                    if (scope.item.key == 'tags') {
+                        return true;
+                    }
 
-					return false;
-				};*/
+                    return false;
+                };*/
 
-				scope.getFieldsGrouped = function () {
+                scope.getFieldsGrouped = function () {
 
-					if (metaService.getFieldsWithTagGrouping().indexOf(scope.item.key) !== -1) {
+                    if (metaService.getFieldsWithTagGrouping().indexOf(scope.item.key) !== -1) {
 
-						var entityType = scope.item.key.replace('_', '-'); // refactor this
+                        var entityType = scope.item.key.replace('_', '-'); // refactor this
 
-						if (entityType === 'transaction-types') {
-							entityType = 'transaction-type'
-						}
+                        if (entityType === 'transaction-types') {
+                            entityType = 'transaction-type'
+                        }
 
-						if (scope.item.key === 'type') {
-							entityType = 'account-type';
-						}
+                        if (scope.item.key === 'type') {
+                            entityType = 'account-type';
+                        }
 
-						console.log('getFieldsGrouped.entityType', entityType);
+                        console.log('getFieldsGrouped.entityType', entityType);
 
-						tagService.getListByContentType(entityType).then(function (data) { //refactor entityType getter
-							scope.tags = data.results;
+                        tagService.getListByContentType(entityType).then(function (data) { //refactor entityType getter
+                            scope.tags = data.results;
 
-							scope.groups = bindFieldsHelper.groupFieldsByTagsWithDuplicates(scope.fields, scope.tags);
+                            scope.groups = bindFieldsHelper.groupFieldsByTagsWithDuplicates(scope.fields, scope.tags);
 
-							scope.readyStatus.content = true;
+                            scope.readyStatus.content = true;
 
-							scope.$apply();
-						})
-					}
-				};
+                            scope.$apply();
+                        })
+                    }
+                };
 
-				scope.searchTerm = '';
+                scope.searchTerm = '';
 
-				scope.resolveSort = function (field) {
-					if (field) {
-						if (field.hasOwnProperty('name')) {
-							return '-' + field.name;
-						}
-						if (field.hasOwnProperty('user_code')) {
-							return '-' + field.user_code;
-						}
-						if (field.hasOwnProperty('public_name')) {
-							return '-' + field.public_name;
-						}
-					}
-				};
+                scope.resolveSort = function (field) {
+                    if (field) {
+                        if (field.hasOwnProperty('name')) {
+                            return '-' + field.name;
+                        }
+                        if (field.hasOwnProperty('user_code')) {
+                            return '-' + field.user_code;
+                        }
+                        if (field.hasOwnProperty('public_name')) {
+                            return '-' + field.public_name;
+                        }
+                    }
+                };
 
-				scope.checkComplexEntityType = function () {
-					if (metaService.getFieldsWithTagGrouping().indexOf(scope.item.key) !== -1) {
-						return true;
-					}
-					return false;
-				};
+                scope.checkComplexEntityType = function () {
+                    if (metaService.getFieldsWithTagGrouping().indexOf(scope.item.key) !== -1) {
+                        return true;
+                    }
+                    return false;
+                };
 
-				scope.inputBackgroundColor = function () {
-					var backgroundColor = '';
+                scope.inputBackgroundColor = function () {
+                    var backgroundColor = '';
 
-					if (scope.options.backgroundColor) {
-						backgroundColor = 'background-color: ' + scope.options.backgroundColor + ';';
-					}
+                    if (scope.options.backgroundColor) {
+                        backgroundColor = 'background-color: ' + scope.options.backgroundColor + ';';
+                    }
 
-					return backgroundColor;
-				};
+                    return backgroundColor;
+                };
 
-				scope.getName = function () {
-					if (scope.item.options && scope.item.options.fieldName) {
-						return scope.item.options.fieldName;
+                scope.getName = function () {
+                    if (scope.item.options && scope.item.options.fieldName) {
+                        return scope.item.options.fieldName;
 
-					} else if (scope.item.hasOwnProperty('verbose_name')) {
-						return scope.item.verbose_name;
+                    } else if (scope.item.hasOwnProperty('verbose_name')) {
+                        return scope.item.verbose_name;
 
-					}
+                    }
 
-					return scope.item.name
-				};
+                    return scope.item.name
+                };
 
-				scope.bindFormFields = function () {
+                scope.bindFormFields = function () {
 
-					var result = '';
+                    var result = '';
 
-				// var id = scope.entity[scope.fieldKey];
-				var id = scope.modelObj.model;
+                    // var id = scope.entity[scope.fieldKey];
+                    var id = scope.modelObj.model;
 
-					if (id) {
+                    if (id) {
 
-						var i;
-						var attr;
+                        var i;
+                        var attr;
 
-						for (i = 0; i < scope.fields.length; i = i + 1) {
-							if (id === scope.fields[i].id) {
-								attr = scope.fields[i]
-							}
-						}
+                        for (i = 0; i < scope.fields.length; i = i + 1) {
+                            if (id === scope.fields[i].id) {
+                                attr = scope.fields[i]
+                            }
+                        }
 
-						if (attr) {
-							result = attr.name;
-						}
+                        if (attr) {
+                            result = attr.name;
+                        }
 
-						if (scope.item.options && scope.item.options.fieldsForm) {
+                        if (scope.item.options && scope.item.options.fieldsForm) {
 
-							var resultCaption = '';
+                            var resultCaption = '';
 
-							scope.item.options.fieldsForm.forEach(function (item, index) {
-								if (index + 1 === scope.item.options.fieldsForm.length) {
-									resultCaption = resultCaption + attr[item];
-								} else {
-									resultCaption = resultCaption + attr[item] + ' / ';
-								}
-							});
+                            scope.item.options.fieldsForm.forEach(function (item, index) {
+                                if (index + 1 === scope.item.options.fieldsForm.length) {
+                                    resultCaption = resultCaption + attr[item];
+                                } else {
+                                    resultCaption = resultCaption + attr[item] + ' / ';
+                                }
+                            });
 
-							result = resultCaption;
+                            result = resultCaption;
 
-						}
+                        }
 
 
-					} else {
-						result = scope.getName();
-					}
+                    } else {
+                        result = scope.getName();
+                    }
 
-					return result
-				};
+                    return result
+                };
 
-				scope.bindListFields = function (field) {
+                scope.bindListFields = function (field) {
 
-					if (scope.item.options && scope.item.options.fieldsList) {
+                    if (scope.item.options && scope.item.options.fieldsList) {
 
-						var resultCaption = '';
+                        var resultCaption = '';
 
-						scope.item.options.fieldsList.forEach(function (item, index) {
+                        scope.item.options.fieldsList.forEach(function (item, index) {
 
-							if (index + 1 === scope.item.options.fieldsList.length) {
-								resultCaption = resultCaption + field[item];
-							} else {
-								resultCaption = resultCaption + field[item] + ' / ';
-							}
+                            if (index + 1 === scope.item.options.fieldsList.length) {
+                                resultCaption = resultCaption + field[item];
+                            } else {
+                                resultCaption = resultCaption + field[item] + ' / ';
+                            }
 
-						});
+                        });
 
-						return resultCaption;
-					}
+                        return resultCaption;
+                    }
 
-					return field.name;
-				};
+                    return field.name;
+                };
 
-				scope.getListWithBindFields = function (items) {
-					return items.map(function (item) {
-						/* return {
-							...item,
-							bindFieldsName: scope.bindListFields(item)
-						} */
-						item.bindFieldsName = scope.bindListFields(item);
-						return item;
-					})
-				};
+                scope.getListWithBindFields = function (items) {
+                    return items.map(function (item) {
+                        /* return {
+                            ...item,
+                            bindFieldsName: scope.bindListFields(item)
+                        } */
+                        item.bindFieldsName = scope.bindListFields(item);
+                        return item;
+                    })
+                };
 
-				scope.getListWithSchemeName = function (items) {
-					return items.map(function (item) {
-						return {
-							...item,
-							name: item.user_code
-						}
-					})
-				}
+                scope.getListWithSchemeName = function (items) {
+                    return items.map(function (item) {
+                        return {
+                            ...item,
+                            name: item.user_code
+                        }
+                    })
+                }
 
                 scope.bindMCField = function (model) {
                     /* if (scope.entity[scope.fieldKey] && scope.entity[scope.fieldKey].length > 0) {
                         return '[' + scope.entity[scope.fieldKey].length + '] selected';
                     } */
-					if (scope.modelObj.model && scope.modelObj.model.length > 0) {
-						return '[' + scope.modelObj.model.length + '] selected';
+                    if (scope.modelObj.model && scope.modelObj.model.length > 0) {
+                        return '[' + scope.modelObj.model.length + '] selected';
 
-					} else {
+                    } else {
                         return scope.getName();
                     }
                 };
 
-				scope.getInputTextForEntitySearch = function () {
+                scope.getInputTextForEntitySearch = function () {
 
-					var result = '';
+                    var result = '';
 
-				// var id = scope.entity[scope.fieldKey];
-				var id = scope.modelObj.model;
+                    // var id = scope.entity[scope.fieldKey];
+                    var id = scope.modelObj.model;
 
-				if (scope.fields && scope.fields.length) {
+                    if (scope.fields && scope.fields.length) {
 
-						for (var i = 0; i < scope.fields.length; i = i + 1) {
+                        for (var i = 0; i < scope.fields.length; i = i + 1) {
 
-							if (scope.fields[i].id === id) {
+                            if (scope.fields[i].id === id) {
 
-								if (scope.fields[i].short_name) {
-									result = scope.fields[i].short_name;
+                                if (scope.fields[i].short_name) {
+                                    result = scope.fields[i].short_name;
 
-								} else if (scope.fields[i].name) {
-									result = scope.fields[i].name;
+                                } else if (scope.fields[i].name) {
+                                    result = scope.fields[i].name;
 
-								} else {
-									result = scope.fields[i].public_name;
-								}
-							}
+                                } else {
+                                    result = scope.fields[i].public_name;
+                                }
+                            }
 
-							if (result) {
-								break;
-							}
+                            if (result) {
+                                break;
+                            }
 
-						}
+                        }
 
-					}
+                    }
 
-					console.log('scope.fields', scope.fields)
-					console.log('getInputTextForEntitySearch', result)
+                    console.log('scope.fields', scope.fields)
+                    console.log('getInputTextForEntitySearch', result)
 
-					return result;
-				};
+                    return result;
+                };
 
-				//scope.getModelKey = scope.$parent.getModelKey;
-				scope.fieldKey = scope.$parent.vm.fieldKey;
+                //scope.getModelKey = scope.$parent.getModelKey;
+                scope.fieldKey = scope.$parent.vm.fieldKey;
 
-				if (scope.item.value_entity) {
-					scope.crudEntityType = scope.item.value_entity;
-				} else {
-					scope.crudEntityType = scope.item.entity;
-				}
+                if (scope.item.value_entity) {
+                    scope.crudEntityType = scope.item.value_entity;
+                } else {
+                    scope.crudEntityType = scope.item.entity;
+                }
 
-				scope.checkForCrudSelects = function () {
-					if (['group', 'subgroup'].indexOf(scope.fieldKey) !== -1) {
-						return true;
-					}
+                scope.checkForCrudSelects = function () {
+                    if (['group', 'subgroup'].indexOf(scope.fieldKey) !== -1) {
+                        return true;
+                    }
 
-					return false
-				};
+                    return false
+                };
 
-				scope.getData = function () {
+                scope.getData = function () {
 
-					return new Promise(function (resolve, reject) {
+                    return new Promise(function (resolve, reject) {
 
-						if (!fieldsDataIsLoaded) {
+                        if (!fieldsDataIsLoaded) {
 
-							var options = {};
+                            var options = {};
 
-							if (scope.options.entityType) {
-								options.entityType = scope.options.entityType;
-							}
+                            if (scope.options.entityType) {
+                                options.entityType = scope.options.entityType;
+                            }
 
-							if (scope.options.key) {
-								options.key = scope.options.key;
-							}
+                            if (scope.options.key) {
+                                options.key = scope.options.key;
+                            }
 
-							if (scope.entityType === 'complex-transaction') {
+                            if (scope.entityType === 'complex-transaction') {
 
-								console.log('scope.fieldsDataStore', scope.fieldsDataStore);
+                                console.log('scope.fieldsDataStore', scope.fieldsDataStore);
 
-								if (scope.fieldsDataStore['fieldKeys']) {
-									delete scope.fieldsDataStore['fieldKeys']['currencies.currency']
-									delete scope.fieldsDataStore['fieldKeys']['instruments.instrument']
-								}
+                                if (scope.fieldsDataStore['fieldKeys']) {
+                                    delete scope.fieldsDataStore['fieldKeys']['currencies.currency']
+                                    delete scope.fieldsDataStore['fieldKeys']['instruments.instrument']
+                                }
 
 
-								fieldResolverService.getFieldsByContentType(scope.item.content_type, options, scope.fieldsDataStore).then(function (res) {
+                                fieldResolverService.getFieldsByContentType(scope.item.content_type, options, scope.fieldsDataStore).then(function (res) {
 
-									console.log('res', res);
+                                    console.log('res', res);
 
-									scope.type = res.type;
-									scope.fields = res.data;
-									scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
+                                    scope.type = res.type;
+                                    scope.fields = res.data;
+                                    scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
 
-									if ('price_download_scheme') {
-										scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
-									}
+                                    if ('price_download_scheme') {
+                                        scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
+                                    }
 
-									scope.readyStatus.content = true;
-									fieldsDataIsLoaded = true;
+                                    scope.readyStatus.content = true;
+                                    fieldsDataIsLoaded = true;
 
-									scope.getFieldsGrouped();
+                                    scope.getFieldsGrouped();
 
-									resolve();
-									// scope.$apply();
+                                    resolve();
+                                    // scope.$apply();
 
 
-								})
-							} else {
+                                })
+                            } else {
 
 
-								fieldResolverService.getFields(scope.item.key, options, scope.fieldsDataStore).then(function (res) {
+                                fieldResolverService.getFields(scope.item.key, options, scope.fieldsDataStore).then(function (res) {
 
-									scope.type = res.type;
-									scope.fields = res.data;
-									scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
+                                    scope.type = res.type;
+                                    scope.fields = res.data;
+                                    scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
 
-									if ('price_download_scheme') {
-										scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
-									}
+                                    if ('price_download_scheme') {
+                                        scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
+                                    }
 
-									scope.readyStatus.content = true;
-									fieldsDataIsLoaded = true;
+                                    scope.readyStatus.content = true;
+                                    fieldsDataIsLoaded = true;
 
-									scope.getFieldsGrouped();
+                                    scope.getFieldsGrouped();
 
-									resolve();
-									// scope.$apply();
-								});
+                                    resolve();
+                                    // scope.$apply();
+                                });
 
 
-							}
+                            }
 
-						} else {
-							resolve();
-						}
+                        } else {
+                            resolve();
+                        }
 
-					});
+                    });
 
-				};
+                };
 
-				scope.getDataApply = function (){
-					scope.getData().then(function(){
-						scope.$apply();
-					})
-				}
+                scope.getDataApply = function () {
+                    scope.getData().then(function () {
+                        scope.$apply();
+                    })
+                }
 
-				/*scope.getMultiselectorItems = function () {
-					return scope.getData().then(function () {
+                /*scope.getMultiselectorItems = function () {
+                    return scope.getData().then(function () {
 
-						var data = {
-							results: scope.getListWithBindFields(metaHelper.textWithDashSort(scope.fields))
-						};
+                        var data = {
+                            results: scope.getListWithBindFields(metaHelper.textWithDashSort(scope.fields))
+                        };
 
-						return data;
-					});
-				};*/
+                        return data;
+                    });
+                };*/
 
-				/* var prepareDataForSelector = function () {
+                /* var prepareDataForSelector = function () {
 
-					scope.fields = [];
+                    scope.fields = [];
 
-					var item_object;
+                    var item_object;
 
-					if (scope.entityType === 'complex-transaction') {
-						item_object = scope.entity[scope.item.name + '_object'];
-					} else {
-						item_object = scope.entity[scope.item.key + '_object'];
-					}
+                    if (scope.entityType === 'complex-transaction') {
+                        item_object = scope.entity[scope.item.name + '_object'];
+                    } else {
+                        item_object = scope.entity[scope.item.key + '_object'];
+                    }
 
-					if (item_object) {
+                    if (item_object) {
 
-						if (Array.isArray(item_object)) { // For multiselector
-							scope.fields = item_object;
-							var items = scope.fields.slice(0);
-							scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(items));
-							scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'user_code'));
+                        if (Array.isArray(item_object)) { // For multiselector
+                            scope.fields = item_object;
+                            var items = scope.fields.slice(0);
+                            scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(items));
+                            scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'user_code'));
 
-						} else {
-							scope.fields.push(item_object);
-							var items = scope.fields.slice(0);
-							scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(items));
-							scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'user_code'));
-						}
+                        } else {
+                            scope.fields.push(item_object);
+                            var items = scope.fields.slice(0);
+                            scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(items));
+                            scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(items, 'user_code'));
+                        }
 
-					}
+                    }
 
-					scope.inputTextObj.value = scope.getInputTextForEntitySearch();
+                    scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
-				}; */
+                }; */
 
-				scope.inputTextObj.value = scope.getInputTextForEntitySearch();
+                scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
-				scope.$watch('item', function () {
+                scope.$watch('item', function () {
 
-					fieldsDataIsLoaded = false;
+                    fieldsDataIsLoaded = false;
 
-					// prepareDataForSelector();
-					scope.inputTextObj.value = scope.getInputTextForEntitySearch();
+                    // prepareDataForSelector();
+                    scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
-				});
+                });
 
 
-				scope.$watch('modelObj', function (){
+                scope.$watch('modelObj', function () {
 
-					fieldsDataIsLoaded = false;
+                    fieldsDataIsLoaded = false;
 
-					// prepareDataForSelector();
-					scope.inputTextObj.value = scope.getInputTextForEntitySearch();
+                    // prepareDataForSelector();
+                    scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
 
-				})
+                })
 
 
                 scope.changeHandler = function () {
 
-                	bfcVm.model = scope.modelObj.model;
+                    bfcVm.model = scope.modelObj.model;
 
                     if (bfcVm.itemChange) {
-						bfcVm.itemChange();
+                        bfcVm.itemChange();
                     }
 
                 };
 
-				var setItemSpecificSettings = function () {
+                var setItemSpecificSettings = function () {
 
-					if (scope.options.backgroundColor) {
+                    if (scope.options.backgroundColor) {
 
-						scope.customStyles = {
-							'customInputBackgroundColor': 'background-color: ' + scope.options.backgroundColor + ';'
-						}
+                        scope.customStyles = {
+                            'customInputBackgroundColor': 'background-color: ' + scope.options.backgroundColor + ';'
+                        }
 
-					}
+                    }
 
-					if (scope.item.frontOptions) {
+                    if (scope.item.frontOptions) {
 
-						if (scope.item.frontOptions.recalculated) {
+                        if (scope.item.frontOptions.recalculated) {
 
-							scope.ciEventObj.event = {key: "set_style_preset1"};
+                            scope.ciEventObj.event = {key: "set_style_preset1"};
 
-						}
+                        }
 
-					}
+                    }
 
-				scope.tooltipText = bfcVm.getTooltipText();
+                    scope.tooltipText = bfcVm.getTooltipText();
 
-			}
+                }
 
                 var initListeners = function () {
 
-					eventListenersIndexesData['MARK_FIELDS_WITH_ERRORS'] = scope.evEditorEventService.addEventListener(evEditorEvents.MARK_FIELDS_WITH_ERRORS, function () {
+                    eventListenersIndexesData['MARK_FIELDS_WITH_ERRORS'] = scope.evEditorEventService.addEventListener(evEditorEvents.MARK_FIELDS_WITH_ERRORS, function () {
                         scope.ciEventObj.event = {key: 'mark_not_valid_fields'};
                     });
 
-					eventListenersIndexesData['ENTITY_UPDATED'] = scope.evEditorEventService.addEventListener(evEditorEvents.ENTITY_UPDATED, function () {
-						scope.modelObj.model = bfcVm.getValueFromEntity();
-					});
+                    eventListenersIndexesData['ENTITY_UPDATED'] = scope.evEditorEventService.addEventListener(evEditorEvents.ENTITY_UPDATED, function () {
+                        scope.modelObj.model = bfcVm.getValueFromEntity();
+                    });
 
-					if (scope.entityType === 'complex-transaction') {
+                    if (scope.entityType === 'complex-transaction') {
 
-						eventListenersIndexesData['FIELDS_RECALCULATION_END'] = scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
+                        eventListenersIndexesData['FIELDS_RECALCULATION_END'] = scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
 
-							scope.modelObj.model = bfcVm.getValueFromEntity();
+                            scope.modelObj.model = bfcVm.getValueFromEntity();
 
-							if (scope.item &&
-								scope.item.frontOptions && scope.item.frontOptions.recalculated &&
-								(scope.modelObj.model || scope.modelObj.model === 0)) {
+                            if (scope.item &&
+                                scope.item.frontOptions && scope.item.frontOptions.recalculated &&
+                                (scope.modelObj.model || scope.modelObj.model === 0)) {
 
-								fieldsDataIsLoaded = false;
+                                fieldsDataIsLoaded = false;
 
-								scope.getData().then(function () {
+                                scope.getData().then(function () {
 
-									setItemSpecificSettings();
-									// prepareDataForSelector();
-									scope.inputTextObj.value = scope.getInputTextForEntitySearch();
-
-
-									scope.$apply();
+                                    setItemSpecificSettings();
+                                    // prepareDataForSelector();
+                                    scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
 
-								})
+                                    scope.$apply();
 
-							}
 
-						});
+                                })
 
-					}
+                            }
+
+                        });
+
+                    }
 
                     /* scope.evEditorEventService.addEventListener(evEditorEvents.FIELD_CHANGED, function () {
 
@@ -591,7 +591,7 @@
                             }
 
                         }); */
-                    };
+                };
 
                 var init = function () {
 
@@ -616,56 +616,56 @@
                         setItemSpecificSettings();
                     }
 
-					if (bfcVm.fieldType) { // should be called after setItemSpecificSettings()
+                    if (bfcVm.fieldType) { // should be called after setItemSpecificSettings()
 
-						scope.getData().then(function (){
-							scope.$apply();
-						})
+                        scope.getData().then(function () {
+                            scope.$apply();
+                        })
 
-						var item_object;
+                        var item_object;
 
-						if (scope.entityType === 'complex-transaction' && bfcVm.fieldType.type === 'userInput') {
-							item_object = scope.entity.values[scope.item.name + '_object'];
-						} else {
-							item_object = scope.entity[scope.item.key + '_object'];
-						}
+                        if (scope.entityType === 'complex-transaction' && bfcVm.fieldType.type === 'userInput') {
+                            item_object = scope.entity.values[scope.item.name + '_object'];
+                        } else {
+                            item_object = scope.entity[scope.item.key + '_object'];
+                        }
 
-						if (item_object) {
+                        if (item_object) {
 
-							if (Array.isArray(item_object)) {
-								scope.fields = item_object;
-							} else {
-								scope.fields.push(item_object);
-							}
-						}
+                            if (Array.isArray(item_object)) {
+                                scope.fields = item_object;
+                            } else {
+                                scope.fields.push(item_object);
+                            }
+                        }
 
-						scope.modelObj.model = bfcVm.getValueFromEntity();
-						scope.inputTextObj.value = scope.getInputTextForEntitySearch();
+                        scope.modelObj.model = bfcVm.getValueFromEntity();
+                        scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
-						scope.valueEntity = scope.getValueEntity();
+                        scope.valueEntity = scope.getValueEntity();
 
-						if (scope.evEditorEventService) {
-							initListeners();
-						}
+                        if (scope.evEditorEventService) {
+                            initListeners();
+                        }
 
-					}
+                    }
 
-					scope.options = bfcVm.checkForNotNull(scope.options);
+                    scope.options = bfcVm.checkForNotNull(scope.options);
 
                 };
 
                 init();
 
-				scope.$on('$destroy', function () {
+                scope.$on('$destroy', function () {
 
-					Object.keys(eventListenersIndexesData).forEach(function (eventName) {
+                    Object.keys(eventListenersIndexesData).forEach(function (eventName) {
 
-						var eventIndex = eventListenersIndexesData[eventName];
-						scope.evEditorEventService.removeEventListener(eventName, eventIndex);
+                        var eventIndex = eventListenersIndexesData[eventName];
+                        scope.evEditorEventService.removeEventListener(eventName, eventIndex);
 
-					});
+                    });
 
-				});
+                });
 
             }
 
