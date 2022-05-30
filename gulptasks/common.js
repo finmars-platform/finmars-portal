@@ -80,15 +80,15 @@
 
 		let bundles = browserify(pathToJS, browserifyOpts);
 
-		// if (PROJECT_ENV === 'production' || PROJECT_ENV === 'development') {
-		//
-		// 	const presets = [
-		// 		["@babel/preset-env", {useBuiltIns: "entry", corejs: "^2.1.4"}, 'module:@babel/helper-module-imports'],
-		// 	];
-		//
-		// 	bundles = bundles.transform("babelify", {presets: presets});
-		//
-		// }
+		if (PROJECT_ENV === 'production' || PROJECT_ENV === 'development') {
+
+			const presets = [
+				["@babel/preset-env", {useBuiltIns: "entry", corejs: "^2.1.4"}, 'module:@babel/helper-module-imports'],
+			];
+
+			bundles = bundles.transform("babelify", {presets: presets});
+
+		}
 		/* console.log("PROJECT_ENV ", PROJECT_ENV);
 		console.log("API_HOST ", API_HOST);
 		console.log("AUTHORIZER_URL ", AUTHORIZER_URL); */
@@ -113,8 +113,8 @@
 			.pipe(gulpif(PROJECT_ENV === 'local', replace(/__HEALTHCHECK_HOST__/g, HEALTHCHECK_HOST)))
 			// .pipe(replace(/__BUILD_DATE__/g, build_date))
 			.pipe(replace(/__PROJECT_ENV__/g, PROJECT_ENV))
-			.pipe(gulpif(PROJECT_ENV === 'production', uglify()))
-			.pipe(gulpif(PROJECT_ENV === 'production', stripDebug()))
+			// .pipe(gulpif(PROJECT_ENV === 'production', uglify()))
+			// .pipe(gulpif(PROJECT_ENV === 'production', stripDebug()))
 			.pipe(rename({basename: 'main', suffix: '.min'}))
 			.pipe(plumber.stop())
 			.pipe(gulp.dest('dist/shell/scripts/'))
