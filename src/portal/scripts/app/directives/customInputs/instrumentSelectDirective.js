@@ -251,13 +251,20 @@
 
                             scope.valueIsValid = true;
 
+                            scope.$apply();
+
                             setTimeout(function () {
 
-                                if (scope.onChangeCallback) scope.onChangeCallback();
+                                if (scope.onChangeCallback) {
 
-                                scope.$apply();
+                                    scope.onChangeCallback();
 
-                            }, 100);
+                                    scope.$apply();
+
+                                }
+
+
+                            }, 1);
 
                         }
 
