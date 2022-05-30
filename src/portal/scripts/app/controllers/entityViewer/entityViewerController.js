@@ -11,6 +11,7 @@
         var evEvents = require('../../services/entityViewerEvents');
         var metaContentTypesService = require('../../services/metaContentTypesService');
         var evHelperService = require('../../services/entityViewerHelperService');
+		var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
         // var usersService = require('../../services/usersService');
 
         var complexTransactionService = require('../../services/transaction/complexTransactionService');
@@ -38,30 +39,11 @@
                 layout: false
             };
 
-            var listOfStatesWithLayout = [
-                'app.portal.data.portfolio',
-                'app.portal.data.account',
-                'app.portal.data.account-type',
-                'app.portal.data.counterparty',
-                'app.portal.data.responsible',
-                'app.portal.data.instrument',
-                'app.portal.data.instrument-type',
-                // 'app.portal.data.pricing-policy',
-                'app.portal.data.complex-transaction',
-                'app.portal.data.transaction',
-                'app.portal.data.transaction-type',
-                'app.portal.data.currency-history',
-                'app.portal.data.price-history',
-                'app.portal.data.currency',
-                'app.portal.data.strategy-group',
-                'app.portal.data.strategy'
-            ];
-
 			var onLogoutIndex, onUserChangeIndex;
 
             vm.stateWithLayout = false;
 
-            if (listOfStatesWithLayout.indexOf($state.current.name) !== -1) {
+            if (evRvLayoutsHelper.statesWithLayouts.indexOf($state.current.name) !== -1) {
                 vm.stateWithLayout = true;
             }
 

@@ -10,6 +10,9 @@
 	const toastNotificationService = require('../../../../core/services/toastNotificationService');
 	const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
 
+	const metaHelper = require('./meta.helper');
+	const objectComparisonHelper = require('./objectsComparisonHelper');
+
     let getLinkingToFilters = function (layout) {
 
         let linkingToFilters = [];
@@ -327,6 +330,361 @@
 
 	};
 
+	let changesTrackingEvents = {
+		GROUPS_CHANGE: null,
+		COLUMNS_CHANGE: null,
+		COLUMN_SORT_CHANGE: null,
+		RESIZE_COLUMNS_END: null,
+		FILTERS_CHANGE: null,
+		ADDITIONS_CHANGE: null,
+		UPDATE_TABLE_VIEWPORT: null,
+		TOGGLE_FILTER_AREA: null,
+		REPORT_OPTIONS_CHANGE: null,
+		REPORT_TABLE_VIEW_CHANGED: null,
+		REPORT_EXPORT_OPTIONS_CHANGED: null,
+		DATA_LOAD_END: null,
+		ENTITY_VIEWER_PAGINATION_CHANGED: null,
+		VIEW_TYPE_CHANGED: null
+	};
+
+	const removeChangesTrackingEventListeners = function (evEventService) {
+
+		var trackingEventsListenerNames = Object.keys(changesTrackingEvents);
+
+		for (var i = 0; i < trackingEventsListenerNames.length; i++) {
+
+			var telName = trackingEventsListenerNames[i];
+
+			if (changesTrackingEvents[telName]) { // execute only if event listener has been added
+				evEventService.removeEventListener(evEvents[telName], changesTrackingEvents[telName]);
+			}
+
+		}
+
+	};
+
+	const areObjTheSame = function (data1, data2) {
+
+		if (typeof data1 === 'object' && typeof data2 === 'object') {
+
+			return objectComparisonHelper.areObjectsTheSame(data1, data2);
+
+		} else {
+
+			if (data1 !== data2) {
+				return false;
+			}
+
+			return true;
+
+		}
+
+	};
+
+	const areReportOptionsTheSame = function (activeLayoutConfig, evDataService) {
+
+		var originalReportOptions = metaHelper.recursiveDeepCopy(activeLayoutConfig.data.reportOptions);
+
+		var originReportLayoutOptions = metaHelper.recursiveDeepCopy(activeLayoutConfig.data.reportLayoutOptions);
+
+		if (originReportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
+			delete originalReportOptions.pl_first_date;
+			delete originalReportOptions.begin_date;
+		}
+
+		if (originReportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
+			delete originalReportOptions.report_date;
+			delete originalReportOptions.end_date;
+		}
+
+		delete originalReportOptions.task_id;
+		delete originalReportOptions.recieved_at;
+		delete originalReportOptions.task_status;
+
+
+		var currentReportOptions = metaHelper.recursiveDeepCopy(evDataService.getReportOptions());
+
+		var currentReportLayoutOptions = metaHelper.recursiveDeepCopy(evDataService.getReportLayoutOptions());
+
+		if (currentReportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
+			delete currentReportOptions.pl_first_date;
+			delete currentReportOptions.begin_date;
+		}
+
+		if (currentReportLayoutOptions.datepickerOptions.reportLastDatepicker.datepickerMode !== 'datepicker') {
+			delete currentReportOptions.report_date;
+			delete currentReportOptions.end_date;
+		}
+
+		delete currentReportOptions.task_id;
+		delete currentReportOptions.recieved_at;
+		delete currentReportOptions.task_status;
+		/* delete currentReportOptions.items;
+		delete currentReportOptions.item_complex_transactions;
+		delete currentReportOptions.item_counterparties;
+		delete currentReportOptions.item_responsibles;
+		delete currentReportOptions.item_strategies3;
+		delete currentReportOptions.item_strategies2;
+		delete currentReportOptions.item_strategies1;
+		delete currentReportOptions.item_portfolios;
+		delete currentReportOptions.item_instruments;
+		delete currentReportOptions.item_instrument_pricings;
+		delete currentReportOptions.item_instrument_accruals;
+		delete currentReportOptions.item_currency_fx_rates;
+		delete currentReportOptions.item_currencies;
+		delete currentReportOptions.item_accounts; */
+		currentReportOptions = reportHelper.cleanReportOptionsFromTmpProps(currentReportOptions);
+
+		if (areObjTheSame(originalReportOptions, currentReportOptions) &&
+			areObjTheSame(originReportLayoutOptions, currentReportLayoutOptions)) {
+
+			return true;
+
+		} else {
+			return false;
+		}
+
+	};
+
+	const addLayoutChangeListeners = function (evDataService) {
+
+		const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+
+		if (activeLayoutConfig && activeLayoutConfig.data) {
+
+			var groupsChangeEventIndex = evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+
+				var originalGroups = activeLayoutConfig.data.grouping;
+				var currentGroups = evDataService.getGroups();
+
+				if (!areObjTheSame(currentGroups, originalGroups)) {
+					layoutChanged = true;
+					removeChangesTrackingEventListeners();
+				}
+
+			});
+
+			var columnsChangeEventIndex = scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+
+				var originalColumns = activeLayoutConfig.data.columns;
+				var currentColumns = scope.evDataService.getColumns();
+
+				if (!areObjTheSame(currentColumns, originalColumns)) {
+					scope.layoutChanged = true;
+					removeChangesTrackingEventListeners();
+				}
+
+			});
+
+			var columnsSortChangeEventIndex = scope.evEventService.addEventListener(evEvents.COLUMN_SORT_CHANGE, function () {
+
+				var originalColumns = activeLayoutConfig.data.columns;
+				var currentColumns = scope.evDataService.getColumns();
+
+				if (!areObjTheSame(currentColumns, originalColumns)) {
+					scope.layoutChanged = true;
+					removeChangesTrackingEventListeners();
+				}
+
+			});
+
+			var rceEventIndex = scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS_END, function () {
+
+				var originalColumns = activeLayoutConfig.data.columns;
+				var currentColumns = scope.evDataService.getColumns();
+
+				if (!areObjTheSame(currentColumns, originalColumns)) {
+					scope.layoutChanged = true;
+					removeChangesTrackingEventListeners();
+					scope.$apply();
+				}
+
+			});
+
+			var filtersChangeEventIndex = scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+
+				var originalFilters = activeLayoutConfig.data.filters;
+				var currentFilters = scope.evDataService.getFilters();
+
+				if (!areObjTheSame(currentFilters, originalFilters)) {
+					scope.layoutChanged = true;
+					removeChangesTrackingEventListeners();
+				}
+
+			});
+
+			var additionsChangeEventIndex = scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
+
+				var originAdditions = activeLayoutConfig.data.additions;
+				var currentAdditions = scope.evDataService.getAdditions();
+
+				if (!areObjTheSame(originAdditions, currentAdditions)) {
+					scope.layoutChanged = true;
+					removeChangesTrackingEventListeners();
+				}
+
+			});
+
+			var utvEventIndex = scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_VIEWPORT, function () {
+
+				var originInterfaceLayout = activeLayoutConfig.data.interfaceLayout;
+				var currentInterfaceLayout = scope.evDataService.getInterfaceLayout();
+
+				if (!areObjTheSame(originInterfaceLayout, currentInterfaceLayout)) {
+					scope.layoutChanged = true;
+					removeChangesTrackingEventListeners();
+				}
+
+			});
+
+			var tfaEventIndex = scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
+
+				var originInterfaceLayout = activeLayoutConfig.data.interfaceLayout;
+				var currentInterfaceLayout = scope.evDataService.getInterfaceLayout();
+
+				if (!areObjTheSame(originInterfaceLayout, currentInterfaceLayout)) {
+					scope.layoutChanged = true;
+					removeChangesTrackingEventListeners();
+					scope.$apply();
+				}
+
+			});
+
+			var evpcEventIndex = scope.evEventService.addEventListener(evEvents.ENTITY_VIEWER_PAGINATION_CHANGED, function () {
+				scope.layoutChanged = true;
+				removeChangesTrackingEventListeners();
+			});
+
+			if (scope.isReport) {
+
+				var roChangeEventIndex = scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
+
+					if (!areReportOptionsTheSame()) {
+						scope.layoutChanged = true;
+						removeChangesTrackingEventListeners();
+					}
+
+				});
+
+				var rtvChangedEventIndex = scope.evEventService.addEventListener(evEvents.REPORT_TABLE_VIEW_CHANGED, function () {
+
+					var originalColumns = activeLayoutConfig.data.columns;
+					var currentColumns = scope.evDataService.getColumns();
+
+					var originalRootGroupOptions = activeLayoutConfig.data.rootGroupOptions;
+					var currentRootGroupOptions = scope.evDataService.getRootGroupOptions();
+
+					var originalGroups = activeLayoutConfig.data.grouping;
+					var currentGroups = scope.evDataService.getGroups();
+
+					if (!areObjTheSame(originalColumns, currentColumns) ||
+						!areObjTheSame(originalGroups, currentGroups) ||
+						!areObjTheSame(originalRootGroupOptions, currentRootGroupOptions) ||
+						!areReportOptionsTheSame()) {
+						scope.layoutChanged = true;
+						removeChangesTrackingEventListeners();
+
+					}
+
+				});
+
+				var reoChangeEventIndex = scope.evEventService.addEventListener(evEvents.REPORT_EXPORT_OPTIONS_CHANGED, function () {
+
+					var originalReportExportOptions = activeLayoutConfig.data.export;
+					var currentReportExportOptions = scope.evDataService.getExportOptions();
+
+					if (!areObjTheSame(originalReportExportOptions, currentReportExportOptions)) {
+						scope.layoutChanged = true;
+						removeChangesTrackingEventListeners();
+					}
+
+				});
+
+				var viewTypeChangedEI = scope.evEventService.addEventListener(evEvents.VIEW_TYPE_CHANGED, function () {
+
+					var originalViewType = activeLayoutConfig.data.viewType;
+					var originalViewSettings = activeLayoutConfig.data.viewSettings;
+
+					var currentViewType = scope.evDataService.getViewType();
+					var currentViewSettings = null;
+
+					if (originalViewType === currentViewType) {
+
+						if (currentViewType) {
+							currentViewSettings = scope.evDataService.getViewSettings(currentViewType);
+						}
+
+						if (!areObjTheSame(originalViewSettings, currentViewSettings)) {
+							scope.layoutChanged = true;
+							removeChangesTrackingEventListeners();
+						}
+
+					} else {
+						scope.layoutChanged = true;
+						removeChangesTrackingEventListeners();
+					}
+
+				});
+
+			} else {
+
+				var evSettingsIndex = scope.evEventService.addEventListener(evEvents.ENTITY_VIEWER_SETTINGS_CHANGED, function () {
+
+					var originalEvSettings = activeLayoutConfig.data.ev_options;
+					var evSettings = scope.evDataService.getEntityViewerOptions();
+
+					if (!areObjTheSame(originalEvSettings, evSettings)) {
+						scope.layoutChanged = true;
+						removeChangesTrackingEventListeners();
+					}
+
+				});
+
+			}
+
+			changesTrackingEvents.GROUPS_CHANGE = groupsChangeEventIndex;
+			changesTrackingEvents.COLUMNS_CHANGE = columnsChangeEventIndex;
+			changesTrackingEvents.COLUMN_SORT_CHANGE = columnsSortChangeEventIndex;
+			changesTrackingEvents.RESIZE_COLUMNS_END = rceEventIndex;
+			changesTrackingEvents.FILTERS_CHANGE = filtersChangeEventIndex;
+			changesTrackingEvents.ADDITIONS_CHANGE = additionsChangeEventIndex;
+			changesTrackingEvents.UPDATE_TABLE_VIEWPORT = utvEventIndex;
+			changesTrackingEvents.TOGGLE_FILTER_AREA = tfaEventIndex;
+			changesTrackingEvents.REPORT_OPTIONS_CHANGE = roChangeEventIndex;
+			changesTrackingEvents.REPORT_TABLE_VIEW_CHANGED = rtvChangedEventIndex;
+			// Report viewer specific tracking
+			changesTrackingEvents.REPORT_EXPORT_OPTIONS_CHANGED = reoChangeEventIndex;
+			changesTrackingEvents.DATA_LOAD_END = dleEventIndex;
+			changesTrackingEvents.ENTITY_VIEWER_PAGINATION_CHANGED = evpcEventIndex;
+			changesTrackingEvents.VIEW_TYPE_CHANGED = viewTypeChangedEI;
+			// Entity viewer specific tracking
+			changesTrackingEvents.ENTITY_VIEWER_SETTINGS_CHANGED = evSettingsIndex;
+		}
+
+	};
+
+	const statesWithLayoutsList = [
+		'app.portal.reports.balance-report',
+		'app.portal.reports.pl-report',
+		'app.portal.reports.transaction-report',
+
+		'app.portal.data.portfolio',
+		'app.portal.data.account',
+		'app.portal.data.account-type',
+		'app.portal.data.counterparty',
+		'app.portal.data.responsible',
+		'app.portal.data.instrument',
+		'app.portal.data.instrument-type',
+		'app.portal.data.complex-transaction',
+		'app.portal.data.transaction',
+		'app.portal.data.transaction-type',
+		'app.portal.data.currency-history',
+		'app.portal.data.price-history',
+		'app.portal.data.currency',
+		'app.portal.data.strategy-group',
+		'app.portal.data.strategy',
+	];
+
     /** @module evRvLayoutsHelper */
     module.exports = {
         getLinkingToFilters: getLinkingToFilters,
@@ -335,7 +693,9 @@
 		saveLayoutList: saveLayoutList,
 		saveAsLayoutList: saveAsLayoutList,
 
-		clearSplitPanelAdditions: clearSplitPanelAdditions
+		clearSplitPanelAdditions: clearSplitPanelAdditions,
+
+		statesWithLayouts: statesWithLayoutsList,
     }
 
 }());

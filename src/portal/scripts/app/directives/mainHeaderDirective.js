@@ -7,7 +7,9 @@ import baseUrlService from "../../../../shell/scripts/app/services/baseUrlServic
 
 const metaService = require('../services/metaService'); // TODO inject into angular dependencies
 
-export default function ($mdDialog, $state, $transitions, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService) {
+const evRvLayoutsHelper = require('../helpers/evRvLayoutsHelper');
+
+export default function ($mdDialog, $state, $transitions, cookieService, broadcastChannelService, middlewareService, authorizerService, usersService, globalDataService) {
 
     return {
         restrict: 'E',
@@ -19,9 +21,14 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             if (!scope.openedInside) throw new Error("mainHeaderDirective: openedInside does not set");
             // let user;
+			const user = globalDataService.getUser();
             scope.currentLocation = '';
             scope.currentMasterUser = globalDataService.getMasterUser();
             scope.userName = '';
+
+			scope.showAutosaveLayout = false;
+
+			scope.member = globalDataService.getMember();
 
             let deregisterOnSuccessTransitionHook;
 
@@ -303,10 +310,33 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             };
 
+			scope.onAutosaveChange = function () {
+				usersService.updateMember(scope.member.id, scope.member);
+			};
+
             if (scope.openedInside === 'portal') {
 
+				const stateWithLayout = evRvLayoutsHelper.statesWithLayouts.includes($state.current.name);
+				console.log("testing main header", stateWithLayout);
+				if (user.layouts_autosave && stateWithLayout) {
+
+					scope.showAutosaveLayoutCheckbox = true;
+
+					if (typeof scope.member.data.autosave_layouts !== 'boolean') {
+						scope.member.data.autosave_layouts = true;
+						globalDataService.setMember(scope.member);
+					}
+
+				}
+
                 deregisterOnSuccessTransitionHook = $transitions.onSuccess({}, function (transition) {
-                    scope.currentLocation = metaService.getHeaderTitleForCurrentLocation($state);
+
+					scope.currentLocation = metaService.getHeaderTitleForCurrentLocation($state);
+					console.log("testing transition hook works");
+					if (stateWithLayout && scope.member.data.autosave_layouts !== false) {
+						scope.showAutosaveLayoutCheckbox = true;
+					}
+
                 });
 
             }
