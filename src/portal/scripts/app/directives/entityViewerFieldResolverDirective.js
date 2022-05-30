@@ -487,6 +487,18 @@
 
 				});
 
+
+				scope.$watch('modelObj', function (){
+
+					fieldsDataIsLoaded = false;
+
+					// prepareDataForSelector();
+					scope.inputTextObj.value = scope.getInputTextForEntitySearch();
+
+
+				})
+
+
                 scope.changeHandler = function () {
 
                 	bfcVm.model = scope.modelObj.model;
