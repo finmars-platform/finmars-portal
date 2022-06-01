@@ -11,6 +11,7 @@
 	const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
 
 	const metaHelper = require('./meta.helper');
+	const reportHelper = require('./reportHelper');
 	const objectComparisonHelper = require('./objectsComparisonHelper');
 
     let getLinkingToFilters = function (layout) {
@@ -446,220 +447,247 @@
 
 	};
 
-	const addLayoutChangeListeners = function (evDataService) {
+	let autosaveTimeoutId;
 
-		const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+	const autosaveLayout = function (evDataService, isReport) {
+		console.log("testing autosaveLayout called");
+		var currentLayoutConfig = evDataService.getLayoutCurrentConfiguration(isReport);
 
-		if (activeLayoutConfig && activeLayoutConfig.data) {
+		clearTimeout(autosaveTimeoutId);
 
-			var groupsChangeEventIndex = evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
+		autosaveTimeoutId = setTimeout(function () {
 
-				var originalGroups = activeLayoutConfig.data.grouping;
-				var currentGroups = evDataService.getGroups();
+			uiService.autosaveListLayout(currentLayoutConfig);
 
-				if (!areObjTheSame(currentGroups, originalGroups)) {
-					layoutChanged = true;
-					removeChangesTrackingEventListeners();
-				}
+		}, 5000);
 
-			});
+	};
 
-			var columnsChangeEventIndex = scope.evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+	const initListenersForAutosaveLayout = function (evDataService, evEventService, isReport) {
+		console.log("testing initListenersForAutosaveLayout", isReport);
+		const viewContext = evDataService.getViewContext();
 
-				var originalColumns = activeLayoutConfig.data.columns;
-				var currentColumns = scope.evDataService.getColumns();
+		const groupsChangeEventIndex = evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
-				if (!areObjTheSame(currentColumns, originalColumns)) {
-					scope.layoutChanged = true;
-					removeChangesTrackingEventListeners();
-				}
+			const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+			const originalGroups = activeLayoutConfig.data.grouping;
+			const currentGroups = evDataService.getGroups();
 
-			});
-
-			var columnsSortChangeEventIndex = scope.evEventService.addEventListener(evEvents.COLUMN_SORT_CHANGE, function () {
-
-				var originalColumns = activeLayoutConfig.data.columns;
-				var currentColumns = scope.evDataService.getColumns();
-
-				if (!areObjTheSame(currentColumns, originalColumns)) {
-					scope.layoutChanged = true;
-					removeChangesTrackingEventListeners();
-				}
-
-			});
-
-			var rceEventIndex = scope.evEventService.addEventListener(evEvents.RESIZE_COLUMNS_END, function () {
-
-				var originalColumns = activeLayoutConfig.data.columns;
-				var currentColumns = scope.evDataService.getColumns();
-
-				if (!areObjTheSame(currentColumns, originalColumns)) {
-					scope.layoutChanged = true;
-					removeChangesTrackingEventListeners();
-					scope.$apply();
-				}
-
-			});
-
-			var filtersChangeEventIndex = scope.evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
-
-				var originalFilters = activeLayoutConfig.data.filters;
-				var currentFilters = scope.evDataService.getFilters();
-
-				if (!areObjTheSame(currentFilters, originalFilters)) {
-					scope.layoutChanged = true;
-					removeChangesTrackingEventListeners();
-				}
-
-			});
-
-			var additionsChangeEventIndex = scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
-
-				var originAdditions = activeLayoutConfig.data.additions;
-				var currentAdditions = scope.evDataService.getAdditions();
-
-				if (!areObjTheSame(originAdditions, currentAdditions)) {
-					scope.layoutChanged = true;
-					removeChangesTrackingEventListeners();
-				}
-
-			});
-
-			var utvEventIndex = scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_VIEWPORT, function () {
-
-				var originInterfaceLayout = activeLayoutConfig.data.interfaceLayout;
-				var currentInterfaceLayout = scope.evDataService.getInterfaceLayout();
-
-				if (!areObjTheSame(originInterfaceLayout, currentInterfaceLayout)) {
-					scope.layoutChanged = true;
-					removeChangesTrackingEventListeners();
-				}
-
-			});
-
-			var tfaEventIndex = scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
-
-				var originInterfaceLayout = activeLayoutConfig.data.interfaceLayout;
-				var currentInterfaceLayout = scope.evDataService.getInterfaceLayout();
-
-				if (!areObjTheSame(originInterfaceLayout, currentInterfaceLayout)) {
-					scope.layoutChanged = true;
-					removeChangesTrackingEventListeners();
-					scope.$apply();
-				}
-
-			});
-
-			var evpcEventIndex = scope.evEventService.addEventListener(evEvents.ENTITY_VIEWER_PAGINATION_CHANGED, function () {
-				scope.layoutChanged = true;
-				removeChangesTrackingEventListeners();
-			});
-
-			if (scope.isReport) {
-
-				var roChangeEventIndex = scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
-
-					if (!areReportOptionsTheSame()) {
-						scope.layoutChanged = true;
-						removeChangesTrackingEventListeners();
-					}
-
-				});
-
-				var rtvChangedEventIndex = scope.evEventService.addEventListener(evEvents.REPORT_TABLE_VIEW_CHANGED, function () {
-
-					var originalColumns = activeLayoutConfig.data.columns;
-					var currentColumns = scope.evDataService.getColumns();
-
-					var originalRootGroupOptions = activeLayoutConfig.data.rootGroupOptions;
-					var currentRootGroupOptions = scope.evDataService.getRootGroupOptions();
-
-					var originalGroups = activeLayoutConfig.data.grouping;
-					var currentGroups = scope.evDataService.getGroups();
-
-					if (!areObjTheSame(originalColumns, currentColumns) ||
-						!areObjTheSame(originalGroups, currentGroups) ||
-						!areObjTheSame(originalRootGroupOptions, currentRootGroupOptions) ||
-						!areReportOptionsTheSame()) {
-						scope.layoutChanged = true;
-						removeChangesTrackingEventListeners();
-
-					}
-
-				});
-
-				var reoChangeEventIndex = scope.evEventService.addEventListener(evEvents.REPORT_EXPORT_OPTIONS_CHANGED, function () {
-
-					var originalReportExportOptions = activeLayoutConfig.data.export;
-					var currentReportExportOptions = scope.evDataService.getExportOptions();
-
-					if (!areObjTheSame(originalReportExportOptions, currentReportExportOptions)) {
-						scope.layoutChanged = true;
-						removeChangesTrackingEventListeners();
-					}
-
-				});
-
-				var viewTypeChangedEI = scope.evEventService.addEventListener(evEvents.VIEW_TYPE_CHANGED, function () {
-
-					var originalViewType = activeLayoutConfig.data.viewType;
-					var originalViewSettings = activeLayoutConfig.data.viewSettings;
-
-					var currentViewType = scope.evDataService.getViewType();
-					var currentViewSettings = null;
-
-					if (originalViewType === currentViewType) {
-
-						if (currentViewType) {
-							currentViewSettings = scope.evDataService.getViewSettings(currentViewType);
-						}
-
-						if (!areObjTheSame(originalViewSettings, currentViewSettings)) {
-							scope.layoutChanged = true;
-							removeChangesTrackingEventListeners();
-						}
-
-					} else {
-						scope.layoutChanged = true;
-						removeChangesTrackingEventListeners();
-					}
-
-				});
-
-			} else {
-
-				var evSettingsIndex = scope.evEventService.addEventListener(evEvents.ENTITY_VIEWER_SETTINGS_CHANGED, function () {
-
-					var originalEvSettings = activeLayoutConfig.data.ev_options;
-					var evSettings = scope.evDataService.getEntityViewerOptions();
-
-					if (!areObjTheSame(originalEvSettings, evSettings)) {
-						scope.layoutChanged = true;
-						removeChangesTrackingEventListeners();
-					}
-
-				});
-
+			if (!areObjTheSame(currentGroups, originalGroups)) {
+				autosaveLayout(evDataService, isReport);
 			}
 
-			changesTrackingEvents.GROUPS_CHANGE = groupsChangeEventIndex;
-			changesTrackingEvents.COLUMNS_CHANGE = columnsChangeEventIndex;
-			changesTrackingEvents.COLUMN_SORT_CHANGE = columnsSortChangeEventIndex;
-			changesTrackingEvents.RESIZE_COLUMNS_END = rceEventIndex;
-			changesTrackingEvents.FILTERS_CHANGE = filtersChangeEventIndex;
-			changesTrackingEvents.ADDITIONS_CHANGE = additionsChangeEventIndex;
-			changesTrackingEvents.UPDATE_TABLE_VIEWPORT = utvEventIndex;
-			changesTrackingEvents.TOGGLE_FILTER_AREA = tfaEventIndex;
-			changesTrackingEvents.REPORT_OPTIONS_CHANGE = roChangeEventIndex;
-			changesTrackingEvents.REPORT_TABLE_VIEW_CHANGED = rtvChangedEventIndex;
-			// Report viewer specific tracking
-			changesTrackingEvents.REPORT_EXPORT_OPTIONS_CHANGED = reoChangeEventIndex;
-			changesTrackingEvents.DATA_LOAD_END = dleEventIndex;
-			changesTrackingEvents.ENTITY_VIEWER_PAGINATION_CHANGED = evpcEventIndex;
-			changesTrackingEvents.VIEW_TYPE_CHANGED = viewTypeChangedEI;
-			// Entity viewer specific tracking
-			changesTrackingEvents.ENTITY_VIEWER_SETTINGS_CHANGED = evSettingsIndex;
+		});
+
+		const columnsChangeEventIndex = evEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
+
+			const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+			const originalColumns = activeLayoutConfig.data.columns;
+			const currentColumns = scope.evDataService.getColumns();
+
+			if (!areObjTheSame(currentColumns, originalColumns)) {
+				autosaveLayout(evDataService, isReport);
+			}
+
+		});
+
+		const columnsSortChangeEventIndex = evEventService.addEventListener(evEvents.COLUMN_SORT_CHANGE, function () {
+
+			const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+			var originalColumns = activeLayoutConfig.data.columns;
+			var currentColumns = evDataService.getColumns();
+
+			if (!areObjTheSame(currentColumns, originalColumns)) {
+				autosaveLayout(evDataService, isReport);
+			}
+
+		});
+
+		const rceEventIndex = evEventService.addEventListener(evEvents.RESIZE_COLUMNS_END, function () {
+			console.log("testing initListenersForAutosaveLayout RESIZE_COLUMNS_END");
+			const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+			const originalColumns = activeLayoutConfig.data.columns;
+			const currentColumns = evDataService.getColumns();
+			console.log("testing initListenersForAutosaveLayout activeLayoutConfig", activeLayoutConfig);
+			if (!areObjTheSame(currentColumns, originalColumns)) {
+				console.log("testing initListenersForAutosaveLayout RESIZE_COLUMNS_END changed");
+				autosaveLayout(evDataService, isReport);
+			}
+
+		});
+
+		const filtersChangeEventIndex = evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
+
+			const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+			const originalFilters = activeLayoutConfig.data.filters;
+			const currentFilters = evDataService.getFilters();
+
+			if (!areObjTheSame(currentFilters, originalFilters)) {
+				autosaveLayout(evDataService, isReport);
+			}
+
+		});
+
+		const additionsChangeEventIndex = evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
+
+			const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+			const originAdditions = activeLayoutConfig.data.additions;
+			const currentAdditions = evDataService.getAdditions();
+
+			if (!areObjTheSame(originAdditions, currentAdditions)) {
+				autosaveLayout(evDataService, isReport);
+			}
+
+		});
+
+		const utvEventIndex = evEventService.addEventListener(evEvents.UPDATE_TABLE_VIEWPORT, function () {
+
+			const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+			const originInterfaceLayout = activeLayoutConfig.data.interfaceLayout;
+			const currentInterfaceLayout = evDataService.getInterfaceLayout();
+
+			if (!areObjTheSame(originInterfaceLayout, currentInterfaceLayout)) {
+				autosaveLayout(evDataService, isReport);
+			}
+
+		});
+
+		const tfaEventIndex = evEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
+
+			const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+			const originInterfaceLayout = activeLayoutConfig.data.interfaceLayout;
+			const currentInterfaceLayout = evDataService.getInterfaceLayout();
+
+			if (!areObjTheSame(originInterfaceLayout, currentInterfaceLayout)) {
+				autosaveLayout(evDataService, isReport);
+			}
+
+		});
+
+		const evpcEventIndex = evEventService.addEventListener(evEvents.ENTITY_VIEWER_PAGINATION_CHANGED, function () {
+			autosaveLayout(evDataService, isReport);
+		});
+
+		let roChangeEventIndex,
+			rtvChangedEventIndex,
+			reoChangeEventIndex,
+			viewTypeChangedEI,
+			evSettingsIndex;
+
+		if (isReport) {
+
+			roChangeEventIndex = evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
+
+				const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+
+				if (!areReportOptionsTheSame(activeLayoutConfig, evDataService)) {
+					autosaveLayout(evDataService, isReport);
+				}
+
+			});
+
+			rtvChangedEventIndex = evEventService.addEventListener(evEvents.REPORT_TABLE_VIEW_CHANGED, function () {
+
+				const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+
+				const originalColumns = activeLayoutConfig.data.columns;
+				const currentColumns = evDataService.getColumns();
+
+				const originalRootGroupOptions = activeLayoutConfig.data.rootGroupOptions;
+				const currentRootGroupOptions = evDataService.getRootGroupOptions();
+
+				const originalGroups = activeLayoutConfig.data.grouping;
+				const currentGroups = evDataService.getGroups();
+
+				if (!areObjTheSame(originalColumns, currentColumns) ||
+					!areObjTheSame(originalGroups, currentGroups) ||
+					!areObjTheSame(originalRootGroupOptions, currentRootGroupOptions) ||
+					!areReportOptionsTheSame(activeLayoutConfig, evDataService)) {
+
+					autosaveLayout(evDataService, isReport);
+
+				}
+
+			});
+
+			reoChangeEventIndex = evEventService.addEventListener(evEvents.REPORT_EXPORT_OPTIONS_CHANGED, function () {
+
+				const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+				const originalReportExportOptions = activeLayoutConfig.data.export;
+				const currentReportExportOptions = evDataService.getExportOptions();
+
+				if (!areObjTheSame(originalReportExportOptions, currentReportExportOptions)) {
+					autosaveLayout(evDataService, isReport);
+				}
+
+			});
+
+			viewTypeChangedEI = evEventService.addEventListener(evEvents.VIEW_TYPE_CHANGED, function () {
+
+				const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+
+				const originalViewType = activeLayoutConfig.data.viewType;
+				const originalViewSettings = activeLayoutConfig.data.viewSettings;
+
+				const currentViewType = evDataService.getViewType();
+				let currentViewSettings = null;
+
+				if (originalViewType === currentViewType) {
+
+					if (currentViewType) {
+						currentViewSettings = evDataService.getViewSettings(currentViewType);
+					}
+
+					if (!areObjTheSame(originalViewSettings, currentViewSettings)) {
+						autosaveLayout(evDataService, isReport);
+					}
+
+				} else {
+					autosaveLayout(evDataService, isReport);
+				}
+
+			});
+
 		}
+		else {
+
+			evSettingsIndex = evEventService.addEventListener(evEvents.ENTITY_VIEWER_SETTINGS_CHANGED, function () {
+
+				const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+				const originalEvSettings = activeLayoutConfig.data.ev_options;
+				const evSettings = evDataService.getEntityViewerOptions();
+
+				if (!areObjTheSame(originalEvSettings, evSettings)) {
+					autosaveLayout(evDataService, isReport);
+				}
+
+			});
+
+		}
+
+		if (viewContext !== 'reconciliation_viewer') {
+			dleEventIndex = evEventService.addEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, function () {
+				didLayoutChanged();
+			});
+		}
+
+		changesTrackingEvents.GROUPS_CHANGE = groupsChangeEventIndex;
+		changesTrackingEvents.COLUMNS_CHANGE = columnsChangeEventIndex;
+		changesTrackingEvents.COLUMN_SORT_CHANGE = columnsSortChangeEventIndex;
+		changesTrackingEvents.RESIZE_COLUMNS_END = rceEventIndex;
+		changesTrackingEvents.FILTERS_CHANGE = filtersChangeEventIndex;
+		changesTrackingEvents.ADDITIONS_CHANGE = additionsChangeEventIndex;
+		changesTrackingEvents.UPDATE_TABLE_VIEWPORT = utvEventIndex;
+		changesTrackingEvents.TOGGLE_FILTER_AREA = tfaEventIndex;
+		changesTrackingEvents.REPORT_OPTIONS_CHANGE = roChangeEventIndex;
+		changesTrackingEvents.REPORT_TABLE_VIEW_CHANGED = rtvChangedEventIndex;
+		// Report viewer specific tracking
+		changesTrackingEvents.REPORT_EXPORT_OPTIONS_CHANGED = reoChangeEventIndex;
+		// changesTrackingEvents.DATA_LOAD_END = dleEventIndex;
+		changesTrackingEvents.ENTITY_VIEWER_PAGINATION_CHANGED = evpcEventIndex;
+		changesTrackingEvents.VIEW_TYPE_CHANGED = viewTypeChangedEI;
+		// Entity viewer specific tracking
+		changesTrackingEvents.ENTITY_VIEWER_SETTINGS_CHANGED = evSettingsIndex;
 
 	};
 
@@ -694,6 +722,7 @@
 		saveAsLayoutList: saveAsLayoutList,
 
 		clearSplitPanelAdditions: clearSplitPanelAdditions,
+		initListenersForAutosaveLayout: initListenersForAutosaveLayout,
 
 		statesWithLayouts: statesWithLayoutsList,
     }

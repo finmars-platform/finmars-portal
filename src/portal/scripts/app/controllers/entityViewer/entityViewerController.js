@@ -41,11 +41,7 @@
 
 			var onLogoutIndex, onUserChangeIndex;
 
-            vm.stateWithLayout = false;
-
-            if (evRvLayoutsHelper.statesWithLayouts.indexOf($state.current.name) !== -1) {
-                vm.stateWithLayout = true;
-            }
+            vm.stateWithLayout = evRvLayoutsHelper.statesWithLayouts.indexOf($state.current.name) !== -1;
 
             var deregisterOnBeforeTransitionHook;
 

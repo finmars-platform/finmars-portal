@@ -207,7 +207,6 @@
 		}
 
 		let cache = cacheData(cachedLayoutsList, cachedLayouts);
-
 		cacheData(defLayoutDataPath, defaultLayoutData, cache);
 		cacheData(layoutPath, layout, cache);
 
@@ -238,16 +237,27 @@
 
 	const cacheAutosaveLayout = function (layout) {
 
-		const path = ['layouts', 'autosaveLayouts', layout.content_type];
+		const autosaveLayoutPath = ['layouts', 'autosaveLayouts', layout.content_type];
+		const layoutPath = ['layouts', 'layoutsList', layout.id];
+
+		let autosaveLayoutData = {
+			content_type: layout.content_type,
+			id: layout.id,
+			name: layout.name,
+			user_code: layout.user_code,
+			is_default: layout.is_default
+		};
 
 		const propName = getPropertyForStoring();
-		let cache = cacheData(path, layout);
+
+		let cache = cacheData(autosaveLayoutPath, autosaveLayoutData);
+		cache = cacheData(layoutPath, layout, cache);
 
 		localStorage.setItem(propName, JSON.stringify(cache));
 
 	};
 
-	const getCachedAutosaveLayout = contentType => {
+	const getAutosaveLayout = contentType => {
 
 		if (getPropertyForStoring()) { // check for availability of user, masterUser, member
 
@@ -522,7 +532,7 @@
 		cacheDefaultLayout: cacheDefaultLayout,
 		getDefaultLayout: getDefaultLayout,
 		cacheAutosaveLayout: cacheAutosaveLayout,
-		getCachedAutosaveLayout: getCachedAutosaveLayout,
+		getAutosaveLayout: getAutosaveLayout,
 		cacheLayout: cacheLayout,
 		getCachedLayout: getCachedLayout,
 		deleteLayoutFromCache: deleteLayoutFromCache,

@@ -397,6 +397,11 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.USER_REQUEST_AN_ACTION, sharedLogicHelper.executeUserRequestedAction)
 
+                /* const dleEventIndex = vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, function () {
+                    evRvLayoutsHelper.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
+                    vm.entityViewerEventService.removeEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, dleEventIndex);
+                }); */
+                evRvLayoutsHelper.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
 
             };
 
@@ -863,8 +868,7 @@
 
                     vm.getView();
 
-                })
-
+                });
 
             };
 

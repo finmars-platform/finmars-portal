@@ -322,7 +322,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
 					scope.showAutosaveLayoutCheckbox = true;
 
-					if (typeof scope.member.data.autosave_layouts !== 'boolean') {
+					if (scope.member.data && typeof scope.member.data.autosave_layouts !== 'boolean') {
 						scope.member.data.autosave_layouts = true;
 						globalDataService.setMember(scope.member);
 					}
