@@ -245,12 +245,16 @@
 
 				ui.modified = data.modified
 
+                if (ui.is_systemic) {
+                    localStorageService.cacheAutosaveLayout(ui);
+                }
+
 				if (ui.is_default) {
 					localStorageService.cacheDefaultLayout(ui);
 
-				} else {
+				} else if (!ui.is_systemic) {
 					localStorageService.cacheLayout(ui);
-				}
+                }
 
 				resolve(ui);
 
@@ -281,8 +285,8 @@
 	/**
 	 *
 	 * @param id {number} - layout id
-	 * @param xhrOptions {=Object}
-	 * @returns {Promise<Object>}
+	 * @param xhrOptions {Object=}
+     * @returns {Promise<Object>}
 	 */
 	const pingListLayoutByKey = (id, xhrOptions) => {
 		return uiRepository.pingListLayoutByKey(id, xhrOptions);
@@ -396,35 +400,179 @@
         // return uiRepository.getDefaultListLayout(entityType);
     };
 
+    /**
+     * If there is actual default layout in cache, return it. Otherwise fetch layout from server.
+     *
+     * @param cachedLayoutResponse {*} - data about particular layout inside local storage
+     * @param fetchLayoutCallback {Function} - callback to fetch layout from server if default layout in local storage does not fit
+     * @param resolve - resolve function of parent promise
+     * @param reject - reject function of parent promise
+     */
+    const resolveAutosaveListLayout = function (cachedLayoutResponse, fetchLayoutCallback, resolve, reject) {
+
+        const cachedLayout = getCachedLayoutObj(cachedLayoutResponse);
+        const onPingRejectCallback = getOnRejectCallback(fetchLayoutCallback, reject, cachedLayout);
+
+        if (cachedLayout) {
+
+            uiRepository.pingListLayoutByKey(cachedLayout.id).then(function (pingData) {
+
+                if (pingData && pingData.is_default && isCachedLayoutActual(cachedLayout, pingData)) {
+                    resolve(cachedLayoutResponse);
+
+                } else {
+                    fetchLayoutCallback();
+                }
+
+            }).catch(onPingRejectCallback);
+
+        } else {
+            fetchLayoutCallback();
+        }
+
+    };
+
+    const updateAutosaveListLayout = function (cachedLayout, layout, entityType) {
+
+        return new Promise((resolve, reject) => {
+
+            if (cachedLayout) {
+                // Error will occur if nonexistent autosave layout saved inside cache
+                layout.id = cachedLayout.id;
+                updateListLayout(layout.id, layout).then(updatedLayoutData => {
+                    resolve(updatedLayoutData);
+
+                }).catch(error => reject(error));
+
+            }
+            else {
+
+                const options = {
+                    filters: {
+                        user_code: layout.user_code
+                    }
+                };
+
+                getListLayoutLight(entityType, options).then(function (llData) {
+
+                    if (llData.results.length) {
+                        layout.id = llData.results[0].id;
+
+                        updateListLayout(layout.id, layout).then(function (updatedLayoutData) {
+                            resolve(updatedLayoutData);
+
+                        }).catch(error => reject(error));
+
+                    } else {
+                        resolve("Layout does not exist.");
+                    }
+
+                }).catch(error => reject(error));
+
+            }
+
+        });
+
+    };
+
 	const autosaveListLayout = function (layout) {
 
 		layout = JSON.parse(angular.toJson(layout));
 
 		delete layout.id;
 
-		const userCodeText = layout.content_type.replace('.', '_');
-		layout.user_code = 'system_autosave_' + userCodeText;
+		const formattedContentType = layout.content_type.replace('.', '_');
+		layout.user_code = 'system_autosave_' + formattedContentType;
 
+        // In case of autosaving default layout, make is_default === false
+        layout.is_default = layout.is_systemic && layout.is_default;
+        layout.is_systemic = true;
 
+        const cachedLayout = localStorageService.getAutosaveLayout(layout.content_type);
+        console.log("testing autosaveListLayout layout.user_code", layout.user_code);
+        const entityType = metaContentTypesService.findEntityByContentType(layout.content_type);
+
+        return new Promise((resolve, reject) => {
+
+            updateAutosaveListLayout(cachedLayout, layout, entityType).then(function (updateData) {
+
+                if (updateData === "Layout does not exist.") {
+
+                    createListLayout(layout).then(function (createdLayoutData) {
+                        resolve(createdLayoutData);
+                    });
+
+                } else {
+                    resolve(updateData);
+                }
+
+            });
+
+        });
 
 	};
 
-	const getAutosaveListLayout = function (entityType) {
+    const fetchAutosaveListLayout = function (contentType, resolve, reject) {
+
+        const formattedContentType = contentType.replace('.', '_');
+        const entityType = metaContentTypesService.findEntityByContentType(contentType);
+        const autosaveLayoutUserCode = 'system_autosave_' + formattedContentType;
+
+        const options = {
+            filters: {
+                user_code: autosaveLayoutUserCode
+            }
+        };
+
+        return new Promise((resolve, reject) => {
+
+            getListLayout(entityType, options).then(layoutsData => {
+
+                if (layoutsData.result.length) {
+                    resolve(layoutsData.result[0])
+                }
+
+            }).catch(error => reject(error));
+
+        })
+
+    };
+
+	const getAutosaveListLayout = function (contentType) {
 
 		return new Promise (function (resolve, reject) {
 
-			const contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+			// const contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
 			const cachedLayout = localStorageService.getDefaultLayout(contentType);
 
+            if (cachedLayout) {
 
+                pingListLayoutByKey(cachedLayout.id).then(function (pingData) {
+
+                    if (pingData && isCachedLayoutActual(cachedLayout, pingData)) {
+                        resolve(cachedLayout);
+
+                    } else {
+                        fetchAutosaveListLayout(contentType).then(layoutData => {
+                            resolve(layoutData)
+
+                        }).catch(error => reject(error));
+                    }
+
+                });
+
+            } else {
+
+                fetchAutosaveListLayout(contentType).then(layoutData => {
+                    resolve(layoutData)
+
+                }).catch(error => reject(error));
+
+            }
 
 		});
 
 	};
-
-    /*let getActiveListLayout = function (entity) {
-        return uiRepository.getActiveListLayout(entity);
-    };*/
 
     // Input Form Layouts
 
@@ -765,7 +913,8 @@
 
         getListLayoutTemplate: getListLayoutTemplate,
         getDefaultListLayout: getDefaultListLayout,
-        // getActiveListLayout: getActiveListLayout,
+        autosaveListLayout: autosaveListLayout,
+        getAutosaveListLayout: getAutosaveListLayout,
 
         getListLayout: getListLayout,
         getListLayoutLight: getListLayoutLight,
