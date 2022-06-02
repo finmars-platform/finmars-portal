@@ -106,6 +106,23 @@
 
         };
 
+        vm.providerChange = function (){
+
+            if (vm.item.provider === 6) {
+                vm.item.data_string = JSON.stringify({}, 0, 4)
+            }
+
+        }
+
+        vm.universalOptionsChange = function () {
+
+            vm.item.data = JSON.parse(vm.item.data_string)
+        }
+
+        vm.universalFieldChange = function () {
+            vm.item.data_string = JSON.stringify(vm.item.data, 0, 4)
+        }
+
 
         vm.init = function () {
 
