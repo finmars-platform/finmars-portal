@@ -99,6 +99,8 @@
 
                 vm.item = data;
 
+                vm.item.data_string = JSON.stringify(vm.item.data, 0, 4)
+
                 vm.readyStatus.procedure = true;
 
 
@@ -139,6 +141,15 @@
 
             })
 
+        }
+
+        vm.universalOptionsChange = function () {
+
+            vm.item.data = JSON.parse(vm.item.data_string)
+        }
+
+        vm.universalFieldChange = function () {
+            vm.item.data_string = JSON.stringify(vm.item.data, 0, 4)
         }
 
         vm.init = function () {
