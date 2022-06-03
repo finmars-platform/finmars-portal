@@ -1,6 +1,6 @@
 <div>
 
-    <md-input-container class="md-block no-error-spacer">
+    <!--<md-input-container class="md-block no-error-spacer">
         <label data-ng-bind="getName()"></label>
         <md-select md-on-close="searchTerm = ''"
                    data-ng-model="entity[item.name]"
@@ -23,6 +23,17 @@
                 </md-option>
             </div>
         </md-select>
-    </md-input-container>
+    </md-input-container>-->
+    <dropdown-select label="{{getName()}}"
+                     model="modelObj.model"
+                     placeholder-text="{{getName()}}"
+                     event-signal="eventSignal"
+                     item-name="inputTextObj.value"
+                     menu-options="fields"
+                     small-options="{notNull: options.notNull, tooltipText: '{{getName()}}'}"
+                     sorted="sorted"
+                     on-change-callback="changeHandler()"
+                     style="{{inputBackgroundColor()}}">
+    </dropdown-select>
 
 </div>

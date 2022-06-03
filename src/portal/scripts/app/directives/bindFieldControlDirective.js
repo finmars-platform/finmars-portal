@@ -362,7 +362,7 @@
                     return styleValue;
                 };
 
-                $scope.inputBackgroundColor = function () {
+                vm.inputBackgroundColor = function () {
                     var backgroundColor = "";
 
                     if ($scope.options.backgroundColor) {
