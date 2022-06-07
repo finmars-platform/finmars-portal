@@ -168,15 +168,7 @@
                     return false;
                 };
 
-                scope.inputBackgroundColor = function () {
-                    var backgroundColor = '';
-
-                    if (scope.options.backgroundColor) {
-                        backgroundColor = 'background-color: ' + scope.options.backgroundColor + ';';
-                    }
-
-                    return backgroundColor;
-                };
+                scope.inputBackgroundColor = bfcVm.inputBackgroundColor;
 
                 scope.getName = function () {
                     if (scope.item.options && scope.item.options.fieldName) {
@@ -279,7 +271,7 @@
                 }
 
                 scope.bindMCField = function (model) {
-                    /* if (scope.entity[scope.fieldKey] && scope.entity[scope.fieldKey].length > 0) {
+                    /* if (getSelectedFieldNamescope.entity[scope.fieldKey] && scope.entity[scope.fieldKey].length > 0) {
                         return '[' + scope.entity[scope.fieldKey].length + '] selected';
                     } */
                     if (scope.modelObj.model && scope.modelObj.model.length > 0) {
