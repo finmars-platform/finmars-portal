@@ -99,7 +99,7 @@
                           data-ng-change="changeClassifier()"
                           md-container-class="h-classifier-select"
                           data-entity-type="vm.entityType"
-                          style="{{inputBackgroundColor()}}"
+                          style="{{vm.inputBackgroundColor()}}"
                         >
                           <md-option ng-value="node.id" selected="selected">
                             {{node.name}}
@@ -128,7 +128,7 @@
 
         <div data-ng-if="vm.fieldType['display_name'] === 'Decoration' && item.key === 'layoutLine'"
              class="ec-decoration-container">
-            <span class="ec-decoration line" style="{{inputBackgroundColor()}}"></span>
+            <span class="ec-decoration line" style="{{vm.inputBackgroundColor()}}"></span>
         </div>
 
         <div data-ng-if="vm.fieldType['display_name'] === 'Decoration' && item.key === 'layoutLineWithLabel'"
@@ -146,9 +146,9 @@
         <div data-ng-if="vm.fieldType['display_name'] === 'Selector'"
              class="ec-decoration-container">
             <ev-selector-resolver item="item"
-                                  entity="entity"
+                                  model="vm.model"
                                   options="options"
-                                  entity-type="vm.entityType"
+                                  event-signal="ciEventObj.event"
                                   item-change="vm.itemChange()">
             </ev-selector-resolver>
         </div>
