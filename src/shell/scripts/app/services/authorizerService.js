@@ -300,6 +300,19 @@ export default function (globalDataService) {
     const deleteInviteByKey = function (id) {
         return authorizerRepository.deleteInviteByKey(id)
     };
+
+    const authTokenManagerGetList = function () {
+        return authorizerRepository.authTokenManagerGetList()
+    };
+
+    const authTokenManagerDeleteToken = function (id) {
+        return authorizerRepository.authTokenManagerDeleteToken(id)
+    }
+
+    const authTokenManagerCreateToken = function (data) {
+        return authorizerRepository.authTokenManagerCreateToken(data)
+    }
+
     //</editor-fold>
 
     return {
@@ -340,7 +353,11 @@ export default function (globalDataService) {
         getInvitesList: getInvitesList,
         deleteInviteByKey: deleteInviteByKey,
 
-        transferOwner: transferOwner
+        transferOwner: transferOwner,
+
+        authTokenManagerGetList: authTokenManagerGetList,
+        authTokenManagerDeleteToken: authTokenManagerDeleteToken,
+        authTokenManagerCreateToken: authTokenManagerCreateToken
 
     }
 
