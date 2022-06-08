@@ -1,6 +1,7 @@
 (function () {
 
 	const md5Helper = require('../helpers/md5.helper');
+    const toastNotificationService = require('../../../../core/services/toastNotificationService');
 
     function recursiveDeepCopy(o, saveFunctions) {
         var newO,
@@ -276,6 +277,25 @@
 
 	};
 
+	const copyToBuffer = function(content) {
+
+        var listener = function (e) {
+
+            e.clipboardData.setData('text/plain', content);
+
+            e.preventDefault();
+        };
+
+        document.addEventListener('copy', listener, false);
+
+        document.execCommand("copy");
+
+        document.removeEventListener('copy', listener, false);
+
+        toastNotificationService.info("Copied")
+
+    }
+
     module.exports = {
         recursiveDeepCopy: recursiveDeepCopy,
         setObjectNestedPropVal: setObjectNestedPropVal,
@@ -293,6 +313,8 @@
 		generateUniqueId: generateUniqueId,
 
 		clearFrontendOptions: clearFrontendOptions,
+
+        copyToBuffer: copyToBuffer
     }
 
 }());
