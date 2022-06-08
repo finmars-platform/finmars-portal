@@ -1,0 +1,137 @@
+<div>
+
+    <div style="max-width: 1050px; margin: 0 auto; overflow:hidden; padding-bottom: 80px;">
+
+
+        <div class="p-b-24">
+
+            <h3>Active Tokens</h3>
+            <table>
+
+                <thead>
+                <tr>
+                    <td>Bearer Token</td>
+                    <td>Ecosystem Name</td>
+                    <td>Ecosystem API URL</td>
+                    <td>Created</td>
+                    <td>&nbsp;</td>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr data-ng-repeat="item in vm.tokens" style="height: 48px;">
+                    <td>{{item.key}}
+
+                        <a ng-click="vm.copyToken(item.key)" class="copy-text-button">
+                            <ng-md-icon icon="content_copy" size="16">
+                                <md-tooltip class="tooltip_2" md-direction="top">Copy to clipboard</md-tooltip>
+                            </ng-md-icon>
+                        </a>
+
+                    </td>
+                    <td>{{item.current_master_user_object.name}}</td>
+                    <td><a href="{{item.api_url}}" target="_blank">{{item.api_url}}</a></td>
+                    <td>{{item.created | date: 'yyyy/MM/dd'}}</td>
+                    <td class="text-center">
+                        <md-button class="md-warn" data-ng-click="vm.deleteAuthToken($event, item)"
+                                   data-ng-if="vm.currentToken != item.key">Delete
+                        </md-button>
+                        <div data-ng-if="vm.currentToken == item.key">
+                            <b>CURRENT</b>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+
+            <div>
+                <md-button class="md-raised md-warn" data-ng-click="vm.logoutDevices($event)">Logout from all devices
+                </md-button>
+            </div>
+
+            <h3>Create new Bearer Token</h3>
+
+            <div>
+
+                <md-input-container class="md-block" style="height: 64px">
+                    <label>Ecosystem</label>
+                    <md-select data-ng-model="vm.newToken.current_master_user">
+                        <md-option data-ng-repeat="item in vm.masterUsers" ng-value="item.id">{{item.name}}</md-option>
+                    </md-select>
+
+                </md-input-container>
+
+                <md-button class="md-raised md-primary" data-ng-click="vm.createAuthToken($event)">Create</md-button>
+
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <h3>Examples</h3>
+
+            <p>
+                Find all API Endpoints at <b>Ecosystem API URL</b> of your ecosystem.
+            </p>
+
+            <div>
+
+                <h4>Get Report ({{vm.currentTokenItem.api_url}}/reports/balance-report-sql/)</h4>
+
+                <md-input-container class="md-block" style="height: 64px">
+                    <label>Bearer Token</label>
+                    <input type="text" data-ng-model="vm.requestReport.token">
+                </md-input-container>
+
+
+                <md-button class="md-primary md-raised" data-ng-click="vm.executeRequestReport($event)">Request</md-button>
+
+                <div data-ng-if="vm.requestReport.status == 'requested'">
+
+                    <md-button class="md-raised" data-ng-click="vm.requestReport.showFetch = !vm.requestReport.showFetch">Show request (fetch)</md-button>
+                    <md-button class="md-raised" data-ng-click="vm.requestReport.showCurl = !vm.requestReport.showCurl">Show request (curl)</md-button>
+                    <md-button class="md-raised" data-ng-click="vm.requestReport.showResponse = !vm.requestReport.showResponse">Show response</md-button>
+
+
+                    <div data-ng-if="vm.requestReport.showFetch">
+
+                        <h3>Fetch Request</h3>
+
+                        <div class="code-example">
+                            <pre>{{vm.requestReport.fetchRequestText}}</pre>
+                        </div>
+
+                    </div>
+
+                    <div data-ng-if="vm.requestReport.showCurl">
+
+                        <h3>Curl Request</h3>
+
+                        <div class="code-example">
+                            <pre>{{vm.requestReport.curlRequestText}}</pre>
+                        </div>
+
+                    </div>
+
+                    <div data-ng-if="vm.requestReport.showResponse">
+
+                        <h3>Response</h3>
+
+                        <div class="code-example">
+                            <pre>{{vm.requestReport.responseText}}</pre>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

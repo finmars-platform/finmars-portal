@@ -737,6 +737,55 @@ const deleteInviteByKey = function (id) {
 	})
 };
 
+const authTokenManagerGetList = function () {
+
+	return xhrService.fetch(authorizerUrl + '/auth-token-manager/', {
+		method: 'GET',
+		credentials: 'include',
+		headers: {
+			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			Accept: 'application/json',
+			'Content-type': 'application/json'
+		}
+	});
+
+}
+
+const authTokenManagerDeleteToken = function (id) {
+
+	return xhrService.fetch(authorizerUrl + '/auth-token-manager/' + id + '/',
+		{
+			method: 'DELETE',
+			credentials: 'include',
+			headers: {
+				'X-CSRFToken': cookieService.getCookie('csrftoken'),
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		}).then(function (data) {
+		return new Promise(function (resolve, reject) {
+			resolve({status: 'deleted'});
+		});
+	})
+};
+
+const authTokenManagerCreateToken = function (data) {
+
+	return xhrService.fetch(authorizerUrl + '/auth-token-manager/', {
+		method: 'POST',
+		credentials: 'include',
+		headers: {
+			'X-CSRFToken': cookieService.getCookie('csrftoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			Accept: 'application/json',
+			'Content-type': 'application/json'
+		},
+		body: JSON.stringify(data)
+	})
+
+};
+
 // module.exports = {
 export default {
 	tokenLogin: tokenLogin,
@@ -791,7 +840,11 @@ export default {
 	deleteInviteByKey: deleteInviteByKey,
 
 
-	transferOwner: transferOwner
+	transferOwner: transferOwner,
+
+	authTokenManagerGetList: authTokenManagerGetList,
+	authTokenManagerDeleteToken: authTokenManagerDeleteToken,
+	authTokenManagerCreateToken: authTokenManagerCreateToken
 
 }
 
