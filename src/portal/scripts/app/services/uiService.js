@@ -243,7 +243,7 @@
 
 			uiRepository.updateListLayout(id, ui).then(function (data) {
 
-				// ui.modified = data.modified
+				ui.modified = data.modified
 
 				if (ui.is_default) {
 					localStorageService.cacheDefaultLayout(ui);
