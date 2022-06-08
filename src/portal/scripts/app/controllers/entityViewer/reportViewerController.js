@@ -401,7 +401,11 @@
                     evRvLayoutsHelper.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
                     vm.entityViewerEventService.removeEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, dleEventIndex);
                 }); */
-                evRvLayoutsHelper.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
+
+                const testIndex = vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                    evRvLayoutsHelper.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
+                    vm.entityViewerEventService.removeEventListener(evEvents.DATA_LOAD_END, testIndex);
+                });
 
             };
 
@@ -748,7 +752,6 @@
 
             };
 
-            // called inside entityViewerHelperService
             vm.getView = function () {
 
                 // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
