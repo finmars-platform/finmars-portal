@@ -62,7 +62,7 @@
 
                 </md-input-container>
 
-                <md-button class="md-raised md-primary" data-ng-click="vm.createAuthToken($event)">Create</md-button>
+                <md-button class="md-raised md-primary {{vm.newToken.current_master_user ? '' : 'disabled-btn'}}" data-ng-click="vm.createAuthToken($event)">Create</md-button>
 
             </div>
 
@@ -79,11 +79,11 @@
 
             <div>
 
-                <h4>Get Report ({{vm.currentTokenItem.api_url}}/reports/balance-report-sql/)</h4>
+                <h4>Get Report ({{vm.requestReport.tokenItem.api_url}}/reports/balance-report-sql/)</h4>
 
                 <md-input-container class="md-block" style="height: 64px">
                     <label>Bearer Token</label>
-                    <input type="text" data-ng-model="vm.requestReport.token">
+                    <input type="text" data-ng-model="vm.requestReport.token" data-ng-change="vm.matchTokenItem()">
                 </md-input-container>
 
 

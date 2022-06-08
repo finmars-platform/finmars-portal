@@ -67,6 +67,7 @@
 
                     if (token.key === vm.currentToken) {
                         vm.currentTokenItem = token;
+                        vm.requestReport.tokenItem = token;
                     }
 
                     if (token.current_master_user_object) {
@@ -162,9 +163,21 @@
 
         }
 
+        vm.matchTokenItem = function (){
+
+             vm.tokens.forEach(function (token) {
+
+                if (token.key === vm.requestReport.token) {
+                    vm.requestReport.tokenItem = token;
+                }
+
+            });
+
+        }
+
         vm.executeRequestReport = function ($event) {
 
-            let url = vm.currentTokenItem.api_url + '/reports/balance-report-sql/'
+            let url = vm.requestReport.tokenItem.api_url + '/reports/balance-report-sql/'
             let token = 'Token ' + vm.requestReport.token
 
             let body = JSON.stringify(vm.requestReport.body, null, 4)
