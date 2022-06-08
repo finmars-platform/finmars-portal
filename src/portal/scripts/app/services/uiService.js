@@ -481,6 +481,7 @@
 
 		delete layout.id;
 
+        layout.name = "Autosave";
 		const formattedContentType = layout.content_type.replace('.', '_');
 		layout.user_code = 'system_autosave_' + formattedContentType;
 

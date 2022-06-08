@@ -22,12 +22,12 @@
         var filterAreaLeft = document.body.clientWidth - filterAreaWidth;
 
         return {
-            sidebar: {
+            /*sidebar: {
                 left: 0,
                 top: 0,
                 width: sidebarWidth,
                 height: sidebarHeight
-            },
+            },*/
             headerToolbar: {
                 left: sidebarWidth,
                 top: 0,
@@ -1275,7 +1275,7 @@
                 topPart: true,
                 columnArea: true,
                 viewer: true,
-                sidebar: true,
+                // sidebar: true,
                 // groupingArea: true,
                 columnAreaHeader: true,
                 splitPanel: true,
