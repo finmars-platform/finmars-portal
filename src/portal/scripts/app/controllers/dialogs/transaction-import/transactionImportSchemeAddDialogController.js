@@ -7,6 +7,7 @@
 
     var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
     var transactionTypeService = require('../../../services/transactionTypeService');
+    var ecosystemDefaultService = require('../../../services/ecosystemDefaultService');
 
     var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
 
@@ -23,7 +24,8 @@
 
         vm.defaultRuleScenario = {
             name: '-',
-            is_default_rule_scenario: true
+            is_default_rule_scenario: true,
+            fields: []
         };
 
         vm.inputsGroup = {
@@ -71,6 +73,8 @@
             //     fields: []
             // }
         ];
+
+        var ecosystemDefaultData;
 
         vm.openSelectorManager = function ($event) {
 
@@ -161,7 +165,7 @@
 
         };
 
-        vm.getTransactionTypes = function () {
+        /* vm.getTransactionTypes = function () {
 
             transactionTypeService.getListLight({
                 pageSize: 1000
@@ -171,7 +175,49 @@
                 $scope.$apply();
             });
 
+        }; */
+        vm.getTransactionTypes = function () {
+
+            return new Promise(function (resolve) {
+
+                transactionTypeService.getListLight({
+                    pageSize: 1000
+
+                }).then(function (data) {
+
+                    vm.transactionTypes = data.results;
+                    vm.readyStatus.transactionTypes = true;
+                    // $scope.$apply();
+
+                    resolve();
+
+                }).catch(function (error) {
+                    resolve();
+                });
+
+            });
+
         };
+
+
+        var loadEcosystemDefaults = function () {
+
+            return new Promise(function (resolve, reject) {
+
+                ecosystemDefaultService.getList().then(function (data) {
+
+                    ecosystemDefaultData = data.results[0];
+
+                    resolve(ecosystemDefaultData);
+
+                }).catch(function (error) {
+                    reject(error);
+                });
+
+            })
+
+        };
+
 
         vm.openInputs = function (item, $event) {
 
@@ -466,7 +512,8 @@
                     multiple: true
                 });
 
-            } else {
+            }
+            else {
 
                 vm.processing = true;
 
@@ -548,93 +595,98 @@
         vm.init = function () {
 
             vm.createEmptyScheme();
-            vm.getTransactionTypes();
+            // vm.getTransactionTypes();
 
-            if (data && data.hasOwnProperty('scheme')) {
+            Promise.all([vm.getTransactionTypes(), loadEcosystemDefaults()]).then(function () {
 
-                vm.scheme = data.scheme;
+                vm.defaultRuleScenario.transaction_type = ecosystemDefaultData.transaction_type;
 
-                if (vm.scheme.inputs.length) {
+                if (data && data.hasOwnProperty('scheme')) {
 
-                    vm.providerFields = [];
+                    vm.scheme = data.scheme;
 
-                    vm.scheme.inputs.forEach(function (input) {
-                        vm.providerFields.push(input);
-                    });
+                    if (vm.scheme.inputs.length) {
 
-                    vm.providerFields = vm.providerFields.sort(function (a, b) {
-                        if (a.column > b.column) {
-                            return 1;
-                        }
-                        if (a.column < b.column) {
-                            return -1;
-                        }
+                        vm.providerFields = [];
 
-                        return 0;
-                    });
+                        vm.scheme.inputs.forEach(function (input) {
+                            vm.providerFields.push(input);
+                        });
 
-                    vm.inputsFunctions = vm.getFunctions();
+                        vm.providerFields = vm.providerFields.sort(function (a, b) {
+                            if (a.column > b.column) {
+                                return 1;
+                            }
+                            if (a.column < b.column) {
+                                return -1;
+                            }
 
-                }
+                            return 0;
+                        });
 
-                if (vm.scheme.calculated_inputs && vm.scheme.calculated_inputs.length) {
+                        vm.inputsFunctions = vm.getFunctions();
 
-                    vm.calculatedFields = [];
-
-                    vm.scheme.calculated_inputs.forEach(function (input) {
-                        vm.calculatedFields.push(input);
-                    });
-
-                    vm.calculatedFields = vm.calculatedFields.sort(function (a, b) {
-                        if (a.column > b.column) {
-                            return 1;
-                        }
-                        if (a.column < b.column) {
-                            return -1;
-                        }
-
-                        return 0;
-                    });
-
-                    vm.inputsFunctions = vm.getFunctions();
-
-                }
-
-                if (vm.scheme.rule_scenarios.length) {
-                    vm.mapFields = [];
-
-                    vm.scheme.rule_scenarios.forEach(function (item) {
-
-                        if (item.is_default_rule_scenario) {
-                            vm.defaultRuleScenario = item
-                        } else {
-                            vm.mapFields.push(item);
-                        }
-
-                    })
-
-
-
-
-                }
-
-                if (vm.scheme.recon_scenarios.length) {
-                    vm.reconFields = [];
-
-                    vm.scheme.recon_scenarios.forEach(function (item) {
-                        vm.reconFields.push(item)
-                    })
-                }
-
-
-
-                vm.selector_values_projection = vm.scheme.selector_values.map(function (item) {
-                    return {
-                        id: item.value,
-                        value: item.value
                     }
-                });
-            }
+
+                    if (vm.scheme.calculated_inputs && vm.scheme.calculated_inputs.length) {
+
+                        vm.calculatedFields = [];
+
+                        vm.scheme.calculated_inputs.forEach(function (input) {
+                            vm.calculatedFields.push(input);
+                        });
+
+                        vm.calculatedFields = vm.calculatedFields.sort(function (a, b) {
+                            if (a.column > b.column) {
+                                return 1;
+                            }
+                            if (a.column < b.column) {
+                                return -1;
+                            }
+
+                            return 0;
+                        });
+
+                        vm.inputsFunctions = vm.getFunctions();
+
+                    }
+
+                    if (vm.scheme.rule_scenarios.length) {
+                        vm.mapFields = [];
+
+                        vm.scheme.rule_scenarios.forEach(function (item) {
+
+                            if (item.is_default_rule_scenario) {
+                                vm.defaultRuleScenario = item
+                            } else {
+                                vm.mapFields.push(item);
+                            }
+
+                        })
+
+                    }
+
+                    if (vm.scheme.recon_scenarios.length) {
+                        vm.reconFields = [];
+
+                        vm.scheme.recon_scenarios.forEach(function (item) {
+                            vm.reconFields.push(item)
+                        })
+                    }
+
+
+
+                    vm.selector_values_projection = vm.scheme.selector_values.map(function (item) {
+                        return {
+                            id: item.value,
+                            value: item.value
+                        }
+                    });
+                }
+
+                $scope.$apply();
+
+            });
 
         };
 
