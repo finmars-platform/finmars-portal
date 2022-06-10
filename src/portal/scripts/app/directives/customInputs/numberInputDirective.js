@@ -101,10 +101,7 @@
 							error = 'Field should have positive number';
 						}
 
-					}
-
-					else if (!isNaN(changedValue) &&
-						changedValue !== null) {
+					} else if (!isNaN(changedValue) && changedValue !== null) {
 
 						changedValue = Number.isInteger(changedValue) ? parseInt(changedValue) : parseFloat(changedValue);
 
@@ -136,9 +133,7 @@
 						}
 						// < negative numbers processing >
 
-					}
-
-					else {
+					} else {
 						error = 'Invalid character used';
 						modelValue = null;
 					}

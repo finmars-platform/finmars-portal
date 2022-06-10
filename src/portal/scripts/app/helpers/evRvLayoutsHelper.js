@@ -251,8 +251,7 @@
 
 						uiService.createListLayout(entityType, listLayout).then(function (data) {
 
-							listLayout.id = data.id;
-							applyLayout(isRootEntityViewer, evDataService, evEventService, listLayout);
+							applyLayout(isRootEntityViewer, evDataService, evEventService, data);
 							toastNotificationService.success("Layout '" + listLayout.name + "' saved.");
 
 							resolve({status: res.status, layoutData: data});
@@ -287,10 +286,10 @@
 						const layoutToOverwrite = layoutToOverwriteData.results[0];
 						overwriteLayout(layoutToOverwrite, listLayout).then(function (updatedLayoutData) {
 
-							if (isRootEntityViewer) listLayout.is_default = true; // default layout for split panel does not have is_default === true
-							listLayout.modified = updatedLayoutData.modified;
+							/* if (isRootEntityViewer) listLayout.is_default = true; // default layout for split panel does not have is_default === true
+							listLayout.modified = updatedLayoutData.modified; */
 
-							applyLayout(isRootEntityViewer, evDataService, evEventService, listLayout);
+							applyLayout(isRootEntityViewer, evDataService, evEventService, updatedLayoutData);
 							toastNotificationService.success("Success. Layout " + listLayout.name + " overwritten.");
 
 							resolve({status: res.status});

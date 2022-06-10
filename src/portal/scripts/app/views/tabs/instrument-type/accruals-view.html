@@ -45,6 +45,13 @@
             <v-pane data-ng-repeat="item in vm.entity.accruals | orderBy: 'order'"
                     expanded="item.isPaneExpanded">
 
+                <div ng-hide="!item.isPaneExpanded" class="accordion-name-input">
+                    <text-input model="item.name"
+                                event-signal="vm.evEditorFieldEvent"
+                                on-change-callback="vm.onRequiredFieldChange('events')"
+                                small-options="{notNull: true}"></text-input>
+                </div>
+
                 <v-pane-header ng-class="{'m-b-0': !$pane.isExpanded()}">
                     <div class="accordion-header-content flex-row fc-space-between fi-center"
                          ng-click="vm.toggleItem($pane, item, $event)">
@@ -58,18 +65,13 @@
 
                             <span class="text-weight-bold m-r-8"># {{$index + 1}}</span>
 
-                            <span ng-hide="!item.isPaneExpanded" class="accordion-name-input">
+                            <!--<span ng-hide="!item.isPaneExpanded" class="accordion-name-input">
                                 <text-input model="item.name"
                                             event-signal="vm.evEditorFieldEvent"
                                             small-options="{notNull: true}"
                                             on-change-callback="vm.onRequiredFieldChange('accruals')"
                                             ng-click="$event.stopPropagation();"></text-input>
-                                <!--<text-input class="instrument-type-accrual-name-input"
-                                            model="item.name"
-                                            placeholder="Name of accrual"
-                                            on-focus="vm.onNameFocus">
-                                </text-input>-->
-                            </span>
+                            </span>-->
 
                             <span ng-hide="item.isPaneExpanded"
                                   class="text-weight-bold accordion-name-text"

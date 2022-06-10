@@ -25,28 +25,32 @@
 
         <tbody>
 
-        <tr data-ng-repeat="item in vm.instrumentTypeLayouts track by $index">
+        <tr data-ng-repeat="item in vm.instrLayoutsFromItype track by $index">
 
             <td>
                 {{$index + 1}}
             </td>
 
             <td>
-                {{item}}
+                {{item.user_code}}
             </td>
 
             <td>
                 <md-button class="md-raised md-primary" data-ng-class="{'disabled-btn': $index - 1 < 0}"
-                           data-ng-click="vm.instrumentTypeMoveLayoutUp($event, item)">
+                           data-ng-click="vm.instrumentTypeMoveLayoutUp($event, item, $index)">
                     Up
                 </md-button>
                 <md-button class="md-raised md-primary"
-                           data-ng-class="{'disabled-btn': $index + 1 >= vm.instrumentTypeLayouts.length}"
-                           data-ng-click="vm.instrumentTypeMoveLayoutDown($event, item)">
+                           data-ng-class="{'disabled-btn': $index + 1 >= vm.instrLayoutsFromItype.length}"
+                           data-ng-click="vm.instrumentTypeMoveLayoutDown($event, item, $index)">
                     Down
                 </md-button>
-                <md-button class="md-raised md-primary" data-ng-click="vm.instrumentTypeDeleteLayout($event, item)">
+                <md-button class="md-raised md-primary" data-ng-click="vm.instrumentTypeDeleteInstrLayout($event, item, $index)">
                     Delete
+                </md-button>
+
+                <md-button class="md-raised md-primary" data-ng-click="vm.editInstrFormLayout($event, item)">
+                    Edit layout
                 </md-button>
             </td>
 
@@ -60,7 +64,7 @@
 
     <div layout="row" class="p-t-16">
 
-        <div class="position-relative">
+        <!--<div class="position-relative">
             <md-input-container>
                 <label>Form User Code</label>
                 <input type="text" data-ng-model="vm.instrumentTypeNewLayoutUserCode"
@@ -75,12 +79,21 @@
                 </div>
             </div>
 
-        </div>
+        </div>-->
+        <dropdown-select label="Instrument Form layout"
+                         model="vm.newInstrFormLayoutUserCode"
+                         menu-options="vm.instrumentFormLayoutsOptions"
+                         small-options="{tooltipText: 'Select form layout of instrument to add'}"></dropdown-select>
 
-        <md-button class="md-raised md-primary" data-ng-click="vm.instrumentTypeMoveAddLayout($event); vm.showInstrumentFormLayouts = false"
-                   data-ng-class="{'disabled-btn': !vm.instrumentTypeNewLayoutUserCode}">
+        <md-button class="md-raised md-primary" data-ng-click="vm.addInstrLayoutToInstrumentType()"
+                   ng-disabled="!vm.newInstrFormLayoutUserCode">
             Add
         </md-button>
+    </div>
+
+    <div>
+        <md-button class="md-raised"
+                   ng-click="vm.createInstrFormLayout($event)">CREATE LAYOUT FOR INSTRUMENT FORM</md-button>
     </div>
 
 

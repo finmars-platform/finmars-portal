@@ -1,22 +1,30 @@
 <div data-ng-if="vm.checkReadyStatus()" class="position-relative">
 
-    <div class="flex-1-1-50 p-t-24">
-        <complex-dropdown-select label="Transaction type"
-                                 model="vm.transactionTypeId"
-                                 menu-options="vm.transactionGroups"
-                                 favorite-options="vm.favTTypeOpts"
-                                 on-favorite-options-change="vm.saveFavoriteTTypeOptions()"
-                                 on-selected-option-change="vm.transactionTypeChange()"></complex-dropdown-select>
+    <div layout="row" style="height: 90px;">
+
+        <div class="flex-1-1-50 p-t-24">
+            <complex-dropdown-select label="Transaction type"
+                                     model="vm.transactionTypeId"
+                                     menu-options="vm.transactionGroups"
+                                     favorite-options="vm.favTTypeOpts"
+                                     on-favorite-options-change="vm.saveFavoriteTTypeOptions()"
+                                     on-selected-option-change="vm.transactionTypeChange()"></complex-dropdown-select>
+        </div>
+
+        <div flex="50">
+            &nbsp;
+        </div>
+
     </div>
 
-    <div class="m-8 f-s-18 p-8"
-         style="background: #ffeee8">
-        <span class="display-inline-block" style="width: 125px">Transaction type:</span> <b>{{vm.entity.transaction_type_object.name}}</b><br/>
-        <span class="display-inline-block" style="width: 125px">Status:</span>
-        <b data-ng-if="vm.entity.status == 1">Booked</b>
-        <b data-ng-if="vm.entity.status == 2">Pending</b>
-        <b data-ng-if="vm.entity.status == 3">Ignored</b>
-    </div>
+<!--    <div class="m-8 f-s-18 p-8"-->
+<!--         style="background: #ffeee8">-->
+<!--        <span class="display-inline-block" style="width: 125px">Transaction type:</span> <b>{{vm.entity.transaction_type_object.name}}</b><br/>-->
+<!--        <span class="display-inline-block" style="width: 125px">Status:</span>-->
+<!--        <b data-ng-if="vm.entity.status == 1">Booked</b>-->
+<!--        <b data-ng-if="vm.entity.status == 2">Pending</b>-->
+<!--        <b data-ng-if="vm.entity.status == 3">Ignored</b>-->
+<!--    </div>-->
 
     <div data-ng-if="vm.fixedArea.isActive"
          class="entity-editor-fixed-area-container"
@@ -146,7 +154,7 @@
          relative-popup-x="left"
          open-on="click"
          close-on-click-outside="true"
-         popup-classes="vm.entityTablePopupClasses">
+         popup-classes="{{vm.entityTablePopupClasses}}">
 
         <md-button
                 aria-label="open entity tabs"

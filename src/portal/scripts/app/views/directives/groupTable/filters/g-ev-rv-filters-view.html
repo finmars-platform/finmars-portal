@@ -70,7 +70,7 @@
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button data-ng-click="evAddEntity($event)" class="g-settings-option-btn">
+                            <md-button data-ng-click="addFromProvider($event)" class="g-settings-option-btn">
                                 <span>Get From Provider</span>
                             </md-button>
                         </md-menu-item>
@@ -166,8 +166,8 @@
                      popup-event-service="popupEventService"
                      popup-x="popupPosX"
                      popup-y="popupPosY"
-                     backdrop-classes="fpBackClasses"
-                     popup-classes="fpClasses"
+                     backdrop-classes="{{fpBackClasses}}"
+                     popup-classes="{{fpClasses}}"
                      on-save="filterSettingsChange()"
                      class="g-filter-chips-wrap"></div>
                 <chips-list chips-list="filtersChips"

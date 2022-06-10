@@ -16,7 +16,7 @@
                 label: '@',
                 placeholderText: '@',
                 model: '=',
-				customButtons: '=',
+                customButtons: '=',
                 customStyles: '=',
                 eventSignal: '=',
                 smallOptions: '=',
@@ -89,13 +89,37 @@
 
                 scope.setHoverInstrument = function ($event, option) {
 
+                    scope.dropdownMenuShown = true;
+
                     setTimeout(function () {
 
                         scope.hoverInstrument = option
+
+                        scope.hoverInstrument.available_for_update = true;
+
+                        if (scope.hoverInstrument.id) {
+                            if (scope.hoverInstrument.instrument_type_object.user_code === 'bonds' || scope.hoverInstrument.instrument_type_object.user_code === 'stocks') {
+
+                                let regexp = /^([A-Z]{2})([A-Z0-9]{9})([0-9]{1})/g
+
+                                let result = scope.hoverInstrument.user_code.match(regexp)
+
+                                if (!result) {
+                                    scope.hoverInstrument.available_for_update = false;
+                                }
+
+                            } else {
+                                scope.hoverInstrument.available_for_update = false;
+                            }
+                        } else {
+                            // instrument that is not yet downloaded
+                            scope.hoverInstrument.available_for_update = false;
+                        }
+
                         console.log('scope.hoverInstrument', scope.hoverInstrument)
 
                         scope.$apply();
-                    }, 0)
+                    }, 100)
                 }
 
                 scope.getInputContainerClasses = function () {
@@ -180,6 +204,8 @@
 
                     var config = {
                         instrument_code: item.referenceId,
+                        instrument_name: item.issueName,
+                        instrument_type_code: item.instrumentType,
                         mode: 1
                     };
 
@@ -192,6 +218,7 @@
                     importInstrumentCbondsService.download(config).then(function (data) {
 
                         scope.isDisabled = false;
+                        scope.processing = false;
 
                         if (data.errors.length) {
 
@@ -208,28 +235,49 @@
 
                                 scope.$apply();
 
-                            }, 0);
+                            }, 100);
 
 
                         } else {
 
+                            stylePreset = '';
+                            scope.error = '';
+
                             scope.model = data.result_id;
                             scope.itemObject = {id: data.result_id, name: item.issueName, user_code: item.issueName}
 
-                            scope.processing = false;
+                            scope.itemName = item.issueName;
+                            scope.inputText = item.issueName;
 
                             scope.valueIsValid = true;
 
+                            scope.$apply();
+
                             setTimeout(function () {
 
-                                if (scope.onChangeCallback) scope.onChangeCallback();
+                                if (scope.onChangeCallback) {
 
-                                scope.$apply();
+                                    scope.onChangeCallback();
 
-                            }, 0);
+                                    scope.$apply();
+
+                                }
+
+
+                            }, 1);
 
                         }
 
+                    }).catch(function (e){
+                        scope.processing = true;
+                        scope.isDisabled = true;
+
+                        scope.model = null;
+
+                        scope.itemName = ''
+                        scope.inputText = ''
+
+                        scope.$apply();
                     })
 
 
@@ -242,7 +290,7 @@
 
                 };
 
-                scope.onInputFocus = function (){
+                scope.onInputFocus = function () {
                     scope.getList();
                 }
 

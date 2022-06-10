@@ -99,9 +99,16 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
             // console.log('item', item);
 
+            vm.openProcessing = true;
+
             profileAuthorizerService.setCurrentMasterUser(item.id).then(function (data) {
 
+                vm.openProcessing = false;
+                console.log("testing_opendatabase activateDatabase", data);
+				// This code may not fire because of websocket reaction to 'master_user_change' inside shellController.js
                 if (data.base_api_url) {
+                    console.log("testing_opendatabase activateDatabase 1", data);
+                    window.document.title = item.name + ' | Finmars'
 
                     globalDataService.setMasterUser(item);
 
@@ -111,19 +118,47 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
                     // if (broadcastChannelService.isAvailable) {
                     //     broadcastChannelService.postMessage('finmars_broadcast', {event: crossTabEvents.MASTER_USER_CHANGED});
                     // }
-
+                    console.log("testing_opendatabase activateDatabase 1.1", data);
                     $state.go('app.portal.home');
 
-                } else {
+                }
+				else {
+                    console.log("testing_opendatabase activateDatabase 2", data);
+                    $scope.$apply();
 
                     console.log("Error activate", data)
 
-                    toastNotificationService.error("Something went wrong. Please, try again later")
+                    if (data.message) {
+                        console.log("testing_opendatabase activateDatabase 2.1", data.message);
+                        if (typeof data.message == 'string') {
+                            toastNotificationService.error(data.message)
+                        } else if (typeof data.message == 'object') {
+
+                            var message = {}
+
+                            Object.keys(data.message).forEach((key)=>{
+                                message = message = ' ' + key + ': ' + data.message[key]
+
+                            })
+
+                            toastNotificationService.error(message)
+
+                        } else {
+                            toastNotificationService.error(data.message)
+                        }
+
+
+                    } else {
+                        toastNotificationService.error("Something went wrong. Please, try again later")
+                    }
 
                 }
 
 
             }).catch(function (error){
+                console.log("testing_opendatabase activateDatabase catch", error);
+                vm.openProcessing = false;
+
                 console.log("Error activate catch", error)
                 toastNotificationService.error("Something went wrong. Please, try again later")
             })
@@ -358,6 +393,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
                 // vm.getInvites();
 
                 localStorage.setItem('goToSetup', 'true')
+
 
                 profileAuthorizerService.setCurrentMasterUser(item.to_master_user).then(function (data) {
 

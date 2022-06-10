@@ -24,7 +24,11 @@
 		};
 
         vm.event = data.event;
-        vm.eventClasses = data.eventClasses;
+
+        var eventHasId = vm.event.hasOwnProperty('id') || vm.event.frontOptions && vm.event.frontOptions.hasOwnProperty('gtKey');
+		vm.regime = eventHasId ? 'edition' : 'addition';
+
+		vm.eventClasses = data.eventClasses;
         vm.notificationClasses = data.notificationClasses;
         vm.periodicityItems = data.periodicityItems;
 
@@ -103,9 +107,7 @@
 
         };
 
-		const openEventActionParametersManager = function ($event, row, column) {
-
-		    console.log('openEventActionParametersManager row, column', row, column);
+		const openEventActionParametersManager = function ($event, row) {
 
 		    var action = vm.event.actions[row.order];
 
@@ -118,7 +120,6 @@
             if (!vm.event.data.parameters) {
                 vm.event.data.parameters = []
             }
-
 
             $mdDialog.show({
                 controller: 'InstrumentEventActionParameterDialogController as vm',
@@ -138,11 +139,8 @@
 
             }).then(res => {
 
-                console.log('openEventParametersManager.res', res);
-
                 if (res.status === 'agree') {
-
-                    action = res.data.item
+					vm.event.actions[row.order] = res.data.item;
                 }
 
             });
@@ -201,8 +199,14 @@
                             value: null,
                             selectorOptions: [],
                         },
+						methods: {
+                        	onChange: function (rowData, colData, gtDataService, gtEventService) {
+                        		let paramsCell = gtDataService.getCellByKey(rowData.order, 'parameters');
+								paramsCell.settings.isDisabled = false;
+							}
+						},
                         styles: {
-                            'grid-table-cell': {'width': '260px'}
+                            'grid-table-cell': {'width': '342px'}
                         }
                     },
                     {
@@ -217,7 +221,7 @@
 							closeOnMouseOut: false
                         },
                         styles: {
-                            'grid-table-cell': {'width': '220px'}
+                            'grid-table-cell': {'width': '280px'}
                         }
                     },
                     {
@@ -247,17 +251,16 @@
                         }
                     },
                     {
-                        key: null,
-                        objPath: [],
-                        columnName: '-',
+                        key: 'parameters',
                         order: 3,
                         cellType: 'button',
                         settings: {
-                            buttonContent: 'Open Manager',
+                            buttonContent: 'OPEN MANAGER',
+							isDisabled: true,
                             onClick: openEventActionParametersManager
                         },
                         styles: {
-                            'grid-table-cell': {'width': '130px'},
+                            'grid-table-cell': {'width': '158px'},
                         }
                     },
                 ],
@@ -281,7 +284,7 @@
 
 		const formatDataForActionsGridTable = function () {
 
-            // assemble header columns
+            //region Assemble header columns
             var rowObj = metaHelper.recursiveDeepCopy(vm.eventActionsGridTableData.templateRow, true);
 
             vm.eventActionsGridTableData.header.columns = rowObj.columns.map(function (column) {
@@ -304,9 +307,9 @@
                 return headerData;
 
             });
-            // < assemble header columns >
+            //endregion
 
-            // assemble body rows
+            //region assemble body rows
             vm.event.actions.forEach(function (action, actionIndex) {
                 action.button_position = actionIndex;
 
@@ -334,10 +337,13 @@
                 var isBookAutomatic = gridTableHelperService.getCellFromRowByKey(rowObj, 'is_book_automatic');
                 isBookAutomatic.settings.value = action.is_book_automatic;
 
+				var parameters = gridTableHelperService.getCellFromRowByKey(rowObj, 'parameters');
+				parameters.settings.isDisabled = false;
+
                 vm.eventActionsGridTableData.body.push(rowObj);
 
             });
-            // < assemble body rows >
+            //endregion
         };
         // < Event actions grid table >
 
@@ -437,18 +443,13 @@
 
             }).then(res => {
 
-                console.log('openEventParametersManager.res', res);
-
                 if (res.status === 'agree') {
-
-                    vm.event = res.data.item
+                    vm.event = res.data.item;
                 }
 
             });
 
-        }
-
-
+        };
 
         vm.init = function () {
 

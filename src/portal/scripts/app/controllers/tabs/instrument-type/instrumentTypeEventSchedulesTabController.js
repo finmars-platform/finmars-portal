@@ -40,14 +40,16 @@
 
     module.exports = function instrumentTypeEventSchedulesTabController($scope, $mdDialog, multitypeFieldService) {
 
-        var vm = this;
+        let vm = this;
 		const gridTableHelperService = new GridTableHelperService();
 
         vm.entity = $scope.$parent.vm.entity;
+		vm.entityType = 'instrument-type';
         if (!vm.entity.events) vm.entity.events = [];
 
 		vm.evEditorDataService = $scope.$parent.vm.evEditorDataService;
 		vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
+		vm.onEntityChange = $scope.$parent.vm.onEntityChange;
 
         vm.readyStatus = {
             notificationClasses: false,
@@ -74,7 +76,11 @@
 		vm.selectorOptionsMap = {
 			'notification_class': [],
 			'periodicity': []
-		}
+		};
+
+		const entityAttrs = $scope.$parent.vm.entityAttrs;
+		vm.maturityDateAttr = entityAttrs.find(eAttr => eAttr.key === 'maturity_date');
+		vm.maturityPriceAttr = entityAttrs.find(eAttr => eAttr.key === 'maturity_price');
 
         const getTransactionTypes = function () {
 
@@ -304,7 +310,7 @@
                 settings: {
                     value: null,
                     closeOnMouseOut: false,
-                    cellText: '...',
+                    // cellText: '<span class="material-icons three-dots-btn">more_horiz</span>',
                     popupSettings: {
                         contentHtml: {
                             main: "<div ng-include src=\"'views/directives/gridTable/cells/popups/instrument-selector-options-display-settings.html'\"></div>"
@@ -381,7 +387,6 @@
                 if (row.defaultValueType === 'selector') {
 					rowObj.columns[2].settings.selectorOptions = vm.selectorOptionsMap[row.key];
 				}
-
                 else if (row.defaultValueType === 'multitypeField') {
 
                     rowObj.columns[2].cellType = 'multitypeField';
@@ -430,12 +435,9 @@
 
         const openEventActionParametersManager = function ($event, row, column, gtDataService) {
 
-            console.log('openEventActionParametersManager row, column', row, column);
-
             var tableData = gtDataService.getTableData();
 
             let event = vm.entity.events.find(event => findEventById(event, tableData.eventId));
-
             var action = event.data.actions[row.order];
 
             console.log('openEventActionParametersManager vm.event.data', event.data);
@@ -470,7 +472,8 @@
 
                 if (res.status === 'agree') {
 
-                    action = res.data.item
+					event.data.actions[row.order] = res.data.item;
+
                 }
 
             });
@@ -503,7 +506,7 @@
 								selectorOptions: [],
                             },
                             styles: {
-                                'grid-table-cell': {'width': '400px'}
+                                'grid-table-cell': {'width': '365px'}
                             }
                         },
                         {
@@ -518,7 +521,7 @@
 								closeOnMouseOut: false
                             },
                             styles: {
-                                'grid-table-cell': {'width': '506px'}
+                                'grid-table-cell': {'width': '387px'}
                             }
                         },
                         {
@@ -547,19 +550,16 @@
                                 'grid-table-cell': {'width': '130px'},
                             }
                         },
-
                         {
-                            key: null,
-                            objPath: [],
-                            columnName: '-',
+                            key: 'parameters',
                             order: 3,
                             cellType: 'button',
                             settings: {
-                                buttonContent: 'Open Manager',
+                                buttonContent: 'OPEN MANAGER',
                                 onClick: openEventActionParametersManager,
                             },
                             styles: {
-                                'grid-table-cell': {'width': '130px'},
+                                'grid-table-cell': {'width': '158px'},
                             }
                         },
                         /* {
@@ -759,7 +759,7 @@
 			const locsWithErrors = vm.evEditorDataService.getLocationsWithErrors();
 
 			if (locsWithErrors['system_tab'].hasOwnProperty('events')) {
-				$scope.$parent.vm.onEntityChange(fieldKey);
+				vm.onEntityChange(fieldKey);
 			}
 
 		}
@@ -1178,8 +1178,7 @@
                 console.log('openEventParametersManager.res', res);
 
                 if (res.status === 'agree') {
-
-                    item = res.data.item
+                    item.data.parameters = res.data.item.data.parameters;
                 }
 
             });

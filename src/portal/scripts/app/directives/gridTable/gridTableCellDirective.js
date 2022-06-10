@@ -57,12 +57,12 @@
                     if (cellMethods.onOpen) {
                         cellMethods.onOpen(scope.row.order, scope.column.order, scope.gtDataService, scope.gtEventService);
                     }
-                }
+                };
 
                 scope.unselectOptions = function () {
-                    scope.column.settings.value = null
+                    scope.column.settings.value = null;
                     scope.onCellValueChange();
-                }
+                };
 
                 scope.cellWithPopup = function () {
                     return cellsWithPopup.includes(scope.column.cellType);

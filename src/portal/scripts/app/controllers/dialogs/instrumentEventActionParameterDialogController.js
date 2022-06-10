@@ -11,9 +11,11 @@
 
         var vm = this;
 
-        vm.title = 'Instrument Event Action Parameter Dialog';
+		vm.title = 'Instrument Event Action Parameter Dialog';
 
-        // MULTIPLE PARAMETER LOGIC START
+		var eventParameters = [];
+
+        //region MULTIPLE PARAMETER LOGIC
 
         vm.optionsForMultipleParameters = {};
 
@@ -23,7 +25,7 @@
 
             var result = [];
 
-            var attrs = vm.eventParameters.filter(function (item) {
+            var attrs = eventParameters.filter(function (item) {
 
                 if (parseInt(item.value_type, 10) === valueTypeInt) {
                     return true;
@@ -39,7 +41,7 @@
 
         };
 
-        // MULTIPLE PARAMETER LOGIC END
+        //endregion MULTIPLE PARAMETER LOGIC
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
@@ -75,8 +77,13 @@
 
         vm.init = function () {
 
+			if (!data.item) {
+				console.error("Invalid event action");
+				throw data.item;
+			}
+
             if (!data.item.transaction_type) {
-                throw "Transaction type required"
+                throw "Transaction type required";
             }
 
             vm.processsing = true;
@@ -92,18 +99,19 @@
                 if (res.results.length) {
                     vm.transactionType = res.results[0];
                 } else {
+					console.error("Transaction type with user code '" + data.item.transaction_type + "' does not exist")
                     $mdDialog.hide({status: 'disagree'});
-                    throw "Transaction type is not exist"
                 }
 
-                vm.eventParameters = data.eventParameters
-                vm.action = data.item;
+				if (Array.isArray(data.eventParameters)) {
+					eventParameters = JSON.parse(angular.toJson(data.eventParameters));
+				}
+
+                vm.action = JSON.parse(angular.toJson(data.item));
 
                 if (vm.transactionType.context_parameters_notes) {
-                    vm.title = vm.transactionType.context_parameters_notes
+                    vm.title = vm.transactionType.context_parameters_notes;
                 }
-                
-                console.log('eventParameters', vm.eventParameters);
 
                 vm.optionsForMultipleParameters[10] = vm.getOptionsForAttributeKey(10);
                 vm.optionsForMultipleParameters[20] = vm.getOptionsForAttributeKey(20);

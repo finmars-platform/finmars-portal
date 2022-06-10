@@ -9,5 +9,5 @@ module.exports = {
 
 	'UPDATE_TRANSACTION_TYPE_SELECTORS': 'UPDATE_TRANSACTION_TYPE_SELECTORS',
 
-	'REDRAW_TABLE': 'REDRAW_TABLE',
+	'REDRAW_TABLE': 'REDRAW_TABLE', // property 'key' of rows and columns used to find matching data inside gridTableData
 };

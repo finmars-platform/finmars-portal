@@ -406,6 +406,11 @@
 
 		};
 
+		var mapCopiedFields = function (field) {
+			delete field.id;
+			return field;
+		};
+
         vm.init = function () {
 
 			vm.scheme = {
@@ -426,26 +431,44 @@
 
 			Promise.all([vm.getTransactionTypes(), loadEcosystemDefaults()]).then(function () {
 
-				vm.defaultRuleScenario.transaction_type = ecosystemDefaultData.transaction_type;
-
 				if (data && data.hasOwnProperty('scheme')) {
 
 					vm.scheme = data.scheme;
 
 					var procSchemeResult = importSchemesMethodsService.processScheme(vm.scheme);
 
-					if (procSchemeResult.hasOwnProperty('providerFields')) vm.providerFields = procSchemeResult.providerFields;
+					if (procSchemeResult.hasOwnProperty('providerFields')) {
+						vm.providerFields = procSchemeResult.providerFields.map(mapCopiedFields);
+					}
+
 					if (procSchemeResult.hasOwnProperty('inputsFunctions')) {
 						vm.inputsFunctions = procSchemeResult.inputsFunctions;
 						vm.exprEditorData.functions = [vm.inputsFunctions];
 					}
-					if (procSchemeResult.hasOwnProperty('calculatedFields')) vm.calculatedFields = procSchemeResult.calculatedFields;
-					if (procSchemeResult.hasOwnProperty('mapFields')) vm.mapFields = procSchemeResult.mapFields;
-					if (procSchemeResult.hasOwnProperty('defaultRuleScenario')) vm.defaultRuleScenario = procSchemeResult.defaultRuleScenario;
-					if (procSchemeResult.hasOwnProperty('reconFields')) vm.reconFields = procSchemeResult.reconFields;
+
+					if (procSchemeResult.hasOwnProperty('calculatedFields')) {
+						vm.calculatedFields = procSchemeResult.calculatedFields.map(mapCopiedFields);
+					}
+
+					if (procSchemeResult.hasOwnProperty('mapFields')) {
+						vm.mapFields = procSchemeResult.mapFields.map(mapCopiedFields);
+					}
+
+					if (procSchemeResult.hasOwnProperty('defaultRuleScenario')) {
+						vm.defaultRuleScenario = procSchemeResult.defaultRuleScenario;
+						delete vm.defaultRuleScenario.id;
+					}
+
+					if (procSchemeResult.hasOwnProperty('reconFields')) {
+						vm.reconFields = procSchemeResult.reconFields.map(mapCopiedFields);
+					}
+
 					vm.selectorValuesProjection = procSchemeResult.selectorValuesProjection;
 
 				}
+
+				// this line should be after data from copied scheme applied
+				vm.defaultRuleScenario.transaction_type = ecosystemDefaultData.transaction_type;
 
 				vm.readyStatus.scheme = true;
 
@@ -462,7 +485,7 @@
 
 				initEventListeners();
 
-            	$scope.$apply();
+                $scope.$apply();
 
             });
 

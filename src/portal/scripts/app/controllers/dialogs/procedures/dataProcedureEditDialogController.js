@@ -11,6 +11,8 @@
     var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService')
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService')
 
+    var entityResolverService = require('../../../services/entityResolverService')
+
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
@@ -97,6 +99,8 @@
 
                 vm.item = data;
 
+                vm.item.data_string = JSON.stringify(vm.item.data, 0, 4)
+
                 vm.readyStatus.procedure = true;
 
 
@@ -123,12 +127,39 @@
 
         };
 
+        vm.getCurrencyCodes = function (){
+
+            entityResolverService.getListLight('currency').then(function (data){
+
+                vm.currencyCodes = data.results.map(function (item){
+
+                    item.id = item.user_code
+
+                    return item
+
+                })
+
+            })
+
+        }
+
+        vm.universalOptionsChange = function () {
+
+            vm.item.data = JSON.parse(vm.item.data_string)
+        }
+
+        vm.universalFieldChange = function () {
+            vm.item.data_string = JSON.stringify(vm.item.data, 0, 4)
+        }
+
         vm.init = function () {
 
             vm.getItem();
             vm.getTransactionImportSchemes();
             vm.getSimpleImportSchemes();
             vm.getProviders();
+
+            vm.getCurrencyCodes();
 
         };
 
