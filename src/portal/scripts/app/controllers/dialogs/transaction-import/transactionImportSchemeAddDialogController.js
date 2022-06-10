@@ -599,8 +599,6 @@
 
             Promise.all([vm.getTransactionTypes(), loadEcosystemDefaults()]).then(function () {
 
-                vm.defaultRuleScenario.transaction_type = ecosystemDefaultData.transaction_type;
-
                 if (data && data.hasOwnProperty('scheme')) {
 
                     vm.scheme = data.scheme;
@@ -610,6 +608,7 @@
                         vm.providerFields = [];
 
                         vm.scheme.inputs.forEach(function (input) {
+                            delete input.id;
                             vm.providerFields.push(input);
                         });
 
@@ -633,6 +632,7 @@
                         vm.calculatedFields = [];
 
                         vm.scheme.calculated_inputs.forEach(function (input) {
+                            delete input.id;
                             vm.calculatedFields.push(input);
                         });
 
@@ -656,8 +656,11 @@
 
                         vm.scheme.rule_scenarios.forEach(function (item) {
 
+                            delete item.id;
+
                             if (item.is_default_rule_scenario) {
-                                vm.defaultRuleScenario = item
+                                vm.defaultRuleScenario = item;
+
                             } else {
                                 vm.mapFields.push(item);
                             }
@@ -683,6 +686,9 @@
                         }
                     });
                 }
+
+                // this line should be after data from copied scheme applied
+                vm.defaultRuleScenario.transaction_type = ecosystemDefaultData.transaction_type;
 
                 $scope.$apply();
 
