@@ -444,7 +444,7 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog) {
 
 		}));*/
 		vm.attributeTypesByValueTypes[40] = vm.attributeTypesByValueTypes[40].concat(getAttributesByValueType(40));
-		console.log("testing attributeTypesByValueTypes", vm.attributeTypesByValueTypes);
+
 	};
 
 	const getInstrumentPricingSchemes = instrumentPricingSchemeService.getList().then(data => {
