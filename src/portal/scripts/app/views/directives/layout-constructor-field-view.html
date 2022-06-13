@@ -143,9 +143,10 @@
                         <div data-ng-include="specialOptionTemplate"></div>
                     </div>
 
-                    <div ng-if="item.attribute.frontOptions && item.frontOptions.attribute_class === 'userInput'">
+                    <div ng-if="item.attribute_class === 'userInput'">
                         <md-input-container class="ec-input-color-checkbox-container">
-                            <md-checkbox ng-model="item.notNull" aria-label="input not null checkbox">
+                            <md-checkbox ng-model="item.options.notNull"
+                                         aria-label="input not null">
                                 Not null
                             </md-checkbox>
                         </md-input-container>

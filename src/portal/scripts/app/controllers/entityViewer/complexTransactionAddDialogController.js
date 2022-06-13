@@ -235,7 +235,6 @@
             vm.userInputs = pbraResult.userInputs;
 
             mapAttributesAndFixFieldsLayout();
-
             /* // should be fired after mapAttributesAndFixFieldsLayout()
             return sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType); */
 
