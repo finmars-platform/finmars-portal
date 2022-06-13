@@ -459,15 +459,11 @@
 
     var validateFieldWithString = function (value, fieldAttr) {
 
-        if (fieldAttr.options && fieldAttr.options.notNull === true) {
-            if (!value) {
-
-                return {
-                    fieldName: fieldAttr.options.fieldName || fieldAttr.verbose_name || fieldAttr.name,
-                    message: 'Field should not be empty.'
-                };
-
-            }
+        if (!value && fieldAttr.options && fieldAttr.options.notNull === true) {
+            return {
+                fieldName: fieldAttr.options.fieldName || fieldAttr.verbose_name || fieldAttr.name,
+                message: 'Field should not be empty.'
+            };
         }
 
         return null;
@@ -527,6 +523,19 @@
         }
 
         return false;
+
+    };
+
+    var validateUserInputSelector = function (value, userInput) {
+
+        if (!value && userInput.frontOptions && userInput.frontOptions.required) {
+            return {
+                fieldName: userInput.options.fieldName || userInput.verbose_name || userInput.name,
+                message: 'Field should not be empty.'
+            };
+        }
+
+        return null;
 
     };
 
@@ -729,7 +738,7 @@
 
     var getAttributeValueType = function (attribute) {
 
-        if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 10) ||
+        /* if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 10) ||
             attribute.value_type === 10) {
             return 10;
         } else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 20) ||
@@ -741,7 +750,13 @@
         } else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 40) ||
             attribute.value_type === 40) {
             return 40;
+        } */
+
+        if (attribute.attribute_type_object && attribute.attribute_type_object.value_type) {
+            return attribute.attribute_type_object.value_type;
         }
+
+        return attribute.value_type;
 
     }
 
@@ -785,6 +800,10 @@
 
             case 40:
                 errorObj = validateDateField(fieldValue, attr);
+                break;
+
+            case 110:
+                errorObj = validateUserInputSelector(fieldValue, attr);
                 break;
 
         }
@@ -860,8 +879,11 @@
                 var key = dAttrData.attribute_type_object.user_code;
                 var fieldValue = evHelperService.getDynamicAttrValue(dAttrData);
 
-                if (!fieldValue && entity[key]) {
+                /*if (!fieldValue && entity[key]) {
                     fieldValue = entity[key];
+                }*/
+                if (dAttrData.attribute_type_object.value_type === 30 && fieldValue) {
+                    fieldValue = fieldValue.classifier;
                 }
 
                 var attrType;
@@ -1238,13 +1260,10 @@
 
             userInputs.forEach(function (uInput) {
 
-                if (uInput.frontOptions && uInput.frontOptions.required) {
+                var iName = uInput.name;
+                var fieldValue = entity.values[iName];
 
-                    var iName = uInput.name;
-                    var fieldValue = entity[iName];
-
-                    validateComplexTransactionUserInput(uInput, fieldValue, transactionsTypeActions, tabs, errors);
-                }
+                validateComplexTransactionUserInput(uInput, fieldValue, transactionsTypeActions, tabs, errors);
 
             });
 

@@ -765,6 +765,14 @@
 
                         }
 
+                        if (scope.item.attribute.frontOptions &&
+                            scope.item.attribute.frontOptions.attribute_class === 'userInput') {
+
+                            scope.specialOptionTemplate = 'views/attribute-options/plain-text.html';
+                            return true;
+
+                        }
+
                     }
 
                     return false;

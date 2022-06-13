@@ -143,6 +143,14 @@
                         <div data-ng-include="specialOptionTemplate"></div>
                     </div>
 
+                    <div ng-if="item.attribute.frontOptions && item.frontOptions.attribute_class === 'userInput'">
+                        <md-input-container class="ec-input-color-checkbox-container">
+                            <md-checkbox ng-model="item.notNull" aria-label="input not null checkbox">
+                                Not null
+                            </md-checkbox>
+                        </md-input-container>
+                    </div>
+
                     <div data-ng-if="hasEditablesToggle()">
 
                         <md-input-container class="ec-input-color-checkbox-container">
@@ -153,7 +161,7 @@
 
                     </div>
 
-                    <div >
+                    <!--<div >
 
                         <md-input-container class="ec-input-color-checkbox-container">
                             <md-checkbox ng-model="item.required" aria-label="input is required">
@@ -161,7 +169,7 @@
                             </md-checkbox>
                         </md-input-container>
 
-                    </div>
+                    </div>-->
 
                     <div data-ng-if="hasBackgroundColorInput()" class="ec-input-color-container">
                         <div layout="row" layout-align="start center" class="m-b-8">
