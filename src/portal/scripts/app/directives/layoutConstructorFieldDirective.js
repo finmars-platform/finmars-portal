@@ -749,27 +749,21 @@
 
                         }
 
-                        if (scope.item.attribute['value_type'] === 'decoration' &&
-							scope.item.attribute.key === 'layoutLineWithLabel') {
+                        if (scope.item.attribute['value_type'] === 'decoration') {
 
-                        	scope.specialOptionTemplate = 'views/attribute-options/labeled-line.html';
-                            return true;
+                            if (scope.item.attribute.key === 'layoutLineWithLabel') {
 
-                        }
+                                scope.specialOptionTemplate = 'views/attribute-options/labeled-line.html';
+                                return true;
 
-                        if (scope.item.attribute['value_type'] === 'decoration' &&
-							scope.item.attribute.key === 'layoutPlainText') {
+                            }
 
-                        	scope.specialOptionTemplate = 'views/attribute-options/plain-text.html';
-                            return true;
+                        	if (scope.item.attribute.key === 'layoutPlainText') {
 
-                        }
+                                scope.specialOptionTemplate = 'views/attribute-options/plain-text.html';
+                                return true;
 
-                        if (scope.item.attribute.frontOptions &&
-                            scope.item.attribute.frontOptions.attribute_class === 'userInput') {
-
-                            scope.specialOptionTemplate = 'views/attribute-options/plain-text.html';
-                            return true;
+                            }
 
                         }
 

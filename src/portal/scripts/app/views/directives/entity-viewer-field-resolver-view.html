@@ -11,10 +11,12 @@
                         label="{{getName()}}"
                         model="modelObj.model"
                         item-object="entity[fieldKey + '_object']"
-                        on-change-callback="changeHandler()"
                         item-name="inputTextObj.value"
                         custom-buttons="item.buttons"
                         custom-styles="customStyles"
+                        event-signal="ciEventObj.event"
+                        small-options="{notNull: options.notNull, tooltipText: tooltipText}"
+                        on-change-callback="changeHandler()"
                 ></instrument-select>
 
             </div>
@@ -25,11 +27,13 @@
                         label="{{getName()}}"
                         model="modelObj.model"
                         item-object="entity[fieldKey + '_object']"
-                        on-change-callback="changeHandler()"
                         item-name="inputTextObj.value"
                         custom-buttons="item.buttons"
                         custom-styles="customStyles"
+                        event-signal="ciEventObj.event"
+                        small-options="{notNull: options.notNull, tooltipText: tooltipText}"
                         entity-type="valueEntity"
+                        on-change-callback="changeHandler()"
                 ></unified-data-select>
 
             </div>
