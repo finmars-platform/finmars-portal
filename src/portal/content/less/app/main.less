@@ -2210,6 +2210,7 @@ div.header-masteruser {
   font-style: normal;
   color: #747474;
   font-size: 14px;
+  user-select: all;
 }
 
 .margin-0 {
@@ -3508,4 +3509,25 @@ span.highlight {
 
 .entity-tabs-menu.complex-transaction-entity-tabs-menu button.entity-tabs-menu-btn {
   margin-top: 90px;
+}
+
+.copy-text-button {
+  cursor: pointer;
+  margin: 4px;
+  display: inline-block;
+  &:hover {
+    opacity: .7;
+  }
+}
+
+.code-example {
+  background: #f2f1f1;
+
+  overflow-x: auto;
+  margin: 1.5em 0 3em;
+  padding: 20px;
+  max-width: 100%;
+  font-size: 1.1rem;
+  line-height: 1.5em;
+
 }

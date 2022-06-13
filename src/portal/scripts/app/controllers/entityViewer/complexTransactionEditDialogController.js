@@ -30,6 +30,8 @@
     var transactionTypeService = require('../../services/transactionTypeService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
+    const uiService = require('../../services/uiService');
+
     module.exports = function complexTransactionEditDialogController($scope, $mdDialog, $bigDrawer, $state, usersService, usersGroupService, globalDataService, entityType, entityId, data) {
 
         var vm = this;
@@ -853,44 +855,77 @@
 
         vm.fillUserFields = function () {
 
-            vm.textFields = [];
-            vm.numberFields = [];
-            vm.dateFields = [];
+            uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
 
-            for (var i = 1; i < 21; i = i + 1) {
+                var fieldMap = {}
 
-                if (vm.entity['user_text_' + i]) {
-                    vm.textFields.push({
-                        name: 'User Text ' + i,
-                        value: vm.entity['user_text_' + i]
-                    })
-                }
+                data.results.forEach(function (field) {
 
-            }
+                    fieldMap[field.key] = field.name;
 
-            for (var i = 1; i < 21; i = i + 1) {
+                })
 
-                if (vm.entity['user_number_' + i] || vm.entity['user_number_' + i] === 0) {
-                    vm.numberFields.push({
-                        name: 'User Number ' + i,
-                        value: vm.entity['user_number_' + i]
-                    })
-                }
 
-            }
 
-            for (var i = 1; i < 6; i = i + 1) {
+                vm.textFields = [];
+                vm.numberFields = [];
+                vm.dateFields = [];
 
-                if (vm.entity['user_date_' + i]) {
+                for (var i = 1; i < 21; i = i + 1) {
 
-                    vm.dateFields.push({
-                        name: 'User Date ' + i,
-                        value: vm.entity['user_date_' + i]
-                    })
+                    if (vm.entity['user_text_' + i]) {
+                        vm.textFields.push({
+                            key: 'user_text_' + i,
+                            name: 'User Text ' + i,
+                            value: vm.entity['user_text_' + i]
+                        })
+                    }
 
                 }
 
-            }
+                for (var i = 1; i < 21; i = i + 1) {
+
+                    if (vm.entity['user_number_' + i] || vm.entity['user_number_' + i] === 0) {
+                        vm.numberFields.push({
+                            key: 'user_number_' + i,
+                            name: 'User Number ' + i,
+                            value: vm.entity['user_number_' + i]
+                        })
+                    }
+
+                }
+
+                for (var i = 1; i < 6; i = i + 1) {
+
+                    if (vm.entity['user_date_' + i]) {
+
+                        vm.dateFields.push({
+                            key: 'user_date_' + i,
+                            name: 'User Date ' + i,
+                            value: vm.entity['user_date_' + i]
+                        })
+
+                    }
+
+                }
+
+                vm.textFields = vm.textFields.map(function(item){
+                    item.name = fieldMap[item.key]
+                    return item
+                })
+
+                vm.numberFields = vm.numberFields.map(function(item){
+                    item.name = fieldMap[item.key]
+                    return item
+                })
+
+                vm.dateFields = vm.dateFields.map(function(item){
+                    item.name = fieldMap[item.key]
+                    return item
+                })
+
+
+            })
 
         };
 
@@ -1975,6 +2010,12 @@
             })
 
             return newBookData
+        }
+
+        vm.copyUserFieldContent = function(content) {
+
+            metaHelper.copyToBuffer(content)
+
         }
 
         vm.init = function () {
