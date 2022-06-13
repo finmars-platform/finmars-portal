@@ -16,9 +16,9 @@
 
 2.1) Build project for local development
 
-`PROJECT_ENV=local API_HOST=http://0.0.0.0:8080 AUTHORIZER_URL=https://dev.finmars.com/authorizer gulp` - for MAC and Linux
+`PROJECT_ENV=local API_HOST=http://0.0.0.0:8080 AUTHORIZER_URL=https://dev2.finmars.com/authorizer gulp` - for MAC and Linux
 
-`set PROJECT_ENV=local set API_HOST=http://localhost:8080 set AUTHORIZER_URL=https://dev.finmars.com/authorizer` - for windows
+`set PROJECT_ENV=local set API_HOST=http://localhost:8080 set AUTHORIZER_URL=https://dev2.finmars.com/authorizer` - for windows
 
 3) Run local Web Server
 

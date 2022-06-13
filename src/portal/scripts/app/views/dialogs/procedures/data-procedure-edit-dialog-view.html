@@ -116,7 +116,7 @@
                 <div class="m-t-16">
 
                     <div><label for="">Provider</label></div>
-                    <md-select data-ng-model="vm.item.provider">
+                    <md-select data-ng-model="vm.item.provider" data-ng-change="vm.providerChange()">
                         <md-option data-ng-repeat="provider in vm.providers" ng-value="provider.id">
                             {{provider.name}}
                         </md-option>
@@ -259,20 +259,25 @@
 
                     <md-input-container>
                         <label>URL</label>
-                        <input type="text" data-ng-model="vm.item.data.url">
+                        <input type="text" data-ng-model="vm.item.data.url" data-ng-keyup="vm.universalFieldChange()">
                     </md-input-container>
 
                     <md-input-container>
                         <label>Security token</label>
-                        <input type="text" data-ng-model="vm.item.data.security_token">
+                        <input type="text" data-ng-model="vm.item.data.security_token" data-ng-keyup="vm.universalFieldChange()">
                     </md-input-container>
 
-                    <div><label for="">Currency</label></div>
-                    <md-select data-ng-model="vm.item.data.currencies" multiple>
-                        <md-option data-ng-repeat="item in vm.currencyCodes" ng-value="item.id">
-                            {{item.name}}
-                        </md-option>
-                    </md-select>
+<!--                    <div><label for="">Currency</label></div>-->
+<!--                    <md-select data-ng-model="vm.item.data.currencies" multiple>-->
+<!--                        <md-option data-ng-repeat="item in vm.currencyCodes" ng-value="item.id">-->
+<!--                            {{item.name}}-->
+<!--                        </md-option>-->
+<!--                    </md-select>-->
+
+                    <div>
+                        <label>Options (JSON)</label>
+                        <textarea name="" data-ng-model="vm.item.data_string" cols="60" rows="5" data-ng-keyup="vm.universalOptionsChange()"></textarea>
+                    </div>
 
 
                 </div>

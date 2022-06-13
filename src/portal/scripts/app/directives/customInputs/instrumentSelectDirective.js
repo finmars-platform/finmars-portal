@@ -235,23 +235,36 @@
 
                                 scope.$apply();
 
-                            }, 0);
+                            }, 100);
 
 
                         } else {
 
+                            stylePreset = '';
+                            scope.error = '';
+
                             scope.model = data.result_id;
                             scope.itemObject = {id: data.result_id, name: item.issueName, user_code: item.issueName}
 
+                            scope.itemName = item.issueName;
+                            scope.inputText = item.issueName;
+
                             scope.valueIsValid = true;
+
+                            scope.$apply();
 
                             setTimeout(function () {
 
-                                if (scope.onChangeCallback) scope.onChangeCallback();
+                                if (scope.onChangeCallback) {
 
-                                scope.$apply();
+                                    scope.onChangeCallback();
 
-                            }, 0);
+                                    scope.$apply();
+
+                                }
+
+
+                            }, 1);
 
                         }
 
