@@ -255,7 +255,18 @@
 				resolve(ui);
 
 			}).catch(function (error) {
+                console.log("testing1 updateListLayout error", error);
+                if (error.status === 400 &&
+                    error.message &&
+                    error.message.non_field_errors &&
+                    error.message.non_field_errors[0] === "Synchronization error") {
+                    // this and page reload fixes "Synchronization error" which sometimes occur
+                    localStorageService.deleteLayoutFromCache(id);
+
+                }
+
 				reject(error);
+
 			});
 
 		});

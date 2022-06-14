@@ -143,8 +143,7 @@
             <span class="ec-decoration plain-text" data-ng-bind="item.options.plainText"></span>
         </div>
 
-        <div data-ng-if="vm.fieldType['display_name'] === 'Selector'"
-             class="ec-decoration-container">
+        <div data-ng-if="vm.fieldType['display_name'] === 'Selector'">
             <ev-selector-resolver item="item"
                                   model="vm.model"
                                   options="options"
