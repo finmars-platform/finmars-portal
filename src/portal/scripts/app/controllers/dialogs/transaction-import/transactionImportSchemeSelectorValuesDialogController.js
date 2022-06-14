@@ -21,8 +21,14 @@
             notes: ""
         };
 
+        var updateOrder = function (item, index) {
+            item.order = index;
+            return item;
+        };
+
         vm.deleteSelector = function($event, $index) {
             vm.scheme.selector_values.splice($index, 1);
+            vm.scheme.selector_values = vm.scheme.selector_values.map(updateOrder);
         };
 
         vm.addSelector = function () {
@@ -85,9 +91,10 @@
                         vm.scheme.selector_values.push(rowToInsert);
                     }
 
-                    for (var i = 0; i < vm.scheme.selector_values.length; i++) {
+                    /*for (var i = 0; i < vm.scheme.selector_values.length; i++) {
                         vm.scheme.selector_values[i].order = i;
-                    }
+                    }*/
+                    vm.scheme.selector_values = vm.scheme.selector_values.map(updateOrder);
 
                 });
 
@@ -126,11 +133,12 @@
             var DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
             scrollHelper.setDnDScrollElem(DnDScrollElem);
 
-            vm.scheme.selector_values.forEach(function (row, index) {
+            /* vm.scheme.selector_values.forEach(function (row, index) {
                 if (!row.order) {
                     row.order = index;
                 }
-            });
+            }); */
+            vm.scheme.selector_values = vm.scheme.selector_values.map(updateOrder);
         };
 
         init();
