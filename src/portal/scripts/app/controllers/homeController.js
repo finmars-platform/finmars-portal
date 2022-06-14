@@ -29,7 +29,7 @@
             var prefix = baseUrlService.getMasterUserPrefix();
             var apiVersion = baseUrlService.getApiVersion();
 
-            return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
+            return baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
 
         };
 
@@ -51,7 +51,7 @@
 
         var processEventsPromise = function () {
 
-        	return new Promise(function (resolve, reject) {
+            return new Promise(function (resolve, reject) {
 
                 usersService.getOwnMemberSettings().then(function (data) {
 
@@ -142,17 +142,14 @@
 
                     item.verbose_created = moment(new Date(item.created)).format('DD-MM-YYYY HH:mm');
 
-                    if (item.level === 1) {
-                        item.verbose_level = 'Info'
+                    if (item.level == '1') {
+                        item.verbose_level = 'info'
+                    } else {
+                        item.verbose_level = item.level
                     }
 
-                    if (item.level === 2) {
-                        item.verbose_level = 'Warning'
-                    }
 
-                    if (item.level === 3) {
-                        item.verbose_level = 'Error'
-                    }
+                    console.log('item', item)
 
 
                     if (item.status === 1) {
@@ -210,7 +207,7 @@
 
         };
 
-        vm.reactToEvents = function (){
+        vm.reactToEvents = function () {
 
             processEventsPromise()
 
@@ -235,13 +232,13 @@
 
             vm.getSystemMessages();
 
-			var promises = [];
+            var promises = [];
 
-			// promises.push(processEventsPromise());
-			promises.push(getDashboardsList());
+            // promises.push(processEventsPromise());
+            promises.push(getDashboardsList());
 
-			await Promise.all(promises);
-			$scope.$apply();
+            await Promise.all(promises);
+            $scope.$apply();
 
         };
 
