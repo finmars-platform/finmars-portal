@@ -310,8 +310,10 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             };
 
-			scope.onAutosaveChange = function () {
-				usersService.updateMember(scope.member.id, scope.member);
+			scope.onAutosaveToggle = function () {
+				usersService.updateMember(scope.member.id, scope.member).then(function () {
+                    middlewareService.autosaveLayoutToggle();
+                });
 			};
 
             if (scope.openedInside === 'portal') {

@@ -201,6 +201,37 @@
             data.interfaceLayout = interfaceLayout;
         }
 
+        /**
+         *
+         * @param {=Object} interfaceLayout
+         * @returns {Object} - interface layout with only properties that user changes
+         * @memberOf module:entityViewerDataService
+         */
+        var getInterfaceLayoutToSave = function (interfaceLayout) {
+
+            if (interfaceLayout === undefined) {
+                interfaceLayout = getInterfaceLayout();
+            }
+
+            var interfaceLayoutToSave = {};
+
+            // interfaceLayoutToSave.groupingArea = {};
+            // if (interfaceLayout.groupingArea) {
+            //     interfaceLayoutToSave.groupingArea.collapsed = interfaceLayout.groupingArea.collapsed;
+            //     interfaceLayoutToSave.groupingArea.height = interfaceLayout.groupingArea.height;
+            // }
+            interfaceLayoutToSave.columnArea = {};
+            // interfaceLayoutToSave.columnArea.collapsed = interfaceLayout.columnArea.collapsed;
+            if (interfaceLayout.columnArea) {
+                interfaceLayoutToSave.columnArea.height = interfaceLayout.columnArea.height;
+            }
+
+            interfaceLayoutToSave.splitPanel = interfaceLayout.splitPanel;
+
+            return interfaceLayoutToSave;
+
+        };
+
         function toggleRightSidebar(collapse) {
 
             var interfaceLayout = getInterfaceLayout();
@@ -972,30 +1003,15 @@
         function setActiveLayoutConfiguration(options) {
 
             if (options && options.layoutConfig) {
-
                 data.activeLayoutConfiguration = options.layoutConfig;
 
             } else {
 
                 var listLayout = metaHelper.recursiveDeepCopy(getListLayout());
 
-                var interfaceLayout = getInterfaceLayout();
+                // var interfaceLayout = getInterfaceLayout();
 
-                var interfaceLayoutToSave = {};
-                // interfaceLayoutToSave.groupingArea = {};
-                // if (interfaceLayout.groupingArea) {
-                //     interfaceLayoutToSave.groupingArea.collapsed = interfaceLayout.groupingArea.collapsed;
-                //     interfaceLayoutToSave.groupingArea.height = interfaceLayout.groupingArea.height;
-                // }
-                interfaceLayoutToSave.columnArea = {};
-                // interfaceLayoutToSave.columnArea.collapsed = interfaceLayout.columnArea.collapsed;
-                if (interfaceLayout.columnArea) {
-                    interfaceLayoutToSave.columnArea.height = interfaceLayout.columnArea.height;
-                }
-
-                interfaceLayoutToSave.splitPanel = interfaceLayout.splitPanel;
-
-                listLayout.data.interfaceLayout = interfaceLayoutToSave;
+                listLayout.data.interfaceLayout = getInterfaceLayoutToSave();
 
                 /*if (isRootEntityViewer()) {
                     listLayout.data.additions = JSON.parse(JSON.stringify(getAdditions()));
@@ -1070,23 +1086,9 @@
             listLayout.data.rowSettings = getRowSettings();
             listLayout.data.additions = getAdditions();
 
-            var interfaceLayout = getInterfaceLayout();
+            // var interfaceLayout = getInterfaceLayout();
 
-            var interfaceLayoutToSave = {};
-            // interfaceLayoutToSave.groupingArea = {};
-            // if (interfaceLayout.groupingArea) {
-            //     interfaceLayoutToSave.groupingArea.collapsed = interfaceLayout.groupingArea.collapsed;
-            //     interfaceLayoutToSave.groupingArea.height = interfaceLayout.groupingArea.height;
-            // }
-            interfaceLayoutToSave.columnArea = {};
-            // interfaceLayoutToSave.columnArea.collapsed = interfaceLayout.columnArea.collapsed;
-            if (interfaceLayout.columnArea) {
-                interfaceLayoutToSave.columnArea.height = interfaceLayout.columnArea.height;
-            }
-
-            interfaceLayoutToSave.splitPanel = interfaceLayout.splitPanel;
-
-            listLayout.data.interfaceLayout = interfaceLayoutToSave;
+            listLayout.data.interfaceLayout = getInterfaceLayoutToSave();
 
             if (isReport) {
 
@@ -1767,6 +1769,7 @@
 
             getInterfaceLayout: getInterfaceLayout,
             setInterfaceLayout: setInterfaceLayout,
+            getInterfaceLayoutToSave: getInterfaceLayoutToSave,
 
             toggleRightSidebar: toggleRightSidebar,
 
