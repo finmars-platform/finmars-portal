@@ -259,10 +259,21 @@
 
 	const getAutosaveLayout = contentType => {
 
-		if (getPropertyForStoring()) { // check for availability of user, masterUser, member
+		const propName = getPropertyForStoring();
 
-			let objPath = ['layouts', 'layoutsList', contentType];
-			return getCachePropVal(objPath);
+		if (propName) { // check for availability of user, masterUser, member
+
+			let objPath = ['layouts', 'autosaveLayouts', contentType];
+
+			let autosaveLayoutData = getCachePropVal(objPath);
+
+			if (!autosaveLayoutData || !autosaveLayoutData.id) {
+				return null;
+			}
+
+			let autosaveLayout = getCachedLayout(autosaveLayoutData.id);
+
+			return autosaveLayout;
 
 		}
 

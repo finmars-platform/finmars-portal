@@ -365,7 +365,6 @@ import QueuePromisesService from "../services/queuePromisesService";
 		saveAsLayoutList: saveAsLayoutList,
 
 		clearSplitPanelAdditions: clearSplitPanelAdditions,
-		initListenersForAutosaveLayout: initListenersForAutosaveLayout,
 
 		statesWithLayouts: statesWithLayoutsList,
     }
