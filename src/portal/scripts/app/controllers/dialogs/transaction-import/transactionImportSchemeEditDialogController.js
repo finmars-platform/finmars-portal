@@ -602,7 +602,7 @@
                     }
                 }
             });
-            console.log("testing1 makeCopy scheme", scheme);
+
             $mdDialog.hide({status: 'copy', dialogPromise: copyPromise});
 
         };
