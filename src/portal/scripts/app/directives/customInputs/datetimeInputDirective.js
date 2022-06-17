@@ -38,7 +38,7 @@
 				var inputElem = elem[0].querySelector(".dateInputElem");
 
 				var inputLoaded = false; // prevents not null inputs highlight from start
-				var dateChangedFromOutside = true;
+				// var dateChangedFromOutside = true;
 
 				var doNotShowDatepicker = true; // used to prevent datepicker show on click
 				var position = "right";
@@ -92,7 +92,7 @@
 
 					var onChangeEnd = function () {
 
-						dateChangedFromOutside = false;
+						// dateChangedFromOutside = false;
 						clearTimeout(onChangeIndex);
 
 						onChangeIndex = setTimeout(() => {
@@ -334,7 +334,8 @@
 
 					scope.$watch("model", function () {
 						//if (scope.model && scope.model.value) {
-						if (dateChangedFromOutside) { // don't execute if date changed by input itself
+						// if (dateChangedFromOutside) {
+						if (!inputContainer.classList.contains('custom-input-focused')) { // don't execute if date changed by input itself
 
 							if (scope.model) {
 
@@ -371,7 +372,7 @@
 
 						}
 
-						dateChangedFromOutside = true;
+						// dateChangedFromOutside = true;
 
 					});
 
