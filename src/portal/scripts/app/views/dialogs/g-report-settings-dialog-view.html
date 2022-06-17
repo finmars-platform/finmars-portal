@@ -342,6 +342,17 @@
                         </dropdown-select>
                     </div>
 
+                    <div class="g-report-settings-row p-b-8" data-ng-if="vm.fieldsReady">
+                        <div class="default-f-s">Date Field</div>
+
+                        <dropdown-select model="vm.reportOptions.date_field"
+                                         menu-options="vm.dateFieldOptions"
+                                         small-options="{tooltipText: 'Date field'}"
+                                         class="g-report-settings-field">
+                        </dropdown-select>
+                    </div>
+
+
                 </div>
 
                 <!-- <div layout="row">
