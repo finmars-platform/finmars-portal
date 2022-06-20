@@ -1135,6 +1135,7 @@
                             return ['user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'].indexOf(field.key) !== -1;
                         });
 
+
                     });
 
                     syncFilters();
