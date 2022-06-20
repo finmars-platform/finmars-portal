@@ -943,12 +943,18 @@
 
 		};
 
-        const manageAttributeTypes = function (ev) {
+
+
+        // const manageAttributeTypes = function (ev) {
+		const manageAttributeTypes = function (option, _$popup) {
+
+			_$popup.cancel();
 
         	$mdDialog.show({
 				controller: 'AttributesManagerDialogController as vm',
 				templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
-				targetEvent: ev,
+				parent: document.querySelector('.dialog-containers-wrap'),
+				// targetEvent: ev,
 				multiple: true,
 				locals: {
 					data: {

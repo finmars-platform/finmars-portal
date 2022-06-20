@@ -104,10 +104,10 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
             profileAuthorizerService.setCurrentMasterUser(item.id).then(function (data) {
 
                 vm.openProcessing = false;
-                console.log("testing_opendatabase activateDatabase", data);
+
 				// This code may not fire because of websocket reaction to 'master_user_change' inside shellController.js
                 if (data.base_api_url) {
-                    console.log("testing_opendatabase activateDatabase 1", data);
+
                     window.document.title = item.name + ' | Finmars'
 
                     globalDataService.setMasterUser(item);
@@ -118,18 +118,18 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
                     // if (broadcastChannelService.isAvailable) {
                     //     broadcastChannelService.postMessage('finmars_broadcast', {event: crossTabEvents.MASTER_USER_CHANGED});
                     // }
-                    console.log("testing_opendatabase activateDatabase 1.1", data);
+
                     $state.go('app.portal.home');
 
                 }
 				else {
-                    console.log("testing_opendatabase activateDatabase 2", data);
+
                     $scope.$apply();
 
                     console.log("Error activate", data)
 
                     if (data.message) {
-                        console.log("testing_opendatabase activateDatabase 2.1", data.message);
+
                         if (typeof data.message == 'string') {
                             toastNotificationService.error(data.message)
                         } else if (typeof data.message == 'object') {
@@ -156,7 +156,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
 
             }).catch(function (error){
-                console.log("testing_opendatabase activateDatabase catch", error);
+
                 vm.openProcessing = false;
 
                 console.log("Error activate catch", error)
