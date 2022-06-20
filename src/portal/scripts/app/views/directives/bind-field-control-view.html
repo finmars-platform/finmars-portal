@@ -14,7 +14,8 @@
                     event-signal="ciEventObj.event"
                     small-options="{onlyPositive: item.options.onlyPositive,
                       tooltipText: tooltipText,
-                      notNull: options.notNull}"
+                      notNull: options.notNull,
+                      dialogParent: '.dialog-containers-wrap'}"
                     on-change-callback="vm.itemChange()">
             </number-input>
         </div>
@@ -27,7 +28,7 @@
                         custom-buttons="item.buttons"
                         custom-styles="customStyles"
                         event-signal="ciEventObj.event"
-                        small-options="{tooltipText: tooltipText, notNull: options.notNull}"
+                        small-options="{tooltipText: tooltipText, notNull: options.notNull, dialogParent: '.dialog-containers-wrap'}"
                         render-hyperlinks="item.options.isHyperlink"
                         on-change-callback="vm.itemChange()"
                         on-blur-callback="inputBlur()"></text-input>
@@ -56,7 +57,7 @@
                     custom-buttons="item.buttons"
                     custom-styles="customStyles"
                     event-signal="ciEventObj.event"
-                    small-options="{tooltipText: tooltipText, notNull: options.notNull}"
+                    small-options="{tooltipText: tooltipText, notNull: options.notNull, dialogParent: '.dialog-containers-wrap'}"
                     on-change-callback="onDateChange()">
             </date-input>
         </div>
@@ -69,7 +70,7 @@
                     is-readonly="item.readonly"
                     custom-styles="customStyles"
                     event-signal="ciEventObj.event"
-                    small-options="{tooltipText: tooltipText, notNull: options.notNull}"
+                    small-options="{tooltipText: tooltipText, notNull: options.notNull, dialogParent: '.dialog-containers-wrap'}"
                     on-change-callback="onDateChange()">
             </datetime-input>
         </div>
@@ -113,7 +114,7 @@
                                    classifier-value="vm.model"
                                    event-signal="ciEventObj.event"
                                    entity-type="vm.entityType"
-                                   small-options="{tooltipText: tooltipText, notNull: options.notNull}"
+                                   small-options="{tooltipText: tooltipText, notNull: options.notNull, dialogParent: '.dialog-containers-wrap'}"
                                    on-change-callback="changeClassifier()"
                 ></classifier-select>
 

@@ -10,16 +10,8 @@
 </div>
 
 <div style="margin-right: 10px;">
-    <!--            <md-button ng-click="" class="md-raised">-->
-    <!--                <div class="flex-row flex-c-center">-->
-    <!--                    <ng-md-icon icon="more_vert" class="flex-row"></ng-md-icon>-->
-    <!--                </div>-->
-    <!--                -->
-    <!--                -->
-    <!--                -->
-    <!--            </md-button>-->
 
-    <md-menu md-position-mode="target-right target">
+    <!--<md-menu md-position-mode="target-right target">
 
         <md-button class="outline-button" ng-click="$mdOpenMenu($event)">
             <div class="flex-row flex-c-center">
@@ -106,7 +98,21 @@
             </md-menu-item>
 
         </md-menu-content>
-    </md-menu>
+    </md-menu>-->
+    <md-button popup
+               popup-template-url="'views/popups/selector2-popup-view.html'"
+               popup-data="vm.footerPopupData"
+               open-on="click"
+               position-relative-to="element"
+               relative-position-y="top"
+
+               ng-disabled="!vm.checkReadyStatus() || vm.processing"
+               class="outline-button">
+        <div class="flex-row flex-c-center">
+            <ng-md-icon icon="more_vert" class="flex-row"></ng-md-icon>
+        </div>
+    </md-button>
+
 
     <md-button class="outline-button" data-ng-if="vm.entityType !== 'transaction'"
                ng-disabled="vm.saveBtnDisabled()"

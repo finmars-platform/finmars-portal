@@ -30,7 +30,11 @@
                      event-signal="eventSignal"
                      item-name="inputTextObj.value"
                      menu-options="fields"
-                     small-options="{notNull: options.notNull, tooltipText: '{{getName()}}'}"
+                     small-options="{
+                        notNull: options.notNull,
+                        tooltipText: '{{getName()}}',
+                        dialogParent: '.dialog-containers-wrap'
+                     }"
                      sorted="sorted"
                      on-change-callback="changeHandler()"
                      style="{{inputBackgroundColor()}}">

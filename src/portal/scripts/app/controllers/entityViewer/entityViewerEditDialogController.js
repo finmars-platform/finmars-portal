@@ -64,7 +64,7 @@
 
         vm.hasEnabledStatus = true;
         vm.entityStatus = '';
-		vm.allowFormLayoutEdition = true;
+		// vm.allowFormLayoutEdition = true;
         vm.evEditorEvent = null;
 
         if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
@@ -398,10 +398,10 @@
 
             entityResolverService.getByKey(vm.entityType, vm.entity.id).then(function (result) {
 
-                var name = result.name.split('(del) ')[1]
-                var short_name = result.short_name.split('(del) ')[1]
+                var name = result.name.split('(del) ')[1];
+                var short_name = result.short_name.split('(del) ')[1];
 
-                var current_user_code = result.user_code
+                var current_user_code = result.user_code;
 
                 result.name = name;
                 result.short_name = short_name;
@@ -445,7 +445,80 @@
 
         };
 
-        vm.manageAttrs = vm.sharedLogic.manageAttributeTypes;
+        var getFooterPopupData = function () {
+
+            var data = {
+                options: []
+            };
+
+            var duplicateOpt = {
+                icon: 'content_copy',
+                name: 'Duplicate',
+                classes: 'divider-bottom'
+            }
+
+            if (['price-history', 'currency-history', 'transaction'].includes(vm.entityType)) {
+
+                duplicateOpt.isDisabled = !vm.entity.is_enabled || !vm.hasEditPermission;
+                duplicateOpt.onClick = function (option, _$popup) {
+
+                    _$popup.cancel();
+                    vm.copy('big-drawer');
+
+                };
+
+            } else {
+
+                duplicateOpt.isDisabled = !vm.hasEditPermission;
+                duplicateOpt.onClick = function (option, _$popup) {
+
+                    _$popup.cancel();
+                    vm.copy(vm.openedIn);
+
+                };
+
+            }
+
+            data.options.push(duplicateOpt);
+
+            data.options.push({
+                icon: "list",
+                name: "Edit Form",
+                onClick: vm.editLayout
+            });
+
+            if (vm.entityType !== "transaction") {
+                data.options.push({
+                    icon: "edit",
+                    name: "Manage Attributes",
+                    onClick: vm.sharedLogic.manageAttributeTypes
+                });
+            }
+
+            data.options.push({
+                key: 'toggle_enable_status',
+                icon: vm.entity.is_enabled ? "not_interested" : "check_circle",
+                name: vm.entity.is_enabled ? "Disable" : "Enable",
+                isDisabled: !vm.hasEditPermission,
+                classes: 'divider-bottom',
+                onClick: function (option, _$popup) {
+                    _$popup.cancel();
+                    vm.toggleEnableStatus();
+                }
+            });
+
+            data.options.push({
+                icon: 'delete',
+                name: "Delete",
+                isDisabled: !vm.hasEditPermission,
+                onClick: vm.delete,
+            });
+
+            return data;
+
+        };
+
+        vm.footerPopupData = null;
 
         vm.copy = function (windowType) {
 
@@ -625,6 +698,8 @@
                         console.log('# vm.tabs', vm.tabs);
 						vm.attributesLayout = formLayoutData.attributesLayout;
 
+                        vm.footerPopupData = getFooterPopupData(); // have to be called after vm.loadPermissions()
+
 						vm.readyStatus.layout = true;
 						vm.readyStatus.entity = true;
 						/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
@@ -772,14 +847,16 @@
 
         };
 
-        vm.delete = function ($event) {
+        // vm.delete = function ($event) {
+        vm.delete = function (options, _$popup) {
+
+            _$popup.cancel();
 
             $mdDialog.show({
                 controller: 'EntityViewerDeleteDialogController as vm',
                 templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-dialog-view.html',
                 parent: angular.element(document.body),
-                targetEvent: $event,
-                //clickOutsideToClose: false,
+                // targetEvent: $event,
                 multiple: true,
                 preserveScope: true,
                 autoWrap: true,
@@ -804,6 +881,12 @@
 
             vm.entity.is_enabled = !vm.entity.is_enabled;
 
+            var tesOpt = vm.footerPopupData.options.find(function (option) {
+                return option.key === 'toggle_enable_status';
+            });
+
+            tesOpt.icon = vm.entity.is_enabled ? "not_interested" : "check_circle";
+            tesOpt.name = vm.entity.is_enabled ? "Disable" : "Enable";
 
             entityResolverService.getByKey(vm.entityType, vm.entity.id).then(function (result) {
 
@@ -1038,7 +1121,9 @@
 
         };
 
-        vm.editLayout = function (ev) {
+        vm.editLayout = function (option, _$popup) {
+
+            _$popup.cancel();
 
         	const dataConstructorData = {entityType: vm.entityType};
         	if (vm.dataConstructorLayout) dataConstructorData.layoutId = vm.dataConstructorLayout.id;
@@ -1046,7 +1131,7 @@
             $mdDialog.show({
                 controller: 'EntityDataConstructorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
-                targetEvent: ev,
+                // targetEvent: ev,
                 multiple: true,
                 locals: {
                     data: dataConstructorData

@@ -135,10 +135,10 @@
                         'flex-basis-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1
                     }">
 
-                <text-input
-                        label="Report Name (Name)"
-                        placeholder-text="Report Name (Name)"
-                        model="vm.entity.name"></text-input>
+                <text-input label="Report Name (Name)"
+                            placeholder-text="Report Name (Name)"
+                            model="vm.entity.name"
+                            small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
 
             </div>
 
@@ -155,7 +155,7 @@
                         model="vm.entity[vm.typeFieldName]"
                         placeholder-text="{{vm.typeFieldLabel}}"
                         menu-options="vm.typeSelectorOptions"
-                        small-options="{tooltipText: 'Type', indicatorBtnIcon: 'type1'}"
+                        small-options="{tooltipText: 'Type', indicatorBtnIcon: 'type1', dialogParent: '.dialog-containers-wrap'}"
                         on-change-callback="vm.typeSelectorChange()"
                         class="ev-editor-field"></dropdown-select>
 
@@ -176,7 +176,7 @@
                              data-entity-type="vm.groupSelectorEntityType"
                              data-options="vm.groupSelectorOptions"
                              event-signal="vm.groupSelectorEventObj.event"
-                             small-options="{notNull: options.notNull}"></crud-select>
+                             small-options="{notNull: options.notNull, dialogParent: '.dialog-containers-wrap'}"></crud-select>
 
                 <crud-select data-ng-if="vm.entityType === 'strategy-1' || vm.entityType === 'strategy-2' || vm.entityType === 'strategy-3'"
                              data-label="vm.groupSelectorLabel"
@@ -184,7 +184,7 @@
                              data-entity-type="vm.groupSelectorEntityType"
                              data-options="vm.groupSelectorOptions"
                              event-signal="vm.groupSelectorEventObj.event"
-                             small-options="{notNull: options.notNull}"></crud-select>
+                             small-options="{notNull: options.notNull, dialogParent: '.dialog-containers-wrap'}"></crud-select>
 
                 <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type' &&
                                  vm.entityType !== 'responsible' && vm.entityType !== 'counterparty' && vm.entityType !== 'strategy-1' && vm.entityType !== 'strategy-2' && vm.entityType !== 'strategy-3'"
@@ -192,7 +192,8 @@
                     <text-input
                             label="System Name (Short Name)"
                             placeholder-text="System Name (Short Name)"
-                            model="vm.entity.short_name"></text-input>
+                            model="vm.entity.short_name"
+                            small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
                 </div>
             </div>
 
@@ -215,7 +216,8 @@
                     <text-input
                             label="System Name (Short Name)"
                             placeholder-text="System Name (Short Name)"
-                            model="vm.entity.short_name"></text-input>
+                            model="vm.entity.short_name"
+                            small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
                 </div>
 
                 <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type'"
@@ -223,7 +225,8 @@
                     <text-input
                             label="Unique Code (User Code)"
                             placeholder-text="Unique Code (User Code)"
-                            model="vm.entity.user_code"></text-input>
+                            model="vm.entity.user_code"
+                            small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
                 </div>
 
             </div>

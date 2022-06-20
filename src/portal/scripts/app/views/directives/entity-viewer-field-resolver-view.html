@@ -15,6 +15,7 @@
                         item-name="inputTextObj.value"
                         custom-buttons="item.buttons"
                         custom-styles="customStyles"
+                        small-options="{dialogParent: '.dialog-containers-wrap'}"
                 ></instrument-select>
 
             </div>
@@ -30,6 +31,7 @@
                         custom-buttons="item.buttons"
                         custom-styles="customStyles"
                         entity-type="valueEntity"
+                        small-options="{dialogParent: '.dialog-containers-wrap'}"
                 ></unified-data-select>
 
             </div>
@@ -43,7 +45,11 @@
                                       custom-buttons="item.buttons"
                                       custom-styles="customStyles"
                                       event-signal="ciEventObj.event"
-                                      small-options="{notNull: options.notNull, tooltipText: tooltipText}"
+                                      small-options="{
+                                        notNull: options.notNull,
+                                        tooltipText: tooltipText,
+                                        dialogParent: '.dialog-containers-wrap'
+                                      }"
                                       entity-type="valueEntity"
                                       on-change-callback="changeHandler()"></entity-search-select>
             </div>
@@ -144,7 +150,11 @@
                                          placeholder-text="{{getName()}}"
                                          event-signal="ciEventObj.event"
                                          menu-options="sortedFields"
-                                         small-options="{notNull: options.notNull, tooltipText: '{{getName()}}'}"
+                                         small-options="{
+                                            notNull: options.notNull,
+                                            tooltipText: '{{getName()}}',
+                                            dialogParent: '.dialog-containers-wrap'
+                                         }"
                                          sorted="sorted"
                                          on-change-callback="changeHandler()"
                                          style="{{inputBackgroundColor()}}">
@@ -204,7 +214,7 @@
                                      placeholder-text="{{getName()}}"
                                      event-signal="ciEventObj.event"
                                      menu-options="schemeSortedFields"
-                                     small-options="{notNull: options.notNull, tooltipText: '{{getName()}}'}"
+                                     small-options="{notNull: options.notNull, tooltipText: '{{getName()}}', dialogParent: '.dialog-containers-wrap'}"
                                      sorted="sorted"
                                      on-change-callback="changeHandler()"
                                      style="{{inputBackgroundColor()}}">
@@ -226,6 +236,7 @@
                                     items="sortedFields"
                                     name-property="bindFieldsName"
                                     selected-items-indication="chips"
+                                    small-options="{dialogParent: '.dialog-containers-wrap'}"
                                     on-change-callback="changeHandler()"></two-fields-multiselect>
 
         </div>
@@ -269,6 +280,7 @@
                                         name-property="bindFieldsName"
                                         items="sortedFields"
                                         data-selected-items-indication="chips"
+                                        small-options="{dialogParent: '.dialog-containers-wrap'}"
                                         on-change-callback="changeHandler()"></two-fields-multiselect>
 
 
@@ -349,7 +361,11 @@
                                  placeholder-text="{{getName()}}"
                                  event-signal="ciEventObj.event"
                                  menu-options="sortedFields"
-                                 small-options="{notNull: options.notNull, tooltipText: '{{getName()}}'}"
+                                 small-options="{
+                                    notNull: options.notNull,
+                                    tooltipText: '{{getName()}}',
+                                    dialogParent: '.dialog-containers-wrap'
+                                 }"
                                  sorted="sorted"
                                  on-change-callback="changeHandler()"
                                  style="{{inputBackgroundColor()}}">
