@@ -277,7 +277,7 @@
                 locals: {
                     data: {}
                 }
-            }).then(function (data) {
+            }).then(function (res) {
 
                 if (res.status === 'agree') {
                     vm.getList();
