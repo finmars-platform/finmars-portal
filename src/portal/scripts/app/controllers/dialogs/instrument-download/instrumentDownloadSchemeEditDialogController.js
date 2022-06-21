@@ -26,6 +26,8 @@
 
         vm.inputsFunctions = [];
 
+        var dialogParent = document.querySelector(".dialog-containers-wrap");
+
         vm.getFunctions = function () {
 
             return vm.providerFields.map(function(input){
@@ -711,6 +713,7 @@
                     controller: 'ValidationDialogController as vm',
                     templateUrl: 'views/dialogs/validation-dialog-view.html',
                     targetEvent: $event,
+                    parent: dialogParent,
                     locals: {
                         validationData: reason.message
                     },
