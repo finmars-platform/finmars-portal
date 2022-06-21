@@ -145,12 +145,15 @@
         </div>
 
         <div data-ng-if="vm.fieldType['display_name'] === 'Selector'">
-            <ev-selector-resolver item="item"
-                                  model="vm.model"
-                                  options="options"
-                                  event-signal="ciEventObj.event"
-                                  item-change="vm.itemChange()">
-            </ev-selector-resolver>
+
+            <div>
+                <ev-selector-resolver item="item"
+                                      options="options"
+                                      ev-editor-event-service="evEditorEventService"
+                                      item-change="vm.itemChange()">
+                </ev-selector-resolver>
+            </div>
+
         </div>
 
         <div data-ng-if="vm.fieldType['display_name'] === 'Button'">

@@ -1,4 +1,4 @@
-<div>
+<div ng-if="readyStatus.content">
 
     <!--<md-input-container class="md-block no-error-spacer">
         <label data-ng-bind="getName()"></label>
@@ -27,7 +27,7 @@
     <dropdown-select label="{{getName()}}"
                      model="modelObj.model"
                      placeholder-text="{{getName()}}"
-                     event-signal="eventSignal"
+                     event-signal="ciEventObj.event"
                      item-name="inputTextObj.value"
                      menu-options="fields"
                      small-options="{
@@ -35,9 +35,10 @@
                         tooltipText: '{{getName()}}',
                         dialogParent: '.dialog-containers-wrap'
                      }"
+                     custom-buttons="item.buttons"
+                     custom-styles="customStyles"
                      sorted="sorted"
-                     on-change-callback="changeHandler()"
-                     style="{{inputBackgroundColor()}}">
+                     on-change-callback="changeHandler()">
     </dropdown-select>
 
 </div>
