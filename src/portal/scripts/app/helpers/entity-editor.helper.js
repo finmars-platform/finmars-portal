@@ -1304,10 +1304,10 @@
      * @param $event {Object} - event object
      * @param fixedAreaPopup {?Object} - fields inside of popup
      * @param entityType {string}
-     * @param groupSelectorEventObject {{event: Object}} - used to highlight 'Group' crud selector
+     * @param fixedAreaEventObject {{event: Object}} - used to highlight 'Group' crud selector
      * @returns {Object|null} - changed fixedAreaPopup or null
      */
-    const processTabsErrors = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event, fixedAreaPopup, entityType, groupSelectorEventObject) {
+    const processTabsErrors = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event, fixedAreaPopup, entityType, fixedAreaEventObject) {
 
         const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
 
@@ -1377,7 +1377,7 @@
                             groupSelectorEventObject.event = {key: "error", error: "Field should not be empty"};
 
                         }*/
-                        groupSelectorEventObject.event = {key: 'mark_not_valid_fields'};
+                        fixedAreaEventObject.event = {key: 'mark_not_valid_fields'};
 
                         fixedAreaPopupChanged = markErrorInsideFAPopup(fixedAreaPopup, fixedAreaFieldProp, errorObj.message);
 
