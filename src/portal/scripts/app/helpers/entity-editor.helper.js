@@ -347,7 +347,7 @@
 
         }
 
-        return null;
+        // return null;
 
     };
 
@@ -1264,12 +1264,15 @@
      *
      * @param fixedAreaPopup {Object} - popup data
      * @param faFieldProp {string} - property name by which field stored inside fixedAreaPopup
+     * @param errorMessage {string}
      * @returns {boolean} - whether field has and error
      */
     const markErrorInsideFAPopup = function (fixedAreaPopup, faFieldProp, errorMessage) {
 
         var popupFieldsKeysList = [];
-        if (fixedAreaPopup) popupFieldsKeysList = Object.keys(fixedAreaPopup.fields);
+        if (fixedAreaPopup) {
+            popupFieldsKeysList = Object.keys(fixedAreaPopup.fields);
+        }
 
         var errorIsInsidePopup = popupFieldsKeysList.length && popupFieldsKeysList.includes(faFieldProp);
 
@@ -1357,7 +1360,8 @@
 
                     }
 
-                } else if (errorObj.locationData.type === 'fixed_area') {
+                }
+                else if (errorObj.locationData.type === 'fixed_area') {
 
                     var fieldProp = errorObj.key;
                     var fixedAreaFieldProp = getFieldKeyForFAPopup(fieldProp, entityType);
@@ -1368,11 +1372,12 @@
 
                         locsWithErrors.fixed_area.fields.push(fieldProp);
 
-                        if (['strategy-1', 'strategy-2', 'strategy-3', 'responsible', 'counterparty'].includes(entityType) && fieldProp === 'group') { // subgroup used as group for strategy 1,2,3
+                        /*if (['strategy-1', 'strategy-2', 'strategy-3', 'responsible', 'counterparty'].includes(entityType) && fieldProp === 'group') { // subgroup used as group for strategy 1,2,3
 
                             groupSelectorEventObject.event = {key: "error", error: "Field should not be empty"};
 
-                        }
+                        }*/
+                        groupSelectorEventObject.event = {key: 'mark_not_valid_fields'};
 
                         fixedAreaPopupChanged = markErrorInsideFAPopup(fixedAreaPopup, fixedAreaFieldProp, errorObj.message);
 
