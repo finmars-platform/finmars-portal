@@ -44,6 +44,8 @@
 
         var vm = this;
 
+        vm.entityType = entityType;
+
 		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
 
         vm.processing = false;
@@ -53,8 +55,6 @@
         if (data.contextData) {
             vm.contextData = data.contextData;
         }
-
-        vm.entityType = entityType;
 
         vm.entityId = entityId;
 
@@ -187,6 +187,8 @@
         //vm.currenciesSorted = [];
 
         vm.keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
+
+        vm.isNotNullInput = vm.sharedLogic.isNotNullInput;
 
         /* vm.tabsWithErrors = {"system_tab": {}, "user_tab": {}};
         vm.formErrorsList = []; */
@@ -978,7 +980,7 @@
             if (errors.length) {
 				// vm.sharedLogic.processTabsErrors(errors, $event);
 
-				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.groupSelectorEventObj);
+				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.fixedAreaEventObj);
 
 				if (processResult) {
 					vm.fixedAreaPopup = processResult;
@@ -1842,9 +1844,13 @@
                 vm.dialogElemToResize = vm.sharedLogic.onEditorStart();
             }, 100);
 
-			vm.groupSelectorEventObj = {
-				event: {}
-			};
+            /*vm.groupSelectorEventObj = { // sending signal to crud select that is inside fixed area but outside popup
+                event: {}
+            };*/
+
+            vm.fixedAreaEventObj = { // sending signal to fields that are inside fixed area but outside of popup
+                event: {}
+            };
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EntityViewerEditorEventService();
@@ -1959,10 +1965,10 @@
         vm.init();
 
         // Special case for split-panel
-        $scope.splitPanelInit = function (entityType, entityId) {
+        /* $scope.splitPanelInit = function (entityType, entityId) {
             vm.entityType = entityType;
             vm.entityId = entityId;
-        };
+        }; */
 
         /*vm.onEntityChange = function () {
 
