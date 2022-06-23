@@ -25,11 +25,11 @@
             },
 
             {
-                "key": "transaction_type",
-                "name": "Transaction type",
+                "key": "transaction_class",
+                "name": "Transaction Class",
                 "value_type": "field",
-                "value_entity": "transaction-type",
-                "value_content_type": "transactions.transactiontype",
+                "value_entity": "transaction-class",
+                "value_content_type": "transactions.transactionclass",
                 "code": "user_code",
                 "allow_null": false
             },
