@@ -91,12 +91,12 @@
 
 			} */
 			let fieldKey = resolveRelation(vm.contentType);
-			fieldKey = fieldKey.replace(/-/g, "_");
+			// fieldKey = fieldKey.replace(/-/g, "_");
 
 			if (data.loadedRelationsList.includes(fieldKey)) {
 				vm.defaultValuesItems = vm.relationItems[fieldKey];
 
-			} else {
+			} else if (fieldKey) {
 
 				loadRelation(fieldKey).then(function (relItem) {
 

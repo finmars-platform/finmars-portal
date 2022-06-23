@@ -1,4 +1,4 @@
-<div class="custom-input-container dropdown-input-container dropdownSelectInputContainer customInputBackgroundColor"
+<div class="custom-input-container dropdown-input-container dropdownSelectInputContainer"
          data-ng-class="getInputContainerClasses()">
 
     <div ng-if="label" class="custom-input-top-row">
@@ -19,7 +19,7 @@
          popup-classes="custom-select-popup-container mh-100vh-popup"
          on-cancel="onMenuClose()"
 
-         class="custom-input-main-container">
+         class="custom-input-main-container customInputBackgroundColor">
 
         <div class="custom-input-borders">
             <div class="custom-input-content">
@@ -42,12 +42,11 @@
                         ng-disabled="isDisabled"
                         class="custom-input dropdown-select-input dropdownSelectInputElem"
                     /> -->
-                    <input
-                            type="text"
-                            placeholder="{{placeholderText}}"
-                            ng-model="menuOptionsPopupData.filterTerm"
-                            ng-disabled="isDisabled"
-                            class="custom-input dropdown-select-input dropdownSelectInputElem" />
+                    <input type="text"
+                           placeholder="{{placeholderText}}"
+                           ng-model="menuOptionsPopupData.filterTerm"
+                           ng-disabled="isDisabled"
+                           class="custom-input dropdown-select-input dropdownSelectInputElem" />
 
                 </div>
 
