@@ -63,15 +63,12 @@ export default function () {
                 };
 
                 const llData = await uiService.getListLayoutLight(entityType, options);
-                console.log("testing1 updateUsingCachedLayout llData", llData);
+
                 if (llData.results.length && !uiService.isCachedLayoutActual(cachedLayout, llData.results[0])) {
-                    console.log("testing1 updateUsingCachedLayout llData", llData);
                     layout.modified = llData.results[0].modified;
                 }
 
-                console.log("testing1 updateUsingCachedLayout layout to update", layout);
                 uiService.updateListLayout(layout.id, layout).then(updatedLayoutData => {
-                    console.log("testing1 updateUsingCachedLayout resolve");
                     resolve(updatedLayoutData);
                 })
 
@@ -480,11 +477,11 @@ export default function () {
         });
 
         const filtersChangeEventIndex = evEventService.addEventListener(evEvents.FILTERS_CHANGE, function () {
-            console.log("testing1 FILTERS_CHANGE");
+
             const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
             const originalFilters = activeLayoutConfig.data.filters;
             const currentFilters = evDataService.getFilters();
-            console.log("testing1 FILTERS_CHANGE");
+
             /* if (!areObjTheSame(currentFilters, originalFilters)) {
                 autosaveLayout(evDataService, isReport);
             } */
@@ -510,7 +507,7 @@ export default function () {
             const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
             const originInterfaceLayout = activeLayoutConfig.data.interfaceLayout;
             const currentInterfaceLayout = evDataService.getInterfaceLayoutToSave();
-            console.log("testing1 onUpdateTableViewport layouts", originInterfaceLayout, currentInterfaceLayout);
+
             onLayoutChange(originInterfaceLayout, currentInterfaceLayout, evDataService, alQueueService, isReport);
 
         }, 500);
