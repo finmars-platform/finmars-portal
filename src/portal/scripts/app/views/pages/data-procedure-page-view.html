@@ -49,9 +49,10 @@
                             <td>
                                 {{item.scheme_user_code}}
                             </td>
-                            <td>
+                            <td style="min-width: 350px">
+                                <md-button class="md-raised md-primary" data-ng-click="vm.executeProcedure($event, item)">Execute</md-button>
                                 <md-button class="md-raised" data-ng-click="vm.editProcedure($event, item)">Edit</md-button>
-                                <md-button class="md-raised" data-ng-click="vm.deleteProcedure($event, item)">Delete</md-button>
+                                <md-button class="md-raised md-warn" data-ng-click="vm.deleteProcedure($event, item)">Delete</md-button>
                             </td>
                         </tr>
                     </tbody>

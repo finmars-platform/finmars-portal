@@ -56,6 +56,19 @@
 
         };
 
+        vm.executeProcedure = function ($event, item) {
+
+            console.log("Execute Procedure", item);
+
+            dataProcedureService.runProcedure(item.id, item).then(function (data) {
+
+                toastNotificationService.success('Success. Procedure is being processed');
+
+
+            })
+
+        };
+
         vm.deleteProcedure = function ($event, item) {
 
             $mdDialog.show({
