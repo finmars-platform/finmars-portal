@@ -83,15 +83,6 @@
 			let pathToNode = [];
 			let nodeData;
 
-			/*try {
-
-				nodeData = classifiersFlatList.find(item => item.name === nodeName);
-				if (nodeData) pathToNode.push(nodeData.id);
-
-			} catch (error) {
-				console.log("testing getPathToNodeByName ", nodeName, nodeData, '\n', classifiersFlatList);
-			}*/
-
 			nodeData = classifiersFlatList.find(item => item.name === nodeName);
 
 			if (nodeData) {

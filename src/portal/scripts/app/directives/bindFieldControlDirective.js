@@ -41,7 +41,9 @@
 
 				$scope.isRecalculate = false;
 				$scope.numberFormat = null;
-				$scope.ciEventObj = {
+                $scope.customStyles = null;
+
+                $scope.ciEventObj = {
 					event: {},
 				};
 
@@ -584,6 +586,37 @@
                         }
                     }
                 };
+
+                vm.setItemSettings = function () {
+
+                    if ($scope.item.options) {
+                        $scope.tooltipText = vm.getTooltipText();
+                    }
+
+                    if ($scope.options.backgroundColor) {
+                        $scope.customStyles = {
+                            "customInputBackgroundColor": "background-color: " + $scope.options.backgroundColor + ";"
+                        };
+                    }
+
+                    if ($scope.item.frontOptions) {
+
+                        if ($scope.item.frontOptions.recalculated) {
+
+                            $scope.ciEventObj.event = {key: "set_style_preset1"};
+
+                        }
+
+                    }
+
+                    return {
+                        tooltipText: $scope.tooltipText,
+                        customStyles: $scope.customStyles,
+                        event: $scope.ciEventObj.event,
+                    }
+
+                };
+
 				/** Also used by entityViewerFieldResolverDirective */
 				vm.getTooltipText = function () {
 
@@ -696,12 +729,12 @@
                         }
 						//endregion Prepare data for date field
 
-						$scope.tooltipText = vm.getTooltipText();
+						// $scope.tooltipText = vm.getTooltipText();
                     }
 
                     getFieldBackgroundColor();
 
-                    if ($scope.options.backgroundColor) {
+                    /* if ($scope.options.backgroundColor) {
                         $scope.customStyles = {
                             "customInputBackgroundColor": "background-color: " + $scope.options.backgroundColor + ";"
                         };
@@ -715,7 +748,14 @@
 
                         }
 
-                    }
+                    } */
+
+                    var setSettingsResult = vm.setItemSettings();
+
+                    $scope.tooltipText = setSettingsResult.tooltipText;
+                    $scope.customStyles = setSettingsResult.customStyles;
+                    $scope.ciEventObj.event = setSettingsResult.event;
+
                 };
 
                 var initListeners = function () {

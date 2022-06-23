@@ -16,6 +16,7 @@
 				itemName: '=', // used to show selected option without loading menu options
                 menuOptions: '=',
 				groupOptions: '@',
+                customButtons: '=',
                 customStyles: '=',
                 eventSignal: '=',
                 smallOptions: '<',
