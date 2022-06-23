@@ -41,6 +41,7 @@
                 scope.schemeSortedFields = [];
 
                 scope.sorted = true;
+                scope.customStyles = null;
 
                 scope.modelObj = {
                     model: null
@@ -55,7 +56,7 @@
                 };
 
                 var fieldsDataIsLoaded = false;
-                var eventListenersIndexesData = {};
+                var elIndexesData = {};
                 // console.log('scope.item.name', scope.item);
                 // console.log('scope.entity', scope.entity);
 
@@ -503,7 +504,7 @@
 
                 var setItemSpecificSettings = function () {
 
-                    if (scope.options.backgroundColor) {
+                    /*if (scope.options.backgroundColor) {
 
                         scope.customStyles = {
                             'customInputBackgroundColor': 'background-color: ' + scope.options.backgroundColor + ';'
@@ -521,23 +522,28 @@
 
                     }
 
-                    scope.tooltipText = bfcVm.getTooltipText();
+                    scope.tooltipText = bfcVm.getTooltipText();*/
+                    var setSettingsResult = bfcVm.setItemSettings();
+
+                    scope.tooltipText = setSettingsResult.tooltipText;
+                    scope.customStyles = setSettingsResult.customStyles;
+                    scope.ciEventObj.event = setSettingsResult.event;
 
                 }
 
-                var initListeners = function () {
+                var initEventListeners = function () {
 
-                    eventListenersIndexesData['MARK_FIELDS_WITH_ERRORS'] = scope.evEditorEventService.addEventListener(evEditorEvents.MARK_FIELDS_WITH_ERRORS, function () {
+                    elIndexesData['MARK_FIELDS_WITH_ERRORS'] = scope.evEditorEventService.addEventListener(evEditorEvents.MARK_FIELDS_WITH_ERRORS, function () {
                         scope.ciEventObj.event = {key: 'mark_not_valid_fields'};
                     });
 
-                    eventListenersIndexesData['ENTITY_UPDATED'] = scope.evEditorEventService.addEventListener(evEditorEvents.ENTITY_UPDATED, function () {
+                    elIndexesData['ENTITY_UPDATED'] = scope.evEditorEventService.addEventListener(evEditorEvents.ENTITY_UPDATED, function () {
                         scope.modelObj.model = bfcVm.getValueFromEntity();
                     });
 
                     if (scope.entityType === 'complex-transaction') {
 
-                        eventListenersIndexesData['FIELDS_RECALCULATION_END'] = scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
+                        elIndexesData['FIELDS_RECALCULATION_END'] = scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
 
                             scope.modelObj.model = bfcVm.getValueFromEntity();
 
@@ -637,7 +643,7 @@
                         scope.valueEntity = scope.getValueEntity();
 
                         if (scope.evEditorEventService) {
-                            initListeners();
+                            initEventListeners();
                         }
 
                     }
@@ -650,9 +656,9 @@
 
                 scope.$on('$destroy', function () {
 
-                    Object.keys(eventListenersIndexesData).forEach(function (eventName) {
+                    Object.keys(elIndexesData).forEach(function (eventName) {
 
-                        var eventIndex = eventListenersIndexesData[eventName];
+                        var eventIndex = elIndexesData[eventName];
                         scope.evEditorEventService.removeEventListener(eventName, eventIndex);
 
                     });
