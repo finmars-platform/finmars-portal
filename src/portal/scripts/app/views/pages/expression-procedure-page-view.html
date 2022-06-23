@@ -4,7 +4,7 @@
 
         <div>
 
-            <h4>Pricing Procedures</h4>
+            <h4>Expression Procedures</h4>
 
             <div>
 
@@ -22,9 +22,6 @@
                                 Notes for Users
                             </th>
                             <th>
-                                Date Range
-                            </th>
-                            <th>
                                 Actions
                             </th>
                         </tr>
@@ -40,15 +37,10 @@
                             <td>
                                 {{item.notes_for_users}}
                             </td>
-                            <td>
-                                <div data-ng-if="item.price_date_from_calculated">{{item.price_date_from_calculated}} - {{item.price_date_to_calculated}}</div>
-                                <div data-ng-if="!item.price_date_from_calculated">&nbsp;</div>
-                            </td>
                             <td style="min-width: 350px">
                                 <md-button class="md-raised md-primary" data-ng-click="vm.executeProcedure($event, item)">Execute</md-button>
                                 <md-button class="md-raised" data-ng-click="vm.editProcedure($event, item)">Edit</md-button>
                                 <md-button class="md-raised md-warn" data-ng-click="vm.deleteProcedure($event, item)">Delete</md-button>
-
                             </td>
                         </tr>
                     </tbody>
@@ -57,7 +49,7 @@
             </div>
 
             <div>
-                <md-button ui-sref="app.portal.pricing-parent-procedure" class="md-raised">Check Procedure Status</md-button>
+                <md-button ui-sref="app.portal.expression-procedure-instance" class="md-raised">Check Procedure Status</md-button>
             </div>
 
             <div class="m-t-16">
@@ -77,13 +69,14 @@
                         <md-menu-item>
                             <md-button class="md-raised"
                                        package-manager-button
-                                       content-type="'procedures.pricingprocedure'">
+                                       content-type="'procedures.requestdatafileprocedure'">
                                 Select from List
                             </md-button>
                         </md-menu-item>
 
                     </md-menu-content>
                 </md-menu>
+
 
             </div>
 

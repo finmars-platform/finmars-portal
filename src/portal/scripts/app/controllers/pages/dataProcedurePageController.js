@@ -6,6 +6,7 @@
     'use strict';
 
     var dataProcedureService = require('../../services/procedures/dataProcedureService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     module.exports = function ($scope, $mdDialog) {
 

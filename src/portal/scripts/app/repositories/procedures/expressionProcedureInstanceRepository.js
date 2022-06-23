@@ -1,5 +1,5 @@
 /**
- * Created by szhitenev on 25.08.2016.
+ * Created by szhitenev on 23.06.2022.
  */
 (function () {
 
@@ -18,7 +18,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/request-data-procedure/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/expression-procedure-instance/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -35,7 +35,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/request-data-procedure/' + id + '/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/expression-procedure-instance/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -52,7 +52,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/request-data-procedure/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/expression-procedure-instance/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -71,7 +71,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/request-data-procedure/' + id + '/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/expression-procedure-instance/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -91,7 +91,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/request-data-procedure/' + id + '/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/expression-procedure-instance/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -110,37 +110,13 @@
             })
     };
 
-
-    function runProcedure(id, data) {
-
-
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
-
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/request-data-procedure/' + id + '/run-procedure/',
-            {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-    }
-
     module.exports = {
 
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
-        deleteByKey: deleteByKey,
-
-
-        runProcedure: runProcedure
+        deleteByKey: deleteByKey
     }
 
 }());
