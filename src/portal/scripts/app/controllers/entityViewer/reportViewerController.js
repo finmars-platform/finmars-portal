@@ -8,6 +8,7 @@
 import AutosaveLayoutService from "../../services/autosaveLayoutService";
 import evHelperService from "../../services/entityViewerHelperService";
 import uiService from "../../services/uiService";
+import evEvents from "../../services/entityViewerEvents";
 
 (function () {
 
@@ -408,11 +409,14 @@ import uiService from "../../services/uiService";
                 evRvLayoutsHelper.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
                 vm.entityViewerEventService.removeEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, dleEventIndex);
             }); */
+            if (vm.currentMember.data && vm.currentMember.data.autosave_layouts) {
 
-            const testIndex = vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-                autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
-                vm.entityViewerEventService.removeEventListener(evEvents.DATA_LOAD_END, testIndex);
-            });
+                const testIndex = vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                    autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
+                    vm.entityViewerEventService.removeEventListener(evEvents.DATA_LOAD_END, testIndex);
+                });
+
+            }
 
         };
 
@@ -1060,8 +1064,26 @@ import uiService from "../../services/uiService";
             }
 
             Promise.allSettled([downloadAttrsProm, setLayoutProm, crossEntityAttributeExtensionProm]).then(function (getViewData) {
+
                 metaService.logRejectedPromisesAfterAllSettled(getViewData, 'report viewer get view');
+
+                middlewareService.onAutosaveLayoutToggle(function () {
+
+                    vm.currentMember = globalDataService.getMember();
+
+                    if (vm.currentMember.data.autosave_layouts) {
+                        autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
+                        initTransitionListeners();
+
+                    } else {
+                        autosaveLayoutService.removeChangesTrackingEventListeners();
+                        removeTransitionListeners();
+                    }
+
+                });
+
                 $scope.$apply();
+
             });
 
         };
@@ -1078,25 +1100,25 @@ import uiService from "../../services/uiService";
                 removeTransitionListeners();
             });
 
-            middlewareService.onAutosaveLayoutToggle(function () {
+            /*middlewareService.onAutosaveLayoutToggle(function () {
 
                 vm.currentMember = globalDataService.getMember();
 
                 if (vm.currentMember.data.autosave_layouts) {
+                    autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
                     initTransitionListeners();
 
                 } else {
+                    autosaveLayoutService.removeChangesTrackingEventListeners();
                     removeTransitionListeners();
                 }
 
-            });
+            });*/
 
             // vm.getCurrentMember();
             vm.currentMember = globalDataService.getMember();
 
-            console.log("testing1 init currentMember", vm.currentMember);
             if (!vm.currentMember.data || !vm.currentMember.data.autosave_layouts) {
-                console.log("testing1 init startTransitionHook");
                 initTransitionListeners();
             }
 

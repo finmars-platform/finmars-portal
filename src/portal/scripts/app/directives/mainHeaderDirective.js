@@ -311,8 +311,13 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
             };
 
 			scope.onAutosaveToggle = function () {
+
+                globalDataService.setMember(scope.member);
+                middlewareService.autosaveLayoutToggle();
+                console.log("testing1 mainHeader onAutosaveLayoutToggle", scope.member);
 				usersService.updateMember(scope.member.id, scope.member).then(function () {
-                    middlewareService.autosaveLayoutToggle();
+                    scope.member = globalDataService.getMember();
+                    console.log("testing1 mainHeader onAutosaveLayoutToggle then");
                 });
 			};
 
