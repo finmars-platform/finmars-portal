@@ -95,8 +95,8 @@
                 "value_type": 20
             },
             {
-                "key": "n_shares_end_of_the_day",
-                "name": "N Shares end of the day",
+                "key": "rolling_shares_of_the_day",
+                "name": "Rolling shares of the day",
                 "value_type": 20
             },
             {
