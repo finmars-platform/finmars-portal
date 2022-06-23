@@ -259,7 +259,7 @@
 				resolve(ui);
 
 			}).catch(function (error) {
-                console.log("testing1 updateListLayout error", error);
+
                 if (error.status === 400 &&
                     error.message &&
                     error.message.non_field_errors &&

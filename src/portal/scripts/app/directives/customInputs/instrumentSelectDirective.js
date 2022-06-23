@@ -429,6 +429,73 @@
 
                 };
 
+                var initScopeWatchers = function () {
+
+                    if (scope.eventSignal) {
+                        // this if prevents watcher below from running without need
+
+                        scope.$watch("eventSignal", function () {
+
+                            if (scope.eventSignal && scope.eventSignal.key) {
+
+                                switch (scope.eventSignal.key) {
+
+                                    case "mark_not_valid_fields":
+                                        if (scope.smallOptions &&
+                                            scope.smallOptions.notNull &&
+                                            !scope.model) {
+
+                                            scope.error = "Field should not be null";
+
+                                        }
+
+                                        break;
+
+                                    case "error":
+                                        scope.error = JSON.parse(JSON.stringify(scope.eventSignal.error));
+                                        break;
+
+                                    case "set_style_preset1":
+                                        stylePreset = 1;
+                                        break;
+
+                                    case "set_style_preset2":
+                                        stylePreset = 2;
+                                        break;
+
+                                    case "reset": // reset changes done by eventSignal
+
+                                        scope.error = "";
+                                        stylePreset = "";
+
+                                        break;
+
+                                }
+
+                                scope.eventSignal = {};
+                            }
+                        });
+                    }
+
+                    scope.$watch('itemName', function () {
+
+                        console.log('scope.model', scope.model);
+
+                        if (scope.itemName) {
+                            // itemName = scope.itemName;
+                            scope.inputText = scope.itemName;
+
+                            // scope.selectedItem = {id: scope.model, name: scope.itemName, user_code: scope.itemName}
+
+                        } else {
+                            // itemName = '';
+                            scope.inputText = '';
+                        }
+
+                    });
+
+                };
+
                 var initEventListeners = function () {
 
                     elem[0].addEventListener('mouseover', function () {
@@ -615,6 +682,7 @@
                     scope.databaseInstruments = []
                     scope.localInstruments = []
 
+                    initScopeWatchers();
                     initEventListeners();
 
                     if (scope.customStyles) {

@@ -459,15 +459,11 @@
 
     var validateFieldWithString = function (value, fieldAttr) {
 
-        if (fieldAttr.options && fieldAttr.options.notNull === true) {
-            if (!value) {
-
-                return {
-                    fieldName: fieldAttr.options.fieldName || fieldAttr.verbose_name || fieldAttr.name,
-                    message: 'Field should not be empty.'
-                };
-
-            }
+        if (!value && fieldAttr.options && fieldAttr.options.notNull === true) {
+            return {
+                fieldName: fieldAttr.options.fieldName || fieldAttr.verbose_name || fieldAttr.name,
+                message: 'Field should not be empty.'
+            };
         }
 
         return null;
@@ -729,7 +725,7 @@
 
     var getAttributeValueType = function (attribute) {
 
-        if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 10) ||
+        /* if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 10) ||
             attribute.value_type === 10) {
             return 10;
         } else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 20) ||
@@ -741,7 +737,13 @@
         } else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 40) ||
             attribute.value_type === 40) {
             return 40;
+        } */
+
+        if (attribute.attribute_type_object) {
+            return attribute.attribute_type_object.value_type;
         }
+
+        return attribute.value_type;
 
     }
 
@@ -776,7 +778,11 @@
 
             case 10:
             case 30:
-                errorObj = validateFieldWithString(fieldValue, attr);
+
+            case 100:
+            case "field":
+            case 110:
+                errorObj = validateFieldWithString(fieldValue, attr); // also fits for validation of selectors
                 break;
 
             case 20:
@@ -789,11 +795,11 @@
 
         }
 
-
         if (errorObj) {
 
             errorObj.key = key;
             errorObj.locationData = getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType);
+
             errorsList.push(errorObj);
 
             if (errorObj.locationData && errorObj.locationData.type === 'system_tab') {
@@ -860,8 +866,11 @@
                 var key = dAttrData.attribute_type_object.user_code;
                 var fieldValue = evHelperService.getDynamicAttrValue(dAttrData);
 
-                if (!fieldValue && entity[key]) {
+                /*if (!fieldValue && entity[key]) {
                     fieldValue = entity[key];
+                }*/
+                if (dAttrData.attribute_type_object.value_type === 30 && fieldValue) {
+                    fieldValue = fieldValue.classifier;
                 }
 
                 var attrType;
@@ -1238,13 +1247,10 @@
 
             userInputs.forEach(function (uInput) {
 
-                if (uInput.frontOptions && uInput.frontOptions.required) {
+                var iName = uInput.name;
+                var fieldValue = entity.values[iName];
 
-                    var iName = uInput.name;
-                    var fieldValue = entity[iName];
-
-                    validateComplexTransactionUserInput(uInput, fieldValue, transactionsTypeActions, tabs, errors);
-                }
+                validateComplexTransactionUserInput(uInput, fieldValue, transactionsTypeActions, tabs, errors);
 
             });
 

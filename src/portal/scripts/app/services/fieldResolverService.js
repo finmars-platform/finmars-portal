@@ -15,6 +15,7 @@
     var pricingPolicyRepository = require('../repositories/pricingPolicyRepository');
     var currencyRepository = require('../repositories/currencyRepository');
     var portfolioRepository = require('../repositories/portfolioRepository');
+    var portfolioRegisterRepository = require('../repositories/portfolioRegisterRepository');
     var counterpartyRepository = require('../repositories/counterpartyRepository');
     var counterpartyGroupRepository = require('../repositories/counterpartyGroupRepository');
     var responsibleRepository = require('../repositories/responsibleRepository');
@@ -222,6 +223,11 @@
                         resolve({type: 'id', key: 'settlement_currency', data: data.results});
                     });
                     break;
+                case 'cash_currency':
+                    currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'cash_currency', data: data.results});
+                    });
+                    break;
                 case 'currency':
                     currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'currency', data: data.results});
@@ -230,6 +236,11 @@
                 case 'portfolio':
                     portfolioRepository.getListLight({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'portfolio', data: data.results});
+                    });
+                    break;
+                case 'portfolio_register':
+                    portfolioRegisterRepository.getList({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'portfolio_register', data: data.results});
                     });
                     break;
                 case 'account':
@@ -570,6 +581,18 @@
                             fieldsDataStore['fieldKeys'][contentType] = {
                                 type: 'id',
                                 key: 'portfolios.portfolio',
+                                data: data.results
+                            }
+
+                            resolve(fieldsDataStore['fieldKeys'][contentType]);
+                        });
+                        break;
+                    case 'portfolios.portfolioregister':
+                        portfolioRegisterRepository.getList({pageSize: 1000}).then(function (data) {
+
+                            fieldsDataStore['fieldKeys'][contentType] = {
+                                type: 'id',
+                                key: 'portfolios.portfolioregister',
                                 data: data.results
                             }
 
