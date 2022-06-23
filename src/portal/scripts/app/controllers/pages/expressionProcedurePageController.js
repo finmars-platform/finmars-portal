@@ -1,11 +1,11 @@
 /**
- * Created by szhitenev on 31.01.2020.
+ * Created by szhitenev on 23.06.2022.
  */
 (function () {
 
     'use strict';
 
-    var pricingProcedureService = require('../../services/procedures/pricingProcedureService');
+    var expressionProcedureService = require('../../services/procedures/expressionProcedureService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     module.exports = function ($scope, $mdDialog) {
@@ -18,7 +18,7 @@
 
         vm.getList = function () {
 
-            pricingProcedureService.getList().then(function (data) {
+            expressionProcedureService.getList().then(function (data) {
 
                 vm.procedures = data.results;
 
@@ -29,24 +29,11 @@
             })
         };
 
-        vm.executeProcedure = function ($event, item) {
-
-            console.log("Execute Procedure", item);
-
-            pricingProcedureService.runProcedure(item.id, item).then(function (data) {
-
-                toastNotificationService.success('Success. Procedure is being processed');
-
-
-            })
-
-        };
-
         vm.editProcedure = function ($event, item) {
 
             $mdDialog.show({
-                controller: 'PricingProcedureEditDialogController as vm',
-                templateUrl: 'views/dialogs/procedures/pricing-procedure-edit-dialog-view.html',
+                controller: 'ExpressionProcedureEditDialogController as vm',
+                templateUrl: 'views/dialogs/procedures/expression-procedure-edit-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,
@@ -70,6 +57,19 @@
 
         };
 
+        vm.executeProcedure = function ($event, item) {
+
+            console.log("Execute Procedure", item);
+
+            expressionProcedureService.runProcedure(item.id, item).then(function (data) {
+
+                toastNotificationService.success('Success. Procedure is being processed');
+
+
+            })
+
+        };
+
         vm.deleteProcedure = function ($event, item) {
 
             $mdDialog.show({
@@ -81,7 +81,7 @@
                 locals: {
                     warning: {
                         title: 'Warning',
-                        description: "Are you sure you want to delete Pricing Procedure <b>" + item.name + '</b>?'
+                        description: "Are you sure you want to delete Expression Procedure <b>" + item.name + '</b>?'
                     }
                 },
                 preserveScope: true,
@@ -92,7 +92,7 @@
 
                 if (res.status === 'agree') {
 
-                    pricingProcedureService.deleteByKey(item.id).then(function (data) {
+                    expressionProcedureService.deleteByKey(item.id).then(function (data) {
                         vm.getList();
                     })
 
@@ -105,8 +105,8 @@
         vm.addProcedure = function ($event) {
 
             $mdDialog.show({
-                controller: 'PricingProcedureAddDialogController as vm',
-                templateUrl: 'views/dialogs/procedures/pricing-procedure-add-dialog-view.html',
+                controller: 'ExpressionProcedureAddDialogController as vm',
+                templateUrl: 'views/dialogs/procedures/expression-procedure-add-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 clickOutsideToClose: false,
