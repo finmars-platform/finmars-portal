@@ -1,5 +1,5 @@
 /**
- * Created by szhitenev on 25.08.2016.
+ * Created by szhitenev on 23.06.2022.
  */
 (function () {
 
@@ -18,7 +18,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/request-data-procedure/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/expression-procedure/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -35,7 +35,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/request-data-procedure/' + id + '/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/expression-procedure/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -52,7 +52,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/request-data-procedure/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/expression-procedure/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -71,7 +71,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/request-data-procedure/' + id + '/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/expression-procedure/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -91,7 +91,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/request-data-procedure/' + id + '/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/expression-procedure/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -117,7 +117,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/request-data-procedure/' + id + '/run-procedure/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/expression-procedure/' + id + '/run-procedure/',
             {
                 method: 'POST',
                 credentials: 'include',
