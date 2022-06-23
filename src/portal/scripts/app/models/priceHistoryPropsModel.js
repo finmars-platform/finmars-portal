@@ -53,6 +53,11 @@
                 "name": "NAV",
                 "value_type": 20
             },
+            {
+                "key": "cash_flow",
+                "name": "Cash Flow",
+                "value_type": 20
+            },
 
             {
                 "key": "procedure_modified_datetime",

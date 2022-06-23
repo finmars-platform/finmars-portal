@@ -433,10 +433,51 @@
 
                 };
 
-                var initEventListeners = function () {
+                var initScopeWatchers = function () {
+
+                    if (scope.eventSignal) {
+
+                        scope.$watch('eventSignal', function () {
+
+                            if (scope.eventSignal && scope.eventSignal.key) {
+
+                                switch (scope.eventSignal.key) {
+                                    case 'mark_not_valid_fields':
+                                        if (scope.smallOptions && scope.smallOptions.notNull && !scope.item) {
+                                            scope.error = 'Field should not be null';
+                                        }
+
+                                        break;
+
+                                    case 'set_style_preset1':
+                                        stylePreset = 1;
+
+                                        if (scope.item) {
+                                            scope.error = '';
+                                        }
+
+                                        break;
+
+                                    case 'set_style_preset2':
+                                        stylePreset = 2;
+
+                                        if (scope.item) {
+                                            scope.error = '';
+                                        }
+
+                                        break;
+                                }
+
+                                scope.eventSignal = {}; // reset signal
+
+                            }
+
+                        });
+
+                    }
 
                     scope.$watch('itemName', function () {
-                        
+
                         console.log('scope.model', scope.model);
 
                         if (scope.itemName) {
@@ -451,6 +492,10 @@
                         }
 
                     });
+
+                };
+
+                var initEventListeners = function () {
 
 
                     elem[0].addEventListener('mouseover', function () {
@@ -658,6 +703,7 @@
                     scope.databaseItems = []
                     scope.localItems = []
 
+                    initScopeWatchers();
                     initEventListeners();
 
                     if (scope.customStyles) {

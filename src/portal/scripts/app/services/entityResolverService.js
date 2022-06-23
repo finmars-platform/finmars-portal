@@ -207,6 +207,9 @@
             case 'portfolio-register':
                 return portfolioRegisterService.getByKey(id);
                 break;
+            case 'portfolio-register-record':
+                return portfolioRegisterRecordService.getByKey(id);
+                break;
             case 'account':
                 return accountService.getByKey(id);
                 break;
