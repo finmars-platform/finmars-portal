@@ -108,6 +108,17 @@
                 "code": "user_code",
                 "allow_null": false
             },
+            {
+                "key": "created",
+                "name": "Created",
+                "value_type": 40
+            },
+
+            {
+                "key": "modified",
+                "name": "Modified",
+                "value_type": 40
+            }
         ]
     };
 
