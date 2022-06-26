@@ -36,7 +36,14 @@
 
                 </div>
 
-                <div class="m-t-16" layout="row">
+                <div class="m-t-16">
+                    <md-checkbox data-ng-model="vm.item.use_dates">
+
+                        Use Dates
+                    </md-checkbox>
+                </div>
+
+                <div data-ng-if="vm.item.use_dates" class="m-t-16" layout="row">
 
                     <div layout="row">
 
@@ -110,6 +117,8 @@
 
 
                 </div>
+
+
                 <div layout="row">
 
                     <div class="m-t-16">
