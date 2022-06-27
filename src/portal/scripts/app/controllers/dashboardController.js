@@ -2,8 +2,8 @@
  * Created by szhitenev on 05.05.2016.
  */
 
-import {embedDashboard} from '../../../../core/superset/index'
-import supersetService from "../services/supersetService";
+// import {embedDashboard} from '../../../../core/superset/index'
+// import supersetService from "../services/supersetService";
 
 (function () {
 
