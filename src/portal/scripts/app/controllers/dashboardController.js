@@ -1,6 +1,10 @@
 /**
  * Created by szhitenev on 05.05.2016.
  */
+
+import {embedDashboard} from '../../../../core/superset/index'
+import supersetService from "../services/supersetService";
+
 (function () {
 
     'use strict';
@@ -9,12 +13,14 @@
 
     var DashboardDataService = require('../services/dashboard/dashboardDataService');
     var DashboardEventService = require('../services/eventService');
+    var supersetService = require('../services/supersetService');
 
     var dashboardEvents = require('../services/dashboard/dashboardEvents');
     var dashboardComponentStatuses = require('../services/dashboard/dashboardComponentStatuses');
     var metaHelper = require('../helpers/meta.helper');
 
     var toastNotificationService = require('../../../../core/services/toastNotificationService');
+
 
     module.exports = function ($scope, $stateParams, $mdDialog) {
 
@@ -618,6 +624,7 @@
 
             });
 
+
         };
 
         vm.init = function () {
@@ -632,6 +639,8 @@
 
             vm.openDashboardLayout();
             vm.initEventListeners();
+
+
 
 
         };
