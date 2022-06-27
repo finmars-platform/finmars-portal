@@ -1,5 +1,5 @@
-import {embedDashboard} from "../../../../../core/superset";
-import supersetService from "../../services/supersetService";
+// import {embedDashboard} from "../../../../../core/superset";
+
 
 /**
  * Created by mevstratov on 24.06.2019.
@@ -10,6 +10,9 @@ import supersetService from "../../services/supersetService";
 
     var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
     var instrumentEventService = require('../../services/instrumentEventService');
+    var supersetService = require("../../services/supersetService");
+    var embeddedsdk = require("@superset-ui/embedded-sdk");
+
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -215,7 +218,7 @@ import supersetService from "../../services/supersetService";
         };
 
         setTimeout(() => {
-            embedDashboard({
+            embeddedsdk.embedDashboard({
                 id: "3f4dfb00-93be-4969-ab37-2f4476067973", // given by the Superset embedding UI
                 supersetDomain: "https://superset.finmars.com",
                 mountPoint: document.getElementById("my-superset-container"), // any html element that can contain an iframe
