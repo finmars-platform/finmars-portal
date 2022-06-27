@@ -222,10 +222,17 @@
                 id: "3f4dfb00-93be-4969-ab37-2f4476067973", // given by the Superset embedding UI
                 supersetDomain: "https://superset.finmars.com",
                 mountPoint: document.getElementById("my-superset-container"), // any html element that can contain an iframe
-                fetchGuestToken: () => supersetService.getSecurityToken("3f4dfb00-93be-4969-ab37-2f4476067973").then((data) => {
-                    return data.access_token;
-                }),
+                fetchGuestToken: function () {
+
+                    return new Promise(function (resolve, reject) {
+                        supersetService.getSecurityToken("3f4dfb00-93be-4969-ab37-2f4476067973").then((data) => {
+                            resolve(data.token);
+                        })
+                    })
+
+                },
                 dashboardUiConfig: {hideTitle: true}, // dashboard UI config: hideTitle, hideTab, hideChartControls (optional)
+                debug: true
             });
 
         }, 1000)
