@@ -232,7 +232,7 @@
 
                 },
                 dashboardUiConfig: {hideTitle: true}, // dashboard UI config: hideTitle, hideTab, hideChartControls (optional)
-                debug: true
+                debug: false
             });
 
         }, 1000)
