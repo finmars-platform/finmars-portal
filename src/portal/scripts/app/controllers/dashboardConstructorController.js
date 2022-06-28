@@ -486,6 +486,9 @@
                 case 'button_set':
                     verboseName = 'Button Set';
                     break;
+                case 'superset_dashboard':
+                    verboseName = 'Superset Dashboard';
+                    break;
             }
 
             return verboseName;
@@ -1246,6 +1249,10 @@
             input_form: {
                 editorController: 'DashboardConstructorInputFormComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-input-form-component-dialog-view.html'
+            },
+            superset_dashboard: {
+                editorController: 'DashboardConstructorSupersetDashboardComponentDialogController as vm',
+                editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-superset-dashboard-component-dialog-view.html'
             }
         };
 
