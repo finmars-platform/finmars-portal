@@ -344,6 +344,10 @@
             'node_modules/jstree/dist/jstree.js',
             'node_modules/toastr/build/toastr.min.js',
             'src/core/datepicker/pickmeup.js',
+            'src/core/ace/ace.js',
+            'src/core/ace/mode-python.js',
+            'src/core/ace/theme-monokai.js',
+
             'node_modules/d3/dist/d3.js',
             'node_modules/qrious/dist/qrious.js'
         ];
