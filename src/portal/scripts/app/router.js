@@ -428,6 +428,12 @@
                 controller: 'ExpressionProcedurePageController as vm'
             })
 
+            .state('app.portal.ace-editor', {
+                url: '/editor',
+                templateUrl: 'views/pages/ace-editor-page-view.html',
+                controller: 'AceEditorPageController as vm'
+            })
+
             .state('app.portal.pricing-parent-procedure', {
                 url: '/pricing-parent-procedures',
                 templateUrl: 'views/pages/pricing-parent-procedure-page-view.html',

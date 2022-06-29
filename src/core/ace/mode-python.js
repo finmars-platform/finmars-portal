@@ -27,87 +27,93 @@ ace.define("ace/mode/python_highlight_rules", ["require", "exports", "module", "
             "buffer|dict|hex|object|slice|coerce|dir|id|oct|sorted|intern|" +
             "ascii|breakpoint|bytes|" +
 
-            "str|"+
-            "substr|"+
-            "upper|"+
-            "lower|"+
-            "contains|"+
-            "replace|"+
-            "reg_search|"+
-            "reg_replace|"+
-            "int|"+
-            "float|"+
-            "bool|"+
-            "round|"+
-            "trunc|"+
-            "abs|"+
-            "isclose|"+
-            "random|"+
-            "min|"+
-            "max|"+
-            "uuid|"+
-            "iff|"+
-            "len|"+
-            "range|"+
-            "now|"+
-            "date|"+
-            "date_min|"+
-            "date_max|"+
-            "isleap|"+
-            "days|"+
-            "weeks|"+
-            "months|"+
-            "timedelta|"+
-            "add_days|"+
-            "add_weeks|"+
-            "add_workdays|"+
-            "format_date|"+
-            "parse_date|"+
-            "unix_to_date|"+
-            "get_date_last_week_end_business|"+
-            "get_date_last_month_end_business|"+
-            "get_date_last_quarter_end_business|"+
-            "get_date_last_year_end_business|"+
-            "format_date2|"+
-            "parse_date2|"+
-            "format_number|"+
-            "parse_number|"+
-            "join|"+
-            "simple_price|"+
-            "get_currency_field|"+
-            "set_currency_field|"+
-            "get_instrument_field|"+
-            "set_instrument_field|"+
-            "get_instrument_accrual_size|"+
-            "get_instrument_accrual_factor|"+
-            "get_instrument_accrued_price|"+
-            "get_instrument_factor|"+
-            "get_instrument_coupon_factor|"+
-            "get_instrument_coupon|"+
-            "get_fx_rate|"+
-            "get_principal_price|"+
-            "get_accrued_price|"+
-            "get_next_coupon_date|"+
-            "get_factor|"+
-            "add_fx_history|"+
-            "add_price_history|"+
-            "generate_user_code|"+
-            "get_latest_principal_price|"+
-            "get_instrument_user_attribute_value|"+
-            "get_ttype_default_input|"+
-            "set_complex_transaction_input|"+
-            "set_complex_transaction_user_field|"+
-            "set_complex_transaction_form_data|"+
-            "get_relation_by_user_code|"+
-            "get_rt_value|"+
-            "convert_to_number|"+
-            "if_null|"+
-            "send_system_message|"+
-            "calculate_performance_report|"+
-            "calculate_balance_report|"+
-            "calculate_pl_report|"+
-            "get_current_member|"
+            "str|" +
+            "substr|" +
+            "upper|" +
+            "lower|" +
+            "contains|" +
+            "replace|" +
+            "reg_search|" +
+            "reg_replace|" +
+            "int|" +
+            "float|" +
+            "bool|" +
+            "round|" +
+            "trunc|" +
+            "abs|" +
+            "isclose|" +
+            "random|" +
+            "min|" +
+            "max|" +
+            "uuid|" +
+            "iff|" +
+            "len|" +
+            "range|" +
+            "now|" +
+            "date|" +
+            "date_min|" +
+            "date_max|" +
+            "isleap|" +
+            "days|" +
+            "weeks|" +
+            "months|" +
+            "timedelta|" +
+            "add_days|" +
+            "add_weeks|" +
+            "add_workdays|" +
+            "format_date|" +
+            "parse_date|" +
+            "unix_to_date|" +
+            "get_date_last_week_end_business|" +
+            "get_date_last_month_end_business|" +
+            "get_date_last_quarter_end_business|" +
+            "get_date_last_year_end_business|" +
+            "format_date2|" +
+            "parse_date2|" +
+            "format_number|" +
+            "parse_number|" +
+            "join|" +
+            "simple_price|" +
+            "get_currency_field|" +
+            "set_currency_field|" +
+            "get_instrument_field|" +
+            "set_instrument_field|" +
+            "get_instrument_accrual_size|" +
+            "get_instrument_accrual_factor|" +
+            "get_instrument_accrued_price|" +
+            "get_instrument_factor|" +
+            "get_instrument_coupon_factor|" +
+            "get_instrument_coupon|" +
+            "get_fx_rate|" +
+            "get_principal_price|" +
+            "get_accrued_price|" +
+            "get_next_coupon_date|" +
+            "get_factor|" +
+            "add_fx_history|" +
+            "add_price_history|" +
+            "generate_user_code|" +
+            "get_latest_principal_price|" +
+            "get_instrument_user_attribute_value|" +
+            "get_ttype_default_input|" +
+            "set_complex_transaction_input|" +
+            "set_complex_transaction_user_field|" +
+            "set_complex_transaction_form_data|" +
+            "get_relation_by_user_code|" +
+            "get_rt_value|" +
+            "convert_to_number|" +
+            "if_null|" +
+            "send_system_message|" +
+            "calculate_performance_report|" +
+            "calculate_balance_report|" +
+            "calculate_pl_report|" +
+            "get_current_member|" +
+            "run_pricing_procedure|" +
+            "run_data_procedure|" +
+            "get_currencies|" +
+            "get_instruments|" +
+            "get_list_of_dates_between_two_dates|"
         );
+
         var keywordMapper = this.createKeywordMapper({
             "invalid.deprecated": "debugger",
             "support.function": builtinFunctions,
