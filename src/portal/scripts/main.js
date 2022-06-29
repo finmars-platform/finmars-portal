@@ -341,6 +341,8 @@ export default (function () {
 
 	portal.controller('ListLayoutExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/listLayoutExportDialogController')]);
 
+	portal.controller('AceEditorPageController', ['$scope', '$state', '$mdDialog',  require('./app/controllers/aceEditorPageController')]);
+
 
 	// Instrument Type
 
