@@ -345,6 +345,7 @@
             'node_modules/toastr/build/toastr.min.js',
             'src/core/datepicker/pickmeup.js',
             'src/core/ace/ace.js',
+            'src/core/ace/mode-json.js',
             'src/core/ace/mode-python.js',
             'src/core/ace/theme-monokai.js',
 

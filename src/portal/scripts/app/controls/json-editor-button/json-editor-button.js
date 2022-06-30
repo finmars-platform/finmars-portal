@@ -5,23 +5,24 @@
     module.exports = function ($mdDialog) {
         return {
             restriction: 'AE',
-            templateUrl: 'controls/ace-editor-button/ace-editor-button.html',
+            templateUrl: 'controls/json-editor-button/json-editor-button.html',
             scope: {
                 item: '=',
                 data: '=',
-                buttonText: '@'
+                buttonText: '@',
+                onChangeCallback: '&?'
             },
             link: function (scope, elem, attr) {
 
                 if (scope.buttonText === undefined) {
-                    scope.buttonText = '<\>';
+                    scope.buttonText = '<json>';
                 }
 
                 scope.openExpressionDialog = function ($event) {
 
                     $mdDialog.show({
-                        controller: 'AceEditorDialogController as vm',
-                        templateUrl: 'views/dialogs/ace-editor-dialog-view.html',
+                        controller: 'JsonEditorDialogController as vm',
+                        templateUrl: 'views/dialogs/json-editor-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         preserveScope: true,
@@ -37,6 +38,10 @@
                         if (res.status === 'agree') {
 
                             scope.item = res.data.item.expression;
+
+                            if(scope.onChangeCallback) {
+                                scope.onChangeCallback();
+                            }
 
                         }
 
