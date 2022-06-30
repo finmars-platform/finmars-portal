@@ -76,7 +76,6 @@
                 }
 
 
-
                 $scope.$apply();
 
             })
@@ -91,6 +90,22 @@
 
         vm.universalFieldChange = function () {
             vm.item.data_string = JSON.stringify(vm.item.data, 0, 4)
+        }
+
+        vm.addContextVariable = function () {
+
+            if (!vm.item.context_variables) {
+                vm.item.context_variables = []
+            }
+
+            vm.item.context_variables.push({order: vm.item.context_variables.length})
+
+        }
+
+        vm.deleteContextVariable = function ($event, $index) {
+
+            vm.item.context_variables.splice($index, 1);
+
         }
 
         vm.init = function () {
