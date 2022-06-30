@@ -169,6 +169,7 @@ export default (function () {
 	portal.controller('EvFormInstrumentTableSettingsDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'data', require('./app/controllers/dialogs/evFormInstrumentTableSettingsDialogController')]);
 	portal.controller('ExpressionEditorDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/expressionEditorDialogController')]);
 	portal.controller('AceEditorDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/aceEditorDialogController')]);
+	portal.controller('JsonEditorDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/jsonEditorDialogController')]);
 	portal.controller('ConfigurationPackageDialogController', ['$scope', '$mdDialog', 'backendConfigurationImportService', 'data', require('./app/controllers/dialogs/configurationPackageDialogController')]);
 	portal.controller('UseFromAboveDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService', require('./app/controllers/dialogs/useFromAboveDialogController')]);
 	portal.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentSelectDialogController')]);
@@ -672,6 +673,7 @@ export default (function () {
 
 	portal.directive('expressionEditorButton', ['$mdDialog', require('./app/controls/expression-editor-button/expression-editor-button')]);
 	portal.directive('aceEditorButton', ['$mdDialog', require('./app/controls/ace-editor-button/ace-editor-button')]);
+	portal.directive('jsonEditorButton', ['$mdDialog', require('./app/controls/json-editor-button/json-editor-button')]);
 	portal.directive('packageManagerButton', ['$mdDialog', require('./app/controls/package-manager-button/package-manager-button')]);
 	portal.directive('useFromAboveButton', ['$mdDialog', require('./app/controls/use-from-above-button/use-from-above-button')]);
 
