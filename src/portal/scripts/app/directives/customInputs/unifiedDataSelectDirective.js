@@ -207,6 +207,8 @@
                                 scope.itemName = ''
                                 scope.inputText = ''
 
+                                scope.processing = false;
+
                                 setTimeout(function () {
 
                                     if (scope.onChangeCallback) scope.onChangeCallback();
@@ -692,6 +694,7 @@
                     }).catch(function () {
 
                         scope.processing = false;
+                        scope.$apply();
 
                     })
 
