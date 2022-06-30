@@ -89,7 +89,7 @@ ace.define("ace/mode/python_highlight_rules", ["require", "exports", "module", "
             "get_accrued_price|" +
             "get_next_coupon_date|" +
             "get_factor|" +
-            "add_fx_history|" +
+            "add_fx_rate|" +
             "add_price_history|" +
             "generate_user_code|" +
             "get_latest_principal_price|" +
@@ -111,7 +111,8 @@ ace.define("ace/mode/python_highlight_rules", ["require", "exports", "module", "
             "run_data_procedure|" +
             "get_currencies|" +
             "get_instruments|" +
-            "get_list_of_dates_between_two_dates|"
+            "get_list_of_dates_between_two_dates|" +
+            "get_latest_fx_rate|"
         );
 
         var keywordMapper = this.createKeywordMapper({
