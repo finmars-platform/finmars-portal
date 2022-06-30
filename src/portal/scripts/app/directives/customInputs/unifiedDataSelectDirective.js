@@ -644,7 +644,7 @@
                     }))
 
 
-                    Promise.all(promises).then(function (data) {
+                    Promise.allSettled(promises).then(function (data) {
 
                         scope.databaseItems = scope.databaseItems.filter(function (databaseItem) {
 
