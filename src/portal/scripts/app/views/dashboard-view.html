@@ -541,6 +541,18 @@
                                                 ></dashboard-entity-viewer-split-panel>
                                             </div>
 
+                                            <div data-ng-if="item.data.type == 'superset_dashboard'" class="height-100">
+                                                <dashboard-superset-dashboard
+                                                        class="height-100 display-block"
+                                                        tab-number="tab.tab_number"
+                                                        row-number="row.row_number"
+                                                        column-number="item.column_number"
+                                                        item="item"
+                                                        dashboard-data-service="vm.dashboardDataService"
+                                                        dashboard-event-service="vm.dashboardEventService"
+                                                ></dashboard-superset-dashboard>
+                                            </div>
+
                                         </div>
 
                                     </div>

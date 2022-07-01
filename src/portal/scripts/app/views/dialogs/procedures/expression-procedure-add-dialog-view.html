@@ -36,80 +36,55 @@
 
                 </div>
 
-                <div class="m-t-16" layout="row">
+                <div>
 
-                    <div layout="row">
+                    <div data-ng-repeat="item in vm.item.context_variables track by $index" layout="row">
 
-                        <md-button class="md-icon-button md-raised md-primary"
-                                   data-ng-click="vm.toggle('date_from')">
+                        <div>
+                            {{item.order}}
+                        </div>
 
-                            T
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Toggle</md-tooltip>
+                        <div>
 
-                        </md-button>
-
-                        <div data-ng-if="vm.toggleStatus.date_from == 'datepicker'">
-
-                            <md-input-container>
-                                <label for="">Date from</label>
-                                <zh-date-picker data-date-value="vm.item.date_from"></zh-date-picker>
+                            <md-input-container style="width: 60%">
+                                <label for="">Name (must start with <b>context_</b>)</label>
+                                <input type="text" data-ng-model="item.name">
                             </md-input-container>
 
                         </div>
 
-                        <div data-ng-if="vm.toggleStatus.date_from == 'expr'">
+                        <div>
 
                             <md-input-container style="width: 60%">
-                                <label for="">Date from (Expression)</label>
-                                <input type="text" data-ng-model="vm.item.date_from_expr">
+                                <label for="">Expression</label>
+                                <input type="text" data-ng-model="item.expression">
                             </md-input-container>
 
-                            <expression-editor-button data-item="vm.item.date_from_expr">
+                            <expression-editor-button data-item="item.expression">
                             </expression-editor-button>
 
                         </div>
 
-                    </div>
-
-                    <div layout="row">
-
-                        <md-button class="md-icon-button md-raised md-primary"
-                                   data-ng-click="vm.toggle('date_to')">
-
-                            T
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Toggle</md-tooltip>
-
-                        </md-button>
-
-
-                        <div data-ng-if="vm.toggleStatus.date_to == 'datepicker'">
-
-                            <md-input-container>
-                                <label for="">Date to</label>
-                                <zh-date-picker data-date-value="vm.item.date_to"></zh-date-picker>
-                            </md-input-container>
-
-                        </div>
-
-                        <div data-ng-if="vm.toggleStatus.date_to == 'expr'">
+                        <div>
 
                             <md-input-container style="width: 60%">
-                                <label for="">Date to (Expression)</label>
-                                <input type="text" data-ng-model="vm.item.date_to_expr">
+                                <label for="">Notes</label>
+                                <input type="text" data-ng-model="item.notes">
                             </md-input-container>
-
-                            <expression-editor-button data-item="vm.item.date_to_expr">
-                            </expression-editor-button>
-
 
                         </div>
 
+                        <div>
+                            <md-button class="md-warn" data-ng-click="vm.deleteContextVariable($event, $index)">Delete</md-button>
+                        </div>
 
                     </div>
 
-
+                    <md-button data-ng-click="vm.addContextVariable($event)">Add Context Variable</md-button>
 
                 </div>
+
+
                 <div layout="row">
 
                     <div class="m-t-16">
