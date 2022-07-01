@@ -139,7 +139,7 @@
             {
                 "key": "reference_fx_rate",
                 "name": "Reference fx rate",
-                "value_type": 'float'
+                "value_type": 20
             },
             {
                 "key": "is_locked",
@@ -154,22 +154,22 @@
             {
                 "key": "factor",
                 "name": "Factor",
-                "value_type": 'float'
+                "value_type": 20
             },
             {
                 "key": "principal_amount",
                 "name": "Principal amount",
-                "value_type": 'float'
+                "value_type": 20
             },
             {
                 "key": "carry_amount",
                 "name": "Carry amount",
-                "value_type": 'float'
+                "value_type": 20
             },
             {
                 "key": "overheads",
                 "name": "overheads",
-                "value_type": 'float'
+                "value_type": 20
             },
             {
                 "key": "responsible",
@@ -190,7 +190,7 @@
             {
                 "key": "trade_price",
                 "name": "Trade price",
-                "value_type": 'float'
+                "value_type": 20
             },
             {
                 "key": "object_permissions_user",

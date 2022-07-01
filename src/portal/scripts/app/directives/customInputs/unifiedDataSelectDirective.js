@@ -207,6 +207,8 @@
                                 scope.itemName = ''
                                 scope.inputText = ''
 
+                                scope.processing = false;
+
                                 setTimeout(function () {
 
                                     if (scope.onChangeCallback) scope.onChangeCallback();
@@ -644,7 +646,7 @@
                     }))
 
 
-                    Promise.all(promises).then(function (data) {
+                    Promise.allSettled(promises).then(function (data) {
 
                         scope.databaseItems = scope.databaseItems.filter(function (databaseItem) {
 
@@ -692,6 +694,7 @@
                     }).catch(function () {
 
                         scope.processing = false;
+                        scope.$apply();
 
                     })
 

@@ -117,16 +117,16 @@
 
     gulp.task(appName + '-polyfills-js-min', function () { // core-polyfills-js-min
 
-    	var pathToJS = [
-			'node_modules/@babel/polyfill/dist/polyfill.js'
-		];
+        var pathToJS = [
+            'node_modules/@babel/polyfill/dist/polyfill.js'
+        ];
 
-    	return gulp.src(pathToJS)
-			.pipe(concat('polyfills.js'))
-			.pipe(uglify())
-			.pipe(rename('polyfills.min.js'))
-			.pipe(gulp.dest('dist/' + appName + '/scripts/'));
-	});
+        return gulp.src(pathToJS)
+            .pipe(concat('polyfills.js'))
+            .pipe(uglify())
+            .pipe(rename('polyfills.min.js'))
+            .pipe(gulp.dest('dist/' + appName + '/scripts/'));
+    });
 
     gulp.task(appName + '-angular-js-min', function () {
 
@@ -256,6 +256,7 @@
 
     });
 
+
     gulp.task(appName + '-moment-js-min', function () {
 
         var pathToJS = ['node_modules/moment/moment.js'];
@@ -323,7 +324,7 @@
             .pipe(gulp.dest('dist/' + appName + '/content/css/'));
     }
 
-    function fontawesomeFontsCopy () {
+    function fontawesomeFontsCopy() {
         var pathToCSS = ['node_modules/@fortawesome/fontawesome-free/webfonts/*'];
 
         return gulp.src(pathToCSS)
@@ -332,7 +333,7 @@
 
     gulp.task(appName + '-fontawesome-min', gulp.series(fontawesomeCssMin, fontawesomeFontsCopy));
 
-    function deleteTempFolder () {
+    function deleteTempFolder() {
         return del(['src/temp']);
     }
 
@@ -343,6 +344,11 @@
             'node_modules/jstree/dist/jstree.js',
             'node_modules/toastr/build/toastr.min.js',
             'src/core/datepicker/pickmeup.js',
+            'src/core/ace/ace.js',
+            'src/core/ace/mode-json.js',
+            'src/core/ace/mode-python.js',
+            'src/core/ace/theme-monokai.js',
+
             'node_modules/d3/dist/d3.js',
             'node_modules/qrious/dist/qrious.js'
         ];
@@ -406,7 +412,7 @@
 
     gulp.task(appName + '-min-All',
         gulp.parallel(
-			appName + '-polyfills-js-min',
+            appName + '-polyfills-js-min',
             appName + '-angular-js-min',
             appName + '-angular-css-min',
             appName + '-core-js-min',

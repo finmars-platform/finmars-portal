@@ -95,7 +95,7 @@
 
             <div class="flex-row width-50 p-l-8">
 
-                <expression-input ng-if="vm.valueType !== 100"
+                <expression-input
                                   label="Default value"
                                   model="vm.defaultValue"
                                   is-disabled="vm.valueType === 120"
@@ -103,14 +103,14 @@
                                   class="custom-input-bottom-space"
                                   style="width: 240px;"></expression-input>
 
-                <dropdown-select ng-if="vm.valueType === 100"
-                                 label="Default Value"
-                                 placeholder-text="Choose Default Value"
-                                 model="vm.defaultValue"
-                                 menu-options="vm.defaultValuesItems"
-                                 small-options="{tooltipText: 'Input Default value'}"
-                                 class="custom-input-bottom-space"
-                                 style="width: 240px;"></dropdown-select>
+<!--                <dropdown-select ng-if="vm.valueType === 100"-->
+<!--                                 label="Default Value"-->
+<!--                                 placeholder-text="Choose Default Value"-->
+<!--                                 model="vm.defaultValue"-->
+<!--                                 menu-options="vm.defaultValuesItems"-->
+<!--                                 small-options="{tooltipText: 'Input Default value'}"-->
+<!--                                 class="custom-input-bottom-space"-->
+<!--                                 style="width: 240px;"></dropdown-select>-->
             </div>
         </div>
 
