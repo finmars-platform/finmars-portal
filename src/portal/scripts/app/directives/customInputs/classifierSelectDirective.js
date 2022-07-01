@@ -36,10 +36,6 @@
                 scope.dropdownMenuFilter = '';
                 scope.menuOptions = [];
 
-                if (scope.itemName) { // itemName and inputText needed for resetting selected option name
-                    scope.inputText = scope.itemName;
-                }
-
 				/*
 				TIPS
 				scope.smallOptions probable properties
@@ -58,6 +54,12 @@
                 }
 
                 if (!scope.modelProp) scope.modelProp = 'id';
+
+                var itemName = scope.itemName || '';
+
+                if (scope.itemName) { // itemName and inputText needed for resetting selected option name
+                    scope.inputText = itemName;
+                }
 
                 var stylePreset;
 
@@ -108,10 +110,11 @@
                         scope.model = item[scope.modelProp];
                         scope.valueIsValid = true;
 
-                        if (typeof scope.itemName !== 'undefined') {
+                        /*if (typeof scope.itemName !== 'undefined') {
                             scope.itemName = item.name;
-                        }
-                        scope.inputText = item.name;
+                        }*/
+                        itemName = item.name;
+                        scope.inputText = itemName;
 
                         closeDropdownMenu();
 
@@ -137,7 +140,7 @@
 
 					inputContainer.classList.remove('custom-input-focused');
 
-					if (scope.itemName) scope.inputText = scope.itemName;
+                    scope.inputText = itemName;
 
                     scope.dropdownMenuHidden = false;
 
@@ -252,13 +255,14 @@
 
                     scope.$watch('model', function () {
 
-                        if (scope.model && scope.menuOptions) {
+                        if (scope.model && scope.menuOptions && scope.menuOptions.length) {
 
                             for (var i = 0; i < scope.menuOptions.length; i++) {
 
                                 if (scope.menuOptions[i][scope.modelProp] === scope.model) {
 
-                                    scope.inputText = scope.menuOptions[i].name
+                                    itemName = scope.menuOptions[i].name;
+                                    scope.inputText = itemName;
                                     scope.valueIsValid = true
                                     break;
 
@@ -267,7 +271,8 @@
                             }
 
                         } else {
-                            scope.inputText = ""
+                            itemName = "";
+                            scope.inputText = itemName;
                             scope.valueIsValid = false
                         }
 
@@ -312,12 +317,13 @@
                     scope.$watch('itemName', function () {
 
                         if (scope.itemName) {
-                            scope.inputText = scope.itemName;
+                            itemName = scope.itemName;
 
                         } else {
-                            scope.inputText = '';
-
+                            itemName = '';
                         }
+
+                        scope.inputText = itemName;
 
                     });
 
@@ -390,10 +396,11 @@
                         for (var i = 0; i < scope.menuOptions.length; i++) {
                             if (scope.menuOptions[i][scope.modelProp] === scope.model) {
 
-                                if (typeof scope.itemName !== 'undefined') {
+                                /*if (typeof scope.itemName !== 'undefined') {
                                     scope.itemName = scope.menuOptions[i].name;
-                                }
-                                scope.inputText = scope.menuOptions[i].name;
+                                }*/
+                                itemName = scope.menuOptions[i].name;
+                                scope.inputText = itemName;
 
                                 break;
 

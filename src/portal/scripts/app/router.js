@@ -422,6 +422,18 @@
                 controller: 'DataProcedurePageController as vm'
             })
 
+            .state('app.portal.expression-procedure', {
+                url: '/expression-procedures',
+                templateUrl: 'views/pages/expression-procedure-page-view.html',
+                controller: 'ExpressionProcedurePageController as vm'
+            })
+
+            .state('app.portal.ace-editor', {
+                url: '/editor',
+                templateUrl: 'views/pages/ace-editor-page-view.html',
+                controller: 'AceEditorPageController as vm'
+            })
+
             .state('app.portal.pricing-parent-procedure', {
                 url: '/pricing-parent-procedures',
                 templateUrl: 'views/pages/pricing-parent-procedure-page-view.html',
@@ -442,6 +454,11 @@
                 url: '/data-procedure-instance',
                 templateUrl: 'views/pages/data-procedure-instance-page-view.html',
                 controller: 'DataProcedureInstancePageController as vm'
+            })
+            .state('app.portal.expression-procedure-instance', {
+                url: '/expression-procedure-instance',
+                templateUrl: 'views/pages/expression-procedure-instance-page-view.html',
+                controller: 'ExpressionProcedureInstancePageController as vm'
             })
             .state('app.portal.import', {
                 url: '/import',

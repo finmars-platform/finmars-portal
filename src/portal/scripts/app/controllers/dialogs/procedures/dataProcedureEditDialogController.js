@@ -85,6 +85,8 @@
 
         vm.agree = function () {
 
+            vm.item.data = JSON.parse(vm.item.data_string)
+
             dataProcedureService.update(vm.item.id, vm.item).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: {item: data}});

@@ -25,11 +25,11 @@
             },
 
             {
-                "key": "transaction_type",
-                "name": "Transaction type",
+                "key": "transaction_class",
+                "name": "Transaction Class",
                 "value_type": "field",
-                "value_entity": "transaction-type",
-                "value_content_type": "transactions.transactiontype",
+                "value_entity": "transaction-class",
+                "value_content_type": "transactions.transactionclass",
                 "code": "user_code",
                 "allow_null": false
             },
@@ -95,8 +95,8 @@
                 "value_type": 20
             },
             {
-                "key": "n_shares_end_of_the_day",
-                "name": "N Shares end of the day",
+                "key": "rolling_shares_of_the_day",
+                "name": "Rolling shares of the day",
                 "value_type": 20
             },
             {
@@ -108,6 +108,17 @@
                 "code": "user_code",
                 "allow_null": false
             },
+            {
+                "key": "created",
+                "name": "Created",
+                "value_type": 40
+            },
+
+            {
+                "key": "modified",
+                "name": "Modified",
+                "value_type": 40
+            }
         ]
     };
 

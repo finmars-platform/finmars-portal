@@ -690,7 +690,7 @@
 
             }
 
-            if (vm.entity.attributes) {
+            /* if (vm.entity.attributes) {
 
                 vm.entity.attributes.forEach(function (attribute) {
 
@@ -712,7 +712,7 @@
 
                 })
 
-            }
+            } */
 
             vm.entity.object_permissions = [];
 
