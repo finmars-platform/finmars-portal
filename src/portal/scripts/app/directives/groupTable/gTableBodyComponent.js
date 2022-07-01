@@ -422,8 +422,9 @@
                     contentElem.style.opacity = '1';
 
                     updateTableContent();
-
+                    console.log("testing1 DATA_LOAD_END 1", activeLayoutConfigIsSet);
                     if (!activeLayoutConfigIsSet && viewContext !== 'reconciliation_viewer') {
+                        console.log("testing1 DATA_LOAD_END 2");
                         activeLayoutConfigIsSet = true;
                         scope.evDataService.setActiveLayoutConfiguration({isReport: scope.isReport}); // saving layout for checking for changes
                         scope.evEventService.dispatchEvent(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED);
@@ -432,7 +433,7 @@
                     scope.evDataService.setDataLoadStatus(true);
 
                     scope.dataLoadStatus = true;
-
+                    console.log("testing1 DATA_LOAD_END 3", scope.dataLoadStatus);
                     setTimeout(function () {
                         scope.$apply();
                     }, 0)
@@ -585,6 +586,15 @@
                         scope.evEventService.dispatchEvent(evEvents.TABLE_SIZES_CALCULATED);
 
                     }, 500);
+
+                    if (!activeLayoutConfigIsSet && viewContext !== 'reconciliation_viewer') {
+
+                        activeLayoutConfigIsSet = true;
+
+                        scope.evDataService.setActiveLayoutConfiguration({isReport: scope.isReport}); // saving layout for checking for changes
+                        scope.evEventService.dispatchEvent(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED);
+
+                    }
 
                     toggleBookmarksBtn.addEventListener('click', function () {
 

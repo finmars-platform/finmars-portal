@@ -7,35 +7,36 @@
 export default function () {
 
     let queue = [];
+    let processingPromise;
 
     const dequeue = function () {
 
+        if (processingPromise) return false;
+
         const promiseData = queue.shift();
 
-        if (!promiseData) return false;
-
-        if (promiseData.inProgress) return false;
+        if (!promiseData) return false; // no more promises in queue
 
         try {
 
-            promiseData.inProgress = true;
+            processingPromise = true;
 
             promiseData.promise()
                 .then(resData => {
 
-                    promiseData.inProgress = false;
+                    processingPromise = false;
                     promiseData.resolve(resData);
                     dequeue();
 
                 })
                 .catch(error => {
-                    promiseData.inProgress = false;
+                    processingPromise = false;
                     promiseData.reject(error);
                     dequeue();
                 })
 
         } catch (error) {
-            promiseData.inProgress = false;
+            processingPromise = false;
             promiseData.reject(error);
             dequeue();
         }
@@ -48,15 +49,19 @@ export default function () {
                 promise: promise,
                 resolve: resolve,
                 reject: reject,
-                inProgress: false
             });
             dequeue();
         });
-    }
+    };
+
+    const emptyQueue = function () {
+        queue = [];
+    };
 
     return {
         enqueue: enqueue,
-        queue: queue
+        queue: queue,
+        emptyQueue: emptyQueue
     }
 
 }

@@ -323,8 +323,8 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             if (scope.openedInside === 'portal') {
 
-				const stateWithLayout = evRvLayoutsHelper.statesWithLayouts.includes($state.current.name);
-				console.log("testing main header", stateWithLayout);
+                const stateWithLayout = evRvLayoutsHelper.statesWithLayouts.includes($state.current.name);
+
 				if (user.layouts_autosave && stateWithLayout) {
 
 					scope.showAutosaveLayoutCheckbox = true;
@@ -336,17 +336,19 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
 				}
 
-                deregisterOnSuccessTransitionHook = $transitions.onSuccess({}, function (transition) {
-
-					scope.currentLocation = metaService.getHeaderTitleForCurrentLocation($state);
-					console.log("testing transition hook works");
-					if (stateWithLayout && scope.member.data.autosave_layouts !== false) {
-						scope.showAutosaveLayoutCheckbox = true;
-					}
-
-                });
-
             }
+
+            deregisterOnSuccessTransitionHook = $transitions.onSuccess({}, function (transition) {
+
+                scope.currentLocation = metaService.getHeaderTitleForCurrentLocation($state);
+                const stateWithLayout = evRvLayoutsHelper.statesWithLayouts.includes($state.current.name);
+                console.log("testing1 transition hook works", stateWithLayout, scope.member.data);
+                /* if (stateWithLayout && scope.member.data.autosave_layouts !== false) {
+                    scope.showAutosaveLayoutCheckbox = true;
+                } */
+                scope.showAutosaveLayoutCheckbox = stateWithLayout && scope.member.data && scope.member.data.autosave_layouts;
+                console.log("testing1 transition showAutosaveLayoutCheckbox", scope.showAutosaveLayoutCheckbox);
+            });
 
             const init = async function () {
 
@@ -370,13 +372,9 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             init();
 
-            if (scope.openedInside === 'portal') {
-
-                scope.$on("$destroy", function () {
-                    deregisterOnSuccessTransitionHook();
-                });
-
-            }
+            scope.$on("$destroy", function () {
+                deregisterOnSuccessTransitionHook();
+            });
 
         }
     }

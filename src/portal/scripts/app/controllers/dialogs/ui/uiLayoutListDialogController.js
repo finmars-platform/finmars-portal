@@ -1,6 +1,10 @@
 /**
  * Created by szhitenev on 04.11.16.
  */
+import AutosaveLayoutService from "../../../services/autosaveLayoutService";
+import evEvents from "../../../services/entityViewerEvents";
+import uiService from "../../../services/uiService";
+
 (function () {
 
     'use strict';
@@ -8,7 +12,7 @@
     var evEvents = require('../../../services/entityViewerEvents');
 
     var uiService = require('../../../services/uiService');
-
+    var metaContentTypesService = require('../../../services/metaContentTypesService');
     // var middlewareService = require('../../../services/middlewareService');
 
     var inviteToSharedConfigurationFileService = require('../../../services/inviteToSharedConfigurationFileService');
@@ -27,7 +31,10 @@
         var entityViewerEventService = options.entityViewerEventService;
 
         var isRootEntityViewer = entityViewerDataService.isRootEntityViewer();
+        var contentType = metaContentTypesService.findContentTypeByEntity(options.entityType);
         var splitPanelLayoutId = null;
+
+        var autosaveLayoutService = new AutosaveLayoutService();
 
         if (!isRootEntityViewer) {
             var spDefaultLayoutData = entityViewerDataService.getSplitPanelDefaultLayout();
@@ -35,6 +42,7 @@
         }
 
         vm.invites = [];
+        vm.autosaveLayout = {};
 
         //var contentType = metaContentTypesService.getContentTypeUIByEntity(options.entityType);
 
@@ -48,6 +56,14 @@
 
                     vm.items = data.results;
                     layoutsList = data.results;
+
+                    const autosaveLayoutUserCode = autosaveLayoutService.getAutosaveLayoutUserCode(contentType);
+                    const autosaveLayoutIndex = vm.items.findIndex(layout => layout.user_code === autosaveLayoutUserCode);
+
+                    if (autosaveLayoutIndex > -1) {
+                        vm.autosaveLayout = vm.items.splice(autosaveLayoutIndex, 1)[0];
+                        layoutsList.splice(autosaveLayoutIndex, 1);
+                    }
 
                     vm.items.forEach(function (item) {
 
@@ -191,7 +207,6 @@
                         layoutItem.classList.remove('active');
                     }
 
-
                 });
 
                 selectedElem.classList.add('active');
@@ -209,7 +224,104 @@
             vm.agree();
         };
 
+        var setLayoutAsDefault = function (item, layoutData) {
+
+            var defaultLayoutIndex = vm.items.findIndex(function (layout) {
+                return layout.is_default;
+            });
+
+            if (defaultLayoutIndex > -1) {
+                vm.items[defaultLayoutIndex].is_default = false;
+                layoutsList[defaultLayoutIndex].is_default = false;
+            }
+
+            if (vm.autosaveLayout.id !== layoutData.id) {
+                vm.autosaveLayout.is_default = false;
+            }
+            /*for (var i = 0; i < vm.items.length; i++) {
+
+                var layout = vm.items[i];
+
+                if (layout.is_default) {
+
+                    layout.is_default = false;
+                    layoutsList[i].is_default = false;
+                    break;
+                }
+
+            }*/
+
+            item.is_default = true;
+            layoutData.is_default = true;
+
+            uiService.updateListLayout(layoutData.id, layoutData).then(function (data) {
+
+                // needed to update is_default on front-end
+                var listLayout = entityViewerDataService.getListLayout();
+                var activeLayoutConfig = entityViewerDataService.getActiveLayoutConfiguration();
+
+                if (listLayout.id === layoutData.id) { // if active layout made default
+
+                    listLayout.is_default = true;
+                    listLayout.modified = data.modified;
+                    activeLayoutConfig.is_default = true;
+                    activeLayoutConfig.modified = data.modified;
+
+                    entityViewerDataService.setListLayout(listLayout);
+                    entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: activeLayoutConfig});
+
+                }
+                else if (listLayout.is_default) { // Active layout is default right now. Mark it as not default
+
+                    listLayout.is_default = false;
+                    activeLayoutConfig.is_default = false;
+
+                    entityViewerDataService.setListLayout(listLayout);
+                    entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: activeLayoutConfig});
+
+                }
+
+                entityViewerEventService.dispatchEvent(evEvents.DEFAULT_LAYOUT_CHANGE);
+
+            });
+
+        };
+
+        var setSpLayoutAsDefault = function (layoutData) {
+
+            var defaultLayoutData = {
+                layoutId: layoutData.id,
+                name: layoutData.name,
+                content_type: layoutData.content_type
+            };
+
+            entityViewerDataService.setSplitPanelDefaultLayout(defaultLayoutData);
+            entityViewerEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
+            splitPanelLayoutId = layoutData.id;
+
+        };
+
+
         vm.setAsDefault = function ($event, item, index) {
+
+            $event.stopPropagation();
+
+            var layoutData = item.id === vm.autosaveLayout.id ? vm.autosaveLayout : layoutsList[index];
+
+            if (isRootEntityViewer) {
+
+                if (!layoutData.is_default) {
+                    setLayoutAsDefault(item, layoutData);
+                }
+
+            }
+            else if (layoutData.id !== splitPanelLayoutId) {
+                setSpLayoutAsDefault(layoutData);
+            }
+
+        };
+
+        vm.setAutosaveAsDefault = function ($event, item, index) {
 
             $event.stopPropagation();
 
@@ -218,64 +330,12 @@
             if (isRootEntityViewer) {
 
                 if (!layoutData.is_default) {
-
-                    for (var i = 0; i < vm.items.length; i++) {
-
-                    	var layout = vm.items[i];
-
-                        if (layout.is_default) {
-
-                            layout.is_default = false;
-                            layoutsList[i].is_default = false;
-                            break;
-                        }
-
-                    }
-
-                    layoutData.is_default = true;
-                    item.is_default = true;
-
-                    uiService.updateListLayout(layoutData.id, layoutData).then(function (data) {
-
-                    	// needed to update is_default on front-end
-						var listLayout = entityViewerDataService.getListLayout();
-						var activeLayoutConfig = entityViewerDataService.getActiveLayoutConfiguration();
-
-						if (listLayout.id === layoutData.id) { // if active layout made default
-
-							listLayout.is_default = true
-							listLayout.modified = data.modified
-							activeLayoutConfig.is_default = true
-							activeLayoutConfig.is_default = true
-
-						} else {
-
-							listLayout.is_default = false
-							activeLayoutConfig.is_default = false
-
-						}
-
-						entityViewerDataService.setListLayout(listLayout);
-						entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: activeLayoutConfig});
-
-						entityViewerEventService.dispatchEvent(evEvents.DEFAULT_LAYOUT_CHANGE);
-
-					});
-
+                    setLayoutAsDefault(item, layoutData);
                 }
 
-            } else if (layoutData.id !== splitPanelLayoutId) {
-
-                var defaultLayoutData = {
-                    layoutId: layoutData.id,
-                    name: layoutData.name,
-                    content_type: layoutData.content_type
-                };
-
-                entityViewerDataService.setSplitPanelDefaultLayout(defaultLayoutData);
-                entityViewerEventService.dispatchEvent(evEvents.SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED);
-                splitPanelLayoutId = layoutData.id;
-
+            }
+            else if (layoutData.id !== splitPanelLayoutId) {
+                setSpLayoutAsDefault(layoutData);
             }
         };
 
@@ -283,29 +343,15 @@
 
             if (isRootEntityViewer) {
 
-                if (layout.is_default) {
-                    return true;
-                }
-
-                return false;
+                return layout.is_default;
 
             } else {
 
                 if (splitPanelLayoutId) {
-
-                    if (splitPanelLayoutId === layout.id) {
-                        return true
-                    }
-
-                    return false;
+                    return splitPanelLayoutId === layout.id;
 
                 } else { // if there is no specific layout for split panel, show default entity layout
-
-                    if (layout.is_default) {
-                        return true;
-                    }
-
-                    return false;
+                    return layout.is_default;
                 }
 
             }

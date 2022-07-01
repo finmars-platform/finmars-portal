@@ -34,7 +34,7 @@ import evEvents from "../../services/entityViewerEvents";
     var expressionService = require('../../services/expression.service');
     // var middlewareService = require('../../services/middlewareService');
 
-    module.exports = function ($scope, $mdDialog, $stateParams, $transitions, toastNotificationService, middlewareService, usersService, globalDataService) {
+    module.exports = function ($scope, $mdDialog, $stateParams, $transitions, toastNotificationService, middlewareService, globalDataService) {
 
         var vm = this;
 
@@ -48,6 +48,7 @@ import evEvents from "../../services/entityViewerEvents";
         var onLogoutIndex, onUserChangeIndex;
 
         // var doNotCheckLayoutChanges = false;
+        var autosaveLayoutService;
 
         // Functions for context menu
 
@@ -69,8 +70,6 @@ import evEvents from "../../services/entityViewerEvents";
             }
 
         };
-
-        var autosaveLayoutService;
 
         /*var getContextData = function (reportOptions, activeObject) {
 
@@ -411,9 +410,9 @@ import evEvents from "../../services/entityViewerEvents";
             }); */
             if (vm.currentMember.data && vm.currentMember.data.autosave_layouts) {
 
-                const testIndex = vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                const alcIndex = vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, function () {
                     autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
-                    vm.entityViewerEventService.removeEventListener(evEvents.DATA_LOAD_END, testIndex);
+                    vm.entityViewerEventService.removeEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, alcIndex);
                 });
 
             }
@@ -766,16 +765,6 @@ import evEvents from "../../services/entityViewerEvents";
 
         };
 
-        var removeTransitionListeners = function () {
-
-            if (deregisterOnBeforeTransitionHook) {
-                deregisterOnBeforeTransitionHook();
-            }
-
-            window.removeEventListener('beforeunload', warnAboutLayoutChangesLoss);
-
-        };
-
         var warnAboutLayoutChangesLoss = function (event) {
 
             var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
@@ -803,6 +792,16 @@ import evEvents from "../../services/entityViewerEvents";
         var initTransitionListeners = function () {
             deregisterOnBeforeTransitionHook = $transitions.onBefore({}, checkLayoutForChanges);
             window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
+        };
+
+        var removeTransitionListeners = function () {
+
+            if (deregisterOnBeforeTransitionHook) {
+                deregisterOnBeforeTransitionHook();
+            }
+
+            window.removeEventListener('beforeunload', warnAboutLayoutChangesLoss);
+
         };
 
         /**
@@ -976,19 +975,11 @@ import evEvents from "../../services/entityViewerEvents";
             vm.splitPanelExchangeService = new SplitPanelExchangeService();
             vm.attributeDataService = new AttributeDataService();
 
-            autosaveLayoutService = new AutosaveLayoutService();
-
             vm.entityType = $scope.$parent.vm.entityType;
-            /* vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
-            vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
-            vm.entityViewerDataService.setIsReport(true);
-            vm.entityViewerDataService.setRootEntityViewer(true);
-            vm.entityViewerDataService.setViewContext('entity_viewer');
-            vm.entityViewerDataService.setCurrentMember(vm.currentMember);
-            vm.entityViewerDataService.setVirtualScrollStep(500);
 
-            vm.entityViewerDataService.setRowHeight(36); */
+            // calls setEntityType, setIsReport etc
             sharedLogicHelper.setLayoutDataForView();
+
             vm.entityViewerDataService.setRootEntityViewer(true);
             vm.entityViewerDataService.setViewContext(vm.viewContext);
 
@@ -1025,6 +1016,21 @@ import evEvents from "../../services/entityViewerEvents";
             })
 
             vm.setEventListeners();
+
+            middlewareService.onAutosaveLayoutToggle(function () {
+
+                vm.currentMember = globalDataService.getMember();
+
+                if (vm.currentMember.data.autosave_layouts) {
+                    autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
+                    removeTransitionListeners();
+
+                } else {
+                    autosaveLayoutService.removeChangesTrackingEventListeners(vm.entityViewerEventService);
+                    initTransitionListeners();
+                }
+
+            });
 
             var layoutUserCode;
 
@@ -1067,21 +1073,6 @@ import evEvents from "../../services/entityViewerEvents";
 
                 metaService.logRejectedPromisesAfterAllSettled(getViewData, 'report viewer get view');
 
-                middlewareService.onAutosaveLayoutToggle(function () {
-
-                    vm.currentMember = globalDataService.getMember();
-
-                    if (vm.currentMember.data.autosave_layouts) {
-                        autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
-                        initTransitionListeners();
-
-                    } else {
-                        autosaveLayoutService.removeChangesTrackingEventListeners();
-                        removeTransitionListeners();
-                    }
-
-                });
-
                 $scope.$apply();
 
             });
@@ -1089,6 +1080,8 @@ import evEvents from "../../services/entityViewerEvents";
         };
 
         vm.init = function () {
+
+            autosaveLayoutService = new AutosaveLayoutService();
 
             onUserChangeIndex = middlewareService.onMasterUserChanged(function () {
                 vm.entityViewerDataService.setLayoutChangesLossWarningState(false);
