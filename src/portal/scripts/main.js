@@ -320,8 +320,8 @@ export default (function () {
 
 	// Entity Viewer & Report Viewer
 
-	portal.controller('EntityViewerController', ['$scope', '$mdDialog', '$state', '$stateParams', '$transitions', '$customDialog', '$bigDrawer', 'middlewareService', 'usersService', require('./app/controllers/entityViewer/entityViewerController')]);
-	portal.controller('ReportViewerController', ['$scope', '$mdDialog', '$stateParams', '$transitions', 'toastNotificationService', 'middlewareService', 'usersService', 'globalDataService', require('./app/controllers/entityViewer/reportViewerController')]);
+	portal.controller('EntityViewerController', ['$scope', '$mdDialog', '$state', '$stateParams', '$transitions', '$customDialog', '$bigDrawer', 'middlewareService', 'globalDataService', require('./app/controllers/entityViewer/entityViewerController')]);
+	portal.controller('ReportViewerController', ['$scope', '$mdDialog', '$stateParams', '$transitions', 'toastNotificationService', 'middlewareService', 'globalDataService', require('./app/controllers/entityViewer/reportViewerController')]);
 	portal.controller('SplitPanelReportViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/splitPanelReportViewerController')]);
 	portal.controller('ReconciliationViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/reconciliationViewerController')]);
 	portal.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'authorizerService', 'usersService', 'usersGroupService', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);

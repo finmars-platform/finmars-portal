@@ -2,9 +2,12 @@
  /**
  * Created by szhitenev on 05.05.2016.
  */
-(function () {
+'use strict';
 
-        'use strict';
+import AutosaveLayoutService from "../../services/autosaveLayoutService";
+import evEvents from "../../services/entityViewerEvents";
+
+(function () {
 
         var uiService = require('../../services/uiService');
 		var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
@@ -28,7 +31,7 @@
 
         var transactionTypeService = require('../../services/transactionTypeService');
 
-        module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer, middlewareService, usersService) {
+        module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer, middlewareService, globalDataService) {
 
             var vm = this;
 
@@ -44,6 +47,7 @@
             vm.stateWithLayout = evRvLayoutsHelper.statesWithLayouts.indexOf($state.current.name) !== -1;
 
             var deregisterOnBeforeTransitionHook;
+            var autosaveLayoutService;
 
             // $customDialog.show({
             //     controller: 'LoaderDialogController as vm',
@@ -96,12 +100,6 @@
                 vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
             };*/
-
-            var initTransitionHooks = function () {
-
-                deregisterOnBeforeTransitionHook = $transitions.onBefore({}, checkLayoutForChanges);
-
-            };
 
             /* const duplicateEntity = async function (entity) {
 
@@ -612,6 +610,7 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.LIST_LAYOUT_CHANGE, function () {
 
+                    autosaveLayoutService.removeChangesTrackingEventListeners(vm.entityViewerEventService);
                     vm.getView();
 
                 });
@@ -887,12 +886,21 @@
 
                 });
 
+                if (vm.currentMember.data && vm.currentMember.data.autosave_layouts) {
+
+                    const alcIndex = vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, function () {
+                        autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, false);
+                        vm.entityViewerEventService.removeEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, alcIndex);
+                    });
+
+                }
+
             };
 
 			/** Separate front and back filters for old layouts */
-			var separateEvFilters = function (filters) {
+			const separateEvFilters = function (filters) {
 
-				var filterObj = {frontend: [], backend: []};
+				let filterObj = {frontend: [], backend: []};
 
 				if (Array.isArray(filters)) { // old ev layout
 
@@ -925,7 +933,7 @@
                 vm.layoutId = layoutData.id
 
 				layoutData.data.filters = separateEvFilters(layoutData.data.filters);
-
+                console.log("testing1 setLayout layoutData", layoutData);
                 vm.entityViewerDataService.setLayoutCurrentConfiguration(layoutData, uiService, false);
                 vm.setFiltersValuesFromQueryParameters();
                 vm.readyStatus.layout = true;
@@ -991,7 +999,6 @@
 					filters.backend.forEach(setFilterValue);
 
                 }
-
 
             };
 
@@ -1071,7 +1078,6 @@
             vm.getView = function () {
 
                 // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
-
                 vm.readyStatus.layout = false;
 
                 vm.entityViewerDataService = new EntityViewerDataService();
@@ -1101,6 +1107,26 @@
                 vm.entityViewerDataService.setRootEntityViewer(true);
 
                 setEventListeners();
+
+                if (vm.stateWithLayout) {
+
+                    middlewareService.onAutosaveLayoutToggle(function () {
+
+                        vm.currentMember = globalDataService.getMember();
+                        removeTransitionListeners();
+
+                        if (vm.currentMember.data.autosave_layouts) {
+                            autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, false);
+                            initListenersForAutosave();
+
+                        } else {
+                            autosaveLayoutService.removeChangesTrackingEventListeners(vm.entityViewerEventService);
+                            initTransitionListeners();
+                        }
+
+                    });
+
+                }
 
                 var layoutUserCode;
 
@@ -1170,7 +1196,7 @@
 
             };
 
-            vm.getCurrentMember = function () {
+            /* vm.getCurrentMember = function () {
 
                 return usersService.getMyCurrentMember().then(function (data) {
 
@@ -1179,12 +1205,12 @@
                     $scope.$apply();
 
                 });
-            };
+            }; */
 
             var checkLayoutForChanges = function (transition) { // called on attempt to change or reload page
 
                 return new Promise(function (resolve, reject) {
-
+                    console.log("testing checkLayoutForChanges ", doNotCheckLayoutChanges);
                     if (!doNotCheckLayoutChanges) {
 
                         var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
@@ -1201,7 +1227,7 @@
 
                             layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, false);
                         }
-
+                        console.log("testing checkLayoutForChanges layoutIsUnchanged", layoutIsUnchanged);
                         if (!layoutIsUnchanged || spChangedLayout) {
 
                             $mdDialog.show({
@@ -1324,7 +1350,7 @@
                         }
 
                     } else {
-                        removeTransitionWatcher();
+                        removeTransitionListeners();
                         resolve(true);
                     }
 
@@ -1336,7 +1362,7 @@
 
                 var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
                 var layoutCurrentConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(false);
-
+                console.log("testing1 warnAboutLayoutChangesLoss", activeLayoutConfig, '\n', layoutCurrentConfig);
                 var layoutIsUnchanged = true;
                 if (activeLayoutConfig && activeLayoutConfig.data) {
                     layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, false);
@@ -1347,7 +1373,7 @@
                 if (additions.isOpen) {
                     spChangedLayout = vm.splitPanelExchangeService.getSplitPanelChangedLayout();
                 }
-
+                console.log("testing1 warnAboutLayoutChangesLoss ", layoutIsUnchanged);
                 if (!layoutIsUnchanged || spChangedLayout) {
                     event.preventDefault();
                     (event || window.event).returnValue = 'All unsaved changes of layout will be lost.';
@@ -1355,43 +1381,58 @@
 
             };
 
-            var removeTransitionWatcher = function () {
-                if (vm.stateWithLayout) {
-                    deregisterOnBeforeTransitionHook();
+            var initTransitionListeners = function () {
+                console.log("testing1 initTransitionListeners");
+                deregisterOnBeforeTransitionHook = $transitions.onBefore({}, checkLayoutForChanges);
+                window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
+            };
 
-                    window.removeEventListener('beforeunload', warnAboutLayoutChangesLoss);
+            var removeTransitionListeners = function () {
+
+                if (deregisterOnBeforeTransitionHook) {
+                    deregisterOnBeforeTransitionHook();
                 }
+
+                window.removeEventListener('beforeunload', warnAboutLayoutChangesLoss);
+
             };
 
             vm.init = function () {
 
-                if (vm.stateWithLayout) {
+                autosaveLayoutService = new AutosaveLayoutService();
 
-                	initTransitionHooks();
+                /*if (vm.stateWithLayout) {
+
+                	initTransitionListeners();
 
                     window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
 
+                }*/
+                vm.currentMember = globalDataService.getMember();
+
+                if (vm.stateWithLayout) {
+
+                    onUserChangeIndex = middlewareService.onMasterUserChanged(function () {
+
+                        doNotCheckLayoutChanges = true;
+                        removeTransitionListeners();
+
+                    });
+
+                    onLogoutIndex = middlewareService.addListenerOnLogOut(function () {
+
+                        doNotCheckLayoutChanges = true;
+                        removeTransitionListeners();
+
+                    });
+
+                    if (!vm.currentMember.data || !vm.currentMember.data.autosave_layouts) {
+                        initTransitionListeners();
+                    }
+
                 }
 
-				onUserChangeIndex = middlewareService.onMasterUserChanged(function () {
-
-                    doNotCheckLayoutChanges = true;
-                    removeTransitionWatcher();
-
-                });
-
-				onLogoutIndex = middlewareService.addListenerOnLogOut(function () {
-
-                    doNotCheckLayoutChanges = true;
-                    removeTransitionWatcher();
-
-                });
-
-                vm.getCurrentMember().then(function (value) {
-
-                    vm.getView();
-
-                });
+                vm.getView();
 
             };
 
@@ -1399,10 +1440,14 @@
 
             this.$onDestroy = function () {
 
-				middlewareService.removeOnUserChangedListeners(onUserChangeIndex);
-				middlewareService.removeOnLogOutListener(onLogoutIndex);
+                if (vm.stateWithLayout) {
 
-                removeTransitionWatcher();
+                    middlewareService.removeOnUserChangedListeners(onUserChangeIndex);
+                    middlewareService.removeOnLogOutListener(onLogoutIndex);
+
+                    removeTransitionListeners();
+
+                }
 
             }
         }

@@ -62,6 +62,7 @@
 				timeout = setTimeout(function () {
 					timeout = null;
 					fn();
+                    time = Date.now();
 				}, waitRemains);
 			}
 		};

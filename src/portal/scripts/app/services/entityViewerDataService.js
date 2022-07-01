@@ -1004,11 +1004,11 @@
 
             if (options && options.layoutConfig) {
                 data.activeLayoutConfiguration = options.layoutConfig;
-
+                    console.log("testing1 setActiveLayoutConfiguration 1", data.activeLayoutConfiguration);
             } else {
-
+                console.log("testing1 setActiveLayoutConfiguration 2");
                 var listLayout = metaHelper.recursiveDeepCopy(getListLayout());
-
+                console.log("testing1 setActiveLayoutConfiguration 2 listLayout", listLayout);
                 // var interfaceLayout = getInterfaceLayout();
 
                 listLayout.data.interfaceLayout = getInterfaceLayoutToSave();
@@ -1075,7 +1075,7 @@
         function getLayoutCurrentConfiguration(isReport) {
 
             var listLayout = metaHelper.recursiveDeepCopy(getListLayout());
-
+            console.log("testing1 getLayoutCurrentConfiguration listLayout", listLayout);
             listLayout.data.columns = getColumns();
             listLayout.data.grouping = getGroups();
             listLayout.data.filters = getFilters();
@@ -1145,14 +1145,14 @@
             if (activeListLayout) {
 
                 listLayout = Object.assign({}, activeListLayout);
-
+                console.log("testing1 setLayoutCurrentConfiguration 1 ", listLayout);
             } else {
 
                 var defaultList = uiService.getListLayoutTemplate(isReport);
 
                 listLayout = {};
                 listLayout.data = Object.assign({}, defaultList[0].data);
-
+                console.log("testing1 setLayoutCurrentConfiguration 2 ", listLayout);
             }
 
             if (listLayout.data.interfaceLayout) {
@@ -1235,7 +1235,7 @@
             setAdditions(listLayout.data.additions);
 
             setListLayout(listLayout);
-
+            console.log("testing1 setLayoutCurrentConfiguration setListLayout ", JSON.parse(JSON.stringify(listLayout)));
             const setActiveColumn = async (column) => {
 
                 if (column.options && column.options.sort) {

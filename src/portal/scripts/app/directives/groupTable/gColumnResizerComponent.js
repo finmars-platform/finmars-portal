@@ -264,8 +264,8 @@
 
                     removeColSliderEventListeners();
 
-                    scope.evEventService.removeEventListener(evEvents.UPDATE_COLUMNS_SIZE, rtIndex);
-                    scope.evEventService.removeEventListener(evEvents.UPDATE_COLUMNS_SIZE, uthcsIndex);
+                    scope.evEventService.removeEventListener(evEvents.REDRAW_TABLE, rtIndex);
+                    scope.evEventService.removeEventListener(evEvents.UPDATE_TABLE_HEAD_COLUMNS_SIZE, uthcsIndex);
                     scope.evEventService.removeEventListener(evEvents.UPDATE_COLUMNS_SIZE, ucsIndex);
 
                 });
