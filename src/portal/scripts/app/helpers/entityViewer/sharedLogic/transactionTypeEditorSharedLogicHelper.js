@@ -1291,22 +1291,31 @@
                     contentType.objPath = ['content_type'];
                     contentType.cellType = 'selector';
                     contentType.settings.isDisabled = true;
-                    contentType.settings.selectorOptions = viewModel.selectorContentTypes;
-
-                    var contextProps = contextProperties[contentType.settings.value];
-                    if (contextProps) {
-                        fillFromContext.cellType = 'selector'
-                        fillFromContext.settings.selectorOptions = contextProperties[contentType.settings.value]
-                    }
-
-                    defaultValue.cellType = 'selector'
-
-                    defaultValue.methods = {
-                        // onOpen: onRelationDefaultValueSelOpen
-                        onInit: onRelationDefaultValueSelInit
-                    }
+                    // contentType.settings.selectorOptions = viewModel.selectorContentTypes;
+                    //
+                    // var contextProps = contextProperties[contentType.settings.value];
+                    // if (contextProps) {
+                    //     fillFromContext.cellType = 'selector'
+                    //     fillFromContext.settings.selectorOptions = contextProperties[contentType.settings.value]
+                    // }
+                    //
+                    // defaultValue.cellType = 'selector'
+                    //
+                    // defaultValue.methods = {
+                    //     // onOpen: onRelationDefaultValueSelOpen
+                    //     onInit: onRelationDefaultValueSelInit
+                    // }
 
                     // defaultValue.settings.selectorOptions = viewModel.relationItems[resolveRelation(viewModel.newItem)] // TODO Victor: this is bug. viewModel.newItem always undefined
+
+                    if (defaultValue.cellType === 'selector') {
+
+                        defaultValue.cellType = 'expression'
+                        defaultValue.settings = {value: '', exprData: viewModel.expressionData}
+
+                    }
+
+                    fillFromContext.settings.value = null
 
                     break;
 
