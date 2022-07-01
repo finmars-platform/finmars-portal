@@ -28,7 +28,7 @@
             templateUrl: "views/directives/bind-field-control-view.html",
             controllerAs: 'vm',
             controller: ['$scope', function bindFieldControlController($scope) {
-
+                console.log("testing bindField item", $scope.item);
                 var vm = this;
 
                 vm.readyStatus = {classifier: false, content: true};
@@ -294,6 +294,7 @@
                 };
 
             	$scope.changeClassifier = function () {
+
                     if (classifierTree) {
                         /* $scope.classifierId = $scope.entity[vm.fieldKey];
 
