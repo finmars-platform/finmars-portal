@@ -26,6 +26,7 @@
     justify-content: space-between;
     background-color: #FFFFFF;
     opacity: 1;
+    z-index: 1; // allow user to press cancel while loader is on
 
     &.edit {
       opacity: 0.5;
@@ -87,6 +88,24 @@
     align-items: center;
     cursor: pointer;
 
+    .fav-node-btns-holder {
+      display: none;
+      height: inherit;
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      .fav-node-btn {
+        span.material-icons {
+          color: @orange;
+        }
+
+        &:hover {
+          opacity: .5;
+        }
+      }
+    }
+
     &.active,
     &.edit {
       background-color: @orange;
@@ -100,6 +119,11 @@
           opacity: .5;
         }
       }
+
+      .fav-node-btns-holder .fav-node-btn span.material-icons {
+        color: #fff;
+      }
+
     }
 
     &:hover {
@@ -108,24 +132,6 @@
       }
     }
 
-  }
-
-  .fav-node-btns-holder {
-    display: none;
-    height: inherit;
-    position: absolute;
-    top: 0;
-    right: 0;
-
-    .fav-node-btn {
-      span.material-icons {
-        color: @orange;
-      }
-
-      &:hover {
-        opacity: .5;
-      }
-    }
   }
 
 }
@@ -297,6 +303,18 @@
 
   .classifier-node {
 
+    &.dnd-mouse-hover-child:not(.active) {
+
+      > .classifier-node-row .row-content {
+        color: @orange;
+
+        .pointer {
+          color: @orange;
+        }
+      }
+
+    }
+
     &.active,
     &.edit {
 
@@ -309,7 +327,7 @@
         }
 
         .classifier-node-btn {
-          span {
+          span, span.material-icons {
             color: #FFFFFF;
           }
         }

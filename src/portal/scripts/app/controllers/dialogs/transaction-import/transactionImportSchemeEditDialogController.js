@@ -558,7 +558,7 @@
 
                     vm.processing = false;
 
-                    $mdDialog.hide({res: 'agree'});
+                    $mdDialog.hide({status: 'agree'});
 
                 }).catch(function (reason) {
 
@@ -591,7 +591,7 @@
             delete scheme.id;
             scheme["user_code"] = scheme["user_code"] + '_copy';
 
-            $mdDialog.show({
+             var copyPromise = $mdDialog.show({
                 controller: 'TransactionImportSchemeAddDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-dialog-view.html',
                 parent: angular.element(document.body),
@@ -603,7 +603,7 @@
                 }
             });
 
-            $mdDialog.hide({status: 'disagree'});
+            $mdDialog.hide({status: 'copy', dialogPromise: copyPromise});
 
         };
 

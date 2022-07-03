@@ -77,6 +77,16 @@
 
                                 reject(error)
 
+                            }).catch(function(data){
+
+                                var error = {
+                                    status: response.status,
+                                    statusText: response.statusText,
+                                    message: data
+                                };
+
+                                reject(error)
+
                             })
 
                         } catch (e) {

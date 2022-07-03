@@ -143,6 +143,11 @@
 							override_name: "",
 						},
 						{
+							key: "parameters",
+							name: '"Parameters" Button',
+							to_show: true
+						},
+						{
 							key: "build_events_btn",
 							name: '"Build Events" Button',
 							to_show: true

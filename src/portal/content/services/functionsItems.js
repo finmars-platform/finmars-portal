@@ -425,6 +425,16 @@
 				"func": "contains([string1],[string2])"
 			}
 		},
+
+		{
+			"name": "Replace",
+			"description": "replace([string1],[oldValue],[newValue]) :: [Result: string1]<br/><br/>",
+			"groups": "text",
+			"func": "replace([string1],[oldValue],[newValue])",
+			"validation": {
+				"func": "replace([string1],[oldValue],[newValue])"
+			}
+		},
 		{
 			"name": "Get Coupon Size",
 			"description": "get_instrument_coupon([instr], [effective_date]) :: [Result: coupon_size]<br/>[Result: coupon_size]: Number - coupon size for 1 quantity of the [instr] as of the [effective_date] as per the [instr] Accrual Schedule<br/><br/>[instr]: Instrument - instrument for which the coupon is calculated<br/>[effective_date]: Date - as of date for the coupon calculation<br/><br/>Examples:<br/>get_instrument_coupon(instrument, trade_date)<br/>get_instrument_coupon(instrument, '2019-01-01')<br/><br/>! if  [effective_date] doesn't equal to any coupon date of the instrument (as per the Accrual Schedule), then [Result: coupon_size] equal to 0",
@@ -1179,6 +1189,33 @@
 			"func": "get_ttype_default_input([input])",
 			"validation": {
 				"func": "get_ttype_default_input([input])"
+			}
+		},
+		{
+			"name": "Set Complex Transaction input",
+			"description": "set_complex_transaction_input([input], [value])) :: [Result: None]<br/><br/>[input]: String - input name<br/>[Result: default input]: String, number, date or entity - as a default input of transaction type<br/><br/>Examples:<br/>get_ttype_default_input('price')<br/>get_ttype_default_input('currency')<br/>get_ttype_default_input('currency').user_code - attribute [user_code] of default currency<br/>get_ttype_default_input('maturity_date')<br/>get_ttype_default_input('notes')",
+			"groups": "transaction",
+			"func": "set_complex_transaction_input([input], [value])",
+			"validation": {
+				"func": "set_complex_transaction_input([input], [value])"
+			}
+		},
+		{
+			"name": "Set Complex Transaction User Field",
+			"description": "set_complex_transaction_user_field([field_key], [value])) :: [Result: None]<br/><br/>[input]: String - field key name<br/>[Result: default input]: String, number, date or entity - as a default input of transaction type<br/><br/>Examples:<br/>get_ttype_default_input('price')<br/>get_ttype_default_input('currency')<br/>get_ttype_default_input('currency').user_code - attribute [user_code] of default currency<br/>get_ttype_default_input('maturity_date')<br/>get_ttype_default_input('notes')",
+			"groups": "transaction",
+			"func": "set_complex_transaction_user_field([field_key], [value])",
+			"validation": {
+				"func": "set_complex_transaction_user_field([field_key], [value])"
+			}
+		},
+		{
+			"name": "Set Complex Transaction Form Data",
+			"description": "set_complex_transaction_form_data([key], [value])) :: [Result: None]<br/><br/>[key]: String - input name<br/>[Result: default input]: String, number, date or entity - as a default input of transaction type<br/><br/>Examples:<br/>get_ttype_default_input('price')<br/>get_ttype_default_input('currency')<br/>get_ttype_default_input('currency').user_code - attribute [user_code] of default currency<br/>get_ttype_default_input('maturity_date')<br/>get_ttype_default_input('notes')",
+			"groups": "transaction",
+			"func": "set_complex_transaction_form_data([key], [value])",
+			"validation": {
+				"func": "set_complex_transaction_form_data([key], [value])"
 			}
 		},
 		{

@@ -6,6 +6,7 @@
     'use strict';
 
     var dataProcedureService = require('../../services/procedures/dataProcedureService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -51,6 +52,19 @@
                 if (res.status === 'agree') {
                     vm.getList();
                 }
+
+            })
+
+        };
+
+        vm.executeProcedure = function ($event, item) {
+
+            console.log("Execute Procedure", item);
+
+            dataProcedureService.runProcedure(item.id, item).then(function (data) {
+
+                toastNotificationService.success('Success. Procedure is being processed');
+
 
             })
 

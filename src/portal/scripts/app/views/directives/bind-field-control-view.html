@@ -2,12 +2,12 @@
 
     <div ng-class="{'display-none': !vm.readyStatus.content}">
 
-        <div data-ng-if="fieldType['display_name'] === 'Number'"
+        <div data-ng-if="vm.fieldType['display_name'] === 'Number'"
              class="bind-field-number-field-container">
 
             <number-input
                     label="{{getName()}}"
-                    model="entity[vm.fieldKey]"
+                    model="vm.model"
                     number-format="item.options.number_format"
                     custom-buttons="item.buttons"
                     custom-styles="customStyles"
@@ -15,26 +15,26 @@
                     small-options="{onlyPositive: item.options.onlyPositive,
                       tooltipText: tooltipText,
                       notNull: options.notNull}"
-                    on-change-callback="itemChange()">
+                    on-change-callback="vm.itemChange()">
             </number-input>
         </div>
 
-        <div ng-if="fieldType['display_name'] === 'String'">
+        <div ng-if="vm.fieldType['display_name'] === 'String'">
 
             <text-input label="{{getName()}}"
                         placeholder-text="text"
-                        model="entity[vm.fieldKey]"
+                        model="vm.model"
                         custom-buttons="item.buttons"
                         custom-styles="customStyles"
                         event-signal="ciEventObj.event"
                         small-options="{tooltipText: tooltipText, notNull: options.notNull}"
                         render-hyperlinks="item.options.isHyperlink"
-                        on-change-callback="itemChange()"
+                        on-change-callback="vm.itemChange()"
                         on-blur-callback="inputBlur()"></text-input>
 
         </div>
 
-        <div data-ng-if="fieldType['display_name'] === 'Field'">
+        <div data-ng-if="vm.fieldType['display_name'] === 'Field' || vm.fieldType['display_name'] === 'Multiple choice field'">
 
             <div>
                 <ev-field-resolver data-item="item"
@@ -43,31 +43,16 @@
                                    ev-editor-data-service="evEditorDataService"
                                    ev-editor-event-service="evEditorEventService"
                                    data-entity-type="vm.entityType"
-                                   fields-data-store="fieldsDataStore"
-                                   data-item-change="itemChange()">
+                                   fields-data-store="fieldsDataStore">
                 </ev-field-resolver>
             </div>
 
         </div>
 
-        <div data-ng-if="fieldType['display_name'] === 'Multiple choice field'">
-            <div>
-                <ev-field-resolver data-item="item"
-                                   data-entity="entity"
-                                   data-options="options"
-                                   ev-editor-data-service="evEditorDataService"
-                                   ev-editor-event-service="evEditorEventService"
-                                   data-entity-type="vm.entityType"
-                                   fields-data-store="fieldsDataStore"
-                                   data-item-change="itemChange()">
-                </ev-field-resolver>
-            </div>
-        </div>
-
-        <div ng-if="fieldType['display_name'] === 'Date'" class="field-date-pick">
+        <div ng-if="vm.fieldType['display_name'] === 'Date'" class="field-date-pick">
             <date-input
                     label="{{getName()}}"
-                    model="entity[vm.fieldKey]"
+                    model="vm.model"
                     custom-buttons="item.buttons"
                     custom-styles="customStyles"
                     event-signal="ciEventObj.event"
@@ -76,10 +61,10 @@
             </date-input>
         </div>
 
-        <div ng-if="fieldType['display_name'] === 'Datetime'" class="field-date-pick">
+        <div ng-if="vm.fieldType['display_name'] === 'Datetime'" class="field-date-pick">
             <datetime-input
                     label="{{getName()}}"
-                    model="entity[vm.fieldKey]"
+                    model="vm.model"
                     custom-buttons="item.buttons"
                     is-readonly="item.readonly"
                     custom-styles="customStyles"
@@ -89,17 +74,17 @@
             </datetime-input>
         </div>
 
-        <div data-ng-if="fieldType['display_name'] === 'Boolean' && hideIscanceledCheckbox(getName())">
+        <div data-ng-if="vm.fieldType['display_name'] === 'Boolean' && hideIscanceledCheckbox(getName())">
             <md-checkbox
                     class="checkbox-bind-field"
-                    data-ng-model="entity[vm.fieldKey]"
-                    data-ng-change="itemChange()"
+                    data-ng-model="vm.model"
+                    data-ng-change="vm.itemChange()"
                     aria-label="checkbox">
                 <label data-ng-bind="getName()"></label>
             </md-checkbox>
         </div>
 
-        <div data-ng-if="fieldType['display_name'] === 'Classifier'">
+        <div data-ng-if="vm.fieldType['display_name'] === 'Classifier'">
             <div data-ng-if="vm.readyStatus.classifier">
 
                 <!--  Victor 2020.10.23 Change for classifier-select
@@ -107,14 +92,14 @@
                         <label data-ng-bind="getName()"></label>
 
                         <md-select
-                          data-ng-model="entity[vm.fieldKey]"
+                          data-ng-model="vm.model"
                           data-classifier-modal-resolver
                           data-classifier-attr="item"
                           data-classifier-value="entity[vm.fieldKey]"
                           data-ng-change="changeClassifier()"
                           md-container-class="h-classifier-select"
                           data-entity-type="vm.entityType"
-                          style="{{inputBackgroundColor()}}"
+                          style="{{vm.inputBackgroundColor()}}"
                         >
                           <md-option ng-value="node.id" selected="selected">
                             {{node.name}}
@@ -123,14 +108,13 @@
                       </md-input-container>-->
                 <classifier-select label="{{getName()}}"
                                    placeholder-text="{{getName()}}"
-                                   model="entity[vm.fieldKey]"
+                                   model="vm.model"
                                    classifier-attr="item"
-                                   classifier-value="entity[vm.fieldKey]"
+                                   classifier-value="vm.model"
                                    event-signal="ciEventObj.event"
                                    entity-type="vm.entityType"
                                    small-options="{tooltipText: tooltipText, notNull: options.notNull}"
-                                   on-change-callback="itemChange()"
-                                   value-property="'id'"
+                                   on-change-callback="changeClassifier()"
                 ></classifier-select>
 
             </div>
@@ -142,34 +126,36 @@
             </div>
         </div>
 
-        <div data-ng-if="fieldType['display_name'] === 'Decoration' && item.key === 'layoutLine'"
+        <div data-ng-if="vm.fieldType['display_name'] === 'Decoration' && item.key === 'layoutLine'"
              class="ec-decoration-container">
-            <span class="ec-decoration line" style="{{inputBackgroundColor()}}"></span>
+            <span class="ec-decoration line" style="{{vm.inputBackgroundColor()}}"></span>
         </div>
 
-        <div data-ng-if="fieldType['display_name'] === 'Decoration' && item.key === 'layoutLineWithLabel'"
+        <div data-ng-if="vm.fieldType['display_name'] === 'Decoration' && item.key === 'layoutLineWithLabel'"
              class="ec-decoration-container">
             <span class="ec-decoration labeled" data-ng-if="item.options.labelText">
                 <span class="w-rp" data-ng-bind="item.options.labelText"></span>
             </span>
         </div>
 
-        <div data-ng-if="fieldType['display_name'] === 'Decoration' && item.key === 'layoutPlainText'"
+        <div data-ng-if="vm.fieldType['display_name'] === 'Decoration' && item.key === 'layoutPlainText'"
              class="ec-decoration-container">
             <span class="ec-decoration plain-text" data-ng-bind="item.options.plainText"></span>
         </div>
 
-        <div data-ng-if="fieldType['display_name'] === 'Selector'"
-             class="ec-decoration-container">
-            <ev-selector-resolver item="item"
-                                  entity="entity"
-                                  options="options"
-                                  entity-type="vm.entityType"
-                                  item-change="itemChange()">
-            </ev-selector-resolver>
+        <div data-ng-if="vm.fieldType['display_name'] === 'Selector'">
+
+            <div>
+                <ev-selector-resolver item="item"
+                                      options="options"
+                                      ev-editor-event-service="evEditorEventService"
+                                      item-change="vm.itemChange()">
+                </ev-selector-resolver>
+            </div>
+
         </div>
 
-        <div data-ng-if="fieldType['display_name'] === 'Button'">
+        <div data-ng-if="vm.fieldType['display_name'] === 'Button'">
             <div class="custom-input-container">
                 <md-button class="md-raised md-primary" data-ng-click="recalculate()">
                     {{getName()}}
@@ -177,7 +163,7 @@
             </div>
         </div>
 
-        <div ng-if="fieldType['display_name'] === 'Table'" style="padding: 0 10px;">
+        <div ng-if="vm.fieldType['display_name'] === 'Table'" style="padding: 0 10px;">
             <bind-field-table item="item" entity="entity"></bind-field-table>
         </div>
 
