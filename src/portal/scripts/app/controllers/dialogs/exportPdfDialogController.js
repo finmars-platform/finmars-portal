@@ -10,7 +10,7 @@
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
     var reportHelper = require('../../helpers/reportHelper');
 
-    module.exports = function ($scope, $mdDialog, evDataService, evEventService, data) {
+    module.exports = function ($scope, $mdDialog, globalDataService, evDataService, evEventService, data) {
 
         var vm = this;
 
@@ -145,7 +145,7 @@
 
             var elem = {};
 
-            rvRenderer.render(elem, vm.settings.data.content, evDataService, evEventService);
+            rvRenderer.render(elem, vm.settings.data.content, globalDataService, evDataService, evEventService);
 
             vm.settings.data.content = evDataService.getFlatList();
 

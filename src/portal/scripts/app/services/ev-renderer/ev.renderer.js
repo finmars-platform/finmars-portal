@@ -11,7 +11,7 @@
 
     var evEvents = require('../../services/entityViewerEvents');
 
-    var render = function (elem, projection, evDataService, evEventService) {
+    var render = function (elem, projection, globalDataService, evDataService, evEventService) {
 
         // console.log('render.projection.length', projection.length);
         console.log('render.projection', projection);
@@ -29,7 +29,9 @@
         var viewContext = evDataService.getViewContext();
 
         var entityType = evDataService.getEntityType();
-		var markedRows = localStorageService.getMarkedRows(false, entityType);
+		// var markedRows = localStorageService.getMarkedRows(false, entityType);
+		const evSettings = globalDataService.getMemberEntityViewersSettings(false, entityType);
+		const markedRows = evSettings.marked_rows;
 
         var columnsWidthSum = 0;
 		columns.forEach(function (column) {
