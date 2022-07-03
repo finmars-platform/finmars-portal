@@ -14,7 +14,7 @@
 
                 <span class="material-icons default-icons"
                       data-ng-if="!layout.origin_for_global_layout && !layout.sourced_from_global_layout"
-                      ng-class="{'default-layout': layout.is_default}"
+                      ng-class="{'default-layout': layoutIsDefault(layout)}"
                       ng-click="setAsDefault(layout)">home</span>
 
                 <span class="material-icons default-icons" data-ng-if="layout.origin_for_global_layout" style="color: #747474;">share</span>
@@ -121,7 +121,7 @@
     <div class="layout-menu-item"
          data-ng-class="{'default-layout': layout.is_default}"
          data-ng-click="setAsDefault(layout)"
-         data-ng-disabled="layout.is_default">
+         data-ng-disabled="layoutIsDefault(layout)">
 
         <span class="material-icons">home</span>
         <span>Make default</span>

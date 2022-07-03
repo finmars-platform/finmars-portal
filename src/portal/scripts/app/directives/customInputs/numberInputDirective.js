@@ -84,8 +84,10 @@
 					// scope.error = '';
 					var error = '';
 					var modelValue = '';
-					var changedValue = scope.numberToShow;
 					stylePreset = '';
+
+                    scope.numberToShow = scope.numberToShow.replace(',', '.');
+                    var changedValue = scope.numberToShow;
 
 					if (changedValue === '') {
 
@@ -99,10 +101,7 @@
 							error = 'Field should have positive number';
 						}
 
-					}
-
-					else if (!isNaN(changedValue) &&
-						changedValue !== null) {
+					} else if (!isNaN(changedValue) && changedValue !== null) {
 
 						changedValue = Number.isInteger(changedValue) ? parseInt(changedValue) : parseFloat(changedValue);
 
@@ -120,23 +119,20 @@
 								modelValue = null;
 
 							} else {
-								modelValue = JSON.parse(JSON.stringify(changedValue));
+								modelValue = changedValue;
 							}
 
 						}
-
 						else {
 
 							inputContainer.classList.remove('custom-input-error');
 							inputElem.classList.remove('red-text');
-							modelValue = JSON.parse(JSON.stringify(changedValue));
+							modelValue = changedValue;
 
 						}
 						// < negative numbers processing >
 
-					}
-
-					else {
+					} else {
 						error = 'Invalid character used';
 						modelValue = null;
 					}
@@ -265,7 +261,9 @@
                 var initScopeWatchers = function () {
                     scope.$watch('model', function () {
 
-                        scope.numberToShow = scope.model;
+                        if (!inputContainer.classList.contains('custom-input-focused')) {
+                            scope.numberToShow = scope.model;
+                        }
 
                         if (scope.model || scope.model === 0) {
 

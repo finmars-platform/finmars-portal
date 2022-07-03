@@ -1,3 +1,4 @@
+const transactionImportSchemeService = require("../../../services/import/transactionImportSchemeService");
 /**
  * Created by szhitenev on 17.08.2016.
  */
@@ -56,9 +57,19 @@
                 }
             }).then(function (res) {
 
-                if (res && res.status === 'agree') {
+                if (res.status === 'agree') {
 
                     vm.getList();
+
+                } else if (res.status === 'copy') {
+
+                    res.dialogPromise.then(function (copyRes) {
+
+                        if (copyRes.status === 'agree') {
+                            vm.getList();
+                        }
+
+                    });
 
                 }
 

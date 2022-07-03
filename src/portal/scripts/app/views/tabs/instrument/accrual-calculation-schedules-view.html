@@ -26,13 +26,15 @@
                 </md-select>
             </md-input-container>-->
 
-            <dropdown-select class="p-r-8" label="Accrual Currency"
-                             model="vm.entity.accrued_currency"
-                             placeholder-text="Accrual Currency"
-                             menu-options="vm.currencyFields"
-                             small-options="{tooltipText: 'Accrual Currency'}"
-                             style="width: 200px;">
-            </dropdown-select>
+            <div class="p-r-8" style="width: 200px;">
+                <bind-field-control entity-type="vm.entityType"
+                                    entity="vm.entity"
+                                    entity-change="vm.onEntityChange(fieldKey, fieldType)"
+                                    ev-editor-data-service="vm.evEditorDataService"
+                                    ev-editor-event-service="vm.evEditorEventService"
+                                    item="vm.accruedCurrencyAttr"
+                                    class="cic-no-padding"></bind-field-control>
+            </div>
 
 <!--            <md-input-container class="md-block" style="width: 230px;">
                 <label>Accrual Size Clarification</label>
@@ -57,13 +59,15 @@
                 </md-select>
             </md-input-container>-->
 
-            <dropdown-select class="p-r-8" label="Accrual Size Clarification"
-                             model="vm.entity.payment_size_detail"
-                             placeholder-text="Accrual Size Clarification"
-                             menu-options="vm.dailyPricingModelFields"
-                             small-options="{tooltipText: 'Accrual Size Clarification'}"
-                             style="width: 230px;">
-            </dropdown-select>
+            <div class="p-r-8" style="width: 200px;">
+                <bind-field-control entity-type="vm.entityType"
+                                    entity="vm.entity"
+                                    entity-change="vm.onEntityChange(fieldKey, fieldType)"
+                                    ev-editor-data-service="vm.evEditorDataService"
+                                    ev-editor-event-service="vm.evEditorEventService"
+                                    item="vm.paymentSizeDetailAttr"
+                                    class="cic-no-padding"></bind-field-control>
+            </div>
 
 <!--            <md-input-container style="width: 200px;">
                 <label for="">Accrual Multiplier</label>

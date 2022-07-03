@@ -38,7 +38,7 @@
                 var inputElem = elem[0].querySelector(".dateInputElem");
 
                 var inputLoaded = false; // prevents not null inputs highlight from start
-                var dateChangedFromOutside = true;
+                // var dateChangedFromOutside = true;
 
                 var doNotShowDatepicker = true; // used to prevent datepicker show on click
                 var position = "right";
@@ -78,7 +78,7 @@
                     }
 
                     return str;
-                };
+                }
 
                 scope.getInputContainerClasses = function () {
 
@@ -151,7 +151,7 @@
 
                     var onChangeEnd = function () {
 
-                        dateChangedFromOutside = false;
+                        // dateChangedFromOutside = false;
 
                         clearTimeout(onChangeIndex);
 
@@ -462,14 +462,15 @@
 
                     scope.$watch("model", function () {
                         //if (scope.model && scope.model.value) {
-                        if (dateChangedFromOutside) { // don't execute if date changed by input itself
+                        // if (dateChangedFromOutside) { // don't execute if date was entered into input manually
+                        if (!inputContainer.classList.contains('custom-input-focused')) {
 
                             if (scope.model) {
 
                                 if (scope.model !== scope.dateValue) {
 
                                     scope.error = "";
-                                    scope.dateValue = JSON.parse(JSON.stringify(scope.model));
+									scope.dateValue = scope.model;
                                     prevDateValue = scope.dateValue;
 
                                     if (!moment(scope.dateValue, "YYYY-MM-DD", true).isValid()) {
@@ -501,7 +502,7 @@
 
                         }
 
-                        dateChangedFromOutside = true;
+                        // dateChangedFromOutside = true;
 
                     });
 

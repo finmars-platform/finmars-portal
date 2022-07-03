@@ -13,17 +13,18 @@
                 label: '@',
                 placeholderText: '@',
                 model: '=',
+				modelProp: '@', // 'id', 'name'. Default 'id'.
                 //menuOptions: '=',
                 customStyles: '=',
                 eventSignal: '=',
                 smallOptions: '=',
                 isDisabled: '=',
                 itemName: '=',
-                // Victor 2020.10.23 Next fields setting up classifiers properties
-                classifierAttr: '=',
+
+                classifierAttr: '=', // object of classifier attribute
                 classifierValue: '=',
                 entityType: '=',
-				// < Victor 2020.10.23 Next fields setting up classifiers properties >
+
 				onChangeCallback: '&?',
             },
             templateUrl: 'views/directives/customInputs/classifier-select-view.html',
@@ -34,10 +35,6 @@
                 scope.dropdownMenuHidden = false;
                 scope.dropdownMenuFilter = '';
                 scope.menuOptions = [];
-
-                if (scope.itemName) { // itemName and inputText needed for resetting selected option name
-                    scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
-                }
 
 				/*
 				TIPS
@@ -54,6 +51,14 @@
                     scope.dialogParent = scope.smallOptions.dialogParent;
 					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
 
+                }
+
+                if (!scope.modelProp) scope.modelProp = 'id';
+
+                var itemName = scope.itemName || '';
+
+                if (scope.itemName) { // itemName and inputText needed for resetting selected option name
+                    scope.inputText = itemName;
                 }
 
                 var stylePreset;
@@ -97,18 +102,19 @@
 
                 scope.selectOption = function (item) {
 
-                    if (item.id !== scope.model) {
+                    if (item[scope.modelProp] !== scope.model) {
 
                         stylePreset = '';
                         scope.error = '';
 
-                        scope.model = item.id;
+                        scope.model = item[scope.modelProp];
                         scope.valueIsValid = true;
 
-                        if (typeof scope.itemName !== 'undefined') {
+                        /*if (typeof scope.itemName !== 'undefined') {
                             scope.itemName = item.name;
-                        }
-                        scope.inputText = item.name;
+                        }*/
+                        itemName = item.name;
+                        scope.inputText = itemName;
 
                         closeDropdownMenu();
 
@@ -134,7 +140,7 @@
 
 					inputContainer.classList.remove('custom-input-focused');
 
-					if (scope.itemName) scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+                    scope.inputText = itemName;
 
                     scope.dropdownMenuHidden = false;
 
@@ -221,6 +227,10 @@
 
                             scope.model = res.data.item;
 
+                            if (scope.modelProp === 'name') {
+								scope.model = res.data.name;
+							}
+
                             if (typeof scope.itemName !== 'undefined') {
                                 scope.itemName = res.data.name;
                             }
@@ -245,13 +255,14 @@
 
                     scope.$watch('model', function () {
 
-                        if (scope.model && scope.menuOptions) {
+                        if (scope.model && scope.menuOptions && scope.menuOptions.length) {
 
                             for (var i = 0; i < scope.menuOptions.length; i++) {
 
-                                if (scope.menuOptions[i].id === scope.model) {
+                                if (scope.menuOptions[i][scope.modelProp] === scope.model) {
 
-                                    scope.inputText = scope.menuOptions[i].name
+                                    itemName = scope.menuOptions[i].name;
+                                    scope.inputText = itemName;
                                     scope.valueIsValid = true
                                     break;
 
@@ -260,7 +271,8 @@
                             }
 
                         } else {
-                            scope.inputText = ""
+                            itemName = "";
+                            scope.inputText = itemName;
                             scope.valueIsValid = false
                         }
 
@@ -305,12 +317,13 @@
                     scope.$watch('itemName', function () {
 
                         if (scope.itemName) {
-                            scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+                            itemName = scope.itemName;
 
                         } else {
-                            scope.inputText = '';
-
+                            itemName = '';
                         }
+
+                        scope.inputText = itemName;
 
                     });
 
@@ -381,12 +394,13 @@
                         scope.menuOptions = recursiveFlat(data.classifiers);
 
                         for (var i = 0; i < scope.menuOptions.length; i++) {
-                            if (scope.menuOptions[i].id === scope.model) {
+                            if (scope.menuOptions[i][scope.modelProp] === scope.model) {
 
-                                if (typeof scope.itemName !== 'undefined') {
+                                /*if (typeof scope.itemName !== 'undefined') {
                                     scope.itemName = scope.menuOptions[i].name;
-                                }
-                                scope.inputText = scope.menuOptions[i].name;
+                                }*/
+                                itemName = scope.menuOptions[i].name;
+                                scope.inputText = itemName;
 
                                 break;
 

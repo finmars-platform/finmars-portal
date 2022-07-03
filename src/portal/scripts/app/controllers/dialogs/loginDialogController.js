@@ -29,6 +29,15 @@
 
                 console.log('authorizerService.login.data', data);
 
+                vm.processing = false;
+
+                $scope.$apply();
+
+                if (data.success === false) {
+                    vm.error = true;
+                    vm.errorMessage = data.message
+                }
+
                 if (data.token) {
                     console.log('authorizerService.login.setCookie auth token', data.token);
                     cookieService.setCookie('authtoken', data.token);
@@ -44,9 +53,7 @@
                 }
 
 
-                vm.processing = false;
 
-                $scope.$apply();
 
                 $mdDialog.show({
                     controller: 'TwoFactorLoginDialogController as vm',

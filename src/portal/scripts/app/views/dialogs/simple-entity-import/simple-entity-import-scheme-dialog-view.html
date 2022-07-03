@@ -97,6 +97,22 @@
                                     </md-select>
                                 </md-input-container>
 
+
+
+
+                            </div>
+
+                            <div layout="row">
+                                <md-input-container style="width: 245px;">
+                                    <label>Column Matcher</label>
+                                    <md-select
+                                            data-ng-model="vm.scheme.column_matcher">
+                                        <md-option value="index">Index</md-option>
+                                        <md-option value="name">Name</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+
                                 <md-input-container class="md-block">
                                     <label for="">Spreadsheet start cell</label>
                                     <input type="text" data-ng-model="vm.scheme.spreadsheet_start_cell">
@@ -112,18 +128,6 @@
                                     <input type="text" data-ng-model="vm.scheme.instrument_reference_column">
                                 </md-input-container>
 
-
-                            </div>
-
-                            <div>
-                                <md-input-container style="width: 245px;">
-                                    <label>Column Matcher</label>
-                                    <md-select
-                                            data-ng-model="vm.scheme.column_matcher">
-                                        <md-option value="index">Index</md-option>
-                                        <md-option value="name">Name</md-option>
-                                    </md-select>
-                                </md-input-container>
                             </div>
 
                             <md-input-container class="SC-entity-select-container" aria-label="select with filter" data-ng-if="!vm.scheme.id">

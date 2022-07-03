@@ -52,9 +52,13 @@
                 }*/
                 var cellVal = evHelperService.getValueFromDynamicAttrsByUserCode(dynamicAttrKey, item.attributes);
 
-                if (cellVal || cellVal === 0) {
-                    cellValue = cellVal;
-                }
+				if (cellVal && typeof cellVal === 'object' && cellVal.hasOwnProperty('classifier')) {
+					cellVal = cellVal.classifier_object ? cellVal.classifier_object.name : '';
+				}
+
+				if (cellVal || cellVal === 0) {
+					cellValue = cellVal;
+				}
 
             } else {
 

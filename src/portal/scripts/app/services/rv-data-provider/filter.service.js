@@ -410,7 +410,10 @@
 
         var last_key;
         if (pieces.length > 1) {
+            last_key = pieces[pieces.length - 1];
             if (['short_name', 'name', 'public_name'].indexOf(last_key) !== -1) {
+
+                pieces.pop()
 
                 pieces.push('user_code')
 
@@ -432,6 +435,7 @@
             var match;
 
             var key;
+            var converted_key;
             var value;
 
             items = items.filter(function (item) {
@@ -446,7 +450,11 @@
 
                     value = options.groups_values[i];
 
-                    match = getFilterMatch(item, convertNameKeyToUserCodeKey(key), value);
+                    converted_key = convertNameKeyToUserCodeKey(key)
+
+                    console.log('converted_key', converted_key);
+
+                    match = getFilterMatch(item, converted_key, value);
 
                     if (match === false) {
                         break;

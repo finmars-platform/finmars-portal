@@ -26,6 +26,8 @@
 
     var calculateTotalHeight = function (evDataService) {
 
+		var viewContext = evDataService.getViewContext();
+
         var count = evDataService.getFlatList().filter(function (item) {
 
             if (item.___type === 'subtotal' && item.___subtotal_type === 'proxyline') {
@@ -38,7 +40,11 @@
 
         var rowHeight = evDataService.getRowHeight();
 
-        var extraHeight = 10 * rowHeight;
+		var extraHeight = 10 * rowHeight;
+
+		if (viewContext === 'dashboard') {
+			extraHeight = 2;
+		}
 
         return Math.floor(rowHeight * count) + extraHeight;
 

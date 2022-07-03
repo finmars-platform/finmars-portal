@@ -1,0 +1,117 @@
+<md-dialog aria-label="" ng-cloak class="draggable-dialog width-50" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+
+            <h2>Create Expression Procedure</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="p-24">
+
+        <div layout="column">
+
+            <div>
+
+                <h3>General</h3>
+
+                <md-input-container>
+                    <label>Name</label>
+                    <input type="text" data-ng-model="vm.item.name">
+                </md-input-container>
+
+                <usercode-input data-item="vm.item"></usercode-input>
+
+                <div class="m-t-16">
+
+                    <div><label for="">Notes</label></div>
+                    <textarea name="" data-ng-model="vm.item.notes" cols="60" rows="5"></textarea>
+
+                </div>
+
+                <div class="m-t-16">
+
+                    <div><label for="">Notes for Users</label></div>
+                    <textarea name="" data-ng-model="vm.item.notes_for_users" cols="60" rows="5"></textarea>
+
+                </div>
+
+                <div>
+
+                    <div data-ng-repeat="item in vm.item.context_variables track by $index" layout="row">
+
+                        <div>
+                            {{item.order}}
+                        </div>
+
+                        <div>
+
+                            <md-input-container style="width: 60%">
+                                <label for="">Name (must start with <b>context_</b>)</label>
+                                <input type="text" data-ng-model="item.name">
+                            </md-input-container>
+
+                        </div>
+
+                        <div>
+
+                            <md-input-container style="width: 60%">
+                                <label for="">Expression</label>
+                                <input type="text" data-ng-model="item.expression">
+                            </md-input-container>
+
+                            <expression-editor-button data-item="item.expression">
+                            </expression-editor-button>
+
+                        </div>
+
+                        <div>
+
+                            <md-input-container style="width: 60%">
+                                <label for="">Notes</label>
+                                <input type="text" data-ng-model="item.notes">
+                            </md-input-container>
+
+                        </div>
+
+                        <div>
+                            <md-button class="md-warn" data-ng-click="vm.deleteContextVariable($event, $index)">Delete</md-button>
+                        </div>
+
+                    </div>
+
+                    <md-button data-ng-click="vm.addContextVariable($event)">Add Context Variable</md-button>
+
+                </div>
+
+
+                <div layout="row">
+
+                    <div class="m-t-16">
+
+                        <div><label for="">Code</label></div>
+                        <textarea name="" data-ng-model="vm.item.code" cols="60" rows="5"></textarea>
+
+                        <expression-editor-button data-item="vm.item.code">
+                        </expression-editor-button>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="vm.cancel()">
+            Close
+        </md-button>
+        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+            Create
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

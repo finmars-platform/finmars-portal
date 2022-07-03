@@ -154,6 +154,26 @@
 
             vm.schedules.forEach(function (item) {
 
+                var reportOptions = vm.evDataService.getReportOptions();
+                var entityType = vm.evDataService.getEntityType();
+
+                item.data = {
+
+                }
+
+                if (entityType === 'balance-report') {
+                    item.data.report_date = reportOptions.report_date
+                }
+
+                if (entityType === 'pl-report') {
+                    item.data.pl_first_date = reportOptions.pl_first_date
+                }
+
+                if (entityType === 'transaction-report') {
+                    item.data.begin_date = reportOptions.begin_date
+                    item.data.end_date = reportOptions.end_date
+                }
+
                 scheduleService.runSchedule(item.id, item).then(function (data) {
 
                     toastNotificationService.success('Success. Schedule ' + item.name + ' is being processed');

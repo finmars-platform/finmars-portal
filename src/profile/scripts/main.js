@@ -32,6 +32,7 @@ export default (function () {
     profile.controller('CopyMasterUserDialogController', ['$scope', '$mdDialog', '$state', 'data', 'profileAuthorizerService', require('./app/controllers/dialogs/copyMasterUserDialogController')]);
 
     profile.controller('SecuritySettingsController', ['$scope', '$mdDialog', 'authorizerService', 'globalDataService', 'commonDialogsService', require('./app/controllers/securitySettingsController')]);
+    profile.controller('APISettingsController', ['$scope', '$mdDialog', 'authorizerService', 'globalDataService', 'commonDialogsService', 'profileAuthorizerService', 'cookieService',  require('./app/controllers/apiSettingsController')]);
     profile.controller('TwoFactorSetupDialogController', ['$scope', '$mdDialog', 'data', 'globalDataService', require('./app/controllers/dialogs/twoFactorSetupDialogController')]);
 
     profile.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', require('./app/controllers/dialogs/createMasterUserDialogController')]);

@@ -20,7 +20,18 @@
             path = 'company'
         }
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/udp/data/' + path + '/', options),
+        if (entityType === 'currency') {
+            return new Promise(function (resolve) {
+
+                resolve({
+                    count: 0,
+                    results: []
+                })
+            })
+
+        }
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(   baseUrl  +  '/udp/data/' + path + '/', options),
             {
                 method: 'GET',
                 credentials: 'include',

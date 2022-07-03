@@ -71,7 +71,7 @@
 		}
 
 		function getEntityAttributeTypes () {
-			return data.entityAttributeTypes;
+			return JSON.parse(angular.toJson(data.entityAttributeTypes));
 		}
 
         function setRecalculationFunction (fn) {

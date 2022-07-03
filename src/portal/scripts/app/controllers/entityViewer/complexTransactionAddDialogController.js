@@ -56,7 +56,7 @@
 
         vm.contextData = null; // data source when we book from report
 
-        vm.entityTabs = metaService.getEntityTabs(vm.entityType);
+        vm.entityTabs = []
 
         vm.transactionTypeId = null;
 
@@ -235,7 +235,6 @@
             vm.userInputs = pbraResult.userInputs;
 
             mapAttributesAndFixFieldsLayout();
-
             /* // should be fired after mapAttributesAndFixFieldsLayout()
             return sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType); */
 
@@ -271,6 +270,12 @@
 
                     vm.transactionType = data.transaction_type_object;
                     vm.entity = data.complex_transaction;
+					vm.entity.values = data.values;
+
+					vm.entity.frontOptions = {
+						dynamicAttributesValues: {},
+						userInputsValues: {}
+					};
 
                     data = vm.mapValuesOnTransactionTypeChange(data);
 
@@ -287,8 +292,7 @@
 
                         vm.missingLayoutError = false;
 
-                        // await postBookComplexTransactionActions(data);
-						postBookComplexTransactionActions(data);
+                        postBookComplexTransactionActions(data);
 
                     } else {
                         vm.missingLayoutError = true;
@@ -431,6 +435,10 @@
                 vm.attrs = data.results;
                 vm.readyStatus.content = true;
                 vm.readyStatus.entity = true;
+                
+                setTimeout(function (){
+                    $scope.$apply();
+                }, 0)
             });
         };
 
@@ -1323,6 +1331,9 @@
                 vm.favTTypeOpts = getFavoriteTTypeOptions(vm.transactionGroups);
 
                 vm.readyStatus.transactionTypes = true;
+                setTimeout(function (){
+                    $scope.$apply();
+                }, 0)
 
                 $scope.$apply(function () {
                     setTimeout(function () {
@@ -1457,6 +1468,10 @@
                     console.log("Apply from make copy", entity);
                     notCopiedTransaction = false;
                     vm.entity = entity;
+					vm.entity.frontOptions = {
+						dynamicAttributesValues: {},
+						userInputsValues: {}
+					};
 
                     var copy = JSON.parse(JSON.stringify(entity));
 

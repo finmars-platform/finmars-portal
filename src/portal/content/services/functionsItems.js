@@ -281,6 +281,16 @@
 			}
 		},
 		{
+			"name": "Convert Unix Time to Date",
+			"description": "unix_to_date([unix_time], [format='%Y-%m-%d'])  :: [Result: date]<br/><br/>[Result: date]: Date - date as a date object, converted from string object<br/>This function may be used in:<br/>- importing any objects (transactions, accounts, portfolio) with date attributes<br/>- converting string attributes to date attributes<br/><br/>[unix_time]: Int - Unix Date<br/>[format]: String - reflects format in which [date_string] is written<br/><br/>",
+			"groups": "date",
+			"func": "unix_to_date([unix_time], [format='%Y-%m-%d'])",
+			"validation": {
+				"func": "unix_to_date([unix_time], [format='%Y-%m-%d'])"
+			}
+		},
+
+		{
 			"name": "Date plus/minus N days",
 			"description": "[date]+days([number]) :: [Result: date_after]<br/>[date]-days([number]) :: [Result: date_before]<br/><br/>[Result: date_after, date_before]: Date - date differs from [date] by [number] calendar days<br/><br/>[date]: Date - any date variable, used by user in this expression (eg, transaction_date)<br/>[number]: Number - any number or number variable, used by user in this expression (eg, 1, 2, 3... or number_variable)<br/><br/>Examples:<br/>transaction_date+days(2) - for getting date, which differs from transaction date by 2 days<br/>deposit_date+days(duration) - for getting date, which differs from deposit_date by number of days, which is written in variable with name [duration]<br/>now()-days(10)- for getting date, which differs from current date by 10 days<br/>now()+days(rent_period)- for getting date, which differs from current date by number of days, which is written in variable with name [rent_period]<br/>",
 			"groups": "date",
@@ -413,6 +423,16 @@
 			"func": "contains([string1],[string2])",
 			"validation": {
 				"func": "contains([string1],[string2])"
+			}
+		},
+
+		{
+			"name": "Replace",
+			"description": "replace([string1],[oldValue],[newValue]) :: [Result: string1]<br/><br/>",
+			"groups": "text",
+			"func": "replace([string1],[oldValue],[newValue])",
+			"validation": {
+				"func": "replace([string1],[oldValue],[newValue])"
 			}
 		},
 		{
@@ -1169,6 +1189,51 @@
 			"func": "get_ttype_default_input([input])",
 			"validation": {
 				"func": "get_ttype_default_input([input])"
+			}
+		},
+		{
+			"name": "Set Complex Transaction input",
+			"description": "set_complex_transaction_input([input], [value])) :: [Result: None]<br/><br/>[input]: String - input name<br/>[Result: default input]: String, number, date or entity - as a default input of transaction type<br/><br/>Examples:<br/>get_ttype_default_input('price')<br/>get_ttype_default_input('currency')<br/>get_ttype_default_input('currency').user_code - attribute [user_code] of default currency<br/>get_ttype_default_input('maturity_date')<br/>get_ttype_default_input('notes')",
+			"groups": "transaction",
+			"func": "set_complex_transaction_input([input], [value])",
+			"validation": {
+				"func": "set_complex_transaction_input([input], [value])"
+			}
+		},
+		{
+			"name": "Set Complex Transaction User Field",
+			"description": "set_complex_transaction_user_field([field_key], [value])) :: [Result: None]<br/><br/>[input]: String - field key name<br/>[Result: default input]: String, number, date or entity - as a default input of transaction type<br/><br/>Examples:<br/>get_ttype_default_input('price')<br/>get_ttype_default_input('currency')<br/>get_ttype_default_input('currency').user_code - attribute [user_code] of default currency<br/>get_ttype_default_input('maturity_date')<br/>get_ttype_default_input('notes')",
+			"groups": "transaction",
+			"func": "set_complex_transaction_user_field([field_key], [value])",
+			"validation": {
+				"func": "set_complex_transaction_user_field([field_key], [value])"
+			}
+		},
+		{
+			"name": "Set Complex Transaction Form Data",
+			"description": "set_complex_transaction_form_data([key], [value])) :: [Result: None]<br/><br/>[key]: String - input name<br/>[Result: default input]: String, number, date or entity - as a default input of transaction type<br/><br/>Examples:<br/>get_ttype_default_input('price')<br/>get_ttype_default_input('currency')<br/>get_ttype_default_input('currency').user_code - attribute [user_code] of default currency<br/>get_ttype_default_input('maturity_date')<br/>get_ttype_default_input('notes')",
+			"groups": "transaction",
+			"func": "set_complex_transaction_form_data([key], [value])",
+			"validation": {
+				"func": "set_complex_transaction_form_data([key], [value])"
+			}
+		},
+		{
+			"name": "Get relation by user code",
+			"description": "get_relation_by_user_code([content_type], [user_code])) :: [Result: relation object]<br/><br/>[content_type]: String - input name<br/>[user_code]: String - relation user code<br/>[[Result: relation object]: String, number, date or entity<br/><br/>Examples:<br/>get_relation_by_user_code('currencies.currency', 'USD')<br/>get_relation_by_user_code('instruments.instrumenttype', 'bonds')<br/>get_relation_by_user_code('currencies.currency', 'USD').user_code - attribute [user_code]",
+			"groups": "transaction",
+			"func": "get_relation_by_user_code([content_type], [user_code])",
+			"validation": {
+				"func": "get_relation_by_user_code([content_type], [user_code])"
+			}
+		},
+		{
+			"name": "Calculate accrued",
+			"description": "calculate_accrued([instrument], [date])) :: [Result: number]",
+			"groups": "transaction",
+			"func": "calculate_accrued([instrument], [date])",
+			"validation": {
+				"func": "calculate_accrued([instrument], [date])"
 			}
 		},
 		{
