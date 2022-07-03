@@ -169,6 +169,8 @@
 
     var appendAttribute = function (attr, value) {
 
+        value = value || null;
+
         var attribute = {
             attribute_name: attr.name,
             attribute_type: attr.id,
