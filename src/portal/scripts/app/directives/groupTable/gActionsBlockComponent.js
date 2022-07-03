@@ -1,5 +1,7 @@
 /**
  * Created by szhitenev on 02.11.2016.
+ *
+ * DEPRECATED
  */
 (function () {
 
