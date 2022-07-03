@@ -81,12 +81,37 @@
 
         };
 
+        vm.checkLicenseKey = function (){
+
+            vm.processingCheckLicense = true;
+            vm.licenseIsGood = true;
+
+            profileAuthorizerService.checkUserLicenseKey(vm.license_key).then(function (data) {
+
+                console.log('data', data);
+
+                if (data.hasOwnProperty('status') && data.status === 'ok') {
+                    vm.licenseIsGood = true
+                } else {
+                    vm.licenseIsGood = false
+                    vm.licenseErrorMessage = data.message
+                }
+
+                vm.processingCheckLicense = false;
+
+                $scope.$apply();
+
+            })
+
+        }
+
         vm.finishSetup = function ($event) {
 
             vm.finishingSetup = true;
 
             var options = {
                 name: vm.name,
+                license_key: vm.license_key,
                 description: vm.description,
                 base_api_url: vm.base_api_url,
                 db_host: vm.db_host,
@@ -97,27 +122,6 @@
 
 			profileAuthorizerService.createMasterUser(options).then(function (data) {
 
-
-                // authorizerService.setCurrentMasterUser(data.id).then(function (value) {
-                //
-                //     if (vm.activeConfig === 'custom') {
-                //
-                //         setTimeout(function () {
-                //
-                //             $state.go('app.home', {}, {reload: 'app'});
-                //
-                //         }, 100)
-                //
-                //     } else {
-                //
-                //         var item = vm.ecosystemConfigurations.find(function (item) {
-                //             return item.id === vm.activeConfig
-                //         });
-                //
-                //         vm.applyItem($event, item)
-                //     }
-                //
-                // })
 
 
             });

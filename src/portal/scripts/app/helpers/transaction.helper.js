@@ -101,7 +101,7 @@
 			viewModel.entity.attributes = [];
 		}
 
-		if (viewModel.entity.attributes) {
+		/* if (viewModel.entity.attributes) {
 
 			var i, a, c;
 			var keys = Object.keys(viewModel.entity),
@@ -134,7 +134,7 @@
 
 			}
 
-		}
+		} */
 
 		if (viewModel.entity.attributes) {
 
@@ -179,7 +179,16 @@
         tabs.forEach(function (tab) {
             tab.layout.fields.forEach(function (field) {
                 if (field.attribute_class === 'userInput') {
-                    userInputs.push(field.attribute);
+
+                    var res = field.attribute
+
+                    if (!res.frontOptions) {
+                        res.frontOptions = {};
+                    }
+
+                    res.frontOptions.required = field.required
+
+                    userInputs.push(res);
                 }
             });
         });

@@ -92,6 +92,25 @@
             {id: 'large', name: 'Large'},
         ];
 
+        vm.dateFieldOptions = [
+            {id: 'transaction_date', name: 'Transaction Date'},
+            {id: 'accounting_date', name: 'Accounting Date'},
+            {id: 'cash_date', name: 'Cash Date'},
+            {id: 'date', name: 'Complex Transaction Date'},
+            {id: 'user_date_1', name: 'User Date 1'},
+            {id: 'user_date_2', name: 'User Date 2'},
+            {id: 'user_date_3', name: 'User Date 3'},
+            {id: 'user_date_4', name: 'User Date 4'},
+            {id: 'user_date_5', name: 'User Date 5'},
+            // {id: 'user_date_6', name: 'User Date 6'},
+            // {id: 'user_date_7', name: 'User Date 7'},
+            // {id: 'user_date_8', name: 'User Date 8'},
+            // {id: 'user_date_9', name: 'User Date 9'},
+            // {id: 'user_date_10', name: 'User Date 10'},
+        ];
+
+
+
         vm.costMethod = [
 			{id: 1, name: 'AVCO'},
 			{id: 2, name: 'FIFO'},
@@ -428,7 +447,12 @@
 
 				vm.transactionsUserDates = [];
 
-				metaService.loadDataFromAllPages(uiService.getTransactionFieldList, [{pageSize: 1000}]).then(function (transactionFields) {
+                let options = {
+                    pageSize: 1000,
+                    page: 1
+                };
+
+				metaService.loadDataFromAllPages(uiService.getTransactionFieldList, [options]).then(function (transactionFields) {
 
 					vm.transactionsUserDates = transactionFields.filter(function (field) {
 						return ['user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'].includes(field.key);
@@ -465,6 +489,31 @@
             // vm.getStrategies3();
 
             vm.getCustomFields();
+
+            uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
+
+                vm.fieldsReady = true;
+
+                console.log('transactionFields transactionFields', data.results);
+
+                data.results.forEach(function (field) {
+
+                    vm.dateFieldOptions.forEach(function (item){
+
+                        if(field.key === item.id) {
+                            item.name = field.name
+                        }
+
+                    })
+
+
+                })
+
+                $scope.$apply();
+
+
+            });
+
 
         };
 

@@ -23,11 +23,11 @@
             number_prefix: '',
         };
 
-        if (data.report_settings) {
-            const report_settings = JSON.parse(JSON.stringify(data.report_settings));
-            vm.reportSettings = {...defaultReportSettings, ...report_settings}
+        if (data.settings) {
+            const report_settings = JSON.parse(JSON.stringify(data.settings));
+            vm.settings = {...defaultReportSettings, ...report_settings}
         } else {
-            vm.reportSettings = {...defaultReportSettings};
+            vm.settings = {...defaultReportSettings};
         }
 
         vm.zeroFormats = [
@@ -122,7 +122,7 @@
             const selectedPreset = vm.presetSelectorData.options.find(option => {
 
                 const requiredProps = presetsSettings[option.id];
-                const currentProps = vm.reportSettings;
+                const currentProps = vm.settings;
 
                 return isObjectContain(currentProps, requiredProps);
 
@@ -153,18 +153,18 @@
         };
 
         vm.onNegativeFormatChange = function () {
-            vm.reportSettings.negative_format_id = vm.negativeFormat < 2 ? 0 : 1;
-            vm.reportSettings.negative_color_format_id = vm.negativeFormat % 2;
+            vm.settings.negative_format_id = vm.negativeFormat < 2 ? 0 : 1;
+            vm.settings.negative_color_format_id = vm.negativeFormat % 2;
             vm.onNumberFormatChange();
         };
 
         vm.onRoundingChange = function () {
-            if (vm.reportSettings.round_format_id !== 0) {
-                vm.reportSettings.percentage_format_id = 0;
+            if (vm.settings.round_format_id !== 0) {
+                vm.settings.percentage_format_id = 0;
 
-                vm.reportSettings.number_multiplier = null;
-                vm.reportSettings.number_suffix = "";
-                vm.reportSettings.number_prefix = "";
+                vm.settings.number_multiplier = null;
+                vm.settings.number_suffix = "";
+                vm.settings.number_prefix = "";
 
             }
 
@@ -172,30 +172,30 @@
         };
 
         vm.onPercentageChange = function () {
-            if (vm.reportSettings.percentage_format_id !== 0) {
-                vm.reportSettings.round_format_id = 0;
+            if (vm.settings.percentage_format_id !== 0) {
+                vm.settings.round_format_id = 0;
             } else {
 
-                vm.reportSettings.number_multiplier = null;
-                vm.reportSettings.number_suffix = "";
-                vm.reportSettings.number_prefix = "";
+                vm.settings.number_multiplier = null;
+                vm.settings.number_suffix = "";
+                vm.settings.number_prefix = "";
 
             }
 
-            if (vm.reportSettings.percentage_format_id > 0 &&
-                vm.reportSettings.percentage_format_id < 4) {
+            if (vm.settings.percentage_format_id > 0 &&
+                vm.settings.percentage_format_id < 4) {
 
-                vm.reportSettings.number_multiplier = 100;
-                vm.reportSettings.number_suffix = "%";
-                vm.reportSettings.number_prefix = "";
+                vm.settings.number_multiplier = 100;
+                vm.settings.number_suffix = "%";
+                vm.settings.number_prefix = "";
 
             }
 
-            if (vm.reportSettings.percentage_format_id > 3) {
+            if (vm.settings.percentage_format_id > 3) {
 
-                vm.reportSettings.number_multiplier = 10000;
-                vm.reportSettings.number_suffix = "bps";
-                vm.reportSettings.number_prefix = "";
+                vm.settings.number_multiplier = 10000;
+                vm.settings.number_suffix = "bps";
+                vm.settings.number_prefix = "";
 
             }
 
@@ -207,7 +207,7 @@
             vm.zeroExample = vm.formatValue(0);
             vm.negativeNumberExample = vm.formatValue(-9238.1294);
 
-            vm.negativeFormat = getNegativeFormat(vm.reportSettings);
+            vm.negativeFormat = getNegativeFormat(vm.settings);
 
             clearAllPresetSelection();
             const currentPreset = getActivePreset();
@@ -217,7 +217,7 @@
         }
 
         vm.getZeroName = function () {
-            return vm.zeroFormats[vm.reportSettings.zero_format_id].name;
+            return vm.zeroFormats[vm.settings.zero_format_id].name;
         };
 
         vm.getNegativeName = function () {
@@ -225,20 +225,20 @@
         };
 
         vm.getRoundingName = function () {
-            return vm.reportSettings.round_format_id === 0 ? 'No rounding' : vm.formatRounding(0)
+            return vm.settings.round_format_id === 0 ? 'No rounding' : vm.formatRounding(0)
         };
 
         vm.getSeparationName = function () {
-            return vm.separationFormats[vm.reportSettings.thousands_separator_format_id].name;
+            return vm.separationFormats[vm.settings.thousands_separator_format_id].name;
         };
 
         vm.getPercentageName = function () {
-            return vm.percentageFormats[vm.reportSettings.percentage_format_id].name;
+            return vm.percentageFormats[vm.settings.percentage_format_id].name;
         };
 
-        vm.formatRounding = value => renderHelper.formatRounding(value, {report_settings: vm.reportSettings});
+        vm.formatRounding = value => renderHelper.formatRounding(value, {report_settings: vm.settings});
 
-        vm.formatValue = value => renderHelper.formatValue({example: value}, {key: 'example', report_settings: vm.reportSettings});
+        vm.formatValue = value => renderHelper.formatValue({example: value}, {key: 'example', report_settings: vm.settings});
 
         vm.presetSelectorData = {
             options: [
@@ -255,12 +255,12 @@
                 vm.presetSelectorData.options.forEach(it => it.isActive = it === option);
 
                 const numberFormat =  presetsSettings[option.id];
-                Object.assign(vm.reportSettings, numberFormat);
+                Object.assign(vm.settings, numberFormat);
 
                 vm.onNumberFormatChange();
 
             }
-        }
+        };
 
         vm.cancel = function () {
 
@@ -270,7 +270,7 @@
 
         vm.agree = function () {
 
-            $mdDialog.hide({status: 'agree', data: vm.reportSettings});
+            $mdDialog.hide({status: 'agree', data: vm.settings});
 
         };
 

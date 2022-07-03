@@ -117,7 +117,7 @@
                  on-save="vm.onPopupSaveCallback()">
 
                 <text-input label="{{vm.entityTypeSlug()}}"
-                            model="vm.getEntityPropertyByDefault()"
+                            model="vm.getShowByDefaultEntityValue()"
                             placeholder-text="{{vm.getPlaceholderByDefault()}}"
                             event-signal="vm.fixedAreaPopup.event"
                             small-options="{dialogParent: '.dialog-containers-wrap', readonly: true}"
@@ -175,16 +175,16 @@
                              data-item="vm.entity.group"
                              data-entity-type="vm.groupSelectorEntityType"
                              data-options="vm.groupSelectorOptions"
-                             event-signal="vm.groupSelectorEventObj.event"
-                             small-options="{notNull: options.notNull}"></crud-select>
+                             event-signal="vm.fixedAreaEventObj.event"
+                             small-options="{notNull: true}"></crud-select>
 
                 <crud-select data-ng-if="vm.entityType === 'strategy-1' || vm.entityType === 'strategy-2' || vm.entityType === 'strategy-3'"
                              data-label="vm.groupSelectorLabel"
                              data-item="vm.entity.subgroup"
                              data-entity-type="vm.groupSelectorEntityType"
                              data-options="vm.groupSelectorOptions"
-                             event-signal="vm.groupSelectorEventObj.event"
-                             small-options="{notNull: options.notNull}"></crud-select>
+                             event-signal="vm.fixedAreaEventObj.event"
+                             small-options="{notNull: true}"></crud-select>
 
                 <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type' &&
                                  vm.entityType !== 'responsible' && vm.entityType !== 'counterparty' && vm.entityType !== 'strategy-1' && vm.entityType !== 'strategy-2' && vm.entityType !== 'strategy-3'"
@@ -212,18 +212,18 @@
 
                 <div data-ng-if="vm.entityType === 'instrument' || vm.entityType === 'account' || vm.entityType === 'instrument-type'"
                      class="ev-editor-field">
-                    <text-input
-                            label="System Name (Short Name)"
-                            placeholder-text="System Name (Short Name)"
-                            model="vm.entity.short_name"></text-input>
+                    <text-input label="System Name (Short Name)"
+                                placeholder-text="System Name (Short Name)"
+                                model="vm.entity.short_name"></text-input>
                 </div>
 
                 <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type'"
                      class="ev-editor-field">
-                    <text-input
-                            label="Unique Code (User Code)"
-                            placeholder-text="Unique Code (User Code)"
-                            model="vm.entity.user_code"></text-input>
+                    <text-input label="Unique Code (User Code)"
+                                placeholder-text="Unique Code (User Code)"
+                                model="vm.entity.user_code"
+                                event-signal="vm.fixedAreaEventObj.event"
+                                small-options="{notNull: vm.isNotNullInput('user_code')}"></text-input>
                 </div>
 
             </div>
@@ -405,7 +405,7 @@
                                  data-ng-if="vm.checkFieldRender(tab, row, field)">
                                 <bind-field-control entity-type="vm.entityType"
                                                     entity="vm.entity"
-                                                    entity-change="vm.onEntityChange(fieldKey)"
+                                                    entity-change="vm.onEntityChange(fieldKey, fieldType)"
                                                     ev-editor-data-service="vm.evEditorDataService"
                                                     ev-editor-event-service="vm.evEditorEventService"
                                                     item="vm.attributesLayout[tab.tabOrder][field.row][field.column]">
@@ -540,7 +540,7 @@
              relative-popup-x="left"
              open-on="click"
              close-on-click-outside="true"
-             popup-classes="vm.entityTablePopupClasses">
+             popup-classes="{{vm.entityTablePopupClasses}}">
 
             <md-button ng-if="vm.entityType !== 'price-history'"
                        aria-label="open entity tabs"

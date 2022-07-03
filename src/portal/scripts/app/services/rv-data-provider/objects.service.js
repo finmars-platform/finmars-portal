@@ -44,7 +44,7 @@
 
                 var groupTypes = entityViewerDataService.getGroups();
 
-                console.log('globalTableSearch', globalTableSearch);
+                // console.log('globalTableSearch', globalTableSearch);
 
                 items = filterService.filterTableRows(items, regularFilters, entityType);
 
@@ -65,7 +65,7 @@
 
                 // console.log('groups filters length', items.length);
 
-                console.log('objectService.getList.options', options);
+                // console.log('objectService.getList.options', options);
 
                 if (options.ordering_mode === 'manual') {
 
@@ -100,6 +100,8 @@
                 result.count = 0;
                 result.results = [];
             }
+
+            // console.log('objectService.getList.result', result)
 
             resolve(result);
 

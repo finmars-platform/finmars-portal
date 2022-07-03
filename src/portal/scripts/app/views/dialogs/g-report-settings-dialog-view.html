@@ -11,7 +11,7 @@
 
     <md-dialog-content class="p-t-10">
 
-        <div data-ng-if="vm.checkReadyStatus()">
+        <div data-ng-if="vm.checkReadyStatus()" class="p-8">
 
             <div data-ng-if="vm.entityType == 'balance-report' || vm.entityType == 'pl-report' || vm.entityType == 'performance-report'">
 
@@ -246,6 +246,112 @@
                         </div>
 
                     </div>
+
+                </div>
+
+                <!-- <div layout="row">
+
+                    <div layout="column" class="m-r-16">
+
+                        <md-input-container style="margin-bottom: 20px;">
+                            <label for="">Account mode</label>
+                            <md-select data-ng-model="vm.reportOptions.account_mode">
+                                <md-option ng-value="opt.value" ng-repeat="opt in vm.selectOptions">
+                                    {{opt.caption}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+
+                    </div>
+
+                    <div layout="column">
+
+                        <md-input-container style="margin-bottom: 20px;">
+                            <label for="">Strategy 1 mode</label>
+                            <md-select data-ng-model="vm.reportOptions.strategy1_mode">
+                                <md-option ng-value="opt.value" ng-repeat="opt in vm.strategiesSelectOptions">
+                                    {{opt.caption}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+
+                        <md-input-container style="margin-bottom: 20px;">
+                            <label for="">Strategy 2 mode</label>
+                            <md-select data-ng-model="vm.reportOptions.strategy2_mode">
+                                <md-option ng-value="opt.value" ng-repeat="opt in vm.strategiesSelectOptions">
+                                    {{opt.caption}}
+                                </md-option>
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+
+                        <md-input-container style="margin-bottom: 20px;">
+                            <label for="">Strategy 3 mode</label>
+                            <md-select data-ng-model="vm.reportOptions.strategy3_mode">
+                                <md-option ng-value="opt.value" ng-repeat="opt in vm.strategiesSelectOptions">
+                                    {{opt.caption}}
+                                </md-option>
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+
+                    </div>
+
+                    <div layout="row">
+
+                        <md-input-container>
+                            <label for="">Offsetting size</label>
+                            <md-select data-ng-model="vm.reportOptions.approach_multiplier">
+                                <md-option ng-value="0">0/100</md-option>
+                                <md-option ng-value="0.5">50/50</md-option>
+                                <md-option ng-value="1">100/0</md-option>
+                            </md-select>
+                        </md-input-container>
+
+                    </div>
+
+                </div> -->
+
+            </div>
+
+            <div data-ng-if="vm.entityType == 'transaction-report'">
+
+                <h5 class="default-f-s">General Settings</h5>
+
+                <div class="flex-column">
+
+                    <div class="g-report-settings-row p-b-8" >
+                        <div class="default-f-s">Date from</div>
+                        <date-input model="vm.reportOptions.begin_date" class="g-report-settings-field"></date-input>
+                    </div>
+
+
+                    <div class="g-report-settings-row p-b-8">
+                        <div class="default-f-s">Date to</div>
+                        <date-input model="vm.reportOptions.end_date" class="g-report-settings-field"></date-input>
+                    </div>
+
+
+                    <div class="g-report-settings-row p-b-8">
+                        <div class="default-f-s">Table font size</div>
+
+                        <dropdown-select model="vm.tableFontSize"
+                                         menu-options="vm.tableFontSizeOptions"
+                                         small-options="{tooltipText: 'Table font size'}"
+                                         class="g-report-settings-field">
+                        </dropdown-select>
+                    </div>
+
+                    <div class="g-report-settings-row p-b-8" data-ng-if="vm.fieldsReady">
+                        <div class="default-f-s">Date Field</div>
+
+                        <dropdown-select model="vm.reportOptions.date_field"
+                                         menu-options="vm.dateFieldOptions"
+                                         small-options="{tooltipText: 'Date field'}"
+                                         class="g-report-settings-field">
+                        </dropdown-select>
+                    </div>
+
 
                 </div>
 

@@ -1,8 +1,8 @@
 <div class="custom-input-container smart-search-input-container smartSearchInputContainer"
      data-ng-class="getInputContainerClasses()">
-  <div class="custom-input-top-row">
-    <span class="custom-input-textarea-span-pan">{{label}}</span>
-  </div>
+    <div ng-if="label" class="custom-input-top-row">
+        <span class="custom-input-textarea-span-pan">{{label}}</span>
+    </div>
   <!-- <div class="custom-input-top-row">
         <div data-ng-bind="label" class="custom-input-label"></div>
 
@@ -88,4 +88,8 @@
       </div>
     </div>
   </div>
+
+  <div ng-if="error"
+       ng-bind="error"
+       class="custom-input-bottom-error-text"></div>
 </div>

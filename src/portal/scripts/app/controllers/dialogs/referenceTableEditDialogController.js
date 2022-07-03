@@ -30,6 +30,11 @@
             $mdDialog.hide({status: 'disagree'});
         };
 
+        var updateOrder = function (item, index) {
+            item.order = index;
+            return item;
+        };
+
         vm.createRow = function () {
 
             vm.referenceTable.rows.push({
@@ -40,11 +45,14 @@
 
         };
 
-        vm.deleteRow = function ($event, $index) {
+        vm.deleteRow = function ($event, order) {
 
-            vm.referenceTable.rows.splice($index, 1);
+            vm.referenceTable.rows.splice(order, 1);
 
             vm.checkForDuplicates()
+
+            vm.referenceTable.rows = vm.referenceTable.rows.map(updateOrder);
+
         };
 
         vm.checkForDuplicates = function () {
@@ -126,9 +134,10 @@
                         vm.referenceTable.rows.push(rowToInsert);
                     }
 
-                    for (var i = 0; i < vm.referenceTable.rows.length; i++) {
+                    /* for (var i = 0; i < vm.referenceTable.rows.length; i++) {
                         vm.referenceTable.rows[i].order = i;
-                    }
+                    } */
+                    vm.referenceTable.rows = vm.referenceTable.rows.map(updateOrder);
 
                     $scope.$apply();
 
@@ -227,11 +236,8 @@
                 scrollHelper.setDnDScrollElem(DnDScrollElem);
             }, 500);
 
-            vm.referenceTable.rows.forEach(function (row, index) { // TODO remove later
-                if (!row.order) {
-                    row.order = index;
-                }
-            });
+            vm.referenceTable.rows = vm.referenceTable.rows.map(updateOrder);
+
         };
 
         init();

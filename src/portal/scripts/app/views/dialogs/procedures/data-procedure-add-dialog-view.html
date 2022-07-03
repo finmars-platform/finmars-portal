@@ -20,10 +20,10 @@
                     <input type="text" data-ng-model="vm.item.name">
                 </md-input-container>
 
-<!--                <md-input-container>-->
-<!--                    <label>User Code</label>-->
-<!--                    <input type="text" data-ng-model="vm.item.user_code">-->
-<!--                </md-input-container>-->
+                <!--                <md-input-container>-->
+                <!--                    <label>User Code</label>-->
+                <!--                    <input type="text" data-ng-model="vm.item.user_code">-->
+                <!--                </md-input-container>-->
 
                 <usercode-input data-item="vm.item"></usercode-input>
 
@@ -258,8 +258,41 @@
 
                 </div>
 
+                <!--exante provider-->
+                <div data-ng-if="vm.item.provider == 6">
+
+                    <md-input-container>
+                        <label>URL</label>
+                        <input type="text" data-ng-model="vm.item.data.url" data-ng-change="vm.universalFieldChange()">
+                    </md-input-container>
+
+                    <md-input-container>
+                        <label>Security token</label>
+                        <input type="text" data-ng-model="vm.item.data.security_token"
+                               data-ng-change="vm.universalFieldChange()">
+                    </md-input-container>
+
+                    <!--                    <div><label for="">Currency</label></div>-->
+                    <!--                    <md-select data-ng-model="vm.item.data.currencies">-->
+                    <!--                        <md-option data-ng-repeat="item in vm.currencyCodes" ng-value="item.id">-->
+                    <!--                            {{item.name}}-->
+                    <!--                        </md-option>-->
+                    <!--                    </md-select>-->
 
 
+                    <div>
+                        <label>Options (JSON)</label>
+                        <div layout="row">
+                            <textarea name="" data-ng-model="vm.item.data_string" cols="60" rows="5"
+                                      data-ng-change="vm.universalOptionsChange()"></textarea>
+                            <json-editor-button data-item="vm.item.data_string"
+                                                data-on-change-callback="vm.universalOptionsChange()">
+                            </json-editor-button>
+                        </div>
+                    </div>
+
+
+                </div>
 
             </div>
 

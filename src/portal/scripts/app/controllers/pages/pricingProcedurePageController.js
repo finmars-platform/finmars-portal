@@ -6,6 +6,7 @@
     'use strict';
 
     var pricingProcedureService = require('../../services/procedures/pricingProcedureService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -26,6 +27,19 @@
                 $scope.$apply();
 
             })
+        };
+
+        vm.executeProcedure = function ($event, item) {
+
+            console.log("Execute Procedure", item);
+
+            pricingProcedureService.runProcedure(item.id, item).then(function (data) {
+
+                toastNotificationService.success('Success. Procedure is being processed');
+
+
+            })
+
         };
 
         vm.editProcedure = function ($event, item) {

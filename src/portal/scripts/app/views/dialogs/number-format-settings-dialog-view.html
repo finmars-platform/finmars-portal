@@ -18,7 +18,7 @@
              relative-popup-x="left"
              relative-popup-y="top"
              open-on="click"
-             popup-classes="'preset-options'"
+             popup-classes="preset-options"
              close-on-click-outside="true">
 
             <span>{{vm.currentPresetName}}</span>
@@ -30,8 +30,8 @@
             <div class="examples-caption">Examples:</div>
             <div class="examples-items"
                  data-ng-class="{
-                    'low-font-size': vm.reportSettings.percentage_format_id >= 3 && vm.reportSettings.percentage_format_id < 5,
-                    'small-font-size': vm.reportSettings.percentage_format_id === 5
+                    'low-font-size': vm.settings.percentage_format_id >= 3 && vm.settings.percentage_format_id < 5,
+                    'small-font-size': vm.settings.percentage_format_id === 5
                     }">
                 <div>{{vm.positiveNumberExample}}</div>
                 <div>{{vm.zeroExample}}</div>
@@ -66,7 +66,7 @@
                      class="numberFormatAccordionHeight">
                     <div class="settings">
                         <div layout="column">
-                            <md-radio-group ng-model="vm.reportSettings.zero_format_id" ng-change="vm.onNumberFormatChange()">
+                            <md-radio-group ng-model="vm.settings.zero_format_id" ng-change="vm.onNumberFormatChange()">
 
                                 <md-radio-button data-ng-repeat="option in vm.zeroFormats" ng-value="option.id">{{option.name}}</md-radio-button>
 
@@ -132,7 +132,7 @@
                 <div class="parameter">Rounding</div>
                 <div class="example"
                      data-ng-if="roundingCollapsed"
-                     ng-bind="vm.reportSettings.round_format_id === 0 ? 'No rounding' : vm.formatRounding(0)"></div>
+                     ng-bind="vm.settings.round_format_id === 0 ? 'No rounding' : vm.formatRounding(0)"></div>
                 <div class="example" data-ng-if="!roundingCollapsed">Select rounding format</div>
                 <div class="collapse-icon">
                     <span class="material-icons">expand_more</span>
@@ -146,7 +146,7 @@
 
                     <div class="settings">
                         <div layout="column">
-                            <md-radio-group ng-model="vm.reportSettings.round_format_id" ng-change="vm.onRoundingChange()">
+                            <md-radio-group ng-model="vm.settings.round_format_id" ng-change="vm.onRoundingChange()">
 
                                 <md-radio-button ng-value="0">no rounding</md-radio-button>
 
@@ -188,7 +188,7 @@
                     <div class="settings">
                         <div layout="column">
 
-                            <md-radio-group ng-model="vm.reportSettings.thousands_separator_format_id" ng-change="vm.onNumberFormatChange()">
+                            <md-radio-group ng-model="vm.settings.thousands_separator_format_id" ng-change="vm.onNumberFormatChange()">
                                 <md-radio-button data-ng-repeat="option in vm.separationFormats" ng-value="option.id">{{option.name}}</md-radio-button>
                             </md-radio-group>
 
@@ -224,7 +224,7 @@
                     <div class="settings">
                         <div layout="column">
 
-                            <md-radio-group ng-model="vm.reportSettings.percentage_format_id" ng-change="vm.onPercentageChange()">
+                            <md-radio-group ng-model="vm.settings.percentage_format_id" ng-change="vm.onPercentageChange()">
                                 <md-radio-button data-ng-repeat="option in vm.percentageFormats" ng-value="option.id">{{option.name}}</md-radio-button>
                             </md-radio-group>
 
@@ -259,7 +259,7 @@
 
                     <div class="settings">
                         <div layout="column">
-                            <text-input model="vm.reportSettings.number_suffix"
+                            <text-input model="vm.settings.number_suffix"
                                         placeholder-text="Suffix"
                                         on-change-callback="vm.onNumberFormatChange()"
                                         small-options="{noIndicatorBtn: true}"></text-input>
@@ -294,7 +294,7 @@
 
                     <div class="settings">
                         <div layout="column">
-                            <text-input model="vm.reportSettings.number_prefix"
+                            <text-input model="vm.settings.number_prefix"
                                         placeholder-text="Prefix"
                                         on-change-callback="vm.onNumberFormatChange()"
                                         small-options="{noIndicatorBtn: true}"></text-input>
@@ -329,7 +329,7 @@
 
                     <div class="settings">
                         <div layout="column">
-                            <number-input model="vm.reportSettings.number_multiplier"
+                            <number-input model="vm.settings.number_multiplier"
                                           placeholder-text="Multiplier"
                                           small-options="{noIndicatorBtn: true}"
                                           on-change-callback="vm.onNumberFormatChange()"></number-input>

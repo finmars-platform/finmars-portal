@@ -646,9 +646,19 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
                 skipHide: true
             }).then(function (res) {
 
-                if (res && res.status === 'agree') {
+                if (res.status === 'agree') {
 
                     vm.getSchemeList();
+
+                } else if (res.status === 'copy') {
+
+                    res.dialogPromise.then(function (copyRes) {
+
+                        if (copyRes.status === 'agree') {
+                            vm.getSchemeList();
+                        }
+
+                    });
 
                 }
 
@@ -708,6 +718,15 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
             vm.getSchemeList();
             vm.getMember();
+
+            console.log('data', data);
+
+            if (data.scheme) {
+                vm.config.scheme = data.scheme.id
+                
+            }
+            
+            console.log('vm.config', vm.config)
 
         };
 
