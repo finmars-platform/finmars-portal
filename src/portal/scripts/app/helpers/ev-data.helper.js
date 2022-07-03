@@ -320,7 +320,7 @@
 
     };
 
-    const filterByRowColor = function (flatList, evDataService) {
+    const filterByRowColor = function (flatList, evDataService, globalDataService) {
 
         var rowTypeFilters = evDataService.getRowTypeFilters();
         var filterByColor = rowTypeFilters.markedRowFilters;
@@ -330,7 +330,9 @@
         }
 
         var entityType = evDataService.getEntityType();
-        var markedRows = localStorageService.getMarkedRows(false, entityType);
+        // var markedRows = localStorageService.getMarkedRows(false, entityType);
+		var rvSettings = globalDataService.getMemberEntityViewersSettings(false, entityType);
+		var markedRows = rvSettings.marked_rows;
 
         return flatList.filter(item => {
 
@@ -342,7 +344,7 @@
 
     };
 
-    var getFlatStructure = function (evDataService) {
+    var getFlatStructure = function (evDataService, globalDataService) {
 
         var data = JSON.parse(JSON.stringify(evDataService.getData()));
         var rootGroup = JSON.parse(JSON.stringify(evDataService.getRootGroupData()));
@@ -359,7 +361,7 @@
 
         list = removeItemsFromFoldedGroups(list);
 
-        list = filterByRowColor(list, evDataService);
+        list = filterByRowColor(list, evDataService, globalDataService);
 
         // console.log('list', list);
 
@@ -912,7 +914,7 @@
 
     // MATERIAL DESIGN ENTITY VIEWER LOGIC
 
-    var getObjectsFromSelectedGroups = function (evDataService) {
+    var getObjectsFromSelectedGroups = function (evDataService, globalDataService) {
 
         var result = [];
 
@@ -953,7 +955,8 @@
 
             })
 
-        } else {
+        }
+        else {
 
 
             var rawData = evDataService.getRootGroupData()
@@ -987,7 +990,7 @@
 
         evDataService.setUnfilteredFlatList(result);
 
-        result = filterByRowColor(result, evDataService);
+        result = filterByRowColor(result, evDataService, globalDataService);
 
         console.log('getObjectsFromSelectedGroups.result', result)
 

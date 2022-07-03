@@ -654,7 +654,7 @@
 
     };
 
-    var initEventDelegation = function (elem, evDataService, evEventService) {
+    var initEventDelegation = function (elem, evDataService, evEventService, usersService, globalDataService) {
 
         elem.addEventListener('click', function (event) {
 
@@ -667,10 +667,9 @@
 
             console.log('selection', selection);
             if (clickData.___type === 'hyperlink') {
-
                 metaHelper.openLinkInNewTab(event);
-
-            } else if (event.detail === 2) { // double click handler
+            }
+            else if (event.detail === 2) { // double click handler
 
                 if (clickData.___type === 'object') {
 
@@ -695,7 +694,8 @@
 
                 }
 
-            } else if (clickData.isShiftPressed) {
+            }
+            else if (clickData.isShiftPressed) {
 
                 if (event.detail === 1) {
 
@@ -729,7 +729,7 @@
                             case 'open_row_color_picker':
 
                                 event.stopPropagation();
-                                evRvDomManagerService.createRowColorPickerMenu(clickData, evDataService, evEventService, clearDropdowns);
+                                evRvDomManagerService.createRowColorPickerMenu(clickData, evDataService, evEventService, usersService, globalDataService, clearDropdowns);
 
                                 break;
 
@@ -745,7 +745,7 @@
 
                                     event.stopPropagation();
 
-                                    createPopupMenu(objectId, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+                                    createPopupMenu(objectId, parentGroupHashId, evDataService, evEventService, usersService, globalDataService, contextMenuPosition);
 
                                 }
 
@@ -852,11 +852,13 @@
     };
 
     /**
-     * transfer data into event listener callback executeContextMenuAction() or executeSubtotalContextMenuAction()
+     * transfer data into event listener callback ( executeContextMenuAction() )
      *
      * @type {Object} eventListenerFn2Args
      * eventListenerFn2Args.evDataService {Object|null}
      * eventListenerFn2Args.evEventService {Object|null}
+	 * eventListenerFn2Args.usersService {Object|null}
+	 * eventListenerFn2Args.globalDataService {Object|null}
      */
     var eventListenerFn2Args = {
         evDataService: null,
@@ -869,8 +871,10 @@
         var parentGroupHashId = event.target.dataset.parentGroupHashId;
         var dropdownAction = event.target.dataset.evDropdownAction;
 
-        var evDataService = eventListenerFn2Args.evDataService;
-        var evEventService = eventListenerFn2Args.evEventService;
+        var evDataService = eventListenerFn2Args.evDataService,
+			evEventService = eventListenerFn2Args.evEventService,
+			usersService = eventListenerFn2Args.usersService,
+			globalDataService = eventListenerFn2Args.globalDataService;
 
         var dropdownActionData = {};
 
@@ -879,7 +883,7 @@
             var color = event.target.dataset.evDropdownActionDataColor;
 
             if (objectId && color && parentGroupHashId) {
-                evRvDomManagerService.markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, color);
+                evRvDomManagerService.markRowByColor(objectId, parentGroupHashId, evDataService, evEventService, usersService, globalDataService, color);
             }
 
             clearDropdownsAndRows(evDataService, evEventService, true);
@@ -971,11 +975,14 @@
 
     }
 
-    var addEventListenerForContextMenu = function (evDataService, evEventService) {
+    var addEventListenerForContextMenu = function (evDataService, evEventService, usersService, globalDataService) {
 
         eventListenerFn2Args.evDataService = evDataService;
         eventListenerFn2Args.evEventService = evEventService;
-        window.addEventListener('click', executeContextMenuAction);
+		eventListenerFn2Args.usersService = usersService;
+		eventListenerFn2Args.globalDataService = globalDataService;
+
+		window.addEventListener('click', executeContextMenuAction);
 
         clearDropdownsAndRowsArgs.evDataService = evDataService;
         clearDropdownsAndRowsArgs.evEventService = evEventService;
@@ -1100,7 +1107,7 @@
 
     };
 
-    var createPopupMenu = function (objectId, parentGroupHashId, evDataService, evEventService, menuPosition) {
+    var createPopupMenu = function (objectId, parentGroupHashId, evDataService, evEventService, usersService, globalDataService, menuPosition) {
 
         // var entityType = evDataService.getEntityType();
 
@@ -1141,14 +1148,14 @@
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-            addEventListenerForContextMenu(evDataService, evEventService);
+            addEventListenerForContextMenu(evDataService, evEventService, usersService, globalDataService);
 
         }
 
 
     };
 
-    var initContextMenuEventDelegation = function (elem, evDataService, evEventService) {
+    var initContextMenuEventDelegation = function (elem, evDataService, evEventService, usersService, globalDataService) {
 
         var entityType = evDataService.getEntityType();
 
@@ -1220,7 +1227,7 @@
                     //var contextMenuPosition = 'top: ' + ev.pageY + 'px; ' + 'left: ' + ev.pageX + 'px';
                     var contextMenuPosition = {positionX: ev.pageX, positionY: ev.pageY};
 
-                    createPopupMenu(objectId, parentGroupHashId, evDataService, evEventService, contextMenuPosition);
+                    createPopupMenu(objectId, parentGroupHashId, evDataService, evEventService, usersService, globalDataService, contextMenuPosition);
 
                     return false;
 

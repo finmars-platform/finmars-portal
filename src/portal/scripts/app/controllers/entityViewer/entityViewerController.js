@@ -1096,9 +1096,12 @@ import evEvents from "../../services/entityViewerEvents";
 
                 vm.entityViewerDataService.setRowHeight(36);
 
-				var rowFilterColor = localStorageService.getRowTypeFilter(false, vm.entityType);
+				/* var rowFilterColor = localStorageService.getRowTypeFilter(false, vm.entityType);
 				var rowTypeFiltersData = vm.entityViewerDataService.getRowTypeFilters();
-				rowTypeFiltersData.markedRowFilters = rowFilterColor;
+				rowTypeFiltersData.markedRowFilters = rowFilterColor; */
+				var evSettings = globalDataService.getMemberEntityViewersSettings(false, vm.entityType);
+				var rowTypeFiltersData = vm.entityViewerDataService.getRowTypeFilters();
+				rowTypeFiltersData.markedRowFilters = evSettings.row_type_filter;
 
 				vm.entityViewerDataService.setRowTypeFilters(rowTypeFiltersData);
 

@@ -48,6 +48,56 @@ export default function () {
 		return data.member;
 	};
 
+	const setUpMemberData = (member, viewerType, entityType) => {
+
+		if (!member.data) member.data = {};
+		if (!member.data.group_tables) member.data.group_tables = {};
+
+		if (!member.data.group_tables.entity_viewer) {
+			member.data.group_tables.entity_viewer = {
+				entity_viewers_settings: {}
+			};
+		}
+
+		if (!member.data.group_tables.report_viewer) {
+			member.data.group_tables.report_viewer = {
+				entity_viewers_settings: {}
+			};
+		}
+
+		let entityTypesSettings = member.data.group_tables[viewerType].entity_viewers_settings;
+
+		if (!entityTypesSettings[entityType]) {
+
+			entityTypesSettings[entityType] = {
+				marked_rows: {},
+				row_type_filter: 'none'
+			};
+
+		}
+
+		return member;
+
+	};
+
+	const getMemberEntityViewersSettings = (isReport, entityType) => {
+
+		const viewerType = isReport ? 'report_viewer' : 'entity_viewer';
+		let member = setUpMemberData(data.member, viewerType, entityType);
+
+		return JSON.parse(JSON.stringify(member.data.group_tables[viewerType].entity_viewers_settings[entityType]));
+
+	};
+
+	const setMemberEntityViewersSettings = function (settings, isReport, entityType) {
+
+		const viewerType = isReport ? 'report_viewer' : 'entity_viewer';
+		let member = setUpMemberData(data.member, viewerType, entityType);
+
+		member.data.group_tables[viewerType].entity_viewers_settings[entityType] = settings;
+
+	};
+
 	const clearAllData = function () {
 
 		userHaveCurrentMasterUser = false;
@@ -68,6 +118,8 @@ export default function () {
 		getMasterUser: getMasterUser,
 		setMember: setMember,
 		getMember: getMember,
+		getMemberEntityViewersSettings: getMemberEntityViewersSettings,
+		setMemberEntityViewersSettings: setMemberEntityViewersSettings,
 
 		clearAllData: clearAllData
 	}
