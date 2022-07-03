@@ -49,13 +49,13 @@
 
         var vm = this;
 
+        vm.entityType = entityType;
+
         vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
 
         vm.processing = false;
 
         vm.readyStatus = {permissions: false, entity: false, layout: false};
-
-        vm.entityType = entityType;
 
         vm.entity = {$_isValid: true};
         vm.dataConstructorLayout = {};
@@ -196,6 +196,8 @@
         // < Victor 20020.11.20 #59: fields below needs for new design an fixed area popup >
 
         vm.keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
+
+        vm.isNotNullInput = vm.sharedLogic.isNotNullInput;
 
         /* vm.tabsWithErrors = {"system_tab": {}, "user_tab": {}};
         vm.formErrorsList = []; */
@@ -1009,14 +1011,6 @@
                 vm.entity = await setValuesFromInstrumentType(vm.entity);
             }
 
-            if (vm.entityType === 'instrument-type') {
-
-                if (!vm.entity.instrument_factor_schedule_data) {
-                    vm.entity.instrument_factor_schedule_data = ''
-                }
-
-            }
-
             vm.updateEntityBeforeSave();
 
             /* var errors = entityEditorHelper.validateEntityFields(vm.entity,
@@ -1040,7 +1034,7 @@
             if (errors.length) {
 
                 // vm.sharedLogic.processTabsErrors(errors, $event);
-                var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.groupSelectorEventObj);
+                var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.fixedAreaEventObj);
 
                 if (processResult) {
                     vm.fixedAreaPopup = processResult;
@@ -1744,9 +1738,13 @@
                 vm.dialogElemToResize = vm.sharedLogic.onEditorStart();
             }, 100);
 
-			vm.groupSelectorEventObj = { // sending signal to crud select that is inside fixed area but outside popup
+            /*vm.groupSelectorEventObj = { // sending signal to crud select that is inside fixed area but outside popup
 				event: {}
-			};
+			};*/
+
+            vm.fixedAreaEventObj = { // sending signal to fields that are inside fixed area but outside of popup
+                event: {}
+            };
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EventService();
@@ -1833,12 +1831,11 @@
 
 				}
 
-				if (['responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3'].indexOf(vm.entityType) !== -1) {
+				/*if (['responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3'].indexOf(vm.entityType) !== -1) {
 
 					vm.entity.group = vm.groupSelectorOptions[0].id
 
-				}
-
+				}*/
 				vm.readyStatus.layout = true;
 				vm.readyStatus.entity = true;
 

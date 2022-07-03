@@ -101,7 +101,7 @@
 			viewModel.entity.attributes = [];
 		}
 
-		if (viewModel.entity.attributes) {
+		/* if (viewModel.entity.attributes) {
 
 			var i, a, c;
 			var keys = Object.keys(viewModel.entity),
@@ -134,7 +134,7 @@
 
 			}
 
-		}
+		} */
 
 		if (viewModel.entity.attributes) {
 
