@@ -1113,11 +1113,10 @@ import evEvents from "../../services/entityViewerEvents";
                     middlewareService.onAutosaveLayoutToggle(function () {
 
                         vm.currentMember = globalDataService.getMember();
-                        removeTransitionListeners();
 
-                        if (vm.currentMember.data.autosave_layouts) {
+                        if (vm.currentMember.data && vm.currentMember.data.autosave_layouts) {
                             autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, false);
-                            initListenersForAutosave();
+                            removeTransitionListeners();
 
                         } else {
                             autosaveLayoutService.removeChangesTrackingEventListeners(vm.entityViewerEventService);

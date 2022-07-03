@@ -456,6 +456,8 @@
 
 					if (viewContext !== 'reconciliation_viewer' && filters.frontend.length) scope.thereAreFrontendFilters = true;
 
+                    scope.currentAdditions = scope.evDataService.getAdditions();
+
                     scope.popupEventService = gFiltersVm.popupEventService;
                     scope.chipsListEventService = gFiltersVm.chipsListEventService;
 
