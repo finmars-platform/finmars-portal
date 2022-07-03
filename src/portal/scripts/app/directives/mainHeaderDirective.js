@@ -314,10 +314,9 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
                 globalDataService.setMember(scope.member);
                 middlewareService.autosaveLayoutToggle();
-                console.log("testing1 mainHeader onAutosaveLayoutToggle", scope.member);
+
 				usersService.updateMember(scope.member.id, scope.member).then(function () {
                     scope.member = globalDataService.getMember();
-                    console.log("testing1 mainHeader onAutosaveLayoutToggle then");
                 });
 			};
 
@@ -342,12 +341,11 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
                 scope.currentLocation = metaService.getHeaderTitleForCurrentLocation($state);
                 const stateWithLayout = evRvLayoutsHelper.statesWithLayouts.includes($state.current.name);
-                console.log("testing1 transition hook works", stateWithLayout, scope.member.data);
                 /* if (stateWithLayout && scope.member.data.autosave_layouts !== false) {
                     scope.showAutosaveLayoutCheckbox = true;
                 } */
                 scope.showAutosaveLayoutCheckbox = stateWithLayout && scope.member.data && scope.member.data.autosave_layouts;
-                console.log("testing1 transition showAutosaveLayoutCheckbox", scope.showAutosaveLayoutCheckbox);
+
             });
 
             const init = async function () {

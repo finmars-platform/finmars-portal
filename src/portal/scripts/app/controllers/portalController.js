@@ -16,9 +16,9 @@ export default function ($scope, authorizerService, usersService, globalDataServ
 	const getMember = function () {
 
 		return new Promise(function (resolve, reject) {
-			console.log("testing_opendatabase portalController getMember");
+
 			usersService.getMyCurrentMember().then(function (data) {
-				console.log("testing_opendatabase portalController got member", data);
+
 				const member = data;
 
 				websocketService.send({action: "update_user_state", data: {member: member}});
@@ -26,7 +26,6 @@ export default function ($scope, authorizerService, usersService, globalDataServ
 				resolve(member);
 
 			}).catch(function (error) {
-				console.log("testing_opendatabase portalController got error");
 				console.error(error);
 				reject(error);
 			});
