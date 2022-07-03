@@ -93,7 +93,7 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
                     		const listLayout = scope.evDataService.getListLayout();
 
                             uiService.deleteListLayoutByKey(scope.layout.id).then(async function (data) {
-                                console.log("testing1 deleteListLayoutByKey data", data);
+
                             	if (scope.layout.is_default && scope.layouts.length > 1) { // If default layout was deleted and other layouts exist. Make another layout default.
 
 									let nextDefaultLayout = scope.layouts[0];

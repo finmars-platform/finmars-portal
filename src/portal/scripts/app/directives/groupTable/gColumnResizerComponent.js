@@ -145,12 +145,11 @@
 
                 function onColSliderMouseup (e) {
                     $(window).unbind('mousemove');
-                    console.log("testing mouseup RESIZE_COLUMNS_END");
+
                     scope.evEventService.dispatchEvent(evEvents.RESIZE_COLUMNS_END);
                     // scope.evEventService.dispatchEvent(evEvents.START_CELLS_OVERFLOW);
-                    console.log("testing mouseup window eventListeners", window, $(window));
                 }
-                console.log("testing onColSliderMouseup", onColSliderMouseup);
+
                 function onColSliderMousedown(e) {
 
                     e.preventDefault();

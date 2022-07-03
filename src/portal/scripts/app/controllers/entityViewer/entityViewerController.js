@@ -933,7 +933,7 @@ import evEvents from "../../services/entityViewerEvents";
                 vm.layoutId = layoutData.id
 
 				layoutData.data.filters = separateEvFilters(layoutData.data.filters);
-                console.log("testing1 setLayout layoutData", layoutData);
+
                 vm.entityViewerDataService.setLayoutCurrentConfiguration(layoutData, uiService, false);
                 vm.setFiltersValuesFromQueryParameters();
                 vm.readyStatus.layout = true;
@@ -1212,7 +1212,7 @@ import evEvents from "../../services/entityViewerEvents";
             var checkLayoutForChanges = function (transition) { // called on attempt to change or reload page
 
                 return new Promise(function (resolve, reject) {
-                    console.log("testing checkLayoutForChanges ", doNotCheckLayoutChanges);
+
                     if (!doNotCheckLayoutChanges) {
 
                         var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
@@ -1229,7 +1229,7 @@ import evEvents from "../../services/entityViewerEvents";
 
                             layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, false);
                         }
-                        console.log("testing checkLayoutForChanges layoutIsUnchanged", layoutIsUnchanged);
+
                         if (!layoutIsUnchanged || spChangedLayout) {
 
                             $mdDialog.show({
@@ -1364,7 +1364,7 @@ import evEvents from "../../services/entityViewerEvents";
 
                 var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
                 var layoutCurrentConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(false);
-                console.log("testing1 warnAboutLayoutChangesLoss", activeLayoutConfig, '\n', layoutCurrentConfig);
+
                 var layoutIsUnchanged = true;
                 if (activeLayoutConfig && activeLayoutConfig.data) {
                     layoutIsUnchanged = evHelperService.checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, false);
@@ -1375,7 +1375,7 @@ import evEvents from "../../services/entityViewerEvents";
                 if (additions.isOpen) {
                     spChangedLayout = vm.splitPanelExchangeService.getSplitPanelChangedLayout();
                 }
-                console.log("testing1 warnAboutLayoutChangesLoss ", layoutIsUnchanged);
+
                 if (!layoutIsUnchanged || spChangedLayout) {
                     event.preventDefault();
                     (event || window.event).returnValue = 'All unsaved changes of layout will be lost.';
@@ -1384,7 +1384,6 @@ import evEvents from "../../services/entityViewerEvents";
             };
 
             var initTransitionListeners = function () {
-                console.log("testing1 initTransitionListeners");
                 deregisterOnBeforeTransitionHook = $transitions.onBefore({}, checkLayoutForChanges);
                 window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
             };

@@ -46,8 +46,8 @@ export default function () {
 
     }; */
 
-    const updateUsingCachedLayout = function (cachedLayout, layout, entityType, testCounter) {
-        console.log("testing1_" + testCounter + " updateUsingCachedLayout cachedLayout", cachedLayout);
+    const updateUsingCachedLayout = function (cachedLayout, layout, entityType) {
+
         return new Promise (async function (resolve, reject) {
 
             try {
@@ -69,12 +69,10 @@ export default function () {
                 }
 
                 uiService.updateListLayout(layout.id, layout).then(updatedLayoutData => {
-                    console.log("testing1_" + testCounter + " updateUsingCachedLayout updatedLayoutData", updatedLayoutData);
                     resolve(updatedLayoutData);
                 })
 
             } catch (error) {
-                console.log("testing1_" + testCounter + " updateUsingCachedLayout reject", error);
                 reject(error);
             }
 
@@ -82,7 +80,7 @@ export default function () {
 
     };
 
-    const updateUsingUserCode = function (layout, entityType, testCounter) {
+    const updateUsingUserCode = function (layout, entityType) {
 
         const options = {
             filters: {
@@ -91,14 +89,14 @@ export default function () {
         };
 
         return new Promise((resolve, reject) => {
-            console.log("testing1 updateUsingUserCode options", options);
+
             uiService.getListLayoutLight(entityType, options).then(function (llData) {
 
                 if (llData.results.length) {
 
                     layout.id = llData.results[0].id;
                     layout.modified = llData.results[0].modified;
-                    console.log("testing1_" + testCounter + " updateUsingUserCode layout to update", llData.results[0]);
+
                     uiService.updateListLayout(layout.id, layout).then(function (updatedLayoutData) {
                         resolve(updatedLayoutData);
 
@@ -114,13 +112,13 @@ export default function () {
 
     };
 
-    const updateAutosaveListLayout = function (cachedLayout, layout, entityType, testCounter) {
-        console.log("testing1_" + testCounter + " updateAutosaveListLayout layout", layout);
+    const updateAutosaveListLayout = function (cachedLayout, layout, entityType) {
+
         return new Promise((resolve, reject) => {
 
             if (cachedLayout) {
                 // Error will occur if nonexistent autosave layout saved inside cache
-                updateUsingCachedLayout(cachedLayout, layout, entityType, testCounter).then(updatedLayoutData => {
+                updateUsingCachedLayout(cachedLayout, layout, entityType).then(updatedLayoutData => {
                     resolve(updatedLayoutData)
 
                 }).catch(error => reject(error));
@@ -128,7 +126,7 @@ export default function () {
             }
             else {
 
-                updateUsingUserCode(layout, entityType, testCounter).then(updatedLayoutData => {
+                updateUsingUserCode(layout, entityType).then(updatedLayoutData => {
                     resolve(updatedLayoutData)
 
                 }).catch(error => reject(error));
@@ -144,12 +142,12 @@ export default function () {
         return 'system_autosave_' + formattedContentType;
     };
 
-    const autosaveListLayout = function (evDataService, isReport, testCounter) {
+    const autosaveListLayout = function (evDataService, isReport) {
 
         return new Promise((resolve, reject) => {
 
             let layout = evDataService.getLayoutCurrentConfiguration(isReport);
-            console.log("testing1_" + testCounter + " autosaveListLayout ", layout);
+
             layout = JSON.parse(angular.toJson(layout));
 
             delete layout.id;
@@ -164,7 +162,7 @@ export default function () {
             layout.is_systemic = true;
 
             const cachedLayout = localStorageService.getAutosaveLayout(layout.content_type);
-            console.log("testing1_" + testCounter + " layout.user_code", layout.user_code);
+
             const entityType = metaContentTypesService.findEntityByContentType(layout.content_type);
 
 /*            setTimeout(function () {
@@ -176,7 +174,7 @@ export default function () {
 
                 resolve({message: 'layout ready', layoutToSave: layout});
             }, 4000);*/
-            updateAutosaveListLayout(cachedLayout, layout, entityType, testCounter).then(function (updateData) {
+            updateAutosaveListLayout(cachedLayout, layout, entityType).then(function (updateData) {
 
                 if (updateData === "Layout does not exist.") {
 
@@ -366,31 +364,26 @@ export default function () {
     };
 
     let autosaveTimeoutId;
-    let testId = 0;
 
     const saveLastChanges = function (evDataService, isReport) {
-        console.log("testing1 saveLastChanges called");
+
         if (!autosaveTimeoutId) return;
 
         clearTimeout(autosaveTimeoutId);
-        console.log("testing1 saveLastChanges 1");
+
         autosaveListLayout(evDataService, isReport);
 
     };
 
     /*const autosaveLayout = function (evDataService, promiseQueueService, isReport) {
-        testId += 1;
-        const autosaveLayoutId = testId;
-        console.log("testing1 autosaveLayout" + autosaveLayoutId + " called");
-        console.trace();
+
         autosaveTimeoutId = setTimeout(function () {
-            console.log("testing1 autosaveLayout" + autosaveLayoutId + " autosaveListLayout");
+
             const autosavePromFn = function () {
 
                 return new Promise((resolve, reject) => {
 
                     autosaveListLayout(evDataService, isReport).then(data => {
-                        console.log("testing1 autosaveLayout " + autosaveLayoutId + " resolve", data);
                         resolve(data);
                     }).catch(error => reject(error));
 
@@ -406,7 +399,7 @@ export default function () {
     let autosaveLayout;
 
     const onLayoutChange = function (current, original, evDataService, promiseQueueService, isReport) {
-        console.log("testing1 onLayoutChange called");
+
         // clearTimeout(autosaveTimeoutId);
 
         /*if (!areObjTheSame(current, original) && !autosaveTimeoutId) {
@@ -427,23 +420,16 @@ export default function () {
     };
 
     const initListenersForAutosaveLayout = function (evDataService, evEventService, isReport) {
-        console.log("testing1 initListenersForAutosaveLayout ", isReport);
+
         let alQueueService = new QueuePromisesService();
 
          autosaveLayout = utilsHelper.throttle(function () {
-
-            const testCounter = testId + 1;
-            testId += 1;
-
-            console.log("testing1_" + testCounter + " throttle autosaveLayout");
 
             const autosavePromFn = function () {
 
                 return new Promise((resolve, reject) => {
 
-                    autosaveListLayout(evDataService, isReport, testCounter).then(data => {
-                        // console.log("testing1 autosaveLayout " + autosaveLayoutId + " resolve", data);
-                        console.log("testing1_" + testCounter + " autosaveLayout resolve", data);
+                    autosaveListLayout(evDataService, isReport).then(data => {
                         resolve(data);
                     }).catch(error => reject(error));
 
@@ -689,7 +675,7 @@ export default function () {
     const removeChangesTrackingEventListeners = function (evEventService) {
 
         var trackingEventsListenerNames = Object.keys(changesTrackingEvents);
-        console.log("testing1 removeChangesTrackingEventListeners", trackingEventsListenerNames);
+
         for (var i = 0; i < trackingEventsListenerNames.length; i++) {
 
             var telName = trackingEventsListenerNames[i];
