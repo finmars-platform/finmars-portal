@@ -18,6 +18,7 @@ export default function ($scope, authorizerService, usersService, globalDataServ
 		return new Promise(function (resolve, reject) {
 
 			usersService.getMyCurrentMember().then(function (data) {
+				console.log("testing_opendatabase portalController got member", data);
 
 				const member = data;
 
