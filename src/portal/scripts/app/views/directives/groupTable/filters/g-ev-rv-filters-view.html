@@ -362,7 +362,7 @@
                     </md-button>
                 </md-menu-item>
 
-                <md-menu-item>
+                <md-menu-item ng-if="entityType !== 'complex-transaction'">
                     <md-button data-ng-click="openCustomFieldsManager($event)" class="g-settings-option-btn">
                         <span>Custom Columns</span>
                     </md-button>
