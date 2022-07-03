@@ -159,6 +159,55 @@
 
 		};
 
+		const updateAttributesInsideEntity = function (attrsList) {
+
+			viewModel.tabs.forEach(function (tab) {
+
+				tab.layout.fields.forEach(function (field) {
+
+					if (field.attribute_class === 'attr') {
+
+						const attrType = viewModel.attrs.find(attr => attr.user_code === field.attribute.user_code);
+
+						if (attrType) {
+
+							const attrIndex = attrsList.findIndex(attr => attr.attribute_type_object.user_code === field.attribute.user_code);
+
+							if (attrIndex < 0) {
+								attrsList.push(entityEditorHelper.appendAttribute(attrType));
+
+							} else if (attrsList[attrIndex].attribute_type_object.id !== attrType.id) {
+								// properties user_code match but attribute types are different
+								const valueTypesAreDifferent = attrsList[attrIndex].attribute_type_object.value_type !== attrType.value_type;
+
+								attrsList[attrIndex].attribute_type_object = attrType;
+								attrsList[attrIndex].attribute_type = attrType;
+
+								if (valueTypesAreDifferent) {
+
+									attrsList[attrIndex].value_string = null;
+									attrsList[attrIndex].value_float = null;
+									attrsList[attrIndex].classifier = null;
+									attrsList[attrIndex].value_date = null;
+
+								}
+
+							}
+
+						} /*else {
+							// TODO: process dynamic attributes inside tabs that were deleted or whose user_code changed
+						}*/
+
+					}
+
+				});
+
+			});
+
+			return attrsList;
+
+		}
+
 		const postBookRebookActions = function (cTransactionData, recalculateFn) {
 
 			// ng-repeat with bindFieldControlDirective may not update without this
@@ -174,6 +223,8 @@
 			}
 
 			const dataConstructorLayout = JSON.parse(JSON.stringify(cTransactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
+
+			viewModel.entity.attributes = updateAttributesInsideEntity(viewModel.entity.attributes);
 
 			viewModel.userInputs = transactionHelper.updateTransactionUserInputs(viewModel.userInputs, viewModel.tabs, viewModel.fixedArea, viewModel.transactionType);
 
@@ -233,6 +284,7 @@
 			}
 
 			return {
+				attributes: viewModel.entity.attributes,
 				tabs: viewModel.tabs,
 				fixedArea: viewModel.fixedArea,
 				dataConstructorLayout: dataConstructorLayout,

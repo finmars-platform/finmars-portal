@@ -40,7 +40,7 @@
 
     var getEntitiesWithoutBaseAttrsList = function () {
         return ['price-history', 'currency-history', 'transaction',
-            'complex-transaction', 'transaction-report', 'cash-flow-projection-report', 'performance-report',
+            'complex-transaction', 'transaction-report', 'cash-flow-projeviewModel.entityction-report', 'performance-report',
             'balance-report', 'pl-report', 'audit-transaction', 'audit-instrument'];
     };
 
