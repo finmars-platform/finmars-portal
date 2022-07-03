@@ -399,6 +399,9 @@ import evEvents from "../../services/entityViewerEvents";
                 vm.getView();
 
             }); */
+            vm.entityViewerEventService.addEventListener(evEvents.LIST_LAYOUT_CHANGE, function () {
+                autosaveLayoutService.removeChangesTrackingEventListeners(vm.entityViewerEventService);
+            });
 
             vm.entityViewerEventService.addEventListener(evEvents.ROWS_ACTION_FIRED, sharedLogicHelper.executeRowAction);
 
@@ -1021,7 +1024,7 @@ import evEvents from "../../services/entityViewerEvents";
 
                 vm.currentMember = globalDataService.getMember();
 
-                if (vm.currentMember.data.autosave_layouts) {
+                if (vm.currentMember.data && vm.currentMember.data.autosave_layouts) {
                     autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
                     removeTransitionListeners();
 
@@ -1029,6 +1032,8 @@ import evEvents from "../../services/entityViewerEvents";
                     autosaveLayoutService.removeChangesTrackingEventListeners(vm.entityViewerEventService);
                     initTransitionListeners();
                 }
+
+                vm.entityViewerEventService.dispatchEvent(evEvents.TOGGLE_AUTOSAVE);
 
             });
 

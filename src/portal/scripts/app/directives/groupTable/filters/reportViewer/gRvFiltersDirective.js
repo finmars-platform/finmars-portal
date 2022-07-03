@@ -497,6 +497,8 @@
 
                 const init = function () {
 
+                    scope.currentAdditions = scope.evDataService.getAdditions();
+
                     scope.popupEventService = gFiltersVm.popupEventService;
                     scope.chipsListEventService = gFiltersVm.chipsListEventService;
 
