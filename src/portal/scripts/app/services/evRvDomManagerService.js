@@ -303,7 +303,7 @@
 
 		}
 
-		function markRowByColor (objectId, parentGroupHashId, evDataService, evEventService, color) {
+		function markRowByColor (objectId, parentGroupHashId, evDataService, evEventService, usersService, globalDataService, color) {
 
 			var isReport = evDataService.isEntityReport();
 			var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
@@ -324,10 +324,8 @@
 
 			}
 
-			var entityType = evDataService.getEntityType();
+			/* var entityType = evDataService.getEntityType();
 			var markedReportRows = localStorageService.getMarkedRows(isReport, entityType);
-
-			// var rowId = typeof obj.id === 'number' ? '' + obj.id : obj;
 
 			if (color === 'undo_mark_row') {
 				delete markedReportRows[obj.id];
@@ -337,27 +335,74 @@
 				};
 			}
 
-			localStorageService.cacheMarkedRows(isReport, entityType, markedReportRows)
+			localStorageService.cacheMarkedRows(isReport, entityType, markedReportRows) */
+
+			var entityType = evDataService.getEntityType();
+			var entityViewersSettings = globalDataService.getMemberEntityViewersSettings(isReport, entityType);
+			var markedReportRows = entityViewersSettings.marked_rows;
+
+			/* var entityTypesSettings = member.group_tables[viewerType].tables_settings;
+
+			if (!entityTypesSettings[entityType]) {
+				entityTypesSettings[entityType] = {};
+			}
+
+			if (!entityTypesSettings[entityType].marked_rows) {
+				entityTypesSettings[entityType].marked_rows = {};
+			}
+
+			var markedReportRows = entityTypesSettings[entityType].marked_rows; */
+
+			if (color === 'undo_mark_row') {
+				delete markedReportRows[obj.id];
+			} else {
+				markedReportRows[obj.id] = {
+					color: color
+				};
+			}
+
+			globalDataService.setMemberEntityViewersSettings(entityViewersSettings, isReport, entityType);
+
+			var member = globalDataService.getMember();
+
+			usersService.updateMember(member.id, member);
 
 			evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
 		}
 
-		function removeColorMarkFromAllRows (evDataService, evEventService) {
+		function removeColorMarkFromAllRows (evDataService, evEventService, usersService, globalDataService) {
 
 			var isReport = evDataService.isEntityReport();
-			var entityType = evDataService.getEntityType();
+			var viewerType = isReport ? 'report_viewer' : 'entity_viewer';
+			/* var entityType = evDataService.getEntityType();
 
 			localStorageService.cacheMarkedRows(isReport, entityType, {});
-			localStorageService.cacheRowTypeFilter(isReport, entityType, 'none');
+			localStorageService.cacheRowTypeFilter(isReport, entityType, 'none'); */
+			var member = globalDataService.getMember();
+			var entityViewersSettings = member.data.group_tables[viewerType].entity_viewers_settings;
+
+			if (entityViewersSettings) {
+
+				Object.keys(entityViewersSettings).forEach(function (entityType) {
+
+					entityViewersSettings[entityType].marked_rows = {};
+					entityViewersSettings[entityType].row_type_filter = 'none'
+
+				});
+
+			}
 
 			if (isReport) evDataService.setMarkedSubtotals({}); // removing color mark from all subtotal rows for specific table
 
+			globalDataService.setMember(member);
+			usersService.updateMember(member.id, member);
+
 			evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
 		}
 
-		function createRowColorPickerMenu (clickData, evDataService, evEventService, clearDropdownsFn) {
+		function createRowColorPickerMenu (clickData, evDataService, evEventService, usersService, globalDataService, clearDropdownsFn) {
 
 			// var menuElem = clickData.actionElem;
 			var menuElem = clickData.target;
@@ -389,7 +434,7 @@
 			var onOptionClick = function (event) {
 
 				var rowColor = event.currentTarget.dataset.color;
-				markRowByColor(clickData.___id, clickData.___parentId, evDataService, evEventService, rowColor);
+				markRowByColor(clickData.___id, clickData.___parentId, evDataService, evEventService, usersService, globalDataService, rowColor);
 
 				clearDropdownsFn();
 

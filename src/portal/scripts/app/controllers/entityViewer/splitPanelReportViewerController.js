@@ -31,7 +31,7 @@ import evEvents from "../../services/entityViewerEvents";
 
             var vm = this;
 
-            var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
+            var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService);
 
             console.log('parentEntityViewerDataService', parentEntityViewerDataService);
             console.log('parentEntityViewerEventService', parentEntityViewerEventService);

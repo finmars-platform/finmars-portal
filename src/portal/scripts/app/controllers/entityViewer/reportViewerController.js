@@ -13,10 +13,10 @@ import evEvents from "../../services/entityViewerEvents";
 (function () {
 
     var metaService = require('../../services/metaService');
-    var uiService = require('../../services/uiService');
+    /* var uiService = require('../../services/uiService');
     var evEvents = require('../../services/entityViewerEvents');
     var evHelperService = require('../../services/entityViewerHelperService');
-    // var usersService = require('../../services/usersService');
+    var usersService = require('../../services/usersService'); */
     var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
     var priceHistoryService = require('../../services/priceHistoryService');
@@ -38,7 +38,7 @@ import evEvents from "../../services/entityViewerEvents";
 
         var vm = this;
 
-        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
+        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService);
 
         vm.readyStatus = {
             attributes: false,
