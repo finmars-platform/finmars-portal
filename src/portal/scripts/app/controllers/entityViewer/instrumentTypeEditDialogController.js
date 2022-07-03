@@ -543,7 +543,7 @@
 				vm.entity.instrument_factor_schedule_data = ''
 			}
 
-            if (vm.entity.attributes) {
+            /*if (vm.entity.attributes) {
 
                 vm.entity.attributes.forEach(function (attribute) {
 
@@ -565,7 +565,7 @@
 
                 })
 
-            }
+            }*/
 
             vm.entity.object_permissions = [];
 
