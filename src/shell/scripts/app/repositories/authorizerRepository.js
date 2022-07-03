@@ -29,19 +29,20 @@ const authorizerUrl = baseUrlService.getAuthorizerUrl();
 	console.log('Method: ' + methodName + '. Cannot get data from server');
 }; */
 
-const login = function (login, password) {
-
-	return xhrService.fetch(authorizerUrl + '/login/', {
-		method: 'POST',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		},
-		body: JSON.stringify({username: login, password: password})
-	})
-};
+// deprecated
+// const login = function (login, password) {
+//
+// 	return xhrService.fetch(authorizerUrl + '/login/', {
+// 		method: 'POST',
+// 		credentials: 'include',
+// 		headers: {
+// 			'X-CSRFToken': cookieService.getCookie('csrftoken'),
+// 			Accept: 'application/json',
+// 			'Content-type': 'application/json'
+// 		},
+// 		body: JSON.stringify({username: login, password: password})
+// 	})
+// };
 
 const tokenLogin = function (login, password) {
 
@@ -297,6 +298,26 @@ const checkUsernameUniqueness = function (username) {
 	});
 
 };
+
+const transferOwner = function (data) {
+
+	var authorizerUrl = baseUrlService.getAuthorizerUrl();
+
+	return xhrService.fetch(authorizerUrl + '/master-user-change-owner/', {
+		method: 'POST',
+		body: JSON.stringify(data),
+		credentials: 'include',
+		headers: {
+			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			Accept: 'application/json',
+			'Content-type': 'application/json'
+		}
+	});
+
+};
+
+
+
 //</editor-fold>
 
 //<editor-fold desc="Master user">
@@ -716,10 +737,58 @@ const deleteInviteByKey = function (id) {
 	})
 };
 
+const authTokenManagerGetList = function () {
+
+	return xhrService.fetch(authorizerUrl + '/auth-token-manager/', {
+		method: 'GET',
+		credentials: 'include',
+		headers: {
+			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			Accept: 'application/json',
+			'Content-type': 'application/json'
+		}
+	});
+
+}
+
+const authTokenManagerDeleteToken = function (id) {
+
+	return xhrService.fetch(authorizerUrl + '/auth-token-manager/' + id + '/',
+		{
+			method: 'DELETE',
+			credentials: 'include',
+			headers: {
+				'X-CSRFToken': cookieService.getCookie('csrftoken'),
+				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			}
+		}).then(function (data) {
+		return new Promise(function (resolve, reject) {
+			resolve({status: 'deleted'});
+		});
+	})
+};
+
+const authTokenManagerCreateToken = function (data) {
+
+	return xhrService.fetch(authorizerUrl + '/auth-token-manager/', {
+		method: 'POST',
+		credentials: 'include',
+		headers: {
+			'X-CSRFToken': cookieService.getCookie('csrftoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			Accept: 'application/json',
+			'Content-type': 'application/json'
+		},
+		body: JSON.stringify(data)
+	})
+
+};
+
 // module.exports = {
 export default {
 	tokenLogin: tokenLogin,
-	login: login,
 	logout: logout,
 
 	ping: ping,
@@ -768,7 +837,14 @@ export default {
 
 	inviteUser: inviteUser,
 	getInvitesList: getInvitesList,
-	deleteInviteByKey: deleteInviteByKey
+	deleteInviteByKey: deleteInviteByKey,
+
+
+	transferOwner: transferOwner,
+
+	authTokenManagerGetList: authTokenManagerGetList,
+	authTokenManagerDeleteToken: authTokenManagerDeleteToken,
+	authTokenManagerCreateToken: authTokenManagerCreateToken
 
 }
 

@@ -84,8 +84,10 @@
 					// scope.error = '';
 					var error = '';
 					var modelValue = '';
-					var changedValue = scope.numberToShow;
 					stylePreset = '';
+
+                    scope.numberToShow = scope.numberToShow.replace(',', '.');
+                    var changedValue = scope.numberToShow;
 
 					if (changedValue === '') {
 
@@ -117,16 +119,15 @@
 								modelValue = null;
 
 							} else {
-								modelValue = JSON.parse(JSON.stringify(changedValue));
+								modelValue = changedValue;
 							}
 
 						}
-
 						else {
 
 							inputContainer.classList.remove('custom-input-error');
 							inputElem.classList.remove('red-text');
-							modelValue = JSON.parse(JSON.stringify(changedValue));
+							modelValue = changedValue;
 
 						}
 						// < negative numbers processing >
@@ -260,7 +261,9 @@
                 var initScopeWatchers = function () {
                     scope.$watch('model', function () {
 
-                        scope.numberToShow = scope.model;
+                        if (!inputContainer.classList.contains('custom-input-focused')) {
+                            scope.numberToShow = scope.model;
+                        }
 
                         if (scope.model || scope.model === 0) {
 

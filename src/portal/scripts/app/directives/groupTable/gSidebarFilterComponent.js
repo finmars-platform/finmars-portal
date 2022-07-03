@@ -1,5 +1,7 @@
 /**
  * Created by szhitenev on 05.05.2016.
+ *
+ * DEPRECATED.
  */
 (function () {
 
@@ -1134,6 +1136,7 @@
                         scope.transactionsUserDates = transactionFields.filter(function (field) {
                             return ['user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'].indexOf(field.key) !== -1;
                         });
+
 
                     });
 

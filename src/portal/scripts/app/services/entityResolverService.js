@@ -207,6 +207,9 @@
             case 'portfolio-register':
                 return portfolioRegisterService.getByKey(id);
                 break;
+            case 'portfolio-register-record':
+                return portfolioRegisterRecordService.getByKey(id);
+                break;
             case 'account':
                 return accountService.getByKey(id);
                 break;
@@ -619,6 +622,9 @@
             case 'portfolio-register':
                 return portfolioRegisterService.deleteByKey(id);
                 break;
+            case 'portfolio-register-record':
+                return portfolioRegisterRecordService.deleteByKey(id);
+                break;
             case 'account':
                 return accountService.deleteByKey(id);
                 break;
@@ -711,6 +717,8 @@
                 return portfolioService.deleteBulk(data);
             case 'portfolio-register':
                 return portfolioRegisterService.deleteBulk(data);
+            case 'portfolio-register-record':
+                return portfolioRegisterRecordService.deleteBulk(data);
             case 'currency':
                 return currencyService.deleteBulk(data);
             case 'account':

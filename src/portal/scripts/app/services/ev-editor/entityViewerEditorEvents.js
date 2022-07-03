@@ -7,6 +7,6 @@ module.exports = {
 
 	'DYNAMIC_ATTRIBUTES_CHANGE': 'DYNAMIC_ATTRIBUTES_CHANGE',
 
-	'TABLE_CHANGED': 'TABLE_CHANGED',
-	'ENTITY_UPDATED': 'ENTITY_UPDATED'
+	'TABLE_INSTANCE_CHANGED': 'TABLE_INSTANCE_CHANGED', // for tables with multiple instances on a form (e.g. accruals schedules, events for instrument's form)
+	'ENTITY_UPDATED': 'ENTITY_UPDATED',
 };

@@ -10,6 +10,8 @@
     var layoutService = require("../services/entity-data-constructor/layoutService");
     var attributeTypeService = require("../services/attributeTypeService");
 
+	var evHelperService = require('../services/entityViewerHelperService');
+
     module.exports = function () {
         return {
             restrict: "E",
@@ -26,7 +28,7 @@
             templateUrl: "views/directives/bind-field-control-view.html",
             controllerAs: 'vm',
             controller: ['$scope', function bindFieldControlController($scope) {
-
+                console.log("testing bindField item", $scope.item);
                 var vm = this;
 
                 vm.readyStatus = {classifier: false, content: true};
@@ -35,22 +37,26 @@
                 vm.evEditorDataService = $scope.evEditorDataService;
                 vm.evEditorEventService = $scope.evEditorEventService;
 
-                var attrs = $scope.$parent.vm.attrs || [];
+				$scope.layoutAttrs = layoutService.getLayoutAttrs();
+
+				$scope.isRecalculate = false;
+				$scope.numberFormat = null;
+                $scope.customStyles = null;
+
+                $scope.ciEventObj = {
+					event: {},
+				};
+
+				$scope.recalculateFunction = null;
+
+                // var attrs = $scope.$parent.vm.attrs || []; // dynamic attributes
                 var userInputs = $scope.$parent.vm.userInputs || [];
                 var choices = metaService.getEntityViewerFormComponentsValueTypes();
                 var entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
 
                 var palettesList = [];
 
-                $scope.layoutAttrs = layoutService.getLayoutAttrs();
-
-                $scope.isRecalculate = false;
-                $scope.numberFormat = null;
-                $scope.ciEventObj = {
-                    event: {},
-                };
-
-                $scope.recalculateFunction = null;
+                var eventListenersIndexesData = {};
                 //$scope.numericInputValue = {};
 
                 $scope.isEditableField = function () {
@@ -104,7 +110,50 @@
                     return true;
                 };
 
-                $scope.copyFromField = function (attr) {
+				vm.getValueFromEntity = function () {
+
+					var dAttrVal;
+
+					if (vm.fieldType.type === 'dynamicAttribute') {
+
+						dAttrVal = evHelperService.getValueFromDynamicAttrsByUserCode(vm.fieldKey, $scope.entity.attributes);
+
+						if (vm.fieldType && vm.fieldType.value === 30 && dAttrVal) {
+							dAttrVal = dAttrVal.classifier;
+						}
+
+					} else if (vm.entityType === 'complex-transaction' && vm.fieldType.type === 'userInput') { // field is a user input
+						dAttrVal = $scope.entity.values[vm.fieldKey];
+
+					} else {
+						dAttrVal = $scope.entity[vm.fieldKey];
+					}
+
+					if (vm.fieldType.value === 'mc_field' && !Array.isArray(dAttrVal)) {
+						dAttrVal = [];
+					}
+
+					return dAttrVal;
+
+				};
+
+				vm.setValueInsideEntity = function () {
+
+					if (vm.fieldType.type === 'dynamicAttribute') {
+						$scope.entity.attributes = evHelperService.setDynamicAttrValueByUserCode(vm.fieldKey, $scope.entity.attributes, vm.model);
+
+					} else if (vm.entityType === 'complex-transaction' && vm.fieldType.type === 'userInput') { //
+						$scope.entity.values[vm.fieldKey] = vm.model;
+
+					} else {
+						$scope.entity[vm.fieldKey] = vm.model;
+					}
+
+					return $scope.entity;
+
+				};
+
+                /* $scope.copyFromField = function (attr) {
                     var attrObj = JSON.parse(attr);
 
                     if (attrObj.key) {
@@ -131,7 +180,7 @@
                     }
 
                     return false;
-                };
+                }; */
 
                 $scope.getModelKey = function () {
 
@@ -139,8 +188,8 @@
 
                         if ($scope.item.value_type === 'table') {
                             return $scope.item.key;
-                        } else {
-
+                        }
+                        else {
 
                             if ($scope.item.hasOwnProperty("id") && $scope.item.id !== null) {
 
@@ -181,34 +230,13 @@
                     return false;
                 };
 
-                $scope.setDateToday = function () {
-                    $scope.entity[vm.fieldKey] = moment(new Date()).format(
-                        "YYYY-MM-DD"
-                    );
-                };
-
-                $scope.setDatePlus = function () {
-
-                    const date = $scope.entity[vm.fieldKey] ? new Date($scope.entity[vm.fieldKey]) : new Date();
-
-                    $scope.entity[vm.fieldKey] = moment(date)
-                        .add(1, "days")
-                        .format("YYYY-MM-DD");
-                };
-
-                $scope.setDateMinus = function () {
-
-                    const date = $scope.entity[vm.fieldKey] ? new Date($scope.entity[vm.fieldKey]) : new Date();
-                    $scope.entity[vm.fieldKey] = moment(date)
-                        .subtract(1, "days")
-                        .format("YYYY-MM-DD");
-                };
-
-                $scope.node = $scope.node || null;
+				//region Classifier
+				$scope.node = $scope.node || null;
 
                 function findNodeInChildren(item) {
-                    if ($scope.classifierId === item.id) {
+                    if (vm.model === item.id) {
                         $scope.node = item;
+
                     } else {
                         if (item.children.length) {
                             item.children.forEach(findNodeInChildren);
@@ -219,52 +247,89 @@
                 var classifierTree;
 
                 function getNode() {
-                    return attributeTypeService
-                        .getByKey(vm.entityType, $scope.item.id)
-                        .then(function (data) {
-                            classifierTree = data;
-                            classifierTree.classifiers.forEach(findNodeInChildren);
-                            return $scope.node;
-                        });
+
+                	return new Promise (function (resolve) {
+						attributeTypeService
+							.getByKey(vm.entityType, $scope.item.id)
+							.then(function (data) {
+
+								classifierTree = data;
+								classifierTree.classifiers.forEach(findNodeInChildren);
+
+								resolve($scope.node);
+							});
+					});
+
                 }
 
+                var setSelectedNodeInsideEntity = function () {
+
+					var attrIndex = $scope.entity.attributes.findIndex(function (attr) {
+						return attr.attribute_type_object.user_code === $scope.item.user_code;
+					});
+
+					$scope.entity.attributes[attrIndex].classifier = vm.model;
+
+					if ($scope.node) {
+						$scope.entity.attributes[attrIndex].classifier_object = JSON.parse(JSON.stringify($scope.node));
+					}
+
+				};
+
                 $scope.findNodeItem = function () {
-                    vm.readyStatus.classifier = false;
+
+                	vm.readyStatus.classifier = false;
 
                     return new Promise(function (resolve) {
-                        getNode().then(function (data) {
-                            vm.readyStatus.classifier = true;
-                            $scope.node = data;
-                            $scope.entity[vm.fieldKey] = $scope.classifierId;
-                            resolve(undefined);
+                        getNode().then(function () {
+
+                        	vm.readyStatus.classifier = true;
+                            // $scope.node = data;
+							setSelectedNodeInsideEntity()
+
+                            // $scope.entity[vm.fieldKey] = $scope.classifierId;
+                            resolve();
                         });
                     });
                 };
 
-                $scope.changeClassifier = function () {
+            	$scope.changeClassifier = function () {
+
                     if (classifierTree) {
-                        $scope.classifierId = $scope.entity[vm.fieldKey];
+                        /* $scope.classifierId = $scope.entity[vm.fieldKey];
 
                         $scope.findNodeItem().then(function () {
                             classifierTree.classifiers.forEach(findNodeInChildren);
                             $scope.$apply();
 
                             if ($scope.entityChange) {
-                                $scope.entityChange({fieldKey: vm.fieldKey});
+                                $scope.entityChange({fieldKey: vm.fieldKey, fieldType: vm.fieldType.type});
                             }
-                        });
-                    }
-                };
+                        }); */
 
-                $scope.styleForInputsWithButtons = function () {
+						getNode().then(function (nodeData) {
+
+							setSelectedNodeInsideEntity();
+
+							if ($scope.entityChange) {
+								$scope.entityChange({fieldKey: vm.fieldKey, fieldType: vm.fieldType.type});
+							}
+
+						});
+                    }
+            	};
+
+				//endregion Classifier
+
+				$scope.styleForInputsWithButtons = function () {
                     var styleValue = "";
 
                     // -------------------- Space For Buttons -------------------
                     var buttonsCount = 0;
 
                     if (
-                        $scope.fieldType["display_name"] === "Number" ||
-                        $scope.fieldType["display_name"] === "Float"
+                        vm.fieldType["display_name"] === "Number" ||
+                        vm.fieldType["display_name"] === "Float"
                     ) {
                         buttonsCount = 1;
                     }
@@ -300,7 +365,7 @@
                     return styleValue;
                 };
 
-                $scope.inputBackgroundColor = function () {
+                vm.inputBackgroundColor = function () {
                     var backgroundColor = "";
 
                     if ($scope.options.backgroundColor) {
@@ -311,7 +376,7 @@
                     return backgroundColor;
                 };
 
-                /*$scope.openCalculatorDialog = function ($event) {
+                /* $scope.openCalculatorDialog = function ($event) {
 
                                         var fieldModel = $scope.entity[vm.fieldKey];
                                         var calculatorTitle = "Calculator for: " + $scope.getName();
@@ -436,7 +501,7 @@
                                                 numberInputElem.classList.remove('ng-invalid', 'ng-invalid-number');
                                         }
 
-                                        $scope.itemChange();
+                                        vm.itemChange();
 
                                 };
 
@@ -446,29 +511,31 @@
                                                 $scope.numericInputValue.numberVal = formatNumber(itemNumberValue);
                                         }
                                 };*/
-                var checkForNotNull = function () {
+                vm.checkForNotNull = function (options) {
 
                     if ($scope.item.options && $scope.item.options.notNull) {
-                        $scope.options.notNull = true;
+						options.notNull = true;
 
                     } else if (
                         $scope.item.frontOptions &&
                         ($scope.item.frontOptions.notNull || $scope.item.frontOptions.usedInExpr)
                     ) {
 
-                        $scope.options.notNull = true;
+						options.notNull = true;
 
-                    } else if ($scope.item.key) {
+                    } else if ($scope.item.key && vm.fieldType.type === 'systemAttribute') {
 
                         var requiredAttrs = metaService.getRequiredEntityAttrs(
                             vm.entityType
                         );
 
                         if (requiredAttrs.indexOf($scope.item.key) > -1) {
-                            $scope.options.notNull = true;
+							options.notNull = true;
                         }
 
                     }
+
+                    return options;
 
                 };
 
@@ -478,6 +545,7 @@
 
                         if (typeof $scope.item.backgroundColor === "string") {
                             $scope.options.backgroundColor = $scope.item.backgroundColor; // allows old layouts keep its background color
+
                         } else if (typeof $scope.item.backgroundColor === "object") {
 
                             var paletteData = $scope.item.backgroundColor;
@@ -515,9 +583,59 @@
                                     }
                                 }
                             }
+
                         }
                     }
                 };
+
+                vm.setItemSettings = function () {
+
+                    if ($scope.item.options) {
+                        $scope.tooltipText = vm.getTooltipText();
+                    }
+
+                    if ($scope.options.backgroundColor) {
+                        $scope.customStyles = {
+                            "customInputBackgroundColor": "background-color: " + $scope.options.backgroundColor + ";"
+                        };
+                    }
+
+                    if ($scope.item.frontOptions) {
+
+                        if ($scope.item.frontOptions.recalculated) {
+
+                            $scope.ciEventObj.event = {key: "set_style_preset1"};
+
+                        }
+
+                    }
+
+                    return {
+                        tooltipText: $scope.tooltipText,
+                        customStyles: $scope.customStyles,
+                        event: $scope.ciEventObj.event,
+                    }
+
+                };
+
+				/** Also used by entityViewerFieldResolverDirective */
+				vm.getTooltipText = function () {
+
+					var tooltipText;
+
+					if ($scope.item.options && $scope.item.options.tooltipValue) {
+						tooltipText = $scope.item.options.tooltipValue;
+
+					} else if ($scope.item.tooltip) {
+						tooltipText = $scope.item.tooltip;
+
+					} else {
+						tooltipText = $scope.getName();
+					}
+
+					return tooltipText;
+
+				};
 
                 var setItemSpecificSettings = function () {
 
@@ -525,50 +643,59 @@
                         palettesList = vm.evEditorDataService.getColorPalettesList();
                     }
 
-                    $scope.fieldType = null;
-                    /*$scope.attribute = $scope.item;
-
-                                        if ($scope.attribute && $scope.attribute.can_recalculate) {
-                                                $scope.isRecalculate = true;
-                                        }
-
-                                        var i;
-                                        for (i = 0; i < choices.length; i = i + 1) {
-                                                if (choices[i].value === $scope.attribute['value_type']) {
-                                                        $scope.fieldType = choices[i];
-                                                }
-                                        }*/
                     if ($scope.item.can_recalculate) {
                         $scope.isRecalculate = true;
                     }
 
+					//region fieldType
+					vm.fieldType = null;
+
                     var i;
                     for (i = 0; i < choices.length; i = i + 1) {
                         if (choices[i].value === $scope.item["value_type"]) {
-                            $scope.fieldType = choices[i];
+                            vm.fieldType = choices[i];
                             break;
                         }
                     }
 
                     if ($scope.item["value_type"] === 100) {
-                        $scope.fieldType = choices[5]; // relation == field, backend&frontend naming conflict
+                        vm.fieldType = choices[5]; // relation == field, backend&frontend naming conflict
                     }
+
+                    if (vm.fieldType) {
+
+						var uInputIndex = userInputs.findIndex(function (input) {
+							return input.name === vm.fieldKey;
+						});
+
+						if ($scope.item.hasOwnProperty("id") && $scope.item.id !== null) {
+							vm.fieldType.type = 'dynamicAttribute';
+
+						} else if (uInputIndex > -1) {
+							vm.fieldType.type = 'userInput';
+
+						} else {
+							vm.fieldType.type = 'systemAttribute';
+						}
+
+					}
+					//endregion
 
                     if ($scope.item.options) {
                         // prepare data for number field
-                        if ($scope.fieldType && $scope.fieldType.value === 20) {
+                        if (vm.fieldType && vm.fieldType.value === 20) {
                             if ($scope.item.options.number_format) {
                                 $scope.numberFormat = $scope.item.options.number_format;
                             }
 
-                            if ($scope.fieldType.value === 20) {
+                            if (vm.fieldType.value === 20) {
                                 $scope.onlyPositive = $scope.item.options.onlyPositive;
                             }
                         }
                         // < prepare data for number field >
 
-                        // prepare data for date field
-                        if ($scope.fieldType.value === 40) {
+						//region Prepare data for date field
+						if (vm.fieldType.value === 40) {
 
                             if (!$scope.item.buttons) {
                                 $scope.item.buttons = [];
@@ -601,22 +728,14 @@
                                 });
                             }
                         }
-                        // < prepare data for date field >
+						//endregion Prepare data for date field
 
-                        if ($scope.item.options.tooltipValue) {
-                            $scope.tooltipText = $scope.item.options.tooltipValue
-
-                        } else if ($scope.item.tooltip) {
-                            $scope.tooltipText = $scope.item.tooltip
-
-                        } else {
-                            $scope.tooltipText = $scope.getName()
-                        }
+						// $scope.tooltipText = vm.getTooltipText();
                     }
 
                     getFieldBackgroundColor();
 
-                    if ($scope.options.backgroundColor) {
+                    /* if ($scope.options.backgroundColor) {
                         $scope.customStyles = {
                             "customInputBackgroundColor": "background-color: " + $scope.options.backgroundColor + ";"
                         };
@@ -630,48 +749,87 @@
 
                         }
 
-                    }
+                    } */
+
+                    var setSettingsResult = vm.setItemSettings();
+
+                    $scope.tooltipText = setSettingsResult.tooltipText;
+                    $scope.customStyles = setSettingsResult.customStyles;
+                    $scope.ciEventObj.event = setSettingsResult.event;
+
                 };
 
                 var initListeners = function () {
 
-                    vm.evEditorEventService.addEventListener(evEditorEvents.MARK_FIELDS_WITH_ERRORS, function () {
+					eventListenersIndexesData['MARK_FIELDS_WITH_ERRORS'] = vm.evEditorEventService.addEventListener(evEditorEvents.MARK_FIELDS_WITH_ERRORS, function () {
                             $scope.ciEventObj.event = {key: "mark_not_valid_fields"};
                         }
                     );
 
-                    if (vm.entityType === "complex-transaction") {
+					eventListenersIndexesData['ENTITY_UPDATED'] = vm.evEditorEventService.addEventListener(evEditorEvents.ENTITY_UPDATED, function () {
 
-                        vm.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_START, function () {
+						var modelVal = vm.getValueFromEntity();
 
-                                var userInputToRecalc = vm.evEditorDataService.getUserInputsToRecalculate();
+						if (vm.fieldType && $scope.entity) {
 
-                                if (userInputToRecalc && userInputToRecalc.includes(vm.fieldKey)) {
-                                    vm.readyStatus.content = false;
-                                }
+							if (vm.fieldType.value === 30 && (modelVal || modelVal === 0) && modelVal !== vm.model) { // prevents loader if classifier didn't change
 
-                            }
-                        );
+								vm.model = modelVal;
 
-                        vm.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
+								$scope.findNodeItem().then(function () {
+									$scope.$apply();
+								});
 
-                            var userInputToRecalc = vm.evEditorDataService.getUserInputsToRecalculate();
+							} else {
+								vm.model = modelVal;
+							}
 
-                            if (userInputToRecalc && userInputToRecalc.includes(vm.fieldKey)) {
-                                vm.readyStatus.content = true;
-                            }
+						}
 
-                            if ($scope.item &&
-                                $scope.item.frontOptions && $scope.item.frontOptions.recalculated &&
-                                ($scope.entity[vm.fieldKey] || $scope.entity[vm.fieldKey] === 0)) {
+					});
 
-                                setItemSpecificSettings();
+					if (vm.entityType === "complex-transaction") {
 
-                            }
+						eventListenersIndexesData['FIELDS_RECALCULATION_START'] = vm.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_START, function () {
 
-                        });
+								var userInputToRecalc = vm.evEditorDataService.getUserInputsToRecalculate();
 
-                    }
+								if (userInputToRecalc && userInputToRecalc.includes(vm.fieldKey)) {
+									vm.readyStatus.content = false;
+								}
+
+							}
+						);
+
+						eventListenersIndexesData['FIELDS_RECALCULATION_END'] = vm.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
+
+							var userInputToRecalc = vm.evEditorDataService.getUserInputsToRecalculate();
+
+							if (userInputToRecalc && userInputToRecalc.includes(vm.fieldKey)) {
+								vm.readyStatus.content = true;
+							}
+
+							/* if ($scope.item &&
+								$scope.item.frontOptions && $scope.item.frontOptions.recalculated &&
+								($scope.entity[vm.fieldKey] || $scope.entity[vm.fieldKey] === 0)) {
+
+								setItemSpecificSettings();
+
+							} */
+
+							vm.model = vm.getValueFromEntity();
+
+							if ($scope.item &&
+								$scope.item.frontOptions && $scope.item.frontOptions.recalculated &&
+								(vm.model || vm.model === 0)) {
+
+								setItemSpecificSettings();
+
+							}
+
+						});
+
+					}
 
                     /* vm.evEditorEventService.addEventListener(evEditorEvents.FIELD_CHANGED, function () {
 
@@ -714,10 +872,15 @@
 
                 };
 
-                $scope.itemChange = function () {
+                vm.itemChange = function () {
+
+					$scope.entity = vm.setValueInsideEntity(vm.model);
+					vm.evEditorEventService.dispatchEvent(evEditorEvents.ENTITY_UPDATED); // update copies of field inside other tabs (e.g. maturity date)
+
                     if ($scope.entityChange) {
-                        $scope.entityChange({fieldKey: vm.fieldKey});
+						$scope.entityChange({fieldKey: vm.fieldKey, fieldType: vm.fieldType.type});
                     }
+
                 };
 
                 $scope.inputBlur = function () {
@@ -726,24 +889,69 @@
                     }
                 };
 
+				//region Datepicker
+				$scope.setDateToday = function () {
+					/* $scope.entity[vm.fieldKey] = moment(new Date()).format(
+						"YYYY-MM-DD"
+					); */
+					const todaysDate = moment(new Date()).format("YYYY-MM-DD");
+
+					if (vm.model !== todaysDate) {
+
+						vm.model = todaysDate;
+						vm.itemChange();
+
+					}
+
+				};
+
+				$scope.setDatePlus = function () {
+
+					/* const date = $scope.entity[vm.fieldKey] ? new Date($scope.entity[vm.fieldKey]) : new Date();
+
+					$scope.entity[vm.fieldKey] = moment(date)
+						.add(1, "days")
+						.format("YYYY-MM-DD"); */
+					const date = vm.model ? new Date(vm.model) : new Date();
+					vm.model = moment(date)
+						.add(1, "days")
+						.format("YYYY-MM-DD");
+
+					vm.itemChange();
+
+				};
+
+				$scope.setDateMinus = function () {
+
+					/* let date = $scope.entity[vm.fieldKey] ? new Date($scope.entity[vm.fieldKey]) : new Date();
+					$scope.entity[vm.fieldKey] = moment(date)
+						.subtract(1, "days")
+						.format("YYYY-MM-DD"); */
+
+					const date = vm.model ? new Date(vm.model) : new Date();
+					vm.model = moment(date)
+						.subtract(1, "days")
+						.format("YYYY-MM-DD");
+
+					vm.itemChange();
+
+				};
+
                 $scope.onDateChange = function () {
 
-                    if ($scope.entity[vm.fieldKey] === "") {
-                        $scope.entity[vm.fieldKey] = null;
+                    if (vm.model === "") {
+						vm.model = null;
                     }
 
-                    $scope.itemChange();
+                    vm.itemChange();
                 };
+				//endregion Datepicker
 
-                $scope.init = function () {
+                var init = function () {
 
                     vm.fieldKey = $scope.getModelKey();
 
                     $scope.options = {};
-
-                    if (vm.evEditorEventService) {
-                        initListeners();
-                    }
 
                     if (vm.fieldKey === "tags") {
 
@@ -778,24 +986,33 @@
                     }
 
                     if ($scope.item) {
-                        setItemSpecificSettings();
-                    }
+                    	setItemSpecificSettings();
+					}
 
-                    if ($scope.fieldType) {
-                        if ($scope.fieldType.value === 30) {
-                            if ($scope.entity) {
-                                $scope.classifierId = $scope.entity[vm.fieldKey];
 
-                                $scope.findNodeItem().then(function () {
-                                    $scope.$apply();
-                                });
-                            }
-                        }
-                    }
+					if (vm.fieldType) { // should be called after setItemSpecificSettings()
 
-                    checkForNotNull();
+						vm.model = vm.getValueFromEntity();
 
-                    /* if ($scope.fieldType && $scope.fieldType.value === 20) {
+						if (vm.evEditorEventService) {
+							initListeners();
+						}
+
+						if (vm.fieldType.value === 30) { // For classifier
+							if ($scope.entity) {
+								// $scope.classifierId = $scope.entity[vm.fieldKey];
+
+								$scope.findNodeItem().then(function () {
+									$scope.$apply();
+								});
+							}
+						}
+
+					}
+
+                    $scope.options = vm.checkForNotNull($scope.options);
+
+                    /* if (vm.fieldType && vm.fieldType.value === 20) {
 
                         $scope.numericInputValue.numberVal = null;
                         setTimeout(function () {
@@ -813,7 +1030,18 @@
                     } */
                 };
 
-                $scope.init();
+                init();
+
+				$scope.$on('$destroy', function () {
+
+					Object.keys(eventListenersIndexesData).forEach(function (eventName) {
+
+						var eventIndex = eventListenersIndexesData[eventName];
+						vm.evEditorEventService.removeEventListener(eventName, eventIndex);
+
+					});
+
+				});
 
             }]
 

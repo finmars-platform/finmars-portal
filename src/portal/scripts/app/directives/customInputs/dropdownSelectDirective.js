@@ -16,6 +16,7 @@
 				itemName: '=', // used to show selected option without loading menu options
                 menuOptions: '=',
 				groupOptions: '@',
+                customButtons: '=',
                 customStyles: '=',
                 eventSignal: '=',
                 smallOptions: '<',
@@ -96,7 +97,7 @@
 					},
 				};
 
-				if (scope.itemName) { // itemName and inputText needed for resetting selected option name
+				if (scope.itemName) { // itemName needed for resetting selected option name
 					scope.menuOptionsPopupData.filterTerm = itemName;
 				}
 
@@ -220,7 +221,7 @@
                         scope.valueIsValid = true;
 
 						itemName = item.name;
-                        scope.menuOptionsPopupData.filterTerm = item.name;
+                        scope.menuOptionsPopupData.filterTerm = itemName;
 
 						if (scope.onChangeCallback) {
 
@@ -387,13 +388,13 @@
 					scope.$watch('itemName', function () {
 
 						if (scope.itemName) {
-							// itemName = scope.itemName;
-							scope.menuOptionsPopupData.filterTerm = itemName;
+							itemName = scope.itemName;
 
 						} else {
-							// itemName = '';
-							scope.menuOptionsPopupData.filterTerm = '';
+                            itemName = '';
 						}
+
+                        scope.menuOptionsPopupData.filterTerm = itemName;
 
 					});
 
@@ -410,7 +411,7 @@
 
 									if (menuOptionsList[i].id === scope.model) {
 
-										// itemName = menuOptionsList[i].name;
+										itemName = menuOptionsList[i].name;
 										scope.menuOptionsPopupData.filterTerm = itemName;
 										// scope.valueIsValid = true
 										break;
@@ -424,8 +425,8 @@
 							}
 
                         } else {
-							scope.menuOptionsPopupData.filterTerm = "";
 							itemName = "";
+                            scope.menuOptionsPopupData.filterTerm = itemName;
                         }
 
                     });
@@ -537,7 +538,7 @@
                             if (menuOptionsList[i].id === scope.model) {
 
                                 itemName = menuOptionsList[i].name;
-                                scope.menuOptionsPopupData.filterTerm = menuOptionsList[i].name;
+                                scope.menuOptionsPopupData.filterTerm = itemName;
 
                                 break;
 

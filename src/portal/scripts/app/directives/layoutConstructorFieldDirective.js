@@ -343,6 +343,7 @@
 							scope.tab.layout.fields[i].occupiesWholeRow = scope.item.occupiesWholeRow;
 
 							scope.tab.layout.fields[i].editable = scope.item.editable !== false;
+							scope.tab.layout.fields[i].required = scope.item.required;
 
 							scope.tab.layout.fields[i].backgroundColor = null;
 
@@ -748,19 +749,21 @@
 
                         }
 
-                        if (scope.item.attribute['value_type'] === 'decoration' &&
-							scope.item.attribute.key === 'layoutLineWithLabel') {
+                        if (scope.item.attribute['value_type'] === 'decoration') {
 
-                        	scope.specialOptionTemplate = 'views/attribute-options/labeled-line.html';
-                            return true;
+                            if (scope.item.attribute.key === 'layoutLineWithLabel') {
 
-                        }
+                                scope.specialOptionTemplate = 'views/attribute-options/labeled-line.html';
+                                return true;
 
-                        if (scope.item.attribute['value_type'] === 'decoration' &&
-							scope.item.attribute.key === 'layoutPlainText') {
+                            }
 
-                        	scope.specialOptionTemplate = 'views/attribute-options/plain-text.html';
-                            return true;
+                        	if (scope.item.attribute.key === 'layoutPlainText') {
+
+                                scope.specialOptionTemplate = 'views/attribute-options/plain-text.html';
+                                return true;
+
+                            }
 
                         }
 
@@ -830,7 +833,7 @@
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
-                            scope.item.options.number_format = res.data.settings;
+                            scope.item.options.number_format = res.data;
                         }
 
                     });

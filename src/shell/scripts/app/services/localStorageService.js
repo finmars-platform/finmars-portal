@@ -371,9 +371,9 @@
 
 	const cacheMarkedRowsData = (markedRowsData) => {
 		const key = getPropertyForStoring().concat('_marked_g_rows');
-		const test = JSON.stringify(markedRowsData);
+		const markedRowsCopy = JSON.stringify(markedRowsData);
 
-		localStorage.setItem(key, test);
+		localStorage.setItem(key, markedRowsCopy);
 	};
 
 	const getMarkedRowsData = () => {

@@ -6,6 +6,7 @@ logs
 
 dist
 dist/*
+src/shell/scripts/templates.min.js
 src/portal/scripts/templates.min.js
 src/profile/scripts/templates.min.js
 

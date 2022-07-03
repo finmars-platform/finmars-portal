@@ -24,22 +24,49 @@
 
                     <md-input-container>
                         <label>Name</label>
-                        <input type="text" data-ng-model="parameter.name">
+                        <input type="text"
+                               data-ng-model="parameter.name"
+                               data-ng-disabled="vm.changeOnlyValue">
                     </md-input-container>
 
                     <md-input-container class="m-t-16">
                         <label>Value Type</label>
                         <md-select data-ng-model="parameter.value_type"
-                                   data-ng-change="vm.multipleParameterValueTypeUpdate(vm.item, parameter.index)">
+                                   data-ng-change="vm.multipleParameterValueTypeUpdate(vm.item, parameter.index)"
+                                   data-ng-disabled="vm.changeOnlyValue">
                             <md-option value="10">Text</md-option>
                             <md-option value="20">Number</md-option>
                             <md-option value="40">Date</md-option>
                         </md-select>
                     </md-input-container>
 
-                    <div>
+                    <div ng-hide="!parameter.value_type" class="flex-row flex-center">
 
-                        <div layout="row" data-ng-if="parameter.___switch_state == 'default_value'">
+                        <div ng-if="parameter.___switch_state === 'default_value'">
+                            <text-input ng-if="parameter.value_type == 10"
+                                        label="Default value"
+                                        model="parameter.default_value"></text-input>
+
+                            <number-input ng-if="parameter.value_type == 20"
+                                          label="Default value"
+                                          model="parameter.default_value"></number-input>
+
+                            <date-input ng-if="parameter.value_type == 40"
+                                        label="Default value"
+                                        model="parameter.default_value"></date-input>
+                        </div>
+
+                        <div ng-if="parameter.___switch_state === 'attribute_key'">
+                            <dropdown-select label="Options"
+                                             model="parameter.attribute_key"
+                                             menu-options="vm.optionsForMultipleParameters[parameter.value_type]"
+                                             sorted="vm.attrsOptsSorted"></dropdown-select>
+                        </div>
+
+                        <md-button class="md-raised md-primary"
+                                   data-ng-click="vm.switchParameter($event, vm.item, parameter)">Switch
+                        </md-button>
+                        <!--<div layout="row" data-ng-if="parameter.___switch_state == 'default_value'">
 
                             <md-input-container>
                                 <label>Default Value</label>
@@ -68,7 +95,7 @@
                                        data-ng-click="vm.switchParameter($event, vm.item, parameter)">Switch
                             </md-button>
 
-                        </div>
+                        </div>-->
 
                     </div>
 
@@ -78,7 +105,9 @@
             </div>
 
             <div>
-                <md-button class="md-raised" data-ng-click="vm.addParameter($event, vm.item)">Add Parameter</md-button>
+                <md-button ng-if="!vm.changeOnlyValue"
+                           class="md-raised"
+                           data-ng-click="vm.addParameter($event, vm.item)">Add Parameter</md-button>
             </div>
 
         </div>

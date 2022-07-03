@@ -127,9 +127,11 @@
 				]
 			},
 			components: {
-				topPanel: false
+				topPanel: false,
+				rowCheckboxes: false
 			}
 		};
+
 		vm.label = "";
 
 		let tableData = {};

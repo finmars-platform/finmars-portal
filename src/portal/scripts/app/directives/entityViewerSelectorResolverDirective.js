@@ -7,27 +7,49 @@
 
     var referenceTableService = require('../services/referenceTablesService');
 
-    module.exports = function ($scope) {
+    var evEditorEvents = require('../services/ev-editor/entityViewerEditorEvents');
+
+    var metaHelper = require('../helpers/meta.helper');
+
+    module.exports = function () {
 
         return {
+            require: '^^bindFieldControl',
             scope: {
                 item: '=',
-                entity: '=',
-                content_type: '=',
                 options: '=',
-                entityType: '=',
+                evEditorEventService: '=',
                 itemChange: '&'
             },
             templateUrl: 'views/directives/entity-viewer-selector-resolver-view.html',
-            link: function (scope, elem, attrs) {
+            link: function (scope, elem, attrs, bfcVm) {
 
-                scope.readyStatus = {content: false, tags: false};
+                // scope.readyStatus = {content: false};
+                scope.readyStatus = bfcVm.readyStatus;
+                scope.readyStatus.content = false;
 
+                scope.customStyles = null;
+
+                scope.modelObj = {
+                    model: scope.model
+                };
+
+                scope.ciEventObj = {
+                    event: {}
+                };
+
+                scope.inputTextObj = {
+                    value: null
+                };
+
+                // scope.searchTerm = '';
+                scope.sorted = true;
                 scope.fields = [];
 
-                scope.searchTerm = '';
+                var fieldsDataIsLoaded = false;
+                var elIndexesData = {};
 
-                scope.resolveSort = function (field) {
+                /*scope.resolveSort = function (field) {
 
                     if (scope.item && scope.item.value_type === 110) {
 
@@ -51,8 +73,41 @@
 
                     }
 
+                };*/
+                var sortFields = function (fields) {
+
+                    /*if (scope.item && scope.item.value_type === 110) {
+
+                        return metaHelper.textWithDashSort(fields, 'order');
+
+                    } else {
+                        return metaHelper.textWithDashSort(fields);
+                    }*/
+                    return metaHelper.textWithDashSort(fields, 'order');
+
                 };
 
+                scope.inputBackgroundColor = bfcVm.inputBackgroundColor;
+
+                var getSelectedFieldName = function () {
+
+                    // var id = scope.entity[scope.fieldKey];
+                    var id = scope.modelObj.model;
+
+                    if (scope.fields && scope.fields.length) {
+
+                        for (var i = 0; i < scope.fields.length; i = i + 1) {
+
+                            if (scope.fields[i].id === id) {
+                                return scope.fields[i].name
+                            }
+
+                        }
+
+                    }
+
+                    return '';
+                };
 
                 scope.getName = function () {
 
@@ -66,66 +121,215 @@
                     return scope.item.name
                 };
 
-                scope.getData = function () {
+                var getData = function () {
 
                     console.log('scope,', scope);
+                    return new Promise(function (resolve, reject) {
 
-                    referenceTableService.getList({
-                        filters: {
-                            name: scope.item.reference_table
-                        }
-                    }).then(function (res) {
+                        if (!fieldsDataIsLoaded) {
 
-                        var referenceTable;
+                            referenceTableService.getList({
+                                filters: {
+                                    name: scope.item.reference_table
+                                }
+                            })
+                            .then(function (res) {
 
-                        res.results.forEach(function (item) {
+                                var referenceTable;
 
-                            if (item.name === scope.item.reference_table) {
-                                referenceTable = item
-                            }
+                                res.results.forEach(function (item) {
 
-                        });
+                                    if (item.name === scope.item.reference_table) {
+                                        referenceTable = item
+                                    }
 
-                        if (referenceTable) {
-
-                            console.log('res', res);
-
-                            scope.fields = referenceTable.rows;
-                        }
-                        scope.readyStatus.content = true;
-
-                        scope.$apply(function () {
-
-                            setTimeout(function () {
-                                $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
-                                    ev.stopPropagation();
                                 });
-                            }, 100);
-                        });
+
+                                if (referenceTable) {
+
+                                    console.log('res', res);
+
+                                    // scope.fields = referenceTable.rows;
+                                    /*scope.fields = referenceTable.rows.filter(function (row) {
+                                        return !!row;
+
+                                    }).map(function (row) {
+                                        return {
+                                            id: row.value,
+                                            name: row.key
+                                        }
+                                    });*/
+
+                                    scope.fields = referenceTable.rows.map(function (row) {
+                                        return {
+                                            id: row.value,
+                                            name: row.key
+                                        }
+                                    });
+
+                                    scope.fields = sortFields(scope.fields);
+
+                                }
+
+                                scope.readyStatus.content = true;
+                                fieldsDataIsLoaded = true;
+
+                                resolve();
+                                // scope.readyStatus.content = true;
+
+                                /*scope.$apply(function () {
+
+                                    setTimeout(function () {
+                                        $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
+                                            ev.stopPropagation();
+                                        });
+                                    }, 100);
+                                });*/
+                            }).catch(function (error) {
+                                reject(error);
+                            });
+
+                        } else {
+                            resolve();
+                        }
+
                     });
+
                 };
 
-                scope.changeHandler = function () {
+                /* scope.changeHandler = function () {
                     if(scope.itemChange) {
                         scope.itemChange()
                     }
+                }; */
+                scope.changeHandler = function () {
+
+                    bfcVm.model = scope.modelObj.model;
+
+                    if (bfcVm.itemChange) {
+                        bfcVm.itemChange();
+                    }
+
                 };
+
+                var setItemSpecificSettings = function () {
+
+                    /*if (scope.options.backgroundColor) {
+
+                        scope.customStyles = {
+                            'customInputBackgroundColor': 'background-color: ' + scope.options.backgroundColor + ';'
+                        }
+
+                    }
+
+                    if (scope.item.frontOptions) {
+
+                        if (scope.item.frontOptions.recalculated) {
+
+                            scope.ciEventObj.event = {key: "set_style_preset1"};
+
+                        }
+
+                    }
+
+                    scope.tooltipText = bfcVm.getTooltipText();*/
+                    var setSettingsResult = bfcVm.setItemSettings();
+
+                    scope.tooltipText = setSettingsResult.tooltipText;
+                    scope.customStyles = setSettingsResult.customStyles;
+                    scope.ciEventObj.event = setSettingsResult.event;
+
+                }
+
+                var initEventListeners = function () {
+
+                    elIndexesData['MARK_FIELDS_WITH_ERRORS'] = scope.evEditorEventService.addEventListener(evEditorEvents.MARK_FIELDS_WITH_ERRORS, function () {
+                        scope.ciEventObj.event = {key: 'mark_not_valid_fields'};
+                    });
+
+                    elIndexesData['ENTITY_UPDATED'] = scope.evEditorEventService.addEventListener(evEditorEvents.ENTITY_UPDATED, function () {
+                        scope.modelObj.model = bfcVm.getValueFromEntity();
+                    });
+
+                    elIndexesData['FIELDS_RECALCULATION_END'] = scope.evEditorEventService.addEventListener(evEditorEvents.FIELDS_RECALCULATION_END, function () {
+
+                        scope.modelObj.model = bfcVm.getValueFromEntity();
+
+                        if (scope.item &&
+                            scope.item.frontOptions && scope.item.frontOptions.recalculated &&
+                            (scope.modelObj.model || scope.modelObj.model === 0)) {
+
+                            getData().then(function () {
+
+                                setItemSpecificSettings();
+                                // prepareDataForSelector();
+                                scope.inputTextObj.value = getSelectedFieldName();
+
+                                scope.$apply();
+
+                            })
+
+                        }
+
+                    });
+
+                };
+
+                scope.$watch('item', function () {
+
+                    fieldsDataIsLoaded = false;
+                    scope.inputTextObj.value = getSelectedFieldName();
+
+                });
+
+
+                /* scope.$watch('modelObj', function () {
+
+                    fieldsDataIsLoaded = false;
+
+                    // prepareDataForSelector();
+                    scope.inputTextObj.value = scope.getInputTextForEntitySearch();
+
+                }) */
 
                 scope.init = function () {
 
-                    if (scope.entity[scope.item.name]) {
+                    /*if (scope.entity[scope.item.name]) {
                         scope.fields = [];
 
                         var obj = {};
                         obj[scope.entity[scope.item.name]] = scope.entity[scope.item.name];
 
                         scope.fields.push(obj)
-                    }
+                    }*/
+                    getData().then(function () {
 
+                        scope.inputTextObj.value = getSelectedFieldName();
+                        scope.modelObj.model = bfcVm.getValueFromEntity();
+                        scope.options = bfcVm.checkForNotNull(scope.options);
+
+                        setItemSpecificSettings();
+
+                        scope.$apply();
+
+                    });
+
+                    initEventListeners();
 
                 };
 
-                scope.init()
+                scope.init();
+
+                scope.$on('$destroy', function () {
+
+                    Object.keys(elIndexesData).forEach(function (eventName) {
+
+                        var eventIndex = elIndexesData[eventName];
+                        scope.evEditorEventService.removeEventListener(eventName, eventIndex);
+
+                    });
+
+                });
 
             }
 
