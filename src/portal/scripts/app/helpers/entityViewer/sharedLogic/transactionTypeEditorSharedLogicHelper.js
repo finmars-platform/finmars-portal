@@ -1279,8 +1279,16 @@
 
                     }
 
-                    fillFromContext.settings.value = null
-                    fillFromContext.cellType = 'empty'
+                    // fillFromContext.settings.value = null
+                    // fillFromContext.cellType = 'empty'
+
+
+                    if (fillFromContext.cellType === 'selector') {
+
+                        fillFromContext.cellType = 'expression'
+                        fillFromContext.settings = {value: '', exprData: viewModel.expressionData}
+
+                    }
 
                     break;
 
@@ -1313,7 +1321,14 @@
 
                     }
 
-                    fillFromContext.settings.value = null
+                    // fillFromContext.settings.value = null
+
+                    if (fillFromContext.cellType === 'selector') {
+
+                        fillFromContext.cellType = 'expression'
+                        fillFromContext.settings = {value: '', exprData: viewModel.expressionData}
+
+                    }
 
                     break;
 
@@ -1329,8 +1344,15 @@
 
                     }
 
-                    fillFromContext.settings.value = null
-                    fillFromContext.cellType = 'empty'
+                    if (fillFromContext.cellType === 'selector') {
+
+                        fillFromContext.cellType = 'expression'
+                        fillFromContext.settings = {value: '', exprData: viewModel.expressionData}
+
+                    }
+
+                    // fillFromContext.settings.value = null
+                    // fillFromContext.cellType = 'empty'
 
                     break;
 
@@ -1621,11 +1643,11 @@
                         objPath: ['context_property'],
                         columnName: 'Use Default Value from Context',
                         order: 5,
-                        cellType: 'empty',
+                        cellType: 'expression',
                         settings: {
-                            value: null,
-                            closeOnMouseOut: false,
-                            unselectButton: true
+                            value: '',
+                            exprData: null,
+                            closeOnMouseOut: false
                         },
                         styles: {
                             'grid-table-cell': {'width': '180px'}
