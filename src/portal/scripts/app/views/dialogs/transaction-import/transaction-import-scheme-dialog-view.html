@@ -626,6 +626,9 @@
     </md-dialog-content>
 
     <md-dialog-actions layout="row" class="position-relative">
+        <md-button class="md-raised" ng-click="vm.editAsJson($event)" >
+            Edit as JSON
+        </md-button>
         <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-if="vm.scheme.id" data-ng-class="{'disabled-btn': vm.processing}">
             Make Copy
         </md-button>
