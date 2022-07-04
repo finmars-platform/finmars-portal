@@ -315,6 +315,8 @@
 
                 transactionTypeService.getByKey(vm.entityId).then(function (data) {
 
+                    vm._original_entity = JSON.parse(JSON.stringify(data));
+
                     vm.entity = data;
 
                     vm.expressionData = sharedLogic.updateInputFunctions();
@@ -962,6 +964,32 @@
             }
 
         };
+
+        vm.editAsJson = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityAsJsonEditorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        item: vm._original_entity,
+                        entityType: vm.entityType,
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.getItem().then(function () {
+                        $scope.$apply();
+                    });
+
+                }
+            })
+
+        }
 
         // Transaction type General Controller start
 
