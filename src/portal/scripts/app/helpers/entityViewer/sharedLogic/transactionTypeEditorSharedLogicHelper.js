@@ -335,28 +335,27 @@
 		 */
 		const insertActions = function (actions) {
 
+            const insertAction = function (action) {
+
+                viewModel.entity.actions.push(action);
+
+                const newActionIndex = viewModel.actionsMultitypeFieldsList.length;
+                const multitypeFieldsData = getMultitypeFieldsDataForAction(action, newActionIndex);
+
+                viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
+
+            };
+
         	if (Array.isArray(actions)) { // add multiple actions
 
 				actions.forEach(function (action) {
 
-					viewModel.entity.actions.push(action);
-
-					const newActionIndex = viewModel.actionsMultitypeFieldsList.length;
-					const multitypeFieldsData = getMultitypeFieldsDataForAction(action, newActionIndex);
-
-					viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
+                    insertAction(action);
 
 				});
 
 			} else { // add single action
-
-        		viewModel.entity.actions.push(actions);
-
-				const newActionIndex = viewModel.actionsMultitypeFieldsList.length;
-				const multitypeFieldsData = getMultitypeFieldsDataForAction(actions, newActionIndex);
-
-				viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
-
+                insertAction(actions);
 			}
 
 			viewModel.findPhantoms();
@@ -523,7 +522,7 @@
 
 		const getActionPaneId = function (action) {
 
-			const actionId = (action.id || action.id === 0) ? action.id : action.frontOptions.id;
+			const actionId = action.id ? action.id : action.frontOptions.id;
 
 			return 'ttype-action-' + actionId;
 
@@ -547,7 +546,6 @@
 			selectOption: function (option, _$popup) {
 
         		_$popup.cancel();
-
         		addAction(option.key);
 
 			}

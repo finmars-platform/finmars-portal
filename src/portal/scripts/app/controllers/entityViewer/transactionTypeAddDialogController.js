@@ -716,15 +716,16 @@
 
             return new Promise(function (resolve, reject) {
 
-                vm.entity = vm.updateEntityBeforeSave(vm.entity);
+                let entityToSave = JSON.parse(JSON.stringify(vm.entity));
+                entityToSave = vm.updateEntityBeforeSave(entityToSave);
 
-                var actionsErrors = sharedLogic.checkActionsForEmptyFields(vm.entity.actions);
-                var inputsErrors = sharedLogic.validateInputs(vm.entity.inputs);
+                var actionsErrors = sharedLogic.checkActionsForEmptyFields(entityToSave.actions);
+                var inputsErrors = sharedLogic.validateInputs(entityToSave.inputs);
                 actionsErrors = actionsErrors.concat(inputsErrors);
 
-                var entityErrors = sharedLogic.checkEntityForEmptyFields(vm.entity);
+                var entityErrors = sharedLogic.checkEntityForEmptyFields(entityToSave);
 
-                console.log('vm.entity before save', vm.entity);
+                console.log('vm.entity before save', entityToSave);
 
                 if (actionsErrors.length || entityErrors.length) {
 
@@ -751,11 +752,11 @@
 
                     vm.processing = true;
 
-                    transactionTypeService.create(vm.entity).then(function (responseData) {
+                    transactionTypeService.create(entityToSave).then(function (responseData) {
 
-                        toastNotificationService.success("Transaction Type " + " " + vm.entity.name + ' was successfully created');
+                        toastNotificationService.success("Transaction Type " + " " + entityToSave.name + ' was successfully created');
 
-                        if (vm.entity.inputs) {
+                        /* if (vm.entity.inputs) {
                             vm.entity.inputs.forEach(function (input) {
 
                                 if (input.settings && input.settings.linked_inputs_names) {
@@ -764,7 +765,7 @@
 
                             });
 
-                        }
+                        } */
 
                         vm.entity.object_permissions = responseData.object_permissions;
 
