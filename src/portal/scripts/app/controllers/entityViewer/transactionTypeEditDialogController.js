@@ -463,11 +463,11 @@
 
         vm.updateEntityBeforeSave = function (entity) {
 
-            var updatedEntity = JSON.parse(JSON.stringify(entity));
+            // var updatedEntity = JSON.parse(JSON.stringify(entity));
 
-            if (updatedEntity.attributes) {
+            if (entity.attributes) {
 
-                updatedEntity.attributes.forEach(function (attribute) {
+                entity.attributes.forEach(function (attribute) {
 
                     var value_type = attribute.attribute_type_object.value_type;
                     var key = attribute.attribute_type_object.user_code;
@@ -489,14 +489,14 @@
 
             }
 
-            updatedEntity.object_permissions = [];
+            entity.object_permissions = [];
 
             // code that should be working for Add and Edit complex transaction, add to sharedLogic.updateEntityBeforeSave()
-            return sharedLogic.updateEntityBeforeSave(updatedEntity);
+            return sharedLogic.updateEntityBeforeSave(entity);
 
         };
 
-        vm.updateItem = function () {
+        /* vm.updateItem = function () {
 
             // TMP save method for instrument
 
@@ -520,7 +520,7 @@
 
             })
 
-        };
+        }; */
 
         /* var checkFieldExprForDeletedInput = function (actionFieldValue, actionItemKey, actionNotes) {
 
@@ -745,8 +745,9 @@
         vm.save = function () {
 
             var saveTTypePromise = new Promise(function (resolve, reject) {
-				console.log("inputsDeletion.save entity", JSON.parse(angular.toJson(vm.entity)));
-                var entityToSave = vm.updateEntityBeforeSave(vm.entity);
+
+                var entityToSave = JSON.parse(JSON.stringify(vm.entity));
+                entityToSave = vm.updateEntityBeforeSave(entityToSave);
                 // var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
                 // var entityErrors = vm.checkEntityForEmptyFields(vm.entity);
 
