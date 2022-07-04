@@ -27,7 +27,7 @@
         // const markedReportRows = localStorageService.getMarkedRows(true, entityType);
 		const rvSettings = globalDataService.getMemberEntityViewersSettings(true, entityType);
 		const markedReportRows = rvSettings.marked_rows;
-		// console.log("testing.render markedReportRows", markedReportRows);
+
         for (var i = 0; i < projection.length; i = i + 1) {
 
             item = projection[i];
