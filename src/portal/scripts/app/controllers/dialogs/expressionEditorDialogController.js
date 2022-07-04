@@ -964,6 +964,9 @@
                 vm.editor.setBehavioursEnabled(true);
                 vm.editor.setValue(vm.item.expression)
 
+                vm.editor.focus();
+                vm.editor.navigateFileStart();
+
             }, 100)
 
         }
