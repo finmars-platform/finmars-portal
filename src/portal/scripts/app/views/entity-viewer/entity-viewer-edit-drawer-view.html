@@ -23,6 +23,14 @@
                 — Processing
             </div>
 
+            <div data-ng-if="vm.entityType == 'instrument'">
+                <div class="instrument-refresh-from-database-button" data-ng-if="vm.entity.instrument_type_object.user_code == 'stocks' || vm.entity.instrument_type_object.user_code == 'bonds'">
+                    <span class="material-icons  {{vm.processing ? 'disabled-btn' : ''}}" ng-click="vm.updateLocalInstrument()">autorenew</span>
+                    <md-tooltip md-direction="bottom">Refresh Instrument from Finmars© Database</md-tooltip>
+                </div>
+
+            </div>
+
         </div>
 
     </div>
