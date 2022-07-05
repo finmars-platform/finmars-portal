@@ -315,6 +315,8 @@
 
                 transactionTypeService.getByKey(vm.entityId).then(function (data) {
 
+                    vm._original_entity = JSON.parse(JSON.stringify(data));
+
                     vm.entity = data;
 
                     vm.expressionData = sharedLogic.updateInputFunctions();
@@ -757,32 +759,45 @@
 
                 var entityErrors = sharedLogic.checkEntityForEmptyFields(entityToSave);
 				console.log("inputsDeletion.save errors", JSON.parse(JSON.stringify(actionsErrors)), JSON.parse(JSON.stringify(entityErrors)));
-                if (actionsErrors.length || entityErrors.length) {
 
-                    $mdDialog.show({
-                        controller: 'TransactionTypeValidationErrorsDialogController as vm',
-                        templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
-                        parent: angular.element(document.body),
-                        clickOutsideToClose: false,
-                        multiple: true,
-                        locals: {
-                            data: {
-                                actionErrors: actionsErrors,
-                                entityErrors: entityErrors
+
+                new Promise(function (resolve, reject) {
+
+                    if (actionsErrors.length || entityErrors.length) {
+                        $mdDialog.show({
+                            controller: 'TransactionTypeValidationErrorsDialogController as vm',
+                            templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
+                            parent: angular.element(document.body),
+                            clickOutsideToClose: false,
+                            multiple: true,
+                            locals: {
+                                data: {
+                                    actionErrors: actionsErrors,
+                                    entityErrors: entityErrors
+                                }
                             }
-                        }
-                    });
+                        }).then(function (data){
 
-                    vm.processing = false;
+                            if (data.status === 'agree') {
+                                resolve()
+                            } else {
+                                reject()
+                            }
 
-                    reject();
+                        })
 
-                }
-                else {
+
+
+                    } else {
+                        resolve()
+                    }
+
+
+                }).then(function() {
 
                     vm.processing = true;
 
-                     transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
+                    transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
 
                         originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
                         vm.entity.object_permissions = data.object_permissions;
@@ -812,7 +827,7 @@
 
                     });
 
-                }
+                })
 
             });
 
@@ -962,6 +977,32 @@
             }
 
         };
+
+        vm.editAsJson = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityAsJsonEditorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        item: vm._original_entity,
+                        entityType: vm.entityType,
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.getItem().then(function () {
+                        $scope.$apply();
+                    });
+
+                }
+            })
+
+        }
 
         // Transaction type General Controller start
 
