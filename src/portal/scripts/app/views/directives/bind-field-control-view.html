@@ -143,6 +143,11 @@
             <span class="ec-decoration plain-text" data-ng-bind="item.options.plainText"></span>
         </div>
 
+        <div data-ng-if="vm.fieldType['display_name'] === 'Decoration' && item.key === 'layoutCalculatedText'"
+             class="ec-decoration-container">
+            <span class="ec-decoration plain-text" data-ng-bind="item.options.result"></span>
+        </div>
+
         <div data-ng-if="vm.fieldType['display_name'] === 'Selector'">
 
             <div>
