@@ -825,6 +825,33 @@
 
         };
 
+        vm.editAsJson = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityAsJsonEditorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        item:  vm.originalComplexTransaction,
+                        entityType: vm.entityType,
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.getItem().then(function () {
+                        $scope.$apply();
+                    });
+
+
+                }
+            })
+
+        }
+
         // let recalculateTimeoutID;
 
         vm.recalculate = function (paramsObj) {

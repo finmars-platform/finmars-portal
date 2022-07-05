@@ -3526,10 +3526,19 @@ span.highlight {
   }
 }
 
+
+.entity-as-json-editor-dialog {
+  max-width: 100%;
+}
+
 .ace-editor-dialog {
   width: 90%;
 
   background: #2F3129;
+
+  .progress.progress-circular {
+    color: #fff;
+  }
 
   .md-dialog-content {
     padding: 20px;
@@ -3541,6 +3550,7 @@ span.highlight {
 
   .ace-editor {
     min-height: 400px;
+    height: 100%;
   }
 
   md-dialog-actions {
@@ -3550,3 +3560,15 @@ span.highlight {
   }
 }
 
+
+
+.instrument-refresh-from-database-button {
+  position: absolute;
+  right: 16px;
+  top: 14px;
+  color: #fff;
+  cursor: pointer;
+  &:hover {
+    opacity: .7;
+  }
+}

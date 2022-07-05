@@ -13,6 +13,10 @@
         vm.entityErrors = data.entityErrors;
         //vm.inputsErrors = data.inputsErrors;
 
+        vm.cancel = function () {
+            $mdDialog.hide({status: 'disagree'});
+        };
+
         vm.agree = function () {
             $mdDialog.hide({status: 'agree'});
         };
