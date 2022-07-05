@@ -21,6 +21,11 @@
                 key: 'layoutPlainText',
                 name: 'Plain Text',
                 "value_type": 'decoration'
+            },
+            {
+                key: 'layoutCalculatedText',
+                name: 'Calculated Text',
+                "value_type": 'decoration'
             }
         ]
     };
