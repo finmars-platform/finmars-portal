@@ -1026,13 +1026,15 @@
 							}
 						}
 
+                        if (vm.fieldType['display_name'] === 'Decoration' && $scope.item.key === 'layoutCalculatedText') {
+                            vm.calculateDecorationExpression()
+                        }
+
 					}
 
                     $scope.options = vm.checkForNotNull($scope.options);
 
-                    if (vm.fieldType['display_name'] === 'Decoration' && $scope.item.key === 'layoutCalculatedText') {
-                        vm.calculateDecorationExpression()
-                    }
+
 
                     /* if (vm.fieldType && vm.fieldType.value === 20) {
 
