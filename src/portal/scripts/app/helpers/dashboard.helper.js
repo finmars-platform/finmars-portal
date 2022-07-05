@@ -109,8 +109,13 @@
 
                     uiService.updateDashboardLayout(listLayout.id, listLayout).then(function (data) {
 
-                        listLayout.modified = data.modified
+                        /*listLayout.modified = data.modified;
                         dashboardDataService.setListLayout(listLayout);
+
+                        var layout = dashboardDataService.getData();
+                        layout.modified = data.modified;
+                        dashboardDataService.setData(layout);*/
+                        dashboardDataService.updateModifiedDate(data.modified);
 
                         if (showNotification) {
                             toastNotificationService.success('Dashboard component settings saved.');
