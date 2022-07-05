@@ -9,6 +9,7 @@
     var metaService = require("../services/metaService");
     var layoutService = require("../services/entity-data-constructor/layoutService");
     var attributeTypeService = require("../services/attributeTypeService");
+    var expressionService = require('../services/expression.service');
 
 	var evHelperService = require('../services/entityViewerHelperService');
 
@@ -947,6 +948,23 @@
                 };
 				//endregion Datepicker
 
+                vm.calculateDecorationExpression = function () {
+
+                    expressionService.getResultOfExpression({
+                        expression: $scope.item.options.expression,
+                        names1: $scope.entity,
+                        is_eval: true
+                    }).then(function (data) {
+
+                        if (data.result) {
+                            $scope.item.options.result = data.result;
+                        } else {
+                            $scope.item.options.result = data
+                        }
+
+                    })
+                }
+
                 var init = function () {
 
                     vm.fieldKey = $scope.getModelKey();
@@ -1011,6 +1029,10 @@
 					}
 
                     $scope.options = vm.checkForNotNull($scope.options);
+
+                    if (vm.fieldType['display_name'] === 'Decoration' && $scope.item.key === 'layoutCalculatedText') {
+                        vm.calculateDecorationExpression()
+                    }
 
                     /* if (vm.fieldType && vm.fieldType.value === 20) {
 
