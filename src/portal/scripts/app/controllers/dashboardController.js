@@ -325,6 +325,11 @@
 
                 vm.layout = data;
 
+                /*var listLayout = vm.dashboardDataService.getListLayout();
+                listLayout.modified = data.modified;
+                vm.dashboardDataService.setListLayout(listLayout);*/
+                vm.dashboardDataService.updateModifiedDate(data.modified);
+
                 toastNotificationService.success("Dashboard Layout is Saved")
 
                 $scope.$apply();
