@@ -6,6 +6,7 @@
     'use strict';
 
     var entityResolverService = require('../../services/entityResolverService');
+    var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
 
     // var usersGroupService = require('../../services/usersGroupService');
     // var usersService = require('../../services/usersService');
@@ -1039,6 +1040,41 @@
             }
 
         };
+
+        vm.updateLocalInstrument = function () {
+
+            var config = {
+                instrument_code: vm.entity.user_code,
+                mode: 1
+            };
+
+            vm.processing = true;
+
+            importInstrumentCbondsService.download(config).then(function (data) {
+
+                vm.processing = false;
+
+                $scope.$apply();
+
+
+                if (data.errors.length) {
+
+                    toastNotificationService.error(data.errors[0])
+
+
+                } else {
+
+                    toastNotificationService.success('Instrument ' + vm.entity.user_code + ' was updated')
+
+                    vm.getItem().then(function () {
+                        $scope.$apply();
+                    });
+
+
+                }
+
+            })
+        }
 
         vm.editAsJson = function (ev) {
 
