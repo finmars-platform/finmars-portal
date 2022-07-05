@@ -297,7 +297,7 @@
 
             $mdDialog.show({
                 controller: 'DashboardLayoutListDialogController as vm',
-                templateUrl: 'views/dialogs/dashboard/dashboard-layout-list-view.html',
+                templateUrl: 'views/dialogs/dashboard/layout-list-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: false,
@@ -325,10 +325,7 @@
 
                 vm.layout = data;
 
-                /*var listLayout = vm.dashboardDataService.getListLayout();
-                listLayout.modified = data.modified;
-                vm.dashboardDataService.setListLayout(listLayout);*/
-                vm.dashboardDataService.updateModifiedDate(data.modified);
+                vm.dashboardDataService.setListLayout(JSON.parse(JSON.stringify(data)));
 
                 toastNotificationService.success("Dashboard Layout is Saved")
 
