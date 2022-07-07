@@ -26,10 +26,11 @@
 
         vm.inputsForMultiselector = data.inputsForMultiselector
 
-        vm.expressionData = {
+        /*vm.expressionData = {
             groups: [],
             functions: [null]
-        };
+        };*/
+        vm.expressionData = data.expressionData;
 
         vm.onValueTypeChange = function () {
 
