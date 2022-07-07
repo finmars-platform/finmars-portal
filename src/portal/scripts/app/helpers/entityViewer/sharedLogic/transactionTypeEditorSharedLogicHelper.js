@@ -1478,6 +1478,7 @@
                         relationItems: viewModel.relationItems,
                         inputsForMultiselector: viewModel.inputsForMultiselector,
 						loadedRelationsList: loadedRelationsList,
+                        expressionData: viewModel.expressionData,
 
 						resolveRelationCallback: resolveRelation,
 						loadRelationCallback: loadRelation,
@@ -1508,13 +1509,18 @@
                     valueType.settings.value = res.data.valueType;
                     contentType.settings.value = res.data.contentType;
                     fillFromContext.settings.value = res.data.context_property;
+
                     defaultValue.settings.value = res.data.value;
+                    defaultValue.settings.exprData = viewModel.expressionData;
+
                     inputCalcExpression.settings.value = res.data.value_expr;
+                    inputCalcExpression.settings.exprData = viewModel.expressionData;
+
                     linkedInputs.settings.value = res.data.linked_inputs_names;
 
                     if (valueType.settings.value === 120) { // Button
 
-                        newRow.columns[8].settings.optionsCheckboxes.selectedOptions = false; // linked inputs for Button have not checkboxes
+                        newRow.columns[8].settings.optionsCheckboxes.selectedOptions = false; // linked inputs for Button have no checkboxes
 
                     }
 
