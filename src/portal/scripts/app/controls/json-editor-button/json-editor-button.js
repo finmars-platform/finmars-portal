@@ -14,8 +14,8 @@
             },
             link: function (scope, elem, attr) {
 
-                if (scope.buttonText === undefined) {
-                    scope.buttonText = '<json>';
+                if (!scope.buttonText) {
+                    scope.buttonText = 'JSON';
                 }
 
                 scope.openExpressionDialog = function ($event) {
