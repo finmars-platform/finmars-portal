@@ -30,7 +30,7 @@
 			}
 		};
 
-		reqestParamsObj.headers['Authorization'] = 'Token ' + cookieService.getCookie('authtoken');
+		reqestParamsObj.headers['Authorization'] = 'Token ' + cookieService.getCookie('access_token');
 
 		if (['POST', 'PATCH', 'PUT'].includes(method)) {
 

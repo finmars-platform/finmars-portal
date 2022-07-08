@@ -10,11 +10,10 @@
         let vm = this;
 
         vm.newToken = {};
-        vm.currentToken = cookieService.getCookie('authtoken')
-        vm.currentTokenItem = {}
+        vm.currentToken = cookieService.getCookie('access_token')
 
         vm.requestReport = {
-            token: vm.currentToken,
+            access_token: vm.currentToken,
             status: 'init',
             body: {
                 "account_mode": 1,
@@ -65,10 +64,7 @@
 
                 vm.tokens = data.results.map(function (token) {
 
-                    if (token.key === vm.currentToken) {
-                        vm.currentTokenItem = token;
-                        vm.requestReport.tokenItem = token;
-                    }
+
 
                     if (token.current_master_user_object) {
                         token.api_url = window.location.origin + '/' + token.current_master_user_object.base_api_url + '/api/v1'
@@ -76,9 +72,21 @@
                         token.api_url = '';
                     }
 
+                    if (token.keycloak_access_token === vm.currentToken) {
+                        vm.requestReport.tokenItem = token;
+                    }
+
+                    if (token.current_master_user_object) {
+                        token.authorizer_url = window.location.origin + '/authorizer/token-refresh/'
+                    } else {
+                        token.authorizer_url = '';
+                    }
+
                     return token;
 
                 });
+
+                console.log('vm.tokens ', vm.tokens );
 
 
                 $scope.$apply();
@@ -106,7 +114,7 @@
 
             vm.tokens.forEach(function (token) {
 
-                if (vm.currentToken !== token.key) {
+                if (vm.currentToken !== token.keycloak_access_token) {
 
                     authorizerService.authTokenManagerDeleteToken(token.id);
 
@@ -178,7 +186,7 @@
         vm.executeRequestReport = function ($event) {
 
             let url = vm.requestReport.tokenItem.api_url + '/reports/balance-report-sql/'
-            let token = 'Token ' + vm.requestReport.token
+            let token = 'Token ' + vm.requestReport.access_token
 
             let body = JSON.stringify(vm.requestReport.body, null, 4)
             let bodyStr = JSON.stringify(vm.requestReport.body)
@@ -233,6 +241,8 @@ curl -X POST ${url}  \
 
             vm.getTokens()
             vm.getMasterUsersList();
+
+            vm.member = globalDataService.getMember();
 
         };
 
