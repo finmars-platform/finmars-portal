@@ -41,11 +41,11 @@ var login = function (login, password) {
 		credentials: 'include',
 		headers: {
 			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		},
-		body: JSON.stringify({username: login, password: password})
+		data: JSON.stringify({username: login, password: password})
 	})
 };
 
@@ -59,11 +59,11 @@ var logout = function () {
 		credentials: 'include',
 		headers: {
 			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		},
-		body: JSON.stringify({})
+		data: JSON.stringify({})
 	})
 }; */
 
@@ -76,7 +76,7 @@ const ping = function () {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -92,7 +92,7 @@ const protectedPing = function () {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -108,7 +108,7 @@ const protectedPing = function () {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -124,7 +124,7 @@ const getByKey = function (id) {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -142,7 +142,7 @@ const getMe = function () {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -154,7 +154,7 @@ const getCurrentUser = function () {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -172,11 +172,11 @@ var update = function (id, user) {
 		credentials: 'include',
 		headers: {
 			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		},
-		body: JSON.stringify(user)
+		data: JSON.stringify(user)
 	})
 };
 
@@ -189,11 +189,11 @@ var patch = function (id, user) {
 		method: 'PATCH',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		},
-		body: JSON.stringify(user)
+		data: JSON.stringify(user)
 	})
 };
 
@@ -206,7 +206,7 @@ var deleteByKey = function (id) {
 		method: 'DELETE',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -222,11 +222,11 @@ var createMasterUser = function (user) {
 		method: 'POST',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		},
-		body: JSON.stringify(user)
+		data: JSON.stringify(user)
 	})
 };
 
@@ -242,7 +242,7 @@ var getMasterListLight = function () {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -258,7 +258,7 @@ var getMasterList = function () {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -274,7 +274,7 @@ var getMasterByKey = function (id) {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -291,11 +291,11 @@ var updateMaster = function (id, user) {
 		credentials: 'include',
 		headers: {
 			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		},
-		body: JSON.stringify(user)
+		data: JSON.stringify(user)
 	})
 };
 
@@ -309,11 +309,11 @@ var patchMaster = function (id, user) {
 		credentials: 'include',
 		headers: {
 			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		},
-		body: JSON.stringify(user)
+		data: JSON.stringify(user)
 	})
 };
 
@@ -327,7 +327,7 @@ var deleteMasterByKey = function (id) {
 		credentials: 'include',
 		headers: {
 			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -344,7 +344,7 @@ var setMasterUser = function (id) {
 		credentials: 'include',
 		headers: {
 			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -363,7 +363,7 @@ const getMyCurrentMember = function () {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -379,7 +379,7 @@ const getMemberList = function () {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -395,7 +395,7 @@ const getMemberByKey = function (id) {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -411,11 +411,11 @@ const updateMember = function (id, user) {
 		method: 'PUT',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		},
-		body: JSON.stringify(user)
+		data: JSON.stringify(user)
 	})
 };
 
@@ -428,11 +428,11 @@ const patchMember = function (id, user) {
 		method: 'PATCH',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		},
-		body: JSON.stringify(user)
+		data: JSON.stringify(user)
 	})
 };
 
@@ -445,7 +445,7 @@ const deleteMemberByKey = function (id) {
 		method: 'DELETE',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -461,7 +461,7 @@ const getGroupList = function () {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -477,7 +477,7 @@ const getOwnMemberSettings = function () {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -494,11 +494,11 @@ const updateOwnMemberSettings = function (id, member) {
 		credentials: 'include',
 		headers: {
 			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		},
-		body: JSON.stringify(member)
+		data: JSON.stringify(member)
 	})
 };
 
@@ -513,7 +513,7 @@ const getUsercodePrefixList = function () {
 			method: 'GET',
 			credentials: 'include',
 			headers: {
-				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 				Accept: 'application/json',
 				'Content-type': 'application/json'
 			}
@@ -531,11 +531,11 @@ const createUsercodePrefix = function (item) {
 			credentials: 'include',
 			headers: {
 				'X-CSRFToken': cookieService.getCookie('csrftoken'),
-				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 				Accept: 'application/json',
 				'Content-type': 'application/json'
 			},
-			body: JSON.stringify(item)
+			data: JSON.stringify(item)
 		})
 };
 
@@ -548,7 +548,7 @@ const deleteUserCodePrefixByKey = function (id) {
 		method: 'DELETE',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}

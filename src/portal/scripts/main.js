@@ -243,7 +243,7 @@ export default (function () {
 	*/
 	portal.controller('HealthcheckController', ['$scope', require('./app/controllers/pages/healthcheckController')]);
 
-	portal.controller('TwoFactorLoginDialogController', ['$scope', '$mdDialog', 'username', require('./app/controllers/dialogs/twoFactorLoginDialogController')]);
+	portal.controller('TwoFactorLoginDialogController', ['$scope', '$mdDialog', 'username', 'password', require('./app/controllers/dialogs/twoFactorLoginDialogController')]);
 
 	// System Dialogs
 

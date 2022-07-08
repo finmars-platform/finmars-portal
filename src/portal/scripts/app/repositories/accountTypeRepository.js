@@ -23,7 +23,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -40,7 +40,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ac
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -58,11 +58,11 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ac
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(account)
+                data: JSON.stringify(account)
             })
     };
 
@@ -77,11 +77,11 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ac
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(account)
+                data: JSON.stringify(account)
             })
     };
 
@@ -96,11 +96,11 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ac
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(accountTypes)
+                data: JSON.stringify(accountTypes)
             })
     };
 
@@ -115,7 +115,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ac
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -138,11 +138,11 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ac
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(data)
+                data: JSON.stringify(data)
             })
             .then(function (data) {
                 return new Promise(function (resolve, reject) {
