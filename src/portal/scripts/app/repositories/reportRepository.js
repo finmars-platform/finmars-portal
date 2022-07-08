@@ -22,11 +22,11 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 're
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(options)
+                data: JSON.stringify(options)
             })
     };
 
@@ -50,11 +50,11 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + url
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(options)
+                data: JSON.stringify(options)
             })
     };
 
@@ -78,11 +78,11 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + url
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(options)
+                data: JSON.stringify(options)
             })
     };
 
@@ -106,11 +106,11 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + url
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(options)
+                data: JSON.stringify(options)
             })
     };
 
@@ -125,11 +125,11 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 're
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(options)
+                data: JSON.stringify(options)
             })
     };
 
@@ -144,11 +144,11 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 're
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(options)
+                data: JSON.stringify(options)
             })
     };
 

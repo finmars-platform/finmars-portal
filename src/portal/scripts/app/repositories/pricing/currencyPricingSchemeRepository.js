@@ -23,7 +23,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -41,7 +41,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -58,7 +58,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'pr
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -76,11 +76,11 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'pr
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(item)
+                data: JSON.stringify(item)
             })
     };
 
@@ -95,11 +95,11 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'pr
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(item)
+                data: JSON.stringify(item)
             })
     };
 
@@ -114,7 +114,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'pr
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 }

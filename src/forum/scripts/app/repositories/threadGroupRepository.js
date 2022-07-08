@@ -21,7 +21,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'chats/thread-group/?ordering=crea
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -40,7 +40,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'chats/thread-group/' + id + '/',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -59,11 +59,11 @@ return window.fetch(baseUrl  + prefix + '/' + 'chats/thread-group/',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(thread)
+                data: JSON.stringify(thread)
             }).then(function (data) {
             return data.json();
         })
@@ -79,11 +79,11 @@ return window.fetch(baseUrl  + prefix + '/' + 'chats/thread-group/' + id + '/',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(thread)
+                data: JSON.stringify(thread)
             }).then(function (data) {
             return data.json();
         })
@@ -99,7 +99,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'chats/thread-group/' + id + '/',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 }

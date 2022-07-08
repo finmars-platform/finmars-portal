@@ -21,7 +21,7 @@
 				method: 'GET',
 				credentials: 'include',
 				headers: {
-					'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+					'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 					'X-CSRFToken': cookieService.getCookie('csrftoken'),
 					Accept: 'application/json',
 					'Content-type': 'application/json'
