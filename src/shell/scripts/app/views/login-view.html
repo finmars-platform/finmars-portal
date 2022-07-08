@@ -30,7 +30,7 @@
         </div>
 
         <div class="auth-form-footer flex-row flex-c-center">
-            <md-button class="md-raised md-primary" ng-click="vm.logIn($event)">SIGN IN</md-button>
+            <md-button class="md-raised md-primary" data-ng-class="{'disabled-btn': !vm.username || !vm.password}" ng-click="vm.logIn($event)">SIGN IN</md-button>
         </div>
 
     </div>

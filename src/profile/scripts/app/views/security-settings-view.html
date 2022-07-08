@@ -1,48 +1,51 @@
 <div>
 
-    <div style="max-width: 960px; margin: 0 auto; overflow:hidden; padding-bottom: 80px;">
+    <h1 class="text-center">Proceed <a style="color: rgb(63,81,181);
+    text-decoration: none;" href="https://keycloak.finmars.com:8443/realms/finmars/account/#/security/signingin" target="_blank">here</a> to activate Two Factor Authentication</h1>
+
+<!--    <div style="max-width: 960px; margin: 0 auto; overflow:hidden; padding-bottom: 80px;">-->
 
 
-        <div layout="row">
-            <div>Two-step verification</div>
+<!--        <div layout="row">-->
+<!--            <div>Two-step verification</div>-->
 
-            <md-checkbox style="margin-left: 16px;" data-ng-model="vm.twoFactorVerification"
-                         data-ng-change="vm.updateUser(vm.twoFactorVerification)" aria-label="member permission">
+<!--            <md-checkbox style="margin-left: 16px;" data-ng-model="vm.twoFactorVerification"-->
+<!--                         data-ng-change="vm.updateUser(vm.twoFactorVerification)" aria-label="member permission">-->
 
-                <span data-ng-if="vm.twoFactorVerification"><b>On</b></span>
-                <span data-ng-if="!vm.twoFactorVerification"><b>Off</b></span>
+<!--                <span data-ng-if="vm.twoFactorVerification"><b>On</b></span>-->
+<!--                <span data-ng-if="!vm.twoFactorVerification"><b>Off</b></span>-->
 
-            </md-checkbox>
+<!--            </md-checkbox>-->
 
-        </div>
+<!--        </div>-->
 
-        <div data-ng-if="vm.twoFactorVerification">
-
-
-            <div data-ng-if="vm.twoFactorItems.length">
-
-                <div data-ng-repeat="item in vm.twoFactorItems" layout="row">
-
-                    <md-button class="md-raised md-warn" style="margin: 0"  data-ng-click="vm.revokeTwoFactor($event, item)">Revoke Linked Device
-                    </md-button>
-
-                </div>
-
-            </div>
-
-            <div data-ng-if="!vm.twoFactorItems.length">
-                No Linked Devices Found
-            </div>
-
-            <div class="m-t-16" data-ng-if="!vm.twoFactorItems.length" >
-
-                <md-button class="md-primary md-raised"  style="margin: 0" data-ng-click="vm.addDevice($event)">Add Device</md-button>
-
-            </div>
-
-        </div>
+<!--        <div data-ng-if="vm.twoFactorVerification">-->
 
 
-    </div>
+<!--            <div data-ng-if="vm.twoFactorItems.length">-->
+
+<!--                <div data-ng-repeat="item in vm.twoFactorItems" layout="row">-->
+
+<!--                    <md-button class="md-raised md-warn" style="margin: 0"  data-ng-click="vm.revokeTwoFactor($event, item)">Revoke Linked Device-->
+<!--                    </md-button>-->
+
+<!--                </div>-->
+
+<!--            </div>-->
+
+<!--            <div data-ng-if="!vm.twoFactorItems.length">-->
+<!--                No Linked Devices Found-->
+<!--            </div>-->
+
+<!--            <div class="m-t-16" data-ng-if="!vm.twoFactorItems.length" >-->
+
+<!--                <md-button class="md-primary md-raised"  style="margin: 0" data-ng-click="vm.addDevice($event)">Add Device</md-button>-->
+
+<!--            </div>-->
+
+<!--        </div>-->
+
+
+<!--    </div>-->
 
 </div>
