@@ -41,7 +41,7 @@ import cookieService from "./cookieService";
             if (err.response.config.url === authorizerUrl + '/token-refresh/') {
                 console.log('ERRO NO REFRESH')
                 var pieces = window.location.href.split('#')
-                window.location.href = pieces[0] + '#!/authentication'
+                window.location = pieces[0] + '#!/authentication'
                 cookieService.deleteCookie('access_token')
                 cookieService.deleteCookie('refresh_token')
                 return new Promise((resolve, reject) => {
