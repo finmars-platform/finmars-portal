@@ -52,7 +52,7 @@ import cookieService from "./cookieService";
             return ax.post(authorizerUrl + '/token-refresh/', {refresh_token: cookieService.getCookie('refresh_token')}, {withCredentials: true}).then(
                 response => {
                     const config = err.response.config
-                    config.headers.Authorization = 'Bearer ' + response.data.access_token
+                    config.headers.Authorization = 'Token ' + response.data.access_token
                     cookieService.setCookie('access_token', response.data.access_token)
                     return ax(config)
                 }
