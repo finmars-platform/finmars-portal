@@ -257,6 +257,10 @@ import QueuePromisesService from "../services/queuePromisesService";
 			})
 			.then(res => {
 
+				if (res.data.user_code.startsWith('system_autosave_')) {
+					throw "This user code reserved for system layout. Please use another one";
+				}
+
 				if (res.status === 'agree') {
 
 					const saveAsLayout = function () {
@@ -277,7 +281,11 @@ import QueuePromisesService from "../services/queuePromisesService";
 
 					};
 
-					if (isRootEntityViewer) listLayout.is_default = true; // default layout for split panel does not have is_default === true
+					if (isRootEntityViewer) {
+						listLayout.is_default = true; // default layout for split panel does not have is_default === true
+					}
+
+					listLayout.is_systemic = false;
 
 					if (listLayout.id) { // if layout based on another existing layout
 

@@ -345,7 +345,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                 /* if (stateWithLayout && scope.member.data.autosave_layouts !== false) {
                     scope.showAutosaveLayoutCheckbox = true;
                 } */
-                scope.showAutosaveLayoutCheckbox = stateWithLayout && scope.member.data && scope.member.data.autosave_layouts;
+                scope.showAutosaveLayoutCheckbox = user.layouts_autosave && stateWithLayout;
 
             });
 
