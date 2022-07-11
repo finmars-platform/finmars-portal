@@ -36,7 +36,7 @@ import cookieService from "./cookieService";
                 })
             }
             // error on refresh
-            if (err.response.config.url.indexOf('/token-refresh/') !== -) {
+            if (err.response.config.url.indexOf('/token-refresh/') !== -1) {
 
                 var pieces = window.location.href.split('#')
                 window.location = pieces[0] + '#!/authentication'
