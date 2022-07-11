@@ -310,6 +310,7 @@
         var postBookComplexTransactionActions = function (cTransactionData) {
 
             var pbraResult = sharedLogicHelper.postBookRebookActions(cTransactionData, vm.recalculate);
+            vm.entity.attributes = pbraResult.attributes;
             vm.tabs = pbraResult.tabs;
             vm.fixedArea = pbraResult.fixedArea;
             dataConstructorLayout = pbraResult.dataConstructorLayout;
@@ -336,7 +337,7 @@
 			keys.forEach(item => vm.entity[item] = cTransactionData.values[item]); */
 			vm.entity.values = cTransactionData.values;
 
-			cTransactionData.complex_transaction.attributes.forEach(function (item) {
+			/* cTransactionData.complex_transaction.attributes.forEach(function (item) {
 				if (item.attribute_type_object.value_type === 10) {
 					vm.entity[item.attribute_type_object.name] = item.value_string
 				}
@@ -349,7 +350,7 @@
 				if (item.attribute_type_object.value_type === 40) {
 					vm.entity[item.attribute_type_object.name] = item.value_date
 				}
-			});
+			}); */
 
 			postBookComplexTransactionActions(cTransactionData);
 
@@ -824,6 +825,33 @@
 
         };
 
+        vm.editAsJson = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityAsJsonEditorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        item:  vm.originalComplexTransaction,
+                        entityType: vm.entityType,
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.getItem().then(function () {
+                        $scope.$apply();
+                    });
+
+
+                }
+            })
+
+        }
+
         // let recalculateTimeoutID;
 
         vm.recalculate = function (paramsObj) {
@@ -1093,10 +1121,21 @@
         };
 
         vm.getAttributeTypes = function () {
-            attributeTypeService.getList(vm.entityType).then(function (data) {
-                vm.attrs = data.results;
-                vm.readyStatus.attrs = true;
-            });
+
+            return new Promise(function (resolve, reject) {
+
+                attributeTypeService.getList(vm.entityType).then(function (data) {
+                    vm.attrs = data.results;
+                    vm.readyStatus.attrs = true;
+                    resolve(vm.attrs);
+
+                }).catch(function (error) {
+                    console.error(error);
+                    resolve([]);
+                });
+
+            })
+
         };
 
         vm.checkReadyStatus = function () {
@@ -1983,8 +2022,7 @@
                             $scope.$apply()
                         }, 0)
 
-                    })
-                    vm.getAttributeTypes();
+                    });
 
                 }
 
@@ -2048,8 +2086,10 @@
                 vm.evEditorDataService.setColorPalettesList(palettesList);
             });
 
-            vm.getItem();
-            vm.getAttributeTypes();
+            vm.getAttributeTypes().then(function () {
+                vm.getItem();
+            });
+
             vm.loadTransactionTypes();
 
         };

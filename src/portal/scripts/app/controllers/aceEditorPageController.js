@@ -66,6 +66,7 @@
                 vm.editor.getSession().setUseWorker(false);
                 vm.editor.setHighlightActiveLine(false);
                 vm.editor.setShowPrintMargin(false);
+
                 ace.require("ace/ext/language_tools");
                 vm.editor.setOptions({
                     enableBasicAutocompletion: true,
@@ -74,6 +75,9 @@
                 vm.editor.setFontSize(14)
                 vm.editor.setBehavioursEnabled(true);
                 vm.editor.setValue(vm.item.expression)
+
+                vm.editor.focus();
+                vm.editor.navigateFileStart();
 
             }, 100)
 

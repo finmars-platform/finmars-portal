@@ -123,7 +123,7 @@
 					targetLayout.is_default = true;
 
                     uiService.updateDashboardLayout(targetLayout.id, targetLayout).then(async function (data) {
-
+                        scope.dashboardDataService.updateModifiedDate(data.modified);
                         toastNotificationService.success("Dashboard Layout is set as default");
 
                     });
@@ -137,11 +137,12 @@
 
                 scope.saveLayoutList = function () {
 
-                    scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
-
                     uiService.updateDashboardLayout(scope.layout.id, scope.layout).then(function (data) {
 
                         toastNotificationService.success("Dashboard Layout is Saved")
+                        scope.dashboardDataService.updateModifiedDate(data.modified);
+
+                        scope.dashboardEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
 
                     });
@@ -185,7 +186,7 @@
                             scope.layout.name = res.data.name;
 
                             uiService.updateDashboardLayout(scope.layout.id, scope.layout).then(async function (data) {
-
+                                scope.dashboardDataService.updateModifiedDate(data.modified);
                                 toastNotificationService.success("Dashboard Layout is renamed")
 
                             });
@@ -336,7 +337,7 @@
 
                     $mdDialog.show({
                         controller: 'DashboardLayoutListDialogController as vm',
-                        templateUrl: 'views/dialogs/dashboard/dashboard-layout-list-view.html',
+                        templateUrl: 'views/dialogs/dashboard/layout-list-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         preserveScope: false,

@@ -21,7 +21,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'im
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 }

@@ -146,7 +146,7 @@ export default (function () {
 	portal.directive('reportViewerPieChart', ['d3Service', require('./app/directives/reportViewer/reportViewerPieChart')]);
 
 
-	portal.controller('DashboardLayoutListDialogController', ['$scope', '$mdDialog', 'backendConfigurationImportService', 'data', require('./app/controllers/dialogs/dashboard/dashboardLayoutListDialogController')]);
+	portal.controller('DashboardLayoutListDialogController', ['$scope', '$mdDialog', 'backendConfigurationImportService', 'data', require('./app/controllers/dialogs/dashboard/layoutListDialogController')]);
 	portal.controller('DashboardLayoutExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/dashboard/dashboardLayoutExportDialogController')]);
 	//</editor-fold desc="Dashboard">
 
@@ -170,6 +170,7 @@ export default (function () {
 	portal.controller('ExpressionEditorDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/expressionEditorDialogController')]);
 	portal.controller('AceEditorDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/aceEditorDialogController')]);
 	portal.controller('JsonEditorDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/jsonEditorDialogController')]);
+	portal.controller('EntityAsJsonEditorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/entityAsJsonEditorDialogController')]);
 	portal.controller('ConfigurationPackageDialogController', ['$scope', '$mdDialog', 'backendConfigurationImportService', 'data', require('./app/controllers/dialogs/configurationPackageDialogController')]);
 	portal.controller('UseFromAboveDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService', require('./app/controllers/dialogs/useFromAboveDialogController')]);
 	portal.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentSelectDialogController')]);
@@ -242,7 +243,7 @@ export default (function () {
 	*/
 	portal.controller('HealthcheckController', ['$scope', require('./app/controllers/pages/healthcheckController')]);
 
-	portal.controller('TwoFactorLoginDialogController', ['$scope', '$mdDialog', 'username', require('./app/controllers/dialogs/twoFactorLoginDialogController')]);
+	portal.controller('TwoFactorLoginDialogController', ['$scope', '$mdDialog', 'username', 'password', require('./app/controllers/dialogs/twoFactorLoginDialogController')]);
 
 	// System Dialogs
 
@@ -851,5 +852,25 @@ export default (function () {
 		})
 
 	}
+
+	var currentUrl = location.href;
+	window.addEventListener('hashchange', function() {
+		_paq.push(['setReferrerUrl', currentUrl]);
+		currentUrl = '/' + window.location.hash.substr(1);
+		_paq.push(['setCustomUrl', currentUrl]);
+		_paq.push(['setDocumentTitle', document.title]);
+
+		// remove all previously assigned custom variables, requires Matomo (formerly Piwik) 3.0.2
+		_paq.push(['deleteCustomVariables', 'page']);
+		_paq.push(['trackPageView']);
+
+		// make Matomo aware of newly added content
+		var content = document.body;
+		_paq.push(['MediaAnalytics::scanForMedia', content]);
+		_paq.push(['FormAnalytics::scanForForms', content]);
+		_paq.push(['trackContentImpressionsWithinNode', content]);
+		_paq.push(['enableLinkTracking']);
+	});
+
 
 })();

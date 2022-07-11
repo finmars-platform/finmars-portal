@@ -31,6 +31,15 @@
     <md-input-container class="md-block" style="height: 64px">
         <md-checkbox data-ng-model="vm.user.layouts_autosave">Autosave mode</md-checkbox>
     </md-input-container>
+
+    <md-input-container class="md-block">
+
+        <md-checkbox data-ng-click="vm.codeEditorChange()" data-ng-checked="vm.codeEditorInExpressionBuilder">
+            Code Editor in Expression Builder
+        </md-checkbox>
+
+    </md-input-container>
+
     <md-button class="md-raised" data-ng-click="vm.save()">Save</md-button>
 </div>
 <!--
