@@ -19,7 +19,7 @@
     var metaService = require('../../services/metaService');
     var EvScrollManager = require('../../services/ev-dom-manager/ev-scroll.manager');
 
-    module.exports = function (evRvDomManagerService) {
+    module.exports = function (usersService, globalDataService, evRvDomManagerService) {
         return {
             restrict: 'AE',
             scope: {
@@ -87,7 +87,7 @@
 
                     rvDataHelper.syncLevelFold(scope.evDataService);
 
-                    var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
+                    var flatList = rvDataHelper.getFlatStructure(scope.evDataService, globalDataService);
                     flatList.shift(); // remove root group
 
                     flatList = flatList.filter(function (item) {
@@ -130,7 +130,7 @@
 
                     window.requestAnimationFrame(function () {
 
-                        rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                        rvRenderer.render(contentElem, projection, globalDataService, scope.evDataService, scope.evEventService);
                         cellContentOverflow();
 
                     });
@@ -140,7 +140,7 @@
                 function renderEntityViewer() {
 
                     // var flatList = evDataHelper.getFlatStructure(scope.evDataService);
-                    var flatList = evDataHelper.getObjectsFromSelectedGroups(scope.evDataService);
+                    var flatList = evDataHelper.getObjectsFromSelectedGroups(scope.evDataService, globalDataService);
 
                     console.log('renderEntityViewer.flatlist', flatList);
                     /* flatList = flatList.map(function (item, i) {
@@ -231,7 +231,7 @@
                     evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
 
                     window.requestAnimationFrame(function () {
-                        evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                        evRenderer.render(contentElem, projection, globalDataService, scope.evDataService, scope.evEventService);
                     });
 
 
@@ -376,7 +376,7 @@
                         projection = rvDataHelper.calculateProjection(flatList, scope.evDataService);
 
                         rvDomManager.calculateScroll(elements, scope.evDataService);
-                        rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                        rvRenderer.render(contentElem, projection, globalDataService, scope.evDataService, scope.evEventService);
 
                         clearOverflowingCells();
                         cellContentOverflow();
@@ -386,7 +386,7 @@
                         projection = evDataHelper.calculateProjection(flatList, scope.evDataService);
 
                         evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
-                        evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                        evRenderer.render(contentElem, projection, globalDataService, scope.evDataService, scope.evEventService);
                     }
 
 
@@ -492,7 +492,7 @@
                         // rvDomManager.calculateScroll(elements, scope.evDataService);
 
                         if (projection) {
-                            rvRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                            rvRenderer.render(contentElem, projection, globalDataService, scope.evDataService, scope.evEventService);
                         }
 
                     } else {
@@ -501,7 +501,7 @@
                         // evDomManager.calculateVirtualStep(elements, scope.evDataService, scope.scrollManager);
 
                         if (projection) {
-                            evRenderer.render(contentElem, projection, scope.evDataService, scope.evEventService);
+                            evRenderer.render(contentElem, projection, globalDataService, scope.evDataService, scope.evEventService);
                         }
 
                     }
@@ -535,7 +535,7 @@
 
                             rvDomManager.calculateScroll(elements, scope.evDataService);
 
-                            rvDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+                            rvDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService, usersService, globalDataService);
                             // rvDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
 
 
@@ -551,7 +551,7 @@
 
 
                             // If we already have data (e.g. viewType changed)
-                            var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
+                            var flatList = rvDataHelper.getFlatStructure(scope.evDataService, globalDataService);
 
                             if (flatList.length > 1) {
 
@@ -575,7 +575,7 @@
 
                             evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
 
-                            evDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService);
+                            evDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService, usersService, globalDataService);
                             evDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
 
                             evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService, scope.scrollManager);

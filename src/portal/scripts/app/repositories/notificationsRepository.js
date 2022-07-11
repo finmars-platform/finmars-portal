@@ -29,7 +29,7 @@ var apiVersion = baseUrlService.getApiVersion();
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -48,11 +48,11 @@ var apiVersion = baseUrlService.getApiVersion();
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(data)
+                data: JSON.stringify(data)
             });
     }
 
@@ -67,11 +67,11 @@ var apiVersion = baseUrlService.getApiVersion();
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify({})
+                data: JSON.stringify({})
             });
     }
 

@@ -33,11 +33,11 @@
         var dashboardEvents = require('../../services/dashboard/dashboardEvents');
         var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-        module.exports = function ($scope, $mdDialog, toastNotificationService, usersService, gFiltersHelper) {
+        module.exports = function ($scope, $mdDialog, toastNotificationService, usersService, globalDataService, gFiltersHelper) {
 
             var vm = this;
 
-            var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog);
+            var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService);
 
             vm.readyStatus = {
                 attributes: false,
@@ -109,7 +109,7 @@
 
                 var contextData = {
                     effective_date: reportOptions.report_date,
-                    position: null,
+                    position_size: null,
                     pricing_currency: null,
                     accrued_currency: null,
                     instrument: null,
@@ -142,7 +142,7 @@
                 }
 
                 if (activeObject['position_size']) {
-                    contextData.position = activeObject['position_size'];
+                    contextData.position_size = activeObject['position_size'];
                 }
 
                 if (reportOptions['pricing_policy']) {

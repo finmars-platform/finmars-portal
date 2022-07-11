@@ -1,6 +1,10 @@
 /**
  * Created by szhitenev on 05.05.2016.
  */
+
+// import {embedDashboard} from '../../../../core/superset/index'
+// import supersetService from "../services/supersetService";
+
 (function () {
 
     'use strict';
@@ -9,12 +13,14 @@
 
     var DashboardDataService = require('../services/dashboard/dashboardDataService');
     var DashboardEventService = require('../services/eventService');
+    var supersetService = require('../services/supersetService');
 
     var dashboardEvents = require('../services/dashboard/dashboardEvents');
     var dashboardComponentStatuses = require('../services/dashboard/dashboardComponentStatuses');
     var metaHelper = require('../helpers/meta.helper');
 
     var toastNotificationService = require('../../../../core/services/toastNotificationService');
+
 
     module.exports = function ($scope, $stateParams, $mdDialog) {
 
@@ -291,7 +297,7 @@
 
             $mdDialog.show({
                 controller: 'DashboardLayoutListDialogController as vm',
-                templateUrl: 'views/dialogs/dashboard/dashboard-layout-list-view.html',
+                templateUrl: 'views/dialogs/dashboard/layout-list-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 preserveScope: false,
@@ -318,6 +324,8 @@
             uiService.updateDashboardLayout(vm.layout.id, vm.layout).then(function (data) {
 
                 vm.layout = data;
+
+                vm.dashboardDataService.setListLayout(JSON.parse(JSON.stringify(data)));
 
                 toastNotificationService.success("Dashboard Layout is Saved")
 
@@ -618,6 +626,7 @@
 
             });
 
+
         };
 
         vm.init = function () {
@@ -632,6 +641,8 @@
 
             vm.openDashboardLayout();
             vm.initEventListeners();
+
+
 
 
         };

@@ -37,11 +37,13 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
     }
 
-    const onLogInSuccess = function (authorizationToken) {
+    const onLogInSuccess = function (data) {
 
         vm.username = '';
 
-        if (authorizationToken) cookieService.setCookie('authtoken', authorizationToken);
+        cookieService.setCookie('access_token', data['access_token']);
+        cookieService.setCookie('refresh_token', data['refresh_token']);
+
 
         authorizerService.getMe().then(activeUser => {
 
@@ -66,9 +68,6 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
             console.log('authorizerService.login.data', data);
 
-            vm.processing = false;
-            $scope.$apply();
-
             if (data.success) {
 
                 if (data.two_factor_check) {
@@ -78,31 +77,37 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
                         templateUrl: 'views/dialogs/two-factor-login-dialog-view.html',
                         parent: angular.element(document.body),
                         locals: {
-                            username: vm.username
+                            username: vm.username,
+                            password: vm.password
                         },
                         multiple: true,
                         targetEvent: $event
 
                     })
                         .then(res => {
-                            if (res.status === 'agree') onLogInSuccess(res.token);
+                            if (res.status === 'agree') {
+                                onLogInSuccess(res.data);
+                            } else {
+                                vm.processing = false;
+                            }
                         });
 
                 } else {
-                    onLogInSuccess(data.token);
+                    onLogInSuccess(data);
                 }
 
             } else {
+                vm.processing = false;
                 vm.error = true;
                 vm.errorMessage = data.message
+                $scope.$apply();
             }
 
         }).catch(error => {
+            vm.processing = false;
             vm.error = true;
             console.error(error);
         });
-
-        vm.password = '';
 
     };
 
@@ -250,7 +255,8 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
                     } */
                     $state.go('app.authentication');
 
-                    cookieService.deleteCookie('authtoken');
+                    cookieService.deleteCookie('access_token');
+                    cookieService.deleteCookie('refresh_token');
 
                 });
 
@@ -269,15 +275,15 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
             websocketService.addEventListener('master_user_change', function (data) {
 
-				if (data.base_api_url) {
+                if (data.base_api_url) {
 
-					window.document.title = data.master_user.name + ' | Finmars'
+                    window.document.title = data.master_user.name + ' | Finmars'
 
-					baseUrlService.setMasterUserPrefix(data.base_api_url);
+                    baseUrlService.setMasterUserPrefix(data.base_api_url);
 
-					globalDataService.setCurrentMasterUserStatus(true);
+                    globalDataService.setCurrentMasterUserStatus(true);
 
-				}
+                }
 
                 console.log('master_user_change data', data);
 

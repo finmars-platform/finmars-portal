@@ -27,7 +27,7 @@
     const shareConfigurationFileService = require('../../services/shareConfigurationFileService');
     // const backendConfigurationImportService = require('../../services/backendConfigurationImportService');
 
-    module.exports = function ($mdDialog, $state, backendConfigurationImportService) {
+    module.exports = function ($mdDialog, $state, usersService, globalDataService, backendConfigurationImportService) {
         return {
             restrict: 'E',
             templateUrl: 'views/components/layouts-manager-view.html',
@@ -679,7 +679,7 @@
                 scope.saveLayoutList = function () {
 					// scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 					scope.parentPopup.cancel();
-                    evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport);
+                    evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport, usersService, globalDataService);
                 };
 
 				/* var applyLayout = function (layout) {

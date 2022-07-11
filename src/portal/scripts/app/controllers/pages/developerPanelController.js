@@ -1,3 +1,6 @@
+// import {embedDashboard} from "../../../../../core/superset";
+
+
 /**
  * Created by mevstratov on 24.06.2019.
  */
@@ -7,6 +10,9 @@
 
     var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
     var instrumentEventService = require('../../services/instrumentEventService');
+    var supersetService = require("../../services/supersetService");
+    var embeddedsdk = require("@superset-ui/embedded-sdk");
+
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -210,6 +216,30 @@
             });
 
         };
+
+        setTimeout(() => {
+
+            console.log(embeddedsdk.embedDashboard)
+
+            embeddedsdk.embedDashboard({
+                id: "3f4dfb00-93be-4969-ab37-2f4476067973", // given by the Superset embedding UI
+                supersetDomain: "https://superset.finmars.com",
+                mountPoint: document.getElementById("my-superset-container"), // any html element that can contain an iframe
+                fetchGuestToken: function () {
+
+                    return new Promise(function (resolve, reject) {
+                        supersetService.getSecurityToken("3f4dfb00-93be-4969-ab37-2f4476067973").then((data) => {
+                            resolve(data.token);
+                        })
+                    })
+
+                },
+                dashboardUiConfig: {hideTitle: true}, // dashboard UI config: hideTitle, hideTab, hideChartControls (optional)
+                debug: false
+            });
+
+        }, 1000)
+
     }
 
 }());

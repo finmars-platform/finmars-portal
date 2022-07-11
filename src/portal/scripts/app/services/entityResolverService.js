@@ -207,6 +207,9 @@
             case 'portfolio-register':
                 return portfolioRegisterService.getByKey(id);
                 break;
+            case 'portfolio-register-record':
+                return portfolioRegisterRecordService.getByKey(id);
+                break;
             case 'account':
                 return accountService.getByKey(id);
                 break;
@@ -293,11 +296,33 @@
                 break;
             case 'currency-history-error':
                 return currencyHistoryErrorService.getByKey(id);
+                break;
+            case 'csv-import-scheme':
+                return csvImportSchemeService.getByKey(id);
+                break;
+            case 'complex-import-scheme':
+                return complexImportSchemeService.getByKey(id);
+                break;
+            case 'complex-transaction-import-scheme':
+                return complexTransactionImportSchemeService.getByKey(id);
+                break;
         }
     };
 
     var create = function (entityType, entity) {
+
+
+
         switch (entityType) {
+            case 'csv-import-scheme':
+                return csvImportSchemeService.create(entity);
+                break;
+            case 'complex-import-scheme':
+                return complexImportSchemeService.create(entity);
+                break;
+            case 'complex-transaction-import-scheme':
+                return complexTransactionImportSchemeService.create(entity);
+                break;
             case 'portfolio':
                 entity.counterparties = entity.counterparties || [];
                 entity.accounts = entity.accounts || [];
@@ -397,11 +422,22 @@
                 return tagService.create(entity);
                 break;
 
+
         }
     };
 
     var update = function (entityType, id, entity) {
+
         switch (entityType) {
+            case 'csv-import-scheme':
+                return csvImportSchemeService.update(id, entity);
+                break;
+            case 'complex-import-scheme':
+                return complexImportSchemeService.update(id, entity);
+                break;
+            case 'complex-transaction-import-scheme':
+                return complexTransactionImportSchemeService.update(id, entity);
+                break;
             case 'portfolio':
                 return portfolioService.update(id, entity);
                 break;
@@ -440,6 +476,7 @@
                 break;
             case 'complex-transaction-default':
                 return complexTransactionService.update(entity.id, entity);
+                break;
             case 'complex-transaction':
                 // return complexTransactionService.bookComplexTransaction(entity.id, entity);
                 return new Promise(function (resolve, reject) {
@@ -520,6 +557,7 @@
                 break;
             case 'currency-history-error':
                 return currencyHistoryErrorService.update(id, entity);
+                break;
         }
     };
 
@@ -619,6 +657,9 @@
             case 'portfolio-register':
                 return portfolioRegisterService.deleteByKey(id);
                 break;
+            case 'portfolio-register-record':
+                return portfolioRegisterRecordService.deleteByKey(id);
+                break;
             case 'account':
                 return accountService.deleteByKey(id);
                 break;
@@ -702,6 +743,16 @@
                 break;
             case 'currency-history-error':
                 return currencyHistoryErrorService.deleteByKey(id);
+                break;
+            case 'csv-import-scheme':
+                return csvImportSchemeService.deleteByKey(id);
+                break;
+            case 'complex-import-scheme':
+                return complexImportSchemeService.deleteByKey(id);
+                break;
+            case 'complex-transaction-import-scheme':
+                return complexTransactionImportSchemeService.deleteByKey(id);
+                break;
         }
     };
 
@@ -711,6 +762,8 @@
                 return portfolioService.deleteBulk(data);
             case 'portfolio-register':
                 return portfolioRegisterService.deleteBulk(data);
+            case 'portfolio-register-record':
+                return portfolioRegisterRecordService.deleteBulk(data);
             case 'currency':
                 return currencyService.deleteBulk(data);
             case 'account':
