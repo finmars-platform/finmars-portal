@@ -22,8 +22,6 @@ import cookieService from "./cookieService";
         },
         (err) => {
 
-            console.log(err.response.config.url)
-
             // return other errors
             if (err.response.status !== 401) {
                 return new Promise((resolve, reject) => {
@@ -39,7 +37,7 @@ import cookieService from "./cookieService";
             }
             // error on refresh
             if (err.response.config.url === authorizerUrl + '/token-refresh/') {
-                console.log('ERRO NO REFRESH')
+
                 var pieces = window.location.href.split('#')
                 window.location = pieces[0] + '#!/authentication'
                 cookieService.deleteCookie('access_token')
