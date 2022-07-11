@@ -22,6 +22,8 @@ import cookieService from "./cookieService";
         },
         (err) => {
 
+            console.log("Axios catch error", err)
+
             // return other errors
             if (err.response.status !== 401) {
                 return new Promise((resolve, reject) => {
@@ -38,8 +40,7 @@ import cookieService from "./cookieService";
             // error on refresh
             if (err.response.config.url.indexOf('/token-refresh/') !== -1) {
 
-                var pieces = window.location.href.split('#')
-                window.location = pieces[0] + '#!/authentication'
+                window.location.hash = '#!/authentication'
                 cookieService.deleteCookie('access_token')
                 cookieService.deleteCookie('refresh_token')
                 return new Promise((resolve, reject) => {
