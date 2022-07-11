@@ -30,13 +30,13 @@ import cookieService from "./cookieService";
             }
 
             // error on login
-            if (err.response.config.url === authorizerUrl + '/token-auth/') {
+            if (err.response.config.url.indexOf('/token-auth/') !== -1) {
                 return new Promise((resolve, reject) => {
                     reject(err)
                 })
             }
             // error on refresh
-            if (err.response.config.url === authorizerUrl + '/token-refresh/') {
+            if (err.response.config.url.indexOf('/token-refresh/') !== -) {
 
                 var pieces = window.location.href.split('#')
                 window.location = pieces[0] + '#!/authentication'
