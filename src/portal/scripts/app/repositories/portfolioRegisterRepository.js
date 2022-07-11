@@ -23,7 +23,7 @@
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -40,7 +40,7 @@
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -57,7 +57,7 @@
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -75,11 +75,11 @@
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(data)
+                data: JSON.stringify(data)
             })
     };
 
@@ -94,11 +94,11 @@
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(portfolio)
+                data: JSON.stringify(portfolio)
             })
     };
 
@@ -113,11 +113,11 @@
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(portfolio)
+                data: JSON.stringify(portfolio)
             })
     };
 
@@ -132,11 +132,11 @@
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(portfolios)
+                data: JSON.stringify(portfolios)
             })
     };
 
@@ -151,7 +151,7 @@
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -174,11 +174,11 @@
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(data)
+                data: JSON.stringify(data)
             })
             .then(function (data) {
                 return new Promise(function (resolve, reject) {

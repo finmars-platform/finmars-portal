@@ -228,6 +228,7 @@
 
             } */
             var pbraResult = sharedLogicHelper.postBookRebookActions(cTransactionData, vm.recalculate);
+            vm.entity.attributes = pbraResult.attributes;
             vm.tabs = pbraResult.tabs;
             vm.fixedArea = pbraResult.fixedArea;
             dataConstructorLayout = pbraResult.dataConstructorLayout;
@@ -1605,6 +1606,29 @@
 
         }; */
         vm.onEntityChange = sharedLogicHelper.onFieldChange;
+
+        vm.editAsJson = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityAsJsonEditorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        item:  {},
+                        entityType: vm.entityType,
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                }
+
+            })
+
+        }
 
 
         vm.init();

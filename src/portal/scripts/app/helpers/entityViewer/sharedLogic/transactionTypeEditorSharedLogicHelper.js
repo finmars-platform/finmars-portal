@@ -335,28 +335,27 @@
 		 */
 		const insertActions = function (actions) {
 
+            const insertAction = function (action) {
+
+                viewModel.entity.actions.push(action);
+
+                const newActionIndex = viewModel.actionsMultitypeFieldsList.length;
+                const multitypeFieldsData = getMultitypeFieldsDataForAction(action, newActionIndex);
+
+                viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
+
+            };
+
         	if (Array.isArray(actions)) { // add multiple actions
 
 				actions.forEach(function (action) {
 
-					viewModel.entity.actions.push(action);
-
-					const newActionIndex = viewModel.actionsMultitypeFieldsList.length;
-					const multitypeFieldsData = getMultitypeFieldsDataForAction(action, newActionIndex);
-
-					viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
+                    insertAction(action);
 
 				});
 
 			} else { // add single action
-
-        		viewModel.entity.actions.push(actions);
-
-				const newActionIndex = viewModel.actionsMultitypeFieldsList.length;
-				const multitypeFieldsData = getMultitypeFieldsDataForAction(actions, newActionIndex);
-
-				viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
-
+                insertAction(actions);
 			}
 
 			viewModel.findPhantoms();
@@ -523,7 +522,7 @@
 
 		const getActionPaneId = function (action) {
 
-			const actionId = (action.id || action.id === 0) ? action.id : action.frontOptions.id;
+			const actionId = action.id ? action.id : action.frontOptions.id;
 
 			return 'ttype-action-' + actionId;
 
@@ -547,7 +546,6 @@
 			selectOption: function (option, _$popup) {
 
         		_$popup.cancel();
-
         		addAction(option.key);
 
 			}
@@ -1281,8 +1279,16 @@
 
                     }
 
-                    fillFromContext.settings.value = null
-                    fillFromContext.cellType = 'empty'
+                    // fillFromContext.settings.value = null
+                    // fillFromContext.cellType = 'empty'
+
+
+                    if (fillFromContext.cellType === 'selector') {
+
+                        fillFromContext.cellType = 'expression'
+                        fillFromContext.settings = {value: '', exprData: viewModel.expressionData}
+
+                    }
 
                     break;
 
@@ -1315,7 +1321,14 @@
 
                     }
 
-                    fillFromContext.settings.value = null
+                    // fillFromContext.settings.value = null
+
+                    if (fillFromContext.cellType === 'selector') {
+
+                        fillFromContext.cellType = 'expression'
+                        fillFromContext.settings = {value: '', exprData: viewModel.expressionData}
+
+                    }
 
                     break;
 
@@ -1331,8 +1344,15 @@
 
                     }
 
-                    fillFromContext.settings.value = null
-                    fillFromContext.cellType = 'empty'
+                    if (fillFromContext.cellType === 'selector') {
+
+                        fillFromContext.cellType = 'expression'
+                        fillFromContext.settings = {value: '', exprData: viewModel.expressionData}
+
+                    }
+
+                    // fillFromContext.settings.value = null
+                    // fillFromContext.cellType = 'empty'
 
                     break;
 
@@ -1458,6 +1478,7 @@
                         relationItems: viewModel.relationItems,
                         inputsForMultiselector: viewModel.inputsForMultiselector,
 						loadedRelationsList: loadedRelationsList,
+                        expressionData: viewModel.expressionData,
 
 						resolveRelationCallback: resolveRelation,
 						loadRelationCallback: loadRelation,
@@ -1488,13 +1509,18 @@
                     valueType.settings.value = res.data.valueType;
                     contentType.settings.value = res.data.contentType;
                     fillFromContext.settings.value = res.data.context_property;
+
                     defaultValue.settings.value = res.data.value;
+                    defaultValue.settings.exprData = viewModel.expressionData;
+
                     inputCalcExpression.settings.value = res.data.value_expr;
+                    inputCalcExpression.settings.exprData = viewModel.expressionData;
+
                     linkedInputs.settings.value = res.data.linked_inputs_names;
 
                     if (valueType.settings.value === 120) { // Button
 
-                        newRow.columns[8].settings.optionsCheckboxes.selectedOptions = false; // linked inputs for Button have not checkboxes
+                        newRow.columns[8].settings.optionsCheckboxes.selectedOptions = false; // linked inputs for Button have no checkboxes
 
                     }
 
@@ -1623,11 +1649,11 @@
                         objPath: ['context_property'],
                         columnName: 'Use Default Value from Context',
                         order: 5,
-                        cellType: 'empty',
+                        cellType: 'expression',
                         settings: {
-                            value: null,
-                            closeOnMouseOut: false,
-                            unselectButton: true
+                            value: '',
+                            exprData: null,
+                            closeOnMouseOut: false
                         },
                         styles: {
                             'grid-table-cell': {'width': '180px'}

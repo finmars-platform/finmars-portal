@@ -37,10 +37,10 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
             const updateCurrentMasterUser = function () {
 
                 scope.currentMasterUser = globalDataService.getMasterUser();
-
-                window.document.title = scope.currentMasterUser.name + ' | Finmars'
-
                 if (scope.currentMasterUser) {
+
+                    window.document.title = scope.currentMasterUser.name + ' | Finmars'
+
                     websocketService.send({action: "update_user_state", data: {master_user: scope.currentMasterUser}});
                 }
 
@@ -150,7 +150,8 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
                         authorizerService.logout().then(function (data) {
 
-                            cookieService.deleteCookie('authtoken');
+                            cookieService.deleteCookie('access_token');
+                            cookieService.deleteCookie('refresh_token');
                             cookieService.deleteCookie('csrftoken');
 
                             sessionStorage.removeItem('afterLoginEvents');

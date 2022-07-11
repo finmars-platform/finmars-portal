@@ -765,6 +765,13 @@
 
                             }
 
+                            if (scope.item.attribute.key === 'layoutCalculatedText') {
+
+                                scope.specialOptionTemplate = 'views/attribute-options/calculated-text.html';
+                                return true;
+
+                            }
+
                         }
 
                     }

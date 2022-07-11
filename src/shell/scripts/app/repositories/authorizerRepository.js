@@ -10,15 +10,19 @@
 var xhrService = require('../../../../core/services/xhrService');
 var baseUrlService = require('../services/baseUrlService'); */
 import ToastNotificationService from "../services/toastNotificationService";
+
 const toastNotificationService = new ToastNotificationService();
 
 import ErrorService from "../services/errorService";
+
 const errorService = new ErrorService(toastNotificationService);
 
 import CookieService from '../services/cookieService.js';
+
 const cookieService = new CookieService();
 
 import XhrService from '../services/xhrService.js';
+
 const xhrService = new XhrService(errorService);
 
 import baseUrlService from '../services/baseUrlService';
@@ -40,79 +44,79 @@ const authorizerUrl = baseUrlService.getAuthorizerUrl();
 // 			Accept: 'application/json',
 // 			'Content-type': 'application/json'
 // 		},
-// 		body: JSON.stringify({username: login, password: password})
+// 		data: JSON.stringify({username: login, password: password})
 // 	})
 // };
 
 const tokenLogin = function (login, password) {
 
-	return xhrService.fetch(authorizerUrl + '/token-auth/', {
-		method: 'POST',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		},
-		body: JSON.stringify({username: login, password: password})
-	})
+    return xhrService.fetch(authorizerUrl + '/token-auth/', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        },
+        data: JSON.stringify({username: login, password: password})
+    })
 };
 
 const logout = function () {
 
-	return xhrService.fetch(authorizerUrl + '/logout/', {
-		method: 'POST',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		},
-		body: JSON.stringify({})
-	})
+    return xhrService.fetch(authorizerUrl + '/logout/', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        },
+        data: JSON.stringify({})
+    })
 };
 
 const changePassword = function (id, user) {
 
-	return xhrService.fetch(authorizerUrl + '/user/' + id + '/set-password/', {
-		method: 'PUT',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		},
-		body: JSON.stringify(user)
-	})
+    return xhrService.fetch(authorizerUrl + '/user/' + id + '/set-password/', {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        },
+        data: JSON.stringify(user)
+    })
 };
 
 
 const ping = function () {
 
-	return xhrService.fetch(authorizerUrl + '/ping/', {
-		method: 'GET',
-		credentials: 'include',
-		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	})
+    return xhrService.fetch(authorizerUrl + '/ping/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    })
 };
 
 const protectedPing = function () {
 
-	return xhrService.fetch(authorizerUrl + '/protected-ping/', {
-		method: 'GET',
-		credentials: 'include',
-		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	})
+    return xhrService.fetch(authorizerUrl + '/protected-ping/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    })
 };
 
 /* var getUsersList = function () {
@@ -124,7 +128,7 @@ const protectedPing = function () {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -140,7 +144,7 @@ var getUserByKey = function (id) {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -156,7 +160,7 @@ var getUser = function () {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -172,7 +176,7 @@ var getMyCurrentMember = function () {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -182,140 +186,139 @@ var getMyCurrentMember = function () {
 //<editor-fold desc="User">
 const getMe = function () {
 
-	/* const baseUrl = baseUrlService.resolve();
+    /* const baseUrl = baseUrlService.resolve();
 
-	const prefix = baseUrlService.getMasterUserPrefix();
-	const apiVersion = baseUrlService.getApiVersion();
+    const prefix = baseUrlService.getMasterUserPrefix();
+    const apiVersion = baseUrlService.getApiVersion();
 
-	return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/user/0/', {
-		method: 'GET',
-		credentials: 'include',
-		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	}); */
+    return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/user/0/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    }); */
 
-	return xhrService.fetch(authorizerUrl + '/user/0/', {
-		method: 'GET',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	})
+    return xhrService.fetch(authorizerUrl + '/user/0/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    })
 
-	/* return xhrService.fetch(authorizerUrl + '/user/get-me/', {
-		method: 'GET',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	}) */
+    /* return xhrService.fetch(authorizerUrl + '/user/get-me/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    }) */
 
 };
 
 const getUserByKey = function (id) {
 
-	return xhrService.fetch(authorizerUrl + '/user/' + id + '/', {
-		method: 'GET',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	})
+    return xhrService.fetch(authorizerUrl + '/user/' + id + '/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    })
 
 }
 
 const updateUser = function (id, user) {
 
-	return xhrService.fetch(authorizerUrl + '/user/' + id + '/', {
-		method: 'PUT',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		},
-		body: JSON.stringify(user)
-	})
+    return xhrService.fetch(authorizerUrl + '/user/' + id + '/', {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        },
+        data: JSON.stringify(user)
+    })
 
 };
 
 const patchUser = function (id, user) {
 
-	return xhrService.fetch(authorizerUrl + '/user/' + id + '/', {
-		method: 'PATCH',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		},
-		body: JSON.stringify(user)
-	})
+    return xhrService.fetch(authorizerUrl + '/user/' + id + '/', {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        },
+        data: JSON.stringify(user)
+    })
 
 };
 
 const deleteUserByKey = function (id) {
 
-	return xhrService.fetch(authorizerUrl + '/user/' + id + '/', {
-		method: 'DELETE',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	})
+    return xhrService.fetch(authorizerUrl + '/user/' + id + '/', {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    })
 
 };
 
 const checkUsernameUniqueness = function (username) {
 
-	var authorizerUrl = baseUrlService.getAuthorizerUrl();
+    var authorizerUrl = baseUrlService.getAuthorizerUrl();
 
-	return xhrService.fetch(authorizerUrl + '/user-check-existence/?username=' + username, {
-		method: 'GET',
-		credentials: 'include',
-		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	});
+    return xhrService.fetch(authorizerUrl + '/user-check-existence/?username=' + username, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    });
 
 };
 
 const transferOwner = function (data) {
 
-	var authorizerUrl = baseUrlService.getAuthorizerUrl();
+    var authorizerUrl = baseUrlService.getAuthorizerUrl();
 
-	return xhrService.fetch(authorizerUrl + '/master-user-change-owner/', {
-		method: 'POST',
-		body: JSON.stringify(data),
-		credentials: 'include',
-		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	});
+    return xhrService.fetch(authorizerUrl + '/master-user-change-owner/', {
+        method: 'POST',
+        data: JSON.stringify(data),
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    });
 
 };
-
 
 
 //</editor-fold>
@@ -323,15 +326,15 @@ const transferOwner = function (data) {
 //<editor-fold desc="Master user">
 const getCurrentMasterUser = function () {
 
-	return xhrService.fetch(authorizerUrl + '/get-current-master-user', {
-		method: 'GET',
-		credentials: 'include',
-		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	})
+    return xhrService.fetch(authorizerUrl + '/get-current-master-user', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    })
 };
 
 /* var update = function (id, user) {
@@ -344,11 +347,11 @@ const getCurrentMasterUser = function () {
 		credentials: 'include',
 		headers: {
 			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		},
-		body: JSON.stringify(user)
+		data: JSON.stringify(user)
 	})
 };
 
@@ -361,11 +364,11 @@ var patchUser = function (id, user) {
 		method: 'PATCH',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		},
-		body: JSON.stringify(user)
+		data: JSON.stringify(user)
 	})
 };
 
@@ -378,7 +381,7 @@ var deleteByKey = function (id) {
 		method: 'DELETE',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -387,113 +390,113 @@ var deleteByKey = function (id) {
 
 const createMasterUser = function (user) {
 
-	return xhrService.fetch(authorizerUrl + '/master-user/', {
-		method: 'POST',
-		credentials: 'include',
-		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		},
-		body: JSON.stringify(user)
-	})
+    return xhrService.fetch(authorizerUrl + '/master-user/', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        },
+        data: JSON.stringify(user)
+    })
 };
 
 const getMasterUsersListLight = function () {
 
-	return xhrService.fetch(authorizerUrl + '/master-user-light/', {
-		method: 'GET',
-		credentials: 'include',
-		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	})
+    return xhrService.fetch(authorizerUrl + '/master-user-light/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    })
 };
 
 const getMasterUsersList = function () {
 
-	return xhrService.fetch(authorizerUrl + '/master-user/', {
-		method: 'GET',
-		credentials: 'include',
-		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	})
+    return xhrService.fetch(authorizerUrl + '/master-user/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    })
 };
 
 const getMasterUserByKey = function (id) {
 
-	return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/', {
-		method: 'GET',
-		credentials: 'include',
-		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	})
+    return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    })
 };
 
 const updateMasterUser = function (id, user) {
 
-	return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/', {
-		method: 'PUT',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		},
-		body: JSON.stringify(user)
-	})
+    return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/', {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        },
+        data: JSON.stringify(user)
+    })
 };
 
 const patchMasterUser = function (id, user) {
 
-	return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/', {
-		method: 'PATCH',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		},
-		body: JSON.stringify(user)
-	})
+    return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/', {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        },
+        data: JSON.stringify(user)
+    })
 };
 
 const deleteMasterUserByKey = function (id) {
 
-	return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/', {
-		method: 'DELETE',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	})
+    return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/', {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    })
 };
 
 const setCurrentMasterUser = function (id) {
 
-	return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/set-current/', {
-		method: 'PATCH',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	})
+    return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/set-current/', {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    })
 };
 //</editor-fold>
 
@@ -506,7 +509,7 @@ const setCurrentMasterUser = function (id) {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -522,7 +525,7 @@ var getMemberByKey = function (id) {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -538,11 +541,11 @@ var updateMember = function (id, user) {
 		method: 'PUT',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		},
-		body: JSON.stringify(user)
+		data: JSON.stringify(user)
 	})
 };
 
@@ -555,11 +558,11 @@ var patchMember = function (id, user) {
 		method: 'PATCH',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		},
-		body: JSON.stringify(user)
+		data: JSON.stringify(user)
 	})
 };
 
@@ -572,7 +575,7 @@ var deleteMemberByKey = function (id) {
 		method: 'DELETE',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -588,7 +591,7 @@ var getGroupList = function () {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -604,7 +607,7 @@ var getOwnMemberSettings = function () {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -621,11 +624,11 @@ var updateOwnMemberSettings = function (id, member) {
 		credentials: 'include',
 		headers: {
 			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		},
-		body: JSON.stringify(member)
+		data: JSON.stringify(member)
 	})
 };
 
@@ -640,7 +643,7 @@ var getUsercodePrefixList = function () {
 			method: 'GET',
 			credentials: 'include',
 			headers: {
-				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 				Accept: 'application/json',
 				'Content-type': 'application/json'
 			}
@@ -658,11 +661,11 @@ var createUsercodePrefix = function (item) {
 			credentials: 'include',
 			headers: {
 				'X-CSRFToken': cookieService.getCookie('csrftoken'),
-				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+				'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 				Accept: 'application/json',
 				'Content-type': 'application/json'
 			},
-			body: JSON.stringify(item)
+			data: JSON.stringify(item)
 		})
 };
 
@@ -675,7 +678,7 @@ var deleteUserCodePrefixByKey = function (id) {
 		method: 'DELETE',
 		credentials: 'include',
 		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+			'Authorization': 'Token ' + cookieService.getCookie('access_token'),
 			Accept: 'application/json',
 			'Content-type': 'application/json'
 		}
@@ -689,162 +692,162 @@ var deleteUserCodePrefixByKey = function (id) {
 
 const inviteUser = function (data) {
 
-	return xhrService.fetch(authorizerUrl + '/create-invite-to-user/', {
-		method: 'POST',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		},
-		body: JSON.stringify(data)
-	})
+    return xhrService.fetch(authorizerUrl + '/create-invite-to-user/', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        },
+        data: JSON.stringify(data)
+    })
 
 };
 
 const getInvitesList = function (options) {
 
-	return xhrService.fetch(authorizerUrl + '/invite-to-user/',
-		{
-			method: 'GET',
-			credentials: 'include',
-			headers: {
-				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-				Accept: 'application/json',
-				'Content-type': 'application/json'
-			}
-		})
+    return xhrService.fetch(authorizerUrl + '/invite-to-user/',
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
 
 };
 
 const deleteInviteByKey = function (id) {
 
-	return xhrService.fetch(authorizerUrl + '/invite-to-user/' + id + '/',
-		{
-			method: 'DELETE',
-			credentials: 'include',
-			headers: {
-				'X-CSRFToken': cookieService.getCookie('csrftoken'),
-				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-				Accept: 'application/json',
-				'Content-type': 'application/json'
-			}
-		}).then(function (data) {
-		return new Promise(function (resolve, reject) {
-			resolve({status: 'deleted'});
-		});
-	})
+    return xhrService.fetch(authorizerUrl + '/invite-to-user/' + id + '/',
+        {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(function (data) {
+        return new Promise(function (resolve, reject) {
+            resolve({status: 'deleted'});
+        });
+    })
 };
 
 const authTokenManagerGetList = function () {
 
-	return xhrService.fetch(authorizerUrl + '/auth-token-manager/', {
-		method: 'GET',
-		credentials: 'include',
-		headers: {
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		}
-	});
+    return xhrService.fetch(authorizerUrl + '/auth-token-manager/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    });
 
 }
 
 const authTokenManagerDeleteToken = function (id) {
 
-	return xhrService.fetch(authorizerUrl + '/auth-token-manager/' + id + '/',
-		{
-			method: 'DELETE',
-			credentials: 'include',
-			headers: {
-				'X-CSRFToken': cookieService.getCookie('csrftoken'),
-				'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-				Accept: 'application/json',
-				'Content-type': 'application/json'
-			}
-		}).then(function (data) {
-		return new Promise(function (resolve, reject) {
-			resolve({status: 'deleted'});
-		});
-	})
+    return xhrService.fetch(authorizerUrl + '/auth-token-manager/' + id + '/',
+        {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(function (data) {
+        return new Promise(function (resolve, reject) {
+            resolve({status: 'deleted'});
+        });
+    })
 };
 
 const authTokenManagerCreateToken = function (data) {
 
-	return xhrService.fetch(authorizerUrl + '/auth-token-manager/', {
-		method: 'POST',
-		credentials: 'include',
-		headers: {
-			'X-CSRFToken': cookieService.getCookie('csrftoken'),
-			'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
-			Accept: 'application/json',
-			'Content-type': 'application/json'
-		},
-		body: JSON.stringify(data)
-	})
+    return xhrService.fetch(authorizerUrl + '/auth-token-manager/', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        },
+        data: JSON.stringify(data)
+    })
 
 };
 
 // module.exports = {
 export default {
-	tokenLogin: tokenLogin,
-	logout: logout,
+    tokenLogin: tokenLogin,
+    logout: logout,
 
-	ping: ping,
-	protectedPing: protectedPing,
+    ping: ping,
+    protectedPing: protectedPing,
 
-	/* getUsersList: getUsersList,
-	getUserByKey: getUserByKey,
-	getUser: getUser,
-	getMyCurrentMember: getMyCurrentMember, */
-	changePassword: changePassword,
-	/* update: update,
-	patchUser: patchUser,
-	deleteByKey: deleteByKey, */
-	getMe: getMe,
-	getUserByKey: getUserByKey,
-	updateUser: updateUser,
-	patchUser: patchUser,
-	deleteUserByKey: deleteUserByKey,
-	checkUsernameUniqueness: checkUsernameUniqueness,
+    /* getUsersList: getUsersList,
+    getUserByKey: getUserByKey,
+    getUser: getUser,
+    getMyCurrentMember: getMyCurrentMember, */
+    changePassword: changePassword,
+    /* update: update,
+    patchUser: patchUser,
+    deleteByKey: deleteByKey, */
+    getMe: getMe,
+    getUserByKey: getUserByKey,
+    updateUser: updateUser,
+    patchUser: patchUser,
+    deleteUserByKey: deleteUserByKey,
+    checkUsernameUniqueness: checkUsernameUniqueness,
 
-	getCurrentMasterUser: getCurrentMasterUser,
-	createMasterUser: createMasterUser,
-	getMasterUsersList: getMasterUsersList,
-	getMasterUsersListLight: getMasterUsersListLight,
-	getMasterUserByKey: getMasterUserByKey,
-	updateMasterUser: updateMasterUser,
-	patchMasterUser: patchMasterUser,
-	deleteMasterUserByKey: deleteMasterUserByKey,
-	setCurrentMasterUser: setCurrentMasterUser,
+    getCurrentMasterUser: getCurrentMasterUser,
+    createMasterUser: createMasterUser,
+    getMasterUsersList: getMasterUsersList,
+    getMasterUsersListLight: getMasterUsersListLight,
+    getMasterUserByKey: getMasterUserByKey,
+    updateMasterUser: updateMasterUser,
+    patchMasterUser: patchMasterUser,
+    deleteMasterUserByKey: deleteMasterUserByKey,
+    setCurrentMasterUser: setCurrentMasterUser,
 
-	/* getMemberList: getMemberList,
-	getMemberByKey: getMemberByKey,
-	updateMember: updateMember,
-	patchMember: patchMember,
-	deleteMemberByKey: deleteMemberByKey,
+    /* getMemberList: getMemberList,
+    getMemberByKey: getMemberByKey,
+    updateMember: updateMember,
+    patchMember: patchMember,
+    deleteMemberByKey: deleteMemberByKey,
 
-	getGroupList: getGroupList,
+    getGroupList: getGroupList,
 
-	getOwnMemberSettings: getOwnMemberSettings,
-	updateOwnMemberSettings: updateOwnMemberSettings,
-
-
-	getUsercodePrefixList: getUsercodePrefixList,
-	createUsercodePrefix: createUsercodePrefix,
-	deleteUserCodePrefixByKey: deleteUserCodePrefixByKey, */
-
-	inviteUser: inviteUser,
-	getInvitesList: getInvitesList,
-	deleteInviteByKey: deleteInviteByKey,
+    getOwnMemberSettings: getOwnMemberSettings,
+    updateOwnMemberSettings: updateOwnMemberSettings,
 
 
-	transferOwner: transferOwner,
+    getUsercodePrefixList: getUsercodePrefixList,
+    createUsercodePrefix: createUsercodePrefix,
+    deleteUserCodePrefixByKey: deleteUserCodePrefixByKey, */
 
-	authTokenManagerGetList: authTokenManagerGetList,
-	authTokenManagerDeleteToken: authTokenManagerDeleteToken,
-	authTokenManagerCreateToken: authTokenManagerCreateToken
+    inviteUser: inviteUser,
+    getInvitesList: getInvitesList,
+    deleteInviteByKey: deleteInviteByKey,
+
+
+    transferOwner: transferOwner,
+
+    authTokenManagerGetList: authTokenManagerGetList,
+    authTokenManagerDeleteToken: authTokenManagerDeleteToken,
+    authTokenManagerCreateToken: authTokenManagerCreateToken
 
 }
 
