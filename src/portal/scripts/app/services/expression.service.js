@@ -4,6 +4,7 @@
 
 	var baseUrlService = require('../services/baseUrlService');
 	var cookieService = require('../../../../core/services/cookieService');
+	var xhrService = require('../../../../core/services/xhrService');
 	var baseUrl = baseUrlService.resolve();
 
 	var validate = function (data) {
@@ -16,7 +17,7 @@
 		var prefix = baseUrlService.getMasterUserPrefix();
 		var apiVersion = baseUrlService.getApiVersion();
 
-		return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'utils/expression/',
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'utils/expression/',
 			{
 				method: 'POST',
 				credentials: 'include',
@@ -27,14 +28,6 @@
 					'Content-type': 'application/json'
 				},
 				data: JSON.stringify(data)
-			})
-			.then(function (response) {
-
-				if (!response.ok) {
-					throw response;
-				}
-
-				return response.json()
 			})
 
 
@@ -55,7 +48,7 @@
 		var prefix = baseUrlService.getMasterUserPrefix();
 		var apiVersion = baseUrlService.getApiVersion();
 
-		return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'utils/expression/',
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'utils/expression/',
 			{
 				method: 'POST',
 				credentials: 'include',
@@ -66,14 +59,6 @@
 					'Content-type': 'application/json'
 				},
 				data: JSON.stringify(data)
-			})
-			.then(function (response) {
-
-				if (!response.ok) {
-					throw response;
-				}
-
-				return response.json()
 			})
 	};
 
