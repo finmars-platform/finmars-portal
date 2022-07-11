@@ -1005,6 +1005,10 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
 
                 scope.shareLayout = function ($event) {
 
+                    // needed because on slower devices option "Share" may not hide in time
+                    if (scope.layout.id === scope.autosaveLayout.id) {
+                        return;
+                    }
 					// scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 					scope.parentPopup.cancel();
 

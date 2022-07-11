@@ -370,19 +370,6 @@ import evEvents from "../../services/entityViewerEvents";
 
                 });
 
-                parentEntityViewerEventService.addEventListener(evEvents.TOGGLE_AUTOSAVE, function () {
-
-                    vm.currentMember = globalDataService.getMember();
-
-                    if (vm.currentMember.data && vm.currentMember.data.autosave_layouts) {
-                        autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
-
-                    } else {
-                        autosaveLayoutService.removeChangesTrackingEventListeners(vm.entityViewerEventService);
-                    }
-
-                });
-
                 vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
                     rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
@@ -445,14 +432,37 @@ import evEvents from "../../services/entityViewerEvents";
                 var parentLayout = parentEntityViewerDataService.getListLayout();
                 var parentAdditions = parentEntityViewerDataService.getAdditions();
 
-                // parentLayout.content_type !== parentAdditions.content_type prevents two layouts from overriding each other when auto saving
-                if (parentLayout.content_type !== parentAdditions.layoutData.content_type &&
-                    vm.currentMember.data && vm.currentMember.data.autosave_layouts) {
+                // parentLayout.content_type !== parentAdditions.content_type prevents two layouts from overriding each other by auto saving
+                if (parentLayout.content_type !== parentAdditions.layoutData.content_type) {
 
-                    const alcIndex = vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, function () {
-                        autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
-                        vm.entityViewerEventService.removeEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, alcIndex);
+                    parentEntityViewerEventService.addEventListener(evEvents.TOGGLE_AUTOSAVE, function () {
+
+                        vm.currentMember = globalDataService.getMember();
+
+                        if (vm.currentMember.data && vm.currentMember.data.autosave_layouts) {
+                            autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
+                            console.log("testing1 split panel check layouts");
+                            var layoutHasChanges = evHelperService.checkRootLayoutForChanges(vm.entityViewerDataService, true);
+
+                            if (layoutHasChanges) {
+                                console.log("testing1 split panel force autosave");
+                                autosaveLayoutService.forceAutosaveLayout();
+                            }
+
+                        } else {
+                            autosaveLayoutService.removeChangesTrackingEventListeners(vm.entityViewerEventService);
+                        }
+
                     });
+
+                    if (vm.currentMember.data && vm.currentMember.data.autosave_layouts) {
+
+                        const alcIndex = vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, function () {
+                            autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
+                            vm.entityViewerEventService.removeEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, alcIndex);
+                        });
+
+                    }
 
                 }
 

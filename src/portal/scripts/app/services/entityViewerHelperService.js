@@ -1,6 +1,8 @@
 /**
  * Created by szhitenev on 06.05.2016.
  */
+import uiService from "./uiService";
+
 /**
  * Entity viewer helper service.
  * @module entityViewerHelperService
@@ -8,7 +10,7 @@
 (function () {
 
     const objectComparisonHelper = require('../helpers/objectsComparisonHelper');
-    const uiService = require('../services/uiService');
+    // const uiService = require('../services/uiService');
 
     const entityResolverService = require('../services/entityResolverService');
 
@@ -85,6 +87,7 @@
                 delete activeLayoutConfig.data.reportOptions.recieved_at;
                 delete activeLayoutConfig.data.reportOptions.task_status;
                 delete activeLayoutConfig.data.reportOptions.save_report;
+                delete activeLayoutConfig.data.reportOptions.report_uuid;
             }
 
             if (activeLayoutConfig.data.hasOwnProperty('reportLayoutOptions') && activeLayoutConfig.data.reportLayoutOptions.hasOwnProperty('datepickerOptions')) {
@@ -106,6 +109,7 @@
                 delete layoutCurrentConfig.data.reportOptions.recieved_at;
                 delete layoutCurrentConfig.data.reportOptions.task_status;
                 delete layoutCurrentConfig.data.reportOptions.save_report;
+                delete layoutCurrentConfig.data.reportOptions.report_uuid;
             }
 
             if (layoutCurrentConfig.data.hasOwnProperty('reportLayoutOptions') && layoutCurrentConfig.data.reportLayoutOptions.hasOwnProperty('datepickerOptions')) {
@@ -127,6 +131,297 @@
         let layoutIsNotChanged = objectComparisonHelper.areObjectsTheSame(activeLayoutConfig, layoutCurrentConfig);
 
         return layoutIsNotChanged;
+    };
+
+    const saveLayoutsChanges = function (spChangedLayout, layoutHasChanges, activeLayoutConfig, layoutCurrentConfig, layoutNewName, isReport) {
+
+        let layoutsSavePromises = [];
+
+        // if split panel layout changed, save it
+        if (spChangedLayout) {
+
+            var saveSPLayout = new Promise(function (spLayoutSaveRes) {
+
+                if (spChangedLayout.hasOwnProperty('id')) {
+                    uiService.updateListLayout(spChangedLayout.id, spChangedLayout).then(function () {
+                        spLayoutSaveRes(true);
+                    });
+                } else {
+                    uiService.createListLayout(vm.entityType, spChangedLayout).then(function () {
+                        spLayoutSaveRes(true);
+                    });
+                }
+
+            });
+
+            layoutsSavePromises.push(saveSPLayout);
+
+        }
+
+        let saveNeeded = layoutHasChanges;
+
+        if (isReport) {
+            saveNeeded = activeLayoutConfig && layoutHasChanges
+        }
+
+        if (saveNeeded) {
+
+            var saveLayout = new Promise(function (saveLayoutRes) {
+
+                if (layoutCurrentConfig.hasOwnProperty('id')) {
+
+                    uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
+                        saveLayoutRes(true);
+                    });
+
+                } else {
+
+                    if (layoutNewName) {
+                        layoutCurrentConfig.name = layoutNewName;
+                    }
+
+                    uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                        saveLayoutRes(true);
+                    });
+
+                }
+
+            });
+
+            layoutsSavePromises.push(saveLayout);
+        }
+
+        return Promise.all(layoutsSavePromises);
+
+    };
+
+    /**
+     * @param {Object} evDataService - instance of entity viewer data service
+     * @param {boolean} isReport
+     * @param {Object=} activeLayoutConfig
+     * @param {Object=} layoutCurrentConfig
+     *
+     * @returns {boolean} Returns true if layout has been changed, otherwise false
+     * */
+    var checkRootLayoutForChanges = function (evDataService, isReport, activeLayoutConfig, layoutCurrentConfig) {
+
+        if (activeLayoutConfig === undefined) {
+            activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+        }
+
+        if (activeLayoutConfig && activeLayoutConfig.data) {
+
+            if (layoutCurrentConfig === undefined){
+                layoutCurrentConfig = evDataService.getLayoutCurrentConfiguration(isReport);
+            }
+
+            return !checkForLayoutConfigurationChanges(activeLayoutConfig, layoutCurrentConfig, true);
+        }
+
+        return false;
+
+    };
+
+    /** @returns {boolean} Returns true if layout for split panel has been changed, otherwise false  */
+    const checkSplitPanelForChanges = function (evDataService, splitPanelExchangeService) {
+
+        const additions = evDataService.getAdditions();
+
+        if (additions.isOpen) {
+            return splitPanelExchangeService.getSplitPanelChangedLayout();
+        }
+
+        return false;
+
+    };
+
+    /**
+     * Check layouts for root and split panel for changes and warn about loosing them.
+     *
+     * @param {Object} evDataService
+     * @param {Object} splitPanelExchangeService
+     * @param {Object} $mdDialog
+     *
+     * @returns {Promise<boolean>}
+     */
+    const warnAboutChangesToLoose = function (evDataService, splitPanelExchangeService, $mdDialog) {
+
+        const entityType = evDataService.getEntityType();
+        const isReport = evDataService.isEntityReport();
+
+        const activeLayoutConfig = evDataService.getActiveLayoutConfiguration();
+        let layoutCurrentConfig;
+
+        if (activeLayoutConfig && activeLayoutConfig.data) {
+            layoutCurrentConfig = evDataService.getLayoutCurrentConfiguration(isReport);
+        }
+
+        var spDidNotChanged = !checkSplitPanelForChanges(evDataService, splitPanelExchangeService);
+        var layoutHasNoChanges = !checkRootLayoutForChanges(evDataService, isReport, activeLayoutConfig, layoutCurrentConfig);
+
+        if (layoutHasNoChanges && spDidNotChanged) {
+
+            return new Promise(resolve => {
+                resolve(true)
+            });
+
+        }
+
+        return new Promise (function (resolve, reject) {
+
+            $mdDialog.show({
+                controller: 'LayoutChangesLossWarningDialogController as vm',
+                templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
+                parent: angular.element(document.body),
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        evDataService: evDataService,
+                        entityType: entityType
+                    }
+                }
+            })
+                .then(function (res) {
+
+                    if (res.status === 'save_layout') {
+
+                        const layoutNewName = (res.data && res.data.layoutName) ? res.data.layoutName : '';
+
+                        saveLayoutsChanges(spChangedLayout, layoutHasChanges, activeLayoutConfig, layoutCurrentConfig, layoutNewName, isReport)
+                            .then(function () {
+                                resolve(true);
+
+                            }).catch(error => reject(error));
+
+                    } else if (res.status === 'do_not_save_layout') {
+                        resolve(true);
+
+                    } else {
+                        reject(false);
+                    }
+
+                });
+
+        })
+        /*if (layoutHasChanges || spChangedLayout) {
+
+            $mdDialog.show({
+                controller: 'LayoutChangesLossWarningDialogController as vm',
+                templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
+                parent: angular.element(document.body),
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        evDataService: vm.entityViewerDataService,
+                        entityType: vm.entityType
+                    }
+                }
+            })
+                .then(function (res, rej) {
+
+                    if (res.status === 'save_layout') {
+
+                        var layoutsSavePromises = [];
+
+                        // if split panel layout changed, save it
+                        if (spChangedLayout) {
+
+                            var saveSPLayoutChanges = new Promise(function (spLayoutSaveRes, spLayoutSaveRej) {
+
+                                if (spChangedLayout.hasOwnProperty('id')) {
+                                    uiService.updateListLayout(spChangedLayout.id, spChangedLayout).then(function () {
+                                        spLayoutSaveRes(true);
+                                    });
+                                } else {
+                                    uiService.createListLayout(vm.entityType, spChangedLayout).then(function () {
+                                        spLayoutSaveRes(true);
+                                    });
+                                }
+
+                            });
+
+                            layoutsSavePromises.push(saveSPLayoutChanges);
+
+                        }
+                        // < if split panel layout changed, save it >
+
+                        if (activeLayoutConfig && layoutHasChanges) {
+
+                            var saveLayoutChanges = new Promise(function (saveLayoutRes, saveLayoutRej) {
+
+                                if (layoutCurrentConfig.hasOwnProperty('id')) {
+
+                                    uiService.updateListLayout(layoutCurrentConfig.id, layoutCurrentConfig).then(function () {
+                                        saveLayoutRes(true);
+                                    });
+
+                                } else {
+
+                                    if (res.data && res.data.layoutName) {
+                                        layoutCurrentConfig.name = res.data.layoutName;
+                                    }
+
+                                    /!* When saving is_default: true layout on backend, others become is_default: false
+                                    uiService.getDefaultListLayout(vm.entityType).then(function (data) {
+
+                                        layoutCurrentConfig.is_default = true;
+
+                                        if (data.count > 0 && data.results) {
+                                            var activeLayout = data.results[0];
+                                            activeLayout.is_default = false;
+
+                                            uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
+
+                                                uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                                    saveLayoutRes(true);
+                                                });
+
+                                            });
+
+                                        } else {
+                                            uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                                saveLayoutRes(true);
+                                            });
+                                        }
+
+                                    });*!/
+                                    uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                                        saveLayoutRes(true);
+                                    });
+
+                                }
+
+                                layoutsSavePromises.push(saveLayoutChanges);
+
+                            });
+                        }
+
+                        Promise.all(layoutsSavePromises).then(function () {
+                            resolve(true);
+                        });
+
+                    } else if (res.status === 'do_not_save_layout') {
+
+                        resolve(true);
+
+                    } else {
+
+                        reject(false);
+
+                    }
+
+                }).catch(function () {
+                reject(false);
+            });
+
+        } else {
+            resolve(true);
+        }*/
+
     };
 
     /**
@@ -1584,6 +1879,9 @@
     module.exports = {
         transformItem: transformItem,
         checkForLayoutConfigurationChanges: checkForLayoutConfigurationChanges,
+        checkRootLayoutForChanges: checkRootLayoutForChanges,
+        checkSplitPanelForChanges: checkSplitPanelForChanges,
+        warnAboutChangesToLoose: warnAboutChangesToLoose,
         getTableAttrInFormOf: getTableAttrInFormOf,
 
         getDynamicAttrValue: getDynamicAttrValue,
