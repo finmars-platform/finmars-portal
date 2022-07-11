@@ -24,6 +24,9 @@
 
         var currentMasterUser = globalDataService.getMasterUser();
 
+
+
+
         vm.getFileUrl = function (id) {
 
             var prefix = baseUrlService.getMasterUserPrefix();
@@ -32,6 +35,36 @@
             return baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
 
         };
+
+        vm.downloadFile = function ($event, item) {
+
+            systemMessageService.viewFile(item.id).then(function (data){
+
+                console.log('data', data);
+
+                $mdDialog.show({
+                    controller: 'FilePreviewDialogController as vm',
+                    templateUrl: 'views/dialogs/file-preview-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            content: data,
+                            info: item
+                        }
+                    }
+                });
+
+            })
+
+
+
+        }
 
         /* vm.getMasterUsersList = function () {
 

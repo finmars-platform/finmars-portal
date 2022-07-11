@@ -17,10 +17,16 @@
         return systemMessageRepository.update(id, account);
     };
 
+    var viewFile = function (id) {
+        return systemMessageRepository.viewFile(id)
+    }
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
-        update: update
+        update: update,
+
+        viewFile: viewFile
     }
 
 
