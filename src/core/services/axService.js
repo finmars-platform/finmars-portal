@@ -40,9 +40,10 @@ import cookieService from "./cookieService";
             // error on refresh
             if (err.response.config.url.indexOf('/token-refresh/') !== -1) {
 
-                window.location.hash = '#!/authentication'
+
                 cookieService.deleteCookie('access_token')
                 cookieService.deleteCookie('refresh_token')
+                window.location.reload();
                 return new Promise((resolve, reject) => {
                     reject(err)
                 })
