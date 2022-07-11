@@ -26,6 +26,8 @@
 
         vm.inputsFunctions = [];
 
+        vm.modeOptions = instrumentDownloadSchemeService.modeOptions;
+
         var dialogParent = document.querySelector(".dialog-containers-wrap");
 
         vm.getFunctions = function () {

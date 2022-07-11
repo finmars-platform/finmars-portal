@@ -31,13 +31,21 @@
         return instrumentDownloadSchemeRepository.deleteByKey(id)
     };
 
+    var modeOptions = [
+        {id: 'skip', name: 'Skip if exists'},
+        {id: 'overwrite', name: 'Overwrite'},
+        {id: 'overwrite_empty_values', name: 'Overwrite empty values'},
+    ];
+
     module.exports = {
         getList: getList,
         getListLight: getListLight,
         create: create,
         getByKey: getByKey,
         update: update,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+
+        modeOptions: modeOptions,
     }
 
 }());
