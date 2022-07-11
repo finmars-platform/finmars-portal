@@ -70,11 +70,29 @@
             })
     };
 
+    var viewFile = function (id) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                }
+            })
+
+    }
+
     module.exports = {
 
         getList: getList,
         getByKey: getByKey,
-        update: update
+        update: update,
+
+        viewFile: viewFile
     }
 
 }());
