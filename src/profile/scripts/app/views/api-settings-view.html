@@ -13,53 +13,83 @@
     border-bottom: 1px solid #000;
     padding-bottom: 32px;">
 
-                    <div class="m-b-8">
-                        <div data-ng-if="vm.currentToken == item.keycloak_access_token">
-                            <b style="color: rgb(63,81,181);
+                    <div layout="row">
+                        <div class="m-b-8">
+                            <div data-ng-if="vm.currentToken == item.keycloak_access_token">
+                                <b style="color: rgb(63,81,181);
     padding: 8px;
     border: 1px solid;
     margin: 16px;
     display: block;
     width: 70px;">CURRENT</b>
+                            </div>
+
+                        </div>
+
+                        <md-button class="md-raised" data-ng-click="item.show_tokens = !item.show_tokens">
+
+                            <span data-ng-if="!item.show_tokens">Show Tokens</span>
+                            <span data-ng-if="item.show_tokens">Hide Tokens</span>
+
+                        </md-button>
+
+                    </div>
+
+                    <div>
+
+
+                        <div data-ng-if="item.show_tokens">
+
+                            <div class="m-b-8">
+                                <b>Access Token</b>
+                                <div class="p-l-8">
+                                    {{item.keycloak_access_token}}
+
+                                    <a ng-click="vm.copyToken(item.keycloak_access_token)" class="copy-text-button">
+                                        <ng-md-icon icon="content_copy" size="16">
+                                            <md-tooltip class="tooltip_2" md-direction="top">Copy to clipboard
+                                            </md-tooltip>
+                                        </ng-md-icon>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="m-b-8">
+                                <b>Refresh Token</b>
+                                <div class="p-l-8">
+                                    {{item.keycloak_refresh_token}}
+
+                                    <a ng-click="vm.copyToken(item.keycloak_refresh_token)" class="copy-text-button">
+                                        <ng-md-icon icon="content_copy" size="16">
+                                            <md-tooltip class="tooltip_2" md-direction="top">Copy to clipboard
+                                            </md-tooltip>
+                                        </ng-md-icon>
+                                    </a>
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>
 
-                    <div class="m-b-8">
-                        <b>Access Token</b>
-                        <div class="p-l-8">
-                            {{item.keycloak_access_token}}
 
-                            <a ng-click="vm.copyToken(item.keycloak_access_token)" class="copy-text-button">
-                                <ng-md-icon icon="content_copy" size="16">
-                                    <md-tooltip class="tooltip_2" md-direction="top">Copy to clipboard</md-tooltip>
-                                </ng-md-icon>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="m-b-8">
-                        <b>Refresh Token</b>
-                        <div class="p-l-8">
-                            {{item.keycloak_refresh_token}}
-
-                            <a ng-click="vm.copyToken(item.keycloak_refresh_token)" class="copy-text-button">
-                                <ng-md-icon icon="content_copy" size="16">
-                                    <md-tooltip class="tooltip_2" md-direction="top">Copy to clipboard</md-tooltip>
-                                </ng-md-icon>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="m-b-8">
+                    <div class="m-b-8" data-ng-if="item.current_master_user_object">
                         <b>Workspace</b>: {{item.current_master_user_object.name}}
                     </div>
 
                     <div class="m-b-8">
-                        <b>Created</b>: {{item.created}}
+                        <b>Access Expire at </b>: {{item.access_token_expires_at | date:'HH:mm dd/MM/yyyy'}}
                     </div>
 
                     <div class="m-b-8">
+                        <b>Refresh Expire at </b>: {{item.refresh_token_expires_at | date:'HH:mm dd/MM/yyyy'}}
+                    </div>
+
+                    <div class="m-b-8">
+                        <b>Created</b>: {{item.created | date:'HH:mm dd/MM/yyyy'}}
+                    </div>
+
+                    <div class="m-b-8" data-ng-if="item.api_url">
 
                         <b>API URL</b>
                         <div>
@@ -111,8 +141,8 @@
 
                 <div class="code-example">
                     {
-                        "username": "{{vm.member.username}}",
-                        "password": "your password"
+                    "username": "{{vm.member.username}}",
+                    "password": "your password"
                     }
                 </div>
 
@@ -122,8 +152,8 @@
 
                 <div class="code-example">
                     {
-                        "access_token": "...",
-                        "refresh_token: "..."
+                    "access_token": "...",
+                    "refresh_token: "..."
                     }
                 </div>
 
@@ -133,16 +163,17 @@
 
                 <div class="code-example">
                     headers: {
-                        "Authorization": <b>access_token</b>,
-                        "Accept": "application/json",
-                        "Content-type": "application/json"
+                    "Authorization": <b>access_token</b>,
+                    "Accept": "application/json",
+                    "Content-type": "application/json"
                     }
                 </div>
 
                 <p>Access Tokes can expire, to renew them request refresh api url</p>
 
                 <p>
-                    Make a <b>POST</b> request to <a href="https://finmars.com/authorizer/token-refresh/" target="_blank">https://finmars.com/authorizer/token-refresh/</a>
+                    Make a <b>POST</b> request to <a href="https://finmars.com/authorizer/token-refresh/"
+                                                     target="_blank">https://finmars.com/authorizer/token-refresh/</a>
                 </p>
 
                 <p>
@@ -151,7 +182,7 @@
 
                 <div class="code-example">
                     {
-                        "refresh_token": "<b>refresh_token</b>"
+                    "refresh_token": "<b>refresh_token</b>"
                     }
                 </div>
 
@@ -161,11 +192,9 @@
 
                 <div class="code-example">
                     {
-                        "access_token": "..."
+                    "access_token": "..."
                     }
                 </div>
-
-
 
 
             </div>

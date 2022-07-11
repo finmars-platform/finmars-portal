@@ -22,8 +22,6 @@ import cookieService from "./cookieService";
         },
         (err) => {
 
-            console.log(err.response.config.url)
-
             // return other errors
             if (err.response.status !== 401) {
                 return new Promise((resolve, reject) => {
@@ -39,9 +37,9 @@ import cookieService from "./cookieService";
             }
             // error on refresh
             if (err.response.config.url === authorizerUrl + '/token-refresh/') {
-                console.log('ERRO NO REFRESH')
+
                 var pieces = window.location.href.split('#')
-                window.location.href = pieces[0] + '#!/authentication'
+                window.location = pieces[0] + '#!/authentication'
                 cookieService.deleteCookie('access_token')
                 cookieService.deleteCookie('refresh_token')
                 return new Promise((resolve, reject) => {
@@ -52,7 +50,7 @@ import cookieService from "./cookieService";
             return ax.post(authorizerUrl + '/token-refresh/', {refresh_token: cookieService.getCookie('refresh_token')}, {withCredentials: true}).then(
                 response => {
                     const config = err.response.config
-                    config.headers.Authorization = 'Bearer ' + response.data.access_token
+                    config.headers.Authorization = 'Token ' + response.data.access_token
                     cookieService.setCookie('access_token', response.data.access_token)
                     return ax(config)
                 }

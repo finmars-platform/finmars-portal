@@ -76,11 +76,7 @@
                         vm.requestReport.tokenItem = token;
                     }
 
-                    if (token.current_master_user_object) {
-                        token.authorizer_url = window.location.origin + '/authorizer/token-refresh/'
-                    } else {
-                        token.authorizer_url = '';
-                    }
+                    token.authorizer_url = window.location.origin + '/authorizer/token-refresh/'
 
                     return token;
 
