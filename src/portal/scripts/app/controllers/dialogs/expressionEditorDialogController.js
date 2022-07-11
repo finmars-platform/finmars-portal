@@ -32,7 +32,7 @@
                 var availableAttrs = vm.attributeDataService.getAllAttributesByEntityType(vm.data.entityType);
             }
 
-		}
+        }
 
         vm.readyStatus = {expressions: false, groups: false};
 
@@ -60,7 +60,7 @@
             $mdDialog.show({
                 controller: "TableAttributeSelectorDialogController as vm",
                 templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
-				parent: document.querySelector('.dialog-containers-wrap'),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 multiple: true,
                 locals: {
@@ -121,24 +121,34 @@
 
         vm.appendFunction = function (item) {
 
-            vm.expressionsHistory.push(vm.item.expression);
 
-            console.log(this);
-            var val = $('#editorExpressionInput')[0].value;
-            var cursorPosition = val.slice(0, ($('#editorExpressionInput')[0].selectionStart + '')).length;
+            if (vm.editor) {
+                // vm.item.expression = vm.editor.getValue();
+                // vm.item.expression = vm.item.expression + item.func;
 
+                vm.editor.insert(item.func)
 
-            if (!vm.item.expression) {
-                vm.item.expression = '';
-            }
-
-            if (cursorPosition == 0) {
-                vm.item.expression = vm.item.expression + item.func;
+                // vm.editor.setValue(vm.item.expression)
             } else {
-                vm.item.expression = vm.item.expression.slice(0, cursorPosition) + item.func + vm.item.expression.slice(cursorPosition);
+                vm.expressionsHistory.push(vm.item.expression);
+
+                console.log(this);
+                var val = $('#editorExpressionInput')[0].value;
+                var cursorPosition = val.slice(0, ($('#editorExpressionInput')[0].selectionStart + '')).length;
+
+
+                if (!vm.item.expression) {
+                    vm.item.expression = '';
+                }
+
+                if (cursorPosition == 0) {
+                    vm.item.expression = vm.item.expression + item.func;
+                } else {
+                    vm.item.expression = vm.item.expression.slice(0, cursorPosition) + item.func + vm.item.expression.slice(cursorPosition);
+
+                }
 
             }
-
 
         };
 
@@ -935,59 +945,92 @@
 
         }
 
+        vm.initAceEditor = function () {
+
+            setTimeout(function () {
+
+                vm.editor = ace.edit('aceEditor');
+                vm.editor.setTheme("ace/theme/monokai");
+                vm.editor.getSession().setMode("ace/mode/python");
+                vm.editor.getSession().setUseWorker(false);
+                vm.editor.setHighlightActiveLine(false);
+                vm.editor.setShowPrintMargin(false);
+                ace.require("ace/ext/language_tools");
+                vm.editor.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableSnippets: true
+                });
+                vm.editor.setFontSize(14)
+                vm.editor.setBehavioursEnabled(true);
+                vm.editor.setValue(vm.item.expression)
+
+                vm.editor.focus();
+                vm.editor.navigateFileStart();
+
+            }, 100)
+
+        }
+
 
         var init = function () {
+
+            vm.codeEditorInExpressionBuilder = localStorage.getItem('codeEditorInExpressionBuilder')
+
+            if (vm.codeEditorInExpressionBuilder) {
+                vm.initAceEditor();
+            }
+
             //var promises = [getFunctionItems, getFunctionsGroups];
             getFunctionItems();
             getFunctionsGroups();
 
             //Promise.all(promises).then(function () {
 
-                //$scope.$apply();
+            //$scope.$apply();
 
-                setTimeout(function () {
+            setTimeout(function () {
 
-                    var resizerElem = document.querySelector('.exprEditorColsResizer');
-                    var leftColToResize = document.querySelector('.exprEditorExprsCol');
-                    var rightColToResize = document.querySelector('.exprEditorDescriptionCol');
+                var resizerElem = document.querySelector('.exprEditorColsResizer');
+                var leftColToResize = document.querySelector('.exprEditorExprsCol');
+                var rightColToResize = document.querySelector('.exprEditorDescriptionCol');
 
-                    resizerElem.addEventListener('mousedown', function (event) {
+                resizerElem.addEventListener('mousedown', function (event) {
 
-                        event.preventDefault();
-                        event.stopPropagation();
+                    event.preventDefault();
+                    event.stopPropagation();
 
-                        var mouseDownLeft = event.clientX;
-                        var cursorDistance;
-                        var newLeftColWidth;
-                        var newRightColWidth;
+                    var mouseDownLeft = event.clientX;
+                    var cursorDistance;
+                    var newLeftColWidth;
+                    var newRightColWidth;
 
-                        var leftColWidth = leftColToResize.clientWidth;
-                        var rightColWidth = rightColToResize.clientWidth;
+                    var leftColWidth = leftColToResize.clientWidth;
+                    var rightColWidth = rightColToResize.clientWidth;
 
-                        var resizeColsOnMousemove = function (event) {
+                    var resizeColsOnMousemove = function (event) {
 
-                            var eventClientX = event.clientX;
-                            cursorDistance = eventClientX - mouseDownLeft;
+                        var eventClientX = event.clientX;
+                        cursorDistance = eventClientX - mouseDownLeft;
 
-                            newLeftColWidth = leftColWidth + cursorDistance;
-                            newRightColWidth = rightColWidth - cursorDistance;
+                        newLeftColWidth = leftColWidth + cursorDistance;
+                        newRightColWidth = rightColWidth - cursorDistance;
 
-                            if (newLeftColWidth > 150 && newRightColWidth > 150) {
-                                leftColToResize.style.width = newLeftColWidth + 'px';
-                                rightColToResize.style.width = newRightColWidth + 'px';
-                            }
+                        if (newLeftColWidth > 150 && newRightColWidth > 150) {
+                            leftColToResize.style.width = newLeftColWidth + 'px';
+                            rightColToResize.style.width = newRightColWidth + 'px';
+                        }
 
-                        };
+                    };
 
-                        window.addEventListener('mousemove', resizeColsOnMousemove);
+                    window.addEventListener('mousemove', resizeColsOnMousemove);
 
-                        window.addEventListener('mouseup', function () {
-                            window.removeEventListener('mousemove', resizeColsOnMousemove);
-                        }, {once: true});
+                    window.addEventListener('mouseup', function () {
+                        window.removeEventListener('mousemove', resizeColsOnMousemove);
+                    }, {once: true});
 
-                    });
+                });
 
-                }, 50);
+            }, 50);
 
             //});
         };
@@ -995,6 +1038,10 @@
         init();
 
         vm.agree = function () {
+
+            if (vm.editor) {
+                vm.item.expression = vm.editor.getValue();
+            }
 
             $mdDialog.hide({status: 'agree', data: {item: vm.item}});
 

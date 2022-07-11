@@ -90,6 +90,9 @@
                         case 'button_set':
                             verboseType = 'Button Set';
                             break;
+                        case 'superset_dashboard':
+                            verboseType = 'Superset Dashboard';
+                            break;
                     }
 
                     return verboseType;
@@ -701,6 +704,10 @@
                         case 'input_form':
                             contrName = 'DashboardConstructorInputFormComponentDialogController as vm';
                             templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-input-form-component-dialog-view.html';
+                            break;
+                        case 'superset_dashboard':
+                            contrName = 'DashboardConstructorSupersetDashboardComponentDialogController as vm';
+                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-superset-dashboard-component-dialog-view.html';
                             break;
                     }
 

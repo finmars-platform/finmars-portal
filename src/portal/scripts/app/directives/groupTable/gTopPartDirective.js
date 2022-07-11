@@ -13,7 +13,7 @@
 
     var currencyService = require('../../services/currencyService');
 
-    module.exports = function ($mdDialog, $state,) {
+    module.exports = function ($mdDialog, $state, usersService, globalDataService) {
         return {
             restrict: 'E',
             templateUrl: 'views/directives/groupTable/g-top-part-view.html',
@@ -68,7 +68,7 @@
                         evRvLayoutsHelper.saveAsLayoutList(scope.evDataService, scope.evEventService, scope.isReport, $mdDialog, scope.entityType, $event);
 
                     } else {
-                        evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport);
+                        evRvLayoutsHelper.saveLayoutList(scope.evDataService, scope.isReport, usersService, globalDataService);
                     }
 
                 };

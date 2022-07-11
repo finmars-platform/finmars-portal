@@ -39,10 +39,10 @@
 
 
         // let instrumentTypesList = [];
-
+		const reqSysAttrs = metaService.getRequiredEntityAttrs(viewModel.entityType);
         const noEntityTabs = [''];
 
-		//<editor-fold desc="entityTabsMenuTplt">
+		//region entityTabsMenuTplt
 		const entityTabsMenuTplt =
 			'<div class="ev-editor-tabs-popup-content popup-menu">' +
 				'<md-button ng-repeat="tab in popupData.viewModel.entityTabs" ' +
@@ -59,8 +59,9 @@
 					'<span>Permissions</span>' +
 				'</md-button>' +
             '</div>';
-		//</editor-fold>
+		//endregion
 
+		//region Fixed area
 		const getFixedAreaPopup = function () {
 			return {
 				fields: {
@@ -101,17 +102,30 @@
 
             if (viewModel.fixedAreaPopup.tabColumns > 2) {
 
-                if (viewModel.entityType === 'instrument' || viewModel.entityType === 'account' || viewModel.entityType === 'instrument-type') {
+				switch (viewModel.entityType) {
+					case 'instrument':
+					case 'account':
+					case 'instrument-type':
+						fieldsInFixedArea.push(viewModel.typeFieldName);
+						break;
 
-                    fieldsInFixedArea.push(viewModel.typeFieldName);
+					case 'counterparty':
+					case 'responsible':
+						fieldsInFixedArea.push('group');
+						break;
 
-                } else {
+					case 'strategy-1':
+					case 'strategy-2':
+					case 'strategy-3':
+						fieldsInFixedArea.push('subgroup');
+						break;
 
-                    fieldsInFixedArea.push('short_name');
-                }
+					default:
+						fieldsInFixedArea.push('short_name');
+						break;
+				}
 
             }
-
 
             if (viewModel.fixedAreaPopup.tabColumns > 5) {
 
@@ -129,9 +143,20 @@
             return fieldsInFixedArea;
         }
 
+		const getFieldsOutsideOfPopup = function () {
+
+			if (viewModel.action === 'edit') {
+				return getEditFormFieldsInFixedArea();
+
+			} else {
+				return getAddFormFieldsInFixedArea();
+			}
+
+		};
+
         const onPopupSaveCallback = async function () {
-			const test = viewModel.evEditorDataService.getFormErrorsList();
-            const fieldsInFixedArea = viewModel.action === 'edit' ? getEditFormFieldsInFixedArea() : getAddFormFieldsInFixedArea();
+
+            const fieldsOutsideOfPopup = getFieldsOutsideOfPopup();
             // Fixating showByDefault because viewModel.fixedAreaPopup.fields.showByDefault.value can be changed by getAndFormatUserTabs();
             const showByDefaultAfterSave = viewModel.fixedAreaPopup.fields.showByDefault.value;
 
@@ -156,7 +181,7 @@
 
             viewModel.keysOfFixedFieldsAttrs.forEach(key => { // transfer changes from popup to entity
 
-                if (!key || fieldsInFixedArea.includes(key)) {
+                if (!key || fieldsOutsideOfPopup.includes(key)) {
                     return;
                 }
 
@@ -255,6 +280,11 @@
 			}
 
         };
+
+		const isNotNullInput = function (inputKey) {
+			return reqSysAttrs.includes(inputKey);
+		};
+		//endregion Fixed area
 
         const fixFieldsLayoutWithMissingSockets = function (tabs) {
 
@@ -1079,12 +1109,13 @@
 		const getFieldsForFixedAreaPopup = function () {
 
 			// return new Promise(function (resolve, reject) {
+			const fieldsOutside = getFieldsOutsideOfPopup();
 
 			const fields = viewModel.keysOfFixedFieldsAttrs.reduce((acc, key) => {
 
 				const attr = viewModel.entityAttrs.find(entityAttr => entityAttr.key === key);
 
-				if (!attr) {
+				if (!attr || fieldsOutside.includes(key)) {
 					return acc;
 				}
 
@@ -1546,6 +1577,7 @@
             entityTabsMenuTplt: entityTabsMenuTplt,
             onPopupSaveCallback: onPopupSaveCallback,
             onFixedAreaPopupCancel: onFixedAreaPopupCancel,
+			isNotNullInput: isNotNullInput,
 			typeSelectorChangeFns: typeSelectorChangeFns,
 			entityTypeForGroupSelectorsData: entityTypeForGroupSelectorsData,
 

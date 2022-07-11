@@ -6,6 +6,8 @@
 
 export default function (errorService) {
 
+	var axService = require('../../../../core/services/axService')
+
 	const fetch = function (url, params) {
 
 		let requestId;
@@ -17,8 +19,9 @@ export default function (errorService) {
 			})
 		}
 
-		return window
-			.fetch(url, params)
+		params.url = url
+
+		return axService.ax.request(params)
 			.then(function (response) {
 
 				return new Promise(function (resolve, reject) {
@@ -57,7 +60,7 @@ export default function (errorService) {
 					} else {
 
 						if (params.method !== "DELETE") {
-							resolve(response.json());
+							resolve(response.data);
 						}
 						else {
 							resolve(response);

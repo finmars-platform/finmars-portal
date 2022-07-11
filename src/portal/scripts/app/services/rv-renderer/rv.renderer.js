@@ -6,26 +6,27 @@
     var subtotalRender = require('./subtotal.renderer');
     var blanlineRender = require('./blankline.renderer');
 
-    var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
+    // var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
     var evEvents = require('../../services/entityViewerEvents');
 
-    var render = function (elem, projection, evDataService, evEventService) {
+    var render = function (elem, projection, globalDataService, evDataService, evEventService) {
 
         console.time("Generating projection as HTML");
 
-        var columns = evDataService.getColumns();
+        /* var columns = evDataService.getColumns();
         var groups = evDataService.getGroups();
 
         var nextItem;
-        var previousItem;
+        var previousItem; */
         var item;
 
         var rows = [];
 
         const entityType = evDataService.getEntityType();
-        const markedReportRows = localStorageService.getMarkedRows(true, entityType);
-
+        // const markedReportRows = localStorageService.getMarkedRows(true, entityType);
+		const rvSettings = globalDataService.getMemberEntityViewersSettings(true, entityType);
+		const markedReportRows = rvSettings.marked_rows;
 
         for (var i = 0; i < projection.length; i = i + 1) {
 

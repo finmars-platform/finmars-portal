@@ -44,14 +44,20 @@
                                 <div data-ng-if="item.price_date_from_calculated">{{item.price_date_from_calculated}} - {{item.price_date_to_calculated}}</div>
                                 <div data-ng-if="!item.price_date_from_calculated">&nbsp;</div>
                             </td>
-                            <td>
+                            <td style="min-width: 350px">
+                                <md-button class="md-raised md-primary" data-ng-click="vm.executeProcedure($event, item)">Execute</md-button>
                                 <md-button class="md-raised" data-ng-click="vm.editProcedure($event, item)">Edit</md-button>
-                                <md-button class="md-raised" data-ng-click="vm.deleteProcedure($event, item)">Delete</md-button>
+                                <md-button class="md-raised md-warn" data-ng-click="vm.deleteProcedure($event, item)">Delete</md-button>
+
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
+            </div>
+
+            <div>
+                <md-button ui-sref="app.portal.pricing-parent-procedure" class="md-raised">Check Procedure Status</md-button>
             </div>
 
             <div class="m-t-16">

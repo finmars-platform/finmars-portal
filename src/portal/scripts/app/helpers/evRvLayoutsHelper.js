@@ -84,7 +84,7 @@
 
     };
 
-    const saveRowTypeFiltersToLocalStorage = function (entityViewerDataService, isReport) {
+    const saveRowTypeFilters = function (entityViewerDataService, isReport, usersService, globalDataService) {
 
         const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
 
@@ -92,16 +92,24 @@
 
         	const color = rowTypeFilters.markedRowFilters || 'none';
 			const entityType = entityViewerDataService.getEntityType();
+			// const viewerType = isReport ? 'report_viewer' : 'entity_viewer';
 
-			localStorageService.cacheRowTypeFilter(isReport, entityType, color);
+			// localStorageService.cacheRowTypeFilter(isReport, entityType, color);
+			const entityViewersSettings = globalDataService.getMemberEntityViewersSettings(isReport, entityType);
+			entityViewersSettings.row_type_filter = color;
+
+			globalDataService.setMemberEntityViewersSettings(entityViewersSettings, isReport, entityType);
+
+			var member = globalDataService.getMember();
+			usersService.updateMember(member.id, member);
 
         }
 
     };
 
-    const saveLayoutList = function (entityViewerDataService, isReport) {
+    const saveLayoutList = function (entityViewerDataService, isReport, usersService, globalDataService) {
 
-        saveRowTypeFiltersToLocalStorage(entityViewerDataService, isReport);
+        saveRowTypeFilters(entityViewerDataService, isReport, usersService, globalDataService);
 
     	var currentLayoutConfig = entityViewerDataService.getLayoutCurrentConfiguration(isReport);
 
@@ -194,15 +202,15 @@
 
 	};
 	/**
-	 * @memberOf module:evRvLayoutsHelper
-	 *
-	 * @param evDataService {Object} - entityViewerDataService
-	 * @param evEventService {Object} - entityViewerEventService
-	 * @param isReport {boolean}
-	 * @param $mdDialog {Object}
-	 * @param entityType {string}
-	 * @param $event {Object} - event object
+	 * @param {Object} evDataService - entityViewerDataService
+	 * @param {Object} evEventService - entityViewerEventService
+	 * @param {boolean} isReport
+	 * @param {Object} $mdDialog
+	 * @param {string} entityType
+	 * @param {Object} $event - event object
 	 * @return {Promise<any>} - saved layout or error
+	 *
+	 * @memberOf module:evRvLayoutsHelper
 	 */
     const saveAsLayoutList = function (evDataService, evEventService, isReport, $mdDialog, entityType, $event) {
 

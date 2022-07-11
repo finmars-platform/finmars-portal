@@ -414,7 +414,7 @@
 					scope.popupData.date = date;
 
 					if (scope.popupData.datepickerOptions.datepickerMode === 'datepicker') {
-						delete scope.popupData.datepickerOptions.datepickerMode.expression;
+						delete scope.popupData.datepickerOptions.expression;
 					}
 
 					scope.datepickerOptions = JSON.parse(JSON.stringify(scope.popupData.datepickerOptions));
@@ -427,7 +427,7 @@
 					scope.popupData.secondDate = date;
 
 					if (scope.popupData.secondDatepickerOptions.datepickerMode === 'datepicker') {
-						delete scope.popupData.secondDatepickerOptions.datepickerMode.expression;
+						delete scope.popupData.secondDatepickerOptions.expression;
 					}
 
 					scope.secondDatepickerOptions = JSON.parse(JSON.stringify(scope.popupData.secondDatepickerOptions));
