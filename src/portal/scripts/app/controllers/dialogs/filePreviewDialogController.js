@@ -28,7 +28,7 @@
 
             var result = ""
 
-            var lines = content.split(/\r?\n/);
+            var lines = vm.data.content.split(/\r?\n/);
 
             result = "<table><tbody>"
 
@@ -38,7 +38,7 @@
 
                 result = result + "<tr>"
 
-                pieces.forEach(function (piece){
+                pieces.forEach(function (piece) {
 
                     result = result + "<td>" + piece + "</td>"
 
@@ -63,6 +63,10 @@
             if (vm.data.info.file_report_object.name.indexOf('.csv') !== -1) {
 
                 vm.data.content_formatted = vm.formatCSV()
+
+            } else if (vm.data.info.file_report_object.name.indexOf('.json') !== -1) {
+
+                vm.data.content_formatted = JSON.stringify(vm.data.content, null, 4)
 
             } else {
                 vm.data.content_formatted = vm.data.content
