@@ -77,7 +77,7 @@ import QueuePromisesService from "../services/queuePromisesService";
                 id: layout.id,
                 name: layout.name,
                 user_code: layout.user_code,
-                //content_type: layout.content_type,
+                content_type: layout.content_type,
                 content: []
             };
 
