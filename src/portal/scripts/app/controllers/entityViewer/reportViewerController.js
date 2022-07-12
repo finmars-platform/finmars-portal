@@ -812,7 +812,7 @@ import evEvents from "../../services/entityViewerEvents";
             var spChangedLayout = checkSplitPanelForChanges(); */
             var layoutHasChanges = evHelperService.checkRootLayoutForChanges(vm.entityViewerDataService, true);
             var spChangedLayout = evHelperService.checkSplitPanelForChanges(vm.entityViewerDataService, vm.splitPanelExchangeService);
-            console.log("testing1 warnAboutLayoutChangesLoss", layoutHasChanges, spChangedLayout);
+
             if (layoutHasChanges || spChangedLayout) {
                 event.preventDefault();
                 (event || window.event).returnValue = 'All unsaved changes of layout will be lost.';

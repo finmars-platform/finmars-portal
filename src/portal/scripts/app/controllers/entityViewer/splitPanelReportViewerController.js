@@ -441,11 +441,10 @@ import evEvents from "../../services/entityViewerEvents";
 
                         if (vm.currentMember.data && vm.currentMember.data.autosave_layouts) {
                             autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
-                            console.log("testing1 split panel check layouts");
+
                             var layoutHasChanges = evHelperService.checkRootLayoutForChanges(vm.entityViewerDataService, true);
 
                             if (layoutHasChanges) {
-                                console.log("testing1 split panel force autosave");
                                 autosaveLayoutService.forceAutosaveLayout();
                             }
 

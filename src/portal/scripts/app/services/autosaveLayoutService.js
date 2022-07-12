@@ -118,7 +118,7 @@ export default function () {
 
             if (cachedLayout) {
                 // Error will occur if nonexistent autosave layout saved inside cache
-                console.log("testing1 updateAutosaveListLayout cachedLayout", cachedLayout);
+
                 updateUsingCachedLayout(cachedLayout, layout, entityType).then(updatedLayoutData => {
                     resolve(updatedLayoutData)
 
@@ -126,7 +126,7 @@ export default function () {
 
             }
             else {
-                console.log("testing1 updateAutosaveListLayout updateUsingUserCode", layout);
+
                 updateUsingUserCode(layout, entityType).then(updatedLayoutData => {
                     resolve(updatedLayoutData)
 
@@ -144,7 +144,7 @@ export default function () {
     };
 
     const autosaveListLayout = function (evDataService, isReport) {
-        console.log("testing1 autosaveListLayout called");
+
         return new Promise((resolve, reject) => {
 
             let layout = evDataService.getLayoutCurrentConfiguration(isReport);
@@ -390,7 +390,6 @@ export default function () {
     let autosaveLayout;
 
     const forceAutosaveLayout = function () {
-        console.log("testing1 forceAutosaveLayout");
         autosaveLayout();
     };
 

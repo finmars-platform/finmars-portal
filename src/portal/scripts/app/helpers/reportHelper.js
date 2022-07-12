@@ -609,13 +609,17 @@
 		'item_strategies1',
 		'item_portfolios',
 		'item_instruments',
+        'item_instrument_types',
 		'item_instrument_pricings',
 		'item_instrument_accruals',
-		'item_currency_fx_rates',
+        'item_currency_fx_rates',
 		'item_currencies',
 		'item_accounts',
+        'item_account_types',
 		'custom_fields',
 		'custom_fields_object',
+        'save_report',
+        'report_uuid',
 	];
 
     /**
