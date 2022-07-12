@@ -64,7 +64,7 @@
                             <td>
 
                                 <div data-ng-repeat="item in item.attachments">
-                                    <a href="{{item.file_report_url}}">{{item.file_report_object.name}}</a>
+                                    <span class="download-file-button" data-ng-click="vm.downloadFile($event, item)">{{item.file_report_object.name}}</span>
                                 </div>
 
                             </td>

@@ -2196,6 +2196,7 @@ div.header-masteruser {
   font-style: normal;
   color: #747474;
   font-size: 14px;
+  user-select: all;
 }
 
 .margin-0 {
@@ -3217,7 +3218,12 @@ button.md-raised.md-warn.md-button {
   color: #f05a22;
 }
 
+//region v Accordion
 .vAccordion-type1 {
+
+  v-pane {
+    position: relative;
+  }
 
   v-pane-header {
     margin-bottom: 20px;
@@ -3267,6 +3273,14 @@ button.md-raised.md-warn.md-button {
   }
 
 }
+
+.accordion-name-input {
+  position: absolute;
+  top: 8px;
+  left: 54px;
+  z-index: 1;
+}
+//endregion
 
 .alignment-menu-item {
   padding-left: 22px;
@@ -3481,4 +3495,99 @@ span.highlight {
 
 .entity-tabs-menu.complex-transaction-entity-tabs-menu button.entity-tabs-menu-btn {
   margin-top: 90px;
+}
+
+.copy-text-button {
+  cursor: pointer;
+  margin: 4px;
+  display: inline-block;
+  &:hover {
+    opacity: .7;
+  }
+}
+
+.code-example {
+  background: #f2f1f1;
+
+  overflow-x: auto;
+  margin: 1.5em 0 3em;
+  padding: 20px;
+  max-width: 100%;
+  font-size: 1.1rem;
+  line-height: 1.5em;
+
+}
+
+.superset-container {
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+}
+
+
+.entity-as-json-editor-dialog {
+  max-width: 100%;
+}
+
+.ace-editor-dialog {
+  width: 90%;
+
+  background: #2F3129;
+
+  .progress.progress-circular {
+    color: #fff;
+  }
+
+  .md-dialog-content {
+    padding: 20px;
+  }
+
+  .md-toolbar-tools {
+    background: #2F3129;
+  }
+
+  .ace-editor {
+    min-height: 400px;
+    height: 100%;
+  }
+
+  md-dialog-actions {
+    .md-button {
+      color: #fff;
+    }
+  }
+}
+
+
+
+.instrument-refresh-from-database-button {
+  position: absolute;
+  right: 16px;
+  top: 14px;
+  color: #fff;
+  cursor: pointer;
+  &:hover {
+    opacity: .7;
+  }
+}
+
+.download-file-button {
+  color: rgb(63,81,181);
+  cursor: pointer;
+  &:hover {
+    opacity: .7;
+  }
+}
+
+.file-preview-dialog {
+
+  width: 90vw;
+  md-dialog-content {
+    padding: 16px;
+  }
+  .file-preview-content {
+    white-space: pre;
+  }
 }

@@ -27,7 +27,7 @@
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -44,7 +44,7 @@
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
@@ -62,19 +62,37 @@
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(currency)
+                data: JSON.stringify(currency)
             })
     };
+
+    var viewFile = function (id) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                }
+            })
+
+    }
 
     module.exports = {
 
         getList: getList,
         getByKey: getByKey,
-        update: update
+        update: update,
+
+        viewFile: viewFile
     }
 
 }());

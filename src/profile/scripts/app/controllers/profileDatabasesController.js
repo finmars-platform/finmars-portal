@@ -104,7 +104,12 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
             profileAuthorizerService.setCurrentMasterUser(item.id).then(function (data) {
 
                 vm.openProcessing = false;
+<<<<<<< HEAD
 
+=======
+                console.log("testing_opendatabase activateDatabase", data);
+				// This code may not fire because of websocket reaction to 'master_user_change' inside shellController.js
+>>>>>>> 6044d882afcd063ddf8de0ddc0152b1464b838c8
                 if (data.base_api_url) {
 
                     window.document.title = item.name + ' | Finmars'
@@ -120,8 +125,14 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
                     $state.go('app.portal.home');
 
+<<<<<<< HEAD
                 } else {
 
+=======
+                }
+				else {
+                    console.log("testing_opendatabase activateDatabase 2", data);
+>>>>>>> 6044d882afcd063ddf8de0ddc0152b1464b838c8
                     $scope.$apply();
 
                     console.log("Error activate", data)

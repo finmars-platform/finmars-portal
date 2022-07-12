@@ -111,7 +111,7 @@
 
                 if (res.status === 'agree') {
 
-                    vm.item.settings.number_format = res.data.settings;
+                    vm.item.settings.number_format = res.data;
 
                 }
 

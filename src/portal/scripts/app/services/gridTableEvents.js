@@ -8,5 +8,5 @@ module.exports = {
     'ROW_SELECTION_TOGGLED': 'ROW_SELECTION_TOGGLED',
     'SORTING_SETTINGS_CHANGED': 'SORTING_SETTINGS_CHANGED',
 
-	'REDRAW_TABLE': 'REDRAW_TABLE'
+	'REDRAW_TABLE': 'REDRAW_TABLE' // property 'key' of rows and columns used to find matching data inside gridTableData
 };

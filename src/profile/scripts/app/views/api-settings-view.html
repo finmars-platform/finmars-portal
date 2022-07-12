@@ -1,0 +1,292 @@
+<div>
+
+    <div style="max-width: 1050px; margin: 0 auto; overflow:hidden; padding-bottom: 80px;">
+
+
+        <div class="p-b-24">
+
+            <h3>Active Tokens</h3>
+
+            <div>
+
+                <div data-ng-repeat="item in vm.tokens" style="margin-bottom: 32px;
+    border-bottom: 1px solid #000;
+    padding-bottom: 32px;">
+
+                    <div layout="row">
+                        <div class="m-b-8">
+                            <div data-ng-if="vm.currentToken == item.keycloak_access_token">
+                                <b style="color: rgb(63,81,181);
+    padding: 8px;
+    border: 1px solid;
+    margin: 16px;
+    display: block;
+    width: 70px;">CURRENT</b>
+                            </div>
+
+                        </div>
+
+                        <md-button class="md-raised" data-ng-click="item.show_tokens = !item.show_tokens">
+
+                            <span data-ng-if="!item.show_tokens">Show Tokens</span>
+                            <span data-ng-if="item.show_tokens">Hide Tokens</span>
+
+                        </md-button>
+
+                    </div>
+
+                    <div>
+
+
+                        <div data-ng-if="item.show_tokens">
+
+                            <div class="m-b-8">
+                                <b>Access Token</b>
+                                <div class="p-l-8">
+                                    {{item.keycloak_access_token}}
+
+                                    <a ng-click="vm.copyToken(item.keycloak_access_token)" class="copy-text-button">
+                                        <ng-md-icon icon="content_copy" size="16">
+                                            <md-tooltip class="tooltip_2" md-direction="top">Copy to clipboard
+                                            </md-tooltip>
+                                        </ng-md-icon>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="m-b-8">
+                                <b>Refresh Token</b>
+                                <div class="p-l-8">
+                                    {{item.keycloak_refresh_token}}
+
+                                    <a ng-click="vm.copyToken(item.keycloak_refresh_token)" class="copy-text-button">
+                                        <ng-md-icon icon="content_copy" size="16">
+                                            <md-tooltip class="tooltip_2" md-direction="top">Copy to clipboard
+                                            </md-tooltip>
+                                        </ng-md-icon>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="m-b-8" data-ng-if="item.current_master_user_object">
+                        <b>Workspace</b>: {{item.current_master_user_object.name}}
+                    </div>
+
+                    <div class="m-b-8">
+                        <b>Access Expire at </b>: {{item.access_token_expires_at | date:'HH:mm dd/MM/yyyy'}}
+                    </div>
+
+                    <div class="m-b-8">
+                        <b>Refresh Expire at </b>: {{item.refresh_token_expires_at | date:'HH:mm dd/MM/yyyy'}}
+                    </div>
+
+                    <div class="m-b-8">
+                        <b>Created</b>: {{item.created | date:'HH:mm dd/MM/yyyy'}}
+                    </div>
+
+                    <div class="m-b-8" data-ng-if="item.api_url">
+
+                        <b>API URL</b>
+                        <div>
+                            <a href="{{item.api_url}}" target="_blank">{{item.api_url}}</a>
+                        </div>
+
+                    </div>
+
+                    <div class="m-b-8">
+
+                        <b>Refresh Token URL</b>
+                        <div>
+                            <a href="{{item.authorizer_url}}" target="_blank">{{item.authorizer_url}}</a>
+                        </div>
+
+                    </div>
+
+                    <div class="m-b-8">
+
+                        <md-button class="md-warn" data-ng-click="vm.deleteAuthToken($event, item)"
+                                   data-ng-if="vm.currentToken != item.keycloak_access_token">Delete
+                        </md-button>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+            <div>
+                <md-button class="md-raised md-warn" data-ng-click="vm.logoutDevices($event)">Logout from all devices
+                </md-button>
+            </div>
+
+            <h1>
+                Getting Started
+            </h1>
+
+            <div>
+                <h2>Receive Bearer Token</h2>
+
+                <p>
+                    Make a <b>POST</b> request to <a href="https://finmars.com/authorizer/token-auth/" target="_blank">https://finmars.com/authorizer/token-auth/</a>
+                </p>
+                <p>
+                    Request Body:
+                </p>
+
+                <div class="code-example">
+                    {
+                    "username": "{{vm.member.username}}",
+                    "password": "your password"
+                    }
+                </div>
+
+                <p>
+                    In response you will receive
+                </p>
+
+                <div class="code-example">
+                    {
+                    "access_token": "...",
+                    "refresh_token: "..."
+                    }
+                </div>
+
+                <p>You your <b>access_token</b> in request to Finmars API</p>
+
+                <p>Typical headers object</p>
+
+                <div class="code-example">
+                    headers: {
+                    "Authorization": <b>access_token</b>,
+                    "Accept": "application/json",
+                    "Content-type": "application/json"
+                    }
+                </div>
+
+                <p>Access Tokes can expire, to renew them request refresh api url</p>
+
+                <p>
+                    Make a <b>POST</b> request to <a href="https://finmars.com/authorizer/token-refresh/"
+                                                     target="_blank">https://finmars.com/authorizer/token-refresh/</a>
+                </p>
+
+                <p>
+                    Request Body:
+                </p>
+
+                <div class="code-example">
+                    {
+                    "refresh_token": "<b>refresh_token</b>"
+                    }
+                </div>
+
+                <p>
+                    In response you will receive new <b>access_token</b>
+                </p>
+
+                <div class="code-example">
+                    {
+                    "access_token": "..."
+                    }
+                </div>
+
+
+            </div>
+
+            <!--            <h3>Create new Bearer Token</h3>-->
+
+            <!--            <div>-->
+
+            <!--                <md-input-container class="md-block" style="height: 64px">-->
+            <!--                    <label>Workspace</label>-->
+            <!--                    <md-select data-ng-model="vm.newToken.current_master_user">-->
+            <!--                        <md-option data-ng-repeat="item in vm.masterUsers" ng-value="item.id">{{item.name}}</md-option>-->
+            <!--                    </md-select>-->
+
+            <!--                </md-input-container>-->
+
+            <!--                <md-button class="md-raised md-primary {{vm.newToken.current_master_user ? '' : 'disabled-btn'}}"-->
+            <!--                           data-ng-click="vm.createAuthToken($event)">Create-->
+            <!--                </md-button>-->
+
+            <!--            </div>-->
+
+        </div>
+
+
+        <div>
+
+            <h3>Examples</h3>
+
+            <p>
+                Find all API Endpoints at <b>Ecosystem API URL</b> of your ecosystem.
+            </p>
+
+            <div>
+
+                <h4>Get Report ({{vm.requestReport.tokenItem.api_url}}/reports/balance-report-sql/)</h4>
+
+
+                <md-button class="md-primary md-raised" data-ng-click="vm.executeRequestReport($event)">Request
+                </md-button>
+
+                <div data-ng-if="vm.requestReport.status == 'requested'">
+
+                    <md-button class="md-raised"
+                               data-ng-click="vm.requestReport.showFetch = !vm.requestReport.showFetch">Show request
+                        (fetch)
+                    </md-button>
+                    <md-button class="md-raised" data-ng-click="vm.requestReport.showCurl = !vm.requestReport.showCurl">
+                        Show request (curl)
+                    </md-button>
+                    <md-button class="md-raised"
+                               data-ng-click="vm.requestReport.showResponse = !vm.requestReport.showResponse">Show
+                        response
+                    </md-button>
+
+
+                    <div data-ng-if="vm.requestReport.showFetch">
+
+                        <h3>Fetch Request</h3>
+
+                        <div class="code-example">
+                            <pre>{{vm.requestReport.fetchRequestText}}</pre>
+                        </div>
+
+                    </div>
+
+                    <div data-ng-if="vm.requestReport.showCurl">
+
+                        <h3>Curl Request</h3>
+
+                        <div class="code-example">
+                            <pre>{{vm.requestReport.curlRequestText}}</pre>
+                        </div>
+
+                    </div>
+
+                    <div data-ng-if="vm.requestReport.showResponse">
+
+                        <h3>Response</h3>
+
+                        <div class="code-example">
+                            <pre>{{vm.requestReport.responseText}}</pre>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

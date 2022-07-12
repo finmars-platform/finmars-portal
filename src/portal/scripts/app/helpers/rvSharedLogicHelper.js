@@ -15,9 +15,9 @@ import rvHelper from "./rv.helper";
     const priceHistoryService = require('../services/priceHistoryService');
     const currencyHistoryService = require('../services/currencyHistoryService');
 
-	const rvHelper = require('./rv.helper');
+    const rvHelper = require('./rv.helper');
 
-    module.exports = function (viewModel, $scope, $mdDialog) {
+    module.exports = function (viewModel, $scope, $mdDialog, globalDataService) {
 
         const commonDialogsService = new CommonDialogsService($mdDialog);
 
@@ -103,9 +103,10 @@ import rvHelper from "./rv.helper";
 
             viewModel.entityViewerDataService.setRowHeight(36);
 
-            var rowFilterColor = localStorageService.getRowTypeFilter(true, viewModel.entityType);
-            var rowTypeFiltersData = viewModel.entityViewerDataService.getRowTypeFilters();
-            rowTypeFiltersData.markedRowFilters = rowFilterColor;
+            // var rowFilterColor = localStorageService.getRowTypeFilter(true, viewModel.entityType);
+			const rvSettings = globalDataService.getMemberEntityViewersSettings(true, viewModel.entityType);
+            let rowTypeFiltersData = viewModel.entityViewerDataService.getRowTypeFilters();
+            rowTypeFiltersData.markedRowFilters = rvSettings.row_type_filter;
 
             viewModel.entityViewerDataService.setRowTypeFilters(rowTypeFiltersData);
 

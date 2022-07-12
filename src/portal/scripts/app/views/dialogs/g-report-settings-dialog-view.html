@@ -342,6 +342,30 @@
                         </dropdown-select>
                     </div>
 
+                    <div class="g-report-settings-row p-b-8" data-ng-if="vm.fieldsReady">
+                        <div class="default-f-s">Date Field</div>
+
+                        <dropdown-select model="vm.reportOptions.date_field"
+                                         menu-options="vm.dateFieldOptions"
+                                         small-options="{tooltipText: 'Date field'}"
+                                         class="g-report-settings-field">
+                        </dropdown-select>
+                    </div>
+
+                    <div class="g-report-settings-row p-b-16">
+                        <div class="default-f-s">Custom Fields</div>
+
+                        <two-fields-multiselect items="vm.customFieldsNames"
+                                                model="vm.selectedCustomFields"
+                                                selected-items="vm.selectedCustomFields"
+                                                nothing-selected-text="Off"
+                                                selected-items-indication="chips"
+                                                on-change-callback="vm.selectedCustomFieldsChanged()"
+                                                name-property="name"
+                                                class="g-report-settings-field"></two-fields-multiselect>
+                    </div>
+
+
                 </div>
 
                 <!-- <div layout="row">

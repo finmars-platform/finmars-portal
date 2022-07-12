@@ -3,7 +3,7 @@
 	const metaService = require('../../../services/metaService');
     const uiService = require('../../../services/uiService');
 	const entityResolverService = require('../../../services/entityResolverService');
-    const entityViewerHelperService = require('../../../services/entityViewerHelperService');
+    const evHelperService = require('../../../services/entityViewerHelperService');
 
     const instrumentService = require('../../../services/instrumentService');
     const attributeTypeService = require('../../../services/attributeTypeService');
@@ -26,7 +26,7 @@
         const typeSelectorValueEntities = {
         	'instrument': 'instrument-type',
 			'account': 'account-type',
-			'instrument-type': 'instrument-class'
+			'instrument-type': 'instrument-class',
         };
 
 		const groupSelectorValueEntities = {
@@ -39,10 +39,10 @@
 
 
         // let instrumentTypesList = [];
-
+		const reqSysAttrs = metaService.getRequiredEntityAttrs(viewModel.entityType);
         const noEntityTabs = [''];
 
-		//<editor-fold desc="entityTabsMenuTplt">
+		//region entityTabsMenuTplt
 		const entityTabsMenuTplt =
 			'<div class="ev-editor-tabs-popup-content popup-menu">' +
 				'<md-button ng-repeat="tab in popupData.viewModel.entityTabs" ' +
@@ -59,8 +59,9 @@
 					'<span>Permissions</span>' +
 				'</md-button>' +
             '</div>';
-		//</editor-fold>
+		//endregion
 
+		//region Fixed area
 		const getFixedAreaPopup = function () {
 			return {
 				fields: {
@@ -101,17 +102,30 @@
 
             if (viewModel.fixedAreaPopup.tabColumns > 2) {
 
-                if (viewModel.entityType === 'instrument' || viewModel.entityType === 'account' || viewModel.entityType === 'instrument-type') {
+				switch (viewModel.entityType) {
+					case 'instrument':
+					case 'account':
+					case 'instrument-type':
+						fieldsInFixedArea.push(viewModel.typeFieldName);
+						break;
 
-                    fieldsInFixedArea.push(viewModel.typeFieldName);
+					case 'counterparty':
+					case 'responsible':
+						fieldsInFixedArea.push('group');
+						break;
 
-                } else {
+					case 'strategy-1':
+					case 'strategy-2':
+					case 'strategy-3':
+						fieldsInFixedArea.push('subgroup');
+						break;
 
-                    fieldsInFixedArea.push('short_name');
-                }
+					default:
+						fieldsInFixedArea.push('short_name');
+						break;
+				}
 
             }
-
 
             if (viewModel.fixedAreaPopup.tabColumns > 5) {
 
@@ -129,9 +143,20 @@
             return fieldsInFixedArea;
         }
 
+		const getFieldsOutsideOfPopup = function () {
+
+			if (viewModel.action === 'edit') {
+				return getEditFormFieldsInFixedArea();
+
+			} else {
+				return getAddFormFieldsInFixedArea();
+			}
+
+		};
+
         const onPopupSaveCallback = async function () {
-			const test = viewModel.evEditorDataService.getFormErrorsList();
-            const fieldsInFixedArea = viewModel.action === 'edit' ? getEditFormFieldsInFixedArea() : getAddFormFieldsInFixedArea();
+
+            const fieldsOutsideOfPopup = getFieldsOutsideOfPopup();
             // Fixating showByDefault because viewModel.fixedAreaPopup.fields.showByDefault.value can be changed by getAndFormatUserTabs();
             const showByDefaultAfterSave = viewModel.fixedAreaPopup.fields.showByDefault.value;
 
@@ -156,7 +181,7 @@
 
             viewModel.keysOfFixedFieldsAttrs.forEach(key => { // transfer changes from popup to entity
 
-                if (!key || fieldsInFixedArea.includes(key)) {
+                if (!key || fieldsOutsideOfPopup.includes(key)) {
                     return;
                 }
 
@@ -255,6 +280,11 @@
 			}
 
         };
+
+		const isNotNullInput = function (inputKey) {
+			return reqSysAttrs.includes(inputKey);
+		};
+		//endregion Fixed area
 
         const fixFieldsLayoutWithMissingSockets = function (tabs) {
 
@@ -357,7 +387,7 @@
 
             let readyStatus = true;
 
-            Object.keys(viewModel.readyStatus).forEach(key => { // checking that all properties of viewModel.readyStatus have value true
+            Object.keys(viewModel.readyStatus).forEach(key => { // checking that all properties of viewModel.readyStatus have value set to true
             	readyStatus = readyStatus && viewModel.readyStatus[key];
 			});
 
@@ -457,7 +487,7 @@
             // viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, viewModel.entityType);
 
             $scope.$apply();
-            const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(6);
+            const bigDrawerWidth = evHelperService.getBigDrawerWidth(6);
 
             $bigDrawer.setWidth(bigDrawerWidth);
 
@@ -596,8 +626,9 @@
 		 * @param entityType - entitType of relation selector (e.g. instrument type selector for instrument)
 		 * @returns {Promise<unknown>} - returns array of entities on resolve and error object on reject
 		 */
-		const getGroupSelectorOptions = function (entityType) {
+		/* const getGroupSelectorOptions = function (entityType) {
 
+			let resData = {};
 			let options = {pageSize: 1000, page: 1};
 
 			const loadAllPages = (resolve, reject) => {
@@ -605,6 +636,7 @@
 				entityResolverService.getList(entityType, options).then(function (typesData) {
 
 					viewModel.groupSelectorOptions = viewModel.groupSelectorOptions.concat(typesData.results);
+					resData.groupSelectorOptions = viewModel.groupSelectorOptions;
 
 					if (typesData.next) {
 
@@ -612,7 +644,7 @@
 						loadAllPages(resolve, reject);
 
 					} else {
-						resolve();
+						resolve(resData);
 					}
 
 				}).catch(error => reject(error));
@@ -627,18 +659,21 @@
 					if (Array.isArray(typesData)) {
 
 						viewModel.typeSelectorOptions = typesData;
-						res();
+						resData.typeSelectorOptions = viewModel.typeSelectorOptions;
+
+						res(resData);
 
 					} else {
 
 						viewModel.groupSelectorOptions = typesData.results;
+						resData.groupSelectorOptions = viewModel.groupSelectorOptions;
 
 						if (typesData.next) {
 							options.page = options.page + 1;
 							loadAllPages(res, rej);
 
 						} else {
-							res();
+							res(resData);
 						}
 
 					}
@@ -650,7 +685,7 @@
 
 			});
 
-		};
+		}; */
 
 		const resolveEditLayout = function () {
 
@@ -829,7 +864,7 @@
 
 			if (viewModel.entityType === 'instrument') await applyInstrumentUserFieldsAliases(tabs);
 
-        	entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
+			// evHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
 
 			/* if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
 
@@ -861,6 +896,81 @@
 		const typeSelectorChangeFns = {
 			'instrument': getAndFormatUserTabs,
 			'account': onAccountTypeChange,
+		};
+
+		/**
+		 * Map permissions from instrument type to instrument
+		 *
+		 * @param {Array} iTypePermissions
+		 */
+		const mapPermissionsToInstrument = iTypePermissions => {
+
+			/* viewModel.groups.forEach(group => {
+
+				iTypePermissions.forEach(pData => {
+
+					if (pData.group === group.id) {
+
+						let permissionToDo = ['manage_', 'change_', 'view_'].find(action => pData.permission.startsWith(action));
+						permissionToDo = permissionToDo + viewModel.entityType.split('-').join('');
+
+						objectPermissions.push({
+							member: null,
+							group: group.id,
+							permission: permissionToDo
+						});
+
+					}
+
+				})
+
+			}); */
+
+			viewModel.entity.object_permissions = iTypePermissions.map(function (item) {
+
+				var result = Object.assign({}, item);
+
+				result.permission = item.permission.split('_')[0] + '_instrument';
+
+				return result
+
+			});
+
+			if (viewModel.entity.object_permissions) {
+
+				viewModel.groups.forEach(function (group) {
+
+					if (!group.hasOwnProperty('objectPermissions')) {
+						group.objectPermissions = {};
+					}
+
+					group.objectPermissions.manage = false;
+					group.objectPermissions.change = false;
+					group.objectPermissions.view = false;
+
+					viewModel.entity.object_permissions.forEach(function (permission) {
+
+						if (permission.group === group.id) {
+
+							if (permission.permission === "manage_" + viewModel.entityType.split('-').join('')) {
+								group.objectPermissions.manage = true;
+							}
+							if (permission.permission === "change_" + viewModel.entityType.split('-').join('')) {
+								group.objectPermissions.change = true;
+							}
+							if (permission.permission === "view_" + viewModel.entityType.split('-').join('')) {
+								group.objectPermissions.view = true;
+							}
+
+						}
+					})
+
+				});
+
+			}
+
+			return {objectPermissions: viewModel.entity.object_permissions, groups: viewModel.groups};
+
 		};
 
         const manageAttributeTypes = function (ev) {
@@ -895,7 +1005,6 @@
 
 			const hasRelationSelectorInFixedArea = typeSelectorValueEntities.hasOwnProperty(viewModel.entityType);
 
-
 			if (hasRelationSelectorInFixedArea) {
 				const valueEntity = typeSelectorValueEntities[viewModel.entityType];
 				viewModel.typeSelectorOptions = await getTypeSelectorOptions(valueEntity);
@@ -918,7 +1027,7 @@
 				}
 
                 // Instrument-type always open in max big drawer window
-                let columns = entityViewerHelperService.getEditLayoutMaxColumns(tabs);
+                let columns = evHelperService.getEditLayoutMaxColumns(tabs);
 
                 if (viewModel.entityType === 'instrument-type') columns = 6;
 
@@ -927,7 +1036,7 @@
                     viewModel.fixedAreaPopup.tabColumns = columns;
                     viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(viewModel.fixedAreaPopup.tabColumns, viewModel.entityType);
 
-                    const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(viewModel.fixedAreaPopup.tabColumns);
+                    const bigDrawerWidth = evHelperService.getBigDrawerWidth(viewModel.fixedAreaPopup.tabColumns);
                     $bigDrawer.setWidth(bigDrawerWidth);
 
                     if (viewModel.fixedAreaPopup.tabColumns !== 6) {
@@ -957,9 +1066,9 @@
 
 			return new Promise(resolve => {
 
-				Promise.allSettled(promises).then(async function (testData) {
+				Promise.allSettled(promises).then(function () {
 
-					entityViewerHelperService.transformItem(viewModel.entity, viewModel.attributeTypes); // needed to go after synchronous getAttributeTypes()
+					// evHelperService.transformItem(viewModel.entity, viewModel.attributeTypes); // needed to go after synchronous getAttributeTypes()
 
 					if (viewModel.getEntityPricingSchemes) viewModel.getEntityPricingSchemes(); // in entityViewerFormsPreviewDialogController.js there is no pricing tab
 
@@ -974,9 +1083,6 @@
 					};
 
 					if (viewModel.fixedAreaPopup) resolveData.fixedAreaData = getFieldsForFixedAreaPopup();  // in entityViewerFormsPreviewDialogController.js there is no pricing fixed area
-
-					viewModel.readyStatus.layout = true;
-					viewModel.readyStatus.entity = true;
 
 					resolve(resolveData);
 
@@ -997,12 +1103,13 @@
 		const getFieldsForFixedAreaPopup = function () {
 
 			// return new Promise(function (resolve, reject) {
+			const fieldsOutside = getFieldsOutsideOfPopup();
 
 			const fields = viewModel.keysOfFixedFieldsAttrs.reduce((acc, key) => {
 
 				const attr = viewModel.entityAttrs.find(entityAttr => entityAttr.key === key);
 
-				if (!attr) {
+				if (!attr || fieldsOutside.includes(key)) {
 					return acc;
 				}
 
@@ -1128,18 +1235,347 @@
 			})
 		}; */
 
+		const exposureCalculationModelSelectorOptions = [
+			{id: 1, name: "Market Value"},
+			{id: 2, name: "Price exposure"},
+			{id: 3, name: "Delta adjusted price exposure"},
+			{id: 4, name: "Underlying long short exposure net"},
+			{id: 5, name: "Underlying long short exposure split"},
+		];
+
+		const longUnderlyingExposureSelectorOptions = [
+			{id: 1, name: "Zero"},
+			{id: 2, name: "Long Underlying Instrument Price Exposure"},
+			{id: 3, name: "Long Underlying Instrument Price Delta"},
+			{id: 4, name: "Long Underlying Currency FX Rate Exposure"},
+			{id: 5, name: "Long Underlying Currency FX Rate Delta-adjusted Exposure"},
+		]
+
+		const shortUnderlyingExposureSelectorOptions = [
+			{id: 1, name: "Zero"},
+			{id: 2, name: "Short Underlying Instrument Price Exposure"},
+			{id: 3, name: "Short Underlying Instrument Price Delta"},
+			{id: 4, name: "Short Underlying Currency FX Rate Exposure"},
+			{id: 5, name: "Short Underlying Currency FX Rate Delta-adjusted Exposure"},
+		]
+
+		const positionReportingSelectorOptions = [
+			{
+				id: 1,
+				name: 'Direct Position'
+			},
+			{
+				id: 2,
+				name: 'Factor-adjusted Position'
+			},
+			{
+				id: 3,
+				name: 'Do not show'
+			}
+		];
+
+		const getDataForInstrumentExposureTab = function () {
+
+			let mapOption;
+
+			if (viewModel.entityType === 'instrument') {
+
+				mapOption = item => {
+					return {
+						id: item.id,
+						user_code: item.user_code,
+						name: item.short_name
+					}
+				};
+
+			} else { // instrument type
+
+				mapOption = item => {
+					return {
+						id: item.user_code,
+						name: item.short_name
+					}
+				};
+
+			}
+			// let result = {};
+			const instrSelOpts = new Promise(function (resolve) {
+
+				entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data){
+					const options = data.results.map(mapOption)
+					resolve(options);
+				});
+
+			});
+
+			const currSelOpts = new Promise(function (resolve) {
+
+				entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data){
+					const options = data.results.map(mapOption)
+					resolve(options);
+				})
+
+			});
+
+			return Promise.all([instrSelOpts, currSelOpts]);
+
+		};
+
+		const switchPricingPolicyParameter = function ($event, item) {
+
+			if (item.switchState === 'default_value') {
+				item.switchState = 'attribute_key'
+			} else {
+				item.switchState = 'default_value'
+			}
+
+			item.default_value = null;
+			item.attribute_key = null;
+
+		};
+
+		//region Instrument type
+
+		const getInstrFormLayoutsOptions = () => {
+
+			return viewModel.instrumentFormLayouts
+				.filter(ifLayout => {
+
+					const notInsideInstrType = !!!viewModel.instrLayoutsFromItype.find(fLayout => fLayout.user_code === ifLayout.user_code);
+					return notInsideInstrType;
+
+				})
+				.map(ifLayout => {
+					return {
+						id: ifLayout.user_code,
+						name: ifLayout.user_code
+					};
+				});
+
+		};
+
+		const getInstrumentFormLayouts = function () {
+
+			return new Promise((resolve, reject) => {
+
+				uiService.getListEditLayout('instrument').then(function (data) {
+
+					viewModel.instrumentFormLayouts = data.results;
+
+					viewModel.instrumentFormLayoutsOptions = getInstrFormLayoutsOptions();
+
+					resolve();
+
+				}).catch(error => reject(error));
+
+			});
+
+		};
+
+		const instrumentTypeMoveLayoutUp = function ($event, item, index) {
+
+			viewModel.instrLayoutsFromItype.splice(index, 1); // remove old one
+
+			var newIndex = index - 1;
+
+			if (newIndex < 0) {
+				newIndex = 0;
+			}
+
+			viewModel.instrLayoutsFromItype.splice(newIndex, 0, item);
+
+			viewModel.entity.instrument_form_layouts = viewModel.instrLayoutsFromItype.map(layout => layout.user_code).join(',');
+
+		};
+
+		const instrumentTypeMoveLayoutDown = function ($event, item) {
+
+			var index = viewModel.instrLayoutsFromItype.indexOf(item);
+
+			viewModel.instrLayoutsFromItype.splice(index, 1); // remove old one
+
+			var newIndex = index + 1
+
+			viewModel.instrLayoutsFromItype.splice(newIndex, 0, item);
+
+			viewModel.entity.instrument_form_layouts = viewModel.instrLayoutsFromItype.map(layout => layout.user_code).join(',')
+
+		}
+
+		const instrumentTypeDeleteInstrLayout = function ($event, item, index) {
+
+			// var index = viewModel.instrLayoutsFromItype.indexOf(item)
+
+			viewModel.instrLayoutsFromItype.splice(index, 1);
+
+			viewModel.entity.instrument_form_layouts = viewModel.instrLayoutsFromItype.map(layout => layout.user_code).join(',');
+
+			viewModel.instrumentFormLayoutsOptions.push({
+				id: item.user_code,
+				name: item.user_code
+			});
+
+		};
+
+		const addInstrLayoutToInstrumentType = function () {
+
+			const newInstrFormLayout = viewModel.instrumentFormLayouts.find(ifLayout => ifLayout.user_code === viewModel.newInstrFormLayoutUserCode);
+			viewModel.instrLayoutsFromItype.unshift(newInstrFormLayout);
+
+			const index = viewModel.instrumentFormLayoutsOptions.findIndex(lOption => lOption.id === viewModel.newInstrFormLayoutUserCode);
+			viewModel.instrumentFormLayoutsOptions.splice(index, 1);
+
+			viewModel.newInstrFormLayoutUserCode = '';
+
+			viewModel.entity.instrument_form_layouts = viewModel.instrLayoutsFromItype.map(layout => layout.user_code).join(',');
+
+		};
+
+		const editInstrFormLayout = function (ev, layout) {
+
+			$mdDialog.show({
+				controller: 'EntityDataConstructorDialogController as vm',
+				templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+				targetEvent: ev,
+				multiple: true,
+				locals: {
+					data: {
+						entityType: 'instrument',
+						layoutId: layout.id
+					}
+				}
+
+			}).then(function (res) {
+
+				if (res.status === "agree") {
+
+					layout.user_code = res.data.user_code;
+					layout.name = res.data.name;
+					layout.is_default = res.data.is_default;
+
+				}
+
+			});
+
+		};
+
+		const createInstrFormLayout = function (ev) {
+
+			$mdDialog.show({
+				controller: 'EntityDataConstructorDialogController as vm',
+				templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+				targetEvent: ev,
+				multiple: true,
+				locals: {
+					data: {
+						entityType: 'instrument',
+						isCreateNew: true
+					}
+				}
+
+			}).then(function (res) {
+
+				if (res.status === 'agree') {
+
+					viewModel.instrumentFormLayouts.push(res.data);
+					viewModel.instrumentFormLayoutsOptions = getInstrFormLayoutsOptions();
+
+				}
+
+			});
+
+		};
+
+		const saveAndApplyPermissionsToInstrumentsByGroup = function ($event, group) {
+
+			viewModel.updateItem().then(function (value) {
+
+				entityResolverService.getList('instrument', {pageSize: 1000}).then(function (data) {
+
+					var has_view = group.objectPermissions.view;
+					var has_change = group.objectPermissions.change;
+					var has_manage = group.objectPermissions.manage;
+
+					var instrumentsWithPermissions = data.results.map(function (item) {
+
+						var permissions = item.object_permissions.filter(function (perm) {
+							return perm.group !== group.id
+						});
+
+						if (has_view) {
+							permissions.push({
+								group: group.id,
+								member: null,
+								permission: 'view_instrument'
+							});
+						}
+
+						if (has_change) {
+							permissions.push({
+								group: group.id,
+								member: null,
+								permission: 'change_instrument'
+							});
+						}
+
+						if (has_manage) {
+							permissions.push({
+								group: group.id,
+								member: null,
+								permission: 'manage_instrument'
+							});
+						}
+
+						return {
+							id: item.id,
+							object_permissions: permissions
+						}
+
+					});
+
+					entityResolverService.updateBulk('instrument', instrumentsWithPermissions).then(function () {
+
+						$mdDialog.show({
+							controller: 'InfoDialogController as vm',
+							templateUrl: 'views/info-dialog-view.html',
+							parent: angular.element(document.body),
+							targetEvent: $event,
+							clickOutsideToClose: false,
+							preserveScope: true,
+							autoWrap: true,
+							skipHide: true,
+							multiple: true,
+							locals: {
+								info: {
+									title: 'Success',
+									description: "Instrument Permissions successfully updated"
+								}
+							}
+						});
+
+					});
+
+				});
+
+			});
+
+		};
+		//endregion
+
         return {
 
 			readyStatusObj: readyStatusObj,
 
 			groupSelectorValueEntities: groupSelectorValueEntities,
-			getGroupSelectorOptions: getGroupSelectorOptions,
             getFixedAreaPopup: getFixedAreaPopup,
             entityTabsMenuTplt: entityTabsMenuTplt,
             onPopupSaveCallback: onPopupSaveCallback,
             onFixedAreaPopupCancel: onFixedAreaPopupCancel,
+			isNotNullInput: isNotNullInput,
 			typeSelectorChangeFns: typeSelectorChangeFns,
 			entityTypeForGroupSelectorsData: entityTypeForGroupSelectorsData,
+
+			mapPermissionsToInstrument: mapPermissionsToInstrument,
 
             checkReadyStatus: checkReadyStatus,
 			bindFlex: bindFlex,
@@ -1156,6 +1592,25 @@
 
 			isTabWithErrors: isTabWithErrors,
 			getTabBtnClasses: getTabBtnClasses,
+
+			exposureCalculationModelSelectorOptions: exposureCalculationModelSelectorOptions,
+			longUnderlyingExposureSelectorOptions: longUnderlyingExposureSelectorOptions,
+			shortUnderlyingExposureSelectorOptions: shortUnderlyingExposureSelectorOptions,
+			positionReportingSelectorOptions: positionReportingSelectorOptions,
+			getDataForInstrumentExposureTab: getDataForInstrumentExposureTab,
+
+			switchPricingPolicyParameter: switchPricingPolicyParameter,
+
+			//region Instrument type
+			getInstrumentFormLayouts: getInstrumentFormLayouts,
+			instrumentTypeMoveLayoutUp: instrumentTypeMoveLayoutUp,
+			instrumentTypeMoveLayoutDown: instrumentTypeMoveLayoutDown,
+			instrumentTypeDeleteInstrLayout: instrumentTypeDeleteInstrLayout,
+			addInstrLayoutToInstrumentType: addInstrLayoutToInstrumentType,
+			editInstrFormLayout: editInstrFormLayout,
+			createInstrFormLayout: createInstrFormLayout,
+			saveAndApplyPermissionsToInstrumentsByGroup: saveAndApplyPermissionsToInstrumentsByGroup,
+			//endregion
 
 			// injectUserAttributesFromInstrumentType: injectUserAttributesFromInstrumentType
 

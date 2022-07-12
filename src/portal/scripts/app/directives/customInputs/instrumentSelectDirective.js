@@ -204,6 +204,8 @@
 
                     var config = {
                         instrument_code: item.referenceId,
+                        instrument_name: item.issueName,
+                        instrument_type_code: item.instrumentType,
                         mode: 1
                     };
 
@@ -216,6 +218,7 @@
                     importInstrumentCbondsService.download(config).then(function (data) {
 
                         scope.isDisabled = false;
+                        scope.processing = false;
 
                         if (data.errors.length) {
 
@@ -232,28 +235,49 @@
 
                                 scope.$apply();
 
-                            }, 0);
+                            }, 100);
 
 
                         } else {
 
+                            stylePreset = '';
+                            scope.error = '';
+
                             scope.model = data.result_id;
                             scope.itemObject = {id: data.result_id, name: item.issueName, user_code: item.issueName}
 
-                            scope.processing = false;
+                            scope.itemName = item.issueName;
+                            scope.inputText = item.issueName;
 
                             scope.valueIsValid = true;
 
+                            scope.$apply();
+
                             setTimeout(function () {
 
-                                if (scope.onChangeCallback) scope.onChangeCallback();
+                                if (scope.onChangeCallback) {
 
-                                scope.$apply();
+                                    scope.onChangeCallback();
 
-                            }, 0);
+                                    scope.$apply();
+
+                                }
+
+
+                            }, 1);
 
                         }
 
+                    }).catch(function (e){
+                        scope.processing = true;
+                        scope.isDisabled = true;
+
+                        scope.model = null;
+
+                        scope.itemName = ''
+                        scope.inputText = ''
+
+                        scope.$apply();
                     })
 
 
@@ -402,6 +426,73 @@
                         }
 
                     })
+
+                };
+
+                var initScopeWatchers = function () {
+
+                    if (scope.eventSignal) {
+                        // this if prevents watcher below from running without need
+
+                        scope.$watch("eventSignal", function () {
+
+                            if (scope.eventSignal && scope.eventSignal.key) {
+
+                                switch (scope.eventSignal.key) {
+
+                                    case "mark_not_valid_fields":
+                                        if (scope.smallOptions &&
+                                            scope.smallOptions.notNull &&
+                                            !scope.model) {
+
+                                            scope.error = "Field should not be null";
+
+                                        }
+
+                                        break;
+
+                                    case "error":
+                                        scope.error = JSON.parse(JSON.stringify(scope.eventSignal.error));
+                                        break;
+
+                                    case "set_style_preset1":
+                                        stylePreset = 1;
+                                        break;
+
+                                    case "set_style_preset2":
+                                        stylePreset = 2;
+                                        break;
+
+                                    case "reset": // reset changes done by eventSignal
+
+                                        scope.error = "";
+                                        stylePreset = "";
+
+                                        break;
+
+                                }
+
+                                scope.eventSignal = {};
+                            }
+                        });
+                    }
+
+                    scope.$watch('itemName', function () {
+
+                        console.log('scope.model', scope.model);
+
+                        if (scope.itemName) {
+                            // itemName = scope.itemName;
+                            scope.inputText = scope.itemName;
+
+                            // scope.selectedItem = {id: scope.model, name: scope.itemName, user_code: scope.itemName}
+
+                        } else {
+                            // itemName = '';
+                            scope.inputText = '';
+                        }
+
+                    });
 
                 };
 
@@ -591,6 +682,7 @@
                     scope.databaseInstruments = []
                     scope.localInstruments = []
 
+                    initScopeWatchers();
                     initEventListeners();
 
                     if (scope.customStyles) {

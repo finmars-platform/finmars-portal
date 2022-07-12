@@ -1,6 +1,7 @@
 (function () {
 
 	const md5Helper = require('../helpers/md5.helper');
+    const toastNotificationService = require('../../../../core/services/toastNotificationService');
 
     function recursiveDeepCopy(o, saveFunctions) {
         var newO,
@@ -167,7 +168,40 @@
             return 0;
 
         });
-    }
+    };
+	/**
+	 *
+	 * @param {string} text - text to use as unique user code, name etc
+	 * @param {array<string>} [listOfTexts] - array of already existing strings
+	 * @param {string} textName - name to use in error
+	 */
+	const validateTextForUserCode = (text, listOfTexts, textName) => {
+
+		if (!textName) textName = "";
+		// let errorText = "";
+		if (!text) {
+			return `${ textName ? textName + ' ' : ''}should not be empty.`;
+		}
+		else if (text.match('[^1-9a-zA-Z_]')) {
+
+			if (textName) textName = ' for ' + textName;
+
+			return `Only english letters and 1-9 numbers allowed${textName}.`;
+		}
+		else if (text.match('^[0-9]')) {
+			return `${ textName ? textName + ' ' : ''}should not start with number.`;
+		}
+		else if (listOfTexts && listOfTexts.length) {
+
+			if (listOfTexts.includes(text)) {
+				return `${ textName ? textName + ' ' : ''}should be unique.`;
+			}
+
+		}
+
+		return false;
+
+	};
 
 	const openLinkInNewTab = function (event) {
 
@@ -243,12 +277,32 @@
 
 	};
 
+	const copyToBuffer = function(content) {
+
+        var listener = function (e) {
+
+            e.clipboardData.setData('text/plain', content);
+
+            e.preventDefault();
+        };
+
+        document.addEventListener('copy', listener, false);
+
+        document.execCommand("copy");
+
+        document.removeEventListener('copy', listener, false);
+
+        toastNotificationService.info("Copied")
+
+    }
+
     module.exports = {
         recursiveDeepCopy: recursiveDeepCopy,
         setObjectNestedPropVal: setObjectNestedPropVal,
         getObjectNestedPropVal: getObjectNestedPropVal,
         deletePropertyByPath: deletePropertyByPath,
         textWithDashSort: textWithDashSort,
+		validateTextForUserCode: validateTextForUserCode,
 		openLinkInNewTab: openLinkInNewTab,
 
         closeComponent: closeComponent,
@@ -259,6 +313,8 @@
 		generateUniqueId: generateUniqueId,
 
 		clearFrontendOptions: clearFrontendOptions,
+
+        copyToBuffer: copyToBuffer
     }
 
 }());

@@ -42,6 +42,24 @@ export default function ($mdDialog) {
 	}
 
 	/**
+	 * Opens dialog with inputs that are set in option.
+	 *
+	 * @memberOf module:commonDialogsService
+	 * @param locals {Object} - locals for dialog settings
+	 * @param [options] {Object}
+	 * 	@param {HTMLElement} [options.parent] - element that will be parent of dialog element
+	 * 	@param {Object} [options.targetEvent] - event object
+	 * @returns {Promise<Object>} - response after dialog closes
+	 */
+	function inputs (locals, options) {
+
+		const dialogOptionsObj = getMdDialogOptions('InputsDialogController as vm', 'views/dialogs/inputs-dialog-view.html', locals, options);
+
+		return $mdDialog.show(dialogOptionsObj);
+
+	}
+
+	/**
 	 * Opens import configuration manager dialog.
 	 *
 	 * @memberOf module:commonDialogsService
@@ -61,6 +79,7 @@ export default function ($mdDialog) {
 
 	return {
 		warning: warning,
+		inputs: inputs,
 		importConfigurationManager: importConfigurationManager
 	}
 }

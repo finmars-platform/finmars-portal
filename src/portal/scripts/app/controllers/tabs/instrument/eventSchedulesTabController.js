@@ -45,7 +45,6 @@
         vm.evEditorDataService = $scope.$parent.vm.evEditorDataService;
         vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
         vm.onEntityChange = $scope.$parent.vm.onEntityChange;
-
         // Victor 06.10.2020 Not used after switching to grid table
         // var activeItemOriginal = null;
 
@@ -146,7 +145,7 @@
             return name;
         }; */
 
-        vm.newItem = JSON.parse(JSON.stringify(eventObj));
+        // vm.newItem = JSON.parse(JSON.stringify(eventObj));
 
         // Victor 01.10.2020 I use EVENT_INIT_OBJECT
         /* vm.newItem = {
@@ -366,13 +365,15 @@
 
         var onEventsTableAddRow = function () {
 
-            vm.openEventEditDialog(vm.newItem).then(function (res) {
+			var newEventData = JSON.parse(JSON.stringify(eventObj));
+
+			vm.openEventEditDialog(newEventData).then(function (res) {
 
                 if (res.status !== 'agree') {
                     return;
                 }
 
-                vm.newItem = JSON.parse(JSON.stringify(eventObj));
+                // vm.newItem = JSON.parse(JSON.stringify(eventObj));
 
                 var event = res.data.event;
 
@@ -444,7 +445,7 @@
 				setGridTableCellsValues(rowObj, event);
 
 				vm.entity.event_schedules[rowData.order] = event;
-				vm.evEditorEventService.dispatchEvent(evEditorEvents.TABLE_CHANGED, {key: 'event_schedules'});
+				vm.evEditorEventService.dispatchEvent(evEditorEvents.TABLE_INSTANCE_CHANGED, {key: 'event_schedules'});
 
             });
 
@@ -639,7 +640,7 @@
 				instrumentService.onGtRowDeletion(argObj, vm.entity, vm.evEditorEventService, 'event_schedules');
 			});
 
-			vm.evEditorEventService.addEventListener(evEditorEvents.TABLE_CHANGED, argObj => {
+			vm.evEditorEventService.addEventListener(evEditorEvents.TABLE_INSTANCE_CHANGED, argObj => {
 
 				if (argObj && argObj.key === 'event_schedules' && !eventsTableChangedHere) {
 

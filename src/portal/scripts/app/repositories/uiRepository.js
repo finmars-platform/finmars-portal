@@ -3,939 +3,939 @@
  */
 (function () {
 
-	'use strict';
+    'use strict';
 
-	var cookieService = require('../../../../core/services/cookieService');
-	var xhrService = require('../../../../core/services/xhrService');
-	var metaContentTypesService = require('../services/metaContentTypesService');
-	var metaRestrictionsRepository = require('./metaRestrictionsRepository');
-	var baseUrlService = require('../services/baseUrlService');
+    var cookieService = require('../../../../core/services/cookieService');
+    var xhrService = require('../../../../core/services/xhrService');
+    var metaContentTypesService = require('../services/metaContentTypesService');
+    var metaRestrictionsRepository = require('./metaRestrictionsRepository');
+    var baseUrlService = require('../services/baseUrlService');
 
-	var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
 
-	var baseUrl = baseUrlService.resolve();
+    var baseUrl = baseUrlService.resolve();
 
-	var getRequestParams = function (method, bodyData) { // TODO: move to xhrService
+    var getRequestParams = function (method, bodyData) { // TODO: move to xhrService
 
-		if (!['GET', 'POST', 'PATCH', 'PUT', 'DELETE'].includes(method)) {
-			throw new Error("Invalid request method");
-		}
+        if (!['GET', 'POST', 'PATCH', 'PUT', 'DELETE'].includes(method)) {
+            throw new Error("Invalid request method");
+        }
 
-		var reqestParamsObj = {
-			method: method,
-			credentials: 'include',
-			headers: {
-				Accept: 'application/json',
-				'Content-type': 'application/json'
-			}
-		};
+        var reqestParamsObj = {
+            method: method,
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        };
 
-		reqestParamsObj.headers['Authorization'] = 'Token ' + cookieService.getCookie('authtoken');
+        reqestParamsObj.headers['Authorization'] = 'Token ' + cookieService.getCookie('access_token');
 
-		if (['POST', 'PATCH', 'PUT'].includes(method)) {
+        if (['POST', 'PATCH', 'PUT'].includes(method)) {
 
-			reqestParamsObj.headers['X-CSRFToken'] = cookieService.getCookie('csrftoken');
-			reqestParamsObj.body = JSON.stringify(bodyData);
+            reqestParamsObj.headers['X-CSRFToken'] = cookieService.getCookie('csrftoken');
+            reqestParamsObj.data = JSON.stringify(bodyData);
 
-		} else if (method === 'DELETE') {
-			reqestParamsObj.headers['X-CSRFToken'] = cookieService.getCookie('csrftoken');
-		}
+        } else if (method === 'DELETE') {
+            reqestParamsObj.headers['X-CSRFToken'] = cookieService.getCookie('csrftoken');
+        }
 
-		return reqestParamsObj;
+        return reqestParamsObj;
 
-	};
+    };
 
-	var getPortalInterfaceAccess = function (uiLayoutId) {
+    var getPortalInterfaceAccess = function (uiLayoutId) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/portal-interface-access/',
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/portal-interface-access/',
+            getRequestParams('GET'))
+    };
 
-	var getListLayout = function (entity, options) {
+    var getListLayout = function (entity, options) {
 
-		/* if (entity == 'all') {
-
-
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
-
-return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
-				getRequestParams('GET'))
-
-		} else {
-
-			if (!options) {
-				options = {}
-			}
-
-			if (!options.content_type) {
-				options.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
-			}
+        /* if (entity == 'all') {
 
 
 var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
 return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
-				getRequestParams('GET'));
-		} */
+                getRequestParams('GET'))
 
-		if (!options) {
-			options = {}
-		}
+        } else {
 
-		if (entity !== 'all') {
+            if (!options) {
+                options = {}
+            }
 
-			if (!options.filters) {
-				options.filters = {}
-			}
+            if (!options.content_type) {
+                options.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+            }
 
-			if (!options.filters.content_type) {
-				options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
-			}
-
-
-			var prefix = baseUrlService.getMasterUserPrefix();
-			var apiVersion = baseUrlService.getApiVersion();
-
-			return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
-				getRequestParams('GET'));
-
-		}
-
-
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
-
-		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
-			getRequestParams('GET'));
-
-	};
-
-	var getListLayoutLight = function (entity, options) {
-
-		if (!options) {
-			options = {}
-		}
-
-		if (entity !== 'all') {
-
-			if (!options.filters) {
-				options.filters = {}
-			}
-
-			if (!options.filters.content_type) {
-				options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
-			}
-
-
-			var prefix = baseUrlService.getMasterUserPrefix();
-			var apiVersion = baseUrlService.getApiVersion();
-
-			return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout-light/', options),
-				getRequestParams('GET'));
-
-		}
-
-
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
-
-		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout-light/', options),
-			getRequestParams('GET'));
-
-	};
-
-	var getListLayoutByKey = function (uiLayoutId) {
-
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
-
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + uiLayoutId + '/',
-			getRequestParams('GET'));
-	};
-
-	/* var getListLayoutDefault = function (options) {
 
 var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
 return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
-			getRequestParams('GET'));
-	}; */
+                getRequestParams('GET'));
+        } */
 
-	/* var getActiveListLayout = function (entity) {
+        if (!options) {
+            options = {}
+        }
 
-		var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+        if (entity !== 'all') {
+
+            if (!options.filters) {
+                options.filters = {}
+            }
+
+            if (!options.filters.content_type) {
+                options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+            }
+
+
+            var prefix = baseUrlService.getMasterUserPrefix();
+            var apiVersion = baseUrlService.getApiVersion();
+
+            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
+                getRequestParams('GET'));
+
+        }
+
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
+            getRequestParams('GET'));
+
+    };
+
+    var getListLayoutLight = function (entity, options) {
+
+        if (!options) {
+            options = {}
+        }
+
+        if (entity !== 'all') {
+
+            if (!options.filters) {
+                options.filters = {}
+            }
+
+            if (!options.filters.content_type) {
+                options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+            }
+
+
+            var prefix = baseUrlService.getMasterUserPrefix();
+            var apiVersion = baseUrlService.getApiVersion();
+
+            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout-light/', options),
+                getRequestParams('GET'));
+
+        }
+
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout-light/', options),
+            getRequestParams('GET'));
+
+    };
+
+    var getListLayoutByKey = function (uiLayoutId) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + uiLayoutId + '/',
+            getRequestParams('GET'));
+    };
+
+    /* var getListLayoutDefault = function (options) {
+
+var prefix = baseUrlService.getMasterUserPrefix();
+var apiVersion = baseUrlService.getApiVersion();
+
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/', options),
+            getRequestParams('GET'));
+    }; */
+
+    /* var getActiveListLayout = function (entity) {
+
+        var contentType = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
 
 
 var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
 return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/?is_active=2&content_type=' + contentType,
-			getRequestParams('GET'))
-	}; */
+            getRequestParams('GET'))
+    }; */
 
-	var getDefaultListLayout = function (entityType) {
+    var getDefaultListLayout = function (entityType) {
 
-		var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+        var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/?is_default=2&content_type=' + contentType,
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/?is_default=2&content_type=' + contentType,
+            getRequestParams('GET'))
+    };
 
-	var createListLayout = function (ui) {
+    var createListLayout = function (ui) {
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/',
-			getRequestParams('POST', ui));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/',
+            getRequestParams('POST', ui));
+    };
 
-	var updateListLayout = function (id, ui) {
+    var updateListLayout = function (id, ui) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + id + '/',
-			getRequestParams('PUT', ui));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + id + '/',
+            getRequestParams('PUT', ui));
+    };
 
-	var deleteListLayoutByKey = function (id) {
+    var deleteListLayoutByKey = function (id) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return new Promise(function (resolve, reject) {
-			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + id + '/',
-				getRequestParams('DELETE')).then(function (data) {
-				resolve(undefined);
-			})
-		});
-	};
-	/**
-	 *
-	 * @param layoutId {number}
-	 * @param xhrOptions {=Object} - options for xhrService
-	 * @returns {Promise<Object>}
-	 */
-	var pingListLayoutByKey = function (layoutId, xhrOptions) {
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + id + '/',
+                getRequestParams('DELETE')).then(function (data) {
+                resolve(undefined);
+            })
+        });
+    };
+    /**
+     *
+     * @param layoutId {number}
+     * @param xhrOptions {=Object} - options for xhrService
+     * @returns {Promise<Object>}
+     */
+    var pingListLayoutByKey = function (layoutId, xhrOptions) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + layoutId + '/ping/',
-			getRequestParams('GET'), xhrOptions);
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/' + layoutId + '/ping/',
+            getRequestParams('GET'), xhrOptions);
 
-	};
+    };
 
-	var getListLayoutTemplate = function (isReport) {
-		const template = {
-			"name": "",
-			"data": {
-				"entityType": null,
-				"folding": false,
-				"sorting": {
-					"group": {
-						"id": null,
-						"sort": "DESC",
-						"key": null
-					},
-					"column": {
-						"id": null,
-						"sort": "ASC",
-						"key": null
-					}
-				},
-				"grouping": [],
-				"columns": [],
-				"filters": {backend: [], frontend: []},
-				"additions": {}
-			}
-		};
+    var getListLayoutTemplate = function (isReport) {
+        const template = {
+            "name": "",
+            "data": {
+                "entityType": null,
+                "folding": false,
+                "sorting": {
+                    "group": {
+                        "id": null,
+                        "sort": "DESC",
+                        "key": null
+                    },
+                    "column": {
+                        "id": null,
+                        "sort": "ASC",
+                        "key": null
+                    }
+                },
+                "grouping": [],
+                "columns": [],
+                "filters": {backend: [], frontend: []},
+                "additions": {}
+            }
+        };
 
-		if (isReport) template.data.filters = [];
+        if (isReport) template.data.filters = [];
 
-		return [template];
-	};
+        return [template];
+    };
 
-	// Input Form Layout
+    // Input Form Layout
 
-	var getListEditLayout = function (entity, options) {
+    var getListEditLayout = function (entity, options) {
 
-		console.log('getListEditLayout.entity', entity)
+        console.log('getListEditLayout.entity', entity)
 
-		if (!options) {
-			options = {}
-		}
+        if (!options) {
+            options = {}
+        }
 
-		if (entity !== 'all') {
+        if (entity !== 'all') {
 
-			if (!options.filters) {
-				options.filters = {}
-			}
+            if (!options.filters) {
+                options.filters = {}
+            }
 
-			if (!options.filters.content_type) {
-				options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
-			}
+            if (!options.filters.content_type) {
+                options.filters.content_type = metaContentTypesService.findContentTypeByEntity(entity, 'ui');
+            }
 
 
-			var prefix = baseUrlService.getMasterUserPrefix();
-			var apiVersion = baseUrlService.getApiVersion();
+            var prefix = baseUrlService.getMasterUserPrefix();
+            var apiVersion = baseUrlService.getApiVersion();
 
-			return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/', options),
-				getRequestParams('GET'));
+            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/', options),
+                getRequestParams('GET'));
 
-		}
+        }
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/', options),
-			getRequestParams('GET'));
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/', options),
+            getRequestParams('GET'));
 
-	};
+    };
 
-	var getDefaultEditLayout = function (entityType) {
+    var getDefaultEditLayout = function (entityType) {
 
-		var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/?is_default=2&content_type=' + contentType,
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/?is_default=2&content_type=' + contentType,
+            getRequestParams('GET'))
+    };
 
-	var getEditLayoutByKey = function (id) {
+    var getEditLayoutByKey = function (id) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/' + id + '/',
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/' + id + '/',
+            getRequestParams('GET'))
+    };
 
-	var getEditLayoutByUserCode = function (entityType, userCode) {
+    var getEditLayoutByUserCode = function (entityType, userCode) {
 
-		var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/?content_type=' + contentType + '&user_code=' + userCode,
-			getRequestParams('GET'));
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/?content_type=' + contentType + '&user_code=' + userCode,
+            getRequestParams('GET'));
 
-	};
+    };
 
-	var createEditLayout = function (ui) {
+    var createEditLayout = function (ui) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/',
-			getRequestParams('POST', ui));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/',
+            getRequestParams('POST', ui));
+    };
 
-	var updateEditLayout = function (id, ui) {
+    var updateEditLayout = function (id, ui) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/' + id + '/',
-			getRequestParams('PUT', ui));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/' + id + '/',
+            getRequestParams('PUT', ui));
+    };
 
-	var deleteEditLayoutByKey = function (id) {
+    var deleteEditLayoutByKey = function (id) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return new Promise(function (resolve, reject) {
-			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/' + id + '/',
-				getRequestParams('DELETE')).then(function (data) {
-				resolve(undefined);
-			})
-		});
-	};
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/' + id + '/',
+                getRequestParams('DELETE')).then(function (data) {
+                resolve(undefined);
+            })
+        });
+    };
 
 
-	// Configuration Layout
+    // Configuration Layout
 
-	var getConfigurationList = function () {
+    var getConfigurationList = function () {
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration/',
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration/',
+            getRequestParams('GET'))
+    };
 
-	var createConfiguration = function (data) {
+    var createConfiguration = function (data) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration/',
-			getRequestParams('POST', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration/',
+            getRequestParams('POST', data));
+    };
 
-	var updateConfiguration = function (id, data) {
+    var updateConfiguration = function (id, data) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration/' + id + '/',
-			getRequestParams('PUT', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration/' + id + '/',
+            getRequestParams('PUT', data));
+    };
 
-	var deleteConfigurationByKey = function (id) {
+    var deleteConfigurationByKey = function (id) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return new Promise(function (resolve, reject) {
-			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration/' + id + '/',
-				getRequestParams('DELETE')).then(function (data) {
-				resolve(undefined);
-			})
-		});
-	};
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration/' + id + '/',
+                getRequestParams('DELETE')).then(function (data) {
+                resolve(undefined);
+            })
+        });
+    };
 
-	var getConfigurationExportLayoutList = function () {
+    var getConfigurationExportLayoutList = function () {
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration-export-layout/',
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration-export-layout/',
+            getRequestParams('GET'))
+    };
 
-	var createConfigurationExportLayout = function (data) {
+    var createConfigurationExportLayout = function (data) {
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration-export-layout/',
-			getRequestParams('POST', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration-export-layout/',
+            getRequestParams('POST', data));
+    };
 
-	var updateConfigurationExportLayout = function (id, data) {
+    var updateConfigurationExportLayout = function (id, data) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration-export-layout/' + id + '/',
-			getRequestParams('PUT', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration-export-layout/' + id + '/',
+            getRequestParams('PUT', data));
+    };
 
-	var deleteConfigurationExportLayoutByKey = function (id) {
+    var deleteConfigurationExportLayoutByKey = function (id) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return new Promise(function (resolve, reject) {
-			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration-export-layout/' + id + '/',
-				getRequestParams('DELETE')).then(function (data) {
-				resolve(undefined);
-			})
-		})
-	};
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/configuration-export-layout/' + id + '/',
+                getRequestParams('DELETE')).then(function (data) {
+                resolve(undefined);
+            })
+        })
+    };
 
-	var getTransactionFieldList = function (options) {
+    var getTransactionFieldList = function (options) {
 
-		console.log('options', options);
+        console.log('options', options);
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/', options),
-			getRequestParams('GET'))
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/', options),
+            getRequestParams('GET'))
 
-	};
+    };
 
-	var createTransactionField = function (data) {
+    var createTransactionField = function (data) {
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/',
-			getRequestParams('POST', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/',
+            getRequestParams('POST', data));
+    };
 
-	var updateTransactionField = function (id, data) {
+    var updateTransactionField = function (id, data) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/' + id + '/',
-			getRequestParams('PUT', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/' + id + '/',
+            getRequestParams('PUT', data));
+    };
 
-	var getInstrumentFieldList = function (options) {
+    var getInstrumentFieldList = function (options) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/instrument-user-field/', options),
-			getRequestParams('GET'))
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/instrument-user-field/', options),
+            getRequestParams('GET'))
 
-	};
+    };
 
-	var createInstrumentField = function (data) {
+    var createInstrumentField = function (data) {
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/instrument-user-field/',
-			getRequestParams('POST', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/instrument-user-field/',
+            getRequestParams('POST', data));
+    };
 
-	var updateInstrumentField = function (id, data) {
+    var updateInstrumentField = function (id, data) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/instrument-user-field/' + id + '/',
-			getRequestParams('PUT', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/instrument-user-field/' + id + '/',
+            getRequestParams('PUT', data));
+    };
 
-	var getDashboardLayoutList = function (entity, options) {
+    var getDashboardLayoutList = function (entity, options) {
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/', options),
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/', options),
+            getRequestParams('GET'))
+    };
 
-	var getDashboardLayoutByKey = function (id) {
+    var getDashboardLayoutByKey = function (id) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/' + id + '/',
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/' + id + '/',
+            getRequestParams('GET'))
+    };
 
-	var getActiveDashboardLayout = function () {
+    var getActiveDashboardLayout = function () {
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/?is_active=2',
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/?is_active=2',
+            getRequestParams('GET'))
+    };
 
-	var getDefaultDashboardLayout = function () {
+    var getDefaultDashboardLayout = function () {
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/?is_default=2',
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/?is_default=2',
+            getRequestParams('GET'))
+    };
 
-	var createDashboardLayout = function (data) {
+    var createDashboardLayout = function (data) {
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/',
-			getRequestParams('POST', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/',
+            getRequestParams('POST', data));
+    };
 
-	var updateDashboardLayout = function (id, data) {
+    var updateDashboardLayout = function (id, data) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/' + id + '/',
-			getRequestParams('PUT', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/' + id + '/',
+            getRequestParams('PUT', data));
+    };
 
-	var deleteDashboardLayoutByKey = function (id) {
+    var deleteDashboardLayoutByKey = function (id) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return new Promise(function (resolve, reject) {
-			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/' + id + '/',
-				getRequestParams('DELETE')).then(function (data) {
-				resolve(undefined);
-			})
-		})
-	};
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/' + id + '/',
+                getRequestParams('DELETE')).then(function (data) {
+                resolve(undefined);
+            })
+        })
+    };
 
 
-	var getTemplateLayoutList = function (options) {
+    var getTemplateLayoutList = function (options) {
 
-		console.log('options', options);
+        console.log('options', options);
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/', options),
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/', options),
+            getRequestParams('GET'))
+    };
 
-	var getTemplateLayoutByKey = function (id) {
+    var getTemplateLayoutByKey = function (id) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/' + id + '/',
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/' + id + '/',
+            getRequestParams('GET'))
+    };
 
-	var getDefaultTemplateLayout = function () {
+    var getDefaultTemplateLayout = function () {
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/?is_default=2',
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/?is_default=2',
+            getRequestParams('GET'))
+    };
 
-	var createTemplateLayout = function (data) {
+    var createTemplateLayout = function (data) {
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/',
-			getRequestParams('POST', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/',
+            getRequestParams('POST', data));
+    };
 
-	var updateTemplateLayout = function (id, data) {
+    var updateTemplateLayout = function (id, data) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/' + id + '/',
-			getRequestParams('PUT', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/' + id + '/',
+            getRequestParams('PUT', data));
+    };
 
-	var deleteTemplateLayoutByKey = function (id) {
+    var deleteTemplateLayoutByKey = function (id) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return new Promise(function (resolve, reject) {
-			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/' + id + '/',
-				getRequestParams('DELETE')).then(function (data) {
-				resolve(undefined);
-			})
-		})
-	};
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/' + id + '/',
+                getRequestParams('DELETE')).then(function (data) {
+                resolve(undefined);
+            })
+        })
+    };
 
-	var getContextMenuLayoutList = function (options) {
+    var getContextMenuLayoutList = function (options) {
 
-		console.log('options', options);
+        console.log('options', options);
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/', options),
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/', options),
+            getRequestParams('GET'))
+    };
 
-	var getContextMenuLayoutByKey = function (id) {
+    var getContextMenuLayoutByKey = function (id) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/' + id + '/',
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/' + id + '/',
+            getRequestParams('GET'))
+    };
 
-	var createContextMenuLayout = function (data) {
+    var createContextMenuLayout = function (data) {
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/',
-			getRequestParams('POST', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/',
+            getRequestParams('POST', data));
+    };
 
-	var updateContextMenuLayout = function (id, data) {
+    var updateContextMenuLayout = function (id, data) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/' + id + '/',
-			getRequestParams('PUT', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/' + id + '/',
+            getRequestParams('PUT', data));
+    };
 
-	var deleteContextMenuLayoutByKey = function (id) {
+    var deleteContextMenuLayoutByKey = function (id) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return new Promise(function (resolve, reject) {
-			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/' + id + '/',
-				getRequestParams('DELETE')).then(function (data) {
-				resolve(undefined);
-			})
-		})
-	};
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/context-menu-layout/' + id + '/',
+                getRequestParams('DELETE')).then(function (data) {
+                resolve(undefined);
+            })
+        })
+    };
 
 
-	var getEntityTooltipList = function (options) {
+    var getEntityTooltipList = function (options) {
 
-		console.log('options', options);
+        console.log('options', options);
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/entity-tooltip/', options),
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/entity-tooltip/', options),
+            getRequestParams('GET'))
+    };
 
-	var createEntityTooltip = function (data) {
+    var createEntityTooltip = function (data) {
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/entity-tooltip/',
-			getRequestParams('POST', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/entity-tooltip/',
+            getRequestParams('POST', data));
+    };
 
-	var updateEntityTooltip = function (id, data) {
+    var updateEntityTooltip = function (id, data) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/entity-tooltip/' + id + '/',
-			getRequestParams('PUT', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/entity-tooltip/' + id + '/',
+            getRequestParams('PUT', data));
+    };
 
-	// Cross Entity Attribute Extension
+    // Cross Entity Attribute Extension
 
-	var getCrossEntityAttributeExtensionList = function (options) {
+    var getCrossEntityAttributeExtensionList = function (options) {
 
-		console.log('options', options);
+        console.log('options', options);
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/', options),
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/', options),
+            getRequestParams('GET'))
+    };
 
-	var getCrossEntityAttributeExtension = function (id) {
+    var getCrossEntityAttributeExtension = function (id) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/' + id + '/',
-			getRequestParams('GET'));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/' + id + '/',
+            getRequestParams('GET'));
+    };
 
-	var createCrossEntityAttributeExtension = function (data) {
+    var createCrossEntityAttributeExtension = function (data) {
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/',
-			getRequestParams('POST', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/',
+            getRequestParams('POST', data));
+    };
 
-	var updateCrossEntityAttributeExtension = function (id, data) {
+    var updateCrossEntityAttributeExtension = function (id, data) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/' + id + '/',
-			getRequestParams('PUT', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/' + id + '/',
+            getRequestParams('PUT', data));
+    };
 
-	var deleteCrossEntityAttributeExtension = function (id) {
+    var deleteCrossEntityAttributeExtension = function (id) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return new Promise(function (resolve, reject) {
-			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/' + id + '/',
-				getRequestParams('DELETE')).then(function (data) {
-				resolve(undefined);
-			})
-		})
-	};
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/cross-entity-attribute-extension/' + id + '/',
+                getRequestParams('DELETE')).then(function (data) {
+                resolve(undefined);
+            })
+        })
+    };
 
-	// Column Sort Data
+    // Column Sort Data
 
-	var getColumnSortDataList = function (options) {
+    var getColumnSortDataList = function (options) {
 
-		console.log('options', options);
+        console.log('options', options);
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/', options),
-			getRequestParams('GET'))
-	};
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/', options),
+            getRequestParams('GET'))
+    };
 
-	var getColumnSortData = function (id) {
+    var getColumnSortData = function (id) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/' + id + '/',
-			getRequestParams('GET'));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/' + id + '/',
+            getRequestParams('GET'));
+    };
 
-	var createColumnSortData = function (data) {
+    var createColumnSortData = function (data) {
 
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/',
-			getRequestParams('POST', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/',
+            getRequestParams('POST', data));
+    };
 
-	var updateColumnSortData = function (id, data) {
+    var updateColumnSortData = function (id, data) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/' + id + '/',
-			getRequestParams('PUT', data));
-	};
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/' + id + '/',
+            getRequestParams('PUT', data));
+    };
 
-	var deleteColumnSortData = function (id) {
+    var deleteColumnSortData = function (id) {
 
-		var prefix = baseUrlService.getMasterUserPrefix();
-		var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-		return new Promise(function (resolve, reject) {
-			xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/' + id + '/',
-				getRequestParams('DELETE')).then(function (data) {
-				resolve(undefined);
-			})
-		})
-	};
+        return new Promise(function (resolve, reject) {
+            xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/column-sort-data/' + id + '/',
+                getRequestParams('DELETE')).then(function (data) {
+                resolve(undefined);
+            })
+        })
+    };
 
 
-	module.exports = {
+    module.exports = {
 
-		getPortalInterfaceAccess: getPortalInterfaceAccess,
+        getPortalInterfaceAccess: getPortalInterfaceAccess,
 
 
-		getDefaultListLayout: getDefaultListLayout,
+        getDefaultListLayout: getDefaultListLayout,
 
-		// getActiveListLayout: getActiveListLayout,
+        // getActiveListLayout: getActiveListLayout,
 
-		getListLayoutTemplate: getListLayoutTemplate,
+        getListLayoutTemplate: getListLayoutTemplate,
 
-		getListLayout: getListLayout,
-		getListLayoutLight: getListLayoutLight,
-		getListLayoutByKey: getListLayoutByKey,
-		// getListLayoutDefault: getListLayoutDefault,
-		createListLayout: createListLayout,
-		updateListLayout: updateListLayout,
-		deleteListLayoutByKey: deleteListLayoutByKey,
+        getListLayout: getListLayout,
+        getListLayoutLight: getListLayoutLight,
+        getListLayoutByKey: getListLayoutByKey,
+        // getListLayoutDefault: getListLayoutDefault,
+        createListLayout: createListLayout,
+        updateListLayout: updateListLayout,
+        deleteListLayoutByKey: deleteListLayoutByKey,
 
-		pingListLayoutByKey: pingListLayoutByKey,
+        pingListLayoutByKey: pingListLayoutByKey,
 
-		// Input Form Layout
+        // Input Form Layout
 
-		getListEditLayout: getListEditLayout,
-		getDefaultEditLayout: getDefaultEditLayout,
-		getEditLayoutByKey: getEditLayoutByKey,
-		getEditLayoutByUserCode: getEditLayoutByUserCode,
-		createEditLayout: createEditLayout,
-		updateEditLayout: updateEditLayout,
-		deleteEditLayoutByKey: deleteEditLayoutByKey,
+        getListEditLayout: getListEditLayout,
+        getDefaultEditLayout: getDefaultEditLayout,
+        getEditLayoutByKey: getEditLayoutByKey,
+        getEditLayoutByUserCode: getEditLayoutByUserCode,
+        createEditLayout: createEditLayout,
+        updateEditLayout: updateEditLayout,
+        deleteEditLayoutByKey: deleteEditLayoutByKey,
 
-		// Configuration Layout
+        // Configuration Layout
 
-		getConfigurationList: getConfigurationList,
-		createConfiguration: createConfiguration,
-		updateConfiguration: updateConfiguration,
-		deleteConfigurationByKey: deleteConfigurationByKey,
+        getConfigurationList: getConfigurationList,
+        createConfiguration: createConfiguration,
+        updateConfiguration: updateConfiguration,
+        deleteConfigurationByKey: deleteConfigurationByKey,
 
-		getConfigurationExportLayoutList: getConfigurationExportLayoutList,
-		createConfigurationExportLayout: createConfigurationExportLayout,
-		updateConfigurationExportLayout: updateConfigurationExportLayout,
-		deleteConfigurationExportLayoutByKey: deleteConfigurationExportLayoutByKey,
+        getConfigurationExportLayoutList: getConfigurationExportLayoutList,
+        createConfigurationExportLayout: createConfigurationExportLayout,
+        updateConfigurationExportLayout: updateConfigurationExportLayout,
+        deleteConfigurationExportLayoutByKey: deleteConfigurationExportLayoutByKey,
 
-		getTransactionFieldList: getTransactionFieldList,
-		createTransactionField: createTransactionField,
-		updateTransactionField: updateTransactionField,
+        getTransactionFieldList: getTransactionFieldList,
+        createTransactionField: createTransactionField,
+        updateTransactionField: updateTransactionField,
 
-		getInstrumentFieldList: getInstrumentFieldList,
-		createInstrumentField: createInstrumentField,
-		updateInstrumentField: updateInstrumentField,
+        getInstrumentFieldList: getInstrumentFieldList,
+        createInstrumentField: createInstrumentField,
+        updateInstrumentField: updateInstrumentField,
 
-		getDashboardLayoutList: getDashboardLayoutList,
-		getDashboardLayoutByKey: getDashboardLayoutByKey,
-		getActiveDashboardLayout: getActiveDashboardLayout,
-		getDefaultDashboardLayout: getDefaultDashboardLayout,
-		createDashboardLayout: createDashboardLayout,
-		updateDashboardLayout: updateDashboardLayout,
-		deleteDashboardLayoutByKey: deleteDashboardLayoutByKey,
+        getDashboardLayoutList: getDashboardLayoutList,
+        getDashboardLayoutByKey: getDashboardLayoutByKey,
+        getActiveDashboardLayout: getActiveDashboardLayout,
+        getDefaultDashboardLayout: getDefaultDashboardLayout,
+        createDashboardLayout: createDashboardLayout,
+        updateDashboardLayout: updateDashboardLayout,
+        deleteDashboardLayoutByKey: deleteDashboardLayoutByKey,
 
 
-		getTemplateLayoutList: getTemplateLayoutList,
-		getTemplateLayoutByKey: getTemplateLayoutByKey,
-		getDefaultTemplateLayout: getDefaultTemplateLayout,
-		createTemplateLayout: createTemplateLayout,
-		updateTemplateLayout: updateTemplateLayout,
-		deleteTemplateLayoutByKey: deleteTemplateLayoutByKey,
+        getTemplateLayoutList: getTemplateLayoutList,
+        getTemplateLayoutByKey: getTemplateLayoutByKey,
+        getDefaultTemplateLayout: getDefaultTemplateLayout,
+        createTemplateLayout: createTemplateLayout,
+        updateTemplateLayout: updateTemplateLayout,
+        deleteTemplateLayoutByKey: deleteTemplateLayoutByKey,
 
 
-		getContextMenuLayoutList: getContextMenuLayoutList,
-		getContextMenuLayoutByKey: getContextMenuLayoutByKey,
-		createContextMenuLayout: createContextMenuLayout,
-		updateContextMenuLayout: updateContextMenuLayout,
-		deleteContextMenuLayoutByKey: deleteContextMenuLayoutByKey,
+        getContextMenuLayoutList: getContextMenuLayoutList,
+        getContextMenuLayoutByKey: getContextMenuLayoutByKey,
+        createContextMenuLayout: createContextMenuLayout,
+        updateContextMenuLayout: updateContextMenuLayout,
+        deleteContextMenuLayoutByKey: deleteContextMenuLayoutByKey,
 
-		getEntityTooltipList: getEntityTooltipList,
-		createEntityTooltip: createEntityTooltip,
-		updateEntityTooltip: updateEntityTooltip,
+        getEntityTooltipList: getEntityTooltipList,
+        createEntityTooltip: createEntityTooltip,
+        updateEntityTooltip: updateEntityTooltip,
 
-		getCrossEntityAttributeExtensionList: getCrossEntityAttributeExtensionList,
-		getCrossEntityAttributeExtension: getCrossEntityAttributeExtension,
-		createCrossEntityAttributeExtension: createCrossEntityAttributeExtension,
-		updateCrossEntityAttributeExtension: updateCrossEntityAttributeExtension,
-		deleteCrossEntityAttributeExtension: deleteCrossEntityAttributeExtension,
+        getCrossEntityAttributeExtensionList: getCrossEntityAttributeExtensionList,
+        getCrossEntityAttributeExtension: getCrossEntityAttributeExtension,
+        createCrossEntityAttributeExtension: createCrossEntityAttributeExtension,
+        updateCrossEntityAttributeExtension: updateCrossEntityAttributeExtension,
+        deleteCrossEntityAttributeExtension: deleteCrossEntityAttributeExtension,
 
-		getColumnSortDataList: getColumnSortDataList,
-		getColumnSortData: getColumnSortData,
-		createColumnSortData: createColumnSortData,
-		updateColumnSortData: updateColumnSortData,
-		deleteColumnSortData: deleteColumnSortData,
+        getColumnSortDataList: getColumnSortDataList,
+        getColumnSortData: getColumnSortData,
+        createColumnSortData: createColumnSortData,
+        updateColumnSortData: updateColumnSortData,
+        deleteColumnSortData: deleteColumnSortData,
 
 
-	}
+    }
 
 }());

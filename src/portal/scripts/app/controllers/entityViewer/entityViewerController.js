@@ -27,7 +27,7 @@
 
         var transactionTypeService = require('../../services/transactionTypeService');
 
-        module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer, middlewareService, usersService) {
+        module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer, middlewareService, usersService, globalDataService) {
 
             var vm = this;
 
@@ -1112,9 +1112,12 @@
 
                 vm.entityViewerDataService.setRowHeight(36);
 
-				var rowFilterColor = localStorageService.getRowTypeFilter(false, vm.entityType);
+				/* var rowFilterColor = localStorageService.getRowTypeFilter(false, vm.entityType);
 				var rowTypeFiltersData = vm.entityViewerDataService.getRowTypeFilters();
-				rowTypeFiltersData.markedRowFilters = rowFilterColor;
+				rowTypeFiltersData.markedRowFilters = rowFilterColor; */
+				var evSettings = globalDataService.getMemberEntityViewersSettings(false, vm.entityType);
+				var rowTypeFiltersData = vm.entityViewerDataService.getRowTypeFilters();
+				rowTypeFiltersData.markedRowFilters = evSettings.row_type_filter;
 
 				vm.entityViewerDataService.setRowTypeFilters(rowTypeFiltersData);
 

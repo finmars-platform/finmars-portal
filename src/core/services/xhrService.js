@@ -8,6 +8,7 @@
 (function () {
 
     var errorService = require('./errorService');
+    var axService = require('./axService')
 
     var fetch = function (url, params, options) {
 
@@ -22,8 +23,9 @@
             })
         }
 
-        return window
-            .fetch(url, params)
+        params.url = url
+
+        return axService.ax.request(params)
             .then(function (response) {
 
                 return new Promise(function (resolve, reject) {
@@ -77,6 +79,16 @@
 
                                 reject(error)
 
+                            }).catch(function(data){
+
+                                var error = {
+                                    status: response.status,
+                                    statusText: response.statusText,
+                                    message: data
+                                };
+
+                                reject(error)
+
                             })
 
                         } catch (e) {
@@ -94,7 +106,7 @@
                     } else {
 
                         if (params.method !== "DELETE") {
-                            resolve(response.json());
+                            resolve(response.data);
                         }
                         else {
                             resolve(response);

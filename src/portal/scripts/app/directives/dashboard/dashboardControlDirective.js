@@ -4,10 +4,12 @@
 
     var entityResolverService = require('../../services/entityResolverService');
     var metaContentTypeService = require('../../services/metaContentTypesService');
+	var expressionsService = require('../../services/expression.service');
 
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
 	var directivesEvents = require('../../services/events/directivesEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
+	var reportHelper = require('../../helpers/reportHelper');
 
     var EventService = require('../../services/eventService');
     var uiService = require('../../services/uiService');
@@ -200,6 +202,115 @@
 
                 };
 
+				var reportDateKeys = ['report_date', 'pl_first_date', 'begin_date', 'end_date'];
+
+				var getReportOptionsValue = function (layout, key) {
+
+					var rlOptions = layout.data.reportLayoutOptions;
+
+					/* if (rlOptions && rlOptions.datepickerOptions && reportDateKeys.indexOf(key) > -1) {
+
+						var dateFrom = reportDateKeys.indexOf(key) < 2;
+						var dateExpr = rlOptions.datepickerOptions.reportFirstDatepicker.expression;
+
+						if (dateFrom) {
+							dateExpr = rlOptions.datepickerOptions.reportFirstDatepicker.expression;
+
+						} else {
+							dateExpr = rlOptions.datepickerOptions.reportLastDatepicker.expression;
+						}
+
+						if (dateExpr) {
+
+							return new Promise(function (resolve) {
+
+								expressionsService.getResultOfExpression({'expression': dateExpr}).then(function (data) {
+									resolve(data.result)
+
+								}).catch(function (error) {
+									console.error('Error occurred while trying to evaluate: ' + dateExpr, error);
+									resolve(null);
+								});
+
+							});
+
+						}
+
+					} */
+					if (rlOptions && reportDateKeys.indexOf(key) > -1) {
+						return reportHelper.getReportDateValue(layout, key);
+					}
+
+					return new Promise(function (resolve) {
+						resolve(layout.data.reportOptions[key]);
+					});
+
+				};
+
+				var formatValueForDataStore = function (value, componentData) {
+
+					if (!value) {
+						return {};
+					}
+
+					if (componentData.settings.multiple) {
+
+						return Array.isArray(value) ? {value: value} : {value: [value]};
+
+					}
+
+					if (componentData.settings.value_type === 100) {
+
+						value = Array.isArray(value) ? value[0] : value;
+
+						var selectedRelation = scope.fields.find(function (field) {
+
+							return field.id === value;
+
+						});
+
+						if (selectedRelation) {
+
+							return {value: value, name: selectedRelation.name};
+
+						}
+
+						return {};
+
+					}
+
+					return Array.isArray(value) ? {value: value[0]} : {value: value};
+
+				};
+
+				var resolveValueFromReportLayout = function (layoutData, componentData, resolve) {
+
+					/* var layout;
+
+					if (layoutData.results) {
+
+						layout = layoutData.results.find(function (item) {
+							return item.user_code === user_code
+						})
+
+					} */
+
+					if (layoutData.results && layoutData.results[0]) {
+
+						var layout = layoutData.results[0];
+						var key = componentData.settings.defaultValue.reportOptionsKey;
+						// var value = layout.data.reportOptions[key];
+						getReportOptionsValue(layout, key).then(function (value) {
+							value = formatValueForDataStore(value, componentData);
+							resolve(value);
+						});
+
+					} else {
+						resolve({});
+					}
+
+				};
+
                 var getItemDataStore = function (componentData) {
 
                     if (scope.componentData.custom_component_name) {
@@ -281,69 +392,28 @@
                         var user_code = componentData.settings.defaultValue.layout;
                         var entityType = componentData.settings.defaultValue.entity_type;
 
-                        return uiService.getListLayout(entityType, {
-                            filters: {
-                                user_code: user_code
-                            }
-                        }).then(function (data) {
+						return new Promise(function (resolve) {
 
-                            var layout;
+							uiService.getListLayout(entityType, {
+								filters: {
+									user_code: user_code
+								}
+							}).then(function (data) {
 
-                            if (data.results) {
+								resolveValueFromReportLayout(data, componentData, resolve);
 
-                                layout = data.results.find(function (item) {
-                                    return item.user_code === user_code
-                                })
+							}).catch(function (error) {
+								console.error(error);
+								resolve({});
+							});
 
-                            }
+						});
 
-                            if (!layout) {
-                                return {}
-                            }
-
-                            var key = componentData.settings.defaultValue.reportOptionsKey;
-                            var value = layout.data.reportOptions[key];
-
-                            if (!value) {
-
-                                return {};
-
-                            }
-
-                            if (componentData.settings.multiple) {
-
-                                return Array.isArray(value) ? {value: value} : {value: [value]};
-
-                            }
-
-                            if (componentData.settings.value_type === 100) {
-
-                                value = Array.isArray(value) ? value[0] : value;
-
-                                var selectedRelation = scope.fields.find(function (field) {
-
-                                    return field.id === value;
-
-                                });
-
-                                if (selectedRelation) {
-
-                                    return {value: value, name: selectedRelation.name};
-
-                                }
-
-                                return {};
-
-                            }
-
-                            return Array.isArray(value) ? {value: value[0]} : {value: value};
-
-                        });
                     }
-
                     else {
                         return promisify({});
                     }
+
                 };
 
                 scope.settingUpDefaultValue = function (componentData) {

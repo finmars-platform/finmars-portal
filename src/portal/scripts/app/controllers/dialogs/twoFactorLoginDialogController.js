@@ -8,49 +8,49 @@
     var twoFactorService = require('../../../../../profile/scripts/app/services/twoFactorServce');
     var cookieService = require('../../../../../core/services/cookieService');
 
-    module.exports = function ($scope, $mdDialog, username) {
+    module.exports = function ($scope, $mdDialog, username, password) {
 
         var vm = this;
 
         vm.username = username;
+        vm.password = password;
 
         vm.codeIsValid = false;
         vm.securityCode = null;
 
         vm.agree = function () {
-            $mdDialog.hide({status: 'agree', token: vm.token});
+            $mdDialog.hide({
+                status: 'agree', data: {
+                    'access_token': vm.access_token,
+                    'refresh_token': vm.refresh_token
+                }
+            });
         };
 
 
         vm.validateCode = function () {
 
-			vm.codeIsValid = false;
+            vm.codeIsValid = false;
             vm.codeIsChecked = false;
 
             if (vm.securityCode && vm.securityCode.length === 6) {
 
-                twoFactorService.validateCode({code: vm.securityCode, username: vm.username}).then(function (data) {
+                twoFactorService.validateCode({
+                    code: vm.securityCode,
+                    username: vm.username,
+                    password: vm.password
+                }).then(function (data) {
 
                     vm.codeIsChecked = true
 
-                    if (data.token) {
+                    if (data.access_token) {
 
-                        var domain = "." +
-                            location.hostname.split('.').reverse()[1] + "." +
-                            location.hostname.split('.').reverse()[0]
+                        vm.codeIsValid = true
 
-                        var options = {
-                            'domain': domain,
-                            'path': '/'
-                        }
-
-                        vm.token = data.token;
-
-                        cookieService.setCookie('authtoken', data.token, options);
+                        $mdDialog.hide({
+                            status: 'agree', data: data
+                        });
                     }
-
-
-                    vm.codeIsValid = data.match;
 
                     $scope.$apply();
 

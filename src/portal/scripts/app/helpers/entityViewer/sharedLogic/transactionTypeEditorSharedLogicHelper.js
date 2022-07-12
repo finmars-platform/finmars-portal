@@ -15,6 +15,7 @@
     const helpExpressionsService = require('../../../services/helpExpressionsService');
 
     'use strict';
+
     module.exports = function (viewModel, $scope, $mdDialog) {
 
         const gridTableHelperService = new GridTableHelperService();
@@ -113,7 +114,7 @@
                     name: 'Context Strategy 3'
                 }
             ]
-        }
+        };
 
         const getContextProperties = function () {
             return contextProperties;
@@ -141,7 +142,7 @@
 				"key": 'input'
 			}
 
-			if (viewModel.entity.inputs && viewModel.entity.inputs.length > 0) {
+            if (viewModel.entity.inputs.length) {
 
 				viewModel.expressionData.functions[0] = viewModel.entity.inputs.map(function (input) {
 
@@ -157,13 +158,42 @@
 
 				});
 
-			} else {
-
-				viewModel.expressionData.functions = []
-
-			}
+            } else {
+                viewModel.expressionData.functions[0] = []
+            }
 
 			return viewModel.expressionData;
+
+        };
+
+		const updateContextParametersFunctions = function () {
+
+			viewModel.expressionData.groups[1] = {
+				"name": "<b>Context Parameters</b>",
+				"key": 'context_parameters'
+			}
+
+			if (viewModel.entity.context_parameters.length) {
+
+				viewModel.expressionData.functions[1] = viewModel.entity.context_parameters.map(function (cParam) {
+
+					return {
+						"name": "Context Parameter: " + cParam.name + " (" + cParam.user_code + ")",
+						"description": "Transaction Type Context Parameter: " + cParam.name + " (" + cParam.user_code + ")",
+						"groups": "context_parameters",
+						"func": cParam.user_code,
+						"validation": {
+							"func": cParam.user_code,
+						}
+					}
+
+				});
+
+			}
+			else {
+				viewModel.expressionData.functions[1] = [];
+			}
+
 		};
 
         // const useIdForRelList = ['pricing_condition', 'payment_size_detail', 'accrual_calculation_model', 'notification_class', 'event_class', 'periodicity'];
@@ -305,28 +335,27 @@
 		 */
 		const insertActions = function (actions) {
 
+            const insertAction = function (action) {
+
+                viewModel.entity.actions.push(action);
+
+                const newActionIndex = viewModel.actionsMultitypeFieldsList.length;
+                const multitypeFieldsData = getMultitypeFieldsDataForAction(action, newActionIndex);
+
+                viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
+
+            };
+
         	if (Array.isArray(actions)) { // add multiple actions
 
 				actions.forEach(function (action) {
 
-					viewModel.entity.actions.push(action);
-
-					const newActionIndex = viewModel.actionsMultitypeFieldsList.length;
-					const multitypeFieldsData = getMultitypeFieldsDataForAction(action, newActionIndex);
-
-					viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
+                    insertAction(action);
 
 				});
 
 			} else { // add single action
-
-        		viewModel.entity.actions.push(actions);
-
-				const newActionIndex = viewModel.actionsMultitypeFieldsList.length;
-				const multitypeFieldsData = getMultitypeFieldsDataForAction(actions, newActionIndex);
-
-				viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
-
+                insertAction(actions);
 			}
 
 			viewModel.findPhantoms();
@@ -493,7 +522,7 @@
 
 		const getActionPaneId = function (action) {
 
-			const actionId = (action.id || action.id === 0) ? action.id : action.frontOptions.id;
+			const actionId = action.id ? action.id : action.frontOptions.id;
 
 			return 'ttype-action-' + actionId;
 
@@ -517,7 +546,6 @@
 			selectOption: function (option, _$popup) {
 
         		_$popup.cancel();
-
         		addAction(option.key);
 
 			}
@@ -747,23 +775,23 @@
 
                 } else {
 
-                    switch (validationResult.status) {
-                        case 'error':
-                            actionFieldLocation.message = 'Invalid expression. ' + validationResult.result;
-                            break;
+					switch (validationResult.status) {
+						case 'error':
+							actionFieldLocation.message = 'Invalid expression.\n Expression: ' + validationResult.result;
+							break;
 
-                        case 'functions-error':
-                            actionFieldLocation.message = 'Not all variables are identified expression. ' + validationResult.result;
-                            break;
+						case 'functions-error':
+							actionFieldLocation.message = 'Not all variables are identified expression.\n Expression: ' + validationResult.result;
+							break;
 
-                        case 'inputs-error':
-                            actionFieldLocation.message = 'Not all variables are identified inputs. ' + validationResult.result;
-                            break;
+						case 'inputs-error':
+							actionFieldLocation.message = 'Not all variables are identified inputs.\n Expression: ' + validationResult.result;
+							break;
 
-                        case 'bracket-error':
-                            actionFieldLocation.message = 'Mismatch in the opening and closing braces. ' + validationResult.result;
-                            break;
-                    }
+						case 'bracket-error':
+							actionFieldLocation.message = 'Mismatch in the opening and closing braces.\n Expression: ' + validationResult.result;
+							break;
+					}
 
                 }
 
@@ -1107,7 +1135,7 @@
 
             getInputsForLinking();
             updateLinkedInputsOptionsInsideGridTable();
-            updateInputFunctions();
+			viewModel.expressionData = updateInputFunctions();
 
             viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions); // update options for selectors of instrument inputs
 			setTimeout(function () {
@@ -1168,7 +1196,7 @@
 
             });
 
-        }
+        };
 
         const relationItemsResolver = function (contentType) { // Victor: This function I introduce in child dialog to resolve default value items
             return loadRelation(resolveRelation(contentType), true);
@@ -1251,8 +1279,16 @@
 
                     }
 
-                    fillFromContext.settings.value = null
-                    fillFromContext.cellType = 'empty'
+                    // fillFromContext.settings.value = null
+                    // fillFromContext.cellType = 'empty'
+
+
+                    if (fillFromContext.cellType === 'selector') {
+
+                        fillFromContext.cellType = 'expression'
+                        fillFromContext.settings = {value: '', exprData: viewModel.expressionData}
+
+                    }
 
                     break;
 
@@ -1261,22 +1297,38 @@
                     contentType.objPath = ['content_type'];
                     contentType.cellType = 'selector';
                     contentType.settings.isDisabled = true;
-                    contentType.settings.selectorOptions = viewModel.selectorContentTypes;
-
-                    var contextProps = contextProperties[contentType.settings.value];
-                    if (contextProps) {
-                        fillFromContext.cellType = 'selector'
-                        fillFromContext.settings.selectorOptions = contextProperties[contentType.settings.value]
-                    }
-
-                    defaultValue.cellType = 'selector'
-
-                    defaultValue.methods = {
-                        // onOpen: onRelationDefaultValueSelOpen
-                        onInit: onRelationDefaultValueSelInit
-                    }
+                    // contentType.settings.selectorOptions = viewModel.selectorContentTypes;
+                    //
+                    // var contextProps = contextProperties[contentType.settings.value];
+                    // if (contextProps) {
+                    //     fillFromContext.cellType = 'selector'
+                    //     fillFromContext.settings.selectorOptions = contextProperties[contentType.settings.value]
+                    // }
+                    //
+                    // defaultValue.cellType = 'selector'
+                    //
+                    // defaultValue.methods = {
+                    //     // onOpen: onRelationDefaultValueSelOpen
+                    //     onInit: onRelationDefaultValueSelInit
+                    // }
 
                     // defaultValue.settings.selectorOptions = viewModel.relationItems[resolveRelation(viewModel.newItem)] // TODO Victor: this is bug. viewModel.newItem always undefined
+
+                    if (defaultValue.cellType === 'selector') {
+
+                        defaultValue.cellType = 'expression'
+                        defaultValue.settings = {value: '', exprData: viewModel.expressionData}
+
+                    }
+
+                    // fillFromContext.settings.value = null
+
+                    if (fillFromContext.cellType === 'selector') {
+
+                        fillFromContext.cellType = 'expression'
+                        fillFromContext.settings = {value: '', exprData: viewModel.expressionData}
+
+                    }
 
                     break;
 
@@ -1292,8 +1344,15 @@
 
                     }
 
-                    fillFromContext.settings.value = null
-                    fillFromContext.cellType = 'empty'
+                    if (fillFromContext.cellType === 'selector') {
+
+                        fillFromContext.cellType = 'expression'
+                        fillFromContext.settings = {value: '', exprData: viewModel.expressionData}
+
+                    }
+
+                    // fillFromContext.settings.value = null
+                    // fillFromContext.cellType = 'empty'
 
                     break;
 
@@ -1419,6 +1478,7 @@
                         relationItems: viewModel.relationItems,
                         inputsForMultiselector: viewModel.inputsForMultiselector,
 						loadedRelationsList: loadedRelationsList,
+                        expressionData: viewModel.expressionData,
 
 						resolveRelationCallback: resolveRelation,
 						loadRelationCallback: loadRelation,
@@ -1449,13 +1509,18 @@
                     valueType.settings.value = res.data.valueType;
                     contentType.settings.value = res.data.contentType;
                     fillFromContext.settings.value = res.data.context_property;
+
                     defaultValue.settings.value = res.data.value;
+                    defaultValue.settings.exprData = viewModel.expressionData;
+
                     inputCalcExpression.settings.value = res.data.value_expr;
+                    inputCalcExpression.settings.exprData = viewModel.expressionData;
+
                     linkedInputs.settings.value = res.data.linked_inputs_names;
 
                     if (valueType.settings.value === 120) { // Button
 
-                        newRow.columns[8].settings.optionsCheckboxes.selectedOptions = false; // linked inputs for Button have not checkboxes
+                        newRow.columns[8].settings.optionsCheckboxes.selectedOptions = false; // linked inputs for Button have no checkboxes
 
                     }
 
@@ -1584,11 +1649,11 @@
                         objPath: ['context_property'],
                         columnName: 'Use Default Value from Context',
                         order: 5,
-                        cellType: 'empty',
+                        cellType: 'expression',
                         settings: {
-                            value: null,
-                            closeOnMouseOut: false,
-                            unselectButton: true
+                            value: '',
+                            exprData: null,
+                            closeOnMouseOut: false
                         },
                         styles: {
                             'grid-table-cell': {'width': '180px'}
@@ -4058,6 +4123,64 @@
 
         };
 
+		//region Context Parameters tab
+		/** Set front end properties for context parameters data */
+		const getContextParameters = function () {
+
+			if (!Array.isArray(viewModel.entity.context_parameters)) {
+				viewModel.entity.context_parameters = [];
+			}
+
+			return viewModel.entity.context_parameters;
+
+		};
+
+		const deleteContextParameter = function ($event, $index) {
+			viewModel.entity.context_parameters.splice($index, 1);
+			updateContextParametersFunctions();
+		};
+
+		const addContextParameter = function ($event) {
+
+			const contextParamsUserCodesList = viewModel.entity.context_parameters.map(param => param.user_code);
+
+			$mdDialog.show({
+				controller: 'EnterUserCodeDialogController as vm',
+				templateUrl: 'views/dialogs/enter-user-code-dialog-view.html',
+				targetEvent: $event,
+				locals: {
+					data: {
+						title: "Enter user code for new context parameter",
+						occupiedUserCodesList: contextParamsUserCodesList
+					}
+				},
+				multiple: true
+			})
+			.then(function (res) {
+
+				if (res.status === 'agree') {
+
+					let order = 1;
+
+					if (viewModel.entity.context_parameters.length) {
+						order = viewModel.entity.context_parameters[viewModel.entity.context_parameters.length - 1].order + 1
+					}
+
+					viewModel.entity.context_parameters.push({
+						order:order,
+						user_code: res.data,
+						name: '',
+					});
+
+					updateContextParametersFunctions();
+
+				}
+
+			});
+
+		};
+		//endregion Context Parameters tab
+
         return {
             getValueTypes: getValueTypes,
             getContextProperties: getContextProperties,
@@ -4106,7 +4229,13 @@
 			saveAsTemplate: saveAsTemplate,
 			appendFromTemplate: appendFromTemplate,
 			setDefaultValueForRelation: setDefaultValueForRelation,
-            initAfterMainDataLoaded: initAfterMainDataLoaded
+
+			updateContextParametersFunctions: updateContextParametersFunctions,
+			getContextParameters: getContextParameters,
+			deleteContextParameter: deleteContextParameter,
+			addContextParameter: addContextParameter,
+
+			initAfterMainDataLoaded: initAfterMainDataLoaded
         }
 
     };

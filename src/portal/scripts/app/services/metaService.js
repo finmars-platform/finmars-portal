@@ -565,7 +565,7 @@
 	 * @param {array} [dataList] - array where requested data will be placed
 	 * @returns {Promise<unknown>}
 	 */
-	var loadDataFromAllPages = function (dataRequest, argumentsList, dataList) {
+    var loadDataFromAllPages = function (dataRequest, argumentsList, dataList) {
 
 		if (!Array.isArray(dataList)) dataList = [];
 

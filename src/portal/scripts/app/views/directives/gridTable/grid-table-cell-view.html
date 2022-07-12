@@ -95,7 +95,7 @@
         <md-button ng-bind-html="column.settings.buttonContent"
                    ng-disabled="column.settings.isDisabled"
                    class="flex-i-center"
-                   ng-click="onButtonClick()"></md-button>
+                   ng-click="onButtonClick($event)"></md-button>
     </div>
 
     <div ng-if="column.cellType === 'multiselector'" class="gt-cell-content">

@@ -171,11 +171,9 @@
                             objPath: ['name'],
                             columnName: 'Name',
                             order: 0,
-                            cellType: 'text',
+                            cellType: 'readonly_text',
                             settings: {
                                 value: null,
-                                closeOnMouseOut: false,
-                                isDisabled: true
                             },
 							classes: 'grid-table-cell-right-border',
                             styles: {
@@ -252,7 +250,8 @@
                     ],
                 },
                 components: {
-                    topPanel: false
+                    topPanel: false,
+					rowCheckboxes: false
                 }
             };
 

@@ -133,7 +133,7 @@
 
 		let contextData = {
 			effective_date: effective_date,
-			position: null,
+			position_size: null,
 			pricing_currency: null,
 			accrued_currency: null,
 			instrument: null,
@@ -166,7 +166,7 @@
 		}
 
 		if (rowObject['position_size']) {
-			contextData.position = rowObject['position_size'];
+			contextData.position_size = rowObject['position_size'];
 		}
 
 		if (reportOptions['pricing_policy']) {
