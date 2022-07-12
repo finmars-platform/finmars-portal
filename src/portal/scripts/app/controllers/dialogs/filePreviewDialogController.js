@@ -28,8 +28,6 @@
 
             var result = ""
 
-            console.log('content', content);
-
             var lines = content.split(/\r?\n/);
 
             result = "<table><tbody>"
@@ -62,7 +60,7 @@
 
         vm.formatContent = function () {
 
-            if (vm.data.info.file_report_object.name.indexOf('.csv')) {
+            if (vm.data.info.file_report_object.name.indexOf('.csv') !== -1) {
 
                 vm.data.content_formatted = vm.formatCSV()
 
