@@ -23,10 +23,10 @@
                 method: 'POST',
                 credentials: 'include',
                 headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
-                body: config
+                data: config
             })
     };
 
@@ -41,10 +41,10 @@
                 method: 'POST',
                 credentials: 'include',
                 headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('authtoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
-                body: config
+                data: config
             })
     };
 

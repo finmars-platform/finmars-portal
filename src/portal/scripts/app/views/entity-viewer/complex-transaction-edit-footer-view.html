@@ -36,6 +36,31 @@
 
             <md-menu-item >
 
+                <md-button ng-click="vm.copy('big-drawer')"
+                           ng-disabled="!vm.checkReadyStatus() || vm.entity.is_canceled || !vm.hasEditPermission || vm.processing" >
+
+                    <div class="flex-row flex-i-center ">
+                        <ng-md-icon icon="content_copy" class="flex-row"></ng-md-icon>
+                        <span class="m-l-16">Make a copy</span>
+                    </div>
+                </md-button>
+
+            </md-menu-item>
+
+            <md-menu-item>
+
+                <md-button ng-click="vm.editAsJson($event)">
+                    <div class="flex-row flex-i-center">
+                        <ng-md-icon icon="edit" class="flex-row"></ng-md-icon>
+                        <span class="m-l-16">Edit as JSON</span>
+                    </div>
+
+                </md-button>
+
+            </md-menu-item>
+
+            <md-menu-item >
+
                 <md-button ng-click="vm.toggleLockStatus($event)"
                            ng-if="vm.entity.is_locked == false"
                            ng-disabled="vm.entity.is_canceled == true || !vm.hasEditPermission || vm.processing"

@@ -7,6 +7,7 @@
 
     const instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
     const attributeTypeService = require('../../../services/attributeTypeService');
+	const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
 
     const GridTableDataService = require('../../../services/gridTableDataService');
     const GridTableEventService = require('../../../services/gridTableEventService');
@@ -15,30 +16,38 @@
     const metaHelper = require('../../../helpers/meta.helper');
     const GridTableHelperService = require('../../../helpers/gridTableHelperService');
 
-    module.exports = function pricingPoliciesTabController($scope, $mdDialog) {
+	const pricingPolicyService = require('../../../services/pricingPolicyService');
+
+    module.exports = function InstrmentPricingTabController($scope, $mdDialog) {
 
         var vm = this;
 
         const gridTableHelperService = new GridTableHelperService();
 
+		vm.readyStatus = false;
+		vm.instrumentPricingSchemes = null;
+
         vm.entity = $scope.$parent.vm.entity;
-        vm.readyStatus = false;
+		vm.entityType = $scope.$parent.vm.entityType; // 'instrument' or 'instrument-type'
         vm.currencies = $scope.$parent.vm.currencies;
         vm.pricingConditions = $scope.$parent.vm.pricingConditions;
-        vm.instrumentPricingSchemes = null;
 
-        vm.attributeTypesByValueTypes = $scope.$parent.vm.attributeTypesByValueTypes;
-		vm.pricingSchemeChange = $scope.$parent.vm.pricingSchemeChange;
+		//region Inherit from a parent controller
 
-        vm.contextData = $scope.$parent.vm.contextData;
-        vm.entityType = 'instrument';
+		vm.attributeTypesByValueTypes = $scope.$parent.vm.attributeTypesByValueTypes; // Parent controller can be entityViewerEditDialogController, entityViewerAddDialogController, instrumentTypeEditDialogController, instrumentTypeAddDialogController
+		vm.pricingSchemeChange = $scope.$parent.vm.pricingSchemeChange;	// Have to leave pricingSchemeChange one level above because of currency entity viewer
+
+		vm.contextData = $scope.$parent.vm.contextData;
         vm.entityAttrs = $scope.$parent.vm.entityAttrs;
 
         vm.evEditorDataService = $scope.$parent.vm.evEditorDataService;
         vm.evEditorEventService = $scope.$parent.vm.evEditorEventService;
         vm.entityChange = $scope.$parent.vm.entityChange;
+		//endregion
 
-		const pricingDefaultValueFieldTypes = {
+		vm.pricingCurrencyAttr = vm.entityAttrs.find(eAttr => eAttr.key === 'pricing_currency');
+
+		/*const pricingDefaultValueFieldTypes = {
 			fieldTypesList: [
 				{
 					'model': "",
@@ -65,16 +74,44 @@
 					}
 				}
 			]
+		};*/
+
+		const pricingDefaultValueFieldTypes = pricingPolicyService.pricingDefaultValueFieldTypes;
+
+		//region Pricing policies grid table
+
+		var getPpTemplateRow = function () {
+
+			let templateRow = pricingPolicyService.getPpGtTemplateRow(vm.entityType);
+
+			let pricingPolicyCell = gridTableHelperService.getCellFromRowByKey(templateRow, 'pricing_policy');
+			pricingPolicyCell.styles['grid-table-cell-elem'] = {'width': '10%'};
+
+			let pricingScheme = gridTableHelperService.getCellFromRowByKey(templateRow, 'pricing_scheme');
+			pricingScheme.styles['grid-table-cell-elem'] = {'width': '20%'};
+
+			let pricingSchemeClarification = gridTableHelperService.getCellFromRowByKey(templateRow, 'pricing_scheme_clarification');
+			pricingSchemeClarification.styles['grid-table-cell-elem'] = {'width': '40%'};
+
+			let defaultParameters = gridTableHelperService.getCellFromRowByKey(templateRow, 'edit_default_parameters');
+			defaultParameters.styles['grid-table-cell-elem'] = {'width': '20%'};
+
+			let multipleParameters = gridTableHelperService.getCellFromRowByKey(templateRow, 'multiple_parameters');
+			multipleParameters.styles['grid-table-cell-elem'] = {'width': '10%'};
+
+			return templateRow;
+
 		};
 
-        vm.pricingPoliciesGridTableData = {
+        const pricingPoliciesGridTableData = {
             header: {
                 order: 'header',
                 columns: []
             },
             body:[],
-            templateRow: {
-                isActive: false,
+            templateRow: getPpTemplateRow(),
+			/* {
+				isActive: false,
                 columns: [
                     {
                         key: 'pricing_policy',
@@ -116,7 +153,7 @@
                         styles: {
                             'grid-table-cell-elem': {'width': '40%'}
                         },
-                        classes: 'pricing-scheme-clarification gt-cell-plain-text'
+                        classes: 'gt-cell-multi-lined-text gt-cell-plain-text'
                     },
                     {
                         key: 'edit_default_parameters',
@@ -149,11 +186,8 @@
                     },
 
                 ],
-                methods: {
-                    onClick: '' // onEventsTableRowClick
-                },
                 styles: {'grid-table-row': {'cursor': 'pointer'}}
-            },
+            }, */
 
 			tableMethods: {
                 addRow: '' //onEventsTableAddRow
@@ -164,7 +198,7 @@
 				rowCheckboxes: false
             }
 
-        }
+        };
 
         var getOptionsForPPDefaultValueSel = function (typesList, pricingPolicy) {
 
@@ -206,7 +240,7 @@
 
 		};
 
-		const openPricingMultipleParametersDialog = (policy) => {
+		/* const openPricingMultipleParametersDialog = (policy) => {
 
             $mdDialog.show({
                 controller: 'PricingMultipleParametersDialogController as vm',
@@ -233,7 +267,10 @@
                 }
 
             })
-        }
+        } */
+		const openPricingMultipleParametersDialog = (pricingPolicy) => {
+			pricingPolicyService.openPricingMultipleParametersDialog($mdDialog, pricingPolicy, vm.entityType, vm.attributeTypes);
+		};
 
 		var setUpDefaultParametersAsMultitypeCell = function (pricingPolicy, defaultParametersCell) {
 
@@ -258,20 +295,22 @@
 
 			multipleParametersCell.cellType = 'button';
 			multipleParametersCell.settings = {
-				buttonContent: '<span class="material-icons multiple-parameters-button">more_horiz</span>'
+				buttonContent: '<span class="material-icons more-btn">more_horiz</span>'
 			};
 
 			multipleParametersCell.methods = {
 				onClick: () => openPricingMultipleParametersDialog(pricingPolicy)
 			};
 
-			multipleParametersCell.classes = ['gt-3dots-btn'];
+			multipleParametersCell.classes = ['gt-more-btn'];
 
 			return multipleParametersCell;
 
 		};
 
         var formatDataForPricingGridTable = function () {
+
+			vm.pricingPoliciesGridTableData = JSON.parse(JSON.stringify(pricingPoliciesGridTableData));
 
 			//region assemble header columns
             var rowObj = metaHelper.recursiveDeepCopy(vm.pricingPoliciesGridTableData.templateRow, true);
@@ -282,7 +321,7 @@
                     key: column.key,
                     columnName: column.columnName,
                     order: column.order,
-                    sorting: true,
+                    sorting: column.key !== 'multiple_parameters',
                     styles: {
                         'grid-table-cell-elem': {'width': column.styles['grid-table-cell-elem'].width}
                     },
@@ -302,7 +341,15 @@
 				policy.order = policyIndex;
 
             	rowObj = metaHelper.recursiveDeepCopy(vm.pricingPoliciesGridTableData.templateRow, true);
-                rowObj.key = policy.id;
+
+            	/* var rowKey = policy.id;
+
+            	if (!rowKey && rowKey !== 0) {
+					rowKey = metaHelper.generateUniqueId(policyIndex);
+				} */
+
+				// using user_code of pricing policy helps with row's mapping after change of instrument type
+                rowObj.key = policy.pricing_policy_object.user_code;
                 rowObj.order = policy.order;
 
                 const pricingPolicyCell = gridTableHelperService.getCellFromRowByKey(rowObj, 'pricing_policy');
@@ -341,7 +388,7 @@
 						onClick: () => openPricingMultipleParametersDialog(policy)
 					};
 
-					multipleParameters.classes = ['gt-3dots-btn']; */
+					multipleParameters.classes = ['gt-more-btn']; */
 
 					setUpMultipleParametersAsButtonCell(policy, multipleParameters);
 
@@ -353,8 +400,10 @@
             });
 			//endregion assemble body rows
 
+			return vm.pricingPoliciesGridTableData;
+
         };
-        // <Event schedules grid Table>
+		//endregion Pricing policies grid table
 
         var initGridTableEvents = function () {
 
@@ -434,7 +483,7 @@
 							onClick: () => openPricingMultipleParametersDialog(changedPolicy)
 						}*/
 						multipleParameters = setUpMultipleParametersAsButtonCell(changedPolicy, multipleParameters);
-
+						vm.pricingPoliciesGridTableEventService.dispatchEvent(gridTableEvents.REDRAW_TABLE); // apply class to multiple_parameters cell
 
 					} else {
 
@@ -588,6 +637,15 @@
             vm.attributeTypes = data.results;
         });
 
+		const entityUpdateId = vm.evEditorEventService.addEventListener(evEditorEvents.ENTITY_UPDATED, function () {
+
+			vm.pricingPoliciesGridTableData = formatDataForPricingGridTable();
+			vm.pricingPoliciesGridTableDataService.setTableData(vm.pricingPoliciesGridTableData);
+
+			vm.pricingPoliciesGridTableEventService.dispatchEvent(gridTableEvents.REDRAW_TABLE);
+
+		});
+
         vm.init = function () {
 
         	vm.pricingPoliciesGridTableDataService = new GridTableDataService();
@@ -598,7 +656,7 @@
             Promise.all([getInstrumentPricingSchemes, getAttributeTypes]).then(function () {
 
 				generateInstrumentAttributeTypesByValueTypes();
-            	formatDataForPricingGridTable();
+				vm.pricingPoliciesGridTableData = formatDataForPricingGridTable();
 
 				vm.pricingPoliciesGridTableDataService.setTableData(vm.pricingPoliciesGridTableData);
 				vm.readyStatus = true;
@@ -608,6 +666,10 @@
         };
 
         vm.init();
+
+        $scope.$on('$destroy', function () {
+			vm.evEditorEventService.removeEventListener(evEditorEvents.ENTITY_UPDATED, entityUpdateId);
+		});
 
     }
 

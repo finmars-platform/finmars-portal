@@ -1,47 +1,19 @@
-<div>
+<div data-ng-controller="InstrumentTypePricingTabController as vm">
 
-    <!-- <div layout="row" class="m-t-8 m-b-8">
+    <div class="flex-column">
 
-        <div style="width: 200px;" class="p-l-8 p-r-8">
-            <number-input label="Default Price"
-                          model="vm.entity.default_price"
-                          event-signal="vm.evEditorFieldEvent"
-                          small-options="{tooltipText: 'Default Price'}"
-            >
-            </number-input>
-        </div>
+        <div class="flex-row m-b-13">
 
-        <div style="width: 200px;" class="p-l-8 p-r-8">
-            <number-input label="Maturity Price"
-                          model="vm.entity.maturity_price"
-                          event-signal="vm.evEditorFieldEvent"
-                          small-options="{tooltipText: 'Maturity Price'}"
-                          style="width: 200px;">
-            </number-input>
-        </div>
+            <div class="p-r-8" style="width: 306px">
+                <dropdown-select label="Pricing Currency"
+                                 model="vm.entity.pricing_currency"
+                                 placeholder-text="Pricing Currency"
+                                 menu-options="vm.currencies"
+                                 small-options="{tooltipText: 'Pricing Currency'}"
+                                 on-change-callback="vm.onEntityChange()">
+                </dropdown-select>
+            </div>
 
-        <div style="width: 200px;" class="p-l-8 p-r-8">
-            <date-input label="Maturity Date"
-                        model="vm.entity.maturity_date"
-                        event-signal="vm.evEditorFieldEvent"
-                        small-options="{tooltipText: 'Maturity Date'}"
-                        style="width: 200px;">
-            </date-input>
-        </div>
-
-    </div> -->
-    <div layotu="column">
-
-        <div layout="row" class="m-b-13">
-
-            <dropdown-select class="p-r-8" label="Pricing Currency"
-                             model="vm.entity.pricing_currency"
-                             placeholder-text="Pricing Currency"
-                             menu-options="vm.currencies"
-                             small-options="{tooltipText: 'Pricing Currency'}"
-                             on-change-callback="vm.onEntityChange()"
-                             style="width: 306px">
-            </dropdown-select>
             <!--                on-change-callback="vm.entityChange()"-->
             <!--                <dropdown-select class="p-r-8" label="Co-directional exposure currency"
                                              model="vm.entity.co_directional_exposure_currency"
@@ -59,69 +31,39 @@
                                              style="width: 200px;">
                             </dropdown-select>-->
 
-            <number-input class="p-r-8"
-                          label="Pricing Multiplier"
-                          model="vm.entity.price_multiplier"
-                          small-options="{tooltipText: 'Pricing Multiplier'}"
-                          style="width: 148px;">
-            </number-input>
+            <div class="p-r-8" style="width: 148px;">
+                <number-input label="Pricing Multiplier"
+                              model="vm.entity.price_multiplier"
+                              small-options="{tooltipText: 'Pricing Multiplier'}">
+                </number-input>
+            </div>
 
-            <number-input class="p-r-8"
-                          label="Default Price"
-                          model="vm.entity.default_price"
-                          small-options="{tooltipText: 'Default Price'}"
-                          style="width: 148px;">
-            </number-input>
-
-            <dropdown-select class="p-r-8" label="Pricing Condition"
-                             model="vm.entity.pricing_condition"
-                             placeholder-text="Pricing Condition"
-                             menu-options="vm.pricingConditions"
-                             small-options="{tooltipText: 'Pricing Condition'}"
-                             style="width: 306px;">
-            </dropdown-select>
-
-        </div>
-
-        <div layout="row" class="m-b-13">
-
-            <text-input class="p-r-8"
-                        model="vm.entity.reference_for_pricing"
-                        label="ID for Price Downloading"
-                        placeholder-text="ID for Price Downloading"
-                        style="width: 306px;">
-            </text-input>
-
-            <div style="width: 148px;" class="p-r-8">
+            <div class="p-r-8" style="width: 148px;">
                 <number-input label="Default Price"
                               model="vm.entity.default_price"
-                              event-signal="vm.evEditorFieldEvent"
                               small-options="{tooltipText: 'Default Price'}">
                 </number-input>
             </div>
 
-            <div style="width: 148px;" class="p-r-8">
-                <number-input label="Maturity Price"
-                              model="vm.entity.maturity_price"
-                              event-signal="vm.evEditorFieldEvent"
-                              small-options="{tooltipText: 'Maturity Price'}"
-                              style="width: 200px;">
-                </number-input>
+            <div class="p-r-8" style="width: 306px;">
+                <dropdown-select label="Pricing Condition"
+                                 model="vm.entity.pricing_condition"
+                                 placeholder-text="Pricing Condition"
+                                 menu-options="vm.pricingConditions"
+                                 small-options="{tooltipText: 'Pricing Condition'}">
+                </dropdown-select>
             </div>
 
-            <div style="width: 148px;" class="p-r-8">
-                <date-input label="Maturity Date"
-                            model="vm.entity.maturity_date"
-                            event-signal="vm.evEditorFieldEvent"
-                            small-options="{tooltipText: 'Maturity Date'}"
-                            style="width: 200px;">
-                </date-input>
-            </div>
+        </div>
 
-            <md-button data-ng-if="vm.entity.id"
-                       class="md-raised primary-button m-t-0 m-b-0"
-                       data-ng-click="vm.runPricingInstrument($event)">Run Pricing
-            </md-button>
+        <div class="flex-row m-b-13">
+
+            <div class="p-r-8" style="width: 306px;">
+                <text-input model="vm.entity.reference_for_pricing"
+                            label="ID for Price Downloading"
+                            placeholder-text="ID for Price Downloading">
+                </text-input>
+            </div>
 
         </div>
 
@@ -189,7 +131,7 @@
             <td>
                 <md-input-container class="m-t-16">
                     <md-select data-ng-model="item.pricing_scheme"
-                               data-ng-change="vm.pricingSchemeChange($event, item)">
+                               data-ng-change="vm.pricingSchemeChange(item)">
                         <md-option ng-value="scheme.id" data-ng-repeat="scheme in vm.instrumentPricingSchemes">
                             {{scheme.name}}
                         </md-option>
@@ -237,8 +179,8 @@
                         <md-input-container class="m-t-16">
                             <label>Options</label>
                             <md-select data-ng-model="item.attribute_key">
-                                <md-option ng-value="attribute.user_code"
-                                           data-ng-repeat="attribute in vm.attributeTypesByValueTypes[item.pricing_scheme_object.type_settings.value_type]">
+                                <md-option data-ng-repeat="attribute in vm.attributeTypesByValueTypes[item.pricing_scheme_object.type_settings.value_type]"
+                                           ng-value="attribute.user_code">
                                     {{attribute.name}}
                                 </md-option>
                             </md-select>
@@ -262,7 +204,7 @@
 
                 <div class="m-t-16" data-ng-if="item.pricing_scheme_object.type_object.input_type == 3">
 
-                    <md-button class="md-raised" data-ng-click="vm.openPricingMultipleParametersDialog($event, item)">
+                    <md-button class="md-raised" data-ng-click="vm.openPricingMultipleParametersDialog(item)">
                         ...
                     </md-button>
 
@@ -271,7 +213,8 @@
             </td>
 
             <td>
-                <md-button class="md-raised" data-ng-click="vm.editPricingScheme($event, item.pricing_scheme_object)">
+                <md-button class="md-raised" data-ng-click="vm.editPricingScheme($event, item.pricing_scheme_object)"
+                           ng-disabled="!item.pricing_scheme && item.pricing_scheme !== 0">
                     Edit
                 </md-button>
             </td>
@@ -284,7 +227,7 @@
             </td>
 
             <td>
-                <md-button class="md-raised md-primary" data-ng-click="vm.applyPricingToAllInstruments($event, item)">
+                <md-button ng-if="vm.entity.id || vm.entity.id === 0" class="md-raised md-primary" data-ng-click="vm.applyPricingToAllInstruments($event, item)">
                     Apply
                 </md-button>
             </td>

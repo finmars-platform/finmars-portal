@@ -167,6 +167,16 @@
             return data.listLayout;
         }
 
+        function updateModifiedDate (modifiedDate) {
+            // updating listLayout prevents synchronization error when saving settings of component inside dashboard
+            var listLayout = getListLayout();
+            listLayout.modified = modifiedDate;
+
+            var layout = getData();
+            layout.modified = modifiedDate;
+
+        }
+
         function pushToActualRvLayoutsInCache (layoutId) {
 
             if (!tmpData.actualRvLayouts.includes(layoutId)) {
@@ -193,7 +203,7 @@
             getData: getData,
             setListLayout: setListLayout,
             getListLayout: getListLayout,
-
+            updateModifiedDate: updateModifiedDate,
 
             setProjection: setProjection,
             getProjection: getProjection,

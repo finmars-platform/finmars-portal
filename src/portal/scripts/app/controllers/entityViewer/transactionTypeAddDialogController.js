@@ -94,8 +94,9 @@
         vm.inputsForMultiselector = [];
 
         vm.openedIn = data.openedIn;
+		vm.updateContextParameters = sharedLogic.updateContextParametersFunctions;
 
-        // var ecosystemDefaultData = {};
+		// var ecosystemDefaultData = {};
 
         vm.loadPermissions = function () {
 
@@ -715,15 +716,16 @@
 
             return new Promise(function (resolve, reject) {
 
-                vm.entity = vm.updateEntityBeforeSave(vm.entity);
+                let entityToSave = JSON.parse(JSON.stringify(vm.entity));
+                entityToSave = vm.updateEntityBeforeSave(entityToSave);
 
-                var actionsErrors = sharedLogic.checkActionsForEmptyFields(vm.entity.actions);
-                var inputsErrors = sharedLogic.validateInputs(vm.entity.inputs);
+                var actionsErrors = sharedLogic.checkActionsForEmptyFields(entityToSave.actions);
+                var inputsErrors = sharedLogic.validateInputs(entityToSave.inputs);
                 actionsErrors = actionsErrors.concat(inputsErrors);
 
-                var entityErrors = sharedLogic.checkEntityForEmptyFields(vm.entity);
+                var entityErrors = sharedLogic.checkEntityForEmptyFields(entityToSave);
 
-                console.log('vm.entity before save', vm.entity);
+                console.log('vm.entity before save', entityToSave);
 
                 if (actionsErrors.length || entityErrors.length) {
 
@@ -750,11 +752,11 @@
 
                     vm.processing = true;
 
-                    transactionTypeService.create(vm.entity).then(function (responseData) {
+                    transactionTypeService.create(entityToSave).then(function (responseData) {
 
-                        toastNotificationService.success("Transaction Type " + " " + vm.entity.name + ' was successfully created');
+                        toastNotificationService.success("Transaction Type " + " " + entityToSave.name + ' was successfully created');
 
-                        if (vm.entity.inputs) {
+                        /* if (vm.entity.inputs) {
                             vm.entity.inputs.forEach(function (input) {
 
                                 if (input.settings && input.settings.linked_inputs_names) {
@@ -763,7 +765,7 @@
 
                             });
 
-                        }
+                        } */
 
                         vm.entity.object_permissions = responseData.object_permissions;
 
@@ -846,6 +848,7 @@
         vm.entity.book_transaction_layout = vm.entity.book_transaction_layout || '';
         vm.entity.actions = vm.entity.actions || [];
         vm.entity.inputs = vm.entity.inputs || [];
+		vm.entity.context_parameters = sharedLogic.getContextParameters();
 
         vm.readyStatus = {transactionTypeGroups: false, instrumentTypes: false, portfolios: false};
 
@@ -1078,6 +1081,7 @@
         vm.saveItem = function (item) {
 
 			vm.expressionData = sharedLogic.updateInputFunctions();
+			vm.updateContextParameters();
 
             item.editStatus = false;
         };
@@ -1357,7 +1361,7 @@
 
         // Transaction Type Recon end
 
-        // Transaction type Actions controller start
+        //region Transaction type Actions controller
 
         vm.relationItems = {};
 
@@ -2179,31 +2183,12 @@
             })
         }
 
+		//endregion Transaction type Actions controller
 
-        // Transaction type actions controller end
-
-        // Context Parameters tab start
-
-        vm.deleteContextParameter = function ($event, $index) {
-            vm.entity.context_parameters.splice($index, 1);
-        }
-
-        vm.addContextParameter = function ($event) {
-
-            var order = 1;
-
-            if (vm.entity.context_parameters && vm.entity.context_parameters.length) {
-                order = vm.entity.context_parameters[vm.entity.context_parameters.length - 1].order + 1
-            }
-
-            vm.entity.context_parameters.push({
-                order:order
-            });
-
-
-        }
-
-        // Context Parameters tab end
+		//region Context Parameters tab
+		vm.deleteContextParameter = sharedLogic.deleteContextParameter
+		vm.addContextParameter = sharedLogic.addContextParameter;
+		//endregion Context Parameters tab
 
         vm.init = function () {
 
@@ -2239,6 +2224,7 @@
             vm.getActionTemplates();
 
 			vm.expressionData = sharedLogic.updateInputFunctions();
+			vm.updateContextParameters();
 
             var allDataPromises = [
                 attrsProm,

@@ -13,7 +13,8 @@
 
     var transactionClassService = require('../services/transaction/transactionClassService');
     var modelService = require('../services/modelService');
-    var metaService = require('../services/metaService')
+    var metaService = require('../services/metaService');
+	var expressionsService = require('../services/expression.service');
 
     function findEntityObject(report, propertyName, id) {
 
@@ -598,24 +599,28 @@
     }
 
     var reportOptionsTemporaryPropsList = [
-    	'items',
-		'item_complex_transactions',
-		'item_transaction_classes',
-		'item_counterparties',
-		'item_responsibles',
-		'item_strategies3',
-		'item_strategies2',
-		'item_strategies1',
-		'item_portfolios',
-		'item_instruments',
-		'item_instrument_pricings',
-		'item_instrument_accruals',
-		'item_currency_fx_rates',
-		'item_currencies',
-		'item_accounts',
-		'custom_fields',
-		'custom_fields_object',
-	];
+        'items',
+        'item_complex_transactions',
+        'item_transaction_classes',
+        'item_counterparties',
+        'item_responsibles',
+        'item_strategies3',
+        'item_strategies2',
+        'item_strategies1',
+        'item_portfolios',
+        'item_instruments',
+        'item_instrument_types',
+        'item_instrument_pricings',
+        'item_instrument_accruals',
+        'item_currency_fx_rates',
+        'item_currencies',
+        'item_accounts',
+        'item_account_types',
+        'custom_fields',
+        'custom_fields_object',
+        'save_report',
+        'report_uuid',
+    ];
 
     /**
 	 * Delete temporary properties from report options.
@@ -632,12 +637,66 @@
 
 	};
 
+	var getReportDateValue = function (layout, dateKey) {
+
+		var dateFromKeys = ['begin_date', 'pl_first_date'];
+		var dateToKeys = ['report_date', 'end_date'];
+
+		var dateFrom = dateFromKeys.indexOf(dateKey) > -1;
+		var dateTo = dateToKeys.indexOf(dateKey) > -1;
+		var dateExpr;
+
+		if (!dateFrom && !dateTo) {
+
+			console.error("key is not report date key: " + dateKey);
+
+			return new Promise(function (resolve) {resolve(null)});
+
+		}
+
+		var rlOptions = layout.data.reportLayoutOptions;
+
+		if (rlOptions && rlOptions.datepickerOptions) {
+
+			if (dateFrom) {
+				dateExpr = rlOptions.datepickerOptions.reportFirstDatepicker.expression;
+
+			} else if (dateTo) {
+				dateExpr = rlOptions.datepickerOptions.reportLastDatepicker.expression;
+			}
+
+			if (dateExpr) {
+
+				return new Promise(function (resolve) {
+
+					expressionsService.getResultOfExpression({'expression': dateExpr}).then(function (data) {
+
+						resolve(data.result);
+
+					}).catch(function (error) {
+						console.error('Error occurred while trying to evaluate: ' + dateExpr, error);
+						resolve(null);
+					});
+
+				});
+
+			}
+
+		}
+
+		return new Promise(function (resolve) {
+			resolve(layout.data.reportOptions[dateKey]);
+		});
+
+	};
+
     module.exports = {
         convertItemsToFlat: convertItemsToFlat,
         injectIntoItems: injectIntoItems,
         extendAttributes: extendAttributes,
         calculateMarketValueAndExposurePercents: calculateMarketValueAndExposurePercents,
-		cleanReportOptionsFromTmpProps: cleanReportOptionsFromTmpProps
+		cleanReportOptionsFromTmpProps: cleanReportOptionsFromTmpProps,
+		getReportDateValue: getReportDateValue,
     }
 
 }());

@@ -1,5 +1,7 @@
 (function(){
 
+	var metaHelper = require('../../helpers/meta.helper');
+
     'use strict';
 
     module.exports = function($scope, $mdDialog, data) {
@@ -24,10 +26,11 @@
 
         vm.inputsForMultiselector = data.inputsForMultiselector
 
-        vm.expressionData = {
+        /*vm.expressionData = {
             groups: [],
             functions: [null]
-        };
+        };*/
+        vm.expressionData = data.expressionData;
 
         vm.onValueTypeChange = function () {
 
@@ -89,12 +92,12 @@
 
 			} */
 			let fieldKey = resolveRelation(vm.contentType);
-			fieldKey = fieldKey.replace(/-/g, "_");
+			// fieldKey = fieldKey.replace(/-/g, "_");
 
 			if (data.loadedRelationsList.includes(fieldKey)) {
 				vm.defaultValuesItems = vm.relationItems[fieldKey];
 
-			} else {
+			} else if (fieldKey) {
 
 				loadRelation(fieldKey).then(function (relItem) {
 
@@ -124,7 +127,7 @@
 
         vm.validateInputName = function () {
 
-            var errorText = "";
+            /* var errorText = "";
 
             if (!vm.name) {
                 errorText += "Input name should not be empty.";
@@ -155,7 +158,8 @@
 
                 }
 
-            }
+            } */
+			var errorText = metaHelper.validateTextForUserCode(vm.name, data.inputs, "Input name");
 
             if (errorText) {
 

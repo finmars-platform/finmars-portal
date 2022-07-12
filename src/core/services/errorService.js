@@ -37,70 +37,51 @@
 
                         obj[key].forEach(function (item) {
 
-                            message = getFullErrorAsHtml(item, message)
+                            message = message +  getFullErrorAsHtml(item, message)
 
                         })
 
                     } else {
 
-                        message = message + key + ': ' + obj[key].join('. ');
+                        message = message + key + ': ' + obj[key].join(', ');
                     }
                 }
             } else {
 
                 if (typeof obj[key] === 'object') {
 
-                    message = getFullErrorAsHtml(obj[key], message)
+                    message = message + getFullErrorAsHtml(obj[key], message)
 
                 } else {
-                    message = message + key + ': ' + obj[key]
+                    message = message + key + ': ' + obj[key];
                 }
             }
 
         });
 
-        return message;
+        return message
 
     };
 
     var notifyError = function (data) {
 
 
-
-        // if (reason.hasOwnProperty('message')) {
-        //
-        //     if (typeof reason.message === 'object') {
-        //
-        //         message = getFullErrorAsHtml(reason.message, message)
-        //
-        //     }
-        //
-        //
-        // }
+        console.error('notifyError.data', data);
 
         var message = '';
 
-        if (data.message) {
-            message = data.status + ' ' + data.statusText + '<br>'
+        message = data.response.status + ' ' + data.response.statusText + '<br>'
 
-            if (data.message.message) {
-                message = message + data.message.message
-            } else {
-                var htmlMessage = '';
-                message = message + getFullErrorAsHtml(data.message, htmlMessage)
-            }
+        if (data.response.data) {
 
-            toastNotificationService.error(message);
-        } else {
-            message = data.statusText + ' (' + data.status + ')';
-            toastNotificationService.error(message);
+            message = getFullErrorAsHtml(data.response.data, message)
+
         }
 
+        console.log('notifyError.message', message)
 
+        toastNotificationService.error(message);
 
-        // return reason
-
-        // throw new Error("Error processing request", reason);
 
         return Promise.reject(data)
 

@@ -25,23 +25,6 @@
     <div class="sidenav-content">
         <div class="side-menu-container" layout="column">
 
-            <!--<ul class="side-menu">
-                <li data-ng-repeat="section in vm.sections" class="parent-list-item"
-                    data-ng-class="{'parentActive' : vm.isSectionSelected(section)}">
-                    <menu-link section="section" ng-if="section.type === 'link'"></menu-link>
-                    <menu-toggle section="section" ng-if="section.type === 'toggle'"></menu-toggle>
-                </li>
-                <li>
-                    <md-button ui-sref-active="active" class="sidemenu-btn"
-                               ng-click="vm.openHelp($event)">
-                        <span class="side-nav-icon">
-                            <ng-md-icon icon="local_library" size="24"></ng-md-icon>
-                        </span>
-                        <span class="side-nav-title">Help</span>
-                    </md-button>
-                </li>
-            </ul>-->
-
             <div class="side-menu-main-buttons">
                 <ul class="side-menu" data-ng-if="vm.readyStatus.access">
 
@@ -443,7 +426,7 @@
                                                ui-sref="app.portal.import.instrument-cbonds">
                                         <span class="side-nav-title">
                                             Instrument<br>
-                                            (from CBONDS)
+                                            (from Finmars Database)
                                         </span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
@@ -474,43 +457,11 @@
                         </div>
                     </li>
 
-<!--                    <li data-ng-if="vm.accessTable.report_forum">-->
-<!--                        <md-button class="sidemenu-btn"-->
-<!--                                   ui-sref-active="active"-->
-<!--                                   ui-sref="app.forum.thread-groups">-->
-<!--                            <span class="side-nav-icon">-->
-<!--                                <ng-md-icon icon="forum" size="24"></ng-md-icon>-->
-<!--                            </span>-->
-<!--                            <span class="side-nav-title">Forum</span>-->
-<!--                            &lt;!&ndash;<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>&ndash;&gt;-->
-<!--                        </md-button>-->
-<!--                    </li>-->
                 </ul>
             </div>
 
             <div class="side-menu-bottom-menu side-menu-main-buttons">
                 <ul class="side-menu" data-ng-if="vm.readyStatus.access">
-
-<!--                    <li>-->
-<!--                        <md-button ui-sref="app.portal.developer-panel"-->
-<!--                                   class="sidemenu-btn">-->
-<!--                        <span class="side-nav-icon">-->
-<!--                            <ng-md-icon icon="developer_dashboard" size="24"></ng-md-icon>-->
-<!--                        </span>-->
-<!--                            <span class="side-nav-title">Dev Panel</span>-->
-<!--                        </md-button>-->
-<!--                    </li>-->
-
-<!--                    <li>-->
-<!--                        <md-button ui-sref-active="active"-->
-<!--                                   class="sidemenu-btn"-->
-<!--                                   ng-click="vm.openHelp($event)">-->
-<!--                        <span class="side-nav-icon">-->
-<!--                            <ng-md-icon icon="local_library" size="24"></ng-md-icon>-->
-<!--                        </span>-->
-<!--                            <span class="side-nav-title">Help</span>-->
-<!--                        </md-button>-->
-<!--                    </li>-->
 
                     <li data-ng-if="vm.accessSectionTable.journal">
                         <div class="sidenav-dropdown-menu-wrapper" sidenav-dropdown-menu menu-type="journal">
@@ -589,20 +540,6 @@
                     <div class="side-menu-group-btn-container border-top-none">
                         <h3 class="sms-btn-group-header">Interface</h3>
                         <ul class="side-menu">
-<!--                            <li data-ng-if="vm.accessTable.report_dashboard">-->
-<!--                                <md-button class="sidemenu-btn"-->
-<!--                                           ui-sref="app.portal.dashboard-layout-manager">-->
-<!--                                    <span class="side-nav-title">Dashboard Layouts</span>-->
-<!--                                    &lt;!&ndash;<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>&ndash;&gt;-->
-<!--                                </md-button>-->
-<!--                            </li>-->
-<!--                            <li>-->
-<!--                                <md-button class="sidemenu-btn"-->
-<!--                                           ui-sref="app.portal.settings.forms">-->
-<!--                                    <span class="side-nav-title">Forms</span>-->
-<!--                                    &lt;!&ndash;<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>&ndash;&gt;-->
-<!--                                </md-button>-->
-<!--                            </li>-->
                             <li>
 
                                 <div class="sidenav-dropdown-menu-wrapper" sidenav-dropdown-menu menu-type="dataTypes">
@@ -895,6 +832,14 @@
                                             <md-button class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.portal.data-procedure">
                                                 <span class="side-nav-title">Data Procedures</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.portal.expression-procedure">
+                                                <span class="side-nav-title">Expression Procedures</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>

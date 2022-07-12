@@ -85,6 +85,8 @@
 
         vm.agree = function () {
 
+            vm.item.data = JSON.parse(vm.item.data_string)
+
             dataProcedureService.update(vm.item.id, vm.item).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: {item: data}});
@@ -98,6 +100,8 @@
             dataProcedureService.getByKey(vm.itemId).then(function (data) {
 
                 vm.item = data;
+
+                vm.item.data_string = JSON.stringify(vm.item.data, 0, 4)
 
                 vm.readyStatus.procedure = true;
 
@@ -139,6 +143,15 @@
 
             })
 
+        }
+
+        vm.universalOptionsChange = function () {
+
+            vm.item.data = JSON.parse(vm.item.data_string)
+        }
+
+        vm.universalFieldChange = function () {
+            vm.item.data_string = JSON.stringify(vm.item.data, 0, 4)
         }
 
         vm.init = function () {

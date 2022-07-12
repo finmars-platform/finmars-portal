@@ -14,7 +14,7 @@
                 </thead>
 
                 <tbody>
-                <tr ng-repeat="attr in vm.attrs">
+                <tr ng-repeat="attr in vm.instrumentAttrTypes">
                     <td class="attribute-name">{{attr.name}}</td>
                     <td class="default-value">
                         <div data-ng-if="attr.value_type === 10">
@@ -32,18 +32,22 @@
                                           is-disabled="attr.___isDisabled"
                                           style="width: 200px;"></number-input>
                         </div>
-                        <div data-ng-if="attr.value_type === 30">
+                        <div data-ng-if="attr.value_type === 30" class="position-relative">
                             <classifier-select placeholder-text="{{attr.name}}"
                                                model="attr.value"
+                                               model-prop="name"
                                                classifier-attr="!attr.___isDisabled ? attr : null"
                                                classifier-value="attr.value"
                                                entity-type="'instrument'"
                                                is-disabled="attr.___isDisabled"
-                                               item-name="attr.___classifierName"
+                                               item-name="attr.value"
                                                on-change-callback="vm.attrChange()"
                                                value-property="'name'"
                             ></classifier-select>
 
+                            <md-button class="small-button-icon position-absolute m-0"
+                                       style="right: -25px; top: 50%; transform: translateY(-50%);"
+                                       ng-click="vm.clearSelector(attr)">X</md-button>
                         </div>
                         <div data-ng-if="attr.value_type === 40">
                             <date-input model="attr.value"

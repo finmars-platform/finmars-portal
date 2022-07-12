@@ -46,7 +46,6 @@
 				let filterIndex = -1;
 
 				const findFilter = function () {
-					const filtersTest = vm.evDataService.getFilters();
 
 					let allFilters = JSON.parse(JSON.stringify(vm.evDataService.getFilters()));
 					filtersList = [];

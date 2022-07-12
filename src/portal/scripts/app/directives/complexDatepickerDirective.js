@@ -118,6 +118,7 @@
 									if (moment(resData.result, 'YYYY-MM-DD', true).isValid()) {
 
 										scope[dateProp] = resData.result;
+										scope.inputsModels[dateProp] = scope[dateProp];
 										scope[datepickerOptsProp].date = resData.result;
 
 										var exprDate = new Date(scope[dateProp]);

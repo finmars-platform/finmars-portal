@@ -169,6 +169,8 @@
 
     var appendAttribute = function (attr, value) {
 
+        value = value || null;
+
         var attribute = {
             attribute_name: attr.name,
             attribute_type: attr.id,
@@ -182,15 +184,13 @@
         if (attr['value_type'] === 10) {
             attribute['value_string'] = value;
         }
-
-        if (attr['value_type'] === 20) {
+        else if (attr['value_type'] === 20) {
             attribute['value_float'] = value;
         }
-
-        if (attr['value_type'] === 30) {
+		else if (attr['value_type'] === 30) {
             attribute['classifier'] = value;
         }
-        if (attr['value_type'] === 40) {
+		else if (attr['value_type'] === 40) {
             attribute['value_date'] = value;
         }
 
@@ -269,7 +269,8 @@
 
     var systemTabLocationOfAttribute = {
         'instrument': {
-            'maturity_date': {type: 'system_tab', name: 'Events', validatorText: 'tab: EVENTS'}
+            'maturity_date': {type: 'system_tab', name: 'Events', validatorText: 'tab: EVENTS'},
+			'pricing_currency': {type: 'system_tab', name: 'Pricing', validatorText: 'tab: PRICING'}
         },
         'instrument-type': {
             'accrued_currency': {type: 'system_tab', name: 'Accruals', validatorText: 'tab: ACCRUALS'},
@@ -348,7 +349,7 @@
 
         }
 
-        return null;
+        // return null;
 
     };
 
@@ -460,15 +461,11 @@
 
     var validateFieldWithString = function (value, fieldAttr) {
 
-        if (fieldAttr.options && fieldAttr.options.notNull === true) {
-            if (!value) {
-
-                return {
-                    fieldName: fieldAttr.options.fieldName || fieldAttr.verbose_name || fieldAttr.name,
-                    message: 'Field should not be empty.'
-                };
-
-            }
+        if (!value && fieldAttr.options && fieldAttr.options.notNull === true) {
+            return {
+                fieldName: fieldAttr.options.fieldName || fieldAttr.verbose_name || fieldAttr.name,
+                message: 'Field should not be empty.'
+            };
         }
 
         return null;
@@ -730,7 +727,7 @@
 
     var getAttributeValueType = function (attribute) {
 
-        if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 10) ||
+        /* if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 10) ||
             attribute.value_type === 10) {
             return 10;
         } else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 20) ||
@@ -742,7 +739,13 @@
         } else if ((attribute.attribute_type_object && attribute.attribute_type_object.value_type === 40) ||
             attribute.value_type === 40) {
             return 40;
+        } */
+
+        if (attribute.attribute_type_object) {
+            return attribute.attribute_type_object.value_type;
         }
+
+        return attribute.value_type;
 
     }
 
@@ -777,7 +780,11 @@
 
             case 10:
             case 30:
-                errorObj = validateFieldWithString(fieldValue, attr);
+
+            case 100:
+            case "field":
+            case 110:
+                errorObj = validateFieldWithString(fieldValue, attr); // also fits for validation of selectors
                 break;
 
             case 20:
@@ -790,11 +797,11 @@
 
         }
 
-
         if (errorObj) {
 
             errorObj.key = key;
             errorObj.locationData = getLocationOfAttribute(key, tabs, fixedFieldsAttrs, entityType);
+
             errorsList.push(errorObj);
 
             if (errorObj.locationData && errorObj.locationData.type === 'system_tab') {
@@ -861,8 +868,11 @@
                 var key = dAttrData.attribute_type_object.user_code;
                 var fieldValue = evHelperService.getDynamicAttrValue(dAttrData);
 
-                if (!fieldValue && entity[key]) {
+                /*if (!fieldValue && entity[key]) {
                     fieldValue = entity[key];
+                }*/
+                if (dAttrData.attribute_type_object.value_type === 30 && fieldValue) {
+                    fieldValue = fieldValue.classifier;
                 }
 
                 var attrType;
@@ -1239,13 +1249,10 @@
 
             userInputs.forEach(function (uInput) {
 
-                if (uInput.frontOptions && uInput.frontOptions.required) {
+                var iName = uInput.name;
+                var fieldValue = entity.values[iName];
 
-                    var iName = uInput.name;
-                    var fieldValue = entity[iName];
-
-                    validateComplexTransactionUserInput(uInput, fieldValue, transactionsTypeActions, tabs, errors);
-                }
+                validateComplexTransactionUserInput(uInput, fieldValue, transactionsTypeActions, tabs, errors);
 
             });
 
@@ -1259,12 +1266,15 @@
      *
      * @param fixedAreaPopup {Object} - popup data
      * @param faFieldProp {string} - property name by which field stored inside fixedAreaPopup
+     * @param errorMessage {string}
      * @returns {boolean} - whether field has and error
      */
     const markErrorInsideFAPopup = function (fixedAreaPopup, faFieldProp, errorMessage) {
 
         var popupFieldsKeysList = [];
-        if (fixedAreaPopup) popupFieldsKeysList = Object.keys(fixedAreaPopup.fields);
+        if (fixedAreaPopup) {
+            popupFieldsKeysList = Object.keys(fixedAreaPopup.fields);
+        }
 
         var errorIsInsidePopup = popupFieldsKeysList.length && popupFieldsKeysList.includes(faFieldProp);
 
@@ -1296,10 +1306,10 @@
      * @param $event {Object} - event object
      * @param fixedAreaPopup {?Object} - fields inside of popup
      * @param entityType {string}
-     * @param groupSelectorEventObject {{event: Object}} - used to highlight 'Group' crud selector
+     * @param fixedAreaEventObject {{event: Object}} - used to highlight 'Group' crud selector
      * @returns {Object|null} - changed fixedAreaPopup or null
      */
-    const processTabsErrors = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event, fixedAreaPopup, entityType, groupSelectorEventObject) {
+    const processTabsErrors = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event, fixedAreaPopup, entityType, fixedAreaEventObject) {
 
         const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
 
@@ -1352,7 +1362,8 @@
 
                     }
 
-                } else if (errorObj.locationData.type === 'fixed_area') {
+                }
+                else if (errorObj.locationData.type === 'fixed_area') {
 
                     var fieldProp = errorObj.key;
                     var fixedAreaFieldProp = getFieldKeyForFAPopup(fieldProp, entityType);
@@ -1363,11 +1374,12 @@
 
                         locsWithErrors.fixed_area.fields.push(fieldProp);
 
-                        if (['strategy-1', 'strategy-2', 'strategy-3', 'responsible', 'counterparty'].includes(entityType) && fieldProp === 'group') { // subgroup used as group for strategy 1,2,3
+                        /*if (['strategy-1', 'strategy-2', 'strategy-3', 'responsible', 'counterparty'].includes(entityType) && fieldProp === 'group') { // subgroup used as group for strategy 1,2,3
 
                             groupSelectorEventObject.event = {key: "error", error: "Field should not be empty"};
 
-                        }
+                        }*/
+                        fixedAreaEventObject.event = {key: 'mark_not_valid_fields'};
 
                         fixedAreaPopupChanged = markErrorInsideFAPopup(fixedAreaPopup, fixedAreaFieldProp, errorObj.message);
 
@@ -2013,7 +2025,8 @@
                             fieldsToEmptyList.push(fieldPath);
                         }
 
-                    } else if (field.attribute_class === 'decorationAttr') {
+                    }
+					else if (field.attribute_class === 'decorationAttr') {
 
                         for (l = 0; l < layoutAttrs.length; l = l + 1) {
 
@@ -2031,7 +2044,8 @@
 
                         }
 
-                    } else {
+                    }
+					else {
 
                         for (e = 0; e < entityAttrs.length; e = e + 1) {
 
@@ -2058,12 +2072,14 @@
                             for (u = 0; u < userInputs.length; u = u + 1) {
 
                                 if (field.name === userInputs[u].name) {
-                                    userInputs[u].options = field.options;
 
+									userInputs[u].options = field.options;
                                     fieldResult = userInputs[u];
 
-                                    attrFound = true;
-                                    break;
+									attrFound = true;
+
+									break;
+
                                 }
                             }
 
@@ -2089,7 +2105,6 @@
                 }
 
             }
-
             //tabResult.push(fieldResult);
             tabResult[field.row][field.column] = fieldResult;
 
@@ -2272,7 +2287,8 @@
         updateValue: updateValue,
 
         findAttributeByKey: findAttributeByKey,
-        getFieldKeyForFAPopup: getFieldKeyForFAPopup,
+		getLocationOfAttributeInsideUserTabs: getLocationOfAttributeInsideUserTabs,
+		getFieldKeyForFAPopup: getFieldKeyForFAPopup,
 
         checkForNotNullRestriction: checkForNotNullRestriction,
         checkForNegNumsRestriction: checkForNegNumsRestriction,

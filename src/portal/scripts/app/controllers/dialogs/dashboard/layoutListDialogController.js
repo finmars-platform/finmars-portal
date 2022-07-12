@@ -16,6 +16,7 @@
         var vm = this;
 
         vm.readyStatus = {items: false};
+        var dashboardDataService = data.dashboardDataService;
         var layoutsList = []; // list of layouts without properties added for rendering
         var selectedLayout = null;
 
@@ -93,8 +94,30 @@
                     layout.name = res.data.name;
                     layoutData.user_code = res.data.user_code;
                     layout.user_code = res.data.user_code;
+                    /*
+                    uiService.updateDashboardLayout(layoutData.id, layoutData).then(function (data) {
+                        $scope.$apply()
+                    });
+                     */
+                    uiService.updateDashboardLayout(layoutData.id, layoutData).then(function (data) {
 
-                    uiService.updateDashboardLayout(layoutData.id, layoutData).then(function () {
+                        var listLayout = dashboardDataService.getListLayout();
+
+                        if (listLayout.id === data.id) {
+
+                            var activeLayoutData = dashboardDataService.getData();
+
+                            listLayout.name = res.data.name;
+                            activeLayoutData.name = res.data.name;
+                            listLayout.user_code = res.data.user_code;
+                            activeLayoutData.user_code = res.data.user_code;
+                            listLayout.modified = data.modified;
+                            activeLayoutData.modified = data.modified;
+
+                            dashboardDataService.setListLayout(listLayout);
+                            dashboardDataService.setData(activeLayoutData);
+
+                        }
 
                         $scope.$apply()
 
@@ -160,6 +183,8 @@
 
             $event.stopPropagation();
 
+            var listLayout = dashboardDataService.getListLayout();
+            var activeLayoutData;
             var layoutData = layoutsList[index];
 
             if (!layoutData.is_default) {
@@ -172,14 +197,44 @@
                         layout.is_default = false;
                         layoutsList[i].is_default = false;
 
-                        uiService.updateDashboardLayout(layoutsList[i].id, layoutsList[i]);
+                        // uiService.updateDashboardLayout(layoutsList[i].id, layoutsList[i]);
+                        if (listLayout.id === layout.id) {
+
+                            activeLayoutData = dashboardDataService.getData();
+
+                            listLayout.is_default = false;
+                            activeLayoutData.is_default = false;
+
+                            dashboardDataService.setListLayout(listLayout);
+                            dashboardDataService.setData(activeLayoutData);
+
+                        }
+
                         break;
                     }
                 }
 
                 layoutData.is_default = true;
                 item.is_default = true;
-                uiService.updateDashboardLayout(layoutData.id, layoutData);
+
+                uiService.updateDashboardLayout(layoutData.id, layoutData).then(function (updatedData) {
+
+                    if (listLayout.id === item.id) {
+
+                        activeLayoutData = dashboardDataService.getData();
+
+                        listLayout.is_default = true;
+                        activeLayoutData.is_default = true;
+                        listLayout.modified = updatedData.modified;
+                        activeLayoutData.modified = updatedData.modified;
+
+                        dashboardDataService.setListLayout(listLayout);
+                        dashboardDataService.setData(activeLayoutData);
+
+                    }
+
+                });
+
             }
         };
 
@@ -283,13 +338,14 @@
                     vm.getInvites();
                     vm.getList().then(function (data) {
 
+                        var listLayout = dashboardDataService.getListLayout();
+
                         vm.items.forEach(function (item) {
 
                             if (item.name === sharedFile.shared_configuration_file_object.name) {
                                 item.sourced_from_global_layout = sharedFile.shared_configuration_file;
 
                                 uiService.updateDashboardLayout(item.id, item).then(function (value) {
-
 
                                     vm.getList().then(function (value1) {
 
@@ -311,7 +367,7 @@
                                             }
                                         })
 
-                                    })
+                                    });
 
                                 })
 

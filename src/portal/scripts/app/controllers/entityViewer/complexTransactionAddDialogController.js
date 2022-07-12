@@ -228,6 +228,7 @@
 
             } */
             var pbraResult = sharedLogicHelper.postBookRebookActions(cTransactionData, vm.recalculate);
+            vm.entity.attributes = pbraResult.attributes;
             vm.tabs = pbraResult.tabs;
             vm.fixedArea = pbraResult.fixedArea;
             dataConstructorLayout = pbraResult.dataConstructorLayout;
@@ -235,7 +236,6 @@
             vm.userInputs = pbraResult.userInputs;
 
             mapAttributesAndFixFieldsLayout();
-
             /* // should be fired after mapAttributesAndFixFieldsLayout()
             return sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType); */
 
@@ -271,6 +271,12 @@
 
                     vm.transactionType = data.transaction_type_object;
                     vm.entity = data.complex_transaction;
+					vm.entity.values = data.values;
+
+					vm.entity.frontOptions = {
+						dynamicAttributesValues: {},
+						userInputsValues: {}
+					};
 
                     data = vm.mapValuesOnTransactionTypeChange(data);
 
@@ -287,8 +293,7 @@
 
                         vm.missingLayoutError = false;
 
-                        // await postBookComplexTransactionActions(data);
-						postBookComplexTransactionActions(data);
+                        postBookComplexTransactionActions(data);
 
                     } else {
                         vm.missingLayoutError = true;
@@ -1464,6 +1469,10 @@
                     console.log("Apply from make copy", entity);
                     notCopiedTransaction = false;
                     vm.entity = entity;
+					vm.entity.frontOptions = {
+						dynamicAttributesValues: {},
+						userInputsValues: {}
+					};
 
                     var copy = JSON.parse(JSON.stringify(entity));
 
@@ -1597,6 +1606,29 @@
 
         }; */
         vm.onEntityChange = sharedLogicHelper.onFieldChange;
+
+        vm.editAsJson = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityAsJsonEditorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        item:  {},
+                        entityType: vm.entityType,
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                }
+
+            })
+
+        }
 
 
         vm.init();
