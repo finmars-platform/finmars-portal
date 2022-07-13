@@ -26,6 +26,10 @@
 
         vm.inputsFunctions = [];
 
+        vm.modeOptions = instrumentDownloadSchemeService.modeOptions;
+
+        var dialogParent = document.querySelector(".dialog-containers-wrap");
+
         vm.getFunctions = function () {
 
             return vm.providerFields.map(function(input){
@@ -703,7 +707,7 @@
 
             instrumentDownloadSchemeService.update(vm.scheme.id, vm.schemeUpdated).then(function (data) {
 
-                $mdDialog.hide({res: 'agree'});
+                $mdDialog.hide({status: 'agree'});
 
             }).catch(function (reason) {
 
@@ -711,6 +715,7 @@
                     controller: 'ValidationDialogController as vm',
                     templateUrl: 'views/dialogs/validation-dialog-view.html',
                     targetEvent: $event,
+                    parent: dialogParent,
                     locals: {
                         validationData: reason.message
                     },

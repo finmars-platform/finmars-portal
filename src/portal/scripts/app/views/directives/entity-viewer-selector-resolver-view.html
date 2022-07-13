@@ -30,7 +30,11 @@
                      event-signal="ciEventObj.event"
                      item-name="inputTextObj.value"
                      menu-options="fields"
-                     small-options="{notNull: options.notNull, tooltipText: '{{getName()}}'}"
+                     small-options="{
+                        notNull: options.notNull,
+                        tooltipText: '{{getName()}}',
+                        dialogParent: '.dialog-containers-wrap'
+                     }"
                      custom-buttons="item.buttons"
                      custom-styles="customStyles"
                      sorted="sorted"

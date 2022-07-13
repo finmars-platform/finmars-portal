@@ -36,6 +36,7 @@
                 scope.dropdownMenuFilter = '';
                 scope.menuOptions = [];
 
+                var dialogParent;
 				/*
 				TIPS
 				scope.smallOptions probable properties
@@ -48,8 +49,8 @@
                 if (scope.smallOptions) {
 
                 	scope.tooltipText = scope.smallOptions.tooltipText;
-                    scope.dialogParent = scope.smallOptions.dialogParent;
 					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
+                    dialogParent = scope.smallOptions.dialogParent;
 
                 }
 
@@ -194,14 +195,14 @@
 
                 scope.openSelectorDialog = function ($event) {
 
-                    var dialogParent = angular.element(document.body);
+                    var parent = angular.element(document.body);
 
-                    if (scope.dialogParent) {
+                    if (dialogParent) {
 
-                        var dialogParentElem = document.querySelector(scope.dialogParent);
+                        var parentElem = document.querySelector(dialogParent);
 
-                        if (dialogParentElem) {
-                            dialogParent = dialogParentElem
+                        if (parentElem) {
+                            parent = parentElem
                         }
 
                     }
@@ -209,7 +210,7 @@
                     $mdDialog.show({
                         controller: 'ClassifierSelectDialogController as vm',
                         templateUrl: 'views/classifier-select-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: parent,
                         targetEvent: $event,
                         preserveScope: true,
                         autoWrap: true,

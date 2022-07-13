@@ -1,4 +1,4 @@
-<md-dialog aria-label="" ng-cloak class="instrument-select-database-dialog-view">
+<md-dialog class="instrument-select-database-dialog-view" aria-label="instrument select database dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Instruments</h2>
@@ -20,6 +20,7 @@
                             on-change-callback="vm.onInputTextChange()"
                             placeholder-text="Search"
                             model="vm.inputText"
+                            small-options="{dialogParent: '.dialog-containers-wrap'}"
                             class="m-r-8"></text-input>
                 </div>
 
@@ -32,6 +33,7 @@
                                      small-options="{tooltipText: 'Instrument Type'}"
                                      class="custom-input-bottom-space"
                                      on-change-callback="vm.onInputTextChange()"
+                                     small-options="{dialogParent: '.dialog-containers-wrap'}"
                                      style="width: 50%">
                     </dropdown-select>
 
