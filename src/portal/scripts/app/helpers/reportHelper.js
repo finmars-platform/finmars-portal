@@ -599,24 +599,28 @@
     }
 
     var reportOptionsTemporaryPropsList = [
-    	'items',
-		'item_complex_transactions',
-		'item_transaction_classes',
-		'item_counterparties',
-		'item_responsibles',
-		'item_strategies3',
-		'item_strategies2',
-		'item_strategies1',
-		'item_portfolios',
-		'item_instruments',
-		'item_instrument_pricings',
-		'item_instrument_accruals',
-		'item_currency_fx_rates',
-		'item_currencies',
-		'item_accounts',
-		'custom_fields',
-		'custom_fields_object',
-	];
+        'items',
+        'item_complex_transactions',
+        'item_transaction_classes',
+        'item_counterparties',
+        'item_responsibles',
+        'item_strategies3',
+        'item_strategies2',
+        'item_strategies1',
+        'item_portfolios',
+        'item_instruments',
+        'item_instrument_types',
+        'item_instrument_pricings',
+        'item_instrument_accruals',
+        'item_currency_fx_rates',
+        'item_currencies',
+        'item_accounts',
+        'item_account_types',
+        'custom_fields',
+        'custom_fields_object',
+        'save_report',
+        'report_uuid',
+    ];
 
     /**
 	 * Delete temporary properties from report options.
