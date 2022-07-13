@@ -55,6 +55,8 @@
 
 				scope.isPopupOpen = false;
 
+				const popupWrap = document.querySelector(".dialog-containers-wrap");
+
 				let coords;
 				let popupBackdropElem = document.createElement("div");
 				popupBackdropElem.classList.add('popup-area-backdrop');
@@ -300,8 +302,11 @@
 
 					$compile(popupElem)(popupContentScope);
 
-					document.body.appendChild(popupBackdropElem);
-					document.body.appendChild(popupElem);
+					/* document.body.appendChild(popupBackdropElem);
+					document.body.appendChild(popupElem); */
+
+					popupWrap.appendChild(popupBackdropElem);
+					popupWrap.appendChild(popupElem);
 
 					if (!doNotUpdateScope) {
 						scope.$apply(); // needed for $compile when called not by angular method
@@ -315,8 +320,10 @@
 
 				const removePopUp = function (event) {
 
-					document.body.removeChild(popupBackdropElem);
-					document.body.removeChild(popupElem);
+					/*document.body.removeChild(popupBackdropElem);
+					document.body.removeChild(popupElem);*/
+					popupWrap.removeChild(popupBackdropElem);
+					popupWrap.removeChild(popupElem);
 
 					removeListeners();
 

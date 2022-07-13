@@ -774,12 +774,14 @@
             metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
         };
 
-        vm.editLayout = function (ev) {
+        vm.editLayout = function (option, _$popup) {
+
+            _$popup.cancel();
 
             $mdDialog.show({
                 controller: 'EntityDataConstructorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
-                targetEvent: ev,
+                parent: document.querySelector('.dialog-containers-wrap'),
                 multiple: true,
                 locals: {
                     data: {
@@ -807,7 +809,22 @@
 
         };
 
-        vm.manageAttrs = vm.sharedLogic.manageAttributeTypes;
+        vm.footerPopupData = {
+            options: [
+                {
+                    icon: "list",
+                    name: "Edit Form",
+                    onClick: vm.editLayout
+                },
+                {
+                    icon: "edit",
+                    name: "Manage Attributes",
+                    onClick: vm.sharedLogic.manageAttributeTypes
+                },
+            ]
+        };
+
+        // vm.manageAttrs = vm.sharedLogic.manageAttributeTypes;
 
         vm.checkReadyStatus = vm.sharedLogic.checkReadyStatus;
         vm.bindFlex = vm.sharedLogic.bindFlex;
