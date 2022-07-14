@@ -355,7 +355,7 @@ const getMyCurrentMember = function () {
 
 	const baseUrl = baseUrlService.resolve();
 	const prefix = baseUrlService.getMasterUserPrefix();
-	console.log("opendatabase getMyCurrentMember prefix", prefix);
+
 	const apiVersion = baseUrlService.getApiVersion();
 
 	return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/member/0/', {
