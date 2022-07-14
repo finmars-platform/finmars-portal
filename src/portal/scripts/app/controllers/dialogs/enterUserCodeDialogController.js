@@ -24,7 +24,7 @@ export default function ($scope, $mdDialog, data) {
 	vm.userCodeIsValid = false;
 
 	vm.validateUserCode = function () {
-		console.log("testing1 validateUserCode called");
+
 		var errorText = metaHelper.validateTextForUserCode(vm.userCode, vm.occupiedUserCodesList, userCodeName);
 
 		if (errorText) {
