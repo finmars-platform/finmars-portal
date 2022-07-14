@@ -22,11 +22,9 @@ const getAuthorizerUrl = () => {
 
 const setMasterUserPrefix = function (_prefix) {
 	window.base_api_url = _prefix;
-	console.log("opendatabase setMasterUserPrefix", _prefix, window.base_api_url);
 }
 
 const getMasterUserPrefix = () => {
-	console.log("opendatabase getMasterUserPrefix", window.base_api_url);
 	return window.base_api_url
 }
 

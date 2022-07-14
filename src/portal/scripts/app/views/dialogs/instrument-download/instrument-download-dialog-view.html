@@ -41,14 +41,7 @@
                             </div>
                             <div layout="row">
 
-                                <md-input-container aria-label="select with filter">
-                                    <!--<label for="">Import scheme</label>
-                                    <md-select style="width: 200px"
-                                               data-ng-model="vm.config.instrument_download_scheme">
-                                        <md-option data-ng-repeat="item in vm.instrumentSchemes" ng-value="item.id">
-                                            {{item.user_code}}
-                                        </md-option>
-                                    </md-select>-->
+                                <!--<md-input-container aria-label="select with filter">
 
                                     <label for="">Import scheme</label>
                                     <md-select ng-model="vm.config.instrument_download_scheme"
@@ -75,7 +68,12 @@
                                             </div>
 
                                     </md-select>
-                                </md-input-container>
+
+                                </md-input-container>-->
+                                <dropdown-select placeholder-text="Import scheme"
+                                                 model="vm.config.instrument_download_scheme"
+                                                 menu-options="vm.instrumentSchemes"></dropdown-select>
+
                                 <md-button
                                         class="instrument-mapping-btn md-fab {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
                                         data-ng-click="vm.openSchemeManager($event)">

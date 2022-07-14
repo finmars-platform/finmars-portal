@@ -36,38 +36,30 @@
 
                     <md-card-content>
 
-                        <md-input-container>
+                        <!--<md-input-container>
                             <label>Mode</label>
                             <md-select data-ng-model="vm.scheme.mode">
                                 <md-option value="skip">Skip if exists</md-option>
                                 <md-option value="overwrite">Overwrite</md-option>
                                 <md-option value="overwrite_empty_values">Overwrite empty values</md-option>
                             </md-select>
-                        </md-input-container>
+                        </md-input-container>-->
+                        <div class="m-b-16">
+                            <dropdown-select label="Mode"
+                                             model="vm.scheme.mode"
+                                             menu-options="vm.modeOptions"
+                                             small-options="{dialogParent: '.dialog-containers-wrap'}"></dropdown-select>
+                        </div>
 
-                        <md-input-container class="md-block"
+                        <!-- <md-input-container class="md-block"
                                             flex-gt-sm
                                             aria-label="select with filter">
-                            <!--<label>Provider</label>
-                            <md-select data-ng-model="vm.schemeProvider" data-ng-if="vm.readyStatus.dataProviders">
-                                <md-option data-ng-repeat="item in vm.dataProviders" data-ng-value="item.id">
-                                    {{item.name}}
-                                </md-option>
-                            </md-select>-->
 
                             <label>Provider</label>
                             <md-select ng-model="vm.schemeProvider"
                                        md-container-class="common-select-container"
                                        md-on-close="searchTerm = ''"
                                        ng-if="vm.readyStatus.dataProviders">
-
-                                <!--<md-select-header>
-                                    <input data-ng-model="searchTerm"
-                                           type="search"
-                                           placeholder="Search for a ..."
-                                           class="md-text md-select-search-pattern select-input-filter"
-                                           ng-keydown="$event.stopPropagation()">
-                                </md-select-header>-->
 
                                 <div class="select-options-holder">
 
@@ -80,7 +72,13 @@
                                 </div>
 
                             </md-select>
-                        </md-input-container>
+                        </md-input-container> -->
+                        <div ng-if="vm.readyStatus.dataProviders">
+                            <dropdown-select label="Provider"
+                                             model="vm.schemeProvider"
+                                             menu-options="vm.dataProviders"
+                                             small-options="{dialogParent: '.dialog-containers-wrap'}"></dropdown-select>
+                        </div>
 
                         <div data-ng-if="!vm.readyStatus.dataProviders">
                             <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">

@@ -1,4 +1,5 @@
-<md-dialog aria-label="" ng-cloak class="unified-data-select-database-dialog-view">
+<md-dialog class="unified-data-select-database-dialog-view"
+           aria-label="unified data select dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Results</h2>
@@ -20,6 +21,7 @@
                             on-change-callback="vm.onInputTextChange()"
                             placeholder-text="Search"
                             model="vm.inputText"
+                            small-options="{dialogParent: '.dialog-containers-wrap'}"
                             class="m-r-8"></text-input>
                 </div>
 
