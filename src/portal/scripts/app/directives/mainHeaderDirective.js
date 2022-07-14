@@ -325,7 +325,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
                 const stateWithLayout = evRvLayoutsHelper.statesWithLayouts.includes($state.current.name);
 
-				if (user.layouts_autosave && stateWithLayout) {
+				if (user.data.autosave_layouts && stateWithLayout) {
 
 					scope.showAutosaveLayoutCheckbox = true;
 
@@ -345,7 +345,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                 /* if (stateWithLayout && scope.member.data.autosave_layouts !== false) {
                     scope.showAutosaveLayoutCheckbox = true;
                 } */
-                scope.showAutosaveLayoutCheckbox = user.layouts_autosave && stateWithLayout;
+                scope.showAutosaveLayoutCheckbox = user.data.autosave_layouts && stateWithLayout;
 
             });
 

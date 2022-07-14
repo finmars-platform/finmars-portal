@@ -129,7 +129,7 @@
 							}, 0);
 						} */
 						scope.$apply();
-						console.log("testing1 onInputChange");
+
 						if (scope.onChangeCallback) scope.onChangeCallback();
 
 					}, 500);
