@@ -79,6 +79,7 @@
                         <md-card-title-text>
                             <div class="md-headline m-b-8">{{item.name}}</div>
                             <div data-ng-if="item.legacy_id"><b>Legacy Database</b></div>
+                            <div><a class="mm-card-api-url" href="{{'/' + item.base_api_url + '/api/v1/'}}" target="_blank">{{ item.base_api_url }}</a></div>
 
                             <div class="m-b-8 mm-description" data-ng-if="!item.descriptionEdit">
                                 {{item.description}}
