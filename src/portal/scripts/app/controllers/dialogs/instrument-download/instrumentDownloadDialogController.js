@@ -54,6 +54,8 @@
 
         vm.providerId = 1; //TODO HARD REFACTOR CODE BLOOMBERG PROVIDER
 
+        var dialogParent = document.querySelector('.dialog-containers-wrap');
+
         vm.appendString = function (string) {
             var code = vm.config.instrument_code.split(' ')[0];
             vm.config.instrument_code = code + ' ' + string;
@@ -111,7 +113,7 @@
             $mdDialog.show({
                 controller: 'EntityTypeMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: dialogParent,
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,
@@ -187,6 +189,7 @@
                 $mdDialog.show({
                     controller: 'ValidationDialogController as vm',
                     templateUrl: 'views/dialogs/validation-dialog-view.html',
+                    parent: dialogParent,
                     targetEvent: $event,
                     locals: {
                         validationData: "An error occurred. Please try again later"
@@ -211,6 +214,7 @@
             $mdDialog.show({
                 controller: 'InstrumentDownloadSchemeEditDialogController as vm',
                 templateUrl: 'views/dialogs/instrument-download/instrument-download-scheme-dialog-view.html',
+                parent: dialogParent,
                 targetEvent: $event,
                 multiple: true,
                 preserveScope: true,
@@ -220,10 +224,19 @@
                     schemeId: vm.config.instrument_download_scheme
                 }
             }).then(function (res) {
-                if (res && res.status === 'agree') {
+                if (res.status === 'agree') {
+                    vm.readyStatus.schemes = false;
                     console.log('res', res.data);
-                    instrumentDownloadSchemeService.update(vm.config.instrument_download_scheme, res.data).then(function () {
+                    instrumentDownloadSchemeService.update(vm.config.instrument_download_scheme, res.data).then(function (schemeData) {
+
+                        var editedScheme = vm.instrumentSchemes.find(function (scheme) {
+                            return scheme.id === vm.config.instrument_download_scheme;
+                        });
+
+                        editedScheme.name = schemeData.user_code;
                         //vm.getList();
+
+                        vm.readyStatus.schemes = true;
                         $scope.$apply();
                     })
                 }
@@ -236,6 +249,7 @@
                 $mdDialog.show({
                     controller: 'SuccessDialogController as vm',
                     templateUrl: 'views/dialogs/success-dialog-view.html',
+                    parent: dialogParent,
                     targetEvent: $event,
                     locals: {
                         success: {
@@ -256,6 +270,7 @@
                 $mdDialog.show({
                     controller: 'ValidationDialogController as vm',
                     templateUrl: 'views/dialogs/validation-dialog-view.html',
+                    parent: dialogParent,
                     targetEvent: $event,
                     locals: {
                         validationData: reason.message
@@ -273,9 +288,17 @@
         vm.init = function () {
 
             instrumentDownloadSchemeService.getList(vm.providerId).then(function (data) {
-                vm.instrumentSchemes = data.results;
+
+                vm.instrumentSchemes = data.results.map(function (scheme) {
+                    return {
+                        id: scheme.id,
+                        name: scheme.user_code
+                    }
+                });
+
                 vm.readyStatus.schemes = true;
                 $scope.$apply();
+
             });
 
             instrumentDailyPricingModelService.getList().then(function (data) {

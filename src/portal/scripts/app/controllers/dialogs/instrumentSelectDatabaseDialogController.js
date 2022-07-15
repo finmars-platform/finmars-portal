@@ -241,9 +241,9 @@
 
         }
 
-        vm.addInstrument = function ($event) {
+        var dialogParent = document.querySelector('.dialog-containers-wrap');
 
-            var dialogParent = document.querySelector('.dialog-containers-wrap');
+        vm.addInstrument = function ($event) {
 
             $mdDialog.show({
                 controller: 'EntityViewerAddDialogController as vm',
@@ -258,15 +258,15 @@
                 }
             }).then(function (data) {
 
-                vm.getList();
+                if (res.status === 'agree') {
+                    vm.getList();
+                }
 
             })
 
         }
 
         vm.importBloomberg = function ($event) {
-
-            var dialogParent = document.querySelector('.dialog-containers-wrap');
 
             $mdDialog.show({
                 controller: 'InstrumentDownloadDialogController as vm',
@@ -277,9 +277,11 @@
                 locals: {
                     data: {}
                 }
-            }).then(function (data) {
+            }).then(function (res) {
 
-                vm.getList();
+                if (res.status === 'agree') {
+                    vm.getList();
+                }
 
             })
 

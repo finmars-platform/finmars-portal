@@ -264,7 +264,11 @@
                     },
                 })
                 .then(function (res) {
-                    vm.getList();
+
+                    if (res.status === 'agree') {
+                        vm.getList();
+                    }
+
                 });
 
         }

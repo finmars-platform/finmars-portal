@@ -334,7 +334,7 @@ md-sidenav {
   height: 100%;
   top: 0;
   left: 0;
-  z-index: 51;
+  z-index: 61;
 
   span.side-nav-title {
     position: relative;
@@ -2110,13 +2110,41 @@ md-menu-content md-menu.md-menu {
   color: @gray;
   z-index: 100;
   font-size: 9px;
-  text-align: center;
-  margin: 16px;
-  cursor: pointer;
+  text-align: left;
+  margin: 6px;
+
 }
 
-.build-date:hover {
-  opacity: .5;
+.sidenav-error-subtitle {
+
+  margin-top: 4px;
+  margin-bottom: 4px;
+
+  cursor: pointer;
+
+  &:hover {
+    opacity: .7;
+  }
+
+}
+
+.sidenav-tech-button {
+  cursor: pointer;
+
+  &:hover {
+    opacity: .7;
+  }
+}
+
+.sidenav-api-link {
+
+  color: #fff;
+  text-decoration: none;
+
+  &:hover {
+    opacity: .7;
+  }
+
 }
 
 .active-button,
@@ -2411,9 +2439,12 @@ md-menu-content.dropdown-buttons-menu {
 }
 
 .dialog-containers-wrap {
-  div.md-dialog-container {
+
+  div.md-dialog-container,
+  div.popup-area-backdrop, div.popup-container {
     z-index: 55;
   }
+
 }
 
 
@@ -3591,3 +3622,4 @@ span.highlight {
     white-space: pre;
   }
 }
+

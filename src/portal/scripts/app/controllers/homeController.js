@@ -38,7 +38,7 @@
 
         vm.downloadFile = function ($event, item) {
 
-            systemMessageService.viewFile(item.id).then(function (data){
+            systemMessageService.viewFile(item.file_report).then(function (data){
 
                 console.log('data', data);
 
