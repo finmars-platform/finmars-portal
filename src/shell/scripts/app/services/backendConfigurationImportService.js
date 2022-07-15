@@ -27,8 +27,6 @@
                 'Content-type': 'application/json'
             },
             data: JSON.stringify(data)
-        }).then(function (data) {
-            return data.json();
         })
     };
 
