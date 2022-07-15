@@ -8,8 +8,9 @@
     var metaService = require('../services/metaService');
     // var usersService = require('../services/usersService');
     var uiService = require('../services/uiService');
+    var metaHelper = require('../helpers/meta.helper');
 
-    module.exports = function ($scope, $mdDialog, $transition, usersService) {
+    module.exports = function ($scope, $mdDialog, $transition, usersService, globalDataService) {
 
         var vm = this;
 
@@ -526,6 +527,8 @@
             if (window.ws && window.ws.readyState === WebSocket.CLOSED) {
                 return 'closed'
             }
+
+            return 'closed'
         }
 
         vm.openSystemErrorLogDialog = function ($event) {
@@ -548,6 +551,29 @@
         vm.getErrorCount = function () {
 
             return window.system_errors.length
+        }
+
+        vm.getCurrentApiUrl = function() {
+
+            var currentMasterUser = globalDataService.getMasterUser();
+
+            return '/' + currentMasterUser.base_api_url + '/api/v1';
+
+        }
+
+        vm.copyToBuffer = function(content) {
+
+            metaHelper.copyToBuffer(content)
+
+        }
+
+
+        vm.getCurrentBaseApiUrl = function () {
+
+            var currentMasterUser = globalDataService.getMasterUser();
+
+            return currentMasterUser.base_api_url;
+
         }
 
         vm.init = function () {
