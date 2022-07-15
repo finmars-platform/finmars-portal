@@ -727,7 +727,7 @@
 
                 console.log('vm.entity before save', entityToSave);
 
-                if (actionsErrors.length || entityErrors.length) {
+                /*if (actionsErrors.length || entityErrors.length) {
 
                     $mdDialog.show({
                         controller: 'TransactionTypeValidationErrorsDialogController as vm',
@@ -748,7 +748,39 @@
 
                     reject();
 
-                } else {
+                }*/
+
+                new Promise(function (resolve, reject) {
+
+                    if (actionsErrors.length || entityErrors.length) {
+
+                        $mdDialog.show({
+                            controller: 'TransactionTypeValidationErrorsDialogController as vm',
+                            templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
+                            parent: angular.element(document.body),
+                            clickOutsideToClose: false,
+                            multiple: true,
+                            locals: {
+                                data: {
+                                    actionErrors: actionsErrors,
+                                    entityErrors: entityErrors
+                                }
+                            }
+                        }).then(function (data){
+
+                            if (data.status === 'agree') {
+                                resolve()
+                            } else {
+                                reject()
+                            }
+
+                        })
+
+                    } else {
+                        resolve()
+                    }
+
+                }).then(function () {
 
                     vm.processing = true;
 
@@ -814,7 +846,7 @@
 
                         })
 
-                }
+                })
 
             });
 
