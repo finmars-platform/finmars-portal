@@ -506,7 +506,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
         var propertiesWords = getPropertiesWords(expressionsList);
         var inputWords = getInputWords(data);
 
-        var reservedWords = ['decimal_pos', 'thousand_sep', 'use_grouping', 'True', 'False', 'format']; // TODO remove 'format' if allowed to make validation of function arguments
+        var reservedWords = ['decimal_pos', 'thousand_sep', 'use_grouping', 'True', 'False', 'None', 'format']; // TODO remove 'format' if allowed to make validation of function arguments
 
         var processing = true;
         var currentIndex = 0;

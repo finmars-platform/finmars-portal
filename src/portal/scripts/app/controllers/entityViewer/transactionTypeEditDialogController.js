@@ -764,6 +764,7 @@
                 new Promise(function (resolve, reject) {
 
                     if (actionsErrors.length || entityErrors.length) {
+
                         $mdDialog.show({
                             controller: 'TransactionTypeValidationErrorsDialogController as vm',
                             templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
