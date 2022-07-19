@@ -2124,13 +2124,41 @@ md-menu-content md-menu.md-menu {
   color: @gray;
   z-index: 100;
   font-size: 9px;
-  text-align: center;
-  margin: 16px;
-  cursor: pointer;
+  text-align: left;
+  margin: 6px;
+
 }
 
-.build-date:hover {
-  opacity: .5;
+.sidenav-error-subtitle {
+
+  margin-top: 4px;
+  margin-bottom: 4px;
+
+  cursor: pointer;
+
+  &:hover {
+    opacity: .7;
+  }
+
+}
+
+.sidenav-tech-button {
+  cursor: pointer;
+
+  &:hover {
+    opacity: .7;
+  }
+}
+
+.sidenav-api-link {
+
+  color: #fff;
+  text-decoration: none;
+
+  &:hover {
+    opacity: .7;
+  }
+
 }
 
 .active-button,
@@ -3608,3 +3636,4 @@ span.highlight {
     white-space: pre;
   }
 }
+

@@ -5,6 +5,7 @@
 'use strict';
 
 const baseUrlService = require('./baseUrlService');
+const xhrService = require('../../../../core/services/xhrService');
 
 export default function (cookieService) {
 
@@ -16,7 +17,7 @@ export default function (cookieService) {
 		var prefix = baseUrlService.getMasterUserPrefix();
 		var apiVersion = baseUrlService.getApiVersion();
 
-		return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/configuration-json/', {
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/configuration-json/', {
 			method: 'POST',
 			credentials: 'include',
 			headers: {
@@ -26,8 +27,6 @@ export default function (cookieService) {
 				'Content-type': 'application/json'
 			},
 			data: JSON.stringify(data)
-		}).then(function (data) {
-			return data.json();
 		})
 	};
 
