@@ -857,7 +857,7 @@
                                 </div>
                             </li>
 
-                            <li >
+                            <li>
                                 <!--<md-button class="sidemenu-btn"
                                            ui-sref="app.portal.settings.template-fields">
                                     <span class="side-nav-title">Aliases</span>
@@ -959,7 +959,8 @@
 
                     </div>
 
-                    <div class="side-menu-group-btn-container side-menu-settings-border-top-1" data-ng-if="vm.accessSectionTable.settings_administration && vm.member.is_admin">
+                    <div class="side-menu-group-btn-container side-menu-settings-border-top-1"
+                         data-ng-if="vm.accessSectionTable.settings_administration && vm.member.is_admin">
                         <h3 class="sms-btn-group-header">Administration</h3>
                         <ul class="side-menu">
                             <li data-ng-if="vm.accessTable.settings_provider">
@@ -1007,7 +1008,6 @@
                             </li>
 
 
-
                         </ul>
                     </div>
                 </div>
@@ -1018,12 +1018,26 @@
     </div>
 </md-sidenav>
 
-<div class="build-date" data-ng-show="vm.sideNavStatus == 'expand'" data-ng-click="vm.openSystemErrorLogDialog($event)">Build date: __BUILD_DATE__
+<div class="build-date" data-ng-show="vm.sideNavStatus == 'expand'">
+    Build date: __BUILD_DATE__
 
 
-    <span class="websocket-connection-status {{vm.getWsStatus()}}" title="Websocket status: {{vm.getWsStatus()}}"></span>
+    <span class="websocket-connection-status {{vm.getWsStatus()}}"
+          title="Websocket status: {{vm.getWsStatus()}}"></span>
 
     <br/>
-    <span class="{{vm.getErrorCount() ? 'text-warning-red' : ''}}">Errors: {{vm.getErrorCount()}}</span>
+    <div class="sidenav-error-subtitle" data-ng-click="vm.openSystemErrorLogDialog($event)">
+        <span class="{{vm.getErrorCount() ? 'text-warning-red' : ''}}">Errors: {{ vm.getErrorCount() }}</span>
+    </div>
+
+    <div classs="sidenav-api-subtitle">
+        <span><a class="sidenav-api-link" href="{{ vm.getCurrentApiUrl() }}" target="_blank">API</a>: <span
+                data-ng-click="vm.copyToBuffer(vm.getCurrentBaseApiUrl())" class="sidenav-tech-button">
+            {{ vm.getCurrentBaseApiUrl() }}
+
+            <md-tooltip class="tooltip_1" md-direction="top">Copy</md-tooltip>
+
+        </span></span>
+    </div>
 
 </div>
