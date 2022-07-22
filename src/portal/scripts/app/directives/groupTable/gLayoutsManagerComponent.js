@@ -1,6 +1,8 @@
-(function () {
+import AutosaveLayoutService from "../../services/autosaveLayoutService";
 
-    'use strict';
+'use strict';
+
+(function () {
 
     const metaService = require('../../services/metaService');
     const metaContentTypesService = require('../../services/metaContentTypesService');
@@ -47,10 +49,12 @@
             	scope.viewContext = scope.evDataService.getViewContext();
 
                 scope.layout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
+                scope.autosaveLayout = {};
 
                 const isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 let splitPanelLayoutId = null;
 				let spDefaultLayoutData = null;
+                let autosaveLayoutService = new AutosaveLayoutService();
 
                 if (!isRootEntityViewer) {
                     spDefaultLayoutData = scope.evDataService.getSplitPanelDefaultLayout();
@@ -1001,6 +1005,10 @@
 
                 scope.shareLayout = function ($event) {
 
+                    // needed because on slower devices option "Share" may not hide in time
+                    if (scope.layout.id === scope.autosaveLayout.id) {
+                        return;
+                    }
 					// scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 					scope.parentPopup.cancel();
 
@@ -1090,6 +1098,13 @@
 
                     const {results} = await uiService.getListLayout(scope.entityType, {pageSize: 1000});
 
+                    const autosaveLayoutUserCode = autosaveLayoutService.getAutosaveLayoutUserCode(scope.targetContentType);
+                    const autosaveLayoutIndex = results.findIndex(layout => layout.user_code === autosaveLayoutUserCode);
+
+                    if (autosaveLayoutIndex > -1) {
+                        scope.autosaveLayout = results.splice(autosaveLayoutIndex, 1)[0];
+                    }
+
                     return results;
 
                 };
@@ -1114,7 +1129,7 @@
 
                 	Promise.allSettled([getLayouts(), getInvites()]).then(resData => {
 
-						if (resData[0].status = "fulfilled") scope.layouts = resData[0].value;
+						if (resData[0].status === "fulfilled") scope.layouts = resData[0].value;
 
 						scope.$apply();
 
