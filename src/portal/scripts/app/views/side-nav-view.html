@@ -7,15 +7,15 @@
                      height="40"
                      class="sidenav-logo">
             </div>
-            <div class="side-nav-btn-resize-holder">
+            <div class="sidenav-btn-resize-holder">
                 <md-button data-ng-show="vm.sideNavStatus == 'expand'" aria-label="resize"
-                           class="to-small-btn side-nav-btn fab md-raised"
+                           class="to-small-btn sidenav-btn fab display-block md-raised"
                            data-ng-click="vm.resizeSideNav('collapse')">
                     <ng-md-icon icon="chevron_left"></ng-md-icon>
                 </md-button>
                 <md-button data-ng-show="vm.sideNavStatus == 'collapse'"
                            aria-label="resize"
-                           class="expand-sidenav-btn side-nav-btn fab md-raised"
+                           class="expand-sidenav-btn sidenav-btn fab display-block md-raised"
                            data-ng-click="vm.resizeSideNav('expand')">
                     <ng-md-icon icon="chevron_right"></ng-md-icon>
                 </md-button>
@@ -284,7 +284,8 @@
                         <div class="sidenav-dropdown-menu-wrapper" sidenav-dropdown-menu menu-type="history">
                             <md-button class="sidemenu-btn history-sidenav-menu-btn">
                             <span class="side-nav-icon">
-                                <ng-md-icon icon="layers" size="24"></ng-md-icon>
+<!--                                <ng-md-icon icon="currency_exchange" size="24"></ng-md-icon>-->
+                                <span class="material-icons">currency_exchange</span>
                             </span>
                                 <span class="side-nav-title">Valuations</span>
                                 <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
@@ -529,9 +530,9 @@
 
             <div class="side-menu-settings-container side-menu-settings-menu">
                 <div class="side-menu-settings-wrapper">
-                    <div class="settings-menu-collapse-button-holder">
+                    <div class="settings-menu-collapse-btn-holder m-0">
                         <md-button aria-label="toggle settings side menu"
-                                   class="to-small-btn side-nav-btn fab md-raised"
+                                   class="to-small-btn sidenav-btn fab md-raised"
                                    data-ng-click="vm.toggleSettingsSideMenu()">
                             <ng-md-icon icon="chevron_left"></ng-md-icon>
                         </md-button>
