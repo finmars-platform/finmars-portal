@@ -35,6 +35,10 @@ md-content.md-default-theme {
   width: 38px;
 }
 
+.md-button {
+  letter-spacing: normal;
+}
+
 md-card {
   background-color: #fff;
 
@@ -172,6 +176,7 @@ md-toolbar:not(.md-hue-1),
   color: #747474;
 }
 
+//region Sidenav
 md-sidenav {
   width: 100%;
   fill: #737373;
@@ -213,7 +218,7 @@ md-sidenav {
     overflow: visible;
   }
 
-  ng-md-icon {
+  ng-md-icon, span.material-icons {
     position: relative;
     top: 5px; // adjust for svg viewbox
   }
@@ -240,6 +245,7 @@ md-sidenav {
     display: block;
     text-align: left;
     padding-left: 1em;
+    margin-bottom: 6px;
     margin-left: 0;
     font-size: 11px;
     line-height: 2;
@@ -279,68 +285,6 @@ md-sidenav {
     margin-bottom: 0;
   }
 }
-
-.user-avatar {
-  border-radius: 99%;
-}
-
-.min-height, .min-height-100 {
-  min-height: 100%;
-  height: 100%;
-  overflow: auto;
-}
-
-/* Legacy sidenav-wrapper */
-/*.sidenav-wrapper {
-  width: 200px;
-  menu-toggle {
-    ul {
-      padding-left: 0;
-
-      .sidemenu-btn {
-        //padding-left: 40px;
-        padding-left: 61px;
-        &.active {
-          background: rgba(255, 255, 255, .1);
-        }
-      }
-      menu-toggle {
-        ul {
-          li {
-            padding-left: 20px;
-          }
-        }
-      }
-
-      ul {
-        .sidemenu-btn {
-          padding-left: 81px;
-        }
-      }
-    }
-  }
-
-  span.side-nav-title {
-    position: relative;
-    top: -4px;
-  }
-
-  .sidemenu-btn {
-    height: 30px;
-    min-height: 30px;
-    font-size: 11px;
-    line-height: 39px;
-  }
-
-  .side-nav-icon {
-    fill: #fff;
-    margin-right: 20px;
-    display: inline-block;
-  }
-
-  transition: width ease .25s;
-}*/
-/* < Legacy sidenav-wrapper > */
 
 .sidenav-wrapper {
   position: absolute;
@@ -424,30 +368,9 @@ md-sidenav {
   padding-left: 0;
 }
 
-.md-button.md-fab {
-  line-height: 1;
-}
-
-/* Old sidemenu styles */
-/*.sidemenu-btn {
-  width: 100%;
-  display: block;
-  text-align: left;
-  padding-left: 1em;
-  margin-left: 0;
-
-  .dropdown-icon {
-    float: right;
-    fill: #fff;
-  }
-}*/
-
-/* < Old sidemenu styles > */
-
-/* New sidemenu styles */
 .sidemenu-btn {
   width: 100%;
-  height: 35px;
+  height: 36px;
   display: block;
   text-align: left;
   margin-left: 0;
@@ -476,9 +399,6 @@ md-sidenav {
   }
 }
 
-/* < New sidemenu styles > */
-
-
 .side-menu-bottom-menu {
   position: absolute;
   bottom: 40px;
@@ -495,7 +415,20 @@ md-sidenav {
     display: none;
   }
 }
+//endregion
+.user-avatar {
+  border-radius: 99%;
+}
 
+.min-height, .min-height-100 {
+  min-height: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+.md-button.md-fab {
+  line-height: 1;
+}
 
 .homepage-dashboards-fieldset {
   .md-button {
@@ -995,6 +928,7 @@ md-menu-bar.header-logout-menu {
   }
 }
 
+//region Sidenav
 .side-menu-settings-container {
   width: 0px;
   height: 100%;
@@ -1018,10 +952,15 @@ md-menu-bar.header-logout-menu {
     box-sizing: border-box;
   }
 
-  .settings-menu-collapse-button-holder {
+  .settings-menu-collapse-btn-holder {
     position: absolute;
     right: 3px;
-    top: 3px;
+    top: 9px;
+
+    button.sidenav-btn {
+      margin: 0;
+      left: 12px;
+    }
   }
 
   .side-menu-group-btn-container {
@@ -1029,8 +968,11 @@ md-menu-bar.header-logout-menu {
     box-sizing: border-box;
 
     .sms-btn-group-header {
-      margin-left: 20px;
       margin-top: 15px;
+      margin-bottom: 0;
+      margin-left: 20px;
+      font-weight: 600;
+      line-height: normal;
     }
 
     .sidemenu-btn {
@@ -1043,7 +985,7 @@ md-menu-bar.header-logout-menu {
   }
 }
 
-.side-nav-btn {
+.sidenav-btn {
   width: 24px;
   height: 24px;
   background: #fff;
@@ -1053,20 +995,21 @@ md-menu-bar.header-logout-menu {
   min-height: 24px;
   min-width: 24px;
 
-  ng-md-icon {
+  ng-md-icon, span.material-icons {
     position: relative;
     top: 0;
     left: -6px;
   }
 
-  &.expand-sidenav-btn ng-md-icon {
-    left: -5px;
+  &.expand-sidenav-btn {
+    ng-md-icon, span.material-icons {
+      left: -5px;
+    }
   }
 }
 
 .sidenav-collapsed {
 
-  //<editor-fold desc="New sidemenu styles">
   .space-for-sidenav {
     padding-left: @collapsedLeftSidenavWidth;
   }
@@ -1074,10 +1017,6 @@ md-menu-bar.header-logout-menu {
   .g-table-dial {
     left: 80px;
   }
-
-  //.bookmarks-list {
-  //  padding-left: 80px;
-  //}
 
   .sidenav-logo-wrapper {
     width: 40px;
@@ -1087,7 +1026,7 @@ md-menu-bar.header-logout-menu {
     width: @collapsedLeftSidenavWidth;
   }
 
-  .side-nav-btn-resize-holder {
+  .sidenav-btn-resize-holder {
     position: absolute;
     right: -12px;
   }
@@ -1128,32 +1067,6 @@ md-menu-bar.header-logout-menu {
   .portal-header md-toolbar.header {
     padding-left: @collapsedLeftSidenavWidth;
   }
-
-  //</editor-fold>
-
-  //<editor-fold desc="Old sidemenu styles">
-  /*.sidenav-wrapper {
-    width: 55px;
-    position: absolute;
-    height: 100%;
-    left: 0;
-    // z-index: 11000;
-    z-index: 1;
-    overflow: hidden;
-  }
-
-  .app-md-content {
-    padding-left: 55px;
-  }
-
-  md-toolbar.header {
-    padding-left: 70px;
-  }
-
-  .g-table-dial {
-    left: 70px;
-  }*/
-  //</editor-fold>
 }
 
 .separate-side-menu {
@@ -1168,6 +1081,25 @@ md-menu-bar.header-logout-menu {
 .side-menu-settings-menu.settings-menu-opened {
   width: 200px;
 }
+
+.sidenav-btn-resize-holder {
+  position: absolute;
+  right: 0;
+}
+
+.sidenav-logo-wrapper {
+  position: absolute;
+  left: 10px;
+  width: 140px;
+  height: 40px;
+  overflow: hidden;
+}
+
+.sidenav-logo {
+  width: 140px;
+  margin: 0 auto;
+}
+//endregion Sidenav
 
 .bookmarks-editor-content-wrapper {
   min-width: 420px;
@@ -1187,77 +1119,6 @@ md-menu-bar.header-logout-menu {
 
 .bookmarks-list {
   padding-left: 215px;
-}
-
-/* Legacy sidemenu */
-/*.sidenav-wrapper menu-toggle ul menu-toggle ul li {
-  padding-left: 0;
-}*/
-
-/*.sidenav-wrapper {
-  menu-toggle ul .sidemenu-btn {
-    padding-left: 61px;
-  }
-  menu-toggle ul {
-    ul {
-      .sidemenu-btn {
-        padding-left: 81px;
-      }
-    }
-  }
-  span.side-nav-title {
-    position: relative;
-    top: -4px;
-  }
-
-  .sidemenu-btn {
-    height: 30px;
-    min-height: 30px;
-    font-size: 11px;
-    line-height: 39px;
-  }
-
-  .side-nav-icon {
-    fill: #fff;
-    margin-right: 20px;
-    display: inline-block;
-  }
-
-  transition: width ease .25s;
-
-  .side-nav-btn-resize-holder {
-    //position: absolute;
-    //bottom: 70px;
-    width: 100%;
-  }
-}*/
-
-/* < Legacy sidemenu > */
-
-/* New sidemenu styles */
-.side-nav-btn-resize-holder {
-  position: absolute;
-  right: 0;
-}
-
-/* < New sidemenu styles > */
-
-.sidenav-logo-wrapper {
-  position: absolute;
-  left: 10px;
-  width: 140px;
-  overflow: hidden;
-}
-
-// Old sidemenu styles
-/*.side-nav-btn-resize-holder {
-  width: 100%;
-}*/
-// < Old sidemenu styles >
-
-.sidenav-logo {
-  width: 140px;
-  margin: 0 auto;
 }
 
 .custom-scrollbar {
