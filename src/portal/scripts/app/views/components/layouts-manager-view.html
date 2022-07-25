@@ -25,6 +25,16 @@
                    class="layout-menu-a">{{layout.name}}</a>
 
             </div>
+
+            <div ng-if="autosaveLayout.id" class="layout-menu-item">
+                <span class="material-icons default-icons"
+                      ng-class="{'default-layout': layoutIsDefault(autosaveLayout)}"
+                      ng-click="setAsDefault(autosaveLayout)">home</span>
+
+                <a href="{{getLinkToLayout(autosaveLayout.user_code)}}"
+                   ng-click="onLayoutLinkClick($event, autosaveLayout)"
+                   class="layout-menu-a text-bold">{{autosaveLayout.name}}</a>
+            </div>
         </div>
 
         <div data-ng-if="processing" class="p-t-16" layout="row" layout-sm="column" layout-align="space-around">
@@ -98,12 +108,12 @@
         <span>Invites ({{invites.length}})</span>
     </div>
 
-    <div class="layout-menu-item"
+    <md-button class="layout-menu-item"
          data-ng-click="renameLayout($event)"
-         ng-disabled="isNewLayout">
+         ng-disabled="isNewLayout || layout.id === autosaveLayout.id">
         <span class="material-icons">create</span>
         <span>Rename</span>
-    </div>
+    </md-button>
 
     <div data-ng-if="layout.sourced_from_global_layout && !layout.origin_for_global_layout"
          class="layout-menu-item"
@@ -113,12 +123,12 @@
     </div>
 
     <div class="layout-menu-item" data-ng-click="shareLayout($event)"
-         data-ng-if="(!layout.sourced_from_global_layout && !layout.origin_for_global_layout) || (layout.sourced_from_global_layout && layout.origin_for_global_layout)">
+         data-ng-if="layout.id !== autosaveLayout.id && ((!layout.sourced_from_global_layout && !layout.origin_for_global_layout) || (layout.sourced_from_global_layout && layout.origin_for_global_layout))">
         <span class="material-icons">share</span>
         <span>Share</span>
     </div>
 
-    <div class="layout-menu-item"
+    <md-button class="layout-menu-item"
          data-ng-class="{'default-layout': layout.is_default}"
          data-ng-click="setAsDefault(layout)"
          data-ng-disabled="layoutIsDefault(layout)">
@@ -126,13 +136,15 @@
         <span class="material-icons">home</span>
         <span>Make default</span>
 
-    </div>
+    </md-button>
 
     <md-menu-divider></md-menu-divider>
 
-    <div class="layout-menu-item" data-ng-click="deleteLayout($event)">
+    <md-button class="layout-menu-item"
+               data-ng-click="deleteLayout($event)"
+               data-ng-disabled="isNewLayout || layout.id === autosaveLayout.id">
         <span class="material-icons">delete</span>
         <span>Delete</span>
-    </div>
+    </md-button>
 
 </div>

@@ -154,8 +154,8 @@
 
     };
 
-	const getListLayoutLight = function (options) {
-        return uiRepository.getListLayoutLight(options);
+	const getListLayoutLight = function (entity, options) {
+        return uiRepository.getListLayoutLight(entity, options);
     };
 
     /* let getListLayoutDefault = function (options) {
@@ -245,12 +245,16 @@
 
 				ui.modified = data.modified
 
+                if (ui.is_systemic) {
+                    localStorageService.cacheAutosaveLayout(ui);
+                }
+
 				if (ui.is_default) {
 					localStorageService.cacheDefaultLayout(ui);
 
-				} else {
+				} else if (!ui.is_systemic) {
 					localStorageService.cacheLayout(ui);
-				}
+                }
 
 				resolve(ui);
 
@@ -292,8 +296,8 @@
 	/**
 	 *
 	 * @param id {number} - layout id
-	 * @param xhrOptions {=Object}
-	 * @returns {Promise<Object>}
+	 * @param xhrOptions {Object=}
+     * @returns {Promise<Object>}
 	 */
 	const pingListLayoutByKey = (id, xhrOptions) => {
 		return uiRepository.pingListLayoutByKey(id, xhrOptions);
@@ -406,10 +410,6 @@
 
         // return uiRepository.getDefaultListLayout(entityType);
     };
-
-    /*let getActiveListLayout = function (entity) {
-        return uiRepository.getActiveListLayout(entity);
-    };*/
 
     // Input Form Layouts
 
@@ -745,12 +745,13 @@
     };
 	/** @module uiService */
     module.exports = {
-
+        isCachedLayoutActual: isCachedLayoutActual,
         getPortalInterfaceAccess: getPortalInterfaceAccess,
 
         getListLayoutTemplate: getListLayoutTemplate,
         getDefaultListLayout: getDefaultListLayout,
-        // getActiveListLayout: getActiveListLayout,
+            /*autosaveListLayout: autosaveListLayout,
+        getAutosaveListLayout: getAutosaveListLayout,*/
 
         getListLayout: getListLayout,
         getListLayoutLight: getListLayoutLight,

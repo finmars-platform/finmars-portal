@@ -118,6 +118,16 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
             authorizerService.getMe().then(function (userData) {
 
                 vm.user = userData;
+
+                if (!vm.user.data) vm.user.data = {};
+                // enable by default list layout autosave
+                if (typeof vm.user.data.autosave_layouts !== 'boolean') {
+
+                    vm.user.data.autosave_layouts = true;
+                    globalDataService.setUser(vm.user);
+
+                }
+
                 resolve();
 
             }).catch(error => {
