@@ -35,6 +35,7 @@ export default function () {
 		/* newEntityViewerLayoutName: false,
 		newSplitPanelLayoutName: false, */
 		warnOnLayoutChangeFn: false,
+		onAutosaveLayoutToggle: false,
 		masterUserChangeEvents: [],
 		logOutEvents: []
 	};
@@ -120,6 +121,16 @@ export default function () {
 
 	}
 
+	function onAutosaveLayoutToggle(callback) {
+		data.onAutosaveLayoutToggle = callback;
+	}
+
+	function autosaveLayoutToggle() {
+		if (data.onAutosaveLayoutToggle) {
+			data.onAutosaveLayoutToggle();
+		}
+	}
+
 	function clearEvents() {
 		data.masterUserChangeEvents = [];
 		data.logOutEvents = [];
@@ -127,21 +138,15 @@ export default function () {
 
 	function resetData() {
 		data = {
-			newEntityViewerLayoutName: false,
-			newSplitPanelLayoutName: false,
 			warnOnLayoutChangeFn: false,
-			masterUserChanged: false
+			onAutosaveLayoutToggle: false,
+			masterUserChangeEvents: [],
+			logOutEvents: []
 		};
 	}
+
 	/** @module: middlewareService */
 	return {
-		/* COMMITTED: 2021-07-19
-
-		setNewEntityViewerLayoutName: setNewEntityViewerLayoutName,
-		getNewEntityViewerLayoutName: getNewEntityViewerLayoutName,
-		setNewSplitPanelLayoutName: setNewSplitPanelLayoutName,
-		getNewSplitPanelLayoutName: getNewSplitPanelLayoutName, */
-
 		setWarningOfLayoutChangesLossFn: setWarningOfLayoutChangesLossFn,
 		getWarningOfLayoutChangesLossFn: getWarningOfLayoutChangesLossFn,
 
@@ -152,6 +157,9 @@ export default function () {
 		addListenerOnLogOut: addListenerOnLogOut,
 		removeOnLogOutListener: removeOnLogOutListener,
 		initLogOut: initLogOut,
+
+		onAutosaveLayoutToggle: onAutosaveLayoutToggle,
+		autosaveLayoutToggle: autosaveLayoutToggle,
 
 		clearEvents: clearEvents,
 		resetData: resetData
