@@ -2,15 +2,20 @@
  /**
  * Created by szhitenev on 05.05.2016.
  */
-(function () {
+'use strict';
 
-        'use strict';
+import AutosaveLayoutService from "../../services/autosaveLayoutService";
+import evEvents from "../../services/entityViewerEvents";
+import evHelperService from "../../services/entityViewerHelperService";
+
+(function () {
 
         var uiService = require('../../services/uiService');
 		var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
         var evEvents = require('../../services/entityViewerEvents');
         var metaContentTypesService = require('../../services/metaContentTypesService');
         var evHelperService = require('../../services/entityViewerHelperService');
+		var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
         // var usersService = require('../../services/usersService');
 
         var complexTransactionService = require('../../services/transaction/complexTransactionService');
@@ -27,45 +32,23 @@
 
         var transactionTypeService = require('../../services/transactionTypeService');
 
-        module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer, middlewareService, usersService, globalDataService) {
+        module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer, middlewareService, globalDataService) {
 
             var vm = this;
 
-            var doNotCheckLayoutChanges = false;
+            var checkLayoutChanges = true;
 
             vm.readyStatus = {
                 attributes: false,
                 layout: false
             };
 
-            var listOfStatesWithLayout = [
-                'app.portal.data.portfolio',
-                'app.portal.data.account',
-                'app.portal.data.account-type',
-                'app.portal.data.counterparty',
-                'app.portal.data.responsible',
-                'app.portal.data.instrument',
-                'app.portal.data.instrument-type',
-                // 'app.portal.data.pricing-policy',
-                'app.portal.data.complex-transaction',
-                'app.portal.data.transaction',
-                'app.portal.data.transaction-type',
-                'app.portal.data.currency-history',
-                'app.portal.data.price-history',
-                'app.portal.data.currency',
-                'app.portal.data.strategy-group',
-                'app.portal.data.strategy'
-            ];
-
 			var onLogoutIndex, onUserChangeIndex;
 
-            vm.stateWithLayout = false;
-
-            if (listOfStatesWithLayout.indexOf($state.current.name) !== -1) {
-                vm.stateWithLayout = true;
-            }
+            vm.stateWithLayout = evRvLayoutsHelper.statesWithLayouts.indexOf($state.current.name) !== -1;
 
             var deregisterOnBeforeTransitionHook;
+            var autosaveLayoutService;
 
             // $customDialog.show({
             //     controller: 'LoaderDialogController as vm',
@@ -118,12 +101,6 @@
                 vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
             };*/
-
-            var initTransitionHooks = function () {
-
-                deregisterOnBeforeTransitionHook = $transitions.onBefore({}, checkLayoutForChanges);
-
-            };
 
             /* const duplicateEntity = async function (entity) {
 
@@ -634,6 +611,7 @@
 
                 vm.entityViewerEventService.addEventListener(evEvents.LIST_LAYOUT_CHANGE, function () {
 
+                    autosaveLayoutService.removeChangesTrackingEventListeners(vm.entityViewerEventService);
                     vm.getView();
 
                 });
@@ -909,12 +887,21 @@
 
                 });
 
+                if (vm.currentMember.data && vm.currentMember.data.autosave_layouts) {
+
+                    const alcIndex = vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, function () {
+                        autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, false);
+                        vm.entityViewerEventService.removeEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, alcIndex);
+                    });
+
+                }
+
             };
 
 			/** Separate front and back filters for old layouts */
-			var separateEvFilters = function (filters) {
+			const separateEvFilters = function (filters) {
 
-				var filterObj = {frontend: [], backend: []};
+				let filterObj = {frontend: [], backend: []};
 
 				if (Array.isArray(filters)) { // old ev layout
 
@@ -1014,7 +1001,6 @@
 
                 }
 
-
             };
 
             vm.isLayoutFromUrl = function () {
@@ -1093,7 +1079,6 @@
             vm.getView = function () {
 
                 // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
-
                 vm.readyStatus.layout = false;
 
                 vm.entityViewerDataService = new EntityViewerDataService();
@@ -1126,6 +1111,34 @@
                 vm.entityViewerDataService.setRootEntityViewer(true);
 
                 setEventListeners();
+
+                if (vm.stateWithLayout) {
+
+                    middlewareService.onAutosaveLayoutToggle(function () {
+
+                        vm.currentMember = globalDataService.getMember();
+
+                        if (vm.currentMember.data && vm.currentMember.data.autosave_layouts) {
+                            autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, false);
+                            removeTransitionListeners();
+
+                            var layoutHasChanges = evHelperService.checkRootLayoutForChanges(vm.entityViewerDataService, false);
+                            var spChangedLayout = evHelperService.checkSplitPanelForChanges(vm.entityViewerDataService, vm.splitPanelExchangeService);
+
+                            if (layoutHasChanges || spChangedLayout) {
+                                autosaveLayoutService.forceAutosaveLayout();
+                            }
+
+                        } else {
+                            autosaveLayoutService.removeChangesTrackingEventListeners(vm.entityViewerEventService);
+                            initTransitionListeners();
+                        }
+
+                        vm.entityViewerEventService.dispatchEvent(evEvents.TOGGLE_AUTOSAVE);
+
+                    });
+
+                }
 
                 var layoutUserCode;
 
@@ -1195,7 +1208,7 @@
 
             };
 
-            vm.getCurrentMember = function () {
+            /* vm.getCurrentMember = function () {
 
                 return usersService.getMyCurrentMember().then(function (data) {
 
@@ -1204,11 +1217,11 @@
                     $scope.$apply();
 
                 });
-            };
+            }; */
 
-            var checkLayoutForChanges = function (transition) { // called on attempt to change or reload page
+            var checkLayoutsForChanges = function (transition) { // called on attempt to change page
 
-                return new Promise(function (resolve, reject) {
+                /* return new Promise(function (resolve, reject) {
 
                     if (!doNotCheckLayoutChanges) {
 
@@ -1290,31 +1303,6 @@
                                                     layoutCurrentConfig.name = res.data.layoutName;
                                                 }
 
-                                                /* When saving is_default: true layout on backend, others become is_default: false
-                                                uiService.getDefaultListLayout(vm.entityType).then(function (data) {
-
-                                                    layoutCurrentConfig.is_default = true;
-
-                                                    if (data.count > 0 && data.results) {
-                                                        var activeLayout = data.results[0];
-                                                        activeLayout.is_default = false;
-
-                                                        uiService.updateListLayout(activeLayout.id, activeLayout).then(function () {
-
-                                                            uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
-                                                                saveLayoutRes(true);
-                                                            });
-
-                                                        });
-
-                                                    } else {
-                                                        uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
-                                                            saveLayoutRes(true);
-                                                        });
-                                                    }
-
-                                                }); */
-
 												uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
 													saveLayoutRes(true);
 												});
@@ -1349,17 +1337,29 @@
                         }
 
                     } else {
-                        removeTransitionWatcher();
+                        removeTransitionListeners();
                         resolve(true);
                     }
 
-                });
+                }); */
+                if (checkLayoutChanges) {
+                    return evHelperService.warnAboutChangesToLoose(vm.entityViewerDataService, vm.splitPanelExchangeService, $mdDialog);
+
+                } else {
+
+                    removeTransitionListeners();
+
+                    return new Promise(function (resolve) {
+                        resolve(true);
+                    });
+
+                }
 
             };
 
             var warnAboutLayoutChangesLoss = function (event) {
 
-                var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
+                /* var activeLayoutConfig = vm.entityViewerDataService.getActiveLayoutConfiguration();
                 var layoutCurrentConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(false);
 
                 var layoutIsUnchanged = true;
@@ -1371,52 +1371,68 @@
                 var additions = vm.entityViewerDataService.getAdditions();
                 if (additions.isOpen) {
                     spChangedLayout = vm.splitPanelExchangeService.getSplitPanelChangedLayout();
-                }
+                } */
+                var layoutHasChanges = evHelperService.checkRootLayoutForChanges(vm.entityViewerDataService, false);
+                var spChangedLayout = evHelperService.checkSplitPanelForChanges(vm.entityViewerDataService, vm.splitPanelExchangeService);
 
-                if (!layoutIsUnchanged || spChangedLayout) {
+                if (layoutHasChanges || spChangedLayout) {
                     event.preventDefault();
                     (event || window.event).returnValue = 'All unsaved changes of layout will be lost.';
                 }
 
             };
 
-            var removeTransitionWatcher = function () {
-                if (vm.stateWithLayout) {
-                    deregisterOnBeforeTransitionHook();
+            var initTransitionListeners = function () {
+                deregisterOnBeforeTransitionHook = $transitions.onBefore({}, checkLayoutsForChanges);
+                window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
+            };
 
-                    window.removeEventListener('beforeunload', warnAboutLayoutChangesLoss);
+            var removeTransitionListeners = function () {
+
+                if (deregisterOnBeforeTransitionHook) {
+                    deregisterOnBeforeTransitionHook();
                 }
+
+                window.removeEventListener('beforeunload', warnAboutLayoutChangesLoss);
+
             };
 
             vm.init = function () {
 
-                if (vm.stateWithLayout) {
+                autosaveLayoutService = new AutosaveLayoutService();
 
-                	initTransitionHooks();
+                /*if (vm.stateWithLayout) {
+
+                	initTransitionListeners();
 
                     window.addEventListener('beforeunload', warnAboutLayoutChangesLoss);
 
+                }*/
+                vm.currentMember = globalDataService.getMember();
+
+                if (vm.stateWithLayout) {
+
+                    onUserChangeIndex = middlewareService.onMasterUserChanged(function () {
+
+                        checkLayoutChanges = false;
+                        removeTransitionListeners();
+
+                    });
+
+                    onLogoutIndex = middlewareService.addListenerOnLogOut(function () {
+
+                        checkLayoutChanges = false;
+                        removeTransitionListeners();
+
+                    });
+
+                    if (!vm.currentMember.data || !vm.currentMember.data.autosave_layouts) {
+                        initTransitionListeners();
+                    }
+
                 }
 
-				onUserChangeIndex = middlewareService.onMasterUserChanged(function () {
-
-                    doNotCheckLayoutChanges = true;
-                    removeTransitionWatcher();
-
-                });
-
-				onLogoutIndex = middlewareService.addListenerOnLogOut(function () {
-
-                    doNotCheckLayoutChanges = true;
-                    removeTransitionWatcher();
-
-                });
-
-                vm.getCurrentMember().then(function (value) {
-
-                    vm.getView();
-
-                });
+                vm.getView();
 
             };
 
@@ -1424,10 +1440,14 @@
 
             this.$onDestroy = function () {
 
-				middlewareService.removeOnUserChangedListeners(onUserChangeIndex);
-				middlewareService.removeOnLogOutListener(onLogoutIndex);
+                if (vm.stateWithLayout) {
 
-                removeTransitionWatcher();
+                    middlewareService.removeOnUserChangedListeners(onUserChangeIndex);
+                    middlewareService.removeOnLogOutListener(onLogoutIndex);
+
+                    removeTransitionListeners();
+
+                }
 
             }
         }

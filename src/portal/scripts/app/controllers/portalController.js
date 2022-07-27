@@ -20,6 +20,11 @@ export default function ($scope, authorizerService, usersService, globalDataServ
 			usersService.getMyCurrentMember().then(function (data) {
 
 				const member = data;
+				// enable by default list layout autosave
+				if (member.data && typeof member.data.autosave_layouts !== 'boolean') {
+					member.data.autosave_layouts = true;
+					globalDataService.setMember(member);
+				}
 
 				websocketService.send({action: "update_user_state", data: {member: member}});
 

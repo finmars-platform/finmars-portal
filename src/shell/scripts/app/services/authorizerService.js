@@ -98,10 +98,10 @@ export default function (globalDataService) {
 
         return new Promise((resolve, reject) => {
 
-            authorizerRepository.getMe().then(userData => {
+			 authorizerRepository.getMe().then(userData => {
 
-                globalDataService.setUser(userData);
-                resolve(userData);
+				globalDataService.setUser(userData);
+				resolve(userData);
 
             }).catch(error => reject(error));
 

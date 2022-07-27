@@ -49,10 +49,14 @@
 
                 <md-tab label="Password">
                     <md-content class="md-padding">
-                        <div ng-include="'views/settings/change-password-settings-view.html'"
-                             ng-controller="SettingsGeneralChangePasswordController as vm">
 
-                        </div>
+                        <h1 class="text-center">Proceed <a style="color: rgb(63,81,181);
+    text-decoration: none;" href="{{vm.resetPasswordLink}}" target="_blank">here</a> to change Password</h1>
+
+                        <!--                        <div ng-include="'views/settings/change-password-settings-view.html'"-->
+<!--                             ng-controller="SettingsGeneralChangePasswordController as vm">-->
+
+<!--                        </div>-->
                     </md-content>
                 </md-tab>
 
