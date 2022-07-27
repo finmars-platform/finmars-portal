@@ -53,6 +53,7 @@
 				let selOptionsIdsList = [];
 				let chipElem;
 				let customInputContent;
+				let dialogParent;
 
 				// TIPS
 				// scope.smallOptions probable properties
@@ -63,15 +64,16 @@
 
 				if (scope.smallOptions) {
 
-					scope.tooltipText = scope.smallOptions.tooltipText
-					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn
+					scope.tooltipText = scope.smallOptions.tooltipText;
+					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
+					dialogParent = scope.smallOptions.dialogParent;
 
 					if (scope.smallOptions.optionsOrdering === false) {
-						scope.orderOptions.options = false
+						scope.orderOptions.options = false;
 					}
 
 					if (scope.smallOptions.selectedOptionsOrdering === false) {
-						scope.orderOptions.selectedOptions = false
+						scope.orderOptions.selectedOptions = false;
 					}
 
 				}
@@ -244,6 +246,18 @@
 					event.preventDefault();
 					event.stopPropagation();
 
+					let parent = angular.element(document.body);
+
+					if (dialogParent) {
+
+						var parentElem = document.querySelector(dialogParent);
+
+						if (parentElem) {
+							parent = parentElem
+						}
+
+					}
+
 					getItems().then(function (data) {
 
 						items = data;
@@ -251,6 +265,7 @@
 						$mdDialog.show({
 							controller: "TwoFieldsMultiselectDialogController as vm",
 							templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
+							parent: parent,
 							targetEvent: event,
 							multiple: true,
 							locals: {

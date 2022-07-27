@@ -21,6 +21,8 @@ export default function ($scope, authorizerService, globalDataService) {
 
 	const init = function () {
 
+		vm.resetPasswordLink = 'https://keycloak.finmars.com:8443/realms/finmars/login-actions/reset-credentials';
+
 		vm.readyStatus = false;
 
 		vm.user = globalDataService.getUser();

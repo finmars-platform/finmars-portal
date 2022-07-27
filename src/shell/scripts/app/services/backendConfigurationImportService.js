@@ -7,7 +7,9 @@
     'use strict';
 
     var cookieService = require('../../../../core/services/cookieService');
+    var xhrService = require('../../../../core/services/xhrService');
     var baseUrlService = require('./baseUrlService');
+
 
     var baseUrl = baseUrlService.resolve();
 
@@ -15,7 +17,7 @@
 
         var prefix = baseUrlService.getMasterUserPrefix();
 
-        return window.fetch(baseUrl + prefix + '/' + 'import/configuration-json/', {
+        return xhrService.fetch(baseUrl + prefix + '/' + 'import/configuration-json/', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -25,8 +27,6 @@
                 'Content-type': 'application/json'
             },
             data: JSON.stringify(data)
-        }).then(function (data) {
-            return data.json();
         })
     };
 

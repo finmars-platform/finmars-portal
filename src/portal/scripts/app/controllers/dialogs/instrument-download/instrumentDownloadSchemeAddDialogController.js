@@ -26,6 +26,8 @@
 
         vm.inputsFunctions = [];
 
+        vm.modeOptions = instrumentDownloadSchemeService.modeOptions;
+
         vm.getFunctions = function () {
 
             return vm.providerFields.map(function (input) {

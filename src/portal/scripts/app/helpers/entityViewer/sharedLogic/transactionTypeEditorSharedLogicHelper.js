@@ -1297,7 +1297,7 @@
                     contentType.objPath = ['content_type'];
                     contentType.cellType = 'selector';
                     contentType.settings.isDisabled = true;
-                    // contentType.settings.selectorOptions = viewModel.selectorContentTypes;
+                    contentType.settings.selectorOptions = viewModel.selectorContentTypes;
                     //
                     // var contextProps = contextProperties[contentType.settings.value];
                     // if (contextProps) {
@@ -1335,7 +1335,7 @@
                 default:
 
                     delete contentType.objPath;
-                    contentType.settings.isDisabled = true
+                    contentType.settings.isDisabled = true;
 
                     if (defaultValue.cellType === 'selector') {
 

@@ -32,12 +32,16 @@ export default function ($scope, $mdDialog, data) {
 			vm.eventObj.event = {key: 'error', error: errorText};
 			vm.userCodeIsValid = false;
 
-			return false;
-
+			// return false;
 		}
 
 		vm.userCodeIsValid = true;
-		return true;
+
+		setTimeout(function () { // enables "OK' button faster
+			$scope.$apply();
+		}, 0);
+		// return true;
+		return vm.userCodeIsValid;
 
 	};
 
