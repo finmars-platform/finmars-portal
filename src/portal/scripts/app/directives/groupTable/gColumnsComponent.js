@@ -38,12 +38,14 @@
 
                 scope.entityType = scope.evDataService.getEntityType();
                 scope.rowStatusFilterIcon = `<span class="material-icons">star_outline</span>`;
+
+                let filters = scope.evDataService.getFilters();
                 /**
-                 * What filters are now shown in filter area (front or back)
+                 * What filters (front or back) are shown now in filter area of entity viewer
                  * @type {Boolean}
                  */
-                var showFrontEvFilters = true;
-                var data = scope.evDataService.getData();
+                let showFrontEvFilters = !scope.isReport && filters.frontend.length > 0;
+                // var data = scope.evDataService.getData();
 
                 /* const setFiltersLayoutNames = () => {
 
@@ -1518,6 +1520,7 @@
 
                     var filters = scope.evDataService.getFilters();
                     var filterToAdd = evHelperService.getTableAttrInFormOf('filter', column);
+                    filterToAdd.options.enabled = true;
 
                     if (scope.isReport) {
                         filters.push(filterToAdd);
