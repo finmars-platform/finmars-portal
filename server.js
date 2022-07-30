@@ -10,6 +10,15 @@ var app = express();
 
 var port = process.env.PORT || 8080;
 
+app.use(function noCacheForRoot(req, res, next) {
+    if (req.url === '/') {
+        res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+        res.header("Pragma", "no-cache");
+        res.header("Expires", 0);
+    }
+    next();
+});
+
 
 app.use('/build/:uid/*', function(req, res, next) {
 
@@ -49,14 +58,7 @@ app.use('/healthcheck', function (req, res) {
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
-app.use(function noCacheForRoot(req, res, next) {
-    if (req.url === '/') {
-        res.header("Cache-Control", "no-cache, no-store, must-revalidate");
-        res.header("Pragma", "no-cache");
-        res.header("Expires", 0);
-    }
-    next();
-});
+
 
 // WARNING ONLY FOR DEV PURPOSE
 // var pdfProxyOptions = url.parse('http://0.0.0.0:80');
