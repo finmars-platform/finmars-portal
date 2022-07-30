@@ -292,7 +292,8 @@ md-sidenav {
   height: 100%;
   top: 0;
   left: 0;
-  z-index: 61;
+  //z-index: 61; // why? dialogs have 51, so its overlaps
+  z-index: 51;
 
   span.side-nav-title {
     position: relative;
