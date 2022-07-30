@@ -19,6 +19,8 @@
 
         vm.itemId = data.item.id;
 
+        vm.entityType = 'data-procedure';
+
         vm.readyStatus = {procedure: false};
 
         vm.item = {};
@@ -99,6 +101,8 @@
 
             dataProcedureService.getByKey(vm.itemId).then(function (data) {
 
+                vm.originalItem = JSON.parse(JSON.stringify(data));
+
                 vm.item = data;
 
                 vm.item.data_string = JSON.stringify(vm.item.data, 0, 4)
@@ -153,6 +157,31 @@
         vm.universalFieldChange = function () {
             vm.item.data_string = JSON.stringify(vm.item.data, 0, 4)
         }
+
+        vm.editAsJson = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityAsJsonEditorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        item: vm.originalItem,
+                        entityType: vm.entityType,
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.getItem();
+
+                }
+            })
+
+        };
+
 
         vm.init = function () {
 
