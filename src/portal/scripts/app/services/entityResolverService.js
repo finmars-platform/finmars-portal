@@ -50,6 +50,11 @@
     var priceHistoryErrorService = require('./pricing/priceHistoryErrorService');
     var currencyHistoryErrorService = require('./pricing/currencyHistoryErrorService');
 
+    var expressionProcedureService = require('./procedures/expressionProcedureService');
+    var dataProcedureService = require('./procedures/dataProcedureService');
+    var pricingProcedureService = require('./procedures/pricingProcedureService');
+
+
     var getList = function (entityType, options) {
 
         switch (entityType) {
@@ -158,6 +163,17 @@
             case 'transaction-class':
                 return transactionClassService.getList(options)
                 break;
+            case 'expression-procedure':
+                return expressionProcedureService.getList(options)
+                break;
+            case 'data-procedure':
+                return dataProcedureService.getList(options)
+                break;
+            case 'pricing-procedure':
+                return pricingProcedureService.getList(options)
+                break;
+
+
             // default:
             //     throw new Error('entityResolverService: Unknown entityType ' + entityType);
         }
@@ -306,6 +322,15 @@
             case 'complex-transaction-import-scheme':
                 return complexTransactionImportSchemeService.getByKey(id);
                 break;
+            case 'expression-procedure':
+                return expressionProcedureService.getByKey(id);
+                break;
+            case 'data-procedure':
+                return dataProcedureService.getByKey(id);
+                break;
+            case 'pricing-procedure':
+                return pricingProcedureService.getByKey(id);
+                break;
         }
     };
 
@@ -420,6 +445,15 @@
                 });
             case 'tag':
                 return tagService.create(entity);
+                break;
+            case 'expression-procedure':
+                return expressionProcedureService.create(entity);
+                break;
+            case 'data-procedure':
+                return dataProcedureService.create(entity);
+                break;
+            case 'pricing-procedure':
+                return pricingProcedureService.create(entity);
                 break;
 
 
@@ -557,6 +591,15 @@
                 break;
             case 'currency-history-error':
                 return currencyHistoryErrorService.update(id, entity);
+                break;
+            case 'expression-procedure':
+                return expressionProcedureService.update(id, entity);
+                break;
+            case 'data-procedure':
+                return dataProcedureService.update(id, entity);
+                break;
+            case 'pricing-procedure':
+                return pricingProcedureService.update(id, entity);
                 break;
         }
     };
@@ -752,6 +795,15 @@
                 break;
             case 'complex-transaction-import-scheme':
                 return complexTransactionImportSchemeService.deleteByKey(id);
+                break;
+            case 'expression-procedure':
+                return expressionProcedureService.deleteByKey(id);
+                break;
+            case 'data-procedure':
+                return dataProcedureService.deleteByKey(id);
+                break;
+            case 'pricing-procedure':
+                return pricingProcedureService.deleteByKey(id);
                 break;
         }
     };
