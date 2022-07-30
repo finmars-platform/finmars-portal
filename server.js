@@ -59,6 +59,13 @@ app.use('/healthcheck', function (req, res) {
 app.use(express.static(path.join(__dirname, 'dist')));
 
 
+app.get('/', (request, response) => {
+    response.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    response.header('Expires', '-1');
+    response.header('Pragma', 'no-cache');
+    response.sendFile(path.join(__dirname, 'dist/index.html'));
+});
+
 
 // WARNING ONLY FOR DEV PURPOSE
 // var pdfProxyOptions = url.parse('http://0.0.0.0:80');
