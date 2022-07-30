@@ -5,78 +5,87 @@
 'use strict';
 
 import websocketService from "../../../../shell/scripts/app/services/websocketService.js";
+
 const localStorageService = require('../../../../shell/scripts/app/services/localStorageService'); // TODO inject localStorageService into angular dependencies
 
-export default function ($scope, authorizerService, usersService, globalDataService) {
+export default function ($scope, $state, authorizerService, usersService, globalDataService) {
 
-	let vm = this;
+    let vm = this;
 
-	vm.readyStatus = false;
+    vm.readyStatus = false;
 
-	const getMember = function () {
+    const getMember = function () {
 
-		return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
 
-			usersService.getMyCurrentMember().then(function (data) {
+            usersService.getMyCurrentMember().then(function (data) {
 
-				const member = data;
-				// enable by default list layout autosave
-				if (member.data && typeof member.data.autosave_layouts !== 'boolean') {
-					member.data.autosave_layouts = true;
-					globalDataService.setMember(member);
-				}
+                const member = data;
+                // enable by default list layout autosave
+                if (member.data && typeof member.data.autosave_layouts !== 'boolean') {
+                    member.data.autosave_layouts = true;
+                    globalDataService.setMember(member);
+                }
 
-				websocketService.send({action: "update_user_state", data: {member: member}});
+                websocketService.send({action: "update_user_state", data: {member: member}});
 
-				resolve(member);
+                resolve(member);
 
-			}).catch(function (error) {
-				console.error(error);
-				reject(error);
-			});
+            }).catch(function (error) {
+                console.error(error);
+                reject(error);
+            });
 
-		});
+        });
 
-	}
+    }
 
-	const getCurrentMasterUser = function () {
+    const getCurrentMasterUser = function () {
 
-		return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-			authorizerService.getCurrentMasterUser().then(masterUser => {
+            authorizerService.getCurrentMasterUser().then(masterUser => {
 
-				websocketService.send({action: "update_user_state", data: {master_user: masterUser}});
+                websocketService.send({action: "update_user_state", data: {master_user: masterUser}});
 
-				resolve();
+                resolve();
 
-			}).catch(error => reject(error));
+            }).catch(error => reject(error));
 
-		});
+        });
 
-	};
+    };
 
-	const init = function () {
+    const init = function () {
 
-		localStorageService.setGlobalDataService(globalDataService); // TODO inject localStorageService into angular dependencies
+        localStorageService.setGlobalDataService(globalDataService); // TODO inject localStorageService into angular dependencies
 
-		vm.currentMasterUser = globalDataService.getMasterUser();
-		const promises = [];
+        vm.currentMasterUser = globalDataService.getMasterUser();
+        const promises = [];
 
-		if (!vm.currentMasterUser) { // if currentMasterUser was not set previously, load it
-			promises.push(getCurrentMasterUser());
-		}
+        if (!vm.currentMasterUser) { // if currentMasterUser was not set previously, load it
+            promises.push(getCurrentMasterUser());
+        }
 
-		promises.push(getMember());
+        promises.push(getMember());
 
-		Promise.all(promises).then(resData => {
+        Promise.all(promises).then(resData => {
 
-			vm.readyStatus = true;
-			$scope.$apply();
+            console.log('PortalController.resData', resData);
 
-		});
+            vm.readyStatus = true;
+            $scope.$apply();
 
-	};
+        }).catch(function (error) {
 
-	init();
+            console.log('PortalController.error', error);
+
+            $state.go('app.profile', {}, {reload: true});
+
+        })
+
+    };
+
+    init();
 
 };
