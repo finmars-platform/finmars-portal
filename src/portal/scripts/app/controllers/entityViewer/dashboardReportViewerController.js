@@ -513,8 +513,8 @@
                         }); */
 
                         var calcReportDateOptions = {
-                            noDateExpr_0: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 0),
-                            noDateExpr_1: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 1)
+                            noDateFromExpr: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 0),
+                            noDateToExpr: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 1)
                         }
 
                         await sharedLogicHelper.calculateReportDatesExprs(calcReportDateOptions);

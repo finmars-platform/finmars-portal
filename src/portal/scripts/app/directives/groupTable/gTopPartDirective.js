@@ -154,6 +154,21 @@
 
                 scope.onSettingsClick = scope.isReport ? openReportSettings : openEntityViewerSettings;
 
+                var datesKeysData = [
+                    {
+                        'pl-report': 'pl_first_date',
+                        'transaction-report': 'begin_date',
+                    },
+                    {
+                        'balance-report': 'report_date',
+                        'pl-report': 'report_date',
+                        'transaction-report': 'end_date',
+                    }
+                ];
+
+                var dateFromKey = datesKeysData[0][scope.entityType];
+                var dateToKey = datesKeysData[1][scope.entityType];
+
                 var prepareReportLayoutOptions = function () {
 
                     scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
@@ -163,20 +178,16 @@
                         scope.reportLayoutOptions.datepickerOptions = {};
                     }
 
-                    if (!scope.reportLayoutOptions.datepickerOptions.hasOwnProperty('reportLastDatepicker')) {
-                        scope.reportLayoutOptions.datepickerOptions.reportLastDatepicker = {};
-                    }
-
                     if (!scope.reportLayoutOptions.datepickerOptions.hasOwnProperty('reportFirstDatepicker')) {
                         scope.reportLayoutOptions.datepickerOptions.reportFirstDatepicker = {};
                     }
 
-                    scope.datepickerFromDisplayOptions = {
-                        position: 'left',
-                        labelName: 'Date from (excl)'
-                    };
+                    if (!scope.reportLayoutOptions.datepickerOptions.hasOwnProperty('reportLastDatepicker')) {
+                        scope.reportLayoutOptions.datepickerOptions.reportLastDatepicker = {};
+                    }
 
-                    scope.datepickerToDisplayOptions = {position: 'left'};
+                    /*scope.reportLayoutOptions.datepickerOptions.reportFirstDatepicker.dateKey = datesKeysData[0][scope.entityType];
+                    scope.reportLayoutOptions.datepickerOptions.reportLastDatepicker.dateKey = datesKeysData[1][scope.entityType];*/
 
                     /* if (scope.entityType === 'pl-report' || scope.entityType === 'transaction-report') {
 
@@ -245,17 +256,53 @@
 
                     getCurrencies();
 
+                    scope.datesData = {
+                        from: scope.reportOptions[dateFromKey],
+                        to: scope.reportOptions[dateToKey]
+                    }
+                    /*scope.dateFrom = scope.reportOptions[dateFromKey];
+                    scope.dateTo = scope.reportOptions[dateToKey];*/
+
                     prepareReportLayoutOptions();
 
                 }
+
+                var applyDatesToReportOptions = function (reportOptions, reportLayoutOptions) {
+
+                    /*if (reportLayoutOptions.datepickerOptions.reportFirstDatepicker.hasOwnProperty('dateKey')) {
+
+                        var dateFromKey = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.dateKey;
+                        reportOptions[dateFromKey] = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.date;
+
+                    }
+
+                    var lastDateKey = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.dateKey;
+                    reportOptions[lastDateKey] = reportLayoutOptions.datepickerOptions.reportLastDatepicker.date;*/
+                    if (dateFromKey) {
+                        reportOptions[dateFromKey] = scope.datesData.from;
+                    }
+
+                    reportOptions[dateToKey] = scope.datesData.to;
+
+                };
 
                 scope.updateReportOptions = function () {
 
                     var reportOptions = scope.evDataService.getReportOptions();
                     var reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
-
+                    console.log("testing1 updateReportOptions reportLayoutOptions", reportLayoutOptions);
+                    // delete reportLayoutOptions.datepickerOptions.reportFirstDatepicker.secondDate;
                     console.log('updateReportOptions.scope.reportOptions', scope.reportOptions);
+                    /*if (scope.isRootEntityViewer || !reportLayoutOptions.datepickerOptions.useDateFromAbove) {
+                        console.log("testing1 updateReportOptions applyDatesToReportOptions");
+                        if (dateFromKey) {
+                            scope.reportOptions[dateFromKey] = scope.datesData.from;
+                        }
 
+                        scope.reportOptions[dateToKey] = scope.datesData.to;
+
+                    }*/
+                    console.log("testing1 updateReportOptions reportOptions", reportOptions);
                     var newReportOptions = Object.assign({}, reportOptions, scope.reportOptions);
                     var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, scope.reportLayoutOptions);
                     // TODO Delete in future
@@ -266,12 +313,34 @@
                     scope.evDataService.setReportOptions(newReportOptions);
                     scope.evDataService.setReportLayoutOptions(newReportLayoutOptions);
 
-                    scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE); // needed to keep tracks of changes for didLayoutChanged from gActionsBlockComponent
+                    scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
 
                     setTimeout(function () {
                         scope.$apply();
                     }, 200)
                 };
+
+                scope.toggleUseDateFromAbove = scope.updateReportOptions;
+
+                if (!scope.isRootEntityViewer) {
+
+                    scope.toggleUseDateFromAbove = function () {
+                        console.log("testing1 toggleUseDateFromAbove ", scope.reportLayoutOptions.datepickerOptions.useDateFromAbove);
+                        if (!scope.reportLayoutOptions.datepickerOptions.useDateFromAbove) {
+
+                            if (dateFromKey) {
+                                scope.reportOptions[dateFromKey] = scope.reportLayoutOptions.datepickerOptions.reportFirstDatepicker.date;
+                            }
+
+                            scope.reportOptions[dateToKey] = scope.reportLayoutOptions.datepickerOptions.reportLastDatepicker.date;
+                            console.log("testing1 toggleUseDateFromAbove reportOptions", JSON.parse(JSON.stringify(scope.reportOptions)));
+
+                        }
+
+                        scope.updateReportOptions();
+                    };
+
+                }
 
                 var initEventListeners = function () {
 
@@ -294,6 +363,13 @@
 
                     scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
                         scope.reportOptions = scope.evDataService.getReportOptions();
+
+                        if (dateFromKey) {
+                            scope.datesData.from = scope.reportOptions[dateFromKey];
+                        }
+
+                        scope.datesData.to = scope.reportOptions[dateToKey];
+                        console.log("testing1 gTopPart REPORT_OPTIONS_CHANGE", scope.datesData);
                     });
 
                 };

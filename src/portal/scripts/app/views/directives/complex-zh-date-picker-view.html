@@ -9,8 +9,9 @@
                close-on-click-outside="true"
                on-save="onPopupSave()"
                on-cancel="onPopupCancel()"
-               on-popup-close="onPopupSave()"
-               class="complex-datepicker-popup-btn">
+
+               class="complex-datepicker-popup-btn"
+               ng-disabled="isDisabled">
         <span ng-bind="date"></span>
         <span ng-if="rangeOfDates && secondDate">&nbsp;- <span ng-bind="secondDate"></span></span>
         <span class="material-icons closed-selector-icon">arrow_drop_down</span>

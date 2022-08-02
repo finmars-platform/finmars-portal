@@ -344,6 +344,14 @@
             return data.attributesFromAbove
         }
 
+        function setReportDateFromAbove(dateData) {
+            data.reportDateFromAbove = dateData;
+        }
+
+        function getReportDateFromAbove() {
+            return data.reportDateFromAbove;
+        }
+
         function setGroups(groups) {
 
             if (groups) {
@@ -826,6 +834,10 @@
             data.activeObjectFromAbove = obj
         }
 
+        function getActiveObjectFromAbove() {
+            return data.activeObjectFromAbove;
+        }
+
         function clearActiveObject() {
 
             var activeObject = getActiveObject();
@@ -855,10 +867,6 @@
 
         function getActiveObject() {
             return data.activeObject;
-        }
-
-        function getActiveObjectFromAbove() {
-            return data.activeObjectFromAbove;
         }
 
         function setActiveColumnSort(column) {
@@ -1647,6 +1655,8 @@
 
             setAttributesFromAbove: setAttributesFromAbove,
             getAttributesFromAbove: getAttributesFromAbove,
+            setReportDateFromAbove: setReportDateFromAbove,
+            getReportDateFromAbove: getReportDateFromAbove,
 
             getPagination: getPagination,
             setPagination: setPagination,

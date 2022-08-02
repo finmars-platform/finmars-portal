@@ -16,7 +16,7 @@
         return {
             restrict: 'AE',
             scope: {
-                displayOptions: '<',
+                // displayOptions: '<',
                 callbackMethod: '&',
 				date: '=',
                 datepickerOptions: '=',
@@ -41,6 +41,7 @@
 
                 let linkToAboveEventIndex; */
                 let attributesFromAbove;
+				// let useReportDateFromAbove = true;
                 let columnKey;
 
 				/* OLD COMPLEX DATEPICKER CODE
@@ -475,18 +476,9 @@
 
 					}
 					else {
-
-						/* scope.date = scope.popupData.date;
-
-						if (scope.popupData.datepickerOptions.datepickerMode === 'datepicker') {
-							delete scope.popupData.datepickerOptions.expression;
-						}
-
-						scope.datepickerOptions = JSON.parse(JSON.stringify(scope.popupData.datepickerOptions)); */
 						applyPopupDataToFirstDate(scope.popupData.date);
-
 					}
-
+					console.log("testing1 onPopupSave", scope.date);
 					setTimeout(() => {
 						if (scope.callbackMethod) scope.callbackMethod();
 					}, 0);
@@ -510,23 +502,47 @@
 
 				};
 
+				const updatePopupData = function () {
+
+					setTimeout(() => {
+
+						scope.popupData.date = scope.date;
+						scope.popupData.datepickerOptions = JSON.parse(JSON.stringify(scope.datepickerOptions));
+
+						if (scope.rangeOfDates) {
+							scope.popupData.secondDate = scope.secondDate;
+							scope.popupData.secondDatepickerOptions = JSON.parse(JSON.stringify(scope.secondDatepickerOptions));
+						}
+
+					}, 100);
+
+				};
+
 				const init = function () {
 
-					scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
+					if (scope.isRootEntityViewer) {
+						console.log("testing1 idk REPORT_OPTIONS_CHANGE listener");
+						scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
+							updatePopupData();
+						});
 
-						setTimeout(() => {
+					} else {
+						console.log("testing1 idk REPORT_OPTIONS_CHANGE listener 2");
+						scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
 
-							scope.popupData.date = scope.date;
-							scope.popupData.datepickerOptions = JSON.parse(JSON.stringify(scope.datepickerOptions));
+							const reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
+							// useReportDateFromAbove = reportLayoutOptions.useDateFromAbove;
+							console.log("testing1 idk reportLayoutOptions", reportLayoutOptions);
+							if (reportLayoutOptions.datepickerOptions.useDateFromAbove) {
 
-							if (scope.rangeOfDates) {
-								scope.popupData.secondDate = scope.secondDate;
-								scope.popupData.secondDatepickerOptions = JSON.parse(JSON.stringify(scope.secondDatepickerOptions));
+
+							} else {
+								updatePopupData();
 							}
 
-						}, 100);
+						});
 
-					});
+					}
 
 					scope.popupEventService = new EventService();
 
@@ -534,8 +550,8 @@
 
 					if (!scope.datepickerOptions.datepickerMode) scope.datepickerOptions.datepickerMode = 'datepicker';
 
-					scope.datepickerOptions.date = scope.date;
-					if (scope.rangeOfDates) scope.secondDatepickerOptions.date = scope.secondDate;
+					/*scope.datepickerOptions.date = scope.date;
+					if (scope.rangeOfDates) scope.secondDatepickerOptions.date = scope.secondDate;*/
 
 				};
 
