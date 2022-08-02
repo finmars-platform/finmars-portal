@@ -45,10 +45,10 @@
 				let firstDate, secondDate, secondCalendarElem;
 				let useFromAboveEventIndex, attributeKey;
 
-				scope.inputsModels = {
+				/* scope.inputsModels = {
 					date: scope.date,
 					secondDate: null
-				};
+				}; */
 
 				scope.openEditExpressionDialog = function ($event, dateNumber) {
 
@@ -118,7 +118,7 @@
 									if (moment(resData.result, 'YYYY-MM-DD', true).isValid()) {
 
 										scope[dateProp] = resData.result;
-										scope.inputsModels[dateProp] = scope[dateProp];
+										// scope.inputsModels[dateProp] = scope[dateProp];
 										scope[datepickerOptsProp].date = resData.result;
 
 										var exprDate = new Date(scope[dateProp]);
@@ -256,7 +256,8 @@
 						// firstDate = event.detail.date;
 						firstDate = event.detail.date;
 						scope.date = event.detail.formatted_date;
-						scope.inputsModels.date = scope.date;
+						// scope.inputsModels.date = scope.date;
+						scope.datepickerOptions.date = scope.date;
 
 						scope.datepickerOptions.datepickerMode = 'datepicker';
 
@@ -433,7 +434,8 @@
 
 						firstDate = event.detail.date;
 						scope.date = event.detail.formatted_date;
-						scope.inputsModels.date = scope.date;
+						// scope.inputsModels.date = scope.date;
+						scope.datepickerOptions.date = scope.date;
 
 						scope.datepickerOptions.datepickerMode = 'datepicker';
 
@@ -457,7 +459,8 @@
 
 						secondDate = event.detail.date;
 						scope.secondDate = event.detail.formatted_date;
-						scope.inputsModels.secondDate = scope.secondDate;
+						// scope.inputsModels.secondDate = scope.secondDate;
+						scope.secondDatepickerOptions.date = scope.secondDate;
 
 						scope.secondDatepickerOptions.datepickerMode = 'datepicker';
 
@@ -473,7 +476,8 @@
 					if (moment(date, 'YYYY-MM-DD', true).isValid()) {
 
 						scope.date = date;
-						scope.inputsModels.date = scope.date;
+						// scope.inputsModels.date = scope.date;
+						scope.datepickerOptions.date = scope.date;
 						firstDate = new Date(date);
 
 						pickmeup(firstCalendarElem).set_date(firstDate);
@@ -485,7 +489,8 @@
 					} else if (date === null) {
 
 						scope.date = null;
-						scope.inputsModels.date = scope.date;
+						// scope.inputsModels.date = scope.date;
+						scope.datepickerOptions.date = scope.date;
 						firstDate = null;
 						pickmeup(firstCalendarElem).set_date();
 
@@ -498,7 +503,8 @@
 					if (moment(date, 'YYYY-MM-DD', true).isValid()) {
 
 						scope.secondDate = date;
-						scope.inputsModels.secondDate = scope.secondDate;
+						// scope.inputsModels.secondDate = scope.secondDate;
+						scope.secondDatepickerOptions.date = scope.secondDate;
 						secondDate = new Date(date);
 
 						pickmeup(firstCalendarElem).update();
@@ -510,7 +516,8 @@
 					} else if (date === null) {
 
 						scope.secondDate = null;
-						scope.inputsModels.secondDate = scope.secondDate;
+						// scope.inputsModels.secondDate = scope.secondDate;
+						scope.secondDatepickerOptions.date = scope.secondDate;
 						secondDate = null;
 						pickmeup(secondCalendarElem).set_date();
 
@@ -579,14 +586,16 @@
 				const applyFirstDate = function (date) {
 					firstDate = date;
 					scope.date = moment(date).format('YYYY-MM-DD');
-					scope.inputsModels.date = scope.date;
+					// scope.inputsModels.date = scope.date;
+					scope.datepickerOptions.date = scope.date;
 					pickmeup(firstCalendarElem).set_date(firstDate);
 				};
 
 				const applySecondDate = function (date) {
 					secondDate = date;
 					scope.secondDate = moment(date).format('YYYY-MM-DD');
-					scope.inputsModels.secondDate = scope.secondDate;
+					// scope.inputsModels.secondDate = scope.secondDate;
+					scope.secondDatepickerOptions.date = scope.secondDate;
 					pickmeup(secondCalendarElem).set_date(secondDate);
 				};
 
@@ -661,7 +670,8 @@
 							scope.datepickerOptions.expression = 'now()';
 
 							scope.date = moment(new Date()).format('YYYY-MM-DD');
-							scope.inputsModels.date = scope.date;
+							// scope.inputsModels.date = scope.date;
+							scope.datepickerOptions.date = scope.date;
 
 							pickmeup(firstCalendarElem).set_date(new Date(scope.date));
 
@@ -677,7 +687,8 @@
 
 							const yesterdayDate = moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD');
 							scope.date = yesterdayDate;
-							scope.inputsModels.date = scope.date;
+							// scope.inputsModels.date = scope.date;
+							scope.datepickerOptions.date = scope.date;
 
 							pickmeup(firstCalendarElem).set_date(new Date(scope.date));
 
@@ -958,11 +969,14 @@
 
 					scope.onDateInputChange = onDateInputChange;
 
+					// delete scope.datepickerOptions.secondDate;
+
 					if (scope.rangeOfDates) {
 
-						scope.inputsModels.secondDate = scope.secondDate;
+						// scope.inputsModels.secondDate = scope.secondDate;
+						scope.secondDatepickerOptions.date = scope.secondDate;
 
-						if (scope.rangeOfDates && moment(scope.date, 'YYYY-MM-DD', true).isValid()) {
+						if (scope.rangeOfDates && moment(scope.secondDate, 'YYYY-MM-DD', true).isValid()) {
 							secondDate = new Date(scope.secondDate);
 						}
 
