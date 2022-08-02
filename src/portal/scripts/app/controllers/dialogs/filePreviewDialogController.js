@@ -12,11 +12,19 @@
 
         var vm = this;
 
+        console.log('filePreviewDialogController data', data);
+
         vm.data = data;
 
         vm.download = function () {
 
-            downloadFileHelper.downloadFile(vm.data.content, "application/force-download", vm.data.info.file_report_object.name);
+            var content = vm.data.content
+
+            if (typeof vm.data.content === 'object') {
+                content = JSON.stringify(vm.data.content, null, 4);
+            }
+
+            downloadFileHelper.downloadFile(content, "application/force-download", vm.data.info.file_report_object.name);
 
         }
 
