@@ -1,5 +1,6 @@
-<div class="g-filter-type-n-value flex-row fc-space-between">
-    <md-input-container class="g-filter-types-select">
+<div ng-if="readyStatus"
+     class="g-filter-type-n-value flex-row fc-space-between">
+    <!--<md-input-container class="g-filter-types-select">
         <md-select ng-model="activeFilter.type"
                    ng-change="changeFilterType(activeFilter.type)"
                    class="g-filter-tnv-back">
@@ -13,31 +14,48 @@
 
             </div>
         </md-select>
-    </md-input-container>
+    </md-input-container>-->
+    <dropdown-select2 model="activeFilter.type"
+                      menu-options="filterTypes"
+                      on-change-callback="changeFilterType(activeFilter.type)"
+                      class="g-filter-types-select"></dropdown-select2>
 
     <div class="g-filter-value-wrap">
         <div ng-if="filter.options.filter_type !== 'from_to' && filter.options.filter_type !== 'out_of_range'"
              class="height-100">
 
-            <input type="number"
+            <!--<input type="number"
                    ng-model="filter.options.filter_values[0]"
                    placeholder="Value"
-                   class="g-filter-tnv-back g-filter-input no-input-arrows" />
+                   class="g-filter-tnv-back g-filter-input no-input-arrows" />-->
+
+            <number-input model="filter.options.filter_values[0]"
+                          placeholder-text="Value"
+                          small-options="{noIndicatorBtn: true}"
+                          class="ci-placeholder2"></number-input>
 
         </div>
 
         <div ng-if="filter.options.filter_type === 'from_to' || filter.options.filter_type === 'out_of_range'"
              class="height-100">
 
-            <input type="number"
+            <!--<input type="number"
                    ng-model="filter.options.filter_values.min_value"
                    placeholder="From (incl)"
-                   class="g-filter-tnv-back g-filter-input no-input-arrows" />
+                   class="g-filter-tnv-back g-filter-input no-input-arrows" />-->
+            <number-input model="filter.options.filter_values.min_value"
+                          placeholder-text="From (incl)"
+                          small-options="{noIndicatorBtn: true}"
+                          class="ci-placeholder2"></number-input>
 
-            <input type="number"
+            <!--<input type="number"
                    ng-model="filter.options.filter_values.max_value"
                    placeholder="To (incl)"
-                   class="g-filter-tnv-back g-filter-input no-input-arrows" />
+                   class="g-filter-tnv-back g-filter-input no-input-arrows" />-->
+            <number-input model="filter.options.filter_values.max_value"
+                          placeholder-text="To (incl)"
+                          small-options="{noIndicatorBtn: true}"
+                          class="ci-placeholder2 display-block m-t-10"></number-input>
 
         </div>
 

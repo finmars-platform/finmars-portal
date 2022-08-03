@@ -62,10 +62,12 @@
 				vm.getActiveFilterType = (filterTypesList) => {
 
 					const activeType = filterTypesList.find(type => {
-						return type.value === vm.filter.options.filter_type;
+						// return type.value === vm.filter.options.filter_type;
+						return type.id === vm.filter.options.filter_type;
 					});
 
-					return activeType ? activeType.value : null;
+					// return activeType ? activeType.value : null;
+					return activeType ? activeType.id : null;
 
 				};
 
