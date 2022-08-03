@@ -22,6 +22,8 @@
                     scope.title = 'Date tree'
                 }
 
+                var dialogParent = document.querySelector('.dialog-containers-wrap');
+
                 var setInputText = function () {
 
                     var datesSelected = 0;
@@ -52,6 +54,8 @@
 
                 setInputText();
 
+                var dialogParent = document.querySelector('.dialog-containers-wrap');
+
                 $(elem).click(function (event) {
 
                     event.preventDefault();
@@ -60,6 +64,7 @@
                     $mdDialog.show({
                         controller: 'DateTreeDialogController as vm',
                         templateUrl: 'views/dialogs/date-tree-dialog-view.html',
+                        parent: dialogParent,
                         targetEvent: event,
                         bindToController: false,
                         preserveScope: false,

@@ -3,6 +3,7 @@
 	'use strict';
 
 	const specificDataService = require('../../../../services/specificDataService');
+	const userFilterService = require('../../../../services/rv-data-provider/user-filter.service');
 	const evEvents = require("../../../../services/entityViewerEvents");
 	const popupEvents = require("../../../../services/events/popupEvents");
 
@@ -21,13 +22,13 @@
 				};
 
 				scope.filterTypes = [
-					{name: 'Equal', value: 'equal'},
-					{name: 'Contains', value: 'contains'},
-					{name: 'Has substring', value: 'contains_has_substring'},
+					{name: 'Equal', id: 'equal'},
+					{name: 'Contains', id: 'contains'},
+					{name: 'Has substring', id: 'contains_has_substring'},
 					// {name: 'Does not contains', value: 'does_not_contains'},
-					{name: 'Select', value: 'selector'},
-					{name: 'Multiple Select', value: 'multiselector'},
-					{name: 'Empty cells', value: 'empty'}
+					{name: 'Select', id: 'selector'},
+					{name: 'Multiple Select', id: 'multiselector'},
+					{name: 'Empty cells', id: 'empty'}
 				];
 
 				scope.columnRowsContent = null;
@@ -44,13 +45,7 @@
 
 						// var columnRowsContent = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
 
-						scope.columnRowsContent = data.results.map(cRowsContent => {
-							return {
-								id: cRowsContent, // for text multiselector
-								value: cRowsContent, // for text selector
-								active: false // for date multiselector
-							}
-						});
+						scope.columnRowsContent = data.results.map(userFilterService.mapColRowsContent);
 
 						scope.readyStatus = true;
 
@@ -61,7 +56,6 @@
 				};
 
 				scope.changeFilterType = function (filterType) {
-
 					/* scope.activeFilter.type = filterType;
 					scope.filter.options.filter_type = scope.activeFilter.type;
 

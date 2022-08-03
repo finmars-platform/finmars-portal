@@ -19,20 +19,25 @@
 				};
 
 				scope.filterTypes = [
-					{name: 'Equal', value: 'equal'},
-					{name: 'Contains', value: 'contains'},
-					{name: 'Has substring', value: 'contains_has_substring'},
-					// {name: 'Does not contains', value: 'does_not_contains'},
-					{name: 'Select', value: 'selector'},
-					{name: 'Multiple Select', value: 'multiselector'},
-					{name: 'Empty cells', value: 'empty'}
+					{name: 'Equal', id: 'equal'},
+					{name: 'Contains', id: 'contains'},
+					{name: 'Has substring', id: 'contains_has_substring'},
+					// {name: 'Does not contains', id: 'does_not_contains'},
+					{name: 'Select', id: 'selector'},
+					{name: 'Multiple Select', id: 'multiselector'},
+					{name: 'Empty cells', id: 'empty'},
+
+					{name: 'Use from above', id: 'use_from_above'}
 				];
 
 				scope.readyStatus = true;
 
 				scope.changeFilterType = function (filterType) {
 
-					if (filterType !== 'use_from_above') {
+					if (filterType === 'use_from_above') {
+						scope.openUseFromAboveSettings();
+
+					} else {
 
 						scope.filter.options.use_from_above = {};
 						// openUseFromAboveSettings() responsible for setting 'use_from_above' into scope.activeFilterType
@@ -48,6 +53,7 @@
 						const resultList = gFiltersHelper.emptyTextFilter(filterType, scope.filter.options);
 						scope.activeFilter.type = resultList[0];
 						scope.filter.options = resultList[1];
+
 					}
 
 				};

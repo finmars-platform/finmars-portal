@@ -3,6 +3,7 @@
 	'use strict';
 
 	const specificDataService = require('../../../../services/specificDataService');
+	const userFilterService = require('../../../../services/rv-data-provider/user-filter.service');
 	const evEvents = require("../../../../services/entityViewerEvents");
 	const popupEvents = require("../../../../services/events/popupEvents");
 
@@ -21,16 +22,16 @@
 				};
 
 				scope.filterTypes = [
-					{name: 'Equal', value: 'equal'},
-					{name: 'Not equal', value: 'not_equal'},
-					{name: 'Greater than', value: 'greater'},
-					{name: 'Greater or equal to', value: 'greater_equal'},
-					{name: 'Less than', value: 'less'},
-					{name: 'Less or equal to', value: 'less_equal'},
-					{name: 'From ... to ... (incl)', value: 'from_to'},
-					{name: 'Out of range (incl)', value: 'out_of_range'},
-					{name: 'Empty cells', value: 'empty'},
-					{name: 'Date tree', value: 'date_tree'},
+					{name: 'Equal', id: 'equal'},
+					{name: 'Not equal', id: 'not_equal'},
+					{name: 'Greater than', id: 'greater'},
+					{name: 'Greater or equal to', id: 'greater_equal'},
+					{name: 'Less than', id: 'less'},
+					{name: 'Less or equal to', id: 'less_equal'},
+					{name: 'From ... to ... (incl)', id: 'from_to'},
+					{name: 'Out of range (incl)', id: 'out_of_range'},
+					{name: 'Empty cells', id: 'empty'},
+					{name: 'Date tree', id: 'date_tree'},
 				];
 
 				scope.columnRowsContent = null;
@@ -45,14 +46,8 @@
 
 					specificDataService.getValuesForSelect(contentType, scope.filter.key, scope.filter.value_type).then(function (data) {
 
-						// var columnRowsContent = userFilterService.getCellValueByKey(scope.evDataService, scope.filter.key);
-
 						scope.columnRowsContent = data.results.map(cRowsContent => {
-							return {
-								id: cRowsContent, // for text multiselector
-								value: cRowsContent, // for text selector
-								active: false // for date multiselector
-							}
+							return {value: cRowsContent};
 						});
 
 						scope.readyStatus = true;
