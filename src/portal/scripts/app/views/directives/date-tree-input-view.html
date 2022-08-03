@@ -1,4 +1,5 @@
-<md-input-container class="date-tree-input-container">
-    <label ng-bind="title"></label>
-    <input type="text" data-ng-model="inputText" readonly>
-</md-input-container>
+<div class="date-tree-input-container">
+    <text-input label="{{title}}"
+                model="inputText"
+                small-options="{noIndicatorBtn: true, readonly: true}"></text-input>
+</div>

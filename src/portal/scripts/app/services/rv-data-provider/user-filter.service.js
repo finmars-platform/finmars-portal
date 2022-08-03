@@ -1,10 +1,10 @@
 (function () {
 
-    var evHelperService = require('../entityViewerHelperService');
+    const evHelperService = require('../entityViewerHelperService');
 
     'use strict';
 
-    var getCellValueByKey = function (entityViewerDataService, key) {
+    const getCellValueByKey = function (entityViewerDataService, key) {
 
         var data = entityViewerDataService.getUnfilteredFlatList();
         var result = [];
@@ -96,8 +96,18 @@
 
     };
 
+    const mapColRowsContent = (cRowsContent) => {
+        return {
+            id: cRowsContent, // for text multiselector
+            // value: cRowsContent, // for text selector
+            name: cRowsContent, // for dropdownSelect
+            active: false // for date multiselector
+        }
+    };
+
     module.exports = {
-        getCellValueByKey: getCellValueByKey
+        getCellValueByKey: getCellValueByKey,
+        mapColRowsContent: mapColRowsContent,
     }
 
 }());

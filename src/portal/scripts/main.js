@@ -805,6 +805,7 @@ export default (function () {
 	portal.directive('multitypeField', [require('./app/directives/customInputs/multitypeFieldDirective')]);
 	portal.directive('complexDropdownSelect', [complexDropdownSelectDirective]);
 	portal.directive('complexDropdownSelectMenu', [complexDropdownSelectMenuDirective]);
+	portal.directive('dropdownSelect2', [require('./app/directives/customInputs/dropdownSelect2Directive')]);
 	//</editor-fold>
 
 	//<editor-fold desc="Grid Table">

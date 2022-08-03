@@ -98,17 +98,13 @@
 
 					var columnRowsContent  = userFilterService.getCellValueByKey(vm.evDataService, vm.filter.key);
 
-					vm.columnRowsContent = columnRowsContent.map(cRowsContent => {
-						return {
-							id: cRowsContent, // for text multiselector
-							value: cRowsContent, // for text selector
-							active: false // for date multiselector
-						}
-					});
+					vm.columnRowsContent = columnRowsContent.map(userFilterService.mapColRowsContent);
 
 					// $scope.$apply();
 
 				};
+
+				var dialogParent = document.querySelector('.dialog-containers-wrap');
 
 				vm.openUseFromAboveSettings = function () {
 
@@ -117,7 +113,7 @@
 						$mdDialog.show({
 							controller: 'UseFromAboveDialogController as vm',
 							templateUrl: 'views/dialogs/use-from-above-dialog-view.html',
-							parent: angular.element(document.body),
+							parent: dialogParent,
 							multiple: true,
 							locals: {
 								data: {
@@ -179,10 +175,12 @@
 					} else {
 
 						const activeType = filterTypesList.find(type => {
-							return type.value === vm.filter.options.filter_type;
+							// return type.value === vm.filter.options.filter_type;
+							return type.id === vm.filter.options.filter_type;
 						});
 
-						return activeType ? activeType.value : null;
+						// return activeType ? activeType.value : null;
+						return activeType ? activeType.id : null;
 
 					}
 

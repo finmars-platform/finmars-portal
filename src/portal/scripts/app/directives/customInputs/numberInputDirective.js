@@ -10,6 +10,7 @@
             restrict: 'E',
             scope: {
                 label: '@',
+                placeholderText: "@",
                 model: '=',
                 numberFormat: '<',
                 customButtons: '=',
@@ -23,7 +24,8 @@
             templateUrl: 'views/directives/customInputs/number-input-view.html',
             link: function (scope, elem, attr) {
 
-                scope.placeholderText = "0";
+                // scope.placeholderText = "0";
+                scope.placeholder = scope.placeholderText || "0";
                 scope.error = '';
 
                 var inputLoaded = false;  // prevents not null inputs highlight from start
@@ -372,7 +374,7 @@
 
                     initEventListeners();
 
-                    if (scope.numberFormat) {
+                    if (scope.numberFormat && scope.placeholderText === undefined) {
 
                         switch (scope.numberFormat.round_format_id) {
                             case 0:
