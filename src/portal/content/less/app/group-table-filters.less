@@ -14,7 +14,7 @@
 }
 
 //region old group table filters
-.g-filter-sidebar.additions-sidebar {
+/*.g-filter-sidebar.additions-sidebar {
   &::before {
     display: block;
     content: '';
@@ -58,12 +58,6 @@
     }
   }
 }
-
-/* .g-filters-holder-container {
-  padding: 0 8px;
-  width: 100%;
-  box-sizing: border-box;
-} */
 
 .g-filter-item {
   padding: 16px 10px 0;
@@ -116,12 +110,6 @@
       padding: 2px;
     }
   }
-
-  /*md-input-container {
-    //height: 30px;
-    height: 100%;
-    margin-bottom: 10px;
-  }*/
 
 };
 
@@ -248,7 +236,7 @@ md-checkbox.g-filter-options-checkbox {
     margin: 0;
     text-transform: none;
   }
-}
+}*/
 //endregion old group table filters
 
 .g-filters {
@@ -264,6 +252,17 @@ md-checkbox.g-filter-options-checkbox {
   &.open-filters {
     height: auto;
     overflow: visible;
+  }
+
+  .g-filters-holder {
+    // float: left;
+    box-sizing: border-box;
+
+    .modal-dialog-card {
+      margin: 8px;
+      width: 100%;
+      min-height: 66px;
+    }
   }
 
   .g-filter-left-part {
@@ -407,25 +406,7 @@ md-checkbox.g-filter-options-checkbox {
     margin-bottom: 0;
   }
 
-  md-select {
-    height: 100%;
-    width: 100%;
-
-    md-select-value {
-      padding-left: @gFilterFieldLeftIndent;
-      border-bottom: @gFilterFieldBottomBorder;
-    }
-
-    &:not([disabled]):focus {
-
-      .md-select-value {
-        padding-bottom: 0;
-        border-bottom: 2px solid @orange;
-      }
-    }
-  }
-
-  .filter-input {
+  /* .filter-input {
     width: 100%;
     height: @gFilterFieldsHeight;
     padding-left: @gFilterFieldLeftIndent;
@@ -439,12 +420,12 @@ md-checkbox.g-filter-options-checkbox {
       padding-bottom: 0;
       border-bottom: 2px solid @orange;
     }
-  }
+  } */
 
 
-  input.g-filter-input {
+  /*input.g-filter-input {
     .filter-input
-  }
+  }*/
 
   .g-filter-tnv-back {
     background-color: @tnvBackColor;
@@ -459,9 +440,9 @@ md-checkbox.g-filter-options-checkbox {
 
     .custom-input-borders {
       height: @gFilterFieldsHeight;
-      border-radius: 0;
+      /*border-radius: 0;
       border: none;
-      border-bottom: @gFilterFieldBottomBorder;
+      border-bottom: @gFilterFieldBottomBorder;*/
     }
 
   }
@@ -491,19 +472,19 @@ md-checkbox.g-filter-options-checkbox {
       width: 170px;
 
 
-      md-input-container {
+      /*md-input-container {
         margin: 0 0;
         max-height: 50px;
-      }
+      }*/
 
-      input:nth-child(2) {
+      /*input:nth-child(2) {
         margin-top: 10px;
-      }
+      }*/
 
-      input {
+      /*input {
         .filter-input;
         background-color: @tnvBackColor;
-      }
+      }*/
 
       .date-tree {
         md-input-container {
@@ -558,5 +539,53 @@ md-checkbox.g-filter-options-checkbox {
   md-option {
     .g-filters-menu-opts();
   }
+}
+
+.entity-viewer-holder {
+
+  .g-filters .icon-buttons {
+    flex: 0 0 201px;
+    /* display: flex;
+        justify-content: flex-end;
+        flex: 0 0 191px; */
+    & > div {
+      width: 201px;
+    }
+  }
+
+}
+
+.report-viewer-holder {
+
+  .g-filter-sidebar {
+    display: none;
+  }
+
+  .g-filters {
+
+    .md-button.chain-button {
+      color: @orange;
+
+      &.g-use-from-above-filters-hidden {
+        color: @gray;
+
+        ng-md-icon svg {
+          fill: @gray;
+        }
+      }
+    }
+
+  }
+
+  .g-filters .icon-buttons {
+    flex: 0 0 252px;
+    /* display: flex;
+        justify-content: flex-end;
+        flex: 0 0 191px; */
+    & > div {
+      width: 252px;
+    }
+  }
+
 }
 

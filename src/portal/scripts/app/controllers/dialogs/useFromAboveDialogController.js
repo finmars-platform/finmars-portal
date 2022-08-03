@@ -16,6 +16,11 @@
         vm.attributes = [];
 
         vm.filterTypes = [];
+        vm.reportTypesOpts = [
+            {id: 'balance-report', name: 'Balance Report'},
+            {id: 'pl-report', name: 'P&L Report'},
+            {id: 'transaction-report', name: 'Transaction Report'},
+        ];
 
         switch (vm.data.value_type) {
             case 10:
@@ -23,11 +28,11 @@
             case 'field':
 
             	vm.filterTypes = [{
-                    key: 'contains',
+                    id: 'contains',
                     name: 'CONTAINS'
                 },
                 {
-                    key: 'equal',
+                    id: 'equal',
                     name: 'EQUAL'
                 }];
 
@@ -37,28 +42,30 @@
             case 40:
 
             	vm.filterTypes = [{
-                    key: 'equal',
+                    id: 'equal',
                     name: 'EQUAL',
                 },
                 {
-                    key: 'greater',
+                    id: 'greater',
                     name: 'GREATER THAN'
                 },
                 {
-                    key: 'greater_equal',
+                    id: 'greater_equal',
                     name: 'GREATER OR EQUAL TO'
                 },
                 {
-                    key: 'less',
+                    id: 'less',
                     name: 'LESS THAN'
                 },
                 {
-                    key: 'less_equal',
+                    id: 'less_equal',
                     name: 'LESS OR EQUAL TO'
                 }];
 
                 break;
         }
+
+        vm.filterTypesSelDisabled = vm.filterTypes.length < 2;
 
         if (!vm.item) {
             vm.filterType = vm.filterTypes[0].key;
