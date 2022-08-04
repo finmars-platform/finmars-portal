@@ -7,13 +7,14 @@
             scope: {
                 model: '=',
                 menuOptions: '=',
+                smallOptions: '<',
                 isDisabled: '=',
                 onChangeCallback: '&?',
             },
             template: `<div class="dropdown-select-2">
                     <dropdown-select model="model"
                                      menu-options="menuOptions"
-                                     small-options="{noIndicatorBtn: true}"
+                                     small-options="dsSmallOpts"
                                      is-disabled="isDisabled"
                                      on-change-callback="onChangeCallback()"></dropdown-select>
             
@@ -23,6 +24,14 @@
 
                 let dropdownSelectElem = elem[0].querySelector(".dropdownSelectInputContainer div[popup]");
                 const selIconElem = elem[0].querySelector(".selIcon");
+
+                scope.dsSmallOpts = {};
+
+                if (scope.smallOptions) {
+                    scope.dsSmallOpts = {...{}, ...scope.smallOptions}
+                }
+
+                scope.dsSmallOpts.noIndicatorBtn = true;
 
                 // using addEventListener instead of ngClick to prevent $digest error
                 selIconElem.addEventListener("click", function () {

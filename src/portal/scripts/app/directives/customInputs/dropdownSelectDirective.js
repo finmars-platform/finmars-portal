@@ -34,6 +34,7 @@
                 //scope.placeholderText = 'Relation';
                 scope.dropdownMenuShown = false;
                 scope.dropdownMenuFilter = '';
+                scope.popupWidth = 'element';
 
                 let itemName = scope.itemName || '';
                 let menuOptionsList = [];
@@ -44,6 +45,7 @@
                     noIndicatorBtn: whether to show button at the right part of input
                     notNull: selector should not be empty
                     dialogParent: 'string' - querySelector content for element to insert mdDialog into
+                    popupWidth:
                 */
 
                 if (scope.smallOptions) {
@@ -56,6 +58,7 @@
 
                     scope.dialogParent = scope.smallOptions.dialogParent;
                     scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
+                    scope.popupWidth = scope.smallOptions.popupWidth || scope.popupWidth;
 
                 }
 
