@@ -49,6 +49,7 @@ import evEvents from "../../services/entityViewerEvents";
 
         // var doNotCheckLayoutChanges = false;
         var autosaveLayoutService;
+        var autosaveLayoutOn = globalDataService.isAutosaveLayoutOn();
 
         // Functions for context menu
 
@@ -411,7 +412,7 @@ import evEvents from "../../services/entityViewerEvents";
                 evRvLayoutsHelper.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
                 vm.entityViewerEventService.removeEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, dleEventIndex);
             }); */
-            if (vm.currentMember.data && vm.currentMember.data.autosave_layouts) {
+            if (autosaveLayoutOn) {
 
                 const alcIndex = vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, function () {
                     autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
@@ -605,17 +606,6 @@ import evEvents from "../../services/entityViewerEvents";
 
         }; */
 
-        /*vm.getCurrentMember = function () {
-
-            return usersService.getMyCurrentMember().then(function (data) {
-
-                vm.currentMember = data;
-
-                $scope.$apply();
-
-            });
-        };*/
-
         var deregisterOnBeforeTransitionHook;
 
         /* var checkRootLayoutForChanges = function (activeLayoutConfig, layoutCurrentConfig) {
@@ -650,7 +640,7 @@ import evEvents from "../../services/entityViewerEvents";
         }; */
 
         var checkLayoutsForChanges = function () { // called on attempt to change or reload page
-
+            console.log("autosave77 rv checkLayoutsForChanges ", autosaveLayoutOn);
             /* return new Promise(function (resolve, reject) {
 
                 var checkForLayoutChanges = vm.entityViewerDataService.isLayoutChangesLossWarningNeeded();
@@ -814,6 +804,7 @@ import evEvents from "../../services/entityViewerEvents";
             var spChangedLayout = evHelperService.checkSplitPanelForChanges(vm.entityViewerDataService, vm.splitPanelExchangeService);
 
             if (layoutHasChanges || spChangedLayout) {
+                console.log("autosave77 ev warnAboutLayoutChangesLoss ", autosaveLayoutOn);
                 event.preventDefault();
                 (event || window.event).returnValue = 'All unsaved changes of layout will be lost.';
             }
@@ -1050,9 +1041,9 @@ import evEvents from "../../services/entityViewerEvents";
 
             middlewareService.onAutosaveLayoutToggle(function () {
 
-                vm.currentMember = globalDataService.getMember();
-
-                if (vm.currentMember.data && vm.currentMember.data.autosave_layouts) {
+                autosaveLayoutOn = globalDataService.isAutosaveLayoutOn();
+                console.log("autosave77 rv isAutosaveLayoutOn", autosaveLayoutOn);
+                if (autosaveLayoutOn) {
 
                     autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
                     removeTransitionListeners();
@@ -1150,9 +1141,9 @@ import evEvents from "../../services/entityViewerEvents";
             });*/
 
             // vm.getCurrentMember();
-            vm.currentMember = globalDataService.getMember();
 
-            if (!vm.currentMember.data || !vm.currentMember.data.autosave_layouts) {
+            if (!autosaveLayoutOn) {
+                console.log("autosave77 rv init initTransitionListeners", autosaveLayoutOn);
                 initTransitionListeners();
             }
 
