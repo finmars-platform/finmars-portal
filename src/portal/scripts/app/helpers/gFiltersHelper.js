@@ -202,19 +202,18 @@
 
 			return new Promise ((resolve, reject) => {
 
-				useFromAboveDialogPromise.then(ufaData => {
+				useFromAboveDialogPromise.then(filterData => {
 
-					// let activeFilterType = ufaData;
+					let activeFilterType = filterData.options.filter_type;
 
-					// if (activeFilterType === 'use_from_above') {
-					//
-					// 	filterOptions.use_from_above = {};
-					// 	filterOptions.filter_type = activeFilterType;
-					// 	filterOptions.filter_values = [];
-					//
-					// }
+					if (filterData.options.use_from_above &&
+						Object.keys(filterData.options.use_from_above).length) {
 
-					resolve([ufaData.options.filter_type, ufaData.options]);
+						activeFilterType = 'use_from_above';
+
+					}
+
+					resolve([activeFilterType, filterData.options]);
 
 				});
 

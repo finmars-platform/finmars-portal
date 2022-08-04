@@ -47,6 +47,7 @@ import evEvents from "../../services/entityViewerEvents";
         vm.entityViewerEventService = null;
 
         var autosaveLayoutService;
+            var autosaveLayoutOn = globalDataService.isAutosaveLayoutOn();
         var useDateFromAbove;
         //region Functions for context menu
 
@@ -459,10 +460,10 @@ import evEvents from "../../services/entityViewerEvents";
 
                 parentEntityViewerEventService.addEventListener(evEvents.TOGGLE_AUTOSAVE, function () {
 
-                    vm.currentMember = globalDataService.getMember();
+                        autosaveLayoutOn = globalDataService.isAutosaveLayoutOn();
 
-                    if (vm.currentMember.data && vm.currentMember.data.autosave_layouts) {
-                        autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
+                        if (autosaveLayoutOn) {
+                            autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
 
                         var layoutHasChanges = evHelperService.checkRootLayoutForChanges(vm.entityViewerDataService, true);
 
@@ -476,7 +477,7 @@ import evEvents from "../../services/entityViewerEvents";
 
                 });
 
-                if (vm.currentMember.data && vm.currentMember.data.autosave_layouts) {
+                    if (autosaveLayoutOn) {
 
                     const alcIndex = vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, function () {
                         autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
@@ -714,8 +715,7 @@ import evEvents from "../../services/entityViewerEvents";
 
         vm.init = function () {
 
-            autosaveLayoutService = new AutosaveLayoutService();
-            vm.currentMember = globalDataService.getMember();
+                autosaveLayoutService = new AutosaveLayoutService();
 
             vm.getView();
 

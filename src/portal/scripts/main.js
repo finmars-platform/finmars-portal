@@ -153,7 +153,7 @@ export default (function () {
 	// Common
 
 	// portal.controller('ShellController', ['$scope', '$state', '$stateParams', '$rootScope', '$mdDialog', '$transitions', require('./app/controllers/shellController')]);
-	portal.controller('PortalController', ['$scope', 'authorizerService', 'usersService', 'globalDataService', portalController]);
+	portal.controller('PortalController', ['$scope', '$state', 'authorizerService', 'usersService', 'globalDataService', portalController]);
 	portal.controller('BookmarksController', ['$scope', '$mdDialog', '$state', 'toastNotificationService', require('./app/controllers/bookmarksController')]);
 	portal.controller('SideNavController', ['$scope', '$mdDialog', '$transitions', 'usersService', 'globalDataService', require('./app/controllers/sideNavController')]);
 	portal.controller('HomeController', ['$scope', '$state', '$mdDialog', 'authorizerService', 'usersService', 'globalDataService', require('./app/controllers/homeController')]);
@@ -805,6 +805,7 @@ export default (function () {
 	portal.directive('multitypeField', [require('./app/directives/customInputs/multitypeFieldDirective')]);
 	portal.directive('complexDropdownSelect', [complexDropdownSelectDirective]);
 	portal.directive('complexDropdownSelectMenu', [complexDropdownSelectMenuDirective]);
+	portal.directive('dropdownSelect2', [require('./app/directives/customInputs/dropdownSelect2Directive')]);
 	//</editor-fold>
 
 	//<editor-fold desc="Grid Table">

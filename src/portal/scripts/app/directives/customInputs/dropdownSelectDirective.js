@@ -34,6 +34,7 @@
                 //scope.placeholderText = 'Relation';
                 scope.dropdownMenuShown = false;
                 scope.dropdownMenuFilter = '';
+                scope.popupWidth = 'element';
 
                 let itemName = scope.itemName || '';
                 let menuOptionsList = [];
@@ -41,20 +42,24 @@
                 /* TIPS
                 scope.smallOptions probable properties
                     tooltipText: custom tooltip text
-                    indicatorBtnIcon: sets icon for indicator button
-                    dialogParent: 'string' - querySelector content for element to insert mdDialog into
+                    noIndicatorBtn: whether to show button at the right part of input
                     notNull: selector should not be empty
+                    dialogParent: 'string' - querySelector content for element to insert mdDialog into
+                    popupWidth:
                 */
 
                 if (scope.smallOptions) {
 
-                    scope.tooltipText = scope.smallOptions.tooltipText
+                    scope.tooltipText = scope.smallOptions.tooltipText;
 
                     /* if (scope.smallOptions.indicatorBtnIcon) {
                         var indicatorBtnIcon = scope.smallOptions.indicatorBtnIcon;
                     } */
 
-                    scope.dialogParent = scope.smallOptions.dialogParent
+                    scope.dialogParent = scope.smallOptions.dialogParent;
+                    scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
+                    scope.popupWidth = scope.smallOptions.popupWidth || scope.popupWidth;
+
                 }
 
                 scope.menuOptionsPopupData = {
@@ -211,6 +216,9 @@
 
                 scope.selectOption = function (item) {
 
+                    if (item.hasOwnProperty('onClick')) {
+                        item.onClick();
+                    }
 					// closeDropdownMenu();
                     if (item.id !== scope.model) {
 

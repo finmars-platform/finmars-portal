@@ -13,6 +13,8 @@
 
         vm.itemId = data.item.id;
 
+        vm.entityType = 'expression-procedure';
+
         vm.readyStatus = {procedure: false};
 
         vm.item = {};
@@ -52,6 +54,8 @@
         vm.getItem = function () {
 
             expressionProcedureService.getByKey(vm.itemId).then(function (data) {
+
+                vm.originalItem = JSON.parse(JSON.stringify(data));
 
                 vm.item = data;
 
@@ -107,6 +111,30 @@
             vm.item.context_variables.splice($index, 1);
 
         }
+
+        vm.editAsJson = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityAsJsonEditorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        item: vm.originalitem,
+                        entityType: vm.entityType,
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.getItem();
+
+                }
+            })
+
+        };
 
         vm.init = function () {
 
