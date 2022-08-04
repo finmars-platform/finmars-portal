@@ -19,6 +19,11 @@
 					type: null
 				};
 
+				const openUseFromAboveSettings = async function () {
+					[scope.activeFilter.type, scope.filter.options] = await gFiltersHelper.openUseFromAboveSettings(rvFilterVm.openUseFromAboveSettings(), scope.filter.options);
+					scope.$apply();
+				};
+
 				scope.filterTypes = [
 					{name: 'Equal', id: 'equal'},
 					{name: 'Not equal', id: 'not_equal'},
@@ -29,7 +34,11 @@
 					{name: 'From ... to ... (incl)', id: 'from_to'},
 					{name: 'Out of range (incl)', id: 'out_of_range'},
 					{name: 'Empty cells', id: 'empty'},
+
+					{name: 'Linked', id: 'use_from_above', onClick: openUseFromAboveSettings}
 				];
+
+				scope.readyStatus = true;
 
 				scope.changeFilterType = function (filterType) {
 
@@ -58,24 +67,6 @@
 						scope.filter.options = resultList[1];
 
 					}
-
-				};
-
-				scope.openUseFromAboveSettings = async function () {
-
-					/* scope.activeFilter.type = await rvFilterVm.openUseFromAboveSettings();
-
-					if (scope.activeFilter.type === 'use_from_above') {
-
-						scope.filter.options.use_from_above = {};
-						scope.filter.options.filter_type = scope.activeFilter.type;
-						scope.filter.options.filter_values = [];
-
-					}
-
-					scope.$apply(); */
-					[scope.activeFilter.type, scope.filter.options] = await gFiltersHelper.openUseFromAboveSettings(rvFilterVm.openUseFromAboveSettings(), scope.filter.options);
-					scope.$apply();
 
 				};
 

@@ -213,6 +213,9 @@
 
                 scope.selectOption = function (item) {
 
+                    if (item.hasOwnProperty('onClick')) {
+                        item.onClick();
+                    }
 					// closeDropdownMenu();
                     if (item.id !== scope.model) {
 
