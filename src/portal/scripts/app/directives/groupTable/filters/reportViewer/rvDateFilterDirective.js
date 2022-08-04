@@ -18,7 +18,10 @@
 					type: null
 				};
 
-				scope.readyStatus = true;
+				const openUseFromAboveSettings = async function () {
+					[scope.activeFilter.type, scope.filter.options] = await gFiltersHelper.openUseFromAboveSettings(rvFilterVm.openUseFromAboveSettings(), scope.filter.options);
+					scope.$apply();
+				};
 
 				scope.filterTypes = [
 					{name: 'Equal', id: 'equal'},
@@ -31,7 +34,11 @@
 					{name: 'Out of range (incl)', id: 'out_of_range'},
 					{name: 'Empty cells', id: 'empty'},
 					{name: 'Date tree', id: 'date_tree'},
+
+					{name: 'Linked', id: 'use_from_above', onClick: openUseFromAboveSettings},
 				];
+
+				scope.readyStatus = true;
 
 				scope.dateTreeChanged =function (dateTree) {
 					scope.filter.options.filter_values = gFiltersHelper.convertDatesTreeToFlatList(dateTree);
@@ -49,11 +56,6 @@
 
 					}
 
-				};
-
-				scope.openUseFromAboveSettings = async function () {
-					[scope.activeFilter.type, scope.filter.options] = await gFiltersHelper.openUseFromAboveSettings(rvFilterVm.openUseFromAboveSettings(), scope.filter.options);
-					scope.$apply();
 				};
 
 				const init = function () {
