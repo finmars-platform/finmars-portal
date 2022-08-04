@@ -18,6 +18,7 @@
     </md-input-container>-->
     <dropdown-select2 model="activeFilter.type"
                       menu-options="filterTypes"
+                      small-options="{popupWidth: 'content'}"
                       on-change-callback="changeFilterType(activeFilter.type)"
                       class="g-filter-types-select"></dropdown-select2>
 
@@ -30,7 +31,8 @@
                    placeholder="Value"
                    class="g-filter-tnv-back g-filter-input" />-->
             <text-input model="filter.options.filter_values[0]"
-                        placeholder-text="Value" small-options="{noIndicatorBtn: true}"
+                        placeholder-text="Value"
+                        small-options="{noIndicatorBtn: true}"
                         class="ci-placeholder2"></text-input>
 
         </div>
@@ -61,7 +63,8 @@
                 </md-select>
             </md-input-container> -->
             <dropdown-select2 model="filter.options.filter_values[0]"
-                              menu-options="columnRowsContent"></dropdown-select2>
+                              menu-options="columnRowsContent"
+                              small-options="{popupWidth: 'content'}"></dropdown-select2>
 
         </div>
 
