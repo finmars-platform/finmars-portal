@@ -7,6 +7,7 @@
             scope: {
                 label: "@",
                 model: "=",
+                placeholderText: "@",
                 customButtons: "=",
                 customStyles: "=",
                 elemsStyles: "=",
@@ -20,7 +21,8 @@
             link: function (scope, elem, attr) {
 
                 scope.error = "";
-                scope.placeholderText = "yyyy-mm-dd";
+                // scope.placeholderText = "yyyy-mm-dd";
+                scope.placeholder = scope.placeholderText || "yyyy-mm-dd";
 
                 scope.dateValue = ""; // prevents from calling on change method when date changed to the same date
 

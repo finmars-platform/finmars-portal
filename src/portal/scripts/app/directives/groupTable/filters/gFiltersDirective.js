@@ -50,8 +50,6 @@
 
                 vm.popupPosX = {value: null}
                 vm.popupPosY = {value: null}
-                vm.fpBackClasses = "z-index-48"
-                vm.fpClasses = "z-index-49"
 
                 /* $scope.readyStatus = {
                     filters: false

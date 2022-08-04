@@ -35,8 +35,8 @@
 
                 scope.popupPosX = gFiltersVm.popupPosX;
                 scope.popupPosY = gFiltersVm.popupPosY;
-                scope.fpBackClasses = gFiltersVm.fpBackClasses;
-                scope.fpClasses = gFiltersVm.fpClasses;
+               /* scope.fpBackClasses = gFiltersVm.fpBackClasses;
+                scope.fpClasses = gFiltersVm.fpClasses;*/
 
                 const gFiltersLeftPartWidth = elem[0].querySelector('.gFiltersLeftPart').clientWidth;
                 const gFiltersRightPartWidth = elem[0].querySelector('.gFiltersRightPart').clientWidth;

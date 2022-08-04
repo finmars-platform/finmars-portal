@@ -28,6 +28,8 @@
 
         vm.readyStatus = {procedure: false};
 
+        vm.entityType = 'pricing-procedure';
+
         vm.portfolios = [];
         vm.pricingPolicies = [];
         vm.instrumentTypes = [];
@@ -230,6 +232,8 @@
 
             pricingProcedureService.getByKey(vm.itemId).then(function (data) {
 
+                vm.originalItem = JSON.parse(JSON.stringify(data));
+
                 vm.item = data;
 
                 Object.keys(getAndOverwriteKeysPairs).forEach(vm.checkOverwriteValue);
@@ -304,6 +308,30 @@
 
                 vm.item[overwriteKey] = false;
             }
+
+        };
+
+        vm.editAsJson = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityAsJsonEditorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        item: vm.originalItem,
+                        entityType: vm.entityType,
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.getItem();
+
+                }
+            })
 
         };
 

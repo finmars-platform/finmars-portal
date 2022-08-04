@@ -292,7 +292,8 @@ md-sidenav {
   height: 100%;
   top: 0;
   left: 0;
-  z-index: 61;
+  //z-index: 61; // why? dialogs have 51, so its overlaps
+  z-index: 51;
 
   span.side-nav-title {
     position: relative;
@@ -3467,6 +3468,36 @@ span.highlight {
   }
 }
 
+.file-preview-content {
+
+  position: relative;
+
+  .copy-text-button {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    cursor: pointer;
+    z-index: 1;
+    background: #fff;
+    display: block;
+    padding: 4px;
+    font-size: 10px;
+    border-radius: 6px;
+    &:hover {
+      opacity: .7;
+    }
+  }
+
+  .file-preview-content-wrap {
+
+    .ace-editor {
+      min-height: 400px;
+      height: 100%;
+    }
+
+  }
+
+}
 
 
 .instrument-refresh-from-database-button {

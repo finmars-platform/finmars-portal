@@ -10,17 +10,14 @@ var app = express();
 
 var port = process.env.PORT || 8080;
 
-// app.use(function (req, res, next) {
-//
-//     var host = process.env.HOSTNAME || 'none';
-//
-//     console.info('host', host);
-//
-//     res.header("Access-Control-Expose-Headers", "x-hostname");
-//     res.header('x-hostname', host);
-//
-//     next()
-// });
+app.use(function noCacheForRoot(req, res, next) {
+    if (req.url === '/') {
+        res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+        res.header("Pragma", "no-cache");
+        res.header("Expires", 0);
+    }
+    next();
+});
 
 
 app.use('/build/:uid/*', function(req, res, next) {
@@ -37,6 +34,9 @@ app.use('/build/:uid/*', function(req, res, next) {
 
 
 app.use(express.static(path.join(__dirname, 'dist')));
+
+
+
 app.use('/portal', express.static('dist'));
 
 
@@ -56,10 +56,16 @@ app.use('/healthcheck', function (req, res) {
 });
 
 
-
-
-
 app.use(express.static(path.join(__dirname, 'dist')));
+
+
+app.get('/', (request, response) => {
+    response.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    response.header('Expires', '-1');
+    response.header('Pragma', 'no-cache');
+    response.sendFile(path.join(__dirname, 'dist/index.html'));
+});
+
 
 // WARNING ONLY FOR DEV PURPOSE
 // var pdfProxyOptions = url.parse('http://0.0.0.0:80');
