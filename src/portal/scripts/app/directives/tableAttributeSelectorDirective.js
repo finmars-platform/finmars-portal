@@ -14,6 +14,7 @@
                 availableAttrs: '<',
                 item: '=',
 				isReport: '@', // whether available attributes are from report ['true', 'false']
+                isDisabled: '=',
                 onChangeCallback: '&?'
             },
             templateUrl: 'views/directives/table-attribute-selector-view.html',
@@ -42,10 +43,16 @@
                     getInputText();
                 });
 
+                var dialogParent = document.querySelector('.dialog-containers-wrap');
+
                 $(elem).click(function (event) {
 
                     event.preventDefault();
                     event.stopPropagation();
+
+                    if (scope.isDisabled) {
+                        return;
+                    }
 
                     var availableAttrs = null;
                     if (scope.availableAttrs) {
@@ -55,6 +62,7 @@
                     $mdDialog.show({
                         controller: "TableAttributeSelectorDialogController as vm",
                         templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
+                        parent: dialogParent,
                         targetEvent: event,
                         multiple: true,
                         locals: {

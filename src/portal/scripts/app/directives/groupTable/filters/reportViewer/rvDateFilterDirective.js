@@ -18,20 +18,27 @@
 					type: null
 				};
 
-				scope.readyStatus = true;
+				const openUseFromAboveSettings = async function () {
+					[scope.activeFilter.type, scope.filter.options] = await gFiltersHelper.openUseFromAboveSettings(rvFilterVm.openUseFromAboveSettings(), scope.filter.options);
+					scope.$apply();
+				};
 
 				scope.filterTypes = [
-					{name: 'Equal', value: 'equal'},
-					{name: 'Not equal', value: 'not_equal'},
-					{name: 'Greater than', value: 'greater'},
-					{name: 'Greater or equal to', value: 'greater_equal'},
-					{name: 'Less than', value: 'less'},
-					{name: 'Less or equal to', value: 'less_equal'},
-					{name: 'From ... to ... (incl)', value: 'from_to'},
-					{name: 'Out of range (incl)', value: 'out_of_range'},
-					{name: 'Empty cells', value: 'empty'},
-					{name: 'Date tree', value: 'date_tree'},
+					{name: 'Equal', id: 'equal'},
+					{name: 'Not equal', id: 'not_equal'},
+					{name: 'Greater than', id: 'greater'},
+					{name: 'Greater or equal to', id: 'greater_equal'},
+					{name: 'Less than', id: 'less'},
+					{name: 'Less or equal to', id: 'less_equal'},
+					{name: 'From ... to ... (incl)', id: 'from_to'},
+					{name: 'Out of range (incl)', id: 'out_of_range'},
+					{name: 'Empty cells', id: 'empty'},
+					{name: 'Date tree', id: 'date_tree'},
+
+					{name: 'Linked', id: 'use_from_above', onClick: openUseFromAboveSettings},
 				];
+
+				scope.readyStatus = true;
 
 				scope.dateTreeChanged =function (dateTree) {
 					scope.filter.options.filter_values = gFiltersHelper.convertDatesTreeToFlatList(dateTree);
@@ -49,11 +56,6 @@
 
 					}
 
-				};
-
-				scope.openUseFromAboveSettings = async function () {
-					[scope.activeFilter.type, scope.filter.options] = await gFiltersHelper.openUseFromAboveSettings(rvFilterVm.openUseFromAboveSettings(), scope.filter.options);
-					scope.$apply();
 				};
 
 				const init = function () {

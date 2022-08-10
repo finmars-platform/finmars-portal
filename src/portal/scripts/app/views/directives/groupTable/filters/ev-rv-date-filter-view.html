@@ -1,6 +1,6 @@
 <div ng-if="readyStatus" class="g-filter-type-n-value flex-row fc-space-between">
 
-    <md-input-container class="g-filter-types-select">
+    <!--<md-input-container class="g-filter-types-select">
         <md-select ng-model="activeFilter.type"
                    ng-change="changeFilterType(activeFilter.type)"
                    class="g-filter-tnv-back">
@@ -14,27 +14,33 @@
 
             </div>
         </md-select>
-    </md-input-container>
+    </md-input-container>-->
+    <dropdown-select2 model="activeFilter.type"
+                      menu-options="filterTypes"
+                      on-change-callback="changeFilterType(activeFilter.type)"
+                      class="g-filter-types-select"></dropdown-select2>
 
     <div class="g-filter-value-wrap">
         <div ng-if="filter.options.filter_type !== 'from_to' && filter.options.filter_type !== 'out_of_range' && filter.options.filter_type !== 'date_tree'"
              class="height-100">
 
-            <md-input-container class="md-block">
+            <!--<md-input-container class="md-block">
                 <label>
                     <span ng-bind="getFilterRegime()"></span>
                 </label>
 
                 <zh-date-picker data-date-value="filter.options.filter_values[0]"
                                 data-position="left"></zh-date-picker>
-            </md-input-container>
+            </md-input-container>-->
+            <date-input model="filter.options.filter_values[0]"
+                        class="ci-placeholder2"></date-input>
 
         </div>
 
         <div ng-if="filter.options.filter_type === 'from_to' || filter.options.filter_type === 'out_of_range'"
              class="height-100">
 
-            <md-input-container class="md-block">
+            <!--<md-input-container class="md-block">
                 <label>
                     <span>From (incl)</span>
                 </label>
@@ -50,7 +56,14 @@
 
                 <zh-date-picker data-date-value="filter.options.filter_values.max_value"
                                 data-position="left"></zh-date-picker>
-            </md-input-container>
+            </md-input-container>-->
+            <date-input model="filter.options.filter_values.min_value"
+                        placeholder-text="From (incl)"
+                        class="ci-placeholder2"></date-input>
+
+            <date-input model="filter.options.filter_values.max_value"
+                        placeholder-text="To (incl)"
+                        class="ci-placeholder2 display-block m-t-10"></date-input>
 
         </div>
 
