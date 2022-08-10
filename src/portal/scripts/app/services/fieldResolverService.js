@@ -34,6 +34,10 @@
     var metaEventClassRepository = require('../repositories/metaEventClassRepository');
     var metaNotificationClassRepository = require('../repositories/metaNotificationClassRepository');
 
+
+    var instrumentPricingSchemeRepository = require('../repositories/pricing/instrumentPricingSchemeRepository');
+    var currencyPricingSchemeRepository = require('../repositories/pricing/currencyPricingSchemeRepository');
+
     var getFields = function (fieldKey, options, fieldsDataStore) {
 
         return new Promise(function (resolve, reject) {
@@ -135,6 +139,17 @@
                 case 'periodicity':
                     instrumentPeriodicityRepository.getList({pageSize: 1000}).then(function (data) {
                         resolve({type: 'id', key: 'periodicity', data: data});
+                    });
+                    break;
+                case 'instrument_pricing_scheme':
+                    instrumentPricingSchemeRepository.getList({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'instrument_pricing_scheme', data: data.results});
+                    });
+                    break;
+
+                case 'currency_pricing_scheme':
+                    currencyPricingSchemeRepository.getList({pageSize: 1000}).then(function (data) {
+                        resolve({type: 'id', key: 'currency_pricing_scheme', data: data.results});
                     });
                     break;
                 case 'accrual_calculation_model':

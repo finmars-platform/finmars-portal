@@ -201,28 +201,28 @@
                 </md-select>
             </md-input-container>
 
-<!--            <md-input-container class="md-block" style="width: 200px;">-->
-<!--                <label>Price Download Scheme</label>-->
-<!--                <md-select md-on-close="vm.searchTermPriceDownloadScheme = ''"-->
-<!--                           data-ng-model="vm.default.price_download_scheme"-->
-<!--                           md-on-open="vm.getRelation('price-download-scheme', 'price_download_scheme', 'price_download_scheme_fields')"-->
-<!--                           md-container-class="common-select-container">-->
-<!--                    <md-select-header>-->
-<!--                        <input data-ng-model="vm.searchTermPriceDownloadScheme"-->
-<!--                               type="search"-->
-<!--                               placeholder="Search for a ..."-->
-<!--                               class="md-text md-select-search-pattern select-input-filter"-->
-<!--                               ng-keydown="$event.stopPropagation()">-->
-<!--                    </md-select-header>-->
-<!--                    <div class="select-options-holder">-->
-<!--                        <md-option-->
-<!--                                data-ng-repeat="field in vm.price_download_scheme_fields | orderBy:'-'+field.user_code | filter:{user_code: vm.searchTermPriceDownloadScheme} as results track by field.id "-->
-<!--                                ng-value="field.id">-->
-<!--                            {{field.user_code}}-->
-<!--                        </md-option>-->
-<!--                    </div>-->
-<!--                </md-select>-->
-<!--            </md-input-container>-->
+            <!--            <md-input-container class="md-block" style="width: 200px;">-->
+            <!--                <label>Price Download Scheme</label>-->
+            <!--                <md-select md-on-close="vm.searchTermPriceDownloadScheme = ''"-->
+            <!--                           data-ng-model="vm.default.price_download_scheme"-->
+            <!--                           md-on-open="vm.getRelation('price-download-scheme', 'price_download_scheme', 'price_download_scheme_fields')"-->
+            <!--                           md-container-class="common-select-container">-->
+            <!--                    <md-select-header>-->
+            <!--                        <input data-ng-model="vm.searchTermPriceDownloadScheme"-->
+            <!--                               type="search"-->
+            <!--                               placeholder="Search for a ..."-->
+            <!--                               class="md-text md-select-search-pattern select-input-filter"-->
+            <!--                               ng-keydown="$event.stopPropagation()">-->
+            <!--                    </md-select-header>-->
+            <!--                    <div class="select-options-holder">-->
+            <!--                        <md-option-->
+            <!--                                data-ng-repeat="field in vm.price_download_scheme_fields | orderBy:'-'+field.user_code | filter:{user_code: vm.searchTermPriceDownloadScheme} as results track by field.id "-->
+            <!--                                ng-value="field.id">-->
+            <!--                            {{field.user_code}}-->
+            <!--                        </md-option>-->
+            <!--                    </div>-->
+            <!--                </md-select>-->
+            <!--            </md-input-container>-->
 
         </div>
 
@@ -274,28 +274,28 @@
                 </md-select>
             </md-input-container>
 
-<!--            <md-input-container class="md-block" style="width: 200px;">-->
-<!--                <label>Daily Pricing Model</label>-->
-<!--                <md-select md-on-close="vm.searchTermDailyPricingModel = ''"-->
-<!--                           data-ng-model="vm.default.daily_pricing_model"-->
-<!--                           md-on-open="vm.getRelation('daily-pricing-model', 'daily_pricing_model', 'daily_pricing_model_fields')"-->
-<!--                           md-container-class="common-select-container">-->
-<!--                    <md-select-header>-->
-<!--                        <input data-ng-model="vm.searchTermDailyPricingModel"-->
-<!--                               type="search"-->
-<!--                               placeholder="Search for a ..."-->
-<!--                               class="md-text md-select-search-pattern select-input-filter"-->
-<!--                               ng-keydown="$event.stopPropagation()">-->
-<!--                    </md-select-header>-->
-<!--                    <div class="select-options-holder">-->
-<!--                        <md-option-->
-<!--                                data-ng-repeat="field in vm.daily_pricing_model_fields | orderBy:'-'+field.name | filter:{name: vm.searchTermDailyPricingModel} as results track by field.id "-->
-<!--                                ng-value="field.id">-->
-<!--                            {{field.name}}-->
-<!--                        </md-option>-->
-<!--                    </div>-->
-<!--                </md-select>-->
-<!--            </md-input-container>-->
+            <!--            <md-input-container class="md-block" style="width: 200px;">-->
+            <!--                <label>Daily Pricing Model</label>-->
+            <!--                <md-select md-on-close="vm.searchTermDailyPricingModel = ''"-->
+            <!--                           data-ng-model="vm.default.daily_pricing_model"-->
+            <!--                           md-on-open="vm.getRelation('daily-pricing-model', 'daily_pricing_model', 'daily_pricing_model_fields')"-->
+            <!--                           md-container-class="common-select-container">-->
+            <!--                    <md-select-header>-->
+            <!--                        <input data-ng-model="vm.searchTermDailyPricingModel"-->
+            <!--                               type="search"-->
+            <!--                               placeholder="Search for a ..."-->
+            <!--                               class="md-text md-select-search-pattern select-input-filter"-->
+            <!--                               ng-keydown="$event.stopPropagation()">-->
+            <!--                    </md-select-header>-->
+            <!--                    <div class="select-options-holder">-->
+            <!--                        <md-option-->
+            <!--                                data-ng-repeat="field in vm.daily_pricing_model_fields | orderBy:'-'+field.name | filter:{name: vm.searchTermDailyPricingModel} as results track by field.id "-->
+            <!--                                ng-value="field.id">-->
+            <!--                            {{field.name}}-->
+            <!--                        </md-option>-->
+            <!--                    </div>-->
+            <!--                </md-select>-->
+            <!--            </md-input-container>-->
 
             <md-input-container class="md-block" style="width: 200px;">
                 <label>Instrument Class</label>
@@ -683,6 +683,43 @@
 
         </div>
 
+
+        <div layout="row" class="m-t-16">
+
+            <md-input-container class="md-block" style="width: 200px;">
+                <label>Instrument Pricing Scheme</label>
+                <md-select md-on-close="vm.searchTermPeriodicity = ''"
+                           data-ng-model="vm.default.instrument_pricing_scheme"
+                           md-on-open="vm.getRelation('instrument-pricing-scheme', 'instrument_pricing_scheme', 'instrument_pricing_scheme_fields')"
+                           md-container-class="common-select-container">
+                    <div class="select-options-holder">
+                        <md-option
+                                data-ng-repeat="field in vm.instrument_pricing_scheme_fields | orderBy:'-'+field.name | filter:{name: vm.searchTermPeriodicity} as results track by field.id "
+                                ng-value="field.id">
+                            {{field.name}}
+                        </md-option>
+                    </div>
+                </md-select>
+            </md-input-container>
+
+            <md-input-container class="md-block" style="width: 200px;">
+                <label>Currency Pricing Scheme</label>
+                <md-select md-on-close="vm.searchTermPeriodicity = ''"
+                           data-ng-model="vm.default.currency_pricing_scheme"
+                           md-on-open="vm.getRelation('currency-pricing-scheme', 'currency_pricing_scheme', 'currency_pricing_scheme_fields')"
+                           md-container-class="common-select-container">
+                    <div class="select-options-holder">
+                        <md-option
+                                data-ng-repeat="field in vm.currency_pricing_scheme_fields | orderBy:'-'+field.name | filter:{name: vm.searchTermPeriodicity} as results track by field.id "
+                                ng-value="field.id">
+                            {{field.name}}
+                        </md-option>
+                    </div>
+                </md-select>
+            </md-input-container>
+
+        </div>
+
         <div layout="row" class="m-t-16">
 
             <md-button class="md-raised md-primary" data-ng-click="vm.save()">Save</md-button>
@@ -702,7 +739,8 @@
 
                 <div class="p-t-8">{{item.value}}</div>
 
-                <md-button class="md-warn md-raised" data-ng-click="vm.deleteUsercodeGroup($event, item)">Delete</md-button>
+                <md-button class="md-warn md-raised" data-ng-click="vm.deleteUsercodeGroup($event, item)">Delete
+                </md-button>
 
             </div>
 
@@ -713,10 +751,10 @@
                     <input type="text" data-ng-model="vm.groupPrefix">
                 </md-input-container>
 
-                <md-button class="md-raised md-primary" data-ng-click="vm.createNewUserCodeGroup($event)">Create</md-button>
+                <md-button class="md-raised md-primary" data-ng-click="vm.createNewUserCodeGroup($event)">Create
+                </md-button>
 
             </div>
-
 
 
         </div>
