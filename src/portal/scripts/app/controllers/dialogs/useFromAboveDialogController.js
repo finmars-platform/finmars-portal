@@ -68,7 +68,7 @@
         vm.filterTypesSelDisabled = vm.filterTypes.length < 2;
 
         if (!vm.item) {
-            vm.filterType = vm.filterTypes[0].key;
+            vm.filterType = vm.filterTypes[0].id;
         }
 
         vm.getAttributes = function () {
