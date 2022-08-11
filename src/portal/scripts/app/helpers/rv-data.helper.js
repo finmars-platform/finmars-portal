@@ -915,35 +915,9 @@
         var layout = evDataService.getListLayout();
         var contentType = evDataService.getContentType();
 
-        // var member_id = member.id
-
         var parents = evRvCommonHelper.getParents(group.___parentId, evDataService);
 
         parents.pop() // skip root group
-
-        /* var reportData
-        var rawReportData = localStorage.getItem('report_data')
-
-
-        if (rawReportData) {
-            reportData = JSON.parse(rawReportData)
-        } else {
-            reportData = {}
-        }
-
-        if (!reportData[member_id]) {
-            reportData[member_id] = {}
-        }
-
-        if (!reportData[member_id][contentType]) {
-            reportData[member_id][contentType] = {}
-        }
-
-        if (!reportData[member_id][contentType][layout.user_code]) {
-            reportData[member_id][contentType][layout.user_code] = {
-                groups: {}
-            }
-        } */
 
 		var reportData = localStorageService.getReportData();
 
@@ -955,13 +929,6 @@
 			}
 		}
 
-		/*if (parents.length && parents[0].___type === "subtotal") {
-
-			full_path = parents.map(function (item) {
-				return item.___group_name
-			})
-
-		}*/
 		var full_path = parents.map(function (item) {
 			return item.___group_name
 		})
@@ -975,9 +942,6 @@
 
         var groupSettings;
 
-        /*if (reportData[member_id][contentType][layout.user_code]['groups'][full_path]) {
-            groupSettings = reportData[member_id][contentType][layout.user_code]['groups'][full_path];
-        }*/
 		if (reportData[contentType][layout.user_code]['groups'][full_path_prop]) {
 			groupSettings = reportData[contentType][layout.user_code]['groups'][full_path_prop];
 		}
@@ -989,10 +953,8 @@
                 is_open: true
             }
 
-            // reportData[member_id][contentType][layout.user_code]['groups'][full_path] = groupSettings
 			reportData[contentType][layout.user_code]['groups'][full_path_prop] = groupSettings;
 
-            // localStorage.setItem('report_data', JSON.stringify(reportData));
 			localStorageService.cacheReportData(reportData);
 
         }
@@ -1003,31 +965,12 @@
 
     var setGroupSettings = function (evDataService, group, groupSettings) {
 
-        // var member = evDataService.getCurrentMember()
         var layout = evDataService.getListLayout();
         var contentType = evDataService.getContentType();
         var groups = evDataService.getGroups();
 
-        /*if (!member) {
-            throw new Error("Current Member is not set")
-        }
-
-        if (!contentType) {
-            throw new Error("Content type is not set")
-        }
-
-        var member_id = member.id
-
-        var reportData
-        var rawReportData = localStorage.getItem('report_data')
-
-        if (rawReportData) {
-            reportData = JSON.parse(rawReportData)
-        } else {
-            reportData = {}
-        } */
 		var reportData = localStorageService.getReportDataForLayout(contentType, layout.user_code);
-        // reportData[member_id][contentType][layout.user_code]['groups'][groupSettings.full_path] = groupSettings;
+
 		if (!reportData['groups']) {
 			reportData['groups'] = {}
 		}
@@ -1040,20 +983,6 @@
 
 		reportData['groups'][full_path_prop] = groupSettings;
 
-		/*reportData.groupsList = groups.map(group => {
-
-			var groupObj = {key: group.key};
-			if (group.report_settings && group.report_settings.is_level_folded) {
-
-				groupObj.report_settings = {
-					is_level_folded: true
-				}
-
-			}
-
-			return groupObj;
-
-		});*/
 		reportData.groupsList = [];
 
 		groups.forEach(group => {
@@ -1076,9 +1005,6 @@
 
 		});
 
-		// if (!reportData.fullyFoldedGroups.length) delete reportData.fullyFoldedGroups;
-
-        // localStorage.setItem('report_data', JSON.stringify(reportData));
 		localStorageService.cacheReportDataForLayout(contentType, layout.user_code, reportData);
 
     }
