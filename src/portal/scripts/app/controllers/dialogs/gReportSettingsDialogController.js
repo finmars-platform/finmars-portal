@@ -364,8 +364,6 @@
             return ready;
         };
 
-
-
         vm.saveSettings = function () {
 
             // console.log('saveSettings.reportOptions', vm.reportOptions);
@@ -387,8 +385,15 @@
             vm.reportOptions.table_font_size = vm.tableFontSize;
 
             vm.reportOptions.complex_transaction_statuses_filter = vm.complex_transaction_statuses_filter.join(',')
-            console.log("testing1 saveSettings", vm.reportOptions, vm.reportLayoutOptions);
-            $mdDialog.hide({status: 'agree', data: vm.reportOptions});
+
+            $mdDialog.hide({
+                status: 'agree',
+                data: {
+                    reportOptions: vm.reportOptions,
+                    reportLayoutOptions: vm.reportLayoutOptions
+                }
+            });
+
         };
 
         vm.cancel = function () {

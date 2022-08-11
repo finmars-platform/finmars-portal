@@ -2589,6 +2589,12 @@ body.md-dialog-is-showing {
     }
   }
 
+  .complex-datepicker-popup-btn:not([disabled]) {
+    .complex-datepicker-sel-value:hover {
+      opacity: .5;
+    }
+  }
+
   .complex-datepicker-sel-value {
     position: relative;
     display: flex;
@@ -2598,12 +2604,9 @@ body.md-dialog-is-showing {
     padding: 2px 26px 1px 2px;
     margin: 0;
     box-sizing: border-box;
-
-    &:not([disabled]):hover {
-      opacity: .5;
-    }
-
   }
+
+
 
   &.range-of-dates {
     .complex-datepicker-popup-btn {
@@ -2612,7 +2615,7 @@ body.md-dialog-is-showing {
   }
 
   .complex-datepicker-custom-input {
-    cursor: pointer;
+    // cursor: pointer;
 
     .custom-input:not([disabled]) {
       cursor: pointer;

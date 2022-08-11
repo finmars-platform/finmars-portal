@@ -129,9 +129,8 @@
 
                         if (res.status === 'agree') {
 
-                            var reportOptions = res.data;
-
-                            scope.evDataService.setReportOptions(reportOptions);
+                            scope.evDataService.setReportLayoutOptions(res.data.reportLayoutOptions);
+                            scope.evDataService.setReportOptions(res.data.reportOptions);
 
                             scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
 
@@ -368,21 +367,16 @@
                     if (scope.isReport) {
 
                         scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
-                            console.trace("testing1 REPORT_OPTIONS_CHANGE")
+
                             scope.reportOptions = scope.evDataService.getReportOptions();
+                            scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
 
                             if (dateFromKey) {
                                 scope.datesData.from = scope.reportOptions[dateFromKey];
                             }
 
                             scope.datesData.to = scope.reportOptions[dateToKey];
-                            console.log("testing1 gTopPart REPORT_OPTIONS_CHANGE", scope.datesData);
-                        });
 
-                    } else {
-
-                        scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
-                            scope.reportOptions = scope.evDataService.getReportOptions();
                         });
 
                     }

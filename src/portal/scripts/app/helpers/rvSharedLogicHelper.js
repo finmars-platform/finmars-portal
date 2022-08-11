@@ -202,7 +202,7 @@ import reportHelper from "./reportHelper";
          * @returns {Promise<{-readonly [P in keyof *[]]: PromiseSettledResult<Awaited<*[][P]>>}>}
          */
         const applyDatesFromAnotherLayout = function (contentType, reportOptions, reportLayoutOptions) {
-            // console.log("testing1 applyDatesFromAnotherLayout " + layout.name);
+
             const result = [];
             const pEntityType = metaContentTypeService.findEntityByContentType(contentType);
             const dateProps = reportHelper.getDateProperties(viewModel.entityType);
@@ -220,7 +220,7 @@ import reportHelper from "./reportHelper";
                             activeLayoutRo[prop] = '0001-01-01';
                             return resolve();
                         }
-                        console.log("testing1 applyDatesFromAnotherLayout in between");
+
                         reportHelper.getReportDate(reportOptions, reportLayoutOptions, matchingProp).then(date => {
 
 

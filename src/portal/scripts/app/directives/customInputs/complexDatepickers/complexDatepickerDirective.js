@@ -87,6 +87,7 @@
 						parent: dialogContainerWrapElem,
 						targetEvent: $event,
 						autoWrap: true,
+						multiple: true,
 						locals: {
 							item: {expression: datepickerOptionsCopy.expression},
 							data: eeData
