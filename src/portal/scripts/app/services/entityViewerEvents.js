@@ -43,7 +43,7 @@ module.exports = {
 
     'UPDATE_EV_UI': 'UPDATE_EV_UI',
     'TOGGLE_FILTER_AREA': 'TOGGLE_FILTER_AREA',
-    'TOGGLE_FILTER_BLOCK': 'TOGGLE_FILTER_BLOCK', // Victor 2021.01.06 #69 new report viewer interface toggle filter block visibility
+    'TOGGLE_FILTER_BLOCK': 'TOGGLE_FILTER_BLOCK',
     'UPDATE_FILTER_AREA_SIZE': 'UPDATE_FILTER_AREA_SIZE',
     'TOGGLE_SHOW_FROM_ABOVE_FILTERS': 'TOGGLE_SHOW_FROM_ABOVE_FILTERS',
 
@@ -53,20 +53,21 @@ module.exports = {
 
 
     'REPORT_OPTIONS_CHANGE': 'REPORT_OPTIONS_CHANGE',
+    'TOGGLE_USE_REPORT_DATE_FROM_ABOVE': 'TOGGLE_USE_REPORT_DATE_FROM_ABOVE',
 
     'LIST_LAYOUT_CHANGE': 'LIST_LAYOUT_CHANGE',
     'DEFAULT_LAYOUT_CHANGE': 'DEFAULT_LAYOUT_CHANGE',
     'ACTIVE_LAYOUT_CONFIGURATION_CHANGED': 'ACTIVE_LAYOUT_CONFIGURATION_CHANGED', // fires on DATA_LOAD_END
     'LAYOUT_NAME_CHANGE': 'LAYOUT_NAME_CHANGE',
 
-    // Events used only to track layout changes
+    //region Events used only to track layout changes
     'REPORT_EXPORT_OPTIONS_CHANGED': 'REPORT_EXPORT_OPTIONS_CHANGED',
     'REPORT_TABLE_VIEW_CHANGED': 'REPORT_TABLE_VIEW_CHANGED',
     'ENTITY_VIEWER_PAGINATION_CHANGED': 'ENTITY_VIEWER_PAGINATION_CHANGED',
     'ENTITY_VIEWER_SETTINGS_CHANGED': 'ENTITY_VIEWER_SETTINGS_CHANGED',
-    // < Events used only to track layout changes >
+    //endregion Events used only to track layout changes
 
-    // Trigger Split Panel events from root entity viewer
+    //region Trigger Split Panel events from root entity viewer
     'UPDATE_SPLIT_PANEL_TABLE_VIEWPORT': 'UPDATE_SPLIT_PANEL_TABLE_VIEWPORT',
     'SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED': 'SPLIT_PANEL_DEFAULT_LIST_LAYOUT_CHANGED',
     'TOGGLE_AUTOSAVE': 'TOGGLE_AUTOSAVE',
@@ -77,17 +78,17 @@ module.exports = {
 
 
     'RECON_BOOK_SELECTED': 'RECON_BOOK_SELECTED',
-    // < Trigger Split Panel events from root entity viewer >
+    //endregion Trigger Split Panel events from root entity viewer
 
     // Trigger Entity Viewer methods from Split Panel
     'RECON_TOGGLE_MATCH_EDITOR': 'RECON_TOGGLE_MATCH_EDITOR',
     // < Trigger Entity Viewer methods from Split Panel >
 
-	//<editor-fold desc="When inside dashboard events">
+	//region When inside dashboard events
 	'OPEN_DASHBOARD_COMPONENT_EDITOR': 'OPEN_DASHBOARD_COMPONENT_EDITOR',
     'MISSING_PRICES_LOAD_END_TO_DASHBOARD': 'MISSING_PRICES_LOAD_END_TO_DASHBOARD',
 	'DASHBOARD_COMPONENT_DATA_CHANGED': 'DASHBOARD_COMPONENT_DATA_CHANGED',
-	//</editor-fold>
+	//endregion
 
     'MISSING_PRICES_LOAD_END': 'MISSING_PRICES_LOAD_END',
 

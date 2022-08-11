@@ -302,7 +302,6 @@ export default function () {
     const areReportOptionsTheSame = function (activeLayoutConfig, evDataService) {
 
         var originalReportOptions = metaHelper.recursiveDeepCopy(activeLayoutConfig.data.reportOptions);
-
         var originReportLayoutOptions = metaHelper.recursiveDeepCopy(activeLayoutConfig.data.reportLayoutOptions);
 
         if (originReportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
@@ -321,8 +320,13 @@ export default function () {
 
 
         var currentReportOptions = metaHelper.recursiveDeepCopy(evDataService.getReportOptions());
-
         var currentReportLayoutOptions = metaHelper.recursiveDeepCopy(evDataService.getReportLayoutOptions());
+
+        var viewContext = evDataService.getViewContext();
+
+        if (viewContext === 'split_panel' && currentReportLayoutOptions.useDateFromAbove) {
+            currentReportOptions = evDataService.applyStashedReportDates(currentReportOptions);
+        }
 
         if (currentReportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
             delete currentReportOptions.pl_first_date;

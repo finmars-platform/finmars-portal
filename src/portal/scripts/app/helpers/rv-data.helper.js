@@ -912,11 +912,10 @@
 
     var getOrCreateGroupSettings = function (evDataService, group) {
 
-        var member = evDataService.getCurrentMember();
         var layout = evDataService.getListLayout();
         var contentType = evDataService.getContentType();
 
-        var member_id = member.id
+        // var member_id = member.id
 
         var parents = evRvCommonHelper.getParents(group.___parentId, evDataService);
 
