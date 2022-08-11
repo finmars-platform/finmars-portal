@@ -415,8 +415,8 @@
 				const cancelPopup = function (argumentsObj) {
 
 					removePopUp();
-
-					if (scope.onCancel && !argumentsObj || argumentsObj.onCancelCallback !== false) {
+					console.log("testing1 cancelPopup", scope.onCancel, argumentsObj);
+					if (scope.onCancel && (!argumentsObj || argumentsObj.onCancelCallback !== false)) {
 						scope.onCancel();
 					}
 

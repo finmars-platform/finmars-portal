@@ -205,7 +205,7 @@ import reportHelper from "./reportHelper";
             // console.log("testing1 applyDatesFromAnotherLayout " + layout.name);
             const result = [];
             const pEntityType = metaContentTypeService.findEntityByContentType(contentType);
-            const dateProps = reportDateProperties[viewModel.entityType];
+            const dateProps = reportHelper.getDateProperties(viewModel.entityType);
             const activeLayoutRo = viewModel.entityViewerDataService.getReportOptions();
 
             dateProps.forEach(prop => {
@@ -242,12 +242,6 @@ import reportHelper from "./reportHelper";
 
         };
 
-        const reportDateProperties = {
-            'balance-report': [null, 'report_date'],
-            'pl-report': ['pl_first_date', 'report_date'],
-            'transaction-report': ['begin_date', 'end_date']
-        };
-
         /**
          * Supports calculateReportDatesExprs function
          *
@@ -258,7 +252,8 @@ import reportHelper from "./reportHelper";
          */
         const calcReportDateExpr = function (dateExpr, reportOptions, reportDateIndex) {
 
-            const dateProp = reportDateProperties[viewModel.entityType][reportDateIndex];
+            // const dateProp = reportDateProperties[viewModel.entityType][reportDateIndex];
+            const dateProp = reportHelper.getDateProperties(viewModel.entityType)[reportDateIndex];
 
             /*const result = expressionService.getResultOfExpression({"expression": dateExpr}).then(function (data) {
                 reportOptions[dateProp] = data.result

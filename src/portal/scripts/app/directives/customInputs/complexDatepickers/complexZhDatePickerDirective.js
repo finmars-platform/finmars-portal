@@ -7,11 +7,11 @@
 
     /* const metaService = require('../services/metaService');
 	const expressionService = require('../services/expression.service'); */
-	const evEvents = require('../services/entityViewerEvents');
+	const evEvents = require('../../../services/entityViewerEvents');
 
-	const EventService = require('../services/eventService');
+	const EventService = require('../../../services/eventService');
 
-    module.exports = function ($mdDialog, pickmeup) {
+    module.exports = function ($mdDialog) {
 
         return {
             restrict: 'AE',
@@ -25,15 +25,26 @@
                 evDataService: '=',
                 evEventService: '=',
                 attributeDataService: '=',
-                isDisabled: '=',
+				isDisabled: '=',
+
+				selectorLook: '@', // 'input'
+
+				label: '@',
+				placeholderText: '@',
             },
-            templateUrl: 'views/directives/complex-zh-date-picker-view.html',
+            templateUrl: 'views/directives/customInputs/complexDatepickers/complex-zh-datepicker-view.html',
             link: function (scope, elem, attrs) {
 
-                scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+                // scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.rangeOfDates = (scope.secondDate !== undefined && !!scope.secondDatepickerOptions);
+				scope.templateUrl = 'views/directives/customInputs/complexDatepickers/c-zh-datepicker-view.html';
+
+				if (scope.selectorLook === 'input') {
+					scope.templateUrl = 'views/directives/customInputs/complexDatepickers/c-zh-datepicker-input-view.html';
+				}
 
                 const entityType = scope.evDataService.getEntityType();
+				const viewContext = scope.evDataService.getViewContext();
 				/* const isReport = metaService.isReport(entityType);
 
                 // var input = $(elem).find('.complex-datepicker-input');
@@ -43,82 +54,6 @@
                 let attributesFromAbove;
 				// let useReportDateFromAbove = true;
                 let columnKey;
-
-				/* OLD COMPLEX DATEPICKER CODE
-
-				/!* TIPS
-					// scope.displayOptions is an object that may contain next properties:
-					// position: side to show datepicker on
-					// defaultDate: show default date in datepicker empty
-					// labelName: name to show in label of input *!/
-
-				scope.availableModes = { // determine whether to hide some of datepicker modes
-					inception: true
-				};
-
-				var position = 'right';
-				var defaultDate = false;
-
-				if (scope.displayOptions) {
-
-					if (scope.displayOptions.position) {
-						position = scope.displayOptions.position;
-					}
-
-					if (scope.displayOptions.defaultDate) {
-						defaultDate = scope.displayOptions.defaultDate;
-					}
-
-					if (scope.displayOptions.modes) {
-						var modesAvailability = scope.displayOptions.modes;
-
-						var modesAvailabilityKeys = Object.keys(modesAvailability);
-
-						modesAvailabilityKeys.forEach(function (mode) {
-							scope.availableModes[mode] = modesAvailability[mode];
-						})
-					}
-
-				}
-
-				scope.datepickerActiveModeTitle = '';
-
-				scope.getDatepickerName = function () {
-					if (scope.displayOptions.labelName) {
-						return scope.displayOptions.labelName + ": " + scope.datepickerActiveModeTitle;
-					} else {
-						return "Date: " +  scope.datepickerActiveModeTitle + " mode";
-					}
-				};
-
-				if (scope.date) {
-
-					pickmeup(input, {
-						date: new Date(scope.date),
-						current: new Date(scope.date),
-						position: position,
-						default_date: defaultDate,
-						hide_on_select: true,
-						format: 'Y-m-d'
-					});
-
-				} else {
-
-					pickmeup(input, {
-						position: position,
-						default_date: defaultDate,
-						hide_on_select: true,
-						format: 'Y-m-d'
-					});
-
-				}
-
-				input.addEventListener("pickmeup-change", function (event) {
-					scope.date = event.detail.formatted_date;
-					scope.$apply();
-				});
-
-				< OLD COMPLEX DATEPICKER CODE > */
 
                 scope.testModelChange = function () {
                     scope.callbackMethod();
@@ -478,6 +413,8 @@
 					else {
 						applyPopupDataToFirstDate(scope.popupData.date);
 					}
+
+					if (scope.selectorLook === 'input') scope.textDate = getDateText();
 					console.log("testing1 onPopupSave", scope.date);
 					setTimeout(() => {
 						if (scope.callbackMethod) scope.callbackMethod();
@@ -518,28 +455,44 @@
 
 				};
 
-				const init = function () {
+				const getDateText = function () {
 
-					if (scope.isRootEntityViewer) {
-						console.log("testing1 idk REPORT_OPTIONS_CHANGE listener");
-						scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
-							updatePopupData();
-						});
+					if (scope.rangeOfDates) {
+
+						scope.dateText = scope.date;
+
+						if (scope.secondDate) {
+							scope.dateText = scope.dateText + ' - ' + scope.secondDate;
+						}
 
 					} else {
+						scope.dateText = scope.date;
+					}
+
+					return scope.dateText;
+
+				};
+
+				const init = function () {
+
+					if (viewContext === 'split_panel') {
 						console.log("testing1 idk REPORT_OPTIONS_CHANGE listener 2");
 						scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
 
 							const reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
 							// useReportDateFromAbove = reportLayoutOptions.useDateFromAbove;
 							console.log("testing1 idk reportLayoutOptions", reportLayoutOptions);
-							if (reportLayoutOptions.datepickerOptions.useDateFromAbove) {
-
-
-							} else {
+							if (reportLayoutOptions.useDateFromAbove) {
 								updatePopupData();
 							}
 
+						});
+
+					} else {
+
+						console.log("testing1 idk REPORT_OPTIONS_CHANGE listener");
+						scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
+							updatePopupData();
 						});
 
 					}
@@ -552,6 +505,10 @@
 
 					/*scope.datepickerOptions.date = scope.date;
 					if (scope.rangeOfDates) scope.secondDatepickerOptions.date = scope.secondDate;*/
+
+					if (scope.selectorLook === 'input') {
+						scope.dateText = getDateText();
+					}
 
 				};
 

@@ -36,7 +36,7 @@
                     <div layout="column" style="padding-top: 16px">
 
                         <div data-ng-if="entityType === 'pl-report'">
-                            <complex-zh-date-picker data-ng-if="!isReportFilterFromDashboard"
+                            <complex-zh-datepicker data-ng-if="!isReportFilterFromDashboard"
                                                     data-date="reportOptions.pl_first_date"
                                                     data-datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
                                                     data-display-options="datepickerFromDisplayOptions"
@@ -45,7 +45,7 @@
                                                     data-ev-event-service="evEventService"
                                                     data-attribute-data-service="attributeDataService"
                                                     data-is-disabled="viewContext === 'dashboard'">
-                            </complex-zh-date-picker>
+                            </complex-zh-datepicker>
 
                             <md-input-container data-ng-if="isReportFilterFromDashboard">
                                 <label class="uncut-text-on-focus-label">From</label>
@@ -56,7 +56,7 @@
                             </md-input-container>
                         </div>
 
-                        <complex-zh-date-picker data-ng-if="!isReportFilterFromDashboard"
+                        <complex-zh-datepicker data-ng-if="!isReportFilterFromDashboard"
                                                 data-date="reportOptions.report_date"
                                                 data-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
                                                 data-display-options="datepickerToDisplayOptions"
@@ -65,7 +65,7 @@
                                                 ev-event-service="evEventService"
                                                 data-attribute-data-service="attributeDataService"
                                                 data-is-disabled="viewContext === 'dashboard'">
-                        </complex-zh-date-picker>
+                        </complex-zh-datepicker>
 
                         <md-input-container data-ng-if="isReportFilterFromDashboard">
                             <label class="uncut-text-on-focus-label"
@@ -175,7 +175,7 @@
                         </md-input-container>
 
                         <div>
-                            <complex-zh-date-picker data-ng-if="!isReportFilterFromDashboard"
+                            <complex-zh-datepicker data-ng-if="!isReportFilterFromDashboard"
                                                     data-date="reportOptions.begin_date"
                                                     data-datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
                                                     data-display-options="datepickerFromDisplayOptions"
@@ -184,7 +184,7 @@
                                                     ev-event-service="evEventService"
                                                     data-attribute-data-service="attributeDataService"
                                                     data-is-disabled="viewContext === 'dashboard'">
-                            </complex-zh-date-picker>
+                            </complex-zh-datepicker>
 
                             <md-input-container data-ng-if="isReportFilterFromDashboard">
                                 <label class="uncut-text-on-focus-label">Date From</label>
@@ -196,7 +196,7 @@
                         </div>
 
                         <div>
-                            <complex-zh-date-picker data-ng-if="!isReportFilterFromDashboard"
+                            <complex-zh-datepicker data-ng-if="!isReportFilterFromDashboard"
                                                     data-date="reportOptions.end_date"
                                                     data-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
                                                     data-display-options="datepickerToDisplayOptions"
@@ -205,7 +205,7 @@
                                                     ev-event-service="evEventService"
                                                     data-attribute-data-service="attributeDataService"
                                                     data-is-disabled="viewContext === 'dashboard'">
-                            </complex-zh-date-picker>
+                            </complex-zh-datepicker>
 
                             <md-input-container data-ng-if="isReportFilterFromDashboard">
                                 <label class="uncut-text-on-focus-label">Date From</label>

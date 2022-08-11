@@ -637,12 +637,29 @@
 
 	};
 
+    const reportDateProperties = {
+        'balance-report': [null, 'report_date'],
+        'pl-report': ['pl_first_date', 'report_date'],
+        'transaction-report': ['begin_date', 'end_date']
+    };
+
+    /**
+     *
+     * @param {String} entityType
+     * @returns {Array}
+     * @memberof module:reportHelper
+     */
+    const getDateProperties = function (entityType) {
+        return reportDateProperties[entityType];
+    };
+
     /**
      *
      * @param reportOptions
      * @param reportLayoutOptions
      * @param {string} dateKey - name of property where date stored
      * @returns {Promise<string|null>}
+     * @memberof module:reportHelper
      */
     var getReportDate = function (reportOptions, reportLayoutOptions, dateKey) {
 
@@ -701,6 +718,8 @@
         extendAttributes: extendAttributes,
         calculateMarketValueAndExposurePercents: calculateMarketValueAndExposurePercents,
 		cleanReportOptionsFromTmpProps: cleanReportOptionsFromTmpProps,
+
+        getDateProperties: getDateProperties,
         getReportDate: getReportDate,
     }
 

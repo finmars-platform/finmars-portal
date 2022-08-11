@@ -9,6 +9,7 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
 import evHelperService from "../../services/entityViewerHelperService";
 import uiService from "../../services/uiService";
 import evEvents from "../../services/entityViewerEvents";
+import reportHelper from "../../helpers/reportHelper";
 
 (function () {
 
@@ -360,7 +361,7 @@ import evEvents from "../../services/entityViewerEvents";
 
             await applyDatesFromParentLayout();
             var tro = vm.entityViewerDataService.getReportOptions();
-            console.log("testing1 parent REPORT_OPTIONS_CHANGE after applying dates: ", tro);
+            console.log("testing1 onParentRoChange after applying dates: ", tro);
             vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
         };
 
@@ -462,8 +463,9 @@ import evEvents from "../../services/entityViewerEvents";
 
                         autosaveLayoutOn = globalDataService.isAutosaveLayoutOn();
 
-                        if (autosaveLayoutOn) {
-                            autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
+                    if (autosaveLayoutOn) {
+
+                        autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
 
                         var layoutHasChanges = evHelperService.checkRootLayoutForChanges(vm.entityViewerDataService, true);
 
@@ -488,35 +490,66 @@ import evEvents from "../../services/entityViewerEvents";
 
             }
 
-            vm.entityViewerEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, async function () {
+            vm.entityViewerEventService.addEventListener(evEvents.TOGGLE_USE_REPORT_DATE_FROM_ABOVE, async function () {
 
                 var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
-
+                console.log("testing1 TOGGLE_USE_REPORT_DATE_FROM_ABOVE reportLayoutOptions", reportLayoutOptions);
                 // useDateFromAbove variable assures that parent report dates calculated only when useDateFromAbove activated
-                var useDateFromAboveChanged = reportLayoutOptions.datepickerOptions.useDateFromAbove !== useDateFromAbove;
+                /*var useDateFromAboveChanged = reportLayoutOptions.useDateFromAbove !== useDateFromAbove;
 
                 if (useDateFromAboveChanged) {
 
-                    useDateFromAbove = reportLayoutOptions.datepickerOptions.useDateFromAbove;
+                    useDateFromAbove = reportLayoutOptions.useDateFromAbove;
 
-                    if (reportLayoutOptions.datepickerOptions.useDateFromAbove) {
+                    if (reportLayoutOptions.useDateFromAbove) {
 
                         await applyDatesFromParentLayout();
                         var tro = vm.entityViewerDataService.getReportOptions();
-                        console.log("testing1 REPORT_OPTIONS_CHANGE after applying dates: ", tro);
                         procIndex = parentEntityViewerEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, onParentRoChange);
 
                     } else {
 
                         await sharedLogicHelper.calculateReportDatesExprs();
                         var tro = vm.entityViewerDataService.getReportOptions();
-                        console.log("testing1 REPORT_OPTIONS_CHANGE calculateReportDatesExprs ", tro);
                         parentEntityViewerEventService.removeEventListener(evEvents.REPORT_OPTIONS_CHANGE, procIndex);
+
                     }
 
                     vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
 
+                }*/
+                useDateFromAbove = reportLayoutOptions.useDateFromAbove;
+                console.log("testing1 TOGGLE_USE_REPORT_DATE_FROM_ABOVE useDateFromAbove", useDateFromAbove);
+                if (reportLayoutOptions.useDateFromAbove) {
+
+                    stashReportDates();
+
+                    await applyDatesFromParentLayout();
+                    var tro = vm.entityViewerDataService.getReportOptions();
+                    console.log("testing1 TOGGLE_USE_REPORT_DATE_FROM_ABOVE after applying dates: ", tro);
+                    procIndex = parentEntityViewerEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, onParentRoChange);
+
+                } else {
+
+                    var reportOptions = vm.entityViewerDataService.getReportOptions();
+                    /* var reportDatesData = vm.entityViewerDataService.getStashedReportDates();
+
+                    if (reportDatesData.dateFrom) {
+                        reportOptions[reportDatesData.dateFrom.key] = reportDatesData.dateFrom.value;
+                    }
+
+                    reportOptions[reportDatesData.dateTo.key] = reportDatesData.dateTo.value;*/
+                    reportOptions = vm.entityViewerDataService.applyStashedReportDates(reportOptions);
+
+                    await sharedLogicHelper.calculateReportDatesExprs();
+                    // var tro = vm.entityViewerDataService.getReportOptions();
+                        console.log("testing1 TOGGLE_USE_REPORT_DATE_FROM_ABOVE calculateReportDatesExprs ", reportOptions);
+                    parentEntityViewerEventService.removeEventListener(evEvents.REPORT_OPTIONS_CHANGE, procIndex);
+
                 }
+
+                vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+                vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
 
             });
 
@@ -537,6 +570,25 @@ import evEvents from "../../services/entityViewerEvents";
         };
 
         splitPanelExchangeService.setSplitPanelLayoutChangesCheckFn(getLayoutChanges);
+
+        var stashReportDates = function () {
+
+            var reportOptions = vm.entityViewerDataService.getReportOptions();
+            var datesProps = reportHelper.getDateProperties(vm.entityType);
+            console.log("testing1 stashReportDates datesProps", datesProps);
+            var dateFromProp = datesProps[0];
+            var dateFromVal;
+
+            if (dateFromProp) {
+                dateFromVal = reportOptions[dateFromProp];
+            }
+
+            var dateToKey = datesProps[1];
+            var dateToVal = reportOptions[dateToKey];
+            console.log("testing1 stashReportDates date values", dateFromVal, dateToVal);
+            vm.entityViewerDataService.stashReportDates(dateFromVal, dateToVal);
+
+        };
 
         /* vm.downloadAttributes = function(){
 
@@ -588,8 +640,10 @@ import evEvents from "../../services/entityViewerEvents";
                 // Check if there is need to solve report datepicker expression
                 if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
-                    if (reportLayoutOptions.datepickerOptions.useDateFromAbove) {
+                    if (reportLayoutOptions.useDateFromAbove) {
                         console.log("testing1 apply dates from parent layout for "  + layout.name);
+                        stashReportDates();
+
                         await applyDatesFromParentLayout();
                         var tro = vm.entityViewerDataService.getReportOptions();
                         console.log("testing1 reportOptions after applying dates for "  + layout.name + ": ", tro);
@@ -700,7 +754,7 @@ import evEvents from "../../services/entityViewerEvents";
 
                     var reportLayoutOptions = vm.entityViewerDataService.getReportLayoutOptions();
 
-                    if (reportLayoutOptions.datepickerOptions.useDateFromAbove) {
+                    if (reportLayoutOptions.useDateFromAbove) {
                         // should be called after vm.setLayout()
                         procIndex = parentEntityViewerEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, onParentRoChange);
                     }
