@@ -472,8 +472,6 @@
          */
         function stashReportDates (dateFrom, dateTo) {
 
-            console.trace("testing1 stashReportDates");
-            console.log("testing1 stashReportDates ", dateFrom, dateTo);
             const entityType = getEntityType();
             const datesProps = reportHelper.getDateProperties(entityType);
 
@@ -506,16 +504,16 @@
         }
 
         function applyStashedReportDates (reportOptions) {
-            console.trace("testing1 applyStashedReportDates");
+
             const datesData = getStashedReportDates();
-            console.log("testing1 applyStashedReportDates datesData", datesData);
+
             if (Object.keys(datesData).length) {
                 if (datesData.dateFrom) {
                     reportOptions[datesData.dateFrom.key] = datesData.dateFrom.value;
                 }
 
                 reportOptions[datesData.dateTo.key] = datesData.dateTo.value;
-                console.log("testing1 applyStashedReportDates reportOptions", JSON.parse(JSON.stringify(reportOptions)));
+
             } else {
                 console.error("No dates have been stashed");
             }

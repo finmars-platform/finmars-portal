@@ -415,7 +415,7 @@
 					}
 
 					if (scope.selectorLook === 'input') scope.textDate = getDateText();
-					console.log("testing1 onPopupSave", scope.date);
+
 					setTimeout(() => {
 						if (scope.callbackMethod) scope.callbackMethod();
 					}, 0);
@@ -476,12 +476,11 @@
 				const init = function () {
 
 					if (viewContext === 'split_panel') {
-						console.log("testing1 idk REPORT_OPTIONS_CHANGE listener 2");
+
 						scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
 
 							const reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
-							// useReportDateFromAbove = reportLayoutOptions.useDateFromAbove;
-							console.log("testing1 idk reportLayoutOptions", reportLayoutOptions);
+
 							if (reportLayoutOptions.useDateFromAbove) {
 								updatePopupData();
 							}
@@ -490,7 +489,6 @@
 
 					} else {
 
-						console.log("testing1 idk REPORT_OPTIONS_CHANGE listener");
 						scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
 							updatePopupData();
 						});
