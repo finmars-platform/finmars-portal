@@ -98,6 +98,27 @@ export default function () {
 
 	};
 
+	const isAutosaveLayoutOn = function () {
+
+		const user = getUser();
+		const member = getMember();
+
+		if (!member) {
+			throw "Method should be called after getting member"
+		}
+
+		if (!member.data) member.data = {};
+
+		const autosave77 = user.data.autosave_layouts && member.data.autosave_layouts;
+
+		if (!autosave77) {
+			console.log("autosave77 isAutosaveLayoutOn user, member", user, member);
+		}
+
+		return autosave77;
+
+	};
+
 	const clearAllData = function () {
 
 		userHaveCurrentMasterUser = false;
@@ -120,6 +141,8 @@ export default function () {
 		getMember: getMember,
 		getMemberEntityViewersSettings: getMemberEntityViewersSettings,
 		setMemberEntityViewersSettings: setMemberEntityViewersSettings,
+
+		isAutosaveLayoutOn: isAutosaveLayoutOn,
 
 		clearAllData: clearAllData
 	}

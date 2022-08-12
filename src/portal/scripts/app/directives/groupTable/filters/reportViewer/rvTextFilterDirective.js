@@ -18,14 +18,21 @@
 					type: null
 				};
 
+				const openUseFromAboveSettings = async function () {
+					[scope.activeFilter.type, scope.filter.options] = await gFiltersHelper.openUseFromAboveSettings(rvFilterVm.openUseFromAboveSettings(), scope.filter.options);
+					scope.$apply();
+				};
+
 				scope.filterTypes = [
-					{name: 'Equal', value: 'equal'},
-					{name: 'Contains', value: 'contains'},
-					{name: 'Has substring', value: 'contains_has_substring'},
-					// {name: 'Does not contains', value: 'does_not_contains'},
-					{name: 'Select', value: 'selector'},
-					{name: 'Multiple Select', value: 'multiselector'},
-					{name: 'Empty cells', value: 'empty'}
+					{name: 'Equal', id: 'equal'},
+					{name: 'Contains', id: 'contains'},
+					{name: 'Has substring', id: 'contains_has_substring'},
+					// {name: 'Does not contains', id: 'does_not_contains'},
+					{name: 'Select', id: 'selector'},
+					{name: 'Multiple Select', id: 'multiselector'},
+					{name: 'Empty cells', id: 'empty'},
+
+					{name: 'Linked', id: 'use_from_above', onClick: openUseFromAboveSettings}
 				];
 
 				scope.readyStatus = true;
@@ -48,23 +55,9 @@
 						const resultList = gFiltersHelper.emptyTextFilter(filterType, scope.filter.options);
 						scope.activeFilter.type = resultList[0];
 						scope.filter.options = resultList[1];
+
 					}
 
-				};
-
-				scope.openUseFromAboveSettings = async function () {
-
-					/*scope.activeFilter.type = await rvFilterVm.openUseFromAboveSettings();
-
-					if (scope.activeFilter.type === 'use_from_above') {
-
-						scope.filter.options.use_from_above = {};
-						scope.filter.options.filter_type = scope.activeFilter.type;
-						scope.filter.options.filter_values = [];
-
-					}*/
-					[scope.activeFilter.type, scope.filter.options] = await gFiltersHelper.openUseFromAboveSettings(rvFilterVm.openUseFromAboveSettings(), scope.filter.options);
-					scope.$apply();
 				};
 
 				scope.getMultiselectorName = function () {

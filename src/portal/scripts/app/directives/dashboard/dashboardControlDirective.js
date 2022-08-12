@@ -323,18 +323,15 @@
                         });
                     };
 
-                    if (scope.item.data.store && scope.item.data.store.value) {
-                        const isArray = Array.isArray(scope.item.data.store.value);
-                        if (!isArray || scope.item.data.store.value.length > 0) {
-                            return promisify(scope.item.data.store); // Value already exist, default value don't need
-                        }
-                    }
+                    var mode;
 
-                    if (!componentData.settings.defaultValue) {
+                    /*if (!componentData.settings.defaultValue) {
                         return promisify({});
-                    }
+                    }*/
 
-                    var mode = componentData.settings.defaultValue.mode;
+                    if (componentData.settings.defaultValue) {
+                        mode = componentData.settings.defaultValue.mode;
+                    }
 
                     if (mode === 1) { // Set default value
 
@@ -386,7 +383,6 @@
                             return promisify({value: value, name: name, label: label});
                         }
                     }
-
                     else if (mode === 0) { // Get default value from report
 
                         var user_code = componentData.settings.defaultValue.layout;
@@ -411,7 +407,22 @@
 
                     }
                     else {
+
+                        // return promisify({});
+
+                        // if value saved inside dashboard layout, return it
+                        if (scope.item.data.store && scope.item.data.store.value) {
+
+                            var isNotArray = !Array.isArray(scope.item.data.store.value);
+
+                            if (isNotArray || scope.item.data.store.value.length > 0) {
+                                return promisify(scope.item.data.store);
+                            }
+
+                        }
+
                         return promisify({});
+
                     }
 
                 };

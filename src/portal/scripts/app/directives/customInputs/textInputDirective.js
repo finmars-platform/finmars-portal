@@ -129,7 +129,7 @@
 							}, 0);
 						} */
 						scope.$apply();
-						console.log("testing1 onInputChange");
+
 						if (scope.onChangeCallback) scope.onChangeCallback();
 
 					}, 500);
@@ -390,6 +390,14 @@
 						fullTextElem.addEventListener("focus", scope.onFocus);
 
 					} */
+
+					inputElem.addEventListener('focus', function () {
+						inputContainer.classList.add('custom-input-focused');
+					});
+
+					inputElem.addEventListener('blur', function () {
+						inputContainer.classList.remove('custom-input-focused');
+					});
 
 				};
 

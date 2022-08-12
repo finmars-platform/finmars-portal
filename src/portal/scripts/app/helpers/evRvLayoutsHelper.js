@@ -1,3 +1,5 @@
+import QueuePromisesService from "../services/queuePromisesService";
+
 (function () {
 
     'use strict';
@@ -9,6 +11,11 @@
 
 	const toastNotificationService = require('../../../../core/services/toastNotificationService');
 	const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
+
+	const metaHelper = require('./meta.helper');
+	const utilsHelper = require('./utils.helper');
+	const reportHelper = require('./reportHelper');
+	const objectComparisonHelper = require('./objectsComparisonHelper');
 
     let getLinkingToFilters = function (layout) {
 
@@ -70,7 +77,7 @@
                 id: layout.id,
                 name: layout.name,
                 user_code: layout.user_code,
-                //content_type: layout.content_type,
+                content_type: layout.content_type,
                 content: []
             };
 
@@ -250,6 +257,10 @@
 			})
 			.then(res => {
 
+				if (res.data.user_code.startsWith('system_autosave_')) {
+					throw "This user code reserved for system layout. Please use another one";
+				}
+
 				if (res.status === 'agree') {
 
 					const saveAsLayout = function () {
@@ -270,7 +281,11 @@
 
 					};
 
-					if (isRootEntityViewer) listLayout.is_default = true; // default layout for split panel does not have is_default === true
+					if (isRootEntityViewer) {
+						listLayout.is_default = true; // default layout for split panel does not have is_default === true
+					}
+
+					listLayout.is_systemic = false;
 
 					if (listLayout.id) { // if layout based on another existing layout
 
@@ -335,6 +350,28 @@
 
 	};
 
+	const statesWithLayoutsList = [
+		'app.portal.reports.balance-report',
+		'app.portal.reports.pl-report',
+		'app.portal.reports.transaction-report',
+
+		'app.portal.data.portfolio',
+		'app.portal.data.account',
+		'app.portal.data.account-type',
+		'app.portal.data.counterparty',
+		'app.portal.data.responsible',
+		'app.portal.data.instrument',
+		'app.portal.data.instrument-type',
+		'app.portal.data.complex-transaction',
+		'app.portal.data.transaction',
+		'app.portal.data.transaction-type',
+		'app.portal.data.currency-history',
+		'app.portal.data.price-history',
+		'app.portal.data.currency',
+		'app.portal.data.strategy-group',
+		'app.portal.data.strategy',
+	];
+
     /** @module evRvLayoutsHelper */
     module.exports = {
         getLinkingToFilters: getLinkingToFilters,
@@ -343,7 +380,9 @@
 		saveLayoutList: saveLayoutList,
 		saveAsLayoutList: saveAsLayoutList,
 
-		clearSplitPanelAdditions: clearSplitPanelAdditions
+		clearSplitPanelAdditions: clearSplitPanelAdditions,
+
+		statesWithLayouts: statesWithLayoutsList,
     }
 
 }());

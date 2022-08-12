@@ -15,25 +15,24 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
     let vm = this;
 
-    // vm.isAuthenticated = false; // check if logged in or not
-    let isAuthenticated = false;
-    vm.isAuthenticated = isAuthenticated;
+    vm.isAuthenticated = false;
     vm.isAuthenticationPage = $state.current.name === 'app.authentication';
 
     // let finmarsBroadcastChannel = new BroadcastChannel('finmars_broadcast');
     // vm.isIdentified = false; // check if has proper settings (e.g. has master users to work with)
     const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
 
-    let readyStatus = false;
+    vm.readyStatus = false;
 
     let transitionFromState = '';
 
     vm.showPageContent = function () {
 
-        if (vm.isAuthenticationPage) return !isAuthenticated;
+        if (vm.isAuthenticationPage) {
+            return !vm.isAuthenticated; // do not show loader if its loading page and we are not authorized
+        }
 
-        // return vm.readyStatus.masterUsers && vm.isAuthenticated;
-        return isAuthenticated && readyStatus;
+        return vm.isAuthenticated && vm.readyStatus;
 
     }
 
@@ -44,15 +43,12 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
         cookieService.setCookie('access_token', data['access_token']);
         cookieService.setCookie('refresh_token', data['refresh_token']);
 
-
         authorizerService.getMe().then(activeUser => {
 
             globalDataService.setUser(activeUser);
 
-            isAuthenticated = true;
-            vm.isAuthenticated = isAuthenticated;
-
-            readyStatus = true;
+            vm.isAuthenticated = true;
+            vm.readyStatus = true;
 
             $state.go('app.profile', {}, {});
 
@@ -118,6 +114,16 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
             authorizerService.getMe().then(function (userData) {
 
                 vm.user = userData;
+
+                if (!vm.user.data) vm.user.data = {};
+                // enable by default list layout autosave
+                if (typeof vm.user.data.autosave_layouts !== 'boolean') {
+
+                    vm.user.data.autosave_layouts = true;
+                    globalDataService.setUser(vm.user);
+
+                }
+
                 resolve();
 
             }).catch(error => {
@@ -141,7 +147,7 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
             };
 
-            if (isAuthenticated) {
+            if (vm.isAuthenticated) {
 
                 if (transition.to().name === 'app.authentication') {
 
@@ -311,8 +317,7 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
         }
 
         middlewareService.addListenerOnLogOut(function () {
-            isAuthenticated = false;
-            vm.isAuthenticated = isAuthenticated;
+            vm.isAuthenticated = false;
         });
 
         initTransitionListener();
@@ -327,16 +332,13 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
             if (!data.is_authenticated) {
 
-                // vm.initLoginDialog();
-                isAuthenticated = false;
-                vm.isAuthenticated = isAuthenticated;
+                vm.isAuthenticated = false;
 
                 $state.go('app.authentication');
 
             } else {
 
-                isAuthenticated = true;
-                vm.isAuthenticated = isAuthenticated;
+                vm.isAuthenticated = true;
 
                 if (data.current_master_user_id && data.base_api_url) {
 
@@ -369,7 +371,7 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
                 getUser().then(() => {
 
-                    readyStatus = true;
+                    vm.readyStatus = true;
                     $scope.$apply();
 
                 });

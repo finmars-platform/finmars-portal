@@ -62,6 +62,7 @@
 				timeout = setTimeout(function () {
 					timeout = null;
 					fn();
+                    time = Date.now();
 				}, waitRemains);
 			}
 		};
@@ -319,7 +320,6 @@
 
         return v1.value.toLowerCase() < v2.value.toLowerCase() ? -1 : 1;
     };
-
 
     module.exports = {
         floor10: floor10,

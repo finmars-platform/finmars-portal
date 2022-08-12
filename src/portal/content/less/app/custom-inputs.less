@@ -61,9 +61,7 @@
     background: white;
     display: inline-block;
     white-space: nowrap;
-    /* Запрещаем перенос строк */
     overflow: hidden;
-    /* Обрезаем все, что не помещается в область */
     text-overflow: ellipsis;
     max-width: 80%;
   }
@@ -163,6 +161,13 @@
 
   &:focus {
     outline: none;
+  }
+}
+
+.ci-placeholder2 {
+  .custom-input::placeholder {
+    color: #919191;
+    font-style: italic;
   }
 }
 
@@ -563,7 +568,6 @@
     outline: none;
   }
 }
-//endregion
 
 .multitype-field-type-sign-wrap[disabled] {
 
@@ -605,7 +609,53 @@
   }
 
 }
-//</editor-fold>
+//endregion
+
+.dropdown-select-2 {
+  position: relative;
+  cursor: pointer;
+
+  .material-icons.sel-2-icon {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    right: 9px;
+    top: 0;
+    color: @gray;
+  }
+
+  .custom-input-container.dropdown-input-container {
+
+    /*.custom-input-borders {
+      border-top: none;
+      border-right: none;
+      border-left: none;
+      border-radius: 0;
+      border-color: @gray;
+    }*/
+
+    .dropdown-select-input {
+      padding-right: 23px;
+      cursor: pointer;
+    }
+
+  }
+
+  /*.custom-input-container.custom-input-focused {
+
+    .custom-input-main-container {
+
+      .custom-input-borders {
+        box-shadow: initial;
+        border-color: @orange;
+      }
+
+    }
+  }*/
+
+}
 
 //region Should always be at the bottom
 .custom-input-container.no-indicator-btn {

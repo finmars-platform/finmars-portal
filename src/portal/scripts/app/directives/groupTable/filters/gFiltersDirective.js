@@ -50,8 +50,6 @@
 
                 vm.popupPosX = {value: null}
                 vm.popupPosY = {value: null}
-                vm.fpBackClasses = "z-index-48"
-                vm.fpClasses = "z-index-49"
 
                 /* $scope.readyStatus = {
                     filters: false
@@ -367,15 +365,6 @@
 
                                             additions.layoutData.layoutId = res.selected.id;
                                             additions.layoutData.name = res.selected.name;
-
-                                            for (var i = 0; i < layouts.length; i++) {
-
-                                                if (layouts[i].id === res.selected.id) {
-                                                    additions.layoutData.content_type = layouts[i].content_type;
-                                                    break;
-                                                }
-
-                                            }
 
                                             additions.layoutData.content_type = res.selected.content_type;
 
