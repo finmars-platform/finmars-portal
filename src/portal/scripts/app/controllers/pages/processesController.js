@@ -19,18 +19,114 @@
         vm.items = [];
         vm.readyStatus = {data: false};
 
-        vm.showAll = false;
-        vm.autoRefresh = true;
-
-        vm.options = {
-            filters: {
-                task_status: 'P'
-            }
-        };
-
-        // TODO Add pagination?
 
         vm.interval = null;
+
+        vm.currentPage = 1;
+
+        vm.pages = []
+
+        vm.openPreviousPage = function () {
+
+            vm.currentPage = vm.currentPage - 1;
+
+            vm.getData()
+
+        }
+
+        vm.openNextPage = function () {
+
+            vm.currentPage = vm.currentPage + 1;
+
+            vm.getData()
+
+        }
+
+        vm.openPage = function (page) {
+
+            if (page.number) {
+
+                vm.currentPage = page.number;
+
+                vm.getData();
+            }
+
+        }
+
+        vm.generatePages = function (data) {
+
+            vm.totalPages = Math.round(data.count / 40)
+
+            vm.pages = []
+
+            for (var i = 1; i <= vm.totalPages; i = i + 1) {
+                vm.pages.push({
+                    number: i,
+                    caption: i.toString()
+                })
+
+            }
+
+            if (vm.totalPages > 10) {
+
+                vm.currentPageIndex = 0;
+
+                vm.pages.forEach(function (item, index) {
+
+                    if (vm.currentPage === item.number) {
+                        vm.currentPageIndex = index;
+                    }
+
+                })
+
+                vm.pages = vm.pages.filter(function (item, index) {
+
+                    if (index < 2 || index > vm.totalPages - 3) {
+                        return true
+                    }
+
+                    if (index === vm.currentPageIndex) {
+                        return true
+                    }
+
+                    if (index > vm.currentPageIndex - 2 && index < vm.currentPageIndex) {
+                        return true
+                    }
+
+                    if (index < vm.currentPageIndex + 2 && index > vm.currentPageIndex) {
+                        return true
+                    }
+
+                    return false
+
+                })
+
+                for (var i = 0; i < vm.pages.length; i = i + 1) {
+
+                    var j = i + 1;
+
+                    if (j < vm.pages.length) {
+
+                        if (vm.pages[j].number && vm.pages[i].number) {
+                            if (vm.pages[j].number - vm.pages[i].number > 1) {
+
+
+                                vm.pages.splice(i + 1, 0, {
+                                    caption: '...'
+                                })
+
+                            }
+                        }
+
+                    }
+
+                }
+
+
+            }
+
+        }
+
 
 
         vm.getData = function () {
@@ -39,9 +135,33 @@
 
             return new Promise(function (resolve, reject) {
 
-                processesService.getList(vm.options).then(function (data) {
+                processesService.getList({
+                    pageSize: 40,
+                    page: vm.currentPage,
+                    sort: {
+                        direction: "DESC",
+                        key: "created"
+                    }
+                }).then(function (data) {
+
+                    vm.generatePages(data)
 
                     vm.items = data.results;
+
+                    vm.items = vm.items.map(function (item){
+
+                        try {
+
+                            item.options_object = JSON.stringify(item.options_object, null, 4);
+                            item.result_object = JSON.stringify(item.result_object, null, 4);
+
+                        } catch (error) {
+
+                        }
+
+                        return item;
+
+                    })
 
                     vm.readyStatus.data = true;
 
@@ -98,7 +218,7 @@
 
         vm.getStartedAt = function (item) {
 
-            return new Date(item.started_at).toLocaleDateString() + ' ' + new Date(item.started_at).toLocaleTimeString()
+            return new Date(item.created).toLocaleDateString() + ' ' + new Date(item.created).toLocaleTimeString()
 
         };
 
@@ -180,37 +300,6 @@
             }
 
             return result
-
-        };
-
-        vm.getInfo = function (item) {
-
-            if (item.data) {
-
-                if (item.data.total_rows) {
-
-                    return 'Progress: ' + item.data.processed_rows + '/' + item.data.total_rows
-
-                }
-
-            }
-
-        };
-
-        vm.delete = function (item) {
-
-            processesService.deleteByKey(item.id).then(function (data) {
-
-                // $scope.$apply();
-
-                vm.getData();
-
-                // if (!vm.autoRefresh) {
-                //
-                //     vm.getData();
-                // }
-
-            })
 
         };
 
