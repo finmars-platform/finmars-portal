@@ -114,98 +114,95 @@ export default function ($state, commonDialogsService) {
 
 			const importOnDragListeners = function () {
 
-				if (!scope.isDisabled) {
+				let dragBackdropElem = document.createElement("div");
+				dragBackdropElem.classList.add("drag-file-backdrop");
+				dragBackdropElem.appendChild(document.createElement("div"));
 
-					let dragBackdropElem = document.createElement("div");
-					dragBackdropElem.classList.add("drag-file-backdrop");
-					dragBackdropElem.appendChild(document.createElement("div"));
+				let dragBackdropTextHolder = dragBackdropElem.querySelector("div");
+				dragBackdropTextHolder.appendChild(document.createElement("span")).textContent = "Drop File Here";
 
-					let dragBackdropTextHolder = dragBackdropElem.querySelector("div");
-					dragBackdropTextHolder.appendChild(document.createElement("span")).textContent = "Drop File Here";
+				elementForDropping.addEventListener('dragenter', function (ev) {
 
-					elementForDropping.addEventListener('dragenter', function (ev) {
+					ev.preventDefault();
 
-						ev.preventDefault();
+					if (ev.dataTransfer.items && ev.dataTransfer.items.length === 1) {
 
-						if (ev.dataTransfer.items && ev.dataTransfer.items.length === 1) {
+						if (ev.dataTransfer.items[0].kind === 'file') {
 
-							if (ev.dataTransfer.items[0].kind === 'file') {
-
-								if (!elementForDropping.contains(dragBackdropElem)) elementForDropping.appendChild(dragBackdropElem);
-
-							}
+							if (!elementForDropping.contains(dragBackdropElem)) elementForDropping.appendChild(dragBackdropElem);
 
 						}
 
-					});
+					}
 
-					window.addEventListener("dragover", preventDefaultCallback, false);
+				});
 
-					dragBackdropElem.addEventListener('dragleave', function (ev) {
-						ev.preventDefault();
-						if (ev.target === dragBackdropElem) elementForDropping.removeChild(dragBackdropElem);
-					});
+				window.addEventListener("dragover", preventDefaultCallback, false);
 
-					dragBackdropElem.addEventListener('drop', function (ev) {
+				dragBackdropElem.addEventListener('dragleave', function (ev) {
+					ev.preventDefault();
+					if (ev.target === dragBackdropElem) elementForDropping.removeChild(dragBackdropElem);
+				});
 
-						ev.preventDefault();
-						ev.stopPropagation();
+				dragBackdropElem.addEventListener('drop', function (ev) {
 
-						if (ev.dataTransfer.items && ev.dataTransfer.items.length === 1) {
+					ev.preventDefault();
+					ev.stopPropagation();
 
-							if (ev.dataTransfer.items[0].kind === 'file') {
+					if (ev.dataTransfer.items && ev.dataTransfer.items.length === 1) {
 
-								const file = ev.dataTransfer.items[0].getAsFile();
+						if (ev.dataTransfer.items[0].kind === 'file') {
 
-								const fileNameParts = file.name.split('.');
-								const fileExtension = fileNameParts.pop();
+							const file = ev.dataTransfer.items[0].getAsFile();
 
-								if (fileExtension !== 'fcfg') {
+							const fileNameParts = file.name.split('.');
+							const fileExtension = fileNameParts.pop();
 
-									/* $mdDialog.show({
-										controller: 'WarningDialogController as vm',
-										templateUrl: 'views/dialogs/warning-dialog-view.html',
-										parent: angular.element(document.body),
-										targetEvent: ev,
-										clickOutsideToClose: false,
-										locals: {
-											warning: {
-												title: 'Warning',
-												description: "Wrong file extension. Drop configuration file to start import."
-											}
-										},
-										autoWrap: true,
-										multiple: true
-									}) */
+							if (fileExtension !== 'fcfg') {
 
-									const warningLocals = {
+								/* $mdDialog.show({
+									controller: 'WarningDialogController as vm',
+									templateUrl: 'views/dialogs/warning-dialog-view.html',
+									parent: angular.element(document.body),
+									targetEvent: ev,
+									clickOutsideToClose: false,
+									locals: {
 										warning: {
 											title: 'Warning',
 											description: "Wrong file extension. Drop configuration file to start import."
 										}
-									};
+									},
+									autoWrap: true,
+									multiple: true
+								}) */
 
-									commonDialogsService.warning(warningLocals, {targetEvent: ev});
+								const warningLocals = {
+									warning: {
+										title: 'Warning',
+										description: "Wrong file extension. Drop configuration file to start import."
+									}
+								};
 
-								} else {
-									openImportConfigurationManager(file);
-								}
+								commonDialogsService.warning(warningLocals, {targetEvent: ev});
 
+							} else {
+								openImportConfigurationManager(file);
 							}
 
 						}
 
-						elementForDropping.removeChild(dragBackdropElem);
+					}
 
-					});
+					elementForDropping.removeChild(dragBackdropElem);
 
-				}
+				});
 
 			};
 
 
-
-			importOnDragListeners();
+			if (!scope.isDisabled) {
+				importOnDragListeners();
+			}
 
 			scope.$on('$destroy', function () {
 				window.removeEventListener("dragover", preventDefaultCallback, false);

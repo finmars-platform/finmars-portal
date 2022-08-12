@@ -2,13 +2,19 @@
  /**
  * Created by szhitenev on 05.05.2016.
  */
+
+'use strict';
+
+import AutosaveLayoutService from "../../services/autosaveLayoutService";
+import evHelperService from "../../services/entityViewerHelperService";
+import uiService from "../../services/uiService";
+import evEvents from "../../services/entityViewerEvents";
+
 (function () {
 
-        'use strict';
-
-        var uiService = require('../../services/uiService');
+        /* var uiService = require('../../services/uiService');
         var evEvents = require('../../services/entityViewerEvents');
-        var evHelperService = require('../../services/entityViewerHelperService');
+        var evHelperService = require('../../services/entityViewerHelperService'); */
 
         var priceHistoryService = require('../../services/priceHistoryService');
         var currencyHistoryService = require('../../services/currencyHistoryService');
@@ -39,6 +45,8 @@
             vm.entityViewerDataService = null;
             vm.entityViewerEventService = null;
 
+            var autosaveLayoutService;
+            var autosaveLayoutOn = globalDataService.isAutosaveLayoutOn();
             // Functions for context menu
 
 			/* var updateTableAfterEntityChanges = function (res) {
@@ -304,7 +312,7 @@
 
                 });
 
-            }; */
+            };
 
             var offerToCreateEntity = function (activeObject, warningDescription, createEntityLocals) {
 
@@ -327,50 +335,12 @@
                 }).then(function (res) {
                     if (res.status === 'agree') {
 
-                        /*$mdDialog.show({
-                            controller: 'EntityViewerAddDialogController as vm',
-                            templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-                            parent: angular.element(document.body),
-                            targetEvent: activeObject.event,
-                            locals: {
-                                entityType: 'price-history',
-                                entity: {
-                                    instrument: activeObject['instrument.id'],
-                                    instrument_object: {
-                                        id: activeObject['instrument.id'],
-                                        name: activeObject['instrument.name'],
-                                        user_code: activeObject['instrument.user_code'],
-                                        short_name: activeObject['instrument.short_name']
-                                    },
-                                    pricing_policy: reportOptions.pricing_policy,
-                                    pricing_policy_object: reportOptions.pricing_policy_object,
-                                    date: reportOptions.report_date
-                                }
-                            }
-                        }).then(function (res) {
-
-                            vm.entityViewerDataService.setActiveObjectAction(null);
-                            vm.entityViewerDataService.setActiveObjectActionData(null);
-
-                            if (res && res.res === 'agree') {
-
-                                vm.entityViewerDataService.resetData();
-                                vm.entityViewerDataService.resetRequestParameters();
-
-                                var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                                vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                                vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                            }
-                        });*/
-
                         createEntity(activeObject, createEntityLocals);
 
                     }
                 });
 
-            };
+            }; */
 
             // < Functions for context menu >
 
@@ -431,6 +401,7 @@
 
                     parentEntityViewerDataService.setSplitPanelLayoutToOpen(spActiveLayout);
 
+                    autosaveLayoutService.removeChangesTrackingEventListeners(vm.entityViewerEventService);
                     vm.getView();
 
                 });
@@ -446,6 +417,7 @@
 					additions.layoutData.user_code = spDefaultLayout.user_code;
 
                     parentEntityViewerDataService.setAdditions(additions);
+                    parentEntityViewerEventService.dispatchEvent(evEvents.ADDITIONS_CHANGE);
 
                 });
 
@@ -457,6 +429,42 @@
                     parentEntityViewerEventService.dispatchEvent(evEvents.UPDATE_FILTER_AREA_SIZE);
 
                 });
+
+                var parentLayout = parentEntityViewerDataService.getListLayout();
+                var parentAdditions = parentEntityViewerDataService.getAdditions();
+
+                // parentLayout.content_type !== parentAdditions.content_type prevents two layouts from overriding each other by auto saving
+                if (parentLayout.content_type !== parentAdditions.layoutData.content_type) {
+
+                    parentEntityViewerEventService.addEventListener(evEvents.TOGGLE_AUTOSAVE, function () {
+
+                        autosaveLayoutOn = globalDataService.isAutosaveLayoutOn();
+
+                        if (autosaveLayoutOn) {
+                            autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
+
+                            var layoutHasChanges = evHelperService.checkRootLayoutForChanges(vm.entityViewerDataService, true);
+
+                            if (layoutHasChanges) {
+                                autosaveLayoutService.forceAutosaveLayout();
+                            }
+
+                        } else {
+                            autosaveLayoutService.removeChangesTrackingEventListeners(vm.entityViewerEventService);
+                        }
+
+                    });
+
+                    if (autosaveLayoutOn) {
+
+                        const alcIndex = vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, function () {
+                            autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
+                            vm.entityViewerEventService.removeEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, alcIndex);
+                        });
+
+                    }
+
+                }
 
             };
 
@@ -626,7 +634,6 @@
 					var setLayoutProm = vm.setLayout(spLayoutData, spDefaultLayoutData);
 
 					Promise.allSettled([downloadAttrsProm, setLayoutProm]).then(function () {
-						const somelistLayout = vm.entityViewerDataService.getListLayout();
 						$scope.$apply();
 					});
 
@@ -635,7 +642,11 @@
             };
 
             vm.init = function () {
+
+                autosaveLayoutService = new AutosaveLayoutService();
+
                 vm.getView();
+
             };
 
             vm.init();

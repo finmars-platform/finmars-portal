@@ -143,94 +143,114 @@
 
                 }
 
-                function initColumnSliderListener() {
+                function onColSliderMouseup (e) {
+                    $(window).unbind('mousemove');
 
-                    $(elem).bind('mousedown', function (e) {
+                    scope.evEventService.dispatchEvent(evEvents.RESIZE_COLUMNS_END);
+                    // scope.evEventService.dispatchEvent(evEvents.START_CELLS_OVERFLOW);
+                }
 
-                    	e.preventDefault();
-                        e.stopPropagation();
+                function onColSliderMousedown(e) {
 
-                        scope.evEventService.dispatchEvent(evEvents.RESIZE_COLUMNS_START);
+                    e.preventDefault();
+                    e.stopPropagation();
 
-                        const isNewDesign = this.parentElement.classList.contains('g-table-header-cell-wrapper');
+                    scope.evEventService.dispatchEvent(evEvents.RESIZE_COLUMNS_START);
 
-                        var gColumnElem;
+                    const isNewDesign = this.parentElement.classList.contains('g-table-header-cell-wrapper');
 
-                        if (isNewDesign) {
+                    var gColumnElem;
 
-                            gColumnElem = $(this).parents('.g-table-header-cell-wrapper'); // Victor 2020.12.16 New report viewer design
+                    if (isNewDesign) {
 
-                        } else {
+                        gColumnElem = $(this).parents('.g-table-header-cell-wrapper'); // Victor 2020.12.16 New report viewer design
 
-                            gColumnElem = $(this).parents('md-card.g-cell.g-column');
+                    } else {
+
+                        gColumnElem = $(this).parents('md-card.g-cell.g-column');
+
+                    }
+
+                    var column = findColumnById(gColumnElem[0].dataset.columnId);
+                    var columnIndex = findColumnIndexById(gColumnElem[0].dataset.columnId);
+
+                    var mouseDownLeft = e.clientX;
+                    var diff;
+                    var result;
+                    var currentWidth = gColumnElem.width();
+
+                    $(window).bind('mousemove', function (e) {
+
+                        diff = e.clientX - mouseDownLeft;
+
+                        result = currentWidth + diff;
+
+                        if (result > 32) {
+
+                            gColumnElem.width(result);
+
+                            resizeScrollableArea();
+
+                            column.style.width = result + 'px';
+
+                            updateColumn(column);
+
+                            // utilsHelper.debounce(updateCellsWidth(column, columnIndex), 5);
+                            updateCellsWidth(column, columnIndex);
+
+                            toggleColumnNameTooltip(gColumnElem);
 
                         }
 
-                        var column = findColumnById(gColumnElem[0].dataset.columnId);
-                        var columnIndex = findColumnIndexById(gColumnElem[0].dataset.columnId);
-
-                        var mouseDownLeft = e.clientX;
-                        var diff;
-                        var result;
-                        var currentWidth = gColumnElem.width();
-
-                        $(window).bind('mousemove', function (e) {
-
-                            diff = e.clientX - mouseDownLeft;
-
-                            result = currentWidth + diff;
-
-                            if (result > 32) {
-
-                                gColumnElem.width(result);
-
-                                resizeScrollableArea();
-
-                                column.style.width = result + 'px';
-
-                                updateColumn(column);
-
-                                // utilsHelper.debounce(updateCellsWidth(column, columnIndex), 5);
-                                updateCellsWidth(column, columnIndex);
-
-                                toggleColumnNameTooltip(gColumnElem);
-
-                            }
-
-                        });
-
-                        $(window).bind('mouseup', function () {
-                            $(window).unbind('mousemove');
-                            scope.evEventService.dispatchEvent(evEvents.RESIZE_COLUMNS_END);
-                            // scope.evEventService.dispatchEvent(evEvents.START_CELLS_OVERFLOW);
-                        });
-
                     });
+
+                    // $(window).bind('mouseup', onColSliderMouseup);
+                    window.addEventListener('mouseup', onColSliderMouseup);
 
                 }
 
+                function removeColSliderEventListeners () {
+                    elem[0].removeEventListener('mousedown', onColSliderMousedown);
+                    window.removeEventListener('mouseup', onColSliderMouseup);
+                }
+
+                /*function initColumnSliderListener() {
+
+                    $(elem).bind('mousedown', onColSliderMousedown);
+
+                }*/
+
+                var rtIndex, uthcsIndex, ucsIndex;
+
                 var init = function () {
 
-                    initColumnSliderListener();
+                    // initColumnSliderListener();
+                    elem[0].addEventListener('mousedown', onColSliderMousedown);
 
                     resizeScrollableArea();
 
-                    scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
+                    rtIndex = scope.evEventService.addEventListener(evEvents.REDRAW_TABLE, function () {
 
-                        initColumnSliderListener();
-
-                    });
-
-
-                    scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_HEAD_COLUMNS_SIZE, function () {
-
-                        initColumnSliderListener();
+                        removeColSliderEventListeners();
+                        elem[0].addEventListener('mousedown', onColSliderMousedown);
+                        // initColumnSliderListener();
 
                     });
 
-                    scope.evEventService.addEventListener(evEvents.UPDATE_COLUMNS_SIZE, function () {
 
-                        initColumnSliderListener();
+                    uthcsIndex = scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_HEAD_COLUMNS_SIZE, function () {
+
+                        removeColSliderEventListeners();
+                        elem[0].addEventListener('mousedown', onColSliderMousedown);
+                        // initColumnSliderListener();
+
+                    });
+
+                    ucsIndex = scope.evEventService.addEventListener(evEvents.UPDATE_COLUMNS_SIZE, function () {
+
+                        removeColSliderEventListeners();
+                        elem[0].addEventListener('mousedown', onColSliderMousedown);
+                        // initColumnSliderListener();
 
                     });
 
@@ -239,6 +259,15 @@
 
                 init();
 
+                scope.$on('$destroy', function () {
+
+                    removeColSliderEventListeners();
+
+                    scope.evEventService.removeEventListener(evEvents.REDRAW_TABLE, rtIndex);
+                    scope.evEventService.removeEventListener(evEvents.UPDATE_TABLE_HEAD_COLUMNS_SIZE, uthcsIndex);
+                    scope.evEventService.removeEventListener(evEvents.UPDATE_COLUMNS_SIZE, ucsIndex);
+
+                });
 
             }
         }

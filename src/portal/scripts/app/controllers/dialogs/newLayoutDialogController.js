@@ -47,6 +47,19 @@
 
         vm.agree = function () {
 
+			if (vm.item.user_code.startsWith('system_autosave_')) {
+
+				commonDialogsService.warning({
+					warning: {
+						title: 'Warning',
+						description: 'This user code reserved for system layout. Please use another one.',
+					}
+				})
+
+				return;
+
+			}
+
 			layoutsPromise.then(() => {
 
 				if (layoutsUserCodes.includes(vm.item.user_code)) {

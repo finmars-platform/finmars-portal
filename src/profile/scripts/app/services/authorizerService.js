@@ -287,7 +287,7 @@ export default function (xhrService, cookieService) {
                 'X-CSRFToken': cookieService.getCookie('csrftoken'),
                 'Authorization': 'Token ' + cookieService.getCookie('access_token')
             },
-            body: data
+            data: data
         })
     }
 

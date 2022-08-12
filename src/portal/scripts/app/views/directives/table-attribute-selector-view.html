@@ -1,7 +1,6 @@
-<md-input-container class="margin-0 width-100">
-    <label data-ng-bind="title" class="cursor-pointer"></label>
-    <input type="text"
-           data-ng-model="inputText"
-           class="cursor-pointer"
-           readonly>
-</md-input-container>
+<div class="table-attr-sel" ng-class="{'disabled': isDisabled}">
+    <text-input label="{{title}}"
+                model="inputText"
+                small-options="{noIndicatorBtn: true, readonly: true}"
+                is-disabled="isDisabled"></text-input>
+</div>

@@ -485,6 +485,12 @@
             data.options.push(duplicateOpt);
 
             data.options.push({
+                icon: "edit",
+                name: "Edit as JSON",
+                onClick: vm.editAsJson
+            });
+
+            data.options.push({
                 icon: "list",
                 name: "Edit Form",
                 onClick: vm.editLayout

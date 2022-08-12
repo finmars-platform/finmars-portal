@@ -7,7 +7,9 @@ import baseUrlService from "../../../../shell/scripts/app/services/baseUrlServic
 
 const metaService = require('../services/metaService'); // TODO inject into angular dependencies
 
-export default function ($mdDialog, $state, $transitions, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService) {
+const evRvLayoutsHelper = require('../helpers/evRvLayoutsHelper');
+
+export default function ($mdDialog, $state, $transitions, cookieService, broadcastChannelService, middlewareService, authorizerService, usersService, globalDataService) {
 
     return {
         restrict: 'E',
@@ -19,9 +21,14 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             if (!scope.openedInside) throw new Error("mainHeaderDirective: openedInside does not set");
             // let user;
+			const user = globalDataService.getUser();
             scope.currentLocation = '';
             scope.currentMasterUser = globalDataService.getMasterUser();
             scope.userName = '';
+
+			scope.showAutosaveLayout = false;
+
+			scope.member = globalDataService.getMember();
 
             let deregisterOnSuccessTransitionHook;
 
@@ -304,13 +311,43 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             };
 
+			scope.onAutosaveToggle = function () {
+
+                globalDataService.setMember(scope.member);
+                middlewareService.autosaveLayoutToggle();
+
+				usersService.updateMember(scope.member.id, scope.member).then(function () {
+                    scope.member = globalDataService.getMember();
+                });
+			};
+
             if (scope.openedInside === 'portal') {
 
-                deregisterOnSuccessTransitionHook = $transitions.onSuccess({}, function (transition) {
-                    scope.currentLocation = metaService.getHeaderTitleForCurrentLocation($state);
-                });
+                const stateWithLayout = evRvLayoutsHelper.statesWithLayouts.includes($state.current.name);
+
+				if (user.data.autosave_layouts && stateWithLayout) {
+
+					scope.showAutosaveLayoutCheckbox = true;
+
+					if (scope.member.data && typeof scope.member.data.autosave_layouts !== 'boolean') {
+						scope.member.data.autosave_layouts = true;
+						globalDataService.setMember(scope.member);
+					}
+
+				}
 
             }
+
+            deregisterOnSuccessTransitionHook = $transitions.onSuccess({}, function (transition) {
+
+                scope.currentLocation = metaService.getHeaderTitleForCurrentLocation($state);
+                const stateWithLayout = evRvLayoutsHelper.statesWithLayouts.includes($state.current.name);
+                /* if (stateWithLayout && scope.member.data.autosave_layouts !== false) {
+                    scope.showAutosaveLayoutCheckbox = true;
+                } */
+                scope.showAutosaveLayoutCheckbox = user.data.autosave_layouts && stateWithLayout;
+
+            });
 
             const init = async function () {
 
@@ -334,13 +371,9 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             init();
 
-            if (scope.openedInside === 'portal') {
-
-                scope.$on("$destroy", function () {
-                    deregisterOnSuccessTransitionHook();
-                });
-
-            }
+            scope.$on("$destroy", function () {
+                deregisterOnSuccessTransitionHook();
+            });
 
         }
     }

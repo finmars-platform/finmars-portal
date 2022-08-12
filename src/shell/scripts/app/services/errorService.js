@@ -114,16 +114,28 @@ export default function (toastNotificationService) {
 
 	const notifyError = function (reason) {
 
-		let message = reason.statusText + ' (' + reason.status + ')';
+		console.log('notifyError.reason', reason);
 
-		if (reason.hasOwnProperty('message')) {
+		let message = ''
 
-			if (typeof reason.message === 'object') {
+		if (reason.statusText) {
 
-				message = getFullErrorAsHtml(reason.message, message)
+			message = reason.statusText + ' (' + reason.status + ')';
+
+			if (reason.hasOwnProperty('message')) {
+
+				if (typeof reason.message === 'object') {
+
+					message = getFullErrorAsHtml(reason.message, message)
+
+				}
+
 
 			}
 
+		} else if (reason.message) {
+
+			message = reason.message
 
 		}
 
