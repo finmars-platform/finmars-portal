@@ -793,6 +793,7 @@ export default (function () {
 	portal.directive('onRepeatElemInit', [require('./app/directives/onRepeatElemInit')]);
 
 	//<editor-fold desc="Custom inputs"
+	portal.directive('baseInput', [require('./app/directives/customInputs/baseInputDirective.js')]);
 	portal.directive('textInput', ['$mdDialog', require('./app/directives/customInputs/textInputDirective.js')]);
 	portal.directive('numberInput', ['$mdDialog', require('./app/directives/customInputs/numberInputDirective.js')]);
 	portal.directive('dateInput', [require('./app/directives/customInputs/dateInputDirective.js')]);
@@ -803,6 +804,7 @@ export default (function () {
 	portal.directive('unifiedDataSelect', ['$mdDialog', require('./app/directives/customInputs/unifiedDataSelectDirective')]);
 	portal.directive('classifierSelect', ['$mdDialog', require('./app/directives/customInputs/classifierSelectDirective')]);
 	portal.directive('multitypeField', [require('./app/directives/customInputs/multitypeFieldDirective')]);
+	portal.directive('multiinputField', [require('./app/directives/customInputs/multiinputFieldDirective')]);
 	portal.directive('complexDropdownSelect', [complexDropdownSelectDirective]);
 	portal.directive('complexDropdownSelectMenu', [complexDropdownSelectMenuDirective]);
 	portal.directive('dropdownSelect2', [require('./app/directives/customInputs/dropdownSelect2Directive')]);
