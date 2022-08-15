@@ -1,4 +1,4 @@
-<md-dialog aria-label="" ng-cloak class="draggable-dialog width-80" drag-dialog>
+<md-dialog aria-label="dashboard constructor button set dialog" class="draggable-dialog width-80" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Button Set Component</h2>
@@ -111,9 +111,16 @@
 
                         </div>
 
+                        <div data-ng-if="item.action === 'book_transaction'"
+                             class="m-t-16">
+                            <md-checkbox ng-model="item.options.get_context"
+                                         style="width: 200px; margin: 0 10px;">Get context</md-checkbox>
+                            <md-tooltip md-direction="top" class="tooltip_1">Take last selected position inside another report based component as context.</md-tooltip>
+                        </div>
+
                         <div class="m-t-16">
 
-                            <md-button class="md-raised md-primary" data-ng-click="item = {}">Clear</md-button>
+                            <md-button class="md-raised md-primary" data-ng-click="item = {options: {}}">Clear</md-button>
 
                         </div>
 
