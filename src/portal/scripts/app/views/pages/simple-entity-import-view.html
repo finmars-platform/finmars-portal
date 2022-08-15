@@ -55,6 +55,13 @@
                 IMPORT
             </md-button>
 
+            <md-button
+                    style="font-size: 8px;"
+                    class="md-raised import-button {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                    data-ng-click="vm.startImport($event)">
+                IMPORT (NO VALIDATE)
+            </md-button>
+
         </div>
     </div>
 
