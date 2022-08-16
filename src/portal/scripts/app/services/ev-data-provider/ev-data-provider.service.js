@@ -323,8 +323,8 @@
 
                 obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
                 obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
-                // obj.___items_count = groupData.___items_count ? groupData.___items_count : 0;
-                obj.___items_count = data.count;
+                obj.___items_count = groupData.___items_count ? groupData.___items_count : 0;
+                // obj.___items_count = data.count;
                 obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
 
                 obj.count = data.count;
