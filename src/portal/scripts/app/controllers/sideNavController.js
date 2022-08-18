@@ -561,6 +561,13 @@
 
         }
 
+        vm.getCurrentVersion = function () {
+
+            var currentMasterUser = globalDataService.getMasterUser();
+
+            return currentMasterUser.version;
+        }
+
         vm.copyToBuffer = function(content) {
 
             metaHelper.copyToBuffer(content)

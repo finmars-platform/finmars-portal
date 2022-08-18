@@ -386,6 +386,12 @@
                 controller: 'ProcessesController as vm'
             })
 
+            .state('app.portal.update-center', {
+                url: '/update-center',
+                templateUrl: 'views/pages/update-center-view.html',
+                controller: 'UpdateCenterController as vm'
+            })
+
             .state('app.portal.system-messages', {
                 url: '/system-messages',
                 templateUrl: 'views/pages/system-messages-view.html',
