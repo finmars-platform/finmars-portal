@@ -789,6 +789,34 @@ const authTokenManagerCreateToken = function (data) {
 
 };
 
+const getVersions = function () {
+
+    return xhrService.fetch(authorizerUrl + '/version/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    });
+
+}
+
+const updateFinmars = function (base_api_url, tag) {
+
+    return xhrService.fetch(authorizerUrl + '/master-user-download-update/?base_api_url=' + base_api_url + '&tag=' + tag, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    });
+
+}
+
 // module.exports = {
 export default {
     tokenLogin: tokenLogin,
@@ -847,7 +875,10 @@ export default {
 
     authTokenManagerGetList: authTokenManagerGetList,
     authTokenManagerDeleteToken: authTokenManagerDeleteToken,
-    authTokenManagerCreateToken: authTokenManagerCreateToken
+    authTokenManagerCreateToken: authTokenManagerCreateToken,
+
+    getVersions: getVersions,
+    updateFinmars: updateFinmars
 
 }
 
