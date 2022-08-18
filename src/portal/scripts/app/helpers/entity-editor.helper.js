@@ -1424,10 +1424,9 @@
      * @param evEditorEventService {Object} - entityViewerEditorEventService
      * @param $mdDialog {Object}
      * @param $event {Object} - event object
-     * @param fixedAreaPopup {?Object} - fields inside of popup
      * @returns {Object|null} - changed fixedAreaPopup or null
      */
-    const processTabsErrorsInstrumentType = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event, fixedAreaPopup) {
+    const processTabsErrorsInstrumentType = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event) {
 
 
         let locsWithErrors = evEditorDataService.getLocationsWithErrors();
@@ -1481,21 +1480,6 @@
                         }
 
                     }
-
-                } else if (errorObj.locationData.type === 'fixed_area') {
-
-                    var fieldProp = errorObj.key;
-                    var fixedAreaFieldProp = getFieldKeyForFAPopup(fieldProp, 'instrument-type');
-
-                    if (!locsWithErrors.fixed_area.fields.includes(fieldProp)) {
-
-                        locsWithErrors.fixed_area.fields.push(fieldProp);
-
-                        fixedAreaPopupChanged = markErrorInsideFAPopup(fixedAreaPopup, fixedAreaFieldProp, errorObj.message);
-
-                    }
-
-                    if (!formErrorsList.includes(fieldProp)) formErrorsList.push(fieldProp);
 
                 }
 

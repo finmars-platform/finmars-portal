@@ -14,14 +14,16 @@
           <button class="custom-input-indicator-btn"
                   ng-disabled="isDisabled"
                   ng-click="onIndBtnClick()">
-            <span class="material-icons">{{indicatorBtn.value}}</span>
+            <span class="material-icons">{{indicatorBtn}}</span>
           </button>
 
           <input type="{{type}}"
-                 ng-model="inputValue.value"
-                 ng-disabled="isDisabled"
+
                  placeholder="{{placeholderText}}"
-                 readonly
+                 ng-model="model"
+                 ng-disabled="isDisabled"
+                 ng-change="onInputChange()"
+
                  class="custom-input" />
 
         </div>

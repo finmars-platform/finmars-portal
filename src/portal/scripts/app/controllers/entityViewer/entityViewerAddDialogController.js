@@ -38,13 +38,6 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    var SHOW_BY_DEFAULT_OPTIONS = [
-        {id: 'name', name: 'Name', visible_name: 'Report Name (Name)'},
-        {id: 'public_name', name: 'Public Name', visible_name: 'System Name (Short Name)'},
-        {id: 'short_name', name: 'Short Name', visible_name: 'Unique Code (User Code)'},
-        {id: 'user_code', name: 'User Code', visible_name: 'Name if Hidden (Public Name)'},
-    ];
-
     module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, authorizerService, usersService, usersGroupService, entityType, entity, data) {
 
         var vm = this;
@@ -112,15 +105,22 @@
             vm.typeFieldLabel = 'Instrument class';
         }
 
-        vm.showByDefaultOptions = SHOW_BY_DEFAULT_OPTIONS;
+        /*vm.nameToShowOptions = [
+			{id: 'name', name: 'Name', visible_name: 'Report Name (Name)'},
+			{id: 'public_name', name: 'Public Name', visible_name: 'System Name (Short Name)'},
+			{id: 'short_name', name: 'Short Name', visible_name: 'Unique Code (User Code)'},
+			{id: 'user_code', name: 'User Code', visible_name: 'Name if Hidden (Public Name)'},
+		];
 
         if (vm.entityType === 'currency') {
-            vm.showByDefaultOptions = vm.showByDefaultOptions.filter(item => item.id !== 'public_name');
+            vm.nameToShowOptions = vm.nameToShowOptions.filter(item => item.id !== 'public_name');
         }
 
-        vm.showByDefault = vm.showByDefaultOptions[0].id;
+        vm.nameToShow = vm.nameToShowOptions[0].id;
 
         vm.fixedAreaPopup = vm.sharedLogic.getFixedAreaPopup();
+        vm.originalFixedAreaPopupFields; */
+		vm.nameToShow;
 
         vm.typeSelectorOptions = [];
 		vm.groupSelectorLabel = 'Group';
@@ -137,7 +137,6 @@
         vm.activeTab = null;
 
         vm.openedIn = data.openedIn; // 'big-drawer', 'dialog'
-        vm.originalFixedAreaPopupFields;
 
 		if (vm.entityType === 'instrument') {
 
@@ -158,8 +157,10 @@
 
         var formLayoutFromAbove = data.editLayout;
 
-        /* var getShowByDefaultOptions = function (columns, entityType) {
-            let result = vm.showByDefaultOptions;
+        /* FIXED AREA POPUP
+
+        var getNameToShowOptions = function (columns, entityType) {
+            let result = vm.nameToShowOptions;
             if (columns > 2 && entityType !== 'instrument' && entityType !== 'account' && entityType !== 'instrument-type') {
                 result = result.filter(option => option.id !== 'short_name')
             }
@@ -174,14 +175,14 @@
 
             return result;
 
-        }; */
-
-        vm.getShowByDefaultEntityValue = function () {
-            return vm.entity[vm.showByDefault];
         };
 
-        vm.getPlaceholderByDefault = function () {
-            return vm.showByDefaultOptions.find(option => option.id === vm.showByDefault).visible_name;
+        vm.getNameToShowValue = function () {
+            return vm.entity[vm.nameToShow];
+        };
+
+        vm.getNameToShowAlias = function () {
+            return vm.nameToShowOptions.find(option => option.id === vm.nameToShow).visible_name;
         };
 
         vm.isEntityTabActive = function () {
@@ -192,8 +193,13 @@
         vm.entityTabsMenuPopupData = {viewModel: vm};
         vm.entityTablePopupClasses = "border-radius-2";
         vm.onPopupSaveCallback = vm.sharedLogic.onPopupSaveCallback;
-        vm.onFixedAreaPopupCancel = vm.sharedLogic.onFixedAreaPopupCancel;
+        vm.onFixedAreaPopupCancel = vm.sharedLogic.onFixedAreaPopupCancel; */
         // < Victor 20020.11.20 #59: fields below needs for new design an fixed area popup >
+		vm.onNameToShowChange = vm.sharedLogic.onNameToShowChange;
+
+		vm.getFaField1Classes = vm.sharedLogic.getFaField1Classes;
+		vm.getFaField2Classes = vm.sharedLogic.getFaField2Classes;
+		vm.getFaField3Classes = vm.sharedLogic.getFaField3Classes;
 
         vm.keysOfFixedFieldsAttrs = metaService.getEntityViewerFixedFieldsAttributes(vm.entityType);
 
@@ -477,7 +483,9 @@
 
                 $scope.$apply();
 
-            });
+            }).catch(function (error) {
+				console.log("testing1 permissions error", error);
+			});
 
         };
 
@@ -1054,8 +1062,8 @@
                 var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.fixedAreaEventObj);
 
                 if (processResult) {
-                    vm.fixedAreaPopup = processResult;
-                    vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));
+                    /*vm.fixedAreaPopup = processResult;
+                    vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));*/
                 }
 
             }
@@ -1803,8 +1811,10 @@
 					vm.entity.subgroup = vm.groupSelectorOptions[0].id;
 				}
 
+				/* FIXED AREA POPUP
+
 				vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
-				vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
+				vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));*/
 
 				vm.attributeTypes = formLayoutData.attributeTypes;
 
@@ -1819,6 +1829,7 @@
 				}
 
 				vm.tabs = formLayoutData.tabs;
+				vm.tabColumns = formLayoutData.tabColumns;
 				vm.attributesLayout = formLayoutData.attributesLayout;
 
 				vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
@@ -1867,6 +1878,8 @@
 
 				}); */
 
+			}).catch(function (error) {
+				console.log("testing1 load layout or entity error", error);
 			});
 
             vm.getCurrencies();

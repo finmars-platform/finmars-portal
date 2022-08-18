@@ -19,6 +19,9 @@ import mainHeaderDirective from "./app/directives/mainHeaderDirective.js";
 
 import complexDropdownSelectDirective from "./app/directives/customInputs/complexDropdownSelectDirective";
 import complexDropdownSelectMenuDirective from "./app/directives/customInputs/complexDropdownSelectMenuDirective";
+import baseInputDirective from "./app/directives/customInputs/baseInputDirective";
+import multiinputFieldDirective from "./app/directives/customInputs/multiinputFieldDirective";
+import entityNamesFieldDirective from "./app/directives/customInputs/entityNamesFieldDirective";
 
 // noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
@@ -788,12 +791,12 @@ export default (function () {
 	portal.directive('isDraggableSign', [require('./app/directives/isDraggableSignDirective.js')]);
 	portal.directive('dialogWindowResizer', [require('./app/directives/dialogWindowResizerDirective.js')]);
 	// portal.directive('popUp', [require('./app/directives/dialogWindowResizerDirective.js')]);
-	portal.directive('popup', ['$rootScope', '$compile', require('./app/directives/popupDirective')]);
+	portal.directive('customPopup', ['$rootScope', '$compile', require('./app/directives/customPopupDirective')]);
 	portal.directive('chipsList', ['$filter', require('./app/directives/chipsListDirective')]);
 	portal.directive('onRepeatElemInit', [require('./app/directives/onRepeatElemInit')]);
 
 	//<editor-fold desc="Custom inputs"
-	portal.directive('baseInput', [require('./app/directives/customInputs/baseInputDirective.js')]);
+	portal.directive('baseInput', [baseInputDirective]);
 	portal.directive('textInput', ['$mdDialog', require('./app/directives/customInputs/textInputDirective.js')]);
 	portal.directive('numberInput', ['$mdDialog', require('./app/directives/customInputs/numberInputDirective.js')]);
 	portal.directive('dateInput', [require('./app/directives/customInputs/dateInputDirective.js')]);
@@ -804,7 +807,8 @@ export default (function () {
 	portal.directive('unifiedDataSelect', ['$mdDialog', require('./app/directives/customInputs/unifiedDataSelectDirective')]);
 	portal.directive('classifierSelect', ['$mdDialog', require('./app/directives/customInputs/classifierSelectDirective')]);
 	portal.directive('multitypeField', [require('./app/directives/customInputs/multitypeFieldDirective')]);
-	portal.directive('multiinputField', [require('./app/directives/customInputs/multiinputFieldDirective')]);
+	portal.directive('multiinputField', [multiinputFieldDirective]);
+	portal.directive('entityNamesField', [entityNamesFieldDirective]);
 	portal.directive('complexDropdownSelect', [complexDropdownSelectDirective]);
 	portal.directive('complexDropdownSelectMenu', [complexDropdownSelectMenuDirective]);
 	portal.directive('dropdownSelect2', [require('./app/directives/customInputs/dropdownSelect2Directive')]);

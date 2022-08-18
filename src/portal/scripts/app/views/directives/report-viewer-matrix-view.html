@@ -8,7 +8,7 @@
             <div ng-if="viewContext === 'dashboard'"
                  class="axis-attr-selector-btns-holder axisAttrSelectorBtnsHolder">
                 <button ng-if="canChangeAbscissaAttr"
-                        popup
+                        custom-popup
                         popup-template-url="'views/popups/selector-popup-view.html'"
                         popup-data="abscissaSelectorData"
                         position-relative-to="element"
@@ -19,7 +19,7 @@
                         class="flex-row flex-center axis-attr-selector-btn abscissa"><span class="material-icons">chevron_right</span></button>
 
                 <button ng-if="canChangeOrdinateAttr"
-                        popup
+                        custom-popup
                         popup-template-url="'views/popups/selector-popup-view.html'"
                         popup-data="ordinateSelectorData"
                         position-relative-to="element"
@@ -38,7 +38,7 @@
                     <div ng-if="canChangeValueAttr"
                          class="selector-button-popup">
 
-                        <button popup
+                        <button custom-popup
                                 popup-template-url="'views/popups/selector-popup-view.html'"
                                 popup-data="valueSelectorData"
                                 position-relative-to="element"

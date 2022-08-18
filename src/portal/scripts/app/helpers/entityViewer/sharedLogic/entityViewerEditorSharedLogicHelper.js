@@ -62,7 +62,7 @@
 		//endregion
 
 		//region Fixed area
-		const getFixedAreaPopup = function () {
+		/*const getFixedAreaPopup = function () {
 			return {
 				fields: {
 					showByDefault: {
@@ -73,7 +73,7 @@
 				tabColumns: null,
 				event: {}
 			};
-		};
+		};*/
 
         const getEditFormFieldsInFixedArea = function () {
 
@@ -154,6 +154,8 @@
 
 		};
 
+        /* FIXED AREA POPUP
+
         const onPopupSaveCallback = async function () {
 
             const fieldsOutsideOfPopup = getFieldsOutsideOfPopup();
@@ -202,10 +204,10 @@
 
             if (viewModel.showByDefault !== showByDefaultAfterSave) {
 
-                viewModel.showByDefault = showByDefaultAfterSave;
-				viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
+                viewModel.nameToShow = showByDefaultAfterSave;
+				// viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.nameToShow;
                 // save layout settings
-                viewModel.dataConstructorLayout.data.fixedArea.showByDefault = viewModel.showByDefault;
+                viewModel.dataConstructorLayout.data.fixedArea.showByDefault = viewModel.nameToShow;
                 uiService.updateEditLayout(viewModel.dataConstructorLayout.id, viewModel.dataConstructorLayout).then(layoutData => {
                 	viewModel.dataConstructorLayout = JSON.parse(JSON.stringify(layoutData));
 				});
@@ -216,10 +218,10 @@
 
             	let popupHasNoErrors = true;
 
-				/* const attributes = {
+				/!* const attributes = {
 					entityAttrs: viewModel.entityAttrs,
 					attrsTypes: viewModel.attributeTypes
-				} */
+				} *!/
 
             	for (const popupFieldKey in viewModel.originalFixedAreaPopupFields) {
 
@@ -279,7 +281,57 @@
 
 			}
 
-        };
+        }; */
+		const onNameToShowChange = function () {
+			console.log("testing1 onNameToShowChange called ", viewModel.nameToShow, viewModel.dataConstructorLayout.data.fixedArea.showByDefault);
+			if (viewModel.nameToShow !== viewModel.dataConstructorLayout.data.fixedArea.showByDefault) {
+
+				// save layout settings
+				viewModel.dataConstructorLayout.data.fixedArea.showByDefault = viewModel.nameToShow;
+
+				uiService.updateEditLayout(viewModel.dataConstructorLayout.id, viewModel.dataConstructorLayout).then(layoutData => {
+					viewModel.dataConstructorLayout = JSON.parse(JSON.stringify(layoutData));
+				});
+
+			}
+
+		};
+
+		const getFaField1Classes = function () {
+			if (viewModel.tabColumns > 3) {
+				return "flex-basis-33 width-33 max-width-50";
+
+			} else if (viewModel.tabColumns === 3) {
+				return "flex-basis-66 width-66 m-b-13 max-width-66"
+
+			} else {
+				return "flex-basis-100 m-b-13";
+			}
+		};
+
+		const getFaField2Classes = function () {
+			if (viewModel.tabColumns > 3) {
+				return "flex-basis-33 width-33";
+
+			} else if (viewModel.tabColumns === 3) {
+				return "flex-basis-33 width-33"
+
+			} else {
+				return "flex-basis-100 m-b-13";
+			}
+		};
+
+		const getFaField3Classes = function () {
+			if (viewModel.tabColumns > 3) {
+				return "flex-basis-33 width-33 max-width-50";
+
+			} else if (viewModel.tabColumns === 3) {
+				return "flex-basis-33 width-33 max-width-66"
+
+			} else {
+				return "flex-basis-100";
+			}
+		};
 
 		const isNotNullInput = function (inputKey) {
 			return reqSysAttrs.includes(inputKey);
@@ -482,9 +534,11 @@
 
         const onBigDrawerResizeButtonClick = function () {
 
+        	/* FIXED AREA POPUP
+
         	viewModel.fixedAreaPopup.tabColumns = 6;
-			viewModel.fixedAreaPopup.fields = getFieldsForFixedAreaPopup();
-            // viewModel.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(6, viewModel.entityType);
+			viewModel.fixedAreaPopup.fields = getFieldsForFixedAreaPopup(); */
+			viewModel.tabColumns = 6;
 
             $scope.$apply();
             const bigDrawerWidth = evHelperService.getBigDrawerWidth(6);
@@ -791,7 +845,7 @@
 
 		};
 
-		const getUserTabsAndFixedAreaData = formLayoutFromAbove => {
+		const getUserTabsAndFixedAreaData = formLayout => {
 
         	return new Promise(async resolve => {
 
@@ -799,8 +853,8 @@
 				let gotEditLayout = true;
 				let tabs = [];
 
-				if (formLayoutFromAbove) {
-					editLayout = formLayoutFromAbove;
+				if (formLayout) {
+					editLayout = formLayout;
 
 				} else {
 
@@ -824,26 +878,14 @@
 					}
 					else {
 
-						// viewModel.tabs = editLayout.results[0].data.tabs
 						tabs = editLayout.results[0].data.tabs;
-						// viewModel.fixedArea = editLayout.results[0].data.fixedArea;
-						viewModel.showByDefault = editLayout.results[0].data.fixedArea.showByDefault || viewModel.showByDefaultOptions[0].id;
+						// viewModel.showByDefault = editLayout.results[0].data.fixedArea.showByDefault || viewModel.showByDefaultOptions[0].id;
+						viewModel.nameToShow = editLayout.results[0].data.fixedArea.showByDefault;
 
 					}
 
 				}
 
-				/* else {
-					// viewModel.tabs = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.tabs;
-					tabs = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.tabs;
-					viewModel.fixedArea = uiService.getDefaultEditLayout(viewModel.entityType)[0].data.fixedArea;
-				} */
-
-				/* if (viewModel.tabs.length && !viewModel.tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
-
-					viewModel.tabs.forEach((tab, index) => tab.tabOrder = index);
-
-				} */
 				if (tabs.length && !tabs[0].hasOwnProperty('tabOrder')) { // for old layouts
 
 					tabs.forEach((tab, index) => tab.tabOrder = index);
@@ -866,15 +908,10 @@
 
 			// evHelperService.transformItem(viewModel.entity, viewModel.attributeTypes);
 
-			/* if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
-
-				viewModel.showByDefault = viewModel.fixedArea.showByDefault;
-				viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
-
-			} */
+			/* FIXED AREA POPUP
 			if (viewModel.showByDefault) {
 				viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
-			}
+			}*/
 
 			const attributesLayout = mapAttributesAndFixFieldsLayout(tabs);
 
@@ -1007,7 +1044,7 @@
 
 		};
 
-        const getFormLayout = async formLayoutFromAbove => {
+        const getFormLayout = async formLayout => {
 
 			const hasRelationSelectorInFixedArea = typeSelectorValueEntities.hasOwnProperty(viewModel.entityType);
 
@@ -1019,21 +1056,19 @@
 				viewModel.groupSelectorOptions = await getTypeSelectorOptions(viewModel.groupSelectorEntityType);
 			}
 
-			const tabs = await getUserTabsAndFixedAreaData(formLayoutFromAbove);
+			const tabs = await getUserTabsAndFixedAreaData(formLayout);
 
             if (viewModel.openedIn === 'big-drawer') {
 
-				/* // viewModel.fixedArea received by getUserTabsAndFixedAreaData()
-				if (viewModel.fixedArea && viewModel.fixedArea.showByDefault) {
-					viewModel.showByDefault = viewModel.fixedArea.showByDefault;
-					viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
-				} */
+				/* FIXED AREA POPUP
+
 				if (viewModel.showByDefault) {
+
 					viewModel.fixedAreaPopup.fields.showByDefault.value = viewModel.showByDefault;
 				}
 
                 // Instrument-type always open in max big drawer window
-                let columns = evHelperService.getEditLayoutMaxColumns(tabs);
+                let columns = evHelperService.getEditLayoutMaxColumns(entityType, tabs);
 
                 if (viewModel.entityType === 'instrument-type') columns = 6;
 
@@ -1058,13 +1093,44 @@
                     }
 
                 }
-                // <Victor 2020.11.20 #59 Fixed area popup>e
+                // <Victor 2020.11.20 #59 Fixed area popup>
 
-                viewModel.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(viewModel.fixedAreaPopup.fields));
+				viewModel.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(viewModel.fixedAreaPopup.fields));*/
 
-            } else if (viewModel.fixedAreaPopup) { // in entityViewerFormsPreviewDialogController.js there is no pricing fixed area
-                viewModel.fixedAreaPopup.tabColumns = 6; // in dialog window there are always 2 fields outside of popup
+				const columns = evHelperService.getEditLayoutMaxColumns(viewModel.entityType, tabs);
+				console.log("testing1 columns", columns, viewModel.tabColumns);
+				if (viewModel.tabColumns !== columns) { // e.g. when tab's columns number have been changed inside EntityDataConstructorDialogController
+
+					viewModel.tabColumns = columns;
+
+					const bigDrawerWidth = evHelperService.getBigDrawerWidth(viewModel.tabColumns);
+					$bigDrawer.setWidth(bigDrawerWidth);
+
+				}
+
+				if (bigDrawerResizeButton) {
+
+					if (viewModel.tabColumns === 6) {
+
+						bigDrawerResizeButton.classList.remove('display-block');
+						bigDrawerResizeButton.classList.add('display-none');
+
+
+					} else {
+
+						bigDrawerResizeButton.classList.remove('display-none');
+						bigDrawerResizeButton.classList.add('display-block');
+
+					}
+
+				}
+
             }
+			/*  FIXED AREA POPUP
+
+             else if (viewModel.fixedAreaPopup) { // inside entityViewerFormsPreviewDialogController.js there is no pricing fixed area
+                viewModel.fixedAreaPopup.tabColumns = 6; // inside dialog window there are always 2 fields outside popup
+            } */
 
 			const promises = [getAttributeTypes()];
 
@@ -1079,16 +1145,19 @@
 					if (viewModel.getEntityPricingSchemes) viewModel.getEntityPricingSchemes(); // in entityViewerFormsPreviewDialogController.js there is no pricing tab
 
 					const attributesLayout = mapAttributesAndFixFieldsLayout(tabs);
-
+					console.log("testing1 getEditLayout", viewModel.tabColumns);
 					let resolveData = {
 						typeSelectorOptions: viewModel.typeSelectorOptions,
 						groupSelectorOptions: viewModel.groupSelectorOptions,
 						tabs: tabs,
+						tabColumns: viewModel.tabColumns,
 						attributeTypes: viewModel.attributeTypes,
 						attributesLayout: attributesLayout
 					};
 
-					if (viewModel.fixedAreaPopup) resolveData.fixedAreaData = getFieldsForFixedAreaPopup();  // in entityViewerFormsPreviewDialogController.js there is no pricing fixed area
+					/*  FIXED AREA POPUP
+
+					if (viewModel.fixedAreaPopup) resolveData.fixedAreaData = getFieldsForFixedAreaPopup();  // in entityViewerFormsPreviewDialogController.js there is no pricing fixed area */
 
 					resolve(resolveData);
 
@@ -1573,10 +1642,14 @@
 			readyStatusObj: readyStatusObj,
 
 			groupSelectorValueEntities: groupSelectorValueEntities,
-            getFixedAreaPopup: getFixedAreaPopup,
+            // getFixedAreaPopup: getFixedAreaPopup,
             entityTabsMenuTplt: entityTabsMenuTplt,
-            onPopupSaveCallback: onPopupSaveCallback,
-            onFixedAreaPopupCancel: onFixedAreaPopupCancel,
+            // onPopupSaveCallback: onPopupSaveCallback,
+            // onFixedAreaPopupCancel: onFixedAreaPopupCancel,
+			onNameToShowChange: onNameToShowChange,
+			getFaField1Classes: getFaField1Classes,
+			getFaField2Classes: getFaField2Classes,
+			getFaField3Classes: getFaField3Classes,
 			isNotNullInput: isNotNullInput,
 			typeSelectorChangeFns: typeSelectorChangeFns,
 			entityTypeForGroupSelectorsData: entityTypeForGroupSelectorsData,

@@ -5,11 +5,19 @@
  *
  */
 
+'use strict';
+
+import ToastNotificationService from "../../shell/scripts/app/services/toastNotificationService";
+import ErrorService from "../../shell/scripts/app/services/errorService";
+
 (function () {
 
-    var toastNotificationService = require('./toastNotificationService');
+    // var toastNotificationService = require('./toastNotificationService');
 
-    function ErrorObject(message, status, statusText) {
+	const toastNotificationService = new ToastNotificationService();
+	const errorService = new ErrorService(toastNotificationService);
+
+    /* function ErrorObject(message, status, statusText) {
         this.status = status;
         this.statusText = statusText;
         this.message = message || 'Oops something went wrong, please try again.';
@@ -102,11 +110,11 @@
 
 
         return Promise.reject(data)
-    }
+    } */
 
     module.exports = {
-        notifyError: notifyError,
-        recordError: recordError
+        notifyError: errorService.notifyError,
+        recordError: errorService.recordError
     }
 
 

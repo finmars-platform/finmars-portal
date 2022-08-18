@@ -5,12 +5,21 @@
  *
  */
 
+'use strict';
+
+import ToastNotificationService from "../../shell/scripts/app/services/toastNotificationService";
+import ErrorService from "../../shell/scripts/app/services/errorService";
+import XhrService from "../../shell/scripts/app/services/xhrService";
+
 (function () {
 
-    var errorService = require('./errorService');
-    var axService = require('./axService')
+    /*var errorService = require('./errorService');
+    var axService = require('./axService');*/
+	const toastNotificationService = new ToastNotificationService();
+	const errorService = new ErrorService(toastNotificationService);
+	const xhrService = new XhrService(errorService);
 
-    var fetch = function (url, params, options) {
+    /*var fetch = function (url, params, options) {
 
     	if (!options) options = {};
 
@@ -135,10 +144,10 @@
 
             })
 
-    };
+    };*/
 
     module.exports = {
-        fetch: fetch
+        fetch: xhrService.fetch
     }
 
 })();
