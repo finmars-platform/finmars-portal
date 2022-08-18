@@ -410,6 +410,12 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
         };
 
+        vm.redeployMasterUser = function ($event, item){
+
+            profileAuthorizerService.redeployMasterUser(item.base_api_url)
+
+        }
+
         vm.init = function () {
             vm.getMasterUsersList();
             vm.getInvites();

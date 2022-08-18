@@ -1032,13 +1032,16 @@
     </div>
 
     <div classs="sidenav-api-subtitle">
-        <span><a class="sidenav-api-link" href="{{ vm.getCurrentApiUrl() }}" target="_blank">API</a>: <span
+        <div><a class="sidenav-api-link" href="{{ vm.getCurrentApiUrl() }}" target="_blank">API</a>: <span
                 data-ng-click="vm.copyToBuffer(vm.getCurrentBaseApiUrl())" class="sidenav-tech-button">
             {{ vm.getCurrentBaseApiUrl() }}
 
             <md-tooltip class="tooltip_1" md-direction="top">Copy</md-tooltip>
 
-        </span></span>
+        </span>
+            &nbsp; <a class="sidenav-api-link"  ui-sref="app.portal.update-center">{{vm.getCurrentVersion()}}</a>
+
+        </div>
     </div>
 
 </div>
