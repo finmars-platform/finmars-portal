@@ -7,6 +7,7 @@
 
 import authorizerRepository from '../repositories/authorizerRepository.js';
 import baseUrlService from "./baseUrlService";
+import {getVersions} from "../../../../portal/scripts/app/controllers/pages/updateCenterController";
 // import usersRepository from "../repositories/usersRepository";
 /** @module authorizerService */
 export default function (globalDataService) {
@@ -313,6 +314,14 @@ export default function (globalDataService) {
         return authorizerRepository.authTokenManagerCreateToken(data)
     }
 
+    const getVersions = function (){
+        return authorizerRepository.getVersions()
+    }
+
+    const updateFinmars = function (base_api_url, tag){
+        return authorizerRepository.updateFinmars(base_api_url, tag);
+    }
+
     //</editor-fold>
 
     return {
@@ -357,7 +366,11 @@ export default function (globalDataService) {
 
         authTokenManagerGetList: authTokenManagerGetList,
         authTokenManagerDeleteToken: authTokenManagerDeleteToken,
-        authTokenManagerCreateToken: authTokenManagerCreateToken
+        authTokenManagerCreateToken: authTokenManagerCreateToken,
+
+        getVersions: getVersions,
+        updateFinmars: updateFinmars
+
 
     }
 
