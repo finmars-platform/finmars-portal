@@ -1,4 +1,4 @@
-<div class="entity-names-popup">
+<div class="entity-names-popup-content">
     <div>
         <text-input label="Report Name (Name)"
                     placeholder-text="Report Name (Name)"
@@ -22,7 +22,7 @@
                 small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
     </div>
 
-    <div>
+    <div ng-if="popupData.fields.hasOwnProperty('public_name')">
         <text-input
                 label="Name if Hidden (Public Name)"
                 placeholder-text="Name if Hidden (Public Name)"
@@ -32,9 +32,9 @@
 
     <div>
         <dropdown-select label="Show by default"
-                         model="popupData.fields.showByDefault.value"
+                         model="popupData.fields.valueToShow.value"
                          placeholder-text="Show by default"
-                         menu-options="popupData.fields.showByDefault.options"
+                         menu-options="popupData.fields.valueToShow.options"
                          small-options="{tooltipText: 'Show by default', indicatorBtnIcon: 'type1', dialogParent: '.dialog-containers-wrap'}"
                          class="ev-editor-field"></dropdown-select>
     </div>

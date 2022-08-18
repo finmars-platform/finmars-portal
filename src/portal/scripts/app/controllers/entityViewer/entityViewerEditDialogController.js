@@ -112,7 +112,7 @@
             vm.typeFieldLabel = 'Instrument class';
         }
 
-        vm.showByDefaultOptions = [
+        /*vm.nameToShowOptions = [
             {id: 'name', name: 'Name', visible_name: 'Report Name (Name)'},
             {id: 'public_name', name: 'Public Name', visible_name: 'System Name (Short Name)'},
             {id: 'short_name', name: 'Short Name', visible_name: 'Unique Code (User Code)'},
@@ -120,13 +120,15 @@
         ];
 
         if (vm.entityType === 'currency') {
-            vm.showByDefaultOptions = vm.showByDefaultOptions.filter((item) => item.id !== 'public_name')
+            vm.nameToShowOptions = vm.nameToShowOptions.filter((item) => item.id !== 'public_name')
         }
 
         // id of popup field which value will be shown when popup closed
-        vm.showByDefault = vm.showByDefaultOptions[0].id;
+        vm.nameToShow = vm.nameToShowOptions[0].id;
 
-        vm.fixedAreaPopup = vm.sharedLogic.getFixedAreaPopup();
+        vm.fixedAreaPopup = vm.sharedLogic.getFixedAreaPopup(); */
+		vm.tabColumns = data.tabColumns;
+		vm.nameToShow;
 
         vm.typeSelectorOptions = [];
 		vm.groupSelectorLabel = 'Group';
@@ -142,7 +144,7 @@
         vm.activeTab = null;
 
         vm.openedIn = data.openedIn;
-        vm.originalFixedAreaPopupFields;
+        // vm.originalFixedAreaPopupFields;
 
 		if (vm.entityType === 'instrument') {
 
@@ -155,14 +157,14 @@
 
 		}
 
-        var formLayoutFromAbove = data.editLayout;
+        var formLayout = data.editLayout;
 
         /* var getShowByDefaultOptions = function (columns, entityType) {
             if (columns > 2 && entityType !== 'instrument' && entityType !== 'account' && entityType !== 'instrument-type') {
-                return vm.showByDefaultOptions.filter(option => option.id !== 'short_name')
+                return vm.nameToShowOptions.filter(option => option.id !== 'short_name')
             }
 
-            return vm.showByDefaultOptions;
+            return vm.nameToShowOptions;
 
         }; */
 
@@ -170,20 +172,27 @@
             return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
         };
 
-        vm.getShowByDefaultEntityValue = function () {
-            return vm.entity[vm.showByDefault] || '';
+        vm.getNameToShowValue = function () {
+            return vm.entity[vm.nameToShow] || '';
         };
 
-        vm.getPlaceholderByDefault = function () {
-            return vm.showByDefaultOptions.find(option => option.id === vm.showByDefault).visible_name;
-        };
+        /*vm.getNameToShowAlias = function () {
+            return vm.nameToShowOptions.find(option => option.id === vm.nameToShow).visible_name;
+        };*/
 
         vm.entityTabsMenuTplt = vm.sharedLogic.entityTabsMenuTplt;
         vm.entityTabsMenuPopupData = {viewModel: vm};
         vm.entityTablePopupClasses = "border-radius-2";
+        /* FIXED AREA POPUP
+
         vm.onPopupSaveCallback = vm.sharedLogic.onPopupSaveCallback;
-        vm.onFixedAreaPopupCancel = vm.sharedLogic.onFixedAreaPopupCancel;
+        vm.onFixedAreaPopupCancel = vm.sharedLogic.onFixedAreaPopupCancel;*/
         // <Victor 20020.11.20 #59: fields below needs for new design an fixed area popup>
+		vm.onNameToShowChange = vm.sharedLogic.onNameToShowChange;
+
+		vm.getFaField1Classes = vm.sharedLogic.getFaField1Classes;
+		vm.getFaField2Classes = vm.sharedLogic.getFaField2Classes;
+		vm.getFaField3Classes = vm.sharedLogic.getFaField3Classes;
 
         //vm.currenciesSorted = [];
 
@@ -288,7 +297,9 @@
 
                 vm.readyStatus.permissions = true;
                 $scope.$apply();
-            });
+            }).catch(function (error) {
+				console.log("testing1 permissions error", error);
+			});
 
         };
 
@@ -567,8 +578,8 @@
         	var editLayout;
         	var gotEditLayout = true;
 
-			if (formLayoutFromAbove) {
-        		editLayout = formLayoutFromAbove;
+			if (formLayout) {
+        		editLayout = formLayout;
 
 			} else {
 
@@ -611,9 +622,9 @@
 			if (vm.openedIn === 'big-drawer') {
 
 				// Victor 2020.11.20 #59 Fixed area popup
-				if (vm.fixedArea && vm.fixedArea.showByDefault) {
-					vm.showByDefault = vm.fixedArea.showByDefault;
-					vm.fixedAreaPopup.fields.showByDefault.value = vm.showByDefault;
+				if (vm.fixedArea && vm.fixedArea.nameToShow) {
+					vm.nameToShow = vm.fixedArea.nameToShow;
+					vm.fixedAreaPopup.fields.nameToShow.value = vm.nameToShow;
 				}
 
 				const columns = entityViewerHelperService.getEditLayoutMaxColumns(vm.tabs);
@@ -621,7 +632,7 @@
 				if (vm.fixedAreaPopup.tabColumns !== columns) {
 
 					vm.fixedAreaPopup.tabColumns = columns;
-					vm.fixedAreaPopup.fields.showByDefault.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
+					vm.fixedAreaPopup.fields.nameToShow.options = getShowByDefaultOptions(vm.fixedAreaPopup.tabColumns, vm.entityType);
 
 					const bigDrawerWidth = entityViewerHelperService.getBigDrawerWidth(vm.fixedAreaPopup.tabColumns);
 					$bigDrawer.setWidth(bigDrawerWidth);
@@ -693,39 +704,36 @@
                     }
 
                     // vm.getFormLayout();
-                    vm.sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
-
+                    vm.sharedLogic.getFormLayout(formLayout).then(formLayoutData => {
+						console.log("testing1 getFormLayout formLayoutData", formLayoutData);
 						vm.typeSelectorOptions = formLayoutData.typeSelectorOptions;
 						vm.groupSelectorOptions = formLayoutData.groupSelectorOptions;
 
-						vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
-						vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
+						// vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
+						// vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
 
 						vm.attributeTypes = formLayoutData.attributeTypes;
 
                     	vm.tabs = formLayoutData.tabs;
-                        console.log('# vm.tabs', vm.tabs);
+						vm.tabColumns = formLayoutData.tabColumns;
+						console.log("testing1 getFormLayout tabColumns", vm.tabColumns);
 						vm.attributesLayout = formLayoutData.attributesLayout;
 
                         vm.footerPopupData = getFooterPopupData(); // have to be called after vm.loadPermissions()
 
 						vm.readyStatus.layout = true;
 						vm.readyStatus.entity = true;
-						/* vm.sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
-
-							vm.fixedAreaPopup.fields = fieldsData;
-							vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
-
-						}); */
-						vm.readyStatus.layout = true;
-						vm.readyStatus.entity = true;
 
                     	// Resolving promise to inform child about end of editor building
 						res();
 
+					}).catch(function (error) {
+						console.log("testing1 load layout error", error);
 					});
 
-                });
+                }).catch(function (error) {
+					console.log("testing1 load entity error", error);
+				});
 
             });
 
@@ -1017,11 +1025,13 @@
             }
 
             // Victor 2020.11.20 #59 fixed fields popup
+            /* FIXED AREA POPUP
+
             if (vm.fixedAreaPopup.fields.status) {
 
                 vm.fixedAreaPopup.fields.status.value = vm.entityStatus;
 
-            }
+            }*/
             // <Victor 2020.11.20 #59 fixed fields popup>
 
         };
@@ -1073,8 +1083,8 @@
 				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.fixedAreaEventObj);
 
 				if (processResult) {
-					vm.fixedAreaPopup = processResult;
-					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));
+					/*vm.fixedAreaPopup = processResult;
+					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));*/
 				}
 
             }
@@ -1217,7 +1227,7 @@
                     vm.readyStatus.entity = false;
                     vm.readyStatus.layout = false;
 
-                    formLayoutFromAbove = null; // forcing getFormLayout() to download layout from server
+					formLayout = null; // forcing getFormLayout() to download layout from server
 
                     vm.getItem().then(function () {
                     	$scope.$apply();

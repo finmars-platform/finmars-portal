@@ -1,42 +1,46 @@
-(function () {
+"use strict";
 
-    "use strict";
+export default function () {
 
-    const stringHelper = require('../../helpers/stringHelper');
-    const metaHelper = require('../../helpers/meta.helper');
+	return {
+		restrict: "E",
+		scope: {
+			label: "@",
+			placeholderText: "@",
+			indicatorButtonIcon: "@",
+			model: "=",
+			isDisabled: "=",
+			onChange: "&?",
+			onBlurCallback: "&?",
+			onIndicatorButtonClick: "&?",
+		},
+		templateUrl: "views/directives/customInputs/base-input-view.html",
+		link: function (scope, elem, attr) {
 
-    module.exports = function () {
-        return {
-            restrict: "E",
-            scope: {
-                label: "@",
-                placeholderText: "@",
-                indicatorButtonIcon: "@",
-                model: "=",
-                isDisabled: "=",
-                onChangeCallback: "&?",
-                onBlurCallback: "&?",
-                onIndicatorButtonClick: "&?",
-            },
-            templateUrl: "views/directives/customInputs/base-input-view.html",
-            link: function (scope, elem, attr) {
+			scope.indicatorBtn = scope.indicatorButtonIcon || 'edit';
 
-                scope.indicatorBtn = {
-                    value: scope.indicatorButtonIcon || 'edit'
-                }
+			/*scope.inputModel = {
+				value: ''
+			}*/
 
-                scope.inputValue = {
-                    value: ''
-                }
+			scope.onInputChange = function () {
+				console.log("testing1 baseInputChange", scope.model);
+				if (scope.onChange) {
 
-                scope.onIndBtnClick = function () {
-                    if (scope.onIndicatorButtonClick) {
-                        scope.onIndicatorButtonClick();
-                    }
-                }
+					setTimeout(function () {
+						scope.onChange();
+					}, 100);
 
-            }
-        }
-    }
+				}
+			};
 
-}());
+			scope.onIndBtnClick = function () {
+				if (scope.onIndicatorButtonClick) {
+					scope.onIndicatorButtonClick();
+				}
+			}
+
+		}
+	}
+
+}

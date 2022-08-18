@@ -113,7 +113,7 @@ import evHelperService from "../../services/entityViewerHelperService";
 
                     var tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
                     if (vm.entityType !== 'instrument-type') {
-                        fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
+                        fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(entityType, tabs);
                     }
 
                     bigDrawerWidth = evHelperService.getBigDrawerWidth(fixedAreaColumns);
@@ -422,7 +422,7 @@ import evHelperService from "../../services/entityViewerHelperService";
 							var tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
 
                             if (entityType !== 'instrument-type') {
-                                fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
+                                fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(entityType, tabs);
                             }
 
 							bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
