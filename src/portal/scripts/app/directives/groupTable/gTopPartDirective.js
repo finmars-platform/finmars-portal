@@ -215,6 +215,10 @@
                     } */
                     /* < preparing data for complexZhDatePickerDirective > */
 
+					if (typeof scope.reportLayoutOptions.useDateFromAbove !== 'boolean') {
+						scope.reportLayoutOptions.useDateFromAbove = true;
+					}
+
                 };
 
                 const getCurrencies = function () {
@@ -326,7 +330,7 @@
                 if (!scope.isRootEntityViewer) {
 
                     scope.toggleUseDateFromAbove = function () {
-                        console.log("testing1 toggleUseDateFromAbove ", scope.reportLayoutOptions.useDateFromAbove);
+
                         if (!scope.reportLayoutOptions.useDateFromAbove) {
 
                             if (dateFromKey) {
@@ -334,7 +338,6 @@
                             }
 
                             scope.reportOptions[dateToKey] = scope.reportLayoutOptions.datepickerOptions.reportLastDatepicker.date;
-                            console.log("testing1 toggleUseDateFromAbove reportOptions", JSON.parse(JSON.stringify(scope.reportOptions)));
 
                         }
 
