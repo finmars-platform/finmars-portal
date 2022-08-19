@@ -466,14 +466,30 @@
         /**
          * Store dates of report when using dates from report above
          *
-         * @param {String|null|undefined} dateFrom
-         * @param {String} dateTo
+         * @param {String|null=} dateFrom
+         * @param {String=} dateTo
          * @memberof module:entityViewerDataService
          */
         function stashReportDates (dateFrom, dateTo) {
 
             const entityType = getEntityType();
             const datesProps = reportHelper.getDateProperties(entityType);
+
+			// if dates were not passed as arguments take them from reportOptions
+			if (dateFrom === undefined && dateTo === undefined) {
+
+				const reportOptions = getReportOptions();
+
+				var dateFromProp = datesProps[0];
+				var dateToProp = datesProps[1];
+
+				if (dateFromProp) {
+					dateFrom = reportOptions[dateFromProp];
+				}
+
+				dateTo = reportOptions[dateToProp];
+
+			}
 
             let datesData = {
                 dateTo: {

@@ -517,7 +517,7 @@ import reportHelper from "../../helpers/reportHelper";
 
                 if (reportLayoutOptions.useDateFromAbove) {
 
-                    stashReportDates();
+                    vm.entityViewerDataService.stashReportDates();
 
                     await applyDatesFromParentLayout();
 
@@ -563,25 +563,6 @@ import reportHelper from "../../helpers/reportHelper";
 
         splitPanelExchangeService.setSplitPanelLayoutChangesCheckFn(getLayoutChanges);
 
-        var stashReportDates = function () {
-
-            var reportOptions = vm.entityViewerDataService.getReportOptions();
-            var datesProps = reportHelper.getDateProperties(vm.entityType);
-
-            var dateFromProp = datesProps[0];
-            var dateFromVal;
-
-            if (dateFromProp) {
-                dateFromVal = reportOptions[dateFromProp];
-            }
-
-            var dateToKey = datesProps[1];
-            var dateToVal = reportOptions[dateToKey];
-
-            vm.entityViewerDataService.stashReportDates(dateFromVal, dateToVal);
-
-        };
-
         /* vm.downloadAttributes = function(){
 
             var promises = [];
@@ -623,6 +604,10 @@ import reportHelper from "../../helpers/reportHelper";
 
             return new Promise(async function (resolve, reject) {
 
+				if (typeof layout.data.reportLayoutOptions.useDateFromAbove !== 'boolean') {
+					layout.data.reportLayoutOptions.useDateFromAbove = true;
+				}
+
                 vm.entityViewerDataService.setSplitPanelDefaultLayout(spDefaultLayoutData);
                 vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
 
@@ -632,9 +617,9 @@ import reportHelper from "../../helpers/reportHelper";
                 // Check if there is need to solve report datepicker expression
                 if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
-                    if (reportLayoutOptions.useDateFromAbove) {
+                    if (reportLayoutOptions.useDateFromAbove !== false) {
 
-                        stashReportDates();
+                        vm.entityViewerDataService.stashReportDates();
 
                         await applyDatesFromParentLayout();
 

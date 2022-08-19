@@ -836,6 +836,10 @@ import evEvents from "../../services/entityViewerEvents";
 
             return new Promise(async function (resolve, reject) {
 
+				if (typeof layout.data.reportLayoutOptions.useDateFromAbove !== 'boolean') {
+					layout.data.reportLayoutOptions.useDateFromAbove = true;
+				}
+
                 vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
                 vm.setFiltersValuesFromQueryParameters();
 
