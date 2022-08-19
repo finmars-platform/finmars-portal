@@ -8,9 +8,10 @@ export default function (errorService) {
 
 	var axService = require('../../../../core/services/axService')
 
-	const fetch = function (url, params) {
+	const fetch = function (url, params, options) {
 
 		let requestId;
+		const notifyError = options && options.hasOwnProperty('notifyError') ? options.notifyError : true;
 
 		if (window.developerConsoleService) {
 			requestId = window.developerConsoleService.pushRequest({
@@ -78,7 +79,9 @@ export default function (errorService) {
 					window.developerConsoleService.rejectRequest(requestId, reason)
 				}
 
-				errorService.notifyError(reason);
+				if (notifyError !== false) {
+					errorService.notifyError(reason);
+				}
 
 				console.log('XHR Service catch error', reason);
 

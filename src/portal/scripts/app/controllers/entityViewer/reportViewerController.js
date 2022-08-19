@@ -887,7 +887,7 @@ import evEvents from "../../services/entityViewerEvents";
                         }
 
                         console.error(errorObj);
-                        if (error && error.status === 404) {
+                        if (error && error.response.status === 404) {
 
                             /* interfaceLayout.splitPanel.height = 0;
                             vm.entityViewerDataService.setInterfaceLayout(interfaceLayout);
