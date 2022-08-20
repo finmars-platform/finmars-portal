@@ -12,110 +12,110 @@ import ErrorService from "../../shell/scripts/app/services/errorService";
 
 (function () {
 
-    // var toastNotificationService = require('./toastNotificationService');
+	// var toastNotificationService = require('./toastNotificationService');
 
 	const toastNotificationService = new ToastNotificationService();
 	const errorService = new ErrorService(toastNotificationService);
 
-    /* function ErrorObject(message, status, statusText) {
-        this.status = status;
-        this.statusText = statusText;
-        this.message = message || 'Oops something went wrong, please try again.';
-        this.stack = (new Error()).stack;
-    }
+	/* function ErrorObject(message, status, statusText) {
+		this.status = status;
+		this.statusText = statusText;
+		this.message = message || 'Oops something went wrong, please try again.';
+		this.stack = (new Error()).stack;
+	}
 
-    ErrorObject.prototype = Object.create(Error.prototype);
-    ErrorObject.prototype.constructor = ErrorObject;
+	ErrorObject.prototype = Object.create(Error.prototype);
+	ErrorObject.prototype.constructor = ErrorObject;
 
-    'use strict';
-    
-    var getFullErrorAsHtml = function (obj, message) {
+	'use strict';
 
-        // console.log('getFullErrorAsHtml.obj', obj);
+	var getFullErrorAsHtml = function (obj, message) {
 
-        Object.keys(obj).forEach(function (key) {
+		// console.log('getFullErrorAsHtml.obj', obj);
 
-            message = message + '<br/>';
+		Object.keys(obj).forEach(function (key) {
 
-            if (Array.isArray(obj[key])) {
+			message = message + '<br/>';
 
-                if (obj[key].length) {
+			if (Array.isArray(obj[key])) {
 
-                    if (typeof obj[key][0] === 'object') {
+				if (obj[key].length) {
 
-                        obj[key].forEach(function (item) {
+					if (typeof obj[key][0] === 'object') {
 
-                            message = message +  getFullErrorAsHtml(item, message)
+						obj[key].forEach(function (item) {
 
-                        })
+							message = message +  getFullErrorAsHtml(item, message)
 
-                    } else {
+						})
 
-                        message = message + key + ': ' + obj[key].join(', ');
-                    }
-                }
-            } else {
+					} else {
 
-                if (typeof obj[key] === 'object') {
+						message = message + key + ': ' + obj[key].join(', ');
+					}
+				}
+			} else {
 
-                    message = message + getFullErrorAsHtml(obj[key], message)
+				if (typeof obj[key] === 'object') {
 
-                } else {
-                    message = message + key + ': ' + obj[key];
-                }
-            }
+					message = message + getFullErrorAsHtml(obj[key], message)
 
-        });
+				} else {
+					message = message + key + ': ' + obj[key];
+				}
+			}
 
-        return message
+		});
 
-    };
+		return message
 
-    var notifyError = function (data) {
+	};
 
-
-        console.error('notifyError.data', data);
-
-        var message = '';
-
-        message = data.response.status + ' ' + data.response.statusText + '<br>'
-
-        if (data.response.data) {
-
-            message = getFullErrorAsHtml(data.response.data, message)
-
-        }
-
-        console.log('notifyError.message', message)
-
-        toastNotificationService.error(message);
+	var notifyError = function (data) {
 
 
-        return Promise.reject(data)
+		console.error('notifyError.data', data);
 
-    };
+		var message = '';
 
-    var recordError = function (data){
+		message = data.response.status + ' ' + data.response.statusText + '<br>'
 
-        if (!window.system_errors) {
-            window.system_errors = []
-        }
+		if (data.response.data) {
 
-        window.system_errors.push({
-            created: new Date().toISOString(),
-            location: window.location.href,
-            data: data,
-            text: JSON.stringify(data)
-        })
+			message = getFullErrorAsHtml(data.response.data, message)
+
+		}
+
+		console.log('notifyError.message', message)
+
+		toastNotificationService.error(message);
 
 
-        return Promise.reject(data)
-    } */
+		return Promise.reject(data)
 
-    module.exports = {
-        notifyError: errorService.notifyError,
-        recordError: errorService.recordError
-    }
+	};
+
+	var recordError = function (data){
+
+		if (!window.system_errors) {
+			window.system_errors = []
+		}
+
+		window.system_errors.push({
+			created: new Date().toISOString(),
+			location: window.location.href,
+			data: data,
+			text: JSON.stringify(data)
+		})
+
+
+		return Promise.reject(data)
+	} */
+
+	module.exports = {
+		notifyError: errorService.notifyError,
+		recordError: errorService.recordError
+	}
 
 
 }());
