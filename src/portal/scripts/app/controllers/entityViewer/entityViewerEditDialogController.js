@@ -19,7 +19,7 @@
     var evHelperService = require('../../services/entityViewerHelperService');
 
     var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
-    var EntityViewerEditorEventService = require('../../services/eventService');
+    var EventService = require('../../services/eventService');
 
     // var attributeTypeService = require('../../services/attributeTypeService');
     var metaPermissionsService = require('../../services/metaPermissionsService');
@@ -1080,12 +1080,13 @@
             if (errors.length) {
 				// vm.sharedLogic.processTabsErrors(errors, $event);
 
-				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.fixedAreaEventObj);
+				// var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.fixedAreaEventObj);
+				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.entityType, vm.enfEventService);
 
-				if (processResult) {
-					/*vm.fixedAreaPopup = processResult;
-					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));*/
-				}
+				/*if (processResult) {
+					vm.fixedAreaPopup = processResult;
+					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));
+				}*/
 
             }
         	else {
@@ -2015,12 +2016,14 @@
                 event: {}
             };*/
 
-            vm.fixedAreaEventObj = { // sending signal to fields that are inside fixed area but outside of popup
+			/*vm.fixedAreaEventObj = { // sending signal to fields that are inside fixed area but outside of popup
                 event: {}
-            };
+            };*/
+
+			vm.enfEventService = new EventService();
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
-            vm.evEditorEventService = new EntityViewerEditorEventService();
+            vm.evEditorEventService = new EventService();
 
 			vm.evEditorDataService.setLocationsWithErrors(null);
 			vm.evEditorDataService.setFormErrorsList([]);

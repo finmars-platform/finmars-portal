@@ -3,6 +3,7 @@
     var metaService = require('../services/metaService');
     var evHelperService = require('../services/entityViewerHelperService');
     var evEditorEvents = require('../services/ev-editor/entityViewerEditorEvents');
+	var directivesEvents = require('../services/events/directivesEvents');
 
     var metaHelper = require('../helpers/meta.helper');
 
@@ -1304,19 +1305,19 @@
      * @param evEditorEventService {Object} - entityViewerEditorEventService
      * @param $mdDialog {Object}
      * @param $event {Object} - event object
-     * @param fixedAreaPopup {?Object} - fields inside of popup
      * @param entityType {string}
-     * @param fixedAreaEventObject {{event: Object}} - used to highlight 'Group' crud selector
+     * @param entityNamesFieldEventService {Object}
      * @returns {Object|null} - changed fixedAreaPopup or null
      */
-    const processTabsErrors = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event, fixedAreaPopup, entityType, fixedAreaEventObject) {
+    const processTabsErrors = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event, entityType, entityNamesFieldEventService) {
 
         const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
 
         let locsWithErrors = evEditorDataService.getLocationsWithErrors();
         let formErrorsList = evEditorDataService.getFormErrorsList();
 
-        let fixedAreaPopupChanged = false;
+        // let fixedAreaPopupChanged = false;
+		let fixedAreaErrorsData = {};
 
         errors.forEach(function (errorObj) {
 
@@ -1374,14 +1375,13 @@
 
                         locsWithErrors.fixed_area.fields.push(fieldProp);
 
-                        /*if (['strategy-1', 'strategy-2', 'strategy-3', 'responsible', 'counterparty'].includes(entityType) && fieldProp === 'group') { // subgroup used as group for strategy 1,2,3
+                        // fixedAreaEventObject.event = {key: 'mark_not_valid_fields'};
 
-                            groupSelectorEventObject.event = {key: "error", error: "Field should not be empty"};
-
-                        }*/
-                        fixedAreaEventObject.event = {key: 'mark_not_valid_fields'};
-
-                        fixedAreaPopupChanged = markErrorInsideFAPopup(fixedAreaPopup, fixedAreaFieldProp, errorObj.message);
+						// fixedAreaErrorsData = markErrorInsideFAPopup(fixedAreaErrorsData, fixedAreaFieldProp, errorObj.message);
+						fixedAreaErrorsData[fixedAreaFieldProp] = {
+							key: "error",
+							error: errorObj.message
+						}
 
                     }
 
@@ -1395,6 +1395,10 @@
 
         evEditorDataService.setLocationsWithErrors(locsWithErrors);
         evEditorDataService.setFormErrorsList(formErrorsList);
+
+		if (Object.keys(fixedAreaErrorsData).length) {
+			entityNamesFieldEventService.dispatchEvent(directivesEvents.TURN_ON_ERROR_MODE, fixedAreaErrorsData);
+		}
 
         evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
 
@@ -1410,9 +1414,9 @@
             }
         });
 
-        if (fixedAreaPopupChanged) return fixedAreaPopup;
+        // if (fixedAreaPopupChanged) return fixedAreaPopup;
 
-        return null;
+        // return null;
 
     };
 

@@ -1058,13 +1058,13 @@
 
             if (errors.length) {
 
-                // vm.sharedLogic.processTabsErrors(errors, $event);
-                var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.fixedAreaEventObj);
+                // var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.fixedAreaEventObj);
+				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.entityType, vm.enfEventService);
 
-                if (processResult) {
-                    /*vm.fixedAreaPopup = processResult;
-                    vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));*/
-                }
+                /*if (processResult) {
+                    vm.fixedAreaPopup = processResult;
+                    vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));
+                }*/
 
             }
 			else {
@@ -1763,13 +1763,10 @@
                 vm.dialogElemToResize = vm.sharedLogic.onEditorStart();
             }, 100);
 
-            /*vm.groupSelectorEventObj = { // sending signal to crud select that is inside fixed area but outside popup
-				event: {}
-			};*/
-
-            vm.fixedAreaEventObj = { // sending signal to fields that are inside fixed area but outside of popup
+            /*vm.fixedAreaEventObj = { // sending signal to fields that are inside fixed area but outside of popup
                 event: {}
-            };
+            };*/
+			vm.enfEventService = new EventService();
 
             vm.evEditorDataService = new EntityViewerEditorDataService();
             vm.evEditorEventService = new EventService();
@@ -1900,7 +1897,6 @@
             /* if (vm.fixedAreaPopup.fields) {
 				originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));
 			} */
-            console.log('vm.fixedAreaPopup', vm.fixedAreaPopup)
 
         };
 

@@ -15,11 +15,11 @@
     </div>
 
     <div>
-        <text-input
-                label="Unique Code (User Code)"
-                placeholder-text="Unique Code (User Code)"
-                model="popupData.fields.user_code.value"
-                small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
+        <text-input label="Unique Code (User Code)"
+                    placeholder-text="Unique Code (User Code)"
+                    model="popupData.fields.user_code.value"
+                    event-signal="popupData.fields.user_code.event"
+                    small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
     </div>
 
     <div ng-if="popupData.fields.hasOwnProperty('public_name')">

@@ -1,10 +1,12 @@
 "use strict";
 
-import EventService from "../../services/eventService";
+import directivesEvents from "../../services/events/directivesEvents";
+import directivesEvent from "../../services/events/directivesEvents";
 
 export default function () {
 
     const EventService = require("../../services/eventService");
+	const directivesEvents = require("../../services/events/directivesEvents");
 	const popupEvents = require("../../services/events/popupEvents");
 
     return {
@@ -18,7 +20,8 @@ export default function () {
 			popupData: "=",
 			popupClasses: "@",
 
-            isDisabled: "=",
+            eventService: "=",
+			isDisabled: "=",
 
             onChange: "&?",
 			onValueToShowChange: "&?",
@@ -36,6 +39,10 @@ export default function () {
 
 				scope.popupEventService = new EventService();
 				console.log("testing12 multiinput pre called");
+				scope.biEventObj = {
+					event: {}
+				};
+
 			},
 			post: function (scope, elem, attrs) {
 
@@ -45,7 +52,22 @@ export default function () {
 				let currentVts = scope.popupData.fields.valueToShow.value;
 				console.log("testing12 multiinput currentVts", currentVts);
 				scope.openPopup = function () {
+
+					// have to use property 'errorData' because custom inputs reset property 'event' after turning on error mode
+					Object.keys(scope.popupData.fields).forEach(prop => {
+
+						const fieldData = scope.popupData.fields[prop];
+
+						if (fieldData.errorData) {
+							fieldData.event = {...{}, ...fieldData.errorData};
+						}
+
+					});
+
+					scope.popupData.fields;
+					console.log("testing1 multiinput openPopup", scope.popupData);
 					scope.popupEventService.dispatchEvent(popupEvents.OPEN_POPUP, {doNotUpdateScope: true});
+
 				};
 
 				const getVal = function () {
@@ -82,7 +104,7 @@ export default function () {
 
 					checkVtsForChanges();
 					scope.inputModel.value = getVal();
-
+					console.log("testing1 multiinput onPopupCancelCallback", scope.popupData);
 					if (scope.onPopupCancel) {
 						scope.onPopupCancel();
 					}
@@ -92,7 +114,7 @@ export default function () {
 				scope.onInputChange = function () {
 
 					console.log("testing1 onInputChange", scope.inputModel.value);
-					for (const prop in scope.popupData.fields) {
+					Object.keys(scope.popupData.fields).forEach(prop => {
 
 						const fieldData = scope.popupData.fields[prop];
 
@@ -102,13 +124,25 @@ export default function () {
 
 						}
 
-					}
+					});
 
 				};
 
 				const init = function () {
 					scope.inputModel.value = getVal();
 					console.log("testing1 valueToShow value", scope.inputModel.value);
+					if (scope.eventService) {
+
+						scope.eventService.addEventListener(directivesEvents.TURN_ON_ERROR_MODE, function () {
+							scope.biEventObj.event = {key: "error", error: "There are fields with errors inside"};
+						});
+
+						scope.eventService.addEventListener(directivesEvents.TURN_OFF_ERROR_MODE, function () {
+							scope.biEventObj.event = {key: "reset"};
+						});
+
+					}
+
 				};
 
 				init();
