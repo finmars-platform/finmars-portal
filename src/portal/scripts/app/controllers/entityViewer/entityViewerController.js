@@ -1088,6 +1088,7 @@ import evHelperService from "../../services/entityViewerHelperService";
                 vm.attributeDataService = new AttributeDataService();
 
                 vm.entityType = $scope.$parent.vm.entityType;
+				console.log("testing1 entityType", vm.entityType);
                 vm.contentType = $scope.$parent.vm.contentType;
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
                 vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);

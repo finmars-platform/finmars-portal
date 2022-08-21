@@ -1,6 +1,11 @@
 "use strict";
 
+import directivesEvent from "../../services/events/directivesEvents";
+
 export default function () {
+
+	const EventService = require("../../services/eventService");
+	const directivesEvent = require("../../services/events/directivesEvents");
 
 	return {
 		restrict: "E",
@@ -16,6 +21,7 @@ export default function () {
 			valueToShow: "=",*/
 			entity: "=",
 			valueToShow: "=",
+			eventService: "=",
 
 			isDisabled: "=",
 
@@ -29,12 +35,66 @@ export default function () {
 							  popup-template-url="'views/popups/entity-names-popup-view.html'"
 							  popup-data="popupData"
 							  popup-classes="entity-names-popup"
-							  is-disabled="isDisabled"></multiinput-field>
+							  event-service="multiinputFieldEventService"
+							  is-disabled="isDisabled"
+							  on-popup-cancel="onPopupCancel()"></multiinput-field>
 		</div>`,
 		link: {
 			pre: function (scope, elem, attr) {
 
 				scope.valueToShow = scope.valueToShow || 'name';
+
+				scope.onPopupCancel = function () {
+
+					let noInvalidFields = true;
+
+					// const noInvalidFields = Object.keys(scope.popupData.fields).find(prop => !!scope.popupData.fields[prop].errorData);
+					Object.keys(scope.popupData.fields).forEach(prop => {
+
+						const fieldData = scope.popupData.fields[prop];
+
+						if (fieldData.errorData) {
+
+							if (fieldData.value) {
+								fieldData.errorData = null;
+
+							} else {
+								noInvalidFields = false;
+							}
+
+						}
+
+					});
+
+					if (noInvalidFields) {
+						scope.multiinputFieldEventService.dispatchEvent(directivesEvent.TURN_OFF_ERROR_MODE);
+					}
+
+				};
+
+				const getErrorData = function (value) {
+
+					let result = {
+						key: "error",
+						error: "Field should not be empty."
+					};
+
+					if (value) result = null;
+
+					if (!result) {
+
+						const noInvalidFields = Object.keys(scope.popupData.fields).find(prop => !!scope.popupData.fields[prop].errorData);
+
+						if (noInvalidFields) {
+							scope.multiinputFieldEventService.dispatchEvent(directivesEvent.TURN_OFF_ERROR_MODE);
+						}
+
+					}
+
+
+					return result;
+
+				};
 				console.log("testing1 entityNamesField entity", scope.entity);
 				scope.popupData = {
 					fields: {
@@ -43,19 +103,24 @@ export default function () {
 
 								scope.entity.name = name;
 
-								if (scope.onChange) {
-									scope.onChange();
-								}
+								this.errorData = getErrorData(scope.entity.name);
+
+								if (scope.onChange) scope.onChange();
 
 							},
 							get value() {
 								return scope.entity.name;
 							},
-							changeByInput: true
+
+							event: {},
+							changeByInput: true,
 						},
 						short_name: {
 							set value(shortName) {
+
 								scope.entity.short_name = shortName;
+								if (scope.onChange) scope.onChange();
+
 							},
 							get value() {
 								return scope.entity.short_name;
@@ -64,11 +129,21 @@ export default function () {
 						},
 						user_code: {
 							set value(userCode) {
+
 								scope.entity.user_code = userCode;
+
+								if (scope.entityType !== 'instrument') {
+									this.errorData = getErrorData(scope.entity.user_code);
+								}
+
+								if (scope.onChange) scope.onChange();
+
 							},
 							get value() {
 								return scope.entity.user_code;
 							},
+							invalid: false,
+							event: {},
 							changeByInput: true
 						},
 
@@ -102,6 +177,14 @@ export default function () {
 
 				}
 				console.log("testing12 entityNameField vts value", scope.popupData.fields.valueToShow.value);
+
+				const placeholdersForNames = {
+					'name': 'Report Name (Name)',
+					'public_name': 'Name if Hidden (Public Name)',
+					'short_name': 'System Name (Short Name)',
+					'user_code': 'Unique Code (User Code)',
+				};
+
 				if (scope.entityType !== 'currency') {
 
 					scope.popupData.fields.public_name = {
@@ -118,19 +201,35 @@ export default function () {
 
 				}
 
-				const placeholdersForNames = {
-					'name': 'Report Name (Name)',
-					'public_name': 'Name if Hidden (Public Name)',
-					'short_name': 'System Name (Short Name)',
-					'user_code': 'Unique Code (User Code)',
-				};
-
 				if (scope.placeholderText === undefined) {
 					scope.placeholderText = placeholdersForNames[scope.valueToShow];
 				}
 
+				scope.multiinputFieldEventService = new EventService();
+
 			},
-			post: function (scope, elem, attrs) {}
+			post: function (scope, elem, attrs) {
+				console.log("testing1 entityNamesField eventService", scope.eventService);
+				if (scope.eventService) {
+
+					scope.eventService.addEventListener(directivesEvent.TURN_ON_ERROR_MODE, function (argumentsObj) {
+						console.log("testing1 entityNamesField TURN_ON_ERROR_MODE argumentsObj", argumentsObj);
+						if (argumentsObj) {
+
+							for (const prop in argumentsObj) {
+								scope.popupData.fields[prop].errorData = argumentsObj[prop];
+								// scope.popupData.fields[prop].event = argumentsObj[prop];
+							}
+
+						}
+						console.log("testing1 entityNamesField TURN_ON_ERROR_MODE scope.popupData.fields", scope.popupData.fields);
+						scope.multiinputFieldEventService.dispatchEvent(directivesEvent.TURN_ON_ERROR_MODE);
+
+					});
+
+				}
+
+			}
 		}
 	}
 
