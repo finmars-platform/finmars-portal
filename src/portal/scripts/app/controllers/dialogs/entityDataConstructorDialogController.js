@@ -415,7 +415,7 @@
         }
 
         vm.setLayoutColumns = function (tab, columns, ev) {
-			console.log("testing1 setLayoutColumns called ", columns);
+
             if (columns < tab.layout.columns) {
 
                 var willBeLostColumns = [];
@@ -430,7 +430,7 @@
                 } else {
                     description = 'If you switch to less number of columns you lose data of ' + willBeLostColumns.join(', ') + ' column'
                 }
-				console.log("testing1 setLayoutColumns 1  ");
+
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
                     templateUrl: 'views/dialogs/warning-dialog-view.html',

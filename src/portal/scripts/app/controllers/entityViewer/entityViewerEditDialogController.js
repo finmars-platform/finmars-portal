@@ -297,9 +297,7 @@
 
                 vm.readyStatus.permissions = true;
                 $scope.$apply();
-            }).catch(function (error) {
-				console.log("testing1 permissions error", error);
-			});
+            });
 
         };
 
@@ -705,7 +703,7 @@
 
                     // vm.getFormLayout();
                     vm.sharedLogic.getFormLayout(formLayout).then(formLayoutData => {
-						console.log("testing1 getFormLayout formLayoutData", formLayoutData);
+
 						vm.typeSelectorOptions = formLayoutData.typeSelectorOptions;
 						vm.groupSelectorOptions = formLayoutData.groupSelectorOptions;
 
@@ -716,7 +714,7 @@
 
                     	vm.tabs = formLayoutData.tabs;
 						vm.tabColumns = formLayoutData.tabColumns;
-						console.log("testing1 getFormLayout tabColumns", vm.tabColumns);
+
 						vm.attributesLayout = formLayoutData.attributesLayout;
 
                         vm.footerPopupData = getFooterPopupData(); // have to be called after vm.loadPermissions()
@@ -727,13 +725,9 @@
                     	// Resolving promise to inform child about end of editor building
 						res();
 
-					}).catch(function (error) {
-						console.log("testing1 load layout error", error);
 					});
 
-                }).catch(function (error) {
-					console.log("testing1 load entity error", error);
-				});
+                });
 
             });
 
@@ -1081,7 +1075,7 @@
 				// vm.sharedLogic.processTabsErrors(errors, $event);
 
 				// var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.fixedAreaEventObj);
-				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.entityType, vm.enfEventService);
+				entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.entityType, vm.enfEventService);
 
 				/*if (processResult) {
 					vm.fixedAreaPopup = processResult;
