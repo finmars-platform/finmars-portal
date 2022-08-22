@@ -119,11 +119,23 @@
 
         }
 
+        vm.searchMessages = function () {
+            vm.currentPage = 1;
+            vm.getData();
+        }
+
         vm.getData = function () {
+
+            var filters = {}
+
+            if (vm.query) {
+                filters.text = vm.query;
+            }
 
             systemMessageService.getList({
                 pageSize: 40,
                 page: vm.currentPage,
+                filters: filters,
                 sort: {
                     direction: "DESC",
                     key: "created"
@@ -139,17 +151,17 @@
 
                     item.verbose_created = moment(new Date(item.created)).format('DD-MM-YYYY HH:mm');
 
-                    if (item.level === 1) {
-                        item.verbose_level = 'Info'
-                    }
-
-                    if (item.level === 2) {
-                        item.verbose_level = 'Warning'
-                    }
-
-                    if (item.level === 3) {
-                        item.verbose_level = 'Error'
-                    }
+                    // if (item.level === 1) {
+                    //     item.verbose_level = 'Info'
+                    // }
+                    //
+                    // if (item.level === 2) {
+                    //     item.verbose_level = 'Warning'
+                    // }
+                    //
+                    // if (item.level === 3) {
+                    //     item.verbose_level = 'Error'
+                    // }
 
 
                     if (item.status === 1) {
