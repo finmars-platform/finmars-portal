@@ -5,6 +5,7 @@ import directivesEvent from "../../services/events/directivesEvents";
 export default function () {
 
 	const EventService = require("../../services/eventService");
+	const metaService = require("../../services/metaService")
 	const directivesEvent = require("../../services/events/directivesEvents");
 
 	return {
@@ -44,33 +45,7 @@ export default function () {
 
 				scope.valueToShow = scope.valueToShow || 'name';
 
-				scope.onPopupCancel = function () {
-
-					let noInvalidFields = true;
-
-					// const noInvalidFields = Object.keys(scope.popupData.fields).find(prop => !!scope.popupData.fields[prop].errorData);
-					Object.keys(scope.popupData.fields).forEach(prop => {
-
-						const fieldData = scope.popupData.fields[prop];
-
-						if (fieldData.errorData) {
-
-							if (fieldData.value) {
-								fieldData.errorData = null;
-
-							} else {
-								noInvalidFields = false;
-							}
-
-						}
-
-					});
-
-					if (noInvalidFields) {
-						scope.multiinputFieldEventService.dispatchEvent(directivesEvent.TURN_OFF_ERROR_MODE);
-					}
-
-				};
+				const reqAttrs = metaService.getRequiredEntityAttrs(scope.entityType);
 
 				const getErrorData = function (value) {
 
@@ -95,7 +70,40 @@ export default function () {
 					return result;
 
 				};
-				console.log("testing1 entityNamesField entity", scope.entity);
+
+				scope.onPopupCancel = function () {
+
+					let noInvalidFields = true;
+
+					// const noInvalidFields = Object.keys(scope.popupData.fields).find(prop => !!scope.popupData.fields[prop].errorData);
+					Object.keys(scope.popupData.fields).forEach(prop => {
+
+						const fieldData = scope.popupData.fields[prop];
+						const fieldVal = fieldData.value;
+
+						if (reqAttrs.includes(prop)) {
+
+							if (fieldVal) {
+								fieldData.errorData = null;
+
+							} else {
+								fieldData.errorData = getErrorData(fieldVal);
+								noInvalidFields = false;
+							}
+
+						}
+
+					});
+
+					if (noInvalidFields) {
+						scope.multiinputFieldEventService.dispatchEvent(directivesEvent.TURN_OFF_ERROR_MODE);
+
+					} else {
+						scope.multiinputFieldEventService.dispatchEvent(directivesEvent.TURN_ON_ERROR_MODE);
+					}
+
+				};
+
 				scope.popupData = {
 					fields: {
 						name: {
@@ -132,7 +140,7 @@ export default function () {
 
 								scope.entity.user_code = userCode;
 
-								if (scope.entityType !== 'instrument') {
+								if (reqAttrs.includes('user_code')) {
 									this.errorData = getErrorData(scope.entity.user_code);
 								}
 
@@ -142,7 +150,8 @@ export default function () {
 							get value() {
 								return scope.entity.user_code;
 							},
-							invalid: false,
+
+							smallOptions: {notNull: reqAttrs.includes('user_code')},
 							event: {},
 							changeByInput: true
 						},
@@ -153,9 +162,9 @@ export default function () {
 								const changed = scope.valueToShow !== valueToShow;
 
 								scope.valueToShow = valueToShow;
-								console.log("testing1 entityNameField valueToShow", changed, scope.onValueToShowChange);
+
 								if (changed && scope.onValueToShowChange) {
-									console.log("testing1 entityNameField valueToShow call onValueToShowChange");
+
 									setTimeout(function() {
 										scope.onValueToShowChange();
 									}, 100);
@@ -176,7 +185,6 @@ export default function () {
 					},
 
 				}
-				console.log("testing12 entityNameField vts value", scope.popupData.fields.valueToShow.value);
 
 				const placeholdersForNames = {
 					'name': 'Report Name (Name)',
@@ -209,11 +217,11 @@ export default function () {
 
 			},
 			post: function (scope, elem, attrs) {
-				console.log("testing1 entityNamesField eventService", scope.eventService);
+
 				if (scope.eventService) {
 
 					scope.eventService.addEventListener(directivesEvent.TURN_ON_ERROR_MODE, function (argumentsObj) {
-						console.log("testing1 entityNamesField TURN_ON_ERROR_MODE argumentsObj", argumentsObj);
+
 						if (argumentsObj) {
 
 							for (const prop in argumentsObj) {
@@ -222,7 +230,7 @@ export default function () {
 							}
 
 						}
-						console.log("testing1 entityNamesField TURN_ON_ERROR_MODE scope.popupData.fields", scope.popupData.fields);
+
 						scope.multiinputFieldEventService.dispatchEvent(directivesEvent.TURN_ON_ERROR_MODE);
 
 					});

@@ -483,9 +483,7 @@
 
                 $scope.$apply();
 
-            }).catch(function (error) {
-				console.log("testing1 permissions error", error);
-			});
+            });
 
         };
 
@@ -1059,7 +1057,7 @@
             if (errors.length) {
 
                 // var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup, vm.entityType, vm.fixedAreaEventObj);
-				var processResult = entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.entityType, vm.enfEventService);
+				entityEditorHelper.processTabsErrors(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.entityType, vm.enfEventService);
 
                 /*if (processResult) {
                     vm.fixedAreaPopup = processResult;
@@ -1875,8 +1873,6 @@
 
 				}); */
 
-			}).catch(function (error) {
-				console.log("testing1 load layout or entity error", error);
 			});
 
             vm.getCurrencies();

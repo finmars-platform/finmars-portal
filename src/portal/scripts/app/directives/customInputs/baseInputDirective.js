@@ -27,7 +27,7 @@ export default function () {
 			}*/
 
 			scope.onInputChange = function () {
-				console.log("testing1 baseInputChange", scope.model);
+
 				if (scope.onChange) {
 
 					setTimeout(function () {
@@ -71,7 +71,7 @@ export default function () {
 				return classes;
 
 			};
-			console.log("testing1 baseInput eventSignal", scope.eventSignal);
+
 			if (scope.eventSignal) {
 
 				scope.$watch("eventSignal", function () {

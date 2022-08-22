@@ -19,7 +19,10 @@
                     placeholder-text="Unique Code (User Code)"
                     model="popupData.fields.user_code.value"
                     event-signal="popupData.fields.user_code.event"
-                    small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
+                    small-options="{
+                        dialogParent: '.dialog-containers-wrap',
+                        notNull: popupData.fields.user_code.smallOptions.notNull
+                    }"></text-input>
     </div>
 
     <div ng-if="popupData.fields.hasOwnProperty('public_name')">

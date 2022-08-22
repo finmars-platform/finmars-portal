@@ -283,7 +283,7 @@
 
         }; */
 		const onNameToShowChange = function () {
-			console.log("testing1 onNameToShowChange called ", viewModel.nameToShow, viewModel.dataConstructorLayout.data.fixedArea.showByDefault);
+
 			if (viewModel.nameToShow !== viewModel.dataConstructorLayout.data.fixedArea.showByDefault) {
 
 				// save layout settings
@@ -1098,7 +1098,7 @@
 				viewModel.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(viewModel.fixedAreaPopup.fields));*/
 
 				const columns = evHelperService.getEditLayoutMaxColumns(viewModel.entityType, tabs);
-				console.log("testing1 columns", columns, viewModel.tabColumns);
+
 				if (viewModel.tabColumns !== columns) { // e.g. when tab's columns number have been changed inside EntityDataConstructorDialogController
 
 					viewModel.tabColumns = columns;
@@ -1145,7 +1145,7 @@
 					if (viewModel.getEntityPricingSchemes) viewModel.getEntityPricingSchemes(); // in entityViewerFormsPreviewDialogController.js there is no pricing tab
 
 					const attributesLayout = mapAttributesAndFixFieldsLayout(tabs);
-					console.log("testing1 getEditLayout", viewModel.tabColumns);
+
 					let resolveData = {
 						typeSelectorOptions: viewModel.typeSelectorOptions,
 						groupSelectorOptions: viewModel.groupSelectorOptions,

@@ -38,7 +38,7 @@ export default function () {
 				}
 
 				scope.popupEventService = new EventService();
-				console.log("testing12 multiinput pre called");
+
 				scope.biEventObj = {
 					event: {}
 				};
@@ -47,10 +47,9 @@ export default function () {
 			post: function (scope, elem, attrs) {
 
 				scope.popupClasses = scope.popupClasses || '';
-				console.log("testing12 multiinput popupData", scope.popupData);
 
 				let currentVts = scope.popupData.fields.valueToShow.value;
-				console.log("testing12 multiinput currentVts", currentVts);
+
 				scope.openPopup = function () {
 
 					// have to use property 'errorData' because custom inputs reset property 'event' after turning on error mode
@@ -65,14 +64,14 @@ export default function () {
 					});
 
 					scope.popupData.fields;
-					console.log("testing1 multiinput openPopup", scope.popupData);
+
 					scope.popupEventService.dispatchEvent(popupEvents.OPEN_POPUP, {doNotUpdateScope: true});
 
 				};
 
 				const getVal = function () {
 					const fieldProp = scope.popupData.fields.valueToShow.value;
-					console.log("testing12 multiinput getVal fieldProp", fieldProp);
+
 					scope.inputModel.value = scope.popupData.fields[fieldProp].value;
 					return scope.inputModel.value;
 				};
@@ -80,7 +79,7 @@ export default function () {
 				const checkVtsForChanges = function () {
 
 					const vts = scope.popupData.fields.valueToShow.value;
-					console.log("testing12 multiinput checkVtsForChanges", vts);
+
 					if (currentVts !== vts && scope.onValueToShowChange) {
 						scope.onValueToShowChange();
 					}
@@ -104,7 +103,7 @@ export default function () {
 
 					checkVtsForChanges();
 					scope.inputModel.value = getVal();
-					console.log("testing1 multiinput onPopupCancelCallback", scope.popupData);
+
 					if (scope.onPopupCancel) {
 						scope.onPopupCancel();
 					}
@@ -113,7 +112,6 @@ export default function () {
 
 				scope.onInputChange = function () {
 
-					console.log("testing1 onInputChange", scope.inputModel.value);
 					Object.keys(scope.popupData.fields).forEach(prop => {
 
 						const fieldData = scope.popupData.fields[prop];
@@ -129,8 +127,9 @@ export default function () {
 				};
 
 				const init = function () {
+
 					scope.inputModel.value = getVal();
-					console.log("testing1 valueToShow value", scope.inputModel.value);
+
 					if (scope.eventService) {
 
 						scope.eventService.addEventListener(directivesEvents.TURN_ON_ERROR_MODE, function () {
