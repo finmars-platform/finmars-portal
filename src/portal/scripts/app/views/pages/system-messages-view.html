@@ -4,16 +4,16 @@
 
     <div data-ng-if="vm.systemMessagesReady">
 
+        <div class="m-t-8 m-b-8">
+
+            <md-input-container  style="width: 90%">
+                <label for="">Search</label>
+                <input aria-label="search" type="text" data-ng-model="vm.query" data-ng-change="vm.searchMessages()">
+            </md-input-container>
+
+        </div>
+
         <div data-ng-if="vm.systemMessages.length">
-
-            <div class="m-t-8 m-b-8">
-
-                <md-input-container  style="width: 90%">
-                    <label for="">Search</label>
-                    <input aria-label="search" type="text" data-ng-model="vm.query" data-ng-change="vm.searchMessages()">
-                </md-input-container>
-
-            </div>
 
             <table>
 
