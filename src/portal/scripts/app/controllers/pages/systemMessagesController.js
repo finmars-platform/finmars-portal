@@ -119,6 +119,36 @@
 
         }
 
+        vm.downloadFile = function ($event, item) {
+
+            systemMessageService.viewFile(item.file_report).then(function (data){
+
+                console.log('data', data);
+
+                $mdDialog.show({
+                    controller: 'FilePreviewDialogController as vm',
+                    templateUrl: 'views/dialogs/file-preview-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            content: data,
+                            info: item
+                        }
+                    }
+                });
+
+            })
+
+
+
+        }
+
         vm.searchMessages = function () {
             vm.currentPage = 1;
             vm.getData();
