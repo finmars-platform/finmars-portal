@@ -13,35 +13,37 @@
 
     </div>
 
+    <div class="m-t-8 m-b-8">
+
+
+        <md-input-container style="width: 90%">
+            <label for="">Search</label>
+            <input aria-label="search" type="text" data-ng-model="vm.query" data-ng-change="vm.searchProcesses()">
+        </md-input-container>
+
+    </div>
+
+    <div class="m-t-8 m-b-8">
+
+        <md-input-container style="width: 90%">
+            <label for="">Search By Id</label>
+            <input aria-label="search" type="text" data-ng-model="vm.queryId" data-ng-change="vm.searchProcesses()">
+        </md-input-container>
+
+    </div>
+
+    <div class="m-t-8 m-b-8">
+
+        <md-input-container style="width: 90%">
+            <label for="">Search By Created</label>
+            <input aria-label="search" type="text" data-ng-model="vm.queryCreated" data-ng-change="vm.searchProcesses()">
+        </md-input-container>
+
+    </div>
+
+
     <div data-ng-if="vm.readyStatus.data">
 
-        <div class="m-t-8 m-b-8">
-
-
-            <md-input-container style="width: 90%">
-                <label for="">Search</label>
-                <input aria-label="search" type="text" data-ng-model="vm.query" data-ng-change="vm.searchProcesses()">
-            </md-input-container>
-
-        </div>
-
-        <div class="m-t-8 m-b-8">
-
-            <md-input-container style="width: 90%">
-                <label for="">Search By Id</label>
-                <input aria-label="search" type="text" data-ng-model="vm.queryId" data-ng-change="vm.searchProcesses()">
-            </md-input-container>
-
-        </div>
-
-        <div class="m-t-8 m-b-8">
-
-            <md-input-container style="width: 90%">
-                <label for="">Search By Created</label>
-                <input aria-label="search" type="text" data-ng-model="vm.queryCreated" data-ng-change="vm.searchProcesses()">
-            </md-input-container>
-
-        </div>
 
         <div data-ng-if="vm.items.length">
 
