@@ -1131,6 +1131,9 @@
              else if (viewModel.fixedAreaPopup) { // inside entityViewerFormsPreviewDialogController.js there is no pricing fixed area
                 viewModel.fixedAreaPopup.tabColumns = 6; // inside dialog window there are always 2 fields outside popup
             } */
+			else { // inside dialog window
+				viewModel.tabColumns = 6;
+			}
 
 			const promises = [getAttributeTypes()];
 
