@@ -127,7 +127,13 @@
 
         }
 
+        vm.searchProcesses = function () {
 
+            vm.currentPage = 1;
+
+            vm.getData();
+
+        }
 
         vm.getData = function () {
 
@@ -135,9 +141,24 @@
 
             return new Promise(function (resolve, reject) {
 
+                var filters = {}
+
+                if (vm.query) {
+                    filters.type = vm.query;
+                }
+
+                if (vm.queryId) {
+                    filters.id = vm.queryId
+                }
+
+                if (vm.queryCreated) {
+                    filters.created = vm.queryCreated
+                }
+
                 processesService.getList({
                     pageSize: 40,
                     page: vm.currentPage,
+                    filters: filters,
                     sort: {
                         direction: "DESC",
                         key: "created"

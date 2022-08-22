@@ -119,11 +119,53 @@
 
         }
 
+        vm.downloadFile = function ($event, item) {
+
+            systemMessageService.viewFile(item.file_report).then(function (data){
+
+                console.log('data', data);
+
+                $mdDialog.show({
+                    controller: 'FilePreviewDialogController as vm',
+                    templateUrl: 'views/dialogs/file-preview-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            content: data,
+                            info: item
+                        }
+                    }
+                });
+
+            })
+
+
+
+        }
+
+        vm.searchMessages = function () {
+            vm.currentPage = 1;
+            vm.getData();
+        }
+
         vm.getData = function () {
+
+            var filters = {}
+
+            if (vm.query) {
+                filters.text = vm.query;
+            }
 
             systemMessageService.getList({
                 pageSize: 40,
                 page: vm.currentPage,
+                filters: filters,
                 sort: {
                     direction: "DESC",
                     key: "created"
@@ -139,17 +181,17 @@
 
                     item.verbose_created = moment(new Date(item.created)).format('DD-MM-YYYY HH:mm');
 
-                    if (item.level === 1) {
-                        item.verbose_level = 'Info'
-                    }
-
-                    if (item.level === 2) {
-                        item.verbose_level = 'Warning'
-                    }
-
-                    if (item.level === 3) {
-                        item.verbose_level = 'Error'
-                    }
+                    // if (item.level === 1) {
+                    //     item.verbose_level = 'Info'
+                    // }
+                    //
+                    // if (item.level === 2) {
+                    //     item.verbose_level = 'Warning'
+                    // }
+                    //
+                    // if (item.level === 3) {
+                    //     item.verbose_level = 'Error'
+                    // }
 
 
                     if (item.status === 1) {
