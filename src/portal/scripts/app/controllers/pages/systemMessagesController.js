@@ -181,37 +181,40 @@
 
                     item.verbose_created = moment(new Date(item.created)).format('DD-MM-YYYY HH:mm');
 
-                    // if (item.level === 1) {
-                    //     item.verbose_level = 'Info'
-                    // }
-                    //
-                    // if (item.level === 2) {
-                    //     item.verbose_level = 'Warning'
-                    // }
-                    //
-                    // if (item.level === 3) {
-                    //     item.verbose_level = 'Error'
-                    // }
-
-
-                    if (item.status === 1) {
-                        item.verbose_status = 'New'
+                    if (item.type === 1) {
+                        item.verbose_type = 'Information'
+                    } else if (item.type === 2) {
+                        item.verbose_type = 'Warning'
+                    } else if (item.type === 3) {
+                        item.verbose_type = 'Error'
+                    } else if (item.type === 2) {
+                        item.verbose_type = 'Success'
                     }
 
-                    if (item.status === 2) {
-                        item.verbose_status = 'Solved'
-                    }
 
-                    if (item.status === 3) {
-                        item.verbose_status = 'Viewed'
-                    }
+                    console.log('item', item)
 
-                    if (item.status === 4) {
-                        item.verbose_status = 'Marked'
-                    }
 
-                    if (item.status === 5) {
-                        item.verbose_status = 'Abandoned'
+                    if (item.section === 0) {
+                        item.verbose_section = 'General';
+                    } else if (item.section === 1) {
+                        item.verbose_section = 'Events';
+                    } else if (item.section === 2) {
+                        item.verbose_section = 'Transactions';
+                    } else if (item.section === 3) {
+                        item.verbose_section = 'Instruments';
+                    } else if (item.section === 4) {
+                        item.verbose_section = 'Data';
+                    } else if (item.section === 5) {
+                        item.verbose_section = 'Prices';
+                    } else if (item.section === 6) {
+                        item.verbose_section = 'Report';
+                    } else if (item.section === 7) {
+                        item.verbose_section = 'Import';
+                    } else if (item.section === 8) {
+                        item.verbose_section = 'Activity Log';
+                    } else if (item.section === 9) {
+                        item.verbose_section = 'Schedules';
                     }
 
                     return item;
