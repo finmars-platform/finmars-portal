@@ -117,7 +117,9 @@
 
 					if (vm.fieldType.type === 'dynamicAttribute') {
 
-						dAttrVal = evHelperService.getValueFromDynamicAttrsByUserCode(vm.fieldKey, $scope.entity.attributes);
+						if (Array.isArray($scope.entity.attributes)) {
+							dAttrVal = evHelperService.getValueFromDynamicAttrsByUserCode(vm.fieldKey, $scope.entity.attributes);
+						}
 
 						if (vm.fieldType && vm.fieldType.value === 30 && dAttrVal) {
 							dAttrVal = dAttrVal.classifier;
