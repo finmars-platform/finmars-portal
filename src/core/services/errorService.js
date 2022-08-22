@@ -5,109 +5,117 @@
  *
  */
 
+'use strict';
+
+import ToastNotificationService from "../../shell/scripts/app/services/toastNotificationService";
+import ErrorService from "../../shell/scripts/app/services/errorService";
+
 (function () {
 
-    var toastNotificationService = require('./toastNotificationService');
+	// var toastNotificationService = require('./toastNotificationService');
 
-    function ErrorObject(message, status, statusText) {
-        this.status = status;
-        this.statusText = statusText;
-        this.message = message || 'Oops something went wrong, please try again.';
-        this.stack = (new Error()).stack;
-    }
+	const toastNotificationService = new ToastNotificationService();
+	const errorService = new ErrorService(toastNotificationService);
 
-    ErrorObject.prototype = Object.create(Error.prototype);
-    ErrorObject.prototype.constructor = ErrorObject;
+	/* function ErrorObject(message, status, statusText) {
+		this.status = status;
+		this.statusText = statusText;
+		this.message = message || 'Oops something went wrong, please try again.';
+		this.stack = (new Error()).stack;
+	}
 
-    'use strict';
-    
-    var getFullErrorAsHtml = function (obj, message) {
+	ErrorObject.prototype = Object.create(Error.prototype);
+	ErrorObject.prototype.constructor = ErrorObject;
 
-        // console.log('getFullErrorAsHtml.obj', obj);
+	'use strict';
 
-        Object.keys(obj).forEach(function (key) {
+	var getFullErrorAsHtml = function (obj, message) {
 
-            message = message + '<br/>';
+		// console.log('getFullErrorAsHtml.obj', obj);
 
-            if (Array.isArray(obj[key])) {
+		Object.keys(obj).forEach(function (key) {
 
-                if (obj[key].length) {
+			message = message + '<br/>';
 
-                    if (typeof obj[key][0] === 'object') {
+			if (Array.isArray(obj[key])) {
 
-                        obj[key].forEach(function (item) {
+				if (obj[key].length) {
 
-                            message = message +  getFullErrorAsHtml(item, message)
+					if (typeof obj[key][0] === 'object') {
 
-                        })
+						obj[key].forEach(function (item) {
 
-                    } else {
+							message = message +  getFullErrorAsHtml(item, message)
 
-                        message = message + key + ': ' + obj[key].join(', ');
-                    }
-                }
-            } else {
+						})
 
-                if (typeof obj[key] === 'object') {
+					} else {
 
-                    message = message + getFullErrorAsHtml(obj[key], message)
+						message = message + key + ': ' + obj[key].join(', ');
+					}
+				}
+			} else {
 
-                } else {
-                    message = message + key + ': ' + obj[key];
-                }
-            }
+				if (typeof obj[key] === 'object') {
 
-        });
+					message = message + getFullErrorAsHtml(obj[key], message)
 
-        return message
+				} else {
+					message = message + key + ': ' + obj[key];
+				}
+			}
 
-    };
+		});
 
-    var notifyError = function (data) {
+		return message
 
+	};
 
-        console.error('notifyError.data', data);
-
-        var message = '';
-
-        message = data.response.status + ' ' + data.response.statusText + '<br>'
-
-        if (data.response.data) {
-
-            message = getFullErrorAsHtml(data.response.data, message)
-
-        }
-
-        console.log('notifyError.message', message)
-
-        toastNotificationService.error(message);
+	var notifyError = function (data) {
 
 
-        return Promise.reject(data)
+		console.error('notifyError.data', data);
 
-    };
+		var message = '';
 
-    var recordError = function (data){
+		message = data.response.status + ' ' + data.response.statusText + '<br>'
 
-        if (!window.system_errors) {
-            window.system_errors = []
-        }
+		if (data.response.data) {
 
-        window.system_errors.push({
-            created: new Date().toISOString(),
-            location: window.location.href,
-            data: data,
-            text: JSON.stringify(data)
-        })
+			message = getFullErrorAsHtml(data.response.data, message)
+
+		}
+
+		console.log('notifyError.message', message)
+
+		toastNotificationService.error(message);
 
 
-        return Promise.reject(data)
-    }
+		return Promise.reject(data)
 
-    module.exports = {
-        notifyError: notifyError,
-        recordError: recordError
-    }
+	};
+
+	var recordError = function (data){
+
+		if (!window.system_errors) {
+			window.system_errors = []
+		}
+
+		window.system_errors.push({
+			created: new Date().toISOString(),
+			location: window.location.href,
+			data: data,
+			text: JSON.stringify(data)
+		})
+
+
+		return Promise.reject(data)
+	} */
+
+	module.exports = {
+		notifyError: errorService.notifyError,
+		recordError: errorService.recordError
+	}
 
 
 }());
