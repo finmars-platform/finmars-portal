@@ -13,11 +13,42 @@
 
     </div>
 
+    <div class="m-t-8 m-b-8">
+
+
+        <md-input-container style="width: 90%">
+            <label for="">Search</label>
+            <input aria-label="search" type="text" data-ng-model="vm.query" data-ng-change="vm.searchProcesses()">
+        </md-input-container>
+
+    </div>
+
+    <div class="m-t-8 m-b-8">
+
+        <md-input-container style="width: 90%">
+            <label for="">Search By Id</label>
+            <input aria-label="search" type="text" data-ng-model="vm.queryId" data-ng-change="vm.searchProcesses()">
+        </md-input-container>
+
+    </div>
+
+    <div class="m-t-8 m-b-8">
+
+        <md-input-container style="width: 90%">
+            <label for="">Search By Created</label>
+            <input aria-label="search" type="text" data-ng-model="vm.queryCreated" data-ng-change="vm.searchProcesses()">
+        </md-input-container>
+
+    </div>
+
+
     <div data-ng-if="vm.readyStatus.data">
+
 
         <div data-ng-if="vm.items.length">
 
-            <div >
+
+            <div>
 
 
                 <md-card data-ng-repeat="item in vm.items" layout="column" class="m-b-16">
@@ -25,7 +56,7 @@
                     <div layout="column">
 
                         <div class="m-8">
-                            Process name: <b>{{vm.getProcessName(item)}}</b>
+                            Process name: <b>{{vm.getProcessName(item)}}</b> ({{item.type}})
                         </div>
 
                         <div class="m-8">
@@ -66,7 +97,7 @@
                                style="text-decoration: none; color: #000; display: block; margin-top: 15px; padding: 0 20px;">Download</a>
                         </div>
 
-                        </div>
+                    </div>
 
                     <div layout="column" class="p-8">
 
@@ -102,7 +133,8 @@
                     <div data-ng-repeat="page in vm.pages">
 
                         <md-button data-ng-click="vm.openPage(page)" data-ng-if="page.number"
-                                   class="md-raised {{vm.currentPage == page.number ? 'md-primary' : ''}}">{{page.caption}}
+                                   class="md-raised {{vm.currentPage == page.number ? 'md-primary' : ''}}">
+                            {{page.caption}}
                         </md-button>
 
                         <div data-ng-if="!page.number" style="margin: 10px;">

@@ -4,6 +4,15 @@
 
     <div data-ng-if="vm.systemMessagesReady">
 
+        <div class="m-t-8 m-b-8">
+
+            <md-input-container  style="width: 90%">
+                <label for="">Search</label>
+                <input aria-label="search" type="text" data-ng-model="vm.query" data-ng-change="vm.searchMessages()">
+            </md-input-container>
+
+        </div>
+
         <div data-ng-if="vm.systemMessages.length">
 
             <table>
@@ -25,6 +34,9 @@
                     <td>
                         Status
                     </td>
+                    <td>
+                        Attachments
+                    </td>
                 </tr>
                 </thead>
 
@@ -33,10 +45,17 @@
                 <tr data-ng-repeat="item in vm.systemMessages">
 
                     <td> {{item.verbose_created}}</td>
-                    <td> {{item.verbose_level}}</td>
+                    <td> {{item.level}}</td>
                     <td> {{item.source}}</td>
                     <td> {{item.text}}</td>
                     <td> {{item.verbose_status}}</td>
+                    <td>
+
+                        <div data-ng-repeat="item in item.attachments">
+                            <span class="download-file-button" data-ng-click="vm.downloadFile($event, item)">{{item.file_report_object.name}}</span>
+                        </div>
+
+                    </td>
 
                 </tr>
 
