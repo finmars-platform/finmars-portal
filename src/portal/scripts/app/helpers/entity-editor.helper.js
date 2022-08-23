@@ -3,6 +3,7 @@
     var metaService = require('../services/metaService');
     var evHelperService = require('../services/entityViewerHelperService');
     var evEditorEvents = require('../services/ev-editor/entityViewerEditorEvents');
+	var directivesEvents = require('../services/events/directivesEvents');
 
     var metaHelper = require('../helpers/meta.helper');
 
@@ -197,6 +198,35 @@
         return attribute;
 
     };
+
+	var updateAttribute = function (attributesList, attributeType) {
+
+		var attrIndex = attributesList.findIndex(attr => attr.attribute_type_object.user_code === attributeType.user_code);
+
+		if (attrIndex < 0) {
+			attributesList.push(appendAttribute(attributeType));
+
+		} else if (attributesList[attrIndex].attribute_type_object.id !== attributeType.id) {
+			// properties user_code match but attribute types are different
+			const valueTypesAreDifferent = attributesList[attrIndex].attribute_type_object.value_type !== attributeType.value_type;
+
+			attributesList[attrIndex].attribute_type_object = attributeType;
+			attributesList[attrIndex].attribute_type = attributeType;
+
+			if (valueTypesAreDifferent) {
+
+				attributesList[attrIndex].value_string = null;
+				attributesList[attrIndex].value_float = null;
+				attributesList[attrIndex].classifier = null;
+				attributesList[attrIndex].value_date = null;
+
+			}
+
+		}
+
+		return attributesList;
+
+	};
 
     var updateValue = function (entityAttr, attr, value) {
 
@@ -1304,19 +1334,19 @@
      * @param evEditorEventService {Object} - entityViewerEditorEventService
      * @param $mdDialog {Object}
      * @param $event {Object} - event object
-     * @param fixedAreaPopup {?Object} - fields inside of popup
      * @param entityType {string}
-     * @param fixedAreaEventObject {{event: Object}} - used to highlight 'Group' crud selector
+     * @param entityNamesFieldEventService {Object}
      * @returns {Object|null} - changed fixedAreaPopup or null
      */
-    const processTabsErrors = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event, fixedAreaPopup, entityType, fixedAreaEventObject) {
+    const processTabsErrors = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event, entityType, entityNamesFieldEventService) {
 
         const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
 
         let locsWithErrors = evEditorDataService.getLocationsWithErrors();
         let formErrorsList = evEditorDataService.getFormErrorsList();
 
-        let fixedAreaPopupChanged = false;
+        // let fixedAreaPopupChanged = false;
+		let fixedAreaErrorsData = {};
 
         errors.forEach(function (errorObj) {
 
@@ -1374,14 +1404,13 @@
 
                         locsWithErrors.fixed_area.fields.push(fieldProp);
 
-                        /*if (['strategy-1', 'strategy-2', 'strategy-3', 'responsible', 'counterparty'].includes(entityType) && fieldProp === 'group') { // subgroup used as group for strategy 1,2,3
+                        // fixedAreaEventObject.event = {key: 'mark_not_valid_fields'};
 
-                            groupSelectorEventObject.event = {key: "error", error: "Field should not be empty"};
-
-                        }*/
-                        fixedAreaEventObject.event = {key: 'mark_not_valid_fields'};
-
-                        fixedAreaPopupChanged = markErrorInsideFAPopup(fixedAreaPopup, fixedAreaFieldProp, errorObj.message);
+						// fixedAreaErrorsData = markErrorInsideFAPopup(fixedAreaErrorsData, fixedAreaFieldProp, errorObj.message);
+						fixedAreaErrorsData[fixedAreaFieldProp] = {
+							key: "error",
+							error: errorObj.message
+						}
 
                     }
 
@@ -1395,6 +1424,10 @@
 
         evEditorDataService.setLocationsWithErrors(locsWithErrors);
         evEditorDataService.setFormErrorsList(formErrorsList);
+
+		if (Object.keys(fixedAreaErrorsData).length) {
+			entityNamesFieldEventService.dispatchEvent(directivesEvents.TURN_ON_ERROR_MODE, fixedAreaErrorsData);
+		}
 
         evEditorEventService.dispatchEvent(evEditorEvents.MARK_FIELDS_WITH_ERRORS);
 
@@ -1410,9 +1443,9 @@
             }
         });
 
-        if (fixedAreaPopupChanged) return fixedAreaPopup;
+        // if (fixedAreaPopupChanged) return fixedAreaPopup;
 
-        return null;
+        // return null;
 
     };
 
@@ -1424,10 +1457,9 @@
      * @param evEditorEventService {Object} - entityViewerEditorEventService
      * @param $mdDialog {Object}
      * @param $event {Object} - event object
-     * @param fixedAreaPopup {?Object} - fields inside of popup
      * @returns {Object|null} - changed fixedAreaPopup or null
      */
-    const processTabsErrorsInstrumentType = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event, fixedAreaPopup) {
+    const processTabsErrorsInstrumentType = function (errors, evEditorDataService, evEditorEventService, $mdDialog, $event) {
 
 
         let locsWithErrors = evEditorDataService.getLocationsWithErrors();
@@ -1481,21 +1513,6 @@
                         }
 
                     }
-
-                } else if (errorObj.locationData.type === 'fixed_area') {
-
-                    var fieldProp = errorObj.key;
-                    var fixedAreaFieldProp = getFieldKeyForFAPopup(fieldProp, 'instrument-type');
-
-                    if (!locsWithErrors.fixed_area.fields.includes(fieldProp)) {
-
-                        locsWithErrors.fixed_area.fields.push(fieldProp);
-
-                        fixedAreaPopupChanged = markErrorInsideFAPopup(fixedAreaPopup, fixedAreaFieldProp, errorObj.message);
-
-                    }
-
-                    if (!formErrorsList.includes(fieldProp)) formErrorsList.push(fieldProp);
 
                 }
 
@@ -2284,6 +2301,7 @@
         clearEntityBeforeSave: clearEntityBeforeSave,
         clearUnusedAttributeValues: clearUnusedAttributeValues,
         appendAttribute: appendAttribute,
+		updateAttribute: updateAttribute,
         updateValue: updateValue,
 
         findAttributeByKey: findAttributeByKey,

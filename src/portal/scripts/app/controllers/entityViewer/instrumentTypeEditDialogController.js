@@ -77,9 +77,7 @@
 
         vm.range = gridHelperService.range;
 
-        vm.fixedFieldsAttributes = [];
         vm.attributesLayout = [];
-        vm.fixedAreaAttributesLayout = [];
 
         vm.currentMember = null;
 
@@ -90,28 +88,7 @@
 
         vm.currencies = []; // need for instrument pricing tab;
 
-        // Victor 20020.11.20 #59: fields below needs for new design an fixed area popup
         vm.action = 'edit';
-        vm.typeFieldName = 'type';
-        vm.typeFieldLabel = 'Type';
-
-		vm.typeFieldName = 'instrument_class';
-		vm.typeFieldLabel = 'Instrument class';
-
-        vm.showByDefaultOptions = [
-            {id: 'name', name: 'Name', visible_name: 'Report Name (Name)'},
-            {id: 'public_name', name: 'Public Name', visible_name: 'System Name (Short Name)'},
-            {id: 'short_name', name: 'Short Name', visible_name: 'Unique Code (User Code)'},
-            {id: 'user_code', name: 'User Code', visible_name: 'Name if Hidden (Public Name)'},
-        ];
-
-        // id of popup field which value will be shown when popup closed
-        vm.showByDefault = vm.showByDefaultOptions[0].id;
-
-        vm.fixedAreaPopup = sharedLogic.getFixedAreaPopup();
-
-        vm.typeSelectorOptions = [];
-        vm.groupSelectorOptions = [];
 
         vm.pricingConditions = [
             {id: 1, name: "Don't Run Valuation"},
@@ -122,7 +99,6 @@
         vm.activeTab = null;
 
         vm.openedIn = data.openedIn;
-        vm.originalFixedAreaPopupFields;
 
 		vm.exposureCalculationModelSelectorOptions = sharedLogic.exposureCalculationModelSelectorOptions;
 		vm.longUnderlyingExposureSelectorOptions = sharedLogic.longUnderlyingExposureSelectorOptions;
@@ -140,24 +116,9 @@
 
         }; */
 
-        vm.isEntityTabActive = function () {
-            return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
-        };
-
-        vm.getShowByDefaultEntityValue = function () {
-            return vm.entity[vm.showByDefault] || '';
-        };
-
-        vm.getPlaceholderByDefault = function () {
-            return vm.showByDefaultOptions.find(option => option.id === vm.showByDefault).visible_name;
-        };
-
         vm.entityTabsMenuTplt = sharedLogic.entityTabsMenuTplt;
         vm.entityTabsMenuPopupData = {viewModel: vm};
         vm.entityTablePopupClasses = "border-radius-2";
-        vm.onPopupSaveCallback = sharedLogic.onPopupSaveCallback;
-        vm.onFixedAreaPopupCancel = sharedLogic.onFixedAreaPopupCancel;
-        // <Victor 20020.11.20 #59: fields below needs for new design an fixed area popup>
 
         //vm.currenciesSorted = [];
 
@@ -180,39 +141,7 @@
         };
 
         var getEntityAttrs = function () {
-
             vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
-            vm.fixedFieldsAttributes = [];
-
-            var i, a;
-            for (i = 0; i < vm.keysOfFixedFieldsAttrs.length; i++) {
-
-                var attrKey = vm.keysOfFixedFieldsAttrs[i];
-
-                if (!attrKey) {
-
-                    vm.fixedFieldsAttributes.push(null);
-
-                } else {
-
-                    for (a = 0; a < vm.entityAttrs.length; a++) {
-
-                        if (vm.entityAttrs[a].key === attrKey) {
-
-                            if (vm.entityAttrs[a]) {
-                                var entityAttr = JSON.parse(JSON.stringify(vm.entityAttrs[a]));
-                            }
-
-                            vm.fixedFieldsAttributes.push(entityAttr);
-
-                            break;
-
-                        }
-                    }
-
-                }
-            }
-
         };
 
         vm.getCurrencies = function () {
@@ -475,23 +404,14 @@
                     sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
 
 						vm.typeSelectorOptions = formLayoutData.typeSelectorOptions; // list of instrument classes
-						vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
-						vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
 
 						vm.attributeTypes = formLayoutData.attributeTypes;
+						vm.entity.attributes = formLayoutData.attributes;
 
                     	vm.tabs = formLayoutData.tabs;
-                        console.log('# vm.tabs', vm.tabs);
+
 						vm.attributesLayout = formLayoutData.attributesLayout;
 
-						vm.readyStatus.layout = true;
-						vm.readyStatus.entity = true;
-						/* sharedLogic.getFieldsForFixedAreaPopup().then(fieldsData => {
-
-							vm.fixedAreaPopup.fields = fieldsData;
-							vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fieldsData));
-
-						}); */
 						vm.readyStatus.layout = true;
 						vm.readyStatus.entity = true;
 
@@ -721,14 +641,6 @@
 				vm.entityStatus = 'deleted';
 			}
 
-            // Victor 2020.11.20 #59 fixed fields popup
-            if (vm.fixedAreaPopup.fields.status) {
-
-                vm.fixedAreaPopup.fields.status.value = vm.entityStatus;
-
-            }
-            // <Victor 2020.11.20 #59 fixed fields popup>
-
         };
 
 		vm.saveAndApplyPermissionsToInstrumentsByGroup = sharedLogic.saveAndApplyPermissionsToInstrumentsByGroup;
@@ -742,10 +654,9 @@
 				vm.entity,
 				vm.entityType,
 				vm.tabs,
-				vm.keysOfFixedFieldsAttrs,
+				[],
 				vm.entityAttrs,
 				vm.attributeTypes,
-				[]
 			);
 
             /* if (entityType === 'instrument-type') {
@@ -770,12 +681,7 @@
             if (errors.length) {
 				// sharedLogic.processTabsErrors(errors, $event);
 
-				var processResult = entityEditorHelper.processTabsErrorsInstrumentType(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
-
-				if (processResult) {
-					vm.fixedAreaPopup = processResult;
-					vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(vm.fixedAreaPopup.fields));
-				}
+				entityEditorHelper.processTabsErrorsInstrumentType(errors, vm.evEditorDataService, vm.evEditorEventService, $mdDialog, $event, vm.fixedAreaPopup);
 
             }
         	else {
@@ -1534,12 +1440,6 @@
 
                 vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
 
-                /* evHelperService.getFieldsForFixedAreaPopup(vm).then(function (fields) {
-
-                    vm.fixedAreaPopup.fields = fields;
-                    vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(fields));
-
-                }); */
 				$scope.$apply();
 
             });

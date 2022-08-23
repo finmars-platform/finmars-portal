@@ -17,17 +17,13 @@
                     scope.buttonText = '...';
                 }
 
-                scope.openExpressionDialog = function ($event) {
+                var openExpressionDialog = function () {
 
                     $mdDialog.show({
                         controller: 'ExpressionEditorDialogController as vm',
                         templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
                         parent: document.querySelector(".dialog-containers-wrap"),
-                        targetEvent: $event,
-                        preserveScope: true,
                         multiple: true,
-                        autoWrap: true,
-                        skipHide: true,
                         locals: {
                             item: {expression: scope.item},
                             data: scope.data
@@ -35,26 +31,20 @@
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
-
                             scope.item = res.data.item.expression;
-
                         }
 
                     });
 
                 };
 
-                scope.openCodeEditorDialog = function ($event) {
+                var openCodeEditorDialog = function () {
 
                     $mdDialog.show({
                         controller: 'AceEditorDialogController as vm',
                         templateUrl: 'views/dialogs/ace-editor-dialog-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        preserveScope: true,
+						parent: document.querySelector(".dialog-containers-wrap"),
                         multiple: true,
-                        autoWrap: true,
-                        skipHide: true,
                         locals: {
                             item: {expression: scope.item},
                             data: scope.data
@@ -62,14 +52,37 @@
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
-
                             scope.item = res.data.item.expression;
-
                         }
 
                     });
 
                 };
+
+				scope.exprEditorSelData = {
+					options: [
+						{
+							key: "expression_builder",
+							name: "Expression Builder"
+						},
+						{
+							key: "code_editor",
+							name: "Code Editor"
+						}
+					],
+					selectOption: function (option, _$popup, $event) {
+
+						_$popup.cancel();
+
+						if (option.key === "expression_builder") {
+							openExpressionDialog();
+
+						} else {
+							openCodeEditorDialog();
+						}
+
+					}
+				}
 
             }
         }
