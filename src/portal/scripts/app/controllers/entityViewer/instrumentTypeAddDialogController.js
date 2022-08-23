@@ -1416,6 +1416,7 @@
                 vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
 
                 vm.attributeTypes = formLayoutData.attributeTypes;
+				vm.entity.attributes = formLayoutData.attributes;
 
 				if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
 
