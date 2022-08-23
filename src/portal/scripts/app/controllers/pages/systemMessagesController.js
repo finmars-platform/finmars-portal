@@ -187,7 +187,7 @@
                         item.verbose_type = 'Warning'
                     } else if (item.type === 3) {
                         item.verbose_type = 'Error'
-                    } else if (item.type === 2) {
+                    } else if (item.type === 4) {
                         item.verbose_type = 'Success'
                     }
 
