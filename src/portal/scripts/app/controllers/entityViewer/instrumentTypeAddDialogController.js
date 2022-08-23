@@ -1325,6 +1325,7 @@
 				vm.typeSelectorOptions = formLayoutData.typeSelectorOptions; // list of instrument classes
 
                 vm.attributeTypes = formLayoutData.attributeTypes;
+				vm.entity.attributes = formLayoutData.attributes;
 
 				if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
 

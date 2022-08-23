@@ -1812,8 +1812,9 @@
 				vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));*/
 
 				vm.attributeTypes = formLayoutData.attributeTypes;
+				vm.entity.attributes = formLayoutData.attributes;
 
-				if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
+				/*if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
 
 					vm.entity.attributes = [];
 
@@ -1821,7 +1822,7 @@
 						vm.entity.attributes.push(entityEditorHelper.appendAttribute(attributeType, null));
 					});
 
-				}
+				}*/
 
 				vm.tabs = formLayoutData.tabs;
 				vm.tabColumns = formLayoutData.tabColumns;

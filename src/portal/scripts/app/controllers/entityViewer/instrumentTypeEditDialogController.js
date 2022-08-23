@@ -406,9 +406,10 @@
 						vm.typeSelectorOptions = formLayoutData.typeSelectorOptions; // list of instrument classes
 
 						vm.attributeTypes = formLayoutData.attributeTypes;
+						vm.entity.attributes = formLayoutData.attributes;
 
                     	vm.tabs = formLayoutData.tabs;
-                        console.log('# vm.tabs', vm.tabs);
+
 						vm.attributesLayout = formLayoutData.attributesLayout;
 
 						vm.readyStatus.layout = true;

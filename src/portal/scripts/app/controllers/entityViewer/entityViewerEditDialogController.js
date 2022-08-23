@@ -711,6 +711,7 @@
 						// vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
 
 						vm.attributeTypes = formLayoutData.attributeTypes;
+						vm.entity.attributes = formLayoutData.attributes;
 
                     	vm.tabs = formLayoutData.tabs;
 						vm.tabColumns = formLayoutData.tabColumns;
