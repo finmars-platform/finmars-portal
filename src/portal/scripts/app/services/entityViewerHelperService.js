@@ -759,13 +759,19 @@ import uiService from "./uiService";
 
     /**
      * Get max columns from tabs of Edit Layout
+	 * @param {String} entityType
      * @param {Array} editLayoutTabs
      * @memberOf module:entityViewerHelperService
      * @returns {number}
      */
-    var getEditLayoutMaxColumns = function (editLayoutTabs) {
+    var getEditLayoutMaxColumns = function (entityType, editLayoutTabs) {
 
         let maxCols = 0;
+		const alwaysMaxWidth = ['instrument-type', 'transaction-type', 'account-type'];
+
+		if (alwaysMaxWidth.includes(entityType)) {
+			return 6;
+		}
 
         editLayoutTabs.forEach(function (tab) {
 
@@ -881,22 +887,24 @@ import uiService from "./uiService";
 
     var getBigDrawerOptions = function (layout, entityType) {
 
-        var fixedAreaColumns = 6;
+        var tabColumns = 6;
 
         if (layout.results.length) {
 
             var tabs = Array.isArray(layout.results[0].data) ? layout.results[0].data : layout.results[0].data.tabs;
 
-            if (entityType !== 'instrument-type') {
-                fixedAreaColumns = getEditLayoutMaxColumns(tabs);
-            }
+            /*if (entityType !== 'instrument-type') {
+                fixedAreaColumns = getEditLayoutMaxColumns(entityType, tabs);
+            }*/
+			tabColumns = getEditLayoutMaxColumns(entityType, tabs);
 
         }
 
-        var bigDrawerWidth = getBigDrawerWidth(fixedAreaColumns);
+        var bigDrawerWidth = getBigDrawerWidth(tabColumns);
 
         return {
             width: bigDrawerWidth,
+			tabColumns: tabColumns,
             editLayout: layout
         }
     };
@@ -1663,7 +1671,8 @@ import uiService from "./uiService";
                 entity: entity,
                 data: {
                     openedIn: 'big-drawer',
-                    editLayout: bigDrawerOptions.editLayout
+                    editLayout: bigDrawerOptions.editLayout,
+					tabColumns: bigDrawerOptions.tabColumns
                 }
             }
 
@@ -1756,7 +1765,8 @@ import uiService from "./uiService";
                 entityId: entityId,
                 data: {
                     openedIn: 'big-drawer',
-                    editLayout: bigDrawerOptions.editLayout
+                    editLayout: bigDrawerOptions.editLayout,
+					tabColumns: bigDrawerOptions.tabColumns
                 }
             }
 
