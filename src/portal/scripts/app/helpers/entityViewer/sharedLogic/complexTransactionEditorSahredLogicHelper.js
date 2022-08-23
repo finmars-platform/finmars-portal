@@ -171,7 +171,7 @@
 
 						if (attrType) {
 
-							const attrIndex = attrsList.findIndex(attr => attr.attribute_type_object.user_code === field.attribute.user_code);
+							/* const attrIndex = attrsList.findIndex(attr => attr.attribute_type_object.user_code === field.attribute.user_code);
 
 							if (attrIndex < 0) {
 								attrsList.push(entityEditorHelper.appendAttribute(attrType));
@@ -192,7 +192,8 @@
 
 								}
 
-							}
+							} */
+							attrsList = entityEditorHelper.updateAttribute(attrsList, attrType);
 
 						} /*else {
 							// TODO: process dynamic attributes inside tabs that were deleted or whose user_code changed

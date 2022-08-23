@@ -199,6 +199,35 @@
 
     };
 
+	var updateAttribute = function (attributesList, attributeType) {
+
+		var attrIndex = attributesList.findIndex(attr => attr.attribute_type_object.user_code === attributeType.user_code);
+
+		if (attrIndex < 0) {
+			attributesList.push(appendAttribute(attributeType));
+
+		} else if (attributesList[attrIndex].attribute_type_object.id !== attributeType.id) {
+			// properties user_code match but attribute types are different
+			const valueTypesAreDifferent = attributesList[attrIndex].attribute_type_object.value_type !== attributeType.value_type;
+
+			attributesList[attrIndex].attribute_type_object = attributeType;
+			attributesList[attrIndex].attribute_type = attributeType;
+
+			if (valueTypesAreDifferent) {
+
+				attributesList[attrIndex].value_string = null;
+				attributesList[attrIndex].value_float = null;
+				attributesList[attrIndex].classifier = null;
+				attributesList[attrIndex].value_date = null;
+
+			}
+
+		}
+
+		return attributesList;
+
+	};
+
     var updateValue = function (entityAttr, attr, value) {
 
         if (attr['value_type'] === 10) {
@@ -2272,6 +2301,7 @@
         clearEntityBeforeSave: clearEntityBeforeSave,
         clearUnusedAttributeValues: clearUnusedAttributeValues,
         appendAttribute: appendAttribute,
+		updateAttribute: updateAttribute,
         updateValue: updateValue,
 
         findAttributeByKey: findAttributeByKey,
