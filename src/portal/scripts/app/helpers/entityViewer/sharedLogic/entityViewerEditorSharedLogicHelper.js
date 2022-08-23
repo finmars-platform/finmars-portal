@@ -1007,6 +1007,22 @@
 
 		};
 
+		const updateAttributesInsideEntity = function () {
+
+			if (metaService.getEntitiesWithoutDynAttrsList().indexOf(viewModel.entityType) === -1) {
+
+				viewModel.entity.attributes = [];
+
+				viewModel.attributeTypes.forEach(function (attrType) {
+					viewModel.entity.attributes = entityEditorHelper.updateAttribute(viewModel.entity.attributes, attrType);
+				});
+
+			}
+
+			return viewModel.entity.attributes;
+
+		};
+
         const getFormLayout = async formLayoutFromAbove => {
 
 			const hasRelationSelectorInFixedArea = typeSelectorValueEntities.hasOwnProperty(viewModel.entityType);
@@ -1078,6 +1094,8 @@
 
 					if (viewModel.getEntityPricingSchemes) viewModel.getEntityPricingSchemes(); // in entityViewerFormsPreviewDialogController.js there is no pricing tab
 
+					viewModel.entity.attributes = updateAttributesInsideEntity();
+
 					const attributesLayout = mapAttributesAndFixFieldsLayout(tabs);
 
 					let resolveData = {
@@ -1085,6 +1103,7 @@
 						groupSelectorOptions: viewModel.groupSelectorOptions,
 						tabs: tabs,
 						attributeTypes: viewModel.attributeTypes,
+						attributes: viewModel.entity.attributes,
 						attributesLayout: attributesLayout
 					};
 
@@ -1588,6 +1607,7 @@
 			checkFieldRender: checkFieldRender,
 			manageAttributeTypes: manageAttributeTypes,
             getFormLayout: getFormLayout,
+			updateAttributesInsideEntity: updateAttributesInsideEntity,
 			// getFieldsForFixedAreaPopup: getFieldsForFixedAreaPopup,
             onEditorStart: onEditorStart,
 

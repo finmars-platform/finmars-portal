@@ -229,6 +229,7 @@
             } */
             var pbraResult = sharedLogicHelper.postBookRebookActions(cTransactionData, vm.recalculate);
             vm.entity.attributes = pbraResult.attributes;
+
             vm.tabs = pbraResult.tabs;
             vm.fixedArea = pbraResult.fixedArea;
             dataConstructorLayout = pbraResult.dataConstructorLayout;
