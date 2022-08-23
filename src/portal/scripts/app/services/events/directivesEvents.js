@@ -21,4 +21,9 @@ module.exports = {
 	'FIELD_TYPES_DATA_CHANGED': 'FIELD_TYPES_DATA_CHANGED',
 	//endregion
 
+	//region entityNamesFieldDirective, multiinputFieldDirective
+	'TURN_ON_ERROR_MODE': 'TURN_ON_ERROR_MODE',
+	'TURN_OFF_ERROR_MODE': 'TURN_OFF_ERROR_MODE',
+	//endregion
+
 };

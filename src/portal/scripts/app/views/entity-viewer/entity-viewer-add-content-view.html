@@ -93,9 +93,9 @@
     <div data-ng-if="vm.fixedFieldsAttributes.length > 0"
          class="entity-editor-fixed-area">
 
-        <div class="entity-editor-row flex-row fc-space-between">
+        <div class="entity-editor-fa-row">
 
-            <div class="cursor-pointer fa-field1"
+            <!--<div class="cursor-pointer fa-field1"
                  data-ng-if="vm.entityType !== 'currency' || vm.fixedAreaPopup.tabColumns < 6"
                  data-ng-class="{
                         'flex-basis-33': vm.fixedAreaPopup.tabColumns === 6,
@@ -103,7 +103,7 @@
                         'flex-basis-66': vm.fixedAreaPopup.tabColumns === 3,
                         'flex-basis-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1
                     }"
-                 popup
+                 custom-popup
                  popup-template-url="'views/popups/entity-viewer-add-fixed-area-popup-view.html'"
                  popup-width="element"
                  position-relative-to="element"
@@ -124,9 +124,20 @@
                             style="pointer-events: none;">
                 </text-input>
 
+            </div>-->
+            <div class="fa-field1"
+                 data-ng-class="vm.getFaField1Classes()">
+
+                <entity-names-field label="{{vm.entityTypeSlug()}}"
+                                    entity-type="{{vm.entityType}}"
+                                    entity="vm.entity"
+                                    value-to-show="vm.nameToShow"
+                                    event-service="vm.enfEventService"
+                                    on-value-to-show-change="vm.onNameToShowChange()"></entity-names-field>
+
             </div>
 
-            <div data-ng-if="vm.entityType === 'currency' && vm.fixedAreaPopup.tabColumns === 6"
+            <!--<div data-ng-if="vm.entityType === 'currency' && vm.fixedAreaPopup.tabColumns === 6"
                  class="fa-field2"
                  data-ng-class="{
                         'flex-basis-33': vm.fixedAreaPopup.tabColumns === 6,
@@ -140,14 +151,10 @@
                             model="vm.entity.name"
                             small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
 
-            </div>
+            </div>-->
 
-            <div data-ng-if="vm.fixedAreaPopup.tabColumns > 2" class="fa-field3"
-                 data-ng-class="{
-                        'flex-basis-33': vm.fixedAreaPopup.tabColumns === 6 || vm.fixedAreaPopup.tabColumns === 3,
-                        'flex-basis-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
-                        'flex-basis-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1
-                    }">
+            <div class="fa-field3"
+                 data-ng-class="vm.getFaField2Classes()">
 
                 <dropdown-select
                         data-ng-if="vm.entityType === 'instrument' || vm.entityType === 'account' || vm.entityType === 'instrument-type'"
@@ -186,7 +193,7 @@
                              event-signal="vm.fixedAreaEventObj.event"
                              small-options="{notNull: true, , dialogParent: '.dialog-containers-wrap'}"></crud-select>
 
-                <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type' &&
+                <!--<div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type' &&
                                  vm.entityType !== 'responsible' && vm.entityType !== 'counterparty' && vm.entityType !== 'strategy-1' && vm.entityType !== 'strategy-2' && vm.entityType !== 'strategy-3'"
                      class="ev-editor-field">
                     <text-input
@@ -194,21 +201,10 @@
                             placeholder-text="System Name (Short Name)"
                             model="vm.entity.short_name"
                             small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
-                </div>
+                </div>-->
             </div>
 
-            <!--            Add dialog have not status field-->
-            <!--            <div data-ng-if="vm.fixedAreaPopup.tabColumns > 5"
-                             class="width-33">
-                            <dropdown-select label="Status"
-                                             model="vm.entityStatus"
-                                             placeholder-text="System List"
-                                             menu-options="vm.statusSelectorOptions"
-                                             small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
-                                             on-change-callback="vm.entityStatusChanged()"
-                                             class="ev-editor-field"></dropdown-select>
-                        </div>-->
-            <div data-ng-if="vm.fixedAreaPopup.tabColumns > 5"
+            <!--<div data-ng-if="vm.fixedAreaPopup.tabColumns > 5"
                  class="width-33">
 
                 <div data-ng-if="vm.entityType === 'instrument' || vm.entityType === 'account' || vm.entityType === 'instrument-type'"
@@ -228,7 +224,7 @@
                                 small-options="{notNull: vm.isNotNullInput('user_code'), dialogParent: '.dialog-containers-wrap'}"></text-input>
                 </div>
 
-            </div>
+            </div>-->
 
 
         </div>
@@ -535,7 +531,7 @@
 
         <div class="entity-tabs-menu entityTabsMenu"
              ng-class="{'active': vm.isEntityTabActive()}"
-             popup
+             custom-popup
              popup-template="{{vm.entityTabsMenuTplt}}"
              popup-data="vm.entityTabsMenuPopupData"
              position-relative-to="element"

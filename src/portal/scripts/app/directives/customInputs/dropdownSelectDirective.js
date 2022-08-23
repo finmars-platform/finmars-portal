@@ -359,7 +359,7 @@
                         multiple: true,
                         locals: {
                             data: {
-                                dialogTitle: 'Choose layout to open Split Panel with',
+                                dialogTitle: scope.title,
                                 // items: scope.menuOptions
 								items: menuOptionsList
                             }
