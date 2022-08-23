@@ -20,7 +20,7 @@
 				renderHyperlinks: "=",
 				onChangeCallback: "&?",
 				onBlurCallback: "&?",
-				onFocus: "=" // I can't bind as "&?" because onFocus need event argument
+				// onFocus: "=" // I can't bind as "&?" because onFocus need event argument
 			},
 			templateUrl: "views/directives/customInputs/text-input-view.html",
 			link: function (scope, elem, attr) {

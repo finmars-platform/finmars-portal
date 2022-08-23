@@ -40,6 +40,8 @@
 
         vm.searchExpr = '';
 
+		var dialogParent = document.querySelector('.dialog-containers-wrap');
+
         vm.getFilters = function () {
 
             var result = {};
@@ -60,7 +62,7 @@
             $mdDialog.show({
                 controller: "TableAttributeSelectorDialogController as vm",
                 templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
-                parent: document.querySelector('.dialog-containers-wrap'),
+                parent: dialogParent,
                 targetEvent: $event,
                 multiple: true,
                 locals: {
@@ -1051,14 +1053,12 @@
             $mdDialog.show({
                 controller: 'HelpDialogController as vm',
                 templateUrl: 'views/dialogs/help-dialog-view.html',
-                targetEvent: $event,
+				parent: dialogParent,
+				targetEvent: $event,
                 locals: {
                     data: {}
                 },
-                preserveScope: true,
                 multiple: true,
-                autoWrap: true,
-                skipHide: true
             })
         }
     }
