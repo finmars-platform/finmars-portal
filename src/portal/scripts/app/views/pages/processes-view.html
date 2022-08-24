@@ -64,6 +64,10 @@
                         </div>
 
                         <div class="m-8">
+                            Celery Task id: <b>{{item.celery_task_id}}</b>
+                        </div>
+
+                        <div class="m-8">
                             Created: <b>{{vm.getStartedAt(item)}}</b>
                         </div>
 
@@ -90,6 +94,10 @@
 
                             </md-button>
 
+                            <md-button class="md-raised" data-ng-click="vm.requestTaskStatus($event, item)">
+                                Request status
+                            </md-button>
+
                         </div>
 
                         <div data-ng-if="item.file_report" style="min-width: 120px" class="m-8">
@@ -100,6 +108,15 @@
                     </div>
 
                     <div layout="column" class="p-8">
+
+                        <div data-ng-if="item.status_object">
+
+                            <div><b>Status</b></div>
+                            <div style="max-height: 300px; overflow: auto">
+                                <pre>{{item.status_object}}</pre>
+                            </div>
+
+                        </div>
 
                         <div data-ng-if="item.show_options">
                             <div><b>Options</b></div>
