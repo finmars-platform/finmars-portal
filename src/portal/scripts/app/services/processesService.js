@@ -13,10 +13,15 @@
         return processesRepository.deleteByKey(id);
     };
 
+    var getStatus = function (id, celery_task_id) {
+        return processesRepository.getStatus(id, celery_task_id);
+    }
+
 
     module.exports = {
         getList: getList,
-        deleteByKey: deleteByKey
+        deleteByKey: deleteByKey,
+        getStatus: getStatus
     }
 
 
