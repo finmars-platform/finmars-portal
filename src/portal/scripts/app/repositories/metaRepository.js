@@ -220,6 +220,14 @@
 
     var getEntityTabs = function (entityType) {
         switch (entityType) {
+			case 'portfolio':
+				return [
+					{
+						label: 'Performance',
+						type: 'system_tab',
+						templateUrl: 'views/tabs/portfolio/performance-view.html'
+					}
+				];
             case 'currency':
                 return [
                     {
