@@ -390,6 +390,8 @@
 						const isReport = metaService.isReport(entityType);
 
 						defaultLayout = uiRepository.getListLayoutTemplate(isReport);
+						defaultLayout[0].content_type = contentType;
+
 						defaultLayout = await applyDefaultSettingsToLayoutTemplate(defaultLayout);
 						defaultLayoutData = {results: defaultLayout};
 

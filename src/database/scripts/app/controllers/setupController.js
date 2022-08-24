@@ -74,7 +74,7 @@
 
         vm.getMember = function () {
 
-            return usersService.getMyCurrentMember().then(function (data) {
+            /*return usersService.getMyCurrentMember().then(function (data) {
 
                 vm.currentMember = data;
 
@@ -88,7 +88,16 @@
                     $scope.$apply();
                 });
 
-            });
+            });*/
+			return usersService.getMyCurrentMember().then(function (data) {
+
+				vm.member = data;
+				console.log('vm.member', vm.member);
+
+				vm.readyStatus.member = true;
+				$scope.$apply();
+
+			});
 
         };
 
