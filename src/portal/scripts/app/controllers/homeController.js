@@ -81,7 +81,7 @@
 
         var processEventsPromise = function () {
 
-            return new Promise(function (resolve, reject) {
+            /*return new Promise(function (resolve, reject) {
 
                 usersService.getOwnMemberSettings().then(function (data) {
 
@@ -135,7 +135,57 @@
 
                 });
 
-            });
+            });*/
+			return new Promise(function (resolve, reject) {
+
+				var info = JSON.parse(sessionStorage.getItem('afterLoginEvents'));
+
+				var member = globalDataService.getMember();
+
+				var showEventsDialogs = false;
+
+				if (!info) {
+					showEventsDialogs = true;
+				}
+
+				if (info && info.indexOf(currentMasterUser.id) === -1) {
+					showEventsDialogs = true;
+				}
+
+				// 1 = Do not notify
+				// 3 = Email only notifications
+
+				if (member.notification_level === 1 || member.notification_level === 3) {
+					showEventsDialogs = false;
+				}
+
+				if (showEventsDialogs) {
+
+					vm.eventsProcessing = true;
+
+					afterLoginEventsService.getAndShowEvents($mdDialog).then(function (value) {
+
+						vm.eventsProcessing = false;
+						resolve();
+
+					}).catch(function () {
+						resolve();
+					});
+
+					if (info) {
+						info.push(currentMasterUser.id);
+					} else {
+						info = [currentMasterUser.id];
+					}
+
+					sessionStorage.setItem('afterLoginEvents', JSON.stringify(info));
+
+				} else {
+					vm.eventsProcessing = false;
+					resolve();
+				}
+
+			});
 
         };
 

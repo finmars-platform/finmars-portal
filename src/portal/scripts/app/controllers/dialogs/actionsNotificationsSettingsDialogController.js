@@ -11,7 +11,7 @@
 
     // var usersService = require('../../services/usersService');
 
-    module.exports = function ($scope, $mdDialog, usersService) {
+    module.exports = function ($scope, $mdDialog, usersService, globalDataService) {
         // logService.controller('ActionsNotificationsSettingsDialogController', 'initialized');
 
         var vm = this;
@@ -20,11 +20,13 @@
 
         vm.timeZones = timeZonesService.getList();
 
-        usersService.getOwnMemberSettings().then(function (data) {
+        /* usersService.getOwnMemberSettings().then(function (data) {
             vm.member = data.results[0];
             vm.readyStatus.member = true;
             $scope.$apply();
-        });
+        }); */
+		vm.member = globalDataService.getMember();
+		vm.readyStatus.member = true;
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});

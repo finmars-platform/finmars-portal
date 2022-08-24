@@ -337,13 +337,11 @@
 
         vm.applyMemberInterfacePermissions = function () {
 
-            console.log('currentMember', vm.currentMember);
-
-            if (!vm.currentMember.is_admin && !vm.currentMember.is_owner) {
+            if (!vm.member.is_admin && !vm.member.is_owner) {
 
                 console.log("Applying Member Interface Permissions");
 
-                vm.currentMember.groups_object.forEach(function (group) {
+                vm.member.groups_object.forEach(function (group) {
 
                     console.log(' group.permission_table', group.permission_table);
 
@@ -502,7 +500,7 @@
 
         vm.getMember = function () {
 
-            usersService.getMyCurrentMember().then(function (data) {
+			/* usersService.getMyCurrentMember().then(function (data) {
 
                 vm.currentMember = data;
 
@@ -516,7 +514,9 @@
 
                 })
 
-            })
+            })*/
+			vm.member = globalDataService.getMember();
+			vm.getInterfaceAccess();
 
         };
 
