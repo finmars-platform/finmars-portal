@@ -68,7 +68,7 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog) {
 	};
 
 	vm.openPricingMultipleParametersDialog = function (pricingPolicy) {
-		pricingPolicyService.openPricingMultipleParametersDialog($mdDialog, pricingPolicy, vm.entityType, vm.attributeTypes);
+		pricingPolicyService.openPricingMultipleParametersDialog($mdDialog, pricingPolicy, vm.entityType, vm.instrAttributeTypes);
 	};
 
 	//region Pricing policies grid table
@@ -372,19 +372,19 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog) {
 			10: [
 				{
 					name: 'Reference For Pricing',
-					user_code: 'reference_for_pricing'
+					id: 'reference_for_pricing'
 				}
 			],
 			20: [
 				{
 					name: 'Default Price',
-					user_code: 'default_price'
+					id: 'default_price'
 				}
 			],
 			40: [
 				{
 					name: 'Maturity Date',
-					user_code: 'maturity_date'
+					id: 'maturity_date'
 				}
 			]
 
@@ -392,13 +392,13 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog) {
 
 		var getAttributesByValueType = function (valueType) {
 
-			var attrsList = vm.attributeTypes.filter(function (item) {
+			var attrsList = vm.instrAttributeTypes.filter(function (item) {
 				return item.value_type === valueType;
 			}).map(function (item) {
 
 				return {
 					name: item.name,
-					user_code: 'attributes.' + item.id
+					id: 'attributes.' + item.user_code
 				}
 
 			});
@@ -451,8 +451,8 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog) {
 		vm.instrumentPricingSchemes =  data.results;
 	});
 
-	const getAttributeTypes = attributeTypeService.getList(vm.entityType, {pageSize: 1000}).then(function (data) {
-		vm.attributeTypes = data.results;
+	const getInstrAttributeTypes = attributeTypeService.getList('instrument', {pageSize: 1000}).then(function (data) {
+		vm.instrAttributeTypes = data.results;
 	});
 
 	vm.init = function () {
@@ -462,7 +462,7 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog) {
 
 		initGridTableEvents(); */
 
-		Promise.all([getInstrumentPricingSchemes, getAttributeTypes]).then(function () {
+		Promise.all([getInstrumentPricingSchemes, getInstrAttributeTypes]).then(function () {
 
 			generateInstrumentAttributeTypesByValueTypes();
 			/* formatDataForPricingGridTable();
