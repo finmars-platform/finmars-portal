@@ -201,7 +201,7 @@
         };
 
         var getOptionsForPPDefaultValueSel = function (typesList, pricingPolicy) {
-
+			// menuOptions for selector inside edit_default_parameters column received based on selected pricing scheme
         	if (pricingPolicy.pricing_scheme_object &&
 				pricingPolicy.pricing_scheme_object.type_settings &&
 				pricingPolicy.pricing_scheme_object.type_settings.value_type) {
@@ -580,7 +580,7 @@
 
 					return {
 						name: item.name,
-						id: 'attributes.' + item.id
+						id: 'attributes.' + item.user_code
 					}
 
 				});
