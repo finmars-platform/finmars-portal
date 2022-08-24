@@ -169,7 +169,7 @@
 
                     vm.items = data.results;
 
-                    vm.items = vm.items.map(function (item){
+                    vm.items = vm.items.map(function (item) {
 
                         try {
 
@@ -242,6 +242,15 @@
             return new Date(item.created).toLocaleDateString() + ' ' + new Date(item.created).toLocaleTimeString()
 
         };
+
+        vm.requestTaskStatus = function ($event, item) {
+
+            processesService.getStatus(item.id, item.celery_task_id).then(function (data) {
+                item.status_object = data
+                $scope.$apply();
+            })
+
+        }
 
         vm.getProcessName = function (item) {
 
@@ -329,7 +338,7 @@
             var prefix = baseUrlService.getMasterUserPrefix();
             var apiVersion = baseUrlService.getApiVersion();
 
-            return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
+            return baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
 
         };
 
