@@ -29,25 +29,21 @@
             vm.applyItem($event, item)
         };
 
-        vm.getMember = function () {
+        /* vm.getMember = function () {
 
-            return usersService.getMyCurrentMember().then(function (data) {
+			return usersService.getMyCurrentMember().then(function (data) {
 
-                vm.currentMember = data;
-
-                usersService.getOwnMemberSettings().then(function (data) {
-                    vm.member = data.results[0];
+				vm.member = data;
 
 
-                    console.log('vm.member', vm.member);
+				console.log('vm.member', vm.member);
 
-                    vm.readyStatus.member = true;
-                    $scope.$apply();
-                });
+				vm.readyStatus.member = true;
+				$scope.$apply();
 
-            });
+			});
 
-        };
+        }; */
 
         vm.getGroupList = function () {
 
@@ -161,7 +157,7 @@
 
         vm.init = function () {
 
-            vm.getMember();
+            // vm.getMember();
             vm.getGroupList();
             vm.getList();
 

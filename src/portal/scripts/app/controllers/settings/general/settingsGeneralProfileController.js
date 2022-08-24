@@ -7,7 +7,7 @@
 
     // var usersService = require('../../../services/usersService');
 
-    module.exports = function ($scope, usersService) {
+    module.exports = function ($scope, usersService, globalDataService) {
 
         var vm = this;
 
@@ -15,11 +15,13 @@
 
         vm.timeZones = timeZonesService.getList();
 
-        usersService.getOwnMemberSettings().then(function (data) {
+        /* usersService.getOwnMemberSettings().then(function (data) {
             vm.member = data.results[0];
             vm.readyStatus.member = true;
             $scope.$apply();
-        });
+        }); */
+		vm.member = globalDataService.getMember();
+		vm.readyStatus.member = true;
 
         vm.save = function () {
             usersService.updateOwnMemberSettings(vm.member.id, vm.member).then(function () {
