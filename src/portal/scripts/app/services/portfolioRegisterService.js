@@ -10,10 +10,6 @@
         return portfolioRegisterRepository.getList(options);
     };
 
-    var getListLight = function (options) {
-        return portfolioRegisterRepository.getListLight(options);
-    };
-
     var getByKey = function (id) {
         return portfolioRegisterRepository.getByKey(id);
     };
@@ -46,7 +42,6 @@
     module.exports = {
 
         getList: getList,
-        getListLight: getListLight,
         getByKey: getByKey,
         create: create,
         update: update,

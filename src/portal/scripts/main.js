@@ -13,7 +13,10 @@ import authorizerService from '../../shell/scripts/app/services/authorizerServic
 
 import portalController from './app/controllers/portalController.js';
 import enterUserCodeDialogController from "./app/controllers/dialogs/enterUserCodeDialogController.js";
+
+// form - tabs
 import instrumentTypePricingTabController from "./app/controllers/tabs/instrument-type/instrumentTypePricingTabController.js";
+import portfolioPerformanceTabController from "./app/controllers/tabs/portfolio/performanceTabController.js"
 
 import mainHeaderDirective from "./app/directives/mainHeaderDirective.js";
 
@@ -418,6 +421,9 @@ export default (function () {
 	portal.controller('GenerateEventScheduleDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/generateEventScheduleDialogController')]);
 
 	portal.controller('CalculatePortfolioRegisterRecordsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/calculatePortfolioRegisterRecordsDialogController')]);
+
+	// Portfolio form - tabs
+	portal.controller('PortfolioPerformanceTabController', ['$scope', '$mdDialog', portfolioPerformanceTabController]);
 
 	// Data
 

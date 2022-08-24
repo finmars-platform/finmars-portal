@@ -141,7 +141,7 @@
 				};
 
 				vm.setValueInsideEntity = function () {
-
+					console.log("testing1 setValueInsideEntity " + vm.fieldKey, vm.model);
 					if (vm.fieldType.type === 'dynamicAttribute') {
 						$scope.entity.attributes = evHelperService.setDynamicAttrValueByUserCode(vm.fieldKey, $scope.entity.attributes, vm.model);
 
@@ -151,7 +151,7 @@
 					} else {
 						$scope.entity[vm.fieldKey] = vm.model;
 					}
-
+					console.log("testing1 setValueInsideEntity " + vm.fieldKey, $scope.entity);
 					return $scope.entity;
 
 				};
@@ -1033,7 +1033,7 @@
                         }
 
 					}
-
+					console.log("testing1 bindFieldControl ", $scope.item, vm.fieldType);
                     $scope.options = vm.checkForNotNull($scope.options);
 
 

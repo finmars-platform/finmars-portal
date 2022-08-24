@@ -1,0 +1,25 @@
+<div ng-controller="PortfolioPerformanceTabController as vm">
+
+    <div ng-if="vm.readyStatus">
+        <h4>Related Instruments</h4>
+
+        <div custom-popup
+             popup-template-url="views/popups/selector-popup-view.html"
+             popup-data="">
+            <grid-table gt-data-service="vm.relInstrGtDataService"
+                        gt-event-service="vm.relInstrGtEventService"
+                        class="portfolio-related-instruments"></grid-table>
+        </div>
+
+    </div>
+
+    <button ng-click="vm.addNewRelInstr($event)">
+        <span class="material-icons">add</span><span>ADD NEW RELATED INSTRUMENT</span>
+    </button>
+
+    <div ng-if="!vm.readyStatus"
+         class="flex-row flex-c-center width-100" style="height: 100px;">
+        <progress-circular diameter="100"></progress-circular>
+    </div>
+
+</div>
