@@ -41,6 +41,8 @@ export default function () {
 	};
 
 	const setMember = function (member) {
+		console.trace("autosave77 setMember");
+		console.log("autosave77 setMember", member);
 		data.member = member;
 	};
 

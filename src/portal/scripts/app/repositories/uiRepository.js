@@ -241,7 +241,9 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
     var getListLayoutTemplate = function (isReport) {
         const template = {
             "name": "",
-            "data": {
+			"user_code": "",
+			"content_type": "",
+			"data": {
                 "entityType": null,
                 "folding": false,
                 "sorting": {
