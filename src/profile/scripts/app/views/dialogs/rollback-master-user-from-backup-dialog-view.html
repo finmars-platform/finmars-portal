@@ -14,7 +14,7 @@
 
         <div data-ng-if="vm.readyStatus.data">
 
-            <md-card data-ng-repeat="item in vm.items | filter: {name: vm.query}" class="mm-card p-8 {{item.is_selected ? 'selected' : ''}}" style="width: 100%">
+            <md-card data-ng-repeat="item in vm.items | filter: {name: vm.query}" class="mm-card p-8 rollback-backup-card {{item.is_selected ? 'selected' : ''}}" style="width: 100%">
                 <md-card-title>
                     <md-card-title-text>
                         <div class="md-headline m-b-8">{{item.name}}</div>
@@ -23,7 +23,7 @@
                 </md-card-title>
                 <md-card-actions layout="row" layout-align="space-between center">
 
-                    <md-button class="md-raised"
+                    <md-button class="md-raised {{item.is_selected ? 'disabled-btn' : ''}}"
                                data-ng-click="vm.selectBackup($event, item)">Select
                     </md-button>
 
