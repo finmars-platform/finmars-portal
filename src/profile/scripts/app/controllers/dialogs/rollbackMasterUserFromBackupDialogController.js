@@ -66,7 +66,7 @@ const masterUserBackupsService = require("../../services/masterUserBackupsServic
             const warningLocals = {
                 warning: {
                     title: 'Warning',
-                    description: 'Database ' + vm.masterUser.name + ' is going to be restored to previous version. All unsaved data will be lost.'
+                    description: 'Database ' + vm.master_user.name + ' is going to be restored to previous version. All unsaved data will be lost.'
                 }
             };
 
