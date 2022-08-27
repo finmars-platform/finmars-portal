@@ -122,7 +122,7 @@
 		const authorizerUrl = baseUrlService.getAuthorizerUrl();
 
 		return window.fetch(authorizerUrl + '/master-user/' + master_user_id + '/rollback-from-backup/', {
-			method: 'POST',
+			method: 'PUT',
 			credentials: 'include',
 			headers: {
 				'X-CSRFToken': cookieService.getCookie('csrftoken'),
