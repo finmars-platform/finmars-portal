@@ -16,7 +16,7 @@
 		let url = authorizerUrl + '/master-user-backups/';
 
 		if (base_api_url) {
-			url = url + '?base_api_url=' + base_api_url
+			url = url + '?master_user_base_api_url=' + base_api_url
 		}
 
 		return window.fetch(url,{
