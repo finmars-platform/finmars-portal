@@ -70,13 +70,19 @@ const masterUserBackupsService = require("../../services/masterUserBackupsServic
                 }
             };
 
+
+
             commonDialogsService.warning(warningLocals, {targetEvent: $event}).then(function (res) {
 
                 if (res.status === 'agree') {
 
-                    masterUserBackupsService.rollbackFromBackup(vm.master_user.id, {master_user_backup_id: vm.backup.id, create_backup_before_rollback: vm.createBackupBeforeRollback}).then(function (data) {
+                    vm.processing = true;
+
+                    masterUserBackupsService.rollbackFromBackup(vm.master_user.id, {master_user_backup_id: vm.selectedBackup.id, create_backup_before_rollback: vm.createBackupBeforeRollback}).then(function (data) {
 
                         console.log('data success', data);
+
+                        vm.processing = false;
 
                         $mdDialog.hide({status: 'agree', data: data});
 
