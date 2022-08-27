@@ -156,6 +156,12 @@
                                     </md-button>
                                 </md-menu-item>
 
+                                <md-menu-item data-ng-if="!item.legacy_id && item.is_admin">
+                                    <md-button  class="md-raised" data-ng-click="vm.rollbackMasterUserFromBackup($event, item)">
+                                        Rollback
+                                    </md-button>
+                                </md-menu-item>
+
                                 <md-menu-item data-ng-if="!item.is_owner">
                                     <md-button  class="md-raised"
                                                 data-ng-click="vm.leaveMasterUser($event, item)">Dismiss

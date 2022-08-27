@@ -41,6 +41,7 @@ export default (function () {
     profile.controller('RenameMasterUserDialogController', ['$scope', '$mdDialog', 'data', 'toastNotificationService', 'profileAuthorizerService', require('./app/controllers/dialogs/renameMasterUserDialogController')]);
 
     profile.controller('RestoreMasterUserFromBackupDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/restoreMasterUserFromBackupDialogController')]);
+    profile.controller('RollbackMasterUserFromBackupDialogController', ['$scope', '$mdDialog', 'commonDialogsService', 'data', require('./app/controllers/dialogs/rollbackMasterUserFromBackupDialogController')]);
     profile.controller('DeleteMasterUserBackupDialogController', ['$scope', '$mdDialog', 'data', 'toastNotificationService', 'profileAuthorizerService', 'commonDialogsService', require('./app/controllers/dialogs/deleteMasterUserBackupDialogController')]);
     profile.controller('RenameMasterUserBackupDialogController', ['$scope', '$mdDialog', 'data', 'toastNotificationService', 'profileAuthorizerService', require('./app/controllers/dialogs/renameMasterUserBackupDialogController')]);
 
