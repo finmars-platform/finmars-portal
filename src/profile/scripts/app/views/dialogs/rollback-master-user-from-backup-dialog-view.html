@@ -47,7 +47,7 @@
         <md-button ng-click="vm.cancel()">
             Close
         </md-button>
-        <md-button class="md-raised {{vm.selectedBackup ? '' : 'disabled-btn'}}" ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button class="md-raised {{vm.selectedBackup ? '' : 'disabled-btn'}} {{vm.processing ? 'disabled-btn' : ''}}" ng-click="vm.agree()" style="margin-right:20px;">
             Rollback
         </md-button>
     </md-dialog-actions>
