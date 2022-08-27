@@ -23,7 +23,7 @@ const masterUserBackupsService = require("../../services/masterUserBackupsServic
             data: false
         }
 
-        vm.selectBackup = function (item){
+        vm.selectBackup = function ($event, item){
 
             vm.items.forEach(function (backup){
                 backup.is_selected = false;
