@@ -84,16 +84,17 @@
                             <div class="mm-ecosystem-status">
 
                                 <span data-ng-if="item.status == 1" class="mm-ecosystem-operational-status">operational
-
-                                    <md-tooltip class="tooltip_2" md-direction="bottom">Ecosystem is ready and fully operational
+                                            <md-tooltip class="tooltip_2" md-direction="bottom">Ecosystem is ready and fully operational
                                             </md-tooltip>
+                                </span>
                                 <span data-ng-if="item.status == 2" class="mm-ecosystem-maintenance-status">maintenance
-                                    <md-tooltip class="tooltip_2" md-direction="bottom">Ecosystem is under maintenance. Please try again later
+                                                <md-tooltip class="tooltip_2" md-direction="bottom">Ecosystem is under maintenance. Please try again later
                                             </md-tooltip>
                                 </span>
                                 <span data-ng-if="item.status == 3" class="mm-ecosystem-error-status">error
-                                <md-tooltip class="tooltip_2" md-direction="bottom">Ecosystem is unavailable. Something went wrong, we are working on it.
-                                            </md-tooltip></span>
+                                            <md-tooltip class="tooltip_2" md-direction="bottom">Ecosystem is unavailable. Something went wrong, we are working on it.
+                                            </md-tooltip>
+                                </span>
 
                             </div>
                             <div><a class="mm-card-api-url" href="{{'/' + item.base_api_url + '/api/v1/'}}"
