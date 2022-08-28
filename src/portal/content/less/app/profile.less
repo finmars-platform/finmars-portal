@@ -2,6 +2,7 @@
   width: 48%;
   float: left;
   margin: 8px 1%;
+  position: relative;
 }
 
 .mm-card-api-url {
@@ -36,4 +37,22 @@
 md-card-actions.ng-scope.layout-align-space-between-center.layout-row button.md-button.md-raised {
   font-size: 11px;
   min-width: 78px;
+}
+
+.mm-ecosystem-status {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-size: 10px;
+  cursor: pointer;
+
+  .mm-ecosystem-operational-status {
+    color: green
+  }
+  .mm-ecosystem-maintenance-status {
+    color: yellow;
+  }
+  .mm-ecosystem-error-status {
+    color: red;
+  }
 }
