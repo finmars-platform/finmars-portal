@@ -405,7 +405,7 @@
                     scope.evDataService.setDataLoadStatus(false);
 
                     scope.dataLoadStatus = false;
-
+					console.log("testing1 dataLoadStatus DATA_LOAD_START", scope.dataLoadStatus);
                     setTimeout(function () {
                         scope.$apply();
 
@@ -432,7 +432,7 @@
                     scope.evDataService.setDataLoadStatus(true);
 
                     scope.dataLoadStatus = true;
-
+					console.log("testing1 dataLoadStatus DATA_LOAD_END", scope.dataLoadStatus);
                     setTimeout(function () {
                         scope.$apply();
                     }, 0)

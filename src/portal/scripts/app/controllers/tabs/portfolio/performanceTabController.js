@@ -2,20 +2,141 @@
 
 const metaService = require('../../../services/metaService');
 const portfolioRegisterService = require('../../../services/portfolioRegisterService');
+const instrumentService = require('../../../services/instrumentService');
+const pricingPolicyService = require('../../../services/pricingPolicyService');
+
 const GridTableDataService = require('../../../services/gridTableDataService');
-const GridTableEventService = require('../../../services/gridTableEventService');
+const EventService = require('../../../services/eventService');
+
+const popupEvents = require('../../../services/events/popupEvents');
 
 const metaHelper = require('../../../helpers/meta.helper');
 
-export default function PortfolioPerformanceTabController ($scope, $mdDialog) {
+export default function PortfolioPerformanceTabController ($scope, $state, $mdDialog, commonDialogsService, toastNotificationService) {
 
 	const vm = this;
 
+	vm.entity = $scope.$parent.vm.entity;
 	vm.readyStatus = false;
+
+	vm.raPopupX = {
+		value: null
+	};
+	vm.raPopupY = {
+		value: null
+	};
 
 	let portfoliosRegistersList = [];
 
 	vm.addNewRelInstr = function ($event) {
+		$mdDialog.show({
+			controller: 'PortfolioRegisterDialogController as vm',
+			templateUrl: 'views/dialogs/portfolio-register-dialog-view.html',
+			parent: document.querySelector('.dialog-containers-wrap'),
+			targetEvent: $event,
+			locals: {
+				data: {
+					title: 'Create related instrument',
+				}
+			}
+
+		}).then(res => {
+
+			if (res.status === 'agree') {
+
+			}
+		});
+	};
+
+	vm.rowActionsPopupData = {
+		row: null,
+		options: [
+			{
+				key: 'open_instrument',
+				name: "Go to instrument detail page",
+				icon: "article",
+				onClick: function (option, _$popup) {
+
+					_$popup.cancel();
+
+					const registerUc = vm.rowActionsPopupData.row.key;
+					const register = portfoliosRegistersList.find(register => register.user_code === registerUc);
+
+					const url = $state.href('app.portal.data.instrument', {entity: register.linked_instrument_object.id});
+
+					window.open(url, '_blank');
+
+					vm.rowActionsPopupData.row = null;
+
+				},
+			},
+			{
+				key: "delete",
+				name: "Delete instrument and relation",
+				icon: "delete",
+				onClick: function (option, _$popup) {
+					_$popup.cancel();
+
+					commonDialogsService.warning({
+						warning: {
+							title: "Warning",
+							description: "Instrument and it's relation to portfolio will be deleted. Are you sure?"
+						}
+					}).then(res => {
+
+						if (res.status === 'agree') {
+
+							const registerUc = vm.rowActionsPopupData.row.key;
+							const regIndex = portfoliosRegistersList.findIndex(register => register.user_code === registerUc);
+							const register = portfoliosRegistersList[regIndex];
+
+							const instrName = register.linked_instrument_object.short_name;
+
+							portfolioRegisterService.deleteByKey(register.id).then(() => {
+
+								toastNotificationService.success(`Instrument ${instrName} and it's relation to portfolio ${vm.entity.short_name} were deleted.`);
+								portfoliosRegistersList.splice(regIndex, 1);
+
+								vm.relInstrGtDataService.deleteRows(vm.rowActionsPopupData.row);
+
+								$scope.$apply();
+								console.log("testing1 portfoliosRegistersList", portfoliosRegistersList, relationInstrumentsGtData);
+							});
+
+							vm.rowActionsPopupData.row = null;
+
+							/* if (rowData.newRow) {
+								// remove newly created register
+
+							}
+							else {
+
+								portfolioRegisterService.deleteByKey(register.id);
+								instrumentService.deleteByKey(register.linked_instrument);
+
+								if (register.valuation_pricing_policy) {
+									pricingPolicyService.deleteByKey(register.valuation_pricing_policy);
+								}
+
+							} */
+
+						}
+
+					});
+				},
+			},
+		]
+	};
+
+	const openRowActionsPopup = function ($event, rowData) {
+		console.log("testing1 openRowActionsPopup rowData", rowData);
+		vm.raPopupX.value = $event.clientX;
+		vm.raPopupY.value = $event.clientY;
+		console.log("testing1 openRowActionsPopup rowActionsPopupData.row", vm.rowActionsPopupData.row);
+		console.log("testing1 openRowActionsPopup coords", vm.raPopupX, vm.raPopupY);
+
+		vm.rowActionsPopupData.row = rowData;
+		vm.rowActionsPopupEventService.dispatchEvent(popupEvents.OPEN_POPUP, {doNotUpdateScope: true});
 
 	};
 
@@ -83,9 +204,9 @@ export default function PortfolioPerformanceTabController ($scope, $mdDialog) {
 					cellType: 'button',
 					settings: {
 						buttonContent: `<div class="material-icons">more_vert</div>`,
-						callback: function () {
-							// open popup
-						}
+					},
+					methods: {
+						onClick: openRowActionsPopup
 					},
 					order: 4,
 					styles: {
@@ -111,6 +232,9 @@ export default function PortfolioPerformanceTabController ($scope, $mdDialog) {
 		return new Promise((resolve, reject) => {
 
 			metaService.loadDataFromAllPages(portfolioRegisterService.getList, [options]).then(prData => {
+
+				prData = prData.filter(register => register.portfolio === vm.entity.id);
+
 				resolve(prData)
 
 			}).catch(error => reject(error))
@@ -176,7 +300,9 @@ export default function PortfolioPerformanceTabController ($scope, $mdDialog) {
 	const init = function () {
 
 		vm.relInstrGtDataService = new GridTableDataService();
-		vm.relInstrGtEventService = new GridTableEventService();
+		vm.relInstrGtEventService = new EventService();
+
+		vm.rowActionsPopupEventService = new EventService();
 
 		loadPrtfRegisters().then((prList) => {
 

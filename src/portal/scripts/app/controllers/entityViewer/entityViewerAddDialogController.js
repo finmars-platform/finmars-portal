@@ -1033,7 +1033,7 @@
             if (vm.entityType === 'instrument') {
                 vm.entity = await setValuesFromInstrumentType(vm.entity);
             }
-			console.log("testing1 save 1", JSON.parse(JSON.stringify(vm.entity)));
+
             vm.updateEntityBeforeSave();
 
             /* var errors = entityEditorHelper.validateEntityFields(vm.entity,
@@ -1066,11 +1066,11 @@
 
             }
 			else {
-				console.log("testing1 save 2", JSON.parse(JSON.stringify(vm.entity)));
+
                 // var resultEntity = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
                 var resultEntity = entityEditorHelper.clearEntityBeforeSave(vm.entity, vm.entityType);
                 console.log('resultEntity', resultEntity);
-				console.log("testing1 save 3", resultEntity);
+
                 if (vm.dcLayoutHasBeenFixed) {
                     uiService.updateEditLayout(vm.dataConstructorLayout.id, vm.dataConstructorLayout);
                 }

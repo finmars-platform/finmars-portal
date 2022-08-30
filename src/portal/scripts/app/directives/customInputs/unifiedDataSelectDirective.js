@@ -44,11 +44,13 @@
                 scope.hoverItem = null;
                 scope.selectedItem = null;
 
-                scope.inputText = '';
+				var itemName = scope.itemName || '';
+				scope.inputText = itemName;
+				/*scope.inputText = '';
 
-                if (scope.itemName) { // itemName and inputText needed for resetting selected option name
-                    scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
-                }
+				if (itemName) { // itemName and inputText needed for resetting selected option name
+					scope.inputText = itemName;
+				}*/
 
                 /* TIPS
                 scope.smallOptions probable properties
@@ -158,7 +160,7 @@
                         scope.itemObject = item;
                         scope.valueIsValid = true;
 
-                        scope.itemName = item.name;
+                        itemName = item.name;
                         scope.inputText = item.name;
 
                         setTimeout(function () {
@@ -172,7 +174,7 @@
                     } else {
                         scope.model = item.id;
                         scope.itemObject = item;
-                        scope.itemName = item.name;
+                        itemName = item.name;
                         scope.inputText = item.name;
                     }
 
@@ -184,7 +186,7 @@
 
                     closeDropdownMenu();
 
-                    scope.itemName = item.name;
+                    itemName = item.name;
                     scope.inputText = item.name;
 
                     if (scope.entityType === 'currency') {
@@ -204,7 +206,7 @@
 
                                 scope.model = null;
 
-                                scope.itemName = ''
+                                itemName = ''
                                 scope.inputText = ''
 
                                 scope.processing = false;
@@ -254,7 +256,7 @@
 
                         scope.selectedItem = item;
 
-                        scope.itemName = item.name;
+                        itemName = item.name;
                         scope.inputText = item.name;
 
                         scope.processing = true;
@@ -270,7 +272,7 @@
 
                                 scope.model = null;
 
-                                scope.itemName = ''
+                                itemName = ''
                                 scope.inputText = ''
 
                                 setTimeout(function () {
@@ -322,10 +324,10 @@
                     if (!scope.selectedItem) {
                         scope.model = null;
                         scope.inputText = '';
-                        scope.itemName = '';
+                        itemName = '';
                     } else {
                         scope.inputText = scope.selectedItem.name
-                        scope.itemName = scope.selectedItem.name
+                        itemName = scope.selectedItem.name
                     }
 
                 }
@@ -367,7 +369,7 @@
                             scope.model = res.data.item.id;
                             scope.itemObject = res.data.item;
 
-                            scope.itemName = res.data.item.name;
+                            itemName = res.data.item.name;
                             scope.inputText = res.data.item.name;
                         }
 
@@ -381,7 +383,7 @@
 
                     inputContainer.classList.remove('custom-input-focused');
 
-                    if (scope.itemName) scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+                    if (itemName) scope.inputText = itemName;
 
                     scope.dropdownMenuShown = false;
 
@@ -478,22 +480,21 @@
 
                     }
 
-                    scope.$watch('itemName', function () {
+					scope.$watch('itemName', function () {
 
-                        console.log('scope.model', scope.model);
+						console.log('scope.model', scope.model);
 
-                        if (scope.itemName) {
-                            // itemName = scope.itemName;
-                            scope.inputText = scope.itemName;
+						if (scope.itemName) {
+							itemName = scope.itemName;
+							scope.selectedItem = {id: scope.model, name: itemName, user_code: itemName}
 
-                            scope.selectedItem = {id: scope.model, name: scope.itemName, user_code: scope.itemName}
+						} else {
+							itemName = '';
+						}
 
-                        } else {
-                            // itemName = '';
-                            scope.inputText = '';
-                        }
+						scope.inputText = itemName;
 
-                    });
+					});
 
                 };
 
@@ -526,9 +527,9 @@
 
                         inputContainer.classList.remove('custom-input-focused');
 
-                        if (scope.itemName) {
+                        if (itemName) {
 
-                        	scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+                        	scope.inputText = JSON.parse(JSON.stringify(itemName));
                             scope.$apply();
 
                         }
@@ -713,7 +714,7 @@
                         applyCustomStyles();
                     }
 
-                    scope.selectedItem = {id: scope.model, name: scope.itemName, user_code: scope.itemName}
+                    scope.selectedItem = {id: scope.model, name: itemName, user_code: itemName}
 
                 };
 
