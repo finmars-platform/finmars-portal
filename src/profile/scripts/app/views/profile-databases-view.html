@@ -4,9 +4,10 @@
 
         <div style="max-width: 960px; margin: 0 auto; overflow:hidden; padding-bottom: 80px;">
 
-            <div class="overflow-hidden" >
+            <div class="overflow-hidden">
 
-                <div class="float-left" data-ng-if="vm.copyMasterUserTask && vm.copyMasterUserTask.task_status == 'PENDING' ">
+                <div class="float-left"
+                     data-ng-if="vm.copyMasterUserTask && vm.copyMasterUserTask.task_status == 'PENDING' ">
 
                     <div layout="row">
 
@@ -19,18 +20,18 @@
 
                 </div>
 
-                <md-button class="md-raised md-primary float-right"  data-ng-click="vm.getMasterUsersList($event)">
+                <md-button class="md-raised md-primary float-right" data-ng-click="vm.getMasterUsersList($event)">
                     Refresh
                 </md-button>
 
-                <md-button class="md-raised md-primary float-right"  data-ui-sref="app.new-database">Create
+                <md-button class="md-raised md-primary float-right" data-ui-sref="app.new-database">Create
                     Database
                 </md-button>
 
-                <md-button class="md-raised md-primary float-right"  data-ng-click="vm.createDatabaseFromBackup($event)">Create
+                <md-button class="md-raised md-primary float-right" data-ng-click="vm.createDatabaseFromBackup($event)">
+                    Create
                     Database From Backup
                 </md-button>
-
 
 
             </div>
@@ -49,7 +50,8 @@
                                     <b>{{item.from_user_object.username}}</b>
                                 </div>
 
-                                <div class="m-t-16" style="font-size: 13px;" data-ng-if="item.to_master_user_object.description">
+                                <div class="m-t-16" style="font-size: 13px;"
+                                     data-ng-if="item.to_master_user_object.description">
                                     Description:
                                     <div class="m-b-8 mm-description">
                                         {{item.to_master_user_object.description}}
@@ -79,7 +81,24 @@
                         <md-card-title-text>
                             <div class="md-headline m-b-8">{{item.name}}</div>
                             <div data-ng-if="item.legacy_id"><b>Legacy Database</b></div>
-                            <div><a class="mm-card-api-url" href="{{'/' + item.base_api_url + '/api/v1/'}}" target="_blank">{{ item.base_api_url }}</a></div>
+                            <div class="mm-ecosystem-status">
+
+                                <span data-ng-if="item.status == 1" class="mm-ecosystem-operational-status">operational
+                                            <md-tooltip class="tooltip_2" md-direction="bottom">Ecosystem is ready and fully operational
+                                            </md-tooltip>
+                                </span>
+                                <span data-ng-if="item.status == 2" class="mm-ecosystem-maintenance-status">maintenance
+                                                <md-tooltip class="tooltip_2" md-direction="bottom">Ecosystem is under maintenance. Please try again later
+                                            </md-tooltip>
+                                </span>
+                                <span data-ng-if="item.status == 3" class="mm-ecosystem-error-status">error
+                                            <md-tooltip class="tooltip_2" md-direction="bottom">Ecosystem is unavailable. Something went wrong, we are working on it.
+                                            </md-tooltip>
+                                </span>
+
+                            </div>
+                            <div><a class="mm-card-api-url" href="{{'/' + item.base_api_url + '/api/v1/'}}"
+                                    target="_blank">{{ item.base_api_url }}</a></div>
 
                             <div class="m-b-8 mm-description" data-ng-if="!item.descriptionEdit">
                                 {{item.description}}
@@ -122,7 +141,8 @@
                             </div>
                         </md-card-title-text>
                     </md-card-title>
-                    <md-card-actions layout="row" layout-align="space-between center" data-ng-if="item.is_initialized">
+                    <md-card-actions layout="row" data-ng-if="item.status == 1" layout-align="space-between center"
+                                     data-ng-if="item.is_initialized">
                         <!--<md-button>Leave</md-button>-->
 
                         <md-menu>
@@ -133,52 +153,63 @@
                             <md-menu-content>
 
                                 <md-menu-item data-ng-if="item.is_admin">
-                                    <md-button class="md-raised" data-ng-click="vm.redeployMasterUser($event, item)">
+                                    <md-button class="md-raised"
+                                               data-ng-click="vm.redeployMasterUser($event, item)">
                                         Restart
                                     </md-button>
                                 </md-menu-item>
 
                                 <md-menu-item data-ng-if="item.is_owner">
-                                    <md-button  class="md-raised"
+                                    <md-button class="md-raised"
                                                data-ng-click="vm.copyMasterUser($event, item)">Copy
                                     </md-button>
                                 </md-menu-item>
                                 <md-menu-item data-ng-if="item.is_admin">
-                                    <md-button  class="md-raised"
+                                    <md-button class="md-raised"
                                                data-ng-click="vm.renameMasterUser($event, item)">Rename
                                     </md-button>
                                 </md-menu-item>
 
                                 <md-menu-item data-ng-if="!item.legacy_id && item.is_admin">
-                                    <md-button  class="md-raised" data-ng-click="vm.exportMasterUserBackup($event, item)">
+                                    <md-button class="md-raised"
+                                               data-ng-click="vm.exportMasterUserBackup($event, item)">
                                         <!--                        <md-button  class="md-raised" data-ng-click="vm.exportMasterUserBackup($event, item)">-->
                                         Export Backup
                                     </md-button>
                                 </md-menu-item>
 
+                                <md-menu-item data-ng-if="!item.legacy_id && item.is_admin">
+                                    <md-button class="md-raised"
+                                               data-ng-click="vm.rollbackMasterUserFromBackup($event, item)">
+                                        Rollback
+                                    </md-button>
+                                </md-menu-item>
+
                                 <md-menu-item data-ng-if="!item.is_owner">
-                                    <md-button  class="md-raised"
-                                                data-ng-click="vm.leaveMasterUser($event, item)">Dismiss
+                                    <md-button class="md-raised"
+                                               data-ng-click="vm.leaveMasterUser($event, item)">Dismiss
                                     </md-button>
                                 </md-menu-item>
                                 <md-menu-item data-ng-if="item.is_owner">
-                                    <md-button  class="md-raised md-warn"
-                                                data-ng-click="vm.deleteMasterUser($event, item)">Delete
+                                    <md-button class="md-raised md-warn"
+                                               data-ng-click="vm.deleteMasterUser($event, item)">Delete
                                     </md-button>
                                 </md-menu-item>
 
                             </md-menu-content>
                         </md-menu>
 
-                        <md-button class="md-raised md-primary {{vm.openProcessing ? 'disabled-btn' : ''}}" data-ng-click="vm.activateDatabase(item)">Open
+                        <md-button class="md-raised md-primary {{vm.openProcessing ? 'disabled-btn' : ''}}"
+                                   data-ng-click="vm.activateDatabase(item)">Open
                         </md-button>
+
                     </md-card-actions>
                     <md-card-actions layout="row" layout-align="space-between center" data-ng-if="!item.is_initialized">
                         <div class="text-center">Ecosystem is initializing</div>
                     </md-card-actions>
-<!--                    <md-card-actions layout="row" layout-align="space-between center" data-ng-if="item.is_initialized && !item.online">-->
-<!--                        <div class="text-center">Something went wrong. Ecosystem is not responding.</div>-->
-<!--                    </md-card-actions>-->
+                    <!--                    <md-card-actions layout="row" layout-align="space-between center" data-ng-if="item.is_initialized && !item.online">-->
+                    <!--                        <div class="text-center">Something went wrong. Ecosystem is not responding.</div>-->
+                    <!--                    </md-card-actions>-->
                 </md-card>
 
             </div>

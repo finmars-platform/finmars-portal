@@ -9,11 +9,17 @@
 	var cookieService = require('../../../../core/services/cookieService');
 	var baseUrlService = require('./baseUrlService');
 
-	var getMasterUserBackupsList = function () {
-
+	var getMasterUserBackupsList = function (base_api_url) {
+		// TODO pagination
 		const authorizerUrl = baseUrlService.getAuthorizerUrl();
 
-		return window.fetch(authorizerUrl + '/master-user-backups/',{
+		let url = authorizerUrl + '/master-user-backups/';
+
+		if (base_api_url) {
+			url = url + '?master_user_base_api_url=' + base_api_url
+		}
+
+		return window.fetch(url,{
 			method: 'GET',
 			credentials: 'include',
 			headers: {
@@ -93,7 +99,7 @@
 				Accept: 'application/json',
 				'Content-type': 'application/json'
 			},
-			data: JSON.stringify(data)
+			body: JSON.stringify(data)
 		}).then(function (data) {
 
 			if (data.status !== 200 && data.status !== 201) {
@@ -111,6 +117,35 @@
 
 	};
 
+	var rollbackFromBackup = function (master_user_id, data) {
+
+		const authorizerUrl = baseUrlService.getAuthorizerUrl();
+
+		return window.fetch(authorizerUrl + '/master-user/' + master_user_id + '/rollback-from-backup/', {
+			method: 'PUT',
+			credentials: 'include',
+			headers: {
+				'X-CSRFToken': cookieService.getCookie('csrftoken'),
+				'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+				Accept: 'application/json',
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		}).then(function (data) {
+
+			if (data.status !== 200 && data.status !== 201) {
+				throw data
+			}
+
+			return data.json();
+
+		})
+
+	};
+
+
+
+
 	module.exports = {
 
 		getMasterUserBackupsList: getMasterUserBackupsList,
@@ -118,7 +153,8 @@
 		updateMasterUserBackup: updateMasterUserBackup,
 
 		deleteMasterUserBackup: deleteMasterUserBackup,
-		restoreFromBackup: restoreFromBackup
+		restoreFromBackup: restoreFromBackup,
+		rollbackFromBackup: rollbackFromBackup
 	}
 
 }());
