@@ -64,10 +64,38 @@ span.material-icons.more-btn {
   border-radius: 100%;
 }
 
+.btn-add-1 {
+  display: flex;
+  align-items: center;
+
+  span.material-icons {
+    margin-right: 12px;
+    color: #fff;
+    background-color: @orange;
+    border-radius: 100%;
+  }
+
+  .btn-text {
+    font-size: 14px;
+    color: @orange;
+  }
+
+  &:not([disabled]):hover {
+    opacity: .5;
+  }
+}
+
 .table-attr-sel:not(.disabled) {
   cursor: pointer;
 
   .custom-input {
     cursor: pointer;
   }
+}
+
+.close-dialog-btn {
+  position: absolute;
+  top: 20px;
+  right: 10px;
+  color: @gray;
 }

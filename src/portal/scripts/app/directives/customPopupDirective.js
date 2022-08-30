@@ -155,7 +155,7 @@
 					const windowWidth = document.body.clientWidth;
 
 					if (popupHeight > windowHeight) popupHeight = windowHeight;
-
+					console.log("testing1 some text", positionX, popupWidth, windowWidth);
 					if (positionX + popupWidth > windowWidth) {
 						popupElem.style.right = '0';
 						popupElem.style.left = "";

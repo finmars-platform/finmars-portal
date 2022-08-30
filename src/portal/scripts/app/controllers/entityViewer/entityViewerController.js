@@ -7,6 +7,7 @@
 import AutosaveLayoutService from "../../services/autosaveLayoutService";
 import evEvents from "../../services/entityViewerEvents";
 import evHelperService from "../../services/entityViewerHelperService";
+import entityResolverService from "../../services/entityResolverService";
 
 (function () {
 
@@ -18,6 +19,7 @@ import evHelperService from "../../services/entityViewerHelperService";
 		var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
         // var usersService = require('../../services/usersService');
 
+		var entityResolverService = require('../../services/entityResolverService');
         var complexTransactionService = require('../../services/transaction/complexTransactionService');
         var instrumentService = require('../../services/instrumentService');
 
@@ -32,7 +34,7 @@ import evHelperService from "../../services/entityViewerHelperService";
 
         var transactionTypeService = require('../../services/transactionTypeService');
 
-        module.exports = function ($scope, $mdDialog, $state, $stateParams, $transitions, $customDialog, $bigDrawer, middlewareService, globalDataService) {
+        module.exports = function ($scope, $mdDialog, $state, $transitions, $urlService, $customDialog, $bigDrawer, middlewareService, globalDataService, toastNotificationService) {
 
             var vm = this;
 
@@ -181,7 +183,7 @@ import evHelperService from "../../services/entityViewerHelperService";
 					'transaction',
 					'complex-transaction'
 				]; */
-                let editLayout;
+                let editLayout, dialogOptions;
 				switch (entityType) {
 					case 'transaction-type':
                         editLayout = await uiService.getDefaultEditLayout(vm.entityType);
@@ -296,7 +298,7 @@ import evHelperService from "../../services/entityViewerHelperService";
 
 					case 'price-history-error':
 
-						$mdDialog.show({
+						dialogOptions = {
 							controller: 'PriceHistoryErrorEditDialogController as vm',
 							templateUrl: 'views/entity-viewer/price-history-error-edit-dialog-view.html',
 							parent: angular.element(document.body),
@@ -304,7 +306,11 @@ import evHelperService from "../../services/entityViewerHelperService";
 							locals: {
 								entityId: actionData.object.id
 							}
-						}).then(function (res) {
+						}
+
+						if (actionData.event) dialogOptions.targetEvent = actionData.event;
+
+						$mdDialog.show(dialogOptions).then(function (res) {
 
 							/*vm.entityViewerDataService.setActiveObjectAction(null);
 							vm.entityViewerDataService.setActiveObjectActionData(null);*/
@@ -343,15 +349,18 @@ import evHelperService from "../../services/entityViewerHelperService";
 
 					case 'currency-history-error':
 
-						$mdDialog.show({
+						dialogOptions = {
 							controller: 'CurrencyHistoryErrorEditDialogController as vm',
 							templateUrl: 'views/entity-viewer/currency-history-error-edit-dialog-view.html',
 							parent: angular.element(document.body),
-							targetEvent: actionData.event,
 							locals: {
 								entityId: actionData.object.id
 							}
-						}).then(function (res) {
+						};
+
+						if (actionData.event) dialogOptions.targetEvent = actionData.event;
+
+						$mdDialog.show(dialogOptions).then(function (res) {
 
 							/* vm.entityViewerDataService.setActiveObjectAction(null);
 							vm.entityViewerDataService.setActiveObjectActionData(null); */
@@ -930,6 +939,11 @@ import evHelperService from "../../services/entityViewerHelperService";
 
 			};
 
+			/**
+			 * Called inside evHelperService.getLayoutByUserCode() or evHelperService.getDefaultLayout
+			 *
+			 * @param layoutData
+			 */
             vm.setLayout = function (layoutData) {
 
                 vm.layoutId = layoutData.id
@@ -1077,6 +1091,34 @@ import evHelperService from "../../services/entityViewerHelperService";
 
             }; */
 
+			const openEditEntity = function (id) {
+
+				entityResolverService.getByKey(vm.entityType, id).then(function (entityData) {
+
+					var actionData = {
+						object: {
+							id: entityData.id
+						}
+					};
+
+					if (vm.entityType === 'instrument') {
+						actionData.object.instrument_type_object = entityData.instrument_type_object
+					}
+
+					editEntity(vm.entityType, actionData);
+
+					/*let urlWithoutQuery = $state.href($state.current.name, {entity: null}, {relative: true});
+					urlWithoutQuery = urlWithoutQuery.slice(2); // remove #! part
+
+					$urlService.url(urlWithoutQuery, true);*/
+
+				}).catch(error => {
+					toastNotificationService.error("Entity not found");
+					console.error(`There is no entity with entityType: ${vm.entityType} and id: ${$state.params.entity}`)
+				});
+
+			}
+
             vm.getView = function () {
 
                 // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
@@ -1144,6 +1186,8 @@ import evHelperService from "../../services/entityViewerHelperService";
                 }
 
                 var layoutUserCode;
+				var getLayoutProm;
+				var stateParams = $state.params;
 
                 if (vm.isLayoutFromUrl()) {
 
@@ -1167,20 +1211,25 @@ import evHelperService from "../../services/entityViewerHelperService";
                     });
 
                     // vm.getLayoutByUserCode(layoutUserCode);
-                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog, 'entity_viewer');
+					getLayoutProm = evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog, 'entity_viewer');
 
-                } else if ($stateParams.layoutUserCode) {
+                } else if (stateParams.layoutUserCode) {
 
-                    layoutUserCode = $stateParams.layoutUserCode;
+                    layoutUserCode = stateParams.layoutUserCode;
 
                     // vm.getLayoutByUserCode(layoutUserCode);
-                    evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog, 'entity_viewer');
+					getLayoutProm = evHelperService.getLayoutByUserCode(vm, layoutUserCode, $mdDialog, 'entity_viewer');
 
                 } else {
                     // vm.getDefaultLayout();
-                    evHelperService.getDefaultLayout(vm, 'entity_viewer');
+					getLayoutProm = evHelperService.getDefaultLayout(vm, 'entity_viewer');
                 }
 
+				getLayoutProm.then(function () {
+					if (stateParams.entity) {
+						openEditEntity(stateParams.entity);
+					}
+				});
 
             };
 

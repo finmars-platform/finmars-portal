@@ -294,7 +294,7 @@
                     vm.hasEditPermission = true;
                     vm.canManagePermissions = true;
                 }
-
+				console.log("testing1 hasEditPermission", vm.hasEditPermission);
                 vm.readyStatus.permissions = true;
                 $scope.$apply();
             });
