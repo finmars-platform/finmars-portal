@@ -7,6 +7,7 @@
 let callbacks = {}
 
 const toastNotificationService = require('../../../../core/services/toastNotificationService');
+const cookieService = require('../../../../core/services/cookieService');
 
 const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
 
@@ -89,7 +90,9 @@ function connect(isReconnect) {
             window.ws.onopen = function(){
                 console.log("Websocket. Initial Auth");
                 window.openedSocket = true;
-                window.ws.send(JSON.stringify({action: "initial_auth"}));
+                window.ws.send(JSON.stringify({action: "initial_auth", data: {
+                    "access_token": cookieService.getCookie("access_token")
+                    }}));
             };
 
             // window.ws.on("message", (data) => {
