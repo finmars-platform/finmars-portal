@@ -225,7 +225,7 @@
 					{
 						label: 'Performance',
 						type: 'system_tab',
-						templateUrl: 'views/tabs/portfolio/performance-view.html'
+						templateUrl: 'views/tabs/portfolio/performance-tab-view.html'
 					}
 				];
             case 'currency':

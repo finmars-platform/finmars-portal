@@ -70,6 +70,12 @@
 
         vm.entityTabs = metaService.getEntityTabs(vm.entityType);
 
+		if (vm.entityType === 'portfolio') {
+			// Don't show performance tab while creating portfolio
+			const perfTabIndex = vm.entityTabs.findIndex(tab => tab.templateUrl === 'views/tabs/portfolio/performance-tab-view.html');
+			vm.entityTabs.splice(perfTabIndex, 1);
+		}
+
         vm.attributeTypes = [];
         vm.layoutAttrs = layoutService.getLayoutAttrs();
         vm.entityAttrs = [];

@@ -1091,9 +1091,22 @@ import entityResolverService from "../../services/entityResolverService";
 
             }; */
 
-			const openEditEntity = function (id) {
+			const openEditEntity = function (userCode) {
 
-				entityResolverService.getByKey(vm.entityType, id).then(function (entityData) {
+				const option = {
+					pageSize: 1000,
+					filters: {
+						user_code: userCode
+					}
+				};
+
+				entityResolverService.getList(vm.entityType, option).then(function (resData) {
+
+					if (!resData.results.length) {
+						return;
+					}
+
+					var entityData = resData.results.find(entity => entity.user_code === userCode);
 
 					var actionData = {
 						object: {
