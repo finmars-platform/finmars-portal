@@ -3,7 +3,6 @@
 const metaService = require('../../../services/metaService');
 const portfolioRegisterService = require('../../../services/portfolioRegisterService');
 const instrumentService = require('../../../services/instrumentService');
-const pricingPolicyService = require('../../../services/pricingPolicyService');
 
 const GridTableDataService = require('../../../services/gridTableDataService');
 const EventService = require('../../../services/eventService');
@@ -18,6 +17,7 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 
 	vm.entity = $scope.$parent.vm.entity;
 	vm.readyStatus = false;
+	vm.creatingInstr = false;
 
 	vm.raPopupX = {
 		value: null
@@ -44,6 +44,26 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 
 			if (res.status === 'agree') {
 
+				const prtfRegisterToCreate = res.data;
+				prtfRegisterToCreate.portfolio = vm.entity.id;
+
+				vm.creatingInstr = true;
+
+				portfolioRegisterService.create(res.data).then((registerData) => {
+
+					portfoliosRegistersList.push(registerData);
+
+					const rowObj = getRowForRelInstrGt(registerData, portfoliosRegistersList.length);
+					relationInstrumentsGtData.body.push(rowObj);
+
+					toastNotificationService.success("Register " + res.data.name + " created.");
+
+					vm.creatingInstr = false;
+
+					$scope.$apply();
+
+				});
+
 			}
 		});
 	};
@@ -57,16 +77,14 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 				icon: "article",
 				onClick: function (option, _$popup) {
 
+					const registerUc = vm.rowActionsPopupData.row.key;
+
 					_$popup.cancel();
 
-					const registerUc = vm.rowActionsPopupData.row.key;
 					const register = portfoliosRegistersList.find(register => register.user_code === registerUc);
-
-					const url = $state.href('app.portal.data.instrument', {entity: register.linked_instrument_object.id});
+					const url = $state.href('app.portal.data.instrument', {entity: register.linked_instrument_object.user_code});
 
 					window.open(url, '_blank');
-
-					vm.rowActionsPopupData.row = null;
 
 				},
 			},
@@ -75,6 +93,9 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 				name: "Delete instrument and relation",
 				icon: "delete",
 				onClick: function (option, _$popup) {
+
+					const rowData = vm.rowActionsPopupData.row;
+
 					_$popup.cancel();
 
 					commonDialogsService.warning({
@@ -86,7 +107,7 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 
 						if (res.status === 'agree') {
 
-							const registerUc = vm.rowActionsPopupData.row.key;
+							const registerUc = rowData.key;
 							const regIndex = portfoliosRegistersList.findIndex(register => register.user_code === registerUc);
 							const register = portfoliosRegistersList[regIndex];
 
@@ -97,13 +118,11 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 								toastNotificationService.success(`Instrument ${instrName} and it's relation to portfolio ${vm.entity.short_name} were deleted.`);
 								portfoliosRegistersList.splice(regIndex, 1);
 
-								vm.relInstrGtDataService.deleteRows(vm.rowActionsPopupData.row);
+								vm.relInstrGtDataService.deleteRows(rowData);
 
 								$scope.$apply();
-								console.log("testing1 portfoliosRegistersList", portfoliosRegistersList, relationInstrumentsGtData);
-							});
 
-							vm.rowActionsPopupData.row = null;
+							});
 
 							/* if (rowData.newRow) {
 								// remove newly created register
@@ -129,11 +148,9 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 	};
 
 	const openRowActionsPopup = function ($event, rowData) {
-		console.log("testing1 openRowActionsPopup rowData", rowData);
+
 		vm.raPopupX.value = $event.clientX;
 		vm.raPopupY.value = $event.clientY;
-		console.log("testing1 openRowActionsPopup rowActionsPopupData.row", vm.rowActionsPopupData.row);
-		console.log("testing1 openRowActionsPopup coords", vm.raPopupX, vm.raPopupY);
 
 		vm.rowActionsPopupData.row = rowData;
 		vm.rowActionsPopupEventService.dispatchEvent(popupEvents.OPEN_POPUP, {doNotUpdateScope: true});
@@ -159,7 +176,7 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 						value: null,
 					},
 					styles: {
-						'grid-table-cell': {'width': '140px'}
+						'grid-table-cell': {'width': '384px'}
 					},
 				},
 				{
@@ -171,7 +188,7 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 						value: null,
 					},
 					styles: {
-						'grid-table-cell': {'width': '140px'}
+						'grid-table-cell': {'width': '354px'}
 					},
 				},
 				{
@@ -183,7 +200,7 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 						value: null,
 					},
 					styles: {
-						'grid-table-cell': {'width': '140px'}
+						'grid-table-cell': {'width': '250px'}
 					},
 				},
 				{
@@ -195,7 +212,7 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 						value: null,
 					},
 					styles: {
-						'grid-table-cell': {'width': '140px'}
+						'grid-table-cell': {'width': '275px'}
 					},
 				},
 				{
@@ -210,7 +227,7 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 					},
 					order: 4,
 					styles: {
-						'grid-table-cell': {'width': '140px'}
+						'grid-table-cell': {'width': '65px'}
 					},
 				},
 			]
@@ -243,6 +260,38 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 
 	};
 
+	const getRowForRelInstrGt = function (registerData, order) {
+
+		const rowObj = metaHelper.recursiveDeepCopy(relationInstrumentsGtData.templateRow, true);
+
+		rowObj.key = registerData.user_code;
+		rowObj.order = order;
+		rowObj.newRow = !!(rowObj.frontOptions && rowObj.frontOptions.newRow);
+
+		let nameToShow = $scope.$parent.vm.nameToShow;
+
+		const relName = rowObj.columns.find(col => col.key === 'relationName');
+		relName.settings.value = registerData[nameToShow];
+
+		if (registerData.linked_instrument_object) {
+			const instrument = rowObj.columns.find(col => col.key === 'instrument');
+			instrument.settings.value = registerData.linked_instrument_object.short_name;
+		}
+
+		if (registerData.valuation_currency_object) {
+			const valCurrency = rowObj.columns.find(col => col.key === 'valuationCurrency');
+			valCurrency.settings.value = registerData.valuation_currency_object.short_name;
+		}
+
+		if (registerData.valuation_pricing_policy_object) {
+			const valPp = rowObj.columns.find(col => col.key === 'valuationPricingPolicy');
+			valPp.settings.value = registerData.valuation_pricing_policy_object.short_name;
+		}
+
+		return rowObj;
+
+	};
+
 	const createDataForRelInstrGt = function () {
 
 		relationInstrumentsGtData.body = [];
@@ -266,33 +315,12 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 		//region assemble body rows
 		portfoliosRegistersList.forEach((register, index) => {
 
-			const rowObj = metaHelper.recursiveDeepCopy(relationInstrumentsGtData.templateRow, true);
-
-			rowObj.key = register.user_code;
-			rowObj.order = index;
-			rowObj.newRow = !!(rowObj.frontOptions && rowObj.frontOptions.newRow);
-
-			let nameToShow = $scope.$parent.vm.nameToShow;
-			console.log("testing1 nameToShow", nameToShow);
-			const relName = rowObj.columns.find(col => col.key === 'relationName');
-			relName.settings.value = register[nameToShow];
-
-			const instrument = rowObj.columns.find(col => col.key === 'instrument');
-			instrument.settings.value = register.linked_instrument_object.short_name;
-
-			const valCurrency = rowObj.columns.find(col => col.key === 'valuationCurrency');
-			valCurrency.settings.value = register.linked_instrument_object.short_name;
-
-			/*if (register.valuation_pricing_policy) { // need to fix backend
-				const valPp = rowObj.columns.find(col => col.key === 'valuationPricingPolicy');
-				valPp.settings.value = register.valuation_pricing_policy_object.short_name;
-			}*/
-
+			const rowObj = getRowForRelInstrGt(register, index);
 			relationInstrumentsGtData.body.push(rowObj);
 
 		});
 		//endregion
-		console.log("testing1 createDataForRelInstrGt gtData", relationInstrumentsGtData);
+
 		vm.relInstrGtDataService.setTableData(relationInstrumentsGtData);
 
 	};

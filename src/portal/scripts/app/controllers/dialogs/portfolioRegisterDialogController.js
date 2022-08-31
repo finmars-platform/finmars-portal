@@ -43,15 +43,14 @@ export default function PortfolioRegisterDialogController ($scope, $mdDialog, da
 
 	vm.agree = function () {
 
-		const resData = {
-			portfolioRegisterData: vm.portfolioRegister,
-			instrumentData: vm.instrument,
-			instrumentType: vm.instrTypeId,
-			currency: vm.currencyId,
-			pricingPolicy: vm.pricingPolicyId
-		};
+		const newPrtfRegister = {...{}, ...vm.portfolioRegister};
+		newPrtfRegister.new_linked_instrument = {...{}, ...vm.instrument};
+		newPrtfRegister.new_linked_instrument.instrument_type = vm.instrTypeId;
 
-		$mdDialog.hide({status: "agree", data: resData});
+		newPrtfRegister.valuation_currency = vm.currencyId;
+		newPrtfRegister.valuation_pricing_policy = vm.pricingPolicyId;
+
+		$mdDialog.hide({status: "agree", data: newPrtfRegister});
 	};
 
 	const init = function () {
