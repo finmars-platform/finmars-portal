@@ -51,6 +51,7 @@
         vm.layoutUserCode = "";
 
         var fullRowUserInputsList = entityDataConstructorService.fullRowUserInputsList;
+		var dialogParent = document.querySelector('.dialog-containers-wrap');
 
         vm.fromEntityType = undefined;
         if (data.hasOwnProperty('fromEntityType')) {
@@ -293,6 +294,7 @@
             $mdDialog.show({
                 controller: 'TabsEditorDialogController as vm',
                 templateUrl: 'views/dialogs/tabs-editor-dialog-view.html',
+				parent: dialogParent,
                 multiple: true,
                 targetEvent: $event,
                 locals: {
@@ -432,7 +434,7 @@
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
                     templateUrl: 'views/dialogs/warning-dialog-view.html',
-                    parent: angular.element(document.body),
+                    parent: dialogParent,
                     targetEvent: ev,
                     clickOutsideToClose: false,
                     locals: {
@@ -703,7 +705,7 @@
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
                     templateUrl: 'views/dialogs/warning-dialog-view.html',
-                    parent: angular.element(document.body),
+                    parent: dialogParent,
                     clickOutsideToClose: false,
                     multiple: true,
                     locals: {
@@ -818,7 +820,7 @@
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
                         templateUrl: 'views/dialogs/warning-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: dialogParent,
                         clickOutsideToClose: false,
                         multiple: true,
                         locals: {
@@ -947,6 +949,7 @@
                     controller: 'WarningDialogController as vm',
                     templateUrl: 'views/dialogs/warning-dialog-view.html',
                     // targetEvent: $event,
+					parent: dialogParent,
                     autoWrap: true,
                     skipHide: true,
                     multiple: true,
@@ -979,6 +982,7 @@
                 controller: 'AttributesManagerDialogController as vm',
                 templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
                 targetEvent: $event,
+				parent: dialogParent,
                 multiple: true,
                 preserveScope: false,
                 locals: {
@@ -1787,7 +1791,7 @@
                             $mdDialog.show({
                                 controller: 'WarningDialogController as vm',
                                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: dialogParent,
                                 clickOutsideToClose: false,
                                 locals: {
                                     warning: {
@@ -2058,7 +2062,7 @@
             $mdDialog.show({
                 controller: previewController,
                 templateUrl: 'views/dialogs/data-constructor-forms-preview-dialog-view.html',
-                parent: angular.element(document.body),
+				parent: dialogParent,
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 multiple: true,

@@ -25,8 +25,6 @@
         var currentMasterUser = globalDataService.getMasterUser();
 
 
-
-
         vm.getFileUrl = function (id) {
 
             var prefix = baseUrlService.getMasterUserPrefix();
@@ -38,7 +36,7 @@
 
         vm.downloadFile = function ($event, item) {
 
-            systemMessageService.viewFile(item.file_report).then(function (data){
+            systemMessageService.viewFile(item.file_report).then(function (data) {
 
                 console.log('data', data);
 
@@ -63,7 +61,6 @@
             })
 
 
-
         }
 
         /* vm.getMasterUsersList = function () {
@@ -84,7 +81,7 @@
 
         var processEventsPromise = function () {
 
-            return new Promise(function (resolve, reject) {
+            /*return new Promise(function (resolve, reject) {
 
                 usersService.getOwnMemberSettings().then(function (data) {
 
@@ -138,7 +135,57 @@
 
                 });
 
-            });
+            });*/
+			return new Promise(function (resolve, reject) {
+
+				var info = JSON.parse(sessionStorage.getItem('afterLoginEvents'));
+
+				var member = globalDataService.getMember();
+
+				var showEventsDialogs = false;
+
+				if (!info) {
+					showEventsDialogs = true;
+				}
+
+				if (info && info.indexOf(currentMasterUser.id) === -1) {
+					showEventsDialogs = true;
+				}
+
+				// 1 = Do not notify
+				// 3 = Email only notifications
+
+				if (member.notification_level === 1 || member.notification_level === 3) {
+					showEventsDialogs = false;
+				}
+
+				if (showEventsDialogs) {
+
+					vm.eventsProcessing = true;
+
+					afterLoginEventsService.getAndShowEvents($mdDialog).then(function (value) {
+
+						vm.eventsProcessing = false;
+						resolve();
+
+					}).catch(function () {
+						resolve();
+					});
+
+					if (info) {
+						info.push(currentMasterUser.id);
+					} else {
+						info = [currentMasterUser.id];
+					}
+
+					sessionStorage.setItem('afterLoginEvents', JSON.stringify(info));
+
+				} else {
+					vm.eventsProcessing = false;
+					resolve();
+				}
+
+			});
 
         };
 
@@ -173,36 +220,58 @@
 
                 vm.systemMessages = vm.systemMessages.map(function (item) {
 
+                    // SECTION_GENERAL = 0
+                    // SECTION_EVENTS = 1
+                    // SECTION_TRANSACTIONS = 2
+                    // SECTION_INSTRUMENTS = 3
+                    // SECTION_DATA = 4
+                    // SECTION_PRICES = 5
+                    // SECTION_REPORT = 6
+                    // SECTION_IMPORT = 7
+                    // SECTION_ACTIVITY_LOG = 8
+                    // SECTION_SCHEDULES = 9
+
+                    // TYPE_INFORMATION = 1
+                    // TYPE_WARNING = 2
+                    // TYPE_ERROR = 3
+                    // TYPE_SUCCESS = 4
+
                     item.verbose_created = moment(new Date(item.created)).format('DD-MM-YYYY HH:mm');
 
-                    if (item.level == '1') {
-                        item.verbose_level = 'info'
-                    } else {
-                        item.verbose_level = item.level
+                    if (item.type === 1) {
+                        item.verbose_type = 'Information'
+                    } else if (item.type === 2) {
+                        item.verbose_type = 'Warning'
+                    } else if (item.type === 3) {
+                        item.verbose_type = 'Error'
+                    } else if (item.type === 4) {
+                        item.verbose_type = 'Success'
                     }
 
 
                     console.log('item', item)
 
 
-                    if (item.status === 1) {
-                        item.verbose_status = 'New'
-                    }
-
-                    if (item.status === 2) {
-                        item.verbose_status = 'Solved'
-                    }
-
-                    if (item.status === 3) {
-                        item.verbose_status = 'Viewed'
-                    }
-
-                    if (item.status === 4) {
-                        item.verbose_status = 'Marked'
-                    }
-
-                    if (item.status === 5) {
-                        item.verbose_status = 'Abandoned'
+                    if (item.section === 0) {
+                        item.verbose_section = 'General';
+                    } else if (item.section === 1) {
+                        item.verbose_section = 'Events';
+                    } else if (item.section === 2) {
+                        item.verbose_section = 'Transactions';
+                    } else if (item.section === 3) {
+                        item.verbose_section = 'Instruments';
+                    } else if (item.section === 4) {
+                        item.verbose_section = 'Data';
+                    } else if (item.section === 5) {
+                        item.verbose_section = 'Prices';
+                    } else if (item.section === 6) {
+                        item.verbose_section = 'Report';
+                    } else if (item.section === 7) {
+                        item.verbose_section = 'Import';
+                    } else if (item.section === 8) {
+                        item.verbose_section = 'Activity Log';
+                    } else if (item.section === 9) {
+                        item.verbose_section = 'Schedules';
                     }
 
                     item.attachments = item.attachments.map(function (attachment) {

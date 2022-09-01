@@ -1,0 +1,55 @@
+<md-dialog aria-label="" ng-cloak class="warning-dialog width-50" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Rollback Database From Backup</h2>
+            <span flex></span>
+            <progress-circular data-diameter="20" data-ng-if="vm.processing"></progress-circular>
+        </div>
+    </md-toolbar>
+    <md-dialog-content data-custom-scroll class="custom-scrollbar p-24">
+
+        <md-checkbox ng-checked="vm.createBackupBeforeRollback" data-ng-click="vm.createBackupBeforeRollback = !vm.createBackupBeforeRollback"
+                     >
+            Create Backup of current state before rollback
+        </md-checkbox>
+
+        <div data-ng-if="vm.readyStatus.data">
+
+            <md-card data-ng-repeat="item in vm.items | filter: {name: vm.query}" class="mm-card p-8 rollback-backup-card {{item.is_selected ? 'selected' : ''}}" style="width: 100%">
+                <md-card-title>
+                    <md-card-title-text>
+                        <div class="md-headline m-b-8">{{item.name}}</div>
+                        <div class="m-b-8 mm-description">{{item.created}}</div>
+                    </md-card-title-text>
+                </md-card-title>
+                <md-card-actions layout="row" layout-align="space-between center">
+
+                    <md-button class="md-raised {{item.is_selected ? 'disabled-btn' : ''}}"
+                               data-ng-click="vm.selectBackup($event, item)">Select
+                    </md-button>
+
+                </md-card-actions>
+
+            </md-card>
+
+
+        </div>
+
+        <div data-ng-if="!vm.readyStatus.data" class="dialog-loader m-t-16">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <progress-circular data-diameter="100"></progress-circular>
+            </div>
+        </div>
+
+
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="vm.cancel()">
+            Close
+        </md-button>
+        <md-button class="md-raised {{vm.selectedBackup ? '' : 'disabled-btn'}} {{vm.processing ? 'disabled-btn' : ''}}" ng-click="vm.agree()" style="margin-right:20px;">
+            Rollback
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

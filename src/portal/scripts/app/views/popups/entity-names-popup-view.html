@@ -1,0 +1,44 @@
+<div class="entity-names-popup-content">
+    <div>
+        <text-input label="Report Name (Name)"
+                    placeholder-text="Report Name (Name)"
+                    model="popupData.fields.name.value"
+                    event-signal="popupData.fields.name.event"
+                    small-options="{dialogParent: '.dialog-containers-wrap', notNull: true}"></text-input>
+    </div>
+
+    <div>
+        <text-input label="System Name (Short Name)"
+                    placeholder-text="System Name (Short Name)"
+                    model="popupData.fields.short_name.value"
+                    small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
+    </div>
+
+    <div>
+        <text-input label="Unique Code (User Code)"
+                    placeholder-text="Unique Code (User Code)"
+                    model="popupData.fields.user_code.value"
+                    event-signal="popupData.fields.user_code.event"
+                    small-options="{
+                        dialogParent: '.dialog-containers-wrap',
+                        notNull: popupData.fields.user_code.smallOptions.notNull
+                    }"></text-input>
+    </div>
+
+    <div ng-if="popupData.fields.hasOwnProperty('public_name')">
+        <text-input
+                label="Name if Hidden (Public Name)"
+                placeholder-text="Name if Hidden (Public Name)"
+                model="popupData.fields.public_name.value"
+                small-options="{dialogParent: '.dialog-containers-wrap'}"></text-input>
+    </div>
+
+    <div>
+        <dropdown-select label="Show by default"
+                         model="popupData.fields.valueToShow.value"
+                         placeholder-text="Show by default"
+                         menu-options="popupData.fields.valueToShow.options"
+                         small-options="{tooltipText: 'Show by default', indicatorBtnIcon: 'type1', dialogParent: '.dialog-containers-wrap'}"
+                         class="ev-editor-field"></dropdown-select>
+    </div>
+</div>

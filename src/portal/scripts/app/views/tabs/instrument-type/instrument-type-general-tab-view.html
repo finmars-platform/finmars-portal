@@ -1,8 +1,9 @@
 <div>
     <div data-ng-if="vm.checkReadyStatus()" style="min-height: 500px;">
 
-        <div layout="row" class="m-t-8 m-b-8">
-            <div class="width-33 p-l-8 p-r-8">
+        <div class="flex-row entity-editor-row">
+
+            <div class="flex-33 ev-data-field">
 
                 <usercode-input ng-if="!vm.entity.id" data-item="vm.entity"></usercode-input>
 
@@ -13,28 +14,31 @@
 
             </div>
 
-            <div class="width-33 p-l-8 p-r-8">
+            <div class="flex-33 ev-data-field">
 
-                <md-input-container style="width: 300px">
+                <!--<md-input-container style="width: 300px">
                     <label for="">Notes</label>
                     <input type="text" data-ng-model="vm.entity.notes">
-                </md-input-container>
+                </md-input-container>-->
+                <text-input label="Notes"
+                            placeholder-text="Notes"
+                            model="vm.entity.notes"></text-input>
 
             </div>
 
         </div>
 
 
-        <div layout="row" class="m-t-8 m-b-16">
+        <div class="flex-row entity-editor-row">
 
-            <div class="width-33 p-l-16 p-r-16">
+            <div class="flex-33 ev-data-field">
                 <text-input
                         label="Report Name (Name)"
                         placeholder-text="Report Name (Name)"
                         model="vm.entity.name"></text-input>
             </div>
 
-            <div class="width-33 p-l-16 p-r-16">
+            <div class="flex-33 ev-data-field">
                 <text-input
                         label="Name if Hidden (Public Name)"
                         placeholder-text="Name if Hidden (Public Name)"
@@ -42,7 +46,7 @@
             </div>
 
 
-            <div class="width-33 p-l-16 p-r-16">
+            <div class="flex-33 ev-data-field">
                 <text-input
                         label="System Name (Short Name)"
                         placeholder-text="System Name (Short Name)"
@@ -53,9 +57,9 @@
         </div>
 
 
-        <div layout="row" class="m-b-8 m-t-16">
+        <div class="flex-row entity-editor-row">
 
-            <div class="width-33 p-l-8 p-r-8">
+            <div class="flex-33 ev-data-field">
 
                 <bind-field-control entity-type="vm.entityType"
                                     entity="vm.entity"
@@ -67,7 +71,7 @@
             </div>
 
 
-            <div class="width-33 p-l-8 p-r-8">
+            <div class="flex-33 ev-data-field">
                 <bind-field-control entity-type="vm.entityType"
                                     entity="vm.entity"
                                     entity-change="vm.onEntityChange(fieldKey)"
@@ -77,7 +81,7 @@
                 </bind-field-control>
             </div>
 
-            <div class="width-33 p-l-8 p-r-8">
+            <div class="flex-33 ev-data-field">
                 <bind-field-control entity-type="vm.entityType"
                                     entity="vm.entity"
                                     entity-change="vm.onEntityChange(fieldKey)"
@@ -89,9 +93,9 @@
 
         </div>
 
-        <div layout="row" class="m-b-8 m-t-16">
+        <div class="flex-row entity-editor-row">
 
-            <div class="width-33 p-l-8 p-r-8">
+            <div class="flex-33 ev-data-field">
 
                 <bind-field-control entity-type="vm.entityType"
                                     entity="vm.entity"
@@ -104,7 +108,7 @@
             </div>
 
 
-            <div class="width-33 p-l-8 p-r-8">
+            <div class="flex-33 ev-data-field">
 
                 <bind-field-control entity-type="vm.entityType"
                                     entity="vm.entity"
@@ -116,7 +120,7 @@
 
             </div>
 
-            <div class="width-33 p-l-8 p-r-8">
+            <div class="flex-33 ev-data-field">
 
                 <bind-field-control entity-type="vm.entityType"
                                     entity="vm.entity"

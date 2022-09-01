@@ -115,14 +115,12 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
                 vm.user = userData;
 
-                if (!vm.user.data) vm.user.data = {};
                 // enable by default list layout autosave
                 if (typeof vm.user.data.autosave_layouts !== 'boolean') {
-
                     vm.user.data.autosave_layouts = true;
-                    globalDataService.setUser(vm.user);
-
                 }
+
+				globalDataService.setUser(vm.user);
 
                 resolve();
 
@@ -385,7 +383,6 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
     };
 
     init();
-    // vm.currentGlobalState = 'portal';
 
 };
 

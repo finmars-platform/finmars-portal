@@ -101,6 +101,7 @@ export default function (globalDataService) {
 
 			 authorizerRepository.getMe().then(userData => {
 
+				if (!userData.data) userData.data = {};
 				globalDataService.setUser(userData);
 				resolve(userData);
 
@@ -112,7 +113,18 @@ export default function (globalDataService) {
     }
 
     const getUserByKey = function (id, user) {
-        return authorizerRepository.getUserByKey(id);
+
+		return new Promise((resolve, reject) => {
+
+			authorizerRepository.getUserByKey(id).then(userData => {
+
+				if (!userData.data) userData.data = {};
+				resolve(userData);
+
+			}).catch(error => reject(error));
+
+		});
+
     };
 
     const updateUser = function (id, user) {

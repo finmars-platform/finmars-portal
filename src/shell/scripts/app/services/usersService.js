@@ -176,9 +176,9 @@ export default function (globalDataService) {
         return usersRepository.getGroupList();
     }; */
 
-    const getOwnMemberSettings = function () {
+    /* const getOwnMemberSettings = function () {
         return usersRepository.getOwnMemberSettings();
-    };
+    }; */
 
     const updateOwnMemberSettings = function (id, member) {
         return usersRepository.updateOwnMemberSettings(id, member);
@@ -233,7 +233,7 @@ export default function (globalDataService) {
 
 		// getGroupList: getGroupList,
 
-		getOwnMemberSettings: getOwnMemberSettings,
+		// getOwnMemberSettings: getOwnMemberSettings,
 		updateOwnMemberSettings: updateOwnMemberSettings,
 
 		getUsercodePrefixList: getUsercodePrefixList,

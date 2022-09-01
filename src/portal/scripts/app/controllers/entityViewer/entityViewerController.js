@@ -113,7 +113,7 @@ import evHelperService from "../../services/entityViewerHelperService";
 
                     var tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
                     if (vm.entityType !== 'instrument-type') {
-                        fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
+                        fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(entityType, tabs);
                     }
 
                     bigDrawerWidth = evHelperService.getBigDrawerWidth(fixedAreaColumns);
@@ -422,7 +422,7 @@ import evHelperService from "../../services/entityViewerHelperService";
 							var tabs = Array.isArray(editLayout.results[0].data) ? editLayout.results[0].data : editLayout.results[0].data.tabs;
 
                             if (entityType !== 'instrument-type') {
-                                fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(tabs);
+                                fixedAreaColumns = evHelperService.getEditLayoutMaxColumns(entityType, tabs);
                             }
 
 							bigDrawerWidthPercent = evHelperService.getBigDrawerWidthPercent(fixedAreaColumns);
@@ -1088,6 +1088,7 @@ import evHelperService from "../../services/entityViewerHelperService";
                 vm.attributeDataService = new AttributeDataService();
 
                 vm.entityType = $scope.$parent.vm.entityType;
+
                 vm.contentType = $scope.$parent.vm.contentType;
                 vm.entityViewerDataService.setEntityType($scope.$parent.vm.entityType);
                 vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);

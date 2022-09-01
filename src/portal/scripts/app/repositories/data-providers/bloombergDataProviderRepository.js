@@ -51,7 +51,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'data-provider/bloomberg/credential/',
+        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'data-provider/bloomberg/credential/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -68,7 +68,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'data-provider/bloomberg/credential/' + id + '/',
+        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'data-provider/bloomberg/credential/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',

@@ -8,16 +8,16 @@
          class="entity-editor-fixed-area"
          data-ng-class="{'disabled-element': !vm.entity.is_enabled && vm.hasEnabledStatus}">
 
-        <div class="entity-editor-row flex-row fc-space-between">
+        <div class="entity-editor-fa-row">
 
-            <div class="cursor-pointer fa-field1"
+            <!--<div class="cursor-pointer fa-field1"
                  ng-class="{
                         'flex-basis-33': vm.fixedAreaPopup.tabColumns === 6,
                         'flex-basis-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
                         'flex-basis-66': vm.fixedAreaPopup.tabColumns === 3,
                         'flex-basis-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1
                     }"
-                 popup
+                 custom-popup
                  popup-template-url="'views/popups/entity-viewer-edit-fixed-area-popup-view.html'"
                  popup-width="element"
                  position-relative-to="element"
@@ -39,15 +39,28 @@
                             style="pointer-events: none;">
                 </text-input>
 
+            </div>-->
+            <div class="fa-field1"
+                 data-ng-class="vm.getFaField1Classes()">
+                <entity-names-field label="{{vm.entityTypeSlug()}}"
+                                    entity-type="{{vm.entityType}}"
+                                    entity="vm.entity"
+                                    value-to-show="vm.nameToShow"
+                                    event-service="vm.enfEventService"
+                                    on-value-to-show-change="vm.onNameToShowChange()"
+                                    is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"></entity-names-field>
             </div>
 
-            <div data-ng-if="vm.fixedAreaPopup.tabColumns > 2"
+            <!--<div data-ng-if="vm.fixedAreaPopup.tabColumns > 2"
                  class="fa-field2"
                  data-ng-class="{
                         'flex-basis-33': vm.fixedAreaPopup.tabColumns === 6 || vm.fixedAreaPopup.tabColumns === 3,
                         'flex-basis-50': vm.fixedAreaPopup.tabColumns === 5 || vm.fixedAreaPopup.tabColumns === 4,
                         'flex-basis-100': vm.fixedAreaPopup.tabColumns === 2 || vm.fixedAreaPopup.tabColumns === 1
-                    }">
+                    }">-->
+            <div ng-if="['instrument', 'account', 'instrument-type', 'responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3'].includes(vm.entityType)"
+                 class="fa-field2"
+                 data-ng-class="vm.getFaField2Classes()">
 
                 <dropdown-select data-ng-if="vm.entityType === 'instrument' || vm.entityType === 'account' || vm.entityType === 'instrument-type'"
                                  label="{{vm.typeFieldLabel}}"
@@ -56,24 +69,18 @@
                                  menu-options="vm.typeSelectorOptions"
                                  small-options="{tooltipText: 'Type', indicatorBtnIcon: 'type1'}"
                                  on-change-callback="vm.typeSelectorChange()"
+                                 is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"
                                  class="ev-editor-field">
                 </dropdown-select>
 
-                 <!-- <dropdown-select data-ng-if="vm.entityType === 'strategy-1' || vm.entityType === 'strategy-2' || vm.entityType === 'strategy-3' || vm.entityType === 'responsible' || vm.entityType === 'counterparty'"
-                                 label="Group"
-                                 model="vm.entity.group"
-                                 placeholder-text="Group"
-                                 menu-options="vm.groupSelectorOptions"
-                                 small-options="{tooltipText: 'Group', indicatorBtnIcon: 'type1'}"
-                                 class="ev-editor-field">
-                </dropdown-select> -->
                 <crud-select data-ng-if="vm.entityType === 'responsible' || vm.entityType === 'counterparty'"
                              data-label="vm.groupSelectorLabel"
                              data-item="vm.entity.group"
                              data-entity-type="vm.groupSelectorEntityType"
                              data-options="vm.groupSelectorOptions"
                              event-signal="vm.fixedAreaEventObj.event"
-                             small-options="{notNull: true}"></crud-select>
+                             small-options="{notNull: true}"
+                             is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"></crud-select>
 
                 <crud-select data-ng-if="vm.entityType === 'strategy-1' || vm.entityType === 'strategy-2' || vm.entityType === 'strategy-3'"
                              data-label="vm.groupSelectorLabel"
@@ -81,26 +88,30 @@
                              data-entity-type="vm.groupSelectorEntityType"
                              data-options="vm.groupSelectorOptions"
                              event-signal="vm.fixedAreaEventObj.event"
-                             small-options="{notNull: true}"></crud-select>
+                             small-options="{notNull: true}"
+                             is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"></crud-select>
 
-                <div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type' &&
+                <!--<div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type' &&
                                  vm.entityType !== 'counterparty' && vm.entityType !== 'responsible' && vm.entityType !== 'strategy-1' && vm.entityType !== 'strategy-2' && vm.entityType !== 'strategy-3'"
                      class="ev-editor-field">
                     <text-input
                             label="System Name (Short Name)"
                             placeholder-text="System Name (Short Name)"
                             model="vm.entity.short_name"></text-input>
-                </div>
+                </div>-->
             </div>
 
-            <div data-ng-if="vm.fixedAreaPopup.tabColumns > 5"
-                 class="fa-field3">
+            <!--<div data-ng-if="vm.fixedAreaPopup.tabColumns > 5"
+                 class="fa-field3">-->
+            <div class="fa-field3"
+                 data-ng-class="vm.getFaField3Classes()">
                 <dropdown-select label="Status"
                                  model="vm.entityStatus"
                                  placeholder-text="System List"
                                  menu-options="vm.statusSelectorOptions"
                                  small-options="{tooltipText: 'Status', indicatorBtnIcon: 'type1'}"
                                  on-change-callback="vm.entityStatusChanged()"
+                                 is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"
                                  class="ev-editor-field"></dropdown-select>
             </div>
 
@@ -305,7 +316,7 @@
         <div class="entity-tabs-menu entityTabsMenu"
              data-ng-class="{'active': vm.isEntityTabActive()}"
 
-             popup
+             custom-popup
              popup-template="{{vm.entityTabsMenuTplt}}"
              popup-data="vm.entityTabsMenuPopupData"
              position-relative-to="element"
