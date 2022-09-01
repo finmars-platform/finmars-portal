@@ -2923,7 +2923,7 @@ md-checkbox.md-indeterminate .md-icon:after {
   border: 1px solid #7d7d7d;
   border-radius: 3px;
 
-  &:hover {
+  &:not([disabled]):hover {
     background-color: #FDECE5
   }
 
@@ -3529,4 +3529,9 @@ span.highlight {
     white-space: pre;
   }
 }
+
+.rollback-backup-card.selected {
+  border: 1px solid green;
+}
+
 

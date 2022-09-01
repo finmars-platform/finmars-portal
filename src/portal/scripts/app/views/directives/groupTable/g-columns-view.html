@@ -92,7 +92,7 @@
                  data-attr-key="{{column.key}}"
                  draggable="{{groupsAreaDraggable}}"
 
-                 popup
+                 custom-popup
                  popup-id="{{column.key}}"
                  popup-template-url="{{getPopupMenuTemplate(column)}}"
                  position-relative-to="mouse"
@@ -118,7 +118,7 @@
 
                     <!--<div data-ng-click="showArrowDown($event)"
 
-                         popup
+                         custom-popup
                          popup-id="{{column.key}}"
                          popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"
                          popup-data="{column: column, changeSortMode: changeSortMode}"
@@ -211,7 +211,7 @@
                  data-attr-key="{{column.key}}"
                  draggable="true"
 
-                 popup
+                 custom-popup
                  popup-id="{{column.key}}"
                  popup-template-url="{{getPopupMenuTemplate(column)}}"
                  position-relative-to="mouse"
@@ -237,7 +237,7 @@
                     <!--<div ng-if="isReport"
                          data-ng-click="showArrowDown($event)"
 
-                         popup
+                         custom-popup
                          popup-id="{{column.key}}"
                          popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"
                          popup-data="{column: column, changeSortMode: changeSortMode}"

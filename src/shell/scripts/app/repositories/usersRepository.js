@@ -467,7 +467,7 @@ const getGroupList = function () {
 	})
 };
 
-const getOwnMemberSettings = function () {
+/* const getOwnMemberSettings = function () {
 
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
@@ -481,7 +481,7 @@ const getOwnMemberSettings = function () {
 			'Content-type': 'application/json'
 		}
 	})
-};
+}; */
 
 const updateOwnMemberSettings = function (id, member) {
 
@@ -595,7 +595,7 @@ export default {
 
 	getGroupList: getGroupList,
 
-	getOwnMemberSettings: getOwnMemberSettings,
+	// getOwnMemberSettings: getOwnMemberSettings,
 	updateOwnMemberSettings: updateOwnMemberSettings,
 
 

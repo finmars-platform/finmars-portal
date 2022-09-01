@@ -50,7 +50,7 @@ import evEvents from "../../services/entityViewerEvents";
         // var doNotCheckLayoutChanges = false;
         var autosaveLayoutService;
         var autosaveLayoutOn = globalDataService.isAutosaveLayoutOn();
-
+		console.log("autosave77 autosaveLayoutOn", autosaveLayoutOn);
         // Functions for context menu
 
         var updateTableAfterEntityChanges = function (res) {

@@ -180,7 +180,7 @@
                             <label>Options</label>
                             <md-select data-ng-model="item.attribute_key">
                                 <md-option data-ng-repeat="attribute in vm.attributeTypesByValueTypes[item.pricing_scheme_object.type_settings.value_type]"
-                                           ng-value="attribute.user_code">
+                                           ng-value="attribute.id">
                                     {{attribute.name}}
                                 </md-option>
                             </md-select>

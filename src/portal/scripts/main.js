@@ -19,6 +19,9 @@ import mainHeaderDirective from "./app/directives/mainHeaderDirective.js";
 
 import complexDropdownSelectDirective from "./app/directives/customInputs/complexDropdownSelectDirective";
 import complexDropdownSelectMenuDirective from "./app/directives/customInputs/complexDropdownSelectMenuDirective";
+import baseInputDirective from "./app/directives/customInputs/baseInputDirective";
+import multiinputFieldDirective from "./app/directives/customInputs/multiinputFieldDirective";
+import entityNamesFieldDirective from "./app/directives/customInputs/entityNamesFieldDirective";
 
 // noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
@@ -187,7 +190,7 @@ export default (function () {
 	portal.controller('RenameFieldDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameFieldDialogController')]);
 	portal.controller('ResizeFieldDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/resizeFieldDialogController')]);
 	portal.controller('SaveConfigurationExportLayoutDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/saveConfigurationExportLayoutDialogController')]);
-	portal.controller('ActionsNotificationsSettingsDialogController', ['$scope', '$mdDialog', 'usersService', require('./app/controllers/dialogs/actionsNotificationsSettingsDialogController')]);
+	portal.controller('ActionsNotificationsSettingsDialogController', ['$scope', '$mdDialog', 'usersService', 'globalDataService', require('./app/controllers/dialogs/actionsNotificationsSettingsDialogController')]);
 	portal.controller('ExportPdfDialogController', ['$scope', '$mdDialog', 'globalDataService', 'evDataService', 'evEventService', 'data', require('./app/controllers/dialogs/exportPdfDialogController')]);
 	portal.controller('NotificationsController', ['$scope', '$state', '$stateParams', require('./app/controllers/system/notificationsController')]);
 	portal.controller('HeaderNotificationsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/headerNotificationsDialogController')]);
@@ -478,8 +481,8 @@ export default (function () {
 	// Settings
 
 	portal.controller('SettingsGeneralController', ['$scope', '$state', require('./app/controllers/settings/settingsGeneralController')]);
-	portal.controller('SettingsGeneralProfileController', ['$scope', 'usersService', require('./app/controllers/settings/general/settingsGeneralProfileController')]);
-	portal.controller('SettingsGeneralInterfaceAccessController', ['$scope', '$state', 'usersService', require('./app/controllers/settings/general/settingsGeneralInterfaceAccessController')]);
+	portal.controller('SettingsGeneralProfileController', ['$scope', 'usersService', 'globalDataService', require('./app/controllers/settings/general/settingsGeneralProfileController')]);
+	portal.controller('SettingsGeneralInterfaceAccessController', ['$scope', '$state', 'usersService', 'globalDataService', require('./app/controllers/settings/general/settingsGeneralInterfaceAccessController')]);
 	portal.controller('SettingsGeneralTransactionFieldController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralTransactionFieldController')]);
 	portal.controller('SettingsGeneralInstrumentFieldController', ['$scope', '$mdDialog', require('./app/controllers/settings/general/settingsGeneralInstrumentFieldController')]);
 	portal.controller('SettingsGeneralChangePasswordController', ['$scope', '$mdDialog', 'authorizerService', require('./app/controllers/settings/general/settingsGeneralChangePasswordController')]);
@@ -789,11 +792,12 @@ export default (function () {
 	portal.directive('isDraggableSign', [require('./app/directives/isDraggableSignDirective.js')]);
 	portal.directive('dialogWindowResizer', [require('./app/directives/dialogWindowResizerDirective.js')]);
 	// portal.directive('popUp', [require('./app/directives/dialogWindowResizerDirective.js')]);
-	portal.directive('popup', ['$rootScope', '$compile', require('./app/directives/popupDirective')]);
+	portal.directive('customPopup', ['$rootScope', '$compile', require('./app/directives/customPopupDirective')]);
 	portal.directive('chipsList', ['$filter', require('./app/directives/chipsListDirective')]);
 	portal.directive('onRepeatElemInit', [require('./app/directives/onRepeatElemInit')]);
 
 	//<editor-fold desc="Custom inputs"
+	portal.directive('baseInput', [baseInputDirective]);
 	portal.directive('textInput', ['$mdDialog', require('./app/directives/customInputs/textInputDirective.js')]);
 	portal.directive('numberInput', ['$mdDialog', require('./app/directives/customInputs/numberInputDirective.js')]);
 	portal.directive('dateInput', [require('./app/directives/customInputs/dateInputDirective.js')]);
@@ -804,6 +808,8 @@ export default (function () {
 	portal.directive('unifiedDataSelect', ['$mdDialog', require('./app/directives/customInputs/unifiedDataSelectDirective')]);
 	portal.directive('classifierSelect', ['$mdDialog', require('./app/directives/customInputs/classifierSelectDirective')]);
 	portal.directive('multitypeField', [require('./app/directives/customInputs/multitypeFieldDirective')]);
+	portal.directive('multiinputField', [multiinputFieldDirective]);
+	portal.directive('entityNamesField', [entityNamesFieldDirective]);
 	portal.directive('complexDropdownSelect', [complexDropdownSelectDirective]);
 	portal.directive('complexDropdownSelectMenu', [complexDropdownSelectMenuDirective]);
 	portal.directive('dropdownSelect2', [require('./app/directives/customInputs/dropdownSelect2Directive')]);

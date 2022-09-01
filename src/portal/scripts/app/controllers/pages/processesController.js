@@ -127,7 +127,13 @@
 
         }
 
+        vm.searchProcesses = function () {
 
+            vm.currentPage = 1;
+
+            vm.getData();
+
+        }
 
         vm.getData = function () {
 
@@ -135,9 +141,24 @@
 
             return new Promise(function (resolve, reject) {
 
+                var filters = {}
+
+                if (vm.query) {
+                    filters.type = vm.query;
+                }
+
+                if (vm.queryId) {
+                    filters.id = vm.queryId
+                }
+
+                if (vm.queryCreated) {
+                    filters.created = vm.queryCreated
+                }
+
                 processesService.getList({
                     pageSize: 40,
                     page: vm.currentPage,
+                    filters: filters,
                     sort: {
                         direction: "DESC",
                         key: "created"
@@ -148,7 +169,7 @@
 
                     vm.items = data.results;
 
-                    vm.items = vm.items.map(function (item){
+                    vm.items = vm.items.map(function (item) {
 
                         try {
 
@@ -221,6 +242,15 @@
             return new Date(item.created).toLocaleDateString() + ' ' + new Date(item.created).toLocaleTimeString()
 
         };
+
+        vm.requestTaskStatus = function ($event, item) {
+
+            processesService.getStatus(item.id, item.celery_task_id).then(function (data) {
+                item.status_object = data
+                $scope.$apply();
+            })
+
+        }
 
         vm.getProcessName = function (item) {
 
@@ -308,7 +338,7 @@
             var prefix = baseUrlService.getMasterUserPrefix();
             var apiVersion = baseUrlService.getApiVersion();
 
-            return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
+            return baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
 
         };
 
