@@ -1,7 +1,6 @@
 'use strict';
 
 import CommonDialogsService from "../../../../shell/scripts/app/services/commonDialogsService";
-import rvHelper from "./rv.helper";
 
 (function () {
 
@@ -9,13 +8,15 @@ import rvHelper from "./rv.helper";
     const pricesCheckerService = require('../services/reports/pricesCheckerService');
     const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
 
+    const metaContentTypeService = require('../services/metaContentTypesService');
     const expressionService = require('../services/expression.service');
     const evEvents = require('../services/entityViewerEvents');
 
     const priceHistoryService = require('../services/priceHistoryService');
     const currencyHistoryService = require('../services/currencyHistoryService');
 
-    const rvHelper = require('./rv.helper');
+	const reportHelper = require('../helpers/reportHelper');
+	const rvHelper = require('../helpers/rv.helper')
 
     module.exports = function (viewModel, $scope, $mdDialog, globalDataService) {
 
@@ -174,21 +175,102 @@ import rvHelper from "./rv.helper";
 
         };
 
-        const reportDateProperties = {
-            'balance-report': [null, 'report_date'],
-            'pl-report': ['pl_first_date', 'report_date'],
-            'transaction-report': ['begin_date', 'end_date']
+        var datePropsMatchData = {
+            'balance-report': {
+                'report_date': 'report_date',
+                'end_date': 'report_date'
+            },
+            'pl-report': {
+                'pl_first_date': 'pl_first_date',
+                'report_date': 'report_date',
+                'begin_date': 'pl_first_date',
+                'end_date': 'report_date'
+            },
+            'transaction-report': {
+                'pl_first_date': 'begin_date',
+                'report_date': 'end_date',
+                'begin_date': 'begin_date',
+                'end_date': 'end_date'
+            }
         };
 
-        const calculateReportDateExpr = function (dateExpr, reportOptions, reportDateIndex, dateExprsProms) {
+        /**
+         *
+         * @param {String} contentType - anotherLayout.content_type
+         * @param {Object} reportOptions - anotherLayout.data.reportOptions
+         * @param {Object} reportLayoutOptions - anotherLayout.data.reportLayoutOptions
+         * @returns {Promise<{-readonly [P in keyof *[]]: PromiseSettledResult<Awaited<*[][P]>>}>}
+         */
+        const applyDatesFromAnotherLayout = function (contentType, reportOptions, reportLayoutOptions) {
 
-            const dateProp = reportDateProperties[viewModel.entityType][reportDateIndex];
+            const result = [];
+            const pEntityType = metaContentTypeService.findEntityByContentType(contentType);
+            const dateProps = reportHelper.getDateProperties(viewModel.entityType);
+            const activeLayoutRo = viewModel.entityViewerDataService.getReportOptions();
 
-            const result = expressionService.getResultOfExpression({"expression": dateExpr}).then(function (data) {
+            dateProps.forEach(prop => {
+
+                if (prop) {
+
+                    const matchingProp = datePropsMatchData[pEntityType][prop];
+
+                    const prom = new Promise((resolve, reject) => {
+
+                        if (!matchingProp) { // for pl_first_date, begin_date when applying date from balance report
+                            activeLayoutRo[prop] = '0001-01-01';
+                            return resolve();
+                        }
+
+                        reportHelper.getReportDate(reportOptions, reportLayoutOptions, matchingProp).then(date => {
+
+
+                            // resolve({key: prop, value: date})
+                            activeLayoutRo[prop] = date;
+                            resolve();
+
+                        }).catch(error => reject(error));
+
+                    });
+
+                    result.push(prom)
+
+                }
+
+            });
+
+            return Promise.allSettled(result);
+
+        };
+
+        /**
+         * Supports calculateReportDatesExprs function
+         *
+         * @param {string} dateExpr
+         * @param {Object} reportOptions
+         * @param {Number} reportDateIndex
+         * @returns {Promise<unknown>}
+         */
+        const calcReportDateExpr = function (dateExpr, reportOptions, reportDateIndex) {
+
+            // const dateProp = reportDateProperties[viewModel.entityType][reportDateIndex];
+            const dateProp = reportHelper.getDateProperties(viewModel.entityType)[reportDateIndex];
+
+            /*const result = expressionService.getResultOfExpression({"expression": dateExpr}).then(function (data) {
                 reportOptions[dateProp] = data.result
             });
 
-            dateExprsProms.push(result);
+            dateExprsProms.push(result);*/
+
+            return new Promise((resolve, reject) => {
+
+                expressionService.getResultOfExpression({"expression": dateExpr}).then(function (data) {
+
+                    reportOptions[dateProp] = data.result;
+                    resolve();
+
+                }).catch(error => reject(error));
+
+            });
 
         };
 
@@ -208,12 +290,18 @@ import rvHelper from "./rv.helper";
 
             var dateExprsProms = [];
 
-            if (firstDateExpr && !options.noDateExpr_0) {
-                calculateReportDateExpr(firstDateExpr, reportOptions, 0, dateExprsProms);
+            if (firstDateExpr && !options.noDateFromExpr) {
+
+                var dateFromProm = calcReportDateExpr(firstDateExpr, reportOptions, 0);
+                dateExprsProms.push(dateFromProm);
+
             }
 
-            if (secondDateExpr && !options.noDateExpr_1) {
-                calculateReportDateExpr(secondDateExpr, reportOptions, 1, dateExprsProms);
+            if (secondDateExpr && !options.noDateToExpr) {
+
+                var dateToProm = calcReportDateExpr(secondDateExpr, reportOptions, 1);
+                dateExprsProms.push(dateToProm);
+
             }
 
             return Promise.all(dateExprsProms);
@@ -856,6 +944,7 @@ import rvHelper from "./rv.helper";
         return {
             setLayoutDataForView: setLayoutDataForView,
             downloadAttributes: downloadAttributes,
+            applyDatesFromAnotherLayout: applyDatesFromAnotherLayout,
             calculateReportDatesExprs: calculateReportDatesExprs,
             onSetLayoutEnd: onSetLayoutEnd,
 

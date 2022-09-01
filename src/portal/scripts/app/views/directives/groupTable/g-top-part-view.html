@@ -31,11 +31,13 @@
 
         <div class="global-table-filter-container">
 
-            <input type="text" ng-model="globalTableSearch" ng-change="onGlobalTableSearchChange()" placeholder="Search for a ..."
-                   class="global-table-filter-search" aria-invalid="false"
-                   data-ng-model-options="{debounce: 500}"
-                   style="">
-
+            <input type="text"
+                   ng-model="globalTableSearch"
+                   ng-change="onGlobalTableSearchChange()"
+                   placeholder="Search for a ..."
+                   class="global-table-filter-search"
+                   aria-invalid="false"
+                   data-ng-model-options="{debounce: 500}">
 
         </div>
 
@@ -86,79 +88,77 @@
                 </md-select>
             </md-input-container>
 
-            <!--<div ng-if="entityType === 'balance-report' || entityType === 'pl-report'" class="flex-row">-->
-            <div ng-if="entityType === 'balance-report'" class="flex-row">
+            <md-checkbox ng-model="reportLayoutOptions.useDateFromAbove"
+                         ng-change="toggleUseDateFromAbove()"
+                         class="g-top-link-date-checkbox m-r-8 m-l-16">{{useDateFromAboveName}}</md-checkbox>
 
-                <!-- <div ng-if="entityType === 'pl-report'">
-                    <complex-zh-date-picker data-date="reportOptions.pl_first_date"
-                                            data-datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
-                                            data-display-options="datepickerFromDisplayOptions"
-                                            data-callback-method="updateReportOptions()"
-                                            ev-data-service="evDataService"
-                                            ev-event-service="evEventService"
-                                            data-attribute-data-service="attributeDataService">
-                    </complex-zh-date-picker>
-                </div> -->
+            <!-- <div ng-if="entityType === 'balance-report'" class="flex-row">
 
                 <div>
-                    <complex-zh-date-picker date="reportOptions.report_date"
+                    <complex-zh-datepicker date="reportOptions.report_date"
                                             datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
                                             callback-method="updateReportOptions()"
                                             ev-data-service="evDataService"
                                             ev-event-service="evEventService"
-                                            attribute-data-service="attributeDataService"></complex-zh-date-picker>
+                                            attribute-data-service="attributeDataService"></complex-zh-datepicker>
                 </div>
 
             </div>
 
             <div ng-if="entityType === 'pl-report'" class="flex-row">
                 <div>
-                    <complex-zh-date-picker date="reportOptions.pl_first_date"
+                    <complex-zh-datepicker date="reportOptions.pl_first_date"
                                             datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
                                             second-date="reportOptions.report_date"
                                             second-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
                                             callback-method="updateReportOptions()"
                                             ev-data-service="evDataService"
                                             ev-event-service="evEventService"
-                                            attribute-data-service="attributeDataService"></complex-zh-date-picker>
+                                            attribute-data-service="attributeDataService"></complex-zh-datepicker>
                 </div>
-
-                <!-- <div>
-                    <complex-zh-date-picker date="reportOptions.report_date"
-                                            datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
-                                            callback-method="updateReportOptions()"
-                                            ev-data-service="evDataService"
-                                            ev-event-service="evEventService"
-                                            attribute-data-service="attributeDataService"></complex-zh-date-picker>
-                </div> -->
             </div>
 
             <div ng-if="entityType === 'transaction-report'" class="flex-row">
 
                 <div>
-                    <complex-zh-date-picker date="reportOptions.begin_date"
+                    <complex-zh-datepicker date="reportOptions.begin_date"
                                             datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
                                             second-date="reportOptions.end_date"
                                             second-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
-                                            display-options="datepickerFromDisplayOptions"
                                             callback-method="updateReportOptions()"
                                             ev-data-service="evDataService"
                                             ev-event-service="evEventService"
                                             attribute-data-service="attributeDataService">
-                    </complex-zh-date-picker>
+                    </complex-zh-datepicker>
                 </div>
 
-                <!--<div>
-                    <complex-zh-date-picker data-date="reportOptions.end_date"
-                                            data-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
-                                            data-display-options="datepickerToDisplayOptions"
-                                            data-callback-method="updateReportOptions()"
+            </div> -->
+
+            <div ng-if="entityType === 'balance-report'" class="flex-row">
+                <div>
+                    <complex-zh-datepicker date="datesData.to"
+                                            datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
+                                            callback-method="onReportDateChange()"
                                             ev-data-service="evDataService"
                                             ev-event-service="evEventService"
-                                            data-attribute-data-service="attributeDataService">
-                    </complex-zh-date-picker>
-                </div>-->
+                                            attribute-data-service="attributeDataService"
+                                            is-disabled="viewContext === 'split_panel' && reportLayoutOptions.useDateFromAbove"></complex-zh-datepicker>
+                </div>
+            </div>
 
+            <div ng-if="entityType === 'pl-report' || entityType === 'transaction-report'" class="flex-row">
+                <div>
+                    <complex-zh-datepicker date="datesData.from"
+                                            datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
+                                            second-date="datesData.to"
+                                            second-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
+                                            callback-method="onReportDateChange()"
+                                            ev-data-service="evDataService"
+                                            ev-event-service="evEventService"
+                                            attribute-data-service="attributeDataService"
+                                            is-disabled="viewContext === 'split_panel' && reportLayoutOptions.useDateFromAbove">
+                    </complex-zh-datepicker>
+                </div>
             </div>
 
         </div>

@@ -1,4 +1,5 @@
 import AutosaveLayoutService from "../../services/autosaveLayoutService";
+import evEvents from "../../services/entityViewerEvents";
 
 'use strict';
 
@@ -327,6 +328,7 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
 
 					/* listLayout.name = res.data.name
 					listLayout.user_code = res.data.user_code; */
+					listLayout.content_type = scope.evDataService.getContentType();
 					listLayout.name = 'New layout';
 					listLayout.user_code = '';
 
@@ -384,7 +386,8 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
 							datepickerOptions: {
 								reportFirstDatepicker: {},
 								reportLastDatepicker: {}
-							}
+							},
+							useDateFromAbove: true
 						};
 
 						const todaysDate = moment(new Date()).format('YYYY-MM-DD');
@@ -416,10 +419,12 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
 
 							scope.evEventService.dispatchEvent(evEvents.LAYOUT_NAME_CHANGE);
 							scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+							scope.evEventService.dispatchEvent(evEvents.TOGGLE_USE_REPORT_DATE_FROM_ABOVE);
 							// middlewareService.setNewEntityViewerLayoutName(listLayout.name);
 
-							scope.$apply(); // needed to update layout name inside gTopPartDirective
-
+							setTimeout(function () {
+								scope.$apply(); // needed to update layout name inside gTopPartDirective
+							}, 0);
 							/*uiService.createListLayout(scope.entityType, listLayout).then(() => {
 								toastNotificationService.success("Layout was successfully created");
 							});

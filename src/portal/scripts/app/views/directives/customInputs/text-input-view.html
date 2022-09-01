@@ -37,8 +37,7 @@
                     <button data-ng-if="!noIndicatorBtn"
                           class="custom-input-indicator-btn"
                           data-ng-click="openTextInDialog($event)"
-                          data-ng-disabled="isReadonly"
-                          ng-disabled="isDisabled">
+                          ng-disabled="isDisabled || isReadonly">
                         <span class="material-icons">edit</span>
                     </button>
 

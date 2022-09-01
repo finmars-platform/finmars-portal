@@ -747,7 +747,7 @@ export default (function () {
 	portal.directive('gLayoutsManager', ['$mdDialog', '$state', 'usersService', 'globalDataService', 'backendConfigurationImportService', require('./app/directives/groupTable/gLayoutsManagerComponent.js')]);
 	portal.directive('dashboardLayoutsManagerComponent', ['$mdDialog', '$state', 'backendConfigurationImportService', require('./app/directives/dashboardLayoutsManagerComponent.js')]);
 
-	portal.controller('GReportSettingsDialogController', ['$scope', '$mdDialog', 'reportOptions', 'options', require('./app/controllers/dialogs/gReportSettingsDialogController')]);
+	portal.controller('GReportSettingsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/gReportSettingsDialogController')]);
 	portal.controller('GEntityViewerSettingsDialogController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', require('./app/controllers/dialogs/gEntityViewerSettingsDialogController')]);
 	portal.controller('PeriodsEditorDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/periodsEditorDialogController')]);
 	portal.controller('DateTreeDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/dateTreeDialogController')]);
@@ -788,8 +788,8 @@ export default (function () {
 	portal.directive('instrumentEventActionResolver', ['$mdDialog', require('./app/directives/instrumentEventActionResolverDirective')]);
 	portal.directive('classifierModalResolver', ['$mdDialog', require('./app/directives/classifierModalResolverDirective')]);
 	portal.directive('zhDatePicker', ['pickmeup', require('./app/directives/zhDatePickerDirective')]);
-	portal.directive('complexZhDatePicker', ['$mdDialog', 'pickmeup', require('./app/directives/complexZhDatePickerDirective')]);
-	portal.directive('complexDatepicker', ['$mdDialog', 'pickmeup', require('./app/directives/complexDatepickerDirective')]);
+	portal.directive('complexZhDatepicker', ['$mdDialog', require('./app/directives/customInputs/complexDatepickers/complexZhDatePickerDirective')]);
+	portal.directive('complexDatepicker', ['$mdDialog', 'pickmeup', 'toastNotificationService', require('./app/directives/customInputs/complexDatepickers/complexDatepickerDirective')]);
 	portal.directive('dateTreeInput', ['$mdDialog', require('./app/directives/dateTreeInputDirective')]);
 	portal.directive('dragDialog', [require('./app/directives/dragDialogDirective')]);
 	portal.directive('membersGroupsTable', [require('./app/directives/membersGroupsTableDirective')]);

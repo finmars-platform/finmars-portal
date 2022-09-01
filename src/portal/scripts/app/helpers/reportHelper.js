@@ -637,58 +637,80 @@
 
 	};
 
-	var getReportDateValue = function (layout, dateKey) {
+    const reportDateProperties = {
+        'balance-report': [null, 'report_date'],
+        'pl-report': ['pl_first_date', 'report_date'],
+        'transaction-report': ['begin_date', 'end_date']
+    };
 
-		var dateFromKeys = ['begin_date', 'pl_first_date'];
-		var dateToKeys = ['report_date', 'end_date'];
+    /**
+     *
+     * @param {String} entityType
+     * @returns {Array}
+     * @memberof module:reportHelper
+     */
+    const getDateProperties = function (entityType) {
+        return reportDateProperties[entityType];
+    };
 
-		var dateFrom = dateFromKeys.indexOf(dateKey) > -1;
-		var dateTo = dateToKeys.indexOf(dateKey) > -1;
-		var dateExpr;
+    /**
+     *
+     * @param reportOptions
+     * @param reportLayoutOptions
+     * @param {string} dateKey - name of property where date stored
+     * @returns {Promise<string|null>}
+     * @memberof module:reportHelper
+     */
+    var getReportDate = function (reportOptions, reportLayoutOptions, dateKey) {
 
-		if (!dateFrom && !dateTo) {
+        var dateFromKeys = ['begin_date', 'pl_first_date'];
+        var dateToKeys = ['report_date', 'end_date'];
 
-			console.error("key is not report date key: " + dateKey);
+        var dateFrom = dateFromKeys.indexOf(dateKey) > -1;
+        var dateTo = dateToKeys.indexOf(dateKey) > -1;
+        var dateExpr;
 
-			return new Promise(function (resolve) {resolve(null)});
+        if (!dateFrom && !dateTo) {
 
-		}
+            console.error("key is not report date key: " + dateKey);
 
-		var rlOptions = layout.data.reportLayoutOptions;
+            return new Promise(function (resolve) {resolve(null)});
 
-		if (rlOptions && rlOptions.datepickerOptions) {
+        }
 
-			if (dateFrom) {
-				dateExpr = rlOptions.datepickerOptions.reportFirstDatepicker.expression;
+        if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
-			} else if (dateTo) {
-				dateExpr = rlOptions.datepickerOptions.reportLastDatepicker.expression;
-			}
+            if (dateFrom) {
+                dateExpr = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression;
 
-			if (dateExpr) {
+            } else if (dateTo) {
+                dateExpr = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression;
+            }
 
-				return new Promise(function (resolve) {
+            if (dateExpr) {
 
-					expressionsService.getResultOfExpression({'expression': dateExpr}).then(function (data) {
+                return new Promise(function (resolve) {
 
-						resolve(data.result);
+                    expressionsService.getResultOfExpression({'expression': dateExpr}).then(function (data) {
 
-					}).catch(function (error) {
-						console.error('Error occurred while trying to evaluate: ' + dateExpr, error);
-						resolve(null);
-					});
+                        resolve(data.result);
 
-				});
+                    }).catch(function (error) {
+                        console.error('Error occurred while trying to evaluate: ' + dateExpr, error);
+                        resolve(null);
+                    });
 
-			}
+                });
 
-		}
+            }
 
-		return new Promise(function (resolve) {
-			resolve(layout.data.reportOptions[dateKey]);
-		});
+        }
 
-	};
+        return new Promise(function (resolve) {
+            resolve(reportOptions[dateKey]);
+        });
+
+    };
 
     module.exports = {
         convertItemsToFlat: convertItemsToFlat,
@@ -696,7 +718,9 @@
         extendAttributes: extendAttributes,
         calculateMarketValueAndExposurePercents: calculateMarketValueAndExposurePercents,
 		cleanReportOptionsFromTmpProps: cleanReportOptionsFromTmpProps,
-		getReportDateValue: getReportDateValue,
+
+        getDateProperties: getDateProperties,
+        getReportDate: getReportDate,
     }
 
 }());

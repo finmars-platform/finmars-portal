@@ -404,7 +404,7 @@
 
 					if (scope.popupEventService) {
 
-						scope.popupEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+						scope.popupEventService.dispatchEvent(popupEvents.CLOSE_POPUP, {onCancelCallback: false});
 
 					} else {
 						removePopUp();
@@ -412,11 +412,11 @@
 
 				};
 
-				const cancelPopup = function () {
+				const cancelPopup = function (argumentsObj) {
 
 					removePopUp();
 
-					if (scope.onCancel) {
+					if (scope.onCancel && (!argumentsObj || argumentsObj.onCancelCallback !== false)) {
 						scope.onCancel();
 					}
 
