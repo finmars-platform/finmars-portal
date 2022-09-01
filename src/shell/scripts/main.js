@@ -27,6 +27,7 @@ import middlewareService from "./app/services/middlewareService.js";
 import usersService from "./app/services/usersService.js";
 import usersGroupService from "./app/services/usersGroupService";
 import backendConfigurationImportService from "../../portal/scripts/app/services/backendConfigurationImportService";
+import systemMessageService from "../../portal/scripts/app/services/systemMessageService";
 
 import commonDialogsService from "./app/services/commonDialogsService.js";
 
@@ -162,6 +163,7 @@ app.service('middlewareService', [middlewareService]);
 app.service('usersService', ['globalDataService', usersService]);
 app.service('usersGroupService', ['globalDataService', usersGroupService]);
 app.service('backendConfigurationImportService', ['cookieService', backendConfigurationImportService]);
+app.service('systemMessageService', [systemMessageService]);
 
 app.service('commonDialogsService', ['$mdDialog', commonDialogsService]);
 

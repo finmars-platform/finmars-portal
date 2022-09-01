@@ -5,10 +5,10 @@
 
     'use strict';
 
-    var systemMessageService = require('../../services/systemMessageService');
+    // var systemMessageService = require('../../services/systemMessageService');
 
 
-    module.exports = function processesController($scope, $mdDialog) {
+    module.exports = function systemMEssagesController($scope, $mdDialog, systemMessageService) {
 
         var vm = this;
 

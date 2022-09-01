@@ -1,7 +1,8 @@
 .md-button.link-button {
   background-color: #ffffff;
   color: #f05a22;
-  font-weight: 700;
+  // font-weight: 700;
+  font-weight: 500;
   border-radius: 3px;
 
   &:not([disabled]):hover {
@@ -98,4 +99,21 @@ span.material-icons.more-btn {
   top: 20px;
   right: 10px;
   color: @gray;
+}
+
+span.material-icons.unread-notifications {
+  position: relative;
+
+  &:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 2px;
+    right: 1px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #f05a22;
+    border: 2px solid #f2f1f1;
+  }
 }

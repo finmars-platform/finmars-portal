@@ -9,7 +9,7 @@ const metaService = require('../services/metaService'); // TODO inject into angu
 
 const evRvLayoutsHelper = require('../helpers/evRvLayoutsHelper');
 
-export default function ($mdDialog, $state, $transitions, cookieService, broadcastChannelService, middlewareService, authorizerService, usersService, globalDataService) {
+export default function ($mdDialog, $state, $transitions, cookieService, broadcastChannelService, middlewareService, authorizerService, usersService, globalDataService, systemMessageService) {
 
     return {
         restrict: 'E',
@@ -22,6 +22,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
             if (!scope.openedInside) throw new Error("mainHeaderDirective: openedInside does not set");
             // let user;
 			const user = globalDataService.getUser();
+			const baseUrl = baseUrlService.resolve();
             scope.currentLocation = '';
             scope.currentMasterUser = globalDataService.getMasterUser();
             scope.userName = '';
@@ -29,6 +30,30 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 			scope.showAutosaveLayout = false;
 
 			scope.member = globalDataService.getMember();
+
+			scope.notiPopupData = {
+				noti: [],
+				SECTIONS: {
+					1: 'Events',
+					2: 'Transactions',
+					3: 'Instruments',
+					4: 'Data',
+					5: 'Prices',
+					6: 'Report',
+					7: 'Import',
+					8: 'Activity log',
+					9: 'Schedules',
+					10: 'Other'
+				},
+				homepageUrl: baseUrl + '/v/',
+				formatDate: function (date) {
+					if ( moment().diff(moment(date), 'hours') > 12 ) {
+						return moment( date ).format('DD.MM.YYYY HH:mm');
+					}
+
+					return moment( date ).fromNow();
+				}
+			};
 
             let deregisterOnSuccessTransitionHook;
 
@@ -77,6 +102,21 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                 });
 
             };
+
+			const loadNoti = function () {
+
+				const options = {
+					pageSize: 3,
+					filters: {
+						only_new: true
+					}
+				};
+
+				systemMessageService.getList(options).then(messagesData => {
+					scope.notiPopupData.noti = messagesData.results;
+				});
+
+			};
 
             scope.toggleBookmarksPanel = function () {
 
@@ -360,6 +400,10 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                 getMasterUsersList().then(resData => {
                     scope.$apply();
                 });
+
+				loadNoti();
+
+				scope.notiPopupData.homepageUrl = baseUrl + '/v/';
 
                 websocketService.addEventListener('master_user_change', function (data) {
 
