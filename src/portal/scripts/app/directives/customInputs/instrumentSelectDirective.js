@@ -296,8 +296,6 @@
 
                 var closeDropdownMenu = function (updateScope) {
 
-                    console.trace();
-
                     inputContainer.classList.remove('custom-input-focused');
 
                     if (scope.itemName) scope.inputText = JSON.parse(JSON.stringify(scope.itemName));

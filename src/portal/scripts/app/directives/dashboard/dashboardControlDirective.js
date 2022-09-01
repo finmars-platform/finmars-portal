@@ -238,7 +238,7 @@
 
 					} */
 					if (rlOptions && reportDateKeys.indexOf(key) > -1) {
-						return reportHelper.getReportDateValue(layout, key);
+						return reportHelper.getReportDate(layout.data.reportOptions, layout.data.reportLayoutOptions, key);
 					}
 
 					return new Promise(function (resolve) {

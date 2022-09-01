@@ -1209,6 +1209,23 @@
       }
     }
 
+    md-checkbox {
+      margin-bottom: 0;
+
+      .md-label {
+        margin-top: 2px;
+      }
+    }
+
+    md-checkbox.g-top-link-date-checkbox {
+      margin-right: 16px;
+      margin-left: 8px;
+
+      .md-label {
+        white-space: nowrap;
+      }
+    }
+
     .g-top-part-left {
 
       .g-top-button.small-button-icon {
@@ -2553,19 +2570,59 @@ body.md-dialog-is-showing {
   position: relative;
 
   .complex-datepicker-popup-btn {
-    display: flex;
+    /*display: flex;
     flex-direction: row;
     align-items: center;
     min-width: 78px;
     min-height: 0;
     height: 26px;
     padding: 2px 26px 1px 2px;
+    margin: 0;*/
+    display: block;
+    min-height: 0;
+    min-width: 78px;
+    padding: 0;
     margin: 0;
+
+    &:hover {
+      background-color: initial;
+    }
   }
+
+  .complex-datepicker-popup-btn:not([disabled]) {
+    .complex-datepicker-sel-value:hover {
+      opacity: .5;
+    }
+  }
+
+  .complex-datepicker-sel-value {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 26px;
+    padding: 2px 26px 1px 2px;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+
 
   &.range-of-dates {
     .complex-datepicker-popup-btn {
       min-width: 156px;
+    }
+  }
+
+  .complex-datepicker-custom-input {
+    // cursor: pointer;
+
+    .custom-input:not([disabled]) {
+      cursor: pointer;
+    }
+
+    .custom-input-indicator-btn:hover {
+      opacity: 1;
     }
   }
 
@@ -3017,6 +3074,10 @@ body.md-dialog-is-showing {
   .g-report-settings-field {
     display: block;
     width: 280px;
+  }
+
+  .complex-datepicker-popup-btn {
+    width: 100%;
   }
 
 }
