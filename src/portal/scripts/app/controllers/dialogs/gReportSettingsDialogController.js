@@ -18,11 +18,17 @@
     var transactionClassService = require('../../services/transaction/transactionClassService');
 
 
-    module.exports = function ($scope, $mdDialog, reportOptions, options) {
+    module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
 
-        vm.reportOptions = JSON.parse(JSON.stringify(reportOptions));
+        vm.evDataService = data.evDataService;
+        vm.evEventService = data.evEventService;
+        vm.attributeDataService = data.attributeDataService;
+
+        // vm.reportOptions = JSON.parse(JSON.stringify(reportOptions));
+        vm.reportOptions = JSON.parse(JSON.stringify(vm.evDataService.getReportOptions()));
+        vm.reportLayoutOptions = JSON.parse(JSON.stringify(vm.evDataService.getReportLayoutOptions()));
 
         if (vm.reportOptions.accounts_cash && vm.reportOptions.accounts_cash.length) {
             vm.accountsCash = vm.reportOptions.accounts_cash[0];
@@ -160,8 +166,12 @@
             vm.tableFontSize = vm.tableFontSizeOptions[0].id;
         }
 
-        vm.entityType = options.entityType;
-        vm.disableChangesSaving = options.disableChangesSaving; // when opened inside dashboard
+        /* vm.entityType = options.entityType;
+        vm.disableChangesSaving = options.disableChangesSaving; // when opened inside dashboard */
+        vm.entityType = vm.evDataService.getEntityType();
+        vm.disableChangesSaving = data.disableChangesSaving; // when opened inside dashboard
+
+        vm.disableDatepicker = false;
 
         vm.readyStatus = {
             pricingPolicy: false,
@@ -354,8 +364,6 @@
             return ready;
         };
 
-
-
         vm.saveSettings = function () {
 
             // console.log('saveSettings.reportOptions', vm.reportOptions);
@@ -378,7 +386,14 @@
 
             vm.reportOptions.complex_transaction_statuses_filter = vm.complex_transaction_statuses_filter.join(',')
 
-            $mdDialog.hide({status: 'agree', data: vm.reportOptions});
+            $mdDialog.hide({
+                status: 'agree',
+                data: {
+                    reportOptions: vm.reportOptions,
+                    reportLayoutOptions: vm.reportLayoutOptions
+                }
+            });
+
         };
 
         vm.cancel = function () {
@@ -467,13 +482,18 @@
 
 			}
 
-			if (!vm.currencies.length) {
-                await getEcosystemDefaultCurrencies();
+            let ecosystemDefProms = [];
+            if (!vm.currencies.length) {
+                // await getEcosystemDefaultCurrencies();
+                ecosystemDefProms.push(getEcosystemDefaultCurrencies());
             }
 
             if (!vm.pricingPolicies.length) {
-                await getEcosystemDefaultPricingPolicies();
+                // await getEcosystemDefaultPricingPolicies();
+                ecosystemDefProms.push(getEcosystemDefaultPricingPolicies());
             }
+
+            await Promise.allSettled(ecosystemDefProms);
 
             if (vm.reportOptions.complex_transaction_statuses_filter) {
                 vm.complex_transaction_statuses_filter = vm.reportOptions.complex_transaction_statuses_filter.split(',')
@@ -489,6 +509,9 @@
             // vm.getStrategies3();
 
             vm.getCustomFields();
+
+            const viewContext = vm.evDataService.getViewContext();
+            vm.disableDatepicker = viewContext === 'split_panel' && vm.reportLayoutOptions.useDateFromAbove;
 
             uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
 
@@ -510,7 +533,6 @@
                 })
 
                 $scope.$apply();
-
 
             });
 
