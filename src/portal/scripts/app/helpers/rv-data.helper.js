@@ -965,31 +965,12 @@
 
     var setGroupSettings = function (evDataService, group, groupSettings) {
 
-        // var member = evDataService.getCurrentMember()
         var layout = evDataService.getListLayout();
         var contentType = evDataService.getContentType();
         var groups = evDataService.getGroups();
 
-        /*if (!member) {
-            throw new Error("Current Member is not set")
-        }
-
-        if (!contentType) {
-            throw new Error("Content type is not set")
-        }
-
-        var member_id = member.id
-
-        var reportData
-        var rawReportData = localStorage.getItem('report_data')
-
-        if (rawReportData) {
-            reportData = JSON.parse(rawReportData)
-        } else {
-            reportData = {}
-        } */
 		var reportData = localStorageService.getReportDataForLayout(contentType, layout.user_code);
-        // reportData[member_id][contentType][layout.user_code]['groups'][groupSettings.full_path] = groupSettings;
+
 		if (!reportData['groups']) {
 			reportData['groups'] = {}
 		}
@@ -1002,20 +983,6 @@
 
 		reportData['groups'][full_path_prop] = groupSettings;
 
-		/*reportData.groupsList = groups.map(group => {
-
-			var groupObj = {key: group.key};
-			if (group.report_settings && group.report_settings.is_level_folded) {
-
-				groupObj.report_settings = {
-					is_level_folded: true
-				}
-
-			}
-
-			return groupObj;
-
-		});*/
 		reportData.groupsList = [];
 
 		groups.forEach(group => {
@@ -1038,9 +1005,6 @@
 
 		});
 
-		// if (!reportData.fullyFoldedGroups.length) delete reportData.fullyFoldedGroups;
-
-        // localStorage.setItem('report_data', JSON.stringify(reportData));
 		localStorageService.cacheReportDataForLayout(contentType, layout.user_code, reportData);
 
     }
