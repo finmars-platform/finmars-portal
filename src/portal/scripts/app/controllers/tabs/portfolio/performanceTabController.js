@@ -49,12 +49,13 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 
 				vm.creatingInstr = true;
 
-				portfolioRegisterService.create(res.data).then((registerData) => {
-
-					portfoliosRegistersList.push(registerData);
+				portfolioRegisterService.create(res.data).then(registerData => {
 
 					const rowObj = getRowForRelInstrGt(registerData, portfoliosRegistersList.length);
+
 					relationInstrumentsGtData.body.push(rowObj);
+
+					portfoliosRegistersList.push(registerData);
 
 					toastNotificationService.success("Register " + res.data.name + " created.");
 
@@ -108,6 +109,7 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 						if (res.status === 'agree') {
 
 							const registerUc = rowData.key;
+
 							const regIndex = portfoliosRegistersList.findIndex(register => register.user_code === registerUc);
 							const register = portfoliosRegistersList[regIndex];
 
@@ -118,7 +120,8 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 								toastNotificationService.success(`Instrument ${instrName} and it's relation to portfolio ${vm.entity.short_name} were deleted.`);
 								portfoliosRegistersList.splice(regIndex, 1);
 
-								vm.relInstrGtDataService.deleteRows(rowData);
+								const rowToDelete = vm.relInstrGtDataService.getRowByKey(rowData.key);
+								vm.relInstrGtDataService.deleteRows(rowToDelete);
 
 								$scope.$apply();
 
@@ -176,7 +179,10 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 						value: null,
 					},
 					styles: {
-						'grid-table-cell': {'width': '384px'}
+						'grid-table-cell-elem': {
+							'min-width': '240px',
+							'width': '30%',
+						}
 					},
 				},
 				{
@@ -188,7 +194,10 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 						value: null,
 					},
 					styles: {
-						'grid-table-cell': {'width': '354px'}
+						'grid-table-cell-elem': {
+							'min-width': '210px',
+							'width': '30%',
+						}
 					},
 				},
 				{
@@ -200,7 +209,10 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 						value: null,
 					},
 					styles: {
-						'grid-table-cell': {'width': '250px'}
+						'grid-table-cell-elem': {
+							'min-width': '150px',
+							'width': '18%'
+						}
 					},
 				},
 				{
@@ -212,7 +224,10 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 						value: null,
 					},
 					styles: {
-						'grid-table-cell': {'width': '275px'}
+						'grid-table-cell-elem': {
+							'min-width': '175px',
+							'width': '18%',
+						}
 					},
 				},
 				{
@@ -227,7 +242,7 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 					},
 					order: 4,
 					styles: {
-						'grid-table-cell': {'width': '65px'}
+						'grid-table-cell-elem': {'width': '65px'}
 					},
 				},
 			]
@@ -306,7 +321,10 @@ export default function PortfolioPerformanceTabController ($scope, $state, $mdDi
 				order: column.order,
 				sorting: column.key !== 'rowActionButton',
 				styles: {
-					'grid-table-cell': {'width': column.styles['grid-table-cell'].width}
+					'grid-table-cell-elem': {
+						'min-width': column.styles['grid-table-cell-elem']['min-width'],
+						'width': column.styles['grid-table-cell-elem'].width
+					}
 				}
 			}
 
