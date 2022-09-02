@@ -148,7 +148,7 @@
                     <md-card-actions layout="row" data-ng-if="item.status == 4" layout-align="space-between center">
 
                         <md-button class="md-raised md-primary {{vm.openProcessing ? 'disabled-btn' : ''}}"
-                                   data-ng-click="vm.startMasterUser(item)">Start
+                                   data-ng-click="vm.startMasterUser($event, item)">Start
                         </md-button>
 
                     </md-card-actions>
