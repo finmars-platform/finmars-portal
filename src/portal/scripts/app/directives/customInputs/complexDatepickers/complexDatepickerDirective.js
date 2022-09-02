@@ -5,15 +5,13 @@
 
 	'use strict';
 
-	const metaService = require('../services/metaService');
-	const expressionService = require('../services/expression.service');
+	const metaService = require('../../../services/metaService');
+	const expressionService = require('../../../services/expression.service');
 
-	const popupEvents = require('../services/events/popupEvents');
-	const evEvents = require('../services/entityViewerEvents');
+	const popupEvents = require('../../../services/events/popupEvents');
+	const evEvents = require('../../../services/entityViewerEvents');
 
-	const toastNotificationService = require('../../../../core/services/toastNotificationService');
-
-	module.exports = function ($mdDialog, pickmeup) {
+	module.exports = function ($mdDialog, pickmeup, toastNotificationService) {
 
 		return {
 			restrict: 'E',
@@ -27,7 +25,7 @@
 				attributeDataService: '=',
 				popupEventService: '='
 			},
-			templateUrl: 'views/directives/complex-datepicker-view.html',
+			templateUrl: 'views/directives/customInputs/complexDatepickers/complex-datepicker-view.html',
 			link: function (scope, elem, attrs) {
 
 				scope.rangeOfDates = scope.secondDate !== undefined;
@@ -45,7 +43,7 @@
 				let firstDate, secondDate, secondCalendarElem;
 				let useFromAboveEventIndex, attributeKey;
 
-				scope.inputsModels = {
+				 scope.inputsModels = {
 					date: scope.date,
 					secondDate: null
 				};
@@ -89,6 +87,7 @@
 						parent: dialogContainerWrapElem,
 						targetEvent: $event,
 						autoWrap: true,
+						multiple: true,
 						locals: {
 							item: {expression: datepickerOptionsCopy.expression},
 							data: eeData
@@ -119,7 +118,7 @@
 
 										scope[dateProp] = resData.result;
 										scope.inputsModels[dateProp] = scope[dateProp];
-										scope[datepickerOptsProp].date = resData.result;
+										// scope[datepickerOptsProp].date = resData.result;
 
 										var exprDate = new Date(scope[dateProp]);
 
@@ -958,11 +957,13 @@
 
 					scope.onDateInputChange = onDateInputChange;
 
+					// delete scope.datepickerOptions.secondDate;
+
 					if (scope.rangeOfDates) {
 
 						scope.inputsModels.secondDate = scope.secondDate;
 
-						if (scope.rangeOfDates && moment(scope.date, 'YYYY-MM-DD', true).isValid()) {
+						if (scope.rangeOfDates && moment(scope.secondDate, 'YYYY-MM-DD', true).isValid()) {
 							secondDate = new Date(scope.secondDate);
 						}
 

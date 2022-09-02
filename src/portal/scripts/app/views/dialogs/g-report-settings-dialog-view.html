@@ -19,7 +19,7 @@
 
                 <div class="flex-column">
 
-                    <div class="g-report-settings-row p-b-8" data-ng-if="vm.entityType == 'pl-report'">
+                    <!--<div class="g-report-settings-row p-b-8" data-ng-if="vm.entityType == 'pl-report'">
                         <div class="default-f-s">First Date</div>
                         <date-input model="vm.reportOptions.pl_first_date" class="g-report-settings-field"></date-input>
                     </div>
@@ -28,6 +28,38 @@
                     <div class="g-report-settings-row p-b-8">
                         <div class="default-f-s">Date</div>
                         <date-input model="vm.reportOptions.report_date" class="g-report-settings-field"></date-input>
+                    </div>-->
+
+                    <div ng-if="vm.entityType === 'balance-report'"
+                         class="g-report-settings-row p-b-8">
+                        <div class="default-f-s">Report date</div>
+
+                        <div class="g-report-settings-field">
+                            <complex-zh-datepicker date="vm.reportOptions.report_date"
+                                                   datepicker-options="vm.reportLayoutOptions.datepickerOptions.reportLastDatepicker"
+                                                   ev-data-service="vm.evDataService"
+                                                   ev-event-service="vm.evEventService"
+                                                   attribute-data-service="vm.attributeDataService"
+                                                   is-disabled="vm.disableDatepicker"
+                                                   selector-look="input"></complex-zh-datepicker>
+                        </div>
+                    </div>
+
+                    <div ng-if="vm.entityType === 'pl-report'"
+                         class="g-report-settings-row p-b-8">
+                        <div class="default-f-s">Report date</div>
+
+                        <div class="g-report-settings-field">
+                            <complex-zh-datepicker date="vm.reportOptions.pl_first_date"
+                                                   datepicker-options="vm.reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
+                                                   second-date="vm.reportOptions.report_date"
+                                                   second-datepicker-options="vm.reportLayoutOptions.datepickerOptions.reportLastDatepicker"
+                                                   ev-data-service="vm.evDataService"
+                                                   ev-event-service="vm.evEventService"
+                                                   attribute-data-service="vm.attributeDataService"
+                                                   is-disabled="vm.disableDatepicker"
+                                                   selector-look="input"></complex-zh-datepicker>
+                        </div>
                     </div>
 
                     <div class="g-report-settings-row p-b-8">
@@ -320,7 +352,7 @@
 
                 <div class="flex-column">
 
-                    <div class="g-report-settings-row p-b-8" >
+                    <!--<div class="g-report-settings-row p-b-8" >
                         <div class="default-f-s">Date from</div>
                         <date-input model="vm.reportOptions.begin_date" class="g-report-settings-field"></date-input>
                     </div>
@@ -329,6 +361,21 @@
                     <div class="g-report-settings-row p-b-8">
                         <div class="default-f-s">Date to</div>
                         <date-input model="vm.reportOptions.end_date" class="g-report-settings-field"></date-input>
+                    </div>-->
+                    <div class="g-report-settings-row p-b-8">
+                        <div class="default-f-s">Report date</div>
+
+                        <div class="g-report-settings-field">
+                            <complex-zh-datepicker date="vm.reportOptions.begin_date"
+                                                   datepicker-options="vm.reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
+                                                   second-date="vm.reportOptions.end_date"
+                                                   second-datepicker-options="vm.reportLayoutOptions.datepickerOptions.reportLastDatepicker"
+                                                   ev-data-service="vm.evDataService"
+                                                   ev-event-service="vm.evEventService"
+                                                   attribute-data-service="vm.attributeDataService"
+                                                   is-disabled="vm.disableDatepicker"
+                                                   selector-look="input"></complex-zh-datepicker>
+                        </div>
                     </div>
 
 

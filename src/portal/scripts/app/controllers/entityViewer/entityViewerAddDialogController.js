@@ -189,12 +189,13 @@
             return vm.activeTab && (vm.activeTab === 'permissions' || vm.entityTabs.includes(vm.activeTab));
         };
 
-        vm.entityTabsMenuTplt = vm.sharedLogic.entityTabsMenuTplt;
-        vm.entityTabsMenuPopupData = {viewModel: vm};
-        vm.entityTablePopupClasses = "border-radius-2";
         vm.onPopupSaveCallback = vm.sharedLogic.onPopupSaveCallback;
         vm.onFixedAreaPopupCancel = vm.sharedLogic.onFixedAreaPopupCancel; */
         // < Victor 20020.11.20 #59: fields below needs for new design an fixed area popup >
+		vm.entityTabsMenuTplt = vm.sharedLogic.entityTabsMenuTplt;
+		vm.entityTabsMenuPopupData = {viewModel: vm};
+		vm.entityTablePopupClasses = "border-radius-2";
+
 		vm.onNameToShowChange = vm.sharedLogic.onNameToShowChange;
 
 		vm.getFaField1Classes = vm.sharedLogic.getFaField1Classes;

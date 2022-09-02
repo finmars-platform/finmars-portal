@@ -95,6 +95,10 @@
                                             <md-tooltip class="tooltip_2" md-direction="bottom">Ecosystem is unavailable. Something went wrong, we are working on it.
                                             </md-tooltip>
                                 </span>
+                                <span data-ng-if="item.status == 4" class="mm-ecosystem-error-status">offline
+                                            <md-tooltip class="tooltip_2" md-direction="bottom">Ecosystem is offline.
+                                            </md-tooltip>
+                                </span>
 
                             </div>
                             <div><a class="mm-card-api-url" href="{{'/' + item.base_api_url + '/api/v1/'}}"
@@ -141,6 +145,13 @@
                             </div>
                         </md-card-title-text>
                     </md-card-title>
+                    <md-card-actions layout="row" data-ng-if="item.status == 4" layout-align="space-between center">
+
+                        <md-button class="md-raised md-primary {{vm.openProcessing ? 'disabled-btn' : ''}}"
+                                   data-ng-click="vm.startMasterUser(item)">Start
+                        </md-button>
+
+                    </md-card-actions>
                     <md-card-actions layout="row" data-ng-if="item.status == 1" layout-align="space-between center"
                                      data-ng-if="item.is_initialized">
                         <!--<md-button>Leave</md-button>-->
@@ -156,6 +167,13 @@
                                     <md-button class="md-raised"
                                                data-ng-click="vm.redeployMasterUser($event, item)">
                                         Restart
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-item data-ng-if="item.is_admin">
+                                    <md-button class="md-raised"
+                                               data-ng-click="vm.stopMasterUser($event, item)">
+                                        Stop
                                     </md-button>
                                 </md-menu-item>
 

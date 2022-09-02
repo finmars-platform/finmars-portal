@@ -463,6 +463,81 @@
             return data.reportLayoutOptions;
         }
 
+        /**
+         * Store dates of report when using dates from report above
+         *
+         * @param {String|null=} dateFrom
+         * @param {String=} dateTo
+         * @memberof module:entityViewerDataService
+         */
+        function stashReportDates (dateFrom, dateTo) {
+
+            const entityType = getEntityType();
+            const datesProps = reportHelper.getDateProperties(entityType);
+
+			// if dates were not passed as arguments take them from reportOptions
+			if (dateFrom === undefined && dateTo === undefined) {
+
+				const reportOptions = getReportOptions();
+
+				var dateFromProp = datesProps[0];
+				var dateToProp = datesProps[1];
+
+				if (dateFromProp) {
+					dateFrom = reportOptions[dateFromProp];
+				}
+
+				dateTo = reportOptions[dateToProp];
+
+			}
+
+            let datesData = {
+                dateTo: {
+                    key: datesProps[1],
+                    value: dateTo
+                }
+            };
+
+            if (datesProps[0]) { // balance-report does not have dateFrom
+
+                datesData.dateFrom = {
+                    key: datesProps[0],
+                    value: dateFrom
+                }
+
+            }
+
+            data.reportDatesData = datesData;
+
+        }
+
+        /**
+         * @returns {{dateFrom?: Object, dateTo: Object}|undefined}
+         * @memberof module:entityViewerDataService
+         * */
+        function getStashedReportDates() {
+            return data.reportDatesData || {};
+        }
+
+        function applyStashedReportDates (reportOptions) {
+
+            const datesData = getStashedReportDates();
+
+            if (Object.keys(datesData).length) {
+                if (datesData.dateFrom) {
+                    reportOptions[datesData.dateFrom.key] = datesData.dateFrom.value;
+                }
+
+                reportOptions[datesData.dateTo.key] = datesData.dateTo.value;
+
+            } else {
+                console.error("No dates have been stashed");
+            }
+
+            return reportOptions;
+
+        }
+
         function setStatusData(status) {
             data.status.data = status
         }
@@ -826,6 +901,10 @@
             data.activeObjectFromAbove = obj
         }
 
+        function getActiveObjectFromAbove() {
+            return data.activeObjectFromAbove;
+        }
+
         function clearActiveObject() {
 
             var activeObject = getActiveObject();
@@ -855,10 +934,6 @@
 
         function getActiveObject() {
             return data.activeObject;
-        }
-
-        function getActiveObjectFromAbove() {
-            return data.activeObjectFromAbove;
         }
 
         function setActiveColumnSort(column) {
@@ -1073,7 +1148,7 @@
 
         function getLayoutCurrentConfiguration(isReport) {
 
-            var listLayout = metaHelper.recursiveDeepCopy(getListLayout());
+            let listLayout = metaHelper.recursiveDeepCopy(getListLayout());
 
             listLayout.data.columns = getColumns();
             listLayout.data.grouping = getGroups();
@@ -1095,6 +1170,13 @@
 
                 listLayout.data.reportOptions = metaHelper.recursiveDeepCopy(getReportOptions());
                 listLayout.data.reportLayoutOptions = metaHelper.recursiveDeepCopy(getReportLayoutOptions());
+
+                var viewContext = getViewContext();
+
+                if (viewContext === 'split_panel' && listLayout.data.reportLayoutOptions.useDateFromAbove) {
+                    listLayout.data.reportOptions = applyStashedReportDates(listLayout.data.reportOptions);
+                }
+
                 listLayout.data.rootGroupOptions = metaHelper.recursiveDeepCopy(getRootGroupOptions());
 
                 if (getExportOptions()) {
@@ -1667,6 +1749,9 @@
             getReportOptions: getReportOptions,
             setReportLayoutOptions: setReportLayoutOptions,
             getReportLayoutOptions: getReportLayoutOptions,
+            stashReportDates: stashReportDates,
+            getStashedReportDates: getStashedReportDates,
+            applyStashedReportDates: applyStashedReportDates,
 
             setStatusData: setStatusData,
             getStatusData: getStatusData,

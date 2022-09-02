@@ -347,7 +347,7 @@
 
 				var dateValProm = new Promise(function (resolve) {
 
-					reportHelper.getReportDateValue(layout, field.key).then(function (dateValue) {
+					reportHelper.getReportDate(layout.data.reportOptions, layout.data.reportLayoutOptions, field.key).then(function (dateValue) {
 						field.value = dateValue;
 						resolve();
 					});

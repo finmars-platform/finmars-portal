@@ -471,6 +471,10 @@
 
 			return new Promise(async function (resolve, reject) {
 
+				if (typeof layout.data.reportLayoutOptions.useDateFromAbove !== 'boolean') {
+					layout.data.reportLayoutOptions.useDateFromAbove = true;
+				}
+
 				vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
 
 				var reportOptions = vm.entityViewerDataService.getReportOptions();
@@ -511,10 +515,10 @@
 						resolve();
 					}); */
 
-					var calcReportDateOptions = {
-						noDateExpr_0: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 0),
-						noDateExpr_1: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 1)
-					}
+                        var calcReportDateOptions = {
+                            noDateFromExpr: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 0),
+                            noDateToExpr: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 1)
+                        }
 
 					await sharedLogicHelper.calculateReportDatesExprs(calcReportDateOptions);
 
