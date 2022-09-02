@@ -408,6 +408,18 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
         }
 
+        vm.startMasterUser = function ($event, item) {
+            profileAuthorizerService.startMasterUser(item.base_api_url).then(function (){
+                vm.getMasterUsersList();
+            })
+        }
+
+        vm.stopMasterUser = function ($event, item) {
+            profileAuthorizerService.stopMasterUser(item.base_api_url).then(function (){
+                vm.getMasterUsersList();
+            })
+        }
+
         vm.init = function () {
             vm.getMasterUsersList();
             vm.getInvites();
