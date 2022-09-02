@@ -243,7 +243,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
             "name": "",
 			"user_code": "",
 			"content_type": "",
-			"data": {
+            "data": {
                 "entityType": null,
                 "folding": false,
                 "sorting": {

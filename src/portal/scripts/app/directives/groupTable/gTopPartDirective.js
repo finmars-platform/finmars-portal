@@ -7,6 +7,7 @@
 
     var metaService = require('../../services/metaService');
     var evEvents = require('../../services/entityViewerEvents');
+    var reportHelper = require('../../helpers/reportHelper');
     var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
     const ecosystemDefaultService = require('../../services/ecosystemDefaultService');
@@ -29,6 +30,7 @@
                 scope.isReport = metaService.isReport(scope.entityType) || false;
                 scope.reportOptions = scope.evDataService.getReportOptions();
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+                scope.viewContext = scope.evDataService.getViewContext();
 
                 scope.globalTableSearch = ''
 
@@ -37,6 +39,9 @@
                 };
 
                 let listLayout = scope.evDataService.getListLayout();
+
+                let dateFromKey;
+                let dateToKey;
 
                 if (listLayout && listLayout.name) {
                     scope.layoutData.name = listLayout.name;
@@ -47,7 +52,7 @@
                     evDataService: scope.evDataService,
                     evEventService: scope.evEventService,
                     spExchangeService: scope.spExchangeService
-                }
+                };
 
                 scope.onGlobalTableSearchChange = function () {
 
@@ -101,26 +106,31 @@
 
                 var openReportSettings = function ($event) {
 
-                    var reportOptions = scope.evDataService.getReportOptions();
+                    // var reportOptions = scope.evDataService.getReportOptions();
 
                     $mdDialog.show({
                         controller: 'GReportSettingsDialogController as vm',
                         templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
+                        multiple: true,
                         locals: {
-                            reportOptions: reportOptions,
+                            /*reportOptions: reportOptions,
                             options: {
                                 entityType: scope.entityType
+                            }*/
+                            data: {
+                                evDataService: scope.evDataService,
+                                evEventService: scope.evEventService,
+                                attributeDataService: scope.attributeDataService
                             }
                         }
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
 
-                            reportOptions = res.data;
-
-                            scope.evDataService.setReportOptions(reportOptions);
+                            scope.evDataService.setReportLayoutOptions(res.data.reportLayoutOptions);
+                            scope.evDataService.setReportOptions(res.data.reportOptions);
 
                             scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
 
@@ -154,6 +164,18 @@
 
                 scope.onSettingsClick = scope.isReport ? openReportSettings : openEntityViewerSettings;
 
+                var datesKeysData = [
+                    {
+                        'pl-report': 'pl_first_date',
+                        'transaction-report': 'begin_date',
+                    },
+                    {
+                        'balance-report': 'report_date',
+                        'pl-report': 'report_date',
+                        'transaction-report': 'end_date',
+                    }
+                ];
+
                 var prepareReportLayoutOptions = function () {
 
                     scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
@@ -163,20 +185,16 @@
                         scope.reportLayoutOptions.datepickerOptions = {};
                     }
 
-                    if (!scope.reportLayoutOptions.datepickerOptions.hasOwnProperty('reportLastDatepicker')) {
-                        scope.reportLayoutOptions.datepickerOptions.reportLastDatepicker = {};
-                    }
-
                     if (!scope.reportLayoutOptions.datepickerOptions.hasOwnProperty('reportFirstDatepicker')) {
                         scope.reportLayoutOptions.datepickerOptions.reportFirstDatepicker = {};
                     }
 
-                    scope.datepickerFromDisplayOptions = {
-                        position: 'left',
-                        labelName: 'Date from (excl)'
-                    };
+                    if (!scope.reportLayoutOptions.datepickerOptions.hasOwnProperty('reportLastDatepicker')) {
+                        scope.reportLayoutOptions.datepickerOptions.reportLastDatepicker = {};
+                    }
 
-                    scope.datepickerToDisplayOptions = {position: 'left'};
+                    /*scope.reportLayoutOptions.datepickerOptions.reportFirstDatepicker.dateKey = datesKeysData[0][scope.entityType];
+                    scope.reportLayoutOptions.datepickerOptions.reportLastDatepicker.dateKey = datesKeysData[1][scope.entityType];*/
 
                     /* if (scope.entityType === 'pl-report' || scope.entityType === 'transaction-report') {
 
@@ -197,81 +215,138 @@
                     } */
                     /* < preparing data for complexZhDatePickerDirective > */
 
+					if (typeof scope.reportLayoutOptions.useDateFromAbove !== 'boolean') {
+						scope.reportLayoutOptions.useDateFromAbove = true;
+					}
+
                 };
 
-                if (scope.isReport) {
+                const getCurrencies = function () {
 
-                    var currencyOptions = {
+                    const currencyOptions = {
                         pageSize: 1000,
                         page: 1
                     };
 
-                    scope.currencies = [];
+                    new Promise(function (resolve, reject) {
 
-                    var getCurrencies = function () {
+                        currencyService.getListLight(currencyOptions).then(async function (data) {
 
-                        new Promise(function (resolve, reject) {
+                            scope.currencies = scope.currencies.concat(data.results);
 
-                            currencyService.getListLight(currencyOptions).then(async function (data) {
+                            if (!scope.currencies.length) {
 
-                                scope.currencies = scope.currencies.concat(data.results);
+                                const ecosystemDefaultData = await ecosystemDefaultService.getList().then(res => res.results[0]);
+                                scope.currencies.push(ecosystemDefaultData.currency_object);
+                                scope.reportOptions.report_currency = ecosystemDefaultData.currency_object.id;
 
-                                if (!scope.currencies.length) {
+                            }
 
-                                    const ecosystemDefaultData = await ecosystemDefaultService.getList().then(res => res.results[0]);
-                                    scope.currencies.push(ecosystemDefaultData.currency_object);
-                                    scope.reportOptions.report_currency = ecosystemDefaultData.currency_object.id;
+                            if (data.next) {
 
-                                }
+                                currencyOptions.page = currencyOptions.page + 1;
+                                // Victor 2020.12.03 may be not need
+                                //getPricingPolicies(resolve, reject);
 
-                                if (data.next) {
+                            } else {
+                                scope.$apply();
+                                resolve(true);
+                            }
 
-                                    currencyOptions.page = currencyOptions.page + 1;
-                                    // Victor 2020.12.03 may be not need
-                                    //getPricingPolicies(resolve, reject);
-
-                                } else {
-                                    scope.$apply();
-                                    resolve(true);
-                                }
-
-                            }).catch(function (error) {
-                                reject(error);
-                            });
-
+                        }).catch(function (error) {
+                            reject(error);
                         });
+
+                    });
+
+                };
+
+                const updateReportLayoutOptions = function () {
+
+                    const reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
+                    const newReportLayoutOptions = {...reportLayoutOptions, ...scope.reportLayoutOptions};
+
+                    scope.evDataService.setReportLayoutOptions(newReportLayoutOptions);
+
+                };
+
+                if (scope.isReport) {
+
+                    scope.currencies = [];
+                    /*scope.dateFrom = scope.reportOptions[dateFromKey];
+                    scope.dateTo = scope.reportOptions[dateToKey];*/
+                    scope.onReportDateChange = function () {
+
+                        if (scope.viewContext !== 'split_panel' || !scope.reportLayoutOptions.useDateFromAbove) {
+
+                            if (dateFromKey) {
+                                scope.reportOptions[dateFromKey] = scope.datesData.from;
+                            }
+
+                            scope.reportOptions[dateToKey] = scope.datesData.to;
+
+                        }
+
+                        scope.updateReportOptions();
 
                     };
 
-                    getCurrencies();
+                    scope.toggleUseDateFromAbove = function () {
+                        // reportLayoutOptions.useDateFromAbove updated inside entityViewerDataService by mutation
+                        updateReportLayoutOptions();
 
-                    prepareReportLayoutOptions();
+                        scope.evEventService.dispatchEvent(evEvents.TOGGLE_USE_REPORT_DATE_FROM_ABOVE);
+
+                        // event REPORT_OPTIONS_CHANGE dispatched from splitPanelReportViewerController as reaction to TOGGLE_USE_REPORT_DATE_FROM_ABOVE
+                        if (scope.viewContext !== 'split_panel') {
+                            scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+                        }
+
+                    };
+
+                    scope.useDateFromAboveName = scope.entityType === 'balance-report' ? 'Link date' : 'Link date';
 
                 }
 
                 scope.updateReportOptions = function () {
 
                     var reportOptions = scope.evDataService.getReportOptions();
-                    var reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
-
-                    console.log('updateReportOptions.scope.reportOptions', scope.reportOptions);
-
+                    // delete reportLayoutOptions.datepickerOptions.reportFirstDatepicker.secondDate;
                     var newReportOptions = Object.assign({}, reportOptions, scope.reportOptions);
-                    var newReportLayoutOptions = Object.assign({}, reportLayoutOptions, scope.reportLayoutOptions);
-                    // TODO Delete in future
-                    delete newReportLayoutOptions.reportFirstDatepicker;
-                    delete newReportLayoutOptions.reportLastDatepicker;
-                    // < Delete in future >
 
                     scope.evDataService.setReportOptions(newReportOptions);
-                    scope.evDataService.setReportLayoutOptions(newReportLayoutOptions);
 
-                    scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE); // needed to keep tracks of changes for didLayoutChanged from gActionsBlockComponent
+                    updateReportLayoutOptions();
+
+                    scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
 
                     setTimeout(function () {
                         scope.$apply();
                     }, 200)
                 };
+
+                /*scope.toggleUseDateFromAbove = scope.updateReportOptions;
+
+                if (!scope.isRootEntityViewer) {
+
+                    scope.toggleUseDateFromAbove = function () {
+
+                        if (!scope.reportLayoutOptions.useDateFromAbove) {
+
+                            if (dateFromKey) {
+                                scope.reportOptions[dateFromKey] = scope.reportLayoutOptions.datepickerOptions.reportFirstDatepicker.date;
+                            }
+
+                            scope.reportOptions[dateToKey] = scope.reportLayoutOptions.datepickerOptions.reportLastDatepicker.date;
+
+                        }
+
+                        scope.updateReportOptions();
+
+                    };
+
+                }*/
+
 
                 var initEventListeners = function () {
 
@@ -292,15 +367,44 @@
 
                     });
 
-                    scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
-                        scope.reportOptions = scope.evDataService.getReportOptions();
-                    });
+                    if (scope.isReport) {
+
+                        scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
+
+                            scope.reportOptions = scope.evDataService.getReportOptions();
+                            scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
+
+                            if (dateFromKey) {
+                                scope.datesData.from = scope.reportOptions[dateFromKey];
+                            }
+
+                            scope.datesData.to = scope.reportOptions[dateToKey];
+
+                        });
+
+                    }
 
                 };
 
-                var init = async function () {
+                const init = async function () {
 
                     scope.missingPricesData = scope.evDataService.getMissingPrices()
+
+                    if (scope.isReport) {
+
+                        getCurrencies();
+
+                        prepareReportLayoutOptions();
+
+                        [dateFromKey, dateToKey] = reportHelper.getDateProperties(scope.entityType);
+
+                        scope.datesData = {
+                            to: scope.reportOptions[dateToKey]
+                        };
+
+                        if (dateFromKey) scope.datesData.from = scope.reportOptions[dateFromKey];
+
+                    }
 
                     initEventListeners();
                 };
