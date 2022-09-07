@@ -265,7 +265,11 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
             }
         };
 
-        if (isReport) template.data.filters = [];
+        if (isReport) {
+			template.data.filters = [];
+			template.data.reportOptions = {};
+			template.data.reportLayoutOptions = {};
+		}
 
         return [template];
     };
