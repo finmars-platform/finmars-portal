@@ -23,27 +23,91 @@
 
     </div>
 
-    <div class="m-t-8 m-b-8">
+    <div data-ng-if="vm.readyStatus.running && vm.runningItems.length">
 
-        <md-input-container style="width: 90%">
-            <label for="">Search By Id</label>
-            <input aria-label="search" type="text" data-ng-model="vm.queryId" data-ng-change="vm.searchProcesses()">
-        </md-input-container>
+        <h1>Running Tasks</h1>
+
+        <md-card data-ng-repeat="item in vm.runningItems" layout="column" class="m-b-16">
+
+            <div layout="column">
+
+                <div class="m-8">
+                    Process name: <b>{{vm.getProcessName(item)}}</b> ({{item.type}})
+                </div>
+
+                <div class="m-8">
+                    Task id: <b>{{item.id}}</b>
+                </div>
+
+                <div class="m-8">
+                    Celery Task id: <b>{{item.celery_task_id}}</b>
+                </div>
+
+                <div class="m-8">
+                    Created: <b>{{vm.getStartedAt(item)}}</b>
+                </div>
+
+                <div class="m-8">
+                    Member: <b>{{item.member_object.display_name}}</b>
+                </div>
+
+                <div class="m-8">
+                    Status: <b>{{vm.getStatus(item)}}</b>
+                </div>
+
+                <div layout="row" class="m-8">
+
+                    <md-button class="md-raised" data-ng-click="item.show_options = !item.show_options">
+
+                        <span data-ng-if="!item.show_options">Show Options</span>
+                        <span data-ng-if="item.show_options">Hide Options</span>
+
+                    </md-button>
+
+                    <md-button class="md-raised" data-ng-click="vm.requestTaskStatus($event, item)">
+                        Request status
+                    </md-button>
+
+                    <md-button class="md-raised md-warn"  data-ng-click="vm.cancelTask($event, item)">
+                        Cancel Task
+                    </md-button>
+
+
+
+                </div>
+
+
+            </div>
+
+            <div layout="column" class="p-8">
+
+                <div data-ng-if="item.status_object">
+
+                    <div><b>Status</b></div>
+                    <div style="max-height: 300px; overflow: auto">
+                        <pre>{{item.status_object}}</pre>
+                    </div>
+
+                </div>
+
+                <div data-ng-if="item.show_options">
+                    <div><b>Options</b></div>
+                    <div style="max-height: 300px; overflow: auto">
+                        <pre>{{item.options_object}}</pre>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </md-card>
+
 
     </div>
-
-    <div class="m-t-8 m-b-8">
-
-        <md-input-container style="width: 90%">
-            <label for="">Search By Created</label>
-            <input aria-label="search" type="text" data-ng-model="vm.queryCreated" data-ng-change="vm.searchProcesses()">
-        </md-input-container>
-
-    </div>
-
 
     <div data-ng-if="vm.readyStatus.data">
 
+        <h1>Finished Tasks</h1>
 
         <div data-ng-if="vm.items.length">
 
@@ -96,6 +160,10 @@
 
                             <md-button class="md-raised" data-ng-click="vm.requestTaskStatus($event, item)">
                                 Request status
+                            </md-button>
+
+                            <md-button class="md-raised md-warn" data-ng-if="item.type == 'transaction_import'" data-ng-click="vm.abortTransactionImport($event, item)">
+                                Abort Transactions
                             </md-button>
 
                         </div>
@@ -172,7 +240,7 @@
 
 
         <div data-ng-if="!vm.items.length">
-            <h4 class="text-center">No Active Processes</h4>
+            <h4 class="text-center">No Tasks Found</h4>
         </div>
 
     </div>
