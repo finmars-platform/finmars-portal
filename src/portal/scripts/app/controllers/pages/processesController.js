@@ -135,7 +135,61 @@
 
         }
 
-        vm.getData = function () {
+        vm.getRunning = function () {
+
+            vm.readyStatus.running = false;
+
+            return new Promise(function (resolve, reject) {
+
+                var filters = {
+                    status: 'P'
+                }
+
+                if (vm.query) {
+                    filters.query = vm.query;
+                }
+
+                processesService.getList({
+                    pageSize: 40,
+                    page: 1,
+                    filters: filters,
+                    sort: {
+                        direction: "DESC",
+                        key: "created"
+                    }
+                }).then(function (data) {
+
+                    vm.runningItems = data.results;
+
+                    vm.runningItems = vm.runningItems.map(function (item) {
+
+                        try {
+
+                            item.options_object = JSON.stringify(item.options_object, null, 4);
+                            item.result_object = JSON.stringify(item.result_object, null, 4);
+
+                        } catch (error) {
+
+                        }
+
+                        return item;
+
+                    })
+
+                    vm.readyStatus.running = true;
+
+                    resolve();
+
+                    $scope.$apply();
+
+                })
+
+            })
+
+
+        }
+
+        vm.getFinished = function () {
 
             vm.readyStatus.data = false;
 
@@ -144,15 +198,7 @@
                 var filters = {}
 
                 if (vm.query) {
-                    filters.type = vm.query;
-                }
-
-                if (vm.queryId) {
-                    filters.id = vm.queryId
-                }
-
-                if (vm.queryCreated) {
-                    filters.created = vm.queryCreated
+                    filters.query = vm.query;
                 }
 
                 processesService.getList({
@@ -194,6 +240,14 @@
 
             })
 
+
+        }
+
+        vm.getData = function () {
+
+            vm.getRunning();
+            vm.getFinished();
+
         };
 
         vm.toggleShowAll = function () {
@@ -232,6 +286,10 @@
                 return 'Timeout'
             }
 
+            if (item.status === 'C') {
+                return 'Canceled'
+            }
+
 
             return 'Unknown'
 
@@ -249,6 +307,25 @@
                 item.status_object = data
                 $scope.$apply();
             })
+
+        }
+
+        vm.cancelTask = function ($event, item) {
+
+            processesService.cancelTask(item.id).then(function (data) {
+
+                vm.getData();
+            })
+
+        }
+
+        vm.abortTransactionImport = function ($event, item) {
+
+            processesService.abortTransactionImport(item.id).then(function (data) {
+
+                vm.getData();
+            })
+
 
         }
 

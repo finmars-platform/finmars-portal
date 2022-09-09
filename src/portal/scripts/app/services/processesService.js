@@ -17,11 +17,20 @@
         return processesRepository.getStatus(id, celery_task_id);
     }
 
+    var cancelTask = function (id) {
+        return processesRepository.cancelTask(id);
+    }
+
+    var abortTransactionImport = function (id) {
+        return processesRepository.abortTransactionImport(id);
+    }
 
     module.exports = {
         getList: getList,
         deleteByKey: deleteByKey,
-        getStatus: getStatus
+        getStatus: getStatus,
+        cancelTask: cancelTask,
+        abortTransactionImport: abortTransactionImport
     }
 
 
