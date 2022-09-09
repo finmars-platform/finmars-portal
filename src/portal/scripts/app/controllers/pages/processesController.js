@@ -215,6 +215,10 @@
 
                     vm.items = data.results;
 
+                    vm.items = vm.items.filter(function (item) {
+                        return item.status !== 'P'
+                    })
+
                     vm.items = vm.items.map(function (item) {
 
                         try {
