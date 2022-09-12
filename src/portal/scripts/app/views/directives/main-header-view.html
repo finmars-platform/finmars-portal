@@ -25,7 +25,7 @@
 
                     <a ng-if="currentMasterUser"
                        class="md-button header-help-btn"
-                       ui-sref="app.portal.home">
+                       href="{{homepageUrl}}">
                         <ng-md-icon icon="home" size="24">
                             <md-tooltip class="tooltip_1" md-direction="bottom">Homepage</md-tooltip>
                         </ng-md-icon>
@@ -140,7 +140,7 @@
                         </md-button>
                         <md-menu-content>
                             <md-menu-item style="border-bottom: 1px solid #ddd;">
-                                <md-button data-ui-sref="app.profile">Profile</md-button>
+                                <a class="md-button" href="{{profileUrl}}">Profile</a>
                             </md-menu-item>
                             <md-menu-item>
 <!--                                <md-button data-ng-click="logOutMethod()">Log Out</md-button>-->

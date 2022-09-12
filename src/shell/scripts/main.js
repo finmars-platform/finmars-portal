@@ -28,6 +28,7 @@ import usersService from "./app/services/usersService.js";
 import usersGroupService from "./app/services/usersGroupService";
 import backendConfigurationImportService from "../../portal/scripts/app/services/backendConfigurationImportService";
 import systemMessageService from "../../portal/scripts/app/services/systemMessageService";
+import redirectionService from "./app/services/redirectionService";
 
 import commonDialogsService from "./app/services/commonDialogsService.js";
 
@@ -165,9 +166,10 @@ app.service('usersGroupService', ['globalDataService', usersGroupService]);
 app.service('backendConfigurationImportService', ['cookieService', backendConfigurationImportService]);
 app.service('systemMessageService', [systemMessageService]);
 
+app.service('redirectionService', [redirectionService]);
 app.service('commonDialogsService', ['$mdDialog', commonDialogsService]);
 
-app.controller('ShellController', ['$scope', '$state', '$transitions', '$urlService', '$mdDialog', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'globalDataService', shellController]);
+app.controller('ShellController', ['$scope', '$state', '$transitions', '$urlService', '$mdDialog', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'globalDataService', 'redirectionService', shellController]);
 
 app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', warningDialogController]);
 app.controller('InputsDialogController', ['$scope', '$mdDialog', 'data', inputsDialogController]);

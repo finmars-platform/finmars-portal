@@ -8,7 +8,7 @@ import websocketService from "../../../../shell/scripts/app/services/websocketSe
 
 const localStorageService = require('../../../../shell/scripts/app/services/localStorageService'); // TODO inject localStorageService into angular dependencies
 
-export default function ($scope, $state, authorizerService, usersService, globalDataService) {
+export default function ($scope, $state, authorizerService, usersService, globalDataService, redirectionService) {
 
     let vm = this;
 
@@ -80,7 +80,8 @@ export default function ($scope, $state, authorizerService, usersService, global
 
             console.log('PortalController.error', error);
 
-            $state.go('app.profile', {}, {reload: true});
+            // $state.go('app.profile', {}, {reload: true});
+			window.open(redirectionService.getUrl('app.profile'), '_self')
 
         })
 
