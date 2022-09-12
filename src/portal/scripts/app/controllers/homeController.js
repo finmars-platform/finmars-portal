@@ -9,11 +9,11 @@
     // var usersService = require('../services/usersService');
     var uiService = require('../services/uiService');
 
-    var systemMessageService = require('../services/systemMessageService');
+    // var systemMessageService = require('../services/systemMessageService');
     var baseUrlService = require('../services/baseUrlService');
     var baseUrl = baseUrlService.resolve();
 
-    module.exports = function ($scope, $state, $mdDialog, authorizerService, usersService, globalDataService) {
+    module.exports = function ($scope, $state, $mdDialog, authorizerService, usersService, globalDataService, systemMessageService) {
 
         var vm = this;
 
