@@ -1902,6 +1902,7 @@ import uiService from "./uiService";
 
         updateTableAfterEntitiesDeletion: updateTableAfterEntitiesDeletion,
 
+		postEditionActions: postEditionActions,
         openEntityViewerEditDrawer: openEntityViewerEditDrawer,
         openEntityViewerAddDrawer: openEntityViewerAddDrawer,
 

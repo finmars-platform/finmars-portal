@@ -187,11 +187,11 @@
                 }
             })
             .state('app.portal.data.instrument', {
-                url: '/instruments',
+                url: '/instruments?entity',
                 templateUrl: 'views/data/data-instrument-view.html',
                 controller: 'DataInstrumentController as vm',
                 params: {
-                    layoutUserCode: null
+                    layoutUserCode: null,
                 }
             })
             .state('app.portal.data.generated-event', {

@@ -1,27 +1,27 @@
 /**
  * Created by szhitenev on 30.10.2020.
  */
-(function () {
+'use strict';
+const systemMessageRepository = require('../repositories/systemMessageRepository');
+export default function systemMessageService () {
 
-    var systemMessageRepository = require('../repositories/systemMessageRepository');
-
-    var getList = function (options) {
+    const getList = function (options) {
         return systemMessageRepository.getList(options);
     };
 
-    var getByKey = function (id) {
+	const getByKey = function (id) {
         return systemMessageRepository.getByKey(id);
     };
 
-    var update = function(id, account) {
+	const update = function(id, account) {
         return systemMessageRepository.update(id, account);
     };
 
-    var viewFile = function (id) {
+	const viewFile = function (id) {
         return systemMessageRepository.viewFile(id)
     }
 
-    module.exports = {
+    return {
         getList: getList,
         getByKey: getByKey,
         update: update,
@@ -30,4 +30,4 @@
     }
 
 
-}());
+};

@@ -30,23 +30,6 @@
             })
     };
 
-    var getListLight = function (options) {
-
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
-
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio-light/', options),
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
-
     var getByKey = function (id) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
@@ -190,7 +173,6 @@
     module.exports = {
 
         getList: getList,
-        getListLight: getListLight,
         getByKey: getByKey,
         create: create,
         update: update,

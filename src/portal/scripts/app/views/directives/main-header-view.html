@@ -33,6 +33,19 @@
 
                 </div>
 
+                <div ng-if="currentMasterUser">
+                    <md-button custom-popup
+                               popup-template-url="'views/popups/last-notifications-popup-view.html'"
+                               popup-data="notiPopupData"
+                               open-on="click"
+                               position-relative-to="element"
+                               offset-x="11"
+
+                               class="md-button">
+                        <span class="material-icons" ng-class="{'unread-notifications': notiPopupData.noti.length}">notifications</span>
+                    </md-button>
+                </div>
+
                 <div ng-if="openedInside === 'portal'">
 
                     <md-button class="md-button header-cloud-layout-btn"

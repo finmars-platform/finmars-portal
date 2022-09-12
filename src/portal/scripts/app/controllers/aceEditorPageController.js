@@ -9,7 +9,6 @@
     // var usersService = require('../services/usersService');
     var uiService = require('../services/uiService');
 
-    var systemMessageService = require('../services/systemMessageService');
     var expressionService = require('../services/expression.service');
 
     module.exports = function ($scope, $state, $mdDialog) {
