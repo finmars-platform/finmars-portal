@@ -17,7 +17,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'active_processes/active_processes/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/active_processes/active_processes/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -34,7 +34,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'active_processes/active_processes/' + id + '/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/active_processes/active_processes/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -57,7 +57,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'active_processes/active_processes/' + id + '/status/?celery_task_id=' + celery_task_id),
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/active_processes/active_processes/' + id + '/status/?celery_task_id=' + celery_task_id,
             {
                 method: 'GET',
                 credentials: 'include',
@@ -69,12 +69,55 @@
             })
     };
 
+    var cancelTask = function (id) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/active_processes/active_processes/' + id + '/cancel/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                data: JSON.stringify({
+                    'action': 'cancel'
+                })
+            })
+    };
+
+    var abortTransactionImport = function (id) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/active_processes/active_processes/' + id + '/abort-transaction-import/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                data: JSON.stringify({
+                    'action': 'abort-transaction-import'
+                })
+            })
+    };
 
     module.exports = {
 
         deleteByKey: deleteByKey,
         getList: getList,
-        getStatus: getStatus
+        getStatus: getStatus,
+        cancelTask: cancelTask,
+        abortTransactionImport: abortTransactionImport
     }
 
 }());

@@ -303,6 +303,30 @@ export default function (xhrService, cookieService) {
         })
     }
 
+    const startMasterUser = function (base_api_url) {
+
+        return xhrService.fetch(authorizerUrl + '/master-user-start/?base_api_url=' + base_api_url, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('access_token')
+            }
+        })
+    }
+
+    const stopMasterUser = function (base_api_url) {
+
+        return xhrService.fetch(authorizerUrl + '/master-user-stop/?base_api_url=' + base_api_url, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                'Authorization': 'Token ' + cookieService.getCookie('access_token')
+            }
+        })
+    }
+
     const downloadUpdateForMasterUser = function (base_api_url, tag) {
 
         return xhrService.fetch(authorizerUrl + '/master-user-download-update/?base_api_url=' + base_api_url + '&tag=' + tag, {
@@ -344,6 +368,8 @@ export default function (xhrService, cookieService) {
         createMasterUserFromBackup: createMasterUserFromBackup,
 
         redeployMasterUser: redeployMasterUser,
+        startMasterUser: startMasterUser,
+        stopMasterUser: stopMasterUser,
         downloadUpdateForMasterUser: downloadUpdateForMasterUser
     }
 

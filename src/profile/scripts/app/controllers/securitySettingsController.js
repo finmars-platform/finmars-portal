@@ -26,6 +26,18 @@
 
         }; */
 
+        vm.getLink = function (){
+
+            var link = 'https://auth.finmars.com/realms/finmars/account/#/security/signingin';
+
+            if (window.location.host.indexOf('marscapital') !== -1) {
+                var link = 'https://marscapital-auth.finmars.com/realms/marscapital/account/#/security/signingin';
+            }
+
+            return link;
+
+        }
+
         vm.updateUser = function (twoFactorVerificationState) {
 
 			user = globalDataService.getUser();
