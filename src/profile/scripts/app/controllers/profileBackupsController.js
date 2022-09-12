@@ -16,7 +16,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
     var toastNotificationService = require('../../../../core/services/toastNotificationService');
 
-    module.exports = function ($scope, $state, $mdDialog, profileAuthorizerService, broadcastChannelService, commonDialogsService, globalDataService) {
+    module.exports = function ($scope, $state, $mdDialog, redirectionService) {
 
         var vm = this;
 
@@ -113,7 +113,8 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
             }).then(res => {
 
                 if (res.status === 'agree') {
-                    $state.go('app.profile', {}, {reload: 'app'})
+                    // $state.go('app.profile', {}, {reload: 'app'})
+					window.open(redirectionService.getUrl('app.profile'), '_self');
                 }
 
             });

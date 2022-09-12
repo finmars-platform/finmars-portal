@@ -11,9 +11,11 @@
     // TODO resolve service from profile module
     // var backendConfigurationImportService = require('../services/backendConfigurationImportService')
 
-    module.exports = function ($scope, $state, profileAuthorizerService, backendConfigurationImportService) {
+    module.exports = function ($scope, $state, profileAuthorizerService, backendConfigurationImportService, redirectionService) {
 
         var vm = this;
+
+		vm.profileUrl = redirectionService.getUrl('app.profile');
 
         vm.readyStatus = {ecosystemConfigurations: false};
 
@@ -128,7 +130,8 @@
 
             setTimeout(function () {
 
-                $state.go('app.profile', {}, {reload: 'app'});
+                // $state.go('app.profile', {}, {reload: 'app'});
+				window.open(vm.profileUrl, '_self');
 
             }, 1000)
 
@@ -171,7 +174,7 @@
 
             }).then(function (data) {
 
-                $state.go('app.portal.home', {}, {reload: 'app'});
+                // $state.go('app.portal.home', {}, {reload: 'app'});
 
             })
 
