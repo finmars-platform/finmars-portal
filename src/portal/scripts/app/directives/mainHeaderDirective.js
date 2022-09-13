@@ -133,7 +133,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             };
 
-            scope.openHelp = function ($event) {
+            /*scope.openHelp = function ($event) {
 
                 var urlPieces = $state.current.url.split('/');
                 var destinationUrl = urlPieces[urlPieces.length - 1].replace('-', '_');
@@ -155,7 +155,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                     skipHide: true
                 });
 
-            };
+            };*/
 
             scope.logOutMethod = function () {
 
