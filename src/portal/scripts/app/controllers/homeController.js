@@ -17,7 +17,7 @@
 
         var vm = this;
 
-		// window.open(redirectionService.getUrl('app.portal.home'), '_self');
+		window.open(redirectionService.getUrl('app.portal.home'), '_self');
 
         vm.systemMessages = [];
         // vm.currentMasterUser = null;
