@@ -13,9 +13,11 @@
     var baseUrlService = require('../services/baseUrlService');
     var baseUrl = baseUrlService.resolve();
 
-    module.exports = function ($scope, $state, $mdDialog, authorizerService, usersService, globalDataService, systemMessageService) {
+    module.exports = function ($scope, $state, $mdDialog, authorizerService, usersService, globalDataService, systemMessageService, redirectionService) {
 
         var vm = this;
+
+		// window.open(redirectionService.getUrl('app.portal.home'), '_self');
 
         vm.systemMessages = [];
         // vm.currentMasterUser = null;

@@ -8,7 +8,8 @@ export default function () {
 
 	const stateToUrl = {
 		'app.portal.home': baseUrl + '/v/',
-		'app.profile': baseUrl + '/v/profile'
+		'app.profile': baseUrl + '/v/profile',
+		'app.portal.reports.performance-report': baseUrl + '/v/reports/performance',
 	};
 
 	function getUrl (stateName) {
