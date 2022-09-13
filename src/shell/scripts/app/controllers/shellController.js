@@ -11,7 +11,7 @@ import websocketService from "../../../../shell/scripts/app/services/websocketSe
 import baseUrlService from "../services/baseUrlService.js";
 import crossTabEvents from "../services/events/crossTabEvents";
 
-export default function ($scope, $state, $transitions, $urlService, $mdDialog, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService) {
+export default function ($scope, $state, $transitions, $urlService, $mdDialog, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService, redirectionService) {
 
     let vm = this;
 
@@ -21,6 +21,9 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
     // let finmarsBroadcastChannel = new BroadcastChannel('finmars_broadcast');
     // vm.isIdentified = false; // check if has proper settings (e.g. has master users to work with)
     const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
+
+	const homepageUrl = redirectionService.getUrl('app.portal.home');
+	const profileUrl = redirectionService.getUrl('app.profile');
 
     vm.readyStatus = false;
 
@@ -50,7 +53,8 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
             vm.isAuthenticated = true;
             vm.readyStatus = true;
 
-            $state.go('app.profile', {}, {});
+            // $state.go('app.profile', {}, {});
+			window.open(profileUrl, '_self');
 
         });
 
@@ -240,8 +244,9 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
             if (ev.data.event === crossTabEvents.MASTER_USER_CHANGED) {
                 middlewareService.masterUserChanged();
 
-                $state.go('app.portal.home');
-                // vm.getMasterUsersList();
+                // $state.go('app.portal.home');
+				window.open(homepageUrl, '_self');
+
             }
 
             if (ev.data.event === crossTabEvents.LOGOUT) {
@@ -305,7 +310,8 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
                         $state.reload('app');
 
                     } else {
-                        $state.go('app.portal.home');
+                        // $state.go('app.portal.home');
+						window.open(homepageUrl, '_self');
                     }
 
                 }
@@ -345,7 +351,8 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
                     globalDataService.setCurrentMasterUserStatus(true);
 
                     if (vm.isAuthenticationPage) {
-                        $state.go('app.portal.home');
+                        // $state.go('app.portal.home');
+						window.open(homepageUrl, '_self');
                     }
 
                 } else {
@@ -354,7 +361,10 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
                     globalDataService.setCurrentMasterUserStatus(false);
 
-                    if ($state.current.name !== 'app.profile') $state.go('app.profile', {}, {});
+                    if ($state.current.name !== 'app.profile') {
+						// $state.go('app.profile', {}, {});
+						window.open(profileUrl, '_self');
+					}
 
                 }
 

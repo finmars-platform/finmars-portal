@@ -7,7 +7,7 @@ export default (function () {
 
 	database.config(['$stateProvider', databaseRouter])
 
-	database.controller('NewDatabaseController', ['$scope', '$state', 'profileAuthorizerService', 'backendConfigurationImportService', require('./app/controllers/newDatabaseController')]);
-	database.controller('SetupController', ['$scope', '$state', 'usersService', 'usersGroupService', 'backendConfigurationImportService', require('./app/controllers/setupController')]);
+	database.controller('NewDatabaseController', ['$scope', '$state', 'profileAuthorizerService', 'backendConfigurationImportService', 'redirectionService', require('./app/controllers/newDatabaseController')]);
+	database.controller('SetupController', ['$scope', '$state', 'usersService', 'usersGroupService', 'backendConfigurationImportService', 'redirectionService', require('./app/controllers/setupController')]);
 
 })();

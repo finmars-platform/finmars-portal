@@ -25,11 +25,11 @@ export default (function () {
     // profile.controller('NewDatabaseController', ['$scope', '$state', 'profileAuthorizerService', require('./app/controllers/newDatabaseController')]);
     profile.controller('ProfileController', ['$scope', 'authorizerService', 'globalDataService', profileController]);
     profile.controller('ProfileSettingsController', ['$scope', 'globalDataService', require('./app/controllers/profileSettingsController')]);
-    profile.controller('ProfileDatabasesController', ['$scope', '$state', '$mdDialog', 'profileAuthorizerService', 'broadcastChannelService', 'commonDialogsService',  'globalDataService', require('./app/controllers/profileDatabasesController')]);
-    profile.controller('ProfileBackupsController', ['$scope', '$state', '$mdDialog', 'profileAuthorizerService', 'broadcastChannelService', 'commonDialogsService',  'globalDataService', require('./app/controllers/profileBackupsController')]);
+    profile.controller('ProfileDatabasesController', ['$scope', '$state', '$mdDialog', 'profileAuthorizerService', 'broadcastChannelService', 'commonDialogsService',  'globalDataService', 'redirectionService', require('./app/controllers/profileDatabasesController')]);
+    profile.controller('ProfileBackupsController', ['$scope', '$state', '$mdDialog', 'redirectionService', require('./app/controllers/profileBackupsController')]);
     profile.controller('CreateMasterUserDialogController', ['$scope', '$mdDialog', 'data', 'profileAuthorizerService', require('./app/controllers/dialogs/createMasterUserDialogController')]);
     profile.controller('CreateMasterUserFromDumpDialogController', ['$scope', '$mdDialog', 'data', 'profileAuthorizerService', require('./app/controllers/dialogs/createMasterUserFromDumpDialogController')]);
-    profile.controller('CopyMasterUserDialogController', ['$scope', '$mdDialog', '$state', 'data', 'profileAuthorizerService', require('./app/controllers/dialogs/copyMasterUserDialogController')]);
+    profile.controller('CopyMasterUserDialogController', ['$scope', '$mdDialog', '$state', 'redirectionService', 'data', 'profileAuthorizerService', require('./app/controllers/dialogs/copyMasterUserDialogController')]);
 
     profile.controller('SecuritySettingsController', ['$scope', '$mdDialog', 'authorizerService', 'globalDataService', 'commonDialogsService', require('./app/controllers/securitySettingsController')]);
     profile.controller('APISettingsController', ['$scope', '$mdDialog', 'authorizerService', 'globalDataService', 'commonDialogsService', 'profileAuthorizerService', 'cookieService',  require('./app/controllers/apiSettingsController')]);

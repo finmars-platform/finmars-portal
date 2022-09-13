@@ -8,7 +8,7 @@
     // var authorizerService = require('../../services/authorizerService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function copyMasterUserDialogController($scope, $mdDialog, $state, data, profileAuthorizerService) {
+    module.exports = function copyMasterUserDialogController($scope, $mdDialog, $state, redirectionService, data, profileAuthorizerService) {
 
         console.log('data', data);
 
@@ -34,7 +34,8 @@
                 toastNotificationService.info("Copy of Database  " + vm.name + ' is currently processing');
 				$mdDialog.hide({status: 'agree'});
 
-                $state.go('app.profile', {}, {reload: 'app'});
+                // $state.go('app.profile', {}, {reload: 'app'});
+				window.open(redirectionService.getUrl('app.profile'), '_self');
 
             }, 1000)
 
