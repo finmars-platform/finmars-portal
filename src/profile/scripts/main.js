@@ -23,7 +23,7 @@ export default (function () {
 	profile.service('profileAuthorizerService', ['xhrService', 'cookieService', profileAuthorizerService]);
 
     // profile.controller('NewDatabaseController', ['$scope', '$state', 'profileAuthorizerService', require('./app/controllers/newDatabaseController')]);
-    profile.controller('ProfileController', ['$scope', 'authorizerService', 'globalDataService', profileController]);
+    profile.controller('ProfileController', ['$scope', 'authorizerService', 'globalDataService', 'redirectionService', profileController]);
     profile.controller('ProfileSettingsController', ['$scope', 'globalDataService', require('./app/controllers/profileSettingsController')]);
     profile.controller('ProfileDatabasesController', ['$scope', '$state', '$mdDialog', 'profileAuthorizerService', 'broadcastChannelService', 'commonDialogsService',  'globalDataService', 'redirectionService', require('./app/controllers/profileDatabasesController')]);
     profile.controller('ProfileBackupsController', ['$scope', '$state', '$mdDialog', 'redirectionService', require('./app/controllers/profileBackupsController')]);
