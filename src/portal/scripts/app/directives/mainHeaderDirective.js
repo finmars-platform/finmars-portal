@@ -9,7 +9,7 @@ const metaService = require('../services/metaService'); // TODO inject into angu
 
 const evRvLayoutsHelper = require('../helpers/evRvLayoutsHelper');
 
-export default function ($mdDialog, $state, $transitions, cookieService, broadcastChannelService, middlewareService, authorizerService, usersService, globalDataService, systemMessageService) {
+export default function ($mdDialog, $state, $transitions, cookieService, broadcastChannelService, middlewareService, authorizerService, usersService, globalDataService, systemMessageService, redirectionService) {
 
     return {
         restrict: 'E',
@@ -22,7 +22,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
             if (!scope.openedInside) throw new Error("mainHeaderDirective: openedInside does not set");
             // let user;
 			const user = globalDataService.getUser();
-			const baseUrl = baseUrlService.resolve();
+
             scope.currentLocation = '';
             scope.currentMasterUser = globalDataService.getMasterUser();
             scope.userName = '';
@@ -30,6 +30,9 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 			scope.showAutosaveLayout = false;
 
 			scope.member = globalDataService.getMember();
+
+			scope.homepageUrl = redirectionService.getUrl('app.portal.home');
+			scope.profileUrl = redirectionService.getUrl('app.profile');
 
 			scope.notiPopupData = {
 				noti: [],
@@ -45,7 +48,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 					9: 'Schedules',
 					10: 'Other'
 				},
-				homepageUrl: baseUrl + '/v/',
+				homepageUrl: scope.homepageUrl,
 				formatDate: function (date) {
 					if ( moment().diff(moment(date), 'hours') > 12 ) {
 						return moment( date ).format('DD.MM.YYYY HH:mm');
@@ -249,10 +252,6 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
                             window.document.title = master.name + ' | Finmars'
 
-
-                            // $state.go('app.portal.home', null, {reload: 'app'});
-
-                            // window.location.reload();
                             if (broadcastChannelService.isAvailable) {
                                 broadcastChannelService.postMessage('finmars_broadcast', {event: crossTabEvents.MASTER_USER_CHANGED});
                             }
@@ -263,12 +262,14 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                                 $state.reload('app.portal')
 
                             } else {
-                                $state.go('app.portal.home')
+                                // $state.go('app.portal.home')
+								window.open(scope.homepageUrl, '_self');
                             }
 
                         } else {
 
-							$state.go('app.profile', {});
+							// $state.go('app.profile', {});
+							window.open(scope.profileUrl, '_self')
 
 							console.log("Error activate", data)
 
@@ -345,7 +346,8 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
                 } else {
 
-                    $state.go('app.portal.home');
+                    // $state.go('app.portal.home');
+					window.open(scope.homepageUrl, '_self');
 
                 }
 
@@ -403,7 +405,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
 				loadNoti();
 
-				scope.notiPopupData.homepageUrl = baseUrl + '/v/';
+				scope.notiPopupData.homepageUrl = scope.homepageUrl;
 
                 websocketService.addEventListener('master_user_change', function (data) {
 
