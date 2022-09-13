@@ -6,12 +6,14 @@
     'use strict';
 
     var logService = require('../../../../../core/services/logService');
+	var baseUrlService = require('../../services/baseUrlService');
 
     module.exports = function ($scope, $mdDialog, data) {
 
-        logService.controller('HelpDialogController', 'initialized');
-
         var vm = this;
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
 
         vm.data = data;
 
