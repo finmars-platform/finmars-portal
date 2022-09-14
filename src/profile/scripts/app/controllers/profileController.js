@@ -10,9 +10,11 @@
 // module.exports = function($scope) {
 // import websocketService from "../../../../shell/scripts/app/services/websocketService";
 
-export default function ($scope, authorizerService, globalDataService) {
+export default function ($scope, authorizerService, globalDataService, redirectionService) {
 
 	let vm = this;
+
+	window.open(redirectionService.getUrl('app.profile'), '_self')
 
 	vm.readyStatus = false;
 

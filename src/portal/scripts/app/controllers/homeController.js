@@ -17,7 +17,11 @@
 
         var vm = this;
 
-		window.open(redirectionService.getUrl('app.portal.home'), '_self');
+		const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
+
+		if (PROJECT_ENV !== 'local') {
+			window.open(redirectionService.getUrl('app.portal.home'), '_self');
+		}
 
         vm.systemMessages = [];
         // vm.currentMasterUser = null;
