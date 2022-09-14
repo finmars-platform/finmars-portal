@@ -24,7 +24,7 @@
                 <div ng-if="openedInside === 'profile'">
 
                     <a ng-if="currentMasterUser"
-                       class="md-button header-help-btn"
+                       class="md-button header-left-icon-btn header-help-btn"
                        href="{{homepageUrl}}">
                         <ng-md-icon icon="home" size="24">
                             <md-tooltip class="tooltip_1" md-direction="bottom">Homepage</md-tooltip>
@@ -41,14 +41,14 @@
                                position-relative-to="element"
                                offset-x="11"
 
-                               class="md-button">
+                               class="md-button header-left-icon-btn">
                         <span class="material-icons" ng-class="{'unread-notifications': notiPopupData.noti.length}">notifications</span>
                     </md-button>
                 </div>
 
                 <div ng-if="openedInside === 'portal'">
 
-                    <md-button class="md-button header-cloud-layout-btn"
+                    <md-button class="md-button header-left-icon-btn header-cloud-layout-btn"
                                data-ui-sref="app.portal.processes">
                         <!--<ng-md-icon icon="cloud_download" size="24">
                             <md-tooltip class="tooltip_1" md-direction="bottom">Open Active
@@ -56,6 +56,7 @@
                             </md-tooltip>
                         </ng-md-icon>-->
                         <span class="material-icons">cloud_download</span>
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Open Active Processes</md-tooltip>
                     </md-button>
 
                     <!--<md-button class="md-button toggle-bookmarks-panel-btn header-cloud-layout-btn"
@@ -67,7 +68,7 @@
                         </ng-md-icon>
                     </md-button>-->
 
-                    <md-button class="md-button header-help-btn"
+                    <md-button class="md-button header-left-icon-btn header-help-btn"
                                aria-label="Notifications">
                         <!--<ng-md-icon icon="help" size="24">
                             <md-tooltip class="tooltip_1" md-direction="bottom">Open help menu</md-tooltip>
