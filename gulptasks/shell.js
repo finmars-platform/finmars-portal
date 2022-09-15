@@ -25,10 +25,10 @@
 		return htmlToJs();
 	});
 
-	gulp.task('portal-less-to-css-min', function () { // for now .less files only inside directory portal
+	/*gulp.task('portal-less-to-css-min', function () { // for now .less files only inside directory portal
 		var pathToLess = ['src/portal/content/less/imports.less'];
 		return commonTasks.lessToCssMin(pathToLess, 'portal');
-	});
+	});*/
 
 	gulp.task('js-min', function () {
 		return commonTasks.minAllScripts();

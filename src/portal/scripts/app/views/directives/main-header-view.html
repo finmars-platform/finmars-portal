@@ -46,37 +46,37 @@
                     </md-button>
                 </div>
 
-                <div ng-if="openedInside === 'portal'">
+                <md-button ng-if="openedInside === 'portal'"
+                           class="md-button header-left-icon-btn header-cloud-layout-btn"
+                           data-ui-sref="app.portal.processes">
+                    <!--<ng-md-icon icon="cloud_download" size="24">
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Open Active
+                            Processes
+                        </md-tooltip>
+                    </ng-md-icon>-->
+                    <span class="material-icons">cloud_download</span>
+                    <md-tooltip class="tooltip_1" md-direction="bottom">Open Active Processes</md-tooltip>
+                </md-button>
 
-                    <md-button class="md-button header-left-icon-btn header-cloud-layout-btn"
-                               data-ui-sref="app.portal.processes">
-                        <!--<ng-md-icon icon="cloud_download" size="24">
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Open Active
-                                Processes
-                            </md-tooltip>
-                        </ng-md-icon>-->
-                        <span class="material-icons">cloud_download</span>
-                        <md-tooltip class="tooltip_1" md-direction="bottom">Open Active Processes</md-tooltip>
-                    </md-button>
+                <!--<md-button class="md-button toggle-bookmarks-panel-btn header-cloud-layout-btn"
+                           data-ng-click="toggleBookmarksPanel()">
+                    <ng-md-icon icon="bookmark" size="24">
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Open bookmark
+                            panel
+                        </md-tooltip>
+                    </ng-md-icon>
+                </md-button>-->
 
-                    <!--<md-button class="md-button toggle-bookmarks-panel-btn header-cloud-layout-btn"
-                               data-ng-click="toggleBookmarksPanel()">
-                        <ng-md-icon icon="bookmark" size="24">
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Open bookmark
-                                panel
-                            </md-tooltip>
-                        </ng-md-icon>
-                    </md-button>-->
-
-                    <a class="md-button header-left-icon-btn header-help-btn"
-                       href="https://marscapital.finmars.com/documentation"
-                       aria-label="Notifications">
-                        <!--<ng-md-icon icon="help" size="24">
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Open help menu</md-tooltip>
-                        </ng-md-icon>-->
-                        <span class="material-icons">help</span>
+                <a ng-if="openedInside === 'portal'"
+                   class="md-button header-left-icon-btn header-help-btn"
+                   href="https://marscapital.finmars.com/documentation"
+                   aria-label="Notifications">
+                    <!--<ng-md-icon icon="help" size="24">
                         <md-tooltip class="tooltip_1" md-direction="bottom">Open help menu</md-tooltip>
-                    </a>
+                    </ng-md-icon>-->
+                    <span class="material-icons">help</span>
+                    <md-tooltip class="tooltip_1" md-direction="bottom">Open help menu</md-tooltip>
+                </a>
 
                     <!--<md-button style="margin-left: 0"
                                data-ui-sref="app.portal.system.notifications({notificationsListType: 'unreaded'})"
@@ -99,8 +99,6 @@
                                aria-label="System Messages">
                         <ng-md-icon icon="email"></ng-md-icon>
                     </md-button>-->
-
-                </div>
 
                 <div ng-if="currentMasterUser"
                      class="header-masteruser">
