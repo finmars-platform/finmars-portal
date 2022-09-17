@@ -12,13 +12,18 @@ import authorizerService from '../../shell/scripts/app/services/authorizerServic
 // import uiService from "./app/services/uiService.js";
 
 import portalController from './app/controllers/portalController.js';
+
+//#region
+import dataPortfolioBundleController from "./app/controllers/entityViewer/dataPortfolioBundleController";
+//#endregion
+
 import enterUserCodeDialogController from "./app/controllers/dialogs/enterUserCodeDialogController.js";
 import portfolioRegisterDialogController from "./app/controllers/dialogs/portfolioRegisterDialogController";
 
-// form - tabs
+//#region form - tabs
 import instrumentTypePricingTabController from "./app/controllers/tabs/instrument-type/instrumentTypePricingTabController.js";
-import portfolioPerformanceTabController from "./app/controllers/tabs/portfolio/performanceTabController.js"
-// < form - tabs >
+import portfolioPerformanceTabController from "./app/controllers/tabs/portfolio/performanceTabController.js";
+//#endregion form - tabs
 
 import mainHeaderDirective from "./app/directives/mainHeaderDirective.js";
 
@@ -28,6 +33,9 @@ import baseInputDirective from "./app/directives/customInputs/baseInputDirective
 import multiinputFieldDirective from "./app/directives/customInputs/multiinputFieldDirective";
 import entityNamesFieldDirective from "./app/directives/customInputs/entityNamesFieldDirective";
 import closeDialogButtonDirective from "./app/directives/closeDialogButtonDirective";
+
+/*import portfolioBundleRepository from "./app/repositories/portfolioBundleRepository";
+import portfolioBundleService from "./app/services/portfolioBundleService";*/
 
 // noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
@@ -93,6 +101,8 @@ export default (function () {
 
 	portal.service('gFiltersHelper', [require('./app/helpers/gFiltersHelper')]);
 	portal.service('gridTableHelperService', [require('./app/helpers/gridTableHelperService')]);
+	/*portal.service('portfolioBundleRepository', ['cookieService', 'xhrService', 'configureRepositoryUrlService', 'baseUrlService', portfolioBundleRepository]);
+	portal.service('portfolioBundleService', ['portfolioBundleRepository', portfolioBundleService]);*/
 
 	//<editor-fold desc="Dashboard">
 	portal.component('dashboardEntityViewer', require('./app/components/dashboardEntityViewerComponent'));
@@ -434,6 +444,7 @@ export default (function () {
 	portal.controller('DataPortfolioController', ['$scope', require('./app/controllers/data/dataPortfolioController')]);
 	portal.controller('DataPortfolioRegisterController', ['$scope', require('./app/controllers/data/dataPortfolioRegisterController')]);
 	portal.controller('DataPortfolioRegisterRecordController', ['$scope', require('./app/controllers/data/dataPortfolioRegisterRecordController')]);
+	portal.controller('DataPortfolioBundleController', [dataPortfolioBundleController]);
 	portal.controller('DataTagController', ['$scope', '$stateParams', require('./app/controllers/data/dataTagController')]);
 	portal.controller('DataAccountController', ['$scope', '$stateParams', require('./app/controllers/data/dataAccountController')]);
 	portal.controller('DataAccountTypeController', ['$scope', '$stateParams', require('./app/controllers/data/dataAccountTypeController')]);

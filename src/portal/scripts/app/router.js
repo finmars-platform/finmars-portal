@@ -108,7 +108,7 @@
             })
             .state('app.portal.data.portfolio', {
                 url: '/portfolios',
-                templateUrl: 'views/data/data-portfolio-view.html',
+                templateUrl: 'views/data/data-entity-view.html',
                 controller: 'DataPortfolioController as vm',
                 params: {
                     layoutUserCode: null
@@ -130,6 +130,14 @@
                     layoutUserCode: null
                 }
             })
+			.state('app.portal.data.portfolio-bundle', {
+				url: '/portfolio-bundles',
+				templateUrl: 'views/data/data-entity-view.html',
+				controller: 'DataPortfolioBundleController as vm',
+				params: {
+					layoutUserCode: null
+				}
+			})
             .state('app.portal.data.tag', {
                 url: '/tags',
                 templateUrl: 'views/data/data-tag-view.html',
@@ -260,7 +268,7 @@
             })
             .state('app.portal.data.price-history', {
                 url: '/pricing',
-                templateUrl: 'views/data/data-price-history-view.html',
+                templateUrl: 'views/data/data-entity-view.html',
                 controller: 'DataPriceHistoryController as vm',
                 params: {
                     layoutUserCode: null

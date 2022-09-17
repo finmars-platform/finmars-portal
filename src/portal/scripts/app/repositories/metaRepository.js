@@ -58,6 +58,7 @@
             "portfolio": require('../models/portfolioPropsModel').getAttributes(),
             "portfolio-register": require('../models/portfolioRegisterPropsModel').getAttributes(),
             "portfolio-register-record": require('../models/portfolioRegisterRecordPropsModel').getAttributes(),
+			"portfolio-bundle": require('../models/portfolioBundlePropsModel').getAttributes(),
             "audit-transaction": require('../models/auditTransactionPropsModel').getAttributes(),
             "audit-instrument": require('../models/auditInstrumentPropsModel').getAttributes(),
             "account": require('../models/accountPropsModel').getAttributes(),

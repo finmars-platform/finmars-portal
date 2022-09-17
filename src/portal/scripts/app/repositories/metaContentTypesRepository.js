@@ -164,14 +164,19 @@
             },
             {
                 name: "Portfolio Register",
-                entity: 'portfolio-register',
+                entity: "portfolio-register",
                 key: "portfolios.portfolioregister"
             },
             {
                 name: "Portfolio Register Record",
-                entity: 'portfolio-register-record',
+                entity: "portfolio-register-record",
                 key: "portfolios.portfolioregisterrecord"
             },
+			{
+				name: "Portfolio Bundle",
+				entity: "portfolio-bundle",
+				key: "portfolios.portfoliobundles"
+			},
             {
                 name: "Instrument Type",
                 entity: 'instrument-type',
@@ -579,6 +584,11 @@
                 entity: 'portfolio-register-record',
                 key: "portfolios.portfolioregisterrecord"
             },
+			{
+				name: "Portfolio Bundle",
+				entity: "portfolio-bundle",
+				key: "portfolios.portfoliobundles"
+			},
             {
                 name: "Instrument Type",
                 entity: 'instrument-type',

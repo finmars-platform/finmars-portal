@@ -1250,7 +1250,7 @@ import entityResolverService from "../../services/entityResolverService";
 
                 var promises = [];
 
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType(vm.entityType));
+				promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType(vm.entityType));
 
                 if (vm.entityType === 'instrument') {
                     promises.push(vm.attributeDataService.downloadInstrumentUserFields());

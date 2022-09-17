@@ -171,6 +171,7 @@
                         default:
 
                             editLayout = await uiService.getDefaultEditLayout(scope.entityType);
+
                             evHelperService.openEntityViewerAddDrawer(
                                 scope.evDataService,
                                 scope.evEventService,

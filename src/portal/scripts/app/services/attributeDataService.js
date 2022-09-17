@@ -541,6 +541,7 @@
         }
 
         function downloadDynamicAttributesByEntityType(entityType) {
+
             return new Promise(function (resolve, reject) {
 
                 var result = [];

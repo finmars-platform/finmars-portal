@@ -315,6 +315,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
     var getDefaultEditLayout = function (entityType) {
 
         var contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
+
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 

@@ -28,7 +28,7 @@
             'performance-report',
             'counterparty-group', 'responsible-group', 'tag', 'transaction-type-group',
             'strategy-1-subgroup', 'strategy-2-subgroup', 'strategy-3-subgroup',
-            'audit-transaction', 'audit-instrument', 'portfolio-register-record',
+            'audit-transaction', 'audit-instrument', 'portfolio-register-record', 'portfolio-bundle',
             'generated-event']
     };
 

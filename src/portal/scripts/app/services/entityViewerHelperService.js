@@ -1642,6 +1642,8 @@ import uiService from "./uiService";
     };
 
 
+
+
     var openEntityViewerAddDrawer = function (evDataService, evEventService, layout, $bigDrawer, entityType, entity) {
 
         /* $mdDialog.show({

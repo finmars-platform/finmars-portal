@@ -1,0 +1,58 @@
+<div class="big-drawer-content universal-editor">
+    <div class="big-drawer-header">
+        <div>
+
+            <h2 class="big-drawer-header-h"></h2>
+            <div data-ng-if="vm.processing" layout="row" class="m-l-16 big-drawer-header-processing">
+                <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
+                    <progress-circular diameter="20"></progress-circular>
+                </div>
+                — Processing
+            </div>
+
+        </div>
+    </div>
+
+    <div class="big-drawer-main">
+
+        <div data-ng-if="vm.checkReadyStatus()">
+            <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
+
+                <md-tab>
+                    <md-tab-lable>
+                        <div class="tab-name-elem evFormSystemTabName" data-tab-name="general">
+                            <span class="grey-tab">General</span>
+                        </div>
+                    </md-tab-lable>
+                    <md-tab-body>
+                        <md-content class="md-padding p-t-26">
+                            <div data-ng-include="'views/tabs/simple-entity-general-tab.html'"></div>
+                        </md-content>
+                    </md-tab-body>
+                </md-tab>
+
+                <md-tab data-ng-if="vm.canManagePermissions">
+                    <md-tab-label>
+                        <span class="colored-tab">Permissions</span>
+                    </md-tab-label>
+                    <md-tab-body>
+                        <md-content class="md-padding p-t-26"
+                                    data-ng-include="'views/tabs/entity-permissions2-view.html'"></md-content>
+                    </md-tab-body>
+                </md-tab>
+
+            </md-tabs>
+        </div>
+
+        <div data-ng-if="!vm.checkReadyStatus()">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
+                <progress-circular diameter="100"></progress-circular>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="big-drawer-footer big-drawer-actions flex-row fc-space-between"
+         data-ng-include="'views/entity-viewer/entity-viewer-edit-footer-view.html'"></div>
+</div>

@@ -1,6 +1,11 @@
 /**
  * Created by szhitenev on 16.06.2016.
  */
+
+import portfolioBundleService from "./portfolioBundleService";
+import portfolioRegisterService from "./portfolioRegisterService";
+import portfolioRegisterRecordService from "./portfolioRegisterRecordService";
+
 (function () {
 
     'use strict';
@@ -67,6 +72,9 @@
             case 'portfolio-register-record':
                 return portfolioRegisterRecordService.getList(options);
                 break;
+			case 'portfolio-bundle':
+				return portfolioBundleService.getList(options);
+				break;
             case 'account':
                 return accountService.getList(options);
                 break;
@@ -226,6 +234,9 @@
             case 'portfolio-register-record':
                 return portfolioRegisterRecordService.getByKey(id);
                 break;
+			case 'portfolio-bundle':
+				return portfolioBundleService.getByKey(id);
+				break;
             case 'account':
                 return accountService.getByKey(id);
                 break;
@@ -336,8 +347,6 @@
 
     var create = function (entityType, entity) {
 
-
-
         switch (entityType) {
             case 'csv-import-scheme':
                 return csvImportSchemeService.create(entity);
@@ -358,6 +367,12 @@
             case 'portfolio-register':
                 return portfolioRegisterService.create(entity);
                 break;
+			case 'portfolio-register-record':
+				return portfolioRegisterRecordService.create(entity);
+				break;
+			case 'portfolio-bundle':
+				return portfolioBundleService.create(entity);
+				break;
             case 'account':
                 entity.portfolios = entity.portfolios || [];
                 return accountService.create(entity);
@@ -703,6 +718,9 @@
             case 'portfolio-register-record':
                 return portfolioRegisterRecordService.deleteByKey(id);
                 break;
+			case 'portfolio-bundle':
+				return portfolioBundleService.deleteByKey(id);
+				break;
             case 'account':
                 return accountService.deleteByKey(id);
                 break;
@@ -816,6 +834,8 @@
                 return portfolioRegisterService.deleteBulk(data);
             case 'portfolio-register-record':
                 return portfolioRegisterRecordService.deleteBulk(data);
+			case 'portfolio-bundle':
+				return portfolioBundleService.deleteBulk(data);
             case 'currency':
                 return currencyService.deleteBulk(data);
             case 'account':

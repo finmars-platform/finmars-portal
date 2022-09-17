@@ -15,6 +15,8 @@
                 return 'portfolios/portfolio-register';
             case 'portfolio-register-record':
                 return 'portfolios/portfolio-register-record';
+			case 'portfolio-bundle':
+				return 'portfolios/portfolio-bundle';
             case 'account':
                 return 'accounts/account';
             case 'account-type':
