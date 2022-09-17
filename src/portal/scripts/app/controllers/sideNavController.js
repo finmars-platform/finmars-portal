@@ -10,7 +10,7 @@
     var uiService = require('../services/uiService');
     var metaHelper = require('../helpers/meta.helper');
 
-    module.exports = function ($scope, $mdDialog, $transition, usersService, globalDataService) {
+    module.exports = function ($scope, $mdDialog, $transition, usersService, globalDataService, redirectionService) {
 
         var vm = this;
 
@@ -100,6 +100,8 @@
         };
 
         vm.sideNavStatus = 'expand';
+		vm.homepageUrl = redirectionService.getUrl('app.portal.home');
+		vm.performanceUrl = redirectionService.getUrl('app.portal.reports.performance-report');
 
         /* Old sidemenu */
         /*vm.resizeSideNav = function (status) {

@@ -24,8 +24,8 @@
                 <div ng-if="openedInside === 'profile'">
 
                     <a ng-if="currentMasterUser"
-                       class="md-button header-help-btn"
-                       ui-sref="app.portal.home">
+                       class="md-button header-left-icon-btn header-help-btn"
+                       href="{{homepageUrl}}">
                         <ng-md-icon icon="home" size="24">
                             <md-tooltip class="tooltip_1" md-direction="bottom">Homepage</md-tooltip>
                         </ng-md-icon>
@@ -41,41 +41,44 @@
                                position-relative-to="element"
                                offset-x="11"
 
-                               class="md-button">
+                               class="md-button header-left-icon-btn">
                         <span class="material-icons" ng-class="{'unread-notifications': notiPopupData.noti.length}">notifications</span>
                     </md-button>
                 </div>
 
-                <div ng-if="openedInside === 'portal'">
+                <md-button ng-if="openedInside === 'portal'"
+                           class="md-button header-left-icon-btn header-cloud-layout-btn"
+                           data-ui-sref="app.portal.processes">
+                    <!--<ng-md-icon icon="cloud_download" size="24">
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Open Active
+                            Processes
+                        </md-tooltip>
+                    </ng-md-icon>-->
+                    <span class="material-icons">cloud_download</span>
+                    <md-tooltip class="tooltip_1" md-direction="bottom">Open Active Processes</md-tooltip>
+                </md-button>
 
-                    <md-button class="md-button header-cloud-layout-btn"
-                               data-ui-sref="app.portal.processes">
-                        <ng-md-icon icon="cloud_download" size="24">
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Open Active
-                                Processes
-                            </md-tooltip>
-                        </ng-md-icon>
-                    </md-button>
+                <!--<md-button class="md-button toggle-bookmarks-panel-btn header-cloud-layout-btn"
+                           data-ng-click="toggleBookmarksPanel()">
+                    <ng-md-icon icon="bookmark" size="24">
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Open bookmark
+                            panel
+                        </md-tooltip>
+                    </ng-md-icon>
+                </md-button>-->
 
-                    <md-button class="md-button toggle-bookmarks-panel-btn header-cloud-layout-btn"
-                               data-ng-click="toggleBookmarksPanel()">
-                        <ng-md-icon icon="bookmark" size="24">
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Open bookmark
-                                panel
-                            </md-tooltip>
-                        </ng-md-icon>
-                    </md-button>
+                <a ng-if="openedInside === 'portal'"
+                   class="md-button header-left-icon-btn header-help-btn"
+                   href="https://marscapital.finmars.com/documentation"
+                   aria-label="Notifications">
+                    <!--<ng-md-icon icon="help" size="24">
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Open help menu</md-tooltip>
+                    </ng-md-icon>-->
+                    <span class="material-icons">help</span>
+                    <md-tooltip class="tooltip_1" md-direction="bottom">Open help menu</md-tooltip>
+                </a>
 
-                    <md-button class="md-button header-help-btn"
-                               data-ng-click="openHelp($event)"
-                               aria-label="Notifications">
-                        <ng-md-icon icon="help" size="24">
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Open help menu
-                            </md-tooltip>
-                        </ng-md-icon>
-                    </md-button>
-
-                    <md-button style="margin-left: 0"
+                    <!--<md-button style="margin-left: 0"
                                data-ui-sref="app.portal.system.notifications({notificationsListType: 'unreaded'})"
                                aria-label="Notifications">
                         <ng-md-icon icon="flag"></ng-md-icon>
@@ -95,9 +98,7 @@
                                data-ui-sref="app.portal.system-messages"
                                aria-label="System Messages">
                         <ng-md-icon icon="email"></ng-md-icon>
-                    </md-button>
-
-                </div>
+                    </md-button>-->
 
                 <div ng-if="currentMasterUser"
                      class="header-masteruser">
@@ -140,7 +141,7 @@
                         </md-button>
                         <md-menu-content>
                             <md-menu-item style="border-bottom: 1px solid #ddd;">
-                                <md-button data-ui-sref="app.profile">Profile</md-button>
+                                <a class="md-button" href="{{profileUrl}}">Profile</a>
                             </md-menu-item>
                             <md-menu-item>
 <!--                                <md-button data-ng-click="logOutMethod()">Log Out</md-button>-->

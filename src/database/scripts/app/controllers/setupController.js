@@ -11,7 +11,7 @@
 
     // var backendConfigurationImportService = require('../services/backendConfigurationImportService');
 
-    module.exports = function ($scope, $state, usersService, usersGroupService, backendConfigurationImportService) {
+    module.exports = function ($scope, $state, usersService, usersGroupService, backendConfigurationImportService, redirectionService) {
 
         var vm = this;
 
@@ -25,6 +25,7 @@
 
         vm.finishingSetup = false;
 
+		const homepageUrl = redirectionService.getUrl('app.portal.home');
 
         vm.finishStep1 = function () {
 
@@ -56,7 +57,8 @@
 
                 setTimeout(function () {
 
-                    $state.go('app.portal.home');
+                    // $state.go('app.portal.home');
+					window.open(homepageUrl, '_self');
 
                 }, 1000)
 
@@ -175,7 +177,8 @@
 
             }).then(function (value) {
 
-                $state.go('app.portal.home');
+                // $state.go('app.portal.home');
+				window.open(homepageUrl, '_self');
 
             })
 

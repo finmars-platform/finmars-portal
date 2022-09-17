@@ -123,7 +123,8 @@
 	};
 
 	const lessToCssMin = (pathToLess, appName) => {
-
+		console.log("testing lessToCssMin");
+		console.trace();
 		return gulp.src(pathToLess)
 			.pipe(less())
 			.on('error', function (err) {

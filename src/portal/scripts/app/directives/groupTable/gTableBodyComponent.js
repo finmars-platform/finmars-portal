@@ -594,25 +594,30 @@
 
                     }
 
-                    toggleBookmarksBtn.addEventListener('click', function () {
+					if (toggleBookmarksBtn) {
 
-                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
+						toggleBookmarksBtn.addEventListener('click', function () {
 
-                        var headerToolbar = document.querySelector('md-toolbar.header');
+							var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
-                        interfaceLayout.headerToolbar.height = headerToolbar.clientHeight;
+							var headerToolbar = document.querySelector('md-toolbar.header');
 
-                        scope.evDataService.setInterfaceLayout(interfaceLayout);
+							interfaceLayout.headerToolbar.height = headerToolbar.clientHeight;
 
-                        /* delete var splitPanelIsActive = scope.evDataService.isSplitPanelActive();
+							scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-                         if (isRootEntityViewer && splitPanelIsActive) {
-                            scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
-                        } */
+							/* delete var splitPanelIsActive = scope.evDataService.isSplitPanelActive();
 
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+							 if (isRootEntityViewer && splitPanelIsActive) {
+								scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
+							} */
 
-                    });
+							scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+
+						});
+
+					}
+
                 };
 
                 init();

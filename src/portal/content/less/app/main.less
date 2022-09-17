@@ -9,6 +9,10 @@ h2 {
   font-weight: 400;
 }
 
+a {
+  text-decoration: none;
+}
+
 .z-index-2 {
   z-index: 2;
 }
@@ -103,12 +107,15 @@ md-toolbar.header {
     color: #747474;
     fill: #747474;
     // border-bottom: 1px solid rgba(224, 224, 224, 1);
+    padding: 0 30px;
   }
 
   .md-toolbar-tools {
     min-height: 52px;
     height: 52px;
     background-color: rgba(242, 242, 242, 1);
+    // padding: 0 30px;
+    padding: 0;
 
     .current-location-title {
       text-transform: capitalize;
@@ -123,7 +130,7 @@ md-toolbar.header {
 
   .header-breadcrumbs {
     margin: 0;
-    padding-left: 11px;
+    // padding-left: 11px;
     font-size: 14px;
     font-weight: 600;
   }
@@ -525,21 +532,28 @@ md-backdrop.md-select-backdrop {
 }
 
 .header-misc {
+  .header-left-icon-btn {
+    border-radius: 100%;
+  }
+
   .md-button {
     min-width: 0;
     line-height: 1;
-    padding: 4px;
+    // padding: 4px;
+    padding: 7px;
     overflow: visible;
     margin-top: 8px;
+    margin-right: 2px;
+    margin-left: 2px;
     min-height: 0;
-    height: 32px;
+    // height: 32px;
+    height: 36px;
     //fill: #fff;
     fill: #747474;
   }
 
   .header-profile {
     position: relative;
-    //padding-top: 5px;
 
     button.md-button {
       height: 51px;
@@ -2090,8 +2104,7 @@ div.header-masteruser {
 
   button.md-button {
     height: 51px;
-    padding: 0 16px;
-
+    padding: 0 12px;
   }
 }
 

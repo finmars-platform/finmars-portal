@@ -104,10 +104,14 @@
                 <div class="m-t-24">
                     <div class="setup-item-footer">
 
-                        <md-button class="md-raised m-0 float-left"
-                                   data-ui-sref="app.profile">
-                            Back to Profile page
-                        </md-button>
+                        <div class="float-left">
+                            <a href="{{vm.profileUrl}}">
+                                <md-button class="md-raised m-0">
+                                    Back to Profile page
+                                </md-button>
+                            </a>
+                        </div>
+
 
                         <md-button class="md-raised md-primary m-0 float-right"
                                    data-ng-class="{'disabled-btn': !vm.name || vm.processingCheckName || !vm.nameIsUnique || !vm.licenseIsGood}"

@@ -41,15 +41,15 @@
                     </li>
 
                     <li>
-                        <md-button ui-sref-active="active"
-                                   class="sidemenu-btn"
-                                   ui-sref="app.portal.home">
-                        <span class="side-nav-icon">
-                            <ng-md-icon icon="home" size="24"></ng-md-icon>
-                        </span>
-                            <span class="side-nav-title">Homepage</span>
-                            <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
-                        </md-button>
+                        <a href="{{vm.homepageUrl}}">
+                            <md-button class="sidemenu-btn">
+                            <span class="side-nav-icon">
+                                <ng-md-icon icon="home" size="24"></ng-md-icon>
+                            </span>
+                                <span class="side-nav-title">Homepage</span>
+                                <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
+                            </md-button>
+                        </a>
                     </li>
 
                     <li>
@@ -92,14 +92,12 @@
                                     </md-button>
                                 </li>
                                 <li data-ng-if="vm.accessTable.report_performance">
-                                    <md-button ui-sref-active="active"
-                                               class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.portal.reports.performance-report"
-                                               disabled>
+                                    <a href="{{vm.performanceUrl}}"
+                                       class="md-button sidenav-dropdown-menu-btn">
                                         <span class="side-nav-title">Performance</span>
                                         <span class="md-visually-hidden"
                                               data-ng-if="isSelected()">current page</span>
-                                    </md-button>
+                                    </a>
                                 </li>
                                 <li data-ng-if="vm.accessTable.report_cash_flow">
                                     <md-button ui-sref-active="active"

@@ -13,9 +13,15 @@
     var baseUrlService = require('../services/baseUrlService');
     var baseUrl = baseUrlService.resolve();
 
-    module.exports = function ($scope, $state, $mdDialog, authorizerService, usersService, globalDataService, systemMessageService) {
+    module.exports = function ($scope, $state, $mdDialog, authorizerService, usersService, globalDataService, systemMessageService, redirectionService) {
 
         var vm = this;
+
+		const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
+
+		if (PROJECT_ENV !== 'local') {
+			window.open(redirectionService.getUrl('app.portal.home'), '_self');
+		}
 
         vm.systemMessages = [];
         // vm.currentMasterUser = null;
