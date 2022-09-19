@@ -14,7 +14,7 @@
 
 	gulp.task('portal-less-to-css-min', function () {
 		var pathToLess = ['src/portal/content/less/imports.less'];
-		return commonTasks.lessToCssMin(pathToLess, appName);
+		return commonTasks.lessToCssMin(pathToLess, 'portal');
 	});
 
 	gulp.task(appName + '-HTML-to-JS', () => {

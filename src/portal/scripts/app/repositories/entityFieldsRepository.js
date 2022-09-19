@@ -27,6 +27,23 @@
 			})
 	};
 
+	var getCountryChoices = function () {
+
+		var prefix = baseUrlService.getMasterUserPrefix();
+		var apiVersion = baseUrlService.getApiVersion();
+
+		return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/country/',
+			{
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+					Accept: 'application/json',
+					'Content-type': 'application/json'
+				}
+			})
+	};
+
 	var getDailyPricingModelChoices = function () {
 
 		var prefix = baseUrlService.getMasterUserPrefix();
@@ -145,7 +162,8 @@
 		getDailyPricingModelChoices: getDailyPricingModelChoices,
 		getPaymentSizeDetailChoices: getPaymentSizeDetailChoices,
 		getTransactionClassList: getTransactionClassList,
-		getPricingConditionChoices: getPricingConditionChoices
+		getPricingConditionChoices: getPricingConditionChoices,
+		getCountryChoices: getCountryChoices
 	}
 
 }());
