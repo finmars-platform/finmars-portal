@@ -38,6 +38,7 @@
 
     var instrumentDailyPricingModelService = require('./instrument/instrumentDailyPricingModelService');
     var instrumentPricingConditionService = require('./instrument/instrumentPricingConditionService');
+    var instrumentCountryService = require('./instrument/instrumentCountryService');
     var instrumentPaymentSizeDetailService = require('./instrument/instrumentPaymentSizeDetailService');
     var instrumentClassService = require('./instrument/instrumentClassService');
     var priceDownloadSchemeService = require('./import/priceDownloadSchemeService');
@@ -108,6 +109,9 @@
                 break;
             case 'pricing-condition':
                 return instrumentPricingConditionService.getList(options);
+                break;
+            case 'country':
+                return instrumentCountryService.getList(options);
                 break;
             case 'event-class':
                 return metaEventClassService.getList(options);

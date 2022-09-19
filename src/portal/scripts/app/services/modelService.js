@@ -71,6 +71,7 @@
             "instruments.instrumenttype": require('../models/instrumentTypePropsModel').getAttributes(),
             "instruments.instrument": require('../models/instrumentPropsModel').getAttributes(),
             "instruments.generatedevent": require('../models/generatedEventPropsModel').getAttributes(),
+            "instruments.country": require('../models/countryPropsModel').getAttributes(),
             "transactions.transaction": require('../models/transactionPropsModel').getAttributes(),
             "transactions.transactionclass": require('../models/transactionClassPropsModel').getAttributes(),
             "transactions.transactiontypegroup": require('../models/transactionTypeGroupPropsModel').getAttributes(),
