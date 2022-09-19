@@ -377,6 +377,11 @@
                 entity: 'audit-instrument',
                 key: 'audit.objecthistory4entry'
             },
+            {
+                name: "Country",
+                entity: 'country',
+                key: "instruments.country"
+            },
         ]
     };
 
