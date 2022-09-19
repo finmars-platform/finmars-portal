@@ -66,6 +66,7 @@
 
             "transaction-class": require('../models/transactionClassPropsModel').getAttributes(),
             "complex-transaction-status": require('../models/complextransactionStatusPropsModel').getAttributes(),
+            "country": require('../models/countryPropsModel').getAttributes(),
 
         };
 
