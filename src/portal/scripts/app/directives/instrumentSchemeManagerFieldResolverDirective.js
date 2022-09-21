@@ -7,7 +7,6 @@
 
     var logService = require('../../../../core/services/logService');
     var fieldResolverService = require('../services/fieldResolverService');
-    var bindFieldsHelper = require('../helpers/bindFieldsHelper');
     var metaService = require('../services/metaService');
 
     module.exports = function ($mdDialog) {

@@ -8,7 +8,6 @@
     var evEditorEvents = require('../services/ev-editor/entityViewerEditorEvents');
 
     var fieldResolverService = require('../services/fieldResolverService');
-    var bindFieldsHelper = require('../helpers/bindFieldsHelper');
     var metaService = require('../services/metaService');
     var metaContentTypesService = require('../services/metaContentTypesService');
     var metaHelper = require('../helpers/meta.helper');
