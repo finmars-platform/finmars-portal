@@ -30,7 +30,6 @@
     var instrumentTypeService = require('./instrumentTypeService');
     var accrualCalculationModelService = require('./accrualCalculationModelService');
     var instrumentPeriodicityService = require('./instrumentPeriodicityService');
-    var tagService = require('./tagService');
 
     var strategyService = require('./strategyService');
     var strategyGroupService = require('./strategyGroupService');
@@ -308,9 +307,6 @@
             case 'strategy-3-subgroup':
                 return strategySubgroupService.getByKey(3, id);
                 break;
-            case 'tag':
-                return tagService.getByKey(id);
-                break;
             case 'price-history-error':
                 return priceHistoryErrorService.getByKey(id);
                 break;
@@ -447,9 +443,6 @@
                         });
                     });
                 });
-            case 'tag':
-                return tagService.create(entity);
-                break;
             case 'expression-procedure':
                 return expressionProcedureService.create(entity);
                 break;
@@ -587,9 +580,6 @@
             case 'strategy-3-subgroup':
                 return strategySubgroupService.update(3, id, entity);
                 break;
-            case 'tag':
-                return tagService.update(id, entity);
-                break;
             case 'price-history-error':
                 return priceHistoryErrorService.update(id, entity);
                 break;
@@ -690,9 +680,6 @@
             case 'strategy-3-subgroup':
                 //return strategySubgroupService.update(3, id, entity);
                 break;
-            case 'tag':
-                //return tagService.update(id, entity);
-                break;
         }
     };
 
@@ -781,9 +768,6 @@
                 break;
             case 'strategy-3-subgroup':
                 return strategySubgroupService.deleteByKey(3, id);
-                break;
-            case 'tag':
-                return tagService.deleteByKey(id);
                 break;
             case 'price-history-error':
                 return priceHistoryErrorService.deleteByKey(id);
@@ -875,9 +859,6 @@
                 break;
             case 'strategy-3-subgroup':
                 //return strategySubgroupService.deleteBulk(data);
-                break;
-            case 'tag':
-                //return tagService.deleteBulk(data);
                 break;
 
             case 'price-history-error':

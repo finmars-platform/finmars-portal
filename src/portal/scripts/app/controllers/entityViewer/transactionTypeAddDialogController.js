@@ -21,7 +21,6 @@
 
     var portfolioService = require('../../services/portfolioService');
     var instrumentTypeService = require('../../services/instrumentTypeService');
-    var tagService = require('../../services/tagService');
     // var usersService = require('../../services/usersService');
 
     var transactionTypeService = require('../../services/transactionTypeService');
@@ -907,15 +906,6 @@
                 $scope.$apply();
             })
         };
-
-        /*vm.getTags = function () {
-            tagService.getListByContentType('transaction-type').then(function (data) {
-                vm.tags = data.results;
-                vm.readyStatus.tags = true;
-                $scope.$apply();
-            });
-
-        };*/
 
         vm.unselectAllEntities = function (entity) {
 
@@ -2248,7 +2238,7 @@
             vm.getTransactionTypeGroups();
             vm.getPortfolios();
             vm.getInstrumentTypes();
-            // vm.getTags();
+
 
             // vm.getInputTemplates();
             var getInputTemplPromise = sharedLogic.getInputTemplates();
@@ -2278,21 +2268,6 @@
                 vm.readyStatus.inputs = true;
 
             });
-
-            /* $scope.$watch('vm.entity.tags', function () {
-
-                if (vm.entity.tags) {
-                    vm.entity.tags.forEach(function (item) {
-                        if (item.id == null) {
-                            tagService.create({
-                                name: item.name,
-                                content_types: ['transactions.transactiontype']
-                            })
-                        }
-                    })
-
-                }
-            }); */
 
         };
 

@@ -21,8 +21,6 @@
             case 'counterparties':
                 return 'counterparty';
                 break;
-            case 'tags':
-                return 'tag';
             case 'content_types':
                 return 'content_type';
             default:

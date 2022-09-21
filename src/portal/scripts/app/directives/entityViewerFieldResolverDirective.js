@@ -8,9 +8,7 @@
     var evEditorEvents = require('../services/ev-editor/entityViewerEditorEvents');
 
     var fieldResolverService = require('../services/fieldResolverService');
-    var bindFieldsHelper = require('../helpers/bindFieldsHelper');
     var metaService = require('../services/metaService');
-    var tagService = require('../services/tagService');
     var metaContentTypesService = require('../services/metaContentTypesService');
     var metaHelper = require('../helpers/meta.helper');
 
@@ -60,7 +58,7 @@
                 // console.log('scope.item.name', scope.item);
                 // console.log('scope.entity', scope.entity);
 
-                if (['counterparties', 'accounts', 'responsibles', 'transaction_types', 'tags'].indexOf(scope.item.key) !== -1) {
+                if (['counterparties', 'accounts', 'responsibles', 'transaction_types'].indexOf(scope.item.key) !== -1) {
                     scope.type = 'multiple-ids';
                 }
 
@@ -111,40 +109,10 @@
                         return true
                     }
 
-                    if (scope.item.key == 'tags') {
-                        return true;
-                    }
+
 
                     return false;
                 };*/
-
-                scope.getFieldsGrouped = function () {
-
-                    if (metaService.getFieldsWithTagGrouping().indexOf(scope.item.key) !== -1) {
-
-                        var entityType = scope.item.key.replace('_', '-'); // refactor this
-
-                        if (entityType === 'transaction-types') {
-                            entityType = 'transaction-type'
-                        }
-
-                        if (scope.item.key === 'type') {
-                            entityType = 'account-type';
-                        }
-
-                        console.log('getFieldsGrouped.entityType', entityType);
-
-                        tagService.getListByContentType(entityType).then(function (data) { //refactor entityType getter
-                            scope.tags = data.results;
-
-                            scope.groups = bindFieldsHelper.groupFieldsByTagsWithDuplicates(scope.fields, scope.tags);
-
-                            scope.readyStatus.content = true;
-
-                            scope.$apply();
-                        })
-                    }
-                };
 
                 scope.searchTerm = '';
 
@@ -379,7 +347,6 @@
                                     scope.readyStatus.content = true;
                                     fieldsDataIsLoaded = true;
 
-                                    scope.getFieldsGrouped();
 
                                     resolve();
                                     // scope.$apply();
@@ -401,8 +368,6 @@
 
                                     scope.readyStatus.content = true;
                                     fieldsDataIsLoaded = true;
-
-                                    scope.getFieldsGrouped();
 
                                     resolve();
                                     // scope.$apply();

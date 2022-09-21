@@ -711,7 +711,7 @@
 
                             if (item['value_type'] === "mc_field" || item['value_type'] === "field") {
 
-                                if (item.key === 'tags' || item.key === 'group') {
+                                if (item.key === 'group') {
                                     promises.push(fieldResolverService.getFields(item.key, {entityType: scope.entityType}));
                                 } else {
                                     promises.push(fieldResolverService.getFields(item.key));

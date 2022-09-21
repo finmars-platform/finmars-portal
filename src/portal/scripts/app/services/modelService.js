@@ -61,7 +61,6 @@
             "audit.transactionaudit": require('../models/auditTransactionPropsModel').getAttributes(),
             "audit.instrumentaudit": require('../models/auditInstrumentPropsModel').getAttributes(),
             "accounts.account": require('../models/accountPropsModel').getAttributes(),
-            "tags.tag": require('../models/tagPropsModel').getAttributes(),
             "accounts.accounttype": require('../models/accountTypePropsModel').getAttributes(),
             "counterparties.counterparty": require('../models/counterpartyPropsModel').getAttributes(),
             "counterparties.counterpartygroup": require('../models/counterpartyGroupPropsModel').getAttributes(),

@@ -248,11 +248,6 @@
                 key: "strategies.strategy3subgroup"
             },
             {
-                name: "Tag",
-                entity: 'tag',
-                key: "tags.tag"
-            },
-            {
                 name: "Transaction",
                 entity: 'complex-transaction',
                 key: "transactions.complextransaction"
@@ -383,133 +378,6 @@
                 key: "instruments.country"
             },
         ]
-    };
-
-    var getListForTags = function () {
-
-        return [
-            {
-                name: "Account Type",
-                entity: 'account-type',
-                key: "accounts.accounttype"
-            },
-            {
-                name: "Account",
-                entity: 'account',
-                key: "accounts.account"
-            },
-            {
-                name: "Counterparty",
-                entity: 'counterparty',
-                key: "counterparties.counterparty"
-            },
-            {
-                name: "Responsible",
-                entity: 'responsible',
-                key: "counterparties.responsible"
-            },
-            {
-                name: "Currency",
-                entity: 'currency',
-                key: "currencies.currency"
-            },
-            {
-                name: "Instrument",
-                entity: 'instrument',
-                key: "instruments.instrument"
-            },
-            {
-                name: "Portfolio",
-                entity: 'portfolio',
-                key: "portfolios.portfolio"
-            },
-            {
-                name: "Thread",
-                entity: 'thread',
-                key: "chats.thread"
-            },
-            {
-                name: "Instrument Type",
-                entity: 'instrument-type',
-                key: "instruments.instrumenttype"
-            },
-            //{
-            //    name: "Instrument Type",
-            //    entity: 'instrument-types',
-            //    key: "instruments.instrumenttype"
-            //},
-            {
-                name: "Transaction Type",
-                entity: 'transaction-type',
-                key: "transactions.transactiontype"
-            },
-            {
-                name: "Transaction Type Group",
-                entity: 'transaction-type-group',
-                key: "transactions.transactiontypegroup"
-            },
-            {
-                name: "Strategy 1",
-                entity: 'strategy-1',
-                key: "strategies.strategy1"
-            },
-            {
-                name: "Strategy 2",
-                entity: 'strategy-2',
-                key: "strategies.strategy2"
-            },
-            {
-                name: "Strategy 3",
-                entity: 'strategy-3',
-                key: "strategies.strategy3"
-            },
-            {
-                name: "Thread group",
-                entity: 'thread-group',
-                key: "chats.threadgroup"
-            },
-            {
-                name: "Counterparty group",
-                entity: 'counterparty-group',
-                key: "counterparties.counterpartygroup"
-            },
-            {
-                name: "Responsible group",
-                entity: 'responsible-group',
-                key: "counterparties.responsiblegroup"
-            },
-            {
-                name: "Strategy 1 group",
-                entity: 'strategy-1-group',
-                key: "strategies.strategy1group"
-            },
-            {
-                name: "Strategy 2 group",
-                entity: 'strategy-2-group',
-                key: "strategies.strategy2group"
-            },
-            {
-                name: "Strategy 3 group",
-                entity: 'strategy-3-group',
-                key: "strategies.strategy3group"
-            },
-            {
-                name: "Strategy 1 subgroup",
-                entity: 'strategy-1-subgroup',
-                key: "strategies.strategy1subgroup"
-            },
-            {
-                name: "Strategy 2 subgroup",
-                entity: 'strategy-2-subgroup',
-                key: "strategies.strategy2subgroup"
-            },
-            {
-                name: "Strategy 3 subgroup",
-                entity: 'strategy-3-subgroup',
-                key: "strategies.strategy3subgroup"
-            }
-        ]
-
     };
 
     var getListForUi = function () {
@@ -660,11 +528,6 @@
                 key: "strategies.strategy1subgroup"
             },
             {
-                name: "Tag",
-                entity: 'tag',
-                key: "tags.tag"
-            },
-            {
                 name: "Balance report",
                 entity: 'balance-report',
                 key: "reports.balancereport"
@@ -813,7 +676,6 @@
     };
 
     module.exports = {
-        getListForTags: getListForTags,
         getListForUi: getListForUi,
         getList: getList,
         getListForTransactionTypeInputs: getListForTransactionTypeInputs,
