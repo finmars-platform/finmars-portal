@@ -169,7 +169,7 @@
 
             vm.scheme.entity_fields = metaService.getEntityAttrs(entity).filter(function (item) {
 
-                return ['tags', 'transaction_types', 'object_permissions_user', 'object_permissions_group'].indexOf(item.key) === -1 && item.value_type !== 'mc_field'
+                return ['transaction_types', 'object_permissions_user', 'object_permissions_group'].indexOf(item.key) === -1 && item.value_type !== 'mc_field'
 
             }).map(function (item, index) {
 

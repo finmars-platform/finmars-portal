@@ -327,9 +327,6 @@
                         case 'app.portal.data.complex-transaction':
                             return "TRANSACTION";
                             break;
-                        case 'app.portal.data.tag':
-                            return "TAG";
-                            break;
                         default:
                             return "ENTITIY";
                             break;

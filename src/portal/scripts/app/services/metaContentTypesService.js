@@ -5,10 +5,6 @@
 
     var metaContentTypesRepository = require('../repositories/metaContentTypesRepository');
 
-    var getListForTags = function (entity) {
-        return metaContentTypesRepository.getListForTags(entity);
-    };
-
     var getListForUi = function () {
         return metaContentTypesRepository.getListForUi();
     };
@@ -21,12 +17,8 @@
 
         var contentTypes = getList();
 
-        if (type === 'tag') {
-            contentTypes = getListForTags();
-        } else {
-            if (type === 'ui') {
-                contentTypes = getListForUi();
-            }
+        if (type === 'ui') {
+            contentTypes = getListForUi();
         }
 
         var contentType = null;
@@ -44,12 +36,8 @@
 
         var contentTypes = getList();
 
-        if (type === 'tag') {
-            contentTypes = getListForTags();
-        } else {
-            if (type === 'ui') {
-                contentTypes = getListForUi();
-            }
+        if (type === 'ui') {
+            contentTypes = getListForUi();
         }
 
         var entity = null;
@@ -213,9 +201,6 @@
             case 'strategies.strategy3subgroup':
                 result = 'Strategy 3 Subgroup';
                 break;
-            case 'tags.tag':
-                result = 'Tags';
-                break;
             case 'transactions.transactiontype':
                 result = 'Transaction Type';
                 break;
@@ -353,7 +338,6 @@
     };
 
     module.exports = {
-        getListForTags: getListForTags,
         getListForUi: getListForUi,
         getList: getList,
 

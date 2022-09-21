@@ -434,7 +434,6 @@ export default (function () {
 	portal.controller('DataPortfolioController', ['$scope', require('./app/controllers/data/dataPortfolioController')]);
 	portal.controller('DataPortfolioRegisterController', ['$scope', require('./app/controllers/data/dataPortfolioRegisterController')]);
 	portal.controller('DataPortfolioRegisterRecordController', ['$scope', require('./app/controllers/data/dataPortfolioRegisterRecordController')]);
-	portal.controller('DataTagController', ['$scope', '$stateParams', require('./app/controllers/data/dataTagController')]);
 	portal.controller('DataAccountController', ['$scope', '$stateParams', require('./app/controllers/data/dataAccountController')]);
 	portal.controller('DataAccountTypeController', ['$scope', '$stateParams', require('./app/controllers/data/dataAccountTypeController')]);
 	portal.controller('DataCounterpartyController', ['$scope', '$stateParams', require('./app/controllers/data/dataCounterpartyController')]);

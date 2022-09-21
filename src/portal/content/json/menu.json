@@ -262,12 +262,6 @@
         "title": "Base transactions",
         "type": "link",
         "icon": ""
-      },
-      {
-        "state": "app.data.tag",
-        "title": "Tags",
-        "type": "link",
-        "icon": ""
       }
     ]
   },
