@@ -55,7 +55,7 @@
 
         vm.attrsList = [];
 
-        var attrsWithoutGroups = ['notes', 'accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios', 'tags', 'content_types'];
+        var attrsWithoutGroups = ['notes', 'accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios', 'content_types'];
         var attrsWithoutFilters = ['notes'];
 
         $('body').addClass('drag-dialog'); // hide backdrop

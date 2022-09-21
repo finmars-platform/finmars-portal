@@ -253,9 +253,6 @@
             case 'app.portal.data.complex-transaction':
                 result = "Transaction";
                 break;
-            case 'app.portal.data.tag':
-                result = "Tags";
-                break;
             case 'app.portal.reports.balance-report':
                 result = "Balance report";
                 break;

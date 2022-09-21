@@ -9,7 +9,6 @@
     var fieldResolverService = require('../services/fieldResolverService');
     var bindFieldsHelper = require('../helpers/bindFieldsHelper');
     var metaService = require('../services/metaService');
-    var tagService = require('../services/tagService');
 
     module.exports = function ($mdDialog) {
 
@@ -30,32 +29,6 @@
                 logService.property('field entity', scope.entity);
                 logService.property('field options', scope.options);
 
-                scope.getFieldsGrouped = function () {
-
-                    if (metaService.getFieldsWithTagGrouping().indexOf(scope.item.key) !== -1) {
-
-                        var entityType = scope.item.key.replace('_', '-'); // refactor this
-
-                        console.log('ENTITYTYPE------------------------------------------', entityType);
-
-                        tagService.getListByContentType(entityType).then(function (data) { //refactor entityType getter
-                            scope.tags = data.results;
-
-                            scope.groups = bindFieldsHelper.groupFieldsByTagsWithDuplicates(scope.fields, scope.tags);
-
-                            scope.readyStatus.tags = true;
-
-                            scope.$apply(function () {
-
-                                setTimeout(function () {
-                                    $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
-                                        ev.stopPropagation();
-                                    });
-                                }, 100);
-                            })
-                        })
-                    }
-                };
 
                 scope.searchTerm = '';
 
@@ -65,7 +38,6 @@
                     scope.fields = res.data;
                     scope.readyStatus.content = true;
 
-                    scope.getFieldsGrouped();
 
                     scope.$apply(function () {
 

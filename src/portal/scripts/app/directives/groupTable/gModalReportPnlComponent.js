@@ -315,7 +315,7 @@
 
         vm.checkAreaAccessibility = function (item, type) {
             if (type === 'group') {
-                if (['notes', 'accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios', 'tags', 'content_types'].indexOf(item.key) !== -1) {
+                if (['notes', 'accounts', 'responsibles', 'counterparties', 'transaction_types', 'portfolios', 'content_types'].indexOf(item.key) !== -1) {
                     return true;
                 }
                 return false;

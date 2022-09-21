@@ -35,11 +35,6 @@
                 "value_content_type": "strategies.strategy1group",
                 "code": "user_code"
             },*/
-            {
-                "key": "tags",
-                "name": "Tags",
-                "value_type": "mc_field"
-            }
         ]
     };
 

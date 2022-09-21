@@ -111,12 +111,6 @@
                     item[propertyItem.key] = null;
                 }
 
-                if (propertyItem.key === 'tags') {
-                    if (!item[propertyItem.key]) {
-                        item[propertyItem.key] = [];
-                    }
-                }
-
                 if (!item[propertyItem.key] && propertyItem.allow_null === false) {
 
                     if (propertyItem.value_type === 'field') {

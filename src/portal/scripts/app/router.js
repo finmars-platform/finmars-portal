@@ -130,14 +130,6 @@
                     layoutUserCode: null
                 }
             })
-            .state('app.portal.data.tag', {
-                url: '/tags',
-                templateUrl: 'views/data/data-tag-view.html',
-                controller: 'DataTagController as vm',
-                params: {
-                    layoutUserCode: null
-                }
-            })
             .state('app.portal.data.account', {
                 url: '/accounts',
                 templateUrl: 'views/data/data-account-view.html',

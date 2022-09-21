@@ -973,22 +973,13 @@
 
                     $scope.options = {};
 
-                    if (vm.fieldKey === "tags") {
+                    if (metaService.getEntitiesWithSimpleFields().includes(vm.entityType)) {
 
                         $scope.options = {
                             entityType: vm.entityType,
+                            key: vm.fieldKey,
                         };
 
-                    } else {
-
-                        if (metaService.getEntitiesWithSimpleFields().includes(vm.entityType)) {
-
-                            $scope.options = {
-                                entityType: vm.entityType,
-                                key: vm.fieldKey,
-                            };
-
-                        }
                     }
 
                     var tooltipsList = [];
