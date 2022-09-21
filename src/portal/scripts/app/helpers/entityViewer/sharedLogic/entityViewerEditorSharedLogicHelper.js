@@ -1048,7 +1048,7 @@
 
 			if (metaService.getEntitiesWithoutDynAttrsList().indexOf(viewModel.entityType) === -1) {
 
-				viewModel.entity.attributes = [];
+				if (!viewModel.entity.attributes) viewModel.entity.attributes = [];
 
 				viewModel.attributeTypes.forEach(function (attrType) {
 					viewModel.entity.attributes = entityEditorHelper.updateAttribute(viewModel.entity.attributes, attrType);
