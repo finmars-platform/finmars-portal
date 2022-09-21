@@ -22,7 +22,6 @@
     var responsibleGroupRepository = require('../repositories/responsibleGroupRepository');
     var transactionTypeRepository = require('../repositories/transactionTypeRepository');
     var transactionTypeGroupRepository = require('../repositories/transaction/transactionTypeGroupRepository');
-    var tagRepository = require('../repositories/tagRepository');
     var metaContentTypesRepository = require('../repositories/metaContentTypesRepository');
 
     var strategyRepository = require('../repositories/strategyRepository');
@@ -108,11 +107,6 @@
                     }
                 }
 
-                if (fieldKey == 'tags') {
-                    tagRepository.getListByContentType(options.entityType).then(function (data) {
-                        resolve({type: 'multiple-ids', key: 'tags', data: data.results});
-                    });
-                }
             }
 
             switch (fieldKey) {
@@ -445,7 +439,7 @@
                     resolve({
                         type: 'multiple-ids',
                         key: 'content_types',
-                        data: metaContentTypesRepository.getListForTags()
+                        data: metaContentTypesRepository.getList()
                     });
                     break;
                 case 'responsibles':

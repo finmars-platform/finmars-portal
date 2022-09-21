@@ -110,9 +110,6 @@
                         case 'app.data.complex-transaction':
                             return "TRANSACTION";
                             break;
-                        case 'app.data.tag':
-                            return "TAG";
-                            break;
                         default:
                             return "ENTITIY";
                             break;

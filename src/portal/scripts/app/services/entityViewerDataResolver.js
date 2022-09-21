@@ -24,7 +24,6 @@
     var instrumentTypeService = require('./instrumentTypeService');
     var accrualCalculationModelService = require('./accrualCalculationModelService');
     var instrumentPeriodicityService = require('./instrumentPeriodicityService');
-    var tagService = require('./tagService');
 
     var strategyService = require('./strategyService');
     var strategyGroupService = require('./strategyGroupService');
@@ -103,9 +102,6 @@
                 break;
             case 'strategy-3-subgroup':
                 return strategySubgroupService.getList(3, options);
-                break;
-            case 'tag':
-                return tagService.getList(options);
                 break;
             case 'audit-transaction':
                 return auditService.getList(options);
