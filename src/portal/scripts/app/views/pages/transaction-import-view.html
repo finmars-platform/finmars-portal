@@ -1,6 +1,6 @@
 <div style="padding: 0 20px" class="import-page transaction-import-page">
 
-    <div layout="column" class="m-b-24" style="width: 300px;"  data-ng-if="vm.readyStatus.schemes">
+    <div layout="column" class="m-b-24" style="width: 300px;" data-ng-if="vm.readyStatus.schemes">
 
         <div class="position-relative" layout="row">
             <dropdown-select
@@ -12,7 +12,7 @@
             <md-button
                     class="scheme-edit-button md-fab {{vm.config.scheme && vm.hasSchemeEditPermission? '' : 'disabled-btn' }}"
                     data-ng-click="vm.editScheme($event)">
-                <ng-md-icon icon="edit" size="24" ></ng-md-icon>
+                <ng-md-icon icon="edit" size="24"></ng-md-icon>
                 <md-tooltip class="tooltip_1" md-direction="top">Edit Scheme</md-tooltip>
             </md-button>
         </div>
@@ -56,15 +56,34 @@
         <!--            </md-button>-->
         <!--        </div>-->
 
-        <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
-            <input type="file" id="importDataUploadInput" input-file-directive
-                   read-file="vm.config.file"
-                   read-file-change="vm.checkExtension(vm.config.file, 'csv', $event)">
-        </md-input-container>
-        <div class="input-upload-file-container">
-            <p class="importDataUploadInput">Entity</p>
-            <label for="importDataUploadInput" class="md-button md-raised md-primary IFUlabel">
-                <span>BROWSE...</span></label>
+        <md-button class="md-raised import-button"  style="width: 190px" data-ng-click="vm.loadFromJson = !vm.loadFromJson">
+            <span data-ng-if="vm.loadFromJson">Load From File</span>
+            <span data-ng-if="!vm.loadFromJson">Load From JSON Input</span>
+        </md-button>
+
+        <div data-ng-if="vm.loadFromJson">
+
+            <div layout="row">
+                            <textarea name="" style="width: 300px;" data-ng-model="vm.config.json_data" cols="60" rows="5"
+                            ></textarea>
+                <json-editor-button data-item="vm.config.json_data">
+                </json-editor-button>
+            </div>
+
+        </div>
+
+        <div data-ng-if="!vm.loadFromJson">
+
+            <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
+                <input type="file" id="importDataUploadInput" input-file-directive
+                       read-file="vm.config.file"
+                       read-file-change="vm.checkExtension(vm.config.file, 'csv', $event)">
+            </md-input-container>
+            <div class="input-upload-file-container">
+                <p class="importDataUploadInput">Entity</p>
+                <label for="importDataUploadInput" class="md-button md-raised md-primary IFUlabel">
+                    <span>BROWSE...</span></label>
+            </div>
         </div>
 
         <div layout="row" layout-align="end center" class="m-t-8">
@@ -91,6 +110,8 @@
             </md-button>
 
         </div>
+
+
     </div>
 
     <div class="loader-dialog" data-ng-if="vm.processing">

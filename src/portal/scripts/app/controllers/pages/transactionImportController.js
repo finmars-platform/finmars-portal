@@ -43,13 +43,14 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
             return !vm.readyStatus.processing && vm.config.scheme;
         };
 
+
         vm.checkExtension = function (file, extension, $event) {
 
             if (file) {
 
                 var ext = file.name.split('.')[1]
 
-                if (ext !== 'csv' && ext !== 'xlsx' ) {
+                if (ext !== 'csv' && ext !== 'xlsx') {
 
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
@@ -239,7 +240,6 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
                         }
 
 
-
                     }
 
                     if (data.scheme_object.error_handler === 'continue') {
@@ -254,7 +254,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
                     description = description + '<div> You have successfully imported transactions file </div>';
 
-                    description = description + '<div><a href="'+ vm.getFileUrl(data.stats_file_report) +'" download>Download Report File</a></div>';
+                    description = description + '<div><a href="' + vm.getFileUrl(data.stats_file_report) + '" download>Download Report File</a></div>';
 
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
@@ -275,7 +275,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
                 }
 
-                vm.processing  = false;
+                vm.processing = false;
                 vm.dataIsImported = true;
 
             }).catch(function (error) {
@@ -417,7 +417,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
                 $scope.$apply();
 
                 if (websocketService.isOnline()) {
-                    
+
                     console.log('Websocket Online. Fetching status')
 
                     websocketService.addEventListener('transaction_import_status', function (data) {
@@ -448,7 +448,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
                             var processedRows = 0
                             var processed
 
-                            keys.forEach(function(task_id){
+                            keys.forEach(function (task_id) {
 
                                 processed = 0
 
@@ -494,20 +494,45 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
         };
 
+        vm.convertJSONtoFile = function () {
+
+
+        }
+
         vm.import = function (resolve, $event) {
             vm.processing = true;
 
             var formData = new FormData();
 
-            if (vm.config.task_id) {
-                formData.append('task_id', vm.config.task_id);
+            if (vm.config.json_data) {
+
+                console.log('vm.config.json_data', vm.config.json_data);
+
+                let blob = new Blob([JSON.stringify(JSON.parse(vm.config.json_data))], {type: 'application/json;'});
+
+                if (vm.config.task_id) {
+                    formData.append('task_id', vm.config.task_id);
+                } else {
+
+                    formData.append('file', blob, 'input.json');
+                    formData.append('scheme', vm.config.scheme);
+
+                    vm.fileLocal = vm.config.local;
+
+                }
+
             } else {
 
-                formData.append('file', vm.config.file);
-                formData.append('scheme', vm.config.scheme);
+                if (vm.config.task_id) {
+                    formData.append('task_id', vm.config.task_id);
+                } else {
 
-                vm.fileLocal = vm.config.local;
+                    formData.append('file', vm.config.file);
+                    formData.append('scheme', vm.config.scheme);
 
+                    vm.fileLocal = vm.config.local;
+
+                }
             }
 
             var transactionScheme;
@@ -561,7 +586,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
                             var processedRows = 0
                             var processed
 
-                            keys.forEach(function(task_id){
+                            keys.forEach(function (task_id) {
 
                                 processed = 0
 
@@ -617,19 +642,19 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
                     skipHide: true,
                 });
 
-                vm.processing  = false;
+                vm.processing = false;
 
             })
 
 
         };
 
-        vm.getFileUrl = function(id) {
+        vm.getFileUrl = function (id) {
 
             var prefix = baseUrlService.getMasterUserPrefix();
             var apiVersion = baseUrlService.getApiVersion();
 
-            return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
+            return baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
 
         };
 
@@ -674,17 +699,17 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
                 vm.currentMember = data;
 
-                if(vm.currentMember.is_admin) {
+                if (vm.currentMember.is_admin) {
                     vm.hasSchemeEditPermission = true
                 }
 
                 vm.currentMember.groups_object.forEach(function (group) {
 
-                    if(group.permission_table) {
+                    if (group.permission_table) {
 
                         group.permission_table.configuration.forEach(function (item) {
 
-                            if(item.content_type === 'integrations.complextransactionimportscheme') {
+                            if (item.content_type === 'integrations.complextransactionimportscheme') {
                                 if (item.data.creator_change) {
                                     vm.hasSchemeEditPermission = true
                                 }
@@ -704,7 +729,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
         };
 
-        vm.getSchemeList = function(){
+        vm.getSchemeList = function () {
 
             transactionImportSchemeService.getListLight().then(function (data) {
 
