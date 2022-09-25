@@ -22,8 +22,8 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
     // vm.isIdentified = false; // check if has proper settings (e.g. has master users to work with)
     const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
 
-	const homepageUrl = redirectionService.getUrl('app.portal.home');
-	const profileUrl = redirectionService.getUrl('app.profile');
+    const homepageUrl = redirectionService.getUrl('app.portal.home');
+    const profileUrl = redirectionService.getUrl('app.profile');
 
     vm.readyStatus = false;
 
@@ -54,7 +54,7 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
             vm.readyStatus = true;
 
             // $state.go('app.profile', {}, {});
-			window.open(profileUrl, '_self');
+            window.open(profileUrl, '_self');
 
         });
 
@@ -124,7 +124,7 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
                     vm.user.data.autosave_layouts = true;
                 }
 
-				globalDataService.setUser(vm.user);
+                globalDataService.setUser(vm.user);
 
                 resolve();
 
@@ -169,10 +169,13 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
         $transitions.onStart({}, function (transition) {
 
-            const openedDialogs = document.querySelectorAll('md-dialog');
+            let openedDialogs = document.querySelectorAll('md-dialog');
 
-            openedDialogs.forEach(() => {
-                $mdDialog.hide();
+
+            openedDialogs.forEach((item) => {
+                if (!item.classList.contains('log-dialog')) {
+                    $mdDialog.hide();
+                }
             });
 
         });
@@ -245,7 +248,7 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
                 middlewareService.masterUserChanged();
 
                 // $state.go('app.portal.home');
-				window.open(homepageUrl, '_self');
+                window.open(homepageUrl, '_self');
 
             }
 
@@ -311,7 +314,7 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
                     } else {
                         // $state.go('app.portal.home');
-						window.open(homepageUrl, '_self');
+                        window.open(homepageUrl, '_self');
                     }
 
                 }
@@ -352,7 +355,7 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
                     if (vm.isAuthenticationPage) {
                         // $state.go('app.portal.home');
-						window.open(homepageUrl, '_self');
+                        window.open(homepageUrl, '_self');
                     }
 
                 } else {
@@ -362,9 +365,9 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
                     globalDataService.setCurrentMasterUserStatus(false);
 
                     if ($state.current.name !== 'app.profile') {
-						// $state.go('app.profile', {}, {});
-						window.open(profileUrl, '_self');
-					}
+                        // $state.go('app.profile', {}, {});
+                        window.open(profileUrl, '_self');
+                    }
 
                 }
 

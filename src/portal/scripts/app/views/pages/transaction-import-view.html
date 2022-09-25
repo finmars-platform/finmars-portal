@@ -17,45 +17,6 @@
             </md-button>
         </div>
 
-
-        <!--        <div layout="row">-->
-
-        <!--            <md-input-container aria-label="select with filter">-->
-
-        <!--                <label for="">Import scheme</label>-->
-        <!--                <md-select ng-model="vm.config.scheme"-->
-        <!--                           md-container-class="common-select-container"-->
-        <!--                           md-on-close="searchTerm = ''"-->
-        <!--                           style="width: 200px">-->
-
-        <!--                    <md-select-header>-->
-        <!--                        <input data-ng-model="searchTerm"-->
-        <!--                               type="search"-->
-        <!--                               placeholder="Search for a ..."-->
-        <!--                               class="md-text md-select-search-pattern select-input-filter"-->
-        <!--                               ng-keydown="$event.stopPropagation()">-->
-        <!--                    </md-select-header>-->
-
-        <!--                    <div class="select-options-holder">-->
-
-        <!--                        <md-option-->
-        <!--                                data-ng-repeat="item in vm.transactionSchemes | filter: {user_code: searchTerm}"-->
-        <!--                                ng-value="item.id"-->
-        <!--                                ng-bind="item.user_code">-->
-        <!--                        </md-option>-->
-
-        <!--                    </div>-->
-
-        <!--                </md-select>-->
-        <!--            </md-input-container>-->
-        <!--            <md-button-->
-        <!--                    class="instrument-mapping-btn md-fab {{vm.config.scheme && vm.hasSchemeEditPermission? '' : 'disabled-btn' }}"-->
-        <!--                    data-ng-click="vm.editScheme($event)">-->
-        <!--                <ng-md-icon icon="edit" size="24" style="fill:rgb(63,81,181);"></ng-md-icon>-->
-        <!--                <md-tooltip class="tooltip_1" md-direction="top">Edit Scheme</md-tooltip>-->
-        <!--            </md-button>-->
-        <!--        </div>-->
-
         <md-button class="md-raised import-button"  style="width: 190px" data-ng-click="vm.loadFromJson = !vm.loadFromJson">
             <span data-ng-if="vm.loadFromJson">Load From File</span>
             <span data-ng-if="!vm.loadFromJson">Load From JSON Input</span>
