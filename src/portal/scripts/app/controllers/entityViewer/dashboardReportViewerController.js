@@ -1124,8 +1124,6 @@
 					vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.PROCESSING);
 					vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-				} else {
-					vm.entityViewerDataService.setDataLoadStatus(true);
 				}
 
 			});
