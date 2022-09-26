@@ -30,7 +30,6 @@
 
         vm.poll = function () {
 
-            vm.position = 0;
             vm.requesting = false;
 
             if (vm.interval) {
@@ -48,9 +47,8 @@
         }
 
         vm.stop = function () {
-            if (vm.interval) {
-                clearInterval(vm.interval);
-            }
+            clearInterval(vm.interval);
+            vm.interval = null;
         };
 
         vm.makeRequest = function () {
@@ -116,7 +114,7 @@
 
         vm.render = function () {
 
-            var lines = vm.textData.split(/\r?\n/)
+            var lines = vm.textData.split(/\[0m?/)
 
             if (vm.search) {
                 lines = lines.filter(function (line) {
@@ -149,7 +147,19 @@
 
         }
 
+        vm.toggleWork = function (){
+
+            if (vm.interval) {
+                vm.stop()
+            } else {
+                vm.poll();
+            }
+
+        }
+
         vm.init = function () {
+
+            vm.position = 0;
 
             $('body').addClass('drag-dialog'); // hide backdrop
 
