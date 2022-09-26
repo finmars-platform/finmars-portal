@@ -162,7 +162,7 @@ export default (function () {
 	// Common
 
 	// portal.controller('ShellController', ['$scope', '$state', '$stateParams', '$rootScope', '$mdDialog', '$transitions', require('./app/controllers/shellController')]);
-	portal.controller('PortalController', ['$scope', '$state', 'authorizerService', 'usersService', 'globalDataService', 'redirectionService', portalController]);
+	portal.controller('PortalController', ['$scope', '$state',  'authorizerService', 'usersService', 'globalDataService', 'redirectionService', portalController]);
 	portal.controller('BookmarksController', ['$scope', '$mdDialog', '$state', 'toastNotificationService', require('./app/controllers/bookmarksController')]);
 	portal.controller('SideNavController', ['$scope', '$mdDialog', '$transitions', 'usersService', 'globalDataService', 'redirectionService', require('./app/controllers/sideNavController')]);
 	portal.controller('HomeController', ['$scope', '$state', '$mdDialog', 'authorizerService', 'usersService', 'globalDataService', 'systemMessageService', 'redirectionService', require('./app/controllers/homeController')]);
@@ -262,6 +262,7 @@ export default (function () {
 	portal.controller('InfoDialogController', ['$scope', '$mdDialog', 'info', require('./app/controllers/dialogs/infoDialogController')]);
 	portal.controller('FilePreviewDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/filePreviewDialogController')]);
 	portal.controller('SystemErrorLogDialogController', ['$scope', '$mdDialog', 'globalDataService', 'data', require('./app/controllers/dialogs/systemErrorLogDialogController')]);
+	portal.controller('LogDialogController', ['$scope', '$mdDialog', 'globalDataService', 'data', require('./app/controllers/dialogs/logDialogController')]);
 
 	// Actions
 
