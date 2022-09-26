@@ -36,12 +36,12 @@
 					scope.columnRowsContent = [
 						{
 							id: true, // for text multiselector
-							value: 'True', // for text selector
+							name: 'True', // for text selector
 							active: false // for date multiselector
 						},
 						{
 							id: false, // for text multiselector
-							value: 'False', // for text selector
+							name: 'False', // for text selector
 							active: false // for date multiselector
 						}
 					]

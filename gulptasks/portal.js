@@ -43,7 +43,6 @@
 
     gulp.task(appName + '-less-to-css-min', function () {
 		var pathToLess = ['src/' + appName + '/content/less/imports.less'];
-		console.log("testing " + appName + "-less-to-css-min", pathToLess, appName);
 		return commonTasks.lessToCssMin(pathToLess, appName);
     });
 
@@ -205,7 +204,7 @@
     });
 
     gulp.task(appName + '-watch-All', function () {
-		console.log("testing portal-watch-All fired");
+
     	livereload.listen();
 
         gulp.watch('src/' + appName + '/**/*.less', gulp.series(appName + '-less-to-css-min'));
