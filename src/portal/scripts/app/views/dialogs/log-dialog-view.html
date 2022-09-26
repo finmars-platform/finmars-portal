@@ -35,6 +35,13 @@
                 <span data-ng-if="vm.autoScroll">Disable Autoscroll</span>
                 <span data-ng-if="!vm.autoScroll">Enable Autoscroll</span>
             </md-button>
+
+
+            <md-button ng-click="vm.toggleWork()">
+                <span data-ng-if="vm.interval">Stop</span>
+                <span data-ng-if="!vm.interval">Start</span>
+            </md-button>
+
         </div>
 
         <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
