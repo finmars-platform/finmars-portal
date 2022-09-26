@@ -83,6 +83,9 @@
 
                     console.log('renderReportViewer');
 
+                    scope.evDataService.setDataLoadStatus(true);
+
+
                     const coloredSubtotals = scope.evDataService.getMarkedSubtotals();
 
                     rvDataHelper.syncLevelFold(scope.evDataService);
@@ -326,6 +329,12 @@
                 }
 
                 function updateTableContent() {
+
+                    scope.dataLoadStatus = true;
+
+                    setTimeout(function () {
+                        scope.$apply();
+                    }, 0)
 
                     scope.firstRender = true; // IF SOMETHING WENT WRONG AND SOMEHOW REPORT IS NOT RENDERER, WE HAVE 1 min timeoout to render
 

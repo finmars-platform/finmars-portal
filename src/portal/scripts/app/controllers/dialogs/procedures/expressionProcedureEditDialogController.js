@@ -121,7 +121,7 @@
                 multiple: true,
                 locals: {
                     data: {
-                        item: vm.originalitem,
+                        item: vm.originalItem,
                         entityType: vm.entityType,
                     }
                 }

@@ -1025,11 +1025,11 @@
           title="Websocket status: {{vm.getWsStatus()}}"></span>
 
     <br/>
-    <div class="sidenav-error-subtitle" data-ng-click="vm.openSystemErrorLogDialog($event)">
-        <span class="{{vm.getErrorCount() ? 'text-warning-red' : ''}}">Errors: {{ vm.getErrorCount() }}</span>
+    <div >
+        <a class="sidenav-api-link sidenav-error-subtitle open-logs-button"  data-ng-click="vm.toggleLogsWindow($event)">logs</a> <span data-ng-click="vm.openSystemErrorLogDialog($event)" class="sidenav-error-subtitle {{vm.getErrorCount() ? 'text-warning-red' : ''}}">Errors: {{ vm.getErrorCount() }}</span>
     </div>
 
-    <div classs="sidenav-api-subtitle">
+    <div class="sidenav-api-subtitle">
         <div><a class="sidenav-api-link" href="{{ vm.getCurrentApiUrl() }}" target="_blank">API</a>: <span
                 data-ng-click="vm.copyToBuffer(vm.getCurrentBaseApiUrl())" class="sidenav-tech-button">
             {{ vm.getCurrentBaseApiUrl() }}

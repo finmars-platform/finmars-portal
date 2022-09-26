@@ -585,6 +585,34 @@
 
         }
 
+        vm.toggleLogsWindow = function ($event) {
+
+
+            if (document.querySelector('.log-dialog')) {
+
+                document.querySelector('.log-dialog').remove()
+
+            } else  {
+
+                $mdDialog.show({
+                    controller: 'LogDialogController as vm',
+                    templateUrl: 'views/dialogs/log-dialog-view.html',
+                    targetEvent: $event,
+                    parent: document.querySelector('.log-containers-wrap'),
+                    locals: {
+                        data: {}
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    hasBackdrop: false
+                })
+            }
+
+
+
+        }
+
         vm.init = function () {
 
             if (!window.system_errors) {
