@@ -282,40 +282,40 @@
 
 						}).then(function (res) {
 
-								if (res.status === "agree") {
+							if (res.status === "agree") {
 
-									scope.model = res.selectedItems
-									if (scope.model) {
-										getSelectedOptionsIds();
-									}
+								scope.model = res.selectedItems
+								if (scope.model) {
+									getSelectedOptionsIds();
+								}
 
-									if (scope.selectedItemsIndication === 'chips') {
+								if (scope.selectedItemsIndication === 'chips') {
 
-										formatDataForChips();
-										getAvailableOptions();
+									formatDataForChips();
+									getAvailableOptions();
 
-										scope.chipsListEventService.dispatchEvent(
-											directivesEvents.CHIPS_LIST_CHANGED,
-											{chipsList: scope.chipsList, updateScope: true}
-										);
-
-									}
-
-									if (scope.onChangeCallback) {
-
-										setTimeout(function () {
-
-											scope.onChangeCallback();
-
-										}, 500);
-
-									} else if (ngModel) { // old method but still used in some places
-										ngModel.$setViewValue(res.selectedItems);
-									}
+									scope.chipsListEventService.dispatchEvent(
+										directivesEvents.CHIPS_LIST_CHANGED,
+										{chipsList: scope.chipsList, updateScope: true}
+									);
 
 								}
 
-							});
+								if (scope.onChangeCallback) {
+
+									setTimeout(function () {
+
+										scope.onChangeCallback();
+
+									}, 500);
+
+								} else if (ngModel) { // old method but still used in some places
+									ngModel.$setViewValue(res.selectedItems);
+								}
+
+							}
+
+						});
 
 					});
 
