@@ -55,7 +55,6 @@
         vm.dcLayoutHasBeenFixed = false;
 
         vm.hasEnabledStatus = false;
-        vm.entityStatus = '';
         vm.evEditorEvent = null;
 
         if (Object.keys(entity).length) { // make copy option
@@ -542,6 +541,16 @@
         };
 
         vm.manageAttrs = sharedLogic.manageAttributeTypes;
+
+        vm.footerPopupData = {
+            options: [
+                {
+                    icon: "edit",
+                    name: "Manage Attributes",
+                    onClick: vm.manageAttrs
+                },
+            ]
+        };
 
         vm.checkReadyStatus = sharedLogic.checkReadyStatus;
         vm.bindFlex = sharedLogic.bindFlex;
