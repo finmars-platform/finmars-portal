@@ -275,29 +275,38 @@
             promises.push(vm.getCurrentMasterUser());
             promises.push(vm.getGroupList());
 
-            Promise.all(promises).then(function (data) {
+            return new Promise(function (resolve, reject) {
 
-                // TODO object_permissions is undefined
-                vm.entity.object_permissions && vm.entity.object_permissions.forEach(function (perm) {
+                Promise.all(promises).then(function (data) {
 
-                    if (perm.permission === "change_" + vm.entityType.split('-').join('')) {
+                    // TODO object_permissions is undefined
+                    vm.entity.object_permissions && vm.entity.object_permissions.forEach(function (perm) {
 
-                        if (vm.currentMember.groups.indexOf(perm.group) !== -1) {
-                            vm.hasEditPermission = true;
+                        if (perm.permission === "change_" + vm.entityType.split('-').join('')) {
+
+                            if (vm.currentMember.groups.indexOf(perm.group) !== -1) {
+                                vm.hasEditPermission = true;
+                            }
+
                         }
 
+                    });
+
+                    if (vm.currentMember && vm.currentMember.is_admin) {
+                        vm.hasEditPermission = true;
+                        vm.canManagePermissions = true;
                     }
 
+                    vm.readyStatus.permissions = true;
+                    $scope.$apply();
+
+                    resolve();
+
+                }).catch(function (error) {
+                    reject(error)
                 });
 
-                if (vm.currentMember && vm.currentMember.is_admin) {
-                    vm.hasEditPermission = true;
-                    vm.canManagePermissions = true;
-                }
-
-                vm.readyStatus.permissions = true;
-                $scope.$apply();
-            });
+            })
 
         };
 
@@ -539,36 +548,7 @@
         vm.footerPopupData = null;
 
         vm.copy = function (windowType) {
-
-            var entity = JSON.parse(JSON.stringify(vm.entity));
-
-            entity["user_code"] = vm.entity["user_code"] + '_copy';
-            entity["name"] = vm.entity["name"] + '_copy';
-
-            console.log('copy entity', entity);
-
-			if (windowType === 'big-drawer') {
-
-				const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType}};
-				return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
-
-			} else {
-
-				$mdDialog.show({
-					controller: 'EntityViewerAddDialogController as vm',
-					templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-					parent: angular.element(document.body),
-					locals: {
-						entityType: vm.entityType,
-						entity: entity,
-						data: {}
-					}
-				});
-
-				metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
-
-			}
-
+            vm.sharedLogic.copy(windowType, 'EntityViewerAddDialogController');
         };
 
         /* vm.getFormLayout = async function () {
@@ -678,7 +658,9 @@
 
         vm.getItem = function () {
 
-            return new Promise(function (res, rej) {
+            return new Promise(async function (resolve, reject) {
+
+                var promises = [];
 
                 entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
 
@@ -692,7 +674,7 @@
 
                     if (['price-history', 'currency-history', 'price-history-error', 'currency-history-error'].indexOf(vm.entityType) === -1) {
 
-                        vm.loadPermissions();
+                        promises.push(vm.loadPermissions());
 
                     } else {
 
@@ -702,29 +684,40 @@
                     }
 
                     // vm.getFormLayout();
-                    vm.sharedLogic.getFormLayout(formLayout).then(formLayoutData => {
+                    promises.push(vm.sharedLogic.getFormLayout(formLayout));
 
-						vm.typeSelectorOptions = formLayoutData.typeSelectorOptions;
-						vm.groupSelectorOptions = formLayoutData.groupSelectorOptions;
+                    Promise.allSettled(promises).then(resData => {
 
-						// vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
-						// vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
+                        var formLayoutDataRes = resData[1];
 
-						vm.attributeTypes = formLayoutData.attributeTypes;
-						vm.entity.attributes = formLayoutData.attributes;
+                        if (formLayoutDataRes.status === 'fulfilled') {
 
-                    	vm.tabs = formLayoutData.tabs;
-						vm.tabColumns = formLayoutData.tabColumns;
+                            var formLayoutData = formLayoutDataRes.value;
 
-						vm.attributesLayout = formLayoutData.attributesLayout;
+                            vm.typeSelectorOptions = formLayoutData.typeSelectorOptions;
+                            vm.groupSelectorOptions = formLayoutData.groupSelectorOptions;
 
-                        vm.footerPopupData = getFooterPopupData(); // have to be called after vm.loadPermissions()
+                            // vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
+                            // vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
 
-						vm.readyStatus.layout = true;
-						vm.readyStatus.entity = true;
+                            vm.attributeTypes = formLayoutData.attributeTypes;
+                            vm.entity.attributes = formLayoutData.attributes;
+
+                            vm.tabs = formLayoutData.tabs;
+                            vm.tabColumns = formLayoutData.tabColumns;
+
+                            vm.attributesLayout = formLayoutData.attributesLayout;
+
+                            vm.footerPopupData = getFooterPopupData(); // have to be called after vm.loadPermissions()
+
+                            vm.readyStatus.layout = true;
+                            vm.readyStatus.entity = true;
+
+                        }
+
 
                     	// Resolving promise to inform child about end of editor building
-						res();
+                        resolve();
 
 					});
 
@@ -860,34 +853,7 @@
         };
 
         // vm.delete = function ($event) {
-        vm.delete = function (options, _$popup) {
-
-            _$popup.cancel();
-
-            $mdDialog.show({
-                controller: 'EntityViewerDeleteDialogController as vm',
-                templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-dialog-view.html',
-                parent: angular.element(document.body),
-                // targetEvent: $event,
-                multiple: true,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    entity: vm.entity,
-                    entityType: vm.entityType
-                }
-            }).then(function (res) {
-
-                console.log('here', res);
-
-                if (res.status === 'agree') {
-                    metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'delete'});
-                }
-
-            })
-
-        };
+        vm.delete = vm.sharedLogic.deleteEntity;
 
         vm.toggleEnableStatus = function () {
 
@@ -1171,30 +1137,20 @@
             })
         };
 
-        vm.editAsJson = function (ev) {
+        vm.editAsJson = function (option, _$popup) {
 
-            $mdDialog.show({
-                controller: 'EntityAsJsonEditorDialogController as vm',
-                templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
-                targetEvent: ev,
-                multiple: true,
-                locals: {
-                    data: {
-                        item: vm.entity,
-                        entityType: vm.entityType,
-                    }
-                }
-            }).then(function (res) {
+            _$popup.cancel();
+
+            vm.sharedLogic.editAsJsonDialog().then(function (res) {
 
                 if (res.status === "agree") {
 
+                    vm.readyStatus.entity = false;
+
                     vm.getItem().then(function () {
+                        vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
                         $scope.$apply();
                     });
-
-                    vm.layoutAttrs = layoutService.getLayoutAttrs();
-                    getEntityAttrs();
-
 
                 }
             })
