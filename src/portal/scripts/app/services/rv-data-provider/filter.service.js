@@ -84,14 +84,14 @@
 
                     if (item.hasOwnProperty(keyProperty) && item[keyProperty]) { // check if cell used to filter row is not empty
 
-                        if (entityType === 'balance-report' || entityType === 'pl-report') {
+                        /*if (entityType === 'balance-report' || entityType === 'pl-report') {
                             if (keyProperty === 'name' || keyProperty.indexOf('instrument') !== -1) {
                                 if (item.item_type !== 1) { // item_type 1 == "instrument"
                                     match = false;
                                     break;
                                 }
                             }
-                        }
+                        }*/
 
                         if (filterType === 'empty') { // prevent pass of cells with values
                             match = false;
