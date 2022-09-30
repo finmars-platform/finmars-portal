@@ -2,6 +2,7 @@
  * Created by mevstratov on 24.06.2019.
  */
 import websocketService from '../../../../../shell/scripts/app/services/websocketService.js';
+import importTransactionService from "../../services/import/importTransactionService";
 
 (function () {
 
@@ -11,6 +12,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
     var importTransactionService = require('../../services/import/importTransactionService');
 
     var baseUrlService = require('../../services/baseUrlService');
+    var downloadFileHelper = require('../../helpers/downloadFileHelper')
     // var usersService = require('../../services/usersService');
 
     // var websocketService = require('../../../../../shell/scripts/app/services/websocketService.js');
@@ -742,6 +744,69 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
             });
 
         };
+
+        vm.togglePreprocessFile = function (){
+
+            vm.config.preprocess_file = !vm.config.preprocess_file;
+        }
+
+        vm.preprocessFile = function (){
+
+            vm.processing = true;
+
+            var formData = new FormData();
+
+            if (vm.config.json_data) {
+
+                console.log('vm.config.json_data', vm.config.json_data);
+
+                let blob = new Blob([JSON.stringify(JSON.parse(vm.config.json_data))], {type: 'application/json;'});
+
+                if (vm.config.task_id) {
+                    formData.append('task_id', vm.config.task_id);
+                } else {
+
+                    formData.append('file', blob, 'input.json');
+                    formData.append('scheme', vm.config.scheme);
+
+                    vm.fileLocal = vm.config.local;
+
+                }
+
+            } else {
+
+                if (vm.config.task_id) {
+                    formData.append('task_id', vm.config.task_id);
+                } else {
+
+                    formData.append('file', vm.config.file);
+                    formData.append('scheme', vm.config.scheme);
+
+                    vm.fileLocal = vm.config.local;
+
+                }
+            }
+
+            var transactionScheme;
+
+            vm.transactionSchemes.forEach(function (scheme) {
+
+                if (scheme.id === vm.config.scheme) {
+                    transactionScheme = scheme;
+                }
+
+            });
+
+            importTransactionService.preprocessFile(formData).then(function (data) {
+
+                downloadFileHelper.downloadFile(data, "application/pdf", "preprocessed.json");
+
+                vm.processing = false;
+                $scope.$apply();
+
+            });
+
+        }
 
         vm.init = function () {
 

@@ -51,6 +51,15 @@
                             </div>
 
                             <div layout="row">
+                                <md-input-container flex style="margin-bottom: 0">
+                                    <label for="">Expression for File Preprocessing</label>
+                                    <input type="text" data-ng-model="vm.scheme.data_preprocess_expression">
+                                </md-input-container>
+                                <expression-editor-button data-item="vm.scheme.data_preprocess_expression"
+                                                          data-data="vm.exprEditorBtnData"></expression-editor-button>
+                            </div>
+
+                            <div layout="row">
                                 <md-input-container>
                                     <label for="">Error handling</label>
                                     <md-select data-ng-model="vm.scheme.error_handler">
