@@ -165,7 +165,7 @@
 
             setTimeout(function (){
                 vm.listFiles();
-            }, 100)
+            }, 600)
 
         }
 
