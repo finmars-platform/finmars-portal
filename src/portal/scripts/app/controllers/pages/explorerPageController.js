@@ -252,7 +252,7 @@
 
             explorerService.uploadFiles(formData).then(function (data){
 
-                document.querySelector('#explorerFileUploadInput').files = []
+                document.querySelector('#explorerFileUploadInput').value = "";
 
                 vm.listFiles();
 
