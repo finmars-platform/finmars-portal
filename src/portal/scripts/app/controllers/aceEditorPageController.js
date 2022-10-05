@@ -38,6 +38,10 @@
                     document.querySelector('.ace-editor-page-output').innerHTML = data;
                 }
 
+                if (data.log) {
+                    document.querySelector('.ace-editor-page-log').innerHTML = data.log;
+                }
+
                 $scope.$apply();
 
             }).catch(function (error) {

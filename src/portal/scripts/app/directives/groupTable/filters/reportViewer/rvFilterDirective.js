@@ -91,7 +91,6 @@
 						vm.filterNotFound = true;
 					}
 
-
 				};
 
 				vm.getDataForSelects = function () {

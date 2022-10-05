@@ -378,6 +378,13 @@
                 controller: 'ProcessesController as vm'
             })
 
+            .state('app.portal.explorer', {
+                url: '/explorer',
+                templateUrl: 'views/pages/explorer-page-view.html',
+                controller: 'ExplorerPageController as vm'
+            })
+
+
             .state('app.portal.update-center', {
                 url: '/update-center',
                 templateUrl: 'views/pages/update-center-view.html',
