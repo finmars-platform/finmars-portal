@@ -14,6 +14,8 @@
 
                 </md-button>
 
+                <md-button class="md-raised" data-ng-click="vm.listFiles($event)">Refresh</md-button>
+
                 <input type="file" style="display: none" multiple id="explorerFileUploadInput" input-file-directive read-file="vm.fileUploadInput"
                        read-file-change="vm.uploadFileHandler($event)">
             </div>
