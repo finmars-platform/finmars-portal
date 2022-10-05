@@ -27,7 +27,17 @@
                 content = JSON.stringify(vm.data.content, null, 4);
             }
 
-            downloadFileHelper.downloadFile(content, "application/force-download", vm.data.info.file_report_object.name);
+            var name = 'file'
+
+            if (vm.data.file_descriptor) {
+                name = vm.data.file_descriptor.name
+            }
+
+            if (vm.data.info && vm.data.info.file_report_object) {
+                name = vm.data.info.file_report_object.name
+            }
+
+            downloadFileHelper.downloadFile(content, "application/force-download", name);
 
         }
 
@@ -103,13 +113,23 @@
 
         vm.formatContent = function () {
 
-            if (vm.data.info.file_report_object.name.indexOf('.csv') !== -1) {
+            var name = ''
+
+            if (vm.data.file_descriptor) {
+                name = vm.data.file_descriptor.name
+            }
+
+            if (vm.data.info && vm.data.info.file_report_object) {
+                name = vm.data.info.file_report_object.name
+            }
+
+            if (name.indexOf('.csv') !== -1) {
 
                 vm.contentType = 'csv'
 
                 vm.data.content_formatted = vm.formatCSV()
 
-            } else if (vm.data.info.file_report_object.name.indexOf('.json') !== -1) {
+            } else if (name.indexOf('.json') !== -1) {
 
                 vm.contentType = 'json'
 
@@ -117,18 +137,49 @@
 
                 vm.initJsonEditor()
 
-            } else {
+            } else if (name.indexOf('.txt') !== -1) {
 
                 vm.contentType = 'text'
 
                 vm.data.content_formatted = vm.data.content
+
+            } else if (name.indexOf('.png') !== -1 || name.indexOf('.jpg') !== -1 || name.indexOf('.gif') !== -1) {
+
+                vm.contentType = 'image'
+
+                var urlCreator = window.URL || window.webkitURL;
+                var imageUrl = urlCreator.createObjectURL(vm.data.blob);
+                document.querySelector("#preview-image").src = imageUrl;
+
             }
+
+
+        }
+
+        vm.readBlob = function (){
+
+            var reader = new FileReader();
+
+            reader.addEventListener("loadend", function(e){
+                vm.data.content = reader.result;
+
+                vm.formatContent();
+
+                $scope.$apply();
+
+            });
+
+            reader.readAsText(vm.data.blob);
 
         }
 
         vm.init = function () {
 
-            vm.formatContent()
+            if (vm.data.blob) {
+                vm.readBlob()
+            } else {
+                vm.formatContent()
+            }
 
         }
 
