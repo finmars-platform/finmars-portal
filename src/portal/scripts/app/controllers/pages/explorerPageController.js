@@ -67,7 +67,11 @@
 
         }
 
-        vm.previewFile = function ($event, item) {
+        vm.previewFile = function ($event, item, $mdMenu) {
+
+            if ($mdMenu) {
+                $mdMenu.close()
+            }
 
             var itemPath = vm.currentPath.join('/') + '/' + item.name
 
