@@ -1,0 +1,77 @@
+.explorer-page {
+
+  min-height: 100%;
+  
+  .explorer-breadcrumbs {
+    overflow: hidden;
+  }
+
+  .explorer-breadcrumbs-item {
+    float: left;
+    margin: 8px;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px;
+    &:hover {
+      background: #ddd;
+      opacity: 7;
+    }
+
+  }
+
+  .explorer-item {
+    float: left;
+    width: 64px;
+    height: 64px;
+    margin: 16px;
+    box-sizing: border-box;
+    text-align: center;
+
+    word-break: break-word;
+
+
+
+    .explorer-item-name {
+
+      display: inline-block;
+      font-size: 12px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    &.selected {
+      background: #ddd;
+
+      .explorer-item-name {
+        background: dodgerblue;
+        color: #fff;
+      }
+    }
+
+    .material-icons {
+      font-size: 48px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+  }
+
+  span.explorer-breadcrumbs-item-divider {
+    float: left;
+    font-weight: bold;
+    margin-top: 18px;
+  }
+
+  .explorer-toolbar {
+    margin-left: 16px;
+    padding-top: 16px;
+
+    button.md-raised.md-button {
+      font-size: 11px;
+      height: 30px;
+    }
+  }
+
+
+}
