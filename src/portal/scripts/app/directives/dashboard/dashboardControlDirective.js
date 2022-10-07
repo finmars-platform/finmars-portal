@@ -145,6 +145,7 @@
 
                     var changedData = {
                         changedLast: true,
+                        name: scope.componentData.name,
                         data: null
                     };
 

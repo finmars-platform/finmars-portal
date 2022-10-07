@@ -489,6 +489,9 @@
                 case 'superset_dashboard':
                     verboseName = 'Superset Dashboard';
                     break;
+                case 'finmars_widget':
+                    verboseName = 'Finmars Widget';
+                    break;
             }
 
             return verboseName;
@@ -1253,6 +1256,10 @@
             superset_dashboard: {
                 editorController: 'DashboardConstructorSupersetDashboardComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-superset-dashboard-component-dialog-view.html'
+            },
+            finmars_widget: {
+                editorController: 'DashboardConstructorFinmarsWidgetComponentDialogController as vm',
+                editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-finmars-widget-component-dialog-view.html'
             }
         };
 
