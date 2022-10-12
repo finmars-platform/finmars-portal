@@ -220,7 +220,7 @@
                         scope.isDisabled = false;
                         scope.processing = false;
 
-                        if (data.errors.length) {
+                        if (data.errors && data.errors.length) {
 
                             toastNotificationService.error(data.errors[0])
 
@@ -253,6 +253,8 @@
 
                             scope.$apply();
 
+                            // scope.getList();
+
                             setTimeout(function () {
 
                                 if (scope.onChangeCallback) {
@@ -269,8 +271,11 @@
                         }
 
                     }).catch(function (e){
-                        scope.processing = true;
-                        scope.isDisabled = true;
+
+                        console.log("selectDatabaseInstrument.error ", e)
+
+                        scope.processing = false;
+                        scope.isDisabled = false;
 
                         scope.model = null;
 
