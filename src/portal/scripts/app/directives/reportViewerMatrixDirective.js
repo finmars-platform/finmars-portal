@@ -524,91 +524,105 @@
 
                 };
 
+                scope.destroyMatrix = function (){
+
+                    console.log("destroy matrix");
+                    scope.matrix = null
+
+                }
+
                 scope.createMatrix = function () {
-                    /*var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
-                    var itemList = flatList.filter(function (item) {
-                        return item.___type === 'object'
-                    });
 
-                    scope.columns = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.abscissa);
-                    scope.rows = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.ordinate);
+                    scope.destroyMatrix();
 
-                    scope.matrix = reportViewerMatrixHelper.getMatrix(itemList,
-                        scope.rows,
-                        scope.columns,
-                        scope.matrixSettings.ordinate,
-                        scope.matrixSettings.abscissa,
-                        scope.matrixSettings.value_key,
-                        scope.matrixSettings.subtotal_formula_id);
+                    setTimeout(function (){
 
-                    if (scope.emptyLinesHidingType) {
+                        /*var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
+                        var itemList = flatList.filter(function (item) {
+                            return item.___type === 'object'
+                        });
 
-                        switch (scope.emptyLinesHidingType) {
-                            case 1:
-                                reportViewerMatrixHelper.hideEmptyCols(scope.matrix, scope.columns);
-                                break;
+                        scope.columns = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.abscissa);
+                        scope.rows = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.ordinate);
 
-                            case 2:
-                                reportViewerMatrixHelper.hideEmptyRows(scope.matrix);
-                                break;
+                        scope.matrix = reportViewerMatrixHelper.getMatrix(itemList,
+                            scope.rows,
+                            scope.columns,
+                            scope.matrixSettings.ordinate,
+                            scope.matrixSettings.abscissa,
+                            scope.matrixSettings.value_key,
+                            scope.matrixSettings.subtotal_formula_id);
 
-                            case 3:
-                                reportViewerMatrixHelper.hideEmptyRows(scope.matrix);
-                                reportViewerMatrixHelper.hideEmptyCols(scope.matrix, scope.columns);
-                                break;
+                        if (scope.emptyLinesHidingType) {
+
+                            switch (scope.emptyLinesHidingType) {
+                                case 1:
+                                    reportViewerMatrixHelper.hideEmptyCols(scope.matrix, scope.columns);
+                                    break;
+
+                                case 2:
+                                    reportViewerMatrixHelper.hideEmptyRows(scope.matrix);
+                                    break;
+
+                                case 3:
+                                    reportViewerMatrixHelper.hideEmptyRows(scope.matrix);
+                                    reportViewerMatrixHelper.hideEmptyCols(scope.matrix, scope.columns);
+                                    break;
+                            }
+
                         }
 
-                    }
+                        scope.totals = reportViewerMatrixHelper.getMatrixTotals(scope.matrix, itemList);*/
+                        scope.matrixCreationInProgress = true;
+                        window.removeEventListener('resize', scope.alignGrid);
 
-                    scope.totals = reportViewerMatrixHelper.getMatrixTotals(scope.matrix, itemList);*/
-					scope.matrixCreationInProgress = true;
-					window.removeEventListener('resize', scope.alignGrid);
+                        getValuesForMatrix();
 
-                    getValuesForMatrix();
+                        if (scope.emptyLinesHidingType) {
 
-                    if (scope.emptyLinesHidingType) {
+                            switch (scope.emptyLinesHidingType) {
+                                case 'columns':
+                                    scope.columns = scope.columns.filter(function (column) {
+                                        return column.total;
+                                    });
 
-                        switch (scope.emptyLinesHidingType) {
-                            case 'columns':
-                                scope.columns = scope.columns.filter(function (column) {
-                                    return column.total;
-                                });
+                                    break;
 
-                                break;
+                                case 'rows':
+                                    scope.rows = scope.rows.filter(function (row) {
+                                        return row.total;
+                                    });
 
-                            case 'rows':
-                                scope.rows = scope.rows.filter(function (row) {
-                                    return row.total;
-                                });
+                                    break;
 
-                                break;
+                                case 'columns_rows':
+                                    scope.columns = scope.columns.filter(function (column) {
+                                        return column.total;
+                                    });
 
-                            case 'columns_rows':
-                                scope.columns = scope.columns.filter(function (column) {
-                                    return column.total;
-                                });
+                                    scope.rows = scope.rows.filter(function (row) {
+                                        return row.total;
+                                    });
 
-                                scope.rows = scope.rows.filter(function (row) {
-                                    return row.total;
-                                });
+                                    break;
+                            }
 
-                                break;
                         }
 
-                    }
+                        buildMatrix();
 
-                    buildMatrix();
+                        setTimeout(function () {
 
-                    setTimeout(function () {
+                            scope.$apply();
 
-                        scope.$apply();
+                            initMatrixMethods();
 
-                        initMatrixMethods();
+                            scope.matrixCreationInProgress = false;
+                            window.addEventListener('resize', scope.alignGrid);
 
-						scope.matrixCreationInProgress = false;
-						window.addEventListener('resize', scope.alignGrid);
+                        }, 100)
 
-                    }, 100)
+                    }, 0)
 
                 };
 
