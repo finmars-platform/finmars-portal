@@ -4,6 +4,10 @@
 
     function getMatrixUniqueValues(itemList, key, valueKey) {
 
+        console.log('getMatrixUniqueValues.itemList', itemList)
+        console.log('getMatrixUniqueValues.key', key)
+        console.log('getMatrixUniqueValues.valueKey', valueKey)
+
         var result = [];
         var foundItems = [];
 
@@ -84,6 +88,14 @@
     }
 
     function getMatrix(itemList, rows, columns, rowsKey, columnsKey, valueKey, subtotal_formula_id) {
+
+        console.log('getMatrix.itemList', itemList)
+        console.log('getMatrix.rows', rows)
+        console.log('getMatrix.columns', columns)
+        console.log('getMatrix.rowsKey', rowsKey)
+        console.log('getMatrix.columnsKey', columnsKey)
+        console.log('getMatrix.valueKey', valueKey)
+        console.log('getMatrix.subtotal_formula_id', subtotal_formula_id)
 
         subtotal_formula_id = subtotal_formula_id || 1;
 
