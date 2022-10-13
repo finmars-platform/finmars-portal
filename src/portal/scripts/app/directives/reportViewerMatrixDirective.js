@@ -496,10 +496,15 @@
                 var getValuesForMatrix = function () {
 
                     var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
+                    console.log('getValuesForMatrix.flatList', flatList)
                     itemList = flatList.filter(item => item.___type === 'object');
+                    console.log('getValuesForMatrix.itemList', itemList)
 
                     scope.columns = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.abscissa, scope.matrixSettings.value_key);
                     scope.rows = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.ordinate, scope.matrixSettings.value_key);
+
+                    console.log('getValuesForMatrix.columns', scope.columns)
+                    console.log('getValuesForMatrix.rows', scope.rows)
 
                 };
 
