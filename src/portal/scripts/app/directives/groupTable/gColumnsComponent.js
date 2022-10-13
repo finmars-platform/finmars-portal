@@ -229,6 +229,7 @@
                 }
 
                 function openNumberFormatDialog(column) {
+
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
                     $mdDialog.show({
@@ -236,7 +237,7 @@
                         templateUrl: 'views/dialogs/number-format-settings-dialog-view.html',
                         parent: angular.element(document.body),
                         locals: {
-                            data: column
+                            data: {settings: column.report_settings}
                         }
                     }).then(res => {
 
