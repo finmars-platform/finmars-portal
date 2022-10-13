@@ -112,51 +112,79 @@
 
                     scope.currentMasterUser = globalDataService.getMasterUser();
 
-
-                    setTimeout(() => {
-
-                        document.querySelector(scope.containerId).innerHTML = '';
-
-                        console.log('scope.portfolio ', scope.portfolio)
-                        console.log('scope.data ',scope.date_to )
-
-                        let FinmarsWidgets2 = new window.FinmarsWidgets({
-                            apiUrl: baseUrl + '/v/',
-                            workspace: scope.currentMasterUser.base_api_url,
-                            apiToken: cookieService.getCookie('access_token'),
-                            // websocketUrl: "wss://finmars.com/",
-                            options: {
-                                portfolioId: scope.portfolio, // Readme
-                                date_to: scope.date_to, // Readme
-                                date_from: undefined, // Readme
-                                benchmark: 'sp_500', // Readme
-                            },
-                            widgets: [
-                                {
-                                    name: scope.name,
-                                    container: scope.containerId// e.g. finmarsChart1
-                                },
-                                // {
-                                //     name: "balance",
-                                //     container: "#balance_datail" // e.g. finmarsChart1
-                                // },
-                                // {
-                                //     name: "pl",
-                                //     container: "#balance_pl" // e.g. finmarsChart1
-                                // },
-                                // {
-                                //     name: "nav",
-                                //     container: "#balance_nav" // e.g. finmarsChart1
-                                // }
-                            ]
+                    if (window.finmarsWidgetsInstance) {
+                        window.finmarsWidgetsInstance.setOptions({
+                            portfolioId: scope.portfolio, // Readme
+                            date_to: scope.date_to, // Readme
+                            date_from: undefined, // Readme
+                            benchmark: 'sp_500', // Readme
                         })
+                    } else {
+                        console.warn("finmarsWidgetsInstance is not defined")
+                    }
 
 
-                    }, 500)
+                    // setTimeout(() => {
+
+                        // document.querySelector(scope.containerId).innerHTML = '';
+
+                        // console.log('scope.portfolio ', scope.portfolio)
+                        // console.log('scope.data ',scope.date_to )
+
+
+
+                        // let FinmarsWidgets2 = new window.FinmarsWidgets({
+                        //     apiUrl: baseUrl + '/v/',
+                        //     workspace: scope.currentMasterUser.base_api_url,
+                        //     apiToken: cookieService.getCookie('access_token'),
+                        //     // websocketUrl: "wss://finmars.com/",
+                        //     options: {
+                        //         portfolioId: scope.portfolio, // Readme
+                        //         date_to: scope.date_to, // Readme
+                        //         date_from: undefined, // Readme
+                        //         benchmark: 'sp_500', // Readme
+                        //     },
+                        //     widgets: [
+                        //         {
+                        //             name: scope.name,
+                        //             container: scope.containerId// e.g. finmarsChart1
+                        //         },
+                        //         // {
+                        //         //     name: "balance",
+                        //         //     container: "#balance_datail" // e.g. finmarsChart1
+                        //         // },
+                        //         // {
+                        //         //     name: "pl",
+                        //         //     container: "#balance_pl" // e.g. finmarsChart1
+                        //         // },
+                        //         // {
+                        //         //     name: "nav",
+                        //         //     container: "#balance_nav" // e.g. finmarsChart1
+                        //         // }
+                        //     ]
+                        // })
+
+
+                    // }, 500)
 
                 }
 
                 scope.init = function () {
+
+                    if (!window.finmarsWidgetsInstance) {
+                        window.finmarsWidgetsInstance = new window.FinmarsWidgets(
+                            {
+                                apiUrl: baseUrl + '/v/',
+                                workspace: scope.currentMasterUser.base_api_url,
+                                apiToken: cookieService.getCookie('access_token')
+                            }
+                        );
+                    }
+
+                    window.finmarsWidgetsInstance.addWidget({
+                        name: scope.name,
+                        container: scope.containerId // e.g. finmarsChart1
+                    })
 
                     scope.renderWidget()
 
@@ -170,6 +198,8 @@
                 scope.getSelectedText = function () {
                     return scope.componentName;
                 }
+
+
 
 
                 scope.init()
