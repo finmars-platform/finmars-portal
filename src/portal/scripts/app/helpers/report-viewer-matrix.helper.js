@@ -189,23 +189,25 @@
 
                 if (column.data.flatListItems.length) {
 
-                    for (var i = 0; i < column.data.flatListItems.length; i++) { // check if at least one flatListItem has number in valueKey
+                    // TODO need to validate value_type of column Value key
+                    // TODO instead of this monster
+                    // for (var i = 0; i < column.data.flatListItems.length; i++) { // check if at least one flatListItem has number in valueKey
+                    //
+                    //     var flItem = column.data.flatListItems[i];
+                    //
+                    //     if (
+                    //     	(flItem[valueKey] && typeof flItem[valueKey] === 'number') ||
+					// 		flItem[valueKey] === 0
+					// 	) {
+                    //
+                    //         cellHasNumericVal = true;
+                    //         break;
+                    //
+                    //     }
+                    //
+                    // }
 
-                        var flItem = column.data.flatListItems[i];
-
-                        if (
-                        	(flItem[valueKey] && typeof flItem[valueKey] === 'number') ||
-							flItem[valueKey] === 0
-						) {
-
-                            cellHasNumericVal = true;
-                            break;
-
-                        }
-
-                    }
-
-                    if (cellHasNumericVal) {
+                    // if (cellHasNumericVal) {
 
                         var columnData = {
                             key: valueKey,
@@ -217,15 +219,15 @@
                         var colValueObj = rvSubtotalService.calculateColumn(column.data.flatListItems, columnData);
                         column.data.value = colValueObj[valueKey];
 
-                    } else {
-                        column.data.value = null;
-                    }
+                    // } else {
+                    //     column.data.value = null;
+                    // }
 
                 } else {
                     column.data.value = null;
                 }
 
-                delete column.data.flatListItems;
+                // delete column.data.flatListItems;
 
             });
 

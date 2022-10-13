@@ -513,6 +513,8 @@
                         scope.matrixSettings.value_key,
                         scope.matrixSettings.subtotal_formula_id);
 
+                    console.log('buildMatrix.scope.matrix', scope.matrix)
+
                     /*scope.totals = reportViewerMatrixHelper.getMatrixTotals(scope.matrix, itemList);*/
                     scope.grandtotal = 0;
 
