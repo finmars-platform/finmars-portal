@@ -217,6 +217,8 @@
 
                     importInstrumentCbondsService.download(config).then(function (data) {
 
+                        console.log('data', data);
+
                         scope.isDisabled = false;
                         scope.processing = false;
 
@@ -244,10 +246,10 @@
                             scope.error = '';
 
                             scope.model = data.result_id;
-                            scope.itemObject = {id: data.result_id, name: item.issueName, user_code: item.issueName}
+                            scope.itemObject = {id: data.result_id, name: data.instrument_name, user_code: data.instrument_code}
 
-                            scope.itemName = item.issueName;
-                            scope.inputText = item.issueName;
+                            scope.itemName = data.instrument_name;
+                            scope.inputText = data.instrument_name;
 
                             scope.valueIsValid = true;
 
