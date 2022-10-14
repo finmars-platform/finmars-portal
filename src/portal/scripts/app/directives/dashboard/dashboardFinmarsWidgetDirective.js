@@ -46,6 +46,8 @@
                 scope.date_to = null
                 scope.portfolio = null
 
+                scope.widgetCreated = false;
+
                 scope.initEventListeners = function () {
 
                     scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
@@ -100,14 +102,23 @@
 
                 scope.updateWidgetSettings = function () {
 
+                    setTimeout(function () {
+                        scope.createWidgetIfNotExists();
+                    }, 0);
+
 
                     if (window.finmarsWidgetsInstance) {
-                        window.finmarsWidgetsInstance.setOptions({
-                            portfolioId: scope.portfolio, // Readme
-                            date_to: scope.date_to, // Readme
-                            date_from: undefined, // Readme
-                            benchmark: 'sp_500', // Readme
-                        })
+
+                        if (scope.portfolio && scope.date_to) {
+
+                            window.finmarsWidgetsInstance.setOptions({
+                                portfolioId: scope.portfolio, // Readme
+                                date_to: scope.date_to, // Readme
+                                date_from: undefined, // Readme
+                                benchmark: 'sp_500', // Readme
+                            })
+
+                        }
                     } else {
                         console.warn("finmarsWidgetsInstance is not defined")
                     }
@@ -157,45 +168,87 @@
 
                 }
 
+                // TODO do a great refactor, this code so awful
+                // TODO Need Default values to widgets init
+                // TODO refactor values receiving - Calculation Tab in constructor?
+                // TODO remove setTimeouts
+                scope.createWidgetIfNotExists = function () {
+
+                    if (!scope.widgetCreated) {
+
+                        if (scope.portfolio && scope.date_to) {
+
+                            console.log("createWidgetIfNotExists going to create widget")
+
+                            scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+
+                            scope.id = scope.componentData.settings.id;
+                            scope.name = scope.componentData.settings.name
+
+                            scope.currentMasterUser = globalDataService.getMasterUser();
+                            scope.containerId = '#finmars-widget-container-' + scope.id
+
+                            console.log(document.querySelector(scope.containerId))
+
+                            if (document.querySelector(scope.containerId)) {
+                                console.log("createWidgetIfNotExists div exists, initing widget")
+
+
+                                scope.componentName = scope.componentData.custom_component_name
+
+
+                                if (!window.finmarsWidgetsInstance) {
+                                    window.finmarsWidgetsInstance = new window.FinmarsWidgets(
+                                        {
+                                            apiUrl: baseUrl + '/v/',
+                                            workspace: scope.currentMasterUser.base_api_url,
+                                            apiToken: cookieService.getCookie('access_token')
+                                        }
+                                    );
+                                }
+
+
+                                window.finmarsWidgetsInstance.setOptions({
+                                    portfolioId: scope.portfolio, // Readme
+                                    date_to: scope.date_to, // Readme
+                                    date_from: undefined, // Readme
+                                    benchmark: 'sp_500', // Readme
+                                })
+
+
+                                window.finmarsWidgetsInstance.addWidget({
+                                    name: scope.name,
+                                    container: scope.containerId // e.g. finmarsChart1
+                                })
+
+                                scope.widgetCreated = true;
+
+                                scope.updateWidgetSettings()
+
+                            }
+                        }
+
+                    }
+
+
+                }
+
                 scope.init = function () {
 
+
+                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                     scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
 
                     scope.id = scope.componentData.settings.id;
                     scope.name = scope.componentData.settings.name
 
-                    scope.currentMasterUser = globalDataService.getMasterUser();
-                    scope.containerId = '#finmars-widget-container-' + scope.id
-
-
-                    scope.componentName = scope.componentData.custom_component_name
-
-                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
-                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
                     scope.initEventListeners();
 
                     setTimeout(function () {
-                        if (!window.finmarsWidgetsInstance) {
-                            window.finmarsWidgetsInstance = new window.FinmarsWidgets(
-                                {
-                                    apiUrl: baseUrl + '/v/',
-                                    workspace: scope.currentMasterUser.base_api_url,
-                                    apiToken: cookieService.getCookie('access_token')
-                                }
-                            );
-                        }
-
-                        window.finmarsWidgetsInstance.addWidget({
-                            name: scope.name,
-                            container: scope.containerId // e.g. finmarsChart1
-                        })
-
-                        scope.updateWidgetSettings()
-
+                        scope.createWidgetIfNotExists();
                     }, 100);
-
 
                 };
 
