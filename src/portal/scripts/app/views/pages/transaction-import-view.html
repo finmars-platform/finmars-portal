@@ -48,6 +48,16 @@
         </div>
 
         <div layout="row" layout-align="end center" class="m-t-8">
+            <md-checkbox data-ng-click="vm.togglePreprocessFile($event)"
+                         data-ng-checked="vm.config.preprocess_file"
+                         tabindex="0"
+                         type="checkbox"
+                         role="checkbox" aria-checked="false" class="m-b-0">
+                Preprocess file
+            </md-checkbox>
+        </div>
+
+        <div layout="row" layout-align="end center" class="m-t-8">
 
             <div data-ng-if="vm.readyStatus.processing" class="m-l-16 m-t-8" style="position: relative; top: -4px;">
                 <progress-circular diameter="20"></progress-circular>
@@ -71,6 +81,18 @@
             </md-button>
 
         </div>
+
+        <div layout="row" layout-align="end center" class="m-t-8">
+
+            <md-button
+                    style="font-size: 8px;"
+                    class="md-raised import-button {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                    data-ng-click="vm.preprocessFile($event)">
+                Preprocess only
+            </md-button>
+
+        </div>
+
 
 
     </div>

@@ -46,9 +46,27 @@
             })
     };
 
+    var preprocessFile = function (config) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/complex-transaction-preprocess-file/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    'X-CSRFToken': cookieService.getCookie('csrftoken')
+                },
+                data: config
+            })
+    };
+
     module.exports = {
         startImport: startImport,
-        validateImport: validateImport
+        validateImport: validateImport,
+        preprocessFile: preprocessFile
     }
 
 }());

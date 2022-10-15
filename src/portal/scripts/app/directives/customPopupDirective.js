@@ -14,6 +14,7 @@
 				popupTemplateUrl: '@', // can bind data from popupData when compile in createPopup
 				popupData: '=',
 				popupEventService: '=', // can be used to open popup
+				noBackdrop: '@',
 
 				openOn: '@', // ('click', 'right_click', 'mouse_over') - set event listener to open popup.
 				closeOnClickOutside: '@', // Default - 'true'
@@ -58,14 +59,21 @@
 				const popupWrap = document.querySelector(".dialog-containers-wrap");
 
 				let coords;
-				let popupBackdropElem = document.createElement("div");
-				popupBackdropElem.classList.add('popup-area-backdrop');
+				let popupBackdropElem;
 
-				if (scope.backdropClasses) {
+				if (scope.noBackdrop !== 'false') popupBackdropElem = document.createElement("div");
 
-					const classes = scope.backdropClasses.split(' ');
+				if (popupBackdropElem) {
 
-					popupBackdropElem.classList.add(...classes);
+					popupBackdropElem.classList.add('popup-area-backdrop');
+
+					if (scope.backdropClasses) {
+
+						const classes = scope.backdropClasses.split(' ');
+
+						popupBackdropElem.classList.add(...classes);
+
+					}
 
 				}
 
@@ -211,9 +219,19 @@
 
 				};
 
-				let resizeHandler = function (event) {
+				const resizeHandler = function (event) {
 					setPopupPosition();
 				}
+
+				const bodyClickHandler = function (event) {
+
+					const clickTarget = event.target;
+
+					if (!elem[0].contains(clickTarget) && !popupElem.contains(clickTarget)) {
+						scope.cancel();
+					}
+
+				};
 
 				let closePopupListenerIndex = null;
 				const addListeners = function () {
@@ -228,13 +246,14 @@
 					}
 
 					if (scope.closeOnClickOutside !== 'false') {
-						popupBackdropElem.addEventListener("click", scope.cancel);
+						// popupBackdropElem.addEventListener("click", scope.cancel);
+						document.body.addEventListener("click", bodyClickHandler);
 					}
 
 					if (scope.closeOnMouseLeave === 'true') {
 
 						elem[0].addEventListener('mouseleave', onElementMouseLeave);
-						popupBackdropElem.addEventListener('mouseenter', scope.cancel);
+						if (popupBackdropElem) popupBackdropElem.addEventListener('mouseenter', scope.cancel);
 
 					}
 				};
@@ -250,13 +269,14 @@
 					}
 
 					if (scope.closeOnClickOutside !== 'false') {
-						popupBackdropElem.removeEventListener("click", scope.cancel);
+						// popupBackdropElem.removeEventListener("click", scope.cancel);
+						document.body.removeEventListener("click", bodyClickHandler);
 					}
 
 					if (scope.closeOnMouseLeave === 'true') {
 
 						elem[0].removeEventListener('mouseleave', onElementMouseLeave);
-						popupBackdropElem.removeEventListener('mouseenter', scope.cancel);
+						if (popupBackdropElem) popupBackdropElem.removeEventListener('mouseenter', scope.cancel);
 
 					}
 
@@ -305,7 +325,7 @@
 					/* document.body.appendChild(popupBackdropElem);
 					document.body.appendChild(popupElem); */
 
-					popupWrap.appendChild(popupBackdropElem);
+					if (popupBackdropElem) popupWrap.appendChild(popupBackdropElem);
 					popupWrap.appendChild(popupElem);
 
 					if (!doNotUpdateScope) {
@@ -322,7 +342,7 @@
 
 					/*document.body.removeChild(popupBackdropElem);
 					document.body.removeChild(popupElem);*/
-					popupWrap.removeChild(popupBackdropElem);
+					if (popupBackdropElem) popupWrap.removeChild(popupBackdropElem);
 					popupWrap.removeChild(popupElem);
 
 					removeListeners();

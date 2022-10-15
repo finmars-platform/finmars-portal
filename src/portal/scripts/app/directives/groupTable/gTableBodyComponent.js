@@ -286,7 +286,7 @@
                                     var nextCellIndex = w;
                                     var overflowedCells = [];
 
-                                    // Looping through next cell in the row, until encounter not empty cell or overflowing cell have enough width
+                                    // Looping through next cells in the row, until encounter not empty cell or overflowing cell have enough width
                                     while (cellContentHolder.offsetWidth > cellSpaceForText && nextCellIndex + 1 < cellWraps.length) {
 
                                         var nextCellIndex = nextCellIndex + 1;
@@ -296,7 +296,9 @@
                                         var nextCellContentWrap = nextCellWrap.querySelector('.g-cell-content-wrap');
                                         var nexCellContentHolder = nextCellContentWrap.querySelector('.g-cell-content');
 
-                                        if (nexCellContentHolder || nextCellContentWrap.contentText) {
+                                        var nextCellNotEmpty = nexCellContentHolder || nextCellContentWrap.contentText;
+
+                                        if (nextCellNotEmpty) {
                                             break;
                                         }
 
