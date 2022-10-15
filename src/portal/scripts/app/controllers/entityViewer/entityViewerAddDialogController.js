@@ -38,10 +38,10 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, authorizerService, usersService, usersGroupService, entityType, entity, data) {
+    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, authorizerService, usersService, usersGroupService, globalDataService, entityType, entity, data) {
 
         var vm = this;
-
+        console.log("testing globalDataService", globalDataService);
         vm.entityType = entityType;
 
         vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
@@ -466,13 +466,17 @@
 
         vm.loadPermissions = function () {
 
-            var promises = [];
+            vm.currentMember = globalDataService.getMember();
+            vm.getCurrentMasterUser();
+
+            /* var promises = [];
 
             promises.push(vm.getCurrentMember());
             promises.push(vm.getCurrentMasterUser());
             promises.push(vm.getGroupList());
 
-            Promise.all(promises).then(function (data) {
+            Promise.all(promises).then(function (data) { */
+            vm.getGroupList().then(function (data) {
 
                 vm.readyStatus.permissions = true;
 
@@ -496,7 +500,7 @@
 
         vm.getCurrentMasterUser = function () {
 
-            return authorizerService.getCurrentMasterUser().then(function (data) {
+            /*return authorizerService.getCurrentMasterUser().then(function (data) {
 
                 vm.currentMasterUser = data;
                 vm.system_currency = data.system_currency;
@@ -505,11 +509,19 @@
 
                 $scope.$apply();
 
-            })
+            })*/
+            vm.currentMasterUser = globalDataService.getMasterUser();
+            vm.system_currency = vm.currentMasterUser.system_currency;
+
+            vm.systemCurrencies = [];
+
+            if (vm.currentMasterUser.system_currency_object) {
+                vm.systemCurrencies.push(vm.currentMasterUser.system_currency_object);
+            }
 
         };
 
-        vm.getCurrentMember = function () {
+        /*vm.getCurrentMember = function () {
 
             return usersService.getMyCurrentMember().then(function (data) {
 
@@ -518,7 +530,7 @@
                 $scope.$apply();
 
             });
-        };
+        };*/
 
         vm.getGroupList = function () {
 
