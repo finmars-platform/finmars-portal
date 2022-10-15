@@ -136,7 +136,7 @@
 
 			const favoriteNodesNamesList = favoriteNodesNames ? favoriteNodesNames.split(',') : [];
 
-			vm.favoritesList = favoriteNodesNamesList.map(name => {
+			/*vm.favoritesList = favoriteNodesNamesList.map(name => {
 
 				const pathToNode = getPathToNodeByName(name);
 				const node = getNode(pathToNode);
@@ -149,6 +149,27 @@
 					level: node.level,
 					isActive: activeNodesIdsBeforeUpdate.includes(nodeId),
 				};
+
+			});*/
+
+			favoriteNodesNamesList.forEach(name => {
+
+				const pathToNode = getPathToNodeByName(name);
+				const node = getNode(pathToNode);
+
+				if (node) {
+
+					const nodeId = (node.id || node.id === 0) ? node.id : node.frontOptions.id;
+
+					vm.favoritesList.push({
+						id: nodeId,
+						pathToNode: node.frontOptions.pathToNode,
+						name: node.name,
+						level: node.level,
+						isActive: activeNodesIdsBeforeUpdate.includes(nodeId),
+					});
+
+				}
 
 			});
 
@@ -478,7 +499,6 @@
 		const processClassifierData = function (data, treeBeforeUpdate) {
 
 			favoriteNodesNames = data.favorites || "";
-
 			vm.tree = setUpTreeNodes(data.classifiers, 0, null, treeBeforeUpdate);
 
 			classifiersFlatList = data.classifiers_flat;
