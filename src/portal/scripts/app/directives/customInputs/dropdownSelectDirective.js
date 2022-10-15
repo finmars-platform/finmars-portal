@@ -541,7 +541,7 @@
 
 						scope.menuOptionsPopupData.options = scope.menuOptions;
                     	menuOptionsList = getMenuOptionsAsFlatList();
-
+                        console.log("testing 3  " + scope.label, menuOptionsList);
                         for (var i = 0; i < menuOptionsList.length; i++) {
                             if (menuOptionsList[i].id === scope.model) {
 
