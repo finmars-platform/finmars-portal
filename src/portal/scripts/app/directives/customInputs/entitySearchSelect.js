@@ -5,8 +5,11 @@
 
     'use strict';
 
-    var entityResolverService = require('../../services/entityResolverService');
-    var metaContentTypeService = require('../../services/metaContentTypesService');
+    const EventService = require("../../services/eventService");
+    const popupEvents = require("../../services/events/popupEvents");
+
+    const entityResolverService = require('../../services/entityResolverService');
+    const metaContentTypeService = require('../../services/metaContentTypesService');
 
     module.exports = function ($mdDialog) {
         return {
@@ -55,10 +58,12 @@
 
                 }
 
-                var stylePreset;
+                scope.popupEventService = new EventService();
 
-                var inputContainer = elem[0].querySelector('.smartSearchInputContainer');
-                var inputElem = elem[0].querySelector('.smartSearchInputElem');
+                let stylePreset;
+
+                const inputContainer = elem[0].querySelector('.smartSearchInputContainer');
+                const inputElem = elem[0].querySelector('.smartSearchInputElem');
 
                 /*var entityIndicatorIcons = {
                     'account': {
@@ -203,7 +208,9 @@
 
                 };
 
-                scope.selectOption = function (item) {
+                scope.selectOption = function (item, _$popup) {
+
+                    if (_$popup) _$popup.cancel();
 
                     if (item[scope.itemProperty] !== scope.item) {
 
@@ -225,7 +232,8 @@
                             scope.inputText = item.name;
                         }
 
-                        closeDropdownMenu();
+                        /* DROPDOWN MENU
+                        closeDropdownMenu();*/
 
                         setTimeout(function () {
 
@@ -257,10 +265,12 @@
 
                     entityResolverService.getListLight(scope.entityType, options).then(function (data) {
 
-                        scope.selectorOptions = data.results;
-						// scope.menuOptionsPopupData.options = data.results;
+                        // scope.selectorOptions = data.results;
+						scope.menuOptionsPopupData.selectorOptions = data.results;
+                        scope.popupEventService.dispatchEvent(popupEvents.OPEN_POPUP);
 
-                        window.addEventListener('click', closeDDMenuOnClick);
+                        /* DROPDOWN MENU
+                        window.addEventListener('click', closeDDMenuOnClick);*/
                         document.addEventListener('keydown', onTabKeyPress);
 
                         scope.$apply();
@@ -275,7 +285,7 @@
 
                 var closeDropdownMenu = function (updateScope) {
 
-                    scope.selectorOptions = null;
+                    /*scope.menuOptionsPopupData.selectorOptions = null;
 
                     window.removeEventListener('click', closeDDMenuOnClick);
                     document.removeEventListener('keydown', onTabKeyPress);
@@ -286,7 +296,7 @@
 
                     if (updateScope) {
                         scope.$apply();
-                    }
+                    }*/
 
                 }
 
@@ -298,12 +308,25 @@
                     }
                 };
 
-                var onTabKeyPress = function (event) {
+                scope.onMenuPopupClose = function () {
+
+                    document.removeEventListener('keydown', onTabKeyPress);
+
+                    if (scope.onMenuClose) {
+                        scope.onMenuClose();
+                    }
+
+                };
+
+                const onTabKeyPress = function (event) {
 
                     var pressedKey = event.key;
 
                     if (pressedKey === "Tab") {
-                        closeDropdownMenu(true);
+                        /* DROPDOWN MENU
+                        closeDropdownMenu(true);*/
+                        scope.onMenuPopupClose();
+                        scope.popupEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
                     }
                 };
 
@@ -312,7 +335,8 @@
                     $event.preventDefault();
                     $event.stopPropagation();
 
-                    closeDropdownMenu();
+                    /* DROPDOWN MENU
+                    closeDropdownMenu();*/
 
                     if (!scope.isDisabled) {
 
@@ -525,8 +549,10 @@
                 };
 
                 // Victor 08.10.2020
-                scope.createEntity = function ($event) {
+                scope.createEntity = function (_$popup, $event) {
                     $event.stopPropagation(); // The closeDDMenuOnClick handler should not be called if pressed Create button
+
+                    if (_$popup) _$popup.cancel();
 
                     $mdDialog
                         .show({
@@ -549,8 +575,10 @@
                         });
                 };
 
-                scope.downloadEntity = function ($event) {
+                scope.downloadEntity = function (_$popup, $event) {
                     $event.stopPropagation();
+
+                    if (_$popup) _$popup.cancel();
 
                     console.log('scope.downloadEntity');
 
@@ -568,17 +596,26 @@
                     })
                 };
 
+                scope.menuOptionsPopupData = {
+                    entityType: scope.entityType,
+                    selectorOptions: [],
+
+                    selectOption: scope.selectOption,
+                    createEntity: scope.createEntity,
+                    downloadEntity: scope.downloadEntity,
+                };
+
                 scope.selectFirst = function ($event) {
 
                     if ($event.which === 13) {
-                        scope.selectOption(scope.selectorOptions[0])
+                        scope.selectOption(scope.menuOptionsPopupData.selectorOptions[0])
                     }
                 }
 
                 init();
 
                 scope.$on("$destroy", function () {
-                    window.removeEventListener('click', closeDDMenuOnClick);
+                    // window.removeEventListener('click', closeDDMenuOnClick);
                     document.removeEventListener('keydown', onTabKeyPress);
                 });
 
