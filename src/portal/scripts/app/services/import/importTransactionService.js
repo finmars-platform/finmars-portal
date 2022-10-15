@@ -15,9 +15,14 @@
         return importTransactionRepository.validateImport(config);
     };
 
+    var preprocessFile = function (config) {
+        return importTransactionRepository.preprocessFile(config);
+    };
+
     module.exports = {
         startImport: startImport,
-        validateImport: validateImport
+        validateImport: validateImport,
+        preprocessFile: preprocessFile
     }
 
 }());

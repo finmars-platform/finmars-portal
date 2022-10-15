@@ -93,6 +93,9 @@
                         case 'superset_dashboard':
                             verboseType = 'Superset Dashboard';
                             break;
+                        case 'finmars_widget':
+                            verboseType = 'Superset Dashboard';
+                            break;
                     }
 
                     return verboseType;
@@ -708,6 +711,10 @@
                         case 'superset_dashboard':
                             contrName = 'DashboardConstructorSupersetDashboardComponentDialogController as vm';
                             templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-superset-dashboard-component-dialog-view.html';
+                            break;
+                        case 'finmars_widget':
+                            contrName = 'DashboardConstructorFinmarsWidgetComponentDialogController as vm';
+                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-finmars-widget-component-dialog-view.html';
                             break;
                     }
 

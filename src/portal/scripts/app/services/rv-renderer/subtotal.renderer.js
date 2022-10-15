@@ -444,6 +444,10 @@
 
 	}
 
+    var getCellWrapWidth = function (column) {
+
+    };
+
     var render = function (evDataService, obj) {
 
         var columns = evDataService.getColumns();
@@ -573,7 +577,7 @@
                 gCellTitle = ' title="' + value_obj.raw_text_result + '"';
             }
 
-            cell = '<div data-column="' + columnNumber + '" class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '">' +
+            cell = '<div data-column="' + columnNumber + '" class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + (column.isHidden ? '0;' : column.style.width) + '">' +
                 // '<div class="g-cell ' + textAlign + ' cell-status-' + column.status + ' ' + colorNegative + ' ' + borderBottomTransparent + '"' + gCellTitle + '>' +
 					'<div class="g-cell' + ' cell-status-' + column.status + ' ' + cellClasses + '"' + gCellTitle + '>' +
 						'<div class="g-cell-content-wrap">' +
