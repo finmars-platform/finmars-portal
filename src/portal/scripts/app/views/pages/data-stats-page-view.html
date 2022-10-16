@@ -267,6 +267,52 @@
                     Expecting Business Days Records: <b>{{vm.stats.nav_history.expecting_bdays_histories}}</b>
                 </div>
 
+                <div>
+
+                    <div>
+                        Portfolios
+                        <md-button class="md-raised" data-ng-click="vm.showNavPortfolios = !vm.showNavPortfolios">Toggle
+                        </md-button>
+                    </div>
+                    <div data-ng-show="vm.showNavPortfolios">
+
+                        <div class="m-t-8 m-b-8">
+
+                            <md-input-container style="width: 90%">
+                                <label for="">Search</label>
+                                <input aria-label="search" type="text" data-ng-model="vm.navPortfolioQuery">
+                            </md-input-container>
+
+                        </div>
+
+                        <div data-ng-repeat="item in vm.stats.nav_history.portfolios | filter: vm.navPortfolioQuery"
+                             class="data-stats-section-content">
+
+                            <div class="data-stats-section-content-item">Name: <b>{{item.portfolio.name}}
+                                ({{item.portfolio.user_code}})</b></div>
+                            <div class="data-stats-section-content-item">Expecting Records:
+                                <b>{{item.expecting_nav_histories}}</b></div>
+                            <div class="data-stats-section-content-item">Expecting Business Days Records:
+                                <b>{{item.expecting_bdays_nav_histories}}</b></div>
+                            <div class="data-stats-section-content-item">Records: <b>{{item.nav_histories}}</b></div>
+                            <div class="data-stats-section-content-item">Last Date Record:
+                                <b>{{item.last_nav_history_date}}</b></div>
+
+                            <div class="data-stats-section-content-item">
+
+                                <div>
+                                    Filled for {{item.nav_histories / (item.expecting_bdays_nav_histories / 100)}}%
+                                </div>
+                                <md-progress-linear md-mode="determinate"
+                                                    value="{{item.nav_histories / (item.expecting_bdays_nav_histories / 100)}}"></md-progress-linear>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
             </div>
         </div>
 
@@ -296,6 +342,51 @@
 
                 <div class="data-stats-section-content-item">
                     Expecting Business Days Records: <b>{{vm.stats.pl_history.expecting_pl_bdays_histories}}</b>
+                </div>
+
+                <div>
+
+                    <div>
+                        Portfolios
+                        <md-button class="md-raised" data-ng-click="vm.showPlPortfolios = !vm.showPlPortfolios">Toggle
+                        </md-button>
+                    </div>
+                    <div data-ng-show="vm.showPlPortfolios">
+
+                        <div class="m-t-8 m-b-8">
+
+                            <md-input-container style="width: 90%">
+                                <label for="">Search</label>
+                                <input aria-label="search" type="text" data-ng-model="vm.plPortfolioQuery">
+                            </md-input-container>
+
+                        </div>
+
+                        <div data-ng-repeat="item in vm.stats.pl_history.portfolios | filter: vm.plPortfolioQuery"
+                             class="data-stats-section-content">
+
+                            <div class="data-stats-section-content-item">Name: <b>{{item.portfolio.name}}
+                                ({{item.portfolio.user_code}})</b></div>
+                            <div class="data-stats-section-content-item">Expecting Records:
+                                <b>{{item.expecting_pl_histories}}</b></div>
+                            <div class="data-stats-section-content-item">Expecting Business Days Records:
+                                <b>{{item.expecting_bdays_pl_histories}}</b></div>
+                            <div class="data-stats-section-content-item">Records: <b>{{item.pl_histories}}</b></div>
+                            <div class="data-stats-section-content-item">Last Date Record:
+                                <b>{{item.last_pl_history_date}}</b></div>
+
+                            <div class="data-stats-section-content-item">
+
+                                <div>
+                                    Filled for {{item.pl_histories / (item.expecting_bdays_pl_histories / 100)}}%
+                                </div>
+                                <md-progress-linear md-mode="determinate"
+                                                    value="{{item.pl_histories / (item.expecting_bdays_pl_histories / 100)}}"></md-progress-linear>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>
@@ -329,6 +420,52 @@
                 <div class="data-stats-section-content-item">
                     Expecting Business Days Records: <b>{{vm.stats.widget_stats_history.expecting_bdays_widget_stats}}</b>
                 </div>
+
+                <div>
+
+                    <div>
+                        Portfolios
+                        <md-button class="md-raised" data-ng-click="vm.showWidgetStatsPortfolios = !vm.showWidgetStatsPortfolios">Toggle
+                        </md-button>
+                    </div>
+                    <div data-ng-show="vm.showWidgetStatsPortfolios">
+
+                        <div class="m-t-8 m-b-8">
+
+                            <md-input-container style="width: 90%">
+                                <label for="">Search</label>
+                                <input aria-label="search" type="text" data-ng-model="vm.widgetStatsPortfolioQuery">
+                            </md-input-container>
+
+                        </div>
+
+                        <div data-ng-repeat="item in vm.stats.widget_stats_history.portfolios | filter: vm.widgetStatsPortfolioQuery"
+                             class="data-stats-section-content">
+
+                            <div class="data-stats-section-content-item">Name: <b>{{item.portfolio.name}}
+                                ({{item.portfolio.user_code}})</b></div>
+                            <div class="data-stats-section-content-item">Expecting Records:
+                                <b>{{item.expecting_widget_stats}}</b></div>
+                            <div class="data-stats-section-content-item">Expecting Business Days Records:
+                                <b>{{item.expecting_bdays_widget_stats}}</b></div>
+                            <div class="data-stats-section-content-item">Records: <b>{{item.widget_stats}}</b></div>
+                            <div class="data-stats-section-content-item">Last Date Record:
+                                <b>{{item.last_widget_stats_date}}</b></div>
+
+                            <div class="data-stats-section-content-item">
+
+                                <div>
+                                    Filled for {{item.widget_stats / (item.expecting_bdays_widget_stats / 100)}}%
+                                </div>
+                                <md-progress-linear md-mode="determinate"
+                                                    value="{{item.widget_stats / (item.expecting_bdays_widget_stats / 100)}}"></md-progress-linear>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
 
             </div>
         </div>
