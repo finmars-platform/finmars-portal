@@ -1,6 +1,23 @@
 <div class="data-stats-page p-24">
 
-    <h1>Finmars Data Fullness</h1>
+    <h1 layout="row">Finmars Data Fullness
+        <div style="position: relative;
+    top: -8px;">
+            <md-input-container>
+                <label>Period</label>
+                <md-select data-ng-model="vm.period" data-ng-change="vm.getData()">
+                    <md-option value="inception">Since Inception</md-option>
+                    <md-option value="last_year">Since last year</md-option>
+                    <md-option value="this_year">This year</md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+        <span data-ng-if="vm.readyStatus.content" style="font-size: 10px;
+    color: #777;
+    padding-top: 12px;">
+            {{vm.stats.date_from}} - {{vm.stats.date_to}}
+        </span>
+    </h1>
 
     <div data-ng-if="vm.readyStatus.content">
 
@@ -267,6 +284,11 @@
                     Expecting Business Days Records: <b>{{vm.stats.nav_history.expecting_bdays_histories}}</b>
                 </div>
 
+                <div class="data-stats-section-content-item">
+                    Total Portfolios:
+                    <b>{{vm.stats.nav_history.total_portfolios}}</b>
+                </div>
+
                 <div>
 
                     <div>
@@ -344,6 +366,11 @@
                     Expecting Business Days Records: <b>{{vm.stats.pl_history.expecting_pl_bdays_histories}}</b>
                 </div>
 
+                <div class="data-stats-section-content-item">
+                    Total Portfolios:
+                    <b>{{vm.stats.pl_history.total_portfolios}}</b>
+                </div>
+
                 <div>
 
                     <div>
@@ -418,14 +445,21 @@
                 </div>
 
                 <div class="data-stats-section-content-item">
-                    Expecting Business Days Records: <b>{{vm.stats.widget_stats_history.expecting_bdays_widget_stats}}</b>
+                    Expecting Business Days Records:
+                    <b>{{vm.stats.widget_stats_history.expecting_bdays_widget_stats}}</b>
+                </div>
+
+                <div class="data-stats-section-content-item">
+                    Total Portfolios:
+                    <b>{{vm.stats.widget_stats_history.total_portfolios}}</b>
                 </div>
 
                 <div>
 
                     <div>
                         Portfolios
-                        <md-button class="md-raised" data-ng-click="vm.showWidgetStatsPortfolios = !vm.showWidgetStatsPortfolios">Toggle
+                        <md-button class="md-raised"
+                                   data-ng-click="vm.showWidgetStatsPortfolios = !vm.showWidgetStatsPortfolios">Toggle
                         </md-button>
                     </div>
                     <div data-ng-show="vm.showWidgetStatsPortfolios">
