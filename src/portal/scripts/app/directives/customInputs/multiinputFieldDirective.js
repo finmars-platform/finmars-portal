@@ -23,6 +23,7 @@ export default function () {
             eventService: "=",
 			isDisabled: "=",
 
+			baseInputChangeFn: "&?",
             onChange: "&?",
 			onValueToShowChange: "&?",
             onBlurCallback: "&?",
@@ -71,9 +72,7 @@ export default function () {
 
 				const getVal = function () {
 					const fieldProp = scope.popupData.fields.valueToShow.value;
-
-					scope.inputModel.value = scope.popupData.fields[fieldProp].value;
-					return scope.inputModel.value;
+					return scope.popupData.fields[fieldProp].value;
 				};
 
 				const checkVtsForChanges = function () {
@@ -110,21 +109,32 @@ export default function () {
 
 				};
 
-				scope.onInputChange = function () {
+				if (scope.baseInputChangeFn) {
 
-					Object.keys(scope.popupData.fields).forEach(prop => {
+					scope.onBaseInputChange = function () {
+						scope.baseInputChangeFn({newVal: scope.inputModel.value, prevVal: getVal()})
+					}
 
-						const fieldData = scope.popupData.fields[prop];
+				} else {
 
-						if (fieldData.changeByInput) {
+					scope.onBaseInputChange = function () {
 
-							fieldData.value = scope.inputModel.value;
+						Object.keys(scope.popupData.fields).forEach(prop => {
 
-						}
+							const fieldData = scope.popupData.fields[prop];
 
-					});
+							if (fieldData.changeByInput) {
 
-				};
+								fieldData.value = scope.inputModel.value;
+
+							}
+
+						});
+
+					};
+
+				}
+
 
 				const init = function () {
 
