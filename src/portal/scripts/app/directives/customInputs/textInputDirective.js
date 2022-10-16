@@ -16,8 +16,11 @@
 				customStyles: "=",
 				eventSignal: "=",
 				smallOptions: "=",
+
 				isDisabled: "=",
+				isLocked: "@",
 				renderHyperlinks: "=",
+
 				onChangeCallback: "&?",
 				onBlurCallback: "&?",
 				// onFocus: "=" // I can't bind as "&?" because onFocus need event argument
@@ -25,10 +28,10 @@
 			templateUrl: "views/directives/customInputs/text-input-view.html",
 			link: function (scope, elem, attr) {
 
-				var inputContainer; // = elem[0].querySelector(".textInputContainer");
+				let inputContainer; // = elem[0].querySelector(".textInputContainer");
 
-				var inputElem; // = elem[0].querySelector(".textInputElem");
-				var stylePreset;
+				let inputElem; // = elem[0].querySelector(".textInputElem");
+				let stylePreset;
 
 				/* TEXTAREA CODE
 
@@ -67,11 +70,13 @@
 
 				}
 
+				scope.locked = scope.isLocked === 'true';
+
 				scope.getInputContainerClasses = function () {
 
 					var classes = "";
 
-					if (scope.isDisabled) {
+					if (scope.disabled()) {
 						classes += "custom-input-is-disabled";
 
 					} else if (scope.error) {
@@ -94,6 +99,14 @@
 
 					return classes;
 
+				};
+
+				scope.unlockInput = function () {
+					scope.locked = false;
+				};
+
+				scope.disabled = function () {
+					return scope.isDisabled || scope.locked;
 				};
 
 				var onChangeIndex;
