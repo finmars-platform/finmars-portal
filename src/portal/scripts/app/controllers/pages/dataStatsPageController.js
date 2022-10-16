@@ -26,6 +26,9 @@
 
         vm.showInstruments = false;
         vm.showCurrencies = false;
+        vm.showNavPortfolios = false;
+        vm.showPlPortfolios = false;
+        vm.showWidgetStatsPortfolios = false;
 
         vm.readyStatus = {content: false};
 
