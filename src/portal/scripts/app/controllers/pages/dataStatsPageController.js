@@ -30,11 +30,15 @@
         vm.showPlPortfolios = false;
         vm.showWidgetStatsPortfolios = false;
 
+        vm.period = 'this_year';
+
         vm.readyStatus = {content: false};
 
-        vm.init = function () {
+        vm.getData = function () {
+            
+            vm.readyStatus.content = false;
 
-            dataStatsService.getStats().then(function (data){
+            dataStatsService.getStats(vm.period).then(function (data) {
 
                 vm.stats = data;
 
@@ -46,6 +50,11 @@
 
             })
 
+        }
+
+        vm.init = function () {
+
+            vm.getData()
         };
 
         vm.init();
