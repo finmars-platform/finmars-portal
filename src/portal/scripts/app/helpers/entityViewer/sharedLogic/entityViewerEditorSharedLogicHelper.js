@@ -41,6 +41,7 @@
         // let instrumentTypesList = [];
 		const reqSysAttrs = metaService.getRequiredEntityAttrs(viewModel.entityType);
         const noEntityTabs = [''];
+		const dialogParent = document.querySelector('.dialog-containers-wrap');
 
 		//region entityTabsMenuTplt
 		const entityTabsMenuTplt =
@@ -1010,8 +1011,6 @@
 
 		};
 
-
-
         // const manageAttributeTypes = function (ev) {
 		const manageAttributeTypes = function (option, _$popup) {
 
@@ -1020,7 +1019,7 @@
         	$mdDialog.show({
 				controller: 'AttributesManagerDialogController as vm',
 				templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
-				parent: document.querySelector('.dialog-containers-wrap'),
+				parent: dialogParent,
 				// targetEvent: ev,
 				multiple: true,
 				locals: {
@@ -1057,6 +1056,88 @@
 			}
 
 			return viewModel.entity.attributes;
+
+		};
+
+		const editAsJsonDialog = function () {
+
+			return $mdDialog.show({
+				controller: 'EntityAsJsonEditorDialogController as vm',
+				templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+				multiple: true,
+				locals: {
+					data: {
+						item: viewModel.entity,
+						entityType: viewModel.entityType,
+					}
+				}
+
+			});
+
+		};
+
+		const deleteEntity = function (options, _$popup) {
+
+			_$popup.cancel();
+
+			$mdDialog.show({
+				controller: 'EntityViewerDeleteDialogController as vm',
+				templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-dialog-view.html',
+				parent: dialogParent,
+				multiple: true,
+				locals: {
+					entity: viewModel.entity,
+					entityType: viewModel.entityType
+				}
+			}).then(function (res) {
+
+				if (res.status === 'agree') {
+					metaHelper.closeComponent(viewModel.openedIn, $mdDialog, $bigDrawer, {status: 'delete'});
+				}
+
+			})
+
+		};
+
+		const copy = function (windowType, addEvController) {
+
+			if (!addEvController) addEvController = 'EntityViewerAddDialogController';
+
+			const entity = JSON.parse(JSON.stringify(viewModel.entity));
+
+			entity["user_code"] = viewModel.entity["user_code"] + '_copy';
+			entity["name"] = viewModel.entity["name"] + '_copy';
+
+			console.log('copy entity', entity);
+
+			if (windowType === 'big-drawer') {
+
+				const responseObj = {
+					status: 'copy',
+					data: {
+						entity: entity,
+						entityType: viewModel.entityType
+					}
+				};
+
+				return metaHelper.closeComponent(viewModel.openedIn, $mdDialog, $bigDrawer, responseObj);
+
+			} else {
+
+				$mdDialog.show({
+					controller: addEvController + ' as vm',
+					templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
+					parent: angular.element(document.body),
+					locals: {
+						entityType: viewModel.entityType,
+						entity: entity,
+						data: {}
+					}
+				});
+
+				metaHelper.closeComponent(viewModel.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
+
+			}
 
 		};
 
@@ -1635,7 +1716,7 @@
 						$mdDialog.show({
 							controller: 'InfoDialogController as vm',
 							templateUrl: 'views/info-dialog-view.html',
-							parent: angular.element(document.body),
+							parent: dialogParent,
 							targetEvent: $event,
 							clickOutsideToClose: false,
 							preserveScope: true,
@@ -1682,6 +1763,9 @@
 			bindFlex: bindFlex,
 			checkFieldRender: checkFieldRender,
 			manageAttributeTypes: manageAttributeTypes,
+			editAsJsonDialog: editAsJsonDialog,
+			deleteEntity: deleteEntity,
+			copy: copy,
             getFormLayout: getFormLayout,
 			updateAttributesInsideEntity: updateAttributesInsideEntity,
 			// getFieldsForFixedAreaPopup: getFieldsForFixedAreaPopup,

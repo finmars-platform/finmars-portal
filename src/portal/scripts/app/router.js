@@ -385,6 +385,13 @@
             })
 
 
+            .state('app.portal.data-stats', {
+                url: '/data-stats',
+                templateUrl: 'views/pages/data-stats-page-view.html',
+                controller: 'DataStatsPageController as vm'
+            })
+
+
             .state('app.portal.update-center', {
                 url: '/update-center',
                 templateUrl: 'views/pages/update-center-view.html',

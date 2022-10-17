@@ -109,7 +109,9 @@
 
         </md-menu-content>
     </md-menu>-->
-    <md-button custom-popup
+    <md-button ng-if="vm.footerPopupData !== undefined"
+
+               custom-popup
                popup-template-url="'views/popups/selector2-popup-view.html'"
                popup-data="vm.footerPopupData"
                open-on="click"

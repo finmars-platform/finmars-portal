@@ -3,13 +3,22 @@
     <div ng-if="label" class="custom-input-top-row">
         <span class="custom-input-textarea-span-pan">{{label}}</span>
     </div>
-  <!-- <div class="custom-input-top-row">
-        <div data-ng-bind="label" class="custom-input-label"></div>
 
+  <div custom-popup
+       popup-template-url="'views/popups/smart-search-popup-view.html'"
+       popup-data="menuOptionsPopupData"
+       popup-event-service="popupEventService"
+       position-relative-to="element"
+       popup-width="element"
+       relative-popup-x="left"
+       relative-popup-y="bottom"
+       offset-y="2"
+       open-on="click"
+       close-on-click-outside="true"
+       on-cancel="onMenuPopupClose()"
 
-    </div> -->
+       class="custom-input-main-container customInputBackgroundColor">
 
-  <div class="custom-input-main-container customInputBackgroundColor">
     <div class="custom-input-borders">
       <div class="custom-input-content">
 
@@ -69,9 +78,10 @@
 
       </div>
     </div>
+
   </div>
 
-  <div data-ng-if="selectorOptions" class="custom-input-sel-menu-container selectMenuContainer m-t-8">
+  <!--<div data-ng-if="selectorOptions" class="custom-input-sel-menu-container selectMenuContainer m-t-8">
     <div class="custom-input-sel-menu-block">
       <div data-ng-repeat="option in selectorOptions track by $index" data-ng-mousedown="selectOption(option)" tabindex="0"
         data-ng-bind="option.short_name" class="custom-input-sel-option"></div>
@@ -87,7 +97,7 @@
         </button>
       </div>
     </div>
-  </div>
+  </div>-->
 
   <div ng-if="error"
        ng-bind="error"

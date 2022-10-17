@@ -62,7 +62,6 @@
         vm.dcLayoutHasBeenFixed = false;
 
         vm.hasEnabledStatus = false;
-        vm.entityStatus = '';
         vm.evEditorEvent = null;
 
         vm.readyStatus = sharedLogic.readyStatusObj;
@@ -167,30 +166,38 @@
             promises.push(vm.getCurrentMasterUser());
             promises.push(vm.getGroupList());
 
-            Promise.all(promises).then(function (data) {
+            return new Promise(function (resolve, reject) {
 
-                // TODO object_permissions is undefined
-                vm.entity.object_permissions && vm.entity.object_permissions.forEach(function (perm) {
+                Promise.all(promises).then(function (data) {
 
-                    if (perm.permission === "change_" + vm.entityType.split('-').join('')) {
+                    // TODO object_permissions is undefined
+                    vm.entity.object_permissions && vm.entity.object_permissions.forEach(function (perm) {
 
-                        if (vm.currentMember.groups.indexOf(perm.group) !== -1) {
-                            vm.hasEditPermission = true;
+                        if (perm.permission === "change_" + vm.entityType.split('-').join('')) {
+
+                            if (vm.currentMember.groups.indexOf(perm.group) !== -1) {
+                                vm.hasEditPermission = true;
+                            }
+
                         }
 
+                    });
+
+                    if (vm.currentMember && vm.currentMember.is_admin) {
+                        vm.hasEditPermission = true;
+                        vm.canManagePermissions = true;
                     }
 
+                    vm.readyStatus.permissions = true;
+                    $scope.$apply();
+
+                    resolve();
+
+                }).catch(function (error) {
+                    reject(error);
                 });
 
-                if (vm.currentMember && vm.currentMember.is_admin) {
-                    vm.hasEditPermission = true;
-                    vm.canManagePermissions = true;
-                }
-
-                vm.readyStatus.permissions = true;
-                $scope.$apply();
-
-            });
+            })
 
         };
 
@@ -352,9 +359,48 @@
 
         vm.manageAttrs = sharedLogic.manageAttributeTypes;
 
+        var getFooterPopupData = function () {
+
+            var data = {
+                options: []
+            };
+
+            data.options.push({
+                icon: 'content_copy',
+                name: 'Duplicate',
+                classes: 'divider-bottom',
+                isDisabled: !vm.hasEditPermission,
+                onClick: function (option, _$popup) {
+
+                    _$popup.cancel();
+                    vm.copy(vm.openedIn);
+
+                }
+            });
+
+            data.options.push({
+                icon: "edit",
+                name: "Edit as JSON",
+                onClick: vm.editAsJson,
+            });
+
+            data.options.push({
+                icon: 'delete',
+                name: "Delete",
+                classes: 'divider-top',
+                isDisabled: !vm.hasEditPermission,
+                onClick: vm.delete,
+            });
+
+            return data;
+
+        };
+
+        vm.footerPopupData = null;
+
         vm.copy = function (windowType) {
 
-            var entity = JSON.parse(JSON.stringify(vm.entity));
+            /*var entity = JSON.parse(JSON.stringify(vm.entity));
 
             entity["user_code"] = vm.entity["user_code"] + '_copy';
             entity["name"] = vm.entity["name"] + '_copy';
@@ -381,7 +427,9 @@
 
 				metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
 
-			}
+			}*/
+
+            sharedLogic.copy(windowType, 'InstrumentTypeAddDialogController');
 
         };
 
@@ -398,7 +446,7 @@
                     vm.entity.$_isValid = true;
                     vm.readyStatus.entity = true;
                     // vm.readyStatus.permissions = true;
-					vm.hasEditPermission = true;
+					// vm.hasEditPermission = true;
 
                     // vm.getFormLayout();
                     sharedLogic.getFormLayout(formLayoutFromAbove).then(formLayoutData => {
@@ -547,33 +595,7 @@
 
         };
 
-        vm.delete = function ($event) {
-
-            $mdDialog.show({
-                controller: 'EntityViewerDeleteDialogController as vm',
-                templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                //clickOutsideToClose: false,
-                multiple: true,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    entity: vm.entity,
-                    entityType: vm.entityType
-                }
-            }).then(function (res) {
-
-                console.log('here', res);
-
-                if (res.status === 'agree') {
-                    metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'delete'});
-                }
-
-            })
-
-        };
+        vm.delete = sharedLogic.deleteEntity;
 
         vm.toggleEnableStatus = function () {
 
@@ -585,8 +607,7 @@
                 result.is_enabled = vm.entity.is_enabled;
 
                 entityResolverService.update(vm.entityType, result.id, result).then(function (data) {
-                    getEntityStatus();
-
+                    // getEntityStatus();
                     $scope.$apply();
                 });
             })
@@ -629,7 +650,7 @@
 
         };
 
-        var getEntityStatus = function () {
+        /* var getEntityStatus = function () {
 
 			vm.entityStatus = 'enabled';
 
@@ -641,10 +662,30 @@
 				vm.entityStatus = 'deleted';
 			}
 
-        };
+        }; */
 
 		vm.saveAndApplyPermissionsToInstrumentsByGroup = sharedLogic.saveAndApplyPermissionsToInstrumentsByGroup;
 		vm.switchPricingPolicyParameter = sharedLogic.switchPricingPolicyParameter;
+
+        vm.editAsJson = function (option, _$popup, ev) {
+
+           _$popup.cancel();
+
+            sharedLogic.editAsJsonDialog(ev).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.readyStatus.entity = false;
+
+                    vm.getItem().then(function () {
+                        vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
+                        $scope.$apply();
+                    });
+
+                }
+            })
+
+        };
 
         vm.save = function ($event, isAutoExitAfterSave) {
 
@@ -1413,7 +1454,9 @@
 
 			Promise.allSettled([getInstrumentFormLayouts(), vm.getItem(), exposureTabProm]).then(function () {
 
-				vm.loadPermissions();
+				vm.loadPermissions().then(function () {
+                    vm.footerPopupData = getFooterPopupData(); // have to be called after vm.loadPermissions()
+                });
 
 				if (vm.entity.instrument_form_layouts) {
 					// vm.instrLayoutsFromItype = vm.entity.instrument_form_layouts.split(',')
@@ -1436,7 +1479,7 @@
 				// vm.getDataForInstrumentTypeTabs();
 
 
-                getEntityStatus();
+                // getEntityStatus();
 
                 vm.evEditorDataService.setEntityAttributeTypes(vm.attributeTypes);
 
