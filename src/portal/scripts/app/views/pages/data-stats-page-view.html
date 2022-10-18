@@ -87,421 +87,380 @@
         </div>
 
         <div class="data-stats-section">
-            <div layout="row" class="data-stats-section-header">Price History Section
-                <md-button class="md-raised" data-ng-click="vm.showPriceHistorySection = !vm.showPriceHistorySection">
-                    Toggle
-                </md-button>
-                <div class="data-stats-section-progress-item" layout="row">
-                    <div>
-                        Filled for
-                        {{vm.stats.price_history.filled_percent}}%
+
+            <div data-ng-repeat="portfolio in vm.stats.portfolios" class="portfolio-data-stats-section">
+
+                <div layout="row" class="data-stats-section-header">{{portfolio.portfolio.name}}
+                    <md-button class="md-raised" data-ng-click="portfolio.showPortfolio = !portfolio.showPortfolio">
+                        Toggle
+                    </md-button>
+                    <div class="data-stats-section-progress-item" layout="row">
+                        <div>
+                            Filled for
+                            {{portfolio.filled_percent}}%
+                        </div>
+                        <md-progress-linear md-mode="determinate"
+                                            value="{{portfolio.filled_percent}}"></md-progress-linear>
+
                     </div>
-                    <md-progress-linear md-mode="determinate"
-                                        value="{{vm.stats.price_history.filled_percent}}"></md-progress-linear>
-
-                </div>
-            </div>
-
-            <div data-ng-show="vm.showPriceHistorySection" class="data-stats-section-content">
-
-                <div class="data-stats-section-content-item">
-                    Total Instruments: <b>{{vm.stats.price_history.total_instruments}}</b>
-                </div>
-                <div class="data-stats-section-content-item">
-                    Total Pricing Policies: <b>{{vm.stats.price_history.total_pricing_policies}}</b>
-                </div>
-                <div class="data-stats-section-content-item">
-                    Total Prices: <b>{{vm.stats.price_history.total_prices}}</b>
-                </div>
-                <div class="data-stats-section-content-item">
-                    Expecting Prices: <b>{{vm.stats.price_history.expecting_total_prices}}</b>
-                </div>
-                <div class="data-stats-section-content-item">
-                    Expecting Business Days Prices: <b>{{vm.stats.price_history.expecting_total_bdays_prices}}</b>
                 </div>
 
+                <div data-ng-show="portfolio.showPortfolio" class="portfolio-data-stats-section-content">
 
-                <div>
+                    <div style="padding-left: 24px;">
 
-                    <div>
-                        Instruments
-                        <md-button class="md-raised" data-ng-click="vm.showInstruments = !vm.showInstruments">Toggle
-                        </md-button>
-                    </div>
-                    <div data-ng-show="vm.showInstruments">
-
-                        <div class="m-t-8 m-b-8">
-
-                            <md-input-container style="width: 90%">
-                                <label for="">Search</label>
-                                <input aria-label="search" type="text" data-ng-model="vm.instrumentQuery">
-                            </md-input-container>
-
+                        <div class="data-stats-section-content-item">
+                            Total Complex Transactions: <b>{{portfolio.complex_transactions}}</b>
+                        </div>
+                        <div class="data-stats-section-content-item">
+                            Total Transactions: <b>{{portfolio.transactions}}</b>
                         </div>
 
-                        <div data-ng-repeat="item in vm.stats.price_history.instruments | filter: vm.instrumentQuery"
-                             class="data-stats-section-content">
+                        <div class="data-stats-section-content-item">
+                            First Transaction Date: <b>{{portfolio.first_transaction_date}}</b>
+                        </div>
 
-                            <div class="data-stats-section-content-item">Name: <b>{{item.instrument.name}}
-                                ({{item.instrument.user_code}})</b></div>
-                            <div class="data-stats-section-content-item">Expecting Prices:
-                                <b>{{item.expecting_prices}}</b></div>
-                            <div class="data-stats-section-content-item">Expecting Business Days Prices:
-                                <b>{{item.expecting_bdays_prices}}</b></div>
-                            <div class="data-stats-section-content-item">Prices: <b>{{item.prices}}</b></div>
-                            <div class="data-stats-section-content-item">Last Date Price:
-                                <b>{{item.last_price_date}}</b></div>
+                        <div class="data-stats-section-content-item">
+                            Related Instruments: <b>{{portfolio.related_instruments}}</b>
+                        </div>
 
-                            <div class="data-stats-section-content-item">
+                        <div class="data-stats-section-content-item">
+                            Related Currencies: <b>{{portfolio.related_currencies}}</b>
+                        </div>
+
+                    </div>
+
+                    <hr>
+
+
+                    <div class="data-stats-section">
+                        <div layout="row" class="data-stats-section-header">Price History Section
+                            <md-button class="md-raised"
+                                       data-ng-click="portfolio.showPriceHistorySection = !portfolio.showPriceHistorySection">
+                                Toggle
+                            </md-button>
+                            <div class="data-stats-section-progress-item" layout="row">
                                 <div>
-                                    Filled for {{item.prices / (item.expecting_bdays_prices / 100)}}%
+                                    Filled for
+                                    {{portfolio.price_history.filled_percent}}%
                                 </div>
                                 <md-progress-linear md-mode="determinate"
-                                                    value="{{item.prices / (item.expecting_bdays_prices / 100)}}"></md-progress-linear>
+                                                    value="{{portfolio.price_history.filled_percent}}"></md-progress-linear>
 
                             </div>
                         </div>
 
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
+                        <div data-ng-show="portfolio.showPriceHistorySection" class="data-stats-section-content">
 
 
-        <div class="data-stats-section">
-            <div layout="row" class="data-stats-section-header">Currency History Section
-                <md-button class="md-raised"
-                           data-ng-click="vm.showCurrencyHistorySection = !vm.showCurrencyHistorySection">Toggle
-                </md-button>
-                <div class="data-stats-section-progress-item" layout="row">
+                            <div data-ng-repeat="pricing_policy in portfolio.price_history.pricing_policies">
 
-                    <div>
-                        Filled for {{vm.stats.currency_history.filled_percent}}%
-                    </div>
-                    <md-progress-linear md-mode="determinate"
-                                        value="{{vm.stats.currency_history.filled_percent}}"></md-progress-linear>
+                                <div layout="row">
+                                    Pricing Policy: {{pricing_policy.pricing_policy.id}}
+                                    {{pricing_policy.pricing_policy.name}}
+                                    ({{pricing_policy.pricing_policy.user_code}})
 
-                </div>
-            </div>
+                                    <div class="data-stats-section-progress-item m-l-8" layout="row">
+                                        <div>
+                                            Filled for
+                                            {{pricing_policy.filled_percent}}%
+                                        </div>
+                                        <md-progress-linear md-mode="determinate"
+                                                            value="{{pricing_policy.filled_percent}}"></md-progress-linear>
 
-            <div data-ng-show="vm.showCurrencyHistorySection" class="data-stats-section-content">
+                                    </div>
+                                </div>
 
-                <div class="data-stats-section-content-item">
-                    Total Currencies: <b>{{vm.stats.currency_history.total_currencies}}</b>
-                </div>
-                <div class="data-stats-section-content-item">
-                    Total Pricing Policies: <b>{{vm.stats.price_history.total_pricing_policies}}</b>
-                </div>
-                <div class="data-stats-section-content-item">
-                    Total FX Rates: <b>{{vm.stats.currency_history.total_fxrates}}</b>
-                </div>
-                <div class="data-stats-section-content-item">
-                    Expecting FX Rates: <b>{{vm.stats.currency_history.expecting_total_fxrates}}</b>
-                </div>
-                <div class="data-stats-section-content-item">
-                    Expecting Business Days FX Rates: <b>{{vm.stats.currency_history.expecting_total_bdays_fxrates}}</b>
-                </div>
+                                <div style="padding-left: 24px; padding-top: 16px">
 
+                                    <div class="data-stats-section-content-item">
+                                        Expecting Prices: <b>{{pricing_policy.expecting_histories}}</b>
+                                    </div>
 
-                <div>
+                                    <div class="data-stats-section-content-item">
+                                        Expecting Business Days Prices:
+                                        <b>{{pricing_policy.expecting_bdays_histories}}</b>
+                                    </div>
 
-                    <div>
-                        Currencies
-                        <md-button class="md-raised" data-ng-click="vm.showCurrencies = !vm.showCurrencies">Toggle
-                        </md-button>
-                    </div>
-                    <div data-ng-show="vm.showCurrencies">
+                                    <div class="data-stats-section-content-item">Prices:
+                                        <b>{{pricing_policy.price_histories}}</b></div>
 
-                        <div class="m-t-8 m-b-8">
+                                    <div class="data-stats-section-header m-t-8 m-b-8">
+                                        Instruments
+                                        <md-button class="md-raised"
+                                                   data-ng-click="pricing_policy.showInstruments = !pricing_policy.showInstruments">
+                                            Toggle
+                                        </md-button>
+                                    </div>
+                                    <div data-ng-show="pricing_policy.showInstruments">
 
-                            <md-input-container style="width: 90%">
-                                <label for="">Search</label>
-                                <input aria-label="search" type="text" data-ng-model="vm.currencyQuery">
-                            </md-input-container>
+                                        <div class="m-t-8 m-b-8">
+
+                                            <md-input-container style="width: 90%">
+                                                <label for="">Search</label>
+                                                <input aria-label="search" type="text"
+                                                       data-ng-model="pricing_policy.instrumentQuery">
+                                            </md-input-container>
+
+                                        </div>
+
+                                        <div data-ng-repeat="item in pricing_policy.instruments | filter: pricing_policy.instrumentQuery"
+                                             class="data-stats-section-content">
+
+                                            <div class="data-stats-section-content-item">Name: <b>{{item.instrument.name}}
+                                                ({{item.instrument.user_code}})</b></div>
+                                            <div class="data-stats-section-content-item">Expecting Prices:
+                                                <b>{{item.expecting_prices}}</b></div>
+                                            <div class="data-stats-section-content-item">Expecting Business Days Prices:
+                                                <b>{{item.expecting_bdays_prices}}</b></div>
+                                            <div class="data-stats-section-content-item">Prices: <b>{{item.prices}}</b>
+                                            </div>
+                                            <div class="data-stats-section-content-item">Last Date Price:
+                                                <b>{{item.last_price_date}}</b></div>
+
+                                            <div class="data-stats-section-content-item">
+                                                <div>
+                                                    Filled for {{item.prices / (item.expecting_bdays_prices / 100)}}%
+                                                </div>
+                                                <md-progress-linear md-mode="determinate"
+                                                                    value="{{item.prices / (item.expecting_bdays_prices / 100)}}"></md-progress-linear>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
 
                         </div>
 
-                        <div data-ng-repeat="item in vm.stats.currency_history.currencies | filter: vm.currencyQuery"
-                             class="data-stats-section-content">
+                    </div>
 
-                            <div class="data-stats-section-content-item">Name: <b>{{item.currency.name}}
-                                ({{item.currency.user_code}})</b></div>
-                            <div class="data-stats-section-content-item">Expecting Prices:
-                                <b>{{item.expecting_fxrates}}</b></div>
-                            <div class="data-stats-section-content-item">Expecting Business Days Prices:
-                                <b>{{item.expecting_bdays_fxrates}}</b></div>
-                            <div class="data-stats-section-content-item">Prices: <b>{{item.fxrates}}</b></div>
-                            <div class="data-stats-section-content-item">Last Date Price:
-                                <b>{{item.last_fxrate_date}}</b></div>
-
-                            <div class="data-stats-section-content-item">
+                    <div class="data-stats-section">
+                        <div layout="row" class="data-stats-section-header">Currency History Section
+                            <md-button class="md-raised"
+                                       data-ng-click="portfolio.showCurrencyHistorySection = !portfolio.showCurrencyHistorySection">
+                                Toggle
+                            </md-button>
+                            <div class="data-stats-section-progress-item" layout="row">
 
                                 <div>
-                                    Filled for {{item.fxrates / (item.expecting_bdays_fxrates / 100)}}%
+                                    Filled for {{portfolio.currency_history.filled_percent}}%
                                 </div>
                                 <md-progress-linear md-mode="determinate"
-                                                    value="{{item.fxrates / (item.expecting_bdays_fxrates / 100)}}"></md-progress-linear>
+                                                    value="{{portfolio.currency_history.filled_percent}}"></md-progress-linear>
+
                             </div>
                         </div>
 
-                    </div>
-
-                </div>
+                        <div data-ng-show="portfolio.showCurrencyHistorySection" class="data-stats-section-content">
 
 
-            </div>
-        </div>
+                            <div>
 
-        <div class="data-stats-section">
-            <div layout="row" class="data-stats-section-header">Nav History
-                <md-button class="md-raised" data-ng-click="vm.showNavHistorySection = !vm.showNavHistorySection">
-                    Toggle
-                </md-button>
-                <div class="data-stats-section-progress-item" layout="row">
+                                <div data-ng-repeat="pricing_policy in portfolio.currency_history.pricing_policies">
 
-                    <div>
-                        Filled for {{vm.stats.nav_history.filled_percent}}%
-                    </div>
-                    <md-progress-linear md-mode="determinate"
-                                        value="{{vm.stats.nav_history.filled_percent}}"></md-progress-linear>
 
-                </div>
-            </div>
-            <div data-ng-show="vm.showNavHistorySection" class="data-stats-section-content">
+                                    <div layout="row">
+                                        Pricing Policy: {{pricing_policy.pricing_policy.id}}
+                                        {{pricing_policy.pricing_policy.name}}
+                                        ({{pricing_policy.pricing_policy.user_code}})
 
-                <div class="data-stats-section-content-item">
-                    Total Records: <b>{{vm.stats.nav_history.total_nav_histories}}</b>
-                </div>
+                                        <div class="data-stats-section-progress-item m-l-8" layout="row">
+                                            <div>
+                                                Filled for
+                                                {{pricing_policy.filled_percent}}%
+                                            </div>
+                                            <md-progress-linear md-mode="determinate"
+                                                                value="{{pricing_policy.filled_percent}}"></md-progress-linear>
 
-                <div class="data-stats-section-content-item">
-                    Expecting Records: <b>{{vm.stats.nav_history.expecting_histories}}</b>
-                </div>
+                                        </div>
+                                    </div>
 
-                <div class="data-stats-section-content-item">
-                    Expecting Business Days Records: <b>{{vm.stats.nav_history.expecting_bdays_histories}}</b>
-                </div>
+                                    <div style="padding-left: 24px; padding-top: 16px">
 
-                <div class="data-stats-section-content-item">
-                    Total Portfolios:
-                    <b>{{vm.stats.nav_history.total_portfolios}}</b>
-                </div>
+                                        <div class="data-stats-section-content-item">
+                                            Expecting FX Rates: <b>{{pricing_policy.expecting_histories}}</b>
+                                        </div>
 
-                <div>
+                                        <div class="data-stats-section-content-item">
+                                            Expecting Business Days FX Rates:
+                                            <b>{{pricing_policy.expecting_bdays_histories}}</b>
+                                        </div>
 
-                    <div>
-                        Portfolios
-                        <md-button class="md-raised" data-ng-click="vm.showNavPortfolios = !vm.showNavPortfolios">Toggle
-                        </md-button>
-                    </div>
-                    <div data-ng-show="vm.showNavPortfolios">
+                                        <div class="data-stats-section-content-item">FX Rates:
+                                            <b>{{pricing_policy.currency_histories}}</b></div>
 
-                        <div class="m-t-8 m-b-8">
 
-                            <md-input-container style="width: 90%">
-                                <label for="">Search</label>
-                                <input aria-label="search" type="text" data-ng-model="vm.navPortfolioQuery">
-                            </md-input-container>
+                                        <div class="data-stats-section-header m-t-8 m-b-8">
+                                            Currencies
+                                            <md-button class="md-raised"
+                                                       data-ng-click="pricing_policy.showCurrencies = !pricing_policy.showCurrencies">
+                                                Toggle
+                                            </md-button>
+                                        </div>
+                                        <div data-ng-show="pricing_policy.showCurrencies">
+
+                                            <div class="m-t-8 m-b-8">
+
+                                                <md-input-container style="width: 90%">
+                                                    <label for="">Search</label>
+                                                    <input aria-label="search" type="text"
+                                                           data-ng-model="pricing_policy.currencyQuery">
+                                                </md-input-container>
+
+                                            </div>
+
+                                            <div data-ng-repeat="item in pricing_policy.currencies | filter: pricing_policy.currencyQuery"
+                                                 class="data-stats-section-content">
+
+                                                <div class="data-stats-section-content-item">Name:
+                                                    <b>{{item.currency.name}}
+                                                        ({{item.currency.user_code}})</b></div>
+                                                <div class="data-stats-section-content-item">Expecting Prices:
+                                                    <b>{{item.expecting_fxrates}}</b></div>
+                                                <div class="data-stats-section-content-item">Expecting Business Days
+                                                    Prices:
+                                                    <b>{{item.expecting_bdays_fxrates}}</b></div>
+                                                <div class="data-stats-section-content-item">Prices:
+                                                    <b>{{item.fxrates}}</b>
+                                                </div>
+                                                <div class="data-stats-section-content-item">Last Date Price:
+                                                    <b>{{item.last_fxrate_date}}</b></div>
+
+                                                <div class="data-stats-section-content-item">
+
+                                                    <div>
+                                                        Filled for {{item.fxrates / (item.expecting_bdays_fxrates / 100)}}%
+                                                    </div>
+                                                    <md-progress-linear md-mode="determinate"
+                                                                        value="{{item.fxrates / (item.expecting_bdays_fxrates / 100)}}"></md-progress-linear>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+
 
                         </div>
+                    </div>
 
-                        <div data-ng-repeat="item in vm.stats.nav_history.portfolios | filter: vm.navPortfolioQuery"
-                             class="data-stats-section-content">
+                    <div class="data-stats-section">
+                        <div layout="row" class="data-stats-section-header">Nav History
+                            <md-button class="md-raised"
+                                       data-ng-click="portfolio.showNavHistorySection = !portfolio.showNavHistorySection">
+                                Toggle
+                            </md-button>
+                            <div class="data-stats-section-progress-item" layout="row">
 
-                            <div class="data-stats-section-content-item">Name: <b>{{item.portfolio.name}}
-                                ({{item.portfolio.user_code}})</b></div>
-                            <div class="data-stats-section-content-item">Expecting Records:
-                                <b>{{item.expecting_nav_histories}}</b></div>
-                            <div class="data-stats-section-content-item">Expecting Business Days Records:
-                                <b>{{item.expecting_bdays_nav_histories}}</b></div>
-                            <div class="data-stats-section-content-item">Records: <b>{{item.nav_histories}}</b></div>
+                                <div>
+                                    Filled for {{portfolio.nav_history.filled_percent}}%
+                                </div>
+                                <md-progress-linear md-mode="determinate"
+                                                    value="{{portfolio.nav_history.filled_percent}}"></md-progress-linear>
+
+                            </div>
+                        </div>
+                        <div data-ng-show="portfolio.showNavHistorySection" class="data-stats-section-content">
+
+                            <div class="data-stats-section-content-item">
+                                Expecting Records: <b>{{portfolio.nav_history.expecting_histories}}</b>
+                            </div>
+
+                            <div class="data-stats-section-content-item">
+                                Expecting Business Days Records:
+                                <b>{{portfolio.nav_history.expecting_bdays_histories}}</b>
+                            </div>
+
+                            <div class="data-stats-section-content-item">Records:
+                                <b>{{portfolio.nav_history.nav_histories}}</b></div>
                             <div class="data-stats-section-content-item">Last Date Record:
-                                <b>{{item.last_nav_history_date}}</b></div>
+                                <b>{{portfolio.nav_history.last_nav_history_date}}</b></div>
 
-                            <div class="data-stats-section-content-item">
+                        </div>
+                    </div>
+
+                    <div class="data-stats-section">
+                        <div layout="row" class="data-stats-section-header">PL History
+                            <md-button class="md-raised"
+                                       data-ng-click="portfolio.showPlHistorySection = !portfolio.showPlHistorySection">
+                                Toggle
+                            </md-button>
+                            <div class="data-stats-section-progress-item" layout="row">
 
                                 <div>
-                                    Filled for {{item.nav_histories / (item.expecting_bdays_nav_histories / 100)}}%
+                                    Filled for {{portfolio.pl_history.filled_percent}}%
                                 </div>
                                 <md-progress-linear md-mode="determinate"
-                                                    value="{{item.nav_histories / (item.expecting_bdays_nav_histories / 100)}}"></md-progress-linear>
+                                                    value="{{portfolio.pl_history.filled_percent}}"></md-progress-linear>
+
                             </div>
                         </div>
+                        <div data-ng-show="portfolio.showPlHistorySection" class="data-stats-section-content">
 
-                    </div>
+                            <div class="data-stats-section-content-item">
+                                Expecting Records: <b>{{portfolio.pl_history.expecting_pl_histories}}</b>
+                            </div>
 
-                </div>
+                            <div class="data-stats-section-content-item">
+                                Expecting Business Days Records:
+                                <b>{{portfolio.pl_history.expecting_pl_bdays_histories}}</b>
+                            </div>
 
-
-            </div>
-        </div>
-
-        <div class="data-stats-section">
-            <div layout="row" class="data-stats-section-header">PL History
-                <md-button class="md-raised" data-ng-click="vm.showPlHistorySection = !vm.showPlHistorySection">Toggle
-                </md-button>
-                <div class="data-stats-section-progress-item" layout="row">
-
-                    <div>
-                        Filled for {{vm.stats.pl_history.filled_percent}}%
-                    </div>
-                    <md-progress-linear md-mode="determinate"
-                                        value="{{vm.stats.pl_history.filled_percent}}"></md-progress-linear>
-
-                </div>
-            </div>
-            <div data-ng-show="vm.showPlHistorySection" class="data-stats-section-content">
-
-                <div class="data-stats-section-content-item">
-                    Total Records: <b>{{vm.stats.pl_history.total_pl_histories}}</b>
-                </div>
-
-                <div class="data-stats-section-content-item">
-                    Expecting Records: <b>{{vm.stats.pl_history.expecting_pl_histories}}</b>
-                </div>
-
-                <div class="data-stats-section-content-item">
-                    Expecting Business Days Records: <b>{{vm.stats.pl_history.expecting_pl_bdays_histories}}</b>
-                </div>
-
-                <div class="data-stats-section-content-item">
-                    Total Portfolios:
-                    <b>{{vm.stats.pl_history.total_portfolios}}</b>
-                </div>
-
-                <div>
-
-                    <div>
-                        Portfolios
-                        <md-button class="md-raised" data-ng-click="vm.showPlPortfolios = !vm.showPlPortfolios">Toggle
-                        </md-button>
-                    </div>
-                    <div data-ng-show="vm.showPlPortfolios">
-
-                        <div class="m-t-8 m-b-8">
-
-                            <md-input-container style="width: 90%">
-                                <label for="">Search</label>
-                                <input aria-label="search" type="text" data-ng-model="vm.plPortfolioQuery">
-                            </md-input-container>
-
-                        </div>
-
-                        <div data-ng-repeat="item in vm.stats.pl_history.portfolios | filter: vm.plPortfolioQuery"
-                             class="data-stats-section-content">
-
-                            <div class="data-stats-section-content-item">Name: <b>{{item.portfolio.name}}
-                                ({{item.portfolio.user_code}})</b></div>
-                            <div class="data-stats-section-content-item">Expecting Records:
-                                <b>{{item.expecting_pl_histories}}</b></div>
-                            <div class="data-stats-section-content-item">Expecting Business Days Records:
-                                <b>{{item.expecting_bdays_pl_histories}}</b></div>
-                            <div class="data-stats-section-content-item">Records: <b>{{item.pl_histories}}</b></div>
+                            <div class="data-stats-section-content-item">Records:
+                                <b>{{portfolio.pl_history.pl_histories}}</b></div>
                             <div class="data-stats-section-content-item">Last Date Record:
-                                <b>{{item.last_pl_history_date}}</b></div>
+                                <b>{{portfolio.pl_history.last_pl_history_date}}</b></div>
 
-                            <div class="data-stats-section-content-item">
+                        </div>
+                    </div>
+
+                    <div class="data-stats-section">
+                        <div layout="row" class="data-stats-section-header">Widget Stats History
+                            <md-button class="md-raised"
+                                       data-ng-click="portfolio.showWidgetStatsSection = !portfolio.showWidgetStatsSection">
+                                Toggle
+                            </md-button>
+                            <div class="data-stats-section-progress-item" layout="row">
 
                                 <div>
-                                    Filled for {{item.pl_histories / (item.expecting_bdays_pl_histories / 100)}}%
+                                    Filled for {{portfolio.widget_stats_history.filled_percent}}%
                                 </div>
                                 <md-progress-linear md-mode="determinate"
-                                                    value="{{item.pl_histories / (item.expecting_bdays_pl_histories / 100)}}"></md-progress-linear>
+                                                    value="{{portfolio.widget_stats_history.filled_percent}}"></md-progress-linear>
+
                             </div>
                         </div>
+                        <div data-ng-show="portfolio.showWidgetStatsSection" class="data-stats-section-content">
 
-                    </div>
+                            <div class="data-stats-section-content-item">
+                                Expecting Records: <b>{{portfolio.widget_stats_history.expecting_widget_stats}}</b>
+                            </div>
 
-                </div>
+                            <div class="data-stats-section-content-item">
+                                Expecting Business Days Records:
+                                <b>{{portfolio.widget_stats_history.expecting_bdays_widget_stats}}</b>
+                            </div>
 
-            </div>
-        </div>
-
-        <div class="data-stats-section">
-            <div layout="row" class="data-stats-section-header">Widget Stats History
-                <md-button class="md-raised" data-ng-click="vm.showWidgetStatsSection = !vm.showWidgetStatsSection">
-                    Toggle
-                </md-button>
-                <div class="data-stats-section-progress-item" layout="row">
-
-                    <div>
-                        Filled for {{vm.stats.widget_stats_history.filled_percent}}%
-                    </div>
-                    <md-progress-linear md-mode="determinate"
-                                        value="{{vm.stats.widget_stats_history.filled_percent}}"></md-progress-linear>
-
-                </div>
-            </div>
-            <div data-ng-show="vm.showWidgetStatsSection" class="data-stats-section-content">
-
-                <div class="data-stats-section-content-item">
-                    Total Records: <b>{{vm.stats.widget_stats_history.total_widget_stats}}</b>
-                </div>
-
-                <div class="data-stats-section-content-item">
-                    Expecting Records: <b>{{vm.stats.widget_stats_history.expecting_widget_stats}}</b>
-                </div>
-
-                <div class="data-stats-section-content-item">
-                    Expecting Business Days Records:
-                    <b>{{vm.stats.widget_stats_history.expecting_bdays_widget_stats}}</b>
-                </div>
-
-                <div class="data-stats-section-content-item">
-                    Total Portfolios:
-                    <b>{{vm.stats.widget_stats_history.total_portfolios}}</b>
-                </div>
-
-                <div>
-
-                    <div>
-                        Portfolios
-                        <md-button class="md-raised"
-                                   data-ng-click="vm.showWidgetStatsPortfolios = !vm.showWidgetStatsPortfolios">Toggle
-                        </md-button>
-                    </div>
-                    <div data-ng-show="vm.showWidgetStatsPortfolios">
-
-                        <div class="m-t-8 m-b-8">
-
-                            <md-input-container style="width: 90%">
-                                <label for="">Search</label>
-                                <input aria-label="search" type="text" data-ng-model="vm.widgetStatsPortfolioQuery">
-                            </md-input-container>
-
-                        </div>
-
-                        <div data-ng-repeat="item in vm.stats.widget_stats_history.portfolios | filter: vm.widgetStatsPortfolioQuery"
-                             class="data-stats-section-content">
-
-                            <div class="data-stats-section-content-item">Name: <b>{{item.portfolio.name}}
-                                ({{item.portfolio.user_code}})</b></div>
-                            <div class="data-stats-section-content-item">Expecting Records:
-                                <b>{{item.expecting_widget_stats}}</b></div>
-                            <div class="data-stats-section-content-item">Expecting Business Days Records:
-                                <b>{{item.expecting_bdays_widget_stats}}</b></div>
-                            <div class="data-stats-section-content-item">Records: <b>{{item.widget_stats}}</b></div>
+                            <div class="data-stats-section-content-item">Records:
+                                <b>{{portfolio.widget_stats_history.widget_stats}}</b></div>
                             <div class="data-stats-section-content-item">Last Date Record:
-                                <b>{{item.last_widget_stats_date}}</b></div>
+                                <b>{{portfolio.widget_stats_history.last_widget_stats_date}}</b></div>
 
-                            <div class="data-stats-section-content-item">
-
-                                <div>
-                                    Filled for {{item.widget_stats / (item.expecting_bdays_widget_stats / 100)}}%
-                                </div>
-                                <md-progress-linear md-mode="determinate"
-                                                    value="{{item.widget_stats / (item.expecting_bdays_widget_stats / 100)}}"></md-progress-linear>
-                            </div>
                         </div>
-
                     </div>
 
                 </div>
 
-
             </div>
+
         </div>
 
 
