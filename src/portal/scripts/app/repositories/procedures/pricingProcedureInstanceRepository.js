@@ -1,5 +1,5 @@
 /**
- * Created by szhitenev on 13.03.2020.
+ * Created by szhitenev on 19.10.2022.
  */
 (function () {
 
@@ -18,7 +18,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/pricing-parent-procedure-instance/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/pricing-procedure-instance/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -35,7 +35,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/pricing-parent-procedure-instance/' + id + '/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/pricing-procedure-instance/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -47,12 +47,51 @@
             })
     };
 
+    var create = function (item) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/pricing-procedure-instance/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                data: JSON.stringify(item)
+            })
+    };
+
+    var update = function (id, item) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/pricing-procedure-instance/' + id + '/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                data: JSON.stringify(item)
+            })
+    };
+
+
     var deleteByKey = function (id) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/pricing-parent-procedure-instance/' + id + '/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'procedures/pricing-procedure-instance/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -72,8 +111,11 @@
     };
 
     module.exports = {
+
         getList: getList,
         getByKey: getByKey,
+        create: create,
+        update: update,
         deleteByKey: deleteByKey
     }
 

@@ -391,6 +391,12 @@
                 controller: 'DataStatsPageController as vm'
             })
 
+            .state('app.portal.data-calendar', {
+                url: '/calendar',
+                templateUrl: 'views/pages/data-calendar-page-view.html',
+                controller: 'DataCalendarPageController as vm'
+            })
+
 
             .state('app.portal.update-center', {
                 url: '/update-center',
