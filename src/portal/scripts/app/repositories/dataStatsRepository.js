@@ -13,13 +13,13 @@
     var baseUrl = baseUrlService.resolve();
 
 
-    var getStats = function () {
+    var getStats = function (period) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/utils/stats/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/utils/stats/?period=' + period,
             {
                 method: 'GET',
                 credentials: 'include',
