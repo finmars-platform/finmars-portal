@@ -254,6 +254,16 @@
                                     </md-button>
 
                                 </li>
+
+                                <li>
+                                    <md-button class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.portal.data-calendar">
+                                        <span class="side-nav-title">Calendar</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+
+                                </li>
                             </ul>
                         </div>
                     </li>
@@ -766,14 +776,14 @@
 
                                     <ul class="sidenav-dropdown-menu dataTypes-dropdown-menu-element ng-hide">
 
-<!--                                        <li data-ng-if="vm.accessTable.configuration_price_download_scheme">-->
-<!--                                            <md-button class="sidenav-dropdown-menu-btn"-->
-<!--                                                       ui-sref="app.portal.settings.price-download-scheme">-->
-<!--                                                <span class="side-nav-title">Price Schemes</span>-->
-<!--                                                <span class="md-visually-hidden"-->
-<!--                                                      data-ng-if="isSelected()">current page</span>-->
-<!--                                            </md-button>-->
-<!--                                        </li>-->
+                                        <!--                                        <li data-ng-if="vm.accessTable.configuration_price_download_scheme">-->
+                                        <!--                                            <md-button class="sidenav-dropdown-menu-btn"-->
+                                        <!--                                                       ui-sref="app.portal.settings.price-download-scheme">-->
+                                        <!--                                                <span class="side-nav-title">Price Schemes</span>-->
+                                        <!--                                                <span class="md-visually-hidden"-->
+                                        <!--                                                      data-ng-if="isSelected()">current page</span>-->
+                                        <!--                                            </md-button>-->
+                                        <!--                                        </li>-->
                                         <li data-ng-if="vm.accessTable.configuration_instrument_download_scheme">
                                             <md-button class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.portal.settings.instrument-import">
@@ -1047,8 +1057,11 @@
           title="Websocket status: {{vm.getWsStatus()}}"></span>
 
     <br/>
-    <div >
-        <a class="sidenav-api-link sidenav-error-subtitle open-logs-button"  data-ng-click="vm.toggleLogsWindow($event)">logs</a> <span data-ng-click="vm.openSystemErrorLogDialog($event)" class="sidenav-error-subtitle {{vm.getErrorCount() ? 'text-warning-red' : ''}}">Errors: {{ vm.getErrorCount() }}</span>
+    <div>
+        <a class="sidenav-api-link sidenav-error-subtitle open-logs-button" data-ng-click="vm.toggleLogsWindow($event)">logs</a>
+        <span data-ng-click="vm.openSystemErrorLogDialog($event)"
+              class="sidenav-error-subtitle {{vm.getErrorCount() ? 'text-warning-red' : ''}}">Errors: {{ vm.getErrorCount()
+            }}</span>
     </div>
 
     <div class="sidenav-api-subtitle">
@@ -1059,7 +1072,7 @@
             <md-tooltip class="tooltip_1" md-direction="top">Copy</md-tooltip>
 
         </span>
-            &nbsp; <a class="sidenav-api-link"  ui-sref="app.portal.update-center">{{vm.getCurrentVersion()}}</a>
+            &nbsp; <a class="sidenav-api-link" ui-sref="app.portal.update-center">{{vm.getCurrentVersion()}}</a>
 
         </div>
     </div>
