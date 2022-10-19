@@ -5,8 +5,8 @@
 
     var dataStatsRepository = require('../repositories/dataStatsRepository');
 
-    var getStats = function (path) {
-        return dataStatsRepository.getStats(path);
+    var getStats = function (period) {
+        return dataStatsRepository.getStats(period);
     };
 
     module.exports = {
