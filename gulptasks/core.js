@@ -298,6 +298,35 @@
 
     });
 
+    gulp.task(appName + '-fullcalendar-js-min', function () {
+
+        var pathToJS = [
+            'node_modules/fullcalendar/main.js',
+        ];
+
+        return gulp.src(pathToJS)
+            .pipe(concat('fullcalendar.js'))
+            .pipe(uglify())
+            .pipe(rename('fullcalendar.min.js'))
+            .pipe(gulp.dest('dist/' + appName + '/scripts/'));
+
+    });
+
+    gulp.task(appName + '-fullcalendar-css-min', function () {
+
+        var pathToCSS = [
+            'node_modules/fullcalendar/main.css'
+        ];
+
+        return gulp.src(pathToCSS)
+            .pipe(concat('fullcalendar.css'))
+            .pipe(minifyCSS())
+            .pipe(rename('fullcalendar.min.css'))
+            .pipe(gulp.dest('dist/' + appName + '/content/css'));
+
+    });
+
+
     /*gulp.task(appName + '-fontawesome-css-min', function () {
 
         var pathToCSS = [
@@ -426,7 +455,9 @@
             appName + '-copy-libs-fonts',
             appName + '-fontawesome-min',
             appName + '-dragula-js-min',
-            appName + '-dragula-css-min'
+            appName + '-dragula-css-min',
+            appName + '-fullcalendar-js-min',
+            appName + '-fullcalendar-css-min',
         )
     );
 
