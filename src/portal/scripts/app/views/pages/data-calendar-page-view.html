@@ -1,0 +1,158 @@
+<div class="data-calendar-page p-24">
+
+    <h1 layout="row">Finmars Calendar
+    </h1>
+
+    <div layout="row">
+
+        <md-button data-ng-click="vm.refresh()" class="md-raised md-primary">Refresh</md-button>
+
+    </div>
+
+    <div data-ng-if="vm.readyStatus.content" class="data-calendar-page-content">
+
+        <div id="calendar">
+
+        </div>
+
+        <div class="calendar-event-detail">
+
+            <div data-ng-if="vm.calendarEvent">
+
+                <h1>{{vm.calendarEvent.title}}</h1>
+                <div>Start: {{vm.calendarEvent.start}}</div>
+                <div data-ng-if="vm.calendarEvent.extendedProps.id">Id: {{vm.calendarEvent.extendedProps.id}}</div>
+                <div>Type: {{vm.calendarEvent.extendedProps.type}}</div>
+
+                <div data-ng-if="vm.calendarEvent.extendedProps.type === 'system_message'">
+
+                    <div>Description: {{vm.calendarEvent.extendedProps.payload.description}}</div>
+
+                </div>
+
+                <div data-ng-if="vm.calendarEvent.extendedProps.type === 'expression_procedure'">
+
+                    <div>Status: {{vm.calendarEvent.extendedProps.payload.status}}</div>
+                    <div>Error message: {{vm.calendarEvent.extendedProps.payload.error_message}}</div>
+                    <div>Result: {{vm.calendarEvent.extendedProps.payload.result}}</div>
+
+                </div>
+
+
+                <div data-ng-if="vm.calendarEventPayloadLoading">
+                    <div layout="row" layout-sm="column" layout-align="space-around">
+                        <progress-circular diameter="50"></progress-circular>
+                    </div>
+                </div>
+
+                <div data-ng-if="vm.calendarEventPayload">
+
+                    <div data-ng-if="vm.calendarEvent.extendedProps.type === 'celery_task'">
+
+                        <div>Status: {{vm.calendarEventPayload.status}}</div>
+                        <div>Type: {{vm.calendarEventPayload.type}}</div>
+
+                        <div data-ng-if="vm.calendarEventPayload.member_object">
+                            Member: {{vm.calendarEventPayload.member_object.username}}
+                        </div>
+
+                        <div>
+
+                            Options
+
+                            <div style="max-height: 300px; overflow: auto">
+
+                                <pre>{{vm.calendarEventPayload.options_object}}
+                                </pre>
+
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            Results
+
+                            <div style="max-height: 300px; overflow: auto">
+
+                                <pre>{{vm.calendarEventPayload.result_object}}
+                                </pre>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                    <div data-ng-if="vm.calendarEvent.extendedProps.type === 'pricing_procedure'">
+
+                        <div>Status: {{vm.calendarEventPayload.status}}</div>
+                        <div>Action: {{vm.calendarEventPayload.action_verbose}}</div>
+                        <div>Provider: {{vm.calendarEventPayload.provider_verbose}}</div>
+                        <div>Procedure: {{vm.calendarEventPayload.procedure_object.user_code}}</div>
+
+                        <hr>
+                        <div>Success prices: {{vm.calendarEventPayload.successful_prices_count}}</div>
+
+                        <hr>
+
+                        <div>Error message: {{vm.calendarEventPayload.error_message}}</div>
+                        <div>Error Prices: {{vm.calendarEventPayload.error_prices_count}}</div>
+
+                        <hr>
+
+                        <div>
+                            Request Data
+                            <div style="max-height: 300px; overflow: auto">
+                                <pre>{{vm.calendarEventPayload.request_data}}</pre>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                    <div data-ng-if="vm.calendarEvent.extendedProps.type === 'data_procedure'">
+
+                        <div>Status: {{vm.calendarEventPayload.status}}</div>
+                        <div>Procedure: {{vm.calendarEventPayload.procedure_object.user_code}}</div>
+
+                        <hr>
+
+                        <div>Error message: {{vm.calendarEventPayload.error_message}}</div>
+
+                        <hr>
+
+                        <div>
+                            Request Data
+                            <div style="max-height: 300px; overflow: auto">
+                                <pre>{{vm.calendarEventPayload.request_data}}</pre>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+            <div data-ng-if="!vm.calendarEvent">
+                <h1>Click on event to see details</h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.content" style="width: 100%">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="100"></progress-circular>
+        </div>
+    </div>
+
+</div>
