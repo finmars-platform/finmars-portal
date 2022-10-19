@@ -1,5 +1,7 @@
 @customInputsRightSpace: 8px;
 @onFocusShadow: 0 0 0 1px #7d7d7d;
+@ciColor: rgba(125,125,125,1);
+@ciColorLighten: rgba(125,125,125,.5);
 
 .entity-editor-fixed-fields-container {
   .custom-input-container {
@@ -29,7 +31,7 @@
 }
 
 .custom-input-textarea-span-pan {
-  color: #7d7d7d;
+  color: @ciColor;
   position: relative;
   padding: 4px 18px 0 4px;
   height: 16px;
@@ -109,7 +111,7 @@
   height: 40px;
   overflow: hidden;
   border-radius: 6px;
-  border: 2px solid #7d7d7d;
+  border: 2px solid rgba(125,125,125,1);
   box-sizing: border-box;
 }
 
@@ -242,8 +244,10 @@
   }
 }
 
+// Using transition will slow work of ng-if for .custom-input-indicator-btn
 .custom-input-indicator-btn {
   width: 30px;
+  flex-basis: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -253,10 +257,8 @@
   border: none;
   border-radius: 0;
   margin-left: 6px;
-  fill: #7b7b7b;
   // z-index: 9;
-  color: #7d7d7d;
-  transition: 0.2s ease-in-out;
+  color: @ciColor;
 
   &:not([disabled]):hover {
     opacity: 0.5;
@@ -340,7 +342,7 @@
   top: 0;
   left: 0;
   background-color: #fff;
-  border: 2px solid #7d7d7d;
+  border: 2px solid @ciColor;
   border-radius: 1px;
   padding-top: 23px;
   box-sizing: border-box;
@@ -969,8 +971,22 @@
 //endregion When input in error mode
 
 .custom-input-container.custom-input-is-disabled {
-  opacity: 0.5;
-  pointer-events: none;
+  /*opacity: 0.5;
+  pointer-events: none;*/
+
+  .custom-input-textarea-span-pan {
+    color: @ciColorLighten;
+    pointer-events: none;
+  }
+
+  .custom-input, .custom-input-custom-btn:not(.enabled), .custom-input-tooltip, .custom-input-bottom-error-text {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .custom-input-borders {
+    border-color: @ciColorLighten;
+  }
 
   .custom-input-side-items {
     display: none;
