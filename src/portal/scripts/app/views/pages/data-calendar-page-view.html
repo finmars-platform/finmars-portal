@@ -1,17 +1,51 @@
 <div class="data-calendar-page p-24">
 
     <h1 layout="row">Finmars Calendar
+        <md-checkbox class="data-calendar-filter-checkbox" data-ng-click="vm.bigPicture = !vm.bigPicture; vm.renderCalendar()" data-ng-checked="vm.bigPicture" style="margin-top: 10px;
+    margin-left: 10px;">
+            Big Picture
+        </md-checkbox>
     </h1>
 
     <div layout="row">
 
         <md-button data-ng-click="vm.refresh()" class="md-raised md-primary">Refresh</md-button>
 
+
+    </div>
+    <div>
+        <div class="m-r-8" style="padding-top: 4px;">Filters:</div>
+        <div layout="row">
+
+            <md-checkbox class="data-calendar-filter-checkbox" data-ng-click="vm.toggleFilter('system_schedule')" data-ng-checked="vm.filter.indexOf('system_schedule') !== -1">
+                Show System Schedules
+            </md-checkbox>
+            <md-checkbox class="data-calendar-filter-checkbox" data-ng-click="vm.toggleFilter('schedule')" data-ng-checked="vm.filter.indexOf('schedule') !== -1">
+                Show User Schedules
+            </md-checkbox>
+            <md-checkbox class="data-calendar-filter-checkbox" data-ng-click="vm.toggleFilter('system_message')" data-ng-checked="vm.filter.indexOf('system_message') !== -1">
+                Show Manual System Messages
+            </md-checkbox>
+            <md-checkbox class="data-calendar-filter-checkbox" data-ng-click="vm.toggleFilter('data_procedure')" data-ng-checked="vm.filter.indexOf('data_procedure') !== -1">
+                Show Data Procedures
+            </md-checkbox>
+            <md-checkbox class="data-calendar-filter-checkbox" data-ng-click="vm.toggleFilter('expression_procedure')" data-ng-checked="vm.filter.indexOf('expression_procedure') !== -1">
+                Show Expression Procedures
+            </md-checkbox>
+            <md-checkbox class="data-calendar-filter-checkbox" data-ng-click="vm.toggleFilter('pricing_procedure')" data-ng-checked="vm.filter.indexOf('pricing_procedure') !== -1">
+                Show Pricing Procedures
+            </md-checkbox>
+            <md-checkbox class="data-calendar-filter-checkbox" data-ng-click="vm.toggleFilter('celery_task')" data-ng-checked="vm.filter.indexOf('celery_task') !== -1">
+                Show Tasks
+            </md-checkbox>
+        </div>
+
     </div>
 
     <div data-ng-if="vm.readyStatus.content" class="data-calendar-page-content">
 
-        <div id="calendar">
+
+        <div id="calendar" class="{{vm.bigPicture ? 'big-calendar' : ''}}">
 
         </div>
 
@@ -19,7 +53,7 @@
 
             <div data-ng-if="vm.calendarEvent">
 
-                <h1>{{vm.calendarEvent.title}}</h1>
+                <h1 style="word-break: break-word;">{{vm.calendarEvent.title}}</h1>
                 <div>Start: {{vm.calendarEvent.start}}</div>
                 <div data-ng-if="vm.calendarEvent.extendedProps.id">Id: {{vm.calendarEvent.extendedProps.id}}</div>
                 <div>Type: {{vm.calendarEvent.extendedProps.type}}</div>
@@ -56,6 +90,31 @@
                             Member: {{vm.calendarEventPayload.member_object.username}}
                         </div>
 
+                        <div data-ng-if="vm.calendarEventPayload.verbose_result">
+                            Verbose result:
+
+                            <div>
+                                {{vm.calendarEventPayload.verbose_result}}
+                            </div>
+                        </div>
+
+
+                        <div data-ng-if="vm.calendarEventPayload.notes">
+                            Notes:
+                            <div>
+                                {{vm.calendarEventPayload.notes}}
+                            </div>
+
+                        </div>
+
+                        <div data-ng-if="vm.calendarEventPayload.error_message">
+                            Error Message:
+                            <div>
+                                {{vm.calendarEventPayload.error_message}}
+                            </div>
+
+                        </div>
+
                         <div>
 
                             Options
@@ -78,6 +137,16 @@
                                 <pre>{{vm.calendarEventPayload.result_object}}
                                 </pre>
 
+                            </div>
+
+                        </div>
+
+                        <div data-ng-if="vm.calendarEventPayload.attachments.length">
+
+                            Attachments
+
+                            <div data-ng-repeat="item in vm.calendarEventPayload.attachments">
+                                <span class="download-file-button" data-ng-click="vm.downloadFile($event, item)">{{item.file_report_object.name}}</span>
                             </div>
 
                         </div>
