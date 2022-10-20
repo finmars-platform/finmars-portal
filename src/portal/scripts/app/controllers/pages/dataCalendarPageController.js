@@ -12,11 +12,10 @@
     var dataProcedureInstanceService = require('../../services/procedures/dataProcedureInstanceService');
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-    var systemMessageService = require('../../services/systemMessageService');
     var baseUrl = baseUrlService.resolve();
 
 
-    module.exports = function dataCalendarController($scope, authorizerService, globalDataService, $mdDialog) {
+    module.exports = function dataCalendarController($scope, authorizerService, globalDataService, $mdDialog, systemMessageService) {
 
         var vm = this;
 
