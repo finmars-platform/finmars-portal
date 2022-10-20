@@ -13,13 +13,13 @@
     var baseUrl = baseUrlService.resolve();
 
 
-    var getList = function (date_from, date_to) {
+    var getList = function (date_from, date_to, filter_query) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/utils/calendar-events/?date_from=' + date_from + '&date_to=' + date_to,
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/utils/calendar-events/?date_from=' + date_from + '&date_to=' + date_to + '&filter=' + filter_query,
             {
                 method: 'GET',
                 credentials: 'include',

@@ -2,16 +2,33 @@ a.fc-event.system {
   color: #777;
 }
 
+
+.data-calendar-filter-checkbox {
+  max-width: 100px;
+  font-size: 11px;
+}
+
 .data-calendar-page-content {
   #calendar {
-    width: 70%;
-    float: left;
+    width: 100%;
+    padding-right: 30vw;
+
+    &.big-calendar {
+      width: 230vw;
+    }
   }
 
   .calendar-event-detail {
     padding: 16px;
-    width: 30%;
-    float: right;
+    width: 30vw;
+    position: fixed;
+    right: 0;
     box-sizing: border-box;
+    background: #fff;
+    height: 100%;
+    top:40px;
+    z-index: 1;
   }
+
+
 }

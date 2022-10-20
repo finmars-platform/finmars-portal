@@ -12,7 +12,7 @@
     var dataProcedureInstanceService = require('../../services/procedures/dataProcedureInstanceService');
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
+    var systemMessageService = require('../../services/systemMessageService');
     var baseUrl = baseUrlService.resolve();
 
 
@@ -26,6 +26,25 @@
 
         vm.readyStatus = {content: true};
 
+        vm.bigPicture = false;
+
+        // vm.filter = ['system_message', 'system_schedule', 'schedule']
+        vm.filter = ['data_procedure', 'expression_procedure', 'pricing_procedure', 'celery_task']
+
+        vm.toggleFilter = function (name) {
+
+            var index = vm.filter.indexOf(name)
+
+            if (index === -1) {
+                vm.filter.push(name)
+            } else {
+                vm.filter.splice(index, 1)
+            }
+
+            vm.renderCalendar();
+
+        }
+
         vm.refresh = function () {
 
             vm.renderCalendar();
@@ -34,14 +53,13 @@
         vm.loadCalendarEvent = function () {
 
 
-
             if (vm.calendarEvent.extendedProps.type === 'celery_task') {
 
                 vm.calendarEventPayloadLoading = true;
 
                 vm.calendarEventPayload = null
 
-                processesService.getByKey(vm.calendarEvent.extendedProps.id).then(function (data){
+                processesService.getByKey(vm.calendarEvent.extendedProps.id).then(function (data) {
 
                     vm.calendarEventPayloadLoading = false;
 
@@ -69,7 +87,7 @@
 
                 vm.calendarEventPayload = null
 
-                pricingProcedureInstanceService.getByKey(vm.calendarEvent.extendedProps.id).then(function (data){
+                pricingProcedureInstanceService.getByKey(vm.calendarEvent.extendedProps.id).then(function (data) {
 
                     vm.calendarEventPayloadLoading = false;
 
@@ -93,7 +111,7 @@
 
                 vm.calendarEventPayload = null
 
-                dataProcedureInstanceService.getByKey(vm.calendarEvent.extendedProps.id).then(function (data){
+                dataProcedureInstanceService.getByKey(vm.calendarEvent.extendedProps.id).then(function (data) {
 
                     vm.calendarEventPayloadLoading = false;
 
@@ -141,7 +159,7 @@
 
                     setTimeout(function () {
                         $scope.$apply();
-                    },0)
+                    }, 0)
 
                 },
                 events: function (info, callback) {
@@ -150,8 +168,13 @@
 
                     var date_from = info.startStr.split('T')[0]
                     var date_to = info.endStr.split('T')[0]
+                    var filter_query = vm.filter.join(',')
 
-                    calendarEventsService.getList(date_from, date_to).then(function (data) {
+                    if (!filter_query) {
+                        filter_query = 'empty'
+                    }
+
+                    calendarEventsService.getList(date_from, date_to, filter_query).then(function (data) {
 
                         console.log('get data', data);
 
@@ -166,6 +189,37 @@
             calendar.render();
 
         }
+
+        vm.downloadFile = function ($event, item) {
+
+            // TODO WTF why systemMessage Service, replace with FilePreview Service later
+            systemMessageService.viewFile(item.file_report).then(function (data) {
+
+                console.log('data', data);
+
+                $mdDialog.show({
+                    controller: 'FilePreviewDialogController as vm',
+                    templateUrl: 'views/dialogs/file-preview-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            content: data,
+                            info: item
+                        }
+                    }
+                });
+
+            })
+
+
+        }
+
 
         vm.init = function () {
 
