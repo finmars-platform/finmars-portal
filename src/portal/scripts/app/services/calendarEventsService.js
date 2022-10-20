@@ -5,8 +5,8 @@
 
     var calendarEventsRepository = require('../repositories/calendarEventsRepository');
 
-    var getList = function (date_from, date_to) {
-        return calendarEventsRepository.getList(date_from, date_to);
+    var getList = function (date_from, date_to, filter_query) {
+        return calendarEventsRepository.getList(date_from, date_to, filter_query);
     };
 
     module.exports = {
