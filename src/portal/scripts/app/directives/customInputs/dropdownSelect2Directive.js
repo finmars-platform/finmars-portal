@@ -22,7 +22,7 @@
             </div>`,
             link: function (scope, elem, attr) {
 
-                let dropdownSelectElem = elem[0].querySelector(".dropdownSelectInputContainer div[popup]");
+                let dropdownSelectElem = elem[0].querySelector(".customInputPopup");
                 const selIconElem = elem[0].querySelector(".selIcon");
 
                 scope.dsSmallOpts = {};
@@ -37,7 +37,7 @@
                 selIconElem.addEventListener("click", function () {
 
                     if (!dropdownSelectElem) {
-                        dropdownSelectElem = elem[0].querySelector(".dropdownSelectInputContainer div[popup]");
+                        dropdownSelectElem = elem[0].querySelector(".customInputPopup");
                     }
 
                     dropdownSelectElem.click();
