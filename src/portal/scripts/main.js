@@ -579,7 +579,7 @@ export default (function () {
 
 	portal.controller('SimpleEntityImportController', ['$scope', '$mdDialog', 'usersService', require('./app/controllers/pages/simpleEntityImportController')]);
 	portal.controller('UnifiedEntityImportController', ['$scope', '$mdDialog', 'usersService', require('./app/controllers/pages/unifiedEntityImportController')]);
-	portal.controller('TransactionImportController', ['$scope', '$mdDialog', 'usersService', require('./app/controllers/pages/transactionImportController')]);
+	portal.controller('TransactionImportController', ['$scope', '$mdDialog', 'usersService', 'systemMessageService', require('./app/controllers/pages/transactionImportController')]);
 	portal.controller('ComplexImportController', ['$scope', '$mdDialog', 'usersService', require('./app/controllers/pages/complexImportController')]);
 	portal.controller('InstrumentDownloadCbondsController', ['$scope', '$mdDialog', require('./app/controllers/pages/instrumentDownloadCbondsController')]);
 	portal.controller('InstrumentDownloadController', ['$scope', '$mdDialog', require('./app/controllers/pages/instrumentDownloadController')]);
