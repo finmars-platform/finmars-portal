@@ -1,6 +1,9 @@
 a.fc-event.system {
   color: #777;
 }
+.fc-daygrid-event {
+  cursor: pointer;
+}
 
 
 .data-calendar-filter-checkbox {
@@ -30,7 +33,22 @@ a.fc-event.system {
     z-index: 1;
     overflow: auto;
     padding-bottom: 100px;
+    border-left: 1px solid #ddd;
   }
 
 
+}
+a.refresh-calendar-event-payload {
+  position: absolute;
+  right: 10px;
+  z-index: 1;
+  display: block;
+  padding: 8px;
+  cursor: pointer;
+  color: #f05a22;
+  border-radius: 16px;
+  &:hover {
+    background-color: rgba(240,90,34,.1);
+
+  }
 }

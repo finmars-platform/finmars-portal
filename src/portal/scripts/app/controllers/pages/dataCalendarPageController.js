@@ -10,6 +10,7 @@
     var processesService = require('../../services/processesService');
     var pricingProcedureInstanceService = require('../../services/procedures/pricingProcedureInstanceService');
     var dataProcedureInstanceService = require('../../services/procedures/dataProcedureInstanceService');
+    var expressionProcedureInstanceService = require('../../services/procedures/expressionProcedureInstanceService');
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
     var baseUrl = baseUrlService.resolve();
@@ -68,6 +69,7 @@
 
                         vm.calendarEventPayload.options_object = JSON.stringify(vm.calendarEventPayload.options_object, null, 4);
                         vm.calendarEventPayload.result_object = JSON.stringify(vm.calendarEventPayload.result_object, null, 4);
+                        vm.calendarEventPayload.progress_object = JSON.stringify(vm.calendarEventPayload.progress_object, null, 4);
 
                     } catch (error) {
 
@@ -99,6 +101,13 @@
 
                     }
 
+                    try {
+                        vm.calendarEventPayload.response_data = JSON.stringify(vm.calendarEventPayload.response_data, null, 4);
+                    } catch (e) {
+
+
+                    }
+
                     $scope.$apply()
 
                 })
@@ -122,6 +131,24 @@
 
 
                     }
+
+
+                    $scope.$apply()
+
+                })
+            }
+
+            if (vm.calendarEvent.extendedProps.type === 'expression_procedure') {
+
+                vm.calendarEventPayloadLoading = true;
+
+                vm.calendarEventPayload = null
+
+                expressionProcedureInstanceService.getByKey(vm.calendarEvent.extendedProps.id).then(function (data) {
+
+                    vm.calendarEventPayloadLoading = false;
+
+                    vm.calendarEventPayload = data;
 
 
                     $scope.$apply()
