@@ -10,6 +10,7 @@ import importTransactionService from "../../services/import/importTransactionSer
 
     var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
     var importTransactionService = require('../../services/import/importTransactionService');
+    var processesService = require('../../services/processesService');
 
     var baseUrlService = require('../../services/baseUrlService');
     var downloadFileHelper = require('../../helpers/downloadFileHelper')
@@ -19,7 +20,7 @@ import importTransactionService from "../../services/import/importTransactionSer
 
     var baseUrl = baseUrlService.resolve();
 
-    module.exports = function transactionImportController($scope, $mdDialog, usersService) {
+    module.exports = function transactionImportController($scope, $mdDialog, usersService, systemMessageService) {
 
         var vm = this;
 
@@ -29,7 +30,7 @@ import importTransactionService from "../../services/import/importTransactionSer
             schemes: false,
             processing: false
         };
-        vm.dataIsImported = false;
+        vm.importIsFinished = false;
 
         vm.config = {};
         vm.validateConfig = {};
@@ -40,6 +41,10 @@ import importTransactionService from "../../services/import/importTransactionSer
         vm.hasSchemeEditPermission = false;
 
         vm.subTasksInfo = {}
+
+        vm.currenTaskId = null;
+
+        vm.poolingInterval = null;
 
         vm.loadIsAvailable = function () {
             return !vm.readyStatus.processing && vm.config.scheme;
@@ -80,6 +85,7 @@ import importTransactionService from "../../services/import/importTransactionSer
 
         };
 
+        // TODO DEPRECATED LOGIC
         vm.validateImport = function ($event) {
 
             new Promise(function (resolve, reject) {
@@ -278,7 +284,6 @@ import importTransactionService from "../../services/import/importTransactionSer
                 }
 
                 vm.processing = false;
-                vm.dataIsImported = true;
 
             }).catch(function (error) {
                 console.log("error occurred", error);
@@ -287,6 +292,7 @@ import importTransactionService from "../../services/import/importTransactionSer
 
         };
 
+        // TODO DEPRECATED LOGIC
         vm.startImportWithValidation = function ($event) {
 
             console.log('startImportWithValidation starting validation')
@@ -385,7 +391,7 @@ import importTransactionService from "../../services/import/importTransactionSer
             })
 
         }
-
+        // TODO DEPRECATED LOGIC
         vm.validate = function (resolve, $event) {
 
             console.log("Validate")
@@ -496,13 +502,66 @@ import importTransactionService from "../../services/import/importTransactionSer
 
         };
 
-        vm.convertJSONtoFile = function () {
+        vm.getTask = function (){
+
+            processesService.getByKey(vm.currentTaskId).then(function (data){
+
+                vm.task = data;
+                console.log('vm.task', vm.task);
+
+
+                if (vm.task.status === 'D' || vm.task.status === 'E') {
+                    clearInterval(vm.poolingInterval)
+                    vm.poolingInterval = null;
+                    vm.processing = false;
+                    vm.importIsFinished = true;
+                }
+
+                $scope.$apply();
+
+            })
+        }
+
+        vm.downloadFile = function ($event, item) {
+
+            // TODO WTF why systemMessage Service, replace with FilePreview Service later
+            systemMessageService.viewFile(item.file_report).then(function (data) {
+
+                console.log('data', data);
+
+                $mdDialog.show({
+                    controller: 'FilePreviewDialogController as vm',
+                    templateUrl: 'views/dialogs/file-preview-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            content: data,
+                            info: item
+                        }
+                    }
+                });
+
+            })
 
 
         }
 
+
+
+
         vm.import = function (resolve, $event) {
             vm.processing = true;
+
+            clearInterval(vm.poolingInterval)
+            vm.poolingInterval = null;
+            vm.importIsFinished = false;
+
 
             var formData = new FormData();
 
@@ -552,81 +611,85 @@ import importTransactionService from "../../services/import/importTransactionSer
                 vm.config = data;
                 vm.subTasksInfo = {}
 
-                vm.loaderData = {
-                    current: vm.config.processed_rows,
-                    total: vm.config.total_rows,
-                    text: 'Import Progress:',
-                    status: vm.config.task_status
-                };
+                vm.currentTaskId = data.task_id
 
                 $scope.$apply();
 
-                if (websocketService.isOnline()) {
+                vm.getTask()
 
-                    websocketService.addEventListener('transaction_import_status', function (data) {
+                vm.poolingInterval = setInterval(function (){
 
-                        if (vm.config.task_id === data.task_id) {
+                    vm.getTask();
 
-                            if (data.state === 'D') {
-                                websocketService.removeEventListener('transaction_import_status');
-                                resolve(data)
-                            } else {
-                                if (data.state !== 'D' && data.state !== 'P') {
-                                    websocketService.removeEventListener('transaction_import_status');
-                                    resolve(data);
-                                }
-                            }
+                }, 1000)
 
-                        }
-
-                        if (vm.config.task_id === data.parent_task_id) {
-
-                            vm.subTasksInfo[data.task_id] = data
-
-                            var keys = Object.keys(vm.subTasksInfo)
-
-                            var processedRows = 0
-                            var processed
-
-                            keys.forEach(function (task_id) {
-
-                                processed = 0
-
-                                if (vm.subTasksInfo[task_id].processed_rows) {
-                                    processed = vm.subTasksInfo[task_id].processed_rows - 1
-                                }
-
-                                processedRows = processedRows + processed
-                            })
-
-                            vm.loaderData = {
-                                current: processedRows,
-                                total: data.parent_total_rows,
-                                text: 'Import Progress:',
-                                status: data.state
-                            };
-
-                            $scope.$apply();
-
-                        }
-
-                    })
-
-                } else {
-
-                    if (vm.config.task_status === 'SUCCESS') {
-
-                        resolve(data)
-
-                    } else {
-
-                        setTimeout(function () {
-                            vm.import(resolve, $event);
-                        }, 1000)
-
-                    }
-
-                }
+                // DEPRECATED
+                // if (websocketService.isOnline()) {
+                //
+                //     websocketService.addEventListener('transaction_import_status', function (data) {
+                //
+                //         if (vm.config.task_id === data.task_id) {
+                //
+                //             if (data.state === 'D') {
+                //                 websocketService.removeEventListener('transaction_import_status');
+                //                 resolve(data)
+                //             } else {
+                //                 if (data.state !== 'D' && data.state !== 'P') {
+                //                     websocketService.removeEventListener('transaction_import_status');
+                //                     resolve(data);
+                //                 }
+                //             }
+                //
+                //         }
+                //
+                //         if (vm.config.task_id === data.parent_task_id) {
+                //
+                //             vm.subTasksInfo[data.task_id] = data
+                //
+                //             var keys = Object.keys(vm.subTasksInfo)
+                //
+                //             var processedRows = 0
+                //             var processed
+                //
+                //             keys.forEach(function (task_id) {
+                //
+                //                 processed = 0
+                //
+                //                 if (vm.subTasksInfo[task_id].processed_rows) {
+                //                     processed = vm.subTasksInfo[task_id].processed_rows - 1
+                //                 }
+                //
+                //                 processedRows = processedRows + processed
+                //             })
+                //
+                //             vm.loaderData = {
+                //                 current: processedRows,
+                //                 total: data.parent_total_rows,
+                //                 text: 'Import Progress:',
+                //                 status: data.state
+                //             };
+                //
+                //             $scope.$apply();
+                //
+                //         }
+                //
+                //     })
+                //
+                // } else {
+                //
+                //     if (vm.config.task_status === 'SUCCESS') {
+                //
+                //         resolve(data)
+                //
+                //     } else {
+                //
+                //         setTimeout(function () {
+                //             vm.import(resolve, $event);
+                //         }, 1000)
+                //
+                //     }
+                //
+                // }
 
 
             }).catch(function (reason) {
