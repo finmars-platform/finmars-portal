@@ -3,14 +3,14 @@
     <div class="page-dnd-wrapper height-100" dnd-files-on-page>
 
         <div class="flex-column height-100">
-            <main-header opened-inside="portal" class="portal-header" data-ng-if="!vm.iframeMode"></main-header>
+            <main-header opened-inside="portal" class="portal-header"></main-header>
 
             <md-content class="app-md-content flex-0-1-100">
-                <div ui-view class="min-height {{vm.iframeMode ? '' : 'space-for-sidenav'}}"></div>
+                <div ui-view class="min-height space-for-sidenav"></div>
             </md-content>
         </div>
 
-        <div layout="row" class="sidenav-wrapper" data-ng-if="!vm.iframeMode" data-ng-controller="SideNavController as vm"
+        <div layout="row" class="sidenav-wrapper" data-ng-controller="SideNavController as vm"
              data-ng-include="'views/side-nav-view.html'"></div>
 
     </div>
