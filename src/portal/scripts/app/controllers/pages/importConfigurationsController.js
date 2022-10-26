@@ -1,3 +1,4 @@
+const processesService = require("../../services/processesService");
 /**
  * Created by szhitenev on 27.06.2019.
  */
@@ -11,7 +12,7 @@
     var mappingsImportService = require('../../services/mappings-import/mappingsImportService');
 
 
-    module.exports = function ($scope, $mdDialog, usersService, usersGroupService, backendConfigurationImportService) {
+    module.exports = function ($scope, $mdDialog, usersService, usersGroupService, backendConfigurationImportService, systemMessageService) {
 
         var vm = this;
 
@@ -808,6 +809,7 @@
 
         };
 
+        // DEPRECATED?
         vm.agree = function ($event) {
 
             vm.processing = true;
@@ -946,49 +948,40 @@
 
         };
 
-        vm.importConfiguration = function (resolve, reject) {
+        vm.getTask = function (){
 
-            try {
+            processesService.getByKey(vm.currentTaskId).then(function (data){
 
-                backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
+                vm.task = data;
+                console.log('vm.task', vm.task);
 
-                    vm.importConfig = data;
 
-                    vm.counter = data.processed_rows;
-                    vm.activeItemTotal = data.total_rows;
+                if (vm.task.status === 'D' || vm.task.status === 'E') {
+                    clearInterval(vm.poolingInterval)
+                    vm.poolingInterval = null;
+                    vm.processing = false;
+                    vm.importIsFinished = true;
 
-                    $scope.$apply();
+                    vm.pageState = 'import-complete';
+                }
 
-                    if (vm.importConfig.task_status === 'SUCCESS') {
+                $scope.$apply();
 
-                        resolve()
+            })
+        }
 
-                    } else if (vm.importConfig.task_status === 'ERROR') {
-                        reject('Server could not process the file. Please, try again later');
-                    } else {
 
-                        setTimeout(function () {
-                            vm.importConfiguration(resolve);
-                        }, 1000)
+        vm.importConfiguration = function ($event) {
 
-                    }
-
-                })
-
-            } catch (e) {
-                reject(e)
-            }
-
-        };
-
-        vm.agreeAsBackendProcess = function ($event) {
-
-            console.log("vm.agreeAsBackendProcess");
+            console.log("vm.importConfiguration");
 
             vm.processing = true;
 
-            vm.activeItemTotal = 0;
-            window.importConfigurationCounter = 0;
+            clearInterval(vm.poolingInterval)
+            vm.poolingInterval = null;
+            vm.importIsFinished = false;
+
+
 
             vm.items.forEach(function (entity) {
 
@@ -1023,6 +1016,7 @@
             mappingItems = JSON.parse(angular.toJson(mappingItems));
 
             mappingItems = mappingItems.filter(function (entity) {
+
                 entity.content = entity.content.filter(function (item) {
                     return item.active;
                 });
@@ -1057,17 +1051,21 @@
 
             vm.pageState = 'import-progress';
 
-            new Promise(function (resolve, reject) {
+            backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
 
-                vm.importConfiguration(resolve, reject)
+                vm.importConfig = data;
 
-            }).then(function (data) {
+                vm.currentTaskId = data.task_id
 
-                console.log('agreeAsBackendProcess data', data);
-                console.log('agreeAsBackendProcess vm.importConfig', vm.importConfig);
-
-                vm.pageState = 'import-complete';
                 $scope.$apply();
+
+                vm.getTask()
+
+                vm.poolingInterval = setInterval(function (){
+
+                    vm.getTask();
+
+                }, 1000)
 
 
             }).catch(function (reason) {
@@ -1081,17 +1079,42 @@
 
         vm.showImportDetails = function ($event) {
 
-            $mdDialog.show({
-                controller: 'ConfigurationImportResultDialogController as vm',
-                templateUrl: 'views/dialogs/configuration-import/configuration-import-result-dialog-view.html',
-                targetEvent: $event,
-                preserveScope: true,
-                multiple: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    data: vm.importConfig
-                }
+            // $mdDialog.show({
+            //     controller: 'ConfigurationImportResultDialogController as vm',
+            //     templateUrl: 'views/dialogs/configuration-import/configuration-import-result-dialog-view.html',
+            //     targetEvent: $event,
+            //     preserveScope: true,
+            //     multiple: true,
+            //     autoWrap: true,
+            //     skipHide: true,
+            //     locals: {
+            //         data: vm.importConfig
+            //     }
+            //
+            // })
+
+            // TODO WTF why systemMessage Service, replace with FilePreview Service later
+            systemMessageService.viewFile(vm.task.attachments[0].file_report).then(function (data) {
+
+                console.log('data', data);
+
+                $mdDialog.show({
+                    controller: 'FilePreviewDialogController as vm',
+                    templateUrl: 'views/dialogs/file-preview-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            content: data,
+                            info: vm.task.attachments[0]
+                        }
+                    }
+                });
 
             })
 
@@ -1197,6 +1220,16 @@
 
             });
 
+            mappingItems.forEach(function (item) {
+
+                item.active = false;
+
+                item.content.forEach(function (child) {
+                    child.active = false;
+                });
+
+            });
+
             vm.items.forEach(function (item) {
 
                 item.active = false;
@@ -1206,6 +1239,37 @@
                 });
 
             });
+
+            vm.dataSettings.forEach(function (item) {
+
+                item.active = false;
+
+                item.content.forEach(function (child) {
+                    child.active = false;
+                });
+
+            });
+
+            vm.downloadSchemes.forEach(function (item) {
+
+                item.active = false;
+
+                item.content.forEach(function (child) {
+                    child.active = false;
+                });
+
+            });
+
+            vm.systemElements.forEach(function (item) {
+
+                item.active = false;
+
+                item.content.forEach(function (child) {
+                    child.active = false;
+                });
+
+            });
+
 
             vm.checkForDuplicates();
 
