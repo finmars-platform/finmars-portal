@@ -673,7 +673,7 @@ export default (function () {
 	portal.controller('TemplateFieldsController', ['$scope', '$mdDialog', require('./app/controllers/pages/templateFieldsController')]);
 	portal.controller('EntityTooltipPageController', ['$scope', '$mdDialog', require('./app/controllers/pages/entityTooltipPageController')]);
 	portal.controller('CrossEntityAttributeExtensionPageController', ['$scope', '$mdDialog', require('./app/controllers/pages/crossEntityAttributeExtensionPageController')]);
-	portal.controller('ImportConfigurationsController', ['$scope', '$mdDialog', 'usersService', 'usersGroupService', 'backendConfigurationImportService', require('./app/controllers/pages/importConfigurationsController')]);
+	portal.controller('ImportConfigurationsController', ['$scope', '$mdDialog', 'usersService', 'usersGroupService', 'backendConfigurationImportService', 'systemMessageService', require('./app/controllers/pages/importConfigurationsController')]);
 	portal.controller('ExportConfigurationsController', ['$scope', '$mdDialog', 'usersService', require('./app/controllers/pages/exportConfigurationsController')]);
 
 	// Reconciliation
