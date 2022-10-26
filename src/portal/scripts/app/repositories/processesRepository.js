@@ -29,6 +29,23 @@
             })
     };
 
+    var getByKey = function (id) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/active_processes/active_processes/' + id + '/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
     var deleteByKey = function (id) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
@@ -115,6 +132,7 @@
 
         deleteByKey: deleteByKey,
         getList: getList,
+        getByKey: getByKey,
         getStatus: getStatus,
         cancelTask: cancelTask,
         abortTransactionImport: abortTransactionImport
