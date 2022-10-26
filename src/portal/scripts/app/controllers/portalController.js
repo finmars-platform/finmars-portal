@@ -14,8 +14,6 @@ export default function ($scope, $state, authorizerService, usersService, global
 
     vm.readyStatus = false;
 
-    vm.iframeMode = false;
-
     const getMember = function () {
 
         return new Promise(function (resolve, reject) {
@@ -60,9 +58,7 @@ export default function ($scope, $state, authorizerService, usersService, global
 
     const init = function () {
 
-        if (window.location.hash.indexOf('iframe=true') !== -1) {
-            vm.iframeMode = true
-        }
+
 
         localStorageService.setGlobalDataService(globalDataService); // TODO inject localStorageService into angular dependencies
 
