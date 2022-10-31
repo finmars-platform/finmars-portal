@@ -688,7 +688,7 @@
 
                     Promise.allSettled(promises).then(resData => {
 
-                        var formLayoutDataRes = resData[1];
+                        var formLayoutDataRes = resData.pop();
 
                         if (formLayoutDataRes.status === 'fulfilled') {
 
