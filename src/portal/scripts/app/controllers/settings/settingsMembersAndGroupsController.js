@@ -185,11 +185,19 @@
 
                 if (res && res.status === 'agree') {
 
-                    membersAndGroupsService.deleteMemberByKey(member.id).then(function () {
-
+                    authorizerService.kickMember({
+                        'base_api_url': vm.currentMasterUser.base_api_url,
+                        'username': member.username
+                    }).then(function (){
                         vm.getData();
 
-                    });
+                    })
+
+                    // membersAndGroupsService.deleteMemberByKey(member.id).then(function () {
+                    //
+                    //     vm.getData();
+                    //
+                    // });
 
                 }
             })
