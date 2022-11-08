@@ -817,6 +817,25 @@ const updateFinmars = function (base_api_url, tag) {
 
 }
 
+
+const kickMember = function (data) {
+
+    return xhrService.fetch(authorizerUrl + '/master-user-kick-member/', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        },
+        data: JSON.stringify(data)
+    })
+
+};
+
+
+
 // module.exports = {
 export default {
     tokenLogin: tokenLogin,
@@ -878,7 +897,10 @@ export default {
     authTokenManagerCreateToken: authTokenManagerCreateToken,
 
     getVersions: getVersions,
-    updateFinmars: updateFinmars
+    updateFinmars: updateFinmars,
+
+
+    kickMember: kickMember
 
 }
 
