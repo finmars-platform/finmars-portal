@@ -27,9 +27,9 @@
                 smallOptions: '=',
                 isDisabled: '=',
 
-				onMenuOpen: '&',
-				onMenuClose: '&',
-				onChangeCallback: '&',
+				onMenuOpen: '&?',
+				onMenuClose: '&?',
+				onChangeCallback: '&?',
             },
             templateUrl: 'views/directives/customInputs/entity-search-select-view.html',
             link: function (scope, elem, attrs) {
@@ -263,6 +263,8 @@
 
                     }
 
+                    scope.menuOptionsPopupData.loadingOptions = true;
+
                     entityResolverService.getListLight(scope.entityType, options).then(function (data) {
 
                         // scope.selectorOptions = data.results;
@@ -272,6 +274,8 @@
                         /* DROPDOWN MENU
                         window.addEventListener('click', closeDDMenuOnClick);*/
                         document.addEventListener('keydown', onTabKeyPress);
+
+                        scope.menuOptionsPopupData.loadingOptions = false;
 
                         scope.$apply();
 
