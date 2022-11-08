@@ -60,8 +60,9 @@
                         <td>{{item.from_user_object.username}}</td>
                         <td>{{item.assigned_groups_pretty}}</td>
                         <td>{{vm.getInviteStatus(item)}}</td>
-                        <td class="members-groups-delete">
+                        <td class="members-groups-delete" >
                             <md-button class="members-groups-delete-btn"
+                                       data-ng-if="item.status !== 1"
                                        data-ng-click="vm.deleteInvite($event, item)">
                                 <ng-md-icon icon="close" style="fill:#000000;" size="20"></ng-md-icon>
                             </md-button>
