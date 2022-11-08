@@ -76,13 +76,13 @@
             {
                 name: 'Portfolio',
                 key: 'portfolios.portfolio',
-                relationType: 'portfolio',
+                entityType: 'portfolio',
                 reportOptionsKey: 'portfolios'
             },
             {
                 name: 'Account',
                 key: 'accounts.account',
-                relationType: 'account',
+                entityType: 'account',
                 reportOptionsKey: 'accounts'
             },
             {
@@ -96,31 +96,31 @@
             {
                 name: 'Currency',
                 key: 'currencies.currency',
-                relationType: 'currency',
+                entityType: 'currency',
                 reportOptionsKey: 'report_currency'
             },
             {
                 name: 'Strategy 1',
                 key: 'strategies.strategy1',
-                relationType: 'strategy-1',
+                entityType: 'strategy-1',
                 reportOptionsKey: 'strategies1'
             },
             {
                 name: 'Strategy 2',
                 key: 'strategies.strategy2',
-                relationType: 'strategy-2',
+                entityType: 'strategy-2',
                 reportOptionsKey: 'strategies2'
             },
             {
                 name: 'Strategy 3',
                 key: 'strategies.strategy3',
-                relationType: 'strategy-3',
+                entityType: 'strategy-3',
                 reportOptionsKey: 'strategies3'
             },
             {
                 name: 'Pricing Policy',
                 key: 'instruments.pricingpolicy',
-                relationType: 'pricing-policy',
+                entityType: 'pricing-policy',
                 reportOptionsKey: 'pricing_policy'
             }
         ];
@@ -139,7 +139,7 @@
         vm.isRequiredDefaultValue = function () {
 
             if (vm.item.settings.value_type === 100) {
-                const isRelationNeedDefaultValue = vm.currentContentType && vm.currentContentType.relationType;
+                const isRelationNeedDefaultValue = vm.currentContentType && vm.currentContentType.entityType;
                 return isRelationNeedDefaultValue;
             }
 
@@ -161,19 +161,14 @@
         vm.contentTypeChanged = function () {
             vm.clearDefaultValue();
 
-            const relationType = vm.currentContentType.relationType;
+            vm.multiselectItems = [];
+            const entityType = vm.currentContentType.entityType;
 
-            if (relationType) {
+            if (vm.item.settings.multiple && entityType) {
 
-                vm.getDataForMultiselect(relationType).then(function (resData) {
-
-                    vm.multiselectItems = JSON.parse(JSON.stringify(resData.results));
-
+                vm.getDataForMultiselect(entityType).then(function (resData) {
+                    vm.multiselectItems = JSON.parse(JSON.stringify(resData));
                 });
-
-            } else {
-
-                vm.multiselectItems = [];
 
             }
 
@@ -570,9 +565,23 @@
 
         };
 
-        vm.getDataForMultiselect = function (relationType) {
+        vm.getDataForMultiselect = function (entityType) {
 
-            return entityResolverService.getList(relationType);
+            // return entityResolverService.getList(entityType);
+            return new Promise(function (resolve, reject) {
+
+                entityResolverService.getList(entityType, {pageSize: 1000}).then(function (data) {
+
+                    var options = data.results.map(function (item) {
+                        return {id: item.user_code, name: item.short_name};
+                    });
+
+                    resolve(options);
+
+                }).catch(function (e) {
+                    reject(e);
+                });
+            })
 
         };
 
@@ -671,19 +680,15 @@
 
                 vm.currentContentType = vm.getContentTypeByKey(vm.item.settings.content_type);
 
-                const relationType = vm.currentContentType.relationType;
+                const entityType = vm.currentContentType.entityType;
 
-                if (relationType) {
+                vm.multiselectItems = [];
 
-                    vm.getDataForMultiselect(relationType).then(function (resData) {
+                if (vm.item.settings.multiple && entityType) {
 
-                        vm.multiselectItems = JSON.parse(JSON.stringify(resData.results));
-
+                    vm.getDataForMultiselect(entityType).then(function (resData) {
+                        vm.multiselectItems = JSON.parse(JSON.stringify(resData));
                     });
-
-                } else {
-
-                    vm.multiselectItems = [];
 
                 }
 
