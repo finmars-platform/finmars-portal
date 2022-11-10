@@ -257,7 +257,7 @@ import QueuePromisesService from "../services/queuePromisesService";
 			})
 			.then(res => {
 
-				if (res.data.user_code.startsWith('system_autosave_')) {
+				if (res.data && res.data.user_code && res.data.user_code.startsWith('system_autosave_')) {
 					throw "This user code reserved for system layout. Please use another one";
 				}
 
