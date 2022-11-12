@@ -295,16 +295,16 @@
 
         var name = '';
 
-        if ($state.current.name.startsWith('app.portal.data')) {
+        if ($state.current.name.startsWith('app.portal.data.')) {
         	name = 'Data: ';
 		}
-        else if ($state.current.name.startsWith('app.portal.settings')) {
+        else if ($state.current.name.startsWith('app.portal.settings.')) {
 			name = 'Settings: ';
 		}
-		else if ($state.current.name.startsWith('app.portal.reports')) {
+		else if ($state.current.name.startsWith('app.portal.reports.')) {
 			name = 'Report: ';
 		}
-		else if ($state.current.name.startsWith('app.portal.import')) {
+		else if ($state.current.name.startsWith('app.portal.import.')) {
 			name = 'Import: '
 		}
 
@@ -338,6 +338,9 @@
 				case 'app.portal.data.portfolio':
                     name += "Portfolios";
                     break;
+                case 'app.portal.data.portfolio-register':
+                    name += "Registers";
+                    break;
                 case 'app.portal.data.account':
                     name += "Accounts";
                     break;
@@ -356,16 +359,32 @@
                 case 'app.portal.data.strategy':
                     name += "Strategies";
                     break;
+                case 'app.portal.data.generated-event':
+                    name += "Events";
+                    break;
 				//</editor-fold>
 
                 case 'app.portal.data.complex-transaction':
                     name = "Transactions: Transactions";
                     break;
+                case 'app.portal.data.transaction':
+                    name = 'Transactions: Base transactions';
+                    break;
+                case 'app.portal.data.portfolio-register-record':
+                    name = "Transactions: Register Records";
+                    break;
+
                 case 'app.portal.data.price-history':
                     name = "Valuations: Prices";
                     break;
+                case 'app.portal.data.price-history-error':
+                    name = "Valuations: Prices Journal";
+                    break;
                 case 'app.portal.data.currency-history':
-                    name = "Valuations: Fx RATES";
+                    name = "Valuations: FX Rates";
+                    break;
+                case 'app.portal.data.currency-history-error':
+                    name = "Valuations: FX Rates Journal";
                     break;
 
 				//<editor-fold desc="Import: ">
@@ -381,6 +400,9 @@
                 case 'app.portal.import.instrument':
                     name += 'Instrument';
                     break;
+                case 'app.portal.import.instrument-cbonds':
+                    name += 'Instrument (from CBONDS)';
+                    break;
                 case 'app.portal.import.prices':
                     name += 'Prices/fx';
                     break;
@@ -394,9 +416,6 @@
                     break;
                 case 'app.portal.system.transactions':
                     name = 'Journal: Transactions audit';
-                    break;
-                case 'app.portal.data.transaction':
-                    name = 'Transactions: Base transactions';
                     break;
 
                 case 'app.portal.developer-panel':
