@@ -81,7 +81,8 @@
                              data-options="vm.groupSelectorOptions"
                              event-signal="vm.fixedAreaEventObj.event"
                              small-options="{notNull: true}"
-                             is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"></crud-select>
+                             is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"
+                             class="ev-editor-field"></crud-select>
 
                 <crud-select data-ng-if="vm.entityType === 'strategy-1' || vm.entityType === 'strategy-2' || vm.entityType === 'strategy-3'"
                              data-label="vm.groupSelectorLabel"
@@ -90,7 +91,8 @@
                              data-options="vm.groupSelectorOptions"
                              event-signal="vm.fixedAreaEventObj.event"
                              small-options="{notNull: true}"
-                             is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"></crud-select>
+                             is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"
+                             class="ev-editor-field"></crud-select>
 
                 <!--<div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type' &&
                                  vm.entityType !== 'counterparty' && vm.entityType !== 'responsible' && vm.entityType !== 'strategy-1' && vm.entityType !== 'strategy-2' && vm.entityType !== 'strategy-3'"
