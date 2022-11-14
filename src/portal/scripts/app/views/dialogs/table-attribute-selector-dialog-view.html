@@ -3,11 +3,12 @@
            aria-label="table attr selector dialog"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
+        <!--<div class="md-toolbar-tools">
             <h2>{{ vm.title }}</h2>
 
             <div class="dialog-close-button" data-ng-click="vm.cancel()"><span class="material-icons">close</span></div>
-        </div>
+        </div>-->
+        <dialog-header title="{{vm.title}}" cancel-dialog="vm.cancel()"></dialog-header>
     </md-toolbar>
 
     <md-dialog-content class="p-16">
