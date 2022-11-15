@@ -9,6 +9,10 @@
         return processesRepository.getList(options);
     };
 
+    var getByKey = function (id) {
+        return processesRepository.getByKey(id);
+    };
+
     var deleteByKey = function (id) {
         return processesRepository.deleteByKey(id);
     };
@@ -27,6 +31,7 @@
 
     module.exports = {
         getList: getList,
+        getByKey: getByKey,
         deleteByKey: deleteByKey,
         getStatus: getStatus,
         cancelTask: cancelTask,

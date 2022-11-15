@@ -17,6 +17,7 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
     vm.isAuthenticated = false;
     vm.isAuthenticationPage = $state.current.name === 'app.authentication';
+    vm.iframeMode = false;
 
     // let finmarsBroadcastChannel = new BroadcastChannel('finmars_broadcast');
     // vm.isIdentified = false; // check if has proper settings (e.g. has master users to work with)
@@ -282,6 +283,12 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
     }
 
     const init = function () {
+
+        if (window.location.href.indexOf('iframe=true') !== -1) {
+            vm.iframeMode = true
+
+            document.body.classList.add('iframe')
+        }
 
         if (PROJECT_ENV !== 'local') {
 

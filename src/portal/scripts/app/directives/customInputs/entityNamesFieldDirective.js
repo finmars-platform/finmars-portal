@@ -1,12 +1,12 @@
 "use strict";
 
-import directivesEvent from "../../services/events/directivesEvents";
-
 export default function () {
 
 	const EventService = require("../../services/eventService");
 	const metaService = require("../../services/metaService")
 	const directivesEvent = require("../../services/events/directivesEvents");
+
+	const utilsHelper = require("../../helpers/utils.helper");
 
 	return {
 		restrict: "E",
@@ -24,6 +24,7 @@ export default function () {
 			valueToShow: "=",
 			eventService: "=",
 
+			editing: "@",
 			isDisabled: "=",
 
 			onChange: "&?",
@@ -38,13 +39,14 @@ export default function () {
 							  popup-classes="entity-names-popup"
 							  event-service="multiinputFieldEventService"
 							  is-disabled="isDisabled"
+							  base-input-change-fn="baseInputChange(newVal, prevVal)"
 							  on-popup-cancel="onPopupCancel()"></multiinput-field>
 		</div>`,
 		link: {
 			pre: function (scope, elem, attr) {
 
 				scope.valueToShow = scope.valueToShow || 'name';
-
+				scope.editingOn = scope.editing === 'true';
 				const reqAttrs = metaService.getRequiredEntityAttrs(scope.entityType);
 
 				const getErrorData = function (value) {
@@ -153,7 +155,8 @@ export default function () {
 
 							smallOptions: {notNull: reqAttrs.includes('user_code')},
 							event: {},
-							changeByInput: true
+							changeByInput: true,
+							locked: scope.editingOn ? 'true' : 'false',
 						},
 
 						valueToShow: {
@@ -179,7 +182,7 @@ export default function () {
 							options: [
 								{id: 'name', name: 'Name'},
 								{id: 'short_name', name: 'Short Name'},
-								{id: 'user_code', name: 'User Code'},
+								// {id: 'user_code', name: 'User Code'},
 							]
 						}
 					},
@@ -187,10 +190,14 @@ export default function () {
 				}
 
 				const placeholdersForNames = {
-					'name': 'Report Name (Name)',
+					/*'name': 'Full Name (Name)',
 					'public_name': 'Name if Hidden (Public Name)',
 					'short_name': 'System Name (Short Name)',
-					'user_code': 'Unique Code (User Code)',
+					'user_code': 'Unique Code (User Code)',*/
+					'name': 'Full Name',
+					'public_name': 'Public Name',
+					'short_name': 'Short Name',
+					'user_code': 'User Code',
 				};
 
 				if (scope.entityType !== 'currency') {
@@ -205,7 +212,7 @@ export default function () {
 						changeByInput: true,
 					};
 
-					scope.popupData.fields.valueToShow.options.splice(1, 0, {id: 'public_name', name: 'Public Name'});
+					// scope.popupData.fields.valueToShow.options.splice(1, 0, {id: 'public_name', name: 'Public Name'});
 
 				}
 
@@ -217,6 +224,38 @@ export default function () {
 
 			},
 			post: function (scope, elem, attrs) {
+
+				const updateName = function (propName, newValue, oldValue) {
+
+					const value = scope.popupData.fields[propName].value;
+
+					// change field if it is empty or having the same value as baseInput
+					if (!value || value === oldValue) {
+
+						scope.popupData.fields[propName].value = newValue;
+
+					}
+
+				};
+
+				function baseInputChangeFn (newVal, prevVal) {
+
+					updateName('name', newVal, prevVal);
+					updateName('short_name', newVal, prevVal);
+
+					if (!scope.editingOn) {
+						updateName('user_code', newVal, prevVal);
+					}
+
+					updateName('public_name', newVal, prevVal);
+
+				}
+
+				/*
+				 * Debounce prevents changing unintended names when deleting text inside base input
+				 * e.g. Deleting 'Bank AAA' would also delete 'Bank A' without debounce
+				 */
+				scope.baseInputChange = utilsHelper.debounce(baseInputChangeFn, 300);
 
 				if (scope.eventService) {
 
