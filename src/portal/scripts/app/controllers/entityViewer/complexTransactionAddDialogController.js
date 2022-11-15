@@ -272,12 +272,12 @@
 
                     vm.transactionType = data.transaction_type_object;
                     vm.entity = data.complex_transaction;
-					vm.entity.values = data.values;
+                    vm.entity.values = data.values;
 
-					vm.entity.frontOptions = {
-						dynamicAttributesValues: {},
-						userInputsValues: {}
-					};
+                    vm.entity.frontOptions = {
+                        dynamicAttributesValues: {},
+                        userInputsValues: {}
+                    };
 
                     data = vm.mapValuesOnTransactionTypeChange(data);
 
@@ -437,8 +437,8 @@
                 vm.attrs = data.results;
                 vm.readyStatus.content = true;
                 vm.readyStatus.entity = true;
-                
-                setTimeout(function (){
+
+                setTimeout(function () {
                     $scope.$apply();
                 }, 0)
             });
@@ -1333,7 +1333,7 @@
                 vm.favTTypeOpts = getFavoriteTTypeOptions(vm.transactionGroups);
 
                 vm.readyStatus.transactionTypes = true;
-                setTimeout(function (){
+                setTimeout(function () {
                     $scope.$apply();
                 }, 0)
 
@@ -1445,9 +1445,13 @@
                         instanceId: vm.transactionTypeId
                     };
 
-                    vm.getFormLayout().then(function (value) {
-                        $scope.$apply();
-                    })
+                    if (vm.transactionTypeId) {
+
+                        vm.getFormLayout().then(function (value) {
+                            $scope.$apply();
+                        })
+
+                    }
 
 
                 }
@@ -1470,10 +1474,10 @@
                     console.log("Apply from make copy", entity);
                     notCopiedTransaction = false;
                     vm.entity = entity;
-					vm.entity.frontOptions = {
-						dynamicAttributesValues: {},
-						userInputsValues: {}
-					};
+                    vm.entity.frontOptions = {
+                        dynamicAttributesValues: {},
+                        userInputsValues: {}
+                    };
 
                     var copy = JSON.parse(JSON.stringify(entity));
 
@@ -1617,7 +1621,7 @@
                 multiple: true,
                 locals: {
                     data: {
-                        item:  {},
+                        item: {},
                         entityType: vm.entityType,
                     }
                 }
