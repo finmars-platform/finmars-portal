@@ -47,8 +47,9 @@
                                     entity="vm.entity"
                                     value-to-show="vm.nameToShow"
                                     event-service="vm.enfEventService"
-                                    on-value-to-show-change="vm.onNameToShowChange()"
-                                    is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"></entity-names-field>
+                                    is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"
+                                    editing="true"
+                                    on-value-to-show-change="vm.onNameToShowChange()"></entity-names-field>
             </div>
 
             <!--<div data-ng-if="vm.fixedAreaPopup.tabColumns > 2"

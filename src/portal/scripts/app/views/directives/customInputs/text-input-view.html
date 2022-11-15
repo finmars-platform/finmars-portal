@@ -34,13 +34,18 @@
 
                 <div class="flex-row">
 
-                    <button data-ng-if="!noIndicatorBtn"
-                          class="custom-input-indicator-btn"
-                          data-ng-click="openTextInDialog($event)"
-                          ng-disabled="isDisabled || isReadonly">
-                        <span class="material-icons">edit</span>
+                    <button data-ng-if="locked"
+                            ng-click="unlockInput()"
+                            class="custom-input-indicator-btn">
+                        <span class="material-icons">lock</span>
                     </button>
 
+                    <button data-ng-if="!noIndicatorBtn && !locked"
+                            class="custom-input-indicator-btn"
+                            data-ng-click="openTextInDialog($event)"
+                            ng-disabled="disabled() || isReadonly">
+                        <span class="material-icons">edit</span>
+                    </button>
 
                     <!-- TEXTAREA CODE
 
@@ -65,7 +70,7 @@
                     <input ng-if="!renderHyperlinks"
                            ng-model="model"
                            ng-readonly="isReadonly"
-                           ng-disabled="isDisabled"
+                           ng-disabled="disabled()"
                            ng-init="init()"
                            ng-blur="onInputBlur()"
                            ng-change="onInputChange(model)"
@@ -75,28 +80,19 @@
 
                     <div ng-if="renderHyperlinks"
                          ng-readonly="isReadonly"
-                         ng-disabled="isDisabled"
+                         ng-disabled="disabled()"
                          ng-init="init()"
                          class="custom-input text-input textInputElem">
                         <span ng-bind-html="getHyperlinks()"></span>
                     </div>
-
-          <!--<input type="text"
-                     data-ng-model="model"
-                     data-ng-change="onInputChange()"
-                     data-ng-model-options="{debounce: 500}"
-                     placeholder="{{placeholderText}}"
-                     class="custom-input text-input textInputElem"
-                     ng-readonly="isReadonly"
-                     ng-disabled="isDisabled"> -->
-        </div>
+                </div>
 
                 <div class="custom-input-side-items flex-row customInputBackgroundColor">
 
                   <div class="custom-input-custom-btns-holder">
                     <div data-ng-if="customButtons && customButtons.length" class="height-100 flex-row">
                       <button ng-repeat="button in customButtons"
-                              ng-disabled="isDisabled"
+                              ng-disabled="disabled()"
                               ng-click="callFnForCustomBtn(button.action)"
                               class="{{button.classes}} custom-input-custom-btn">
                         {{button.caption}}
@@ -137,7 +133,7 @@
                           ng-change="onInputChange(model)"
                           class="custom-input-full-text customInputBackgroundColor customInputFullText"
                           ng-readonly="isReadonly"
-                          ng-disabled="isDisabled"
+                          ng-disabled="disabled()"
                           ng-init="elemInited()"></textarea>
             </div>
 

@@ -58,6 +58,8 @@ export default function ($scope, $state, authorizerService, usersService, global
 
     const init = function () {
 
+
+
         localStorageService.setGlobalDataService(globalDataService); // TODO inject localStorageService into angular dependencies
 
         vm.currentMasterUser = globalDataService.getMasterUser();

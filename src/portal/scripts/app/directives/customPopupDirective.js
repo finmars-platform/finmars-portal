@@ -246,8 +246,8 @@
 					}
 
 					if (scope.closeOnClickOutside !== 'false') {
-						// popupBackdropElem.addEventListener("click", scope.cancel);
-						document.body.addEventListener("click", bodyClickHandler);
+						popupBackdropElem.addEventListener("click", scope.cancel);
+						// document.body.addEventListener("click", bodyClickHandler);
 					}
 
 					if (scope.closeOnMouseLeave === 'true') {
@@ -269,8 +269,8 @@
 					}
 
 					if (scope.closeOnClickOutside !== 'false') {
-						// popupBackdropElem.removeEventListener("click", scope.cancel);
-						document.body.removeEventListener("click", bodyClickHandler);
+						popupBackdropElem.removeEventListener("click", scope.cancel);
+						// document.body.removeEventListener("click", bodyClickHandler);
 					}
 
 					if (scope.closeOnMouseLeave === 'true') {
@@ -322,9 +322,6 @@
 
 					$compile(popupElem)(popupContentScope);
 
-					/* document.body.appendChild(popupBackdropElem);
-					document.body.appendChild(popupElem); */
-
 					if (popupBackdropElem) popupWrap.appendChild(popupBackdropElem);
 					popupWrap.appendChild(popupElem);
 
@@ -340,8 +337,6 @@
 
 				const removePopUp = function (event) {
 
-					/*document.body.removeChild(popupBackdropElem);
-					document.body.removeChild(popupElem);*/
 					if (popupBackdropElem) popupWrap.removeChild(popupBackdropElem);
 					popupWrap.removeChild(popupElem);
 
