@@ -14,7 +14,8 @@ import authorizerService from '../../shell/scripts/app/services/authorizerServic
 import portalController from './app/controllers/portalController.js';
 import enterUserCodeDialogController from "./app/controllers/dialogs/enterUserCodeDialogController.js";
 import portfolioRegisterDialogController from "./app/controllers/dialogs/portfolioRegisterDialogController";
-
+import dashboard2ReportViewerComponentMatrixController from "./app/controllers/dashboard/_version2/reportViewer/componentMatrixController";
+import meTestPageController from "./app/controllers/meTestPageController";
 // form - tabs
 import instrumentTypePricingTabController from "./app/controllers/tabs/instrument-type/instrumentTypePricingTabController.js";
 import portfolioPerformanceTabController from "./app/controllers/tabs/portfolio/performanceTabController.js"
@@ -94,6 +95,8 @@ export default (function () {
 	portal.service('gFiltersHelper', [require('./app/helpers/gFiltersHelper')]);
 	portal.service('gridTableHelperService', [require('./app/helpers/gridTableHelperService')]);
 
+	portal.controller('MeTestPageController', ['$scope', meTestPageController]);
+
 	//<editor-fold desc="Dashboard">
 	portal.component('dashboardEntityViewer', require('./app/components/dashboardEntityViewerComponent'));
 
@@ -160,6 +163,8 @@ export default (function () {
 
 	portal.controller('DashboardLayoutListDialogController', ['$scope', '$mdDialog', 'backendConfigurationImportService', 'data', require('./app/controllers/dialogs/dashboard/layoutListDialogController')]);
 	portal.controller('DashboardLayoutExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/dashboard/dashboardLayoutExportDialogController')]);
+
+	portal.controller('Dashboard2RvMatrixController', ['$scope', '$uiRouterGlobals', dashboard2ReportViewerComponentMatrixController]);
 	//</editor-fold desc="Dashboard">
 
 	// Common
