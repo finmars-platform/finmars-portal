@@ -4,7 +4,7 @@
     <div ng-if="readyStatus.data === 'ready'"
          class="flex-column height-100">
 
-        <div class="dashboard-component-header" flex="noshrink">
+        <div ng-if="!vm.componentData.inside_iframe" class="dashboard-component-header" flex="noshrink">
             <div class="dashboard-component-header-left">
 
                 <div ng-if="customName || (item && item.data.name)" class="dashboard-component-name">

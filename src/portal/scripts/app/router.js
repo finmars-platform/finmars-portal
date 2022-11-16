@@ -47,9 +47,27 @@
         });
 
         $stateProvider.state('app.portal.dashboard-layout-manager', {
-            url: '/dashboard-layouts',
+            url: '/dashboard-layouts/',
             templateUrl: 'views/dashboard-layout-manager-view.html',
             controller: 'DashboardLayoutManagerController as vm'
+        });
+
+        $stateProvider.state('app.portal.me-test-page', {
+            url: '/me-test-page',
+            templateUrl: 'views/me-test-page-view.html',
+            controller: 'MeTestPageController as vm',
+            params: {
+                componentId: null,
+            }
+        });
+
+        $stateProvider.state('app.portal.dashboard-rv-matrix', {
+            url: '/dashboard-component-rv-matrix?componentId&reportLayoutId',
+            templateUrl: 'views/dashboard/_version2/reportViewer/matrix-view.html',
+            controller: 'Dashboard2RvMatrixController as vm',
+            params: {
+                componentId: null,
+            }
         });
 
         $stateProvider.state('app.portal.context-menu-constructor', {
