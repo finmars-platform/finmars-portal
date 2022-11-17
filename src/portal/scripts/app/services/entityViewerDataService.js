@@ -1236,6 +1236,10 @@
 
             }
 
+            if (!listLayout.id) {
+                setIsNewLayoutState(true);
+            }
+
             if (listLayout.data.interfaceLayout) {
 
                 var interfaceLayout = getInterfaceLayout();
