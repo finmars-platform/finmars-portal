@@ -334,6 +334,10 @@ export default function (globalDataService) {
         return authorizerRepository.updateFinmars(base_api_url, tag);
     }
 
+    const kickMember = function (data) {
+        return authorizerRepository.kickMember(data)
+    }
+
     //</editor-fold>
 
     return {
@@ -381,7 +385,10 @@ export default function (globalDataService) {
         authTokenManagerCreateToken: authTokenManagerCreateToken,
 
         getVersions: getVersions,
-        updateFinmars: updateFinmars
+        updateFinmars: updateFinmars,
+
+
+        kickMember: kickMember
 
 
     }
