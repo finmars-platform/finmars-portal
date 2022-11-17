@@ -14,6 +14,7 @@ import authorizerService from '../../shell/scripts/app/services/authorizerServic
 import portalController from './app/controllers/portalController.js';
 import enterUserCodeDialogController from "./app/controllers/dialogs/enterUserCodeDialogController.js";
 import portfolioRegisterDialogController from "./app/controllers/dialogs/portfolioRegisterDialogController";
+import dialogHeaderDirective from "./app/directives/dialogHeaderDirective";
 
 // form - tabs
 import instrumentTypePricingTabController from "./app/controllers/tabs/instrument-type/instrumentTypePricingTabController.js";
@@ -803,6 +804,7 @@ export default (function () {
 	portal.directive('inputFileDirective', [require('./app/directives/inputFileDirective')]);
 	portal.directive('bookmarks', ['$mdDialog', require('./app/directives/bookmarksDirective')]);
 	portal.directive('numberFormatMenu', ['$mdDialog', require('./app/directives/numberFormatMenuDirective')]);
+	portal.directive('dialogHeader', [dialogHeaderDirective]);
 	portal.directive('isDraggableSign', [require('./app/directives/isDraggableSignDirective.js')]);
 	portal.directive('dialogWindowResizer', [require('./app/directives/dialogWindowResizerDirective.js')]);
 	portal.directive('closeDialogButton', [closeDialogButtonDirective]);
