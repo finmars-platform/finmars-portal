@@ -137,7 +137,7 @@
 
 					if (scope.model && scope.model.length) {
 
-						if (scope.items && scope.items.length) {
+						if (items && items.length) {
 
 							scope.inputText = '[';
 							scope.tooltipText = 'Values selected:';
@@ -153,9 +153,9 @@
 							selItemsIds.forEach(function (sItemId, index) { */
 							selOptionsIdsList.forEach(function (sItemId, index) {
 
-								for (var i = 0; i < scope.items.length; i++) {
+								for (var i = 0; i < items.length; i++) {
 
-									if (scope.items[i].id === sItemId) {
+									if (items[i].id === sItemId) {
 
 										if (index > 0) { // add comma between selected items
 
@@ -164,8 +164,8 @@
 
 										}
 
-										scope.inputText = scope.inputText + ' ' + scope.items[i][propName];
-										scope.tooltipText = scope.tooltipText + ' ' + scope.items[i][propName];
+										scope.inputText = scope.inputText + ' ' + items[i][propName];
+										scope.tooltipText = scope.tooltipText + ' ' + items[i][propName];
 
 										break;
 									}
@@ -533,6 +533,8 @@
 
 						if (scope.model && scope.model.length) {
 
+							if (scope.items && scope.items.length) items = JSON.parse(JSON.stringify(scope.items));
+
 							getItems().then(function () {
 
                                 getAvailableOptions();
@@ -581,6 +583,7 @@
 						if (scope.items) {
 
 							items = JSON.parse(JSON.stringify(scope.items));
+
 							getAvailableOptions();
 
 							if (scope.selectedItemsIndication === 'chips') {
