@@ -282,48 +282,18 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
     }
 
-    const init = async function () {
+    const init = function () {
 
         if (window.location.href.indexOf('iframe=true') !== -1) {
 
             vm.iframeMode = true
 
             document.body.classList.add('iframe')
-            console.log("testing.shellController $uiRouterGlobals.params", $uiRouterGlobals.params);
-            const paramUsername = $uiRouterGlobals.params.username;
-            const paramPass = $uiRouterGlobals.params.password;
+            const access_token = $uiRouterGlobals.params.token;
 
-            if (paramUsername && paramPass && (PROJECT_ENV === 'development' || PROJECT_ENV === 'local')) {
+            if (access_token && (PROJECT_ENV === 'development' || PROJECT_ENV === 'local')) {
 
-                vm.processing = true;
-
-                try {
-
-                    const authData = await authorizerService.ping();
-
-                    if (!authData.is_authenticated) {
-
-                        const data = await authorizerService.tokenLogin(paramUsername, paramPass);
-
-                        if (data.success) {
-                            if (!data.two_factor_check) onLogInSuccess(data);
-
-                        } else {
-                            vm.processing = false;
-                            vm.error = true;
-                            vm.errorMessage = data.message
-                            $scope.$apply();
-                        }
-
-                    }
-
-
-
-                } catch (e) {
-                    vm.processing = false;
-                    vm.error = true;
-                    console.error(e);
-                }
+                cookieService.setCookie('access_token', access_token);
 
             }
 
@@ -378,13 +348,13 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         if (broadcastChannelService.isAvailable) {
             initCrossTabBroadcast();
         }
-
+        console.log("testing.880 init before ping");
         authorizerService.ping().then(function (data) {
-
+            console.log("testing.880 ping data", data);
             // console.log('ping data', data);
 
             if (!data.is_authenticated) {
-
+                console.log("testing.880 ping 1");
                 vm.isAuthenticated = false;
 
                 $state.go('app.authentication');
@@ -392,14 +362,15 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             } else {
 
                 vm.isAuthenticated = true;
-
+                console.log("testing.880 ping 2");
                 if (data.current_master_user_id && data.base_api_url) {
 
                     baseUrlService.setMasterUserPrefix(data.base_api_url);
 
                     globalDataService.setCurrentMasterUserStatus(true);
-
+                    console.log("testing.880 ping 2.1");
                     if (vm.isAuthenticationPage) {
+                        console.log("testing.880 ping 2.1.1");
                         // $state.go('app.portal.home');
                         window.open(homepageUrl, '_self');
                     }
@@ -409,8 +380,9 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                     baseUrlService.setMasterUserPrefix(null);
 
                     globalDataService.setCurrentMasterUserStatus(false);
-
+                    console.log("testing.880 ping 2.2");
                     if ($state.current.name !== 'app.profile') {
+                        console.log("testing.880 ping 2.2.1");
                         // $state.go('app.profile', {}, {});
                         window.open(profileUrl, '_self');
                     }
@@ -425,9 +397,9 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                     $state.go('app.portal.home');
                 } */
                 console.log("User status: Authenticated");
-
+                console.log("testing.880 ping 2 before getUser");
                 getUser().then(() => {
-
+                    console.log("testing.880 ping 2 after getUser");
                     vm.readyStatus = true;
                     $scope.$apply();
 
@@ -436,6 +408,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             }
 
         }).catch(error => {
+            console.log("testing.880 ping error", error);
             if (!error.is_authenticated) $state.go('app.authentication');
         })
 
