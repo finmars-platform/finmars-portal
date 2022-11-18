@@ -62,7 +62,7 @@
         });
 
         $stateProvider.state('app.portal.dashboard-rv-matrix', {
-            url: '/dashboard-component-rv-matrix?componentId&reportLayoutId',
+            url: '/dashboard-component-rv-matrix?componentId&reportLayoutId&username&password',
             templateUrl: 'views/dashboard/_version2/reportViewer/matrix-view.html',
             controller: 'Dashboard2RvMatrixController as vm',
             params: {

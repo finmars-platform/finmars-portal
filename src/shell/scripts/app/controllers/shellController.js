@@ -11,7 +11,7 @@ import websocketService from "../../../../shell/scripts/app/services/websocketSe
 import baseUrlService from "../services/baseUrlService.js";
 import crossTabEvents from "../services/events/crossTabEvents";
 
-export default function ($scope, $state, $transitions, $urlService, $mdDialog, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService, redirectionService) {
+export default function ($scope, $state, $transitions, $urlService, $uiRouterGlobals, $mdDialog, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService, redirectionService) {
 
     let vm = this;
 
@@ -282,12 +282,51 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
     }
 
-    const init = function () {
+    const init = async function () {
 
         if (window.location.href.indexOf('iframe=true') !== -1) {
+
             vm.iframeMode = true
 
             document.body.classList.add('iframe')
+            console.log("testing.shellController $uiRouterGlobals.params", $uiRouterGlobals.params);
+            const paramUsername = $uiRouterGlobals.params.username;
+            const paramPass = $uiRouterGlobals.params.password;
+
+            if (paramUsername && paramPass && (PROJECT_ENV === 'development' || PROJECT_ENV === 'local')) {
+
+                vm.processing = true;
+
+                try {
+
+                    const authData = await authorizerService.ping();
+
+                    if (!authData.is_authenticated) {
+
+                        const data = await authorizerService.tokenLogin(paramUsername, paramPass);
+
+                        if (data.success) {
+                            if (!data.two_factor_check) onLogInSuccess(data);
+
+                        } else {
+                            vm.processing = false;
+                            vm.error = true;
+                            vm.errorMessage = data.message
+                            $scope.$apply();
+                        }
+
+                    }
+
+
+
+                } catch (e) {
+                    vm.processing = false;
+                    vm.error = true;
+                    console.error(e);
+                }
+
+            }
+
         }
 
         if (PROJECT_ENV !== 'local') {
