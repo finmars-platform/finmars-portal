@@ -4,6 +4,7 @@
 import websocketService from "../../../../shell/scripts/app/services/websocketService.js";
 import crossTabEvents from "../../../../shell/scripts/app/services/events/crossTabEvents.js";
 import baseUrlService from "../../../../shell/scripts/app/services/baseUrlService.js";
+import {window} from "../../../../../libs/js/d3";
 
 const metaService = require('../services/metaService'); // TODO inject into angular dependencies
 
@@ -248,22 +249,25 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                     authorizerService.setCurrentMasterUser(master.id).then(function (data) {
 
                         if (data.base_api_url) {
-                            baseUrlService.setMasterUserPrefix(data.base_api_url)
+                            // POSSIBLE DEPRECATED
+                            // baseUrlService.setMasterUserPrefix(data.base_api_url)
+                            //
+                            // window.document.title = master.name + ' | Finmars'
+                            //
+                            // if (broadcastChannelService.isAvailable) {
+                            //     broadcastChannelService.postMessage('finmars_broadcast', {event: crossTabEvents.MASTER_USER_CHANGED});
+                            // }
 
-                            window.document.title = master.name + ' | Finmars'
-
-                            if (broadcastChannelService.isAvailable) {
-                                broadcastChannelService.postMessage('finmars_broadcast', {event: crossTabEvents.MASTER_USER_CHANGED});
-                            }
-
-                            getMasterUsersList();
+                            // getMasterUsersList();
 
                             if ($state.current.name.startsWith('app.portal')) {
-                                $state.reload('app.portal')
+                                // $state.reload('app.portal')
+                                window.location.href = '/' + data.base_api_url + '/a/#!/'
 
                             } else {
                                 // $state.go('app.portal.home')
-								window.open(scope.homepageUrl, '_self');
+								// window.open(scope.homepageUrl, '_self');
+                                window.open(redirectionService.getUrl('app.portal.home'), '_self');
                             }
 
                         } else {
