@@ -1,3 +1,4 @@
+const processesService = require("../../../services/processesService");
 /**
  * Created by szhitenev on 30.05.2016.
  */
@@ -13,7 +14,7 @@
     var configurationImportService = require('../../../services/configuration-import/configurationImportService');
     var mappingsImportService = require('../../../services/mappings-import/mappingsImportService');
 
-    module.exports = function configurationImportDialogController($scope, $mdDialog, usersService, usersGroupService, backendConfigurationImportService, data) {
+    module.exports = function configurationImportDialogController($scope, $mdDialog, usersService, usersGroupService, backendConfigurationImportService, systemMessageService, data) {
 
         console.log("file", data.file);
 
@@ -550,102 +551,12 @@
 
         };
 
-        vm.getCounter = function () {
-            return window.importConfigurationCounter;
-        };
-
-        // MAPPINGS START HERE
-
-        /*vm.selectAllMappingsState = false;
-
-        vm.toggleSelectMappingsAll = function () {
-
-            vm.selectAllMappingsState = !vm.selectAllMappingsState;
-
-            vm.mappingItems.forEach(function (item) {
-                item.someChildsActive = false;
-                item.active = vm.selectAllState;
-
-                item.content.forEach(function (child) {
-                    child.active = vm.selectAllState;
-                })
-
-            })
-
-        };
-
-        vm.checkSelectMappingsAll = function () {
-
-            var active = true;
-
-            vm.mappingItems.forEach(function (item) {
-
-                if (!item.active) {
-                    active = false;
-                }
-
-                item.content.forEach(function (child) {
-
-                    if (!child.active) {
-                        active = false;
-                    }
-
-                })
-
-            });
-
-            vm.selectAllMappingsState = active;
-
-        };
-
-        vm.toggleActiveMappingsForChilds = function (item) {
-
-            item.active = !item.active;
-            item.someChildsActive = false;
-            item.content.forEach(function (child) {
-                child.active = item.active;
-            });
-
-            vm.checkSelectMappingsAll();
-
-        };*/
 
         vm.getMappingsEntityName = function (item) {
 
             return metaContentTypesService.getEntityNameByContentType(item.entity)
 
         };
-
-        /*vm.updateActiveMappingsForParent = function (child, parent) {
-
-            child.active = !child.active;
-
-            var ChildIsActive = false;
-            var ChildIsNotActive = false;
-            var parentIsActive = false;
-
-            parent.content.forEach(function (item) {
-                if (item.active) {
-                    ChildIsActive = true;
-                } else {
-                    ChildIsNotActive = true;
-                }
-
-                if (ChildIsActive && !ChildIsNotActive) {
-                    parentIsActive = true;
-                } else if (!ChildIsActive && ChildIsNotActive) {
-                    parent.someChildsActive = false;
-                } else {
-                    parentIsActive = false;
-                    parent.someChildsActive = true;
-                }
-            });
-
-            parent.active = parentIsActive;
-
-            vm.checkSelectMappingsAll();
-
-        };*/
 
         var mappingGroups = [
             {
@@ -897,41 +808,39 @@
 
         };
 
-        vm.importConfiguration = function (resolve) {
+        vm.getTask = function (){
 
-            backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
+            processesService.getByKey(vm.currentTaskId).then(function (data){
 
-                vm.importConfig = data;
+                vm.task = data;
+                console.log('vm.task', vm.task);
 
-                vm.counter = data.processed_rows;
-                vm.activeItemTotal = data.total_rows;
+
+                if (vm.task.status === 'D' || vm.task.status === 'E') {
+                    clearInterval(vm.poolingInterval)
+                    vm.poolingInterval = null;
+                    vm.processing = false;
+                    vm.importIsFinished = true;
+
+                    vm.pageState = 'import-complete';
+                }
 
                 $scope.$apply();
 
-                if (vm.importConfig.task_status === 'SUCCESS') {
-
-                    resolve()
-
-                } else {
-
-                    setTimeout(function () {
-                        vm.importConfiguration(resolve);
-                    }, 1000)
-
-                }
-
             })
+        }
 
-        };
+        vm.importConfiguration = function ($event) {
 
-        vm.agreeAsBackendProcess = function ($event) {
-
-            console.log("vm.agreeAsBackendProcess");
+            console.log("vm.importConfiguration");
 
             vm.processing = true;
 
-            vm.activeItemTotal = 0;
-            window.importConfigurationCounter = 0;
+            clearInterval(vm.poolingInterval)
+            vm.poolingInterval = null;
+            vm.importIsFinished = false;
+
+
 
             vm.items.forEach(function (entity) {
 
@@ -966,6 +875,7 @@
             mappingItems = JSON.parse(angular.toJson(mappingItems));
 
             mappingItems = mappingItems.filter(function (entity) {
+
                 entity.content = entity.content.filter(function (item) {
                     return item.active;
                 });
@@ -1000,36 +910,25 @@
 
             vm.pageState = 'import-progress';
 
-            new Promise(function (resolve, reject) {
+            backendConfigurationImportService.importConfigurationAsJson(vm.importConfig).then(function (data) {
 
-                vm.importConfiguration(resolve)
+                vm.importConfig = data;
 
-            }).then(function (data) {
+                vm.currentTaskId = data.task_id
 
-                console.log('agreeAsBackendProcess data', data);
-                console.log('agreeAsBackendProcess vm.importConfig', vm.importConfig);
+                $scope.$apply();
 
-                vm.pageState = 'import-complete';
+                vm.getTask()
 
-                // $mdDialog.show({
-                //     controller: 'ConfigurationImportResultDialogController as vm',
-                //     templateUrl: 'views/dialogs/configuration-import/configuration-import-result-dialog-view.html',
-                //     targetEvent: $event,
-                //     preserveScope: true,
-                //     multiple: true,
-                //     autoWrap: true,
-                //     skipHide: true,
-                //     locals: {
-                //         data: vm.importConfig
-                //     }
-                //
-                // }).then(function () {
-                //
-                //     $mdDialog.hide({status: 'agree', data: {}});
-                //
-                // });
+                vm.poolingInterval = setInterval(function (){
+
+                    vm.getTask();
+
+                }, 1000)
+
 
             }).catch(function (reason) {
+                console.error(reason)
                 vm.pageState = 'import-error';
                 vm.errorMessage = reason;
                 $scope.$apply();
@@ -1038,21 +937,48 @@
 
         };
 
+
         vm.showImportDetails = function ($event) {
 
-            $mdDialog.show({
-                controller: 'ConfigurationImportResultDialogController as vm',
-                templateUrl: 'views/dialogs/configuration-import/configuration-import-result-dialog-view.html',
-                targetEvent: $event,
-                preserveScope: true,
-                multiple: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    data: vm.importConfig
-                }
+            // $mdDialog.show({
+            //     controller: 'ConfigurationImportResultDialogController as vm',
+            //     templateUrl: 'views/dialogs/configuration-import/configuration-import-result-dialog-view.html',
+            //     targetEvent: $event,
+            //     preserveScope: true,
+            //     multiple: true,
+            //     autoWrap: true,
+            //     skipHide: true,
+            //     locals: {
+            //         data: vm.importConfig
+            //     }
+            //
+            // })
+
+            // TODO WTF why systemMessage Service, replace with FilePreview Service later
+            systemMessageService.viewFile(vm.task.attachments[0].file_report).then(function (data) {
+
+                console.log('data', data);
+
+                $mdDialog.show({
+                    controller: 'FilePreviewDialogController as vm',
+                    templateUrl: 'views/dialogs/file-preview-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            content: data,
+                            info: vm.task.attachments[0]
+                        }
+                    }
+                });
 
             })
+
 
         }
 
