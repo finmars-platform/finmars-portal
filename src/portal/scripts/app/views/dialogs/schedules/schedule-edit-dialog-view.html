@@ -183,13 +183,14 @@
                                     <!--<div  style="min-width: 50px; padding-left: 10px; padding-top: 25px;">{{item.order}}</div>-->
                                     <div style="min-width: 200px">
                                         <md-select data-ng-model="item.type">
-                                            <md-option value="pricing">Pricing Procedure</md-option>
-                                            <md-option value="data_provider">Data Procedure</md-option>
+                                            <md-option value="pricing_procedure">Pricing Procedure</md-option>
+                                            <md-option value="data_procedure">Data Procedure</md-option>
+                                            <md-option value="expression_procedure">Expression Procedure</md-option>
                                         </md-select>
                                     </div>
                                     <div style="min-width: 200px">
 
-                                        <div data-ng-if="item.type == 'pricing'">
+                                        <div data-ng-if="item.type == 'pricing_procedure'">
 
                                             <md-select data-ng-model="item.user_code">
                                                 <md-option ng-value="procedure.user_code"
@@ -200,13 +201,21 @@
 
                                         </div>
 
-                                        <div data-ng-if="item.type == 'data_provider'">
+                                        <div data-ng-if="item.type == 'data_procedure'">
 
                                             <md-select data-ng-model="item.user_code">
                                                 <md-option ng-value="procedure.user_code"
                                                            data-ng-repeat="procedure in vm.dataProcedures">
                                                     {{procedure.name}} ({{procedure.user_code}})
                                                 </md-option>
+                                            </md-select>
+
+                                        </div>
+
+                                        <div data-ng-if="item.type == 'expression_procedure'">
+
+                                            <md-select data-ng-model="item.user_code">
+                                                <md-option ng-value="procedure.user_code" data-ng-repeat="procedure in vm.expressionProcedures">{{procedure.name}} ({{procedure.user_code}})</md-option>
                                             </md-select>
 
                                         </div>
