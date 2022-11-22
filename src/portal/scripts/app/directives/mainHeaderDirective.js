@@ -4,7 +4,7 @@
 import websocketService from "../../../../shell/scripts/app/services/websocketService.js";
 import crossTabEvents from "../../../../shell/scripts/app/services/events/crossTabEvents.js";
 import baseUrlService from "../../../../shell/scripts/app/services/baseUrlService.js";
-import {window} from "../../../../../libs/js/d3";
+// import {window} from "../../../../../libs/js/d3"; // wtf?
 
 const metaService = require('../services/metaService'); // TODO inject into angular dependencies
 
