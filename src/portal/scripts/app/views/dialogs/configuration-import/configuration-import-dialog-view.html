@@ -315,7 +315,7 @@
 
                     <md-button class="md-raised md-primary start-import-button m-t-16"
                                data-ng-class="{'disabled-btn': vm.processing || !vm.readyStatus.member || !vm.readyStatus.groups}"
-                               ng-click="vm.agreeAsBackendProcess($event)">START IMPORT
+                               ng-click="vm.importConfiguration($event)">START IMPORT
                     </md-button>
 
                 </div>
@@ -327,20 +327,30 @@
 
                 <div class="import-configuration-page-progress-container">
 
-                    <div class="m-b-16 f-s-20">
+                    <div data-ng-if="!vm.task.progress_object" class="m-b-16 f-s-20">
                         Import in progress...
                     </div>
 
-                    <div class="import-configuration-page-progress-bar-container">
-                        <progress-linear class="ev-progressbar"></progress-linear>
-                    </div>
+                    <div data-ng-if="vm.task.progress_object">
 
-                    <div class="m-t-16 f-s-14" style="color: #747474;" data-ng-if="vm.activeItemTotal">
-                        {{vm.counter}} of {{vm.activeItemTotal}} entities imported.
-                    </div>
+                        <div class="m-t-8" layout="row" layout-align="space-between">
+                            <span>Progress:</span> <span>{{vm.task.progress_object.current}} / {{vm.task.progress_object.total}}</span>
+                        </div>
 
-                    <div class="m-t-16 f-s-14" style="color: #747474">
-                        You can leave this page, the import will continue anyway.
+                        <div layout="row" layout-sm="column" layout-align="space-around" class="loader-spinner">
+                            <md-progress-linear md-mode="determinate"
+                                                value="{{vm.task.progress_object.percent}}"></md-progress-linear>
+                        </div>
+
+                        <div class="m-t-8">
+                            Status:
+                            <div>
+                                {{vm.task.progress_object.description}}
+                            </div>
+                        </div>
+
+                        <div class="m-t-16 f-s-14" style="color: #747474">You can leave this page, the import will continue anyway.</div>
+
                     </div>
 
                 </div>
@@ -439,14 +449,6 @@
                 Close
             </md-button>
 
-
-<!--            <md-button class="md-raised"-->
-<!--                       data-ng-class="{'disabled-btn': vm.processing || !vm.readyStatus.member || !vm.readyStatus.groups}"-->
-
-<!--                       ng-click="vm.agreeAsBackendProcess($event)"-->
-<!--                       style="margin-right:20px;" aria-label="import button">-->
-<!--                Import-->
-<!--            </md-button>-->
 
         </div>
 
