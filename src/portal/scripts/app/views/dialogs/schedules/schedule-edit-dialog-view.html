@@ -100,7 +100,8 @@
                         <label for="">Day</label>
 
                         <md-select data-ng-model="vm.cron.day" multiple>
-                            <md-option value="{{item + 1}}" data-ng-repeat="item in vm.getRange(31)">{{item + 1}}</md-option>
+                            <md-option value="{{item + 1}}" data-ng-repeat="item in vm.getRange(31)">{{item + 1}}
+                            </md-option>
                         </md-select>
                     </md-input-container>
                 </div>
@@ -120,6 +121,13 @@
                 <ng-md-icon class="tooltip-inline-block" icon="info" size="20" style="fill: #777777; margin-left: 8px;">
                     <md-tooltip class="tooltip_1" md-direction="top">tooltip text</md-tooltip>
                 </ng-md-icon>
+
+                <div>
+                    <md-input-container>
+                        <label for="">Cron Expression</label>
+                        <input type="text" data-ng-model="vm.schedule.cron_expr">
+                    </md-input-container>
+                </div>
             </div>
 
             <div>
@@ -139,13 +147,13 @@
             <div>
 
                 <div layout="row" class="e-pricing-schedules-table-header">
-                    <div  style="min-width: 50px">
+                    <div style="min-width: 50px">
                         Order
                     </div>
-                    <div  style="min-width: 200px">
+                    <div style="min-width: 200px">
                         Type
                     </div>
-                    <div  style="min-width: 200px">
+                    <div style="min-width: 200px">
                         Code
                     </div>
                 </div>
@@ -153,8 +161,9 @@
                 <div class="flex-row e-pricing-schedules-table-body">
 
                     <div class="e-pricing-schedules-order-column">
-                        <div class="e-pricing-schedules-order-cell" data-ng-repeat="item in vm.schedule.procedures track by $index">
-                            <div>{{item.order +1 }}</div>
+                        <div class="e-pricing-schedules-order-cell"
+                             data-ng-repeat="item in vm.schedule.procedures track by $index">
+                            <div>{{item.order + 1 }}</div>
                         </div>
 
                     </div>
@@ -172,7 +181,7 @@
                                 <div layout="row">
 
                                     <!--<div  style="min-width: 50px; padding-left: 10px; padding-top: 25px;">{{item.order}}</div>-->
-                                    <div  style="min-width: 200px">
+                                    <div style="min-width: 200px">
                                         <md-select data-ng-model="item.type">
                                             <md-option value="pricing">Pricing Procedure</md-option>
                                             <md-option value="data_provider">Data Procedure</md-option>
@@ -183,7 +192,10 @@
                                         <div data-ng-if="item.type == 'pricing'">
 
                                             <md-select data-ng-model="item.user_code">
-                                                <md-option ng-value="procedure.user_code" data-ng-repeat="procedure in vm.pricingProcedures">{{procedure.name}} ({{procedure.user_code}})</md-option>
+                                                <md-option ng-value="procedure.user_code"
+                                                           data-ng-repeat="procedure in vm.pricingProcedures">
+                                                    {{procedure.name}} ({{procedure.user_code}})
+                                                </md-option>
                                             </md-select>
 
                                         </div>
@@ -191,15 +203,19 @@
                                         <div data-ng-if="item.type == 'data_provider'">
 
                                             <md-select data-ng-model="item.user_code">
-                                                <md-option ng-value="procedure.user_code" data-ng-repeat="procedure in vm.dataProcedures">{{procedure.name}} ({{procedure.user_code}})</md-option>
+                                                <md-option ng-value="procedure.user_code"
+                                                           data-ng-repeat="procedure in vm.dataProcedures">
+                                                    {{procedure.name}} ({{procedure.user_code}})
+                                                </md-option>
                                             </md-select>
 
                                         </div>
 
 
                                     </div>
-                                    <div  style="min-width: 200px; padding-top: 10px;">
-                                        <md-button data-ng-click="vm.deleteProcedure($event, item, $index)">Delete</md-button>
+                                    <div style="min-width: 200px; padding-top: 10px;">
+                                        <md-button data-ng-click="vm.deleteProcedure($event, item, $index)">Delete
+                                        </md-button>
                                     </div>
                                 </div>
 
@@ -238,6 +254,9 @@
     <md-dialog-actions layout="row">
         <md-button ng-click="vm.cancel()">
             Close
+        </md-button>
+        <md-button ng-click="vm.editAsJson($event)">
+            Edit as JSON
         </md-button>
         <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
             Save

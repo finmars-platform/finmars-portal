@@ -54,6 +54,8 @@
     var dataProcedureService = require('./procedures/dataProcedureService');
     var pricingProcedureService = require('./procedures/pricingProcedureService');
 
+    var scheduleService = require('./scheduleService');
+
 
     var getList = function (entityType, options) {
 
@@ -452,6 +454,9 @@
             case 'pricing-procedure':
                 return pricingProcedureService.create(entity);
                 break;
+            case 'schedule':
+                return scheduleService.create(entity);
+                break;
 
 
         }
@@ -594,6 +599,9 @@
                 break;
             case 'pricing-procedure':
                 return pricingProcedureService.update(id, entity);
+                break;
+            case 'schedule':
+                return scheduleService.update(id, entity);
                 break;
         }
     };

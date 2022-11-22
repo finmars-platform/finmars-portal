@@ -338,6 +338,10 @@ export default function (globalDataService) {
         return authorizerRepository.kickMember(data)
     }
 
+    const getInitialConfiguration = function (){
+        return authorizerRepository.getInitialConfiguration()
+    }
+
     //</editor-fold>
 
     return {
@@ -388,7 +392,9 @@ export default function (globalDataService) {
         updateFinmars: updateFinmars,
 
 
-        kickMember: kickMember
+        kickMember: kickMember,
+
+        getInitialConfiguration: getInitialConfiguration
 
 
     }
