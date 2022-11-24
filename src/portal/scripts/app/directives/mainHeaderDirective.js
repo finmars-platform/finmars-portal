@@ -242,11 +242,25 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                 // var checkLayoutForChanges = middlewareService.getWarningOfLayoutChangesLossFn();
                 const changeMasterUser = function () {
 
-                    middlewareService.masterUserChanged();
+                    if ($state.current.name.startsWith('app.portal')) {
+                        // $state.reload('app.portal')
+                        window.location.href = '/' + master.base_api_url + '/a/#!/'
 
-                    globalDataService.setMasterUser(master);
+                    } else {
+                        // $state.go('app.portal.home')
+                        // window.open(scope.homepageUrl, '_self');
+                        window.open(redirectionService.getUrl('app.portal.home'), '_self');
+                    }
 
-                    authorizerService.setCurrentMasterUser(master.id).then(function (data) {
+
+
+                    // DEPRECATED
+                    // middlewareService.masterUserChanged();
+
+                    // globalDataService.setMasterUser(master);
+
+
+                   /* authorizerService.setCurrentMasterUser(master.id).then(function (data) {
 
                         if (data.base_api_url) {
                             // POSSIBLE DEPRECATED
@@ -302,7 +316,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 							}
                         }
 
-                    });
+                    });*/
                 };
 
                 if (scope.currentMasterUser && scope.currentMasterUser.id !== master.id) {
