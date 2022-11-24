@@ -50,6 +50,44 @@
             vm.renderCalendar();
         }
 
+        vm.deleteCeleryTask = function ($event){
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                multiple: true,
+                skipHide: true,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: 'Are you sure you want to delete task  ' + vm.calendarEvent.extendedProps.id + '?'
+                    }
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+
+                    processesService.deleteByKey(vm.calendarEvent.extendedProps.id).then(function (){
+
+                        toastNotificationService.success('Task ' + vm.calendarEvent.extendedProps.id + ' deleted successfuly')
+
+                        vm.calendarEvent = null;
+                        vm.calendarEventPayload = null;
+                        $scope.$apply();
+
+                        vm.renderCalendar();
+
+                    })
+
+
+                }
+            })
+
+        }
+
         vm.loadCalendarEvent = function () {
 
 

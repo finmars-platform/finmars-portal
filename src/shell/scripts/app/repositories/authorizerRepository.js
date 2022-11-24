@@ -834,6 +834,21 @@ const kickMember = function (data) {
 
 };
 
+const getInitialConfiguration = function () {
+
+    return xhrService.fetch(authorizerUrl + '/backend-get-init-configuration/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    })
+
+};
+
 
 
 // module.exports = {
@@ -900,7 +915,8 @@ export default {
     updateFinmars: updateFinmars,
 
 
-    kickMember: kickMember
+    kickMember: kickMember,
+    getInitialConfiguration: getInitialConfiguration
 
 }
 

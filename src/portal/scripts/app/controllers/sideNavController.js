@@ -176,10 +176,15 @@
                 $('.sidenav-settings-toggle-btn').addClass('settings-menu-opened');
 
                 setTimeout(function () {
-                    $('.side-menu-settings-menu').addClass('overflow-visible');
 
-                    window.addEventListener('click', vm.settingsSideMenuOnClickOutside);
-                    window.addEventListener('contextmenu', vm.settingsSideMenuOnClickOutside);
+                    if (sideMenuSettingsMenuOpened) {
+
+                        $('.side-menu-settings-menu').addClass('overflow-visible');
+
+                        window.addEventListener('click', vm.settingsSideMenuOnClickOutside);
+                        window.addEventListener('contextmenu', vm.settingsSideMenuOnClickOutside);
+                    }
+
                 }, 250);
 
             } else {

@@ -108,11 +108,16 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 				// This code may not fire because of websocket reaction to 'master_user_change' inside shellController.js
                 if (data.base_api_url) {
 
-                    window.document.title = item.name + ' | Finmars'
+                    // DEPRECATED
+                    // window.document.title = item.name + ' | Finmars'
+                    //
+                    // globalDataService.setMasterUser(item);
+                    //
+                    // baseUrlService.setMasterUserPrefix(data.base_api_url);
 
-                    globalDataService.setMasterUser(item);
 
-                    baseUrlService.setMasterUserPrefix(data.base_api_url);
+
+
                     // portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
 
                     // if (broadcastChannelService.isAvailable) {
@@ -375,6 +380,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
         };
 
+        // DEPRECATED, logic moved to vue app
         vm.acceptInvite = function (item) {
 
             item.status = 1; // Accept code
@@ -395,7 +401,8 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
                     baseUrlService.setMasterUserPrefix(data.base_api_url);
                     // portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
 
-                    $state.go('app.setup');
+                    window.location.href = '/' + data.base_api_url + '/a/#!/'
+
                 })
 
             })

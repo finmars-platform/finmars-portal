@@ -8,6 +8,7 @@
     var scheduleService = require('../../../services/scheduleService');
     var pricingProcedureService = require('../../../services/procedures/pricingProcedureService');
     var dataProcedureService = require('../../../services/procedures/dataProcedureService');
+    var expressionProcedureService = require('../../../services/procedures/expressionProcedureService');
 
     const schedulesHelper = require('../../../helpers/schedules.helper');
 
@@ -29,6 +30,7 @@
 
         vm.pricingProcedures = [];
         vm.dataProcedures = [];
+        vm.expressionProcedures = [];
 
         vm.setDay = function (day) {
             if (!vm.cron.day) {
@@ -141,6 +143,20 @@
 
         };
 
+        vm.getExpressionProcedures = function () {
+
+            expressionProcedureService.getList().then(function (data) {
+
+                vm.expressionProcedures = data.results;
+
+                vm.readyStatus.expressionProcedures = true;
+
+                $scope.$apply();
+
+            })
+
+        };
+
 
         vm.getServerTime = function() {
 
@@ -196,6 +212,7 @@
         vm.init = function () {
             vm.getPricingProcedures();
             vm.getDataProcedures();
+            vm.getExpressionProcedures();
         };
 
         vm.init();
