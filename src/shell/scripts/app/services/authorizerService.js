@@ -212,7 +212,7 @@ export default function (globalDataService) {
             }).catch(error => reject(error)); */
             authorizerRepository.getMasterUsersList().then(masterUsersData => {
 
-                const currentMasterUser = masterUsersData.results.find(master => master.is_current)
+                const currentMasterUser = masterUsersData.results.find(master => window.location.href.indexOf(master.base_api_url) !== -1)
 
                 globalDataService.setMasterUser(currentMasterUser);
                 resolve(currentMasterUser);
