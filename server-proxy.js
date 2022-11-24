@@ -13,6 +13,7 @@ var proxyApiHost = process.env.API_HOST || 'https://dev.finmars.com';
 
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/portal', express.static('dist'));
+app.use('/client00000/a', express.static('dist'));
 
 var proxyOptions = url.parse(proxyApiHost);
 
