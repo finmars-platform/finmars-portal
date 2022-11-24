@@ -22,42 +22,42 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             if (!scope.openedInside) throw new Error("mainHeaderDirective: openedInside does not set");
             // let user;
-			const user = globalDataService.getUser();
+            const user = globalDataService.getUser();
 
             scope.currentLocation = '';
             scope.currentMasterUser = globalDataService.getMasterUser();
             scope.userName = '';
 
-			scope.showAutosaveLayout = false;
+            scope.showAutosaveLayout = false;
 
-			scope.member = globalDataService.getMember();
+            scope.member = globalDataService.getMember();
 
-			scope.homepageUrl = redirectionService.getUrl('app.portal.home');
-			scope.profileUrl = redirectionService.getUrl('app.profile');
+            scope.homepageUrl = redirectionService.getUrl('app.portal.home');
+            scope.profileUrl = redirectionService.getUrl('app.profile');
 
-			scope.notiPopupData = {
-				noti: [],
-				SECTIONS: {
-					1: 'Events',
-					2: 'Transactions',
-					3: 'Instruments',
-					4: 'Data',
-					5: 'Prices',
-					6: 'Report',
-					7: 'Import',
-					8: 'Activity log',
-					9: 'Schedules',
-					10: 'Other'
-				},
-				homepageUrl: scope.homepageUrl,
-				formatDate: function (date) {
-					if ( moment().diff(moment(date), 'hours') > 12 ) {
-						return moment( date ).format('DD.MM.YYYY HH:mm');
-					}
+            scope.notiPopupData = {
+                noti: [],
+                SECTIONS: {
+                    1: 'Events',
+                    2: 'Transactions',
+                    3: 'Instruments',
+                    4: 'Data',
+                    5: 'Prices',
+                    6: 'Report',
+                    7: 'Import',
+                    8: 'Activity log',
+                    9: 'Schedules',
+                    10: 'Other'
+                },
+                homepageUrl: scope.homepageUrl,
+                formatDate: function (date) {
+                    if (moment().diff(moment(date), 'hours') > 12) {
+                        return moment(date).format('DD.MM.YYYY HH:mm');
+                    }
 
-					return moment( date ).fromNow();
-				}
-			};
+                    return moment(date).fromNow();
+                }
+            };
 
             let deregisterOnSuccessTransitionHook;
 
@@ -107,20 +107,20 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             };
 
-			const loadNoti = function () {
+            const loadNoti = function () {
 
-				const options = {
-					pageSize: 3,
-					filters: {
-						only_new: true
-					}
-				};
+                const options = {
+                    pageSize: 3,
+                    filters: {
+                        only_new: true
+                    }
+                };
 
-				systemMessageService.getList(options).then(messagesData => {
-					scope.notiPopupData.noti = messagesData.results;
-				});
+                systemMessageService.getList(options).then(messagesData => {
+                    scope.notiPopupData.noti = messagesData.results;
+                });
 
-			};
+            };
 
             scope.toggleBookmarksPanel = function () {
 
@@ -247,11 +247,17 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                         window.location.href = '/' + master.base_api_url + '/a/#!/'
 
                     } else {
+
+                        if (PROJECT_ENV !== 'local') {
+                            window.location.href = '/' + master.base_api_url + '/a/#!/'
+                        } else {
+                            window.location.href = '/' + master.base_api_url + '/v/'
+                        }
                         // $state.go('app.portal.home')
                         // window.open(scope.homepageUrl, '_self');
-                        window.open(redirectionService.getUrl('app.portal.home'), '_self');
+                        // DEPRECATED, we need to go to new BASE_API_URL
+                        // window.open(redirectionService.getUrl('app.portal.home'), '_self');
                     }
-
 
 
                     // DEPRECATED
@@ -260,63 +266,63 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                     // globalDataService.setMasterUser(master);
 
 
-                   /* authorizerService.setCurrentMasterUser(master.id).then(function (data) {
+                    /* authorizerService.setCurrentMasterUser(master.id).then(function (data) {
 
-                        if (data.base_api_url) {
-                            // POSSIBLE DEPRECATED
-                            // baseUrlService.setMasterUserPrefix(data.base_api_url)
-                            //
-                            // window.document.title = master.name + ' | Finmars'
-                            //
-                            // if (broadcastChannelService.isAvailable) {
-                            //     broadcastChannelService.postMessage('finmars_broadcast', {event: crossTabEvents.MASTER_USER_CHANGED});
-                            // }
+                         if (data.base_api_url) {
+                             // POSSIBLE DEPRECATED
+                             // baseUrlService.setMasterUserPrefix(data.base_api_url)
+                             //
+                             // window.document.title = master.name + ' | Finmars'
+                             //
+                             // if (broadcastChannelService.isAvailable) {
+                             //     broadcastChannelService.postMessage('finmars_broadcast', {event: crossTabEvents.MASTER_USER_CHANGED});
+                             // }
 
-                            // getMasterUsersList();
+                             // getMasterUsersList();
 
-                            if ($state.current.name.startsWith('app.portal')) {
-                                // $state.reload('app.portal')
-                                window.location.href = '/' + data.base_api_url + '/a/#!/'
+                             if ($state.current.name.startsWith('app.portal')) {
+                                 // $state.reload('app.portal')
+                                 window.location.href = '/' + data.base_api_url + '/a/#!/'
 
-                            } else {
-                                // $state.go('app.portal.home')
-								// window.open(scope.homepageUrl, '_self');
-                                window.open(redirectionService.getUrl('app.portal.home'), '_self');
-                            }
+                             } else {
+                                 // $state.go('app.portal.home')
+                                 // window.open(scope.homepageUrl, '_self');
+                                 window.open(redirectionService.getUrl('app.portal.home'), '_self');
+                             }
 
-                        } else {
+                         } else {
 
-							// $state.go('app.profile', {});
-							window.open(scope.profileUrl, '_self')
+                             // $state.go('app.profile', {});
+                             window.open(scope.profileUrl, '_self')
 
-							console.log("Error activate", data)
+                             console.log("Error activate", data)
 
-							if (data.message) {
+                             if (data.message) {
 
-								if (typeof data.message == 'string') {
-									toastNotificationService.error(data.message)
-								} else if (typeof data.message == 'object') {
+                                 if (typeof data.message == 'string') {
+                                     toastNotificationService.error(data.message)
+                                 } else if (typeof data.message == 'object') {
 
-									var message = {}
+                                     var message = {}
 
-									Object.keys(data.message).forEach((key)=>{
-										message = message = ' ' + key + ': ' + data.message[key]
+                                     Object.keys(data.message).forEach((key)=>{
+                                         message = message = ' ' + key + ': ' + data.message[key]
 
-									})
+                                     })
 
-									toastNotificationService.error(message)
+                                     toastNotificationService.error(message)
 
-								} else {
-									toastNotificationService.error(data.message)
-								}
+                                 } else {
+                                     toastNotificationService.error(data.message)
+                                 }
 
 
-							} else {
-								toastNotificationService.error("Something went wrong. Please, try again later")
-							}
-                        }
+                             } else {
+                                 toastNotificationService.error("Something went wrong. Please, try again later")
+                             }
+                         }
 
-                    });*/
+                     });*/
                 };
 
                 if (scope.currentMasterUser && scope.currentMasterUser.id !== master.id) {
@@ -365,36 +371,36 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                 } else {
 
                     // $state.go('app.portal.home');
-					window.open(scope.homepageUrl, '_self');
+                    window.open(scope.homepageUrl, '_self');
 
                 }
 
             };
 
-			scope.onAutosaveToggle = function () {
+            scope.onAutosaveToggle = function () {
 
                 globalDataService.setMember(scope.member);
                 middlewareService.autosaveLayoutToggle();
 
-				usersService.updateMember(scope.member.id, scope.member).then(function () {
+                usersService.updateMember(scope.member.id, scope.member).then(function () {
                     scope.member = globalDataService.getMember();
                 });
-			};
+            };
 
             if (scope.openedInside === 'portal') {
 
                 const stateWithLayout = evRvLayoutsHelper.statesWithLayouts.includes($state.current.name);
 
-				if (user.data.autosave_layouts && stateWithLayout) {
+                if (user.data.autosave_layouts && stateWithLayout) {
 
-					scope.showAutosaveLayoutCheckbox = true;
+                    scope.showAutosaveLayoutCheckbox = true;
 
-					if (scope.member.data && typeof scope.member.data.autosave_layouts !== 'boolean') {
-						scope.member.data.autosave_layouts = true;
-						globalDataService.setMember(scope.member);
-					}
+                    if (scope.member.data && typeof scope.member.data.autosave_layouts !== 'boolean') {
+                        scope.member.data.autosave_layouts = true;
+                        globalDataService.setMember(scope.member);
+                    }
 
-				}
+                }
 
             }
 
@@ -421,9 +427,9 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                     scope.$apply();
                 });
 
-				loadNoti();
+                loadNoti();
 
-				scope.notiPopupData.homepageUrl = scope.homepageUrl;
+                scope.notiPopupData.homepageUrl = scope.homepageUrl;
 
                 websocketService.addEventListener('master_user_change', function (data) {
 
