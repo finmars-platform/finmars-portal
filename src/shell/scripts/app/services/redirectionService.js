@@ -5,6 +5,7 @@ import baseUrlService from "./baseUrlService";
 export default function () {
 
 	const baseUrl = baseUrlService.resolve();
+	const base_api_url = baseUrlService.getMasterUserPrefix()
 
 	let profileUrl = baseUrl + '/v/profile'
 
@@ -13,9 +14,9 @@ export default function () {
 	}
 
 	const stateToUrl = {
-		'app.portal.home': baseUrl + '/v/',
+		'app.portal.home': baseUrl + '/' + base_api_url + '/v/',
 		'app.profile': profileUrl,
-		'app.portal.reports.performance-report': baseUrl + '/v/reports/performance',
+		'app.portal.reports.performance-report': baseUrl + '/' + base_api_url + '/v/reports/performance',
 	};
 
 	function getUrl (stateName) {

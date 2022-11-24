@@ -315,6 +315,7 @@
             options.filters = {};
             options.filters.effective_date_0 = vm.effective_date_from;
             options.filters.effective_date_1 = vm.effective_date_to;
+            options.pageSize = 10000
 
             // options.filters = filters;
             instrumentEventService.getList(options).then(function (data) {
