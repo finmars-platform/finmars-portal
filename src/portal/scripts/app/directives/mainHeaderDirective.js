@@ -248,7 +248,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
                     } else {
 
-                        if (PROJECT_ENV !== 'local') {
+                        if ('__PROJECT_ENV__' === 'local') {
                             window.location.href = '/' + master.base_api_url + '/a/#!/'
                         } else {
                             window.location.href = '/' + master.base_api_url + '/v/'
