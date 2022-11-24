@@ -242,22 +242,24 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                 // var checkLayoutForChanges = middlewareService.getWarningOfLayoutChangesLossFn();
                 const changeMasterUser = function () {
 
-                    if ($state.current.name.startsWith('app.portal')) {
+                    if ('__PROJECT_ENV__' === 'local') {
+                        window.location.href = '/' + master.base_api_url + '/a/#!/'
+                    } else {
+                        window.location.href = '/' + master.base_api_url + '/v/'
+                    }
+
+                    /*if ($state.current.name.startsWith('app.portal')) {
                         // $state.reload('app.portal')
                         window.location.href = '/' + master.base_api_url + '/a/#!/'
 
                     } else {
 
-                        if ('__PROJECT_ENV__' === 'local') {
-                            window.location.href = '/' + master.base_api_url + '/a/#!/'
-                        } else {
-                            window.location.href = '/' + master.base_api_url + '/v/'
-                        }
+
                         // $state.go('app.portal.home')
                         // window.open(scope.homepageUrl, '_self');
                         // DEPRECATED, we need to go to new BASE_API_URL
                         // window.open(redirectionService.getUrl('app.portal.home'), '_self');
-                    }
+                    }*/
 
 
                     // DEPRECATED
