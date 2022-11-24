@@ -484,20 +484,6 @@ const deleteMasterUserByKey = function (id) {
         }
     })
 };
-
-const setCurrentMasterUser = function (id) {
-
-    return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/set-current/', {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: {
-            'X-CSRFToken': cookieService.getCookie('csrftoken'),
-            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-            Accept: 'application/json',
-            'Content-type': 'application/json'
-        }
-    })
-};
 //</editor-fold>
 
 /* var getMemberList = function () {
@@ -882,7 +868,6 @@ export default {
     updateMasterUser: updateMasterUser,
     patchMasterUser: patchMasterUser,
     deleteMasterUserByKey: deleteMasterUserByKey,
-    setCurrentMasterUser: setCurrentMasterUser,
 
     /* getMemberList: getMemberList,
     getMemberByKey: getMemberByKey,

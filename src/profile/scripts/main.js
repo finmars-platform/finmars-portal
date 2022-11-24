@@ -25,7 +25,7 @@ export default (function () {
     // profile.controller('NewDatabaseController', ['$scope', '$state', 'profileAuthorizerService', require('./app/controllers/newDatabaseController')]);
     profile.controller('ProfileController', ['$scope', 'authorizerService', 'globalDataService', 'redirectionService', profileController]);
     profile.controller('ProfileSettingsController', ['$scope', 'globalDataService', require('./app/controllers/profileSettingsController')]);
-    profile.controller('ProfileDatabasesController', ['$scope', '$state', '$mdDialog', 'profileAuthorizerService', 'broadcastChannelService', 'commonDialogsService',  'globalDataService', 'redirectionService', require('./app/controllers/profileDatabasesController')]);
+    profile.controller('ProfileDatabasesController', ['$scope', '$state', '$mdDialog', '$urlService', 'profileAuthorizerService', 'broadcastChannelService', 'commonDialogsService',  'globalDataService', 'redirectionService', require('./app/controllers/profileDatabasesController')]);
     profile.controller('ProfileBackupsController', ['$scope', '$state', '$mdDialog', 'redirectionService', require('./app/controllers/profileBackupsController')]);
     profile.controller('CreateMasterUserDialogController', ['$scope', '$mdDialog', 'data', 'profileAuthorizerService', require('./app/controllers/dialogs/createMasterUserDialogController')]);
     profile.controller('CreateMasterUserFromDumpDialogController', ['$scope', '$mdDialog', 'data', 'profileAuthorizerService', require('./app/controllers/dialogs/createMasterUserFromDumpDialogController')]);

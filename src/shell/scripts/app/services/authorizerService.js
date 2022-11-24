@@ -272,30 +272,6 @@ export default function (globalDataService) {
 
     }
 
-    const setCurrentMasterUser = id => {
-
-        return new Promise((resolve, reject) => {
-
-            authorizerRepository.setCurrentMasterUser(id).then(function (masterUserData) {
-
-                globalDataService.setMasterUser(null);
-                globalDataService.setMember(null);
-
-                resolve(masterUserData);
-                /* getUserPromise().then(memberData => {
-                    globalDatabaseService.setMember(memberData);
-                });
-
-                getMemberPromise().then(memberData => {
-                    globalDatabaseService.setMember(memberData);
-                }); */
-
-            }).catch(error => reject(error));
-
-        });
-
-    };
-
     const getMasterUsersListLight = function () {
         return authorizerRepository.getMasterUsersListLight();
     };
@@ -375,8 +351,6 @@ export default function (globalDataService) {
         updateMasterUser: updateMasterUser,
         patchMasterUser: patchMasterUser,
         deleteMasterUserByKey: deleteMasterUserByKey,
-
-        setCurrentMasterUser: setCurrentMasterUser,
 
         inviteUser: inviteUser,
         getInvitesList: getInvitesList,
