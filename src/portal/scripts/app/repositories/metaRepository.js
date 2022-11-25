@@ -349,6 +349,11 @@
                         label: 'Reconciliation',
                         type: 'system_tab',
                         templateUrl: 'views/tabs/complex-transaction/complex-transaction-reconciliation-tab.html'
+                    },
+                    {
+                        label: 'Execution Log',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/complex-transaction/complex-transaction-execution-log-tab.html'
                     }
                 ];
             default:

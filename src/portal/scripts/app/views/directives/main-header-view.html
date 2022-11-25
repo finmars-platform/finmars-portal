@@ -8,11 +8,13 @@
                     <h4 ng-bind="currentLocation" class="m-r-20"></h4>
                 </div>
 
-                <md-input-container ng-if="showAutosaveLayoutCheckbox" class="display-block p-0 m-0 layouts-autosave-toggle-container">
+                <md-input-container ng-if="showAutosaveLayoutCheckbox"
+                                    class="display-block p-0 m-0 layouts-autosave-toggle-container">
                     <md-checkbox ng-model="member.data.autosave_layouts"
                                  ng-change="onAutosaveToggle()"
                                  ng-model-options="{debounce: 300}"
-                                 class="">Autosave</md-checkbox>
+                                 class="">Autosave
+                    </md-checkbox>
                 </md-input-container>
             </div>
         </div>
@@ -78,27 +80,27 @@
                     <md-tooltip class="tooltip_1" md-direction="bottom">Open help menu</md-tooltip>
                 </a>
 
-                    <!--<md-button style="margin-left: 0"
-                               data-ui-sref="app.portal.system.notifications({notificationsListType: 'unreaded'})"
-                               aria-label="Notifications">
-                        <ng-md-icon icon="flag"></ng-md-icon>
-                        <span data-ng-show="vm.unreadedNotificationsAmount"
-                              data-ng-if="vm.unreadedNotificationsAmount <= 99 "
-                              class="unreaded-notifications-number">
-                                                    {{vm.unreadedNotificationsAmount}}
-                                                </span>
-                        <span data-ng-show="vm.unreadedNotificationsAmount"
-                              data-ng-if="vm.unreadedNotificationsAmount > 99 "
-                              class="unreaded-notifications-number">
-                                                    99+
-                                                </span>
-                    </md-button>
+                <!--<md-button style="margin-left: 0"
+                           data-ui-sref="app.portal.system.notifications({notificationsListType: 'unreaded'})"
+                           aria-label="Notifications">
+                    <ng-md-icon icon="flag"></ng-md-icon>
+                    <span data-ng-show="vm.unreadedNotificationsAmount"
+                          data-ng-if="vm.unreadedNotificationsAmount <= 99 "
+                          class="unreaded-notifications-number">
+                                                {{vm.unreadedNotificationsAmount}}
+                                            </span>
+                    <span data-ng-show="vm.unreadedNotificationsAmount"
+                          data-ng-if="vm.unreadedNotificationsAmount > 99 "
+                          class="unreaded-notifications-number">
+                                                99+
+                                            </span>
+                </md-button>
 
-                    <md-button style="margin-left: 0"
-                               data-ui-sref="app.portal.system-messages"
-                               aria-label="System Messages">
-                        <ng-md-icon icon="email"></ng-md-icon>
-                    </md-button>-->
+                <md-button style="margin-left: 0"
+                           data-ui-sref="app.portal.system-messages"
+                           aria-label="System Messages">
+                    <ng-md-icon icon="email"></ng-md-icon>
+                </md-button>-->
 
                 <div ng-if="currentMasterUser"
                      class="header-masteruser">
@@ -122,7 +124,8 @@
                                     <!-- <span ng-class="{'text-bold': master.is_current}">{{master.name}}</span>
                                     &lt;!&ndash;<span data-ng-if="master.is_current"><b>{{master.name}}</b></span>
                                     <span data-ng-if="!master.is_current">{{master.name}}</span>&ndash;&gt; -->
-                                    <span ng-class="{'text-bold': masterUser.is_current}" ng-bind="masterUser.name"></span>
+                                    <span ng-class="{'text-bold': masterUser.id == currentMasterUser.id}"
+                                          ng-bind="masterUser.name"></span>
                                 </md-button>
                             </md-menu-item>
                         </md-menu-content>
@@ -144,7 +147,7 @@
                                 <a class="md-button" href="{{profileUrl}}">Profile</a>
                             </md-menu-item>
                             <md-menu-item>
-<!--                                <md-button data-ng-click="logOutMethod()">Log Out</md-button>-->
+                                <!--                                <md-button data-ng-click="logOutMethod()">Log Out</md-button>-->
                                 <md-button href="/logout">Log Out</md-button>
                             </md-menu-item>
                         </md-menu-content>

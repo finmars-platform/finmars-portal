@@ -7,6 +7,7 @@ iframe {
 body {
   // font-family: 'Roboto-Regular', 'Roboto', sans-serif;
   font-family: 'Roboto', sans-serif;
+  color: @text;
 }
 
 h2 {
@@ -1418,9 +1419,9 @@ mdp-time-picker.custom-time-picker {
 }
 
 .custom-small-icon-btn {
-  min-width: 30px;
-  height: 30px;
-  min-height: 30px;
+  min-width: 24px;
+  height: 24px;
+  min-height: 24px;
 }
 
 .complex-expr-btn {
@@ -1487,21 +1488,6 @@ mdp-time-picker.custom-time-picker {
   textarea {
     width: 100%;
   }
-}
-
-md-dialog {
-  // needed to prevent resize of dialog into too small one
-  min-width: 200px;
-  min-height: 200px;
-}
-
-md-dialog.draggable-dialog {
-  position: absolute;
-  transition: initial;
-
-  /*md-toolbar {
-    cursor: grab;
-  }*/
 }
 
 md-select-header input {
@@ -2629,12 +2615,71 @@ expression-editor-button.expression-entered,
 
 }
 
+@dialog-actions-height: 57px;
+
+md-dialog {
+  // needed to prevent resize of dialog into too small one
+  min-width: 200px;
+  min-height: 200px;
+
+  md-toolbar:not(.md-menu-toolbar) {
+    border-bottom: 1px solid @borderPale;
+    min-height: 51px;
+    height: 51px;
+    font-size: 21px;
+    font-weight: 500;
+    color: @text;
+
+    .md-toolbar-tools {
+      padding: 0 20px;
+      min-height: 50px;
+      height: 50px;
+      font-weight: 500;
+      color: @text;
+    }
+  }
+
+  md-dialog-actions {
+    min-height: @dialog-actions-height;
+    height: @dialog-actions-height;
+    border-top: 1px solid @borderPale;
+    padding: 10px 20px;
+  }
+}
+
+.dialog-actions-bottom {
+  padding-bottom: @dialog-actions-height;
+  box-sizing: border-box;
+
+  md-dialog-content {
+    height: 100%;
+  }
+
+  md-dialog-actions {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    padding-right: 16px;
+  }
+}
+
+md-dialog.draggable-dialog {
+  position: absolute;
+  transition: initial;
+
+  /*md-toolbar {
+    cursor: grab;
+  }*/
+}
+
 .draggable-dialog-sign {
   position: absolute;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   overflow: hidden;
   fill: #929292;
+  color: @text-lighten;
+  font-size: 18px;
   cursor: grab;
 
   .dd-sign-left-icon,
@@ -2650,11 +2695,16 @@ expression-editor-button.expression-entered,
   .dd-sign-right-icon {
     right: 0;
   }
+
+  .material-icons {
+    font-size: 18px;
+  }
 }
 
 .md-toolbar-tools .draggable-dialog-sign {
-  top: 5px;
-  left: 10px;
+  top: 1px;
+  left: 0;
+  color: @text-lighten;
 }
 
 dialog-window-resizer {
@@ -3644,4 +3694,7 @@ md-dialog.width-50.draggable-dialog.log-dialog {
     margin: 4px 0;
     display: block;
   }
+}
+mdp-time-picker .md-button {
+  display: none;
 }

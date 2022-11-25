@@ -193,13 +193,12 @@
                                                           data-label="vm.currentContentType.name"
                                                           data-item-name="vm.defaultValue.setValueName"
                                                           data-item-object="vm.defaultValue.setValueObject"
-                                                          data-entity-type="vm.currentContentType.relationType"></entity-search-select>
+                                                          data-entity-type="vm.currentContentType.entityType"></entity-search-select>
 
                                     <two-fields-multiselect data-ng-if="vm.item.settings.multiple"
                                                             title="{{vm.currentContentType.name}}"
                                                             items="vm.multiselectItems"
                                                             model="vm.defaultValue.setValue"
-                                                            name-property="short_name"
                                                             get-data-method="vm.getDataForMultiselect()"
                                                             class="two-fields-multiselect no-error-spacer dashboard-control-multiselect"></two-fields-multiselect>
 

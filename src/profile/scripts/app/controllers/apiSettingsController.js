@@ -181,7 +181,7 @@
 
         vm.executeRequestReport = function ($event) {
 
-            let url = vm.requestReport.tokenItem.api_url + '/reports/balance-report-sql/'
+            let url = vm.requestReport.tokenItem.api_url + '/reports/balance-report/'
             let token = 'Token ' + vm.requestReport.access_token
 
             let body = JSON.stringify(vm.requestReport.body, null, 4)

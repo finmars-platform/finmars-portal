@@ -368,9 +368,19 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
                 vm.isAuthenticated = true;
                 if (vm.iframeMode) console.log("testing.880 ping 2");
-                if (data.current_master_user_id && data.base_api_url) {
+                if (window.location.href.indexOf('/client') !== -1) {
 
-                    baseUrlService.setMasterUserPrefix(data.base_api_url);
+                    // ================================================================================
+                    // = New way of settings base_api_url, now its mandatory in window.location.href
+                    // ================================================================================
+                    var base_api_url;
+                    var pieces = window.location.href.split('/a')[0].split('/')
+
+                    base_api_url = pieces[pieces.length - 1]
+
+                    console.log("Setting base api url ", base_api_url)
+
+                    baseUrlService.setMasterUserPrefix(base_api_url);
 
                     globalDataService.setCurrentMasterUserStatus(true);
                     if (vm.iframeMode) console.log("testing.880 ping 2.1");

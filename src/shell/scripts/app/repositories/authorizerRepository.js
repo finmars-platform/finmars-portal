@@ -465,20 +465,6 @@ export default function (cookieService, xhrService) {
             }
         })
     };
-
-    const setCurrentMasterUser = function (id) {
-
-        return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/set-current/', {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: {
-                'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
-    };
 //</editor-fold>
 
     /* var getMemberList = function () {
@@ -815,6 +801,21 @@ export default function (cookieService, xhrService) {
 
     };
 
+const getInitialConfiguration = function () {
+
+    return xhrService.fetch(authorizerUrl + '/backend-get-init-configuration/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'X-CSRFToken': cookieService.getCookie('csrftoken'),
+            'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+            Accept: 'application/json',
+            'Content-type': 'application/json'
+        }
+    })
+
+};
+
 
 
 // module.exports = {
@@ -848,7 +849,6 @@ export default function (cookieService, xhrService) {
         updateMasterUser: updateMasterUser,
         patchMasterUser: patchMasterUser,
         deleteMasterUserByKey: deleteMasterUserByKey,
-        setCurrentMasterUser: setCurrentMasterUser,
 
         /* getMemberList: getMemberList,
         getMemberByKey: getMemberByKey,
@@ -881,7 +881,8 @@ export default function (cookieService, xhrService) {
         updateFinmars: updateFinmars,
 
 
-        kickMember: kickMember
+    kickMember: kickMember,
+    getInitialConfiguration: getInitialConfiguration
 
     }
 
