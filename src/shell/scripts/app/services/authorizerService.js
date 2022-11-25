@@ -5,13 +5,15 @@
 
 'use strict';
 
-import authorizerRepository from '../repositories/authorizerRepository.js';
+import AuthorizerRepository from '../repositories/authorizerRepository.js';
+
 import baseUrlService from "./baseUrlService";
 import {getVersions} from "../../../../portal/scripts/app/controllers/pages/updateCenterController";
 // import usersRepository from "../repositories/usersRepository";
 /** @module authorizerService */
-export default function (globalDataService) {
+export default function (cookieService, globalDataService, xhrService) {
 
+    const authorizerRepository = new AuthorizerRepository(cookieService, xhrService);
     // Deprecated
     // const login = function (login, password) {
     // 	return authorizerRepository.login(login, password);
@@ -53,6 +55,8 @@ export default function (globalDataService) {
     }; */
 
     const ping = function () {
+        console.trace("testing.880")
+        debugger;
         return authorizerRepository.ping();
     };
 
@@ -99,7 +103,7 @@ export default function (globalDataService) {
 
         return new Promise((resolve, reject) => {
 
-			 authorizerRepository.getMe().then(userData => {
+			authorizerRepository.getMe().then(userData => {
 
 				if (!userData.data) userData.data = {};
 				globalDataService.setUser(userData);
@@ -112,7 +116,7 @@ export default function (globalDataService) {
         // return authorizerRepository.getMe();
     }
 
-    const getUserByKey = function (id, user) {
+    const getUserByKey = function (id) {
 
 		return new Promise((resolve, reject) => {
 

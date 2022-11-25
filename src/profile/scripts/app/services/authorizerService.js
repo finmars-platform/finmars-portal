@@ -43,7 +43,7 @@ export default function (xhrService, cookieService) {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },
-            data: JSON.stringify(user)
+            body: JSON.stringify(user)
         }).then(function (data) {
             return new Promise(function (resolve, reject) {
                 data.json().then(function (result) {
@@ -93,7 +93,7 @@ export default function (xhrService, cookieService) {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },
-            data: JSON.stringify(user)
+            body: JSON.stringify(user)
         }).then(function (data) {
 
             if (data.status !== 200 && data.status !== 201) {
@@ -160,7 +160,7 @@ export default function (xhrService, cookieService) {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },
-            data: JSON.stringify(user)
+            body: JSON.stringify(user)
         });
     };
 
@@ -202,7 +202,7 @@ export default function (xhrService, cookieService) {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },
-            data: JSON.stringify(invite)
+            body: JSON.stringify(invite)
         });
     };
 
@@ -245,7 +245,7 @@ export default function (xhrService, cookieService) {
                 Accept: 'application/json',
                 'Content-type': 'application/json'
             },
-            data: JSON.stringify(data)
+            body: JSON.stringify(data)
         }).then(function (data) {
 
             if (data.status !== 200 && data.status !== 201) {

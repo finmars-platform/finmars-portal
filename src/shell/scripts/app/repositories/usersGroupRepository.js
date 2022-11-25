@@ -72,7 +72,7 @@ const create = function (group) {
 				Accept: 'application/json',
 				'Content-type': 'application/json'
 			},
-			data: JSON.stringify(group)
+			body: JSON.stringify(group)
 		})
 };
 
@@ -91,7 +91,7 @@ const update = function (id, group) {
 				Accept: 'application/json',
 				'Content-type': 'application/json'
 			},
-			data: JSON.stringify(group)
+			body: JSON.stringify(group)
 		})
 };
 

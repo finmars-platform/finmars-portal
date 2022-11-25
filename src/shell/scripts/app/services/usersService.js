@@ -6,11 +6,12 @@
 
 'use strict';
 
-import usersRepository from '../repositories/usersRepository.js';
+import UsersRepository from '../repositories/usersRepository.js';
 // import authorizerRepository from "../repositories/authorizerRepository";
 /** @module usersService */
-export default function (globalDataService) {
+export default function (cookieService, globalDataService, xhrService) {
 
+	const usersRepository = new UsersRepository(cookieService, xhrService);
     // const usersRepository = require('../repositories/usersRepository');
 
     /* const login = function (login, password) {

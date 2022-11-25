@@ -269,6 +269,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                         } else {
 
 							// $state.go('app.profile', {});
+                            console.log("testing.880 redirection 4");
 							window.open(scope.profileUrl, '_self')
 
 							console.log("Error activate", data)

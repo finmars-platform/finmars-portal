@@ -13,6 +13,7 @@ export default function ($scope, $state, authorizerService, usersService, global
     let vm = this;
 
     vm.readyStatus = false;
+    vm.iframeMode = globalDataService.insideIframe();
 
     const getMember = function () {
 
@@ -58,8 +59,6 @@ export default function ($scope, $state, authorizerService, usersService, global
 
     const init = function () {
 
-
-
         localStorageService.setGlobalDataService(globalDataService); // TODO inject localStorageService into angular dependencies
 
         vm.currentMasterUser = globalDataService.getMasterUser();
@@ -83,7 +82,7 @@ export default function ($scope, $state, authorizerService, usersService, global
             console.log('PortalController.error', error);
 
             // $state.go('app.profile', {}, {reload: true});
-			window.open(redirectionService.getUrl('app.profile'), '_self')
+			// window.open(redirectionService.getUrl('app.profile'), '_self')
 
         })
 
