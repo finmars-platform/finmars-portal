@@ -13,7 +13,7 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function ($scope, $state, $mdDialog, usersService, usersGroupService, backendConfigurationImportService) {
+    module.exports = function ($scope, $state, $mdDialog, usersService, usersGroupService, backendConfigurationImportService, authorizerService) {
 
         var vm = this;
 
@@ -80,7 +80,7 @@
         };
 
         vm.importConfiguration = function ($event, resolve) {
-            
+
             console.log('vm.importConfig', vm.importConfig);
 
             var blob = new Blob([JSON.stringify(vm.importConfig.data)], {type: 'application/json'})
@@ -154,6 +154,31 @@
 
 
         };
+
+        vm.applyInitialConfiguration = function ($event) {
+
+            console.log('applyInitialConfiguration')
+
+            authorizerService.getInitialConfiguration().then(function (data) {
+
+                vm.importConfig = {
+                    data: data.data,
+                    mode: 'overwrite'
+                };
+
+                new Promise(function (resolve, reject) {
+
+                    vm.importConfiguration($event, resolve)
+
+                }).then(function (value) {
+
+                    toastNotificationService.info("Configuration is applied")
+
+                })
+
+            })
+
+        }
 
         vm.init = function () {
 

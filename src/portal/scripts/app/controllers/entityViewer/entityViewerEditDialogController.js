@@ -1660,7 +1660,8 @@
 
         // Instrument tab Exposure start
 
-        /*vm.getDataForInstrumentTabs = function () {
+        // Why it was commented?
+        vm.getDataForInstrumentTabs = function () {
 
             entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data){
 
@@ -1675,7 +1676,7 @@
             })
 
 
-        }*/
+        }
 
         // Instrument tab Exposure end
 
@@ -2060,7 +2061,7 @@
             vm.getItem().then(async function () {
 
 				if (vm.entityType === 'instrument') {
-					// vm.getDataForInstrumentTabs();
+					vm.getDataForInstrumentTabs();
 					vm.sharedLogic.getDataForInstrumentExposureTab().then(function (data) {
 						vm.instrumentsSelectorOptions = data[0];
 						vm.currenciesSelectorOptions = data[1];

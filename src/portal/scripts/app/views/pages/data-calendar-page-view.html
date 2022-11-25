@@ -63,6 +63,7 @@
             <div data-ng-if="vm.calendarEvent">
 
                 <a data-ng-click="vm.loadCalendarEvent($event)" data-ng-if="vm.calendarEventPayload" class="refresh-calendar-event-payload">Refresh</a>
+                <a data-ng-click="vm.deleteCeleryTask($event)" data-ng-if="vm.calendarEventPayload && vm.calendarEvent.extendedProps.type === 'celery_task'" class="delete-calendar-event-payload">Delete</a>
 
                 <h1 style="word-break: break-word; font-size: 24px;">{{vm.calendarEvent.title}}</h1>
                 <div>Start: {{vm.calendarEvent.start}}</div>

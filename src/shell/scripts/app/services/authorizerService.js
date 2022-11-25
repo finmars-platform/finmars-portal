@@ -216,7 +216,7 @@ export default function (cookieService, globalDataService, xhrService) {
             }).catch(error => reject(error)); */
             authorizerRepository.getMasterUsersList().then(masterUsersData => {
 
-                const currentMasterUser = masterUsersData.results.find(master => master.is_current)
+                const currentMasterUser = masterUsersData.results.find(master => window.location.href.indexOf(master.base_api_url) !== -1)
 
                 globalDataService.setMasterUser(currentMasterUser);
                 resolve(currentMasterUser);
@@ -276,30 +276,6 @@ export default function (cookieService, globalDataService, xhrService) {
 
     }
 
-    const setCurrentMasterUser = id => {
-
-        return new Promise((resolve, reject) => {
-
-            authorizerRepository.setCurrentMasterUser(id).then(function (masterUserData) {
-
-                globalDataService.setMasterUser(null);
-                globalDataService.setMember(null);
-
-                resolve(masterUserData);
-                /* getUserPromise().then(memberData => {
-                    globalDatabaseService.setMember(memberData);
-                });
-
-                getMemberPromise().then(memberData => {
-                    globalDatabaseService.setMember(memberData);
-                }); */
-
-            }).catch(error => reject(error));
-
-        });
-
-    };
-
     const getMasterUsersListLight = function () {
         return authorizerRepository.getMasterUsersListLight();
     };
@@ -342,6 +318,10 @@ export default function (cookieService, globalDataService, xhrService) {
         return authorizerRepository.kickMember(data)
     }
 
+    const getInitialConfiguration = function (){
+        return authorizerRepository.getInitialConfiguration()
+    }
+
     //</editor-fold>
 
     return {
@@ -376,8 +356,6 @@ export default function (cookieService, globalDataService, xhrService) {
         patchMasterUser: patchMasterUser,
         deleteMasterUserByKey: deleteMasterUserByKey,
 
-        setCurrentMasterUser: setCurrentMasterUser,
-
         inviteUser: inviteUser,
         getInvitesList: getInvitesList,
         deleteInviteByKey: deleteInviteByKey,
@@ -392,7 +370,9 @@ export default function (cookieService, globalDataService, xhrService) {
         updateFinmars: updateFinmars,
 
 
-        kickMember: kickMember
+        kickMember: kickMember,
+
+        getInitialConfiguration: getInitialConfiguration
 
 
     }

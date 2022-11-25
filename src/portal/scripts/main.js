@@ -14,6 +14,7 @@ import authorizerService from '../../shell/scripts/app/services/authorizerServic
 import portalController from './app/controllers/portalController.js';
 import enterUserCodeDialogController from "./app/controllers/dialogs/enterUserCodeDialogController.js";
 import portfolioRegisterDialogController from "./app/controllers/dialogs/portfolioRegisterDialogController";
+import dialogHeaderDirective from "./app/directives/dialogHeaderDirective";
 import dashboard2ReportViewerComponentMatrixController from "./app/controllers/dashboard/_version2/reportViewer/componentMatrixController";
 import meTestPageController from "./app/controllers/meTestPageController";
 // form - tabs
@@ -518,7 +519,7 @@ export default (function () {
 
 	// Configuration Import
 
-	portal.controller('ConfigurationImportDialogController', ['$scope', '$mdDialog', 'usersService', 'usersGroupService', 'backendConfigurationImportService', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportDialogController')]);
+	portal.controller('ConfigurationImportDialogController', ['$scope', '$mdDialog', 'usersService', 'usersGroupService', 'backendConfigurationImportService', 'systemMessageService', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportDialogController')]);
 	portal.controller('ConfigurationImportResultDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportResultDialogController')]);
 
 	// Configuration Export
@@ -593,7 +594,7 @@ export default (function () {
 	portal.controller('ProcessesController', ['$scope', '$mdDialog', require('./app/controllers/pages/processesController')]);
 	portal.controller('UpdateCenterController', ['$scope', 'authorizerService', 'globalDataService', require('./app/controllers/pages/updateCenterController')]);
 	portal.controller('SystemMessagesController', ['$scope', '$mdDialog', 'systemMessageService', require('./app/controllers/pages/systemMessagesController')]);
-	portal.controller('UpdateConfigurationPageController', ['$scope', '$state', '$mdDialog', 'usersService', 'usersGroupService', 'backendConfigurationImportService', require('./app/controllers/pages/updateConfigurationPageController')]);
+	portal.controller('UpdateConfigurationPageController', ['$scope', '$state', '$mdDialog', 'usersService', 'usersGroupService', 'backendConfigurationImportService', 'authorizerService', require('./app/controllers/pages/updateConfigurationPageController')]);
 	portal.controller('ExplorerPageController', ['$scope', 'authorizerService', 'globalDataService', '$mdDialog', require('./app/controllers/pages/explorerPageController')]);
 	portal.controller('CreateFolderDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/createFolderDialogController')]);
 	portal.controller('DataStatsPageController', ['$scope', 'authorizerService', 'globalDataService', '$mdDialog', require('./app/controllers/pages/dataStatsPageController')]);
@@ -808,6 +809,7 @@ export default (function () {
 	portal.directive('inputFileDirective', [require('./app/directives/inputFileDirective')]);
 	portal.directive('bookmarks', ['$mdDialog', require('./app/directives/bookmarksDirective')]);
 	portal.directive('numberFormatMenu', ['$mdDialog', require('./app/directives/numberFormatMenuDirective')]);
+	portal.directive('dialogHeader', [dialogHeaderDirective]);
 	portal.directive('isDraggableSign', [require('./app/directives/isDraggableSignDirective.js')]);
 	portal.directive('dialogWindowResizer', [require('./app/directives/dialogWindowResizerDirective.js')]);
 	portal.directive('closeDialogButton', [closeDialogButtonDirective]);
