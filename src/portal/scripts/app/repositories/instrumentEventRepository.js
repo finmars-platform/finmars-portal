@@ -38,7 +38,7 @@
     // 			Accept: 'application/json',
     // 			'Content-type': 'application/json'
     // 		},
-    // 		data: JSON.stringify(options)
+    // 		body: JSON.stringify(options)
     // 	}).then(function (data) {
     // 		return data.json();
     // 	});
@@ -76,7 +76,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(data)
+                body: JSON.stringify(data)
             })
     };
 
@@ -116,7 +116,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(data)
+                body: JSON.stringify(data)
             })
 
     };
@@ -154,7 +154,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(options)
+                body: JSON.stringify(options)
             })
     };
 
@@ -191,7 +191,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(options)
+                body: JSON.stringify(options)
             })
     };
 

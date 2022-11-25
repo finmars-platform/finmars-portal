@@ -52,15 +52,6 @@
             controller: 'DashboardLayoutManagerController as vm'
         });
 
-        $stateProvider.state('app.portal.me-test-page', {
-            url: '/me-test-page',
-            templateUrl: 'views/me-test-page-view.html',
-            controller: 'MeTestPageController as vm',
-            params: {
-                componentId: null,
-            }
-        });
-
         $stateProvider.state('app.portal.dashboard-rv-matrix', {
             url: '/dashboard-component-rv-matrix?componentId&reportLayoutId&atoken',
             templateUrl: 'views/dashboard/_version2/reportViewer/matrix-view.html',

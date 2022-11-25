@@ -51,7 +51,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'im
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(attrs)
+                body: JSON.stringify(attrs)
             })
     };
 

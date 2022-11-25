@@ -66,7 +66,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(currency)
+                body: JSON.stringify(currency)
             })
     };
 

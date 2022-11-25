@@ -11,7 +11,7 @@
 			{
 				method: 'POST',
 				credentials: 'include',
-				data: JSON.stringify(data),
+				body: JSON.stringify(data),
 				headers: {
 					Accept: 'application/json',
 					'Content-type': 'application/json'

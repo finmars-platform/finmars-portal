@@ -4,7 +4,7 @@
 
 'use strict';
 
-// fixes angular module import error
+/** fixes angular module import error */
 // require('../../forum/scripts/main.js');
 import profile from '../../profile/scripts/main.js';
 import database from '../../database/scripts/main.js';
@@ -159,9 +159,9 @@ app.service('errorService', ['toastNotificationService', errorService]);
 app.service('xhrService', ['errorService', xhrService]);
 app.service('broadcastChannelService', [broadcastChannelService]);
 app.service('globalDataService', [globalDataService]);
-app.service('authorizerService', ['globalDataService', authorizerService]);
+app.service('authorizerService', ['cookieService', 'globalDataService', 'xhrService', authorizerService]);
 app.service('middlewareService', [middlewareService]);
-app.service('usersService', ['globalDataService', usersService]);
+app.service('usersService', ['cookieService', 'globalDataService', 'xhrService', usersService]);
 app.service('usersGroupService', ['globalDataService', usersGroupService]);
 app.service('backendConfigurationImportService', ['cookieService', backendConfigurationImportService]);
 app.service('systemMessageService', [systemMessageService]);

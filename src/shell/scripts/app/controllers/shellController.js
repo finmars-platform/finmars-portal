@@ -55,6 +55,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             vm.readyStatus = true;
 
             // $state.go('app.profile', {}, {});
+            console.log("testing.880 redirection 1");
             window.open(profileUrl, '_self');
 
         });
@@ -141,7 +142,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
     const initTransitionListener = function () {
 
         $transitions.onBefore({}, function (transition) {
-
+            console.trace("testing.880 transition")
             const resetUrlAfterAbortion = function () {
 
                 let fromUrl = $state.href($state.current.name, {}, {relative: true});
@@ -149,7 +150,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                 $urlService.url(fromUrl, true);
 
             };
-
+            console.log("testing.880 on before ", transition.from().name);
             if (vm.isAuthenticated) {
 
                 if (transition.to().name === 'app.authentication') {
@@ -211,7 +212,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                 vm.username = '';
                 vm.password = '';
             }
-
+            console.log("testing.880 onSuccess transition", transition.to().name);
             // middlewareService.clearEvents();
             vm.isAuthenticationPage = transition.to().name === 'app.authentication';
 
@@ -249,6 +250,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                 middlewareService.masterUserChanged();
 
                 // $state.go('app.portal.home');
+                console.log("testing.880 redirection 2");
                 window.open(homepageUrl, '_self');
 
             }
@@ -286,16 +288,18 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
         if (window.location.href.indexOf('iframe=true') !== -1) {
 
-            vm.iframeMode = true
+            globalDataService.setIframeMode(true);
+            vm.iframeMode = true;
 
             document.body.classList.add('iframe')
-            const access_token = $uiRouterGlobals.params.token;
+            console.log("testing.880 $uiRouterGlobals.params", $uiRouterGlobals.params);
 
-            if (access_token && (PROJECT_ENV === 'development' || PROJECT_ENV === 'local')) {
 
-                cookieService.setCookie('access_token', access_token);
+            cookieService.setCookie('access_token', $uiRouterGlobals.params.atoken);
 
-            }
+            const accessTokenFromC = cookieService.getCookie('access_token');
+            console.log("testing.880 accessTokenFromC", accessTokenFromC, document.cookie);
+            // globalDataService.setIframeData(iframeData);
 
         }
 
@@ -330,6 +334,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
                     } else {
                         // $state.go('app.portal.home');
+                        console.log("testing.880 redirection 3");
                         window.open(homepageUrl, '_self');
                     }
 
@@ -348,13 +353,13 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         if (broadcastChannelService.isAvailable) {
             initCrossTabBroadcast();
         }
-        console.log("testing.880 init before ping");
+        if (vm.iframeMode) console.log("testing.880 init before ping");
         authorizerService.ping().then(function (data) {
-            console.log("testing.880 ping data", data);
+            if (vm.iframeMode) console.log("testing.880 ping data", data);
             // console.log('ping data', data);
 
             if (!data.is_authenticated) {
-                console.log("testing.880 ping 1");
+                if (vm.iframeMode) console.log("testing.880 ping 1");
                 vm.isAuthenticated = false;
 
                 $state.go('app.authentication');
@@ -362,17 +367,17 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             } else {
 
                 vm.isAuthenticated = true;
-                console.log("testing.880 ping 2");
+                if (vm.iframeMode) console.log("testing.880 ping 2");
                 if (data.current_master_user_id && data.base_api_url) {
 
                     baseUrlService.setMasterUserPrefix(data.base_api_url);
 
                     globalDataService.setCurrentMasterUserStatus(true);
-                    console.log("testing.880 ping 2.1");
+                    if (vm.iframeMode) console.log("testing.880 ping 2.1");
                     if (vm.isAuthenticationPage) {
-                        console.log("testing.880 ping 2.1.1");
+                        if (vm.iframeMode) console.log("testing.880 ping 2.1.1");
                         // $state.go('app.portal.home');
-                        window.open(homepageUrl, '_self');
+                        if (!vm.iframeMode) window.open(homepageUrl, '_self');
                     }
 
                 } else {
@@ -380,11 +385,11 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                     baseUrlService.setMasterUserPrefix(null);
 
                     globalDataService.setCurrentMasterUserStatus(false);
-                    console.log("testing.880 ping 2.2");
+                    if (vm.iframeMode) console.log("testing.880 ping 2.2");
                     if ($state.current.name !== 'app.profile') {
-                        console.log("testing.880 ping 2.2.1");
+                        if (vm.iframeMode) console.log("testing.880 ping 2.2.1");
                         // $state.go('app.profile', {}, {});
-                        window.open(profileUrl, '_self');
+                        if (!vm.iframeMode) window.open(profileUrl, '_self');
                     }
 
                 }
@@ -396,10 +401,10 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                 } else if (vm.isAuthenticationPage) {
                     $state.go('app.portal.home');
                 } */
-                console.log("User status: Authenticated");
-                console.log("testing.880 ping 2 before getUser");
+                if (vm.iframeMode) console.log("User status: Authenticated");
+                if (vm.iframeMode) console.log("testing.880 ping 2 before getUser");
                 getUser().then(() => {
-                    console.log("testing.880 ping 2 after getUser");
+                    if (vm.iframeMode) console.log("testing.880 ping 2 after getUser");
                     vm.readyStatus = true;
                     $scope.$apply();
 
@@ -408,7 +413,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             }
 
         }).catch(error => {
-            console.log("testing.880 ping error", error);
+            if (vm.iframeMode) console.log("testing.880 ping error", error);
             if (!error.is_authenticated) $state.go('app.authentication');
         })
 

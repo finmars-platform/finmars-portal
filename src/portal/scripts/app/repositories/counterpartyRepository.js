@@ -78,7 +78,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'co
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(counterparty)
+                body: JSON.stringify(counterparty)
             })
     };
 
@@ -97,7 +97,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'co
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(counterparty)
+                body: JSON.stringify(counterparty)
             })
     };
 
@@ -116,7 +116,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'co
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(counterparties)
+                body: JSON.stringify(counterparties)
             })
     };
 
@@ -158,7 +158,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'co
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(data)
+                body: JSON.stringify(data)
             })
             .then(function (data) {
                 return new Promise(function (resolve, reject) {
