@@ -499,6 +499,10 @@
 
                 vm.readyStatus.access = true;
 
+                // BASE_API_URL could not be set immediately, so refresh links after some xhr requests
+                vm.homepageUrl = redirectionService.getUrl('app.portal.home');
+                vm.performanceUrl = redirectionService.getUrl('app.portal.reports.performance-report');
+
                 $scope.$apply();
 
             })
