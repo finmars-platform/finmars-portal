@@ -18,7 +18,7 @@ export default function () {
 		}
 
 		const stateToUrl = {
-			'app.portal.home': baseUrl + '/' + base_api_url + '/v/',
+			'app.portal.home': baseUrl + '/' + base_api_url + '/v/home',
 			'app.profile': profileUrl,
 			'app.portal.reports.performance-report': baseUrl + '/' + base_api_url + '/v/reports/performance',
 		};
