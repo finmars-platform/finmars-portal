@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
+    "@cyclonedx/bom": "^4.0.2",
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@simonwep/pickr": "^1.7.1",
     "@superset-ui/embedded-sdk": "^0.1.0-alpha.7",
