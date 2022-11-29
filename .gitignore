@@ -3,7 +3,7 @@ logs
 *.log
 *.ppk
 *.pem
-
+bom.xml
 dist
 dist/*
 src/shell/scripts/templates.min.js
