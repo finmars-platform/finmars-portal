@@ -155,6 +155,15 @@
                         </dropdown-select>
                     </div>
 
+                    <div class="g-report-settings-row p-b-8" ng-if="vm.entityType === 'pl-report'">
+                        <div class="default-f-s">Allocation mode</div>
+
+                        <dropdown-select model="vm.reportOptions.allocation_mode"
+                                         menu-options="vm.selectOptions"
+                                         class="g-report-settings-field">
+                        </dropdown-select>
+                    </div>
+
                     <div class="g-report-settings-row p-b-8">
                         <div class="default-f-s">Offsetting Size</div>
 
