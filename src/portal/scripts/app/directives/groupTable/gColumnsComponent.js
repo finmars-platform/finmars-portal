@@ -11,14 +11,11 @@
 
     // var metaService = require('../../services/metaService');
     var evHelperService = require('../../services/entityViewerHelperService');
-    var uiService = require('../../services/uiService');
     var rvDataHelper = require('../../helpers/rv-data.helper');
-    var renderHelper = require('../../helpers/render.helper');
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
     var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
-    module.exports = function ($mdDialog, usersService, globalDataService, evRvDomManagerService) {
+    module.exports = function ($mdDialog, toastNotificationService, usersService, globalDataService, uiService, evRvDomManagerService) {
         return {
             restrict: 'AE',
             scope: {

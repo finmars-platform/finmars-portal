@@ -61,6 +61,15 @@
             }
         });
 
+        $stateProvider.state('app.portal.me-test-page', {
+            url: '/me-test-page',
+            templateUrl: 'views/me-test-page-view.html',
+            controller: 'MeTestPageController as vm',
+            params: {
+                componentId: null,
+            }
+        });
+
         $stateProvider.state('app.portal.context-menu-constructor', {
             url: '/context-menu-constructor/:id',
             templateUrl: 'views/context-menu-constructor-view.html',

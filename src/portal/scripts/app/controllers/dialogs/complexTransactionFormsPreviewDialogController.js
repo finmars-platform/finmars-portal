@@ -10,12 +10,10 @@
     var evEditorEvents = require('../../services/ev-editor/entityViewerEditorEvents');
 
     var gridHelperService = require('../../services/gridHelperService');
-    var attributeTypeService = require('../../services/attributeTypeService');
 
     var transactionTypeService = require('../../services/transactionTypeService');
     var portfolioService = require('../../services/portfolioService');
     var instrumentTypeService = require('../../services/instrumentTypeService');
-	var metaContentTypesService = require('../../services/metaContentTypesService');
 	var tooltipsService = require('../../services/tooltipsService');
 	var colorPalettesService = require('../../services/colorPalettesService');
 
@@ -27,7 +25,7 @@
 	var entityEditorHelper = require('../../helpers/entity-editor.helper');
     var transactionHelper = require('../../helpers/transaction.helper');
 
-    module.exports = function ($scope, $mdDialog, inputFormTabs, data) {
+    module.exports = function ($scope, $mdDialog, metaContentTypesService, attributeTypeService, inputFormTabs, data) {
 
         var vm = this;
 		var sharedLogicHelper = new ComplexTransactionEditorSharedLogicHelper(vm, $scope, $mdDialog);

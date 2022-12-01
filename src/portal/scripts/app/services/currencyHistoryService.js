@@ -1,9 +1,11 @@
 /**
  * Created by szhitenev on 04.05.2016.
  */
-(function () {
+import CurrencyHistoryRepository from "../repositories/currencyHistoryRepository";
 
-    var currencyHistoryRepository = require('../repositories/currencyHistoryRepository');
+export default function (cookieService, xhrService) {
+
+    var currencyHistoryRepository = new CurrencyHistoryRepository(cookieService, xhrService);
 
     var getList = function(options) {
         return currencyHistoryRepository.getList(options);
@@ -29,7 +31,7 @@
         return currencyHistoryRepository.deleteBulk(data)
     };
 
-    module.exports = {
+    return {
         getList: getList,
         getByKey: getByKey,
         create: create,
@@ -38,5 +40,4 @@
         deleteBulk: deleteBulk
     }
 
-
-}());
+};

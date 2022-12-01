@@ -17,10 +17,6 @@ import evEvents from "../../services/entityViewerEvents";
     var evEvents = require('../../services/entityViewerEvents');
     var evHelperService = require('../../services/entityViewerHelperService');
     var usersService = require('../../services/usersService'); */
-    var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
-
-    var priceHistoryService = require('../../services/priceHistoryService');
-    var currencyHistoryService = require('../../services/currencyHistoryService');
 
     var RvSharedLogicHelper = require('../../helpers/rvSharedLogicHelper');
     var EntityViewerDataService = require('../../services/entityViewerDataService');
@@ -28,17 +24,13 @@ import evEvents from "../../services/entityViewerEvents";
     var SplitPanelExchangeService = require('../../services/groupTable/exchangeWithSplitPanelService');
     var AttributeDataService = require('../../services/attributeDataService');
 
-    var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
-    var pricesCheckerService = require('../../services/reports/pricesCheckerService');
-
-    var expressionService = require('../../services/expression.service');
     // var middlewareService = require('../../services/middlewareService');
 
-    module.exports = function ($scope, $mdDialog, $stateParams, $transitions, toastNotificationService, middlewareService, globalDataService) {
+    module.exports = function ($scope, $mdDialog, $stateParams, $transitions, toastNotificationService, middlewareService, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, customFieldService, attributeTypeService, uiService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper) {
 
         var vm = this;
 
-        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService);
+        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper);
 
         vm.readyStatus = {
             attributes: false,
@@ -996,10 +988,10 @@ import evEvents from "../../services/entityViewerEvents";
 
             vm.readyStatus.layout = false; // switched to true by sharedLogicHelper.onSetLayoutEnd()
 
-            vm.entityViewerDataService = new EntityViewerDataService();
+            vm.entityViewerDataService = new EntityViewerDataService(reportHelper);
             vm.entityViewerEventService = new EntityViewerEventService();
             vm.splitPanelExchangeService = new SplitPanelExchangeService();
-            vm.attributeDataService = new AttributeDataService();
+            vm.attributeDataService = new AttributeDataService(metaContentTypesService, customFieldService, attributeTypeService, uiService);
 
             vm.entityType = $scope.$parent.vm.entityType;
 
@@ -1117,7 +1109,7 @@ import evEvents from "../../services/entityViewerEvents";
 
         vm.init = function () {
 
-            autosaveLayoutService = new AutosaveLayoutService();
+            autosaveLayoutService = new AutosaveLayoutService(metaContentTypesService, uiService, reportHelper);
 
             onUserChangeIndex = middlewareService.onMasterUserChanged(function () {
                 vm.entityViewerDataService.setLayoutChangesLossWarningState(false);

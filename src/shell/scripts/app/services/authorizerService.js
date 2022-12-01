@@ -7,7 +7,6 @@
 
 import AuthorizerRepository from '../repositories/authorizerRepository.js';
 
-import baseUrlService from "./baseUrlService";
 import {getVersions} from "../../../../portal/scripts/app/controllers/pages/updateCenterController";
 // import usersRepository from "../repositories/usersRepository";
 /** @module authorizerService */
@@ -55,8 +54,6 @@ export default function (cookieService, globalDataService, xhrService) {
     }; */
 
     const ping = function () {
-        console.trace("testing.880")
-        debugger;
         return authorizerRepository.ping();
     };
 

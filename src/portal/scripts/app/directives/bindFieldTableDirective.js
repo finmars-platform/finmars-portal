@@ -3,7 +3,6 @@
 	const metaHelper = require('../helpers/meta.helper');
 	const md5Helper = require('../helpers/md5.helper');
 
-	const instrumentService = require('../services/instrumentService');
 	const accrualCalculationModelService = require('../services/accrualCalculationModelService');
 	const instrumentPeriodicityService = require('../services/instrumentPeriodicityService');
 	const metaEventClassService = require('../services/metaEventClassService');
@@ -19,7 +18,7 @@
 
 	const evEditorEvents = require("../services/ev-editor/entityViewerEditorEvents");
 
-	module.exports = function ($mdDialog, gridTableHelperService, multitypeFieldService) {
+	module.exports = function ($mdDialog, instrumentService, gridTableHelperService, multitypeFieldService) {
 		return {
 			require: "^^bindFieldControl",
 			restrict: "E",

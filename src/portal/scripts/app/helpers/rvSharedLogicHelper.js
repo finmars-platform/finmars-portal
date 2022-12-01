@@ -4,21 +4,14 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
 (function () {
 
-    const rvDataProviderService = require('../services/rv-data-provider/rv-data-provider.service');
-    const pricesCheckerService = require('../services/reports/pricesCheckerService');
-    const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
+    // const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
 
-    const metaContentTypeService = require('../services/metaContentTypesService');
-    const expressionService = require('../services/expression.service');
     const evEvents = require('../services/entityViewerEvents');
 
-    const priceHistoryService = require('../services/priceHistoryService');
-    const currencyHistoryService = require('../services/currencyHistoryService');
 
-	const reportHelper = require('../helpers/reportHelper');
 	const rvHelper = require('../helpers/rv.helper')
 
-    module.exports = function (viewModel, $scope, $mdDialog, globalDataService) {
+    module.exports = function (viewModel, $scope, $mdDialog, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper) {
 
         const commonDialogsService = new CommonDialogsService($mdDialog);
 
@@ -56,6 +49,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                 Promise.all(promises).then(function (data) {
 
                     viewModel.readyStatus.attributes = true;
+
                     resolve(data);
 
                 }).catch(function (error) {
@@ -116,6 +110,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
         const onSetLayoutEnd = () => {
 
             viewModel.readyStatus.layout = true;
+
             rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
 
             var reportOptions = viewModel.entityViewerDataService.getReportOptions();
@@ -204,7 +199,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
         const applyDatesFromAnotherLayout = function (contentType, reportOptions, reportLayoutOptions) {
 
             const result = [];
-            const pEntityType = metaContentTypeService.findEntityByContentType(contentType);
+            const pEntityType = metaContentTypesService.findEntityByContentType(contentType);
             const dateProps = reportHelper.getDateProperties(viewModel.entityType);
             const activeLayoutRo = viewModel.entityViewerDataService.getReportOptions();
 

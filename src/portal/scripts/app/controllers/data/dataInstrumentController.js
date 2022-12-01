@@ -5,9 +5,7 @@
 
     'use strict';
 
-    var instrumentService = require('../../services/instrumentService');
-
-    module.exports = function ($scope) {
+    module.exports = function ($scope, instrumentService) {
 
         console.log('{"controller": "DataInstrumentController", status: "initialized"}');
 

@@ -12,16 +12,13 @@
 	const GridTableDataService = require('../../../services/gridTableDataService');
 	const EventService = require('../../../services/eventService');
     // const GridTableEventService = require('../../../services/gridTableEventService');
-	const transactionTypeService = require('../../../services/transactionTypeService');
 	const instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
-	const instrumentService = require('../../../services/instrumentService');
 
 	const gridTableEvents = require('../../../services/gridTableEvents');
 	// const popupEvents = require('../../../services/events/popupEvents');
 	const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
 
 	const metaHelper = require('../../../helpers/meta.helper');
-	const GridTableHelperService = require('../../../helpers/gridTableHelperService');
 
 	/* const eventObj = {
         "name": '',
@@ -38,10 +35,10 @@
         "event_class": null
     }; */
 
-    module.exports = function instrumentTypeEventSchedulesTabController($scope, $mdDialog, multitypeFieldService) {
+    module.exports = function instrumentTypeEventSchedulesTabController($scope, $mdDialog, instrumentService, transactionTypeService, multitypeFieldService, gridTableHelperService) {
 
         let vm = this;
-		const gridTableHelperService = new GridTableHelperService();
+		// const gridTableHelperService = new GridTableHelperService();
 
         vm.entity = $scope.$parent.vm.entity;
 		vm.entityType = 'instrument-type';

@@ -9,9 +9,8 @@
     const popupEvents = require("../../services/events/popupEvents");
 
     const entityResolverService = require('../../services/entityResolverService');
-    const metaContentTypeService = require('../../services/metaContentTypesService');
 
-    module.exports = function ($mdDialog) {
+    module.exports = function ($mdDialog, metaContentTypesService) {
         return {
             restrict: 'E',
             scope: {
@@ -526,7 +525,7 @@
 
                     // scope.iconData = entityIndicatorIcons[scope.entityType];
 
-                    var entitiesData = metaContentTypeService.getList();
+                    var entitiesData = metaContentTypesService.getList();
 
                     for (var i = 0; i < entitiesData.length; i++) {
 

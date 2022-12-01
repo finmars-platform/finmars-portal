@@ -5,9 +5,7 @@
 
     'use strict';
 
-    var priceHistoryService = require('../../services/priceHistoryService');
-
-    module.exports = function($scope){
+    module.exports = function($scope, priceHistoryService){
 
         console.log('{"controller": "DataPriceHistoryController", status: "initialized"}');
 

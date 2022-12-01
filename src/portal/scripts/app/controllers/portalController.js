@@ -73,7 +73,7 @@ export default function ($scope, $state, authorizerService, usersService, global
         Promise.all(promises).then(resData => {
 
             console.log('PortalController.resData', resData);
-
+            if (!vm.iframeMode) window.open(redirectionService.getUrl('app.portal.home'), '_self')
             vm.readyStatus = true;
             $scope.$apply();
 
@@ -82,7 +82,7 @@ export default function ($scope, $state, authorizerService, usersService, global
             console.log('PortalController.error', error);
 
             // $state.go('app.profile', {}, {reload: true});
-			// window.open(redirectionService.getUrl('app.profile'), '_self')
+            if (!vm.iframeMode) window.open(redirectionService.getUrl('app.profile'), '_self')
 
         })
 

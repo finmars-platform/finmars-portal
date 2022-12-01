@@ -2,7 +2,6 @@
 
     'use strict';
 
-    const evRvLayoutsHelper = require('../helpers/evRvLayoutsHelper');
     const popupEvents = require('../services/events/popupEvents');
     const dashboardEvents = require('../services/dashboard/dashboardEvents');
 
@@ -13,7 +12,7 @@
     const toastNotificationService = require('../../../../core/services/toastNotificationService');
 
 
-    module.exports = function ($mdDialog, $state, backendConfigurationImportService) {
+    module.exports = function ($mdDialog, $state, toastNotificationService, uiService, backendConfigurationImportService, evRvLayoutsHelper) {
         return {
             restrict: 'E',
             templateUrl: 'views/components/layouts-manager-view.html',

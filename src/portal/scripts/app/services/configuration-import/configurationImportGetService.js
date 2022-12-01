@@ -1,14 +1,8 @@
 /**
  * Created by szhitenev on 12.09.2016.
  */
-(function () {
 
-    'use strict';
-
-    var entityResolverService = require('../../services/entityResolverService');
-    var transactionTypeService = require('../../services/transactionTypeService');
-    var attributeTypeService = require('../../services/attributeTypeService');
-    var customFieldService = require('../../services/reports/customFieldService');
+export default function (entityResolverService, customFieldService, attributeTypeService, transactionTypeService) {
 
     var getEntityByUserCode = function (user_code, entity, cacheContainer) {
 
@@ -294,7 +288,7 @@
 
     };
 
-    module.exports = {
+    return {
         getEntityByUserCode: getEntityByUserCode,
         getEntityBySystemCode: getEntityBySystemCode,
         getAttributeTypeByUserCode: getAttributeTypeByUserCode,
@@ -303,4 +297,4 @@
         getInstrumentsTypesWithIds: getInstrumentsTypesWithIds
     }
 
-}());
+}

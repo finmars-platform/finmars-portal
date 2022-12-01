@@ -1,14 +1,9 @@
 (function () {
 
 	const metaService = require('../../../services/metaService');
-    const uiService = require('../../../services/uiService');
-	const entityResolverService = require('../../../services/entityResolverService');
     const evHelperService = require('../../../services/entityViewerHelperService');
 
-    const instrumentService = require('../../../services/instrumentService');
-    const attributeTypeService = require('../../../services/attributeTypeService');
     const instrumentTypeService = require('../../../services/instrumentTypeService');
-    const fieldResolverService = require('../../../services/fieldResolverService');
 
     const entityEditorHelper = require('../../../helpers/entity-editor.helper');
 
@@ -18,7 +13,7 @@
 
     'use strict';
 
-    module.exports = function (viewModel, $scope, $mdDialog, $bigDrawer) {
+    module.exports = function (viewModel, $scope, $mdDialog, $bigDrawer, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService) {
 
         let bigDrawerResizeButton;
 

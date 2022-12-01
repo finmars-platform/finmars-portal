@@ -4,15 +4,7 @@
  */
 (function () {
 
-    'use strict';
-
-    var metaContentTypesService = require('./metaContentTypesService');
-
-    var customFieldService = require('./reports/customFieldService');
-    var attributeTypeService = require('./attributeTypeService');
-    var uiService = require('./uiService');
-
-    module.exports = function () {
+    module.exports = function (metaContentTypesService, customFieldService, attributeTypeService, uiService) {
 
         var reportsEntityTypes = ['balance-report', 'pl-report', 'transaction-report'];
 

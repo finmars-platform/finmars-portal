@@ -5,18 +5,13 @@
 
     'use strict';
 
-    var transactionTypeService = require('../../../services/transactionTypeService');
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
     var complexImportSchemeService = require('../../../services/import/complexImportSchemeService');
     var pricingProcedureService = require('../../../services/procedures/pricingProcedureService');
     var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
     var instrumentDownloadSchemeService = require('../../../services/import/instrumentDownloadSchemeService');
 
-    var uiService = require('../../../services/uiService');
-    var metaContentTypesService = require('../../../services/metaContentTypesService');
-    var dashboardConstructorMethodsService = require('../../../services/dashboard-constructor/dashboardConstructorMethodsService');
-
-    module.exports = function dashboardConstructorButtonSetComponentDialogController($scope, $mdDialog, item, dataService, eventService) {
+    module.exports = function dashboardConstructorButtonSetComponentDialogController($scope, $mdDialog, metaContentTypesService, transactionTypeService, uiService, dashboardConstructorMethodsService, item, dataService) {
 
         var vm = this;
 

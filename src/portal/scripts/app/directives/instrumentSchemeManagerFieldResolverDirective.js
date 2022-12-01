@@ -6,10 +6,9 @@
     'use strict';
 
     var logService = require('../../../../core/services/logService');
-    var fieldResolverService = require('../services/fieldResolverService');
     var metaService = require('../services/metaService');
 
-    module.exports = function ($mdDialog) {
+    module.exports = function ($mdDialog, fieldResolverService) {
 
         return {
             scope: {

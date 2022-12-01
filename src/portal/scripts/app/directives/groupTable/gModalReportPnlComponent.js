@@ -7,13 +7,9 @@
 
     var logService = require('../../../../../core/services/logService');
 
-    var uiService = require('../../services/uiService');
-
     var evEvents = require('../../services/entityViewerEvents');
 
     var metaService = require('../../services/metaService');
-    var attributeTypeService = require('../../services/attributeTypeService');
-    var customFieldService = require('../../services/reports/customFieldService');
 
     var evDataHelper = require('../../helpers/ev-data.helper');
 

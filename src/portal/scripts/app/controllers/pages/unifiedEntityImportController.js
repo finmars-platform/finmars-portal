@@ -7,7 +7,6 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
     'use strict';
 
-    var metaContentTypesService = require('../../services/metaContentTypesService');
     var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
 
     var unifiedEntityImportService = require('../../services/import/unifiedEntityImportService');
@@ -21,7 +20,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
     var baseUrl = baseUrlService.resolve();
 
 
-    module.exports = function unifiedEntityImportController($scope, $mdDialog, usersService) {
+    module.exports = function unifiedEntityImportController($scope, $mdDialog, usersService, metaContentTypesService) {
 
         var vm = this;
 

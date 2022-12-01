@@ -5,11 +5,9 @@
 
     'use strict';
 
-    var uiService = require('../../services/uiService');
     var metaService = require('../../services/metaService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
 
-    module.exports = function ($scope, $mdDialog, options) {
+    module.exports = function ($scope, $mdDialog, metaContentTypesService, uiService, options) {
 
         console.log('selectLayoutDialogController.options', options);
 

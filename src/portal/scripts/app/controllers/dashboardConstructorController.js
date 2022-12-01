@@ -5,7 +5,6 @@
 
     'use strict';
 
-    var uiService = require('../services/uiService');
     var md5Helper = require('../helpers/md5.helper');
 	var metaHelper = require('../helpers/meta.helper');
 
@@ -16,9 +15,8 @@
 
     var dashboardConstructorEvents = require('../services/dashboard-constructor/dashboardConstructorEvents');
 
-    var toastNotificationService = require('../../../../core/services/toastNotificationService');
 
-    module.exports = function ($scope, $stateParams, $state, $mdDialog) {
+    module.exports = function ($scope, $stateParams, $state, $mdDialog, toastNotificationService, metaContentTypesService, customFieldService, attributeTypeService, uiService) {
 
         var vm = this;
 
@@ -1662,7 +1660,7 @@
             vm.dashboardConstructorDataService = new DashboardConstructorDataService();
             vm.dashboardConstructorEventService = new DashboardConstructorEventService();
 
-            vm.attributeDataService = new AttributeDataService();
+            vm.attributeDataService = new AttributeDataService(metaContentTypesService, customFieldService, attributeTypeService, uiService);
 
             vm.downloadAttributes();
 

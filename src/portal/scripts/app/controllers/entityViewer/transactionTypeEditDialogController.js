@@ -5,8 +5,6 @@
 
     'use strict';
 
-    var fieldResolverService = require('../../services/fieldResolverService');
-
     // var usersGroupService = require('../../services/usersGroupService');
     // var usersService = require('../../services/usersService');
 
@@ -15,19 +13,13 @@
 
     var gridHelperService = require('../../services/gridHelperService');
 
-    var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
-    var attributeTypeService = require('../../services/attributeTypeService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
+    // var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
     var transactionTypeGroupService = require('../../services/transaction/transactionTypeGroupService');
 
     var portfolioService = require('../../services/portfolioService');
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var referenceTableService = require('../../services/referenceTablesService');
-    var transactionTypeService = require('../../services/transactionTypeService');
     var complexTransactionService = require('../../services/transaction/complexTransactionService');
-
-    var uiService = require('../../services/uiService');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     var EventService = require("../../services/eventService");
 
@@ -39,11 +31,11 @@
     var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
     var metaHelper = require('../../helpers/meta.helper');
 
-    module.exports = function transactionTypeEditDialogController($scope, $mdDialog, $bigDrawer, $state, usersService, usersGroupService, entityType, entityId, data) {
+    module.exports = function transactionTypeEditDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, usersService, usersGroupService, ecosystemDefaultService, metaContentTypesService, transactionTypeService, attributeTypeService, uiService, fieldResolverService, gridTableHelperService, entityType, entityId, data) {
 
         var vm = this;
 
-        var sharedLogic = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog);
+        var sharedLogic = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog, ecosystemDefaultService, uiService, fieldResolverService, gridTableHelperService);
 
         vm.entityType = entityType;
         vm.entityId = entityId;

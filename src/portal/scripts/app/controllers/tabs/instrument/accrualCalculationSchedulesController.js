@@ -7,11 +7,9 @@
 
     var metaHelper = require('../../../helpers/meta.helper');
 
-	var instrumentService = require('../../../services/instrumentService');
     var accrualCalculationModelService = require('../../../services/accrualCalculationModelService');
     var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
 
-    var fieldResolverService = require('../../../services/fieldResolverService');
     var instrumentEventScheduleService = require('../../../services/instrument/instrumentEventScheduleService');
 
     var GridTableDataService = require('../../../services/gridTableDataService');
@@ -20,7 +18,7 @@
 
 	var evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
 
-    module.exports = function accrualCalculationSchedulesController($scope, $mdDialog, gridTableHelperService, multitypeFieldService) {
+    module.exports = function accrualCalculationSchedulesController($scope, $mdDialog, instrumentService, gridTableHelperService, multitypeFieldService) {
 
         var vm = this;
 
