@@ -10,9 +10,7 @@
     const popupEvents = require('../../../services/events/popupEvents');
 
     const metaHelper = require('../../../helpers/meta.helper');
-    const evRvLayoutsHelper = require('../../../helpers/evRvLayoutsHelper');
 
-    const uiService = require('../../../services/uiService');
     const downloadFileHelper = require('../../../helpers/downloadFileHelper');
 
     const convertReportHelper = require('../../../helpers/converters/convertReportHelper');
@@ -22,7 +20,7 @@
 
     const EventService = require('../../../services/eventService');
 
-    module.exports = function ($mdDialog, gFiltersHelper) {
+    module.exports = function ($mdDialog, uiService, evRvLayoutsHelper, gFiltersHelper) {
         return {
             restrict: 'E',
             scope: {

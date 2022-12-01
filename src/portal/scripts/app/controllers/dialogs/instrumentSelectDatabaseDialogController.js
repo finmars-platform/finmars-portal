@@ -5,13 +5,11 @@
 
     'use strict';
 
-    var instrumentService = require('../../services/instrumentService');
     var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
     var instrumentDatabaseSearchService = require('../../services/instrument/instrumentDatabaseSearchService');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, toastNotificationService, instrumentService, data) {
 
         var vm = this;
 

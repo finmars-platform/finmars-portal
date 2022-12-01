@@ -1,12 +1,6 @@
-(function () {
+var dashboardEvents = require('../services/dashboard/dashboardEvents');
 
-    'use strict';
-
-    var dashboardEvents = require('../services/dashboard/dashboardEvents');
-
-    const uiService = require('../services/uiService');
-
-    const toastNotificationService = require('../../../../core/services/toastNotificationService');
+export default function (uiService, toastNotificationService) {
 
     let componentsForLinking = [
         'report_viewer', 'report_viewer_split_panel', 'report_viewer_matrix',
@@ -73,7 +67,7 @@
 
             var layoutObj = {
                 id: layout.id,
-				user_code: layout.user_code,
+                user_code: layout.user_code,
                 name: layout.name,
                 content: []
             };
@@ -92,7 +86,7 @@
         return componentsForLinking;
     };
 
-    const saveComponentSettingsFromDashboard = function (dashboardDataService, componentData, showNotification) {
+    const saveComponentSettingsFromDashboard = function (dashboardDataService, uiService, componentData, showNotification) {
 
         var listLayout = dashboardDataService.getListLayout();
 
@@ -174,7 +168,7 @@
         scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.TOGGLE_FILTER_BLOCK);
     };
 
-    module.exports = {
+    return {
         getLinkingToFilters: getLinkingToFilters,
         getDataForLayoutSelectorWithFilters: getDataForLayoutSelectorWithFilters,
         getComponentsForLinking: getComponentsForLinking,
@@ -185,4 +179,4 @@
         toggleFilterBlock: toggleFilterBlock
     };
 
-}());
+}

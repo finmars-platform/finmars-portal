@@ -11,9 +11,7 @@
     var logService = require('../../../../../../core/services/logService');
     var pricingPolicyService = require('../../../services/pricingPolicyService');
 
-    var fieldResolverService = require('../../../services/fieldResolverService');
-
-    module.exports = function ($scope) {
+    module.exports = function ($scope, fieldResolverService) {
 
         logService.controller('ManualPricingFormulasTabController', 'initialized');
 

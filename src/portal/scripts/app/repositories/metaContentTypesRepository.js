@@ -1,12 +1,6 @@
-/**
- * Created by szhitenev on 04.05.2016.
- */
-(function () {
+import baseUrlService from "../../../../shell/scripts/app/services/baseUrlService";
 
-    "use strict";
-
-    var baseUrlService = require('../services/baseUrlService');
-    var xhrService = require('../../../../core/services/xhrService');
+export default function (cookieService, xhrService) {
 
     var baseUrl = baseUrlService.resolve();
 
@@ -675,13 +669,11 @@
 
     };
 
-    module.exports = {
+    return {
         getListForUi: getListForUi,
         getList: getList,
         getListForTransactionTypeInputs: getListForTransactionTypeInputs,
         getContentTypeList: getContentTypeList,
         getListForSimpleEntityImport: getListForSimpleEntityImport
     }
-
-
-}());
+}

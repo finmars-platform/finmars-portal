@@ -9,7 +9,35 @@ require('../../profile/scripts/main.js'); */
 /*import middlewareService from "../../shell/scripts/app/services/middlewareService";
 import authorizerService from '../../shell/scripts/app/services/authorizerService.js';*/
 
-// import uiService from "./app/services/uiService.js";
+import uiService from "./app/services/uiServiceNew";
+import metaContentTypesService from "./app/services/metaContentTypesService";
+import customFieldService from "./app/services/reports/customFieldService";
+import attributeTypeService from "./app/services/attributeTypeServiceNew";
+import metaRestrictionsService from "./app/services/metaRestrictionsService";
+import ecosystemDefaultService from "./app/services/ecosystemDefaultService";
+
+import transactionTypeService from "./app/services/transactionTypeServiceNew";
+import instrumentService from "./app/services/instrumentService";
+import reportService from "./app/services/reportService";
+import priceHistoryService from "./app/services/priceHistoryService";
+import currencyHistoryService from "./app/services/currencyHistoryService";
+import entityResolverService from "./app/services/entityResolverServiceNew";
+import fieldResolverService from "./app/services/fieldResolverService";
+import pricesCheckerService from "./app/services/reports/pricesCheckerService";
+import expressionService from "./app/services/expression.serviceNew";
+import dashboardConstructorMethodsService
+	from "./app/services/dashboard-constructor/dashboardConstructorMethodsService";
+
+import configurationImportGetService from "./app/services/configuration-import/configurationImportGetService";
+import configurationImportMapService from "./app/services/configuration-import/configurationImportMapService";
+import configurationImportSyncService from "./app/services/configuration-import/configurationImportSyncService";
+import configurationImportService from "./app/services/configuration-import/configurationImportService";
+
+import dashboardHelper from "./app/helpers/dashboard.helper.js";
+import evRvLayoutsHelper from "./app/helpers/evRvLayoutsHelper";
+import reportHelper from "./app/helpers/reportHelper";
+import rvDataProviderService from "./app/services/rv-data-provider/rv-data-provider.service";
+import reconDataProviderService from "./app/services/recon-data-provider/recon-data-provider.service";
 
 import portalController from './app/controllers/portalController.js';
 import enterUserCodeDialogController from "./app/controllers/dialogs/enterUserCodeDialogController.js";
@@ -86,15 +114,47 @@ export default (function () {
 
 	/* portal.service('authorizerService', [authorizerService]);
 	portal.service('middlewareService', [middlewareService]); */
+	portal.service('ecosystemDefaultService', ['cookieService', 'xhrService', ecosystemDefaultService]);
+	portal.service('uiService', ['cookieService', 'xhrService', 'ecosystemDefaultService', 'metaContentTypesService', uiService]);
+	portal.service('metaContentTypesService', ['cookieService', 'xhrService', metaContentTypesService]);
+	portal.service('customFieldService', ['cookieService', 'xhrService', customFieldService]);
+	portal.service('metaRestrictionsService', [metaRestrictionsService]);
+	portal.service('attributeTypeService', ['cookieService', 'xhrService', 'metaRestrictionsService', attributeTypeService]);
+
+	portal.service('transactionTypeService', ['cookieService', 'xhrService', transactionTypeService]);
+	portal.service('instrumentService', ['cookieService', 'xhrService', instrumentService]);
+	portal.service('reportService', ['cookieService', 'xhrService', reportService]);
+	portal.service('priceHistoryService', ['cookieService', 'xhrService', priceHistoryService]);
+	portal.service('currencyHistoryService', ['cookieService', 'xhrService', currencyHistoryService]);
+	portal.service('pricesCheckerService', ['cookieService', 'xhrService', pricesCheckerService]);
+	portal.service('entityResolverService', ['instrumentService', 'transactionTypeService', 'priceHistoryService', 'currencyHistoryService', 'reportService', entityResolverService]);
+	portal.service('fieldResolverService', ['instrumentService', 'transactionTypeService', 'metaContentTypesService', fieldResolverService]);
+	portal.service('expressionService', ['cookieService', 'xhrService', expressionService]);
+	portal.service('dashboardConstructorMethodsService', ['uiService', dashboardConstructorMethodsService]);
+
+	//<editor-fold desc="Services for import and export">
+	portal.service('configurationImportGetService', ['entityResolverService', 'customFieldService', 'attributeTypeService', 'transactionTypeService', configurationImportGetService]);
+	portal.service('configurationImportMapService', ['metaContentTypesService', 'attributeTypeService', 'uiService', 'configurationImportGetService', configurationImportMapService]);
+	portal.service('configurationImportSyncService', ['metaContentTypesService', 'configurationImportGetService', 'configurationImportMapService', configurationImportSyncService]);
+	portal.service('configurationImportService', ['metaContentTypesService', 'attributeTypeService', 'customFieldService', 'entityResolverService', 'uiService', 'configurationImportGetService', 'configurationImportMapService', 'configurationImportSyncService', configurationImportService]);
+	portal.service('importSchemesMethodsService', ['$mdDialog', require('./app/services/import/importSchemesMethodsService')]);
+	//</editor-fold desc="Services for import and export">
 
 	// portal.service('uiService', ['localStorageService', uiService]);
 	portal.service('multitypeFieldService', [require('./app/services/multitypeFieldService')]);
-	portal.service('importSchemesMethodsService', ['$mdDialog', require('./app/services/import/importSchemesMethodsService')]);
 	portal.service('evRvDomManagerService', [require('./app/services/evRvDomManagerService')]);
 	portal.service('entityDataConstructorService', [require('./app/services/entity-data-constructor/entityDataConstructorService')]);
 
 	portal.service('gFiltersHelper', [require('./app/helpers/gFiltersHelper')]);
-	portal.service('gridTableHelperService', [require('./app/helpers/gridTableHelperService')]);
+	portal.service('gridTableHelperService', ['multitypeFieldService', require('./app/helpers/gridTableHelperService')]);
+
+	//<editor-fold desc="Helpers">
+	portal.service('dashboardHelper', [dashboardHelper]);
+	portal.service('evRvLayoutsHelper', ['toastNotificationService', 'uiService', evRvLayoutsHelper]);
+	portal.service('reportHelper', ['expressionService', reportHelper]);
+	portal.service('rvDataProviderService', ['entityResolverService', 'pricesCheckerService', 'reportHelper', rvDataProviderService]);
+	portal.service('reconDataProviderService', ['entityResolverService', 'reportHelper', reconDataProviderService]);
+	//</editor-fold desc="Helpers">
 
 	portal.controller('MeTestPageController', ['$scope', meTestPageController]);
 
@@ -103,26 +163,26 @@ export default (function () {
 
 	portal.controller('DashboardLayoutManagerController', ['$scope', '$mdDialog', require('./app/controllers/dashboardLayoutManagerController')]);
 
-	portal.controller('DashboardConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/dashboardConstructorController')]);
+	portal.controller('DashboardConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', 'toastNotificationService', 'metaContentTypesService', 'customFieldService', 'attributeTypeService', 'uiService', require('./app/controllers/dashboardConstructorController')]);
 	portal.controller('DashboardConstructorSocketSettingsDialogController', ['$scope', '$mdDialog', 'dashboardConstructorDataService', 'dashboardConstructorEventService', 'attributeDataService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorSocketSettingsDialogController')]);
 
 	// DEPRECATED SINCE 01.2021
 	portal.controller('DashboardConstructorAccordionEditorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorAccordionEditorDialogController')]);
 
 	portal.controller('DashboardConstructorAccordionComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorAccordionComponentDialogController')]);
-	portal.controller('DashboardConstructorControlComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorControlComponentDialogController')]);
-	portal.controller('DashboardConstructorButtonSetComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorButtonSetComponentDialogController')]);
-	portal.controller('DashboardConstructorSupersetDashboardComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorSupersetDashboardComponentDialogController')]);
+	portal.controller('DashboardConstructorControlComponentDialogController', ['$scope', '$mdDialog', 'uiService', 'dashboardConstructorMethodsService', 'reportHelper', 'dashboardHelper', 'entityResolverService', 'item', 'dataService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorControlComponentDialogController')]);
+	portal.controller('DashboardConstructorButtonSetComponentDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'transactionTypeService', 'uiService', 'dashboardConstructorMethodsService', 'item', 'dataService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorButtonSetComponentDialogController')]);
+	portal.controller('DashboardConstructorSupersetDashboardComponentDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'uiService', 'dashboardConstructorMethodsService', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorSupersetDashboardComponentDialogController')]);
 	portal.controller('DashboardConstructorInputFormComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorInputFormComponentDialogController')]);
-	portal.controller('DashboardConstructorFinmarsWidgetComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorFinmarsWidgetComponentDialogController')]);
+	portal.controller('DashboardConstructorFinmarsWidgetComponentDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'uiService', 'dashboardConstructorMethodsService', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorFinmarsWidgetComponentDialogController')]);
 
 
-	portal.controller('DashboardConstructorReportViewerComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerComponentDialogController')]);
-	portal.controller('DashboardConstructorReportViewerSplitPanelComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerSplitPanelComponentDialogController')]);
-	portal.controller('DashboardConstructorReportViewerGrandTotalComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerGrandTotalComponentDialogController')]);
-	portal.controller('DashboardConstructorReportViewerMatrixComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerMatrixComponentDialogController')]);
-	portal.controller('DashboardConstructorReportViewerTableChartComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerTableChartComponentDialogController')]);
-	portal.controller('DashboardConstructorReportViewerChartsComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', 'attributeDataService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerChartsComponentDialogController')]);
+	portal.controller('DashboardConstructorReportViewerComponentDialogController', ['$scope', '$mdDialog', 'uiService', 'dashboardConstructorMethodsService', 'dashboardHelper', 'evRvLayoutsHelper', 'item', 'dataService', 'eventService', 'attributeDataService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerComponentDialogController')]);
+	portal.controller('DashboardConstructorReportViewerSplitPanelComponentDialogController', ['$scope', '$mdDialog', 'uiService', 'dashboardHelper', 'item', 'dataService', 'eventService', 'attributeDataService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerSplitPanelComponentDialogController')]);
+	portal.controller('DashboardConstructorReportViewerGrandTotalComponentDialogController', ['$scope', '$mdDialog', 'uiService', 'dashboardConstructorMethodsService', 'dashboardHelper', 'item', 'dataService', 'eventService', 'attributeDataService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerGrandTotalComponentDialogController')]);
+	portal.controller('DashboardConstructorReportViewerMatrixComponentDialogController', ['$scope', '$mdDialog', 'uiService', 'dashboardConstructorMethodsService', 'dashboardHelper', 'item', 'dataService', 'eventService', 'attributeDataService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerMatrixComponentDialogController')]);
+	portal.controller('DashboardConstructorReportViewerTableChartComponentDialogController', ['$scope', '$mdDialog', 'uiService', 'dashboardConstructorMethodsService', 'dashboardHelper', 'item', 'dataService', 'eventService', 'attributeDataService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerTableChartComponentDialogController')]);
+	portal.controller('DashboardConstructorReportViewerChartsComponentDialogController', ['$scope', '$mdDialog', 'uiService', 'dashboardConstructorMethodsService', 'dashboardHelper', 'item', 'dataService', 'eventService', 'attributeDataService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerChartsComponentDialogController')]);
 
 	portal.controller('DashboardConstructorEntityViewerComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorEntityViewerComponentDialogController')]);
 	portal.controller('DashboardConstructorEntityViewerSplitPanelComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorEntityViewerSplitPanelComponentDialogController')]);
@@ -141,20 +201,20 @@ export default (function () {
 
 	portal.directive('dashboardAccordion', ['$mdDialog', '$state', require('./app/directives/dashboard/dashboardAccordionDirective')]);
 	portal.directive('dashboardButtonSet', ['$mdDialog', '$state', require('./app/directives/dashboard/dashboardButtonSetDirective')]);
-	portal.directive('dashboardControl', [require('./app/directives/dashboard/dashboardControlDirective')]);
+	portal.directive('dashboardControl', ['metaContentTypesService', 'entityResolverService', 'uiService', 'reportHelper', require('./app/directives/dashboard/dashboardControlDirective')]);
 	portal.directive('dashboardEntityViewer', [require('./app/directives/dashboard/dashboardEntityViewerDirective')]);
 	portal.directive('dashboardEntityViewerSplitPanel', [require('./app/directives/dashboard/dashboardEntityViewerSplitPanelDirective')]);
 	portal.directive('dashboardInputForm', [require('./app/directives/dashboard/dashboardInputFormDirective')]);
-	portal.directive('dashboardReportViewer', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerDirective')]);
+	portal.directive('dashboardReportViewer', ['$mdDialog', 'dashboardHelper', require('./app/directives/dashboard/dashboardReportViewerDirective')]);
 	portal.directive('dashboardReportViewerSplitPanel', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerSplitPanelDirective')]);
 	portal.directive('dashboardReportViewerGrandTotal', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerGrandTotalDirective')]);
-	portal.directive('dashboardReportViewerMatrix', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerMatrixDirective')]);
-	portal.directive('dashboardReportViewerTableChart', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerTableChartDirective')]);
-	portal.directive('dashboardReportViewerCharts', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerChartsDirective')]);
+	portal.directive('dashboardReportViewerMatrix', ['$mdDialog', 'uiService', 'dashboardHelper', require('./app/directives/dashboard/dashboardReportViewerMatrixDirective')]);
+	portal.directive('dashboardReportViewerTableChart', ['$mdDialog', 'uiService', 'dashboardHelper', require('./app/directives/dashboard/dashboardReportViewerTableChartDirective')]);
+	portal.directive('dashboardReportViewerCharts', ['$mdDialog', 'dashboardHelper', require('./app/directives/dashboard/dashboardReportViewerChartsDirective')]);
 	portal.directive('dashboardSupersetDashboard', ['$mdDialog', '$state', require('./app/directives/dashboard/dashboardSupersetDashboardDirective')]);
 	portal.directive('dashboardFinmarsWidget', ['$mdDialog', '$state',  'globalDataService', require('./app/directives/dashboard/dashboardFinmarsWidgetDirective')]);
 
-	portal.controller('DashboardReportViewerController', ['$scope', '$mdDialog', 'toastNotificationService', 'usersService', 'globalDataService', 'gFiltersHelper', require('./app/controllers/entityViewer/dashboardReportViewerController')]);
+	portal.controller('DashboardReportViewerController', ['$scope', '$mdDialog', 'toastNotificationService', 'usersService', 'globalDataService', 'priceHistoryService', 'currencyHistoryService', 'metaContentTypesService', 'customFieldService', 'attributeTypeService', 'uiService', 'pricesCheckerService', 'expressionService', 'rvDataProviderService', 'reportHelper', 'gFiltersHelper', 'dashboardHelper', require('./app/controllers/entityViewer/dashboardReportViewerController')]);
 
 	portal.directive('reportViewerMatrix', ['$mdDialog', require('./app/directives/reportViewerMatrixDirective')]);
 	portal.directive('reportViewerTableChart', ['$mdDialog', require('./app/directives/reportViewerTableChartDirective')]);
@@ -173,17 +233,17 @@ export default (function () {
 	// portal.controller('ShellController', ['$scope', '$state', '$stateParams', '$rootScope', '$mdDialog', '$transitions', require('./app/controllers/shellController')]);
 	portal.controller('PortalController', ['$scope', '$state',  'authorizerService', 'usersService', 'globalDataService', 'redirectionService', portalController]);
 	portal.controller('BookmarksController', ['$scope', '$mdDialog', '$state', 'toastNotificationService', require('./app/controllers/bookmarksController')]);
-	portal.controller('SideNavController', ['$scope', '$mdDialog', '$transitions', 'usersService', 'globalDataService', 'redirectionService', require('./app/controllers/sideNavController')]);
+	portal.controller('SideNavController', ['$scope', '$mdDialog', '$transitions', 'usersService', 'globalDataService', 'redirectionService', 'uiService', require('./app/controllers/sideNavController')]);
 	portal.controller('HomeController', ['$scope', '$state', '$mdDialog', 'authorizerService', 'usersService', 'globalDataService', 'systemMessageService', 'redirectionService', require('./app/controllers/homeController')]);
 	// portal.controller('SetupController', ['$scope', '$state', 'usersService', require('./app/controllers/setupController')]);
 	portal.controller('NotFoundPageController', ['$scope', require('./app/controllers/notFoundPageController')]);
 	portal.controller(
 		'EntityDataConstructorDialogController',
-		['$scope', '$stateParams', '$state', '$mdDialog', 'entityDataConstructorService', 'data',
+		['$scope', '$stateParams', '$state', '$mdDialog', 'toastNotificationService', 'metaContentTypesService', 'attributeTypeService', 'uiService', 'entityDataConstructorService', 'data',
 		require('./app/controllers/dialogs/entityDataConstructorDialogController')]
 	);
-	portal.controller('EntityViewerFormsPreviewDialogController', ['$scope', '$mdDialog', 'inputFormTabs', 'data', require('./app/controllers/dialogs/entityViewerFormsPreviewDialogController')]);
-	portal.controller('ComplexTransactionFormsPreviewDialogController', ['$scope', '$mdDialog', 'inputFormTabs', 'data', require('./app/controllers/dialogs/complexTransactionFormsPreviewDialogController')]);
+	portal.controller('EntityViewerFormsPreviewDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'instrumentService', 'entityResolverService', 'fieldResolverService', 'attributeTypeService', 'uiService', 'inputFormTabs', 'data', require('./app/controllers/dialogs/entityViewerFormsPreviewDialogController')]);
+	portal.controller('ComplexTransactionFormsPreviewDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'attributeTypeService', 'inputFormTabs', 'data', require('./app/controllers/dialogs/complexTransactionFormsPreviewDialogController')]);
 	portal.controller('EvFormInstrumentTableSettingsDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'data', require('./app/controllers/dialogs/evFormInstrumentTableSettingsDialogController')]);
 	portal.controller('ExpressionEditorDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/expressionEditorDialogController')]);
 	portal.controller('AceEditorDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/aceEditorDialogController')]);
@@ -191,7 +251,7 @@ export default (function () {
 	portal.controller('EntityAsJsonEditorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/entityAsJsonEditorDialogController')]);
 	portal.controller('ConfigurationPackageDialogController', ['$scope', '$mdDialog', 'backendConfigurationImportService', 'data', require('./app/controllers/dialogs/configurationPackageDialogController')]);
 	portal.controller('UseFromAboveDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService', require('./app/controllers/dialogs/useFromAboveDialogController')]);
-	portal.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentSelectDialogController')]);
+	portal.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', 'instrumentService', require('./app/controllers/dialogs/instrumentSelectDialogController')]);
 	portal.controller('EntitySearchDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/entitySearchDialogController')]);
 	portal.controller('TwoFieldsMultiselectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/twoFieldsMultiselectDialogController')]);
 	portal.controller('TableAttributeSelectorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/tableAttributeSelectorDialogController')]);
@@ -204,9 +264,9 @@ export default (function () {
 	portal.controller('SaveLayoutDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/saveLayoutDialogController')]);
 	portal.controller('RenameFieldDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameFieldDialogController')]);
 	portal.controller('ResizeFieldDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/resizeFieldDialogController')]);
-	portal.controller('SaveConfigurationExportLayoutDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/saveConfigurationExportLayoutDialogController')]);
+	portal.controller('SaveConfigurationExportLayoutDialogController', ['$scope', '$mdDialog', 'uiService', 'data', require('./app/controllers/dialogs/saveConfigurationExportLayoutDialogController')]);
 	portal.controller('ActionsNotificationsSettingsDialogController', ['$scope', '$mdDialog', 'usersService', 'globalDataService', require('./app/controllers/dialogs/actionsNotificationsSettingsDialogController')]);
-	portal.controller('ExportPdfDialogController', ['$scope', '$mdDialog', 'globalDataService', 'evDataService', 'evEventService', 'data', require('./app/controllers/dialogs/exportPdfDialogController')]);
+	portal.controller('ExportPdfDialogController', ['$scope', '$mdDialog', 'globalDataService', 'uiService', 'reportHelper', 'evDataService', 'evEventService', 'data', require('./app/controllers/dialogs/exportPdfDialogController')]);
 	portal.controller('NotificationsController', ['$scope', '$state', '$stateParams', require('./app/controllers/system/notificationsController')]);
 	portal.controller('HeaderNotificationsDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/headerNotificationsDialogController')]);
 	portal.controller('HelpDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/helpDialogController')]);
@@ -216,25 +276,25 @@ export default (function () {
 	portal.controller('TextEditorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/textEditorDialogController')]);
 	portal.controller('PortfolioRegisterDialogController', ['$scope', '$mdDialog', 'data', portfolioRegisterDialogController]);
 
-	portal.controller('InputTemplateLayoutViewerDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/inputTemplateLayoutViewerDialogController')]);
-	portal.controller('TemplateLayoutManagerController', ['$scope', '$mdDialog', require('./app/controllers/pages/templateLayoutManagerController')]);
+	portal.controller('InputTemplateLayoutViewerDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'data', require('./app/controllers/dialogs/inputTemplateLayoutViewerDialogController')]);
+	portal.controller('TemplateLayoutManagerController', ['$scope', '$mdDialog', 'ecosystemDefaultService', 'metaContentTypesService', 'uiService', 'fieldResolverService', 'gridTableHelperService', require('./app/controllers/pages/templateLayoutManagerController')]);
 	portal.controller('NewLayoutDialogController', ['$scope', '$mdDialog', 'commonDialogsService', 'data', require('./app/controllers/dialogs/newLayoutDialogController')]);
 	portal.controller('RenameDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameDialogController')]);
 	portal.controller('SaveAsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/saveAsDialogController')]);
 	portal.controller('LoaderDialogController', ['$scope', '$customDialog', 'data', require('./app/controllers/dialogs/loaderDialogController')]);
 
 	portal.controller('ContextMenuLayoutManagerController', ['$scope', '$mdDialog', require('./app/controllers/contextMenuLayoutManagerController')]);
-	portal.controller('ContextMenuConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', require('./app/controllers/contextMenuConstructorController')]);
+	portal.controller('ContextMenuConstructorController', ['$scope', '$stateParams', '$state', '$mdDialog', 'toastNotificationService', 'metaContentTypesService', 'uiService', require('./app/controllers/contextMenuConstructorController')]);
 	portal.controller('ContextMenuOptionSettingsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/contextMenuOptionSettingsDialogController')]);
 	portal.directive('contextMenuConstructorOption', [require('./app/directives/contextMenuConstructorOptionDirective')]);
 
 
-	portal.controller('InstrumentSelectDatabaseDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/instrumentSelectDatabaseDialogController')]);
+	portal.controller('InstrumentSelectDatabaseDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'instrumentService', 'data', require('./app/controllers/dialogs/instrumentSelectDatabaseDialogController')]);
 	portal.controller('UnifiedSelectDatabaseDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/unifiedSelectDatabaseDialogController')]);
 
 
 
-	portal.controller('EcosystemDefaultSettingsController', ['$scope', '$mdDialog', 'usersService', require('./app/controllers/pages/ecosystemDefaultSettingsController')]);
+	portal.controller('EcosystemDefaultSettingsController', ['$scope', '$mdDialog', 'toastNotificationService', 'usersService', 'ecosystemDefaultService', 'fieldResolverService', require('./app/controllers/pages/ecosystemDefaultSettingsController')]);
 
 	// Dialog selectors
 	portal.controller('ItemsSelectorWithGroupsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/selectors/itemsSelectorWithGroupsDialogController')]);
@@ -246,7 +306,7 @@ export default (function () {
 	portal.controller('ReportViewerMatrixSettingsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/reportViewerMatrixSettingsDialogController')]);
 	portal.controller('EnterUserCodeDialogController', ['$scope', '$mdDialog', 'data', enterUserCodeDialogController]);
 
-	portal.controller('FillPriceManuallyInstrumentDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/fillPriceManuallyInstrumentDialogController')]);
+	portal.controller('FillPriceManuallyInstrumentDialogController', ['$scope', '$mdDialog', 'instrumentService', 'priceHistoryService', 'currencyHistoryService', 'data', require('./app/controllers/dialogs/fillPriceManuallyInstrumentDialogController')]);
 	portal.controller('FloatCustomFieldConstructorController', ['$scope', require('./app/controllers/floatCustomFieldConstructorController')]);
 	portal.controller('DateCustomFieldConstructorController', ['$scope', require('./app/controllers/dateCustomFieldConstructorController')]);
 	portal.controller('AuditController', ['$scope', require('./app/controllers/system/auditController')]);
@@ -283,16 +343,16 @@ export default (function () {
 
 	// Instrument Download
 
-	portal.controller('InstrumentDownloadDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/instrument-download/instrumentDownloadDialogController')]);
+	portal.controller('InstrumentDownloadDialogController', ['$scope', '$mdDialog', 'instrumentService', 'data', require('./app/controllers/dialogs/instrument-download/instrumentDownloadDialogController')]);
 	portal.controller('InstrumentDownloadSchemeAddDialogController', ['$scope', '$mdDialog', 'importSchemesMethodsService', require('./app/controllers/dialogs/instrument-download/instrumentDownloadSchemeAddDialogController')]);
 	portal.controller('InstrumentDownloadSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', 'importSchemesMethodsService', require('./app/controllers/dialogs/instrument-download/instrumentDownloadSchemeEditDialogController')]);
 
 	// Simple Entity Import
 
-	portal.controller('SimpleEntityImportDialogController', ['$scope', '$mdDialog', 'data', 'usersService', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportDialogController')]);
+	portal.controller('SimpleEntityImportDialogController', ['$scope', '$mdDialog', 'usersService', 'metaContentTypesService', 'data', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportDialogController')]);
 	portal.controller('SimpleEntityImportErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportErrorsDialogController')]);
-	portal.controller('SimpleEntityImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', 'importSchemesMethodsService', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeEditDialogController')]);
-	portal.controller('SimpleEntityImportSchemeCreateDialogController', ['$scope', '$mdDialog', 'data', 'importSchemesMethodsService', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeCreateDialogController')]);
+	portal.controller('SimpleEntityImportSchemeEditDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'attributeTypeService', 'schemeId', 'importSchemesMethodsService', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeEditDialogController')]);
+	portal.controller('SimpleEntityImportSchemeCreateDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'metaContentTypesService', 'attributeTypeService', 'data', 'importSchemesMethodsService', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeCreateDialogController')]);
 
 	// Complex Import
 
@@ -304,9 +364,9 @@ export default (function () {
 
 	// Transaction Import
 
-	portal.controller('TransactionImportSchemeAddDialogController', ['$scope', '$mdDialog', 'data', 'importSchemesMethodsService', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeAddDialogController')]);
+	portal.controller('TransactionImportSchemeAddDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'ecosystemDefaultService', 'transactionTypeService', 'data', 'importSchemesMethodsService', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeAddDialogController')]);
 	portal.controller('TransactionImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', 'importSchemesMethodsService', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeEditDialogController')]);
-	portal.controller('TransactionImportSchemeInputsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeInputsDialogController')]);
+	portal.controller('TransactionImportSchemeInputsDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeInputsDialogController')]);
 	portal.controller('TransactionImportDialogController', ['$scope', '$mdDialog', 'data', 'usersService', require('./app/controllers/dialogs/transaction-import/transactionImportDialogController')]);
 	portal.controller('TransactionImportErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportErrorsDialogController')]);
 	portal.controller('TransactionImportSchemeScenarioFieldsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeScenarioFieldsDialogController')]);
@@ -346,12 +406,15 @@ export default (function () {
 
 	// Entity Viewer & Report Viewer
 
-	portal.controller('EntityViewerController', ['$scope', '$mdDialog', '$state', '$transitions', '$urlService', '$customDialog', '$bigDrawer', 'middlewareService', 'globalDataService', 'toastNotificationService', require('./app/controllers/entityViewer/entityViewerController')]);
-	portal.controller('ReportViewerController', ['$scope', '$mdDialog', '$stateParams', '$transitions', 'toastNotificationService', 'middlewareService', 'globalDataService', require('./app/controllers/entityViewer/reportViewerController')]);
-	portal.controller('SplitPanelReportViewerController', ['$scope', '$mdDialog', '$transitions', 'globalDataService', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/splitPanelReportViewerController')]);
-	portal.controller('ReconciliationViewerController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/reconciliationViewerController')]);
-	portal.controller('EntityViewerAddDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'authorizerService', 'usersService', 'usersGroupService', 'globalDataService', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/entityViewerAddDialogController')]);
-	portal.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'authorizerService', 'usersService', 'usersGroupService', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
+	portal.controller('EntityViewerController', ['$scope', '$mdDialog', '$state', '$transitions', '$urlService', '$customDialog', '$bigDrawer', 'middlewareService', 'globalDataService', 'toastNotificationService', 'metaContentTypesService', 'uiService', require('./app/controllers/entityViewer/entityViewerController')]);
+	portal.controller('ReportViewerController', ['$scope', '$mdDialog', '$stateParams', '$transitions', 'toastNotificationService', 'middlewareService', 'globalDataService', 'priceHistoryService', 'currencyHistoryService', 'metaContentTypesService', 'customFieldService', 'attributeTypeService', 'uiService', 'pricesCheckerService', 'expressionService', 'rvDataProviderService', 'reportHelper', require('./app/controllers/entityViewer/reportViewerController')]);
+	portal.controller('SplitPanelReportViewerController', ['$scope', '$mdDialog', '$transitions', 'globalDataService', 'priceHistoryService', 'currencyHistoryService', 'metaContentTypesService', 'customFieldService', 'attributeTypeService', 'rvDataProviderService', 'uiService', 'pricesCheckerService', 'expressionService', 'reportHelper', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/splitPanelReportViewerController')]);
+	portal.controller('ReconciliationViewerController', ['$scope', '$mdDialog', '$transitions', 'metaContentTypesService', 'customFieldService', 'attributeTypeService', 'uiService', 'reconDataProviderService', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'splitPanelExchangeService', require('./app/controllers/entityViewer/reconciliationViewerController')]);
+	portal.controller(
+		'EntityViewerAddDialogController',
+		['$scope', '$mdDialog', '$bigDrawer', '$state', 'toastNotificationService', 'authorizerService', 'usersService', 'usersGroupService', 'globalDataService', 'metaContentTypesService', 'instrumentService', 'entityResolverService', 'fieldResolverService', 'attributeTypeService', 'uiService', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/entityViewerAddDialogController')]
+	);
+	portal.controller('EntityViewerEditDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'toastNotificationService', 'authorizerService', 'usersService', 'usersGroupService', 'metaContentTypesService', 'instrumentService', 'entityResolverService', 'fieldResolverService', 'attributeTypeService', 'uiService', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/entityViewerEditDialogController')]);
 	portal.controller('EntityViewerDeleteDialogController', ['$scope', '$mdDialog', 'entity', 'entityType', require('./app/controllers/entityViewer/entityViewerDeleteDialogController')]);
 	portal.controller('EntityViewerDeleteBulkDialogController', ['$scope', '$mdDialog', 'evDataService', 'evEventService', 'data', require('./app/controllers/entityViewer/entityViewerDeleteBulkDialogController')]);
 	portal.controller('EntityViewerRestoreDeletedBulkDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/entityViewer/entityViewerRestoreDeletedBulkDialogController')]);
@@ -372,14 +435,14 @@ export default (function () {
 	portal.controller(
 		'InstrumentTypeAddDialogController',
 		[
-			'$scope', '$mdDialog', '$bigDrawer', '$state', 'authorizerService', 'usersService', 'usersGroupService', 'entityType', 'entity', 'data',
+			'$scope', '$mdDialog', '$bigDrawer', '$state', 'toastNotificationService', 'authorizerService', 'usersService', 'usersGroupService', 'metaContentTypesService', 'instrumentService', 'entityResolverService', 'fieldResolverService', 'attributeTypeService', 'uiService', 'entityType', 'entity', 'data',
 			require('./app/controllers/entityViewer/instrumentTypeAddDialogController')
 		]
 	);
 	portal.controller(
 		'InstrumentTypeEditDialogController',
 		[
-			'$scope', '$mdDialog', '$bigDrawer', '$state', 'authorizerService', 'usersService', 'usersGroupService', 'entityType', 'entityId', 'data',
+			'$scope', '$mdDialog', '$bigDrawer', '$state', 'toastNotificationService', 'authorizerService', 'usersService', 'usersGroupService', 'metaContentTypesService', 'instrumentService', 'entityResolverService', 'fieldResolverService', 'attributeTypeService', 'uiService', 'entityType', 'entityId', 'data',
 			require('./app/controllers/entityViewer/instrumentTypeEditDialogController')
 		]
 	);
@@ -389,14 +452,14 @@ export default (function () {
 	portal.controller(
 		'TransactionTypeAddDialogController',
 		[
-			'$scope', '$mdDialog', '$bigDrawer', '$state', 'entityType', 'entity', 'data', 'usersService', 'usersGroupService',
+			'$scope', '$mdDialog', '$bigDrawer', '$state', 'toastNotificationService', 'entityType', 'entity', 'data', 'usersService', 'usersGroupService', 'transactionTypeService', 'attributeTypeService', 'ecosystemDefaultService', 'metaContentTypesService', 'uiService', 'fieldResolverService', 'gridTableHelperService',
 			require('./app/controllers/entityViewer/transactionTypeAddDialogController')
 		]
 	);
 	portal.controller(
 		'TransactionTypeEditDialogController',
 		[
-			'$scope', '$mdDialog', '$bigDrawer', '$state', 'usersService', 'usersGroupService', 'entityType', 'entityId', 'data',
+			'$scope', '$mdDialog', '$bigDrawer', '$state', 'toastNotificationService', 'usersService', 'usersGroupService', 'ecosystemDefaultService', 'metaContentTypesService', 'transactionTypeService', 'attributeTypeService', 'uiService', 'fieldResolverService', 'gridTableHelperService', 'entityType', 'entityId', 'data',
 			require('./app/controllers/entityViewer/transactionTypeEditDialogController')
 		]
 	);
@@ -405,8 +468,8 @@ export default (function () {
 
 	// Complex transaction form
 
-	portal.controller('ComplexTransactionAddDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'usersService', 'usersGroupService', 'globalDataService', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/complexTransactionAddDialogController')]);
-	portal.controller('ComplexTransactionEditDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'usersService', 'usersGroupService', 'globalDataService', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/complexTransactionEditDialogController')]);
+	portal.controller('ComplexTransactionAddDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'toastNotificationService', 'usersService', 'usersGroupService', 'globalDataService', 'metaContentTypesService', 'attributeTypeService', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/complexTransactionAddDialogController')]);
+	portal.controller('ComplexTransactionEditDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'toastNotificationService', 'usersService', 'usersGroupService', 'globalDataService', 'metaContentTypesService', 'attributeTypeService', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/complexTransactionEditDialogController')]);
 	portal.controller('BookTransactionTransactionsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/complex-transaction/bookTransactionTransactionsTabController')]);
 	portal.controller('ComplexTransactionsTransactionEditDialogController', ['$scope', '$mdDialog', 'entityId', require('./app/controllers/entityViewer/complexTransactionsTransactionEditDialogController')]);
 	portal.controller('BookUniquenessWarningDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/bookUniquenessWarningDialogController')]);
@@ -414,20 +477,20 @@ export default (function () {
 
 	// Instrument form - tabs
 
-	portal.controller('AccrualCalculationSchedulesController', ['$scope', '$mdDialog', 'gridTableHelperService', 'multitypeFieldService', require('./app/controllers/tabs/instrument/accrualCalculationSchedulesController')]);
-	portal.controller('EventSchedulesTabController', ['$scope', '$mdDialog', 'gridTableHelperService', require('./app/controllers/tabs/instrument/eventSchedulesTabController')]);
+	portal.controller('AccrualCalculationSchedulesController', ['$scope', '$mdDialog', 'instrumentService', 'gridTableHelperService', 'multitypeFieldService', require('./app/controllers/tabs/instrument/accrualCalculationSchedulesController')]);
+	portal.controller('EventSchedulesTabController', ['$scope', '$mdDialog', 'instrumentService', 'gridTableHelperService', require('./app/controllers/tabs/instrument/eventSchedulesTabController')]);
 	// portal.controller('PricingPoliciesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument/pricingPoliciesTabController')]);
 	portal.controller('InstrumentPricingTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument/instrumentPricingTabController')]);
 	portal.controller('InstrumentTypePricingTabController', ['$scope', '$mdDialog', instrumentTypePricingTabController]);
 	portal.controller('FactorScheduleTabController', ['$scope', require('./app/controllers/tabs/instrument/factorScheduleTabController')]);
-	portal.controller('ManualPricingFormulasTabController', ['$scope', require('./app/controllers/tabs/instrument/manualPricingFormulasTabController')]);
+	portal.controller('ManualPricingFormulasTabController', ['$scope', 'fieldResolverService', require('./app/controllers/tabs/instrument/manualPricingFormulasTabController')]);
 
 	// Instrument type form - tabs
 
-	portal.controller('InstrumentTypeEventSchedulesTabController', ['$scope', '$mdDialog', 'multitypeFieldService', require('./app/controllers/tabs/instrument-type/instrumentTypeEventSchedulesTabController')]);
-	portal.controller('InstrumentTypeAccrualsTabController', ['$scope', '$mdDialog', 'multitypeFieldService', require('./app/controllers/tabs/instrument-type/instrumentTypeAccrualsTabController')]);
+	portal.controller('InstrumentTypeEventSchedulesTabController', ['$scope', '$mdDialog', 'instrumentService', 'transactionTypeService', 'multitypeFieldService', 'gridTableHelperService', require('./app/controllers/tabs/instrument-type/instrumentTypeEventSchedulesTabController')]);
+	portal.controller('InstrumentTypeAccrualsTabController', ['$scope', '$mdDialog', 'instrumentService', 'fieldResolverService', 'multitypeFieldService', 'gridTableHelperService', require('./app/controllers/tabs/instrument-type/instrumentTypeAccrualsTabController')]);
 	portal.controller('InstrumentTypeUserAttributesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument-type/instrumentTypeUserAttributesTabController')]);
-	portal.controller('InstrumentTypeFactorsTabController', ['$scope', '$mdDialog', 'multitypeFieldService', 'gridTableHelperService' , require('./app/controllers/tabs/instrument-type/instrumentTypeFactorsTabController')]);
+	portal.controller('InstrumentTypeFactorsTabController', ['$scope', '$mdDialog', 'instrumentService', 'multitypeFieldService', 'gridTableHelperService' , require('./app/controllers/tabs/instrument-type/instrumentTypeFactorsTabController')]);
 
 	// Currency form - tabs
 
@@ -450,7 +513,7 @@ export default (function () {
 	portal.controller('DataCounterpartyGroupController', ['$scope', '$stateParams', require('./app/controllers/data/dataCounterpartyGroupController')]);
 	portal.controller('DataResponsibleController', ['$scope', '$stateParams', require('./app/controllers/data/dataResponsibleController')]);
 	portal.controller('DataResponsibleGroupController', ['$scope', '$stateParams', require('./app/controllers/data/dataResponsibleGroupController')]);
-	portal.controller('DataInstrumentController', ['$scope', '$stateParams', require('./app/controllers/data/dataInstrumentController')]);
+	portal.controller('DataInstrumentController', ['$scope', 'instrumentService', require('./app/controllers/data/dataInstrumentController')]);
 	portal.controller('DataGeneratedEventController', ['$scope', '$stateParams', require('./app/controllers/data/dataGeneratedEventController')]);
 	portal.controller('DataInstrumentTypeController', ['$scope', '$stateParams', require('./app/controllers/data/dataInstrumentTypeController')]);
 	portal.controller('DataPricingPolicyController', ['$scope', '$stateParams', require('./app/controllers/data/dataPricingPolicyController')]);
@@ -458,8 +521,8 @@ export default (function () {
 	portal.controller('DataComplexTransactionController', ['$scope', '$stateParams', require('./app/controllers/data/dataComplexTransactionController')]);
 	portal.controller('DataTransactionTypeController', ['$scope', '$stateParams', require('./app/controllers/data/dataTransactionTypeController')]);
 	portal.controller('DataTransactionTypeGroupController', ['$scope', '$stateParams', require('./app/controllers/data/dataTransactionTypeGroupController')]);
-	portal.controller('DataPriceHistoryController', ['$scope', '$stateParams', require('./app/controllers/data/dataPriceHistoryController')]);
-	portal.controller('DataCurrencyHistoryController', ['$scope', '$stateParams', require('./app/controllers/data/dataCurrencyHistoryController')]);
+	portal.controller('DataPriceHistoryController', ['$scope', 'priceHistoryService', require('./app/controllers/data/dataPriceHistoryController')]);
+	portal.controller('DataCurrencyHistoryController', ['$scope', 'currencyHistoryService', require('./app/controllers/data/dataCurrencyHistoryController')]);
 	portal.controller('DataCurrencyController', ['$scope', '$stateParams', require('./app/controllers/data/dataCurrencyController')]);
 	portal.controller('DataStrategyController', ['$scope', '$stateParams', require('./app/controllers/data/dataStrategyController')]);
 	portal.controller('DataStrategyGroupController', ['$scope', '$stateParams', require('./app/controllers/data/dataStrategyGroupController')]);
@@ -472,16 +535,16 @@ export default (function () {
 
 	// Reports
 
-	portal.controller('BalanceReportController', ['$scope', '$stateParams', require('./app/controllers/reports/balanceReportController')]);
+	portal.controller('BalanceReportController', ['$scope', 'reportService', require('./app/controllers/reports/balanceReportController')]);
 	portal.controller('ProfitAndLostReportController', ['$scope', '$stateParams', require('./app/controllers/reports/profitAndLostReportController')]);
-	portal.controller('TransactionReportController', ['$scope', '$stateParams', require('./app/controllers/reports/transactionReportController')]);
-	portal.controller('CashFlowProjectionReportController', ['$scope', '$stateParams', require('./app/controllers/reports/cashFlowProjectionReportController')]);
-	portal.controller('PerformanceReportController', ['$scope', '$stateParams', require('./app/controllers/reports/performanceReportController')]);
+	portal.controller('TransactionReportController', ['$scope', 'reportService', require('./app/controllers/reports/transactionReportController')]);
+	portal.controller('CashFlowProjectionReportController', ['$scope', 'reportService', require('./app/controllers/reports/cashFlowProjectionReportController')]);
+	portal.controller('PerformanceReportController', ['$scope', 'reportService', require('./app/controllers/reports/performanceReportController')]);
 
-	portal.controller('CustomFieldDialogController', ['$scope', '$mdDialog', 'attributeDataService', 'entityViewerEventService', 'data', require('./app/controllers/dialogs/customFieldDialogController')]);
+	portal.controller('CustomFieldDialogController', ['$scope', '$mdDialog', 'customFieldService', 'attributeDataService', 'entityViewerEventService', 'data', require('./app/controllers/dialogs/customFieldDialogController')]);
 	portal.controller('CustomFieldController', ['$scope', '$stateParams', '$mdDialog', require('./app/controllers/reports/customFieldController')]);
-	portal.controller('CustomFieldAddDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService', require('./app/controllers/dialogs/customFieldAddDialogController')]);
-	portal.controller('CustomFieldEditDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService', require('./app/controllers/dialogs/customFieldEditDialogController')]);
+	portal.controller('CustomFieldAddDialogController', ['$scope', '$mdDialog', 'customFieldService', 'data', 'attributeDataService', require('./app/controllers/dialogs/customFieldAddDialogController')]);
+	portal.controller('CustomFieldEditDialogController', ['$scope', '$mdDialog', 'customFieldService', 'data', 'attributeDataService', require('./app/controllers/dialogs/customFieldEditDialogController')]);
 
 	portal.controller('ManualSortingSettingsDialogController', ['$scope', '$mdDialog', 'data', 'entityViewerDataService', require('./app/controllers/dialogs/manualSortingSettingsDialogController')]);
 	portal.controller('ManualSortingLayoutManagerDialogController', ['$scope', '$mdDialog', 'data', 'entityViewerDataService', require('./app/controllers/dialogs/manualSortingLayoutManagerDialogController')]);
@@ -492,7 +555,7 @@ export default (function () {
 	portal.controller('ReportPriceCheckerDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/reportPriceCheckerDialogController')]);
 	portal.controller('ViewMissingPriceHistoryDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingPriceHistoryDialogController')]);
 	portal.controller('ViewMissingFxRatesDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingFxRatesDialogController')]);
-	portal.controller('ViewMissingHistoricalFxRatesDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingHistoricalFxRatesDialogController')]);
+	portal.controller('ViewMissingHistoricalFxRatesDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'currencyHistoryService', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingHistoricalFxRatesDialogController')]);
 	portal.controller('ViewMissingPriceHistoryViewPositionsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingPriceHistoryViewPositionsDialogController')]);
 	portal.controller('ViewMissingCustomFieldsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/report-missing-prices/viewMissingCustomFieldsDialogController')]);
 
@@ -519,8 +582,8 @@ export default (function () {
 
 	// Configuration Import
 
-	portal.controller('ConfigurationImportDialogController', ['$scope', '$mdDialog', 'usersService', 'usersGroupService', 'backendConfigurationImportService', 'systemMessageService', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportDialogController')]);
-	portal.controller('ConfigurationImportResultDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportResultDialogController')]);
+	portal.controller('ConfigurationImportDialogController', ['$scope', '$mdDialog', 'usersService', 'usersGroupService', 'backendConfigurationImportService', 'systemMessageService', 'metaContentTypesService', 'configurationImportService', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportDialogController')]);
+	portal.controller('ConfigurationImportResultDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportResultDialogController')]);
 
 	// Configuration Export
 
@@ -530,8 +593,8 @@ export default (function () {
 
 	// Settings - Mapping Export/Import
 
-	portal.controller('SettingGeneralMappingPreviewFileDialogController', ['$scope', '$mdDialog', 'file', require('./app/controllers/dialogs/settingGeneralMappingPreviewFileDialogController')]);
-	portal.controller('SettingGeneralMappingExportFileDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/settingGeneralMappingExportFileDialogController')]);
+	portal.controller('SettingGeneralMappingPreviewFileDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'file', require('./app/controllers/dialogs/settingGeneralMappingPreviewFileDialogController')]);
+	portal.controller('SettingGeneralMappingExportFileDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', require('./app/controllers/dialogs/settingGeneralMappingExportFileDialogController')]);
 	portal.controller('SettingGeneralMappingPreviewFileErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/settingGeneralMappingPreviewFileErrorsDialogController')]);
 
 	// Configuration
@@ -544,22 +607,22 @@ export default (function () {
 	portal.controller('SettingsMembersAndGroupsController', ['$scope', '$mdDialog', 'authorizerService', 'globalDataService', require('./app/controllers/settings/settingsMembersAndGroupsController')]);
 	portal.controller('CreateInviteDialogController', ['$scope', '$mdDialog', 'authorizerService', require('./app/controllers/dialogs/createInviteDialogController')]);
 	portal.controller('ManageMemberDialogController', ['$scope', '$mdDialog', 'memberId', 'authorizerService', require('./app/controllers/dialogs/manageMemberDialogController')]);
-	portal.controller('ManageGroupDialogController', ['$scope', '$mdDialog', 'groupId', require('./app/controllers/dialogs/manageGroupDialogController')]);
+	portal.controller('ManageGroupDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'groupId', require('./app/controllers/dialogs/manageGroupDialogController')]);
 	portal.controller('CreateGroupDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/createGroupDialogController')]);
 
 	// Layouts
 
 	portal.controller('UiLayoutListInvitesDialogController', ['$scope', '$mdDialog', 'backendConfigurationImportService', 'options', require('./app/controllers/dialogs/ui/uiLayoutListInvitesDialogController')]);
-	portal.controller('UiLayoutListDialogController', ['$scope', '$mdDialog', 'backendConfigurationImportService', 'options', require('./app/controllers/dialogs/ui/uiLayoutListDialogController')]);
+	portal.controller('UiLayoutListDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'uiService', 'backendConfigurationImportService', 'reportHelper', 'options', require('./app/controllers/dialogs/ui/uiLayoutListDialogController')]);
 	portal.controller('UiShareLayoutDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiShareLayoutDialogController')]);
 	portal.controller('UiLayoutSaveAsDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiLayoutSaveAsDialogController')]);
-	portal.controller('SelectLayoutDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/selectLayoutDialogController')]);
+	portal.controller('SelectLayoutDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'uiService', 'options', require('./app/controllers/dialogs/selectLayoutDialogController')]);
 
 	// Bookmarks
 
 	portal.controller('BookmarksWizardDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/bookmarksWizardDialogController')]);
 	portal.controller('BookmarksEditSelectedDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/bookmarksEditSelectedDialogController')]);
-	portal.controller('BookmarksLayoutSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/bookmarksLayoutSelectDialogController')]);
+	portal.controller('BookmarksLayoutSelectDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'uiService', require('./app/controllers/dialogs/bookmarksLayoutSelectDialogController')]);
 
 	portal.component('floatRangeCustomFieldControl', require('./app/components/floatRangeCustomFieldControlComponent'));
 	portal.component('dateRangeCustomFieldControl', require('./app/components/dateRangeCustomFieldControlComponent'));
@@ -569,7 +632,7 @@ export default (function () {
 	portal.directive('sidenavDropdownMenu', [require('./app/directives/sidenavDropdownMenuDirective')]);
 
 	portal.directive('bindFieldControl', ['$mdDialog', require('./app/directives/bindFieldControlDirective')]);
-	portal.directive('bindFieldTable', ['$mdDialog', 'gridTableHelperService', 'multitypeFieldService', require('./app/directives/bindFieldTableDirective')]);
+	portal.directive('bindFieldTable', ['$mdDialog', 'instrumentService', 'gridTableHelperService', 'multitypeFieldService', require('./app/directives/bindFieldTableDirective')]);
 	portal.directive('layoutConstructorField', ['$mdDialog', require('./app/directives/layoutConstructorFieldDirective')]);
 	// portal.directive('newLayoutConstructorField', ['$mdDialog', require('./app/directives/newLayoutConstructorFieldDirective')]);
 	portal.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirective')]);
@@ -583,12 +646,12 @@ export default (function () {
 
 	portal.controller('DeveloperPanelController', ['$scope', '$mdDialog', require('./app/controllers/pages/developerPanelController')]);
 
-	portal.controller('SimpleEntityImportController', ['$scope', '$mdDialog', 'usersService', require('./app/controllers/pages/simpleEntityImportController')]);
-	portal.controller('UnifiedEntityImportController', ['$scope', '$mdDialog', 'usersService', require('./app/controllers/pages/unifiedEntityImportController')]);
+	portal.controller('SimpleEntityImportController', ['$scope', '$mdDialog', 'usersService', 'metaContentTypesService', require('./app/controllers/pages/simpleEntityImportController')]);
+	portal.controller('UnifiedEntityImportController', ['$scope', '$mdDialog', 'usersService', 'metaContentTypesService', require('./app/controllers/pages/unifiedEntityImportController')]);
 	portal.controller('TransactionImportController', ['$scope', '$mdDialog', 'usersService', 'systemMessageService', require('./app/controllers/pages/transactionImportController')]);
 	portal.controller('ComplexImportController', ['$scope', '$mdDialog', 'usersService', require('./app/controllers/pages/complexImportController')]);
 	portal.controller('InstrumentDownloadCbondsController', ['$scope', '$mdDialog', require('./app/controllers/pages/instrumentDownloadCbondsController')]);
-	portal.controller('InstrumentDownloadController', ['$scope', '$mdDialog', require('./app/controllers/pages/instrumentDownloadController')]);
+	portal.controller('InstrumentDownloadController', ['$scope', '$mdDialog', 'instrumentService', require('./app/controllers/pages/instrumentDownloadController')]);
 	portal.controller('FillPriceHistoryController', ['$scope', '$mdDialog', require('./app/controllers/pages/fillPriceHistoryController')]);
 	portal.controller('MappingTablesController', ['$scope', '$mdDialog', require('./app/controllers/pages/mappingTablesController')]);
 	portal.controller('ProcessesController', ['$scope', '$mdDialog', require('./app/controllers/pages/processesController')]);
@@ -633,7 +696,7 @@ export default (function () {
 	portal.controller('RunPricingInstrumentDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/runPricingInstrumentDialogController')]);
 	portal.controller('RunPricingCurrencyDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/runPricingCurrencyDialogController')]);
 	portal.controller('SingleInstrumentGenerateEventDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/singleInstrumentGenerateEventDialogController')]);
-	portal.controller('SingleInstrumentAddEventToTableDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/singleInstrumentAddEventToTableDialogController')]);
+	portal.controller('SingleInstrumentAddEventToTableDialogController', ['$scope', '$mdDialog', 'instrumentService', 'transactionTypeService', 'gridTableHelperService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/singleInstrumentAddEventToTableDialogController')]);
 	portal.controller('AddRowToTableInsideEvUserTabDialogController', ['$scope', '$mdDialog', 'gridTableHelperService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/addRowToTableInsideEvUserTabDialogController')]);
 
 	portal.controller('InstrumentEventParameterDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/instrumentEventParameterDialogController')]);
@@ -672,15 +735,15 @@ export default (function () {
 
 	portal.controller('FormsDataConstructor', ['$scope', '$mdDialog', require('./app/controllers/pages/formsDataConstructorController')]);
 	portal.controller('LayoutsSettingsController', ['$scope', '$mdDialog', '$state', require('./app/controllers/pages/layoutsSettingsController')]);
-	portal.controller('InputFormLayoutsSettingsController', ['$scope', '$mdDialog', '$state', require('./app/controllers/pages/inputFormLayoutsSettingsController')]);
+	portal.controller('InputFormLayoutsSettingsController', ['$scope', '$mdDialog', 'metaContentTypesService', 'uiService', require('./app/controllers/pages/inputFormLayoutsSettingsController')]);
 
 	portal.controller('EntitiesCustomAttributesController', ['$scope', '$mdDialog', require('./app/controllers/pages/entitiesCustomAttributesController')]);
 	portal.controller('PriceDownloadSchemeController', ['$scope', require('./app/controllers/pages/priceDownloadSchemeController')]);
 	portal.controller('TemplateFieldsController', ['$scope', '$mdDialog', require('./app/controllers/pages/templateFieldsController')]);
-	portal.controller('EntityTooltipPageController', ['$scope', '$mdDialog', require('./app/controllers/pages/entityTooltipPageController')]);
-	portal.controller('CrossEntityAttributeExtensionPageController', ['$scope', '$mdDialog', require('./app/controllers/pages/crossEntityAttributeExtensionPageController')]);
-	portal.controller('ImportConfigurationsController', ['$scope', '$mdDialog', 'usersService', 'usersGroupService', 'backendConfigurationImportService', 'systemMessageService', require('./app/controllers/pages/importConfigurationsController')]);
-	portal.controller('ExportConfigurationsController', ['$scope', '$mdDialog', 'usersService', require('./app/controllers/pages/exportConfigurationsController')]);
+	portal.controller('EntityTooltipPageController', ['$scope', 'toastNotificationService', 'attributeTypeService', 'metaContentTypesService', 'uiService', require('./app/controllers/pages/entityTooltipPageController')]);
+	portal.controller('CrossEntityAttributeExtensionPageController', ['$scope', 'toastNotificationService', 'attributeTypeService', 'uiService', require('./app/controllers/pages/crossEntityAttributeExtensionPageController')]);
+	portal.controller('ImportConfigurationsController', ['$scope', '$mdDialog', 'usersService', 'usersGroupService', 'metaContentTypesService', 'backendConfigurationImportService', 'systemMessageService', 'configurationImportService', require('./app/controllers/pages/importConfigurationsController')]);
+	portal.controller('ExportConfigurationsController', ['$scope', '$mdDialog', 'usersService', 'metaContentTypesService', 'uiService', require('./app/controllers/pages/exportConfigurationsController')]);
 
 	// Reconciliation
 
@@ -706,20 +769,19 @@ export default (function () {
 
 	//<editor-fold desc="GROUP TABLE">
 	portal.directive('groupTable', [require('./app/directives/groupTable/gTableComponent')]);
-	portal.directive('groupTableBody', ['usersService', 'globalDataService', 'evRvDomManagerService', require('./app/directives/groupTable/gTableBodyComponent')]);
-	/* portal.directive('gSidebarFilter', ['$mdDialog', '$state', require('./app/directives/groupTable/gSidebarFilterComponent')]);
-	portal.directive('rvTextFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterDirective')]);
+	portal.directive('groupTableBody', ['toastNotificationService', 'usersService', 'globalDataService', 'transactionTypeService', 'priceHistoryService', 'uiService', 'evRvDomManagerService', require('./app/directives/groupTable/gTableBodyComponent')]);
+	/* portal.directive('rvTextFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterDirective')]);
 	portal.directive('rvNumberFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvNumberFilterDirective')]);
 	portal.directive('rvDateFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvDateFilterDirective')]); */
 
-	portal.directive('gFilters', ['$mdDialog', 'gFiltersHelper', require('./app/directives/groupTable/filters/gFiltersDirective')]);
+	portal.directive('gFilters', ['$mdDialog', 'uiService', 'evRvLayoutsHelper', 'gFiltersHelper', require('./app/directives/groupTable/filters/gFiltersDirective')]);
 	portal.directive('gEvFilters', ['$mdDialog', '$state', '$bigDrawer', require('./app/directives/groupTable/filters/entityViewer/gEvFiltersDirective')]);
 	portal.directive('evFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evFilterDirective')]);
 	portal.directive('evTextFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evTextFilterDirective')]);
 	portal.directive('evBooleanFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evBooleanFilterDirective')]);
 	portal.directive('evNumberFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evNumberFilterDirective')]);
 	portal.directive('evDateFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evDateFilterDirective')]);
-	portal.directive('gRvFilters', ['$mdDialog', 'gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/gRvFiltersDirective')]);
+	portal.directive('gRvFilters', ['$mdDialog', 'gFiltersHelper', 'uiService', require('./app/directives/groupTable/filters/reportViewer/gRvFiltersDirective')]);
 	portal.directive('rvFilter', ['$mdDialog', 'gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvFilterDirective')]);
 	portal.directive('rvTextFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvTextFilterDirective')]);
 	portal.directive('rvBooleanFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvBooleanFilterDirective')]);
@@ -733,8 +795,7 @@ export default (function () {
 
 	portal.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
 	portal.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]); //2021-12-17 DEPRECATED
-	portal.directive('groupColumns', ['$mdDialog', 'usersService', 'globalDataService', 'evRvDomManagerService', require('./app/directives/groupTable/gColumnsComponent')]);
-	// portal.directive('groupActionsBlock', ['$mdDialog', '$state', '$bigDrawer', 'usersService', require('./app/directives/groupTable/gActionsBlockComponent')]);
+	portal.directive('groupColumns', ['$mdDialog', 'toastNotificationService', 'usersService', 'globalDataService', 'uiService', 'evRvDomManagerService', require('./app/directives/groupTable/gColumnsComponent')]);
 	// portal.directive('groupClipboardHandler', [require('./app/directives/groupTable/gClipboardHandlerComponent')]); // potentially deprecated
 	portal.directive('groupColumnResizer', [require('./app/directives/groupTable/gColumnResizerComponent')]);
 	portal.directive('groupLayoutResizer', [require('./app/directives/groupTable/gLayoutResizerComponent')]);
@@ -742,7 +803,7 @@ export default (function () {
 	portal.directive('gHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
 	portal.directive('groupWidthAligner', [require('./app/directives/groupTable/gWidthAlignerComponent')]);
 	portal.directive('groupEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', require('./app/directives/groupTable/groupEditorBinderComponent')]);
-	portal.directive('groupSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gSplitPanelReportBinderComponent')]);
+	portal.directive('groupSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', 'metaContentTypesService', require('./app/directives/groupTable/gSplitPanelReportBinderComponent')]);
 	portal.directive('gVerticalSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gVerticalSplitPanelReportBinderComponent')]);
 	portal.directive('groupPermissionEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gPermissionEditorBinderComponent')]);
 	portal.directive('groupReconciliationMatchEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gReconciliationMatchEditorBinderComponent')]);
@@ -757,10 +818,10 @@ export default (function () {
 	portal.directive('contentTitle', ['$timeout', require('./app/directives/contentTitleDirective.js')]);
 	portal.directive('valueTitle', ['$timeout', require('./app/directives/valueTitleDirective.js')]);
 
-	portal.directive('gLayoutsManager', ['$mdDialog', '$state', 'usersService', 'globalDataService', 'backendConfigurationImportService', require('./app/directives/groupTable/gLayoutsManagerComponent.js')]);
-	portal.directive('dashboardLayoutsManagerComponent', ['$mdDialog', '$state', 'backendConfigurationImportService', require('./app/directives/dashboardLayoutsManagerComponent.js')]);
+	portal.directive('gLayoutsManager', ['$mdDialog', '$state', 'toastNotificationService', 'usersService', 'globalDataService', 'ecosystemDefaultService', 'metaContentTypesService', 'uiService', 'backendConfigurationImportService', 'reportHelper', 'evRvLayoutsHelper', require('./app/directives/groupTable/gLayoutsManagerComponent.js')]);
+	portal.directive('dashboardLayoutsManagerComponent', ['$mdDialog', '$state', 'toastNotificationService', 'uiService', 'backendConfigurationImportService', 'evRvLayoutsHelper', require('./app/directives/dashboardLayoutsManagerComponent.js')]);
 
-	portal.controller('GReportSettingsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/gReportSettingsDialogController')]);
+	portal.controller('GReportSettingsDialogController', ['$scope', '$mdDialog', 'customFieldService', 'ecosystemDefaultService', 'uiService', 'data', require('./app/controllers/dialogs/gReportSettingsDialogController')]);
 	portal.controller('GEntityViewerSettingsDialogController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', require('./app/controllers/dialogs/gEntityViewerSettingsDialogController')]);
 	portal.controller('PeriodsEditorDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/periodsEditorDialogController')]);
 	portal.controller('DateTreeDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/dateTreeDialogController')]);
@@ -770,27 +831,27 @@ export default (function () {
 	portal.controller('gModalReportController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', 'attributeDataService', 'contentWrapElement', require('./app/directives/groupTable/gModalReportComponent')]);
 	portal.controller('gModalReportPnlController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', 'attributeDataService', 'contentWrapElement', require('./app/directives/groupTable/gModalReportPnlComponent')]);
 	portal.controller('gModalReportTransactionController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', 'attributeDataService', 'contentWrapElement', require('./app/directives/groupTable/gModalReportTransactionComponent')]);
-	portal.controller('gModalReportPerformanceController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', 'attributeDataService', require('./app/directives/groupTable/gModalReportPerformanceComponent')]);
-	portal.controller('gModalReportCashFlowProjectionController', ['$scope', '$mdDialog', 'entityViewerDataService', 'entityViewerEventService', 'attributeDataService', require('./app/directives/groupTable/gModalReportCashFlowProjectionComponent')]);
+	portal.controller('gModalReportPerformanceController', ['$scope', '$mdDialog', 'customFieldService', 'entityViewerDataService', 'entityViewerEventService', 'attributeDataService', require('./app/directives/groupTable/gModalReportPerformanceComponent')]);
+	portal.controller('gModalReportCashFlowProjectionController', ['$scope', '$mdDialog', 'customFieldService', 'entityViewerDataService', 'entityViewerEventService', 'attributeDataService', require('./app/directives/groupTable/gModalReportCashFlowProjectionComponent')]);
 
 	// New report viewer interface
-	portal.directive('gTopPart', ['$mdDialog', '$state', 'usersService', 'globalDataService', require('./app/directives/groupTable/gTopPartDirective')]);
+	portal.directive('gTopPart', ['$mdDialog', '$state', 'usersService', 'ecosystemDefaultService', 'globalDataService', 'evRvLayoutsHelper', 'reportHelper', require('./app/directives/groupTable/gTopPartDirective')]);
 
 	portal.directive('gEvLeftPanel', ['$mdDialog', '$state', require('./app/directives/groupTable/gEvLeftPanelDirective')]);
 	portal.directive('gEvLeftPanelTreeElem', ['$mdDialog', '$state', require('./app/directives/groupTable/gEvLeftPanelTreeElemDirective')]);
 
 	//</editor-fold desc="GROUP TABLE">
 
-	portal.directive('mainHeader', ['$mdDialog', '$state', '$transitions', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'usersService', 'globalDataService', 'systemMessageService', 'redirectionService', mainHeaderDirective]);
-	portal.directive('evFieldResolver', [require('./app/directives/entityViewerFieldResolverDirective')]);
+	portal.directive('mainHeader', ['$mdDialog', '$state', '$transitions', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'usersService', 'globalDataService', 'systemMessageService', 'redirectionService', 'evRvLayoutsHelper', mainHeaderDirective]);
+	portal.directive('evFieldResolver', ['metaContentTypesService', 'fieldResolverService', require('./app/directives/entityViewerFieldResolverDirective')]);
 	portal.directive('evSelectorResolver', [require('./app/directives/entityViewerSelectorResolverDirective')]);
-	portal.directive('ismFieldResolver', ['$mdDialog', require('./app/directives/instrumentSchemeManagerFieldResolverDirective')]);
+	portal.directive('ismFieldResolver', ['$mdDialog', 'fieldResolverService', require('./app/directives/instrumentSchemeManagerFieldResolverDirective')]);
 	portal.directive('floatNumbers', [require('./app/directives/floatNumbersDirective')]);
 	portal.directive('instrumentModalResolver', ['$mdDialog', require('./app/directives/instrumentModalResolverDirective')]);
 	portal.directive('commonSelect', [require('./app/directives/commonSelectDirective')]);
 	portal.directive('ttypeActionsInputSelect', [require('./app/directives/ttypeActionsInputsSelectDirective')]);
 	portal.directive('ttypeActionsRelationsSelect', [require('./app/directives/ttypeActionsRelationsSelectDirective')]);
-	portal.directive('entitySearchSelect', ['$mdDialog', require('./app/directives/customInputs/entitySearchSelect')]);
+	portal.directive('entitySearchSelect', ['$mdDialog', 'metaContentTypesService', require('./app/directives/customInputs/entitySearchSelect')]);
 	portal.directive('crudSelect', ['$mdDialog', require('./app/directives/crudSelect')]);
 	portal.directive('usercodeInput', ['$mdDialog', 'usersService', require('./app/directives/usercodeInputDirective')]);
 	portal.directive('twoFieldsMultiselect', ['$mdDialog', require('./app/directives/twoFieldsMultiselectDirective')]);
@@ -827,7 +888,7 @@ export default (function () {
 	portal.directive('datetimeInput', [require('./app/directives/customInputs/datetimeInputDirective.js')]);
 	portal.directive('expressionInput', ['$mdDialog', require('./app/directives/customInputs/expressionInputDirective')]);
 	portal.directive('dropdownSelect', ['$mdDialog', require('./app/directives/customInputs/dropdownSelectDirective')]);
-	portal.directive('instrumentSelect', ['$mdDialog', require('./app/directives/customInputs/instrumentSelectDirective')]);
+	portal.directive('instrumentSelect', ['$mdDialog', 'toastNotificationService', 'instrumentService', require('./app/directives/customInputs/instrumentSelectDirective')]);
 	portal.directive('unifiedDataSelect', ['$mdDialog', require('./app/directives/customInputs/unifiedDataSelectDirective')]);
 	portal.directive('classifierSelect', ['$mdDialog', require('./app/directives/customInputs/classifierSelectDirective')]);
 	portal.directive('multitypeField', [require('./app/directives/customInputs/multitypeFieldDirective')]);

@@ -2,19 +2,12 @@
  * Created by szhitenev on 13.02.2017.
  */
 
+const modelService = require('../services/modelService');
 /**
  * Report Viewer Helper.
  * @module reportHelper
  */
-
-(function () {
-
-    'use strict';
-
-    var transactionClassService = require('../services/transaction/transactionClassService');
-    var modelService = require('../services/modelService');
-    var metaService = require('../services/metaService');
-	var expressionsService = require('../services/expression.service');
+export default function (expressionService) {
 
     function findEntityObject(report, propertyName, id) {
 
@@ -199,10 +192,10 @@
 
             if (item.custom_fields) {
 
-            	item.custom_fields_object = [];
+                item.custom_fields_object = [];
 
                 item.custom_fields.forEach(function (localCustomField) {
-					reportOptions.custom_fields_object.forEach(function (reportCustomField) {
+                    reportOptions.custom_fields_object.forEach(function (reportCustomField) {
 
                         if (reportCustomField.id == localCustomField.custom_field) {
 
@@ -217,14 +210,14 @@
 
             if (entityType === 'balance-report') {
 
-            	item.date = reportOptions.report_date;
+                item.date = reportOptions.report_date;
 
             } else if (entityType === 'pl-report') {
 
-            	item.pl_first_date = reportOptions.pl_first_date;
-				item.report_date = reportOptions.report_date;
+                item.pl_first_date = reportOptions.pl_first_date;
+                item.report_date = reportOptions.report_date;
 
-			}
+            }
 
 
         });
@@ -294,7 +287,7 @@
             }
 
             if (item.market_value) {
-				var percent = (item.market_value / groupsTotalMarketValue[key] * 100).toFixed(10);
+                var percent = (item.market_value / groupsTotalMarketValue[key] * 100).toFixed(10);
                 item.market_value_percent = parseFloat(percent);
 
             } else {
@@ -302,7 +295,7 @@
             }
 
             if (item.exposure) {
-				var percent = (item.exposure / groupsTotalExposure[key] * 100).toFixed(10);
+                var percent = (item.exposure / groupsTotalExposure[key] * 100).toFixed(10);
                 item.exposure_percent = parseFloat(percent);
 
             } else {
@@ -623,19 +616,19 @@
     ];
 
     /**
-	 * Delete temporary properties from report options.
-	 * @param reportOptions {Object}
-	 * @return reportOptions {Object}
-	 */
+     * Delete temporary properties from report options.
+     * @param reportOptions {Object}
+     * @return reportOptions {Object}
+     */
     var cleanReportOptionsFromTmpProps = function (reportOptions) {
 
-		reportOptionsTemporaryPropsList.forEach(propName => {
-			delete reportOptions[propName]
-		});
+        reportOptionsTemporaryPropsList.forEach(propName => {
+            delete reportOptions[propName]
+        });
 
-    	return reportOptions;
+        return reportOptions;
 
-	};
+    };
 
     const reportDateProperties = {
         'balance-report': [null, 'report_date'],
@@ -691,7 +684,7 @@
 
                 return new Promise(function (resolve) {
 
-                    expressionsService.getResultOfExpression({'expression': dateExpr}).then(function (data) {
+                    expressionService.getResultOfExpression({'expression': dateExpr}).then(function (data) {
 
                         resolve(data.result);
 
@@ -712,15 +705,15 @@
 
     };
 
-    module.exports = {
+    return {
         convertItemsToFlat: convertItemsToFlat,
         injectIntoItems: injectIntoItems,
         extendAttributes: extendAttributes,
         calculateMarketValueAndExposurePercents: calculateMarketValueAndExposurePercents,
-		cleanReportOptionsFromTmpProps: cleanReportOptionsFromTmpProps,
+        cleanReportOptionsFromTmpProps: cleanReportOptionsFromTmpProps,
 
         getDateProperties: getDateProperties,
         getReportDate: getReportDate,
     }
 
-}());
+}

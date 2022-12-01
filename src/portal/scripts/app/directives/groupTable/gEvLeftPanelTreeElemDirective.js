@@ -5,10 +5,7 @@
 
     'use strict';
 
-    var metaService = require('../../services/metaService');
     var evEvents = require('../../services/entityViewerEvents');
-    var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
-    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
     var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
 

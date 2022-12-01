@@ -11,18 +11,12 @@ import entityResolverService from "../../services/entityResolverService";
 
 (function () {
 
-        var uiService = require('../../services/uiService');
 		var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
         var evEvents = require('../../services/entityViewerEvents');
-        var metaContentTypesService = require('../../services/metaContentTypesService');
         var evHelperService = require('../../services/entityViewerHelperService');
-		var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
         // var usersService = require('../../services/usersService');
 
-		var entityResolverService = require('../../services/entityResolverService');
         var complexTransactionService = require('../../services/transaction/complexTransactionService');
-        var instrumentService = require('../../services/instrumentService');
-
 
         var EntityViewerDataService = require('../../services/entityViewerDataService');
         var EntityViewerEventService = require('../../services/eventService');
@@ -32,9 +26,7 @@ import entityResolverService from "../../services/entityResolverService";
         var evDataProviderService = require('../../services/ev-data-provider/ev-data-provider.service');
         // var middlewareService = require('../../services/middlewareService');
 
-        var transactionTypeService = require('../../services/transactionTypeService');
-
-        module.exports = function ($scope, $mdDialog, $state, $transitions, $urlService, $customDialog, $bigDrawer, middlewareService, globalDataService, toastNotificationService) {
+        module.exports = function ($scope, $mdDialog, $state, $transitions, $urlService, $customDialog, $bigDrawer, middlewareService, globalDataService, toastNotificationService, metaContentTypesService, instrumentService, customFieldService, attributeTypeService, entityResolverService, uiService, evRvLayoutsHelper) {
 
             var vm = this;
 
@@ -1140,7 +1132,7 @@ import entityResolverService from "../../services/entityResolverService";
                 vm.entityViewerDataService = new EntityViewerDataService();
                 vm.entityViewerEventService = new EntityViewerEventService();
                 vm.splitPanelExchangeService = new SplitPanelExchangeService();
-                vm.attributeDataService = new AttributeDataService();
+                vm.attributeDataService = new AttributeDataService(metaContentTypesService, customFieldService, attributeTypeService, uiService);
 
                 vm.entityType = $scope.$parent.vm.entityType;
 
@@ -1465,7 +1457,7 @@ import entityResolverService from "../../services/entityResolverService";
 
             vm.init = function () {
 
-                autosaveLayoutService = new AutosaveLayoutService();
+                autosaveLayoutService = new AutosaveLayoutService(metaContentTypesService, uiService, null);
 
                 /*if (vm.stateWithLayout) {
 

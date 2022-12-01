@@ -5,9 +5,7 @@
 
     'use strict';
 
-    var instrumentService = require('../../services/instrumentService');
-
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, instrumentService) {
 
         var vm = this;
 

@@ -7,9 +7,7 @@
 
 import AutosaveLayoutService from "../../services/autosaveLayoutService";
 import evHelperService from "../../services/entityViewerHelperService";
-import uiService from "../../services/uiService";
 import evEvents from "../../services/entityViewerEvents";
-import reportHelper from "../../helpers/reportHelper";
 
 (function () {
 
@@ -17,23 +15,19 @@ import reportHelper from "../../helpers/reportHelper";
     var evEvents = require('../../services/entityViewerEvents');
     var evHelperService = require('../../services/entityViewerHelperService'); */
 
-    var priceHistoryService = require('../../services/priceHistoryService');
-    var currencyHistoryService = require('../../services/currencyHistoryService');
 
     var RvSharedLogicHelper = require('../../helpers/rvSharedLogicHelper');
     var EntityViewerDataService = require('../../services/entityViewerDataService');
     var EntityViewerEventService = require('../../services/eventService');
     var AttributeDataService = require('../../services/attributeDataService');
 
-    var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
     // var middlewareService = require('../../services/middlewareService');
-    var reportHelper = require('../../helpers/reportHelper');
 
-    module.exports = function ($scope, $mdDialog, $transitions, globalDataService, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
+    module.exports = function ($scope, $mdDialog, $transitions, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, customFieldService, attributeTypeService, rvDataProviderService, uiService, pricesCheckerService, expressionService, reportHelper, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
 
         var vm = this;
 
-        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService);
+        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper);
 
         console.log('parentEntityViewerDataService', parentEntityViewerDataService);
         console.log('parentEntityViewerEventService', parentEntityViewerEventService);
@@ -645,9 +639,9 @@ import reportHelper from "../../helpers/reportHelper";
 
             vm.readyStatus.layout = false; // switched to true by sharedLogicHelper.onSetLayoutEnd()
 
-            vm.entityViewerDataService = new EntityViewerDataService();
+            vm.entityViewerDataService = new EntityViewerDataService(reportHelper);
             vm.entityViewerEventService = new EntityViewerEventService();
-            vm.attributeDataService = new AttributeDataService();
+            vm.attributeDataService = new AttributeDataService(metaContentTypesService, customFieldService, attributeTypeService, uiService);
 
             console.log('scope, ', $scope);
 
@@ -743,7 +737,7 @@ import reportHelper from "../../helpers/reportHelper";
 
         vm.init = function () {
 
-                autosaveLayoutService = new AutosaveLayoutService();
+            autosaveLayoutService = new AutosaveLayoutService(metaContentTypesService, uiService, reportHelper);
 
             vm.getView();
 

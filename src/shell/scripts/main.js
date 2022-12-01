@@ -156,7 +156,7 @@ app.service('cookieService', [cookieService]);
 // app.service('localStorageService', ['globalDataService', localStorageService]);
 app.service('toastNotificationService', [toastNotificationService]);
 app.service('errorService', ['toastNotificationService', errorService]);
-app.service('xhrService', ['errorService', xhrService]);
+app.service('xhrService', ['errorService', 'cookieService', xhrService]);
 app.service('broadcastChannelService', [broadcastChannelService]);
 app.service('globalDataService', [globalDataService]);
 app.service('authorizerService', ['cookieService', 'globalDataService', 'xhrService', authorizerService]);

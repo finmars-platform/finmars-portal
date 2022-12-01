@@ -7,7 +7,6 @@
 
     var logService = require('../../../../../core/services/logService');
 
-    var uiService = require('../../services/uiService');
     var evDataHelper = require('../../helpers/ev-data.helper');
     var evEvents = require('../../services/entityViewerEvents');
     var ScrollHelper = require('../../helpers/scrollHelper');

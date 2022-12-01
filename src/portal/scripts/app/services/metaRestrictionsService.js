@@ -1,11 +1,10 @@
 /**
  * Created by szhitenev on 09.08.2016.
  */
-(function(){
 
-    'use strict';
+import metaRestrictionsRepository from "../repositories/metaRestrictionsRepository";
 
-    var metaRestrictionsRepository = require('../repositories/metaRestrictionsRepository');
+export default function () {
 
     var getEntitiesWithoutDynamicAttrsList = function () {
         return metaRestrictionsRepository.getEntitiesWithoutDynamicAttrsList();
@@ -19,10 +18,10 @@
         return metaRestrictionsRepository.getEntitiesWithoutBaseAttrsList();
     };
 
-    module.exports = {
+    return {
         getEntitiesWithoutDynamicAttrsList: getEntitiesWithoutDynamicAttrsList,
         getEntitiesWithoutBaseAttrsList: getEntitiesWithoutBaseAttrsList,
         getRestrictedEntitiesWithTypeField: getRestrictedEntitiesWithTypeField
     }
 
-}());
+};

@@ -2,7 +2,7 @@
  * Created by szhitenev on 24.06.2016.
  */
 'use strict';
-import configureRepositoryUrlService from "../../../../shell/scripts/app/repositories/configureRepositoryUrlService";
+import configureRepositoryUrlService from "../../../../shell/scripts/app/services/configureRepositoryUrlService";
 
 (function () {
 

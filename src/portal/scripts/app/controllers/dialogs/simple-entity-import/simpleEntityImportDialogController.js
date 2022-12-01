@@ -7,7 +7,6 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
     'use strict';
 
-    var metaContentTypesService = require('../../../services/metaContentTypesService');
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
 
     var importEntityService = require('../../../services/import/importEntityService');
@@ -18,7 +17,7 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
     var baseUrl = baseUrlService.resolve();
 
-    module.exports = function simpleEntityImportDialogController($scope, $mdDialog, data, usersService) {
+    module.exports = function simpleEntityImportDialogController($scope, $mdDialog, usersService, metaContentTypesService, data) {
 
         var vm = this;
 

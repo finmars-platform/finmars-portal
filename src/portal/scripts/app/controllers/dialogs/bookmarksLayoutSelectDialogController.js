@@ -7,11 +7,9 @@
 
     var logService = require('../../../../../core/services/logService');
 
-    var uiService = require('../../services/uiService');
     var metaService = require('../../services/metaService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
 
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, metaContentTypesService, uiService) {
 
         logService.controller('BookmarksLayoutSelectDialogController', 'initialized');
 

@@ -6,7 +6,6 @@
     'use strict';
 
     var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
-    var instrumentService = require('../../services/instrumentService');
     var currencyService = require('../../services/currencyService');
 
     var instrumentTypeService = require('../../services/instrumentTypeService');
@@ -18,7 +17,7 @@
     var instrumentAttributeTypeService = require('../../services/instrument/instrumentAttributeTypeService');
 
 
-    module.exports = function instrumentDownloadController($scope, $mdDialog) {
+    module.exports = function instrumentDownloadController($scope, $mdDialog, instrumentService) {
 
         var vm = this;
 

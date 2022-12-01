@@ -8,9 +8,7 @@ import baseUrlService from "../../../../shell/scripts/app/services/baseUrlServic
 
 const metaService = require('../services/metaService'); // TODO inject into angular dependencies
 
-const evRvLayoutsHelper = require('../helpers/evRvLayoutsHelper');
-
-export default function ($mdDialog, $state, $transitions, cookieService, broadcastChannelService, middlewareService, authorizerService, usersService, globalDataService, systemMessageService, redirectionService) {
+export default function ($mdDialog, $state, $transitions, cookieService, broadcastChannelService, middlewareService, authorizerService, usersService, globalDataService, systemMessageService, redirectionService, evRvLayoutsHelper) {
 
     return {
         restrict: 'E',

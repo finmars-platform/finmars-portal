@@ -2,12 +2,11 @@
 
     'use strict';
 
-    const uiService = require('../../../../services/uiService');
     const evEvents = require('../../../../services/entityViewerEvents');
 
     // const EventService = require('../../../../services/eventService');
 
-    module.exports = function ($mdDialog, gFiltersHelper) {
+    module.exports = function ($mdDialog, gFiltersHelper, uiService) {
         return {
             require: '^^gFilters',
             restrict: 'E',

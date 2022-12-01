@@ -6,9 +6,8 @@
     'use strict';
 
     var evEvents = require('../../services/entityViewerEvents');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
 
-    module.exports = function ($templateCache, $compile, $controller, $mdDialog, $state, $transitions) {
+    module.exports = function ($templateCache, $compile, $controller, $mdDialog, $state, $transitions, metaContentTypesService) {
         return {
             scope: {
                 evDataService: '=',

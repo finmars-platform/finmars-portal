@@ -5,12 +5,10 @@
 
     'use strict';
 
-    var metaContentTypesService = require('../../services/metaContentTypesService');
-
     var entityTypeMappingResolveService = require('../../services/entityTypeMappingResolveService');
     var entityResolverService = require('../../services/entityResolverService');
 
-    module.exports = function ($scope, $mdDialog, file) {
+    module.exports = function ($scope, $mdDialog, metaContentTypesService, file) {
 
         console.log("file", file);
 

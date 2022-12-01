@@ -1,19 +1,12 @@
-(function () {
+var evEvents = require('../entityViewerEvents');
+var groupsService = require('./groups.service');
+var objectsService = require('./objects.service');
+var evDataHelper = require('../../helpers/ev-data.helper');
+var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+var rvDataHelper = require('../../helpers/rv-data.helper');
+var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
-    var evEvents = require('../entityViewerEvents');
-    var dashboardEvents = require('../../services/dashboard/dashboardEvents');
-    var groupsService = require('./groups.service');
-    var objectsService = require('./objects.service');
-    var evDataHelper = require('../../helpers/ev-data.helper');
-    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
-    var entityViewerDataResolver = require('../entityViewerDataResolver');
-    var stringHelper = require('../../helpers/stringHelper');
-    var rvDataHelper = require('../../helpers/rv-data.helper');
-    var queryParamsHelper = require('../../helpers/queryParamsHelper');
-
-    var reportHelper = require('../../helpers/reportHelper');
-
-    var pricesCheckerService = require('../../services/reports/pricesCheckerService');
+export default function (entityResolverService, pricesCheckerService, reportHelper) {
 
     var requestData = function (evDataService) {
 
@@ -25,7 +18,7 @@
             // console.log('requestData.entityType', entityType);
             // console.log('requestData.reportOptions', reportOptions);
 
-            entityViewerDataResolver.getList(entityType, reportOptions).then(function (data) {
+            entityResolverService.getList(entityType, reportOptions).then(function (data) {
 
                 // console.log('requestData.data', data);
 
@@ -138,8 +131,8 @@
         var entityType = entityViewerDataService.getEntityType();
         var reportOptions = entityViewerDataService.getReportOptions();
 
-		//<editor-fold desc="Delete report options items">
-		/* delete reportOptions.items;
+        //<editor-fold desc="Delete report options items">
+        /* delete reportOptions.items;
         delete reportOptions.custom_fields;
         delete reportOptions.custom_fields_object;
         delete reportOptions.item_complex_transactions;
@@ -155,8 +148,8 @@
         delete reportOptions.item_currency_fx_rates;
         delete reportOptions.item_currencies;
         delete reportOptions.item_accounts; */
-		reportOptions = reportHelper.cleanReportOptionsFromTmpProps(reportOptions);
-		//</editor-fold>
+        reportOptions = reportHelper.cleanReportOptionsFromTmpProps(reportOptions);
+        //</editor-fold>
 
         reportOptions.task_id = null;
 
@@ -183,9 +176,9 @@
 
             if (reportOptions.items && reportOptions.items.length) {
 
-				var attributeExtensions = entityViewerDataService.getCrossEntityAttributeExtensions();
+                var attributeExtensions = entityViewerDataService.getCrossEntityAttributeExtensions();
 
-				reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions, entityType);
+                reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions, entityType);
                 reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
                 reportOptions.items = reportHelper.convertItemsToFlat(reportOptions.items);
                 reportOptions.items = reportHelper.extendAttributes(reportOptions.items, attributeExtensions);
@@ -342,16 +335,16 @@
                         if (groupSettings.hasOwnProperty('is_open')) {
                             obj.___is_open = groupSettings.is_open;
                         }
-						if (parentGroup) console.log("groupSettings.getObjects parentGroup", JSON.parse(JSON.stringify(parentGroup)));
+                        if (parentGroup) console.log("groupSettings.getObjects parentGroup", JSON.parse(JSON.stringify(parentGroup)));
                         if (!parentGroup.___is_open) {
 
-                        	obj.___is_open = false;
+                            obj.___is_open = false;
                             groupSettings.is_open = false;
-							console.log('groupSettings.getObjects parentGroup is closed');
+                            console.log('groupSettings.getObjects parentGroup is closed');
                             rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
 
                         }
-						console.log('groupSettings.getObjects obj', obj, JSON.parse(JSON.stringify(obj)));
+                        console.log('groupSettings.getObjects obj', obj, JSON.parse(JSON.stringify(obj)));
                     }
 
                 }
@@ -480,12 +473,12 @@
                             if (groupSettings.hasOwnProperty('is_open')) {
                                 obj.___is_open = groupSettings.is_open;
                             }
-							if (parentGroup) console.log("groupSettings parentGroup", JSON.parse(JSON.stringify(parentGroup)));
+                            if (parentGroup) console.log("groupSettings parentGroup", JSON.parse(JSON.stringify(parentGroup)));
                             if (!parentGroup.___is_open) {
 
-                            	obj.___is_open = false;
+                                obj.___is_open = false;
                                 groupSettings.is_open = false;
-								console.log('groupSettings parentGroup is closed');
+                                console.log('groupSettings parentGroup is closed');
                                 rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
 
                             }
@@ -966,7 +959,7 @@
 
     };
 
-    module.exports = {
+    return {
         createDataStructure: createDataStructure,
         requestReport: requestReport,
         updateDataStructure: updateDataStructure,
@@ -974,4 +967,4 @@
         sortGroupType: sortGroupType
     }
 
-}());
+}

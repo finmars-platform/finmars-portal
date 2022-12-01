@@ -1,7 +1,6 @@
 export default function (cookieService, globalDataService) {
 
     const iframeMode = window.location.href.indexOf('iframe=true') > -1;
-    console.log("testing.880 requestHeadersService iframeMode", iframeMode);
 
     let getData, setData, deleteData;
 

@@ -4,7 +4,7 @@
 
 'use strict';
 
-export default function (errorService) {
+export default function (errorService, cookieService) {
 
 	// var axService = require('../../../../core/services/axService')
 

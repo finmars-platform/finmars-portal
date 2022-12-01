@@ -141,15 +141,31 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
     const initTransitionListener = function () {
 
+        const resetUrlAfterAbortion = function () {
+
+            let fromUrl = $state.href($state.current.name, {}, {relative: true});
+            fromUrl = fromUrl.slice(2); // remove #! part
+            $urlService.url(fromUrl, true);
+
+        };
+        console.log("testing.880.initTransitionListener iframeMode", vm.iframeMode);
+        if (vm.iframeMode) {
+            console.log("testing.880.initTransitionListener iframeMode transition hook inited");
+            $transitions.onBefore({}, function (transition) {
+                console.log("testing.880 prevented transition iframe", transition.from().name, transition.to().name);
+                if (['app.authentication', 'app.portal.home', 'app.profile'].includes(transition.to().name)) {
+                    console.log("testing.880 prevented transition to", transition.to().name);
+                    resetUrlAfterAbortion();
+                    return false;
+
+                }
+
+            });
+
+        }
+
         $transitions.onBefore({}, function (transition) {
             console.trace("testing.880 transition")
-            const resetUrlAfterAbortion = function () {
-
-                let fromUrl = $state.href($state.current.name, {}, {relative: true});
-                fromUrl = fromUrl.slice(2); // remove #! part
-                $urlService.url(fromUrl, true);
-
-            };
             console.log("testing.880 on before ", transition.from().name);
             if (vm.isAuthenticated) {
 
@@ -296,9 +312,6 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
 
             cookieService.setCookie('access_token', $uiRouterGlobals.params.atoken);
-
-            const accessTokenFromC = cookieService.getCookie('access_token');
-            console.log("testing.880 accessTokenFromC", accessTokenFromC, document.cookie);
             // globalDataService.setIframeData(iframeData);
 
         }
@@ -367,11 +380,11 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             } else {
 
                 vm.isAuthenticated = true;
-                if (vm.iframeMode) console.log("testing.880 ping 2");
+                    if (vm.iframeMode) console.log("testing.880 ping 2", window.location.href);
                 if (window.location.href.indexOf('/client') !== -1) {
 
                     // ================================================================================
-                    // = New way of settings base_api_url, now its mandatory in window.location.href
+                    // = New way of settings base_api_url, now its mandatory in window.location.href  =
                     // ================================================================================
                     var base_api_url;
                     var pieces = window.location.href.split('/a')[0].split('/')
@@ -399,7 +412,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                     if ($state.current.name !== 'app.profile') {
                         if (vm.iframeMode) console.log("testing.880 ping 2.2.1");
                         // $state.go('app.profile', {}, {});
-                        if (!vm.iframeMode) window.open(profileUrl, '_self');
+                        window.open(profileUrl, '_self');
                     }
 
                 }

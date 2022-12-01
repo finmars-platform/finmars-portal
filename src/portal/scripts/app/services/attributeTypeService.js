@@ -1,49 +1,25 @@
 /**
  * Created by szhitenev on 15.06.2016.
+ *
+ * This service needed for modules that import attributeTypeService by require()
  */
+import ToastNotificationService from "../../../../shell/scripts/app/services/toastNotificationService";
+import ErrorService from "../../../../shell/scripts/app/services/errorService";
+import CookieService from "../../../../shell/scripts/app/services/cookieService";
+import XhrService from "../../../../shell/scripts/app/services/xhrService";
+import MetaRestrictionsService from "./metaRestrictionsService";
+import AttributeTypeService from "./attributeTypeServiceNew";
+
 (function () {
 
     'use strict';
 
-    var attributeTypeRepository = require('../repositories/attributeTypeRepository');
+    const cookieService = new CookieService();
+    const toastNotificationService = new ToastNotificationService();
+    const errorService = new ErrorService(toastNotificationService);
+    const xhrService = new XhrService(errorService, cookieService);
+    const metaRestrictionsService = new MetaRestrictionsService();
 
-    var getList = function (entity, options) {
-        return attributeTypeRepository.getList(entity, options);
-    };
-
-    var getByKey = function (entity, id) {
-        return attributeTypeRepository.getByKey(entity, id);
-    };
-
-    var create = function (entity, attributeType) {
-        return attributeTypeRepository.create(entity, attributeType);
-    };
-
-    var update = function (entity, id, attributeType) {
-        return attributeTypeRepository.update(entity, id, attributeType);
-    };
-
-    var deleteByKey = function (entity, id) {
-        return attributeTypeRepository.deleteByKey(entity, id);
-    };
-
-    var recalculateAttributes = function (entity, id) {
-        return attributeTypeRepository.recalculateAttributes(entity, id);
-    };
-
-    var getRecalculateAttributeCount = function (entity, id) {
-        return attributeTypeRepository.getRecalculateAttributeCount(entity, id);
-    };
-
-    module.exports = {
-        getList: getList,
-        getByKey: getByKey,
-        create: create,
-        update: update,
-        deleteByKey: deleteByKey,
-
-        recalculateAttributes: recalculateAttributes,
-        getRecalculateAttributeCount: getRecalculateAttributeCount
-    }
+    module.exports = new AttributeTypeService(cookieService, xhrService, metaRestrictionsService);
 
 }());

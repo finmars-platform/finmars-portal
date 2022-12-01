@@ -5,7 +5,6 @@
 
     'use strict';
 
-    var entityResolverService = require('../../services/entityResolverService');
     var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
 
     // var usersGroupService = require('../../services/usersGroupService');
@@ -23,11 +22,9 @@
 
     // var attributeTypeService = require('../../services/attributeTypeService');
     var metaPermissionsService = require('../../services/metaPermissionsService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
     var tooltipsService = require('../../services/tooltipsService');
     var colorPalettesService = require('../../services/colorPalettesService');
 
-    var uiService = require('../../services/uiService');
 
     var metaHelper = require('../../helpers/meta.helper');
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
@@ -39,15 +36,14 @@
     var instrumentPricingSchemeService = require('../../services/pricing/instrumentPricingSchemeService');
 
     var instrumentTypeService = require('../../services/instrumentTypeService');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, authorizerService, usersService, usersGroupService, entityType, entityId, data) {
+    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, authorizerService, usersService, usersGroupService, metaContentTypesService, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService, entityType, entityId, data) {
 
         var vm = this;
 
         vm.entityType = entityType;
 
-		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
+		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService);
 
         vm.processing = false;
 

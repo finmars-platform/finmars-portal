@@ -1,15 +1,11 @@
-(function () {
+const evEvents = require('../entityViewerEvents');
+const groupsService = require('./groups.service');
+const objectsService = require('./objects.service');
+const evDataHelper = require('../../helpers/ev-data.helper');
+const evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+const queryParamsHelper = require('../../helpers/queryParamsHelper');
 
-    var evEvents = require('../entityViewerEvents');
-    var groupsService = require('./groups.service');
-    var objectsService = require('./objects.service');
-    var evDataHelper = require('../../helpers/ev-data.helper');
-    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
-    var entityViewerDataResolver = require('../entityViewerDataResolver');
-    var stringHelper = require('../../helpers/stringHelper');
-    var queryParamsHelper = require('../../helpers/queryParamsHelper');
-
-    var reportHelper = require('../../helpers/reportHelper');
+export default function (entityResolverService, reportHelper) {
 
     var requestData = function (evDataService) {
 
@@ -21,7 +17,7 @@
             // console.log('requestData.entityType', entityType);
             // console.log('requestData.reportOptions', reportOptions);
 
-            entityViewerDataResolver.getList(entityType, reportOptions).then(function (data) {
+            entityResolverService.getList(entityType, reportOptions).then(function (data) {
 
                 // console.log('requestData.data', data);
 
@@ -791,7 +787,7 @@
 
     };
 
-    module.exports = {
+    return {
         createDataStructure: createDataStructure,
         processData: processData,
         updateDataStructure: updateDataStructure,
@@ -799,4 +795,4 @@
         sortGroupType: sortGroupType
     }
 
-}());
+}

@@ -4,7 +4,6 @@
 
     var stringHelper = require('../helpers/stringHelper');
     var metaHelper = require('../helpers/meta.helper');
-    var reportHelper = require('../helpers/reportHelper');
 
     var getDefaultInterfaceLayout = function () {
 
@@ -106,7 +105,7 @@
 
     };
     /** @module entityViewerDataService */
-    module.exports = function () {
+    module.exports = function (reportHelper) {
 
         var data = {
             columns: [],

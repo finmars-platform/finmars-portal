@@ -1,7 +1,6 @@
 /**
  * Created by szhitenev on 06.05.2016.
  */
-import uiService from "./uiService";
 
 /**
  * Entity viewer helper service.
@@ -10,7 +9,7 @@ import uiService from "./uiService";
 (function () {
 
     const objectComparisonHelper = require('../helpers/objectsComparisonHelper');
-    // const uiService = require('../services/uiService');
+    const uiService = require('../services/uiService');
 
     const entityResolverService = require('../services/entityResolverService');
 

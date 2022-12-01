@@ -6,15 +6,12 @@
     var evEvents = require('../../services/entityViewerEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-    var uiService = require('../../services/uiService');
-
     var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
     var DashboardComponentEventService = require('../../services/eventService');
 
-	var dashboardHelper = require('../../helpers/dashboard.helper');
     const localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
-	module.exports = function ($mdDialog) {
+	module.exports = function ($mdDialog, uiService, dashboardHelper) {
         return {
             restriction: 'E',
             templateUrl: 'views/directives/dashboard/dashboard-report-viewer-matrix-view.html',
