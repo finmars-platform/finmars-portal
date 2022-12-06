@@ -217,6 +217,8 @@
                     scope.componentData.value = null;
                     var emptyVal = scope.componentData.settings.multiple ? [] : null;
 
+                    scope.entityData.value = null; // for entity search select
+
                     scope.item.data.store.value = emptyVal
                     scope.item.data.store.name = '';
                     scope.item.data.store.user_codes = emptyVal;
