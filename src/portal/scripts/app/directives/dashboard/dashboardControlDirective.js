@@ -675,6 +675,14 @@
 
 					if (!scope.item.data.store) scope.item.data.store = {};
 
+                    if (scope.componentData.settings.multiple &&
+                        !Array.isArray(scope.item.data.store.value)) {
+
+                            scope.item.data.store.value = [];
+                            scope.item.data.store.user_codes = [];
+
+                    }
+
                     if (scope.entityType && scope.componentData.settings.multiple) {
 
                         scope.getData().then(function () {
@@ -698,11 +706,6 @@
                     }
 
                     if (scope.componentData.settings.multiple) {
-
-                    	if (!Array.isArray(scope.item.data.store.value)) {
-							scope.item.data.store.value = [];
-                            scope.item.data.store.user_codes = [];
-						}
 
                     	scope.multiselectEventService = new EventService();
 
