@@ -371,6 +371,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                 } else {
 
                     // $state.go('app.portal.home');
+                    console.log("testing.880 mainHeaderDirective redirection");
                     window.open(scope.homepageUrl, '_self');
 
                 }

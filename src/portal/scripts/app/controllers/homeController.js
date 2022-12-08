@@ -20,6 +20,7 @@
 		const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
 
 		if (PROJECT_ENV !== 'local') {
+            console.log("testing.880 homeController redirection");
 			window.open(redirectionService.getUrl('app.portal.home'), '_self');
 		}
 
