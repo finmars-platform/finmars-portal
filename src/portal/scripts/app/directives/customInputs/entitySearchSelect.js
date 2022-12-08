@@ -236,7 +236,7 @@
 
                         setTimeout(function () {
 
-                            scope.onChangeCallback();
+                            if (scope.onChangeCallback) scope.onChangeCallback();
                             scope.$apply();
 
                         }, 0);
@@ -391,7 +391,7 @@
 
                                 setTimeout(function () {
 
-                                    scope.onChangeCallback();
+                                    if (scope.onChangeCallback) scope.onChangeCallback();
 
                                     scope.$apply();
 
