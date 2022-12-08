@@ -54,6 +54,7 @@ export default function (cookieService, globalDataService, xhrService) {
     }; */
 
     const ping = function () {
+        debugger;
         return authorizerRepository.ping();
     };
 
