@@ -316,6 +316,10 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
         }
 
+        cookieService.setCookie('access_token', $uiRouterGlobals.params.atoken);
+
+        vm.accessToken = cookieService.getCookie('access_token');
+        console.log("testing accessToken", );
         if (PROJECT_ENV !== 'local') {
 
             websocketService.addEventListener('master_user_change', function (data) {

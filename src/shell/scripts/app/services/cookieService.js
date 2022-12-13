@@ -3,15 +3,17 @@
 export default function () {
 
 	// IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally.
-		let cookieStorage = '';
+	let cookieStorage = '';
 
-		const getStoredCookie = function () {
-			return cookieStorage;
-		}
+	const getStoredCookie = function () {
+		console.log("testing.880 getStoredCookie ", cookieStorage);
+		return cookieStorage;
+	}
 
-		const storeCookie = function (value) {
-			cookieStorage = value;
-		}
+	const storeCookie = function (value) {
+		cookieStorage = value;
+		console.log("testing.880 storeCookie ", value, cookieStorage);
+	}
 
 	/*const getStoredCookie = function () {
 		return document.cookie;

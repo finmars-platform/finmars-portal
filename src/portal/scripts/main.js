@@ -44,7 +44,6 @@ import enterUserCodeDialogController from "./app/controllers/dialogs/enterUserCo
 import portfolioRegisterDialogController from "./app/controllers/dialogs/portfolioRegisterDialogController";
 import dialogHeaderDirective from "./app/directives/dialogHeaderDirective";
 import dashboard2ReportViewerComponentMatrixController from "./app/controllers/dashboard/_version2/reportViewer/componentMatrixController";
-import meTestPageController from "./app/controllers/meTestPageController";
 // form - tabs
 import instrumentTypePricingTabController from "./app/controllers/tabs/instrument-type/instrumentTypePricingTabController.js";
 import portfolioPerformanceTabController from "./app/controllers/tabs/portfolio/performanceTabController.js"
@@ -155,8 +154,6 @@ export default (function () {
 	portal.service('rvDataProviderService', ['entityResolverService', 'pricesCheckerService', 'reportHelper', rvDataProviderService]);
 	portal.service('reconDataProviderService', ['entityResolverService', 'reportHelper', reconDataProviderService]);
 	//</editor-fold desc="Helpers">
-
-	portal.controller('MeTestPageController', ['$scope', meTestPageController]);
 
 	//<editor-fold desc="Dashboard">
 	portal.component('dashboardEntityViewer', require('./app/components/dashboardEntityViewerComponent'));
