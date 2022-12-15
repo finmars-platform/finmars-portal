@@ -74,8 +74,8 @@ export default function ($scope, $state, authorizerService, usersService, global
 
             console.log('PortalController.resData', resData);
             if (!vm.iframeMode) {
-                console.log("testing.880 portalController redirection 1");
-                window.open(redirectionService.getUrl('app.portal.home'), '_self')
+                console.log("redirection portalController init() 1 to app.portal.home");
+                window.open(redirectionService.getUrl('app.portal.home'), '_self') // REDIRECTION: vue pages/home
             }
             vm.readyStatus = true;
             $scope.$apply();
@@ -86,8 +86,8 @@ export default function ($scope, $state, authorizerService, usersService, global
 
             // $state.go('app.profile', {}, {reload: true});
             if (!vm.iframeMode) {
-                console.log("testing.880 portalController redirection 2");
-                window.open(redirectionService.getUrl('app.profile'), '_self')
+                console.log("redirection portalController init() 2 to app.profile");
+                window.open(redirectionService.getUrl('app.profile'), '_self')  // REDIRECTION: vue pages/profile
             }
 
         })

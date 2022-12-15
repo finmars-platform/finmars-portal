@@ -2,7 +2,8 @@
 
 export default function () {
 
-	// IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally.
+	/* // IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally.
+
 	let cookieStorage = {};
 
 	const getStoredCookie = function () {
@@ -11,8 +12,6 @@ export default function () {
 			return prev + propName + '=' + cookieStorage[propName] + ';';
 		}, '');
 
-		console.log("testing cookieString ", cookieString);
-
 		return cookieString;
 
 	}
@@ -20,22 +19,21 @@ export default function () {
 	const storeCookie = function (value) {
 
 		const attributeToStore = value.split(';')[0].trim();
-		console.log("testing.880 storeCookie attributeToStore", attributeToStore);
 		const keyAndVal = attributeToStore.split('=');
-		console.log("testing.880 storeCookie keyAndVal", keyAndVal);
+
 		const prop = keyAndVal[0];
 
 		cookieStorage[prop] = keyAndVal[1];
-		console.log("testing.880 storeCookie ", value, cookieStorage);
-	}
 
-	/*const getStoredCookie = function () {
+	} */
+
+	const getStoredCookie = function () {
 		return document.cookie;
 	}
 
 	const storeCookie = function (value) {
 		document.cookie = value;
-	}*/
+	}
 
 	const getCookie = function (name) {
 		let cookieValue = null;
@@ -84,7 +82,7 @@ export default function () {
 				updatedCookie += "=" + propValue;
 			}
 		}
-		console.log("testing.880 setCookie ", updatedCookie);
+
 		// document.cookie = updatedCookie;
 		storeCookie(updatedCookie);
 	};

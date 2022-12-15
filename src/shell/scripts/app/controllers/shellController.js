@@ -55,8 +55,8 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             vm.readyStatus = true;
 
             // $state.go('app.profile', {}, {});
-            console.log("testing.880 redirection 1");
-            window.open(profileUrl, '_self');
+            console.log("redirection shellController onLogInSuccess() ");
+            window.open(profileUrl, '_self'); // REDIRECTION: 'app.profile'
 
         });
 
@@ -148,13 +148,12 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             $urlService.url(fromUrl, true);
 
         };
-        console.log("testing.880.initTransitionListener iframeMode", vm.iframeMode);
+
         if (vm.iframeMode) {
-            console.log("testing.880.initTransitionListener iframeMode transition hook inited");
+
             $transitions.onBefore({}, function (transition) {
-                console.log("testing.880 prevented transition iframe", transition.from().name, transition.to().name);
+
                 if (['app.authentication', 'app.portal.home', 'app.profile'].includes(transition.to().name)) {
-                    console.log("testing.880 prevented transition to", transition.to().name);
                     // resetUrlAfterAbortion();
                     return false;
 
@@ -166,9 +165,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         else {
 
             $transitions.onBefore({}, function (transition) {
-                console.trace("testing.880 transition")
-                console.log("testing.880 on before from().name", transition.from().name);
-                console.log("testing.880 on before from().url", transition.from().url);
+
                 if (vm.isAuthenticated) {
 
                     if (transition.to().name === 'app.authentication') {
@@ -232,10 +229,10 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                 vm.username = '';
                 vm.password = '';
             }
-            console.log("testing.880 onSuccess transition", transition.to().name);
+
             // middlewareService.clearEvents();
             vm.isAuthenticationPage = transition.to().name === 'app.authentication';
-            console.log("testing.880 onSuccess window.location.href", window.location.href);
+
         });
 
         /* $transitions.onFinish({}, function (transition) {
@@ -270,8 +267,8 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                 middlewareService.masterUserChanged();
 
                 // $state.go('app.portal.home');
-                console.log("testing.880 redirection 2");
-                window.open(homepageUrl, '_self');
+                console.log("redirection shellController initCrossTabBroadcast() onmessageCallback()");
+                window.open(homepageUrl, '_self'); // REDIRECTION: app.portal.home
 
             }
 
@@ -312,8 +309,6 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             vm.iframeMode = true;
 
             document.body.classList.add('iframe')
-            console.log("testing.880 $uiRouterGlobals.params", $uiRouterGlobals.params);
-
 
             cookieService.setCookie('access_token', $uiRouterGlobals.params.atoken);
             // globalDataService.setIframeData(iframeData);
@@ -323,7 +318,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         cookieService.setCookie('access_token', $uiRouterGlobals.params.atoken);
 
         vm.accessToken = cookieService.getCookie('access_token');
-        console.log("testing accessToken", );
+
         if (PROJECT_ENV !== 'local') {
 
             websocketService.addEventListener('master_user_change', function (data) {
@@ -355,8 +350,8 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
                     } else {
                         // $state.go('app.portal.home');
-                        console.log("testing.880 redirection 3");
-                        window.open(homepageUrl, '_self');
+                        console.log("redirection shellController init() 1", );
+                        window.open(homepageUrl, '_self'); // REDIRECTION: app.portal.home
                     }
 
                 }
@@ -374,13 +369,12 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         if (broadcastChannelService.isAvailable) {
             initCrossTabBroadcast();
         }
-        if (vm.iframeMode) console.log("testing.880 init before ping");
+
         authorizerService.ping().then(function (data) {
-            if (vm.iframeMode) console.log("testing.880 ping data", data);
             // console.log('ping data', data);
 
             if (!data.is_authenticated) {
-                if (vm.iframeMode) console.log("testing.880 ping 1");
+
                 vm.isAuthenticated = false;
 
                 $state.go('app.authentication');
@@ -388,7 +382,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             } else {
 
                 vm.isAuthenticated = true;
-                    if (vm.iframeMode) console.log("testing.880 ping 2", window.location.href);
+
                 if (window.location.href.indexOf('/client') !== -1) {
 
                     // ================================================================================
@@ -404,11 +398,13 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                     baseUrlService.setMasterUserPrefix(base_api_url);
 
                     globalDataService.setCurrentMasterUserStatus(true);
-                    if (vm.iframeMode) console.log("testing.880 ping 2.1");
+
                     if (vm.isAuthenticationPage) {
-                        if (vm.iframeMode) console.log("testing.880 ping 2.1.1");
                         // $state.go('app.portal.home');
-                        if (!vm.iframeMode) window.open(homepageUrl, '_self');
+                        if (!vm.iframeMode) {
+                            console.log("redirection shellController init() 2");
+                            window.open(homepageUrl, '_self'); // REDIRECTION: app.portal.home
+                        }
                     }
 
                 } else {
@@ -416,11 +412,11 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                     baseUrlService.setMasterUserPrefix(null);
 
                     globalDataService.setCurrentMasterUserStatus(false);
-                    if (vm.iframeMode) console.log("testing.880 ping 2.2");
+
                     if ($state.current.name !== 'app.profile') {
-                        if (vm.iframeMode) console.log("testing.880 ping 2.2.1");
                         // $state.go('app.profile', {}, {});
-                        window.open(profileUrl, '_self');
+                        console.log("redirection shellController init() 3");
+                        window.open(profileUrl, '_self'); // REDIRECTION: app.profile
                     }
 
                 }
@@ -432,10 +428,9 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                 } else if (vm.isAuthenticationPage) {
                     $state.go('app.portal.home');
                 } */
-                if (vm.iframeMode) console.log("User status: Authenticated");
-                if (vm.iframeMode) console.log("testing.880 ping 2 before getUser");
+
                 getUser().then(() => {
-                    if (vm.iframeMode) console.log("testing.880 ping 2 after getUser");
+
                     vm.readyStatus = true;
                     $scope.$apply();
 
@@ -444,8 +439,11 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             }
 
         }).catch(error => {
-            if (vm.iframeMode) console.log("testing.880 ping error", error);
-            if (!error.is_authenticated) $state.go('app.authentication');
+
+            if (!error.is_authenticated) {
+                console.log("redirection shellController init() 4");
+                $state.go('app.authentication'); // REDIRECTION: app.authentication
+            }
         })
 
     };

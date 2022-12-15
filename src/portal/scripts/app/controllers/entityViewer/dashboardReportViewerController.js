@@ -2199,7 +2199,6 @@
 				vm.dashboardComponentDataService.setViewerTableColumns(columns);
 
 				$scope.$apply();
-				console.log("testing.880 getView end", vm.componentData.type, vm.readyStatus);
 				//vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED);
 
 			}).catch(function (error) {
