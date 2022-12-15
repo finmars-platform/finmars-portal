@@ -123,6 +123,7 @@ export default function (toastNotificationService) {
         message = message + '<span class="toast-error-field">Title</span>: ' + error_object.message + '<br/>'
         message = message + '<span class="toast-error-field">Code</span>: ' + error_object.status_code + '<br/>'
         message = message + '<span class="toast-error-field">URL</span>: ' + error_object.url + '<br/>'
+        message = message + '<span class="toast-error-field">Username</span>: ' + error_object.username + '<br/>'
         message = message + '<span class="toast-error-field">Date & Time</span>: ' + error_object.datetime + '<br/>'
         message = message + '<span class="toast-error-field">Details</span>: <div><pre>' + JSON.stringify(error_object.details, null, 4) + '</pre></div>'
 
