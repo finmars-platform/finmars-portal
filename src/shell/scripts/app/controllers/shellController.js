@@ -155,7 +155,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                 console.log("testing.880 prevented transition iframe", transition.from().name, transition.to().name);
                 if (['app.authentication', 'app.portal.home', 'app.profile'].includes(transition.to().name)) {
                     console.log("testing.880 prevented transition to", transition.to().name);
-                    resetUrlAfterAbortion();
+                    // resetUrlAfterAbortion();
                     return false;
 
                 }
@@ -163,27 +163,31 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             });
 
         }
+        else {
 
-        $transitions.onBefore({}, function (transition) {
-            console.trace("testing.880 transition")
-            console.log("testing.880 on before ", transition.from().name);
-            if (vm.isAuthenticated) {
+            $transitions.onBefore({}, function (transition) {
+                console.trace("testing.880 transition")
+                console.log("testing.880 on before from().name", transition.from().name);
+                console.log("testing.880 on before from().url", transition.from().url);
+                if (vm.isAuthenticated) {
 
-                if (transition.to().name === 'app.authentication') {
+                    if (transition.to().name === 'app.authentication') {
+
+                        resetUrlAfterAbortion();
+                        return false;
+
+                    }
+
+                } else if (transition.to().name !== 'app.authentication') {
 
                     resetUrlAfterAbortion();
                     return false;
-
+                    // transition.abort();
                 }
 
-            } else if (transition.to().name !== 'app.authentication') {
+            });
 
-                resetUrlAfterAbortion();
-                return false;
-                // transition.abort();
-            }
-
-        });
+        }
 
         $transitions.onStart({}, function (transition) {
 
@@ -231,7 +235,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             console.log("testing.880 onSuccess transition", transition.to().name);
             // middlewareService.clearEvents();
             vm.isAuthenticationPage = transition.to().name === 'app.authentication';
-
+            console.log("testing.880 onSuccess window.location.href", window.location.href);
         });
 
         /* $transitions.onFinish({}, function (transition) {

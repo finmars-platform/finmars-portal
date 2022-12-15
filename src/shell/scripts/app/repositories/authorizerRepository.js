@@ -180,7 +180,8 @@ export default function (cookieService, xhrService) {
 
 //<editor-fold desc="User">
     const getMe = function () {
-
+        console.log("testing.880 authorizerRepository getMe access_token", cookieService.getCookie('access_token'));
+        debugger;
         return xhrService.fetch(authorizerUrl + '/user/0/', {
             method: 'GET',
             credentials: 'include',

@@ -3,15 +3,29 @@
 export default function () {
 
 	// IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally.
-	let cookieStorage = '';
+	let cookieStorage = {};
 
 	const getStoredCookie = function () {
-		console.log("testing.880 getStoredCookie ", cookieStorage);
-		return cookieStorage;
+
+		const cookieString = Object.keys(cookieStorage).reduce(function (prev, propName) {
+			return prev + propName + '=' + cookieStorage[propName] + ';';
+		}, '');
+
+		console.log("testing cookieString ", cookieString);
+
+		return cookieString;
+
 	}
 
 	const storeCookie = function (value) {
-		cookieStorage = value;
+
+		const attributeToStore = value.split(';')[0].trim();
+		console.log("testing.880 storeCookie attributeToStore", attributeToStore);
+		const keyAndVal = attributeToStore.split('=');
+		console.log("testing.880 storeCookie keyAndVal", keyAndVal);
+		const prop = keyAndVal[0];
+
+		cookieStorage[prop] = keyAndVal[1];
 		console.log("testing.880 storeCookie ", value, cookieStorage);
 	}
 
@@ -70,7 +84,7 @@ export default function () {
 				updatedCookie += "=" + propValue;
 			}
 		}
-
+		console.log("testing.880 setCookie ", updatedCookie);
 		// document.cookie = updatedCookie;
 		storeCookie(updatedCookie);
 	};
