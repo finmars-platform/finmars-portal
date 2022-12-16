@@ -27,7 +27,7 @@ export default function ($scope, $state, authorizerService, usersService, global
                     globalDataService.setMember(member);
                 }
 
-                websocketService.send({action: "update_user_state", data: {member: member}});
+                // websocketService.send({action: "update_user_state", data: {member: member}});
 
                 resolve(member);
 
@@ -46,7 +46,7 @@ export default function ($scope, $state, authorizerService, usersService, global
 
             authorizerService.getCurrentMasterUser().then(masterUser => {
 
-                websocketService.send({action: "update_user_state", data: {master_user: masterUser}});
+                // websocketService.send({action: "update_user_state", data: {master_user: masterUser}});
 
                 resolve();
 
@@ -79,11 +79,13 @@ export default function ($scope, $state, authorizerService, usersService, global
             $scope.$apply();
 
         }).catch(function (error) {
-
+            error.___custom_message = "PortalController init()"
             console.log('PortalController.error', error);
+            console.error(error);
 
             // $state.go('app.profile', {}, {reload: true});
-			window.open(redirectionService.getUrl('app.profile'), '_self')
+			// window.open(redirectionService.getUrl('app.profile'), '_self')
+
 
         })
 
