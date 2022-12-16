@@ -4,8 +4,6 @@
 
 'use strict';
 
-import websocketService from "../../../../shell/scripts/app/services/websocketService.js";
-
 const localStorageService = require('../../../../shell/scripts/app/services/localStorageService'); // TODO inject localStorageService into angular dependencies
 
 export default function ($scope, $state, authorizerService, usersService, globalDataService, redirectionService) {
@@ -27,7 +25,7 @@ export default function ($scope, $state, authorizerService, usersService, global
                     globalDataService.setMember(member);
                 }
 
-                websocketService.send({action: "update_user_state", data: {member: member}});
+                // websocketService.send({action: "update_user_state", data: {member: member}});
 
                 resolve(member);
 
@@ -46,7 +44,7 @@ export default function ($scope, $state, authorizerService, usersService, global
 
             authorizerService.getCurrentMasterUser().then(masterUser => {
 
-                websocketService.send({action: "update_user_state", data: {master_user: masterUser}});
+                // websocketService.send({action: "update_user_state", data: {master_user: masterUser}});
 
                 resolve();
 
@@ -80,10 +78,11 @@ export default function ($scope, $state, authorizerService, usersService, global
 
         }).catch(function (error) {
 
+            error.___custom_message = "PortalController init()"
             console.log('PortalController.error', error);
+            console.error(error);
 
-            // $state.go('app.profile', {}, {reload: true});
-			window.open(redirectionService.getUrl('app.profile'), '_self')
+			// window.open(redirectionService.getUrl('app.profile'), '_self')
 
         })
 
