@@ -7,6 +7,7 @@
 
     var expressionProcedureService = require('../../services/procedures/expressionProcedureService');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var expressionProcedureInstanceService = require('../../services/procedures/expressionProcedureInstanceService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -27,6 +28,22 @@
                 $scope.$apply();
 
             })
+        };
+
+
+        vm.refreshItem = function ($index, item, procedure_instance_id) {
+
+
+
+            expressionProcedureInstanceService.getByKey(procedure_instance_id).then(function (data) {
+
+                item.processing = false;
+                item.result = data
+
+                $scope.$apply();
+
+            });
+
         };
 
         vm.editProcedure = function ($event, item) {
@@ -61,9 +78,14 @@
 
             console.log("Execute Procedure", item);
 
+            item.processing = true;
+            item.executed = true;
+
             expressionProcedureService.runProcedure(item.id, item).then(function (data) {
 
                 toastNotificationService.success('Success. Procedure is being processed');
+
+                vm.refreshItem($event, item, data.procedure_instance.id)
 
 
             })
