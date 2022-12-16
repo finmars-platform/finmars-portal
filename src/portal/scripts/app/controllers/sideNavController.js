@@ -631,29 +631,29 @@
             vm.getMember();
 
 
-            if (toastr) {
-                toastr.options.onclick = function (event) {
-
-                    if (event.currentTarget && event.currentTarget.classList.contains('toast-error')) {
-
-                        $mdDialog.show({
-                            controller: 'SystemErrorLogDialogController as vm',
-                            templateUrl: 'views/dialogs/system-error-log-dialog-view.html',
-                            targetEvent: event,
-                            locals: {
-                                data: {}
-                            },
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true
-                        })
-
-                    }
-
-                }
-
-
-            }
+            // if (toastr) {
+            //     toastr.options.onclick = function (event) {
+            //
+            //         if (event.currentTarget && event.currentTarget.classList.contains('toast-error')) {
+            //
+            //             $mdDialog.show({
+            //                 controller: 'SystemErrorLogDialogController as vm',
+            //                 templateUrl: 'views/dialogs/system-error-log-dialog-view.html',
+            //                 targetEvent: event,
+            //                 locals: {
+            //                     data: {}
+            //                 },
+            //                 preserveScope: true,
+            //                 autoWrap: true,
+            //                 skipHide: true
+            //             })
+            //
+            //         }
+            //
+            //     }
+            //
+            //
+            // }
         }
 
             vm.init();

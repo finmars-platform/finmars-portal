@@ -16,6 +16,8 @@
         vm.schemes = [];
         vm.providers = [];
 
+        vm.readyStatus = {procedure: false};
+
         vm.toggleStatus = {
             'date_from': 'datepicker',
             'date_to': 'datepicker'
@@ -40,6 +42,8 @@
 
         vm.agree = function () {
 
+            vm.item.code = vm.editor.getValue()
+
             expressionProcedureService.create(vm.item).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: {item: data}});
@@ -58,8 +62,41 @@
             vm.item.data_string = JSON.stringify(vm.item.data, 0, 4)
         }
 
+        vm.initExpressionEditor = function () {
+
+            setTimeout(function () {
+
+                vm.editor = ace.edit('aceEditor');
+                vm.editor.setTheme("ace/theme/monokai");
+                vm.editor.getSession().setMode("ace/mode/python");
+                vm.editor.getSession().setUseWorker(false);
+                vm.editor.setHighlightActiveLine(false);
+                vm.editor.setShowPrintMargin(false);
+
+                ace.require("ace/ext/language_tools");
+                vm.editor.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableLiveAutocompletion: true,
+                    enableSnippets: true
+                });
+                vm.editor.setFontSize(14)
+                vm.editor.setBehavioursEnabled(true);
+                vm.editor.setValue(vm.item.code)
+
+                vm.editor.focus();
+                vm.editor.navigateFileStart();
+
+            }, 100)
+
+
+        }
+
 
         vm.init = function () {
+
+            vm.initExpressionEditor();
+
+            vm.readyStatus.procedure = true;
 
         };
 
