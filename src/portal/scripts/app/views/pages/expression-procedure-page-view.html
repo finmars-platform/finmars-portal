@@ -4,56 +4,102 @@
 
         <div>
 
-            <h4>Expression Procedures</h4>
+            <h2>Expression Procedures</h2>
 
             <div>
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>
-                                Name
-                            </th>
+                <div>
 
-                            <th>
-                                Notes
-                            </th>
-                            <th>
-                                Notes for Users
-                            </th>
-                            <th>
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr data-ng-repeat="item in vm.procedures">
-                            <td>
-                                {{item.name}}
-                            </td>
-                            <td>
-                                {{item.notes}}
-                            </td>
-                            <td>
-                                {{item.notes_for_users}}
-                            </td>
-                            <td style="min-width: 350px">
-                                <md-button class="md-raised md-primary" data-ng-click="vm.executeProcedure($event, item)">Execute</md-button>
-                                <md-button class="md-raised" data-ng-click="vm.editProcedure($event, item)">Edit</md-button>
-                                <md-button class="md-raised md-warn" data-ng-click="vm.deleteProcedure($event, item)">Delete</md-button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <div>
+                        <div data-ng-repeat="item in vm.procedures" class="procedure-card">
+
+                            <div >
+                                <div class="procedure-card-field">
+                                    Name: <b>{{item.name}}</b>
+                                </div>
+                                <div data-ng-if="item.notes" class="procedure-card-field">
+                                    {{item.notes}}
+                                </div>
+
+                                <div style="min-width: 350px">
+                                    <md-button class="md-icon-button md-primary"
+                                               style="fill: deepskyblue"
+                                               data-ng-click="vm.executeProcedure($event, item)">
+                                        <ng-md-icon icon="play_arrow"></ng-md-icon>
+                                        <md-tooltip md-direction="bottom">Execute</md-tooltip>
+                                    </md-button>
+                                    <md-button class="md-icon-button" data-ng-click="vm.editProcedure($event, item)">
+                                        <ng-md-icon icon="mode_edit"></ng-md-icon>
+                                        <md-tooltip md-direction="bottom">Edit</md-tooltip>
+                                    </md-button>
+                                    <md-button class="md-icon-button md-warn"
+                                               style="fill: red"
+                                               data-ng-click="vm.deleteProcedure($event, item)">
+                                        <ng-md-icon icon="delete_forever"></ng-md-icon>
+                                        <md-tooltip md-direction="bottom">Delete</md-tooltip>
+                                    </md-button>
+                                </div>
+
+                                <div data-ng-if="item.executed">
+
+                                    <div class="m-16" layout="row" layout-sm="column" layout-align="space-around" data-ng-if="item.processing">
+                                        <progress-circular diameter="50"></progress-circular>
+                                    </div>
+
+                                    <div data-ng-if="!item.processing" style="padding-top: 8px; padding-left: 8px;">
+
+                                        <div class="procedure-card-result-field-holder">
+                                            <span class="procedure-card-result-field">Status:</span>
+                                            <div class="procedure-card-result-value">
+                                                {{item.result.status}}
+                                            </div>
+                                        </div>
+
+                                        <div class="procedure-card-result-field-holder">
+                                            <span class="procedure-card-result-field">Log</span>:
+                                            <div class="procedure-card-result-value">
+                                                <pre>{{item.result.log}}</pre>
+                                            </div>
+                                        </div>
+                                        <div class="procedure-card-result-field-holder">
+                                            <span class="procedure-card-result-field">Error Message</span>:
+                                            <div class="procedure-card-result-value">
+                                                <pre>{{item.result.error_message}}</pre>
+                                            </div>
+                                        </div>
+
+                                        <div class="procedure-card-result-field-holder">
+                                            <span class="procedure-card-result-field">Notes:</span>
+                                            <div class="procedure-card-result-value">
+                                                <pre>{{item.result.notes}}</pre>
+                                            </div>
+                                        </div>
+
+                                        <div class="procedure-card-result-field-holder">
+                                            <span class="procedure-card-result-field">Result:</span>
+                                            <div class="procedure-card-result-value">
+                                                <pre>{{item.result.result}}</pre>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
 
-            <div>
-                <md-button ui-sref="app.portal.expression-procedure-instance" class="md-raised">Check Procedure Status</md-button>
+            <div layout="row">
+                <md-button ui-sref="app.portal.expression-procedure-instance" class="md-raised">Check Procedure Status
+                </md-button>
                 <md-button ui-sref="app.portal.ace-editor" class="md-raised md-primary">Open Code Editor</md-button>
-            </div>
-
-            <div class="m-t-16">
 
                 <md-menu>
                     <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
@@ -78,10 +124,7 @@
                     </md-menu-content>
                 </md-menu>
 
-
             </div>
-
-
 
         </div>
 
