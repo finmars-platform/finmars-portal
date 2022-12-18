@@ -5,7 +5,7 @@
 
     <div class="ev-viewport">
         <div class="ev-content" data-ng-show="dataLoadStatus"></div>
-        <div class="ev-content-loader" data-ng-show="!dataLoadStatus">
+        <div ng-if="!dataLoadStatus" class="ev-content-loader" >
             <div class="e-data-loader" layout="row" layout-sm="column" layout-align="space-around">
                 <progress-circular diameter="100"></progress-circular>
             </div>
