@@ -1,5 +1,9 @@
 .unified-data-select-database-dialog-view {
 
+  md-dialog-content {
+    padding: 21px 20px 15px;
+  }
+
   .control-button {
     color: #f05a22;
     margin: 2px;
@@ -135,78 +139,6 @@ unified-data-select {
 
 }
 
-.unified-data-select-database-dialog-unified-data-row {
-  display: flex;
-  height: 47px;
-  box-sizing: border-box;
-  padding: 0 10px;
-  border-top: 1px solid #ddd;
-
-  &.active {
-    color: #F05A22;
-
-    .unified-data-select-unified-data-name {
-      color: #F05A22;
-    }
-
-    .unified-data-select-unified-data-isin {
-      color: #F05A22;
-    }
-
-    .unified-data-select-unified-data-type {
-      color: #F05A22;
-    }
-
-  }
-
-  &:hover {
-    background: inherit;
-    background-color: rgba(0, 0, 0, 0.027450980392156862);
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-  }
-
-  .unified-data-select-unified-data-name {
-    width: 50%;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 14px;
-    letter-spacing: normal;
-    color: #333333;
-    padding: 5px;
-  }
-
-  .unified-data-select-unified-data-isin {
-    width: 30%;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 14px;
-    letter-spacing: normal;
-    color: #333333;
-    padding: 5px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-
-  .unified-data-select-unified-data-type {
-    width: 20%;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 14px;
-    letter-spacing: normal;
-    color: #333333;
-    padding: 5px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    text-transform: capitalize;
-  }
-
-
-}
-
 
 .unified-data-select-database-dialog-view .unified-data-select-option-detail-box {
   width: 224px;
@@ -294,75 +226,79 @@ unified-data-select {
   }
 }
 
-.unified-data-select-database-dialog-instrument-row {
-  display: flex;
-  height: 47px;
-  box-sizing: border-box;
-  padding: 0 10px;
-  border-top: 1px solid #ddd;
+.unified-data-select-database-dialog-view, instrument-select-database-dialog-view {
 
-  &.active {
-    color: #F05A22;
+  .database-option-row {
+    display: flex;
+    height: 47px;
+    box-sizing: border-box;
+    padding: 0 10px;
+    border-top: 1px solid #ddd;
+
+    &.active {
+      color: #F05A22;
+
+      .unified-data-select-instrument-name {
+        color: #F05A22;
+      }
+
+      .unified-data-select-instrument-isin {
+        color: #F05A22;
+      }
+
+      .unified-data-select-instrument-type {
+        color: #F05A22;
+      }
+
+    }
+
+    &:hover {
+      background: inherit;
+      background-color: rgba(0, 0, 0, 0.027450980392156862);
+      -moz-box-shadow: none;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+    }
 
     .unified-data-select-instrument-name {
-      color: #F05A22;
+      width: 50%;
+      font-weight: 400;
+      font-style: normal;
+      font-size: 14px;
+      letter-spacing: normal;
+      color: #333333;
+      padding: 5px;
     }
 
     .unified-data-select-instrument-isin {
-      color: #F05A22;
+      width: 30%;
+      font-weight: 400;
+      font-style: normal;
+      font-size: 14px;
+      letter-spacing: normal;
+      color: #333333;
+      padding: 5px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     .unified-data-select-instrument-type {
-      color: #F05A22;
+      width: 20%;
+      font-weight: 400;
+      font-style: normal;
+      font-size: 14px;
+      letter-spacing: normal;
+      color: #333333;
+      padding: 5px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      text-transform: capitalize;
     }
 
-  }
 
-  &:hover {
-    background: inherit;
-    background-color: rgba(0, 0, 0, 0.027450980392156862);
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
   }
-
-  .unified-data-select-instrument-name {
-    width: 50%;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 14px;
-    letter-spacing: normal;
-    color: #333333;
-    padding: 5px;
-  }
-
-  .unified-data-select-instrument-isin {
-    width: 30%;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 14px;
-    letter-spacing: normal;
-    color: #333333;
-    padding: 5px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-
-  .unified-data-select-instrument-type {
-    width: 20%;
-    font-weight: 400;
-    font-style: normal;
-    font-size: 14px;
-    letter-spacing: normal;
-    color: #333333;
-    padding: 5px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    text-transform: capitalize;
-  }
-
 
 }
 
@@ -370,7 +306,6 @@ unified-data-select {
   float: left;
   width: 200px;
   text-align: left;
-  padding-top: 12px;
   color: #f05a22;
 
   span {

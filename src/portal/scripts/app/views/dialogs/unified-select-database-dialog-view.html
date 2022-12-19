@@ -1,14 +1,7 @@
 <md-dialog class="unified-data-select-database-dialog-view"
            aria-label="unified data select dialog">
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>Results</h2>
-            <span flex></span>
-        </div>
-
-
-            <span class="material-icons unified-data-select-database-dialog-view-close-button" ng-click="vm.cancel()">close</span>
-
+        <dialog-header title="{{vm.title}}" cancel-dialog="vm.cancel()"></dialog-header>
     </md-toolbar>
     <md-dialog-content>
 
@@ -16,7 +9,7 @@
 
             <div layout="row">
 
-                <div style="width: 383px; padding-left: 20px;">
+                <div style="width: 383px;">
                     <text-input
                             on-change-callback="vm.onInputTextChange()"
                             placeholder-text="Search"
@@ -52,7 +45,7 @@
                         <div
                                 data-ng-repeat="option in vm.localItems"
                                 data-ng-click="vm.selectLocalItem(option)"
-                                class="unified-data-select-database-dialog-instrument-row {{option.selected ? 'active' : ''}}"
+                                class="database-option-row {{option.selected ? 'active' : ''}}"
 
                         >
 
@@ -76,7 +69,7 @@
                         <div
                                 data-ng-repeat="option in vm.databaseItems"
                                 data-ng-click="vm.selectDatabaseItem(option)"
-                                class="unified-data-select-database-dialog-instrument-row {{option.selected ? 'active' : ''}}"
+                                class="database-option-row {{option.selected ? 'active' : ''}}"
 
                         >
 
@@ -113,155 +106,32 @@
 
             </div>
 
-<!--            <div class="unified-data-select-database-dialog-instrument-detail">-->
-
-<!--                <div class="unified-data-select-option-detail-box" data-ng-if="vm.inputText.length > 2">-->
-
-<!--                    <div data-ng-if="vm.hoverItem">-->
-
-<!--                        <div data-ng-if="vm.hoverItem.id" class="unified-data-select-update-instrument-button">-->
-<!--                            <span class="material-icons  {{vm.isUpdatingInstrument ? 'disabled-btn' : ''}}" ng-click="vm.updateLocalInstrument(vm.hoverItem)">autorenew</span>-->
-<!--                        </div>-->
-
-<!--                        <div class="unified-data-select-option-detail-field">-->
-
-<!--                            <div class="unified-data-select-option-detail-label">-->
-<!--                                Instrument-->
-<!--                            </div>-->
-<!--                            <div class="unified-data-select-option-detail-value" style="width: 140px">-->
-
-<!--                                <span data-ng-if="vm.hoverItem.id">{{vm.hoverItem.name}}</span>-->
-<!--                                <span data-ng-if="!vm.hoverItem.id">{{vm.hoverItem.issueName}}</span>-->
-
-<!--                            </div>-->
-
-<!--                        </div>-->
-
-<!--                        <div class="unified-data-select-option-detail-field">-->
-
-<!--                            <div class="unified-data-select-option-detail-label">-->
-<!--                                ISIN-->
-<!--                            </div>-->
-<!--                            <div class="unified-data-select-option-detail-value">-->
-
-<!--                                <span data-ng-if="vm.hoverItem.id">{{vm.hoverItem.user_code}}</span>-->
-<!--                                <span data-ng-if="!vm.hoverItem.id">{{vm.hoverItem.referenceId}}</span>-->
-
-<!--                            </div>-->
-
-<!--                        </div>-->
-
-<!--                        <div class="unified-data-select-option-detail-field">-->
-
-<!--                            <div class="unified-data-select-option-detail-label">-->
-<!--                                Ticker-->
-<!--                            </div>-->
-<!--                            <div class="unified-data-select-option-detail-value">-->
-
-<!--                                <span data-ng-if="vm.hoverItem.id">{{vm.hoverItem.reference_for_pricing}}</span>-->
-<!--                                <span data-ng-if="!vm.hoverItem.id">{{vm.hoverItem.bloombergTicker}}</span>-->
-
-<!--                            </div>-->
-
-<!--                        </div>-->
-
-<!--                        <div class="unified-data-select-option-detail-field">-->
-
-<!--                            <div class="unified-data-select-option-detail-label">-->
-<!--                                Type-->
-<!--                            </div>-->
-<!--                            <div class="unified-data-select-option-detail-value">-->
-
-<!--                                <span data-ng-if="vm.hoverItem.id">{{vm.hoverItem.instrument_type_object.name}}</span>-->
-<!--                                <span data-ng-if="!vm.hoverItem.id">{{vm.hoverItem.instrumentType}}</span>-->
-
-<!--                            </div>-->
-
-<!--                        </div>-->
-
-<!--                        <div class="unified-data-select-option-detail-field">-->
-
-<!--                            <div class="unified-data-select-option-detail-label">-->
-<!--                                FIGI / FIGI RegS-->
-<!--                            </div>-->
-<!--                            <div class="unified-data-select-option-detail-value">-->
-
-<!--                                <span data-ng-if="vm.hoverItem.id">-</span>-->
-<!--                                <span data-ng-if="!vm.hoverItem.id">{{vm.hoverItem.figi}}</span>-->
-
-<!--                            </div>-->
-
-<!--                        </div>-->
-
-<!--                        <div class="unified-data-select-option-detail-field">-->
-
-<!--                            <div class="unified-data-select-option-detail-label">-->
-<!--                                Common Code-->
-<!--                            </div>-->
-<!--                            <div class="unified-data-select-option-detail-value">-->
-
-<!--                                <span data-ng-if="vm.hoverItem.id">-</span>-->
-<!--                                <span data-ng-if="!vm.hoverItem.id">{{vm.hoverItem.commonCode}}</span>-->
-
-<!--                            </div>-->
-
-<!--                        </div>-->
-
-<!--                        <div class="unified-data-select-option-detail-field">-->
-
-<!--                            <div class="unified-data-select-option-detail-label">-->
-<!--                                Updating Date-->
-<!--                            </div>-->
-<!--                            <div class="unified-data-select-option-detail-value">-->
-
-<!--                                <span data-ng-if="vm.hoverItem.id">{{vm.hoverItem.pretty_date}}</span>-->
-<!--                                <span data-ng-if="!vm.hoverItem.id">{{vm.hoverItem.pretty_date}}</span>-->
-
-<!--                            </div>-->
-
-<!--                        </div>-->
-
-<!--                        <div class="unified-data-select-option-detail-field">-->
-
-<!--                            <div class="unified-data-select-option-detail-label">-->
-<!--                                WKN Code-->
-<!--                            </div>-->
-<!--                            <div class="unified-data-select-option-detail-value">-->
-
-<!--                                <span data-ng-if="vm.hoverItem.id">-</span>-->
-<!--                                <span data-ng-if="!vm.hoverItem.id">{{vm.hoverItem.wkn}}</span>-->
-
-<!--                            </div>-->
-
-<!--                        </div>-->
-
-
-<!--                    </div>-->
-
-<!--                </div>-->
-
-<!--            </div>-->
-
-
         </div>
 
     </md-dialog-content>
-    <md-dialog-actions layout="row">
+    <md-dialog-actions>
 
-        <div class="unified-data-select-database-footer">
+        <div class="flex-row fc-space-between flex-i-center">
+            <div class="unified-data-select-database-footer">
 
-            <span class="material-icons" data-ng-click="vm.unlock = true" data-ng-if="!vm.unlock">lock</span>
+                <span class="material-icons" data-ng-click="vm.unlock = true" data-ng-if="!vm.unlock">lock</span>
 
-            <span class="material-icons" data-ng-if="vm.unlock" data-ng-click="vm.addEntity($event)">add</span>
+                <span class="material-icons" data-ng-if="vm.unlock" data-ng-click="vm.addEntity($event)">add</span>
+
+            </div>
+
+            <div>
+                <md-button class="link-button m-0" ng-click="vm.cancel()">
+                    Cancel
+                </md-button>
+
+                <md-button class="link-button m-t-0 m-b-0 {{vm.isDisabled ? 'disabled-btn' : ''}}"
+                           ng-click="vm.agree()" style="margin-right:20px;">
+                    <span data-ng-if="vm.actionType == 'default'">Select</span>
+                </md-button>
+            </div>
 
         </div>
 
-        <md-button class="link-button md-button md-ink-ripple" ng-click="vm.cancel()">
-            Cancel
-        </md-button>
-        <md-button class="link-button md-button md-ink-ripple {{vm.isDisabled ? 'disabled-btn' : ''}}"
-                   ng-click="vm.agree()" style="margin-right:20px;">
-            <span data-ng-if="vm.actionType == 'default'">Select</span>
-        </md-button>
     </md-dialog-actions>
 </md-dialog>
