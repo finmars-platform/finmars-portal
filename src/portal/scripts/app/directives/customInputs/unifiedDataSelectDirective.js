@@ -357,6 +357,7 @@
                         multiple: true,
                         locals: {
                             data: {
+                                title: scope.label,
                                 inputText: scope.inputText,
                                 entityType: scope.entityType
                             }

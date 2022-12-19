@@ -15,6 +15,7 @@
 
         var vm = this;
 
+        vm.title = data.title || 'Select instrument';
         vm.localInstrumentsTotal = 0;
         vm.databaseInstrumentsTotal = 0;
         vm.hoverInstrument = null;
@@ -22,7 +23,8 @@
         vm.databaseInstruments = [];
         vm.localInstruments = [];
 
-        vm.inputText = data.inputText;
+        vm.inputText = '';
+        // vm.inputText = data.inputText;
         vm.instrument_type = '';
 
         vm.globalPage = 1;
