@@ -6,33 +6,37 @@
 
 export default function () {
 
-	const success = function (message) {
-		toastr.success(message);
-	};
+    // toastr.options.onclick = function() { console.log('clicked'); }
 
-	const error = function (message) {
+    const success = function (message) {
+        toastr.success(message);
+    };
 
-		// var searchParams = new URLSearchParams(window.location.search);
+    const error = function (message, title, options) {
 
-		// if (searchParams.get('debug') === 'true') {
-		toastr.error(message);
-		// }
+        // var searchParams = new URLSearchParams(window.location.search);
 
-	};
+        // if (searchParams.get('debug') === 'true') {
 
-	const warning = function (message) {
-		toastr.warning(message)
-	};
+		toastr.error(message, title, options);
 
-	const info = function (message) {
-		toastr.info(message);
-	};
+        // }
 
-	return {
-		success: success,
-		error: error,
-		info: info,
-		warning: warning
-	}
+    };
+
+    const warning = function (message) {
+        toastr.warning(message)
+    };
+
+    const info = function (message) {
+        toastr.info(message);
+    };
+
+    return {
+        success: success,
+        error: error,
+        info: info,
+        warning: warning
+    }
 
 }
