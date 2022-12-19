@@ -415,7 +415,7 @@ const getMasterUsersListLight = function () {
     })
 };
 
-const getMasterUsersList = function () {
+const getMasterUsersList = function (options) {
 
     return xhrService.fetch(authorizerUrl + '/master-user/', {
         method: 'GET',
