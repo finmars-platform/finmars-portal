@@ -4,8 +4,6 @@
 
 'use strict';
 
-import websocketService from "../../../../shell/scripts/app/services/websocketService.js";
-
 const localStorageService = require('../../../../shell/scripts/app/services/localStorageService'); // TODO inject localStorageService into angular dependencies
 
 export default function ($scope, $state, authorizerService, usersService, globalDataService, redirectionService) {
@@ -79,13 +77,12 @@ export default function ($scope, $state, authorizerService, usersService, global
             $scope.$apply();
 
         }).catch(function (error) {
+
             error.___custom_message = "PortalController init()"
             console.log('PortalController.error', error);
             console.error(error);
 
-            // $state.go('app.profile', {}, {reload: true});
 			// window.open(redirectionService.getUrl('app.profile'), '_self')
-
 
         })
 
