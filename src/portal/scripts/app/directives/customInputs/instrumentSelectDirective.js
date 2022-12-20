@@ -428,6 +428,15 @@
 
                             scope.itemName = res.data.item.name;
                             scope.inputText = res.data.item.name;
+
+                            setTimeout(function () {
+
+                                if (scope.onChangeCallback) scope.onChangeCallback();
+
+                                scope.$apply();
+
+                            }, 0);
+
                         }
 
                     })
