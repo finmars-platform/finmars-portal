@@ -107,6 +107,9 @@
         	vm.typeFieldName = 'instrument_type';
             vm.typeFieldLabel = 'Instrument type';
 
+            vm.instrumentsSelectorOptions = [];
+            vm.currenciesSelectorOptions = [];
+
         } else if (vm.entityType === 'instrument-type') {
             vm.typeFieldName = 'instrument_class';
             vm.typeFieldLabel = 'Instrument class';
@@ -669,7 +672,7 @@
                     console.log('vm.entity', vm.entity)
 
                     vm.entity.$_isValid = true;
-                    vm.readyStatus.entity = true;
+                    // vm.readyStatus.entity = true;
                     // vm.readyStatus.permissions = true;
 
                     if (['price-history', 'currency-history', 'price-history-error', 'currency-history-error'].indexOf(vm.entityType) === -1) {
@@ -2062,9 +2065,13 @@
 
 				if (vm.entityType === 'instrument') {
 					vm.getDataForInstrumentTabs();
-					vm.sharedLogic.getDataForInstrumentExposureTab().then(function (data) {
-						vm.instrumentsSelectorOptions = data[0];
+
+                    vm.sharedLogic.getDataForInstrumentExposureTab().then(function (data) {
+
+                        vm.instrumentsSelectorOptions = data[0];
 						vm.currenciesSelectorOptions = data[1];
+                        vm.readyStatus.exposureTab = true;
+
 					});
 
 				}
