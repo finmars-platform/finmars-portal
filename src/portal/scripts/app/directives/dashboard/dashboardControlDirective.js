@@ -670,11 +670,10 @@
 
 					if (!scope.item.data.store) scope.item.data.store = {};
 
-                    if (scope.componentData.settings.multiple &&
-                        !Array.isArray(scope.item.data.store.value)) {
+                    if (scope.componentData.settings.multiple) {
 
-                            scope.item.data.store.value = [];
-                            scope.item.data.store.user_codes = [];
+                        if ( !Array.isArray(scope.item.data.store.value) ) scope.item.data.store.value = [];
+                        if ( !Array.isArray(scope.item.data.store.user_codes) ) scope.item.data.store.user_codes = [];
 
                     }
 

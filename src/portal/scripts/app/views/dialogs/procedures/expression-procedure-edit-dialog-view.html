@@ -1,4 +1,4 @@
-<md-dialog aria-label="" ng-cloak class="draggable-dialog width-50" drag-dialog>
+<md-dialog aria-label="" ng-cloak class="draggable-dialog width-70 edit-expression-procedure" drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
@@ -7,103 +7,94 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content class="p-24">
+    <md-dialog-content>
 
         <div layout="column" data-ng-if="vm.readyStatus.procedure">
 
-            <div>
-
-                <h3>General</h3>
-
-                <md-input-container>
-                    <label>Name</label>
-                    <input type="text" data-ng-model="vm.item.name">
-                </md-input-container>
-
-                <md-input-container>
-                    <label>User Code</label>
-                    <input type="text" data-ng-model="vm.item.user_code">
-                </md-input-container>
-
-                <div class="m-t-16">
-
-                    <div><label for="">Notes</label></div>
-                    <textarea name="" data-ng-model="vm.item.notes" cols="60" rows="5"></textarea>
-
-                </div>
-
-                <div class="m-t-16">
-
-                    <div><label for="">Notes for Users</label></div>
-                    <textarea name="" data-ng-model="vm.item.notes_for_users" cols="60" rows="5"></textarea>
-
-                </div>
+            <div class="p-16">
 
                 <div>
+                    <div class="width-100">
+                        <md-input-container>
+                            <label>Name</label>
+                            <input type="text" data-ng-model="vm.item.name">
+                        </md-input-container>
+                    </div>
 
-                    <div data-ng-repeat="item in vm.item.context_variables track by $index" layout="row">
+                    <div class="width-100">
 
-                        <div>
-                            {{item.order}}
-                        </div>
-
-                        <div>
-
-                            <md-input-container style="width: 60%">
-                                <label for="">Name (must start with <b>context_</b>)</label>
-                                <input type="text" data-ng-model="item.name">
-                            </md-input-container>
-
-                        </div>
-
-                        <div>
-
-                            <md-input-container style="width: 60%">
-                                <label for="">Expression</label>
-                                <input type="text" data-ng-model="item.expression">
-                            </md-input-container>
-
-                            <expression-editor-button data-item="item.expression">
-                            </expression-editor-button>
-
-                        </div>
-
-                        <div>
-
-                            <md-input-container style="width: 60%">
-                                <label for="">Notes</label>
-                                <input type="text" data-ng-model="item.notes">
-                            </md-input-container>
-
-                        </div>
-
-                        <div>
-                            <md-button class="md-warn" data-ng-click="vm.deleteContextVariable($event, $index)">Delete</md-button>
-                        </div>
+                        <md-input-container>
+                            <label>User Code</label>
+                            <input type="text" data-ng-model="vm.item.user_code">
+                        </md-input-container>
 
                     </div>
 
-                    <md-button data-ng-click="vm.addContextVariable($event)">Add Context Variable</md-button>
+                    <div class="width-100">
+                        <md-input-container>
+                            <label>Notes</label>
+                            <input type="text" data-ng-model="vm.item.notes">
+                        </md-input-container>
+                    </div>
 
-                </div>
+                    <div class="edit-expression-procedure-context-variables">
 
-                <div layout="row">
+                        <h3>Context Variables</h3>
 
-                    <div class="m-t-16">
+                        <div data-ng-repeat="item in vm.item.context_variables track by $index"
+                             class="edit-expression-procedure-context-variable" layout="column">
 
-                        <div><label for="">Code</label></div>
-                        <textarea name="" data-ng-model="vm.item.code" cols="60" rows="5"></textarea>
+                            <div style="padding-left: 12px; margin-bottom: 8px;">
+                                Index: {{item.order}}
+                            </div>
 
-                        <expression-editor-button data-item="vm.item.code">
-                        </expression-editor-button>
+                            <div>
 
+                                <md-input-container>
+                                    <label for="">Name (must start with <b>context_</b>)</label>
+                                    <input type="text" data-ng-model="item.name">
+                                </md-input-container>
+
+                            </div>
+
+                            <div>
+
+                                <md-input-container>
+                                    <label for="">Expression</label>
+                                    <input type="text" data-ng-model="item.expression">
+                                </md-input-container>
+
+                                <expression-editor-button data-item="item.expression">
+                                </expression-editor-button>
+
+                            </div>
+
+                            <div>
+
+                                <md-input-container>
+                                    <label for="">Notes</label>
+                                    <input type="text" data-ng-model="item.notes">
+                                </md-input-container>
+
+                            </div>
+
+                            <div>
+                                <md-button class="md-warn" data-ng-click="vm.deleteContextVariable($event, $index)">
+                                    Delete
+                                </md-button>
+                            </div>
+
+                        </div>
+
+                        <md-button data-ng-click="vm.addContextVariable($event)">Add Context Variable</md-button>
 
                     </div>
 
                 </div>
 
+                <div class="ace-editor" id="aceEditor" style="height: 80vh;">
 
-
+                </div>
 
             </div>
 
@@ -125,7 +116,7 @@
         <md-button ng-click="vm.editAsJson($event)">
             Edit as JSON
         </md-button>
-        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button class="md-primary" ng-click="vm.agree()" style="margin-right:20px;">
             Save
         </md-button>
     </md-dialog-actions>

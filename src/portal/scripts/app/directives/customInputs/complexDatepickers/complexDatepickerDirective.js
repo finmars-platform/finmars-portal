@@ -252,6 +252,8 @@
 					}); */
 
 					firstCalendarElem.addEventListener("pickmeup-change", event => {
+
+						document.activeElement.blur(); // otherwise date will be changed to old one on dateInput blur
 						// firstDate = event.detail.date;
 						firstDate = event.detail.date;
 						scope.date = event.detail.formatted_date;
@@ -430,6 +432,7 @@
 					// firstCalendarElem.addEventListener("pickmeup-change", onDateFromPickmeupChange);
 					firstCalendarElem.addEventListener("pickmeup-change", event => {
 
+						document.activeElement.blur(); // otherwise date will be changed to old one on dateInput blur
 						firstDate = event.detail.date;
 						scope.date = event.detail.formatted_date;
 						scope.inputsModels.date = scope.date;
@@ -453,6 +456,8 @@
 
 					// secondCalendarElem.addEventListener("pickmeup-change", onDateToPickmeupChange);
 					secondCalendarElem.addEventListener("pickmeup-change", event => {
+
+						document.activeElement.blur(); // otherwise date will be changed to old one on dateInput blur
 
 						secondDate = event.detail.date;
 						scope.secondDate = event.detail.formatted_date;
@@ -673,7 +678,6 @@
 
 						case 'yesterday-business':
 
-							scope.datepickerOptions.datepickerMode = 'yesterday-business';
 							/* scope.datepickerOptions.expression = 'now()-days(1)';
 
 							const yesterdayDate = moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD');
@@ -695,6 +699,7 @@
 
 							} catch (error) { throw new Error(error); }
 
+							scope.datepickerOptions.datepickerMode = 'yesterday-business';
 							scope.datepickerOptions.expression = 'last_business_day(now()-days(1))';
 
 							applyFirstDate(prevBusinessDay);

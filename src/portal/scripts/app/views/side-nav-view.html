@@ -1059,9 +1059,8 @@
     <br/>
     <div>
         <a class="sidenav-api-link sidenav-error-subtitle open-logs-button" data-ng-click="vm.toggleLogsWindow($event)">logs</a>
-        <span data-ng-click="vm.openSystemErrorLogDialog($event)"
-              class="sidenav-error-subtitle {{vm.getErrorCount() ? 'text-warning-red' : ''}}">Errors: {{ vm.getErrorCount()
-            }}</span>
+        <span ui-sref="app.portal.error-page"
+              class="sidenav-error-subtitle">Errors</span>
     </div>
 
     <div class="sidenav-api-subtitle">

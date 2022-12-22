@@ -116,7 +116,8 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
                 systemMessageService.getList(options).then(messagesData => {
                     scope.notiPopupData.noti = messagesData.results;
-                });
+
+                }).catch(e => { console.error(e) });
 
             };
 

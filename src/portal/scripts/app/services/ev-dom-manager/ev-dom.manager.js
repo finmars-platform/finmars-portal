@@ -660,6 +660,8 @@
 
             var clickData = getClickData(event);
 
+            var entityType = evDataService.getEntityType();
+
             console.log('clickData', clickData);
             console.log('detail', event.detail);
 
@@ -668,8 +670,7 @@
             console.log('selection', selection);
             if (clickData.___type === 'hyperlink') {
                 metaHelper.openLinkInNewTab(event);
-            }
-            else if (event.detail === 2) { // double click handler
+            } else if (event.detail === 2) { // double click handler
 
                 if (clickData.___type === 'object') {
 
@@ -682,7 +683,12 @@
 
                     evDataService.setActiveObject(obj);
                     // evDataService.setActiveObjectAction(dropdownAction);
-                    evDataService.setRowsActionData({actionKey: 'edit', object: obj});
+
+                    if (entityType === 'complex-transaction') {
+                        evDataService.setRowsActionData({actionKey: 'view_transaction', object: obj});
+                    } else {
+                        evDataService.setRowsActionData({actionKey: 'edit', object: obj});
+                    }
 
                     evEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
                     evEventService.dispatchEvent(evEvents.ROWS_ACTION_FIRED);
@@ -694,8 +700,7 @@
 
                 }
 
-            }
-            else if (clickData.isShiftPressed) {
+            } else if (clickData.isShiftPressed) {
 
                 if (event.detail === 1) {
 
@@ -857,8 +862,8 @@
      * @type {Object} eventListenerFn2Args
      * eventListenerFn2Args.evDataService {Object|null}
      * eventListenerFn2Args.evEventService {Object|null}
-	 * eventListenerFn2Args.usersService {Object|null}
-	 * eventListenerFn2Args.globalDataService {Object|null}
+     * eventListenerFn2Args.usersService {Object|null}
+     * eventListenerFn2Args.globalDataService {Object|null}
      */
     var eventListenerFn2Args = {
         evDataService: null,
@@ -872,9 +877,9 @@
         var dropdownAction = event.target.dataset.evDropdownAction;
 
         var evDataService = eventListenerFn2Args.evDataService,
-			evEventService = eventListenerFn2Args.evEventService,
-			usersService = eventListenerFn2Args.usersService,
-			globalDataService = eventListenerFn2Args.globalDataService;
+            evEventService = eventListenerFn2Args.evEventService,
+            usersService = eventListenerFn2Args.usersService,
+            globalDataService = eventListenerFn2Args.globalDataService;
 
         var dropdownActionData = {};
 
@@ -979,10 +984,10 @@
 
         eventListenerFn2Args.evDataService = evDataService;
         eventListenerFn2Args.evEventService = evEventService;
-		eventListenerFn2Args.usersService = usersService;
-		eventListenerFn2Args.globalDataService = globalDataService;
+        eventListenerFn2Args.usersService = usersService;
+        eventListenerFn2Args.globalDataService = globalDataService;
 
-		window.addEventListener('click', executeContextMenuAction);
+        window.addEventListener('click', executeContextMenuAction);
 
         clearDropdownsAndRowsArgs.evDataService = evDataService;
         clearDropdownsAndRowsArgs.evEventService = evEventService;
@@ -1055,6 +1060,10 @@
             if (entityType === 'complex-transaction') {
 
                 innerHTMLString = innerHTMLString +
+                    '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="view_transaction"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">View Transaction</div>' +
                     '<div class="ev-dropdown-option"' +
                     ' data-ev-dropdown-action="lock_transaction"' +
                     ' data-object-id="' + objectId + '"' +

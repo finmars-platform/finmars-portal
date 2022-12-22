@@ -8,6 +8,8 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
 import evEvents from "../../services/entityViewerEvents";
 import evHelperService from "../../services/entityViewerHelperService";
 import entityResolverService from "../../services/entityResolverService";
+import uiService from "../../services/uiService";
+import instrumentService from "../../services/instrumentService";
 
 (function () {
 
@@ -525,6 +527,18 @@ import entityResolverService from "../../services/entityResolverService";
 
             };
 
+            var viewComplexTransaction = async function (entityType, actionData) {
+
+                evHelperService.openComplexTransactionViewDrawer(
+                    vm.entityViewerDataService,
+                    vm.entityViewerEventService,
+                    $bigDrawer,
+					$mdDialog,
+                    actionData.object.id
+                );
+
+            };
+
             var restoreDeletedEntities = function (event, entityType, entitiesToRestore) {
 
             	$mdDialog.show({
@@ -861,6 +875,9 @@ import entityResolverService from "../../services/entityResolverService";
 
 								break;
 
+                            case 'view_transaction':
+                                viewComplexTransaction(entitytype, actionData);
+                                break;
                             case 'lock_transaction':
                                 manageTransactionsLockedAndCanceledProps('lock');
                                 break;

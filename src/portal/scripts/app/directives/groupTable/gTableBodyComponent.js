@@ -575,7 +575,9 @@ import toastNotificationService from "../../../../../shell/scripts/app/services/
                                     contentElem.style.opacity = '1';
                                 }
 
-                                updateTableContent();
+                                if (scope.evDataService.didDataLoadEnd()) {
+                                    updateTableContent();
+                                }
 
                             }
 
