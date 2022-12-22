@@ -23,8 +23,8 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
     // vm.isIdentified = false; // check if has proper settings (e.g. has master users to work with)
     const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
 
-    const homepageUrl = redirectionService.getUrl('app.portal.home');
-    const profileUrl = redirectionService.getUrl('app.profile');
+    let homepageUrl;
+    let profileUrl;
 
     vm.readyStatus = false;
 
@@ -263,14 +263,12 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
         const onmessageCallback = function (ev) {
 
-            if (ev.data.event === crossTabEvents.MASTER_USER_CHANGED) {
+            /* if (ev.data.event === crossTabEvents.MASTER_USER_CHANGED) {
                 middlewareService.masterUserChanged();
 
-                // $state.go('app.portal.home');
-                console.log("redirection shellController initCrossTabBroadcast() onmessageCallback()");
-                window.open(homepageUrl, '_self'); // REDIRECTION: app.portal.home
+                window.open(homepageUrl, '_self');
 
-            }
+            } */
 
             if (ev.data.event === crossTabEvents.LOGOUT) {
 
@@ -285,10 +283,13 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                     } else {
                         window.location.reload()
                     } */
-                    $state.go('app.authentication');
-
                     cookieService.deleteCookie('access_token');
                     cookieService.deleteCookie('refresh_token');
+
+                    vm.isAuthenticated = false;
+
+                    $state.go('app.authentication');
+
 
                 });
 
@@ -370,6 +371,23 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             initCrossTabBroadcast();
         }
 
+        // ==================================================================================
+        // = New way of settings base_api_url, now window.location.pathname can contains it =
+        // ==================================================================================
+        var pathname = window.location.pathname;
+        var base_api_url;
+
+        if (pathname.startsWith('/client')) {
+
+            base_api_url = pathname.split('/')[1];
+
+            baseUrlService.setMasterUserPrefix(base_api_url);
+
+        }
+
+        homepageUrl = redirectionService.getUrl('app.portal.home');
+        profileUrl = redirectionService.getUrl('app.profile');
+
         authorizerService.ping().then(function (data) {
             // console.log('ping data', data);
 
@@ -383,31 +401,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
                 vm.isAuthenticated = true;
 
-                if (window.location.href.indexOf('/client') !== -1) {
-
-                    // ================================================================================
-                    // = New way of settings base_api_url, now its mandatory in window.location.href  =
-                    // ================================================================================
-                    var base_api_url;
-                    var pieces = window.location.href.split('/a')[0].split('/')
-
-                    base_api_url = pieces[pieces.length - 1]
-
-                    console.log("Setting base api url ", base_api_url)
-
-                    baseUrlService.setMasterUserPrefix(base_api_url);
-
-                    globalDataService.setCurrentMasterUserStatus(true);
-
-                    if (vm.isAuthenticationPage) {
-                        // $state.go('app.portal.home');
-                        if (!vm.iframeMode) {
-                            console.log("redirection shellController init() 2");
-                            window.open(homepageUrl, '_self'); // REDIRECTION: app.portal.home
-                        }
-                    }
-
-                } else {
+                if (!base_api_url) { // logging in without specifying database
 
                     baseUrlService.setMasterUserPrefix(null);
 
@@ -429,7 +423,31 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                     $state.go('app.portal.home');
                 } */
 
-                getUser().then(() => {
+                getUser().then(async () => {
+
+                    if (base_api_url) {
+
+                        try {
+
+                            const masterUser = await authorizerService.getCurrentMasterUser();
+
+                            console.log("Setting base api url ", masterUser.base_api_url);
+                            // baseUrlService.setMasterUserPrefix(base_api_url);
+
+                            globalDataService.setCurrentMasterUserStatus(true);
+
+                            if (vm.isAuthenticationPage) {
+                                // $state.go('app.portal.home');
+                                window.open(homepageUrl, '_self');
+                            }
+
+                        } catch (e) {
+                            e.___custom_message = 'location: shellController -> init() -> getCurrentMasterUser()';
+                            console.error(e);
+                        }
+
+                    }
+
 
                     vm.readyStatus = true;
                     $scope.$apply();

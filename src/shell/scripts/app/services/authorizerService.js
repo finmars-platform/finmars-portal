@@ -206,17 +206,19 @@ export default function (cookieService, globalDataService, xhrService) {
 
         return new Promise((resolve, reject) => {
 
-            /* authorizerRepository.getCurrentMasterUser().then(masterUserData => {
-
-                globalDataService.setMasterUser(masterUserData);
-                resolve(masterUserData);
-
-            }).catch(error => reject(error)); */
             authorizerRepository.getMasterUsersList().then(masterUsersData => {
 
-                const currentMasterUser = masterUsersData.results.find(master => window.location.href.indexOf(master.base_api_url) !== -1)
+                const base_api_url = window.location.pathname.split('/')[1];
+                let currentMasterUser = null;
+
+                if (base_api_url.startsWith('client')) {
+
+                    currentMasterUser = masterUsersData.results.find(master => master.base_api_url === base_api_url)
+
+                }
 
                 globalDataService.setMasterUser(currentMasterUser);
+
                 resolve(currentMasterUser);
 
             }).catch(error => reject(error));

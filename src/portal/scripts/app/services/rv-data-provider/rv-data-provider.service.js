@@ -676,12 +676,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         var rootGroup = evDataService.getRootGroupData();
         var level = 0;
 
-        return recursiveRequest(rootGroup.results, level, evDataService, evEventService).then(function (data) {
-
+        return recursiveRequest(rootGroup.results, level, evDataService, evEventService).then(function () {
             console.timeEnd('Creating Data Structure');
-
-            return data;
-
         })
 
     };

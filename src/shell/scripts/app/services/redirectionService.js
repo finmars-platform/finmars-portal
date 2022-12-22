@@ -4,23 +4,25 @@ import baseUrlService from "./baseUrlService";
 
 export default function () {
 
-
+	const PROJECT_ENV = '__PROJECT_ENV__';
 
 	function getUrl (stateName) {
 
-		const baseUrl = baseUrlService.resolve();
-		const base_api_url = baseUrlService.getMasterUserPrefix()
+		let urlBeginning = baseUrlService.resolve();
+		const base_api_url = baseUrlService.getMasterUserPrefix();
 
-		let profileUrl = baseUrl + '/v/profile'
+		if (base_api_url) urlBeginning += '/' + base_api_url;
 
-		if (window.location.href.indexOf('0.0.0.0') !== -1) { // for local develop mode
-			profileUrl = '/#!/profile'
+		let profileUrl = urlBeginning + '/v/profile'
+
+		if (PROJECT_ENV === 'local') {
+			profileUrl = urlBeginning + '/a/#!/profile'
 		}
 
 		const stateToUrl = {
-			'app.portal.home': baseUrl + '/' + base_api_url + '/v/home',
+			'app.portal.home': urlBeginning + '/v/home',
 			'app.profile': profileUrl,
-			'app.portal.reports.performance-report': baseUrl + '/' + base_api_url + '/v/reports/performance',
+			'app.portal.reports.performance-report': urlBeginning + '/v/reports/performance',
 		};
 
 

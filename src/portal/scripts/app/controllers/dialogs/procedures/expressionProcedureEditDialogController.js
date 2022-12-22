@@ -43,6 +43,8 @@
 
         vm.agree = function () {
 
+            vm.item.code = vm.editor.getValue()
+
             expressionProcedureService.update(vm.item.id, vm.item).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: {item: data}});
@@ -54,6 +56,8 @@
         vm.getItem = function () {
 
             expressionProcedureService.getByKey(vm.itemId).then(function (data) {
+
+
 
                 vm.originalItem = JSON.parse(JSON.stringify(data));
 
@@ -78,6 +82,8 @@
                 } else {
                     vm.toggleStatus['date_to'] = 'datepicker'
                 }
+
+                vm.initExpressionEditor();
 
 
                 $scope.$apply();
@@ -136,11 +142,42 @@
 
         };
 
+        vm.initExpressionEditor = function () {
+
+            setTimeout(function () {
+
+                vm.editor = ace.edit('aceEditor');
+                vm.editor.setTheme("ace/theme/monokai");
+                vm.editor.getSession().setMode("ace/mode/python");
+                vm.editor.getSession().setUseWorker(false);
+                vm.editor.setHighlightActiveLine(false);
+                vm.editor.setShowPrintMargin(false);
+
+                ace.require("ace/ext/language_tools");
+                vm.editor.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableLiveAutocompletion: true,
+                    enableSnippets: true
+                });
+                vm.editor.setFontSize(14)
+                vm.editor.setBehavioursEnabled(true);
+                vm.editor.setValue(vm.item.code)
+
+                vm.editor.focus();
+                vm.editor.navigateFileStart();
+
+            }, 100)
+
+
+        }
+
         vm.init = function () {
 
             vm.getItem();
 
         };
+
+
 
         vm.init();
 

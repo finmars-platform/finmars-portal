@@ -400,6 +400,12 @@
                 controller: 'DataStatsPageController as vm'
             })
 
+            .state('app.portal.error-page', {
+                url: '/error-page',
+                templateUrl: 'views/pages/error-page-view.html',
+                controller: 'ErrorPageController as vm'
+            })
+
             .state('app.portal.data-calendar', {
                 url: '/calendar',
                 templateUrl: 'views/pages/data-calendar-page-view.html',

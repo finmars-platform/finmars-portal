@@ -1764,6 +1764,7 @@
 				vm.sharedLogic.getDataForInstrumentExposureTab().then(function (data) {
 					vm.instrumentsSelectorOptions = data[0];
 					vm.currenciesSelectorOptions = data[1];
+                    vm.readyStatus.exposureTab = true;
 				});
 
             }

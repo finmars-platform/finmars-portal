@@ -4,8 +4,6 @@
 
 'use strict';
 
-import websocketService from "../../../../shell/scripts/app/services/websocketService.js";
-
 const localStorageService = require('../../../../shell/scripts/app/services/localStorageService'); // TODO inject localStorageService into angular dependencies
 
 export default function ($scope, $state, authorizerService, usersService, globalDataService, redirectionService) {
@@ -13,7 +11,6 @@ export default function ($scope, $state, authorizerService, usersService, global
     let vm = this;
 
     vm.readyStatus = false;
-    vm.iframeMode = globalDataService.insideIframe();
 
     const getMember = function () {
 
@@ -28,7 +25,7 @@ export default function ($scope, $state, authorizerService, usersService, global
                     globalDataService.setMember(member);
                 }
 
-                websocketService.send({action: "update_user_state", data: {member: member}});
+                // websocketService.send({action: "update_user_state", data: {member: member}});
 
                 resolve(member);
 
@@ -47,7 +44,7 @@ export default function ($scope, $state, authorizerService, usersService, global
 
             authorizerService.getCurrentMasterUser().then(masterUser => {
 
-                websocketService.send({action: "update_user_state", data: {master_user: masterUser}});
+                // websocketService.send({action: "update_user_state", data: {master_user: masterUser}});
 
                 resolve();
 
@@ -73,22 +70,17 @@ export default function ($scope, $state, authorizerService, usersService, global
         Promise.all(promises).then(resData => {
 
             console.log('PortalController.resData', resData);
-            if (!vm.iframeMode) {
-                console.log("redirection portalController init() 1 to app.portal.home");
-                window.open(redirectionService.getUrl('app.portal.home'), '_self') // REDIRECTION: vue pages/home
-            }
+
             vm.readyStatus = true;
             $scope.$apply();
 
         }).catch(function (error) {
 
+            error.___custom_message = "PortalController init()"
             console.log('PortalController.error', error);
+            console.error(error);
 
-            // $state.go('app.profile', {}, {reload: true});
-            if (!vm.iframeMode) {
-                console.log("redirection portalController init() 2 to app.profile");
-                window.open(redirectionService.getUrl('app.profile'), '_self')  // REDIRECTION: vue pages/profile
-            }
+			// window.open(redirectionService.getUrl('app.profile'), '_self')
 
         })
 

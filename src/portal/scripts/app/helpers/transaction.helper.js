@@ -214,7 +214,7 @@
                 userInput.frontOptions = {};
             }
 
-            if (isUserInputUsedInTTypeExpr(userInput, ttype.actions)) {
+            if (ttype.actions && isUserInputUsedInTTypeExpr(userInput, ttype.actions)) {
                 userInput.frontOptions.usedInExpr = true;
             }
 

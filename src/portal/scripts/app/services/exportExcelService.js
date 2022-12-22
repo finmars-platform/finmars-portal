@@ -5,7 +5,7 @@
 
 	'use strict';
 
-	var generatePdf = function (data) {
+	var generateExcel = function (data) {
 
 		return window.fetch('/services/excel',
 			{
@@ -23,7 +23,7 @@
 	};
 
 	module.exports = {
-		generatePdf: generatePdf
+		generateExcel: generateExcel
 	}
 
 }());

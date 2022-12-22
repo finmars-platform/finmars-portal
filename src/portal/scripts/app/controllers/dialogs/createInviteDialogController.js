@@ -84,20 +84,20 @@ import authorizerRepository from "../../../../../shell/scripts/app/repositories/
 					})
 					.catch(function (reason) {
 
-						$mdDialog.show({
-							controller: 'ValidationDialogController as vm',
-							templateUrl: 'views/dialogs/validation-dialog-view.html',
-							targetEvent: $event,
-							locals: {
-								validationData: data
-							},
-							preserveScope: true,
-							autoWrap: true,
-							skipHide: true,
-							multiple: true
-						}).then(function () {
-							$mdDialog.hide({status: 'agree'});
-						});
+						// $mdDialog.show({
+						// 	controller: 'ValidationDialogController as vm',
+						// 	templateUrl: 'views/dialogs/validation-dialog-view.html',
+						// 	targetEvent: $event,
+						// 	locals: {
+						// 		validationData: data
+						// 	},
+						// 	preserveScope: true,
+						// 	autoWrap: true,
+						// 	skipHide: true,
+						// 	multiple: true
+						// }).then(function () {
+						// 	$mdDialog.hide({status: 'agree'});
+						// });
 
 					})
 
