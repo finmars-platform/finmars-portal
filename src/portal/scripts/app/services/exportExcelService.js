@@ -5,13 +5,13 @@
 
 	'use strict';
 
-	var generatePdf = function (data) {
+	var generateExcel = function (data) {
 
 		return window.fetch('/services/excel',
 			{
 				method: 'POST',
 				credentials: 'include',
-				data: JSON.stringify(data),
+				body: JSON.stringify(data),
 				headers: {
 					Accept: 'application/json',
 					'Content-type': 'application/json'
@@ -23,7 +23,7 @@
 	};
 
 	module.exports = {
-		generatePdf: generatePdf
+		generateExcel: generateExcel
 	}
 
 }());

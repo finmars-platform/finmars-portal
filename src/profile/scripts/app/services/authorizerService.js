@@ -164,20 +164,6 @@ export default function (xhrService, cookieService) {
         });
     };
 
-    const setCurrentMasterUser = function (id) {
-
-        return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/set-current/', {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: {
-                'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        });
-    };
-
     const getInviteFromMasterUserList = function (status) {
 
         return xhrService.fetch(authorizerUrl + '/invite-from-master-user/?status=' + status, {
@@ -350,7 +336,6 @@ export default function (xhrService, cookieService) {
         getMasterUsersList: getMasterUsersList,
         getMasterUserByKey: getMasterUserByKey,
         updateMasterUser: updateMasterUser,
-        setCurrentMasterUser: setCurrentMasterUser,
 
         checkMasterUserUniqueness: checkMasterUserUniqueness,
         checkUserLicenseKey: checkUserLicenseKey,

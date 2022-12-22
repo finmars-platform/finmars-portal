@@ -15,7 +15,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
     var toastNotificationService = require('../../../../core/services/toastNotificationService');
 
-    module.exports = function ($scope, $state, $mdDialog, profileAuthorizerService, broadcastChannelService, commonDialogsService, globalDataService, redirectionService) {
+    module.exports = function ($scope, $state, $mdDialog, $urlService, profileAuthorizerService, broadcastChannelService, commonDialogsService, globalDataService, redirectionService) {
 
         var vm = this;
 
@@ -98,71 +98,8 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
         vm.activateDatabase = function (item) {
 
             // console.log('item', item);
-
-            vm.openProcessing = true;
-
-            profileAuthorizerService.setCurrentMasterUser(item.id).then(function (data) {
-
-                vm.openProcessing = false;
-
-				// This code may not fire because of websocket reaction to 'master_user_change' inside shellController.js
-                if (data.base_api_url) {
-
-                    window.document.title = item.name + ' | Finmars'
-
-                    globalDataService.setMasterUser(item);
-
-                    baseUrlService.setMasterUserPrefix(data.base_api_url);
-                    // portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
-
-                    // if (broadcastChannelService.isAvailable) {
-                    //     broadcastChannelService.postMessage('finmars_broadcast', {event: crossTabEvents.MASTER_USER_CHANGED});
-                    // }
-
-                    // $state.go('app.portal.home');
-					window.open(redirectionService.getUrl('app.portal.home'), '_self');
-
-                }
-				else {
-
-                    $scope.$apply();
-
-                    console.log("Error activate", data)
-
-                    if (data.message) {
-
-                        if (typeof data.message == 'string') {
-                            toastNotificationService.error(data.message)
-                        } else if (typeof data.message == 'object') {
-
-                            var message = {}
-
-                            Object.keys(data.message).forEach((key)=>{
-                                message = message = ' ' + key + ': ' + data.message[key]
-
-                            })
-
-                            toastNotificationService.error(message)
-
-                        } else {
-                            toastNotificationService.error(data.message)
-                        }
-
-
-                    } else {
-                        toastNotificationService.error("Something went wrong. Please, try again later")
-                    }
-
-                }
-
-
-            }).catch(function (error){
-
-                vm.openProcessing = false;
-
-                console.log("Error activate catch", error)
-                toastNotificationService.error("Something went wrong. Please, try again later")
-            })
+            const masterUserUrl = `${window.location.origin}/${item.base_api_url}/a/#!/`;
+            window.open(masterUserUrl, '_self');
 
         };
 
@@ -375,6 +312,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
         };
 
+        // DEPRECATED, logic moved to vue app
         vm.acceptInvite = function (item) {
 
             item.status = 1; // Accept code
@@ -386,8 +324,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
                 localStorage.setItem('goToSetup', 'true')
 
-
-                profileAuthorizerService.setCurrentMasterUser(item.to_master_user).then(function (data) {
+                /*profileAuthorizerService.setCurrentMasterUser(item.to_master_user).then(function (data) {
 
                     console.log('vm.activateDatabase.data', data);
 
@@ -395,8 +332,11 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
                     baseUrlService.setMasterUserPrefix(data.base_api_url);
                     // portalBaseUrlService.setMasterUserPrefix(data.base_api_url);
 
-                    $state.go('app.setup');
-                })
+                    window.location.href = '/' + data.base_api_url + '/a/#!/'
+
+                })*/
+                const masterUserUrl = `${window.location.origin}/${item.to_master_user.base_api_url}/v/home`;
+                window.open(masterUserUrl, '_self');
 
             })
 

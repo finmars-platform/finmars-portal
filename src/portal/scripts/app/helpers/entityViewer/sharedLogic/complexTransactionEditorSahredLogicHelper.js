@@ -1,567 +1,569 @@
 (function () {
 
-	'use strict';
+    'use strict';
 
-	const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
+    const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
 
-	const expressionService = require('../../../services/expression.service');
+    const expressionService = require('../../../services/expression.service');
 
-	const entityEditorHelper = require('../../../helpers/entity-editor.helper');
-	const transactionHelper = require('../../../helpers/transaction.helper');
+    const entityEditorHelper = require('../../../helpers/entity-editor.helper');
+    const transactionHelper = require('../../../helpers/transaction.helper');
 
-	module.exports = function (viewModel, $scope, $mdDialog) {
+    module.exports = function (viewModel, $scope, $mdDialog) {
 
-		const entityTabsMenuTplt =
-			'<div class="ev-editor-tabs-popup-content popup-menu">' +
-			'<md-button ng-repeat="tab in popupData.viewModel.entityTabs" ' +
-			'class="entity-tabs-menu-option popup-menu-option" ' +
-			'ng-class="popupData.viewModel.sharedLogic.getTabBtnClasses(tab)" ' +
-			'ng-click="popupData.viewModel.activeTab = tab">' +
-			'<span>{{tab.label}}</span>' +
-			'<div ng-if="popupData.viewModel.sharedLogic.isTabWithErrors(tab)" class="tab-option-error-icon">' +
-			'<span class="material-icons orange-text">info<md-tooltip class="tooltip_2 error-tooltip" md-direction="top">Tab has errors</md-tooltip></span>' +
-			'</div>' +
-			'</md-button>' +
-			'</div>';
+        const entityTabsMenuTplt =
+            '<div class="ev-editor-tabs-popup-content popup-menu">' +
+            '<md-button ng-repeat="tab in popupData.viewModel.entityTabs" ' +
+            'class="entity-tabs-menu-option popup-menu-option" ' +
+            'ng-class="popupData.viewModel.sharedLogic.getTabBtnClasses(tab)" ' +
+            'ng-click="popupData.viewModel.activeTab = tab">' +
+            '<span>{{tab.label}}</span>' +
+            '<div ng-if="popupData.viewModel.sharedLogic.isTabWithErrors(tab)" class="tab-option-error-icon">' +
+            '<span class="material-icons orange-text">info<md-tooltip class="tooltip_2 error-tooltip" md-direction="top">Tab has errors</md-tooltip></span>' +
+            '</div>' +
+            '</md-button>' +
+            '</div>';
 
-		const getTabBtnClasses = function (tab) {
+        const getTabBtnClasses = function (tab) {
 
-			var result = [];
+            var result = [];
 
-			if (viewModel.activeTab.label === tab.label) {
-				result.push('active-tab-button');
-			}
+            if (viewModel.activeTab.label === tab.label) {
+                result.push('active-tab-button');
+            }
 
-			// if (isTabWithErrors(tab)) {
-			// 	result.push('error-menu-option');
-			// }
+            // if (isTabWithErrors(tab)) {
+            // 	result.push('error-menu-option');
+            // }
 
-			return result;
+            return result;
 
-		};
+        };
 
-		const removeUserInputsInvalidForRecalculation = function (inputsList, actualUserInputs) {
+        const removeUserInputsInvalidForRecalculation = function (inputsList, actualUserInputs) {
 
-			inputsList.forEach(function (inputName, index) { // remove deleted inputs from list for recalculation
+            inputsList.forEach(function (inputName, index) { // remove deleted inputs from list for recalculation
 
-				let inputInvalid = true;
+                let inputInvalid = true;
 
-				if (inputName) {
+                if (inputName) {
 
-					for (let i = 0; i < actualUserInputs.length; i++) {
+                    for (let i = 0; i < actualUserInputs.length; i++) {
 
-						if (inputName === actualUserInputs[i].name) { // whether input actually exist
+                        if (inputName === actualUserInputs[i].name) { // whether input actually exist
 
-							if (actualUserInputs[i].value_expr) { // whether input has expression for recalculation
+                            if (actualUserInputs[i].value_expr) { // whether input has expression for recalculation
 
-								inputInvalid = false;
+                                inputInvalid = false;
 
-							}
+                            }
 
-							break;
+                            break;
 
-						}
+                        }
 
-					}
+                    }
 
-				}
+                }
 
-				if (inputInvalid) {
-					inputsList.splice(index, 1);
-				}
+                if (inputInvalid) {
+                    inputsList.splice(index, 1);
+                }
 
-			});
+            });
 
-			// return inputsList;
+            // return inputsList;
 
-		};
+        };
 
-		const preRecalculationActions = (inputs, updateScope) => {
+        const preRecalculationActions = (inputs, updateScope) => {
 
-			let book = {
-				transaction_type: viewModel.entity.transaction_type,
-				recalculate_inputs: inputs,
-				process_mode: 'recalculate',
-				values: {}
-			};
+            let book = {
+                transaction_type: viewModel.entity.transaction_type,
+                recalculate_inputs: inputs,
+                process_mode: 'recalculate',
+                values: {}
+            };
 
-			// const allUserInputs = viewModel.transactionType.inputs || [];
+            // const allUserInputs = viewModel.transactionType.inputs || [];
 
-			/* viewModel.userInputs.forEach(function (item) {
-				book.values[item.name] = viewModel.entity[item.name]
-			});
+            /* viewModel.userInputs.forEach(function (item) {
+                book.values[item.name] = viewModel.entity[item.name]
+            });
 
-			allUserInputs.forEach(function (item) {
-				book.values[item.name] = viewModel.entity[item.name]
-			}); */
-			book.values = mapUserInputsOnEntityValues(book.values);
+            allUserInputs.forEach(function (item) {
+                book.values[item.name] = viewModel.entity[item.name]
+            }); */
+            book.values = mapUserInputsOnEntityValues(book.values);
 
-			viewModel.evEditorDataService.setUserInputsToRecalculate(inputs);
-			viewModel.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_START);
+            viewModel.evEditorDataService.setUserInputsToRecalculate(inputs);
+            viewModel.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_START);
 
-			if (updateScope) $scope.$apply();
+            if (updateScope) $scope.$apply();
 
-			return book;
+            return book;
 
-		};
+        };
 
-		const processRecalculationResolve = function (recalculationPromise, inputs, recalculationData) {
+        const processRecalculationResolve = function (recalculationPromise, inputs, recalculationData) {
 
-			recalculationPromise.then(function (data) {
+            recalculationPromise.then(function (data) {
 
-				console.log('data', data);
-				console.log('inputs', inputs);
+                console.log('data', data);
+                console.log('inputs', inputs);
 
-				inputs.forEach(inputName => {
+                inputs.forEach(inputName => {
 
-					viewModel.entity.values[inputName] = data.values[inputName]
+                    viewModel.entity.values[inputName] = data.values[inputName]
 
-					if (data.values[inputName + '_object']) {
-						viewModel.entity.values[inputName + '_object'] = data.values[inputName + '_object'];
-					}
+                    if (data.values[inputName + '_object']) {
+                        viewModel.entity.values[inputName + '_object'] = data.values[inputName + '_object'];
+                    }
 
-					let recalculatedUserInput = viewModel.userInputs.find(input => input.name === inputName);
+                    let recalculatedUserInput = viewModel.userInputs.find(input => input.name === inputName);
 
-					if (recalculatedUserInput) recalculatedUserInput.frontOptions.recalculated = recalculationData;
+                    if (recalculatedUserInput) recalculatedUserInput.frontOptions.recalculated = recalculationData;
 
-				});
+                });
 
-				viewModel.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
+                viewModel.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
 
-				$scope.$apply();
+                $scope.$apply();
 
-			});
+            });
 
-		};
+        };
 
-		const mapUserInputsOnEntityValues = function (entityValues) {
+        const mapUserInputsOnEntityValues = function (entityValues) {
 
-			if (!entityValues) entityValues = {};
-			const allUserInputs = viewModel.transactionType.inputs || [];
+            if (!entityValues) entityValues = {};
+            const allUserInputs = viewModel.transactionType.inputs || [];
 
-			allUserInputs.forEach(uInput => {
+            allUserInputs.forEach(uInput => {
 
-				if (uInput !== null) {
+                if (uInput !== null) {
 
-					if (viewModel.entity.values.hasOwnProperty(uInput.name)) {
+                    if (viewModel.entity.values.hasOwnProperty(uInput.name)) {
 
-						entityValues[uInput.name] = viewModel.entity.values[uInput.name];
+                        entityValues[uInput.name] = viewModel.entity.values[uInput.name];
 
-						if (uInput.value_type === 120) entityValues[uInput.name] = true; // Required for button user input
+                        if (uInput.value_type === 120) entityValues[uInput.name] = true; // Required for button user input
 
-					}
+                    }
 
-				}
+                }
 
-			});
+            });
 
-			return entityValues;
+            return entityValues;
 
-		};
+        };
 
-		const updateAttributesInsideEntity = function (attrsList) {
+        const updateAttributesInsideEntity = function (attrsList) {
 
-			viewModel.tabs.forEach(function (tab) {
+            viewModel.tabs.forEach(function (tab) {
 
-				tab.layout.fields.forEach(function (field) {
+                tab.layout.fields.forEach(function (field) {
 
-					if (field.attribute_class === 'attr') {
+                    if (field.attribute_class === 'attr') {
 
-						const attrType = viewModel.attrs.find(attr => attr.user_code === field.attribute.user_code);
+                        const attrType = viewModel.attrs.find(attr => attr.user_code === field.attribute.user_code);
 
-						if (attrType) {
+                        if (attrType) {
 
-							/* const attrIndex = attrsList.findIndex(attr => attr.attribute_type_object.user_code === field.attribute.user_code);
+                            /* const attrIndex = attrsList.findIndex(attr => attr.attribute_type_object.user_code === field.attribute.user_code);
 
-							if (attrIndex < 0) {
-								attrsList.push(entityEditorHelper.appendAttribute(attrType));
+                            if (attrIndex < 0) {
+                                attrsList.push(entityEditorHelper.appendAttribute(attrType));
 
-							} else if (attrsList[attrIndex].attribute_type_object.id !== attrType.id) {
-								// properties user_code match but attribute types are different
-								const valueTypesAreDifferent = attrsList[attrIndex].attribute_type_object.value_type !== attrType.value_type;
+                            } else if (attrsList[attrIndex].attribute_type_object.id !== attrType.id) {
+                                // properties user_code match but attribute types are different
+                                const valueTypesAreDifferent = attrsList[attrIndex].attribute_type_object.value_type !== attrType.value_type;
 
-								attrsList[attrIndex].attribute_type_object = attrType;
-								attrsList[attrIndex].attribute_type = attrType;
+                                attrsList[attrIndex].attribute_type_object = attrType;
+                                attrsList[attrIndex].attribute_type = attrType;
 
-								if (valueTypesAreDifferent) {
+                                if (valueTypesAreDifferent) {
 
-									attrsList[attrIndex].value_string = null;
-									attrsList[attrIndex].value_float = null;
-									attrsList[attrIndex].classifier = null;
-									attrsList[attrIndex].value_date = null;
+                                    attrsList[attrIndex].value_string = null;
+                                    attrsList[attrIndex].value_float = null;
+                                    attrsList[attrIndex].classifier = null;
+                                    attrsList[attrIndex].value_date = null;
 
-								}
+                                }
 
-							} */
-							attrsList = entityEditorHelper.updateAttribute(attrsList, attrType);
+                            } */
+                            attrsList = entityEditorHelper.updateAttribute(attrsList, attrType);
 
-						} /*else {
+                        } /*else {
 							// TODO: process dynamic attributes inside tabs that were deleted or whose user_code changed
 						}*/
 
-					}
+                    }
 
-				});
+                });
 
-			});
+            });
 
-			return attrsList;
+            return attrsList;
 
-		}
+        }
 
-		const postBookRebookActions = function (cTransactionData, recalculateFn) {
+        const postBookRebookActions = function (cTransactionData, recalculateFn) {
 
-			// ng-repeat with bindFieldControlDirective may not update without this
-			viewModel.tabs = {};
-			viewModel.fixedArea = {};
-			// < ng-repeat with bindFieldControlDirective may not update without this >
+            // ng-repeat with bindFieldControlDirective may not update without this
+            viewModel.tabs = {};
+            viewModel.fixedArea = {};
+            // < ng-repeat with bindFieldControlDirective may not update without this >
 
-			if (Array.isArray(cTransactionData.book_transaction_layout.data)) {
-				viewModel.tabs = cTransactionData.book_transaction_layout.data;
-			} else {
-				viewModel.tabs = cTransactionData.book_transaction_layout.data.tabs;
-				viewModel.fixedArea = cTransactionData.book_transaction_layout.data.fixedArea;
-			}
+            if (Array.isArray(cTransactionData.book_transaction_layout.data)) {
+                viewModel.tabs = cTransactionData.book_transaction_layout.data;
+            } else {
+                viewModel.tabs = cTransactionData.book_transaction_layout.data.tabs;
+                viewModel.fixedArea = cTransactionData.book_transaction_layout.data.fixedArea;
+            }
 
-			const dataConstructorLayout = JSON.parse(JSON.stringify(cTransactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
+            const dataConstructorLayout = JSON.parse(JSON.stringify(cTransactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
-			viewModel.entity.attributes = updateAttributesInsideEntity(viewModel.entity.attributes);
+            viewModel.entity.attributes = updateAttributesInsideEntity(viewModel.entity.attributes);
+
 
 			viewModel.userInputs = transactionHelper.updateTransactionUserInputs(viewModel.userInputs, viewModel.tabs, viewModel.fixedArea, viewModel.transactionType);
 
-			viewModel.inputsWithCalculations = cTransactionData.transaction_type_object.inputs;
 
-			if (viewModel.inputsWithCalculations) {
+            viewModel.inputsWithCalculations = cTransactionData.transaction_type_object.inputs;
 
-				viewModel.inputsWithCalculations.forEach(function (inputWithCalc) {
+            if (viewModel.inputsWithCalculations) {
 
-					viewModel.userInputs.forEach(function (userInput) {
+                viewModel.inputsWithCalculations.forEach(function (inputWithCalc) {
 
-						if (userInput.name === inputWithCalc.name) {
+                    viewModel.userInputs.forEach(function (userInput) {
 
-							if (!userInput.buttons) {
-								userInput.buttons = [];
-							}
+                        if (userInput.name === inputWithCalc.name) {
 
-							if (inputWithCalc.can_recalculate === true) {
-								userInput.buttons.push({
-									// iconObj: {type: 'fontawesome', icon: 'fas fa-redo'},
-									iconObj: {type: 'angular-material', icon: 'refresh'},
-									tooltip: 'Recalculate this field',
-									caption: '',
-									classes: '',
-									action: {
-										key: 'input-recalculation',
-										callback: recalculateFn,
-										parameters: {inputs: [inputWithCalc.name], recalculationData: 'input'}
-									}
-								})
-							}
+                            if (!userInput.buttons) {
+                                userInput.buttons = [];
+                            }
 
-							if (inputWithCalc.settings && inputWithCalc.settings.linked_inputs_names) {
+                            if (inputWithCalc.can_recalculate === true) {
+                                userInput.buttons.push({
+                                    // iconObj: {type: 'fontawesome', icon: 'fas fa-redo'},
+                                    iconObj: {type: 'angular-material', icon: 'refresh'},
+                                    tooltip: 'Recalculate this field',
+                                    caption: '',
+                                    classes: '',
+                                    action: {
+                                        key: 'input-recalculation',
+                                        callback: recalculateFn,
+                                        parameters: {inputs: [inputWithCalc.name], recalculationData: 'input'}
+                                    }
+                                })
+                            }
 
-								const linkedInputsList = inputWithCalc.settings.linked_inputs_names.split(',');
+                            if (inputWithCalc.settings && inputWithCalc.settings.linked_inputs_names) {
 
-								userInput.buttons.push({
-									iconObj: {type: 'angular-material', icon: 'loop'},
-									tooltip: 'Recalculate linked fields',
-									caption: '',
-									classes: '',
-									action: {
-										key: 'linked-inputs-recalculation',
-										callback: recalculateFn,
-										parameters: {inputs: linkedInputsList, recalculationData: 'linked_inputs'}
-									}
-								})
+                                const linkedInputsList = inputWithCalc.settings.linked_inputs_names.split(',');
 
-							}
+                                userInput.buttons.push({
+                                    iconObj: {type: 'angular-material', icon: 'loop'},
+                                    tooltip: 'Recalculate linked fields',
+                                    caption: '',
+                                    classes: '',
+                                    action: {
+                                        key: 'linked-inputs-recalculation',
+                                        callback: recalculateFn,
+                                        parameters: {inputs: linkedInputsList, recalculationData: 'linked_inputs'}
+                                    }
+                                })
 
-						}
+                            }
 
-					})
+                        }
 
-				});
+                    })
 
-			}
+                });
 
-			return {
-				attributes: viewModel.entity.attributes,
-				tabs: viewModel.tabs,
-				fixedArea: viewModel.fixedArea,
-				dataConstructorLayout: dataConstructorLayout,
-				inputsWithCalculations: viewModel.inputsWithCalculations,
-				userInputs: viewModel.userInputs
-			}
+            }
 
-		};
+            return {
+                attributes: viewModel.entity.attributes,
+                tabs: viewModel.tabs,
+                fixedArea: viewModel.fixedArea,
+                dataConstructorLayout: dataConstructorLayout,
+                inputsWithCalculations: viewModel.inputsWithCalculations,
+                userInputs: viewModel.userInputs
+            }
 
-		const fillMissingFieldsByDefaultValues = async function (entity, userInputs, ttype) {
+        };
 
-			const formFieldsNames = userInputs.map(input => input.name);
-			const userInputsNotPlacedInTheForm = ttype.inputs.filter(input => !formFieldsNames.includes(input.name));
+        const fillMissingFieldsByDefaultValues = async function (entity, userInputs, ttype) {
 
-			const missingFieldsPromises = [];
+            const formFieldsNames = userInputs.map(input => input.name);
+            const userInputsNotPlacedInTheForm = ttype.inputs.filter(input => !formFieldsNames.includes(input.name));
 
-			userInputsNotPlacedInTheForm
-				.filter(input => !entity[input.name] && !!input.value) // take inputs if property is empty and input have default value
-				.forEach(input => {
+            const missingFieldsPromises = [];
 
-					if (input.value_type === 20) { // Expression
+            userInputsNotPlacedInTheForm
+                .filter(input => !entity[input.name] && !!input.value) // take inputs if property is empty and input have default value
+                .forEach(input => {
 
-						const expressionPromise = expressionService.getResultOfExpression({'expression': input.value})
-							.then(data => entity[input.name] = data.result) // set property after expression resolved
-							.catch(error => {
-								console.error('fillMissingFieldsByDefaultValues expression error', error)
-							})
+                    if (input.value_type === 20) { // Expression
 
-						missingFieldsPromises.push(expressionPromise);
+                        const expressionPromise = expressionService.getResultOfExpression({'expression': input.value})
+                            .then(data => entity[input.name] = data.result) // set property after expression resolved
+                            .catch(error => {
+                                console.error('fillMissingFieldsByDefaultValues expression error', error)
+                            })
 
-					} else {
+                        missingFieldsPromises.push(expressionPromise);
 
-						entity[input.name] = input.value; // set property as default value
+                    } else {
 
-					}
-				});
+                        entity[input.name] = input.value; // set property as default value
 
-			return Promise.allSettled(missingFieldsPromises);
+                    }
+                });
 
-		};
+            return Promise.allSettled(missingFieldsPromises);
 
-		const bindFlex = function (tab, field) {
-			var flexUnit = 100 / tab.layout.columns;
-			return Math.floor(field.colspan * flexUnit);
-		};
+        };
 
-		const checkFieldRender = function (tab, row, field) {
+        const bindFlex = function (tab, field) {
+            var flexUnit = 100 / tab.layout.columns;
+            return Math.floor(field.colspan * flexUnit);
+        };
 
-			if (field.row === row) {
-				if (field.type !== 'empty') {
-					return true;
-				} else {
+        const checkFieldRender = function (tab, row, field) {
 
-					var spannedCols = [];
-					var itemsInRow = tab.layout.fields.filter(function (item) {
-						return item.row === row;
-					});
+            if (field.row === row) {
+                if (field.type !== 'empty') {
+                    return true;
+                } else {
 
+                    var spannedCols = [];
+                    var itemsInRow = tab.layout.fields.filter(function (item) {
+                        return item.row === row;
+                    });
 
-					itemsInRow.forEach(function (item) {
 
-						if (item.type !== 'empty' && item.colspan > 1) {
-							var columnsToSpan = item.column + item.colspan - 1;
+                    itemsInRow.forEach(function (item) {
 
-							for (var i = item.column; i <= columnsToSpan; i = i + 1) {
-								spannedCols.push(i);
-							}
+                        if (item.type !== 'empty' && item.colspan > 1) {
+                            var columnsToSpan = item.column + item.colspan - 1;
 
-						}
+                            for (var i = item.column; i <= columnsToSpan; i = i + 1) {
+                                spannedCols.push(i);
+                            }
 
-					});
+                        }
 
+                    });
 
-					if (spannedCols.indexOf(field.column) !== -1) {
-						return false;
-					}
 
-					return true;
-				}
-			}
+                    if (spannedCols.indexOf(field.column) !== -1) {
+                        return false;
+                    }
 
-			return false;
+                    return true;
+                }
+            }
 
-		};
+            return false;
 
-		let recalculateTimeoutID;
+        };
 
-		const onFieldChange = function (fieldKey) {
+        let recalculateTimeoutID;
 
-			if (fieldKey) {
+        const onFieldChange = function (fieldKey) {
 
-				/* Mark linked inputs that are recalculated on parent input change
-				if (inputsWithCalculations) {
+            if (fieldKey) {
 
-					var i, a;
-					for (i = 0; i < viewModel.userInputs.length; i++) {
+                /* Mark linked inputs that are recalculated on parent input change
+                if (inputsWithCalculations) {
 
-						if (viewModel.userInputs[i].key === fieldKey) {
+                    var i, a;
+                    for (i = 0; i < viewModel.userInputs.length; i++) {
 
-							var uInputName = viewModel.userInputs[i].name;
+                        if (viewModel.userInputs[i].key === fieldKey) {
 
-							for (a = 0; a < inputsWithCalculations.length; a++) {
+                            var uInputName = viewModel.userInputs[i].name;
 
-								var inputWithCalc = inputsWithCalculations[a];
+                            for (a = 0; a < inputsWithCalculations.length; a++) {
 
-								if (inputWithCalc.name === uInputName &&
-									inputWithCalc.settings) {
+                                var inputWithCalc = inputsWithCalculations[a];
 
-									var changedUserInputData = JSON.parse(JSON.stringify(viewModel.userInputs[i]));
+                                if (inputWithCalc.name === uInputName &&
+                                    inputWithCalc.settings) {
 
-									if (inputWithCalc.settings.linked_inputs_names) {
+                                    var changedUserInputData = JSON.parse(JSON.stringify(viewModel.userInputs[i]));
 
-										changedUserInputData.frontOptions.linked_inputs_names = JSON.parse(JSON.stringify(
-											inputWithCalc.settings.linked_inputs_names.split(",")
-										));
+                                    if (inputWithCalc.settings.linked_inputs_names) {
 
-									}
+                                        changedUserInputData.frontOptions.linked_inputs_names = JSON.parse(JSON.stringify(
+                                            inputWithCalc.settings.linked_inputs_names.split(",")
+                                        ));
 
-									if (inputWithCalc.settings.recalc_on_change_linked_inputs) {
+                                    }
 
-										changedUserInputData.frontOptions.recalc_on_change_linked_inputs = JSON.parse(JSON.stringify(
-											inputWithCalc.settings.recalc_on_change_linked_inputs.split(",")
-										));
+                                    if (inputWithCalc.settings.recalc_on_change_linked_inputs) {
 
-									}
+                                        changedUserInputData.frontOptions.recalc_on_change_linked_inputs = JSON.parse(JSON.stringify(
+                                            inputWithCalc.settings.recalc_on_change_linked_inputs.split(",")
+                                        ));
 
-									viewModel.evEditorDataService.setChangedUserInputData(changedUserInputData);
+                                    }
 
-									viewModel.evEditorEventService.dispatchEvent(evEditorEvents.FIELD_CHANGED);
+                                    viewModel.evEditorDataService.setChangedUserInputData(changedUserInputData);
 
-									break;
+                                    viewModel.evEditorEventService.dispatchEvent(evEditorEvents.FIELD_CHANGED);
 
-								}
+                                    break;
 
-							}
+                                }
 
-							break;
-						}
+                            }
 
-					}
+                            break;
+                        }
 
-				} */
+                    }
 
-				let userInput = viewModel.userInputs.find(input => input.key === fieldKey);
+                } */
 
-				if (userInput) {
+                let userInput = viewModel.userInputs.find(input => input.key === fieldKey);
 
-					let calcInput;
+                if (userInput) {
 
-					if (viewModel.inputsWithCalculations) {
+                    let calcInput;
 
-						calcInput = viewModel.inputsWithCalculations.find(input => {
+                    if (viewModel.inputsWithCalculations) {
 
-							return input.name === userInput.name &&
-								input.settings &&
-								input.settings.recalc_on_change_linked_inputs;
-						});
+                        calcInput = viewModel.inputsWithCalculations.find(input => {
 
-					}
+                            return input.name === userInput.name &&
+                                input.settings &&
+                                input.settings.recalc_on_change_linked_inputs;
+                        });
 
-					if (calcInput) {
+                    }
 
-						let linkedInputsNames = calcInput.settings.recalc_on_change_linked_inputs.split(',');
+                    if (calcInput) {
 
-						viewModel.evEditorDataService.setUserInputsToRecalculate(linkedInputsNames);
+                        let linkedInputsNames = calcInput.settings.recalc_on_change_linked_inputs.split(',');
 
-						clearTimeout(recalculateTimeoutID);
+                        viewModel.evEditorDataService.setUserInputsToRecalculate(linkedInputsNames);
 
-						recalculateTimeoutID = setTimeout(() => {
+                        clearTimeout(recalculateTimeoutID);
 
-							viewModel.recalculate({
-								inputs: linkedInputsNames,
-								recalculationData: "linked_inputs",
-								updateScope: true
-							});
+                        recalculateTimeoutID = setTimeout(() => {
 
-						}, 1200);
+                            viewModel.recalculate({
+                                inputs: linkedInputsNames,
+                                recalculationData: "linked_inputs",
+                                updateScope: true
+                            });
 
-					}
+                        }, 1200);
 
-				}
+                    }
 
+                }
 
-				// When all faulty fields corrected, remove tab's error indicator.
-				var attributes = {
-					entityAttrs: viewModel.entityAttrs,
-					attrsTypes: viewModel.attrs,
-					userInputs: viewModel.userInputs,
-				};
 
-				/* entityEditorHelper.checkTabsForErrorFields(
-					fieldKey,
-					viewModel.errorFieldsList,
-					viewModel.tabsWithErrors,
-					attributes,
-					viewModel.entity,
-					viewModel.entityType,
-					viewModel.tabs
-				); */
-				entityEditorHelper.checkTabsForErrorFields(fieldKey, viewModel.evEditorDataService, attributes, viewModel.entity, viewModel.entityType, viewModel.tabs);
-				// < When all faulty fields corrected, remove tab's error indicator. >
+                // When all faulty fields corrected, remove tab's error indicator.
+                var attributes = {
+                    entityAttrs: viewModel.entityAttrs,
+                    attrsTypes: viewModel.attrs,
+                    userInputs: viewModel.userInputs,
+                };
 
-			}
+                /* entityEditorHelper.checkTabsForErrorFields(
+                    fieldKey,
+                    viewModel.errorFieldsList,
+                    viewModel.tabsWithErrors,
+                    attributes,
+                    viewModel.entity,
+                    viewModel.entityType,
+                    viewModel.tabs
+                ); */
+                entityEditorHelper.checkTabsForErrorFields(fieldKey, viewModel.evEditorDataService, attributes, viewModel.entity, viewModel.entityType, viewModel.tabs);
+                // < When all faulty fields corrected, remove tab's error indicator. >
 
-		};
+            }
 
-		/* const processTabsErrors = function (errors) {
+        };
 
-			const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
+        /* const processTabsErrors = function (errors) {
 
-			let formErrorsList = viewModel.evEditorDataService.getFormErrorsList();
-			let tabsWithErrors = viewModel.evEditorDataService.getLocationsWithErrors();
+            const entityTabsMenuBtn = document.querySelector('.entityTabsMenu');
 
-			errors.forEach(errorObj => {
+            let formErrorsList = viewModel.evEditorDataService.getFormErrorsList();
+            let tabsWithErrors = viewModel.evEditorDataService.getLocationsWithErrors();
 
-				if (errorObj.locationData &&
-					errorObj.locationData.type === 'system_tab' || errorObj.locationData.type === 'user_tab') {
+            errors.forEach(errorObj => {
 
-					var tabName = errorObj.locationData.name.toLowerCase();
+                if (errorObj.locationData &&
+                    errorObj.locationData.type === 'system_tab' || errorObj.locationData.type === 'user_tab') {
 
-					if (errorObj.locationData.type === 'user_tab') {
+                    var tabName = errorObj.locationData.name.toLowerCase();
 
-						const selectorString = ".evFormUserTabName[data-tab-name='" + tabName + "']";
-						const tabNameElem = document.querySelector(selectorString);
+                    if (errorObj.locationData.type === 'user_tab') {
 
-						if (tabNameElem) tabNameElem.classList.add('error-tab');
+                        const selectorString = ".evFormUserTabName[data-tab-name='" + tabName + "']";
+                        const tabNameElem = document.querySelector(selectorString);
 
-					}
-					else if (errorObj.locationData.type === 'system_tab') {
-						entityTabsMenuBtn.classList.add('error-tab');
-					}
+                        if (tabNameElem) tabNameElem.classList.add('error-tab');
 
-					if (!tabsWithErrors.hasOwnProperty(tabName)) { // if it is tab's first error, create property
-						tabsWithErrors[tabName] = [errorObj.key];
+                    }
+                    else if (errorObj.locationData.type === 'system_tab') {
+                        entityTabsMenuBtn.classList.add('error-tab');
+                    }
 
-					} else if (!tabsWithErrors[tabName].includes(errorObj.key)) { // if there is no same error, add it
-						tabsWithErrors[tabName].push(errorObj.key);
+                    if (!tabsWithErrors.hasOwnProperty(tabName)) { // if it is tab's first error, create property
+                        tabsWithErrors[tabName] = [errorObj.key];
 
-					}
+                    } else if (!tabsWithErrors[tabName].includes(errorObj.key)) { // if there is no same error, add it
+                        tabsWithErrors[tabName].push(errorObj.key);
 
-					/!* if (!errorFieldsList.includes(errorObj.key)) {
+                    }
 
-						errorFieldsList.push(errorObj.key);
-						viewModel.evEditorDataService.setFormErrorsList(errorFieldsList);
+                    /!* if (!errorFieldsList.includes(errorObj.key)) {
 
-					} *!/
-					if (!formErrorsList.includes(errorObj.key)) formErrorsList.push(errorObj.key);
+                        errorFieldsList.push(errorObj.key);
+                        viewModel.evEditorDataService.setFormErrorsList(errorFieldsList);
 
-				}
+                    } *!/
+                    if (!formErrorsList.includes(errorObj.key)) formErrorsList.push(errorObj.key);
 
-			});
+                }
 
-			viewModel.evEditorDataService.setTabsWithErrors(tabsWithErrors);
-			viewModel.evEditorDataService.setFormErrorsList(formErrorsList);
+            });
 
-		}; */
+            viewModel.evEditorDataService.setTabsWithErrors(tabsWithErrors);
+            viewModel.evEditorDataService.setFormErrorsList(formErrorsList);
 
-		return {
-			preRecalculationActions: preRecalculationActions,
-			removeUserInputsInvalidForRecalculation: removeUserInputsInvalidForRecalculation,
-			processRecalculationResolve: processRecalculationResolve,
+        }; */
 
-			mapUserInputsOnEntityValues: mapUserInputsOnEntityValues,
+        return {
+            preRecalculationActions: preRecalculationActions,
+            removeUserInputsInvalidForRecalculation: removeUserInputsInvalidForRecalculation,
+            processRecalculationResolve: processRecalculationResolve,
 
-			postBookRebookActions: postBookRebookActions,
-			fillMissingFieldsByDefaultValues: fillMissingFieldsByDefaultValues,
+            mapUserInputsOnEntityValues: mapUserInputsOnEntityValues,
 
-			bindFlex: bindFlex,
-			checkFieldRender: checkFieldRender,
-			onFieldChange: onFieldChange,
+            postBookRebookActions: postBookRebookActions,
+            fillMissingFieldsByDefaultValues: fillMissingFieldsByDefaultValues,
 
-			entityTabsMenuTplt: entityTabsMenuTplt,
-			getTabBtnClasses: getTabBtnClasses
-			// processTabsErrors: processTabsErrors
-		}
+            bindFlex: bindFlex,
+            checkFieldRender: checkFieldRender,
+            onFieldChange: onFieldChange,
 
-	};
+            entityTabsMenuTplt: entityTabsMenuTplt,
+            getTabBtnClasses: getTabBtnClasses
+            // processTabsErrors: processTabsErrors
+        }
+
+    };
 
 }());

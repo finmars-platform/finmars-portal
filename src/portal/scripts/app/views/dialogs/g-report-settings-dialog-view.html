@@ -2,11 +2,13 @@
            drag-dialog
            aria-label="g report settings dialog">
     <md-toolbar>
-        <div class="md-toolbar-tools">
+        <!--<div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
 
             <h2>Report settings</h2>
-        </div>
+        </div>-->
+        <dialog-header title="Report settings"
+                       cancel-dialog="vm.cancel()"></dialog-header>
     </md-toolbar>
 
     <md-dialog-content class="p-t-10">
@@ -149,6 +151,15 @@
                         <dropdown-select model="vm.reportOptions.strategy3_mode"
                                          menu-options="vm.strategiesSelectOptions"
                                          small-options="{tooltipText: 'Strategy 3 Mode'}"
+                                         class="g-report-settings-field">
+                        </dropdown-select>
+                    </div>
+
+                    <div class="g-report-settings-row p-b-8" ng-if="vm.entityType === 'pl-report'">
+                        <div class="default-f-s">Allocation mode</div>
+
+                        <dropdown-select model="vm.reportOptions.allocation_mode"
+                                         menu-options="vm.selectOptions"
                                          class="g-report-settings-field">
                         </dropdown-select>
                     </div>
@@ -1084,7 +1095,7 @@
 
     </md-dialog-content>
 
-    <md-dialog-actions layout="row">
+    <md-dialog-actions class="flex_cb">
         <md-button class="link-button" ng-click="vm.cancel()">
             CLOSE
         </md-button>

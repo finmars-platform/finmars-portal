@@ -65,6 +65,12 @@
         return complexTransactionRepository.recalculatePermissionComplexTransaction(data)
     };
 
+    var viewComplexTransaction = function (id) {
+        return complexTransactionRepository.viewComplexTransaction(id);
+    };
+
+
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
@@ -85,7 +91,9 @@
         deleteBulk: deleteBulk,
 
         recalculatePermissionTransaction: recalculatePermissionTransaction,
-        recalculatePermissionComplexTransaction: recalculatePermissionComplexTransaction
+        recalculatePermissionComplexTransaction: recalculatePermissionComplexTransaction,
+
+        viewComplexTransaction: viewComplexTransaction
     }
 
 

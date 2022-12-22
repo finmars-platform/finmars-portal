@@ -5,153 +5,195 @@
 
 export default function (toastNotificationService) {
 
-	function ErrorObject(message, status, statusText) {
-		this.status = status;
-		this.statusText = statusText;
-		this.message = message || 'Oops something went wrong, please try again.';
-		this.stack = (new Error()).stack;
-	}
+    function ErrorObject(message, status, statusText) {
+        this.status = status;
+        this.statusText = statusText;
+        this.message = message || 'Oops something went wrong, please try again.';
+        this.stack = (new Error()).stack;
+    }
 
-	ErrorObject.prototype = Object.create(Error.prototype);
-	ErrorObject.prototype.constructor = ErrorObject;
+    ErrorObject.prototype = Object.create(Error.prototype);
+    ErrorObject.prototype.constructor = ErrorObject;
 
-	'use strict';
+    'use strict';
 
-	// DEPRECATED
-	const handleXhrErrors = function (response) {
+    // DEPRECATED
+    const handleXhrErrors = function (response) {
 
-		// console.log('handleXhrErrors.response', response);
+        // console.log('handleXhrErrors.response', response);
 
-		return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
 
-			if (response.status === 500) {
+            if (response.status === 500) {
 
-				if (!response.ok) {
+                if (!response.ok) {
 
-					const errorObj = {
-						status: response.status,
-						statusText: response.statusText,
-						message: response.statusText
-					};
+                    const errorObj = {
+                        status: response.status,
+                        statusText: response.statusText,
+                        message: response.statusText
+                    };
 
-					reject(new ErrorObject(errorObj.message, errorObj.status, response.statusText))
-				}
+                    reject(new ErrorObject(errorObj.message, errorObj.status, response.statusText))
+                }
 
-				reject(response)
+                reject(response)
 
-			} else {
+            } else {
 
-				if (response.status !== 204) {
+                if (response.status !== 204) {
 
-					response.json().then(function (data) {
+                    response.json().then(function (data) {
 
-						if (!response.ok) {
+                        if (!response.ok) {
 
-							const errorObj = {
-								status: response.status,
-								statusText: response.statusText,
-								message: data
-							};
+                            const errorObj = {
+                                status: response.status,
+                                statusText: response.statusText,
+                                message: data
+                            };
 
-							reject(new ErrorObject(errorObj.message, errorObj.status, response.statusText));
+                            reject(new ErrorObject(errorObj.message, errorObj.status, response.statusText));
 
-						}
+                        }
 
-						resolve(data)
+                        resolve(data)
 
-					})
+                    })
 
-				} else {
-					resolve({});
-				}
+                } else {
+                    resolve({});
+                }
 
-			}
+            }
 
-		})
-	};
+        })
+    };
 
-	const getFullErrorAsHtml = function (obj, message) {
+    const getFullErrorAsHtml = function (obj, message) {
 
-		// console.log('getFullErrorAsHtml.obj', obj);
+        // console.log('getFullErrorAsHtml.obj', obj);
 
-		Object.keys(obj).forEach(function (key) {
+        Object.keys(obj).forEach(function (key) {
 
-			message = message + '<br/>';
+            message = message + '<br/>';
 
-			if (Array.isArray(obj[key])) {
+            if (Array.isArray(obj[key])) {
 
-				if (obj[key].length) {
+                if (obj[key].length) {
 
-					if (typeof obj[key][0] === 'object') {
+                    if (typeof obj[key][0] === 'object') {
 
-						obj[key].forEach(function (item) {
+                        obj[key].forEach(function (item) {
 
-							message = getFullErrorAsHtml(item, message)
+                            message = getFullErrorAsHtml(item, message)
 
-						})
+                        })
 
-					} else {
+                    } else {
 
-						message = message + key + ': ' + obj[key].join('. ');
-					}
-				}
-			} else {
+                        message = message + key + ': ' + obj[key].join('. ');
+                    }
+                }
+            } else {
 
-				if (typeof obj[key] === 'object') {
+                if (typeof obj[key] === 'object') {
 
-					message = getFullErrorAsHtml(obj[key], message)
+                    message = getFullErrorAsHtml(obj[key], message)
 
-				} else {
-					message = message + key + ': ' + obj[key]
-				}
-			}
+                } else {
+                    message = message + key + ': ' + obj[key]
+                }
+            }
 
-		});
+        });
 
-		return message;
+        return message;
 
-	};
+    };
 
-	const notifyError = function (reason) {
+    const notifyError = function (reason) {
 
-		console.log('notifyError.reason', reason);
+        console.log('notifyError.reason', reason);
 
-		let message = ''
+        let error_object = reason.response.data.error
 
-		if (reason.statusText) {
+        let message = ''
 
-			message = reason.statusText + ' (' + reason.status + ')';
+        message = message + '<span class="toast-error-field">Title</span>: ' + error_object.message + '<br/>'
+        message = message + '<span class="toast-error-field">Code</span>: ' + error_object.status_code + '<br/>'
+        message = message + '<span class="toast-error-field">URL</span>: ' + error_object.url + '<br/>'
+        message = message + '<span class="toast-error-field">Username</span>: ' + error_object.username + '<br/>'
+        message = message + '<span class="toast-error-field">Date & Time</span>: ' + error_object.datetime + '<br/>'
+        message = message + '<span class="toast-error-field">Details</span>: <div><pre>' + JSON.stringify(error_object.details, null, 4) + '</pre></div>'
 
-			if (reason.hasOwnProperty('message')) {
+        let raw_title = 'Client Error'
 
-				if (typeof reason.message === 'object') {
+        if (error_object.status_code === 500) {
+            raw_title = 'Server Error'
+        }
 
-					message = getFullErrorAsHtml(reason.message, message)
+        let title = raw_title + '<span class="toast-click-to-copy">click to copy</span>'
 
-				}
+        toastNotificationService.error(message, title, {
+            progressBar: true,
+            closeButton: true,
+            tapToDismiss: false,
+            onclick: function (event){
 
+                var listener = function (e) {
 
-			}
+                    e.clipboardData.setData('text/plain', JSON.stringify(error_object, null, 4));
 
-		} else if (reason.message) {
+                    e.preventDefault();
+                };
 
-			message = reason.message
+                document.addEventListener('copy', listener, false);
 
-		}
+                document.execCommand("copy");
 
-		toastNotificationService.error(message);
+                document.removeEventListener('copy', listener, false);
 
-		// return reason
+            },
+            timeOut: '10000',
+            extendedTimeOut: '10000'
+        });
 
-		// throw new Error("Error processing request", reason);
+        // DEPRECATED
+        // if (reason.statusText) {
+        //
+        // 	message = reason.statusText + ' (' + reason.status + ')';
+        //
+        // 	if (reason.hasOwnProperty('message')) {
+        //
+        // 		if (typeof reason.message === 'object') {
+        //
+        // 			message = getFullErrorAsHtml(reason.message, message)
+        //
+        // 		}
+        //
+        //
+        // 	}
+        //
+        // } else if (reason.message) {
+        //
+        // 	message = reason.message
+        //
+        // }
+        //
+        // toastNotificationService.error(message);
+        //
+        // // return reason
+        //
+        // // throw new Error("Error processing request", reason);
 
-		return Promise.reject(reason)
+        return Promise.reject(reason)
 
-	};
+    };
 
-	return {
-		handleXhrErrors: handleXhrErrors,
-		notifyError: notifyError
-	}
+    return {
+        handleXhrErrors: handleXhrErrors,
+        notifyError: notifyError
+    }
 
 };

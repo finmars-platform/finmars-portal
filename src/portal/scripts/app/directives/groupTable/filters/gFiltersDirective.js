@@ -425,7 +425,7 @@
                         content: $scope.evDataService.getFlatList()
                     };
 
-                    exportExcelService.generatePdf(data).then(function (blob) {
+                    exportExcelService.generateExcel(data).then(function (blob) {
 
                         downloadFileHelper.downloadFile(blob, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "report.xlsx");
 

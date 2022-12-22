@@ -204,17 +204,19 @@ export default function (globalDataService) {
 
         return new Promise((resolve, reject) => {
 
-            /* authorizerRepository.getCurrentMasterUser().then(masterUserData => {
-
-                globalDataService.setMasterUser(masterUserData);
-                resolve(masterUserData);
-
-            }).catch(error => reject(error)); */
             authorizerRepository.getMasterUsersList().then(masterUsersData => {
 
-                const currentMasterUser = masterUsersData.results.find(master => master.is_current)
+                const base_api_url = window.location.pathname.split('/')[1];
+                let currentMasterUser = null;
+
+                if (base_api_url.startsWith('client')) {
+
+                    currentMasterUser = masterUsersData.results.find(master => master.base_api_url === base_api_url)
+
+                }
 
                 globalDataService.setMasterUser(currentMasterUser);
+
                 resolve(currentMasterUser);
 
             }).catch(error => reject(error));
@@ -272,30 +274,6 @@ export default function (globalDataService) {
 
     }
 
-    const setCurrentMasterUser = id => {
-
-        return new Promise((resolve, reject) => {
-
-            authorizerRepository.setCurrentMasterUser(id).then(function (masterUserData) {
-
-                globalDataService.setMasterUser(null);
-                globalDataService.setMember(null);
-
-                resolve(masterUserData);
-                /* getUserPromise().then(memberData => {
-                    globalDatabaseService.setMember(memberData);
-                });
-
-                getMemberPromise().then(memberData => {
-                    globalDatabaseService.setMember(memberData);
-                }); */
-
-            }).catch(error => reject(error));
-
-        });
-
-    };
-
     const getMasterUsersListLight = function () {
         return authorizerRepository.getMasterUsersListLight();
     };
@@ -338,6 +316,10 @@ export default function (globalDataService) {
         return authorizerRepository.kickMember(data)
     }
 
+    const getInitialConfiguration = function (){
+        return authorizerRepository.getInitialConfiguration()
+    }
+
     //</editor-fold>
 
     return {
@@ -372,8 +354,6 @@ export default function (globalDataService) {
         patchMasterUser: patchMasterUser,
         deleteMasterUserByKey: deleteMasterUserByKey,
 
-        setCurrentMasterUser: setCurrentMasterUser,
-
         inviteUser: inviteUser,
         getInvitesList: getInvitesList,
         deleteInviteByKey: deleteInviteByKey,
@@ -388,7 +368,9 @@ export default function (globalDataService) {
         updateFinmars: updateFinmars,
 
 
-        kickMember: kickMember
+        kickMember: kickMember,
+
+        getInitialConfiguration: getInitialConfiguration
 
 
     }

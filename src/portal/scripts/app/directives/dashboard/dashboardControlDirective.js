@@ -24,7 +24,7 @@
                 columnNumber: '=',
                 item: '=',
                 dashboardDataService: '=',
-                dashboardEventService: '='
+                dashboardEventService: '=',
             },
 			templateUrl: 'views/directives/dashboard/dashboard-control-view.html',
             link: function (scope, elem, attr) {
@@ -39,8 +39,13 @@
                     key: 'value'
                 }
 
+                scope.entityData = {
+                    value: null
+                }
+
 				var dashboardControlElem = elem[0].querySelector(".dashboardControl");
 				var cellWidth;
+                var entitiesList = [];
 
                 scope.getEntityTypeByContentType = function (contentType) {
 
@@ -75,14 +80,14 @@
                         page: 1
                     }
 
-                    var fields = [];
+                    entitiesList = [];
 
                     var getEntitiesMethod = function (resolve, reject) {
 
                         entityResolverService.getListLight(scope.entityType, options).then(function (data) {
 
                             //scope.fields = data.results;
-                            fields = fields.concat(data.results);
+                            entitiesList = entitiesList.concat(data.results);
 
                             if (data.next) {
 
@@ -91,7 +96,9 @@
 
                             } else {
 
-                                scope.fields = fields;
+                                scope.fields = entitiesList.map(function (field) {
+                                    return {id: field.user_code, name: field.short_name}
+                                })
 
                                 scope.$apply(function () {
 
@@ -119,14 +126,56 @@
                 };
 
                 scope.getDataForMultiselect = function () {
-                    return entityResolverService.getList(scope.entityType);
+
+                    return new Promise(function (resolve, reject) {
+
+                        entityResolverService.getList(scope.entityType, {pageSize: 1000}).then(function (data) {
+
+                            var options = data.results.map(function (item) {
+                                return {id: item.user_code, name: item.short_name};
+                            });
+
+                            resolve(options);
+
+                        }).catch(function (e) {
+                            reject(e);
+                        });
+                    })
                 };
 
+                function getSelectedIds(userCodes) {
+
+                    return userCodes.map(function (uCode) {
+                        var selEntity = entitiesList.find(function (entity) { return entity.user_code === uCode });
+                        return selEntity.id;
+                    });
+
+                }
 
                 scope.valueChanged = function () {
 
                     console.log('valueChanged', scope.item.data.store);
                     console.log('valueChanged.value', scope.item.data.store.value);
+
+                    if (scope.componentData.settings.value_type === 100) {
+
+                        if (scope.componentData.settings.multiple) {
+
+                            if (scope.item.data.store.user_codes.length) {
+
+                                scope.item.data.store.value = getSelectedIds(scope.item.data.store.user_codes);
+
+                            }
+
+
+                        } else if (scope.entityData.value) { // for entity search select
+
+                            scope.item.data.store.user_codes = scope.entityData.value.user_code;
+                            scope.item.data.store.name = scope.entityData.value.name;
+
+                        }
+
+                    }
 
                     var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputs();
                     var compsKeys = Object.keys(componentsOutputs);
@@ -165,8 +214,17 @@
 
                 scope.clearValue = function () {
 
-                    scope.item.data.store.value = scope.componentData.settings.multiple ? [] : null;
+                    scope.componentData.value = null;
+                    var emptyVal = scope.componentData.settings.multiple ? [] : null;
+
+                    scope.entityData.value = null; // for entity search select
+
+                    scope.item.data.store.value = emptyVal
                     scope.item.data.store.name = '';
+                    scope.item.data.store.user_codes = emptyVal;
+
+                    delete scope.item.data.store.user_code;
+
                     scope.valueChanged()
 
                 };
@@ -203,9 +261,26 @@
 
                 };
 
-				var reportDateKeys = ['report_date', 'pl_first_date', 'begin_date', 'end_date'];
+                const dataStoreNotEmpty = function () {
 
-				var getReportOptionsValue = function (layout, key) {
+                    if (scope.item.data.store.value) {
+
+                        if (scope.componentData.settings.multiple) {
+                            return !!scope.item.data.store.value.length;
+                        }
+
+                        return true;
+
+                    }
+
+
+                    return false;
+
+                }
+
+				const reportDateKeys = ['report_date', 'pl_first_date', 'begin_date', 'end_date'];
+
+				const getReportOptionsValue = function (layout, key) {
 
 					var rlOptions = layout.data.reportLayoutOptions;
 
@@ -284,6 +359,49 @@
 
 				};
 
+                /**
+                 * Returns data about selected by default entity
+                 *
+                 * @param {boolean} multiple - is control multiselector
+                 * @param {string|Array} defaultValue - user_code or (in case of multiselector) array of user codes
+                 * @param {string} label
+                 * @returns {Promise<{name, label, value, user_codes}|{}|{label, value, user_codes}>}
+                 */
+                const getEntitySelectorDefOption = async (multiple, defaultValue, label) => {
+
+                    if (multiple) {
+
+                        return {
+                            value: getSelectedIds(defaultValue),
+                            user_codes: defaultValue,
+                            label: label,
+                        };
+
+                    }
+
+                    try {
+
+                        const opts = {filters: {user_code: defaultValue}};
+
+                        const res = await entityResolverService.getListLight(scope.entityType, opts);
+
+                        if (res.results[0]) {
+
+                            return {
+                                value: res.results[0].id,
+                                user_codes: defaultValue,
+                                name: res.results[0].name,
+                                label: label,
+                            };
+
+                        }
+
+                    } catch (e) {}
+
+                    return {};
+
+                }
+
 				var resolveValueFromReportLayout = function (layoutData, componentData, resolve) {
 
 					/* var layout;
@@ -312,6 +430,92 @@
 
 				};
 
+                /** Get data for selected relation by user code **/
+                var getRelSelDataStore = function () {
+
+                    var options = {
+                        filters: {
+                            user_code: scope.item.data.store.user_codes
+                        }
+                    };
+
+                    return new Promise(function (resolve, reject) {
+
+                        entityResolverService.getListLight(scope.entityType, options).then(function (dataLight) {
+
+                            if (dataLight.results.length) {
+
+                                scope.item.data.store.value = dataLight.results[0].id;
+                                scope.item.data.store.name = dataLight.results[0].short_name;
+
+                                resolve(scope.item.data.store);
+
+                            } else {
+                                resolve({});
+                            }
+
+                        })
+                        .catch(function (e) {
+
+                            e._customData = {
+                                user_code: scope.item.data.store.user_codes,
+                                tab: scope.tabNumber,
+                                row: scope.rowNumber,
+                                column: scope.columnNumber,
+                                title: scope.customName,
+                            };
+
+                            console.error("Failed to load selected option for control", e);
+
+                            resolve({});
+
+                        });
+
+                    });
+
+                };
+
+                /** if value saved inside dashboard layout, return it **/
+                var getDataStoreFromDashboardLayout = function (componentData) {
+
+                    var returnPromise = function (resolveVal) {
+                        return new Promise(function (resolve) {
+                            resolve(resolveVal);
+                        })
+                    }
+
+                    // if (scope.item.data.store && scope.item.data.store.value) {
+
+                    if (componentData.settings.value_type === 100) {
+
+                        if (componentData.settings.multiple) {
+
+                            scope.item.data.store.value = scope.item.data.store.user_codes.map(function (userCode) {
+
+                                var selected = entitiesList.find(function (entity) { return entity.user_code === userCode });
+                                return selected.id;
+
+                            });
+
+                            if (scope.item.data.store.value.length) {
+                                return returnPromise(scope.item.data.store);
+                            }
+
+
+                        } else if (scope.item.data.store.user_codes) { // scope.item.data.store.user_codes check needed for old dashboard layouts
+                            return getRelSelDataStore();
+                        }
+
+                    } else {
+                        return returnPromise(scope.item.data.store);
+                    }
+
+                    // }
+
+                    return returnPromise({});
+
+                }
+
                 var getItemDataStore = function (componentData) {
 
                     if (scope.componentData.custom_component_name) {
@@ -323,6 +527,21 @@
                             return resolve(value);
                         });
                     };
+
+                    if (dataStoreNotEmpty()) {
+                        /*if (scope.item.data.store && scope.item.data.store.value) {
+
+                            var isNotArray = !Array.isArray(scope.item.data.store.value);
+
+                            if (isNotArray || scope.item.data.store.value.length > 0) {
+                                return promisify(scope.item.data.store);
+                            }
+
+                        }
+
+                        return promisify({});*/
+                        return getDataStoreFromDashboardLayout(componentData);
+                    }
 
                     var mode;
 
@@ -336,51 +555,16 @@
 
                     if (mode === 1) { // Set default value
 
-                        var value = componentData.settings.defaultValue.setValue;
-                        const values = componentData.settings.multiple ? value : [value];
-                        var name = componentData.settings.defaultValue.setValueName;
-                        var label = componentData.settings.defaultValue.setValueLabel;
+                        let value = componentData.settings.defaultValue.setValue;
+                        value = componentData.settings.multiple ? value : [value];
+                        const name = componentData.settings.defaultValue.setValueName;
+                        const label = componentData.settings.defaultValue.setValueLabel;
 
                         if (componentData.settings.value_type === 100) {
 
-                            return entityResolverService.getListLight(scope.entityType, /*{ // fix bug multiple select
-                                filters: {
-                                    user_code: value
-                                }
-                            }*/).then(function (data){
-
-                                var result;
-
-                                if(data.results) {
-                                    if (componentData.settings.multiple) { // fix bug multiple select
-
-                                        result = data.results.filter(item => values.includes(item.id));
-
-                                        if (result.length > 0) {
-                                            return promisify({value: result.map(({id}) => id), name: name, label: label});
-                                        } else {
-                                            return promisify([]);
-                                        }
-
-                                    } else {
-
-                                        result = data.results.find(function(item){
-                                            return item.user_code === value;
-                                        })
-
-                                        if (result) {
-                                            return promisify({value: result.id, name: name, label: label});
-                                        } else {
-                                            return promisify({});
-                                        }
-
-                                    }
-
-                                }
-                            })
+                            return getEntitySelectorDefOption(componentData.settings.multiple, value, label);
 
                         } else {
-
                             return promisify({value: value, name: name, label: label});
                         }
                     }
@@ -407,39 +591,33 @@
 						});
 
                     }
-                    else {
-
-                        // return promisify({});
-
-                        // if value saved inside dashboard layout, return it
-                        if (scope.item.data.store && scope.item.data.store.value) {
-
-                            var isNotArray = !Array.isArray(scope.item.data.store.value);
-
-                            if (isNotArray || scope.item.data.store.value.length > 0) {
-                                return promisify(scope.item.data.store);
-                            }
-
-                        }
-
-                        return promisify({});
-
-                    }
+                    /*else {
+                        return getDataStoreFromDashboardLayout(componentData);
+                    }*/
 
                 };
 
                 scope.settingUpDefaultValue = function (componentData) {
 
-                    getItemDataStore(componentData).then(function (store) {
+                    return new Promise(function (resolve, reject) {
 
-                        if (!store.value) {
-                            return;
-                        }
+                        getItemDataStore(componentData).then(function (store) {
 
-                        scope.item.data.store = store;
-                        scope.$apply();
-                        scope.valueChanged();
-                    });
+                            if (!store.value) {
+                                resolve();
+                                return;
+                            }
+
+                            scope.item.data.store = store;
+                            scope.$apply();
+                            scope.valueChanged();
+
+                            resolve();
+
+                        })
+
+                    })
+
 
                 };
 
@@ -499,34 +677,36 @@
 
 					if (!scope.item.data.store) scope.item.data.store = {};
 
-                    if (scope.entityType) {
+                    if (scope.componentData.settings.multiple) {
+
+                        if ( !Array.isArray(scope.item.data.store.value) ) scope.item.data.store.value = [];
+                        if ( !Array.isArray(scope.item.data.store.user_codes) ) scope.item.data.store.user_codes = [];
+
+                    }
+
+                    if (scope.entityType && scope.componentData.settings.multiple) {
 
                         scope.getData().then(function () {
 
-							scope.settingUpDefaultValue(scope.componentData);
-							scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
-							scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+							scope.settingUpDefaultValue(scope.componentData).then(function () {
+                                scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                                scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                            });
+
 
                         });
 
                     }
                     else {
 
-                        scope.settingUpDefaultValue(scope.componentData);
-                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
-                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                        scope.settingUpDefaultValue(scope.componentData).then(function () {
+                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                        });
 
                     }
 
                     if (scope.componentData.settings.multiple) {
-
-                    	/* if (!scope.item.data.store) {
-							scope.item.data.store = {}
-						} */
-
-                    	if (!Array.isArray(scope.item.data.store.value)) {
-							scope.item.data.store.value = [];
-						}
 
                     	scope.multiselectEventService = new EventService();
 

@@ -176,10 +176,15 @@
                 $('.sidenav-settings-toggle-btn').addClass('settings-menu-opened');
 
                 setTimeout(function () {
-                    $('.side-menu-settings-menu').addClass('overflow-visible');
 
-                    window.addEventListener('click', vm.settingsSideMenuOnClickOutside);
-                    window.addEventListener('contextmenu', vm.settingsSideMenuOnClickOutside);
+                    if (sideMenuSettingsMenuOpened) {
+
+                        $('.side-menu-settings-menu').addClass('overflow-visible');
+
+                        window.addEventListener('click', vm.settingsSideMenuOnClickOutside);
+                        window.addEventListener('contextmenu', vm.settingsSideMenuOnClickOutside);
+                    }
+
                 }, 250);
 
             } else {
@@ -494,6 +499,10 @@
 
                 vm.readyStatus.access = true;
 
+                // BASE_API_URL could not be set immediately, so refresh links after some xhr requests
+                vm.homepageUrl = redirectionService.getUrl('app.portal.home');
+                vm.performanceUrl = redirectionService.getUrl('app.portal.reports.performance-report');
+
                 $scope.$apply();
 
             })
@@ -622,29 +631,29 @@
             vm.getMember();
 
 
-            if (toastr) {
-                toastr.options.onclick = function (event) {
-
-                    if (event.currentTarget && event.currentTarget.classList.contains('toast-error')) {
-
-                        $mdDialog.show({
-                            controller: 'SystemErrorLogDialogController as vm',
-                            templateUrl: 'views/dialogs/system-error-log-dialog-view.html',
-                            targetEvent: event,
-                            locals: {
-                                data: {}
-                            },
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true
-                        })
-
-                    }
-
-                }
-
-
-            }
+            // if (toastr) {
+            //     toastr.options.onclick = function (event) {
+            //
+            //         if (event.currentTarget && event.currentTarget.classList.contains('toast-error')) {
+            //
+            //             $mdDialog.show({
+            //                 controller: 'SystemErrorLogDialogController as vm',
+            //                 templateUrl: 'views/dialogs/system-error-log-dialog-view.html',
+            //                 targetEvent: event,
+            //                 locals: {
+            //                     data: {}
+            //                 },
+            //                 preserveScope: true,
+            //                 autoWrap: true,
+            //                 skipHide: true
+            //             })
+            //
+            //         }
+            //
+            //     }
+            //
+            //
+            // }
         }
 
             vm.init();
