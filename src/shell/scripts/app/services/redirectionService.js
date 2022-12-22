@@ -4,21 +4,27 @@ import baseUrlService from "./baseUrlService";
 
 export default function () {
 
-	const baseUrl = baseUrlService.resolve();
-
-	let profileUrl = baseUrl + '/v/profile'
-
-	if (window.location.href.indexOf('0.0.0.0') !== -1) { // for local develop mode
-		profileUrl = '/#!/profile'
-	}
-
-	const stateToUrl = {
-		'app.portal.home': baseUrl + '/v/',
-		'app.profile': profileUrl,
-		'app.portal.reports.performance-report': baseUrl + '/v/reports/performance',
-	};
+	const PROJECT_ENV = '__PROJECT_ENV__';
 
 	function getUrl (stateName) {
+
+		let urlBeginning = baseUrlService.resolve();
+		const base_api_url = baseUrlService.getMasterUserPrefix();
+
+		if (base_api_url) urlBeginning += '/' + base_api_url;
+
+		let profileUrl = urlBeginning + '/v/profile'
+
+		if (PROJECT_ENV === 'local') {
+			profileUrl = urlBeginning + '/a/#!/profile'
+		}
+
+		const stateToUrl = {
+			'app.portal.home': urlBeginning + '/v/home',
+			'app.profile': profileUrl,
+			'app.portal.reports.performance-report': urlBeginning + '/v/reports/performance',
+		};
+
 
 		if (!stateToUrl.hasOwnProperty(stateName)) {
 			throw new Error('There is no state with such name')

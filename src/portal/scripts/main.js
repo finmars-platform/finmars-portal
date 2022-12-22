@@ -14,6 +14,7 @@ import authorizerService from '../../shell/scripts/app/services/authorizerServic
 import portalController from './app/controllers/portalController.js';
 import enterUserCodeDialogController from "./app/controllers/dialogs/enterUserCodeDialogController.js";
 import portfolioRegisterDialogController from "./app/controllers/dialogs/portfolioRegisterDialogController";
+import dialogHeaderDirective from "./app/directives/dialogHeaderDirective";
 
 // form - tabs
 import instrumentTypePricingTabController from "./app/controllers/tabs/instrument-type/instrumentTypePricingTabController.js";
@@ -401,6 +402,7 @@ export default (function () {
 
 	portal.controller('ComplexTransactionAddDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'usersService', 'usersGroupService', 'globalDataService', 'entityType', 'entity', 'data', require('./app/controllers/entityViewer/complexTransactionAddDialogController')]);
 	portal.controller('ComplexTransactionEditDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'usersService', 'usersGroupService', 'globalDataService', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/complexTransactionEditDialogController')]);
+	portal.controller('complexTransactionViewDialogController', ['$scope', '$mdDialog', '$bigDrawer', '$state', 'usersService', 'usersGroupService', 'globalDataService', 'entityType', 'entityId', 'data', require('./app/controllers/entityViewer/complexTransactionViewDialogController')]);
 	portal.controller('BookTransactionTransactionsTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/complex-transaction/bookTransactionTransactionsTabController')]);
 	portal.controller('ComplexTransactionsTransactionEditDialogController', ['$scope', '$mdDialog', 'entityId', require('./app/controllers/entityViewer/complexTransactionsTransactionEditDialogController')]);
 	portal.controller('BookUniquenessWarningDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/bookUniquenessWarningDialogController')]);
@@ -513,7 +515,7 @@ export default (function () {
 
 	// Configuration Import
 
-	portal.controller('ConfigurationImportDialogController', ['$scope', '$mdDialog', 'usersService', 'usersGroupService', 'backendConfigurationImportService', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportDialogController')]);
+	portal.controller('ConfigurationImportDialogController', ['$scope', '$mdDialog', 'usersService', 'usersGroupService', 'backendConfigurationImportService', 'systemMessageService', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportDialogController')]);
 	portal.controller('ConfigurationImportResultDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportResultDialogController')]);
 
 	// Configuration Export
@@ -588,11 +590,12 @@ export default (function () {
 	portal.controller('ProcessesController', ['$scope', '$mdDialog', require('./app/controllers/pages/processesController')]);
 	portal.controller('UpdateCenterController', ['$scope', 'authorizerService', 'globalDataService', require('./app/controllers/pages/updateCenterController')]);
 	portal.controller('SystemMessagesController', ['$scope', '$mdDialog', 'systemMessageService', require('./app/controllers/pages/systemMessagesController')]);
-	portal.controller('UpdateConfigurationPageController', ['$scope', '$state', '$mdDialog', 'usersService', 'usersGroupService', 'backendConfigurationImportService', require('./app/controllers/pages/updateConfigurationPageController')]);
+	portal.controller('UpdateConfigurationPageController', ['$scope', '$state', '$mdDialog', 'usersService', 'usersGroupService', 'backendConfigurationImportService', 'authorizerService', require('./app/controllers/pages/updateConfigurationPageController')]);
 	portal.controller('ExplorerPageController', ['$scope', 'authorizerService', 'globalDataService', '$mdDialog', require('./app/controllers/pages/explorerPageController')]);
 	portal.controller('CreateFolderDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/createFolderDialogController')]);
 	portal.controller('DataStatsPageController', ['$scope', 'authorizerService', 'globalDataService', '$mdDialog', require('./app/controllers/pages/dataStatsPageController')]);
 	portal.controller('DataCalendarPageController', ['$scope', 'authorizerService', 'globalDataService', '$mdDialog', 'systemMessageService', require('./app/controllers/pages/dataCalendarPageController')]);
+	portal.controller('ErrorPageController', ['$scope', 'authorizerService', 'globalDataService', '$mdDialog', 'systemMessageService', require('./app/controllers/pages/errorPageController')]);
 
 	// Procedures
 
@@ -803,6 +806,7 @@ export default (function () {
 	portal.directive('inputFileDirective', [require('./app/directives/inputFileDirective')]);
 	portal.directive('bookmarks', ['$mdDialog', require('./app/directives/bookmarksDirective')]);
 	portal.directive('numberFormatMenu', ['$mdDialog', require('./app/directives/numberFormatMenuDirective')]);
+	portal.directive('dialogHeader', [dialogHeaderDirective]);
 	portal.directive('isDraggableSign', [require('./app/directives/isDraggableSignDirective.js')]);
 	portal.directive('dialogWindowResizer', [require('./app/directives/dialogWindowResizerDirective.js')]);
 	portal.directive('closeDialogButton', [closeDialogButtonDirective]);
@@ -878,24 +882,24 @@ export default (function () {
 
 	}
 
-	var currentUrl = location.href;
-	window.addEventListener('hashchange', function() {
-		_paq.push(['setReferrerUrl', currentUrl]);
-		currentUrl = '/' + window.location.hash.substr(1);
-		_paq.push(['setCustomUrl', currentUrl]);
-		_paq.push(['setDocumentTitle', document.title]);
-
-		// remove all previously assigned custom variables, requires Matomo (formerly Piwik) 3.0.2
-		_paq.push(['deleteCustomVariables', 'page']);
-		_paq.push(['trackPageView']);
-
-		// make Matomo aware of newly added content
-		var content = document.body;
-		_paq.push(['MediaAnalytics::scanForMedia', content]);
-		_paq.push(['FormAnalytics::scanForForms', content]);
-		_paq.push(['trackContentImpressionsWithinNode', content]);
-		_paq.push(['enableLinkTracking']);
-	});
+	// var currentUrl = location.href;
+	// window.addEventListener('hashchange', function() {
+	// 	_paq.push(['setReferrerUrl', currentUrl]);
+	// 	currentUrl = '/' + window.location.hash.substr(1);
+	// 	_paq.push(['setCustomUrl', currentUrl]);
+	// 	_paq.push(['setDocumentTitle', document.title]);
+	//
+	// 	// remove all previously assigned custom variables, requires Matomo (formerly Piwik) 3.0.2
+	// 	_paq.push(['deleteCustomVariables', 'page']);
+	// 	_paq.push(['trackPageView']);
+	//
+	// 	// make Matomo aware of newly added content
+	// 	var content = document.body;
+	// 	_paq.push(['MediaAnalytics::scanForMedia', content]);
+	// 	_paq.push(['FormAnalytics::scanForForms', content]);
+	// 	_paq.push(['trackContentImpressionsWithinNode', content]);
+	// 	_paq.push(['enableLinkTracking']);
+	// });
 
 
 })();

@@ -66,6 +66,12 @@
                 "readonly": true
             },
 
+            {
+                "key": "is_temporary_price",
+                "name": "Is Temporary Price",
+                "value_type": 50,
+                "allow_null": true
+            }
             //{
             //    "key": "factor",
             //    "name": "Factor",

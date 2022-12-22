@@ -107,7 +107,7 @@
 
 //region Margins
 .m-0 {
-  margin: 0;
+  margin: 0 !important;
 }
 
 .m-t-0 {
@@ -625,7 +625,7 @@ md-progress-circular.progress-circular-white {
   justify-content: center;
 }
 
-.fc-space-between {
+.flex-c-space-between, .fc-space-between {
   justify-content: space-between;
 }
 
@@ -819,22 +819,6 @@ input.no-input-arrows[type="number"] {
     display: none;
     -webkit-appearance: none;
     margin: 0;
-  }
-}
-
-.dialog-actions-bottom {
-  padding-bottom: 52px;
-  box-sizing: border-box;
-
-  md-dialog-content {
-    height: 100%;
-  }
-
-  md-dialog-actions {
-    position: absolute;
-    width: 100%;
-    bottom: 0;
-    padding-right: 16px;
   }
 }
 

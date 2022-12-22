@@ -495,7 +495,7 @@
 
                 var getValuesForMatrix = function () {
 
-                    var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
+                    var flatList = rvDataHelper.getPureFlatStructure(scope.evDataService);
                     itemList = flatList.filter(item => item.___type === 'object');
 
                     scope.columns = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.abscissa, scope.matrixSettings.value_key);

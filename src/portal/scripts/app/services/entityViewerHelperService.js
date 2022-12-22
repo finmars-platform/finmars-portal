@@ -207,7 +207,7 @@ import uiService from "./uiService";
 
         if (activeLayoutConfig && activeLayoutConfig.data) {
 
-            if (layoutCurrentConfig === undefined){
+            if (layoutCurrentConfig === undefined) {
                 layoutCurrentConfig = evDataService.getLayoutCurrentConfiguration(isReport);
             }
 
@@ -263,7 +263,7 @@ import uiService from "./uiService";
 
         }
 
-        return new Promise (function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
 
             $mdDialog.show({
                 controller: 'LayoutChangesLossWarningDialogController as vm',
@@ -527,14 +527,14 @@ import uiService from "./uiService";
             } else {
                 attrVal = '';
             } */
-			if (dAttrData.classifier_object) {
-				return {
-					classifier: dAttrData.classifier, // can be changed on a form of entity and be different from dAttrData.classifier_object.id
-					classifier_object: dAttrData.classifier_object
-				};
-			}
+            if (dAttrData.classifier_object) {
+                return {
+                    classifier: dAttrData.classifier, // can be changed on a form of entity and be different from dAttrData.classifier_object.id
+                    classifier_object: dAttrData.classifier_object
+                };
+            }
 
-			return null;
+            return null;
 
 
         } else {
@@ -547,7 +547,7 @@ import uiService from "./uiService";
                     return dAttrData.value_float;
 
                 case 40:
-                    return  dAttrData.value_date;
+                    return dAttrData.value_date;
 
             }
 
@@ -557,48 +557,48 @@ import uiService from "./uiService";
 
     const setDynamicAttrValue = function (dAttrData, value) {
 
-		/* if (dAttrData.attribute_type_object.value_type === 30) {
+        /* if (dAttrData.attribute_type_object.value_type === 30) {
 
-			if (dAttrData.classifier_object) {
-				attrVal = dAttrData.classifier_object.name;
-			} else {
-				attrVal = '';
-			}
+            if (dAttrData.classifier_object) {
+                attrVal = dAttrData.classifier_object.name;
+            } else {
+                attrVal = '';
+            }
 
-		} else {
+        } else {
 
-			switch (dAttrData.attribute_type_object.value_type) {
-				case 10:
-					attrVal = dAttrData.value_string;
-					break;
-				case 20:
-					attrVal = dAttrData.value_float;
-					break;
-				case 40:
-					attrVal = dAttrData.value_date;
-					break;
-			}
+            switch (dAttrData.attribute_type_object.value_type) {
+                case 10:
+                    attrVal = dAttrData.value_string;
+                    break;
+                case 20:
+                    attrVal = dAttrData.value_float;
+                    break;
+                case 40:
+                    attrVal = dAttrData.value_date;
+                    break;
+            }
 
-		} */
+        } */
 
-		switch (dAttrData.attribute_type_object.value_type) {
-			case 10:
-				dAttrData.value_string = value;
-				break;
-			case 20:
-				dAttrData.value_float = value;
-				break;
-			case 30:
-				dAttrData.classifier = value;
-				break;
-			case 40:
-				dAttrData.value_date = value;
-				break;
-		}
+        switch (dAttrData.attribute_type_object.value_type) {
+            case 10:
+                dAttrData.value_string = value;
+                break;
+            case 20:
+                dAttrData.value_float = value;
+                break;
+            case 30:
+                dAttrData.classifier = value;
+                break;
+            case 40:
+                dAttrData.value_date = value;
+                break;
+        }
 
-		return dAttrData;
+        return dAttrData;
 
-	};
+    };
 
     /**
      * Get value of dynamic attribute by it's user_code
@@ -607,7 +607,7 @@ import uiService from "./uiService";
      * @memberOf module:entityViewerHelperService
      * @return {string|float|date} Return value of dynamic attribute
      */
-	const getValueFromDynamicAttrsByUserCode = function (userCode, dAttrsList) {
+    const getValueFromDynamicAttrsByUserCode = function (userCode, dAttrsList) {
 
         let cellValue;
 
@@ -627,44 +627,44 @@ import uiService from "./uiService";
 
     };
 
-	/**
-	 * Find dynamic attribute by user_code and set its value
-	 *
-	 * @param {string} userCode - Dynamic attribute user code
-	 * @param {array} dAttrsList - Array of objects with data of dynamic attribute
-	 * @param {string|number|null|undefined} value - value to set into dynamic attribute
-	 * @memberOf module:entityViewerHelperService
-	 * @return {Array} - list of dynamic attributes
-	 */
-	const setDynamicAttrValueByUserCode = function (userCode, dAttrsList, value) {
+    /**
+     * Find dynamic attribute by user_code and set its value
+     *
+     * @param {string} userCode - Dynamic attribute user code
+     * @param {array} dAttrsList - Array of objects with data of dynamic attribute
+     * @param {string|number|null|undefined} value - value to set into dynamic attribute
+     * @memberOf module:entityViewerHelperService
+     * @return {Array} - list of dynamic attributes
+     */
+    const setDynamicAttrValueByUserCode = function (userCode, dAttrsList, value) {
 
-		let da;
-		for (da = 0; da < dAttrsList.length; da++) {
-			let dynamicAttributeData = dAttrsList[da];
+        let da;
+        for (da = 0; da < dAttrsList.length; da++) {
+            let dynamicAttributeData = dAttrsList[da];
 
-			if (dynamicAttributeData.attribute_type_object.user_code === userCode) {
+            if (dynamicAttributeData.attribute_type_object.user_code === userCode) {
 
-				dAttrsList[da] = setDynamicAttrValue(dynamicAttributeData, value);
-				break;
+                dAttrsList[da] = setDynamicAttrValue(dynamicAttributeData, value);
+                break;
 
-			}
+            }
 
-		}
+        }
 
-		return dAttrsList;
+        return dAttrsList;
 
-	};
+    };
 
-	/**
-	 * Try to get layout by user code and use it. If no layout with such user code was found, get default layout.
-	 * @memberOf module:entityViewerHelperService
-	 *
-	 * @param {object} viewModel - view model of current reportViewerController or entityViewerController
-	 * @param {string} userCode
-	 * @param {obj} $mdDialog
-	 * @param {string} viewContext
-	 * @return {Promise<any>}
-	 */
+    /**
+     * Try to get layout by user code and use it. If no layout with such user code was found, get default layout.
+     * @memberOf module:entityViewerHelperService
+     *
+     * @param {object} viewModel - view model of current reportViewerController or entityViewerController
+     * @param {string} userCode
+     * @param {obj} $mdDialog
+     * @param {string} viewContext
+     * @return {Promise<any>}
+     */
     let getLayoutByUserCode = function (viewModel, userCode, $mdDialog, viewContext) {
 
         return new Promise(function (resolve) {
@@ -759,7 +759,7 @@ import uiService from "./uiService";
 
     /**
      * Get max columns from tabs of Edit Layout
-	 * @param {String} entityType
+     * @param {String} entityType
      * @param {Array} editLayoutTabs
      * @memberOf module:entityViewerHelperService
      * @returns {number}
@@ -767,11 +767,11 @@ import uiService from "./uiService";
     var getEditLayoutMaxColumns = function (entityType, editLayoutTabs) {
 
         let maxCols = 0;
-		const alwaysMaxWidth = ['instrument-type', 'transaction-type', 'account-type'];
+        const alwaysMaxWidth = ['instrument-type', 'transaction-type', 'account-type'];
 
-		if (alwaysMaxWidth.includes(entityType)) {
-			return 6;
-		}
+        if (alwaysMaxWidth.includes(entityType)) {
+            return 6;
+        }
 
         editLayoutTabs.forEach(function (tab) {
 
@@ -896,7 +896,7 @@ import uiService from "./uiService";
             /*if (entityType !== 'instrument-type') {
                 fixedAreaColumns = getEditLayoutMaxColumns(entityType, tabs);
             }*/
-			tabColumns = getEditLayoutMaxColumns(entityType, tabs);
+            tabColumns = getEditLayoutMaxColumns(entityType, tabs);
 
         }
 
@@ -904,7 +904,7 @@ import uiService from "./uiService";
 
         return {
             width: bigDrawerWidth,
-			tabColumns: tabColumns,
+            tabColumns: tabColumns,
             editLayout: layout
         }
     };
@@ -1200,6 +1200,16 @@ import uiService from "./uiService";
 
             evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
 
+        } else if (res.status === 'rebook_transaction') {
+
+            openComplexTransactionEditDrawer(
+                evDataService,
+                evEventService,
+                $bigDrawer,
+                entityId,
+                layout
+            );
+
         }
 
     };
@@ -1373,6 +1383,42 @@ import uiService from "./uiService";
             postComplexTransactionEditionAction(evDataService, evEventService, layout, $bigDrawer, res, entityId);
 
         });
+
+    }
+
+    var openComplexTransactionViewDrawer = function (evDataService, evEventService, $bigDrawer, $mdDialog, entityId, layout) {
+
+        try {
+            metaHelper.closeComponent('big-drawer', $mdDialog, $bigDrawer, {status: 'disagree'});
+        } catch (e) {
+            console.warn("nothing to close")
+        }
+        var bigDrawerWidth = getBigDrawerWidth(4);
+
+
+        $bigDrawer.show({
+            controller: 'complexTransactionViewDialogController as vm',
+            templateUrl: 'views/entity-viewer/complex-transaction-view-drawer-view.html',
+            addResizeButton: false,
+            drawerWidth: bigDrawerWidth,
+            showBackdrop: false,
+            closeAnimation: false,
+            openAnimation: false,
+            locals: {
+                entityType: 'complex-transaction',
+                entityId: entityId,
+                data: {
+                    openedIn: 'big-drawer',
+                    editLayout: layout
+                }
+            }
+
+        }).then(function (res) {
+
+            postComplexTransactionEditionAction(evDataService, evEventService, layout, $bigDrawer, res, entityId);
+
+        });
+
 
     }
 
@@ -1672,7 +1718,7 @@ import uiService from "./uiService";
                 data: {
                     openedIn: 'big-drawer',
                     editLayout: bigDrawerOptions.editLayout,
-					tabColumns: bigDrawerOptions.tabColumns
+                    tabColumns: bigDrawerOptions.tabColumns
                 }
             }
 
@@ -1766,7 +1812,7 @@ import uiService from "./uiService";
                 data: {
                     openedIn: 'big-drawer',
                     editLayout: bigDrawerOptions.editLayout,
-					tabColumns: bigDrawerOptions.tabColumns
+                    tabColumns: bigDrawerOptions.tabColumns
                 }
             }
 
@@ -1841,46 +1887,46 @@ import uiService from "./uiService";
 
     };
 
-	/**
-	 * @param {Object} pricingPolicy
-	 * @param {Array<Object>} instrumentPricingSchemes
-	 * @param {Object} entity - data of ev entity
-	 */
-	var onPricingSchemeChangeInsidePricingPolicy = function (pricingPolicy, instrumentPricingSchemes, entity) {
+    /**
+     * @param {Object} pricingPolicy
+     * @param {Array<Object>} instrumentPricingSchemes
+     * @param {Object} entity - data of ev entity
+     */
+    var onPricingSchemeChangeInsidePricingPolicy = function (pricingPolicy, instrumentPricingSchemes, entity) {
 
-		pricingPolicy.pricing_scheme_object = null;
-		pricingPolicy.default_value = null;
-		pricingPolicy.attribute_key = null;
-		pricingPolicy.data = null;
+        pricingPolicy.pricing_scheme_object = null;
+        pricingPolicy.default_value = null;
+        pricingPolicy.attribute_key = null;
+        pricingPolicy.data = null;
 
-		instrumentPricingSchemes.forEach(function (scheme) {
+        instrumentPricingSchemes.forEach(function (scheme) {
 
-			if (scheme.id === pricingPolicy.pricing_scheme) {
+            if (scheme.id === pricingPolicy.pricing_scheme) {
 
-				pricingPolicy.pricing_scheme_object = scheme;
-			}
+                pricingPolicy.pricing_scheme_object = scheme;
+            }
 
-		})
+        })
 
-		if (pricingPolicy.pricing_scheme_object && pricingPolicy.pricing_scheme_object.type_settings) {
+        if (pricingPolicy.pricing_scheme_object && pricingPolicy.pricing_scheme_object.type_settings) {
 
-			pricingPolicy.data = pricingPolicy.pricing_scheme_object.type_settings.data;
-			pricingPolicy.attribute_key = pricingPolicy.pricing_scheme_object.type_settings.attribute_key;
-			pricingPolicy.default_value = pricingPolicy.pricing_scheme_object.type_settings.default_value;
+            pricingPolicy.data = pricingPolicy.pricing_scheme_object.type_settings.data;
+            pricingPolicy.attribute_key = pricingPolicy.pricing_scheme_object.type_settings.attribute_key;
+            pricingPolicy.default_value = pricingPolicy.pricing_scheme_object.type_settings.default_value;
 
-		}
+        }
 
-		entity.pricing_policies = entity.pricing_policies.map(function (policy) {
+        entity.pricing_policies = entity.pricing_policies.map(function (policy) {
 
-			if (policy.id === pricingPolicy.id) {
-				return Object.assign({}, pricingPolicy);
-			}
+            if (policy.id === pricingPolicy.id) {
+                return Object.assign({}, pricingPolicy);
+            }
 
-			return policy;
+            return policy;
 
-		});
+        });
 
-	};
+    };
 
     module.exports = {
         transformItem: transformItem,
@@ -1891,18 +1937,18 @@ import uiService from "./uiService";
         getTableAttrInFormOf: getTableAttrInFormOf,
 
         getDynamicAttrValue: getDynamicAttrValue,
-		setDynamicAttrValue: setDynamicAttrValue,
+        setDynamicAttrValue: setDynamicAttrValue,
         getLayoutByUserCode: getLayoutByUserCode,
         getDefaultLayout: getDefaultLayout,
         getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
-		setDynamicAttrValueByUserCode: setDynamicAttrValueByUserCode,
+        setDynamicAttrValueByUserCode: setDynamicAttrValueByUserCode,
 
         getEditLayoutMaxColumns: getEditLayoutMaxColumns,
         getBigDrawerWidth: getBigDrawerWidth,
 
         updateTableAfterEntitiesDeletion: updateTableAfterEntitiesDeletion,
 
-		postEditionActions: postEditionActions,
+        postEditionActions: postEditionActions,
         openEntityViewerEditDrawer: openEntityViewerEditDrawer,
         openEntityViewerAddDrawer: openEntityViewerAddDrawer,
 
@@ -1914,10 +1960,11 @@ import uiService from "./uiService";
 
         openComplexTransactionEditDrawer: openComplexTransactionEditDrawer,
         openComplexTransactionAddDrawer: openComplexTransactionAddDrawer,
+        openComplexTransactionViewDrawer: openComplexTransactionViewDrawer,
 
         postAdditionActions: postAdditionActions,
 
-		onPricingSchemeChangeInsidePricingPolicy: onPricingSchemeChangeInsidePricingPolicy,
+        onPricingSchemeChangeInsidePricingPolicy: onPricingSchemeChangeInsidePricingPolicy,
     }
 
 }());

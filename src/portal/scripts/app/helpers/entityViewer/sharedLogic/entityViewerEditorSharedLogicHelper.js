@@ -22,7 +22,10 @@
 
         let bigDrawerResizeButton;
 
-        const readyStatusObj = {permissions: false, entity: false, layout: false};
+        let readyStatusObj = {permissions: false, entity: false, layout: false};
+
+		if (viewModel.entityType === 'instrument') readyStatusObj.exposureTab = false;
+
         const typeSelectorValueEntities = {
         	'instrument': 'instrument-type',
 			'account': 'account-type',
@@ -1490,6 +1493,7 @@
 
 				entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data){
 					const options = data.results.map(mapOption)
+					console.log("testing.getDataForInstrumentExposureTab currencies options", options);
 					resolve(options);
 				})
 

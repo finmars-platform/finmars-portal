@@ -8,12 +8,16 @@
     var scheduleService = require('../../../services/scheduleService');
     var pricingProcedureService = require('../../../services/procedures/pricingProcedureService');
     var dataProcedureService = require('../../../services/procedures/dataProcedureService');
+    var expressionProcedureService = require('../../../services/procedures/expressionProcedureService');
 
     const schedulesHelper = require('../../../helpers/schedules.helper');
 
     module.exports = function scheduleEditDialogController($scope, $mdDialog, data) {
 
         var vm = this;
+        vm.originalItem = null;
+
+        vm.entityType = 'schedule';
 
         vm.itemId = data.item.id;
 
@@ -31,6 +35,7 @@
 
         vm.pricingProcedures = [];
         vm.dataProcedures = [];
+        vm.expressionProcedures = [];
 
         vm.setDay = function (day) {
             if (!vm.cron.day) {
@@ -69,6 +74,7 @@
                 console.log('data', data);
 
                 vm.schedule = data;
+                vm.originalItem = data;
                 vm.readyStatus.schedule = true;
 
                 var values = vm.schedule.cron_expr.split(' ');
@@ -118,12 +124,10 @@
             $mdDialog.hide({status: 'disagree'});
         };
 
-        vm.agree = function ($event) {
+        vm.updateCronExpression = function () {
 
             var minutes = moment(new Date(vm.cron.time)).format('mm');
             var hours = moment(new Date(vm.cron.time)).format('HH');
-
-            vm.schedule.is_enabled = true;
 
             console.log('cron.time', vm.cron.time);
             console.log('vm.cron.', vm.cron);
@@ -144,6 +148,12 @@
                 //console.log(minutes + ' ' + parseInt(hours) + ' * ' + vm.cron.month + ' ' + vm.cron.day);
                 vm.schedule.cron_expr = parseInt(minutes) + ' ' + parseInt(hours) + ' ' + vm.cron.day.join(',') + ' ' + vm.cron.month.join(',') + ' *'
             }
+
+        }
+
+        vm.agree = function ($event) {
+
+            vm.schedule.is_enabled = true;
 
             console.log('vm.schedule', vm.schedule)
 
@@ -197,6 +207,22 @@
 
         };
 
+        vm.getExpressionProcedures = function () {
+
+            expressionProcedureService.getList().then(function (data) {
+
+                vm.expressionProcedures = data.results;
+
+                vm.readyStatus.expressionProcedures = true;
+
+                $scope.$apply();
+
+            })
+
+        };
+
+
+
 
         vm.getServerTime = function () {
 
@@ -249,11 +275,36 @@
 
         vm.dragAndDrop = schedulesHelper.createDragAndDropObject($scope, vm);
 
+        vm.editAsJson = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityAsJsonEditorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        item: vm.originalItem,
+                        entityType: vm.entityType,
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.getItem();
+
+                }
+            })
+
+        };
+
         vm.init = function () {
 
             vm.getItem();
             vm.getPricingProcedures();
             vm.getDataProcedures();
+            vm.getExpressionProcedures();
 
         };
 

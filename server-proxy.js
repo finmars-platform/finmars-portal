@@ -10,9 +10,11 @@ var app = express();
 
 var port = process.env.PORT || 8080;
 var proxyApiHost = process.env.API_HOST || 'https://dev.finmars.com';
+var proxyDatabaseId = process.env.DATABASE_ID || 'client00000';
 
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/portal', express.static('dist'));
+app.use('/' + proxyDatabaseId + '/a', express.static('dist'));
 
 var proxyOptions = url.parse(proxyApiHost);
 

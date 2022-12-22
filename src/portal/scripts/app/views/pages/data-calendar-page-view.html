@@ -19,13 +19,13 @@
         <div class="m-r-8" style="padding-top: 4px;">Filters:</div>
         <div layout="row">
 
-            <md-checkbox class="data-calendar-filter-checkbox" data-ng-click="vm.toggleFilter('system_schedule')"
-                         data-ng-checked="vm.filter.indexOf('system_schedule') !== -1">
-                Show System Schedules
-            </md-checkbox>
             <md-checkbox class="data-calendar-filter-checkbox" data-ng-click="vm.toggleFilter('schedule')"
                          data-ng-checked="vm.filter.indexOf('schedule') !== -1">
-                Show User Schedules
+                Show Schedules
+            </md-checkbox>
+            <md-checkbox class="data-calendar-filter-checkbox" data-ng-click="vm.toggleFilter('schedule_instance')"
+                         data-ng-checked="vm.filter.indexOf('schedule_instance') !== -1">
+                Show Schedules Instances
             </md-checkbox>
             <md-checkbox class="data-calendar-filter-checkbox" data-ng-click="vm.toggleFilter('system_message')"
                          data-ng-checked="vm.filter.indexOf('system_message') !== -1">
@@ -62,7 +62,11 @@
 
             <div data-ng-if="vm.calendarEvent">
 
-                <a data-ng-click="vm.loadCalendarEvent($event)" data-ng-if="vm.calendarEventPayload" class="refresh-calendar-event-payload">Refresh</a>
+                <a data-ng-click="vm.loadCalendarEvent($event)" data-ng-if="vm.calendarEventPayload"
+                   class="refresh-calendar-event-payload">Refresh</a>
+                <a data-ng-click="vm.deleteCeleryTask($event)"
+                   data-ng-if="vm.calendarEventPayload && vm.calendarEvent.extendedProps.type === 'celery_task'"
+                   class="delete-calendar-event-payload">Delete</a>
 
                 <h1 style="word-break: break-word; font-size: 24px;">{{vm.calendarEvent.title}}</h1>
                 <div>Start: {{vm.calendarEvent.start}}</div>
@@ -75,6 +79,14 @@
 
                 </div>
 
+                <div data-ng-if="vm.calendarEvent.extendedProps.type === 'schedule_instance'">
+                    <div>Status: {{vm.calendarEvent.extendedProps.payload.status}}</div>
+                    <div>Schedule ID: {{vm.calendarEvent.extendedProps.payload.schedule_object.id}}</div>
+                    <div>Schedule: {{vm.calendarEvent.extendedProps.payload.schedule_object.user_code}}</div>
+                    <div>Progress: {{vm.calendarEvent.extendedProps.payload.current}} / {{vm.calendarEvent.extendedProps.payload.total}}</div>
+
+                </div>
+
                 <div data-ng-if="vm.calendarEventPayloadLoading">
                     <div layout="row" layout-sm="column" layout-align="space-around">
                         <progress-circular diameter="50"></progress-circular>
@@ -82,7 +94,6 @@
                 </div>
 
                 <div data-ng-if="vm.calendarEventPayload">
-
 
 
                     <div data-ng-if="vm.calendarEvent.extendedProps.type === 'celery_task'">
