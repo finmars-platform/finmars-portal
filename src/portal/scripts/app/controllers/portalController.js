@@ -6,9 +6,10 @@
 
 const localStorageService = require('../../../../shell/scripts/app/services/localStorageService'); // TODO inject localStorageService into angular dependencies
 
-export default function ($scope, $state, authorizerService, usersService, globalDataService, redirectionService) {
+export default function ($scope, $state, authorizerService, usersService, globalDataService, finmarsWidgetsService) {
 
     let vm = this;
+    const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
 
     vm.readyStatus = false;
 
@@ -56,8 +57,6 @@ export default function ($scope, $state, authorizerService, usersService, global
 
     const init = function () {
 
-
-
         localStorageService.setGlobalDataService(globalDataService); // TODO inject localStorageService into angular dependencies
 
         vm.currentMasterUser = globalDataService.getMasterUser();
@@ -69,14 +68,40 @@ export default function ($scope, $state, authorizerService, usersService, global
 
         promises.push(getMember());
 
-        Promise.all(promises).then(resData => {
+        promises.push(finmarsWidgetsService.getFinmarsWidgetsClass());
 
-            console.log('PortalController.resData', resData);
+        Promise.allSettled(promises).then(resList => {
 
-            vm.readyStatus = true;
+            console.log('PortalController.resData', resList);
+
+            /*if (PROJECT_ENV !== 'local') {
+                window.FinmarsWidgets = resData.pop();
+            }*/
+            let readyStatus = true;
+
+            const fWidgetsRes = resList.pop();
+
+            if (fWidgetsRes.status === 'fulfilled') {
+                window.FinmarsWidgets = fWidgetsRes.value;
+            }
+
+            resList.forEach(res => {
+
+                if (res.status === 'fulfilled') return;
+
+                let error = res.reason;
+                error.___custom_message = "PortalController init()"
+                console.log('PortalController.error', error);
+                console.error(error);
+
+                readyStatus = false;
+
+            })
+
+            vm.readyStatus = readyStatus;
             $scope.$apply();
 
-        }).catch(function (error) {
+        })/*.catch(function (error) {
 
             error.___custom_message = "PortalController init()"
             console.log('PortalController.error', error);
@@ -84,7 +109,7 @@ export default function ($scope, $state, authorizerService, usersService, global
 
 			// window.open(redirectionService.getUrl('app.profile'), '_self')
 
-        })
+        })*/
 
     };
 

@@ -10,6 +10,7 @@ require('../../profile/scripts/main.js'); */
 import authorizerService from '../../shell/scripts/app/services/authorizerService.js';*/
 
 // import uiService from "./app/services/uiService.js";
+import finmarsWidgetsService from "./app/services/finmarsWidgetsService";
 
 import portalController from './app/controllers/portalController.js';
 import enterUserCodeDialogController from "./app/controllers/dialogs/enterUserCodeDialogController.js";
@@ -29,6 +30,7 @@ import baseInputDirective from "./app/directives/customInputs/baseInputDirective
 import multiinputFieldDirective from "./app/directives/customInputs/multiinputFieldDirective";
 import entityNamesFieldDirective from "./app/directives/customInputs/entityNamesFieldDirective";
 import closeDialogButtonDirective from "./app/directives/closeDialogButtonDirective";
+import xhrService from "../../shell/scripts/app/services/xhrService";
 
 // noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
@@ -87,6 +89,7 @@ export default (function () {
 	portal.service('middlewareService', [middlewareService]); */
 
 	// portal.service('uiService', ['localStorageService', uiService]);
+	portal.service('finmarsWidgetsService', ['xhrService', finmarsWidgetsService]);
 	portal.service('multitypeFieldService', [require('./app/services/multitypeFieldService')]);
 	portal.service('importSchemesMethodsService', ['$mdDialog', require('./app/services/import/importSchemesMethodsService')]);
 	portal.service('evRvDomManagerService', [require('./app/services/evRvDomManagerService')]);
@@ -166,7 +169,7 @@ export default (function () {
 	// Common
 
 	// portal.controller('ShellController', ['$scope', '$state', '$stateParams', '$rootScope', '$mdDialog', '$transitions', require('./app/controllers/shellController')]);
-	portal.controller('PortalController', ['$scope', '$state',  'authorizerService', 'usersService', 'globalDataService', 'redirectionService', portalController]);
+	portal.controller('PortalController', ['$scope', '$state',  'authorizerService', 'usersService', 'globalDataService', 'finmarsWidgetsService', portalController]);
 	portal.controller('BookmarksController', ['$scope', '$mdDialog', '$state', 'toastNotificationService', require('./app/controllers/bookmarksController')]);
 	portal.controller('SideNavController', ['$scope', '$mdDialog', '$transitions', 'usersService', 'globalDataService', 'redirectionService', require('./app/controllers/sideNavController')]);
 	portal.controller('HomeController', ['$scope', '$state', '$mdDialog', 'authorizerService', 'usersService', 'globalDataService', 'systemMessageService', 'redirectionService', require('./app/controllers/homeController')]);
