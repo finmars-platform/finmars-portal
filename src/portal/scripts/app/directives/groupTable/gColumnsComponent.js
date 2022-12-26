@@ -31,6 +31,7 @@
             link: function (scope, elem, attrs) {
 
                 scope.columns = scope.evDataService.getColumns();
+
                 scope.groups = scope.evDataService.getGroups();
                 scope.viewContext = scope.evDataService.getViewContext();
                 // scope.isReport = metaService.isReport(scope.entityType);
@@ -231,19 +232,29 @@
                 function openNumberFormatDialog(column) {
 
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
+                    // column.options.number_format
+                    let dialogData = {settings: column.options.numberFormat};
+
+                    // for old layouts
+                    if ( scope.isReport && !column.options.hasOwnProperty('numberFormat') ) {
+                        dialogData.settings = column.report_settings;
+                    }
 
                     $mdDialog.show({
                         controller: 'NumberFormatSettingsDialogController as vm',
                         templateUrl: 'views/dialogs/number-format-settings-dialog-view.html',
                         parent: angular.element(document.body),
                         locals: {
-                            data: {settings: column.report_settings}
+                            data: dialogData
                         }
                     }).then(res => {
 
                         if (res.status === 'agree') {
+                            // column.report_settings = res.data;
 
-                            column.report_settings = res.data;
+                            if (!column.options) column.options = {};
+
+                            column.options.numberFormat = res.data;
 
                             scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                             scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);

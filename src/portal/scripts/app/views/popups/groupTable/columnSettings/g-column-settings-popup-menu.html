@@ -39,7 +39,15 @@
         </md-button>
     </div>
 
-    <div data-ng-if="popupData.data.item.value_type == 10">
+    <div data-ng-if="popupData.data.item.value_type === 20" class="menu-divider-top" style="padding-top: 4px;">
+        <md-button data-ng-click="popupData.data.openNumberFormatDialog(popupData.data.item)"
+                   class="popup-menu-item">
+            <span class="material-icons" style="visibility: hidden;">done</span>
+            <span>Number Format</span>
+        </md-button>
+    </div>
+
+    <div data-ng-if="popupData.data.item.value_type === 10">
         <md-button data-ng-click="popupData.data.editManualSorting($event, popupData.data.item)"
                    class="popup-menu-item">
             <span class="material-icons" style="visibility: hidden;">done</span>
