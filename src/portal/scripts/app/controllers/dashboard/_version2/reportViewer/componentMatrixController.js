@@ -12,6 +12,9 @@ export default function ($scope, $uiRouterGlobals) {
 
     const componentId = $uiRouterGlobals.params.componentId;
     const reportLayoutId = $uiRouterGlobals.params.reportLayoutId;
+    const abscissa = $uiRouterGlobals.params.abscissa;
+    const ordinate = $uiRouterGlobals.params.ordinate;
+    const value_key = $uiRouterGlobals.params.value_key;
 
     vm.dashboardDataService = null;
     vm.dashboardEventService = null;
@@ -24,9 +27,9 @@ export default function ($scope, $uiRouterGlobals) {
 
     const componentDataTemplate = {
         "id": "",
-        "name": "me test",
+        "name": "",
         "settings": {
-            "abscissa": "name",
+            "abscissa": abscissa,
             "auto_refresh": false,
             "auto_scaling": false,
             "calculate_name_column_width": false,
@@ -41,14 +44,14 @@ export default function ($scope, $uiRouterGlobals) {
             "layout_name": "ME test matrix",
             "linked_components": {},
             "matrix_view": "usual",
-            "ordinate": "currency.name",
+            "ordinate": ordinate,
             "styles": {
                 "cell": {
                     "text_align": "center"
                 }
             },
             "subtotal_formula_id": 1,
-            "value_key": "market_value"
+            "value_key": value_key
         },
         "type": "report_viewer_matrix",
         "user_settings": {
