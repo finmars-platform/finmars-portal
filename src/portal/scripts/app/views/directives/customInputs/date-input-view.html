@@ -82,6 +82,22 @@
 
           </div>
 
+          <div data-ng-if="emptyInputButton === 'true'"
+               class="height-100 flex-row">
+
+            <button class="custom-input-custom-btn"
+                    ng-disabled="isDisabled"
+                    data-ng-click="emptyInput()">
+              <span class="material-icons ci-icon-color">close</span>
+
+              <md-tooltip ng-if="button.tooltip"
+                          class="tooltip_1"
+                          md-direction="top">Empty field</md-tooltip>
+
+            </button>
+
+          </div>
+
           <div data-ng-if="error" class="custom-input-tooltip">
             <span class="material-icons">info</span>
             <md-tooltip class="error-tooltip" md-direction="top">{{error}}</md-tooltip>

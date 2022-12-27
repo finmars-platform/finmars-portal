@@ -15,6 +15,7 @@
                 smallOptions: "=",
                 isDisabled: '=',
                 isReadonly: '=',
+                emptyInputButton: '@',
                 onChangeCallback: "&?",
             },
             templateUrl: "views/directives/customInputs/date-input-view.html",
@@ -321,6 +322,11 @@
                     });
 
                 };
+
+                scope.emptyInput = function () {
+                    scope.dateValue = null;
+                    scope.onDateChange(scope.dateValue);
+                }
 
                 var prepareCustomButtons = function () {
 
