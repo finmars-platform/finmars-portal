@@ -2,7 +2,7 @@
 
 export default function () {
 
-	/* // IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally.
+	 // IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally.
 
 	let cookieStorage = {};
 
@@ -25,15 +25,15 @@ export default function () {
 
 		cookieStorage[prop] = keyAndVal[1];
 
-	} */
+	}
 
-	const getStoredCookie = function () {
+	/*const getStoredCookie = function () {
 		return document.cookie;
 	}
 
 	const storeCookie = function (value) {
 		document.cookie = value;
-	}
+	}*/
 
 	const getCookie = function (name) {
 		let cookieValue = null;
