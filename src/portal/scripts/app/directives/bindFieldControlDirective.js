@@ -49,6 +49,7 @@
 				};
 
 				$scope.recalculateFunction = null;
+                $scope.showEmptyInputBtn;
 
                 // var attrs = $scope.$parent.vm.attrs || []; // dynamic attributes
                 var userInputs = $scope.$parent.vm.userInputs || [];
@@ -684,6 +685,10 @@
 					}
 					//endregion
 
+                    if (vm.fieldType && vm.fieldType.value === 40) {
+                        $scope.showEmptyInputBtn = $scope.item.key === 'maturity_date';
+                    }
+
                     if ($scope.item.options) {
                         // prepare data for number field
                         if (vm.fieldType && vm.fieldType.value === 20) {
@@ -730,6 +735,7 @@
                                     action: {callback: $scope.setDateMinus}
                                 });
                             }
+
                         }
 						//endregion Prepare data for date field
 
