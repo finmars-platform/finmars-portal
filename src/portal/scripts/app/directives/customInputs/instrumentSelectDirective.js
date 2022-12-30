@@ -293,11 +293,17 @@
                 scope.onInputTextChange = function () {
                     // scope.dropdownMenuFilter = scope.inputText;
 
+                    if (!scope.dropdownMenuShown) {
+                        onCustomInputFocus();
+                    }
+
                     scope.getList();
 
                 };
 
                 scope.onInputFocus = function () {
+
+                    inputElem.focus();
                     scope.getList();
                 }
 
@@ -510,6 +516,18 @@
 
                 };
 
+                var onCustomInputFocus = function () {
+                    // scope.inputText = "";
+                    inputContainer.classList.add('custom-input-focused');
+
+                    scope.dropdownMenuShown = true;
+
+                    window.addEventListener('click', closeDDMenuOnClick);
+                    document.addEventListener('keydown', onTabKeyPress);
+
+                    scope.$apply();
+                }
+
                 var initEventListeners = function () {
 
                     elem[0].addEventListener('mouseover', function () {
@@ -520,19 +538,7 @@
                         inputContainer.classList.remove('custom-input-hovered');
                     });
 
-                    inputElem.addEventListener('focus', function () {
-
-                        // scope.inputText = "";
-                        inputContainer.classList.add('custom-input-focused');
-
-                        scope.dropdownMenuShown = true;
-
-                        window.addEventListener('click', closeDDMenuOnClick);
-                        document.addEventListener('keydown', onTabKeyPress);
-
-                        scope.$apply();
-
-                    }, false);
+                    inputElem.addEventListener('focus', onCustomInputFocus, false);
 
                     /* inputElem.addEventListener('blur', function (event) {
 
