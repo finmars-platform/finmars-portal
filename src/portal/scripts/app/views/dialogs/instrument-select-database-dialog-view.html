@@ -1,13 +1,6 @@
 <md-dialog class="instrument-select-database-dialog-view" aria-label="instrument select database dialog">
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>Instruments</h2>
-            <span flex></span>
-        </div>
-
-
-            <span class="material-icons instrument-select-database-dialog-view-close-button" ng-click="vm.cancel()">close</span>
-
+        <dialog-header title="{{vm.title}}" cancel-dialog="vm.cancel()"></dialog-header>
     </md-toolbar>
     <md-dialog-content>
 
@@ -15,7 +8,7 @@
 
             <div layout="row">
 
-                <div style="width: 383px; padding-left: 20px;">
+                <div style="width: 383px;">
                     <text-input
                             on-change-callback="vm.onInputTextChange()"
                             placeholder-text="Search"
@@ -267,24 +260,30 @@
         </div>
 
     </md-dialog-content>
-    <md-dialog-actions layout="row">
+    <md-dialog-actions>
 
-        <div class="instrument-select-database-footer">
+        <div class="flex-row fc-space-between flex-i-center">
+            <div class="unified-data-select-database-footer">
 
-            <span class="material-icons" data-ng-click="vm.unlock = true" data-ng-if="!vm.unlock">lock</span>
+                <span class="material-icons" data-ng-click="vm.unlock = true" data-ng-if="!vm.unlock">lock</span>
 
-            <span class="material-icons" data-ng-if="vm.unlock" data-ng-click="vm.addInstrument($event)">add</span>
-            <span class="material-icons" data-ng-if="vm.unlock" data-ng-click="vm.importBloomberg($event)">upgrade</span>
+                <span class="material-icons" data-ng-if="vm.unlock" data-ng-click="vm.addInstrument($event)">add</span>
+                <span class="material-icons" data-ng-if="vm.unlock" data-ng-click="vm.importBloomberg($event)">upgrade</span>
+
+            </div>
+
+            <div>
+                <md-button class="link-button m-0" ng-click="vm.cancel()">
+                    Cancel
+                </md-button>
+
+                <md-button class="link-button m-t-0 m-b-0 {{vm.isDisabled ? 'disabled-btn' : ''}}"
+                           ng-click="vm.agree()" style="margin-right:20px;">
+                    <span data-ng-if="vm.actionType == 'add_instrument_dialog'">Add</span>
+                    <span data-ng-if="vm.actionType == 'default'">Select</span>
+                </md-button>
+            </div>
 
         </div>
-
-        <md-button class="link-button md-button md-ink-ripple" ng-click="vm.cancel()">
-            Cancel
-        </md-button>
-        <md-button class="link-button md-button md-ink-ripple {{vm.isDisabled ? 'disabled-btn' : ''}}"
-                   ng-click="vm.agree()" style="margin-right:20px;">
-            <span data-ng-if="vm.actionType == 'add_instrument_dialog'">Add</span>
-            <span data-ng-if="vm.actionType == 'default'">Select</span>
-        </md-button>
     </md-dialog-actions>
 </md-dialog>

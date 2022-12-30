@@ -19,6 +19,8 @@
 
         var vm = this;
 
+        vm.title = data.title || 'Select entity';
+
         vm.localItemsTotal = 0;
         vm.databaseItemsTotal = 0;
         vm.hoverItem = null;
@@ -26,7 +28,8 @@
         vm.databaseItems = [];
         vm.localItems = [];
 
-        vm.inputText = data.inputText;
+        // vm.inputText = data.inputText;
+        vm.inputText = '';
 
         vm.globalPage = 1;
         vm.totalPages = 1;
