@@ -245,12 +245,12 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
         const onmessageCallback = function (ev) {
 
-            /*if (ev.data.event === crossTabEvents.MASTER_USER_CHANGED) {
+            /* if (ev.data.event === crossTabEvents.MASTER_USER_CHANGED) {
                 middlewareService.masterUserChanged();
 
                 window.open(homepageUrl, '_self');
 
-            }*/
+            } */
 
             if (ev.data.event === crossTabEvents.LOGOUT) {
 
