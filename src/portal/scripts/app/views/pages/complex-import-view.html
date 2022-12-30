@@ -37,12 +37,14 @@
                 <progress-circular diameter="20"></progress-circular>
             </div>
             <md-button
-                    class="link-button {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                    class="link-button"
+                    data-ng-disabled="!vm.loadIsAvailable()"
                     data-ng-click="vm.validate($event)">
                 VALIDATE
             </md-button>
             <md-button
-                    class="md-raised import-button {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
+                    class="md-raised import-button"
+                    data-ng-disabled="!vm.loadIsAvailable()"
                     data-ng-click="vm.import($event)">
                 IMPORT
             </md-button>
@@ -66,7 +68,7 @@
     <!--        </md-input-container>-->
     <!--    </div>-->
 
-    <div class="loader-dialog" data-ng-if="vm.processing">
+    <div class="loader-dialog" data-ng-if="vm.readyStatus.processing">
 
         <div>
 
