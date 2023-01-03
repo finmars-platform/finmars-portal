@@ -150,9 +150,10 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         };
 
         if (vm.iframeMode) {
-
+            console.log("testing.880 iframeMode onBefore hook ");
             $transitions.onBefore({}, function (transition) {
-
+                console.log("testing.880 onBefore ", transition.to().name);
+                console.trace("testing.880 onBefore ");
                 if (['app.authentication', 'app.portal.home', 'app.profile'].includes(transition.to().name)) {
                     // resetUrlAfterAbortion();
                     return false;
@@ -313,14 +314,14 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
             cookieService.setCookie('access_token', $uiRouterGlobals.params.atoken);
             // globalDataService.setIframeData(iframeData);
-
+            console.log("testing.880 vm.iframeMode ", vm.iframeMode);
         }
 
         cookieService.setCookie('access_token', $uiRouterGlobals.params.atoken);
 
         vm.accessToken = cookieService.getCookie('access_token');
 
-        if (PROJECT_ENV !== 'local') {
+        /* if (PROJECT_ENV !== 'local') {
 
             websocketService.addEventListener('master_user_change', function (data) {
 
@@ -335,12 +336,6 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                 }
 
                 console.log('master_user_change data', data);
-
-                /* if (window.location.pathname !== '/') {
-                    window.location.href = '/portal/#!/';
-                } else {
-                    window.location.reload()
-                } */
 
                 if (localStorage.getItem('goToSetup')) {
                     $state.go('app.portal.setup');
@@ -359,7 +354,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
             })
 
-        }
+        } */
 
         middlewareService.addListenerOnLogOut(function () {
             vm.isAuthenticated = false;
@@ -385,6 +380,10 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
         }
 
+        if (!pathname.startsWith('/client')) {
+            console.log("testing.880 shellController init() pathname without base_api_url", pathname);
+        }
+        console.log("testing.880 shellController init() base_api_url", base_api_url);
         homepageUrl = redirectionService.getUrl('app.portal.home');
         profileUrl = redirectionService.getUrl('app.profile');
 
