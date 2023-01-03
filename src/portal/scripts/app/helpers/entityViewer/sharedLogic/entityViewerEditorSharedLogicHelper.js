@@ -1488,7 +1488,7 @@
 
 				entityResolverService.getListLight('currency', {pageSize: 1000}).then(function (data){
 					const options = data.results.map(mapOption)
-					console.log("testing.getDataForInstrumentExposureTab currencies options", options);
+
 					resolve(options);
 				})
 
