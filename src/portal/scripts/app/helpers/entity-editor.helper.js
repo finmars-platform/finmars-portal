@@ -67,7 +67,8 @@
     };
 
     var fieldsThatCanBeNullData = {
-        'instrument': ['maturity_date']
+        'instrument': ['maturity_date'],
+        'instrument-type': ['maturity_date'],
     };
 
     var removeNullFields = function (item, entityType) {
