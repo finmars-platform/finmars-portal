@@ -2,7 +2,7 @@
            aria-label="warning dialog"
            drag-dialog>
     <md-toolbar>
-        <dialog-header title="vm.warning.title"
+        <dialog-header title="{{vm.warning.title || 'Warning'}}"
                        cancel-dialog="vm.cancel()"></dialog-header>
     </md-toolbar>
     <md-dialog-content>
