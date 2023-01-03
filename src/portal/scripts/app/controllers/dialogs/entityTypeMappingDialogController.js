@@ -18,6 +18,7 @@
         vm.entityItems = [];
         vm.entityItemsCount = null;
         vm.mapItem = mapItem;
+
         vm.mapEntityType = mapItem.complexExpressionEntity;
 
         var entityWithoutCount = [
@@ -128,81 +129,6 @@
             } else {
                 item.mapping.splice(index, 1);
             }
-
-        };
-
-        function addChilds(classifier, item) {
-
-            // console.log('item', item);
-
-            vm.entityItems.push({
-                value_type: classifier.value_type,
-                classifier: classifier.id,
-                name: item.name,
-                id: item.id,
-                level: item.level
-            });
-
-            if (item.children && item.children.length > 0) {
-                item.children.forEach(function (childItem) {
-                    addChilds(classifier, childItem);
-                })
-            }
-        }
-
-        vm.getDataClassifier = function () {
-
-            instrumentAttributeTypeService.getByKey(vm.mapItem.attribute_type).then(function (data) {
-
-                console.log('classifier data', data);
-
-                [data].forEach(function (classifier) {
-
-                    console.log('classifier', classifier);
-
-                    classifier.classifiers.forEach(function (item) {
-
-                        addChilds(classifier, item);
-
-                    })
-                });
-
-                entityTypeMappingResolveService.getList(vm.mapEntityType).then(function (data) {
-
-                    if (data.hasOwnProperty('results')) {
-                        vm.items = data.results;
-                    } else {
-                        vm.items = data
-                    }
-
-                    console.log('vm.items', vm.items);
-
-                    var i, e;
-                    for (e = 0; e < vm.entityItems.length; e = e + 1) {
-                        for (i = 0; i < vm.items.length; i = i + 1) {
-
-                            if (vm.items[i].classifier == vm.entityItems[e].id) {
-
-                                if (!vm.entityItems[e].hasOwnProperty('mapping')) {
-                                    vm.entityItems[e].mapping = [];
-                                }
-
-                                vm.entityItems[e].mapping.push(vm.items[i])
-
-                            }
-                        }
-                    }
-
-                    vm.entityItems.forEach(function (entityItem) {
-                        if (!entityItem.hasOwnProperty('mapping')) {
-                            entityItem.mapping = [{value: ''}];
-                        }
-                    });
-
-                    vm.readyStatus.content = true;
-                    $scope.$apply();
-                });
-            })
 
         };
 
@@ -470,11 +396,7 @@
 
         vm.init = function () {
 
-            if (vm.mapEntityType === 'classifier') {
-                vm.getDataClassifier();
-            } else {
-                vm.getDataEntity();
-            }
+            vm.getDataEntity();
 
         };
 
