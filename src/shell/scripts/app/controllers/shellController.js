@@ -374,10 +374,13 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
         if (pathname.includes('/client')) {
 
-            base_api_url = pathname.split('/')[1];
+            var pathnamePartsList = pathname.split('/');
+            base_api_url = pathnamePartsList.find(part => part.startsWith('client'));
 
             baseUrlService.setMasterUserPrefix(base_api_url);
 
+        } else {
+            console.error("ShellController: no base_api_url in the pathname", pathname);
         }
 
         if (!pathname.includes('/client')) {

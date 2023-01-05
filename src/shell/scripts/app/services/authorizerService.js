@@ -208,10 +208,13 @@ export default function (cookieService, globalDataService, xhrService) {
 
             authorizerRepository.getMasterUsersList().then(masterUsersData => {
 
-                const base_api_url = window.location.pathname.split('/')[1];
+                // const base_api_url = window.location.pathname.split('/')[1];
+                const pathNamePartsList = window.location.pathname.split('/');
+                const base_api_url = pathNamePartsList.find(part => part.startsWith('client'));
+                console.log("testing.880 getCurrentMasterUser pathNamePartsList, base_api_url", pathNamePartsList, base_api_url);
                 let currentMasterUser = null;
 
-                if (base_api_url.startsWith('client')) {
+                if (base_api_url) {
 
                     currentMasterUser = masterUsersData.results.find(master => master.base_api_url === base_api_url)
 
