@@ -325,7 +325,7 @@ export default function (toastNotificationService, uiService) {
 	];
 
 	/** @module evRvLayoutsHelper */
-	module.exports = {
+	return {
 		getLinkingToFilters: getLinkingToFilters,
 		getDataForLayoutSelectorWithFilters: getDataForLayoutSelectorWithFilters,
 
