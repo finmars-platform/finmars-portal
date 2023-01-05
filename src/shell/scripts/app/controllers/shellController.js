@@ -372,7 +372,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         var pathname = window.location.pathname;
         var base_api_url;
 
-        if (pathname.startsWith('/client')) {
+        if (pathname.includes('/client')) {
 
             base_api_url = pathname.split('/')[1];
 
@@ -380,7 +380,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
         }
 
-        if (!pathname.startsWith('/client')) {
+        if (!pathname.includes('/client')) {
             console.log("testing.880 shellController init() pathname without base_api_url", pathname);
         }
         console.log("testing.880 shellController init() base_api_url", base_api_url);
