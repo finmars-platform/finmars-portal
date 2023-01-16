@@ -40,7 +40,7 @@ Push tag:
     GIT_STRATEGY: none
   stage: push
   only:
-    # We want this job to be run on tags only.
+    # We want this job to be rujin on tags only.
     - tags
   script:
     - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
