@@ -56,6 +56,25 @@
                         </div>
                     </md-card-content>
                 </md-card>
+
+
+                <div layout="row">
+
+                    <div data-ng-repeat="page in vm.pages">
+
+                        <md-button data-ng-click="vm.openPage(page)" data-ng-if="page.number"
+                                   class="md-raised {{vm.currentPage == page.number ? 'md-primary' : ''}}">
+                            {{page.caption}}
+                        </md-button>
+
+                        <div data-ng-if="!page.number" style="margin: 10px;">
+                            {{page.caption}}
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
         </div>
         <div layout="row" data-ng-if="!vm.entitySchemes.length" layout-align="center center">
