@@ -47,7 +47,7 @@ const transactionImportSchemeService = require("../../../services/import/transac
 
         vm.generatePages = function (data) {
 
-            vm.totalPages = Math.round(data.count / vm.pageSize)
+            vm.totalPages = Math.ceil(data.count / vm.pageSize)
 
             vm.pages = []
 
