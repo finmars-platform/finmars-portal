@@ -1637,7 +1637,7 @@
 
 		vm.getActionPaneId = sharedLogic.getActionPaneId;
 
-        vm.makeCopyOfAction = function (actionToCopy, index) {
+        /* vm.makeCopyOfAction = function (actionToCopy, index) {
 
             var actionCopy = JSON.parse(JSON.stringify(actionToCopy));
 
@@ -1686,8 +1686,8 @@
 
             vm.entity.actions.splice(index + 1, 0, actionCopy);
 
-            vm.findPhantoms();
-        };
+            findPhantoms();
+        }; */
 
         vm.moveDown = sharedLogic.moveDown;
         vm.moveUp = sharedLogic.moveUp;
@@ -1776,7 +1776,6 @@
             });
             return result;
         }; */
-		vm.findPhantoms = sharedLogic.findPhantoms;
 
         /* vm.findEventSchedulePhantoms = function () {
             var result = [];
