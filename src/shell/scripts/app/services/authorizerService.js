@@ -209,7 +209,7 @@ export default function (globalDataService) {
                 const base_api_url = window.location.pathname.split('/')[1];
                 let currentMasterUser = null;
 
-                if (base_api_url.startsWith('client')) {
+                if (base_api_url.startsWith('space')) {
 
                     currentMasterUser = masterUsersData.results.find(master => master.base_api_url === base_api_url)
 
