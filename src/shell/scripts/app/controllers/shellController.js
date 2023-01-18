@@ -348,7 +348,7 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
         var pathname = window.location.pathname;
         var base_api_url;
 
-        if (pathname.startsWith('/client')) {
+        if (pathname.startsWith('/space')) {
 
             base_api_url = pathname.split('/')[1];
 

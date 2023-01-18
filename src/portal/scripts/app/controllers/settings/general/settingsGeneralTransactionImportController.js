@@ -13,11 +13,124 @@ const transactionImportSchemeService = require("../../../services/import/transac
         vm.readyStatus = {schemes: false};
         vm.schemes = [];
 
-        vm.getList = function () {
+        vm.currentPage = 1;
+        vm.pageSize = 40;
+
+        vm.pages = []
+
+        vm.openPreviousPage = function () {
+
+            vm.currentPage = vm.currentPage - 1;
+
+            vm.getData()
+
+        }
+
+        vm.openNextPage = function () {
+
+            vm.currentPage = vm.currentPage + 1;
+
+            vm.getData()
+
+        }
+
+        vm.openPage = function (page) {
+
+            if (page.number) {
+
+                vm.currentPage = page.number;
+
+                vm.getData();
+            }
+
+        }
+
+        vm.generatePages = function (data) {
+
+            vm.totalPages = Math.ceil(data.count / vm.pageSize)
+
+            vm.pages = []
+
+            for (var i = 1; i <= vm.totalPages; i = i + 1) {
+                vm.pages.push({
+                    number: i,
+                    caption: i.toString()
+                })
+
+            }
+
+            if (vm.totalPages > 10) {
+
+                vm.currentPageIndex = 0;
+
+                vm.pages.forEach(function (item, index) {
+
+                    if (vm.currentPage === item.number) {
+                        vm.currentPageIndex = index;
+                    }
+
+                })
+
+                vm.pages = vm.pages.filter(function (item, index) {
+
+                    if (index < 2 || index > vm.totalPages - 3) {
+                        return true
+                    }
+
+                    if (index === vm.currentPageIndex) {
+                        return true
+                    }
+
+                    if (index > vm.currentPageIndex - 2 && index < vm.currentPageIndex) {
+                        return true
+                    }
+
+                    if (index < vm.currentPageIndex + 2 && index > vm.currentPageIndex) {
+                        return true
+                    }
+
+                    return false
+
+                })
+
+                for (var i = 0; i < vm.pages.length; i = i + 1) {
+
+                    var j = i + 1;
+
+                    if (j < vm.pages.length) {
+
+                        if (vm.pages[j].number && vm.pages[i].number) {
+                            if (vm.pages[j].number - vm.pages[i].number > 1) {
+
+
+                                vm.pages.splice(i + 1, 0, {
+                                    caption: '...'
+                                })
+
+                            }
+                        }
+
+                    }
+
+                }
+
+
+            }
+
+        }
+
+        vm.getData = function () {
 
             vm.readyStatus.schemes = false;
 
-            transactionImportSchemeService.getListLight().then(function (data) {
+            transactionImportSchemeService.getListLight(
+                {
+                    pageSize: vm.pageSize,
+                    page: vm.currentPage
+                }
+            ).then(function (data) {
+
+                vm.generatePages(data)
 
                 vm.schemes = data.results;
                 vm.readyStatus.schemes = true;
@@ -41,7 +154,7 @@ const transactionImportSchemeService = require("../../../services/import/transac
 
                 if (res.status === 'agree') {
                     console.log('res', res.data);
-                    vm.getList();
+                    vm.getData();
                 }
             });
         };
@@ -59,14 +172,14 @@ const transactionImportSchemeService = require("../../../services/import/transac
 
                 if (res.status === 'agree') {
 
-                    vm.getList();
+                    vm.getData();
 
                 } else if (res.status === 'copy') {
 
                     res.dialogPromise.then(function (copyRes) {
 
                         if (copyRes.status === 'agree') {
-                            vm.getList();
+                            vm.getData();
                         }
 
                     });
@@ -99,7 +212,7 @@ const transactionImportSchemeService = require("../../../services/import/transac
 
                     transactionImportSchemeService.deleteByKey(item.id).then(function () {
 
-                        vm.getList();
+                        vm.getData();
 
                     })
 
@@ -111,7 +224,7 @@ const transactionImportSchemeService = require("../../../services/import/transac
 
         vm.init = function () {
 
-            vm.getList();
+            vm.getData();
 
         };
 
