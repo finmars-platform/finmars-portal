@@ -196,8 +196,9 @@
 
             } else {
 
-                // if (column.report_settings && !column.report_settings.hide_subtotal) {
-                if (column.report_settings) {
+                var nFormat = renderHelper.getNumberFormatSettings(column);
+
+                if (nFormat) {
 
                     var subtotal;
 
@@ -346,30 +347,6 @@
 
     };
 
-    var getColorNegativeNumber = function (val, column) {
-
-        var result = '';
-
-        if (column.report_settings && column.report_settings.negative_color_format_id === 1) {
-
-            if (column.value_type === 20) {
-
-                if (val % 1 === 0) { // check whether number is float or integer
-                    if (parseInt(val) < 0) {
-                        result = 'negative-red'
-                    }
-                } else {
-                    if (parseFloat(val) < 0) {
-                        result = 'negative-red'
-                    }
-                }
-            }
-        }
-
-        return result;
-
-    };
-
     var getCellClasses = function (evDataService, obj, column, columnNumber, groups, valueObj) {
 
         var result = [];
@@ -388,7 +365,7 @@
 
         if (valueObj.numeric_result !== null && valueObj.numeric_result !== undefined) {
 
-            var colorNegative = getColorNegativeNumber(valueObj.numeric_result, column);
+            var colorNegative = renderHelper.getColorNegativeNumber(valueObj.numeric_result, column);
 
             if (colorNegative) {
                 result.push(colorNegative);

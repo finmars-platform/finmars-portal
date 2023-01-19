@@ -151,13 +151,28 @@
             },
 
             {
+                "key": "co_directional_exposure_currency",
+                "name": "Exposure Co-Directional Currency",
+                "value_content_type": "currencies.currency",
+                "value_entity": "currency",
+                "code": "user_code",
+                "value_type": "field"
+            },
+            {
+                "key": "counter_directional_exposure_currency",
+                "name": "Exposure Counter-Directional Currency",
+                "value_content_type": "currencies.currency",
+                "value_entity": "currency",
+                "code": "user_code",
+                "value_type": "field"
+            },
+            {
                 "key": "long_underlying_exposure",
                 "name": "Long Underlying Exposure",
                 "value_content_type": "instruments.longunderlyingexposure",
                 "value_entity": "long-underlying-exposure",
                 "value_type": "field"
             },
-
             {
                 "key": "short_underlying_exposure",
                 "name": "Short Underlying Exposure",
@@ -165,7 +180,6 @@
                 "value_entity": "short-underlying-exposure",
                 "value_type": "field"
             },
-
             {
                 "key": "exposure_calculation_model",
                 "name": "Exposure Calculation Model",
@@ -181,7 +195,6 @@
                 "value_entity": "instrument",
                 "value_type": "field"
             },
-
             {
                 "key": "short_underlying_instrument",
                 "name": "Short Underlying Instrument",
