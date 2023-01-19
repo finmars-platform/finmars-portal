@@ -966,7 +966,7 @@
 						switch (scope.datepickerOptions.datepickerMode) {
 
 							case 'today':
-							case 'yesterday':
+							case 'yesterday-business':
 							case 'inception':
 								scope.dateIsDisabled = true;
 								firstCalendarElem.classList.add("pmu-calendar-disabled");
