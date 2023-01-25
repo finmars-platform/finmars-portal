@@ -379,9 +379,18 @@
             })
 
             .state('app.portal.explorer', {
-                url: '/explorer',
+                url: '/explorer/{folderPath:[a-zA-Z0-9/]*}',
                 templateUrl: 'views/pages/explorer-page-view.html',
-                controller: 'ExplorerPageController as vm'
+                controller: 'ExplorerPageController as vm',
+                params: {
+                    folderPath: {squash: true, value: ''},
+                }
+            })
+
+            .state('app.portal.workflows', {
+                url: '/workflows',
+                templateUrl: 'views/pages/workflows-page-view.html',
+                controller: 'WorkflowsPageController as vm'
             })
 
 
