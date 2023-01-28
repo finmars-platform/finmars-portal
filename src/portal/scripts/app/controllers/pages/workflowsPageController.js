@@ -17,7 +17,7 @@
 
         var vm = this;
 
-        vm.iframeUrl = 'http://0.0.0.0:8001/'
+        vm.iframeUrl = 'http://0.0.0.0:8084/workflow/'
 
         vm.trustSrc = function(src) {
             return $sce.trustAsResourceUrl(src);
@@ -29,7 +29,7 @@
 
 
             if (window.location.href.indexOf('finmars') !== -1) {
-                vm.iframeUrl = window.location.protocol + '//' + window.location.host + '/' + baseUrlService.getMasterUserPrefix() + '/workflows'
+                vm.iframeUrl = window.location.protocol + '//' + window.location.host + '/' + baseUrlService.getMasterUserPrefix() + '/workflow/'
             }
 
         }
