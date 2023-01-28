@@ -59,10 +59,10 @@
 
             </md-menu-item>
 
-            <md-menu-item >
+            <md-menu-item>
 
                 <md-button ng-click="vm.toggleLockStatus($event)"
-                           ng-if="vm.entity.is_locked == false"
+                           ng-if="!vm.entity.is_locked"
                            ng-disabled="vm.entity.is_canceled == true || !vm.hasEditPermission || vm.processing"
                            >
 
@@ -74,9 +74,8 @@
 
                 <md-button
                         ng-click="vm.toggleLockStatus($event)"
-                        ng-if="vm.entity.is_locked == true"
-                        ng-disabled="vm.entity.is_canceled == true || !vm.hasEditPermission || vm.processing"
-                        >
+                        ng-if="vm.entity.is_locked === true"
+                        ng-disabled="vm.entity.is_canceled == true || !vm.hasEditPermission || vm.processing">
 
                     <div class="flex-row flex-i-center ">
                         <ng-md-icon icon="lock_open" class="flex-row"></ng-md-icon>
@@ -89,7 +88,7 @@
             <md-menu-item >
 
                 <md-button ng-click="vm.toggleCancelStatus($event)"
-                           ng-if="vm.entity.is_canceled == true"
+                           ng-if="vm.entity.is_canceled === true"
                            ng-disabled="vm.entity.is_locked == true || !vm.hasEditPermission || vm.processing"
                            >
 
@@ -103,7 +102,7 @@
 
                 <md-button
                         ng-click="vm.toggleCancelStatus($event)"
-                        ng-if="vm.entity.is_canceled == false"
+                        ng-if="!vm.entity.is_canceled"
                         ng-disabled="vm.entity.is_locked == true || !vm.hasEditPermission || vm.processing"
                         >
 
