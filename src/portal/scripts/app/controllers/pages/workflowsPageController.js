@@ -17,7 +17,7 @@
 
         var vm = this;
 
-        vm.iframeUrl = 'http://0.0.0.0:8084/workflow/'
+        vm.iframeUrl = 'http://0.0.0.0:8084/space00000/workflow/'
 
         vm.trustSrc = function(src) {
             return $sce.trustAsResourceUrl(src);
