@@ -17,20 +17,24 @@
 
         var vm = this;
 
-        vm.iframeUrl = 'http://0.0.0.0:8084/space00000/workflow/'
-
         vm.trustSrc = function(src) {
             return $sce.trustAsResourceUrl(src);
+        }
+
+        vm.resolveWorkflowIframeUrl = function (){
+
+            vm.iframeUrl = 'http://0.0.0.0:8084/space00000/workflow/'
+
+            if (window.location.href.indexOf('finmars') !== -1) {
+                vm.iframeUrl = window.location.protocol + '//' + window.location.host + '/' + baseUrlService.getMasterUserPrefix() + '/workflow/'
+            }
+
         }
 
 
         vm.init = function (){
 
-
-
-            if (window.location.href.indexOf('finmars') !== -1) {
-                vm.iframeUrl = window.location.protocol + '//' + window.location.host + '/' + baseUrlService.getMasterUserPrefix() + '/workflow/'
-            }
+            vm.resolveWorkflowIframeUrl();
 
         }
 

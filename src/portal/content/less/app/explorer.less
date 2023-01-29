@@ -1,6 +1,61 @@
 .explorer-page {
 
   min-height: 100%;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  overflow-y: hidden;
+
+  padding: 0;
+
+  &.show-explorer-workflow {
+
+    width: 150vw;
+
+    .explorer-explorer-section {
+      width: 50vw;
+    }
+
+  }
+
+  &.show-explorer-editor {
+
+    width: 150vw;
+
+    .explorer-explorer-section {
+      width: 50vw;
+    }
+
+  }
+
+  &.show-explorer-editor-workflow {
+
+    width: 250vw;
+
+    .explorer-explorer-section {
+      width: 50vw;
+    }
+
+  }
+
+  .explorer-explorer-section {
+    width: 100vw;
+    height: 100%;
+    padding: 0 16px;
+    overflow: hidden;
+  }
+
+  .explorer-file-edit-section {
+    width: 100vw;
+    height: 100%;
+  }
+
+  .explorer-workflow-section {
+    width: 100vw;
+    height: 100%;
+
+  }
+
   
   .explorer-breadcrumbs {
     overflow: hidden;
@@ -64,8 +119,7 @@
   }
 
   .explorer-toolbar {
-    margin-left: 16px;
-    padding-top: 16px;
+    padding-top: 8px;
 
     button.md-raised.md-button {
       font-size: 11px;

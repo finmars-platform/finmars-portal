@@ -1,8 +1,8 @@
-<div class="explorer-page p-24">
+<div class="explorer-page  {{vm.explorerStateClass}}">
 
-    <div>
+    <div class="explorer-explorer-section ">
 
-        <div layout="row">
+        <div layout="column">
             <h1>Finmars Explorer</h1>
             <div class="explorer-toolbar" layout="row">
                 <md-button class="md-raised" data-ng-click="vm.createFile($event)">Create File</md-button>
@@ -16,6 +16,10 @@
                 </md-button>
 
                 <md-button class="md-raised" data-ng-click="vm.listFiles($event)">Refresh</md-button>
+                <md-button class="md-raised" data-ng-click="vm.toggleWorkflow()">
+                    <span data-ng-if="!vm.showWorkflow">Show Workflow</span>
+                    <span data-ng-if="vm.showWorkflow">Hide Workflow</span>
+                </md-button>
 
                 <input type="file" style="display: none" multiple id="explorerFileUploadInput" input-file-directive
                        read-file="vm.fileUploadInput"
@@ -156,4 +160,13 @@
 
     </div>
 
+    <div class="explorer-file-edit-section" data-ng-if="vm.showEditor">
+
+    </div>
+
+    <div class="explorer-workflow-section" data-ng-if="vm.showWorkflow">
+
+        <iframe ng-src="{{vm.trustSrc(vm.workflowIframeUrl)}}" frameborder="0" style="width: 100%; height: 100%"></iframe>
+
+    </div>
 </div>

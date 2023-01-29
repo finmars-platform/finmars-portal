@@ -13,7 +13,7 @@
     var baseUrl = baseUrlService.resolve();
 
 
-    module.exports = function explorerController($scope, $state, $stateParams, authorizerService, globalDataService, $mdDialog) {
+    module.exports = function explorerController($scope, $state, $stateParams, $sce, authorizerService, globalDataService, $mdDialog) {
 
         var vm = this;
 
@@ -22,6 +22,8 @@
         vm.currentPath = []
 
         vm.showHiddenFiles = false;
+        vm.showWorkflow = false;
+        vm.showEditor = false;
 
         vm.breadcrumbsNavigation = function ($index) {
 
@@ -375,7 +377,55 @@
 
         }
 
+        vm.trustSrc = function(src) {
+            return $sce.trustAsResourceUrl(src);
+        }
+
+        vm.resolveWorkflowIframeUrl = function (){
+
+            vm.workflowIframeUrl = 'http://0.0.0.0:8084/space00000/workflow/'
+
+            if (window.location.href.indexOf('finmars') !== -1) {
+                vm.workflowIframeUrl = window.location.protocol + '//' + window.location.host + '/' + baseUrlService.getMasterUserPrefix() + '/workflow/'
+            }
+
+        }
+
+        vm.calculateExplorerStateClass = function (){
+
+            var result = '';
+
+            if (vm.showWorkflow && !vm.showEditor) {
+
+                result = 'show-explorer-workflow'
+
+            }
+
+            if (!vm.showWorkflow && vm.showEditor) {
+
+                result = 'show-explorer-editor'
+
+            }
+
+            if (vm.showWorkflow && vm.showEditor) {
+
+                result = 'show-explorer-editor-workflow'
+
+            }
+
+            vm.explorerStateClass = result;
+
+        }
+
+        vm.toggleWorkflow = function () {
+
+            vm.showWorkflow = !vm.showWorkflow;
+            vm.calculateExplorerStateClass()
+        }
+
         vm.init = function () {
+
+            vm.resolveWorkflowIframeUrl();
 
             console.log('$stateParams', $stateParams);
 
@@ -399,6 +449,7 @@
             })
 
         };
+
 
         vm.init();
 
