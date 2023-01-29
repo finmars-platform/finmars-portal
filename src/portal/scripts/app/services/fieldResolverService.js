@@ -1,29 +1,23 @@
 /**
  * Created by szhitenev on 17.06.2016.
  */
-(function () {
 
-    'use strict';
-
-    var entityFieldsRepository = require('../repositories/entityFieldsRepository');
-    var accountRepository = require('../repositories/accountRepository');
-    var accountTypeRepository = require('../repositories/accountTypeRepository');
-    var instrumentService = require('../services/instrumentService');
-    var instrumentRepository = require('../repositories/instrumentRepository');
-    var instrumentTypeRepository = require('../repositories/instrumentTypeRepository');
-    var importPriceDownloadSchemeRepository = require('../repositories/import/importPriceDownloadSchemeRepository');
-    var instrumentClassRepository = require('../repositories/instrument/instrumentClassRepository');
-    var pricingPolicyRepository = require('../repositories/pricingPolicyRepository');
-    var currencyRepository = require('../repositories/currencyRepository');
-    var portfolioRepository = require('../repositories/portfolioRepository');
-    var portfolioRegisterRepository = require('../repositories/portfolioRegisterRepository');
-    var counterpartyRepository = require('../repositories/counterpartyRepository');
-    var counterpartyGroupRepository = require('../repositories/counterpartyGroupRepository');
-    var responsibleRepository = require('../repositories/responsibleRepository');
-    var responsibleGroupRepository = require('../repositories/responsibleGroupRepository');
-    var transactionTypeRepository = require('../repositories/transactionTypeRepository');
-    var transactionTypeGroupRepository = require('../repositories/transaction/transactionTypeGroupRepository');
-    var metaContentTypesRepository = require('../repositories/metaContentTypesRepository');
+var entityFieldsRepository = require('../repositories/entityFieldsRepository');
+var accountRepository = require('../repositories/accountRepository');
+var accountTypeRepository = require('../repositories/accountTypeRepository');
+var instrumentService = require('../services/instrumentService');
+var instrumentTypeRepository = require('../repositories/instrumentTypeRepository');
+var importPriceDownloadSchemeRepository = require('../repositories/import/importPriceDownloadSchemeRepository');
+var instrumentClassRepository = require('../repositories/instrument/instrumentClassRepository');
+var pricingPolicyRepository = require('../repositories/pricingPolicyRepository');
+var currencyRepository = require('../repositories/currencyRepository');
+var portfolioRepository = require('../repositories/portfolioRepository');
+var portfolioRegisterRepository = require('../repositories/portfolioRegisterRepository');
+var counterpartyRepository = require('../repositories/counterpartyRepository');
+var counterpartyGroupRepository = require('../repositories/counterpartyGroupRepository');
+var responsibleRepository = require('../repositories/responsibleRepository');
+var responsibleGroupRepository = require('../repositories/responsibleGroupRepository');
+var transactionTypeGroupRepository = require('../repositories/transaction/transactionTypeGroupRepository');
 
 var strategyRepository = require('../repositories/strategyRepository');
 var strategyGroupRepository = require('../repositories/strategyGroupRepository');
