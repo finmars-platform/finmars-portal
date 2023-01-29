@@ -279,6 +279,58 @@
 
         }
 
+        vm.createFile = function ($event) {
+
+
+            $mdDialog.show({
+                controller: 'CreateFileDialogController as vm',
+                templateUrl: 'views/dialogs/create-file-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {
+
+                    }
+                }
+
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    $mdDialog.show({
+                        controller: 'FileEditDialogController as vm',
+                        templateUrl: 'views/dialogs/file-edit-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                content: '',
+                                file_descriptor: {
+                                    name: res.name
+                                },
+                                currentPath: vm.currentPath,
+                            }
+                        }
+                    }).then(function (res){
+
+                        if (res.status === 'agree') {
+
+                            vm.listFiles();
+
+                        }
+
+                    })
+                }
+
+            });
+
+        }
+
         vm.uploadFiles = function ($event) {
 
             document.querySelector('#explorerFileUploadInput').click();
