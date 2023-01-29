@@ -92,7 +92,7 @@
                         <md-menu>
 
                             <div ng-right-click="vm.triggerMenu($event)" data-ng-click="vm.selectItem($event, item)"
-                                 data-ng-dblclick="vm.previewFile($event, item)">
+                                 data-ng-dblclick="vm.editFile($event, item)">
                                 <div data-ng-click="$mdMenu.open()" class="explorer-md-menu-trigger"></div>
                                 <span class="material-icons">text_snippet</span>
                                 <span class="explorer-item-name" title="{{item.name}}">{{item.name}}</span>
@@ -102,11 +102,20 @@
                             <md-menu-content width="4">
 
                                 <md-menu-item>
-                                    <md-button ng-click="vm.previewFile($event, item, $mdMenu)"
+                                    <md-button ng-click="vm.previewFileDialog($event, item, $mdMenu)"
                                     >
                                         <ng-md-icon icon="visibility_off"
                                                     style="visibility: hidden;"></ng-md-icon>
-                                        <span>Preview</span>
+                                        <span>Preview (In Dialog)</span>
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-item>
+                                    <md-button ng-click="vm.editFileDialog($event, item, $mdMenu)"
+                                    >
+                                        <ng-md-icon icon="visibility_off"
+                                                    style="visibility: hidden;"></ng-md-icon>
+                                        <span>Edit (In Dialog)</span>
                                     </md-button>
                                 </md-menu-item>
 
@@ -162,11 +171,38 @@
 
     <div class="explorer-file-edit-section" data-ng-if="vm.showEditor">
 
+        <div data-ng-if="!vm.fileEditorLoading" class="height-100">
+
+            <div layout="row">
+                <md-button class="md-raised" data-ng-click="vm.closeFileEditor($event)">Close Editor</md-button>
+                <md-button class="md-raised" data-ng-click="vm.saveFileEditor($event)">Save</md-button>
+                <div layout="row" layout-sm="column" layout-align="space-around" style="padding-top: 8px"
+                     data-ng-if="vm.fileSaveProcessing">
+                    <progress-circular diameter="20"></progress-circular>
+                </div>
+            </div>
+
+            <div
+                    class="file-preview-content-wrap">
+                <div class="ace-editor" id="fileEditorAceEditor"></div>
+            </div>
+
+        </div>
+
+        <div data-ng-if="vm.fileEditorLoading" class="height-100">
+
+            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                <progress-circular diameter="100"></progress-circular>
+            </div>
+
+        </div>
+
     </div>
 
     <div class="explorer-workflow-section" data-ng-if="vm.showWorkflow">
 
-        <iframe ng-src="{{vm.trustSrc(vm.workflowIframeUrl)}}" frameborder="0" style="width: 100%; height: 100%"></iframe>
+        <iframe ng-src="{{vm.trustSrc(vm.workflowIframeUrl)}}" frameborder="0"
+                style="width: 100%; height: 100%"></iframe>
 
     </div>
 </div>
