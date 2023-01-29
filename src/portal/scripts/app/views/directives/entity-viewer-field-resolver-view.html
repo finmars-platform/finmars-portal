@@ -151,7 +151,7 @@
                                          model="modelObj.model"
                                          placeholder-text="{{getName()}}"
                                          event-signal="ciEventObj.event"
-                                         menu-options="sortedFields"
+                                         menu-options="selectorOptions"
                                          small-options="{
                                             notNull: options.notNull,
                                             tooltipText: '{{getName()}}',
@@ -235,7 +235,7 @@
             <two-fields-multiselect ng-model="modelObj.model"
                                     title="{{getName()}}"
                                     model="modelObj.model"
-                                    items="sortedFields"
+                                    items="selectorOptions"
                                     name-property="bindFieldsName"
                                     selected-items-indication="chips"
                                     small-options="{dialogParent: '.dialog-containers-wrap'}"
@@ -280,7 +280,7 @@
                                         title="{{getName()}}"
                                         model="modelObj.model"
                                         name-property="bindFieldsName"
-                                        items="sortedFields"
+                                        items="selectorOptions"
                                         data-selected-items-indication="chips"
                                         small-options="{dialogParent: '.dialog-containers-wrap'}"
                                         on-change-callback="changeHandler()"></two-fields-multiselect>
@@ -320,7 +320,7 @@
                         <dropdown-select class="p-r-8" label="{{getName()}}"
                                          model="entity[fieldKey]"
                                          placeholder-text="{{getName()}}"
-                                         menu-options="sortedFields"
+                                         menu-options="selectorOptions"
                                          small-options="{tooltipText: '{{getName()}}'}"
                                          sorted="sorted"
                                          style="{{inputBackgroundColor()}}">
@@ -362,7 +362,7 @@
                                  model="modelObj.model"
                                  placeholder-text="{{getName()}}"
                                  event-signal="ciEventObj.event"
-                                 menu-options="sortedFields"
+                                 menu-options="selectorOptions"
                                  small-options="{
                                     notNull: options.notNull,
                                     tooltipText: '{{getName()}}',

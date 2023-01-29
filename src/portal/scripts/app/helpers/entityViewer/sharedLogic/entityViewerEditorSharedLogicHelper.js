@@ -1416,7 +1416,7 @@
 			})
 		}; */
 
-		const exposureCalculationModelSelectorOptions = [
+		/*const exposureCalculationModelSelectorOptions = [
 			{id: 1, name: "Market Value"},
 			{id: 2, name: "Price exposure"},
 			{id: 3, name: "Delta adjusted price exposure"},
@@ -1453,7 +1453,7 @@
 				id: 3,
 				name: 'Do not show'
 			}
-		];
+		];*/
 
 		const getDataForInstrumentExposureTab = function () {
 
@@ -1783,10 +1783,10 @@
 			isTabWithErrors: isTabWithErrors,
 			getTabBtnClasses: getTabBtnClasses,
 
-			exposureCalculationModelSelectorOptions: exposureCalculationModelSelectorOptions,
-			longUnderlyingExposureSelectorOptions: longUnderlyingExposureSelectorOptions,
-			shortUnderlyingExposureSelectorOptions: shortUnderlyingExposureSelectorOptions,
-			positionReportingSelectorOptions: positionReportingSelectorOptions,
+			exposureCalculationModelSelectorOptions: instrumentService.exposureCalculationModelsList,
+			longUnderlyingExposureSelectorOptions: instrumentService.longUnderlyingExposureList,
+			shortUnderlyingExposureSelectorOptions: instrumentService.shortUnderlyingExposureList,
+			positionReportingSelectorOptions: instrumentService.positionReportingList,
 			getDataForInstrumentExposureTab: getDataForInstrumentExposureTab,
 
 			switchPricingPolicyParameter: switchPricingPolicyParameter,

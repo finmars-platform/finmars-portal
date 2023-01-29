@@ -69,6 +69,13 @@
                 "value_type": 20
             },
             {
+                "key": "position_reporting",
+                "name": "Position reporting",
+                "value_content_type": "instruments.positionreporting",
+                "value_entity": "position-reporting",
+                "value_type": "field",
+            },
+            {
                 "key": "accrued_currency",
                 "name": "Accrued currency",
                 "value_content_type": "currencies.currency",
