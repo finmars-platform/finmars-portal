@@ -372,7 +372,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         var pathname = window.location.pathname;
         var base_api_url;
 
-        if (pathname.includes('/client')) {
+        if (pathname.startsWith('/space')) {
 
             var pathnamePartsList = pathname.split('/');
             base_api_url = pathnamePartsList.find(part => part.startsWith('client'));

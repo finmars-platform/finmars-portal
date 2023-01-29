@@ -13,7 +13,7 @@
     var baseUrl = baseUrlService.resolve();
 
 
-    module.exports = function explorerController($scope, authorizerService, globalDataService, $mdDialog) {
+    module.exports = function explorerController($scope, $state, $stateParams, authorizerService, globalDataService, $mdDialog) {
 
         var vm = this;
 
@@ -33,7 +33,9 @@
                 })
             }
 
-            vm.listFiles();
+            // vm.listFiles();
+            // IMPORTANT! State.go escaping slashes and router goes mad
+            window.location.hash = '#!/explorer/' + vm.currentPath.join('/')
 
         }
 
@@ -63,7 +65,12 @@
 
             vm.currentPath.push(item.name)
 
-            vm.listFiles()
+            console.log('vm.currentPath', vm.currentPath);
+
+            // IMPORTANT! State.go escaping slashes and router goes mad
+            window.location.hash = '#!/explorer/' + vm.currentPath.join('/')
+
+            // vm.listFiles()
 
         }
 
@@ -94,6 +101,47 @@
                         }
                     }
                 });
+
+            });
+
+        }
+
+        vm.editFile =  function ($event, item, $mdMenu) {
+
+            if ($mdMenu) {
+                $mdMenu.close()
+            }
+
+            var itemPath = vm.currentPath.join('/') + '/' + item.name
+
+            explorerService.viewFile(itemPath).then(function (blob) {
+
+                $mdDialog.show({
+                    controller: 'FileEditDialogController as vm',
+                    templateUrl: 'views/dialogs/file-edit-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            blob: blob,
+                            file_descriptor: item,
+                            currentPath: vm.currentPath
+                        }
+                    }
+                }).then(function (res){
+
+                    if (res.status === 'agree') {
+
+                        vm.listFiles();
+
+                    }
+
+                })
 
             });
 
@@ -171,6 +219,8 @@
 
         vm.listFiles = function (){
 
+            vm.processing = true;
+
             explorerService.listFiles(vm.currentPath.join('/')).then(function (data){
 
                 vm.items = data.results;
@@ -186,6 +236,8 @@
                     return result
 
                 })
+
+                vm.processing = false;
 
                 $scope.$apply();
 
@@ -227,6 +279,58 @@
 
         }
 
+        vm.createFile = function ($event) {
+
+
+            $mdDialog.show({
+                controller: 'CreateFileDialogController as vm',
+                templateUrl: 'views/dialogs/create-file-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {
+
+                    }
+                }
+
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    $mdDialog.show({
+                        controller: 'FileEditDialogController as vm',
+                        templateUrl: 'views/dialogs/file-edit-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                content: '',
+                                file_descriptor: {
+                                    name: res.name
+                                },
+                                currentPath: vm.currentPath,
+                            }
+                        }
+                    }).then(function (res){
+
+                        if (res.status === 'agree') {
+
+                            vm.listFiles();
+
+                        }
+
+                    })
+                }
+
+            });
+
+        }
+
         vm.uploadFiles = function ($event) {
 
             document.querySelector('#explorerFileUploadInput').click();
@@ -234,6 +338,8 @@
         }
 
         vm.uploadFileHandler = function ($event) {
+
+            vm.processing = true;
 
             console.log("uploadFileHandler.$event", $event)
 
@@ -270,6 +376,14 @@
         }
 
         vm.init = function () {
+
+            console.log('$stateParams', $stateParams);
+
+            if ($stateParams.folderPath) {
+                vm.currentPath = $stateParams.folderPath.split('/')
+            }
+
+            console.log("here?")
 
             vm.listFiles();
 

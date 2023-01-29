@@ -91,7 +91,9 @@
                 }
             }).then(function (res) {
 
-                if(res && res.status === 'agree') {
+                if (res.status === 'agree') {
+
+                    vm.scheme.selector_values = res.data;
 
                     vm.selector_values_projection = vm.scheme.selector_values.map(function (item) {
                         return {

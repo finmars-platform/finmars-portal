@@ -407,7 +407,9 @@
                         vm.readyStatus.layout = true;
                         $scope.$apply();
 
-						sharedLogic.setStateInActionsControls();
+						// sharedLogic.setStateInActionsControls();
+                        vm.entity.actions = sharedLogic.formatActionsForFrontend();
+
 						vm.paneActionsMenuPopups = vm.createSelectorPopupDataForActions();
 
                         res();
@@ -750,8 +752,6 @@
                 actionsErrors = actionsErrors.concat(inputsErrors);
 
                 var entityErrors = sharedLogic.checkEntityForEmptyFields(entityToSave);
-				console.log("inputsDeletion.save errors", JSON.parse(JSON.stringify(actionsErrors)), JSON.parse(JSON.stringify(entityErrors)));
-
 
                 new Promise(function (resolve, reject) {
 
@@ -786,7 +786,8 @@
                     }
 
 
-                }).then(function() {
+                })
+                .then(function() {
 
                     vm.processing = true;
 
@@ -808,7 +809,8 @@
 
                         }
 
-                    }).catch(function (error) {
+                    })
+                    .catch(function (error) {
 
                         console.log('error', error);
 
@@ -819,6 +821,7 @@
                         reject()
 
                     });
+
 
                 })
 
@@ -1963,8 +1966,6 @@
 
         };
 
-		vm.findPhantoms = sharedLogic.findPhantoms;
-		// vm.findEventSchedulePhantoms = sharedLogic.findEventSchedulePhantoms;
         vm.loadRelation = sharedLogic.loadRelation;
 
         vm.getNameByValueType = function (value) {

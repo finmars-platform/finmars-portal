@@ -1,5 +1,5 @@
 /**
- * Created by szhitenev on 11.07.2022.
+ * Created by szhitenev on 24.01.2023.
  */
 (function () {
 
@@ -7,15 +7,20 @@
 
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
     var metaHelper = require('../../helpers/meta.helper');
+    var explorerService = require('../../services/explorerService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+
 
 
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
 
-        console.log('filePreviewDialogController data', data);
+        console.log('fileEditDialogController data', data);
 
         vm.data = data;
+
+        vm.currentPath = data.currentPath
 
         vm.contentType = 'json'
 
@@ -41,11 +46,52 @@
 
         }
 
+        vm.close = function (){
+            $mdDialog.cancel();
+        }
+
         vm.agree = function () {
-            $mdDialog.hide({status: 'agree'});
+
+            vm.processing = true;
+
+            var name = ''
+
+            if (vm.data.file_descriptor) {
+                name = vm.data.file_descriptor.name
+            }
+
+            if (vm.data.info && vm.data.info.file_report_object) {
+                name = vm.data.info.file_report_object.name
+            }
+
+            var path = vm.currentPath.join('/');
+
+            let formData = new FormData();
+
+            var content = vm.editor.getValue()
+
+
+            console.log('path', path)
+            console.log('name', name)
+
+            const blob = new Blob([content], { type: vm.contentType});
+            const file = new File([blob], name)
+
+            formData.append("file", file)
+            formData.append('path', path)
+
+            explorerService.uploadFiles(formData).then(function (e) {
+
+                toastNotificationService.success("File Uploaded")
+
+                vm.processing = false;
+
+                $mdDialog.hide({status: 'agree'});
+
+            })
         };
 
-        vm.initJsonEditor = function (){
+        vm.initJsonEditor = function () {
 
             setTimeout(function () {
 
@@ -71,7 +117,7 @@
 
         }
 
-        vm.initYamlEditor = function (){
+        vm.initYamlEditor = function () {
 
             setTimeout(function () {
 
@@ -157,7 +203,7 @@
 
         }
 
-        vm.copyContent = function (content){
+        vm.copyContent = function (content) {
 
             metaHelper.copyToBuffer(content)
 
@@ -224,11 +270,11 @@
 
         }
 
-        vm.readBlob = function (){
+        vm.readBlob = function () {
 
             var reader = new FileReader();
 
-            reader.addEventListener("loadend", function(e){
+            reader.addEventListener("loadend", function (e) {
                 vm.data.content = reader.result;
 
                 vm.formatContent();
