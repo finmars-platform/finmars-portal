@@ -37,16 +37,13 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
         };
         vm.validateConfig = {};
 
-        vm.processing = false;
+        // vm.processing = false;
         vm.loaderData = {};
 
         vm.hasSchemeEditPermission = false;
 
         vm.loadIsAvailable = function () {
-            if (vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined && vm.processing === false) {
-                return true;
-            }
-            return false;
+            return vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined && vm.readyStatus.processing === false;
         };
 
         vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport().map(function (item){
@@ -162,7 +159,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
         };
 
-        vm.validate = function (resolve, $event) {
+        vm.validate = function (resolve, reject, $event) {
 
             vm.readyStatus.processing = true;
 
@@ -179,7 +176,8 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
             }
 
-            importEntityService.validateImport(formData).then(function (data) {
+            importEntityService.validateImport(formData)
+            .then(function (data) {
 
                 vm.validateConfig = data;
 
@@ -232,7 +230,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
                     } else {
 
                         setTimeout(function () {
-                            vm.validate(resolve, $event);
+                            vm.validate(resolve, reject, $event);
                         }, 1000)
 
                     }
@@ -241,6 +239,9 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
 
             })
+            .catch(function (e) {
+                reject(e)
+            })
 
         };
 
@@ -248,7 +249,8 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
             new Promise(function (resolve, reject) {
 
-                vm.processing = true;
+                // vm.processing = true;
+                vm.readyStatus.processing = true;
 
                 vm.validateConfig = Object.assign({}, vm.config);
 
@@ -259,11 +261,13 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
                     status: vm.validateConfig.task_status
                 };
 
-                vm.validate(resolve, $event)
+                vm.validate(resolve, reject, $event)
 
-            }).then(function (data) {
+            })
+            .then(function (data) {
 
-                vm.processing = false;
+                // vm.processing = false;
+                vm.readyStatus.processing = false;
 
                 console.log('validateImport.data', data);
 
@@ -337,12 +341,15 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
                 }
 
-            });
-
+            })
+            .catch(function (e) {
+                vm.readyStatus.processing = false;
+                $scope.$apply();
+            })
 
         };
 
-        vm.import = function (resolve, $event) {
+        var importData = function (resolve, reject, $event) {
 
             vm.readyStatus.processing = true;
 
@@ -412,7 +419,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
                     } else {
 
                         setTimeout(function () {
-                            vm.import(resolve, $event);
+                            importData(resolve, reject, $event);
                         }, 1000)
 
                     }
@@ -420,6 +427,8 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
                 }
 
 
+            }).catch(function (e) {
+                reject(e);
             })
         };
 
@@ -430,7 +439,8 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
                 delete vm.config.task_id;
                 delete vm.config.task_status;
 
-                vm.processing = true;
+                // vm.processing = true;
+                vm.readyStatus.processing = true;
 
                 vm.loaderData = {
                     current: vm.config.processed_rows,
@@ -439,17 +449,16 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
                     status: vm.config.task_status
                 };
 
-                vm.import(resolve, $event)
+                importData(resolve, reject, $event)
 
             }).then(function (data) {
 
                 vm.config = {};
 
-                vm.processing = false;
+                // vm.processing = false;
+                vm.readyStatus.processing = false;
 
                 console.log('import.data', data);
-
-                vm.readyStatus.processing = false;
                 vm.dataIsImported = true;
 
                 $scope.$apply();
@@ -503,7 +512,10 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
                 });
 
-
+            })
+            .finally(function (e) {
+                vm.readyStatus.processing = false;
+                $scope.$apply()
             });
 
         };
@@ -512,7 +524,8 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
             return new Promise(function (resolve, reject) {
 
-                vm.processing = true;
+                // vm.processing = true;
+                vm.readyStatus.processing = true;
 
                 vm.validateConfig = Object.assign({}, vm.config);
 
@@ -523,13 +536,15 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
                     status: vm.validateConfig.task_status
                 };
 
-                vm.validate(resolve, $event)
+                vm.validate(resolve, reject, $event)
 
-            }).then(function (data) {
+            })
+            .then(function (data) {
 
                 vm.validateConfig = {};
 
-                vm.processing = false;
+                // vm.processing = false;
+                vm.readyStatus.processing = false;
 
                 console.log('validateImport.data', data);
 
@@ -594,6 +609,10 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
                 }
 
 
+            })
+            .catch(function (e) {
+                vm.readyStatus.processing = false;
+                $scope.$apply();
             })
 
         }

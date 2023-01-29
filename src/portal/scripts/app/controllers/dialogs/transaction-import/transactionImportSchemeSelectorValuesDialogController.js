@@ -9,12 +9,17 @@
 
     var scrollHelper = new ScrollHelper();
 
-    module.exports = function transactionImportSchemeSelectorValuesDialogController($scope, $mdDialog, data) {
+    module.exports = function transactionImportSchemeSelectorValuesDialogController($scope, $mdDialog, commonDialogsService, data) {
 
         var vm = this;
 
         vm.scheme = data.scheme;
+
         vm.dragAndDropInited = false;
+
+        vm.selectorValues = {
+            value: JSON.parse(angular.toJson(vm.scheme.selector_values))
+        };
 
         vm.filterTerms = {
             value: "",
@@ -27,16 +32,18 @@
         };
 
         vm.deleteSelector = function($event, $index) {
-            vm.scheme.selector_values.splice($index, 1);
-            vm.scheme.selector_values = vm.scheme.selector_values.map(updateOrder);
+            vm.selectorValues.value.splice($index, 1);
+            vm.selectorValues.value = vm.selectorValues.value.map(updateOrder);
         };
 
         vm.addSelector = function () {
-            vm.scheme.selector_values.push({
+
+            vm.selectorValues.value.push({
                value: '',
                notes: '',
-               order: vm.scheme.selector_values.length
+               order: vm.selectorValues.value.length
             });
+
         };
 
         vm.dragIconGrabbed = false;
@@ -73,28 +80,28 @@
                         siblingRowOrder = parseInt(nextSiblings.dataset.rowOrder);
                     }
 
-                    var rowToInsert = vm.scheme.selector_values[draggedRowOrder];
-                    vm.scheme.selector_values.splice(draggedRowOrder, 1);
+                    var rowToInsert = vm.selectorValues.value[draggedRowOrder];
+                    vm.selectorValues.value.splice(draggedRowOrder, 1);
 
                     if (siblingRowOrder) {
 
-                        for (var i = 0; i < vm.scheme.selector_values.length; i++) {
-                            if (vm.scheme.selector_values[i].order === siblingRowOrder) {
+                        for (var i = 0; i < vm.selectorValues.value.length; i++) {
+                            if (vm.selectorValues.value[i].order === siblingRowOrder) {
 
-                                vm.scheme.selector_values.splice(i, 0, rowToInsert);
+                                vm.selectorValues.value.splice(i, 0, rowToInsert);
                                 break;
 
                             }
                         }
 
                     } else {
-                        vm.scheme.selector_values.push(rowToInsert);
+                        vm.selectorValues.value.push(rowToInsert);
                     }
 
-                    /*for (var i = 0; i < vm.scheme.selector_values.length; i++) {
-                        vm.scheme.selector_values[i].order = i;
+                    /*for (var i = 0; i < vm.selectorValues.value.length; i++) {
+                        vm.selectorValues.value[i].order = i;
                     }*/
-                    vm.scheme.selector_values = vm.scheme.selector_values.map(updateOrder);
+                    vm.selectorValues.value = vm.selectorValues.value.map(updateOrder);
 
                 });
 
@@ -126,19 +133,71 @@
         };
 
         vm.agree = function () {
-            $mdDialog.hide({status: 'agree'});
+
+            var thereAreEmptyVals = false;
+            var duplicatedValsList = [];
+
+            vm.selectorValues.value.forEach(function (valueData, index) {
+
+                if ( duplicatedValsList.indexOf(valueData.value) > -1 ) { // values already marked as duplicated
+                    return;
+                }
+
+                if (!valueData.value) {
+
+                    thereAreEmptyVals = true;
+                    return;
+
+                }
+
+                var valIndex = vm.selectorValues.value.findIndex(function (vData) {
+                    return valueData.value === vData.value;
+                })
+
+                if (valIndex !== index) {
+                    duplicatedValsList.push(valueData.value);
+                }
+
+            });
+
+            if (duplicatedValsList.length) {
+
+                commonDialogsService.warning({
+                    warning: {
+                        description: 'Value should be unique. Please delete duplicates for this values: ' + duplicatedValsList.join(', '),
+                    }
+                })
+
+                return;
+
+            }
+
+            if (thereAreEmptyVals) {
+
+                commonDialogsService.warning({
+                    warning: {
+                        description: 'Values should not be empty',
+                    }
+                })
+
+                return;
+
+            }
+
+            $mdDialog.hide({status: 'agree', data: vm.selectorValues.value});
+
         };
 
         var init = function () {
             var DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
             scrollHelper.setDnDScrollElem(DnDScrollElem);
 
-            /* vm.scheme.selector_values.forEach(function (row, index) {
+            /* vm.selectorValues.value.forEach(function (row, index) {
                 if (!row.order) {
                     row.order = index;
                 }
             }); */
-            vm.scheme.selector_values = vm.scheme.selector_values.map(updateOrder);
+            vm.selectorValues.value = vm.selectorValues.value.map(updateOrder);
         };
 
         init();

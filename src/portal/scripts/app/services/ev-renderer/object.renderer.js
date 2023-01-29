@@ -170,11 +170,89 @@
 
     };
 
+    var statusData = {
+        'E': 'Error',
+        'S': 'Skip',
+        'C': 'Created',
+        'Overwritten': 'Created',
+        'R': 'Requested',
+
+        1: 'Booked',
+        2: 'Pending',
+        3: 'Ignored',
+    }
+
+    var getAttributeTypeValue = function (obj, column) {
+
+        if (!obj.attributes) {
+
+            return {
+                html_result: '',
+                numeric_result: null,
+                raw_text_result: '',
+            }
+
+        }
+
+        var rawTextResult = '';
+
+        var pieces = column.key.split('.');
+
+        // var id = parseInt(pieces[pieces.length - 1], 10);
+        var user_code = pieces[pieces.length - 1];
+
+        obj.attributes.forEach(function (item) {
+
+            if (item.attribute_type_object && item.attribute_type_object.user_code === user_code) {
+
+                if (column.value_type === 20 && item.value_float) {
+
+                    rawTextResult = item.value_float;
+
+                }
+
+                if (column.value_type === 10 && item.value_string) {
+                    rawTextResult = stringHelper.parseAndInsertHyperlinks(item.value_string, "class='openLinkInNewTab'");
+
+                }
+
+                if (column.value_type === 30 && item.classifier_object) {
+                    rawTextResult = item.classifier_object.name;
+                }
+
+                if (column.value_type === 40 && item.value_date) {
+                    rawTextResult = item.value_date;
+                }
+
+            }
+
+        });
+
+        return {
+            html_result: rawTextResult,
+            numeric_result: null,
+            raw_text_result: rawTextResult,
+        };
+
+    };
+
     var getValue = function (obj, column) {
 
         if (column.status === 'missing') {
-            return "Deleted";
+            return {
+                html_result: 'Deleted',
+                numeric_result: null,
+                raw_text_result: 'Deleted'
+            };
         }
+
+        var result = {
+            html_result: '',
+            numeric_result: null,
+            raw_text_result: ''
+        };
+
+        var rawTextResult = '';
 
         if (obj[column.key] != null && obj[column.key] !== undefined) {
 
@@ -188,95 +266,74 @@
                     // STATUS_CREATED = 'C'
                     // STATUS_OVERWRITTEN = 'O'
 
-                    if (obj[column.key] === 'E') {
-                        return 'Error'
-                    }
-
-                    if (obj[column.key] === 'S') {
-                        return 'Skip'
-                    }
-
-                    if (obj[column.key] === 'C') {
-                        return 'Created'
-                    }
-
-                    if (obj[column.key] === 'R') {
-                        return 'Requested'
-                    }
-
-                    if (obj[column.key] === 'Overwritten') {
-                        return 'Created'
-                    }
+                    var statusKey = obj[column.key];
+                    rawTextResult = statusData[statusKey];
 
                 }
                 else if(column.key === 'procedure_modified_datetime' || column.key === 'created' || column.key === 'modified') {
 
-                    return moment(obj[column.key]).format('YYYY-MM-DD HH:mm:ss')
+                    rawTextResult = moment(obj[column.key]).format('YYYY-MM-DD HH:mm:ss')
 
                 }
                 else {
 
-                    return stringHelper.parseAndInsertHyperlinks(obj[column.key], "class='openLinkInNewTab'");
+                    var aElem = stringHelper.parseAndInsertHyperlinks(obj[column.key], "class='openLinkInNewTab'");
+
+                    return {
+                        html_result: aElem,
+                        numeric_result: null,
+                        raw_text_result: obj[column.key] || '',
+                    };
 
                 }
             }
-
-            if (typeof obj[column.key] === 'number') {
-
+            else if (typeof obj[column.key] === 'number') {
                 /* if (obj[column.key + '_object'] && obj[column.key + '_object'].user_code) {
                     return obj[column.key + '_object'].user_code;
                 } */
-
-                if (obj[column.key + '_object']) {
+                if (obj[column.key + '_object']) { // cell value is id of relation
 
                     if (obj[column.key + '_object'].name) {
 
                         if (obj[column.key + '_object'].short_name) {
 
-                            return obj[column.key + '_object'].short_name;
+                            rawTextResult = obj[column.key + '_object'].short_name;
 
                         } else {
-                            return obj[column.key + '_object'].name;
+                            rawTextResult = obj[column.key + '_object'].name;
                         }
 
                     } else if (column.key === 'price_download_scheme') {
 
-                        return obj[column.key + '_object'].user_code;
+                        rawTextResult = obj[column.key + '_object'].user_code;
 
                     }
 
                 }
+                else if (column.key === 'status') {
 
-                if (column.key === 'status') {
+                    var statusKey = obj[column.key];
+                    rawTextResult = statusData[statusKey];
 
-                    if (obj[column.key] === 1) {
-                        return 'Booked'
-                    }
-
-                    if (obj[column.key] === 2) {
-                        return 'Pending'
-                    }
-
-                    if (obj[column.key] === 3) {
-                        return 'Ignored'
-                    }
-
-                }
-
-                return obj[column.key]
-            }
-
-            if (Array.isArray(obj[column.key])) {
-                return '[' + obj[column.key].length + ']';
-            }
-
-            if (typeof obj[column.key] === 'boolean') {
-
-                if (obj[column.key]) {
-                    return 'True'
                 } else {
-                    return 'False'
+
+                    rawTextResult = renderHelper.formatValue(obj, column);
+
+                    result.numeric_result = rawTextResult;
+
                 }
+
+                // return obj[column.key]
+
+            }
+            else if (Array.isArray(obj[column.key])) {
+
+                rawTextResult = '[' + obj[column.key].length + ']';
+
+            }
+            else if (typeof obj[column.key] === 'boolean') {
+
+                rawTextResult = obj[column.key] ? 'True' : 'False';
 
             }
 
@@ -284,49 +341,14 @@
 
         if (column.attribute_type) {
 
-            var result = '';
-
-            if (obj.attributes) {
-
-                var pieces = column.key.split('.');
-
-                // var id = parseInt(pieces[pieces.length - 1], 10);
-                var user_code = pieces[pieces.length - 1];
-
-                obj.attributes.forEach(function (item) {
-
-                    if (item.attribute_type_object && item.attribute_type_object.user_code === user_code) {
-
-                        if (column.value_type === 20 && item.value_float) {
-
-                            result = item.value_float;
-
-                        }
-
-                        if (column.value_type === 10 && item.value_string) {
-                            result = stringHelper.parseAndInsertHyperlinks(item.value_string, "class='openLinkInNewTab'");
-
-                        }
-
-                        if (column.value_type === 30 && item.classifier_object) {
-                            result = item.classifier_object.name;
-                        }
-
-                        if (column.value_type === 40 && item.value_date) {
-                            result = item.value_date;
-                        }
-
-                    }
-
-                });
-
-                return result;
-
-            }
+            return getAttributeTypeValue(obj, column);
 
         }
 
-        return '';
+        result.html_result = rawTextResult;
+        result.raw_text_result = rawTextResult;
+
+        return result;
 
     };
 
@@ -414,6 +436,30 @@
 
     };
 
+    var getCellClasses = function (column, valueObj) {
+
+        var result = [];
+
+        var textAlign = getCellTextAlign(column);
+
+        if (textAlign) {
+            result.push(textAlign);
+        }
+
+        if (valueObj.numeric_result !== null && valueObj.numeric_result !== undefined) {
+
+            var colorNegative = renderHelper.getColorNegativeNumber(valueObj.numeric_result, column);
+
+            if (colorNegative) {
+                result.push(colorNegative);
+            }
+
+        }
+
+        return result;
+
+    };
+
     var getRowGeneralClasses = function (obj, classList, markedRows) {
 
         if (obj.___context_menu_is_opened) {
@@ -469,25 +515,47 @@
 
         result = result + rowSelection + rowSettings;
 
+        obj.___cells_values = [];
         // console.log('render.columns', columns);
 
         columns.forEach(function (column, columnIndex) {
 
             var columnNumber = columnIndex + 1;
 
-            var cellValue = getValue(obj, column);
-            var textAlign = getCellTextAlign(column);
+            /*var cellValue = getValue(obj, column);
+            var textAlign = getCellTextAlign(column);*/
+            var value_obj = getValue(obj, column);
+
             var gCellTitle = '';
 
-            if (cellValue !== '') {
+            var cellClassesList = getCellClasses(column, value_obj);
+            var cellClasses = cellClassesList.join(' ');
+
+            obj.___cells_values.push({
+                classList: cellClassesList,
+                value: value_obj.html_result
+            });
+
+            /*if (cellValue !== '') {
                 gCellTitle = ' title="' + cellValue + '"';
                 cellValue = '<span class="g-cell-content">' + cellValue + '</span>';
+            }*/
+
+            var resultValue = '';
+
+            if (value_obj.html_result) {
+                resultValue = '<span class="g-cell-content">' + value_obj.html_result + '</span>';
+            }
+
+            if (value_obj.raw_text_result) {
+                gCellTitle = ' title="' + value_obj.raw_text_result + '"'
             }
 
             cell = '<div data-column="' + columnNumber + '" class="g-cell-wrap" style="width: ' + column.style.width + '">' +
-                '<div class="g-cell' + textAlign + ' cell-status-' + column.status + '"' + gCellTitle + '>' +
+                // '<div class="g-cell' + textAlign + ' cell-status-' + column.status + '"' + gCellTitle + '>' +
+                '<div class="g-cell' + ' cell-status-' + column.status + ' ' + cellClasses + '"' + gCellTitle + '>' +
                 '<div class="g-cell-content-wrap">' +
-                cellValue +
+                resultValue +
                 '</div>' +
                 '</div>' +
                 '</div>';

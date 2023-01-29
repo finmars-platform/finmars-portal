@@ -31,7 +31,7 @@
         vm.activeItemTotal = 0;
         vm.skippedItemTotal = 0;
 
-        vm.processing = false;
+        // vm.processing = false;
         vm.loaderData = {};
         vm.schemeIsValid = true;
 
@@ -234,7 +234,8 @@
 
             vm.counterData = {};
 
-            vm.processing = true;
+            // vm.processing = true;
+            vm.readyStatus.processing = true;
 
             var formData = new FormData();
 
@@ -344,11 +345,9 @@
 
                     // console.log('data', data);
 
-                    vm.processing = false;
+                    // vm.processing = false;
 
                     vm.status = 'SUCCESS';
-
-                    vm.processing = false;
 
                     if (data.errors.length === 0) {
 
@@ -369,7 +368,8 @@
 
                         });
 
-                    } else {
+                    }
+                    else {
 
                         $mdDialog.show({
                             controller: 'ComplexImportValidationErrorsDialogController as vm',
@@ -390,6 +390,9 @@
                     }
 
 
+                }).finally(function () {
+                    vm.readyStatus.processing = false;
+                    $scope.$apply();
                 });
             }
 
@@ -397,7 +400,8 @@
 
         vm.import = function ($event) {
 
-            vm.processing = true;
+            // vm.processing = true;
+            vm.readyStatus.processing = true;
 
             var formData = new FormData();
 
@@ -476,6 +480,8 @@
 
             if (schemeErrorsInActions.length > 0) {
 
+                vm.readyStatus.processing = false;
+
                 $mdDialog.show({
                     controller: 'ComplexImportSchemeErrorsDialogController as vm',
                     templateUrl: 'views/dialogs/complex-import/complex-import-scheme-error-dialog-view.html',
@@ -488,7 +494,8 @@
                     }
                 });
 
-            } else {
+            }
+            else {
 
                 vm.loaderData = {
                     current: vm.counter,
@@ -506,7 +513,8 @@
 
                     // console.log('validation data', data);
 
-                    vm.processing = false;
+                    // vm.processing = false;
+                    vm.readyStatus.processing = false;
 
                     vm.status = 'SUCCESS';
 
@@ -529,7 +537,8 @@
 
                         setTimeout(function () {
 
-                            vm.processing = true;
+                            // vm.processing = true;
+                            vm.readyStatus.processing = true;
 
                             vm.status = 'PROGRESS';
 
@@ -552,7 +561,8 @@
                                 // console.log('data', data);
 
                                 vm.status = 'SUCCESS';
-                                vm.processing = false;
+                                // vm.processing = false;
+                                vm.readyStatus.processing = false;
 
                                 errorsCount = 0;
 
@@ -611,12 +621,16 @@
 
                                 }
 
+                                $scope.$apply();
 
-                            }).catch(function (reason) {
+
+                            })
+                            .catch(function (reason) {
 
                                 // console.log('here? ', reason);
 
-                                vm.processing = false;
+                                // vm.processing = false;
+                                vm.readyStatus.processing = false;
 
                                 vm.status = 'SUCCESS';
 
@@ -641,9 +655,11 @@
 
                         }, 500)
 
-                    } else {
+                    }
+                    else {
 
-                        vm.processing = false;
+                        // vm.processing = false;
+                        vm.readyStatus.processing = false;
                         vm.status = 'SUCCESS';
 
                         $mdDialog.show({
@@ -663,7 +679,13 @@
                         })
 
                     }
+
+                })
+                .catch(function (e) {
+                    vm.readyStatus.processing = false;
+                    $scope.$apply();
                 });
+
             }
         };
 

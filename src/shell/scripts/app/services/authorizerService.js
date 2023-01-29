@@ -214,7 +214,7 @@ export default function (cookieService, globalDataService, xhrService) {
                 console.log("testing.880 getCurrentMasterUser pathNamePartsList, base_api_url", pathNamePartsList, base_api_url);
                 let currentMasterUser = null;
 
-                if (base_api_url) {
+                if (base_api_url.startsWith('space')) {
 
                     currentMasterUser = masterUsersData.results.find(master => master.base_api_url === base_api_url)
 

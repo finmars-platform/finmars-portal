@@ -150,11 +150,27 @@
 	};
 
 
+    var getNumberFormatSettings = function (column) {
+
+        if (column.options && column.options.numberFormat) {
+            return column.options.numberFormat;
+        }
+
+        if (column.report_settings) { // for old layouts
+            return column.report_settings;
+        }
+
+        return null;
+
+    }
+
     var formatRounding = function (value, column) {
 
-        if (column.report_settings) {
+        var numberFormat = getNumberFormatSettings(column);
 
-            switch (column.report_settings.round_format_id) {
+        if (numberFormat) {
+
+            switch (numberFormat.round_format_id) {
                 case 0:
                     return '' + value;
                     break;
@@ -173,15 +189,15 @@
                     break;
             }
 
-            /*if (column.report_settings.round_format_id === 0) {
+            /*if (numberFormat.round_format_id === 0) {
                 return value
             }
 
-            if (column.report_settings.round_format_id === 1) {
+            if (numberFormat.round_format_id === 1) {
                 return parseInt(value, 10);
             }
 
-            if (column.report_settings.round_format_id === 3) {
+            if (numberFormat.round_format_id === 3) {
                 return parseFloat(value).toFixed(2);
             }*/
 
@@ -193,19 +209,21 @@
 
     var formatZero = function (value, column) {
 
-        if (column.report_settings) {
+        var numberFormat = getNumberFormatSettings(column);
+
+        if (numberFormat) {
 
             if (parseFloat(value) === 0) {
 
-                if (column.report_settings.zero_format_id === 0) {
+                if (numberFormat.zero_format_id === 0) {
                     return value
                 }
 
-                if (column.report_settings.zero_format_id === 1) {
+                if (numberFormat.zero_format_id === 1) {
                     return '-'
                 }
 
-                if (column.report_settings.zero_format_id === 2) {
+                if (numberFormat.zero_format_id === 2) {
                     return ''
                 }
 
@@ -219,7 +237,9 @@
 
     var formatNegative = function (value, column) {
 
-        if (column.report_settings) {
+        var numberFormat = getNumberFormatSettings(column);
+
+        if (numberFormat) {
 
             var localValue = value;
 
@@ -241,11 +261,11 @@
 
             if (localValue < 0) {
 
-                if (column.report_settings.negative_format_id === 0) {
+                if (numberFormat.negative_format_id === 0) {
                     return value;
                 }
 
-                if (column.report_settings.negative_format_id === 1) {
+                if (numberFormat.negative_format_id === 1) {
 
                     value = value + '';
 
@@ -265,13 +285,15 @@
 
     var formatThousandsSeparator = function (value, column) {
 
-        if (column.report_settings) {
+        var numberFormat = getNumberFormatSettings(column);
 
-            if (column.report_settings.thousands_separator_format_id === 0) {
+        if (numberFormat) {
+
+            if (numberFormat.thousands_separator_format_id === 0) {
                 return value
             }
 
-            if (column.report_settings.thousands_separator_format_id === 1) {
+            if (numberFormat.thousands_separator_format_id === 1) {
 
                 var parts = value.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
@@ -283,7 +305,7 @@
 
             }
 
-            if (column.report_settings.thousands_separator_format_id === 2) {
+            if (numberFormat.thousands_separator_format_id === 2) {
 
                 var parts = value.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "'");
@@ -312,14 +334,15 @@
     var formatPercentage = function (value, column, applySuffix) {
 
         var number = value;
+        var numberFormat = getNumberFormatSettings(column);
 
-        if (column.report_settings) {
+        if (numberFormat) {
 
-            if (column.report_settings.number_multiplier || column.report_settings.number_multiplier === 0) {
-                number = parseFloat(number) * column.report_settings.number_multiplier;
+            if (numberFormat.number_multiplier || numberFormat.number_multiplier === 0) {
+                number = parseFloat(number) * numberFormat.number_multiplier;
             }
 
-            switch (column.report_settings.percentage_format_id) {
+            switch (numberFormat.percentage_format_id) {
 
                 case 1:
                 case 4:
@@ -334,8 +357,8 @@
                     break;
             }
 
-			if (applySuffix && column.report_settings.number_suffix) {
-				number = number + column.report_settings.number_suffix;
+			if (applySuffix && numberFormat.number_suffix) {
+				number = number + numberFormat.number_suffix;
 			}
             /* switch (column.report_settings.percentage_format_id) {
 
@@ -366,7 +389,6 @@
 
     };
 
-
     var formatValue = function (obj, column) {
 
         var value = obj[column.key];
@@ -389,17 +411,44 @@
 
         value = formatNegative(value, column);
 
-        if (column.report_settings) {
-            if (column.report_settings.number_prefix) {
-                value = column.report_settings.number_prefix + value;
+        var numberFormat = getNumberFormatSettings(column);
+
+        if (numberFormat) {
+            if (numberFormat.number_prefix) {
+                value = numberFormat.number_prefix + value;
             }
 
-            if (column.report_settings.number_suffix) {
-                value = value + column.report_settings.number_suffix;
+            if (numberFormat.number_suffix) {
+                value = value + numberFormat.number_suffix;
             }
         }
 
         return value;
+
+    };
+
+    var getColorNegativeNumber = function (val, column) {
+
+        var result = '';
+        var numberFormat = getNumberFormatSettings(column);
+
+        if (numberFormat && numberFormat.negative_color_format_id === 1) {
+
+            if (column.value_type === 20) {
+
+                if (val % 1 === 0) { // check whether number is float or integer
+                    if (parseInt(val) < 0) {
+                        result = 'negative-red'
+                    }
+                } else {
+                    if (parseFloat(val) < 0) {
+                        result = 'negative-red'
+                    }
+                }
+            }
+        }
+
+        return result;
 
     };
 
@@ -516,10 +565,12 @@
 		getRowSelectionElem: getRowSelectionElem,
 		getRowSettings: getRowSettings,
 
+        getNumberFormatSettings: getNumberFormatSettings,
         formatRounding: formatRounding,
         formatNegative: formatNegative,
         formatZero: formatZero,
         formatValue: formatValue,
+        getColorNegativeNumber: getColorNegativeNumber,
 
         isColumnInGroupsList: isColumnInGroupsList,
         isColumnEqualLastGroup: isColumnEqualLastGroup,

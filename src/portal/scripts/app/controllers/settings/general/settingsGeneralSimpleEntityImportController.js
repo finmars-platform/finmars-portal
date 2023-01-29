@@ -16,9 +16,121 @@
         vm.readyStatus = {entitySchemes: false};
         vm.entitySchemes = [];
 
-        vm.getList = function () {
+        vm.currentPage = 1;
+        vm.pageSize = 40;
+
+        vm.pages = []
+
+        vm.openPreviousPage = function () {
+
+            vm.currentPage = vm.currentPage - 1;
+
+            vm.getData()
+
+        }
+
+        vm.openNextPage = function () {
+
+            vm.currentPage = vm.currentPage + 1;
+
+            vm.getData()
+
+        }
+
+        vm.openPage = function (page) {
+
+            if (page.number) {
+
+                vm.currentPage = page.number;
+
+                vm.getData();
+            }
+
+        }
+
+        vm.generatePages = function (data) {
+
+            vm.totalPages = Math.ceil(data.count / vm.pageSize)
+
+            vm.pages = []
+
+            for (var i = 1; i <= vm.totalPages; i = i + 1) {
+                vm.pages.push({
+                    number: i,
+                    caption: i.toString()
+                })
+
+            }
+
+            if (vm.totalPages > 10) {
+
+                vm.currentPageIndex = 0;
+
+                vm.pages.forEach(function (item, index) {
+
+                    if (vm.currentPage === item.number) {
+                        vm.currentPageIndex = index;
+                    }
+
+                })
+
+                vm.pages = vm.pages.filter(function (item, index) {
+
+                    if (index < 2 || index > vm.totalPages - 3) {
+                        return true
+                    }
+
+                    if (index === vm.currentPageIndex) {
+                        return true
+                    }
+
+                    if (index > vm.currentPageIndex - 2 && index < vm.currentPageIndex) {
+                        return true
+                    }
+
+                    if (index < vm.currentPageIndex + 2 && index > vm.currentPageIndex) {
+                        return true
+                    }
+
+                    return false
+
+                })
+
+                for (var i = 0; i < vm.pages.length; i = i + 1) {
+
+                    var j = i + 1;
+
+                    if (j < vm.pages.length) {
+
+                        if (vm.pages[j].number && vm.pages[i].number) {
+                            if (vm.pages[j].number - vm.pages[i].number > 1) {
+
+
+                                vm.pages.splice(i + 1, 0, {
+                                    caption: '...'
+                                })
+
+                            }
+                        }
+
+                    }
+
+                }
+
+
+            }
+
+        }
+
+        vm.getData = function () {
             vm.readyStatus.entitySchemes = false;
-            csvImportSchemeService.getList().then(function (data) {
+            csvImportSchemeService.getList({
+                pageSize: vm.pageSize,
+                page: vm.currentPage
+            }).then(function (data) {
+
+                vm.generatePages();
+
                 console.log("simple entity data", data);
                 vm.entitySchemes = data.results;
                 vm.readyStatus.entitySchemes = true;
@@ -26,7 +138,6 @@
             });
         };
 
-        vm.getList();
 
         vm.addScheme = function ($event) {
             $mdDialog.show({
@@ -38,7 +149,7 @@
                 }
             }).then(function (res) {
                 if (res.res === 'agree') {
-                    vm.getList();
+                    vm.getData();
                 }
             });
         };
@@ -58,7 +169,7 @@
                         vm.getList();
                         $scope.$apply();
                     })*/
-                    vm.getList();
+                    vm.getData();
                 }
             });
 
@@ -86,12 +197,18 @@
                         /*setTimeout(function () {
                             vm.getList();
                         }, 100)*/
-                        vm.getList();
+                        vm.getData();
                     });
                 }
             });
 
         };
+
+        vm.init = function () {
+            vm.getData();
+        }
+
+        vm.init();
 
     }
 

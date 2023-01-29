@@ -12,19 +12,34 @@
         <div data-ng-if="vm.readyStatus.content">
             <div data-ng-if="vm.mapEntityType == 'classifier'">
                 <div layout="row" style="margin-bottom: 20px">
-                    <div flex="50" data-ng-click="vm.setSort('mapping.value')"><b>Your value </b><span
-                            class="sortorder"
-                            data-ng-show="vm.sort === 'mapping.value'"
-                            data-ng-class="{reverse: vm.direction}"></span>
+                    <div flex="50"
+                         data-ng-click="vm.setSort('mapping.value')">
+
+                        <b class="cursor-pointer">Your value</b>
+                        <span class="cursor-pointer sortorder"
+                              data-ng-show="vm.sort === 'mapping.value'"
+                              data-ng-class="{reverse: vm.direction}"></span>
+
                     </div>
-                    <div flex="40" data-ng-click="vm.setSort('name')"><b>Map on {{vm.fancyEntity()}} </b><span
-                            class="sortorder"
-                            data-ng-show="vm.sort === 'name'"
-                            data-ng-class="{reverse: vm.direction}"></span></div>
+
+                    <div flex="40"
+                         data-ng-click="vm.setSort('name')">
+
+                        <b class="cursor-pointer">Map on</b>
+
+                        <span class="cursor-pointer sortorder"
+                              data-ng-show="vm.sort === 'name'"
+                              data-ng-class="{reverse: vm.direction}"></span>
+
+                    </div>
+
                     <div flex="10">
-                        <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
+                        <ng-md-icon class="cursor-pointer"
+                                    data-ng-click="vm.toggleQuery()"
+                                    icon="search"></ng-md-icon>
                     </div>
                 </div>
+
                 <div layout="row" style="margin-bottom: 20px" data-ng-if="vm.queryStatus"
                      class="filter-row-holder">
                     <div flex="50">
@@ -40,19 +55,7 @@
                         </md-input-container>
                     </div>
                 </div>
-                <!--<div data-ng-repeat="item in vm.entityItems | filter:vm.query | orderBy:vm.sort:vm.direction">-->
-                <!--<div layout="row">-->
-                <!--<div flex="50">-->
-                <!--<md-input-container>-->
-                <!--<label for="">Value</label>-->
-                <!--<input type="text" data-ng-model="item.mapping.value">-->
-                <!--</md-input-container>-->
-                <!--</div>-->
-                <!--<div flex="50">-->
-                <!--<p data-ng-bind="item.name"></p>-->
-                <!--</div>-->
-                <!--</div>-->
-                <!--</div>-->
+
                 <div data-ng-repeat="item in vm.entityItems | filter:vm.query | orderBy:vm.sort:vm.direction">
                     <div layout="row" data-ng-repeat="mappingItem in item.mapping"
                          data-ng-show="!mappingItem.isDeleted">
@@ -79,20 +82,33 @@
                 </div>
             </div>
             <div data-ng-if="vm.mapEntityType != 'classifier'">
+
                 <div layout="row" style="margin-bottom: 20px; padding: 24px">
-                    <div flex="50" data-ng-click="vm.setSort('mapping.value')"><b>Your value </b><span
-                            class="sortorder"
-                            data-ng-show="vm.sort === 'mapping.value'"
-                            data-ng-class="{reverse: vm.direction}"></span>
+                    <div flex="50" data-ng-click="vm.setSort('mapping.value')">
+
+                        <b class="cursor-pointer">Your value </b>
+                        <span class="cursor-pointer sortorder"
+                              data-ng-show="vm.sort === 'mapping.value'"
+                              data-ng-class="{reverse: vm.direction}"></span>
+
                     </div>
-                    <div flex="40" data-ng-click="vm.setSort('name')"><b>Map on {{vm.fancyEntity()}} </b><span
-                            class="sortorder"
-                            data-ng-show="vm.sort === 'name'"
-                            data-ng-class="{reverse: vm.direction}"></span></div>
+
+                    <div flex="40" data-ng-click="vm.setSort('name')">
+
+                        <b class="cursor-pointer">Map on</b>
+                        <span class="cursor-pointer sortorder"
+                              data-ng-show="vm.sort === 'name'"
+                              data-ng-class="{reverse: vm.direction}"></span>
+
+                    </div>
+
                     <div flex="10">
-                        <ng-md-icon data-ng-click="vm.toggleQuery()" icon="search"></ng-md-icon>
+                        <ng-md-icon class="cursor-pointer"
+                                    data-ng-click="vm.toggleQuery()"
+                                    icon="search"></ng-md-icon>
                     </div>
                 </div>
+
                 <div layout="row" style="margin-bottom: 20px; padding: 24px" data-ng-if="vm.queryStatus"
                      class="filter-row-holder">
                     <div flex="50">
@@ -111,7 +127,9 @@
                 <!--<div data-ng-repeat="item in vm.entityItems | filter:vm.query | orderBy:vm.sort:vm.direction">-->
                 <div ui-scroll-viewport style="height: 300px; padding: 24px">
 
-                    <div data-ng-repeat="item in vm.entityItems" buffer-size="20" start-index="0">
+                    <div data-ng-repeat="item in vm.entityItems | filter:vm.query | orderBy:vm.sort:vm.direction"
+                         data-buffer-size="20"
+                         data-start-index="0">
                         <div layout="row" data-ng-repeat="mappingItem in item.mapping"
                              data-ng-show="!mappingItem.isDeleted">
                             <div flex="50" layout="row">

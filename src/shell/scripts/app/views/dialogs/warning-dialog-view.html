@@ -2,12 +2,8 @@
            aria-label="warning dialog"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2 data-ng-bind-html="vm.warning.title"></h2>
-            <span flex></span>
-        </div>
+        <dialog-header title="{{vm.warning.title || 'Warning'}}"
+                       cancel-dialog="vm.cancel()"></dialog-header>
     </md-toolbar>
     <md-dialog-content>
         <div class="warning-text">
