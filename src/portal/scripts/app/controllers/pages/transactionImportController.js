@@ -577,6 +577,7 @@ import importTransactionService from "../../services/import/importTransactionSer
 
                     formData.append('file', blob, 'input.json');
                     formData.append('scheme', vm.config.scheme);
+                    formData.append('preprocess_file', vm.config.preprocess_file);
 
                     vm.fileLocal = vm.config.local;
 
@@ -590,6 +591,7 @@ import importTransactionService from "../../services/import/importTransactionSer
 
                     formData.append('file', vm.config.file);
                     formData.append('scheme', vm.config.scheme);
+                    formData.append('preprocess_file', vm.config.preprocess_file);
 
                     vm.fileLocal = vm.config.local;
 
@@ -831,6 +833,7 @@ import importTransactionService from "../../services/import/importTransactionSer
 
                     formData.append('file', blob, 'input.json');
                     formData.append('scheme', vm.config.scheme);
+                    formData.append('preprocess_file', vm.config.preprocess_file);
 
                     vm.fileLocal = vm.config.local;
 
@@ -844,6 +847,7 @@ import importTransactionService from "../../services/import/importTransactionSer
 
                     formData.append('file', vm.config.file);
                     formData.append('scheme', vm.config.scheme);
+                    formData.append('preprocess_file', vm.config.preprocess_file);
 
                     vm.fileLocal = vm.config.local;
 
