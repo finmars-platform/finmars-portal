@@ -14,7 +14,7 @@
     var transactionClassService = require('../services/transaction/transactionClassService');
     var modelService = require('../services/modelService');
     var metaService = require('../services/metaService');
-	var expressionsService = require('../services/expression.service');
+    var expressionsService = require('../services/expression.service');
 
     function findEntityObject(report, propertyName, id) {
 
@@ -110,6 +110,11 @@
 
             if (item.account && reportOptions.item_accounts.length) {
                 item.account_object = findEntityObject(reportOptions, 'item_accounts', item.account);
+
+                if (item.account_object.type) {
+                    item.account_object.type_object = findEntityObject(reportOptions, 'item_account_types', item.account_object.type);
+                }
+
             }
             if (item.account_cash && reportOptions.item_accounts.length) {
                 item.account_cash_object = findEntityObject(reportOptions, 'item_accounts', item.account_cash);
@@ -199,10 +204,10 @@
 
             if (item.custom_fields) {
 
-            	item.custom_fields_object = [];
+                item.custom_fields_object = [];
 
                 item.custom_fields.forEach(function (localCustomField) {
-					reportOptions.custom_fields_object.forEach(function (reportCustomField) {
+                    reportOptions.custom_fields_object.forEach(function (reportCustomField) {
 
                         if (reportCustomField.id == localCustomField.custom_field) {
 
@@ -217,14 +222,14 @@
 
             if (entityType === 'balance-report') {
 
-            	item.date = reportOptions.report_date;
+                item.date = reportOptions.report_date;
 
             } else if (entityType === 'pl-report') {
 
-            	item.pl_first_date = reportOptions.pl_first_date;
-				item.report_date = reportOptions.report_date;
+                item.pl_first_date = reportOptions.pl_first_date;
+                item.report_date = reportOptions.report_date;
 
-			}
+            }
 
 
         });
@@ -294,7 +299,7 @@
             }
 
             if (item.market_value) {
-				var percent = (item.market_value / groupsTotalMarketValue[key] * 100).toFixed(10);
+                var percent = (item.market_value / groupsTotalMarketValue[key] * 100).toFixed(10);
                 item.market_value_percent = parseFloat(percent);
 
             } else {
@@ -302,7 +307,7 @@
             }
 
             if (item.exposure) {
-				var percent = (item.exposure / groupsTotalExposure[key] * 100).toFixed(10);
+                var percent = (item.exposure / groupsTotalExposure[key] * 100).toFixed(10);
                 item.exposure_percent = parseFloat(percent);
 
             } else {
@@ -623,19 +628,19 @@
     ];
 
     /**
-	 * Delete temporary properties from report options.
-	 * @param reportOptions {Object}
-	 * @return reportOptions {Object}
-	 */
+     * Delete temporary properties from report options.
+     * @param reportOptions {Object}
+     * @return reportOptions {Object}
+     */
     var cleanReportOptionsFromTmpProps = function (reportOptions) {
 
-		reportOptionsTemporaryPropsList.forEach(propName => {
-			delete reportOptions[propName]
-		});
+        reportOptionsTemporaryPropsList.forEach(propName => {
+            delete reportOptions[propName]
+        });
 
-    	return reportOptions;
+        return reportOptions;
 
-	};
+    };
 
     const reportDateProperties = {
         'balance-report': [null, 'report_date'],
@@ -674,7 +679,9 @@
 
             console.error("key is not report date key: " + dateKey);
 
-            return new Promise(function (resolve) {resolve(null)});
+            return new Promise(function (resolve) {
+                resolve(null)
+            });
 
         }
 
@@ -717,7 +724,7 @@
         injectIntoItems: injectIntoItems,
         extendAttributes: extendAttributes,
         calculateMarketValueAndExposurePercents: calculateMarketValueAndExposurePercents,
-		cleanReportOptionsFromTmpProps: cleanReportOptionsFromTmpProps,
+        cleanReportOptionsFromTmpProps: cleanReportOptionsFromTmpProps,
 
         getDateProperties: getDateProperties,
         getReportDate: getReportDate,
