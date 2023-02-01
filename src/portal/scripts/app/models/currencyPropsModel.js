@@ -41,6 +41,14 @@
                 "key": "default_fx_rate",
                 "name": "Default FX rate",
                 "value_type": 20
+            },
+            {
+                "key": "pricing_condition",
+                "name": "Pricing Condition",
+                "value_content_type": "instruments.pricingcondition",
+                "value_entity": "pricing-condition",
+                "code": "user_code",
+                "value_type": "field"
             }
         ]
     };
