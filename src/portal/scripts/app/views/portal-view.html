@@ -13,6 +13,11 @@
         <div layout="row" class="sidenav-wrapper" data-ng-controller="SideNavController as vm"
              data-ng-include="'views/side-nav-view.html'"></div>
 
+        <div layout="row" class="alert-sidenav-wrapper {{vm.showWarningSideNav ? 'alert-sidenav-visible' : ''}}">
+            <div data-ng-controller="AlertSideNavController as vm" style="width: 100%"
+                 data-ng-include="'views/alert-side-nav-view.html'"></div>
+        </div>
+
     </div>
 
 </div>
