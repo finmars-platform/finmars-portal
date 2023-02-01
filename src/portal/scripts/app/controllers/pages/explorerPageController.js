@@ -10,6 +10,8 @@
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
+    var metaHelper = require('../../helpers/meta.helper')
+
     var baseUrl = baseUrlService.resolve();
 
 
@@ -270,6 +272,16 @@
             vm.showEditor = false;
 
             vm.calculateExplorerStateClass();
+
+        }
+
+        vm.copyFilePath = function ($event, item, $mdMenu){
+
+            if ($mdMenu) {
+                $mdMenu.close()
+            }
+
+            metaHelper.copyToBuffer(item.file_path)
 
         }
 

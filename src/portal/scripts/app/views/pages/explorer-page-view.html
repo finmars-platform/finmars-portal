@@ -129,6 +129,15 @@
                                 </md-menu-item>
 
                                 <md-menu-item>
+                                    <md-button ng-click="vm.copyFilePath($event, item, $mdMenu)"
+                                    >
+                                        <ng-md-icon icon="visibility_off"
+                                                    style="visibility: hidden;"></ng-md-icon>
+                                        <span>Copy File Path</span>
+                                    </md-button>
+                                </md-menu-item>
+
+                                <md-menu-item>
                                     <md-button ng-click="vm.downloadFile($mdMenu, $event, item)"
                                     >
                                         <ng-md-icon icon="visibility_off"
