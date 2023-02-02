@@ -45,7 +45,7 @@
             $mdDialog.hide({status: 'agree'});
         };
 
-        vm.initJsonEditor = function (){
+        vm.initJsonEditor = function () {
 
             setTimeout(function () {
 
@@ -71,7 +71,7 @@
 
         }
 
-        vm.initYamlEditor = function (){
+        vm.initYamlEditor = function () {
 
             setTimeout(function () {
 
@@ -157,7 +157,7 @@
 
         }
 
-        vm.copyContent = function (content){
+        vm.copyContent = function (content) {
 
             metaHelper.copyToBuffer(content)
 
@@ -211,6 +211,12 @@
 
                 vm.data.content_formatted = vm.data.content
 
+            } else if (name.indexOf('.log') !== -1) {
+
+                vm.contentType = 'text'
+
+                vm.data.content_formatted = vm.data.content
+
             } else if (name.indexOf('.png') !== -1 || name.indexOf('.jpg') !== -1 || name.indexOf('.gif') !== -1) {
 
                 vm.contentType = 'image'
@@ -224,11 +230,11 @@
 
         }
 
-        vm.readBlob = function (){
+        vm.readBlob = function () {
 
             var reader = new FileReader();
 
-            reader.addEventListener("loadend", function(e){
+            reader.addEventListener("loadend", function (e) {
                 vm.data.content = reader.result;
 
                 vm.formatContent();
