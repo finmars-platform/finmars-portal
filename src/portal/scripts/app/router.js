@@ -372,6 +372,12 @@
                 controller: 'UpdateConfigurationPageController as vm'
             })
 
+            .state('app.portal.system-page', {
+                url: '/system-dashboard',
+                templateUrl: 'views/pages/system-page-view.html',
+                controller: 'SystemPageController as vm'
+            })
+
             .state('app.portal.processes', {
                 url: '/processes',
                 templateUrl: 'views/pages/processes-view.html',
