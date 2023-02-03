@@ -10,22 +10,18 @@
 var xhrService = require('../../../../core/services/xhrService');
 var baseUrlService = require('../services/baseUrlService'); */
 import ToastNotificationService from "../services/toastNotificationService";
+import ErrorService from "../services/errorService";
+import CookieService from '../services/cookieService.js';
+import XhrService from '../services/xhrService.js';
+import baseUrlService from '../services/baseUrlService';
 
 const toastNotificationService = new ToastNotificationService();
 
-import ErrorService from "../services/errorService";
-
 const errorService = new ErrorService(toastNotificationService);
-
-import CookieService from '../services/cookieService.js';
 
 const cookieService = new CookieService();
 
-import XhrService from '../services/xhrService.js';
-
 const xhrService = new XhrService(errorService);
-
-import baseUrlService from '../services/baseUrlService';
 
 const authorizerUrl = baseUrlService.getAuthorizerUrl();
 
@@ -692,9 +688,9 @@ const inviteUser = function (data) {
 
 };
 
-const getInvitesList = function (options) {
+const getInvitesList = function (base_api_url) {
 
-    return xhrService.fetch(authorizerUrl + '/invite-to-user/',
+    return xhrService.fetch(authorizerUrl + '/invite-to-user/?base_api_url=' + base_api_url,
         {
             method: 'GET',
             credentials: 'include',
@@ -834,7 +830,6 @@ const getInitialConfiguration = function () {
     })
 
 };
-
 
 
 // module.exports = {
