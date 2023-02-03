@@ -493,6 +493,12 @@
                         scope.currentAdditions = scope.evDataService.getAdditions();
                     });
 
+                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function (){
+
+                        scope.reportOptions = scope.evDataService.getReportOptions(); // for refresh tooltip -> auth time
+
+                    })
+
                 };
 
                 const init = function () {
