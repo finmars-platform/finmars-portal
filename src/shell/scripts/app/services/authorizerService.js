@@ -284,8 +284,8 @@ export default function (globalDataService) {
         return authorizerRepository.inviteUser(data);
     };
 
-    const getInvitesList = function (options) {
-        return authorizerRepository.getInvitesList(options);
+    const getInvitesList = function (base_api_url) {
+        return authorizerRepository.getInvitesList(base_api_url);
     };
 
     const deleteInviteByKey = function (id) {
