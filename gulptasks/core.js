@@ -372,6 +372,7 @@
             'node_modules/fancy-logger/dist/js/fancy-logger.js',
             'node_modules/jstree/dist/jstree.js',
             'node_modules/toastr/build/toastr.min.js',
+            'node_modules/jsondiffpatch/dist/jsondiffpatch.umd.js',
             'src/core/datepicker/pickmeup.js',
             'src/core/ace/ace.js',
             'src/core/ace/mode-json.js',
@@ -415,7 +416,9 @@
         var pathToCSS = [
             'node_modules/jstree/dist/themes/default/style.css',
             'node_modules/toastr/build/toastr.css',
-            'node_modules/pickmeup/css/pickmeup.css'
+            'node_modules/pickmeup/css/pickmeup.css',
+            'node_modules/jsondiffpatch/dist/formatters-styles/annotated.css',
+            'node_modules/jsondiffpatch/dist/formatters-styles/html.css',
         ];
 
         return gulp.src(pathToCSS)
