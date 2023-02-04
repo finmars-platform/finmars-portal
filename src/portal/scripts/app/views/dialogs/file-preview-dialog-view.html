@@ -24,7 +24,7 @@
                 <div data-ng-bind-html="vm.data.content_formatted"></div>
             </div>
 
-            <div data-ng-if="vm.contentType == 'json'" class="file-preview-content-wrap">
+            <div data-ng-show="vm.contentType == 'json' || vm.contentType == 'yaml' || vm.contentType == 'python'" class="file-preview-content-wrap">
                 <div class="ace-editor" id="filePreviewAceEditor"></div>
             </div>
 
@@ -34,11 +34,11 @@
 
         </div>
     </md-dialog-content>
-    <md-dialog-actions layout="row" layout-algin="space-between">
-        <md-button ng-click="vm.download()" style="margin-right:20px;" data-ng-if="vm.contentType != 'image'">
+    <md-dialog-actions layout="row" layout-align="space-between">
+        <md-button ng-click="vm.download()" style="margin: 0" data-ng-if="vm.contentType != 'image'">
             Download
         </md-button>
-        <md-button ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button ng-click="vm.agree()" style="margin: 0">
             OK
         </md-button>
     </md-dialog-actions>

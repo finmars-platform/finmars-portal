@@ -8,6 +8,7 @@
     var entityFieldsRepository = require('../repositories/entityFieldsRepository');
     var accountRepository = require('../repositories/accountRepository');
     var accountTypeRepository = require('../repositories/accountTypeRepository');
+    var instrumentService = require('../services/instrumentService');
     var instrumentRepository = require('../repositories/instrumentRepository');
     var instrumentTypeRepository = require('../repositories/instrumentTypeRepository');
     var importPriceDownloadSchemeRepository = require('../repositories/import/importPriceDownloadSchemeRepository');
@@ -41,8 +42,11 @@
 
         return new Promise(function (resolve, reject) {
 
+            if (!fieldKey) {
+                return reject("Invalid fieldKey: " + fieldKey);
+            }
             console.log('options', options);
-                console.log('fieldKey', fieldKey);
+            console.log('fieldKey', fieldKey);
             console.log('fieldsDataStore', fieldsDataStore);
 
             if (fieldsDataStore) {
@@ -52,7 +56,7 @@
                 }
 
                 if (fieldsDataStore['fieldKeys'][fieldKey]) {
-                    resolve(fieldsDataStore[fieldKey])
+                    return resolve(fieldsDataStore[fieldKey]);
                 }
 
             }
@@ -67,7 +71,7 @@
 
                     if (fieldKey === 'group') {
                         transactionTypeGroupRepository.getList().then(function (data) {
-                            resolve({type: 'id', key: 'group', data: data.results});
+                            return resolve({type: 'id', key: 'group', data: data.results});
                         });
                     }
                 }
@@ -80,13 +84,13 @@
 
                     if (fieldKey === 'group') {
                         strategyGroupRepository.getList(strategyNumber).then(function (data) {
-                            resolve({type: 'id', key: 'group', data: data.results});
+                            return resolve({type: 'id', key: 'group', data: data.results});
                         });
                     }
 
                     if (fieldKey === 'subgroup') {
                         strategySubgroupRepository.getList(strategyNumber).then(function (data) {
-                            resolve({type: 'id', key: 'subgroup', data: data.results});
+                            return resolve({type: 'id', key: 'subgroup', data: data.results});
                         });
                     }
                 }
@@ -94,7 +98,7 @@
                 if (entity === 'counterparty') {
                     if (fieldKey === 'group') {
                         counterpartyGroupRepository.getList().then(function (data) {
-                            resolve({type: 'id', key: 'group', data: data.results});
+                            return resolve({type: 'id', key: 'group', data: data.results});
                         });
                     }
                 }
@@ -102,7 +106,7 @@
                 if (entity === 'responsible') {
                     if (fieldKey === 'group') {
                         responsibleGroupRepository.getList().then(function (data) {
-                            resolve({type: 'id', key: 'group', data: data.results});
+                            return resolve({type: 'id', key: 'group', data: data.results});
                         });
                     }
                 }
@@ -112,174 +116,179 @@
             switch (fieldKey) {
                 case 'pricing_condition':
                     entityFieldsRepository.getPricingConditionChoices({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'pricing_condition', data: data});
+                        return resolve({type: 'id', key: 'pricing_condition', data: data});
                     });
                     break;
                 case 'country':
                     entityFieldsRepository.getCountryChoices({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'country', data: data});
+                        return resolve({type: 'id', key: 'country', data: data});
                     });
                     break;
                 case 'daily_pricing_model':
                     entityFieldsRepository.getDailyPricingModelChoices({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'daily_pricing_model', data: data});
+                        return resolve({type: 'id', key: 'daily_pricing_model', data: data});
                     });
                     break;
                 case 'payment_size_detail':
                     entityFieldsRepository.getPaymentSizeDetailChoices({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'payment_size_detail', data: data});
+                        return resolve({type: 'id', key: 'payment_size_detail', data: data});
                     });
                     break;
                 case 'transaction_class':
                     entityFieldsRepository.getTransactionClassList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'transaction_class', data: data});
+                        return resolve({type: 'id', key: 'transaction_class', data: data});
                     });
                     break;
                 case 'periodicity':
                     instrumentPeriodicityRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'periodicity', data: data});
+                        return resolve({type: 'id', key: 'periodicity', data: data});
                     });
                     break;
                 case 'instrument_pricing_scheme':
                     instrumentPricingSchemeRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'instrument_pricing_scheme', data: data.results});
+                        return resolve({type: 'id', key: 'instrument_pricing_scheme', data: data.results});
                     });
                     break;
 
                 case 'currency_pricing_scheme':
                     currencyPricingSchemeRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'currency_pricing_scheme', data: data.results});
+                        return resolve({type: 'id', key: 'currency_pricing_scheme', data: data.results});
                     });
                     break;
                 case 'accrual_calculation_model':
                     accrualCalculationModelRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'accrual_calculation_model', data: data});
+                        return resolve({type: 'id', key: 'accrual_calculation_model', data: data});
                     });
                     break;
                 case 'event_class':
                     metaEventClassRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'event_class', data: data});
+                        return resolve({type: 'id', key: 'event_class', data: data});
                     });
                     break;
                 case 'notification_class':
                     metaNotificationClassRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'notification_class', data: data});
+                        return resolve({type: 'id', key: 'notification_class', data: data});
                     });
                     break;
                 case 'instrument':
-                    instrumentRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'instrument', data: data.results});
-                    });
-                    break;
                 case 'linked_instrument':
-                    instrumentRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'instrument', data: data.results});
-                    });
-                    break;
                 case 'allocation_balance':
-                    instrumentRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'instrument', data: data.results});
-                    });
-                    break;
                 case 'allocation_pl':
+                case 'long_underlying_instrument':
+                case 'short_underlying_instrument':
                     instrumentRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'instrument', data: data.results});
+                        return resolve({type: 'id', key: 'instrument', data: data.results});
                     });
                     break;
+
+                case 'exposure_calculation_model':
+                    return resolve({type: 'id', key: fieldKey, data: instrumentService.exposureCalculationModelsList});
+
+                case 'long_underlying_exposure':
+                    return resolve({type: 'id', key: fieldKey, data: instrumentService.longUnderlyingExposureList});
+
+                case 'short_underlying_exposure':
+                    return resolve({type: 'id', key: fieldKey, data: instrumentService.shortUnderlyingExposureList});
+
+                case 'position_reporting':
+                    return resolve({type: 'id', key: fieldKey, data: instrumentService.positionReportingList});
+
                 case 'pricing_policy':
                     pricingPolicyRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'pricing_policy', data: data.results});
+                        return resolve({type: 'id', key: 'pricing_policy', data: data.results});
                     });
                     break;
 
                 case 'valuation_pricing_policy':
                     pricingPolicyRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'valuation_pricing_policy', data: data.results});
+                        return resolve({type: 'id', key: 'valuation_pricing_policy', data: data.results});
                     });
                     break;
                 case 'price_download_scheme':
                     importPriceDownloadSchemeRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'price_download_scheme', data: data.results});
+                        return resolve({type: 'id', key: 'price_download_scheme', data: data.results});
                     });
                     break;
                 case 'instrument_type':
                     instrumentTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'instrument_type', data: data.results});
+                        return resolve({type: 'id', key: 'instrument_type', data: data.results});
                     });
                     break;
                 case 'instrument_class':
                     instrumentClassRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'instrument_class', data: data}); // system-wide list
+                        return resolve({type: 'id', key: 'instrument_class', data: data}); // system-wide list
                     });
                     break;
                 case 'accrued_currency':
                     currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'accrued_currency', data: data.results});
+                        return resolve({type: 'id', key: 'accrued_currency', data: data.results});
                     });
                     break;
                 case 'pricing_currency':
                     currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'pricing_currency', data: data.results});
+                        return resolve({type: 'id', key: 'pricing_currency', data: data.results});
                     });
                     break;
                 case 'valuation_currency':
                     currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'valuation_currency', data: data.results});
+                        return resolve({type: 'id', key: 'valuation_currency', data: data.results});
                     });
                     break;
                 case 'transaction_currency':
                     currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'transaction_currency', data: data.results});
+                        return resolve({type: 'id', key: 'transaction_currency', data: data.results});
                     });
                     break;
                 case 'settlement_currency':
                     currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'settlement_currency', data: data.results});
+                        return resolve({type: 'id', key: 'settlement_currency', data: data.results});
                     });
                     break;
                 case 'cash_currency':
                     currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'cash_currency', data: data.results});
+                        return resolve({type: 'id', key: 'cash_currency', data: data.results});
                     });
                     break;
                 case 'currency':
+                case 'co_directional_exposure_currency':
+                case 'counter_directional_exposure_currency':
                     currencyRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'currency', data: data.results});
+                        return resolve({type: 'id', key: fieldKey, data: data.results});
                     });
                     break;
                 case 'portfolio':
                     portfolioRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'portfolio', data: data.results});
+                        return resolve({type: 'id', key: 'portfolio', data: data.results});
                     });
                     break;
                 case 'portfolio_register':
                     portfolioRegisterRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'portfolio_register', data: data.results});
+                        return resolve({type: 'id', key: 'portfolio_register', data: data.results});
                     });
                     break;
                 case 'account':
                     accountRepository.getListLight({pageSize: 10000}).then(function (data) {
-                        resolve({type: 'id', key: 'account', data: data.results});
+                        return resolve({type: 'id', key: 'account', data: data.results});
                     });
                     break;
                 case 'counterparty':
                     counterpartyRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'counterparty', data: data.results});
+                        return resolve({type: 'id', key: 'counterparty', data: data.results});
                     });
                     break;
                 case 'responsible':
                     responsibleRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'responsible', data: data.results});
+                        return resolve({type: 'id', key: 'responsible', data: data.results});
                     });
                     break;
                 case 'type':
                     accountTypeRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'type', data: data.results});
+                        return resolve({type: 'id', key: 'type', data: data.results});
                     });
                     break;
                 case 'account_type':
                     accountTypeRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'type', data: data.results});
+                        return resolve({type: 'id', key: 'type', data: data.results});
                     });
                     break;
 
@@ -291,152 +300,152 @@
                 case 'factor_down':
                 case 'factor_up':
                     transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'transaction_type', data: data.results});
+                        return resolve({type: 'id', key: 'transaction_type', data: data.results});
                     });
                     break;
 
                 case 'account_cash':
                     accountRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'account_cash', data: data.results});
+                        return resolve({type: 'id', key: 'account_cash', data: data.results});
                     });
                     break;
                 case 'account_position':
                     accountRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'account_position', data: data.results});
+                        return resolve({type: 'id', key: 'account_position', data: data.results});
                     });
                     break;
                 case 'account_interim':
                     accountRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'id', key: 'account_interim', data: data.results});
+                        return resolve({type: 'id', key: 'account_interim', data: data.results});
                     });
                     break;
                 case 'strategy1':
                     strategyRepository.getListLight(1).then(function (data) {
-                        resolve({type: 'id', key: 'strategy1', data: data.results});
+                        return resolve({type: 'id', key: 'strategy1', data: data.results});
                     });
                     break;
                 case 'strategy_1': // TODO do something with inconsistency of entity name
                     strategyRepository.getListLight(1).then(function (data) {
-                        resolve({type: 'id', key: 'strategy_1', data: data.results});
+                        return resolve({type: 'id', key: 'strategy_1', data: data.results});
                     });
                     break;
                 case 'strategy1_position':
                     strategyRepository.getListLight(1).then(function (data) {
-                        resolve({type: 'id', key: 'strategy1_position', data: data.results});
+                        return resolve({type: 'id', key: 'strategy1_position', data: data.results});
                     });
                     break;
                 case 'strategy1_cash':
                     strategyRepository.getListLight(1).then(function (data) {
-                        resolve({type: 'id', key: 'strategy1_cash', data: data.results});
+                        return resolve({type: 'id', key: 'strategy1_cash', data: data.results});
                     });
                     break;
                 case 'strategy2':
                     strategyRepository.getListLight(2).then(function (data) {
-                        resolve({type: 'id', key: 'strategy2', data: data.results});
+                        return resolve({type: 'id', key: 'strategy2', data: data.results});
                     });
                     break;
                 case 'strategy_2': // TODO do something with inconsistency of entity name
                     strategyRepository.getListLight(2).then(function (data) {
-                        resolve({type: 'id', key: 'strategy_2', data: data.results});
+                        return resolve({type: 'id', key: 'strategy_2', data: data.results});
                     });
                     break;
                 case 'strategy2_position':
                     strategyRepository.getListLight(2).then(function (data) {
-                        resolve({type: 'id', key: 'strategy2_position', data: data.results});
+                        return resolve({type: 'id', key: 'strategy2_position', data: data.results});
                     });
                     break;
                 case 'strategy2_cash':
                     strategyRepository.getListLight(2).then(function (data) {
-                        resolve({type: 'id', key: 'strategy2_cash', data: data.results});
+                        return resolve({type: 'id', key: 'strategy2_cash', data: data.results});
                     });
                     break;
                 case 'strategy3':
                     strategyRepository.getListLight(3).then(function (data) {
-                        resolve({type: 'id', key: 'strategy3', data: data.results});
+                        return resolve({type: 'id', key: 'strategy3', data: data.results});
                     });
                     break;
                 case 'strategy_3': // TODO do something with inconsistency of entity name
                     strategyRepository.getListLight(3).then(function (data) {
-                        resolve({type: 'id', key: 'strategy_3', data: data.results});
+                        return resolve({type: 'id', key: 'strategy_3', data: data.results});
                     });
                     break;
                 case 'strategy3_position':
                     strategyRepository.getListLight(3).then(function (data) {
-                        resolve({type: 'id', key: 'strategy3_position', data: data.results});
+                        return resolve({type: 'id', key: 'strategy3_position', data: data.results});
                     });
                     break;
                 case 'strategy3_cash':
                     strategyRepository.getListLight(3).then(function (data) {
-                        resolve({type: 'id', key: 'strategy3_cash', data: data.results});
+                        return resolve({type: 'id', key: 'strategy3_cash', data: data.results});
                     });
                     break;
 
                 // TODO delete later, we are using subgroup as groups
                 /*case 'strategy1_group':
                     strategyGroupRepository.getList(1).then(function (data) {
-                        resolve({type: 'id', key: 'strategy1_group', data: data.results});
+                        return resolve({type: 'id', key: 'strategy1_group', data: data.results});
                     });
                     break;
                 case 'strategy2_group':
                     strategyGroupRepository.getList(2).then(function (data) {
-                        resolve({type: 'id', key: 'strategy2_group', data: data.results});
+                        return resolve({type: 'id', key: 'strategy2_group', data: data.results});
                     });
                     break;
                 case 'strategy3_group':
                     strategyGroupRepository.getList(3).then(function (data) {
-                        resolve({type: 'id', key: 'strategy3_group', data: data.results});
+                        return resolve({type: 'id', key: 'strategy3_group', data: data.results});
                     });
                     break;*/
 
                 case 'strategy1_subgroup':
                     strategySubgroupRepository.getList(1).then(function (data) {
-                        resolve({type: 'id', key: 'strategy1_subgroup', data: data.results});
+                        return resolve({type: 'id', key: 'strategy1_subgroup', data: data.results});
                     });
                     break;
                 case 'strategy2_subgroup':
                     strategySubgroupRepository.getList(2).then(function (data) {
-                        resolve({type: 'id', key: 'strategy2_subgroup', data: data.results});
+                        return resolve({type: 'id', key: 'strategy2_subgroup', data: data.results});
                     });
                     break;
                 case 'strategy3_subgroup':
                     strategySubgroupRepository.getList(3).then(function (data) {
-                        resolve({type: 'id', key: 'strategy3_subgroup', data: data.results});
+                        return resolve({type: 'id', key: 'strategy3_subgroup', data: data.results});
                     });
                     break;
 
 
                 case 'portfolios':
                     portfolioRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'multiple-ids', key: 'portfolios', data: data.results});
+                        return resolve({type: 'multiple-ids', key: 'portfolios', data: data.results});
                     });
                     break;
                 case 'account_types':
                     accountTypeRepository.getList({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'multiple-ids', key: 'account_types', data: data.results});
+                        return resolve({type: 'multiple-ids', key: 'account_types', data: data.results});
                     });
                     break;
                 case 'transaction_types':
                     transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
+                        return resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
                     });
                     break;
                 case 'instrument_types':
                     instrumentTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'multiple-ids', key: 'instrument_types', data: data.results});
+                        return resolve({type: 'multiple-ids', key: 'instrument_types', data: data.results});
                     });
                     break;
                 case 'counterparties':
                     counterpartyRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'multiple-ids', key: 'counterparties', data: data.results});
+                        return resolve({type: 'multiple-ids', key: 'counterparties', data: data.results});
                     });
                     break;
                 case 'accounts':
                     accountRepository.getListLight({pageSize: 10000}).then(function (data) {
-                        resolve({type: 'multiple-ids', key: 'accounts', data: data.results});
+                        return resolve({type: 'multiple-ids', key: 'accounts', data: data.results});
                     });
                     break;
                 case 'content_types':
-                    resolve({
+                    return resolve({
                         type: 'multiple-ids',
                         key: 'content_types',
                         data: metaContentTypesRepository.getList()
@@ -444,9 +453,11 @@
                     break;
                 case 'responsibles':
                     responsibleRepository.getListLight({pageSize: 1000}).then(function (data) {
-                        resolve({type: 'multiple-ids', key: 'responsibles', data: data.results});
+                        return resolve({type: 'multiple-ids', key: 'responsibles', data: data.results});
                     });
                     break;
+                default:
+                    return reject("There is not data for attribute with such key: " + fieldKey);
 
             }
 

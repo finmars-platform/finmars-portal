@@ -219,7 +219,7 @@
                     return field.name;
                 };
 
-                scope.getListWithBindFields = function (items) {
+                var getListWithBindFields = function (items) {
                     return items.map(function (item) {
                         /* return {
                             ...item,
@@ -229,6 +229,58 @@
                         return item;
                     })
                 };
+
+                var exposureTabAttrs = [
+                    'co_directional_exposure_currency', 'counter_directional_exposure_currency',
+                    'long_underlying_instrument', 'short_underlying_instrument',
+                    'exposure_calculation_model',
+                    'long_underlying_exposure',
+                    'short_underlying_exposure',
+                    'position_reporting'
+                ];
+
+                var getSelectorOptions = function (items) {
+
+                    var nameField;
+
+                    if ( exposureTabAttrs.includes(scope.fieldKey) && items.length ) {
+
+                        nameField = 'name';
+
+                        if ( items[0].hasOwnProperty('short_name') ) {
+                            nameField = 'short_name';
+                        }
+
+                        if (scope.entityType === 'instrument') {
+
+                            items = items.map(function (item) {
+                                item.name = item[nameField];
+                                return item;
+                            })
+
+                        } else if (scope.entityType === 'instrument-type') {
+
+                            items = items.map(function (item) {
+
+                                item.id = item.user_code;
+                                item.name = item[nameField];
+
+                                return item;
+
+                            })
+
+                        }
+
+                    }
+
+                    items = metaHelper.textWithDashSort(items, nameField);
+
+                    return items.map(function (item) {
+                        item.bindFieldsName = scope.bindListFields(item);
+                        return item;
+                    })
+
+                }
 
                 scope.getListWithSchemeName = function (items) {
                     return items.map(function (item) {
@@ -338,10 +390,13 @@
 
                                     scope.type = res.type;
                                     scope.fields = res.data;
-                                    scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
+                                    // scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
 
-                                    if ('price_download_scheme') {
+                                    if (scope.fieldKey === 'price_download_scheme') {
                                         scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
+
+                                    } else {
+                                        scope.selectorOptions = getSelectorOptions(res.data);
                                     }
 
                                     scope.readyStatus.content = true;
@@ -353,17 +408,22 @@
 
 
                                 })
-                            } else {
+
+                            }
+                            else {
 
 
                                 fieldResolverService.getFields(scope.item.key, options, scope.fieldsDataStore).then(function (res) {
 
                                     scope.type = res.type;
                                     scope.fields = res.data;
-                                    scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
+                                    // scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
 
-                                    if ('price_download_scheme') {
+                                    if (scope.fieldKey === 'price_download_scheme') {
                                         scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
+
+                                    } else {
+                                        scope.selectorOptions = getSelectorOptions(res.data);
                                     }
 
                                     scope.readyStatus.content = true;

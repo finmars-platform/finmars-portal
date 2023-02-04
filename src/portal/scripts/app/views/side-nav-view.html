@@ -264,6 +264,17 @@
                                     </md-button>
 
                                 </li>
+
+                                <li>
+                                    <md-button class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.portal.workflows">
+                                        <span class="side-nav-title">Workflows</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+
+                                </li>
+
                             </ul>
                         </div>
                     </li>
@@ -1032,8 +1043,8 @@
                             </li>
                             <li>
                                 <md-button class="sidemenu-btn"
-                                           ui-sref="app.portal.processes">
-                                    <span class="side-nav-title">Tasks</span>
+                                           ui-sref="app.portal.system-page">
+                                    <span class="side-nav-title">System</span>
                                     <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                                 </md-button>
                             </li>
@@ -1057,11 +1068,11 @@
           title="Websocket status: {{vm.getWsStatus()}}"></span>
 
     <br/>
-    <div>
-        <a class="sidenav-api-link sidenav-error-subtitle open-logs-button" data-ng-click="vm.toggleLogsWindow($event)">logs</a>
-        <span ui-sref="app.portal.error-page"
-              class="sidenav-error-subtitle">Errors</span>
-    </div>
+    <!--    <div>-->
+    <!--        <a class="sidenav-api-link sidenav-error-subtitle open-logs-button" data-ng-click="vm.toggleLogsWindow($event)">logs</a>-->
+    <!--        <span ui-sref="app.portal.error-page"-->
+    <!--              class="sidenav-error-subtitle">Errors</span>-->
+    <!--    </div>-->
 
     <div class="sidenav-api-subtitle">
         <div><a class="sidenav-api-link" href="{{ vm.getCurrentApiUrl() }}" target="_blank">API</a>: <span

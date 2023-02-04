@@ -404,7 +404,8 @@
 			result.push(textAlign);
 		}
 
-		var colorNegative = getColorNegativeNumber(obj, column);
+		// var colorNegative = getColorNegativeNumber(obj, column);
+        var colorNegative = renderHelper.getColorNegativeNumber(obj[column.key], column);
 
 		if (colorNegative) {
 			result.push(colorNegative);

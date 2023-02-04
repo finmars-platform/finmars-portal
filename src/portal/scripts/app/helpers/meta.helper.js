@@ -85,7 +85,7 @@
     // sorts array alphabetically but puts text that starts with '-' at the beginning
 	const textWithDashSort = (arr, field)  => {
 
-    	const keys = ['name', 'user_code', 'public_name']; // preferred fields for sort
+    	const keys = ['name', 'user_code', 'short_name', 'public_name']; // preferred fields for sort
         const key = field || keys.find(key => arr.every(item => item.hasOwnProperty(key)));
 
         if (!key) {

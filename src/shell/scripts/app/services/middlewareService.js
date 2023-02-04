@@ -131,6 +131,18 @@ export default function () {
 		}
 	}
 
+	function onToggleWarningsSideNav(callback) {
+		data.onToggleWarningsSideNav = callback;
+	}
+
+	function toggleWarningsSideNav() {
+		if (data.onToggleWarningsSideNav) {
+			data.onToggleWarningsSideNav();
+		}
+	}
+
+
+
 	function clearEvents() {
 		data.masterUserChangeEvents = [];
 		data.logOutEvents = [];
@@ -160,6 +172,9 @@ export default function () {
 
 		onAutosaveLayoutToggle: onAutosaveLayoutToggle,
 		autosaveLayoutToggle: autosaveLayoutToggle,
+
+		onToggleWarningsSideNav: onToggleWarningsSideNav,
+		toggleWarningsSideNav: toggleWarningsSideNav,
 
 		clearEvents: clearEvents,
 		resetData: resetData

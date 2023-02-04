@@ -1,0 +1,66 @@
+<div class="system-page">
+
+    <h1 style="padding-left: 8px">System Dashboard</h1>
+
+    <div>
+
+        <h2>Stats</h2>
+
+        <div data-ng-if="!vm.readyStatus.stats">
+            <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
+                <progress-circular diameter="50"></progress-circular>
+            </div>
+        </div>
+
+        <div data-ng-if="vm.readyStatus.stats">
+
+            <div class="system-info-cards">
+
+                <md-card data-ng-repeat="item in vm.systemInfoItems" class="system-info-card">
+
+                    <div class="system-info-card-name">{{item.name}}</div>
+
+                    <div class="system-info-card-val-holder">
+
+                        <div data-ng-repeat="val in item.values" class="system-info-card-val">
+
+                            <b>{{val.name}}</b>: {{val.value}}
+
+                        </div>
+
+                    </div>
+
+                </md-card>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div>
+
+        <h2>Logs</h2>
+
+        <div data-ng-if="!vm.readyStatus.logs">
+            <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
+                <progress-circular diameter="50"></progress-circular>
+            </div>
+        </div>
+
+        <div data-ng-if="vm.readyStatus.logs">
+
+            <div data-ng-repeat="item in vm.logFiles">
+
+                <span class="log-file-name">{{item}}</span>
+
+                <md-button class="md-raised" data-ng-click="vm.previewLog($event, item)">Preview</md-button>
+                <md-button class="md-raised" data-ng-click="vm.downloadLog($event, item)">Download</md-button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

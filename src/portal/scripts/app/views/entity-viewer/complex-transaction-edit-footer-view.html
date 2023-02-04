@@ -1,6 +1,6 @@
 <div layout="row">
     <md-button class="link-button" ng-click="vm.cancel()">
-        <span >Cancel</span>
+        <span>Cancel</span>
     </md-button>
 
 </div>
@@ -25,7 +25,7 @@
 
         <md-menu-content class="universal-editor-menu-content optional-entity-menu" width="3">
 
-            <md-menu-item >
+            <md-menu-item>
                 <md-button ng-click="vm.editLayout($event)">
                     <div class="flex-row flex-i-center">
                         <ng-md-icon icon="edit" class="flex-row"></ng-md-icon>
@@ -34,10 +34,10 @@
                 </md-button>
             </md-menu-item>
 
-            <md-menu-item >
+            <md-menu-item>
 
                 <md-button ng-click="vm.copy('big-drawer')"
-                           ng-disabled="!vm.checkReadyStatus() || vm.entity.is_canceled || !vm.hasEditPermission || vm.processing" >
+                           ng-disabled="!vm.checkReadyStatus() || vm.entity.is_canceled || !vm.hasEditPermission || vm.processing">
 
                     <div class="flex-row flex-i-center ">
                         <ng-md-icon icon="content_copy" class="flex-row"></ng-md-icon>
@@ -59,12 +59,12 @@
 
             </md-menu-item>
 
-            <md-menu-item >
+            <md-menu-item>
 
                 <md-button ng-click="vm.toggleLockStatus($event)"
-                           ng-if="vm.entity.is_locked == false"
+                           ng-if="!vm.entity.is_locked"
                            ng-disabled="vm.entity.is_canceled == true || !vm.hasEditPermission || vm.processing"
-                           >
+                >
 
                     <div class="flex-row flex-i-center ">
                         <ng-md-icon icon="lock_outline" class="flex-row"></ng-md-icon>
@@ -74,9 +74,8 @@
 
                 <md-button
                         ng-click="vm.toggleLockStatus($event)"
-                        ng-if="vm.entity.is_locked == true"
-                        ng-disabled="vm.entity.is_canceled == true || !vm.hasEditPermission || vm.processing"
-                        >
+                        ng-if="vm.entity.is_locked === true"
+                        ng-disabled="vm.entity.is_canceled == true || !vm.hasEditPermission || vm.processing">
 
                     <div class="flex-row flex-i-center ">
                         <ng-md-icon icon="lock_open" class="flex-row"></ng-md-icon>
@@ -86,12 +85,28 @@
 
             </md-menu-item>
 
-            <md-menu-item >
+
+            <md-menu-item>
+
+                <md-button
+                        ng-click="vm.viewHistory($event)"
+                >
+
+                    <div class="flex-row flex-i-center ">
+                        <ng-md-icon icon="my_library_books" class="flex-row"></ng-md-icon>
+                        <span class="m-l-16">View History</span>
+                    </div>
+
+                </md-button>
+
+            </md-menu-item>
+
+            <md-menu-item>
 
                 <md-button ng-click="vm.toggleCancelStatus($event)"
-                           ng-if="vm.entity.is_canceled == true"
+                           ng-if="vm.entity.is_canceled === true"
                            ng-disabled="vm.entity.is_locked == true || !vm.hasEditPermission || vm.processing"
-                           >
+                >
 
                     <div class="flex-row flex-i-center ">
                         <ng-md-icon icon="check_circle" class="flex-row"></ng-md-icon>
@@ -101,11 +116,13 @@
 
                 </md-button>
 
+
+
                 <md-button
                         ng-click="vm.toggleCancelStatus($event)"
-                        ng-if="vm.entity.is_canceled == false"
+                        ng-if="!vm.entity.is_canceled"
                         ng-disabled="vm.entity.is_locked == true || !vm.hasEditPermission || vm.processing"
-                        >
+                >
 
                     <div class="flex-row flex-i-center ">
                         <ng-md-icon icon="album" class="flex-row"></ng-md-icon>
@@ -116,12 +133,12 @@
 
             </md-menu-item>
 
-            <md-menu-item >
+            <md-menu-item>
 
                 <md-button
                         ng-click="vm.delete($event)"
                         ng-disabled="vm.entity.is_locked == true || !vm.hasEditPermission || vm.processing"
-                        >
+                >
                     <div class="flex-row flex-i-center color-delete">
                         <ng-md-icon icon="delete" class="flex-row"></ng-md-icon>
                         <span class="m-l-16">Delete</span>
@@ -134,15 +151,17 @@
         </md-menu-content>
     </md-menu>
 
-    <md-button data-ng-class="{'disabled-btn': !vm.formIsValid || vm.entity.is_canceled || vm.entity.is_locked || !vm.hasEditPermission || vm.processing}"
-                class="outline-button"
-               ng-click="vm.rebookAsPending()">
+    <md-button
+            data-ng-class="{'disabled-btn': !vm.formIsValid || vm.entity.is_canceled || vm.entity.is_locked || !vm.hasEditPermission || vm.processing}"
+            class="outline-button"
+            ng-click="vm.rebookAsPending()">
         Rebook as pending
     </md-button>
 
-    <md-button data-ng-class="{'disabled-btn': !vm.formIsValid || vm.entity.is_canceled || vm.entity.is_locked || !vm.hasEditPermission || vm.processing}"
-               ng-click="vm.rebook()"
-               class="m-r-24 primary-button">
+    <md-button
+            data-ng-class="{'disabled-btn': !vm.formIsValid || vm.entity.is_canceled || vm.entity.is_locked || !vm.hasEditPermission || vm.processing}"
+            ng-click="vm.rebook()"
+            class="m-r-24 primary-button">
         Rebook
     </md-button>
 

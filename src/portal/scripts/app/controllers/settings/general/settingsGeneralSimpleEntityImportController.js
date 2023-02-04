@@ -129,7 +129,7 @@
                 page: vm.currentPage
             }).then(function (data) {
 
-                vm.generatePages();
+                vm.generatePages(data);
 
                 console.log("simple entity data", data);
                 vm.entitySchemes = data.results;
@@ -137,7 +137,6 @@
                 $scope.$apply();
             });
         };
-
 
         vm.addScheme = function ($event) {
             $mdDialog.show({

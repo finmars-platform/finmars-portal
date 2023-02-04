@@ -35,7 +35,7 @@ import importTransactionService from "../../services/import/importTransactionSer
         vm.config = {};
         vm.validateConfig = {};
 
-        vm.processing = false;
+        // vm.processing = false;
         vm.loaderData = {};
 
         vm.hasSchemeEditPermission = false;
@@ -92,7 +92,8 @@ import importTransactionService from "../../services/import/importTransactionSer
 
                 vm.validateConfig = Object.assign({}, vm.config);
 
-                vm.processing = true;
+                // vm.processing = true;
+                vm.readyStatus.processing = true;
 
                 vm.loaderData = {
                     current: vm.validateConfig.processed_rows,
@@ -101,13 +102,14 @@ import importTransactionService from "../../services/import/importTransactionSer
                     status: vm.validateConfig.task_status,
                 };
 
-                vm.validate(resolve, $event)
+                vm.validate(resolve, reject, $event)
 
-            }).then(function (data) {
+            })
+            .then(function (data) {
 
                 vm.validateConfig = {};
 
-                vm.processing = false;
+                // vm.processing = false;
                 vm.readyStatus.processing = false;
 
                 var errorsCount = 0;
@@ -179,6 +181,10 @@ import importTransactionService from "../../services/import/importTransactionSer
                 }
 
             })
+            .catch(function (e) {
+                vm.readyStatus.processing = false;
+                $scope.$apply();
+            });
 
         };
 
@@ -189,7 +195,8 @@ import importTransactionService from "../../services/import/importTransactionSer
                 delete vm.config.task_id;
                 delete vm.config.task_status;
 
-                vm.processing = true
+                // vm.processing = true
+                vm.readyStatus.processing = true;
 
                 vm.loaderData = {
                     current: vm.config.processed_rows,
@@ -283,10 +290,9 @@ import importTransactionService from "../../services/import/importTransactionSer
 
                 }
 
-                vm.processing = false;
+                // vm.processing = false;
+                vm.readyStatus.processing = false;
 
-            }).catch(function (error) {
-                console.log("error occurred", error);
             });
 
 
@@ -296,10 +302,10 @@ import importTransactionService from "../../services/import/importTransactionSer
         vm.startImportWithValidation = function ($event) {
 
             console.log('startImportWithValidation starting validation')
-
             return new Promise(function (resolve, reject) {
 
-                vm.processing = true;
+                // vm.processing = true;
+                vm.readyStatus.processing = true;
 
                 vm.validateConfig = Object.assign({}, vm.config);
 
@@ -310,9 +316,10 @@ import importTransactionService from "../../services/import/importTransactionSer
                     status: vm.validateConfig.task_status
                 };
 
-                vm.validate(resolve, $event)
+                vm.validate(resolve, reject, $event)
 
-            }).then(function (data) {
+            })
+            .then(function (data) {
 
                 console.log('startImportWithValidation validation finished')
                 console.log('startImportWithValidation validation finished data', data)
@@ -368,10 +375,11 @@ import importTransactionService from "../../services/import/importTransactionSer
                             vm.startImport($event);
                         } else {
                             vm.validateConfig = {};
-                            vm.readyStatus.processing = false;
                         }
 
                     });
+
+                    vm.readyStatus.processing = false;
 
 
                 } else {
@@ -389,10 +397,14 @@ import importTransactionService from "../../services/import/importTransactionSer
                 }
 
             })
+            .catch(function (e) {
+                vm.readyStatus.processing = false;
+                $scope.$apply();
+            })
 
         }
         // TODO DEPRECATED LOGIC
-        vm.validate = function (resolve, $event) {
+        vm.validate = function (resolve, reject, $event) {
 
             console.log("Validate")
 
@@ -485,19 +497,22 @@ import importTransactionService from "../../services/import/importTransactionSer
                     console.log('Websocket is Offline. Falling back to polling')
 
                     if (vm.validateConfig.task_status === 'SUCCESS') {
+
                         resolve(data)
 
                     } else {
 
                         setTimeout(function () {
-                            vm.validate(resolve, $event);
+                            vm.validate(resolve, reject, $event);
                         }, 1000)
 
                     }
 
                 }
 
-
+            })
+            .catch(function (e) {
+                reject(e)
             })
 
         };
@@ -513,7 +528,8 @@ import importTransactionService from "../../services/import/importTransactionSer
                 if (vm.task.status === 'D' || vm.task.status === 'E') {
                     clearInterval(vm.poolingInterval)
                     vm.poolingInterval = null;
-                    vm.processing = false;
+                    // vm.processing = false;
+                    vm.readyStatus.processing = false;
                     vm.importIsFinished = true;
                 }
 
@@ -556,7 +572,8 @@ import importTransactionService from "../../services/import/importTransactionSer
 
 
         vm.import = function (resolve, $event) {
-            vm.processing = true;
+            // vm.processing = true;
+            vm.readyStatus.processing = true;
 
             clearInterval(vm.poolingInterval)
             vm.poolingInterval = null;
@@ -709,7 +726,9 @@ import importTransactionService from "../../services/import/importTransactionSer
                     skipHide: true,
                 });
 
-                vm.processing = false;
+                // vm.processing = false;
+                vm.readyStatus.processing = false;
+                $scope.$apply();
 
             })
 
@@ -817,7 +836,8 @@ import importTransactionService from "../../services/import/importTransactionSer
 
         vm.preprocessFile = function (){
 
-            vm.processing = true;
+            // vm.processing = true;
+            vm.readyStatus.processing = true;
 
             var formData = new FormData();
 
@@ -868,7 +888,8 @@ import importTransactionService from "../../services/import/importTransactionSer
 
                 downloadFileHelper.downloadFile(data, "application/pdf", "preprocessed.json");
 
-                vm.processing = false;
+                // vm.processing = false;
+                vm.readyStatus.processing = false;
                 $scope.$apply();
 
             });
