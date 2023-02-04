@@ -5,6 +5,7 @@
 
     var historyService = require('../../services/historyService');
     var entityResolverService = require('../../services/entityResolverService');
+    var complexTransactionService = require('../../services/transaction/complexTransactionService');
 
     'use strict';
 
@@ -76,15 +77,31 @@
 
             vm.readyStatus.entity = false;
 
-            entityResolverService.getByKey(vm.entityType, vm.id).then(function (data) {
+            if (vm.content_type === 'transactions.complextransaction') {
 
-                vm.entity = data;
-                vm.entity_pretty = JSON.stringify(vm.entity, null, 4)
-                vm.readyStatus.entity = true;
+                complexTransactionService.getByKey(vm.id).then(function (data) {
 
-                vm.getData();
+                    vm.entity = data;
+                    vm.entity_pretty = JSON.stringify(vm.entity, null, 4)
+                    vm.readyStatus.entity = true;
 
-            })
+                    vm.getData();
+
+                })
+
+            } else {
+
+                entityResolverService.getByKey(vm.entityType, vm.id).then(function (data) {
+
+                    vm.entity = data;
+                    vm.entity_pretty = JSON.stringify(vm.entity, null, 4)
+                    vm.readyStatus.entity = true;
+
+                    vm.getData();
+
+                })
+
+            }
 
 
         };
