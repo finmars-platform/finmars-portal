@@ -14,6 +14,8 @@
     var baseUrl = baseUrlService.resolve();
 
 
+
+
     module.exports = function systemPageController($scope, $mdDialog, globalDataService) {
 
         var vm = this;
