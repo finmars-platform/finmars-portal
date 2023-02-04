@@ -138,7 +138,6 @@
             });
         };
 
-
         vm.addScheme = function ($event) {
             $mdDialog.show({
                 controller: 'SimpleEntityImportSchemeCreateDialogController as vm',
