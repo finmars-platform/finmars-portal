@@ -3528,7 +3528,7 @@ span.highlight {
     color: #FFF;
     margin-right: 0;
 
-    &:hover {
+    &:not([disabled]):hover {
       background: rgba(240, 90, 34, 1);
       opacity: .7;
     }
@@ -3776,4 +3776,7 @@ md-dialog.width-50.draggable-dialog.log-dialog {
 
 mdp-time-picker .md-button {
   display: none;
+}
+.md-tooltip.md-show {
+  height: auto;
 }

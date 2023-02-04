@@ -529,6 +529,45 @@
 
 	};
 
+	const exposureCalculationModelsList = [
+		{id: 1, name: "Market Value"},
+		{id: 2, name: "Price exposure"},
+		{id: 3, name: "Delta adjusted price exposure"},
+		{id: 4, name: "Underlying long short exposure net"},
+		{id: 5, name: "Underlying long short exposure split"},
+	];
+
+	const longUnderlyingExposureList = [
+		{id: 1, name: "Zero"},
+		{id: 2, name: "Long Underlying Instrument Price Exposure"},
+		{id: 3, name: "Long Underlying Instrument Price Delta"},
+		{id: 4, name: "Long Underlying Currency FX Rate Exposure"},
+		{id: 5, name: "Long Underlying Currency FX Rate Delta-adjusted Exposure"},
+	]
+
+	const shortUnderlyingExposureList = [
+		{id: 1, name: "Zero"},
+		{id: 2, name: "Short Underlying Instrument Price Exposure"},
+		{id: 3, name: "Short Underlying Instrument Price Delta"},
+		{id: 4, name: "Short Underlying Currency FX Rate Exposure"},
+		{id: 5, name: "Short Underlying Currency FX Rate Delta-adjusted Exposure"},
+	]
+
+	const positionReportingList = [
+		{
+			id: 1,
+			name: 'Direct Position'
+		},
+		{
+			id: 2,
+			name: 'Factor-adjusted Position'
+		},
+		{
+			id: 3,
+			name: 'Do not show'
+		}
+	];
+
     module.exports = {
         getList: getList,
         getListLight: getListLight,
@@ -551,6 +590,11 @@
 		updateMultitypeFieldSelectorOptionsInsideGridTable: updateMultitypeFieldSelectorOptionsInsideGridTable,
 
 		getEditLayoutBasedOnUserCodes: getEditLayoutBasedOnUserCodes,
+
+		exposureCalculationModelsList: exposureCalculationModelsList,
+		longUnderlyingExposureList: longUnderlyingExposureList,
+		shortUnderlyingExposureList: shortUnderlyingExposureList,
+		positionReportingList: positionReportingList,
 
     }
 

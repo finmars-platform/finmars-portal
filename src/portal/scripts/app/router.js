@@ -372,6 +372,12 @@
                 controller: 'UpdateConfigurationPageController as vm'
             })
 
+            .state('app.portal.system-page', {
+                url: '/system-dashboard',
+                templateUrl: 'views/pages/system-page-view.html',
+                controller: 'SystemPageController as vm'
+            })
+
             .state('app.portal.processes', {
                 url: '/processes',
                 templateUrl: 'views/pages/processes-view.html',
@@ -379,9 +385,18 @@
             })
 
             .state('app.portal.explorer', {
-                url: '/explorer',
+                url: '/explorer/{folderPath:[a-zA-Z0-9_/\.]*}',
                 templateUrl: 'views/pages/explorer-page-view.html',
-                controller: 'ExplorerPageController as vm'
+                controller: 'ExplorerPageController as vm',
+                params: {
+                    folderPath: {squash: true, value: ''},
+                }
+            })
+
+            .state('app.portal.workflows', {
+                url: '/workflows',
+                templateUrl: 'views/pages/workflows-page-view.html',
+                controller: 'WorkflowsPageController as vm'
             })
 
 

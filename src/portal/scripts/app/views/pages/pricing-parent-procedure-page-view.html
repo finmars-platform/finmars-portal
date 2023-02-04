@@ -87,6 +87,11 @@
                                     <div data-ng-if="procedure.status != 'D'">
                                         &nbsp;
                                     </div>
+
+                                    <div data-ng-if="procedure.error_message" style="color: red">
+                                        Error: {{procedure.error_message}}
+                                    </div>
+
                                 </div>
 
                                 <div class="p-8 width-20">

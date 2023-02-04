@@ -173,6 +173,11 @@
 			functions: []
 		};
 
+        vm.instrEventScheduleActions = {
+            eventSchedulePhantomDisabled: true,
+            ttypeFromItypeDisabled: true,
+        };
+
         var ecosystemDefaultData = {};
 
         vm.getTransactionUserFields = function () {
@@ -523,6 +528,7 @@
 
             vm.activeActionTemplate.data.actions.push(result);
 
+            // Because relation selectors disabled anyway, updating phantoms-options for them not needed
             var multitypeFieldsData = ttypeSharedLogic.getMultitypeFieldsDataForAction(result);
             vm.actionsMultitypeFieldsList.push(multitypeFieldsData);
 

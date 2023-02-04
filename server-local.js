@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 
 
-app.use('/client00000/a', express.static('dist'));
+app.use('/space00000/a', express.static('dist'));
 
 
 app.use('/healthcheck', function (req, res) {

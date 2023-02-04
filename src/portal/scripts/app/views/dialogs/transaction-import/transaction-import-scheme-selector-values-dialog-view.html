@@ -31,8 +31,8 @@
             </div>
 
             <div class="transactionImportSchemeSelectorValues">
-<!--        <div data-ng-repeat="selector in vm.scheme.selector_values track by $index" layout="row">-->
-                <div data-ng-repeat="selector in vm.scheme.selector_values | orderBy: 'order' | filter: vm.filterTerms as results track by $index"
+<!--        <div data-ng-repeat="selector in vm.selectorValues track by $index" layout="row">-->
+                <div data-ng-repeat="selector in vm.selectorValues.value | orderBy: 'order' | filter: vm.filterTerms as results track by $index"
                      data-ng-init="$last && !vm.dragAndDropInited && vm.dragAndDrop.init()"
                      data-row-order="{{selector.order}}">
 
@@ -74,7 +74,7 @@
 
     <md-dialog-actions layout="row">
         <md-button class="md-raised" ng-click="vm.cancel()">
-            Close
+            Cancel
         </md-button>
         <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
             Ok

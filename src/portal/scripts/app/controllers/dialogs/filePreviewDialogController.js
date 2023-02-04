@@ -45,13 +45,65 @@
             $mdDialog.hide({status: 'agree'});
         };
 
-        vm.initJsonEditor = function (){
+        vm.initJsonEditor = function () {
 
             setTimeout(function () {
 
                 vm.editor = ace.edit('filePreviewAceEditor');
                 vm.editor.setTheme("ace/theme/monokai");
                 vm.editor.getSession().setMode("ace/mode/json");
+                vm.editor.getSession().setUseWorker(false);
+                vm.editor.setHighlightActiveLine(false);
+                vm.editor.setShowPrintMargin(false);
+                ace.require("ace/ext/language_tools");
+                vm.editor.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableSnippets: true
+                });
+                vm.editor.setFontSize(14)
+                vm.editor.setBehavioursEnabled(true);
+                vm.editor.setValue(vm.data.content_formatted)
+
+                vm.editor.focus();
+                vm.editor.navigateFileStart();
+
+            }, 100)
+
+        }
+
+        vm.initYamlEditor = function () {
+
+            setTimeout(function () {
+
+                vm.editor = ace.edit('filePreviewAceEditor');
+                vm.editor.setTheme("ace/theme/monokai");
+                vm.editor.getSession().setMode("ace/mode/yaml");
+                vm.editor.getSession().setUseWorker(false);
+                vm.editor.setHighlightActiveLine(false);
+                vm.editor.setShowPrintMargin(false);
+                ace.require("ace/ext/language_tools");
+                vm.editor.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableSnippets: true
+                });
+                vm.editor.setFontSize(14)
+                vm.editor.setBehavioursEnabled(true);
+                vm.editor.setValue(vm.data.content_formatted)
+
+                vm.editor.focus();
+                vm.editor.navigateFileStart();
+
+            }, 100)
+
+        }
+
+        vm.initPythonEditor = function () {
+
+            setTimeout(function () {
+
+                vm.editor = ace.edit('filePreviewAceEditor');
+                vm.editor.setTheme("ace/theme/monokai");
+                vm.editor.getSession().setMode("ace/mode/python");
                 vm.editor.getSession().setUseWorker(false);
                 vm.editor.setHighlightActiveLine(false);
                 vm.editor.setShowPrintMargin(false);
@@ -105,7 +157,7 @@
 
         }
 
-        vm.copyContent = function (content){
+        vm.copyContent = function (content) {
 
             metaHelper.copyToBuffer(content)
 
@@ -137,7 +189,29 @@
 
                 vm.initJsonEditor()
 
+            } else if (name.indexOf('.py') !== -1) {
+
+                vm.contentType = 'python'
+
+                vm.data.content_formatted = vm.data.content
+
+                vm.initPythonEditor()
+
+            } else if (name.indexOf('.yml') !== -1 || name.indexOf('.yaml') !== -1) {
+
+                vm.contentType = 'yaml'
+
+                vm.data.content_formatted = vm.data.content
+
+                vm.initYamlEditor()
+
             } else if (name.indexOf('.txt') !== -1) {
+
+                vm.contentType = 'text'
+
+                vm.data.content_formatted = vm.data.content
+
+            } else if (name.indexOf('.log') !== -1) {
 
                 vm.contentType = 'text'
 
@@ -156,11 +230,11 @@
 
         }
 
-        vm.readBlob = function (){
+        vm.readBlob = function () {
 
             var reader = new FileReader();
 
-            reader.addEventListener("loadend", function(e){
+            reader.addEventListener("loadend", function (e) {
                 vm.data.content = reader.result;
 
                 vm.formatContent();

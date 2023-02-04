@@ -165,13 +165,14 @@
 
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="space-between center">
-        <div layout="row">
+
+        <!--<div layout="row">
             <md-button ng-click="vm.editLayout($event)" class="md-raised md-primary">
                 Edit Form
             </md-button>
-<!--            <md-button ng-click="vm.manageAttrs($event)" class="md-raised md-primary">-->
-<!--                Manage attributes-->
-<!--            </md-button>-->
+&lt;!&ndash;            <md-button ng-click="vm.manageAttrs($event)" class="md-raised md-primary">&ndash;&gt;
+&lt;!&ndash;                Manage attributes&ndash;&gt;
+&lt;!&ndash;            </md-button>&ndash;&gt;
 
             <div ng-if="vm.checkReadyStatus()">
 
@@ -238,7 +239,11 @@
                        ng-click="vm.rebook()">
                 Rebook
             </md-button>
-        </div>
+
+        </div>-->
+
+        <div class="dialog-footer flex-row fc-space-between"
+             data-ng-include="'views/entity-viewer/complex-transaction-edit-footer-view.html'"></div>
 
         <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
                                data-elem-to-resize="vm.dialogElemToResize"

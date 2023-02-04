@@ -8,7 +8,7 @@
     var importEntityService = require('../import/importEntityService');
     var importTransactionService = require('../../services/import/importTransactionService');
 
-    var importSimple = function (resolve, config, index, updateCounter) {
+    var importSimple = function (resolve, reject, config, index, updateCounter) {
 
         var formData = new FormData();
 
@@ -28,7 +28,7 @@
 
         // console.log('action', action);
 
-        return importEntityService.validateImport(formData).then(function (data) {
+        importEntityService.validateImport(formData).then(function (data) {
 
             config = data;
 
@@ -41,11 +41,13 @@
                 });
             } else {
                 setTimeout(function () {
-                    importSimple(resolve, config, index, updateCounter);
+                    importSimple(resolve, reject, config, index, updateCounter);
                 }, 1000)
 
             }
 
+        }).catch(function (e) {
+            reject(e);
         })
 
     };
@@ -66,13 +68,13 @@
 
             // console.log('handleComplexTransactionImportAction.config', config)
 
-            importSimple(resolve, config, index, updateCounter);
+            importSimple(resolve, reject, config, index, updateCounter);
 
         })
 
     };
 
-    var importComplexTransactions = function (resolve, config, index, updateCounter) {
+    var importComplexTransactions = function (resolve, reject, config, index, updateCounter) {
 
         var formData = new FormData();
 
@@ -100,13 +102,15 @@
                 });
             } else {
                 setTimeout(function () {
-                    importComplexTransactions(resolve, config, index, updateCounter);
+                    importComplexTransactions(resolve, reject, config, index, updateCounter);
                 }, 1000)
 
             }
 
 
-        })
+        }).catch(function (e) {
+            reject(e);
+        });
 
     };
 
@@ -124,7 +128,7 @@
 
             // console.log('handleComplexTransactionImportAction.config', config)
 
-            importComplexTransactions(resolve, config, index, updateCounter);
+            importComplexTransactions(resolve, reject, config, index, updateCounter);
 
         })
 
@@ -132,7 +136,7 @@
 
     var processAction = function (action, file, delimiter, index, updateCounter) {
 
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve) {
 
             if (action.skip){
 
@@ -158,12 +162,11 @@
         })
     };
 
-    var processActionOneByOne = function (resolve, result, actions, file, delimiter, index, updateCounter) {
+    var processActionOneByOne = function (resolve, reject, result, actions, file, delimiter, index, updateCounter) {
 
         processAction(actions[index], file, delimiter, index, updateCounter).then(function (res) {
 
             // console.log('processAction.res', res);
-
             result.configs[index] = res.config;
             result.errors[index] = [];
 
@@ -207,7 +210,7 @@
 
             if (index < actions.length) {
 
-                processActionOneByOne(resolve, result, actions, file, delimiter, index, updateCounter)
+                processActionOneByOne(resolve, reject, result, actions, file, delimiter, index, updateCounter)
 
             } else {
 
@@ -215,6 +218,9 @@
 
             }
 
+        })
+        .catch(function (e) {
+            reject(e)
         })
 
     };
@@ -236,7 +242,7 @@
 
                 var index = 0;
 
-                processActionOneByOne(resolve, result, scheme.actions, file, delimiter, index, updateCounter)
+                processActionOneByOne(resolve, reject, result, scheme.actions, file, delimiter, index, updateCounter)
 
             } else {
 

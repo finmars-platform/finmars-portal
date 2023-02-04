@@ -338,11 +338,9 @@
             const insertAction = function (action) {
 
                 viewModel.entity.actions.push(action);
+                /*const multitypeFieldsData = getMultitypeFieldsDataForAction(action);
 
-                const newActionIndex = viewModel.actionsMultitypeFieldsList.length;
-                const multitypeFieldsData = getMultitypeFieldsDataForAction(action, newActionIndex);
-
-                viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
+                viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);*/
 
             };
 
@@ -358,12 +356,19 @@
                 insertAction(actions);
 			}
 
-			viewModel.findPhantoms();
-			viewModel.eventPhantomsOpts = findEventSchedulePhantoms();
+			// viewModel.findPhantoms();
+            viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
 
-			viewModel.paneActionsMenuPopups = createSelectorPopupDataForActions();
+			viewModel.eventPhantomsOpts = findPhantoms('instrument_event_schedule');
 
-		};
+			viewModel.paneActionsMenuPopups = createSelectorPopupDataForActions(); // update selectors with options-phantoms
+
+            setTimeout(function () {
+                $scope.$apply();
+                viewModel.actionsMFEventService.dispatchEvent(directiveEvents.FIELD_TYPES_DATA_CHANGED);
+            }, 0);
+
+        };
 
 		var actionFieldsByType = {
 			'transaction': [
@@ -443,80 +448,12 @@
         const addAction = function (actionType) {
 
 			viewModel.accordion.collapseAll();
-        	/* viewModel.accordion.collapseAll();
 
-			var result = {
-				isPaneExpanded: true
-			};
-
-			result[actionType] = {};
-
-			var fields = {
-				'transaction': [
-					'account_cash', 'account_cash_input', 'account_interim',
-					'account_interim_input', 'account_position', 'account_position_input',
-					'accounting_date', 'allocation_balance', 'allocation_balance_input',
-					'allocation_balance_phantom', 'allocation_pl', 'allocation_pl_input',
-					'allocation_pl_phantom', 'carry_with_sign', 'cash_consideration', 'cash_date',
-					'counterparty', 'counterparty_input', 'factor', 'instrument', 'instrument_input', 'instrument_phantom',
-					'linked_instrument', 'linked_instrument_input', 'linked_instrument_phantom', 'notes',
-					'overheads_with_sign', 'portfolio', 'portfolio_input', 'position_size_with_sign',
-					'principal_with_sign', 'reference_fx_rate', 'responsible', 'responsible_input',
-					'settlement_currency', 'settlement_currency_input', 'strategy1_cash', 'strategy1_cash_input',
-					'strategy1_position', 'strategy1_position_input', 'strategy2_cash', 'strategy2_cash_input',
-					'strategy2_position', 'strategy2_position_input', 'strategy3_cash', 'strategy3_cash_input',
-					'strategy3_position', 'strategy3_position_input', 'trade_price', 'transaction_class', 'transaction_currency',
-					'transaction_currency_input'
-				],
-				'instrument': [
-					'accrued_currency', 'accrued_currency_input', 'accrued_multiplier',
-					'pricing_condition', 'pricing_condition_input', 'default_accrued',
-					'default_price', 'instrument_type', 'instrument_type_input', 'maturity_date',
-					'maturity_price', 'name', 'notes', 'payment_size_detail', 'payment_size_detail_input',
-					'price_download_scheme', 'price_download_scheme_input', 'price_multiplier',
-					'pricing_currency', 'pricing_currency_input', 'public_name', 'reference_for_pricing',
-					'short_name', 'user_code', 'user_text_1', 'user_text_2', 'user_text_3'],
-				'instrument_accrual_calculation_schedules': [
-					'accrual_calculation_model', 'accrual_calculation_model_input', 'accrual_size', 'accrual_start_date',
-					'first_payment_date', 'instrument', 'instrument_input', 'instrument_phantom', 'notes', 'periodicity',
-					'periodicity_input', 'periodicity_n'
-				],
-				'instrument_event_schedule': [
-					'description', 'effective_date', 'event_class', 'event_class_input', 'final_date', 'instrument',
-					'instrument_input', 'instrument_phantom', 'is_auto_generated', 'name', 'notification_class',
-					'notification_class_input', 'notify_in_n_days', 'periodicity', 'periodicity_input', 'periodicity_input'
-				],
-				'instrument_event_schedule_action': [
-					'button_position', 'event_schedule', 'event_schedule_input', 'event_schedule_phantom', 'is_book_automatic',
-					'is_sent_to_pending', 'text', 'transaction_type_from_instrument_type'
-				],
-				'instrument_manual_pricing_formula': [
-					'expr', 'instrument', 'instrument_input', 'instrument_phantom', 'notes', 'pricing_policy', 'pricing_policy_input'
-				],
-				'instrument_factor_schedule': [
-					'instrument', 'instrument_input', 'instrument_phantom', 'effective_date', 'factor_value'
-				],
-				'execute_command': [
-					'expr'
-				]
-			};
-
-
-			fields[actionType].forEach(function (key) {
-				result[actionType][key] = null;
-			}); */
-
-			/*viewModel.entity.actions.push(result);
-
-			const multitypeFieldsData = getMultitypeFieldsDataForAction(result);
-			viewModel.actionsMultitypeFieldsList.push(multitypeFieldsData);
-
-			viewModel.paneActionsMenuPopups = createSelectorPopupDataForActions();*/
 			var result = createNewAction(actionType);
 
 			insertActions(result);
 
-			findPhantoms();
+			// findPhantoms('instrument');
 
 		};
 
@@ -706,6 +643,8 @@
                 }
 
             });
+
+            entity.actions = entity.actions.map( action => replacePhantomsValues(action, 'index') );
 
 			entity = metaHelper.clearFrontendOptions(entity);
 
@@ -1909,68 +1848,57 @@
 
 		};
 
-		/*const findPhantoms = function () {
-			var result = [];
-			viewModel.entity.actions.forEach(function (action, $index) {
-				action.positionOrder = $index;
-				if (action.instrument !== null) {
-					result.push(action);
-				}
-			});
-			return result;
+        const findPhantoms = function (actionType) {
+
+            let result = [];
+
+            viewModel.entity.actions.forEach(function (action, $index) {
+
+                action.positionOrder = $index;
+
+                if (action[actionType]) {
+
+                    result.push({
+                        // id: $index, // position order of phantom
+                        id: action.id || '_$phantom$_@' + action.frontOptions.id,
+                        name: action.action_notes || 'Unnamed action',
+                    });
+
+                }
+
+            });
+
+            return result;
+
+        };
+
+		/* const findEventSchedulePhantoms = () => {
+
+            let result = [];
+
+            viewModel.entity.actions.forEach(function (action, $index) {
+
+                action.positionOrder = $index;
+
+                if (action.instrument_event_schedule) {
+                    result.push({
+                        // id: $index,
+                        id: action.frontOptions.id,
+                        name: action.action_notes || ''
+                    });
+                }
+
+            });
+
+            return result;
+
 		}; */
-
-		const findPhantoms = function () {
-			var result = [];
-			viewModel.entity.actions.forEach(function (action, $index) {
-
-				action.positionOrder = $index;
-
-				if (action.instrument) {
-					result.push({
-						id: $index, // position order of phantom
-						name: action.action_notes || ''
-					});
-				}
-
-			});
-
-			return result;
-		};
-
-		const findEventSchedulePhantoms = () => {
-
-			// return new Promise(res => {
-
-				let result = [];
-
-				viewModel.entity.actions.forEach(function (action, $index) {
-					action.positionOrder = $index;
-					if (action.instrument_event_schedule) {
-						/*result.push({
-							id: $index,
-							name: action.action_notes
-						});*/
-						result.push({
-							id: $index,
-							name: action.action_notes || ''
-						});
-					}
-				});
-
-				return result;
-
-				// res(result);
-
-			// });
-
-		};
 
 		const findInputsAndPhantoms = function (entityType, phantomsList) {
 
 			if (!phantomsList) {
 				// check bellow needed in case of this method was fired outside of add / edit ttype
-				phantomsList = (viewModel.entity && viewModel.entity.actions) ? findPhantoms() : [];
+				phantomsList = (viewModel.entity && viewModel.entity.actions) ? findPhantoms('instrument') : [];
 			}
 
 			return [
@@ -2013,7 +1941,7 @@
 					// viewModel.actionsMultitypeFieldsList.splice($index, 1);
 
 					viewModel.clearPhantoms();
-					viewModel.eventPhantomsOpts = findEventSchedulePhantoms();
+					viewModel.eventPhantomsOpts = findPhantoms('instrument_event_schedule');
 
 					viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
 					createSelectorPopupDataForActions();
@@ -2089,14 +2017,20 @@
 
 			viewModel.entity.actions.splice(index + 1, 0, actionCopy);
 
-			const coppiedActionIndex = index + 1;
+			/* const coppiedActionIndex = index + 1;
 			const multitypeFieldsData = getMultitypeFieldsDataForAction(actionCopy, coppiedActionIndex);
-			viewModel.actionsMultitypeFieldsList.splice(coppiedActionIndex, 0, multitypeFieldsData);
+			viewModel.actionsMultitypeFieldsList.splice(coppiedActionIndex, 0, multitypeFieldsData); */
+            viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
 
-			viewModel.findPhantoms();
-			viewModel.eventPhantomsOpts = findEventSchedulePhantoms();
+			// viewModel.findPhantoms();
+			viewModel.eventPhantomsOpts = findPhantoms('instrument_event_schedule');
 
 			viewModel.paneActionsMenuPopups = createSelectorPopupDataForActions();
+
+            setTimeout(function () {
+                $scope.$apply();
+                viewModel.actionsMFEventService.dispatchEvent(directiveEvents.FIELD_TYPES_DATA_CHANGED);
+            }, 0);
 
 		};
 
@@ -2294,7 +2228,7 @@
 					'model': action.transaction[resolveInstrumentProp(action, 'transaction', 'instrument')],
 					'fieldType': 'dropdownSelect',
 					'isDefault': true,
-					'isActive': !!!action.transaction.instrument_toggle,
+					'isActive': !action.transaction.instrument_toggle,
 					'sign': '<div class="multitype-field-type-letter">I</div>',
 					'value_type': 70,
 					'fieldData': {
@@ -2328,7 +2262,7 @@
 					'model': action.transaction.account_position_input,
 					'fieldType': 'dropdownSelect',
 					'isDefault': true,
-					'isActive': !!!action.transaction.account_position_toggle,
+					'isActive': !action.transaction.account_position_toggle,
 					'sign': '<div class="multitype-field-type-letter">I</div>',
 					'value_type': 70,
 					'fieldData': {
@@ -2359,7 +2293,7 @@
 					'model': action.transaction.account_cash_input,
 					'fieldType': 'dropdownSelect',
 					'isDefault': true,
-					'isActive': !!!action.transaction.account_cash_toggle,
+					'isActive': !action.transaction.account_cash_toggle,
 					'sign': '<div class="multitype-field-type-letter">I</div>',
 					'value_type': 70,
 					'fieldData': {
@@ -2390,7 +2324,7 @@
 					'model': action.transaction.account_interim_input,
 					'fieldType': 'dropdownSelect',
 					'isDefault': true,
-					'isActive': !!!action.transaction.account_interim_toggle,
+					'isActive': !action.transaction.account_interim_toggle,
 					'sign': '<div class="multitype-field-type-letter">I</div>',
 					'value_type': 70,
 					'fieldData': {
@@ -2421,7 +2355,7 @@
 					'model': action.transaction[resolveInstrumentProp(action, 'transaction', 'linked_instrument')],
 					'fieldType': 'dropdownSelect',
 					'isDefault': true,
-					'isActive': !!!action.transaction.linked_instrument_toggle,
+					'isActive': !action.transaction.linked_instrument_toggle,
 					'sign': '<div class="multitype-field-type-letter">I</div>',
 					'value_type': 70,
 					'fieldData': {
@@ -2823,7 +2757,7 @@
 					'model': action.instrument.instrument_type_input,
 					'fieldType': 'dropdownSelect',
 					'isDefault': true,
-					'isActive': !!!action.instrument.instrument_type_toggle,
+					'isActive': !action.instrument.instrument_type_toggle,
 					'sign': '<div class="multitype-field-type-letter">I</div>',
 					'value_type': 70,
 					'fieldData': {
@@ -3523,9 +3457,10 @@
 			// instrument phantom selected
 			let inputVal = null;
 			let phantomVal = value;
+            let notPhantomWithTmpId = typeof value !== 'string' || !value.startsWith('_$phantom$_@');
 
 			// instrument input selected
-			if (isNaN(value)) {
+			if ( isNaN(value) && notPhantomWithTmpId ) {
 				inputVal = value;
 				phantomVal = null;
 			}
@@ -3550,8 +3485,8 @@
 			viewModel.entity.actions[$index] = viewModel.entity.actions[$index + 1];
 			viewModel.entity.actions[$index + 1] = swap;
 
-			viewModel.findPhantoms();
-			viewModel.eventPhantomsOpts = findEventSchedulePhantoms();
+			// viewModel.findPhantoms();
+			viewModel.eventPhantomsOpts = findPhantoms('instrument_event_schedule');
 
 			viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
 
@@ -3572,8 +3507,8 @@
 			viewModel.entity.actions[$index] = viewModel.entity.actions[$index - 1];
 			viewModel.entity.actions[$index - 1] = swap;
 
-			viewModel.findPhantoms();
-			viewModel.eventPhantomsOpts = findEventSchedulePhantoms();
+			// viewModel.findPhantoms();
+			viewModel.eventPhantomsOpts = findPhantoms('instrument_event_schedule');
 
 			viewModel.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
 
@@ -3681,50 +3616,165 @@
 
             createDataForInputsGridTable();
 
+
+
 			result.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
-			result.eventPhantomsOpts = findEventSchedulePhantoms();
+			result.eventPhantomsOpts = findPhantoms('instrument_event_schedule');
 
 			return result;
 
         };
 
-		const setStateInActionsControls = function () {
+		const setStateInActionControls = function (action) {
 
-			const actionsKeysList = ['instrument', 'transaction', 'instrument_factor_schedule', /* 'instrument_manual_pricing_formula', */ 'instrument_accrual_calculation_schedules', 'instrument_event_schedule', 'instrument_event_schedule_action'];
+			const actionsKeysList = ['instrument', 'transaction', 'instrument_factor_schedule', /* 'instrument_manual_pricing_formula', */  'instrument_accrual_calculation_schedules', 'instrument_event_schedule', 'instrument_event_schedule_action'];
 
-			viewModel.entity.actions.forEach(function (action) {
+            /* viewModel.entity.actions.forEach(function (action) {
 
-				var keys;
+                var keys;
 
-				for (const actionKey of actionsKeysList) {
+                for (const actionKey of actionsKeysList) {
 
-					if (action[actionKey] !== null) {
+                    if (action[actionKey] !== null) {
 
-						keys = Object.keys(action[actionKey]);
+                        keys = Object.keys(action[actionKey]);
 
-						keys.forEach(function (key) {
+                        keys.forEach(function (key) {
 
-							if (action[actionKey].hasOwnProperty(key + '_input')) {
+                            if (action[actionKey].hasOwnProperty(key + '_input')) {
 
-								const relationSelNotEmpty = !!action[actionKey][key];
+                                const relationSelNotEmpty = !!action[actionKey][key];
 
-								if (relationSelNotEmpty) {
-									action[actionKey][key + '_toggle'] = true;
-								}
+                                if (relationSelNotEmpty) {
+                                    action[actionKey][key + '_toggle'] = true;
+                                }
 
-							}
+                            }
 
-						})
+                        })
 
-						break;
+                        break;
 
-					}
+                    }
 
-				}
+                }
 
-			});
+            }); */
+
+            const actionKey = actionsKeysList.find(actionKey => action[actionKey] !== null);
+
+            if (!actionKey) {
+                return action;
+            }
+
+            Object.keys( action[actionKey] ).forEach(key => {
+
+                if (action[actionKey].hasOwnProperty(key + '_input')) {
+
+                    const relationSelNotEmpty = !!action[actionKey][key];
+
+                    if (relationSelNotEmpty) {
+                        action[actionKey][key + '_toggle'] = true;
+                    }
+
+                }
+
+            })
+
+            return action;
 
 		};
+
+        /**
+         * Set 'id' or 'index' of actions as value for _phantom properties.
+         *
+         * @param {Object} action
+         * @param {String|undefined} replacement - replacement to use as value for _phantom property (e.g. 'id')
+         * @returns {Object} - action with changed _phantom properties
+         */
+        const replacePhantomsValues = function (action, replacement) {
+
+            const actionKey = Object.keys(actionFieldsByType).find( actionType => action[actionType] );
+
+            Object.keys( action[actionKey] ).forEach(key => {
+
+                if ( !action[actionKey][key + '_phantom'] && action[actionKey][key + '_phantom'] !== 0 ) {
+                    return;
+                }
+
+                let selPhantom;
+
+                if (replacement === 'id') {
+
+                    const actionIndex = action[actionKey][key + '_phantom'];
+                    selPhantom = viewModel.entity.actions[actionIndex].id || viewModel.entity.actions[actionIndex].frontOptions.id;
+
+                    if (!selPhantom) console.error("Action has no id: ", viewModel.entity.actions[actionIndex]);
+
+                }
+                else { // replace with action index
+
+                   let actionId = action[actionKey][key + '_phantom'];
+
+                   let findActionIndex = function (action, index) {
+                       // return action.id === actionId;
+                       if (action.id === actionId) {
+                           return true;
+                       }
+
+                       return false;
+                   }
+
+                   if (typeof actionId === 'string') {
+
+                       actionId = actionId.slice(12); // slice _$phantom$_@ part
+
+                       findActionIndex = function (action, index) {
+                           // return action.frontOptions && action.frontOptions.id === actionId;
+                           if (action.frontOptions && action.frontOptions.id === actionId) {
+                               return true;
+                           }
+
+                           return false;
+                       }
+
+                   }
+
+                   selPhantom = viewModel.entity.actions.findIndex(findActionIndex);
+
+                   if (selPhantom < -1) selPhantom = null;
+
+                }
+
+
+                action[actionKey][key + '_phantom'] = selPhantom;
+
+            });
+
+            return action;
+
+        };
+
+        const formatActionsForFrontend = function () {
+
+            /* viewModel.entity.actions = viewModel.entity.actions.map(action => {
+
+                if (!action.frontOptions) action.frontOptions = {};
+                action.frontOptions = metaHelper.generateUniqueId();
+
+                return action;
+
+            }); */
+
+            return viewModel.entity.actions.map(function (action) {
+
+                action = replacePhantomsValues(action, 'id');
+
+                return setStateInActionControls(action);
+
+            });
+
+        };
 
 		/**
 		 *
@@ -4193,7 +4243,6 @@
             getInputTemplates: getInputTemplates,
 			getActionTemplates: getActionTemplates,
 			findPhantoms: findPhantoms,
-			findEventSchedulePhantoms: findEventSchedulePhantoms,
 
 			createNewAction: createNewAction,
 			getActionPaneId: getActionPaneId,
@@ -4223,7 +4272,8 @@
 			onActionMultitypeFieldToggle: onActionMultitypeFieldToggle,
 			onMultitypeFieldValChange: onMultitypeFieldValChange,
 
-			setStateInActionsControls: setStateInActionsControls,
+			setStateInActionsControls: setStateInActionControls,
+            formatActionsForFrontend: formatActionsForFrontend,
 			getActionTypeName: getActionTypeName,
 			// resetPropertyBtn: resetPropertyBtn,
 			saveAsTemplate: saveAsTemplate,

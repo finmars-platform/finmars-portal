@@ -70,7 +70,7 @@
 
                     });
 
-                    authorizerService.getInvitesList().then(function (data) {
+                    authorizerService.getInvitesList(vm.currentMasterUser.base_api_url).then(function (data) {
 
                         vm.invites = data.results;
 

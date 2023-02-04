@@ -8,6 +8,7 @@
     var entityTypeMappingResolveService = require('../../services/entityTypeMappingResolveService');
     var entityResolverService = require('../../services/entityResolverService');
     var instrumentAttributeTypeService = require('../../services/instrument/instrumentAttributeTypeService');
+    var metaHelper = require('../../services/metaService');
 
     module.exports = function entityTypeMappingDialogController($scope, $mdDialog, mapItem) {
 
@@ -17,13 +18,16 @@
         vm.entityItems = [];
         vm.entityItemsCount = null;
         vm.mapItem = mapItem;
+
         vm.mapEntityType = mapItem.complexExpressionEntity;
 
-        var entitiesWithoutCount = ['periodicity',
+        var entityWithoutCount = [
+            'periodicity',
             'accrual-calculation-model',
             'daily-pricing-model',
             'pricing-condition',
-            'payment-size-detail'];
+            'payment-size-detail'
+        ].indexOf(vm.mapEntityType) > -1;
 
         var page = 1;
         vm.pageSize = 40;
@@ -36,9 +40,9 @@
 
         formatEntityForMapping();
 
-        if (entitiesWithoutCount.indexOf(vm.mapEntityType) !== -1) {
+        /*if (entityWithoutCount) {
             vm.pageSize = 1000
-        }
+        }*/
 
         vm.itemsProvider = {
             // ui scroll parameters
@@ -128,83 +132,95 @@
 
         };
 
-        function addChilds(classifier, item) {
+        var loadEntitiesList = function () {
 
-            // console.log('item', item);
+            var getMethodArgs;
 
-            vm.entityItems.push({
-                value_type: classifier.value_type,
-                classifier: classifier.id,
-                name: item.name,
-                id: item.id,
-                level: item.level
-            });
+            if (entityWithoutCount) {
 
-            if (item.children && item.children.length > 0) {
-                item.children.forEach(function (childItem) {
-                    addChilds(classifier, childItem);
-                })
+                return new Promise(function (resolve, reject) {
+
+                    entityResolverService.getList(vm.mapEntityType, {pageSize: 1000}).then(function (entitesList) {
+
+                        resolve(entitesList);
+
+                    }).catch( function (e) { reject(e) } );
+
+                });
+
+
+            } else {
+
+                getMethodArgs = [
+                    vm.mapEntityType,
+                    {page: 1, pageSize: 1000},
+                ]
+
+                return metaHelper.loadDataFromAllPages(entityResolverService.getList, getMethodArgs);
+
             }
+
         }
 
-        vm.getDataClassifier = function () {
+        var mapEntityItems = function (mappingItems) {
 
-            instrumentAttributeTypeService.getByKey(vm.mapItem.attribute_type).then(function (data) {
+            vm.items = mappingItems;
 
-                console.log('classifier data', data);
+            var i, e;
+            for (e = 0; e < vm.entityItems.length; e = e + 1) {
 
-                [data].forEach(function (classifier) {
+                for (i = 0; i < vm.items.length; i = i + 1) {
 
-                    console.log('classifier', classifier);
+                    if (vm.items[i].content_object === vm.entityItems[e].id) {
 
-                    classifier.classifiers.forEach(function (item) {
+                        if (!vm.entityItems[e].hasOwnProperty('mapping')) {
 
-                        addChilds(classifier, item);
+                            vm.entityItems[e].mapping = [];
+                            vm.entityItems[e].mapping.push(vm.items[i]);
 
-                    })
-                });
+                        }
+                        else {
+                            // check if there is same item in mapping array
 
-                entityTypeMappingResolveService.getList(vm.mapEntityType).then(function (data) {
-                    if (data.hasOwnProperty('results')) {
-                        vm.items = data.results;
-                    } else {
-                        vm.items = data
-                    }
+                            /* var alreadyMapped = false;
 
-                    console.log('vm.items', vm.items);
-
-                    var i, e;
-                    for (e = 0; e < vm.entityItems.length; e = e + 1) {
-                        for (i = 0; i < vm.items.length; i = i + 1) {
-
-                            if (vm.items[i].classifier == vm.entityItems[e].id) {
-
-                                if (!vm.entityItems[e].hasOwnProperty('mapping')) {
-                                    vm.entityItems[e].mapping = [];
+                            vm.entityItems[e].mapping.forEach(function (mappingItem) {
+                                if (mappingItem.id === vm.items[i].id) {
+                                    alreadyMapped = true;
                                 }
+                            });
 
-                                vm.entityItems[e].mapping.push(vm.items[i])
+                            if (!alreadyMapped) {
+                                vm.entityItems[e].mapping.push(vm.items[i]);
+                            } */
 
+                            var mItemIndex = vm.entityItems[e].mapping.findIndex(function (mappingItem) {
+                                return mappingItem.id === vm.items[i].id;
+                            })
+
+                            if (mItemIndex < 0) { // not mapped yet
+                                vm.entityItems[e].mapping.push(vm.items[i]);
                             }
+
                         }
                     }
+                }
 
-                    vm.entityItems.forEach(function (entityItem) {
-                        if (!entityItem.hasOwnProperty('mapping')) {
-                            entityItem.mapping = [{value: ''}];
-                        }
-                    });
+            }
 
-                    vm.readyStatus.content = true;
-                    $scope.$apply();
-                });
-            })
+            vm.entityItems.forEach(function (entityItem) {
 
-        };
+                if (!entityItem.hasOwnProperty('mapping')) {
+                    entityItem.mapping = [{value: ''}];
+                }
+
+            });
+
+        }
 
         vm.getDataEntity = function () {
 
-            return new Promise(function (resolve, reject) {
+            /*return new Promise(function (resolve, reject) {
 
                 var options = {
                     page: page,
@@ -275,6 +291,28 @@
                     page = page - 1;
                     reject($scope.$apply());
                 });
+
+            });*/
+            var promises = [];
+
+            promises.push(loadEntitiesList());
+
+            var getAllMappingsArgs = [
+                vm.mapEntityType,
+                {page: 1, pageSize: 1000},
+            ];
+
+            var getAllMappingsProm = metaHelper.loadDataFromAllPages(entityTypeMappingResolveService.getList, getAllMappingsArgs);
+            promises.push(getAllMappingsProm);
+
+            Promise.all(promises).then(function (resList) {
+
+                vm.entityItems = resList[0];
+
+                mapEntityItems(resList[1]);
+
+                vm.readyStatus.content = true;
+                $scope.$apply();
 
             });
 
@@ -358,11 +396,7 @@
 
         vm.init = function () {
 
-            if (vm.mapEntityType === 'classifier') {
-                vm.getDataClassifier();
-            } else {
-                vm.getDataEntity();
-            }
+            vm.getDataEntity();
 
         };
 
