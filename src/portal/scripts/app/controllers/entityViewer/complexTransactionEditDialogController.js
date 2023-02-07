@@ -49,6 +49,7 @@
         var ttypesList;
 
         vm.readyStatus = {attrs: false, permissions: false, entity: false, layout: false, userFields: false};
+        vm.previewMode = !!data.previewMode;
 
         vm.editLayoutEntityInstanceId = null;
         vm.editLayoutByEntityInsance = false;
@@ -99,194 +100,6 @@
 
         var contentType = metaContentTypesService.findContentTypeByEntity("complex-transaction", "ui");
 
-        /* var getMatchForLayoutFields = function (tab, tabIndex, fieldsToEmptyList, tabResult) {
-
-            var i, l, e, u;
-
-            tab.layout.fields.forEach(function (field, fieldIndex) {
-
-                var fieldResult = {};
-
-                if (field && field.type === 'field') {
-
-                    var attrFound = false;
-
-                    if (field.attribute_class === 'attr') {
-
-                        for (i = 0; i < vm.attrs.length; i = i + 1) {
-
-                            if (field.key) {
-
-                                if (field.key === vm.attrs[i].user_code) {
-
-                                    vm.attrs[i].options = field.options;
-                                    fieldResult = vm.attrs[i];
-                                    attrFound = true;
-                                    break;
-
-                                }
-
-                            } else {
-
-                                if (field.attribute.user_code) {
-
-                                    if (field.attribute.user_code === vm.attrs[i].user_code) {
-
-                                        vm.attrs[i].options = field.options;
-                                        fieldResult = vm.attrs[i];
-                                        attrFound = true;
-                                        break;
-
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                        if (!attrFound) {
-                            var fieldPath = {
-                                tabIndex: tabIndex,
-                                fieldIndex: fieldIndex
-                            };
-
-                            fieldsToEmptyList.push(fieldPath);
-                        }
-
-                    } else if (field.attribute_class === 'userInput') {
-
-                        for (u = 0; u < vm.userInputs.length; u = u + 1) {
-                            //console.log('vm.userInputs[u]', vm.userInputs[u]);
-                            if (field.name === vm.userInputs[u].name) {
-                                vm.userInputs[u].options = field.options;
-                                // return vm.userInputs[u];
-                                fieldResult = vm.userInputs[u];
-
-                                attrFound = true;
-                                break;
-                            }
-                        }
-
-                        if (!attrFound) {
-                            var fieldPath = {
-                                tabIndex: tabIndex,
-                                fieldIndex: fieldIndex
-                            };
-
-                            fieldsToEmptyList.push(fieldPath);
-                        }
-
-                    } else {
-
-                        for (e = 0; e < vm.entityAttrs.length; e = e + 1) {
-                            if (field.name === vm.entityAttrs[e].name) {
-                                vm.entityAttrs[e].options = field.options;
-                                fieldResult = vm.entityAttrs[e];
-
-                                attrFound = true;
-                                break;
-                            }
-                        }
-
-                        if (!attrFound) {
-                            for (l = 0; l < vm.layoutAttrs.length; l = l + 1) {
-                                if (field.name === vm.layoutAttrs[l].name) {
-                                    vm.layoutAttrs[l].options = field.options;
-                                    fieldResult = vm.layoutAttrs[l];
-
-                                    attrFound = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                    }
-
-                    if (field.backgroundColor) {
-                        fieldResult.backgroundColor = field.backgroundColor;
-                    }
-
-                    fieldResult.editable = field.editable;
-
-                }
-
-                tabResult.push(fieldResult)
-
-            });
-
-        };
-
-        vm.generateAttributesFromLayoutFields = function () {
-
-            vm.attributesLayout = [];
-            var fieldsToEmptyList = [];
-            dcLayoutHasBeenFixed = false;
-
-            var tabResult;
-
-            vm.tabs.forEach(function (tab, tabIndex) {
-
-                tabResult = [];
-
-                getMatchForLayoutFields(tab, tabIndex, fieldsToEmptyList, tabResult);
-
-                vm.attributesLayout.push(tabResult);
-
-            });
-
-            if (vm.fixedArea && vm.fixedArea.isActive) {
-
-                vm.fixedAreaAttributesLayout = [];
-                getMatchForLayoutFields(vm.fixedArea, 'fixedArea', fieldsToEmptyList, vm.fixedAreaAttributesLayout);
-
-            }
-
-            // Empty sockets that have no attribute that matches them
-            fieldsToEmptyList.forEach(function (fieldPath) {
-
-                if (fieldPath.tabIndex === 'fixedArea') {
-                    var dcLayoutFields = vm.fixedArea.layout.fields;
-                    var layoutFieldsToSave = dataConstructorLayout.data.fixedArea.layout.fields;
-                } else {
-                    var dcLayoutFields = vm.tabs[fieldPath.tabIndex].layout.fields;
-
-                    if (Array.isArray(dataConstructorLayout.data)) {
-                        var layoutFieldsToSave = dataConstructorLayout.data[fieldPath.tabIndex].layout.fields;
-                    } else {
-                        var layoutFieldsToSave = dataConstructorLayout.data.tabs[fieldPath.tabIndex].layout.fields;
-                    }
-
-                }
-
-                var fieldToEmptyColumn = dcLayoutFields[fieldPath.fieldIndex].column;
-                var fieldToEmptyRow = dcLayoutFields[fieldPath.fieldIndex].row;
-
-                dcLayoutFields[fieldPath.fieldIndex] = { // removing from view
-                    colspan: 1,
-                    column: fieldToEmptyColumn,
-                    editMode: false,
-                    row: fieldToEmptyRow,
-                    type: 'empty'
-                };
-
-                layoutFieldsToSave[fieldPath.fieldIndex] = { // removing from layout copy for saving
-                    colspan: 1,
-                    column: fieldToEmptyColumn,
-                    editMode: false,
-                    row: fieldToEmptyRow,
-                    type: 'empty'
-                };
-
-            });
-
-            if (fieldsToEmptyList.length) {
-                dcLayoutHasBeenFixed = true;
-            }
-            // < Empty sockets that have no attribute that matches them >
-
-        }; */
-
         vm.getContextParameters = function () {
 
             var result = {};
@@ -333,25 +146,7 @@
 		 */
 		var postRebookComplexTransactionActions = function (cTransactionData) {
 
-			/* var keys = Object.keys(cTransactionData.values);
-
-			keys.forEach(item => vm.entity[item] = cTransactionData.values[item]); */
 			vm.entity.values = cTransactionData.values;
-
-			/* cTransactionData.complex_transaction.attributes.forEach(function (item) {
-				if (item.attribute_type_object.value_type === 10) {
-					vm.entity[item.attribute_type_object.name] = item.value_string
-				}
-				if (item.attribute_type_object.value_type === 20) {
-					vm.entity[item.attribute_type_object.name] = item.value_float
-				}
-				if (item.attribute_type_object.value_type === 30) {
-					vm.entity[item.attribute_type_object.name] = item.classifier
-				}
-				if (item.attribute_type_object.value_type === 40) {
-					vm.entity[item.attribute_type_object.name] = item.value_date
-				}
-			}); */
 
 			postBookComplexTransactionActions(cTransactionData);
 
@@ -799,7 +594,15 @@
 
             if (windowType === 'big-drawer') {
 
-                const responseObj = {status: 'copy', data: {entity: entity, entityType: vm.entityType, isCopy: true, originalComplexTransaction: vm.originalComplexTransaction}};
+                const responseObj = {status: 'copy',
+                    data: {
+                        entity: entity,
+                        entityType: vm.entityType,
+                        isCopy: true,
+                        originalComplexTransaction: vm.originalComplexTransaction
+                    }
+                };
+
                 return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
             } else {
@@ -938,17 +741,17 @@
 
                 }
 
-                vm.textFields = vm.textFields.map(function(item){
+                vm.textFields = vm.textFields.map(function (item) {
                     item.name = fieldMap[item.key]
                     return item
                 })
 
-                vm.numberFields = vm.numberFields.map(function(item){
+                vm.numberFields = vm.numberFields.map(function (item) {
                     item.name = fieldMap[item.key]
                     return item
                 })
 
-                vm.dateFields = vm.dateFields.map(function(item){
+                vm.dateFields = vm.dateFields.map(function (item) {
                     item.name = fieldMap[item.key]
                     return item
                 })
@@ -1059,8 +862,16 @@
 
             return new Promise(function (resolve, reject) {
 
-                complexTransactionService.initRebookComplexTransaction(vm.entityId).then(async function (cTransactionData) {
+                let cTransactionDataProm;
 
+                if (vm.previewMode) {
+                    cTransactionDataProm = complexTransactionService.viewComplexTransaction(vm.entityId);
+
+                } else {
+                    cTransactionDataProm = complexTransactionService.initRebookComplexTransaction(vm.entityId);
+                }
+
+                cTransactionDataProm.then(async function (cTransactionData) {
 
                     vm.originalComplexTransaction = JSON.parse(JSON.stringify(cTransactionData));
 
@@ -1077,26 +888,13 @@
                     vm.fillUserFields();
                     vm.fillTransactionInputs();
 
-
                     postRebookComplexTransactionActions(cTransactionData); // vm.tabs changed here
-                    // Victor 2020.12.01 #64
-                    // await sharedLogicHelper.fillMissingFieldsByDefaultValues(vm.entity, vm.userInputs, vm.transactionType);
-                    // <Victor 2020.12.01 #64>
 
                     vm.dataConstructorData = {
                         entityType: vm.entityType,
                         from: vm.entityType,
                         instanceId: vm.transactionTypeId
                     };
-
-                    /*vm.manageAttrs = function () {
-                        $state.go('app.portal.attributesManager', {
-                            entityType: vm.entityType,
-                            from: vm.entityType,
-                            instanceId: vm.transactionTypeId
-                        });
-                        $mdDialog.hide();
-                    };*/
 
                     vm.readyStatus.entity = true;
                     vm.readyStatus.layout = true;
@@ -1197,22 +995,6 @@
 
         vm.handleComplexTransactionErrors = function ($event, data) {
 
-            /*$mdDialog.show({
-                controller: 'ValidationDialogController as vm',
-                templateUrl: 'views/dialogs/validation-dialog-view.html',
-                targetEvent: $event,
-                locals: {
-                    validationData: {
-                        complex_transaction_errors: data.complex_transaction_errors,
-                        instruments_errors: data.instruments_errors,
-                        transactions_errors: data.transactions_errors
-                    }
-                },
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true
-            });*/
             $mdDialog.show({
                 controller: 'ValidationDialogController as vm',
                 templateUrl: 'views/dialogs/validation-dialog-view.html',
@@ -1244,7 +1026,6 @@
             })
 
         };
-
 
         vm.toggleCancelStatus = function ($event) {
 
@@ -1416,7 +1197,8 @@
                     }
                 }) */
 
-            } else {
+            }
+            else {
 
                 var result = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
@@ -2031,9 +1813,9 @@
 
         };
 
-        vm.mapValuesOnTransactionTypeChange = function (newBookData){
+        vm.mapValuesOnTransactionTypeChange = function (newBookData) {
 
-            Object.keys(newBookData.values).forEach(function (key){
+            Object.keys(newBookData.values).forEach(function (key) {
 
                 Object.keys(vm.originalComplexTransaction.values).forEach(function (ctKey) {
 
@@ -2051,7 +1833,7 @@
             return newBookData
         }
 
-        vm.copyUserFieldContent = function(content) {
+        vm.copyUserFieldContent = function (content) {
 
             metaHelper.copyToBuffer(content)
 
@@ -2091,12 +1873,11 @@
                 vm.getItem();
             });
 
-            vm.loadTransactionTypes();
+            if (!vm.previewMode)  vm.loadTransactionTypes();
 
         };
 
         vm.init();
-
 
         // Special case for split-panel
         $scope.splitPanelInit = function (entityType, entityId) {
@@ -2104,48 +1885,10 @@
             vm.entityId = entityId;
         };
 
-        /*vm.onEntityChange = function () {
+        vm.openRebookDrawer = function () {
+            metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'rebook_transaction'});
+        }
 
-            console.log("entityChange", vm);
-
-            console.log("vm.oldValues", vm.oldValues);
-
-            var changedInput = null;
-
-            vm.userInputs.forEach(function (item) {
-                if (vm.oldValues[item.name] !== vm.entity[item.name]) {
-                    changedInput = item
-                }
-            });
-
-            vm.userInputs.forEach(function (item) {
-                vm.oldValues[item.name] = vm.entity[item.name]
-            });
-
-            var resultInput;
-
-            if (changedInput) {
-                vm.transactionType.inputs.forEach(function (item) {
-                    if(item.name === changedInput.name) {
-                        resultInput = item;
-                    }
-                });
-            }
-
-            if (resultInput && resultInput.settings) {
-
-                if (resultInput.settings.linked_inputs_names) {
-
-                    vm.recalculateInputs(resultInput.settings.linked_inputs_names.split(','))
-
-                }
-
-            }
-
-            console.log('changedInput', changedInput);
-            console.log('resultInput', resultInput);
-
-        };*/
         vm.onEntityChange = sharedLogicHelper.onFieldChange;
     };
 

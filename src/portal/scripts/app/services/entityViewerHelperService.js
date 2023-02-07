@@ -1386,7 +1386,7 @@ import uiService from "./uiService";
 
     }
 
-    var openComplexTransactionViewDrawer = function (evDataService, evEventService, $bigDrawer, $mdDialog, entityId, layout) {
+    var openComplexTransactionPreviewDrawer = function (evDataService, evEventService, $bigDrawer, $mdDialog, entityId, layout) {
 
         try {
             metaHelper.closeComponent('big-drawer', $mdDialog, $bigDrawer, {status: 'disagree'});
@@ -1397,8 +1397,8 @@ import uiService from "./uiService";
 
 
         $bigDrawer.show({
-            controller: 'complexTransactionViewDialogController as vm',
-            templateUrl: 'views/entity-viewer/complex-transaction-view-drawer-view.html',
+            controller: 'ComplexTransactionEditDialogController as vm',
+            templateUrl: 'views/entity-viewer/complex-transaction-edit-drawer-view.html',
             addResizeButton: false,
             drawerWidth: bigDrawerWidth,
             showBackdrop: false,
@@ -1409,7 +1409,8 @@ import uiService from "./uiService";
                 entityId: entityId,
                 data: {
                     openedIn: 'big-drawer',
-                    editLayout: layout
+                    editLayout: layout,
+                    previewMode: true,
                 }
             }
 
@@ -1960,7 +1961,7 @@ import uiService from "./uiService";
 
         openComplexTransactionEditDrawer: openComplexTransactionEditDrawer,
         openComplexTransactionAddDrawer: openComplexTransactionAddDrawer,
-        openComplexTransactionViewDrawer: openComplexTransactionViewDrawer,
+        openComplexTransactionViewDrawer: openComplexTransactionPreviewDrawer,
 
         postAdditionActions: postAdditionActions,
 
