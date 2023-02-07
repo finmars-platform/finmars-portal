@@ -269,6 +269,7 @@ export default (function () {
     portal.controller('FileEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/fileEditDialogController')]);
     portal.controller('SystemErrorLogDialogController', ['$scope', '$mdDialog', 'globalDataService', 'data', require('./app/controllers/dialogs/systemErrorLogDialogController')]);
     portal.controller('LogDialogController', ['$scope', '$mdDialog', 'globalDataService', 'data', require('./app/controllers/dialogs/logDialogController')]);
+    portal.controller('HistoryDialogController', ['$scope', '$mdDialog', 'globalDataService', 'data', require('./app/controllers/dialogs/historyDialogController')]);
 
     // Actions
 
