@@ -642,6 +642,32 @@ const importTransactionService = require("../../../services/import/importTransac
 
             })
 
+            vm.scenarios.forEach(function (scenario) {
+
+                var transaction_type_user_code = scenario.transaction_type_object.user_code
+
+                if (vm.activeDryRunResultItem.transaction_inputs[transaction_type_user_code]) {
+
+                    scenario.transaction_type_object.inputs.forEach(function (input) {
+
+                        Object.keys(vm.activeDryRunResultItem.transaction_inputs[transaction_type_user_code]).forEach(function (key) {
+
+                            if (input.name === key) {
+
+                                input.dryRunResult = vm.activeDryRunResultItem.transaction_inputs[transaction_type_user_code][key]
+
+                            }
+
+
+                        })
+
+                    })
+
+                }
+
+
+            })
+
         }
 
         vm.init = function () {
