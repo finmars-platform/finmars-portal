@@ -6,7 +6,7 @@
             <h2>Transaction scheme manager (v2)</h2>
             <div data-ng-if="vm.processing" layout="row" class="m-l-16">
                 <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
-                    <progress-circular diameter="20"></progress-circular>
+                    <progress-circular diameter="10"></progress-circular>
                 </div>
                 — Processing
             </div>
@@ -177,7 +177,7 @@
                                                 <md-button class="md-raised dry-run-execute"
                                                            data-ng-click="vm.executeDryRun($event)">Execute
                                                 </md-button>
-                                                <div data-ng-if="vm.processing">
+                                                <div data-ng-if="vm.processing" style="padding-top: 12px">
 
                                                     <div layout="row" layout-sm="column" layout-align="space-around">
                                                         <progress-circular diameter="20"></progress-circular>
@@ -254,29 +254,27 @@
                                                                ng-model="item.column"
                                                                aria-label="provider field column number">
                                                     </md-input-container>
-                                                    <md-input-container>
+                                                    <md-input-container class="transaction-import-scheme-input-container">
 
                                                         <input type="text"
                                                                placeholder="column name"
                                                                data-ng-model="item.column_name"
                                                                aria-label="provider field name">
                                                     </md-input-container>
-                                                    <md-input-container>
+                                                    <md-input-container class="transaction-import-scheme-input-container">
                                                         <input type="text"
                                                                data-ng-model="item.name"
                                                                placeholder="name"
                                                                ng-blur="vm.setProviderFieldExpression(item)"
                                                                aria-label="provider field name">
                                                     </md-input-container>
-                                                </div>
-                                                <div>
-                                                    <md-button class="custom-small-icon-btn md-raised"
-                                                               ng-click="vm.openProviderFieldExpressionBuilder(item, $event)"
-                                                               ng-class="vm.checkForUserExpr(item)"
-                                                    >
-                                                        <ng-md-icon icon="functions"
-                                                                    size="14"></ng-md-icon>
-                                                    </md-button>
+
+                                                    <div
+                                                            ng-click="vm.openProviderFieldExpressionBuilder(item, $event)"
+                                                            name=""
+                                                            class="transaction-import-scheme-v2-calculated-input-expression">
+                                                        {{item.name_expr}}
+                                                    </div>
                                                 </div>
                                                 <div>
                                                     <md-button
@@ -320,7 +318,7 @@
                                             <div class="fields-holder" layout="row">
                                                 <div class="iscm-item" layout="row">
 
-                                                    <md-input-container>
+                                                    <md-input-container class="transaction-import-scheme-input-container">
                                                         <input type="text"
                                                                data-ng-model="item.name"
                                                                placeholder="name"
@@ -487,17 +485,17 @@
 
                                                             <div>
 
-                                                                <div data-ng-repeat="input_item in item.transaction_type_object.inputs">
+                                                                <div data-ng-repeat="input_item in item.transaction_type_object.inputs" class="transaction-import-scheme-v2-scenario-inputs">
 
                                                                     <div layout="row">
 
-                                                                        <div flex="40">
+                                                                        <div class="transaction-import-scheme-v2-scenario-inputs-input-name">
                                                                             <span data-ng-bind="input_item.verbose_name"></span>
                                                                             (<span
                                                                                 data-ng-bind="input_item.name"></span>)
                                                                         </div>
 
-                                                                        <div layout="row" flex="50">
+                                                                        <div layout="row" class="transaction-import-scheme-v2-scenario-inputs-input-expressio">
                                                                             <div flex="80">
                                                                                 <md-input-container>
                                                                                     <label for=""
@@ -511,6 +509,12 @@
                                                                                         data-item="input_item.expression"
                                                                                         data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
                                                                             </div>
+                                                                        </div>
+
+                                                                        <div data-ng-if="input_item.dryRunResult">
+
+                                                                            <span class="dry-run-result-value">{{input_item.dryRunResult}}</span>
+
                                                                         </div>
 
                                                                     </div>
