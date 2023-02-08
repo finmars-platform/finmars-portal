@@ -161,6 +161,74 @@
 
                         <md-tab-body>
 
+                            <div>
+                                <md-button class="md-raised dry-run-button"
+                                           data-ng-click="vm.showDryRun = !vm.showDryRun">
+                                    <span data-ng-show="vm.showDryRun">Hide Dry Run</span>
+                                    <span data-ng-show="!vm.showDryRun">Show Dry Run</span>
+                                </md-button>
+                                <div data-ng-if="vm.showDryRun">
+                                    <div>
+
+                                        <div layout="row">
+                                            <textarea name="" id="" class="dry-run-data-textarea"
+                                                      data-ng-model="vm.dryRunData"></textarea>
+                                            <div>
+                                                <md-button class="md-raised dry-run-execute"
+                                                           data-ng-click="vm.executeDryRun($event)">Execute
+                                                </md-button>
+                                                <div data-ng-if="vm.processing">
+
+                                                    <div layout="row" layout-sm="column" layout-align="space-around">
+                                                        <progress-circular diameter="20"></progress-circular>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div>
+
+                                        <div data-ng-if="vm.dryRunResult.result" class="dry-run-result">
+
+                                            <div>
+                                                Results:
+                                            </div>
+
+                                            <div data-ng-if="vm.dryRunResult.result.error_message">
+                                                <div style="color:red;">{{vm.dryRunResult.result.error_message}}</div>
+                                            </div>
+
+                                            <md-card data-ng-repeat="item in vm.dryRunResult.result.items" data-ng-click="vm.activateResultItem($event, item)"
+                                                 class="dry-run-result-item {{item.active ? 'active' : ''}}">
+
+                                                <div
+                                                     class="dry-run-result-item-body ">
+                                                    <div>Line: {{item.row_number}}. Status: {{item.status}}</div>
+                                                    <div class="dry-run-result-item-message">
+                                                        {{item.message}}
+                                                        <div style="color:red;">{{item.error_message}}</div>
+                                                    </div>
+
+                                                </div>
+
+                                            </md-card>
+
+
+                                        </div>
+                                        <div data-ng-if="!vm.dryRunResult.result">
+
+                                            <div style="color:red;">{{vm.dryRunResult.error_message}}</div>
+
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
                             <div layout="row" class="height-100 transaction-import-scheme-v2-cards-holder">
 
                                 <!-- Imported Columns-->
@@ -215,6 +283,11 @@
                                                                     size="14"></ng-md-icon>
                                                     </md-button>
                                                 </div>
+                                                <div data-ng-if="item.dryRunResult">
+
+                                                    <span class="dry-run-result-value">{{item.dryRunResult}}</span>
+
+                                                </div>
                                             </div>
                                         </div>
 
@@ -252,10 +325,12 @@
 
                                                 <div flex style="margin-right: 2px;">
 
-                                                        <div
-                                                                ng-click="vm.openCalcFieldFxBtnExprBuilder(item, $event)"
-                                                                name=""
-                                                                class="transaction-import-scheme-v2-calculated-input-expression">{{item.name_expr}}</div>
+                                                    <div
+                                                            ng-click="vm.openCalcFieldFxBtnExprBuilder(item, $event)"
+                                                            name=""
+                                                            class="transaction-import-scheme-v2-calculated-input-expression">
+                                                        {{item.name_expr}}
+                                                    </div>
 
                                                     <md-tooltip
                                                             data-ng-show="item.frontOptions && item.frontOptions.noNameExpr"
@@ -272,6 +347,12 @@
                                                         <ng-md-icon icon="close"
                                                                     size="14"></ng-md-icon>
                                                     </md-button>
+                                                </div>
+
+                                                <div data-ng-if="item.dryRunResult">
+
+                                                    <span class="dry-run-result-value">{{item.dryRunResult}}</span>
+
                                                 </div>
 
                                             </div>
