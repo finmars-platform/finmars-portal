@@ -244,53 +244,52 @@
                                         </div>
 
                                         <div data-ng-repeat="item in vm.providerFields | filter: {$: vm.providerFieldsQuery} track by $index"
+                                             class="transaction-import-scheme-v2-file-input"
                                              flex="100">
-                                            <div class="fields-holder" layout="row">
-                                                <div class="iscm-item" layout="row">
-                                                    <md-input-container style="position: relative; width: 22px">
 
-                                                        <input class="no-input-arrows"
-                                                               type="number"
-                                                               ng-model="item.column"
-                                                               aria-label="provider field column number">
-                                                    </md-input-container>
-                                                    <md-input-container class="transaction-import-scheme-input-container">
+                                            <md-input-container style="position: relative; width: 50px">
 
-                                                        <input type="text"
-                                                               placeholder="column name"
-                                                               data-ng-model="item.column_name"
-                                                               aria-label="provider field name">
-                                                    </md-input-container>
-                                                    <md-input-container class="transaction-import-scheme-input-container">
-                                                        <input type="text"
-                                                               data-ng-model="item.name"
-                                                               placeholder="name"
-                                                               ng-blur="vm.setProviderFieldExpression(item)"
-                                                               aria-label="provider field name">
-                                                    </md-input-container>
+                                                <input class="no-input-arrows"
+                                                       type="number"
+                                                       ng-model="item.column"
+                                                       aria-label="provider field column number">
+                                            </md-input-container>
+                                            <md-input-container class="transaction-import-scheme-input-container">
 
-                                                    <div
-                                                            ng-click="vm.openProviderFieldExpressionBuilder(item, $event)"
-                                                            name=""
-                                                            class="transaction-import-scheme-v2-calculated-input-expression">
-                                                        {{item.name_expr}}
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <md-button
-                                                            ng-click="vm.removeProviderField(item, $index)"
-                                                            class="custom-small-icon-btn md-raised"
-                                                            style="line-height: 1">
-                                                        <ng-md-icon icon="close"
-                                                                    size="14"></ng-md-icon>
-                                                    </md-button>
-                                                </div>
-                                                <div data-ng-if="item.dryRunResult">
+                                                <input type="text"
+                                                       placeholder="column name"
+                                                       data-ng-model="item.column_name"
+                                                       aria-label="provider field name">
+                                            </md-input-container>
+                                            <md-input-container class="transaction-import-scheme-input-container">
+                                                <input type="text"
+                                                       data-ng-model="item.name"
+                                                       placeholder="name"
+                                                       ng-blur="vm.setProviderFieldExpression(item)"
+                                                       aria-label="provider field name">
+                                            </md-input-container>
 
-                                                    <span class="dry-run-result-value">{{item.dryRunResult}}</span>
-
-                                                </div>
+                                            <div
+                                                    ng-click="vm.openProviderFieldExpressionBuilder(item, $event)"
+                                                    name=""
+                                                    class="transaction-import-scheme-v2-calculated-input-expression">
+                                                {{item.name_expr}}
                                             </div>
+
+                                            <md-button
+                                                    ng-click="vm.removeProviderField(item, $index)"
+                                                    class="custom-small-icon-btn md-raised"
+                                                    style="line-height: 1">
+                                                <ng-md-icon icon="close"
+                                                            size="14"></ng-md-icon>
+                                            </md-button>
+
+                                            <div data-ng-if="item.dryRunResult">
+
+                                                <span class="dry-run-result-value">{{item.dryRunResult}}</span>
+
+                                            </div>
+
                                         </div>
 
                                         <div layout="row">
