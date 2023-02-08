@@ -169,4 +169,48 @@ md-dialog.transaction-scheme-manager-dialog-view-v2 {
       }
     }
   }
+
+  textarea.dry-run-data-textarea {
+
+    resize: none;
+    min-width: 600px;
+    min-height: 400px;
+    border: 1px solid #ddd;
+    padding: 8px;
+
+  }
+  
+  .dry-run-result-item {
+    cursor: pointer;
+    &.active {
+      background: rgba(173, 216, 230, 0.3);
+    }
+    &:hover {
+      opacity: .7;
+    }
+  }
+
+  .dry-run-result {
+
+  }
+
+  button.md-raised.dry-run-button {
+    min-height: 24px;
+    height: 24px;
+    line-height: 1;
+  }
+
+  span.dry-run-result-value {
+
+    background: rgba(173, 216, 230, 0.3);
+    display: inline-block;
+    min-width: 24px;
+    padding: 4px;
+    min-height: 24px;
+    margin: 2px;
+    box-sizing: border-box;
+
+  }
+
+
 }

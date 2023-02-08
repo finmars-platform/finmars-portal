@@ -1,3 +1,4 @@
+const importTransactionService = require("../../../services/import/importTransactionService");
 /**
  * Created by szhitenev on 07.02.2023.
  */
@@ -24,6 +25,9 @@
             "name": "<b>Imported</b>",
             "key": 'input'
         };
+
+        vm.dryRunData = JSON.stringify([{"user_code": "example"}], null, 4)
+        vm.activeDryRunResultItem = null;
 
         vm.defaultRuleScenario = {
             name: '-',
@@ -573,6 +577,72 @@
                     return 'N/A'
             }
         };
+
+        vm.executeDryRun = function (item) {
+
+            vm.processing = true;
+
+            console.log('vm.config.json_data', vm.dryRunData);
+
+            let blob = new Blob([JSON.stringify(JSON.parse(vm.dryRunData))], {type: 'application/json;'});
+
+            var formData = new FormData();
+
+            formData.append('file', blob, 'input.json');
+            formData.append('scheme', vm.scheme.id);
+
+            importTransactionService.dryRun(formData).then(function (data) {
+
+                vm.dryRunResult = data;
+                vm.processing = false;
+                $scope.$apply();
+
+            })
+
+        }
+
+        vm.activateResultItem = function ($event, item) {
+
+            vm.dryRunResult.result.items.forEach(function (result_item) {
+                result_item.active = false;
+            })
+
+            item.active = true;
+
+            vm.activeDryRunResultItem = item;
+
+            console.log('vm.activeDryRunResultItem', vm.activeDryRunResultItem)
+
+            vm.providerFields.forEach(function (providerField) {
+
+                Object.keys(vm.activeDryRunResultItem.conversion_inputs).forEach(function (key){
+
+                    if (providerField.name === key) {
+
+                        providerField.dryRunResult = vm.activeDryRunResultItem.conversion_inputs[key]
+
+                    }
+
+                })
+
+            })
+
+            vm.calculatedFields.forEach(function (calculatedField) {
+
+                Object.keys(vm.activeDryRunResultItem.inputs).forEach(function (key){
+
+                    if (calculatedField.name === key) {
+
+                        calculatedField.dryRunResult = vm.activeDryRunResultItem.inputs[key]
+
+                    }
+
+                })
+
+
+            })
+
+        }
 
         vm.init = function () {
 
