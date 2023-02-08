@@ -201,11 +201,12 @@
                                                 <div style="color:red;">{{vm.dryRunResult.result.error_message}}</div>
                                             </div>
 
-                                            <md-card data-ng-repeat="item in vm.dryRunResult.result.items" data-ng-click="vm.activateResultItem($event, item)"
-                                                 class="dry-run-result-item {{item.active ? 'active' : ''}}">
+                                            <md-card data-ng-repeat="item in vm.dryRunResult.result.items"
+                                                     data-ng-click="vm.activateResultItem($event, item)"
+                                                     class="dry-run-result-item {{item.active ? 'active' : ''}}">
 
                                                 <div
-                                                     class="dry-run-result-item-body ">
+                                                        class="dry-run-result-item-body ">
                                                     <div>Line: {{item.row_number}}. Status: {{item.status}}</div>
                                                     <div class="dry-run-result-item-message">
                                                         {{item.message}}
@@ -237,9 +238,12 @@
 
                                         <div class="transaction-import-scheme-v2-card-header">
                                             Imported Columns
+                                            <input type="text" data-ng-model="vm.providerFieldsQuery"
+                                                   placeholder="search..."
+                                                   class="transaction-import-scheme-v2-card-header-search">
                                         </div>
 
-                                        <div data-ng-repeat="item in vm.providerFields track by $index"
+                                        <div data-ng-repeat="item in vm.providerFields | filter: {$: vm.providerFieldsQuery} track by $index"
                                              flex="100">
                                             <div class="fields-holder" layout="row">
                                                 <div class="iscm-item" layout="row">
@@ -305,9 +309,12 @@
 
                                         <div class="transaction-import-scheme-v2-card-header">
                                             Calculated Variables
+                                            <input type="text" data-ng-model="vm.calculatedFieldsQuery"
+                                                   placeholder="search..."
+                                                   class="transaction-import-scheme-v2-card-header-search">
                                         </div>
 
-                                        <div data-ng-repeat="item in vm.calculatedFields track by $index"
+                                        <div data-ng-repeat="item in vm.calculatedFields | filter: {$: vm.calculatedFieldsQuery} track by $index"
                                              class="transaction-import-scheme-v2-calculated-input"
                                              flex="100">
                                             <div class="fields-holder" layout="row">
@@ -374,10 +381,14 @@
 
                                         <div class="transaction-import-scheme-v2-card-header">
                                             Transaction Type Matching Scenarios
+                                            <input type="text" data-ng-model="vm.scenariosQuery"
+                                                   placeholder="search..."
+                                                   class="transaction-import-scheme-v2-card-header-search">
                                         </div>
 
                                         <div layout="column">
-                                            <div data-ng-repeat="item in vm.scenarios" layout="row"
+                                            <div data-ng-repeat="item in vm.scenarios | filter: {$: vm.scenariosQuery}"
+                                                 layout="row"
                                                  class="transaction-import-scheme-v2-scenario {{item.showInputs ? 'active' : ''}}">
                                                 <div layout="column">
 
