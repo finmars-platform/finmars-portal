@@ -588,7 +588,7 @@ const importTransactionService = require("../../../services/import/importTransac
 
             var formData = new FormData();
 
-            formData.append('file', blob, 'input.json');
+            formData.append('file', blob, 'input ' + new Date().getUTCDate() + '.json');
             formData.append('scheme', vm.scheme.id);
 
             importTransactionService.dryRun(formData).then(function (data) {
@@ -615,7 +615,7 @@ const importTransactionService = require("../../../services/import/importTransac
 
             vm.providerFields.forEach(function (providerField) {
 
-                Object.keys(vm.activeDryRunResultItem.conversion_inputs).forEach(function (key){
+                Object.keys(vm.activeDryRunResultItem.conversion_inputs).forEach(function (key) {
 
                     if (providerField.name === key) {
 
@@ -629,7 +629,7 @@ const importTransactionService = require("../../../services/import/importTransac
 
             vm.calculatedFields.forEach(function (calculatedField) {
 
-                Object.keys(vm.activeDryRunResultItem.inputs).forEach(function (key){
+                Object.keys(vm.activeDryRunResultItem.inputs).forEach(function (key) {
 
                     if (calculatedField.name === key) {
 
