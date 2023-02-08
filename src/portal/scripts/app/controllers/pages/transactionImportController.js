@@ -779,6 +779,41 @@ import importTransactionService from "../../services/import/importTransactionSer
 
         };
 
+        vm.editSchemeV2 = function ($event) {
+
+            $mdDialog.show({
+                controller: 'TransactionImportSchemeV2EditDialogController as vm',
+                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-v2-dialog-view.html',
+                locals: {
+                    schemeId: vm.config.scheme
+                },
+                targetEvent: $event,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    vm.getSchemeList();
+
+                } else if (res.status === 'copy') {
+
+                    res.dialogPromise.then(function (copyRes) {
+
+                        if (copyRes.status === 'agree') {
+                            vm.getSchemeList();
+                        }
+
+                    });
+
+                }
+
+            });
+
+        }
+
         vm.getMember = function () {
 
             usersService.getMyCurrentMember().then(function (data) {
