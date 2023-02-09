@@ -218,7 +218,7 @@
 	};
 
 	const closeComponent = function (openedIn, $mdDialog, $bigDrawer, response) {
-        console.trace("testing1176 closeComponent");
+
         if (openedIn === 'big-drawer') {
 
             $bigDrawer.hide(response);

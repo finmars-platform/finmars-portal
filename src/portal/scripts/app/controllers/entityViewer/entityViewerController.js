@@ -784,7 +784,7 @@ import instrumentService from "../../services/instrumentService";
 
                         switch (actionData.actionKey) {
 							case 'delete':
-								// in case of deleting row with ___is_active === false from context menu, add it's id manually
+								// in case of deleting row with ___is_active === false from context menu, add its id manually
                             	var idsToDelete = [];
                             	if (actionData.object && actionData.object.id) idsToDelete.push(actionData.object.id);
 
