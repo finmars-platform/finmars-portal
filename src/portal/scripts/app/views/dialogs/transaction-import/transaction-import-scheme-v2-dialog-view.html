@@ -245,7 +245,7 @@
 
                                         <div data-ng-repeat="item in vm.providerFields | filter: {$: vm.providerFieldsQuery} track by $index"
                                              class="transaction-import-scheme-v2-file-input"
-                                             flex="100">
+                                             >
 
                                             <md-input-container style="position: relative; width: 50px">
 
@@ -313,7 +313,7 @@
 
                                         <div data-ng-repeat="item in vm.calculatedFields | filter: {$: vm.calculatedFieldsQuery} track by $index"
                                              class="transaction-import-scheme-v2-calculated-input"
-                                             flex="100">
+                                             >
                                             <div class="fields-holder" layout="row">
                                                 <div class="iscm-item" layout="row">
 
@@ -500,7 +500,7 @@
                                                                         <div layout="row">
                                                                             <div layout="row"
                                                                                  class="transaction-import-scheme-v2-scenario-inputs-input-expressio">
-                                                                                <div flex="80">
+                                                                                <div >
                                                                                     <md-input-container>
                                                                                         <label for=""
                                                                                                data-ng-bind="vm.bindType(input_item)"></label>
@@ -508,7 +508,7 @@
                                                                                                data-ng-model="input_item.expression">
                                                                                     </md-input-container>
                                                                                 </div>
-                                                                                <div flex="20">
+                                                                                <div >
                                                                                     <expression-editor-button
                                                                                             data-item="input_item.expression"
                                                                                             data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
@@ -544,8 +544,8 @@
                                         </div>
 
                                         <div layout="column">
-                                            <div layout="row" flex="100">
-                                                <div layout="row" flex="100">
+                                            <div layout="row">
+                                                <div layout="row" >
                                                     <div flex="30">
                                                         <div layout="row">
                                                             <div>
