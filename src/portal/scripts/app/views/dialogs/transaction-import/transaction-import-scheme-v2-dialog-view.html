@@ -481,54 +481,81 @@
                                                     <div data-ng-if="item.showInputs"
                                                          class="transaction-import-scheme-v2-scenario-inputs-holder">
 
-                                                        <div>
+<!--                                                        <div data-ng-repeat="input_item in item.transaction_type_object.inputs"-->
+<!--                                                             class="transaction-import-scheme-v2-scenario-inputs">-->
 
-                                                            <div>
+<!--                                                            <div class="transaction-import-scheme-v2-scenario-inputs-input-name">-->
+<!--                                                                <span data-ng-bind="input_item.verbose_name"></span>-->
+<!--                                                                <div style="white-space: nowrap;">Input: <b><span-->
+<!--                                                                        data-ng-bind="input_item.name"></span></b>-->
+<!--                                                                </div>-->
+<!--                                                            </div>-->
 
-                                                                <div data-ng-repeat="input_item in item.transaction_type_object.inputs"
-                                                                     class="transaction-import-scheme-v2-scenario-inputs">
+<!--                                                            <div layout="row"-->
+<!--                                                                 class="transaction-import-scheme-v2-scenario-inputs-input-expressio">-->
+<!--                                                                <div >-->
+<!--                                                                    <md-input-container>-->
+<!--                                                                        <label for=""-->
+<!--                                                                               data-ng-bind="vm.bindType(input_item)"></label>-->
+<!--                                                                        <input type="text"-->
+<!--                                                                               data-ng-model="input_item.expression">-->
+<!--                                                                    </md-input-container>-->
+<!--                                                                </div>-->
+<!--                                                                <div >-->
+<!--                                                                    <expression-editor-button-->
+<!--                                                                            data-item="input_item.expression"-->
+<!--                                                                            data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>-->
+<!--                                                                </div>-->
 
-                                                                    <div layout="row">
+<!--                                                                <div data-ng-if="input_item.dryRunResult">-->
 
-                                                                        <div class="transaction-import-scheme-v2-scenario-inputs-input-name">
-                                                                            <span data-ng-bind="input_item.verbose_name"></span>
-                                                                            <div style="white-space: nowrap;">Input: <b><span
-                                                                                    data-ng-bind="input_item.name"></span></b>
-                                                                            </div>
+<!--                                                                    <span class="dry-run-result-value">{{input_item.dryRunResult}}</span>-->
+
+<!--                                                                </div>-->
+<!--                                                            </div>-->
+
+<!--                                                        </div>-->
+
+
+                                                        <table class="transaction-import-scheme-v2-scenario-inputs-table">
+                                                            <tr data-ng-repeat="input_item in item.transaction_type_object.inputs" class="transaction-import-scheme-v2-scenario-inputs">
+                                                                <td>
+                                                                    <div class="transaction-import-scheme-v2-scenario-inputs-input-name">
+                                                                        <span data-ng-bind="input_item.verbose_name"></span>
+                                                                        <div style="white-space: nowrap;">Input: <b><span
+                                                                                data-ng-bind="input_item.name"></span></b>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div layout="row"
+                                                                         class="transaction-import-scheme-v2-scenario-inputs-input-expressio">
+                                                                        <div >
+                                                                            <md-input-container>
+                                                                                <label for=""
+                                                                                       data-ng-bind="vm.bindType(input_item)"></label>
+                                                                                <input type="text"
+                                                                                       data-ng-model="input_item.expression">
+                                                                            </md-input-container>
+                                                                        </div>
+                                                                        <div >
+                                                                            <expression-editor-button
+                                                                                    data-item="input_item.expression"
+                                                                                    data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
                                                                         </div>
 
-                                                                        <div layout="row">
-                                                                            <div layout="row"
-                                                                                 class="transaction-import-scheme-v2-scenario-inputs-input-expressio">
-                                                                                <div >
-                                                                                    <md-input-container>
-                                                                                        <label for=""
-                                                                                               data-ng-bind="vm.bindType(input_item)"></label>
-                                                                                        <input type="text"
-                                                                                               data-ng-model="input_item.expression">
-                                                                                    </md-input-container>
-                                                                                </div>
-                                                                                <div >
-                                                                                    <expression-editor-button
-                                                                                            data-item="input_item.expression"
-                                                                                            data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div data-ng-if="input_item.dryRunResult">
-
-                                                                                <span class="dry-run-result-value">{{input_item.dryRunResult}}</span>
-
-                                                                            </div>
-                                                                        </div>
 
                                                                     </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div data-ng-if="input_item.dryRunResult">
 
-                                                                </div>
+                                                                        <span class="dry-run-result-value">{{input_item.dryRunResult}}</span>
 
-                                                            </div>
-
-                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
 
                                                     </div>
 
