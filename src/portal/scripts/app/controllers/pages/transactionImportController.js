@@ -569,8 +569,6 @@ import importTransactionService from "../../services/import/importTransactionSer
         }
 
 
-
-
         vm.import = function (resolve, $event) {
             // vm.processing = true;
             vm.readyStatus.processing = true;
@@ -615,16 +613,6 @@ import importTransactionService from "../../services/import/importTransactionSer
                 }
             }
 
-            var transactionScheme;
-
-            vm.transactionSchemes.forEach(function (scheme) {
-
-                if (scheme.id === vm.config.scheme) {
-                    transactionScheme = scheme;
-                }
-
-            });
-
             importTransactionService.startImport(formData).then(function (data) {
 
                 vm.config = data;
@@ -641,75 +629,6 @@ import importTransactionService from "../../services/import/importTransactionSer
                     vm.getTask();
 
                 }, 1000)
-
-                // DEPRECATED
-                // if (websocketService.isOnline()) {
-                //
-                //     websocketService.addEventListener('transaction_import_status', function (data) {
-                //
-                //         if (vm.config.task_id === data.task_id) {
-                //
-                //             if (data.state === 'D') {
-                //                 websocketService.removeEventListener('transaction_import_status');
-                //                 resolve(data)
-                //             } else {
-                //                 if (data.state !== 'D' && data.state !== 'P') {
-                //                     websocketService.removeEventListener('transaction_import_status');
-                //                     resolve(data);
-                //                 }
-                //             }
-                //
-                //         }
-                //
-                //         if (vm.config.task_id === data.parent_task_id) {
-                //
-                //             vm.subTasksInfo[data.task_id] = data
-                //
-                //             var keys = Object.keys(vm.subTasksInfo)
-                //
-                //             var processedRows = 0
-                //             var processed
-                //
-                //             keys.forEach(function (task_id) {
-                //
-                //                 processed = 0
-                //
-                //                 if (vm.subTasksInfo[task_id].processed_rows) {
-                //                     processed = vm.subTasksInfo[task_id].processed_rows - 1
-                //                 }
-                //
-                //                 processedRows = processedRows + processed
-                //             })
-                //
-                //             vm.loaderData = {
-                //                 current: processedRows,
-                //                 total: data.parent_total_rows,
-                //                 text: 'Import Progress:',
-                //                 status: data.state
-                //             };
-                //
-                //             $scope.$apply();
-                //
-                //         }
-                //
-                //     })
-                //
-                // } else {
-                //
-                //     if (vm.config.task_status === 'SUCCESS') {
-                //
-                //         resolve(data)
-                //
-                //     } else {
-                //
-                //         setTimeout(function () {
-                //             vm.import(resolve, $event);
-                //         }, 1000)
-                //
-                //     }
-                //
-                // }
-
 
             }).catch(function (reason) {
 
