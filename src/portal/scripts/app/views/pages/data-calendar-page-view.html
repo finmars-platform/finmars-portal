@@ -400,8 +400,7 @@
 
                             <div style="max-height: 300px; overflow: auto">
 
-                                <pre>
-                                {{vm.calendarEventPayload.payload}}
+                                <pre>{{vm.calendarEventPayload.payload}}
                                 </pre>
                             </div>
 
@@ -413,7 +412,7 @@
 
                             <div style="padding-left: 16px">
 
-                                <div data-ng-repeat="task in vm.calendarEventPayload.tasks" class="m-t-8 m-b-8">
+                                <div data-ng-repeat="task in vm.calendarEventPayload.tasks" class="calendar-detail-workflow-task">
 
                                     <div class="calendar-event-detail-field">
                                         <span class="calendar-event-detail-field-definition">Name</span>:
@@ -450,9 +449,8 @@
 
                                         <div style="max-height: 300px; overflow: auto">
 
-                                    <pre>
-                                        {{task.result}}
-                                    </pre>
+                                            <pre>{{task.result}}
+                                            </pre>
                                         </div>
 
                                         <hr>
