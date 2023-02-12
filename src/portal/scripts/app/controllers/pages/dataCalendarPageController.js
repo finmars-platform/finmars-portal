@@ -8,6 +8,7 @@
     var baseUrlService = require('../../services/baseUrlService');
     var calendarEventsService = require('../../services/calendarEventsService');
     var processesService = require('../../services/processesService');
+    var workflowService = require('../../services/workflowService');
     var pricingProcedureInstanceService = require('../../services/procedures/pricingProcedureInstanceService');
     var dataProcedureInstanceService = require('../../services/procedures/dataProcedureInstanceService');
     var expressionProcedureInstanceService = require('../../services/procedures/expressionProcedureInstanceService');
@@ -194,6 +195,50 @@
                 })
             }
 
+            if (vm.calendarEvent.extendedProps.type === 'workflow') {
+
+                vm.calendarEventPayloadLoading = true;
+
+                vm.calendarEventPayload = null
+
+                workflowService.getByKey(vm.calendarEvent.extendedProps.id).then(function (data) {
+
+                    vm.calendarEventPayloadLoading = false;
+
+                    vm.calendarEventPayload = data;
+
+                    try {
+
+                        vm.calendarEventPayload.payload = JSON.stringify(vm.calendarEventPayload.payload, null, 4);
+
+                    } catch (error) {
+
+                    }
+
+
+                    if (vm.calendarEventPayload.tasks) {
+                        vm.calendarEventPayload.tasks = vm.calendarEventPayload.tasks.map(function (task) {
+
+                            try {
+
+                                task.result = JSON.stringify(task.result, null, 4);
+
+                            } catch (error) {
+
+                            }
+
+                            return task
+
+                        })
+                    }
+
+
+                    $scope.$apply()
+
+                })
+
+            }
+
         }
 
         vm.renderCalendar = function () {
@@ -204,7 +249,7 @@
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 timeZone: 'UTC',
                 initialView: 'listDay',
-                headerToolbar: {center: 'listDay,listMonth,dayGridMonth', end: 'prev,next' },
+                headerToolbar: {center: 'listDay,listMonth,dayGridMonth', end: 'prev,next'},
                 buttonText: {
                     'listDay': 'Today (list)',
                     'listMonth': 'Month (list)',
@@ -262,7 +307,7 @@
 
                         console.log('get data', data);
 
-                        var items = data.results.map(function (item){
+                        var items = data.results.map(function (item) {
                             item.allDay = false
 
                             return item
