@@ -398,44 +398,71 @@
                         <div class="calendar-event-detail-field" data-ng-if="vm.calendarEventPayload.payload">
                             <span class="calendar-event-detail-field-definition">Payload</span>:
 
-                            <div>
+                            <div style="max-height: 300px; overflow: auto">
+
+                                <pre>
                                 {{vm.calendarEventPayload.payload}}
+                                </pre>
                             </div>
 
                             <hr>
                         </div>
 
-                        <div data-ng-repeat="task in vm.calendarEventPayload.tasks">
+                        <div data-ng-if="vm.calendarEventPayload.tasks.length">
+                            <div>Tasks</div>
+
+                            <div style="padding-left: 16px">
+
+                                <div data-ng-repeat="task in vm.calendarEventPayload.tasks" class="m-t-8 m-b-8">
+
+                                    <div class="calendar-event-detail-field">
+                                        <span class="calendar-event-detail-field-definition">Name</span>:
+                                        {{task.name}}
+                                    </div>
+
+                                    <div class="calendar-event-detail-field">
+                                        <span class="calendar-event-detail-field-definition">Start Date</span>:
+                                        {{task.created | date:'yyyy-MM-dd' : 'UTC'}}
+                                    </div>
+                                    <div class="calendar-event-detail-field">
+                                        <span class="calendar-event-detail-field-definition">Start Time</span>:
+                                        {{task.created | date:'HH:mm' : 'UTC'}}
+                                    </div>
 
 
-                            <div class="calendar-event-detail-field">
-                                <span class="calendar-event-detail-field-definition">Status</span>:
-                                <span data-ng-if="task.status == 'success'"
-                                      class="{{task.status == 'success' ? 'calendar-detail-status-green' : '' }}">
+                                    <div class="calendar-event-detail-field">
+                                        <span class="calendar-event-detail-field-definition">Status</span>:
+                                        <span data-ng-if="task.status == 'success'"
+                                              class="{{task.status == 'success' ? 'calendar-detail-status-green' : '' }}">
                                 Success
                             </span>
-                                <span data-ng-if="task.status == 'error'"
-                                      class="{{task.status == 'error' ? 'calendar-detail-status-red' : '' }}">
+                                        <span data-ng-if="task.status == 'error'"
+                                              class="{{task.status == 'error' ? 'calendar-detail-status-red' : '' }}">
                                 Error
                             </span>
-                                <span data-ng-if="task.status != 'success' && task.status != 'error'">
+                                        <span data-ng-if="task.status != 'success' && task.status != 'error'">
                             {{task.status}}
                             </span>
-                            </div>
+                                    </div>
 
-                            <div class="calendar-event-detail-field" data-ng-if="task.result">
-                                <span class="calendar-event-detail-field-definition">Result</span>:
+                                    <div class="calendar-event-detail-field" data-ng-if="task.result">
+                                        <span class="calendar-event-detail-field-definition">Result</span>:
 
-                                <div>
-                                    {{task.result}}
+                                        <div style="max-height: 300px; overflow: auto">
+
+                                    <pre>
+                                        {{task.result}}
+                                    </pre>
+                                        </div>
+
+                                        <hr>
+                                    </div>
+
+
                                 </div>
 
-                                <hr>
                             </div>
-
-
                         </div>
-
 
                     </div>
 
