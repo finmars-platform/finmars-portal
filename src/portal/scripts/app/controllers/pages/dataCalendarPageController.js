@@ -29,7 +29,7 @@
         vm.bigPicture = false;
 
         // vm.filter = ['system_message', 'system_schedule', 'schedule']
-        vm.filter = ['data_procedure', 'expression_procedure', 'pricing_procedure', 'celery_task']
+        vm.filter = ['data_procedure', 'expression_procedure', 'pricing_procedure', 'celery_task', 'workflow']
 
         vm.toggleFilter = function (name) {
 
