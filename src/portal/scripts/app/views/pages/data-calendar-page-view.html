@@ -369,6 +369,75 @@
 
                     </div>
 
+                    <div data-ng-if="vm.calendarEvent.extendedProps.type === 'workflow'">
+
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Status</span>:
+                            <span data-ng-if="vm.calendarEventPayload.status == 'success'"
+                                  class="{{vm.calendarEventPayload.status == 'success' ? 'calendar-detail-status-green' : '' }}">
+                                Success
+                            </span>
+                            <span data-ng-if="vm.calendarEventPayload.status == 'error'"
+                                  class="{{vm.calendarEventPayload.status == 'error' ? 'calendar-detail-status-red' : '' }}">
+                                Error
+                            </span>
+                            <span data-ng-if="vm.calendarEventPayload.status != 'success' && vm.calendarEventPayload.status != 'error'">
+                            {{vm.calendarEventPayload.status}}
+                            </span>
+                        </div>
+                        <div class="calendar-event-detail-field"><span class="calendar-event-detail-field-definition">Type</span>:
+                            {{vm.calendarEventPayload.type}}
+                        </div>
+
+                        <!--                        <div data-ng-if="vm.calendarEventPayload.member_object">-->
+                        <!--                            Member: {{vm.calendarEventPayload.member_object.username}}-->
+                        <!--                        </div>-->
+
+                        <hr>
+
+                        <div class="calendar-event-detail-field" data-ng-if="vm.calendarEventPayload.payload">
+                            <span class="calendar-event-detail-field-definition">Payload</span>:
+
+                            <div>
+                                {{vm.calendarEventPayload.payload}}
+                            </div>
+
+                            <hr>
+                        </div>
+
+                        <div data-ng-repeat="task in vm.calendarEventPayload.tasks">
+
+
+                            <div class="calendar-event-detail-field">
+                                <span class="calendar-event-detail-field-definition">Status</span>:
+                                <span data-ng-if="task.status == 'success'"
+                                      class="{{task.status == 'success' ? 'calendar-detail-status-green' : '' }}">
+                                Success
+                            </span>
+                                <span data-ng-if="task.status == 'error'"
+                                      class="{{task.status == 'error' ? 'calendar-detail-status-red' : '' }}">
+                                Error
+                            </span>
+                                <span data-ng-if="task.status != 'success' && task.status != 'error'">
+                            {{task.status}}
+                            </span>
+                            </div>
+
+                            <div class="calendar-event-detail-field" data-ng-if="task.result">
+                                <span class="calendar-event-detail-field-definition">Result</span>:
+
+                                <div>
+                                    {{task.result}}
+                                </div>
+
+                                <hr>
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
 
                 </div>
 
