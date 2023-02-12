@@ -50,7 +50,7 @@
             vm.renderCalendar();
         }
 
-        vm.deleteCeleryTask = function ($event){
+        vm.deleteCeleryTask = function ($event) {
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
@@ -70,7 +70,7 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
 
-                    processesService.deleteByKey(vm.calendarEvent.extendedProps.id).then(function (){
+                    processesService.deleteByKey(vm.calendarEvent.extendedProps.id).then(function () {
 
                         toastNotificationService.success('Task ' + vm.calendarEvent.extendedProps.id + ' deleted successfuly')
 
@@ -202,7 +202,23 @@
             calendarEl.innerHTML = '';
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
+                timeZone: 'UTC',
+                initialView: 'listDay',
+                headerToolbar: {center: 'listDay,listMonth,dayGridMonth', end: 'prev,next' },
+                buttonText: {
+                    'listDay': 'Today (list)',
+                    'listMonth': 'Month (list)',
+                    'dayGridMonth': 'Month (grid)'
+                },
+                eventDisplay: {
+                    timeFormat: 'hh:mm',
+                },
+                eventTimeFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    meridiem: false,
+                    hour12: false
+                },
                 eventMouseEnter: function (info) {
                     // var tooltip = new Tooltip(info.el, {
                     //     title: info.event.extendedProps.description,
@@ -217,7 +233,11 @@
 
                     vm.calendarEvent = info.event;
 
+                    $('.fc-event').removeClass('active')
+
                     console.log('vm.calendarEvent', vm.calendarEvent);
+
+                    info.el.classList.add('active')
 
                     vm.loadCalendarEvent()
 
@@ -242,7 +262,13 @@
 
                         console.log('get data', data);
 
-                        callback(data.results)
+                        var items = data.results.map(function (item){
+                            item.allDay = false
+
+                            return item
+                        })
+
+                        callback(items)
 
 
                     })
