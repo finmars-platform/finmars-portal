@@ -355,6 +355,11 @@
 
         }
 
+        vm.generateWorkflowUrl = function () {
+
+            return '/' + window.base_api_url + '/workflow/#/item/' + vm.calendarEvent.extendedProps.id
+
+        }
 
         vm.init = function () {
 

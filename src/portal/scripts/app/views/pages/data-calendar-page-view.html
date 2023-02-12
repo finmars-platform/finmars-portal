@@ -68,6 +68,9 @@
                    data-ng-if="vm.calendarEventPayload && vm.calendarEvent.extendedProps.type === 'celery_task'"
                    class="delete-calendar-event-payload">Delete</a>
 
+                <a data-ng-if="vm.calendarEventPayload && vm.calendarEvent.extendedProps.type === 'workflow'"
+                   class="calendar-event-payload-open-workflow" target="_blank" href="{{vm.generateWorkflowUrl()}}">Open Workflow</a>
+
                 <h1 style="word-break: break-word; font-size: 24px;">{{vm.calendarEvent.title}}</h1>
                 <div class="calendar-event-detail-field">
                     <span class="calendar-event-detail-field-definition">Start Date</span>:
@@ -408,11 +411,14 @@
                         </div>
 
                         <div data-ng-if="vm.calendarEventPayload.tasks.length">
-                            <div>Tasks</div>
+                            <div>
+                                <span class="calendar-event-detail-field-definition">Tasks</span>
+                            </div>
 
                             <div style="padding-left: 16px">
 
-                                <div data-ng-repeat="task in vm.calendarEventPayload.tasks" class="calendar-detail-workflow-task">
+                                <div data-ng-repeat="task in vm.calendarEventPayload.tasks"
+                                     class="calendar-detail-workflow-task">
 
                                     <div class="calendar-event-detail-field">
                                         <span class="calendar-event-detail-field-definition">Name</span>:
