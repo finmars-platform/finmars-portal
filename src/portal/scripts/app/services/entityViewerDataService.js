@@ -470,26 +470,26 @@
          * @param {String=} dateTo
          * @memberof module:entityViewerDataService
          */
-        function stashReportDates (dateFrom, dateTo) {
+        function stashReportDates(dateFrom, dateTo) {
 
             const entityType = getEntityType();
             const datesProps = reportHelper.getDateProperties(entityType);
 
-			// if dates were not passed as arguments take them from reportOptions
-			if (dateFrom === undefined && dateTo === undefined) {
+            // if dates were not passed as arguments take them from reportOptions
+            if (dateFrom === undefined && dateTo === undefined) {
 
-				const reportOptions = getReportOptions();
+                const reportOptions = getReportOptions();
 
-				var dateFromProp = datesProps[0];
-				var dateToProp = datesProps[1];
+                var dateFromProp = datesProps[0];
+                var dateToProp = datesProps[1];
 
-				if (dateFromProp) {
-					dateFrom = reportOptions[dateFromProp];
-				}
+                if (dateFromProp) {
+                    dateFrom = reportOptions[dateFromProp];
+                }
 
-				dateTo = reportOptions[dateToProp];
+                dateTo = reportOptions[dateToProp];
 
-			}
+            }
 
             let datesData = {
                 dateTo: {
@@ -519,7 +519,7 @@
             return data.reportDatesData || {};
         }
 
-        function applyStashedReportDates (reportOptions) {
+        function applyStashedReportDates(reportOptions) {
 
             const datesData = getStashedReportDates();
 
@@ -1704,6 +1704,14 @@
             return data.globalTableSearch;
         }
 
+        function setRenderTime(time) {
+            data.renderTime = time
+        }
+
+        function getRenderTime() {
+            return data.renderTime;
+        }
+
 
         return {
 
@@ -1971,7 +1979,10 @@
             setSelectedGroups: setSelectedGroups,
 
             setGlobalTableSearch: setGlobalTableSearch,
-            getGlobalTableSearch: getGlobalTableSearch
+            getGlobalTableSearch: getGlobalTableSearch,
+
+            setRenderTime: setRenderTime,
+            getRenderTime: getRenderTime
 
         }
     }
