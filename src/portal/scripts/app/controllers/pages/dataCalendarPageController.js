@@ -8,6 +8,7 @@
     var baseUrlService = require('../../services/baseUrlService');
     var calendarEventsService = require('../../services/calendarEventsService');
     var processesService = require('../../services/processesService');
+    var workflowService = require('../../services/workflowService');
     var pricingProcedureInstanceService = require('../../services/procedures/pricingProcedureInstanceService');
     var dataProcedureInstanceService = require('../../services/procedures/dataProcedureInstanceService');
     var expressionProcedureInstanceService = require('../../services/procedures/expressionProcedureInstanceService');
@@ -29,7 +30,7 @@
         vm.bigPicture = false;
 
         // vm.filter = ['system_message', 'system_schedule', 'schedule']
-        vm.filter = ['data_procedure', 'expression_procedure', 'pricing_procedure', 'celery_task']
+        vm.filter = ['data_procedure', 'expression_procedure', 'pricing_procedure', 'celery_task', 'workflow']
 
         vm.toggleFilter = function (name) {
 
@@ -50,7 +51,7 @@
             vm.renderCalendar();
         }
 
-        vm.deleteCeleryTask = function ($event){
+        vm.deleteCeleryTask = function ($event) {
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
@@ -70,7 +71,7 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
 
-                    processesService.deleteByKey(vm.calendarEvent.extendedProps.id).then(function (){
+                    processesService.deleteByKey(vm.calendarEvent.extendedProps.id).then(function () {
 
                         toastNotificationService.success('Task ' + vm.calendarEvent.extendedProps.id + ' deleted successfuly')
 
@@ -194,6 +195,50 @@
                 })
             }
 
+            if (vm.calendarEvent.extendedProps.type === 'workflow') {
+
+                vm.calendarEventPayloadLoading = true;
+
+                vm.calendarEventPayload = null
+
+                workflowService.getByKey(vm.calendarEvent.extendedProps.id).then(function (data) {
+
+                    vm.calendarEventPayloadLoading = false;
+
+                    vm.calendarEventPayload = data;
+
+                    try {
+
+                        vm.calendarEventPayload.payload = JSON.stringify(vm.calendarEventPayload.payload, null, 4);
+
+                    } catch (error) {
+
+                    }
+
+
+                    if (vm.calendarEventPayload.tasks) {
+                        vm.calendarEventPayload.tasks = vm.calendarEventPayload.tasks.map(function (task) {
+
+                            try {
+
+                                task.result = JSON.stringify(task.result, null, 4);
+
+                            } catch (error) {
+
+                            }
+
+                            return task
+
+                        })
+                    }
+
+
+                    $scope.$apply()
+
+                })
+
+            }
+
         }
 
         vm.renderCalendar = function () {
@@ -202,7 +247,23 @@
             calendarEl.innerHTML = '';
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
+                timeZone: 'UTC',
+                initialView: 'listDay',
+                headerToolbar: {center: 'listDay,listMonth,dayGridMonth', end: 'prev,next'},
+                buttonText: {
+                    'listDay': 'Today (list)',
+                    'listMonth': 'Month (list)',
+                    'dayGridMonth': 'Month (grid)'
+                },
+                eventDisplay: {
+                    timeFormat: 'hh:mm',
+                },
+                eventTimeFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    meridiem: false,
+                    hour12: false
+                },
                 eventMouseEnter: function (info) {
                     // var tooltip = new Tooltip(info.el, {
                     //     title: info.event.extendedProps.description,
@@ -217,7 +278,11 @@
 
                     vm.calendarEvent = info.event;
 
+                    $('.fc-event').removeClass('active')
+
                     console.log('vm.calendarEvent', vm.calendarEvent);
+
+                    info.el.classList.add('active')
 
                     vm.loadCalendarEvent()
 
@@ -242,7 +307,13 @@
 
                         console.log('get data', data);
 
-                        callback(data.results)
+                        var items = data.results.map(function (item) {
+                            item.allDay = false
+
+                            return item
+                        })
+
+                        callback(items)
 
 
                     })
@@ -284,6 +355,11 @@
 
         }
 
+        vm.generateWorkflowUrl = function () {
+
+            return '/' + window.base_api_url + '/workflow/#/item/' + vm.calendarEvent.extendedProps.id
+
+        }
 
         vm.init = function () {
 

@@ -1,20 +1,20 @@
-<div class="data-calendar-page p-24">
+<div class="data-calendar-page">
 
-    <h1 layout="row">Finmars Calendar
+    <h3 layout="row" class="m-0" style="align-items: center">Finmars Calendar
         <md-checkbox class="data-calendar-filter-checkbox"
                      data-ng-click="vm.bigPicture = !vm.bigPicture; vm.renderCalendar()" data-ng-checked="vm.bigPicture"
                      style="margin-top: 10px;
     margin-left: 10px;">
             Big Picture
+            <md-tooltip md-direction="bottom">It improves UI for Month (Grid) view</md-tooltip>
         </md-checkbox>
-    </h1>
 
-    <div layout="row">
+        <md-button data-ng-click="vm.refresh()" class="md-raised md-icon-button md-primary"><span
+                class="material-icons">refresh</span>
 
-        <md-button data-ng-click="vm.refresh()" class="md-raised md-primary">Refresh</md-button>
+        </md-button>
+    </h3>
 
-
-    </div>
     <div>
         <div class="m-r-8" style="padding-top: 4px;">Filters:</div>
         <div layout="row">
@@ -26,10 +26,6 @@
             <md-checkbox class="data-calendar-filter-checkbox" data-ng-click="vm.toggleFilter('schedule_instance')"
                          data-ng-checked="vm.filter.indexOf('schedule_instance') !== -1">
                 Show Schedules Instances
-            </md-checkbox>
-            <md-checkbox class="data-calendar-filter-checkbox" data-ng-click="vm.toggleFilter('system_message')"
-                         data-ng-checked="vm.filter.indexOf('system_message') !== -1">
-                Show Manual System Messages
             </md-checkbox>
             <md-checkbox class="data-calendar-filter-checkbox" data-ng-click="vm.toggleFilter('data_procedure')"
                          data-ng-checked="vm.filter.indexOf('data_procedure') !== -1">
@@ -47,6 +43,10 @@
                          data-ng-checked="vm.filter.indexOf('celery_task') !== -1">
                 Show Tasks
             </md-checkbox>
+            <md-checkbox class="data-calendar-filter-checkbox" data-ng-click="vm.toggleFilter('workflow')"
+                         data-ng-checked="vm.filter.indexOf('workflow') !== -1">
+                Show Workflows
+            </md-checkbox>
         </div>
 
     </div>
@@ -60,7 +60,7 @@
 
         <div class="calendar-event-detail">
 
-            <div data-ng-if="vm.calendarEvent">
+            <div data-ng-if="vm.calendarEvent" class="position-relative calendar-event-detail-content">
 
                 <a data-ng-click="vm.loadCalendarEvent($event)" data-ng-if="vm.calendarEventPayload"
                    class="refresh-calendar-event-payload">Refresh</a>
@@ -68,22 +68,46 @@
                    data-ng-if="vm.calendarEventPayload && vm.calendarEvent.extendedProps.type === 'celery_task'"
                    class="delete-calendar-event-payload">Delete</a>
 
+                <a data-ng-if="vm.calendarEventPayload && vm.calendarEvent.extendedProps.type === 'workflow'"
+                   class="calendar-event-payload-open-workflow" target="_blank" href="{{vm.generateWorkflowUrl()}}">Open Workflow</a>
+
                 <h1 style="word-break: break-word; font-size: 24px;">{{vm.calendarEvent.title}}</h1>
-                <div>Start: {{vm.calendarEvent.start}}</div>
-                <div data-ng-if="vm.calendarEvent.extendedProps.id">Id: {{vm.calendarEvent.extendedProps.id}}</div>
-                <div>Type: {{vm.calendarEvent.extendedProps.type}}</div>
-
-                <div data-ng-if="vm.calendarEvent.extendedProps.type === 'system_message'">
-
-                    <div>Description: {{vm.calendarEvent.extendedProps.payload.description}}</div>
-
+                <div class="calendar-event-detail-field">
+                    <span class="calendar-event-detail-field-definition">Start Date</span>:
+                    {{vm.calendarEvent.start | date:'yyyy-MM-dd' : 'UTC'}}
+                </div>
+                <div class="calendar-event-detail-field">
+                    <span class="calendar-event-detail-field-definition">Start Time</span>:
+                    {{vm.calendarEvent.start | date:'HH:mm' : 'UTC'}}
+                </div>
+                <div class="calendar-event-detail-field" data-ng-if="vm.calendarEvent.extendedProps.id">
+                    <span class="calendar-event-detail-field-definition">Id</span>:
+                    {{vm.calendarEvent.extendedProps.id}}
+                </div>
+                <div class="calendar-event-detail-field">
+                    <span class="calendar-event-detail-field-definition">Type</span>:
+                    {{vm.calendarEvent.extendedProps.type}}
                 </div>
 
                 <div data-ng-if="vm.calendarEvent.extendedProps.type === 'schedule_instance'">
-                    <div>Status: {{vm.calendarEvent.extendedProps.payload.status}}</div>
-                    <div>Schedule ID: {{vm.calendarEvent.extendedProps.payload.schedule_object.id}}</div>
-                    <div>Schedule: {{vm.calendarEvent.extendedProps.payload.schedule_object.user_code}}</div>
-                    <div>Progress: {{vm.calendarEvent.extendedProps.payload.current}} / {{vm.calendarEvent.extendedProps.payload.total}}</div>
+                    <div class="calendar-event-detail-field">
+                        <span class="calendar-event-detail-field-definition">Status</span>:
+                        {{vm.calendarEvent.extendedProps.payload.status}}
+                    </div>
+                    <div class="calendar-event-detail-field">
+                        <span class="calendar-event-detail-field-definition">Schedule ID</span>:
+                        {{vm.calendarEvent.extendedProps.payload.schedule_object.id}}
+                    </div>
+                    <div class="calendar-event-detail-field">
+                        <span class="calendar-event-detail-field-definition">Schedule</span>:
+                        {{vm.calendarEvent.extendedProps.payload.schedule_object.user_code}}
+                    </div>
+                    <div class="calendar-event-detail-field">
+                        <span class="calendar-event-detail-field-definition">Progress</span>:
+                        {{vm.calendarEvent.extendedProps.payload.current}}
+                        /
+                        {{vm.calendarEvent.extendedProps.payload.total}}
+                    </div>
 
                 </div>
 
@@ -98,8 +122,23 @@
 
                     <div data-ng-if="vm.calendarEvent.extendedProps.type === 'celery_task'">
 
-                        <div>Status: {{vm.calendarEventPayload.status}}</div>
-                        <div>Type: {{vm.calendarEventPayload.type}}</div>
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Status</span>:
+                            <span data-ng-if="vm.calendarEventPayload.status == 'D'"
+                                  class="{{vm.calendarEventPayload.status == 'D' ? 'calendar-detail-status-green' : '' }}">
+                                Success
+                            </span>
+                            <span data-ng-if="vm.calendarEventPayload.status == 'E'"
+                                  class="{{vm.calendarEventPayload.status == 'E' ? 'calendar-detail-status-red' : '' }}">
+                                Error
+                            </span>
+                            <span data-ng-if="vm.calendarEventPayload.status != 'D' && vm.calendarEventPayload.status != 'D'">
+                            {{vm.calendarEventPayload.status}}
+                            </span>
+                        </div>
+                        <div class="calendar-event-detail-field"><span class="calendar-event-detail-field-definition">Type</span>:
+                            {{vm.calendarEventPayload.type}}
+                        </div>
 
                         <div data-ng-if="vm.calendarEventPayload.member_object">
                             Member: {{vm.calendarEventPayload.member_object.username}}
@@ -107,8 +146,8 @@
 
                         <hr>
 
-                        <div data-ng-if="vm.calendarEventPayload.verbose_result">
-                            Verbose result:
+                        <div class="calendar-event-detail-field" data-ng-if="vm.calendarEventPayload.verbose_result">
+                            <span class="calendar-event-detail-field-definition">Verbose result</span>:
 
                             <div>
                                 {{vm.calendarEventPayload.verbose_result}}
@@ -118,8 +157,8 @@
                         </div>
 
 
-                        <div data-ng-if="vm.calendarEventPayload.notes">
-                            Notes:
+                        <div class="calendar-event-detail-field" data-ng-if="vm.calendarEventPayload.notes">
+                            <span class="calendar-event-detail-field-definition">Notes</span>:
                             <div>
                                 {{vm.calendarEventPayload.notes}}
                             </div>
@@ -127,18 +166,18 @@
 
                         </div>
 
-                        <div data-ng-if="vm.calendarEventPayload.error_message">
-                            Error Message:
-                            <div>
+                        <div class="calendar-event-detail-field" data-ng-if="vm.calendarEventPayload.error_message">
+                            <span class="calendar-event-detail-field-definition">Error Message</span>:
+                            <div class="calendar-event-detail-error-message">
                                 {{vm.calendarEventPayload.error_message}}
                             </div>
 
                             <hr>
                         </div>
 
-                        <div>
+                        <div class="calendar-event-detail-field">
 
-                            Options
+                            <span class="calendar-event-detail-field-definition">Options</span>
 
                             <div style="max-height: 300px; overflow: auto">
 
@@ -150,9 +189,9 @@
 
                         </div>
 
-                        <div>
+                        <div class="calendar-event-detail-field">
 
-                            Progress
+                            <span class="calendar-event-detail-field-definition">Progress</span>
 
                             <div style="max-height: 300px; overflow: auto">
 
@@ -165,9 +204,9 @@
 
                         </div>
 
-                        <div>
+                        <div class="calendar-event-detail-field">
 
-                            Results
+                            <span class="calendar-event-detail-field-definition">Results</span>
 
                             <div style="max-height: 300px; overflow: auto">
 
@@ -180,9 +219,10 @@
 
                         </div>
 
-                        <div data-ng-if="vm.calendarEventPayload.attachments.length">
+                        <div class="calendar-event-detail-field"
+                             data-ng-if="vm.calendarEventPayload.attachments.length">
 
-                            Attachments
+                            <span class="calendar-event-detail-field-definition">Attachments</span>
 
                             <div data-ng-repeat="item in vm.calendarEventPayload.attachments">
                                 <span class="download-file-button"
@@ -196,23 +236,45 @@
 
                     <div data-ng-if="vm.calendarEvent.extendedProps.type === 'pricing_procedure'">
 
-                        <div>Status: {{vm.calendarEventPayload.status}}</div>
-                        <div>Action: {{vm.calendarEventPayload.action_verbose}}</div>
-                        <div>Provider: {{vm.calendarEventPayload.provider_verbose}}</div>
-                        <div>Procedure: {{vm.calendarEventPayload.procedure_object.user_code}}</div>
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Status</span>:
+                            {{vm.calendarEventPayload.status}}
+                        </div>
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Action</span>:
+                            {{vm.calendarEventPayload.action_verbose}}
+                        </div>
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Provider</span>:
+                            {{vm.calendarEventPayload.provider_verbose}}
+                        </div>
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Procedure</span>:
+                            {{vm.calendarEventPayload.procedure_object.user_code}}
+                        </div>
 
                         <hr>
-                        <div>Success prices: {{vm.calendarEventPayload.successful_prices_count}}</div>
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Success prices</span>:
+                            {{vm.calendarEventPayload.successful_prices_count}}
+                        </div>
 
                         <hr>
 
-                        <div>Error message: {{vm.calendarEventPayload.error_message}}</div>
-                        <div>Error Prices: {{vm.calendarEventPayload.error_prices_count}}</div>
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Error message</span>:
+                            <div class="calendar-event-detail-error-message">{{vm.calendarEventPayload.error_message}}
+                            </div>
+                        </div>
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Error Prices</span>:
+                            {{vm.calendarEventPayload.error_prices_count}}
+                        </div>
 
                         <hr>
 
-                        <div>
-                            Request Data
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Request Data</span>
                             <div style="max-height: 300px; overflow: auto">
                                 <pre>{{vm.calendarEventPayload.request_data}}</pre>
                             </div>
@@ -221,8 +283,8 @@
 
                         <hr>
 
-                        <div>
-                            Response Data
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Response Data</span>
                             <div style="max-height: 300px; overflow: auto">
                                 <pre>{{vm.calendarEventPayload.response_data}}</pre>
                             </div>
@@ -234,18 +296,28 @@
 
                     <div data-ng-if="vm.calendarEvent.extendedProps.type === 'data_procedure'">
 
-                        <div>Status: {{vm.calendarEventPayload.status}}</div>
-                        <div>Procedure: {{vm.calendarEventPayload.procedure_object.user_code}}</div>
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Status</span>:
+                            {{vm.calendarEventPayload.status}}
+                        </div>
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Procedure</span>:
+                            {{vm.calendarEventPayload.procedure_object.user_code}}
+                        </div>
 
                         <hr>
 
-                        <div>Error message: {{vm.calendarEventPayload.error_message}}</div>
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Error message</span>:
+                            <div class="calendar-event-detail-error-message">{{vm.calendarEventPayload.error_message}}
+                            </div>
+                        </div>
 
                         <hr>
 
 
-                        <div>
-                            Request Data
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Request Data</span>
                             <div style="max-height: 300px; overflow: auto">
                                 <pre>{{vm.calendarEventPayload.request_data}}</pre>
                             </div>
@@ -257,8 +329,13 @@
 
                     <div data-ng-if="vm.calendarEvent.extendedProps.type === 'expression_procedure'">
 
-                        <div>Status: {{vm.calendarEvent.extendedProps.payload.status}}</div>
-                        <div>Procedure: [{{vm.calendarEventPayload.procedure_object.id}}]
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Status</span>:
+                            {{vm.calendarEvent.extendedProps.payload.status}}
+                        </div>
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Procedure</span>:
+                            [{{vm.calendarEventPayload.procedure_object.id}}]
                             {{vm.calendarEventPayload.procedure_object.name}}
                             ({{vm.calendarEventPayload.procedure_object.user_code}})
                         </div>
@@ -266,12 +343,16 @@
 
                         <hr>
 
-                        <div>Error message: {{vm.calendarEventPayload.error_message}}</div>
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Error message</span>:
+                            <div class="calendar-event-detail-error-message">{{vm.calendarEventPayload.error_message}}
+                            </div>
+                        </div>
 
                         <hr>
 
-                        <div>
-                            Notes
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Notes</span>
                             <div style="max-height: 300px; overflow: auto">
                                 <pre>{{vm.calendarEventPayload.notes}}</pre>
                             </div>
@@ -280,8 +361,8 @@
 
                         <hr>
 
-                        <div>
-                            Result
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Result</span>
                             <div style="max-height: 300px; overflow: auto">
                                 <pre>{{vm.calendarEventPayload.result}}</pre>
                             </div>
@@ -291,6 +372,103 @@
 
                     </div>
 
+                    <div data-ng-if="vm.calendarEvent.extendedProps.type === 'workflow'">
+
+                        <div class="calendar-event-detail-field">
+                            <span class="calendar-event-detail-field-definition">Status</span>:
+                            <span data-ng-if="vm.calendarEventPayload.status == 'success'"
+                                  class="{{vm.calendarEventPayload.status == 'success' ? 'calendar-detail-status-green' : '' }}">
+                                Success
+                            </span>
+                            <span data-ng-if="vm.calendarEventPayload.status == 'error'"
+                                  class="{{vm.calendarEventPayload.status == 'error' ? 'calendar-detail-status-red' : '' }}">
+                                Error
+                            </span>
+                            <span data-ng-if="vm.calendarEventPayload.status != 'success' && vm.calendarEventPayload.status != 'error'">
+                            {{vm.calendarEventPayload.status}}
+                            </span>
+                        </div>
+                        <div class="calendar-event-detail-field"><span class="calendar-event-detail-field-definition">Type</span>:
+                            {{vm.calendarEventPayload.type}}
+                        </div>
+
+                        <!--                        <div data-ng-if="vm.calendarEventPayload.member_object">-->
+                        <!--                            Member: {{vm.calendarEventPayload.member_object.username}}-->
+                        <!--                        </div>-->
+
+                        <hr>
+
+                        <div class="calendar-event-detail-field" data-ng-if="vm.calendarEventPayload.payload">
+                            <span class="calendar-event-detail-field-definition">Payload</span>:
+
+                            <div style="max-height: 300px; overflow: auto">
+
+                                <pre>{{vm.calendarEventPayload.payload}}
+                                </pre>
+                            </div>
+
+                            <hr>
+                        </div>
+
+                        <div data-ng-if="vm.calendarEventPayload.tasks.length">
+                            <div>
+                                <span class="calendar-event-detail-field-definition">Tasks</span>
+                            </div>
+
+                            <div style="padding-left: 16px">
+
+                                <div data-ng-repeat="task in vm.calendarEventPayload.tasks"
+                                     class="calendar-detail-workflow-task">
+
+                                    <div class="calendar-event-detail-field">
+                                        <span class="calendar-event-detail-field-definition">Name</span>:
+                                        {{task.name}}
+                                    </div>
+
+                                    <div class="calendar-event-detail-field">
+                                        <span class="calendar-event-detail-field-definition">Start Date</span>:
+                                        {{task.created | date:'yyyy-MM-dd' : 'UTC'}}
+                                    </div>
+                                    <div class="calendar-event-detail-field">
+                                        <span class="calendar-event-detail-field-definition">Start Time</span>:
+                                        {{task.created | date:'HH:mm' : 'UTC'}}
+                                    </div>
+
+
+                                    <div class="calendar-event-detail-field">
+                                        <span class="calendar-event-detail-field-definition">Status</span>:
+                                        <span data-ng-if="task.status == 'success'"
+                                              class="{{task.status == 'success' ? 'calendar-detail-status-green' : '' }}">
+                                Success
+                            </span>
+                                        <span data-ng-if="task.status == 'error'"
+                                              class="{{task.status == 'error' ? 'calendar-detail-status-red' : '' }}">
+                                Error
+                            </span>
+                                        <span data-ng-if="task.status != 'success' && task.status != 'error'">
+                            {{task.status}}
+                            </span>
+                                    </div>
+
+                                    <div class="calendar-event-detail-field" data-ng-if="task.result">
+                                        <span class="calendar-event-detail-field-definition">Result</span>:
+
+                                        <div style="max-height: 300px; overflow: auto">
+
+                                            <pre>{{task.result}}
+                                            </pre>
+                                        </div>
+
+                                        <hr>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
 
                 </div>
 

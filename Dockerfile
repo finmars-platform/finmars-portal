@@ -1,4 +1,4 @@
-FROM node:9.10-alpine
+FROM node:19.6-alpine
 USER root
 ARG PROJECT_ENV
 
