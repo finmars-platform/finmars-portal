@@ -42,6 +42,13 @@
                                 <span data-ng-bind="item['user_code']"></span>
                             </div>
                             <div>
+                                <md-button
+                                        class="scheme-edit-button md-fab"
+                                        style="background: orange;"
+                                        data-ng-click="vm.editSchemeV2($event, item)">
+                                    <ng-md-icon icon="developer_dashboard" size="24"></ng-md-icon>
+                                    <md-tooltip class="tooltip_1" md-direction="top">Edit Scheme (v2)</md-tooltip>
+                                </md-button>
                                 <md-button style="min-width: 42px"
                                            data-ng-click="vm.editScheme($event, item)"
                                            aria-label="edit entity scheme button">

@@ -717,6 +717,89 @@
 		});
 
 	};
+    // Deprecated
+    var getFlatStructureOld = function (evDataService, globalDataService) {
+
+        var rootGroupOptions = evDataService.getRootGroupOptions();
+
+        var groups = evDataService.getGroups();
+
+        console.log('getFlatStructure.rootGroupOptions', rootGroupOptions);
+        console.log('getFlatStructure.groups', groups);
+
+        var data;
+
+        if (groups.length || rootGroupOptions.subtotal_type) {
+
+            console.time("Calculating subtotals");
+
+            calculateSubtotals(evDataService);
+
+            console.timeEnd("Calculating subtotals");
+
+            console.time("Copying data");
+
+            data = getNewDataInstance(evDataService);
+
+            console.log('data', data);
+
+            console.timeEnd("Copying data");
+
+
+            console.time("Inserting subtotals");
+
+            data = insertSubtotalsToResults(data, evDataService);
+
+            console.timeEnd("Inserting subtotals");
+
+
+            console.time("Calculating blankline");
+
+            data = insertBlankLinesToResults(data, evDataService);
+
+            localStorage.setItem('flags', [
+                '2,2,1,1,1,1', '2,2,1,1,1,1'
+            ])
+
+            console.timeEnd("Calculating blankline");
+
+            // console.log('data', data);
+
+        } else {
+            data = getNewDataInstance(evDataService)
+        }
+
+
+
+        var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
+
+        console.time("Converting to tree");
+        console.log("Converting to tree data", data);
+
+        var tree = utilsHelper.convertToTree(data, rootGroup);
+
+        console.log("getFlatStructure.tree", tree)
+
+        console.timeEnd("Converting to tree");
+
+        // console.log('getFlatStructure.tree', tree);
+
+        console.time("Converting tree to list");
+
+        var list = utilsHelper.convertTreeToList(tree);
+
+        console.timeEnd("Converting tree to list");
+        console.log('Converted list length',  list.length);
+
+        // console.log('getFlatStructure.list', list);
+
+        list = removeItemsFromFoldedGroups(list, evDataService);
+
+        list = filterByRowColor(list, evDataService, globalDataService);
+
+        return list;
+
+    };
 
     var getFlatStructure = function (evDataService, globalDataService) {
 

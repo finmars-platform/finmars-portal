@@ -499,6 +499,12 @@
 
                     })
 
+                    scope.evEventService.addEventListener(evEvents.FINISH_RENDER, function (){
+
+                        scope.renderTime = scope.evDataService.getRenderTime(); // for refresh tooltip -> auth time
+
+                    })
+
                 };
 
                 const init = function () {

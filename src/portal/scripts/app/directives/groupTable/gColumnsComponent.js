@@ -232,11 +232,20 @@
                 function openNumberFormatDialog(column) {
 
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
-                    // column.options.number_format
-                    let dialogData = {settings: column.options.numberFormat};
 
+                    let dialogData = {
+                        settings: {}
+                    }
+                    // column.options.number_format
+                    if (column.options) {
+                        dialogData.settings = column.options.numberFormat
+                    }
+
+                    if (!column.options) {
+                        dialogData.settings = column.report_settings;
+                    }
                     // for old layouts
-                    if ( scope.isReport && !column.options.hasOwnProperty('numberFormat') ) {
+                    if (scope.isReport && column.options && !column.options.hasOwnProperty('numberFormat')) {
                         dialogData.settings = column.report_settings;
                     }
 
@@ -425,40 +434,40 @@
 
                 // scope.rowFilterColor = localStorageService.getRowTypeFilter(scope.isReport, scope.entityType);
 
-				scope.removeColorMarkFromAllRows = function ($event) {
+                scope.removeColorMarkFromAllRows = function ($event) {
 
-					$mdDialog.show({
-						controller: 'WarningDialogController as vm',
-						templateUrl: 'views/dialogs/warning-dialog-view.html',
-						parent: angular.element(document.body),
-						targetEvent: $event,
-						multiple: true,
-						locals: {
-							warning: {
-								title: 'Warning',
-								description: "Color marks will be removed for all rows in this table. Proceed?",
-								actionsButtons: [
-									{
-										name: "OK",
-										response: {status: 'agree'}
-									},
-									{
-										name: "CANCEL",
-										response: {status: 'disagree'}
-									}
-								]
-							}
-						}
+                    $mdDialog.show({
+                        controller: 'WarningDialogController as vm',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            warning: {
+                                title: 'Warning',
+                                description: "Color marks will be removed for all rows in this table. Proceed?",
+                                actionsButtons: [
+                                    {
+                                        name: "OK",
+                                        response: {status: 'agree'}
+                                    },
+                                    {
+                                        name: "CANCEL",
+                                        response: {status: 'disagree'}
+                                    }
+                                ]
+                            }
+                        }
 
-					}).then(function (res) {
+                    }).then(function (res) {
 
-						if (res.status === 'agree') {
-							evRvDomManagerService.removeColorMarkFromAllRows(scope.evDataService, scope.evEventService, usersService, globalDataService);
-						}
+                        if (res.status === 'agree') {
+                            evRvDomManagerService.removeColorMarkFromAllRows(scope.evDataService, scope.evEventService, usersService, globalDataService);
+                        }
 
-					});
+                    });
 
-				};
+                };
 
                 // <Victor 2020.12.14 #69 New report viewer design>
 
@@ -2156,9 +2165,9 @@
 
                     availableAttrs = allAttrsList.filter(function (attr) {
 
-						if (attr.value_type === "mc_field") return false;
+                        if (attr.value_type === "mc_field") return false;
 
-                    	for (var i = 0; i < scope.columns.length; i++) {
+                        for (var i = 0; i < scope.columns.length; i++) {
                             if (scope.columns[i].key === attr.key) {
                                 return false;
                             }
@@ -2178,7 +2187,7 @@
                                 availableAttrs: availableAttrs,
                                 title: 'Choose column to add',
                                 isReport: scope.isReport,
-								multiselector: true
+                                multiselector: true
                             }
                         }
                     }).then(function (res) {
@@ -2425,7 +2434,7 @@
                     }
 
                     var evSettings = globalDataService.getMemberEntityViewersSettings(scope.isReport, scope.entityType);
-					scope.rowFilterColor = evSettings.row_type_filter;
+                    scope.rowFilterColor = evSettings.row_type_filter;
 
                     initEventListeners();
 
