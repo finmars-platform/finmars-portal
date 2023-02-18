@@ -7,21 +7,23 @@
 
     var pricingProcedureService = require('../../../services/procedures/pricingProcedureService');
 
-    var portfolioService = require('../../../services/portfolioService');
-    var instrumentTypeService = require('../../../services/instrumentTypeService');
-    var pricingPolicyService = require('../../../services/pricingPolicyService');
-
-    var instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
-    var currencyPricingSchemeService = require('../../../services/pricing/currencyPricingSchemeService');
-
-
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
 
+        vm.readyStatus = false;
+        vm.creating = false;
+
         vm.item = {
+            instrument_type_filters: [],
+            pricing_policy_filters: [],
+            portfolio_filters: [],
+
+            instrument_pricing_scheme_filters: [],
+            currency_pricing_scheme_filters: [],
+
             instrument_pricing_condition_filters: [2,3],
-            currency_pricing_condition_filters: [2,3]
+            currency_pricing_condition_filters: [2,3],
         };
 
         vm.portfolios = [];
@@ -62,43 +64,47 @@
 
         vm.agree = function () {
 
-            if (vm.item.price_date_from_expr) {
-                vm.item.price_date_from = null
+            vm.creating = true;
+
+            var pprocedureData = JSON.parse(angular.toJson( vm.item ));
+
+            if (pprocedureData.price_date_from_expr) {
+                pprocedureData.price_date_from = null
             }
 
-            if (vm.item.price_date_to_expr) {
-                vm.item.price_date_to = null
+            if (pprocedureData.price_date_to_expr) {
+                pprocedureData.price_date_to = null
             }
 
-            if (vm.item.portfolio_filters) {
-                vm.item.portfolio_filters = vm.item.portfolio_filters.join(',');
+            if (pprocedureData.portfolio_filters) {
+                pprocedureData.portfolio_filters = pprocedureData.portfolio_filters.join(',');
             }
 
-            if (vm.item.pricing_policy_filters) {
-                vm.item.pricing_policy_filters = vm.item.pricing_policy_filters.join(',');
+            if (pprocedureData.pricing_policy_filters) {
+                pprocedureData.pricing_policy_filters = pprocedureData.pricing_policy_filters.join(',');
             }
 
-            if (vm.item.instrument_type_filters) {
-                vm.item.instrument_type_filters = vm.item.instrument_type_filters.join(',');
+            if (pprocedureData.instrument_type_filters) {
+                pprocedureData.instrument_type_filters = pprocedureData.instrument_type_filters.join(',');
             }
 
-            if (vm.item.instrument_pricing_scheme_filters) {
-                vm.item.instrument_pricing_scheme_filters = vm.item.instrument_pricing_scheme_filters.join(',');
+            if (pprocedureData.instrument_pricing_scheme_filters) {
+                pprocedureData.instrument_pricing_scheme_filters = pprocedureData.instrument_pricing_scheme_filters.join(',');
             }
 
-            if (vm.item.instrument_pricing_condition_filters) {
-                vm.item.instrument_pricing_condition_filters = vm.item.instrument_pricing_condition_filters.join(',');
+            if (pprocedureData.instrument_pricing_condition_filters) {
+                pprocedureData.instrument_pricing_condition_filters = pprocedureData.instrument_pricing_condition_filters.join(',');
             }
 
-            if (vm.item.currency_pricing_scheme_filters) {
-                vm.item.currency_pricing_scheme_filters = vm.item.currency_pricing_scheme_filters.join(',');
+            if (pprocedureData.currency_pricing_scheme_filters) {
+                pprocedureData.currency_pricing_scheme_filters = pprocedureData.currency_pricing_scheme_filters.join(',');
             }
 
-            if (vm.item.currency_pricing_condition_filters) {
-                vm.item.currency_pricing_condition_filters = vm.item.currency_pricing_condition_filters.join(',');
+            if (pprocedureData.currency_pricing_condition_filters) {
+                pprocedureData.currency_pricing_condition_filters = pprocedureData.currency_pricing_condition_filters.join(',');
             }
 
-            pricingProcedureService.create(vm.item).then(function (data) {
+            pricingProcedureService.create(pprocedureData).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: {item: data}});
 
@@ -106,7 +112,7 @@
 
         };
 
-        vm.getPortfolios = function () {
+        /*vm.getPortfolios = function () {
 
             portfolioService.getList({
                 pageSize: 1000
@@ -217,16 +223,23 @@
 
             })
 
-        };
+        };*/
 
         vm.init = function () {
 
-            vm.getInstrumentTypes();
-            vm.getPricingPolicies();
-            vm.getPortfolios();
+            pricingProcedureService.loadRelatedData().then(function (relatedData) {
 
-            vm.getInstrumentPricingSchemes();
-            vm.getCurrencyPricingSchemes();
+                vm.instrumentTypes = relatedData.instrumentTypes;
+                vm.pricingPolicies = relatedData.pricingPolicies;
+                vm.portfolios = relatedData.portfolios;
+
+                vm.instrumentPricingSchemes = relatedData.instrumentPricingSchemes;
+                vm.currencyPricingSchemes = relatedData.currencyPricingSchemes;
+
+                vm.readyStatus = true;
+                $scope.$apply();
+
+            });
 
         };
 

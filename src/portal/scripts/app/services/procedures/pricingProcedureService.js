@@ -7,6 +7,13 @@
 
     var pricingProcedureRepository = require('../../repositories/procedures/pricingProcedureRepository');
 
+    var portfolioService = require('../portfolioService');
+    var instrumentTypeService = require('../instrumentTypeService');
+    var pricingPolicyService = require('../pricingPolicyService');
+
+    var instrumentPricingSchemeService = require('../pricing/instrumentPricingSchemeService');
+    var currencyPricingSchemeService = require('../pricing/currencyPricingSchemeService');
+
     var getList = function (options) {
         return pricingProcedureRepository.getList(options);
     };
@@ -31,6 +38,46 @@
         return pricingProcedureRepository.runProcedure(id, data);
     };
 
+    var loadRelatedData = function () {
+
+        var promisesList = [
+            instrumentTypeService.getList({ pageSize: 1000 }),
+            pricingPolicyService.getList({ pageSize: 1000 }),
+            portfolioService.getList({ pageSize: 1000 }),
+
+            instrumentPricingSchemeService.getList({ pageSize: 1000 }),
+            currencyPricingSchemeService.getList({ pageSize: 1000 }),
+        ];
+
+        var mapOpts = function (promiseRes) {
+            return promiseRes.results.map(function (item) {
+                return {
+                    id: item.user_code,
+                    name: item.user_code
+                }
+            })
+        };
+
+        return new Promise(function (resolve, reject) {
+
+            Promise.all(promisesList).then(function (data) {
+
+                resolve({
+                    instrumentTypes: mapOpts(data[0]),
+                    pricingPolicies: mapOpts(data[1]),
+                    portfolios: mapOpts(data[2]),
+
+                    instrumentPricingSchemes: mapOpts(data[3]),
+                    currencyPricingSchemes: mapOpts(data[4]),
+                })
+
+            }).catch(function (e) { reject(e) });
+
+        });
+
+
+    }
+
     module.exports = {
 
         getList: getList,
@@ -39,7 +86,8 @@
         update: update,
         deleteByKey: deleteByKey,
 
-        runProcedure: runProcedure
+        loadRelatedData: loadRelatedData,
+        runProcedure: runProcedure,
     }
 
 }());
