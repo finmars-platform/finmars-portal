@@ -74,6 +74,16 @@
 
             }
 
+            if (item.entry_instrument && reportOptions.item_instruments.length) {
+
+                item.entry_instrument_object = findEntityObject(reportOptions, 'item_instruments', item.entry_instrument);
+
+                if (item.entry_instrument_object.instrument_type) {
+                    item.entry_instrument_object.instrument_type_object = findEntityObject(reportOptions, 'item_instrument_types', item.entry_instrument_object.instrument_type);
+                }
+
+            }
+
             if (item.allocation_balance && reportOptions.item_instruments.length) {
 
                 item.allocation_balance_object = findEntityObject(reportOptions, 'item_instruments', item.allocation_balance);
@@ -131,6 +141,17 @@
             if (item.responsible && reportOptions.item_responsibles.length) {
                 item.responsible_object = findEntityObject(reportOptions, 'item_responsibles', item.responsible);
             }
+
+            // entry
+
+            if (item.entry_account && reportOptions.item_accounts.length) {
+                item.entry_account_object = findEntityObject(reportOptions, 'item_accounts', item.entry_account);
+            }
+
+            if (item.entry_strategy && reportOptions.item_strategies1.length) {
+                item.entry_strategy_object = findEntityObject(reportOptions, 'item_strategies1', item.entry_strategy);
+            }
+
             if (item.complex_transaction && reportOptions.item_complex_transactions.length) {
                 item.complex_transaction_object = findEntityObject(reportOptions, 'item_complex_transactions', item.complex_transaction);
             }
@@ -152,6 +173,10 @@
 
             if (item.currency && reportOptions.item_currencies.length) {
                 item.currency_object = findEntityObject(reportOptions, 'item_currencies', item.currency);
+            }
+
+            if (item.entry_currency && reportOptions.item_currencies.length) {
+                item.entry_currency_object = findEntityObject(reportOptions, 'item_currencies', item.entry_currency);
             }
 
             if (item.exposure_currency && reportOptions.item_currencies.length) {
@@ -460,15 +485,18 @@
 
         var keysToUnwrap = {
             'instrument': 'instruments.instrument',
+            'entry_instrument': 'instruments.instrument',
             'allocation': 'instruments.instrument',
             'allocation_balance': 'instruments.instrument',
             'allocation_pl': 'instruments.instrument',
             'linked_instrument': 'instruments.instrument',
             'account': 'accounts.account',
+            'entry_account': 'accounts.account',
             'account_cash': 'accounts.account',
             'account_interim': 'accounts.account',
             'account_position': 'accounts.account',
             'currency': 'currencies.currency',
+            'entry_currency': 'currencies.currency',
             'pricing_currency': 'currencies.currency',
             'exposure_currency': 'currencies.currency',
             'accrued_currency': 'currencies.currency',
@@ -479,6 +507,7 @@
             'transaction_class': 'transactions.transactionclass',
             'responsible': 'counterparties.responsible',
             'counterparty': 'counterparties.counterparty',
+            'entry_strategy': 'strategies.strategy1',
             'strategy1': 'strategies.strategy1',
             'strategy2': 'strategies.strategy2',
             'strategy3': 'strategies.strategy3',
