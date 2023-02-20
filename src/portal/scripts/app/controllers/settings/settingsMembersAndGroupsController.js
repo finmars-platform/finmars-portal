@@ -9,7 +9,7 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-    module.exports = function settingsMembersAndGroupsController($scope, $mdDialog, authorizerService, globalDataService) {
+    module.exports = function settingsMembersAndGroupsController($scope, $mdDialog, $uiRouterGlobals, authorizerService, globalDataService) {
 
         var vm = this;
 
@@ -24,6 +24,12 @@
 
 
         vm.processing = false;
+
+        vm.tabsActivityData = {
+            members: true,
+            groups: false,
+            ecosystem: false,
+        }
 
         vm.currentMasterUser;
         vm.currentMember;
@@ -98,6 +104,10 @@
         vm.getCurrentMasterUser = function () {
 
 			vm.currentMasterUser = globalDataService.getMasterUser();
+
+            if (vm.currentMasterUser && vm.currentMasterUser.is_owner) {
+                vm.tabsActivityData.ownership = false;
+            }
 			
 			console.log('currentMasterUser', vm.currentMasterUser);
 
@@ -338,8 +348,16 @@
 
         vm.init = function () {
 
-            vm.getCurrentMasterUser()
-            vm.getCurrentMember()
+            vm.getCurrentMasterUser();
+            vm.getCurrentMember();
+
+            const activeTabFromQuery = $uiRouterGlobals.params.tab;
+
+            if ( vm.tabsActivityData.hasOwnProperty(activeTabFromQuery) ) {
+
+                vm.tabsActivityData[activeTabFromQuery] = true;
+
+            }
 
             vm.getData();
             // vm.getMasterUser();

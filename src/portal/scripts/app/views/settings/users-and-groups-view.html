@@ -1,6 +1,7 @@
 <div class="members-groups-content">
-    <md-tabs md-dynamic-height>
-        <md-tab label="Members">
+    <md-tabs md-selected="" md-dynamic-height>
+        <md-tab label="Members" md-active="vm.tabsActivityData.members">
+
             <div data-ng-if="vm.readyStatus.content">
                 <table class="members-groups-table">
                     <thead class="members-groups-thead">
@@ -35,7 +36,6 @@
                 </table>
 
             </div>
-
 
             <div data-ng-if="vm.readyStatus.content">
 
@@ -93,7 +93,7 @@
                 </div>
             </div>
         </md-tab>
-        <md-tab label="Groups">
+        <md-tab label="Groups" md-active="vm.tabsActivityData.groups">
             <div data-ng-if="vm.readyStatus.content">
                 <table class="members-groups-table">
                     <thead class="members-groups-thead">
@@ -133,7 +133,7 @@
         </md-tab>
 
         <!--<editor-fold desc="Deprecated">-->
-        <md-tab label="Ecosystem">
+        <md-tab label="Ecosystem" md-active="vm.tabsActivityData.ecosystem">
 
             <div class="p-t-24">
 
@@ -181,7 +181,9 @@
         </md-tab>
         <!--</editor-fold>-->
 
-        <md-tab label="Ownership" data-ng-if="vm.currentMasterUser.is_owner">
+        <md-tab data-ng-if="vm.currentMasterUser.is_owner"
+                label="Ownership"
+                md-active="vm.tabsActivityData.ownership">
 
             <div data-ng-if="vm.readyStatus.content">
 
