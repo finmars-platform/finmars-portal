@@ -6,7 +6,6 @@
     var evRvCommonHelper = require('./ev-rv-common.helper');
     var rvSubtotalHelper = require('./rv-subtotal.service');
     var evDataHelper = require('./ev-data.helper');
-    var metaHelper = require('./meta.helper');
     // var metaHelper = require('./meta.helper');
 
     var getGroupsByParent = function (parentId, evDataService) {
@@ -608,11 +607,12 @@
 
             propertyType = typeof obj[key];
 
-            if (isPrimitive(obj[key])) {
-
-                result[key] = obj[key]
-
-            } else if (Array.isArray(obj[key])) {
+            // if (isPrimitive(obj[key])) {
+            //
+            //     result[key] = obj[key]
+            //
+            // }
+            if (Array.isArray(obj[key])) {
 
                 result[key] = [];
 
@@ -624,6 +624,8 @@
 
                 result[key] = Object.assign({}, obj[key]) // WARNING, Nested objects is not supported
 
+            } else {
+                result[key] = obj[key]
             }
 
 
@@ -643,8 +645,7 @@
 
         Object.keys(sourceData).forEach(function (key) {
 
-            // result[key] = simpleObjectCopy(sourceData[key]); // poor performance
-            result[key] = metaHelper.recursiveDeepCopy(sourceData[key]);
+            result[key] = simpleObjectCopy(sourceData[key]);
 
         });
 
@@ -773,8 +774,7 @@
 
 
 
-        // var rootGroup = simpleObjectCopy(evDataService.getRootGroupData()); // poor prformance
-        var rootGroup = metaHelper.recursiveDeepCopy(evDataService.getRootGroupData());
+        var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
 
         console.time("Converting to tree");
         console.log("Converting to tree data", data);
@@ -857,8 +857,7 @@
 
 
 
-        // var rootGroup = simpleObjectCopy(evDataService.getRootGroupData()); // poor performance
-        var rootGroup = metaHelper.recursiveDeepCopy(evDataService.getRootGroupData());
+        var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
 
         console.time("Converting to tree");
         console.log("Converting to tree data", data);
@@ -942,8 +941,7 @@
 
 
 
-        // var rootGroup = simpleObjectCopy(evDataService.getRootGroupData()); // poor performance
-        var rootGroup = metaHelper.recursiveDeepCopy(evDataService.getRootGroupData());
+        var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
 
         console.time("Converting to tree");
         console.log("Converting to tree data", data);
