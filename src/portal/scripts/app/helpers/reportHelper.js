@@ -16,6 +16,9 @@
     var metaService = require('../services/metaService');
     var expressionsService = require('../services/expression.service');
 
+    var models = modelService.getModelsWithAttributes();
+
+
     function findEntityObject(report, propertyName, id) {
 
         var result = null;
@@ -358,6 +361,8 @@
 
     }
 
+    var contentTypesWithDynamicAttributes = getContentTypesWithDynamicAttributes()
+
     /**
      * Save to result object all props from relation key in source object
      * @param {object} result - result flat object.
@@ -369,7 +374,8 @@
      */
     var recursiveUnwrapRelation = function (result, parentKey, contentType, source) {
 
-        var attributes = modelService.getAttributesByContentType(contentType);
+        // var attributes = modelService.getAttributesByContentType(contentType);
+        var attributes = models[contentType] // Performance improvement trick,
         var resultKey;
 
         attributes.forEach(function (attribute) {
@@ -400,7 +406,7 @@
 
         });
 
-        var contentTypesWithDynamicAttributes = getContentTypesWithDynamicAttributes();
+        // var contentTypesWithDynamicAttributes = getContentTypesWithDynamicAttributes(); # performance trick
 
         if (contentTypesWithDynamicAttributes.indexOf(contentType) !== -1) {
 
