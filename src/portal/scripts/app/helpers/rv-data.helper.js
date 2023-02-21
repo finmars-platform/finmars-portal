@@ -607,18 +607,17 @@
 
             propertyType = typeof obj[key];
 
-            // if (isPrimitive(obj[key])) {
-            //
-            //     result[key] = obj[key]
-            //
-            // }
-            if (Array.isArray(obj[key])) {
+            if (isPrimitive(obj[key])) {
+
+                result[key] = obj[key]
+
+            } else if (Array.isArray(obj[key])) {
 
                 result[key] = [];
 
-                for (var i = 0; i < obj[key].length; i = i + 1) {
-                    result[key].push(Object.assign({}, obj[key][i]))
-                }
+                obj[key].forEach(function (item) {
+                    result[key].push(Object.assign({}, item))
+                })
 
             } else if (!Array.isArray(obj[key]) && propertyType === 'object') { // if object
 
