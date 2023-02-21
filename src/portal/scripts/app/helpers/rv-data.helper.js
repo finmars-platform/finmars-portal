@@ -6,6 +6,7 @@
     var evRvCommonHelper = require('./ev-rv-common.helper');
     var rvSubtotalHelper = require('./rv-subtotal.service');
     var evDataHelper = require('./ev-data.helper');
+    var metaHelper = require('./meta.helper');
     // var metaHelper = require('./meta.helper');
 
     var getGroupsByParent = function (parentId, evDataService) {
@@ -642,7 +643,8 @@
 
         Object.keys(sourceData).forEach(function (key) {
 
-            result[key] = simpleObjectCopy(sourceData[key]);
+            // result[key] = simpleObjectCopy(sourceData[key]); // poor performance
+            result[key] = metaHelper.recursiveDeepCopy(sourceData[key]);
 
         });
 
@@ -771,7 +773,8 @@
 
 
 
-        var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
+        // var rootGroup = simpleObjectCopy(evDataService.getRootGroupData()); // poor prformance
+        var rootGroup = metaHelper.recursiveDeepCopy(evDataService.getRootGroupData());
 
         console.time("Converting to tree");
         console.log("Converting to tree data", data);
@@ -854,7 +857,8 @@
 
 
 
-        var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
+        // var rootGroup = simpleObjectCopy(evDataService.getRootGroupData()); // poor performance
+        var rootGroup = metaHelper.recursiveDeepCopy(evDataService.getRootGroupData());
 
         console.time("Converting to tree");
         console.log("Converting to tree data", data);
@@ -938,7 +942,8 @@
 
 
 
-        var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
+        // var rootGroup = simpleObjectCopy(evDataService.getRootGroupData()); // poor performance
+        var rootGroup = metaHelper.recursiveDeepCopy(evDataService.getRootGroupData());
 
         console.time("Converting to tree");
         console.log("Converting to tree data", data);
