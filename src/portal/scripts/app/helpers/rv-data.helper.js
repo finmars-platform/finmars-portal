@@ -616,9 +616,9 @@
 
                 result[key] = [];
 
-                obj[key].forEach(function (item) {
-                    result[key].push(Object.assign({}, item))
-                })
+                for (var i = 0; i < obj[key].length; i = i + 1) {
+                    result[key].push(Object.assign({}, obj[key][i]))
+                }
 
             } else if (!Array.isArray(obj[key]) && propertyType === 'object') { // if object
 
