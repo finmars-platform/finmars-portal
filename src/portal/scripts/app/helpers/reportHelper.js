@@ -510,6 +510,16 @@
             }
 
 
+            if (item.custom_fields) {
+
+                item.custom_fields.forEach(function (localCustomField) {
+
+                    item['custom_fields.' + localCustomField.user_code] = localCustomField.value;
+
+                })
+
+            }
+
             //console.error('item', item);
 
             if (entityType === 'balance-report') {
