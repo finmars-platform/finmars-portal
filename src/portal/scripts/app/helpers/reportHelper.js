@@ -267,6 +267,260 @@
         return items;
     };
 
+    var unwrapRelationsAsFlatDicts = function (items) {
+
+        var result = {}
+
+        for (const item of items) {
+
+            result[item.id] = item
+
+            if (item.hasOwnProperty('attributes')) {
+
+                var resultKey = 'attributes';
+                var localResultKey;
+
+                item.attributes.forEach(function (attribute) {
+
+                    // localResultKey = resultKey + '.' + attribute.attribute_type;
+                    localResultKey = resultKey + '.' + attribute.attribute_type_object.user_code;
+
+                    result[localResultKey] = null;
+
+                    if (attribute.attribute_type_object.value_type === 10) {
+                        result[localResultKey] = attribute.value_string
+                    }
+
+                    if (attribute.attribute_type_object.value_type === 20) {
+                        result[localResultKey] = attribute.value_float
+                    }
+
+                    if (attribute.attribute_type_object.value_type === 30) {
+
+                        if (attribute.classifier_object) {
+
+                            result[localResultKey] = attribute.classifier_object.name
+
+                        }
+
+                    }
+
+                    if (attribute.attribute_type_object.value_type === 40) {
+                        result[localResultKey] = attribute.value_date
+                    }
+
+
+                })
+
+
+            }
+
+
+        }
+
+        return result
+
+    }
+
+    var joinFlatRelationToItem = function (item, key, relation) {
+
+        // console.log('joinFlatRelationToItem.key', key)
+        // console.log('joinFlatRelationToItem.item', item[key])
+
+        if (relation) {
+
+            Object.keys(relation).forEach(function (relation_key) {
+
+                item[key + '.' + relation_key] = relation[relation_key]
+
+            })
+
+        }
+
+        return item
+
+    }
+
+    var injectIntoItemsV2 = function (items, reportOptions, entityType) {
+
+        // reportOptions.item_instruments
+
+        var instruments_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_instruments)
+        var accounts_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_accounts)
+        var currencies_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_currencies)
+        var portfolios_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_portfolios)
+        var counterparties_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_counterparties)
+        var responsibles_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_responsibles)
+        var strategies1_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_strategies1)
+        var strategies2_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_strategies2)
+        var strategies3_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_strategies3)
+        var transaction_classes_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_transaction_classes)
+
+
+        items.forEach(function (item) {
+
+
+            if (item.instrument) {
+                joinFlatRelationToItem(item, 'instrument', instruments_as_dict[item.instrument])
+            }
+
+            if (item.allocation) {
+                joinFlatRelationToItem(item, 'allocation', instruments_as_dict[item.allocation])
+            }
+
+            if (item.allocation_pl) {
+                joinFlatRelationToItem(item, 'allocation_pl', instruments_as_dict[item.allocation_pl])
+            }
+
+            if (item.allocation_balance) {
+                joinFlatRelationToItem(item, 'allocation_balance', instruments_as_dict[item.allocation_balance])
+            }
+
+            if (item.linked_instrument) {
+                joinFlatRelationToItem(item, 'linked_instrument', instruments_as_dict[item.linked_instrument])
+            }
+
+
+            // Accounts
+
+            if (item.account) {
+                joinFlatRelationToItem(item, 'account', accounts_as_dict[item.account])
+            }
+
+            if (item.account_cash) {
+                joinFlatRelationToItem(item, 'account_cash', accounts_as_dict[item.account_cash])
+            }
+
+            if (item.account_interim) {
+                joinFlatRelationToItem(item, 'account_interim', accounts_as_dict[item.account_interim])
+            }
+
+            if (item.account_position) {
+                joinFlatRelationToItem(item, 'account_position', accounts_as_dict[item.account_position])
+            }
+
+            // Currencies
+
+            if (item.currency) {
+                joinFlatRelationToItem(item, 'currency', currencies_as_dict[item.currency])
+            }
+
+            if (item.transaction_currency) {
+                joinFlatRelationToItem(item, 'transaction_currency', currencies_as_dict[item.transaction_currency])
+            }
+
+            if (item.settlement_currency) {
+                joinFlatRelationToItem(item, 'settlement_currency', currencies_as_dict[item.settlement_currency])
+            }
+
+            if (item.accrued_currency) {
+                joinFlatRelationToItem(item, 'accrued_currency', currencies_as_dict[item.accrued_currency])
+            }
+
+            if (item.pricing_currency) {
+                joinFlatRelationToItem(item, 'pricing_currency', currencies_as_dict[item.pricing_currency])
+            }
+
+            if (item.exposure_currency) {
+                joinFlatRelationToItem(item, 'exposure_currency', currencies_as_dict[item.exposure_currency])
+            }
+
+
+            // entry (in transaction report)
+
+            if (item.entry_account) {
+                joinFlatRelationToItem(item, 'entry_account', accounts_as_dict[item.entry_account])
+            }
+
+            if (item.entry_strategy) {
+                joinFlatRelationToItem(item, 'entry_strategy', strategies1_as_dict[item.entry_strategy])
+            }
+
+            if (item.entry_currency) {
+                joinFlatRelationToItem(item, 'entry_currency', currencies_as_dict[item.entry_currency])
+            }
+
+            if (item.entry_instrument) {
+                joinFlatRelationToItem(item, 'entry_instrument', instruments_as_dict[item.entry_instrument])
+            }
+
+            // Other
+
+            if (item.transaction_class) {
+                joinFlatRelationToItem(item, 'transaction_class', transaction_classes_as_dict[item.transaction_class])
+            }
+
+            if (item.counterparty) {
+                joinFlatRelationToItem(item, 'counterparty', counterparties_as_dict[item.counterparty])
+            }
+
+            if (item.responsible) {
+                joinFlatRelationToItem(item, 'responsible', responsibles_as_dict[item.responsible])
+            }
+
+            if (item.portfolio) {
+                joinFlatRelationToItem(item, 'portfolio', portfolios_as_dict[item.portfolio])
+            }
+
+            if (item.strategy1) {
+                joinFlatRelationToItem(item, 'strategy1', strategies1_as_dict[item.strategy1])
+            }
+
+            if (item.strategy1_cash) {
+                joinFlatRelationToItem(item, 'strategy1_cash', strategies1_as_dict[item.strategy1_cash])
+            }
+
+            if (item.strategy1_position) {
+                joinFlatRelationToItem(item, 'strategy1_position', strategies1_as_dict[item.strategy1_position])
+            }
+
+            if (item.strategy2) {
+                joinFlatRelationToItem(item, 'strategy2', strategies2_as_dict[item.strategy2])
+            }
+
+            if (item.strategy2_cash) {
+                joinFlatRelationToItem(item, 'strategy2_cash', strategies2_as_dict[item.strategy2_cash])
+            }
+
+            if (item.strategy2_position) {
+                joinFlatRelationToItem(item, 'strategy2_position', strategies2_as_dict[item.strategy2_position])
+            }
+
+            if (item.strategy3) {
+                joinFlatRelationToItem(item, 'strategy3', strategies3_as_dict[item.strategy3])
+            }
+
+            if (item.strategy3_cash) {
+                joinFlatRelationToItem(item, 'strategy3_cash', strategies3_as_dict[item.strategy3_cash])
+            }
+
+            if (item.strategy3_position) {
+                joinFlatRelationToItem(item, 'strategy3_position', strategies3_as_dict[item.strategy3_position])
+            }
+
+
+            //console.error('item', item);
+
+            if (entityType === 'balance-report') {
+
+                item.date = reportOptions.report_date;
+
+            } else if (entityType === 'pl-report') {
+
+                item.pl_first_date = reportOptions.pl_first_date;
+                item.report_date = reportOptions.report_date;
+
+            }
+
+
+        });
+
+        // console.log('INJECTED', items);
+
+        return items;
+
+    }
+
     function calculateMarketValueAndExposurePercents(items, reportOptions) {
 
 
@@ -372,11 +626,11 @@
      * @return {Object[]} Flat object.
      * @memberof module:reportHelper
      */
-    var recursiveUnwrapRelation = function (result, parentKey, contentType, source) {
+    var recursiveUnwrapRelation = function (result, parentKey, contentType, source, level) {
 
         // var attributes = modelService.getAttributesByContentType(contentType);
 
-        console.log('contentType', contentType)
+        // console.log('contentType', contentType)
         var attributes = models[contentType] // Performance improvement trick,
         var resultKey;
 
@@ -390,7 +644,11 @@
 
                     result[resultKey + '.id'] = source[attribute.key + '_object'].id
 
-                    recursiveUnwrapRelation(result, resultKey, attribute.value_content_type, source[attribute.key + '_object'])
+                    // level = level + 1
+                    //
+                    // if (level < 2) {
+                    //     recursiveUnwrapRelation(result, resultKey, attribute.value_content_type, source[attribute.key + '_object'], level)
+                    // }
 
                 } else {
 
@@ -532,6 +790,8 @@
             //TODO add more keys to map
         };
 
+        var level = 0
+
 
         keys.forEach(function (key) {
 
@@ -539,7 +799,7 @@
 
                 result[key + '.id'] = item[key];
 
-                recursiveUnwrapRelation(result, key, keysToUnwrap[key], item[key + '_object']);
+                recursiveUnwrapRelation(result, key, keysToUnwrap[key], item[key + '_object'], level);
 
             } else {
                 result[key] = item[key];
@@ -763,6 +1023,7 @@
     module.exports = {
         convertItemsToFlat: convertItemsToFlat,
         injectIntoItems: injectIntoItems,
+        injectIntoItemsV2: injectIntoItemsV2,
         extendAttributes: extendAttributes,
         calculateMarketValueAndExposurePercents: calculateMarketValueAndExposurePercents,
         cleanReportOptionsFromTmpProps: cleanReportOptionsFromTmpProps,

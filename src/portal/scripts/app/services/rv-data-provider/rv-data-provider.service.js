@@ -185,9 +185,11 @@
 
 				var attributeExtensions = entityViewerDataService.getCrossEntityAttributeExtensions();
 
-				reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions, entityType);
-                reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
-                reportOptions.items = reportHelper.convertItemsToFlat(reportOptions.items);
+                reportOptions.items = reportHelper.injectIntoItemsV2(reportOptions.items, reportOptions, entityType);
+
+				// reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions, entityType);
+                // reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
+                // reportOptions.items = reportHelper.convertItemsToFlat(reportOptions.items);
                 reportOptions.items = reportHelper.extendAttributes(reportOptions.items, attributeExtensions);
                 entityViewerDataService.setUnfilteredFlatList(reportOptions.items);
 
