@@ -349,8 +349,15 @@
         var accounts_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_accounts)
         var currencies_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_currencies)
         var portfolios_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_portfolios)
-        var counterparties_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_counterparties)
-        var responsibles_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_responsibles)
+
+        var counterparties_as_dict = null
+        if (reportOptions.item_counterparties) {
+            counterparties_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_counterparties)
+        }
+        var responsibles_as_dict = null
+        if (reportOptions.item_counterparties) {
+            responsibles_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_responsibles)
+        }
         var strategies1_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_strategies1)
         var strategies2_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_strategies2)
         var strategies3_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_strategies3)
