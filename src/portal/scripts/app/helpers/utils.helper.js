@@ -4,7 +4,7 @@
  */
 (function () {
 
-	'use strict';
+    'use strict';
 
     // var metaHelper = require('./meta.helper');
 
@@ -34,39 +34,39 @@
             }
         }
     } */
-	/**
-	 *
-	 * @param fn {Function}
-	 * @param wait {number} - milliseconds to wait
-	 * @param [options] {Object}
-	 * @param {boolean} [options.trailing=true] - execute fn on its last call after wait time
-	 * @returns {(function(): void)|*}
-	 */
+    /**
+     *
+     * @param fn {Function}
+     * @param wait {number} - milliseconds to wait
+     * @param [options] {Object}
+     * @param {boolean} [options.trailing=true] - execute fn on its last call after wait time
+     * @returns {(function(): void)|*}
+     */
     function throttle(fn, wait, options) {
 
-    	var time = Date.now();
-		var timeout = null;
-		options = options || {};
+        var time = Date.now();
+        var timeout = null;
+        options = options || {};
 
-		return function () {
-			var waitRemains = time + wait - Date.now();
+        return function () {
+            var waitRemains = time + wait - Date.now();
 
-			if (waitRemains < 0) {
-				if (timeout) {
-					clearTimeout(timeout);
-					timeout = null;
-				}
-				fn();
-				time = Date.now();
-			} else if (options.trailing !== false && !timeout && waitRemains > 0) {
-				timeout = setTimeout(function () {
-					timeout = null;
-					fn();
+            if (waitRemains < 0) {
+                if (timeout) {
+                    clearTimeout(timeout);
+                    timeout = null;
+                }
+                fn();
+                time = Date.now();
+            } else if (options.trailing !== false && !timeout && waitRemains > 0) {
+                timeout = setTimeout(function () {
+                    timeout = null;
+                    fn();
                     time = Date.now();
-				}, waitRemains);
-			}
-		};
-	}
+                }, waitRemains);
+            }
+        };
+    }
 
     function floor10(value, exp) {
         return decimalAdjust('floor', value, exp);
@@ -163,9 +163,16 @@
 
         var extendedKeys = Object.keys(data);
 
+        console.log('convertToTree.extendedKeys', extendedKeys)
+
         extendedKeys.forEach(function (key) {
 
-            list.push(data[key]);
+            list.push({
+                ___id: data[key].___id,
+                ___parentId: data[key].___parentId,
+                ___type: data[key].___type,
+                ___subtotal_type: data[key].___subtotal_type
+            });
 
         });
 
@@ -230,6 +237,19 @@
 
     function convertTreeToList(tree) {
         return flattenTree(tree, 'results');
+    }
+
+    function fillListWithData(list, data) {
+
+        // console.log('fillListWithData', data);
+
+        list = list.map(function (item) {
+
+            return data[item.___id]
+
+        })
+
+        return list
     }
 
     function toNextLevel(item, result) {
@@ -327,6 +347,7 @@
         throttle: throttle,
         convertToTree: convertToTree,
         convertTreeToList: convertTreeToList,
+        fillListWithData: fillListWithData,
         convertTreeToTreeList: convertTreeToTreeList,
 
         sortItems: sortItems,

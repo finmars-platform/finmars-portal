@@ -875,15 +875,20 @@
         var list = utilsHelper.convertTreeToList(tree);
 
         console.timeEnd("Converting tree to list");
-        console.log('Converted list length', list.length);
+
+        console.time("Filling list with data");
+        var filledList = utilsHelper.fillListWithData(list, data);
+        console.timeEnd("Filling list with data");
+
+        console.log('Converted list length', filledList.length);
 
         // console.log('getFlatStructure.list', list);
 
-        list = removeItemsFromFoldedGroups(list, evDataService);
+        filledList = removeItemsFromFoldedGroups(filledList, evDataService);
 
-        list = filterByRowColor(list, evDataService, globalDataService);
+        filledList = filterByRowColor(filledList, evDataService, globalDataService);
 
-        return list;
+        return filledList;
 
     };
 
@@ -959,13 +964,18 @@
         var list = utilsHelper.convertTreeToList(tree);
 
         console.timeEnd("Converting tree to list");
-        console.log('Converted list length', list.length);
+
+        console.time("Filling list with data");
+        var filledList = utilsHelper.fillListWithData(list, data);
+        console.timeEnd("Filling list with data");
+
+        console.log('Converted list length', filledList.length);
 
         // console.log('getFlatStructure.list', list);
 
-        list = filterByRowColor(list, evDataService, globalDataService);
+        filledList = filterByRowColor(filledList, evDataService, globalDataService);
 
-        return list;
+        return filledList;
 
     };
 

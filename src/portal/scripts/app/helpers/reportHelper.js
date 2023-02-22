@@ -375,42 +375,48 @@
     var recursiveUnwrapRelation = function (result, parentKey, contentType, source) {
 
         // var attributes = modelService.getAttributesByContentType(contentType);
+
+        console.log('contentType', contentType)
         var attributes = models[contentType] // Performance improvement trick,
         var resultKey;
 
-        attributes.forEach(function (attribute) {
+        if (models.hasOwnProperty(contentType)) {
 
-            resultKey = parentKey + '.' + attribute.key;
+            attributes.forEach(function (attribute) {
 
-            if (attribute.value_type === 'field' && attribute.code === 'user_code' && source[attribute.key] && source[attribute.key + '_object']) {
-
-                result[resultKey + '.id'] = source[attribute.key + '_object'].id
-
-                recursiveUnwrapRelation(result, resultKey, attribute.value_content_type, source[attribute.key + '_object'])
-
-            } else {
+                resultKey = parentKey + '.' + attribute.key;
 
                 if (attribute.value_type === 'field' && attribute.code === 'user_code' && source[attribute.key] && source[attribute.key + '_object']) {
 
-                    result[resultKey + '.name'] = source[attribute.key + '_object'].name
+                    result[resultKey + '.id'] = source[attribute.key + '_object'].id
+
+                    recursiveUnwrapRelation(result, resultKey, attribute.value_content_type, source[attribute.key + '_object'])
 
                 } else {
 
-                    if (attribute.value_type !== 'mc_field') {
+                    if (attribute.value_type === 'field' && attribute.code === 'user_code' && source[attribute.key] && source[attribute.key + '_object']) {
 
-                        result[resultKey] = source[attribute.key]
+                        result[resultKey + '.name'] = source[attribute.key + '_object'].name
 
+                    } else {
+
+                        if (attribute.value_type !== 'mc_field') {
+
+                            result[resultKey] = source[attribute.key]
+
+                        }
                     }
                 }
+
+            });
+
+            // var contentTypesWithDynamicAttributes = getContentTypesWithDynamicAttributes(); # performance trick
+
+            if (contentTypesWithDynamicAttributes.indexOf(contentType) !== -1) {
+
+                unwrapDynamicAttributes(result, parentKey, contentType, source);
+
             }
-
-        });
-
-        // var contentTypesWithDynamicAttributes = getContentTypesWithDynamicAttributes(); # performance trick
-
-        if (contentTypesWithDynamicAttributes.indexOf(contentType) !== -1) {
-
-            unwrapDynamicAttributes(result, parentKey, contentType, source);
 
         }
 
