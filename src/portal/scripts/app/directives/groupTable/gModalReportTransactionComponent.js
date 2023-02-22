@@ -75,7 +75,10 @@
 
             'entry_account',
             'entry_strategy',
-            'entry_item',
+            'entry_item_name',
+            'entry_item_short_name',
+            'entry_item_user_code',
+            'entry_item_public_name',
             'entry_amount',
             'entry_item_type_name',
             'entry_currency.user_code',

@@ -146,8 +146,26 @@
             },
 
             {
-                "key": "entry_item",
-                "name": "Entry Item",
+                "key": "entry_item_short_name",
+                "name": "Entry Item Short Name",
+                "value_type": 10
+            },
+
+            {
+                "key": "entry_item_name",
+                "name": "Entry Item Name",
+                "value_type": 10
+            },
+
+            {
+                "key": "entry_item_user_code",
+                "name": "Entry Item User Code",
+                "value_type": 10
+            },
+
+            {
+                "key": "entry_item_public_name",
+                "name": "Entry Item Public Name",
                 "value_type": 10
             },
 
