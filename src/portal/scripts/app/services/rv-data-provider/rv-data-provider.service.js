@@ -138,7 +138,7 @@
         var entityType = entityViewerDataService.getEntityType();
         var reportOptions = entityViewerDataService.getReportOptions();
 
-		//<editor-fold desc="Delete report options items">
+		//# region Delete report options items">
 		/* delete reportOptions.items;
         delete reportOptions.custom_fields;
         delete reportOptions.custom_fields_object;
@@ -156,7 +156,7 @@
         delete reportOptions.item_currencies;
         delete reportOptions.item_accounts; */
 		reportOptions = reportHelper.cleanReportOptionsFromTmpProps(reportOptions);
-		//</editor-fold>
+		//# endregion
 
         reportOptions.task_id = null;
 
@@ -316,11 +316,10 @@
                         //     }
                         // }
 
-                    } else {
+                    }
+                    else {
 
                         var parentGroup = entityViewerDataService.getData(event.parentGroupId);
-
-                        var parentItemIsFirst = false;
 
                         obj = Object.assign({}, data);
 
@@ -342,16 +341,16 @@
                         if (groupSettings.hasOwnProperty('is_open')) {
                             obj.___is_open = groupSettings.is_open;
                         }
-						if (parentGroup) console.log("groupSettings.getObjects parentGroup", JSON.parse(JSON.stringify(parentGroup)));
+
                         if (!parentGroup.___is_open) {
 
                         	obj.___is_open = false;
                             groupSettings.is_open = false;
-							console.log('groupSettings.getObjects parentGroup is closed');
+
                             rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
 
                         }
-						console.log('groupSettings.getObjects obj', obj, JSON.parse(JSON.stringify(obj)));
+
                     }
 
                 }
@@ -366,10 +365,28 @@
                     item.___parentId = obj.___id;
                     item.___type = 'object';
                     item.___index = index;
-                    item.___id = evRvCommonHelper.getId(item);
                     item.___level = obj.___level + 1;
 
-                    return item
+                    //# region Create an ___id
+                    item.___id = evRvCommonHelper.getId(item);
+
+                    var duplicateObj;
+
+                    try {
+                        duplicateObj = entityViewerDataService.getObject(item.___id, item.___parentId);// returns an error if a matching object is not found
+                    } catch (e) {}
+
+                    if (duplicateObj) {
+                        console.log("Error: duplicate ___id was created for an object: ", item);
+                        var customError = new Error("Object with an ___id " + item.___id + " already exist");
+                        customError.___item_data = item;
+
+                        throw customError;
+
+                    }
+                    //# endregion
+
+                    return item;
                 });
 
                 entityViewerDataService.setData(obj);
@@ -390,6 +407,17 @@
 
         requestParameters.status = 'loading';
 
+        // var groupTypes = entityViewerDataService.getGroups();
+        var matchingGTypeIndex = requestParameters.body.groups_types.length - 1;
+        var groupType = requestParameters.body.groups_types[matchingGTypeIndex];
+
+        if (groupType.options.sort) {
+
+            requestParameters.body.groups_order = groupType.options.sort.toLocaleLowerCase();
+            requestParameters.body.ordering_mode = groupType.options.sort_settings.mode;
+
+        }
+
         entityViewerDataService.setRequestParameters(requestParameters);
 
         return new Promise(function (resolve, reject) {
@@ -406,20 +434,42 @@
 
             groupsService.getList(entityType, options, entityViewerDataService).then(function (data) {
 
-                if (data.status !== 404) {
-
-                    var obj = {};
+                var obj = {};
 
 
-                    if (!event.___id) {
+                if (!event.___id) {
 
-                        var rootGroupData = entityViewerDataService.getRootGroupData();
+                    var rootGroupData = entityViewerDataService.getRootGroupData();
 
-                        obj = Object.assign({}, rootGroupData);
+                    obj = Object.assign({}, rootGroupData);
+
+                    obj.count = data.count;
+                    obj.next = data.next;
+                    obj.previous = data.previous;
+                    for (i = 0; i < step; i = i + 1) {
+                        if (page * step + i < obj.count) {
+                            obj.results[page * step + i] = data.results[i];
+                        }
+                    }
+
+
+                }
+                else {
+
+                    var groupData = entityViewerDataService.getData(event.___id);
+
+
+                    if (groupData) {
+
+                        obj = Object.assign({}, groupData);
+
+                        obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
+                        obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
 
                         obj.count = data.count;
                         obj.next = data.next;
                         obj.previous = data.previous;
+
                         for (i = 0; i < step; i = i + 1) {
                             if (page * step + i < obj.count) {
                                 obj.results[page * step + i] = data.results[i];
@@ -427,117 +477,88 @@
                         }
 
 
-                    } else {
-
-                        var groupData = entityViewerDataService.getData(event.___id);
-
-
-                        if (groupData) {
-
-                            obj = Object.assign({}, groupData);
-
-                            obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
-                            obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
-
-                            obj.count = data.count;
-                            obj.next = data.next;
-                            obj.previous = data.previous;
-
-                            for (i = 0; i < step; i = i + 1) {
-                                if (page * step + i < obj.count) {
-                                    obj.results[page * step + i] = data.results[i];
-                                }
-                            }
-
-
-                        } else {
-
-
-                            var parentGroup = entityViewerDataService.getData(event.parentGroupId);
-
-                            var parentItemIsFirst = false;
-
-                            obj = Object.assign({}, data);
-                            obj.___group_name = event.groupName ? event.groupName : '-';
-                            obj.___group_identifier = event.groupId ? event.groupId : '-';
-                            obj.___is_open = true;
-
-
-
-
-                            // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
-
-                            obj.___parentId = event.parentGroupId;
-                            obj.___type = 'group';
-                            obj.___id = event.___id;
-                            obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
-
-
-                            var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
-
-                            console.log('groupSettings', JSON.parse(JSON.stringify(groupSettings)));
-
-                            if (groupSettings.hasOwnProperty('is_open')) {
-                                obj.___is_open = groupSettings.is_open;
-                            }
-							if (parentGroup) console.log("groupSettings parentGroup", JSON.parse(JSON.stringify(parentGroup)));
-                            if (!parentGroup.___is_open) {
-
-                            	obj.___is_open = false;
-                                groupSettings.is_open = false;
-								console.log('groupSettings parentGroup is closed');
-                                rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
-
-                            }
-
-
-                        }
                     }
-
-                    var groups = entityViewerDataService.getGroups();
-                    var parents = [];
-
-                    if (obj.___parentId !== null) {
-                        parents = evRvCommonHelper.getParents(obj.___parentId, entityViewerDataService);
-                    }
-
-                    parents.push(obj);
-
-                    obj.results = obj.results.map(function (item, index) {
-
-                        item.___parentId = obj.___id;
-                        item.___group_name = item.___group_name ? item.___group_name : '-';
-                        item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
-
-                        // item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
+                    else {
 
 
-                        item.___level = obj.___level + 1;
-                        item.___index = index;
+                        var parentGroup = entityViewerDataService.getData(event.parentGroupId);
 
-                        if (groups.length >= parents.length) {
-                            item.___type = 'group';
-                        } else {
-                            item.___type = 'object';
+                        obj = Object.assign({}, data);
+                        obj.___group_name = event.groupName ? event.groupName : '-';
+                        obj.___group_identifier = event.groupId ? event.groupId : '-';
+                        obj.___is_open = true;
+
+
+
+
+                        // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
+
+                        obj.___parentId = event.parentGroupId;
+                        obj.___type = 'group';
+                        obj.___id = event.___id;
+                        obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
+
+
+                        var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
+
+                        if (groupSettings.hasOwnProperty('is_open')) {
+                            obj.___is_open = groupSettings.is_open;
                         }
 
-                        item.___id = evRvCommonHelper.getId(item);
+                        if (!parentGroup.___is_open) {
+
+                            obj.___is_open = false;
+                            groupSettings.is_open = false;
+
+                            rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
+
+                        }
 
 
-
-
-                        return item
-                    });
-
-                    entityViewerDataService.setData(obj);
-
-                    requestParameters.status = 'loaded';
-
-                    entityViewerDataService.setRequestParameters(requestParameters);
-
-                    resolve(obj);
+                    }
 
                 }
+
+                var groups = entityViewerDataService.getGroups();
+                var parents = [];
+
+                if (obj.___parentId !== null) {
+                    parents = evRvCommonHelper.getParents(obj.___parentId, entityViewerDataService);
+                }
+
+                parents.push(obj);
+                // generate data for group's children
+                obj.results = obj.results.map(function (item, index) {
+
+                    item.___parentId = obj.___id;
+                    item.___group_name = item.___group_name ? item.___group_name : '-';
+                    item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
+
+                    // item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
+
+
+                    item.___level = obj.___level + 1;
+                    item.___index = index;
+
+                    if (groups.length >= parents.length) {
+                        item.___type = 'group';
+                    } else {
+                        item.___type = 'object';
+                    }
+
+                    item.___id = evRvCommonHelper.getId(item);
+
+                    return item
+
+                });
+
+                entityViewerDataService.setData(obj);
+
+                requestParameters.status = 'loaded';
+
+                entityViewerDataService.setRequestParameters(requestParameters);
+
+                resolve(obj);
 
             })
 
@@ -566,6 +587,18 @@
         var requestParameters;
 
         var id = evRvCommonHelper.getId(item);
+        console.log("teseting1224.createRequestParameters createdIdsList.length", createdIdsList.length);
+        if ( createdIdsList.includes(id) ) {
+            console.log("teseting1224.createRequestParameters duplicate id Error", testObj[id] );
+            console.log("Error: duplicated id was created for an item: ", item);
+            var customError = new Error("Item with an ___id " + item.___id + " already exist");
+            customError.___item_data = item;
+
+            throw customError;
+
+        }
+
+        createdIdsList.push(id);
 
         var groups_types = evDataHelper.getGroupsTypesToLevel(level + 1, evDataService);
         var groups_values = evDataHelper.getGroupsValuesByItem(item, evDataService);
@@ -593,7 +626,8 @@
                 }
             };
 
-        } else {
+        }
+        else {
 
             requestParameters = {
                 requestType: 'objects',
@@ -615,13 +649,30 @@
 
         }
 
+        testObj[id] = {
+            requestParameters: requestParameters,
+            item: item,
+        };
+
         evDataService.setRequestParameters(requestParameters);
 
         return requestParameters;
 
     };
 
-    var recursiveRequest = function (items, level, evDataService, evEventService) {
+    /**
+     * @function
+     * Calls method updateDataStructureByRequestParameters for groups, its children and objects
+     * @see updateDataStructureByRequestParameters
+     *
+     * @param {string} parentId - if of parent of items
+     * @param { [Object] } items - groups or objects to format and add inside data
+     * @param {number} level - group level of items
+     * @param {Object} evDataService
+     * @param {Object} evEventService
+     * @returns {Promise<[]>} - returns arrays of nested promises for called methods updateDataStructureByRequestParameters
+     */
+    var recursiveRequest = function (parentId, items, level, evDataService, evEventService) {
 
         return new Promise(function RecursiveRequestPromise(resolve, reject) {
 
@@ -646,8 +697,8 @@
 
                     // console.log('to next level!', level);
 
-                    items = evDataHelper.getGroupsByLevel(level, evDataService);
-
+                    items = evDataHelper.getGroupsByLevel(level, evDataService)
+                        .filter(item => item.___parentId === parentId);
                     // console.log('recursiveRequest.items', items);
 
                     var recursiveRequestPromises = [];
@@ -656,7 +707,7 @@
 
                         // console.log('item!', item.___group_name);
 
-                        recursiveRequestPromises.push(recursiveRequest(item.results, level, evDataService, evEventService));
+                        recursiveRequestPromises.push(recursiveRequest(item.___id, item.results, level, evDataService, evEventService));
 
                     });
 
@@ -665,7 +716,7 @@
                     })
 
 
-                } else {
+                } else { //
 
                     resolve([])
                 }
@@ -683,38 +734,48 @@
         var rootGroup = evDataService.getRootGroupData();
         var level = 0;
 
-        return recursiveRequest(rootGroup.results, level, evDataService, evEventService).then(function () {
+        return recursiveRequest(rootGroup.___id, rootGroup.results, level, evDataService, evEventService).then(function () {
             console.timeEnd('Creating Data Structure');
         })
 
     };
 
+    var createdIdsList = [];
+    var testObj = {};
+
     var createDataStructure = function (evDataService, evEventService) {
-        console.log('createDataStructure')
+        // console.log('createDataStructure')
 
         evDataService.resetData();
         evDataService.resetRequestParameters();
+        createdIdsList = [];
+        testObj = {};
 
         var defaultRootRequestParameters = evDataService.getActiveRequestParameters();
-        var groups = evDataService.getGroups();
+        var groupTypes = evDataService.getGroups();
         var activeColumnSort = evDataService.getActiveColumnSort();
 
         evEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
-        if (groups.length) {
+        if (groupTypes.length) {
             console.log('createDataStructure 1', defaultRootRequestParameters)
 
+            // get children groups for the rootGroup
             getGroups(defaultRootRequestParameters, evDataService, evEventService).then(function () {
-
-                // injectRegularFilters() will be called inside updateDataStructureByRequestParameters()
-                // that is inside recursiveRequest()
-                // that is inside initRecursiveRequestParametersCreation()
+                /*
+                 * Get children groups for every group level
+                 *
+                 * injectRegularFilters() will be called inside updateDataStructureByRequestParameters()
+                 * that is inside recursiveRequest()
+                 * that is inside initRecursiveRequestParametersCreation()
+                 */
                 initRecursiveRequestParametersCreation(evDataService, evEventService).then(function () {
                     console.log('createDataStructure 2', defaultRootRequestParameters)
 
-                    var activeGroupTypeSort = evDataService.getActiveGroupTypeSort();
+                    // var activeGroupTypeSort = evDataService.getActiveGroupTypeSort();
 
-                    if (activeGroupTypeSort) {
+                    /*
+                    if (sortByGroupType) {
 
                         sortGroupType(evDataService, evEventService, false).then(function () {
 
@@ -733,9 +794,16 @@
                         sortObjects(evDataService, evEventService);
                     }
 
-                    if (!activeGroupTypeSort && !activeColumnSort) {
+                    if (!sortByGroupType && !activeColumnSort) {
                         evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
                     }
+                    */
+                    if (activeColumnSort) {
+                        sortObjects(evDataService, evEventService);
+                    } else {
+                        evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+                    }
+
 
                 })
 
@@ -764,6 +832,14 @@
 
     };
 
+    /**
+     * @function
+     *
+     * @param requestParameters
+     * @param evDataService
+     * @param evEventService
+     * @returns {Promise<unknown>}
+     */
     var updateDataStructureByRequestParameters = function (requestParameters, evDataService, evEventService) {
 
         // console.log('updateDataStructureByRequestParameters.requestParameters', requestParameters);
@@ -835,19 +911,19 @@
 
                 if (group.___id === requestsParameters[key].id) {
 
-                    // apply sorting settings
+                    //# region apply sorting settings
                     requestsParameters[key].body.page = 1;
 
-                    if (activeColumnSort.options.sort === 'ASC') {
+                    /*if (activeColumnSort.options.sort === 'ASC') {
                         requestsParameters[key].body.ordering = activeColumnSort.key
                     } else if (activeColumnSort.options.sort === 'DESC') {
                         requestsParameters[key].body.ordering = '-' + activeColumnSort.key
-                    }
-
-                    requestsParameters[key].body.ordering_mode = activeColumnSort.options.sort_mode
+                    }*/
+                    requestsParameters[key].body.ordering = activeColumnSort.key;
+                    requestsParameters[key].body.ordering_mode = activeColumnSort.options.sort_settings.mode
 
                     entityViewerDataService.setRequestParameters(requestsParameters[key]);
-                    // < apply sorting settings >
+                    //# endregion Apply sorting settings
 
                     levelRequestParameters.push(requestsParameters[key]);
 
@@ -868,9 +944,7 @@
         var promises = [];
 
         levelRequestParameters.forEach(function (requestParameters) { // get sorted content
-
             promises.push(getObjects(requestParameters, entityViewerDataService, entityViewerEventService));
-
         });
 
         Promise.all(promises).then(function () {
@@ -881,35 +955,27 @@
 
     var sortGroupType = function (entityViewerDataService, entityViewerEventService, signalDataLoadEnd) {
 
-        var activeGroupSort = entityViewerDataService.getActiveGroupTypeSort();
+        var activeGroupTypeSort = entityViewerDataService.getActiveGroupTypeSort();
 
-        console.log('sortGroupType.activeGroupSort', activeGroupSort);
+        console.log('sortGroupType.activeGroupTypeSort', activeGroupTypeSort);
 
         var groupsTypes = entityViewerDataService.getGroups();
 
-        var level = 0;
-
-        groupsTypes.forEach(function (item, index) {
-
-            if (activeGroupSort.key && item.key === activeGroupSort.key) {
-                level = index;
-
-            } else {
-
-                if (activeGroupSort.id && item.id === activeGroupSort.id) {
-                    level = index;
-                }
-
-            }
-
+        // level of a parent used, because sorting applies to an array inside 'result' property of a parent
+        var parentLevel = groupsTypes.findIndex(function (item) {
+            return item.key === activeGroupTypeSort.key;
         });
 
-        console.log('sortGroupType.level', level);
+        if (parentLevel === -1) {
+            parentLevel = 0;
+        }
 
-        var groups = evDataHelper.getGroupsByLevel(level, entityViewerDataService);
+
+        console.log('sortGroupType.parentLevel', parentLevel);
+
+        var groups = evDataHelper.getGroupsByLevel(parentLevel, entityViewerDataService);
 
         var requestsParameters = entityViewerDataService.getAllRequestParameters();
-
         var requestParametersForUnfoldedGroups = [];
 
         Object.keys(requestsParameters).forEach(function (key) {
@@ -920,19 +986,7 @@
                     requestParametersForUnfoldedGroups.push(requestsParameters[key]);
                 }
 
-
             })
-
-        });
-
-        requestParametersForUnfoldedGroups.forEach(function (item) {
-
-            item.body.page = 1;
-
-            item.body.groups_order = activeGroupSort.options.sort.toLocaleLowerCase();
-            item.body.ordering_mode = activeGroupSort.options.sort_mode;
-
-            entityViewerDataService.setRequestParameters(item);
 
         });
 
@@ -947,18 +1001,22 @@
         var promises = [];
 
         requestParametersForUnfoldedGroups.forEach(function (requestParameters) {
-
-            promises.push(getGroups(requestParameters, entityViewerDataService, entityViewerEventService))
-
+            promises.push( getGroups(requestParameters, entityViewerDataService, entityViewerEventService) );
         });
 
-        return Promise.all(promises).then(function () {
+        return new Promise(function (resolve, reject) {
 
-            if (signalDataLoadEnd || signalDataLoadEnd === undefined) {
-                entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-            }
+            Promise.all(promises).then(function (data) {
 
-        });
+                if (signalDataLoadEnd !== false) {
+                    entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+                }
+
+                resolve();
+
+            }).catch(function (error) { reject(error) })
+
+        })
 
     };
 

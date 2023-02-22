@@ -19,20 +19,22 @@
 
         vm.agree = function ($event) {
 
-            vm.column.manual_sort_layout_user_code = vm.layout.user_code
+            let response = {
+                status: 'agree',
+            }
 
             if (vm.layout.id) {
 
                 uiService.updateColumnSortData(vm.layout.id, vm.layout).then(function (data) {
-
-                    $mdDialog.hide({status: 'agree'});
+                    response.data = data;
+                    $mdDialog.hide(response);
                 })
 
 
             } else {
                 uiService.createColumnSortData(vm.layout).then(function (data) {
-
-                    $mdDialog.hide({status: 'agree'});
+                    response.data = data;
+                    $mdDialog.hide(response);
                 })
 
             }
@@ -254,7 +256,7 @@
 
             console.log('data', data);
 
-            vm.column = data.column;
+            vm.column = JSON.parse(angular.toJson( data.column ));
 
             if (data.item) {
                 vm.layout = data.item;

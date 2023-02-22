@@ -825,14 +825,12 @@
             data = getNewDataInstance(evDataService);
 
             console.log('data', data);
-
             console.timeEnd("Copying data");
 
 
             console.time("Inserting subtotals");
 
             data = insertSubtotalsToResults(data, evDataService);
-
             console.timeEnd("Inserting subtotals");
 
 
@@ -855,12 +853,10 @@
 
 
         var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
-
         console.time("Converting to tree");
         console.log("Converting to tree data", data);
 
         var tree = utilsHelper.convertToTree(data, rootGroup);
-
         console.log("getFlatStructure.tree", tree)
 
         console.timeEnd("Converting to tree");

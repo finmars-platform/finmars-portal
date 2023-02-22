@@ -67,28 +67,31 @@
 
                 // console.log('objectService.getList.options', options);
 
+                var activeColumnSort = entityViewerDataService.getActiveColumnSort();
+                var sortProp = activeColumnSort.options.sort === 'DESC' ? '-' + options.ordering : options.ordering;
+
                 if (options.ordering_mode === 'manual') {
 
                     var key;
 
-                    if (options.ordering[0] === '-') {
-                        key = options.ordering.split('-')[1];
+                    if (sortProp[0] === '-') {
+                        key = sortProp.split('-')[1];
                     } else {
-                        key = options.ordering;
+                        key = sortProp;
                     }
 
                     var columnSortData = entityViewerDataService.getColumnSortData(key)
 
                     if (columnSortData) {
 
-                        items = sortService.sortItemsManual(items, options.ordering, columnSortData);
+                        items = sortService.sortItemsManual(items, sortProp, columnSortData);
 
                     }
 
                 } else {
 
-                    if (options.ordering) {
-                        items = sortService.sortItems(items, options.ordering);
+                    if (sortProp) {
+                        items = sortService.sortItems(items, sortProp);
                     }
                 }
 
