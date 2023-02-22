@@ -26,6 +26,10 @@
 
         // console.log('calculateItemSubtotal.item', item)
 
+        item.subtotal = {}; // Reset subtotals if previously calculated
+
+        console.log('calculateItemSubtotal.item', item)
+
         if (item.___level === level) {
 
             item.subtotal = rvSubtotalHelper.calculate(item.results, columns);
@@ -644,8 +648,8 @@
 
         Object.keys(sourceData).forEach(function (key) {
 
-            // result[key] = simpleObjectCopy(sourceData[key]); # performance issue
-            result[key] = Object.assign({}, sourceData[key])
+            result[key] = simpleObjectCopy(sourceData[key]); // performance issue
+            // result[key] = Object.assign({}, sourceData[key])
 
         });
 
