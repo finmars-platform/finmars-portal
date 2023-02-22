@@ -616,7 +616,8 @@ import instrumentService from "../../services/instrumentService";
             var setEventListeners = function () {
 
                 vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
-
+					// difference from reportViewerController
+					// here updateDataStructure called because method entityViewerDataService.resetData() not needed (loading only next pages)
                     evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService, vm.attributeDataService);
 
                 });

@@ -464,23 +464,32 @@ import uiService from "./uiService";
             attrTypeToAdd.layout_name = attrInstance.layout_name;
         }
 
+        if (!attrTypeToAdd.options) {
+            attrTypeToAdd.options = {};
+        }
+
         switch (form) {
 
             case 'group':
                 attrTypeToAdd.groups = true;
+
+                attrTypeToAdd.options.sort = null;
+                attrTypeToAdd.options.sort_settings = {};
+
                 break;
 
             case 'column':
+
                 attrTypeToAdd.columns = true;
+
+                attrTypeToAdd.options.sort = null;
+                attrTypeToAdd.options.sort_settings = {};
+
                 break;
 
             case 'filter':
 
                 attrTypeToAdd.filters = true;
-
-                if (!attrTypeToAdd.options) {
-                    attrTypeToAdd.options = {};
-                }
 
                 if (!attrTypeToAdd.options.filter_type) {
                     attrTypeToAdd.options.filter_type = metaHelper.getDefaultFilterType(attrTypeToAdd.value_type);
