@@ -361,7 +361,11 @@
         var strategies1_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_strategies1)
         var strategies2_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_strategies2)
         var strategies3_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_strategies3)
-        var transaction_classes_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_transaction_classes)
+        var transaction_classes_as_dict = null
+
+        if (reportOptions.item_transaction_classes) {
+            transaction_classes_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_transaction_classes)
+        }
 
 
         items.forEach(function (item) {
@@ -453,15 +457,15 @@
 
             // Other
 
-            if (item.transaction_class) {
+            if (item.transaction_class && transaction_classes_as_dict) {
                 joinFlatRelationToItem(item, 'transaction_class', transaction_classes_as_dict[item.transaction_class])
             }
 
-            if (item.counterparty) {
+            if (item.counterparty && counterparties_as_dict) {
                 joinFlatRelationToItem(item, 'counterparty', counterparties_as_dict[item.counterparty])
             }
 
-            if (item.responsible) {
+            if (item.responsible && responsibles_as_dict) {
                 joinFlatRelationToItem(item, 'responsible', responsibles_as_dict[item.responsible])
             }
 
