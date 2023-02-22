@@ -685,7 +685,7 @@
                 controller: 'SettingsFormDesignController as vm'
             })
             .state('app.portal.settings.users-groups', {
-                url: '/users-and-groups',
+                url: '/users-and-groups?tab=',
                 templateUrl: 'views/settings/users-and-groups-view.html',
                 controller: 'SettingsMembersAndGroupsController as vm'
             })
