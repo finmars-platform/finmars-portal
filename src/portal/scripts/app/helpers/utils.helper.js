@@ -163,15 +163,22 @@
 
         var extendedKeys = Object.keys(data);
 
-        console.log('convertToTree.extendedKeys', extendedKeys)
-
+        // console.log('convertToTree.extendedKeys', extendedKeys)
+        // performance update
         extendedKeys.forEach(function (key) {
 
+            // minimal amount of meta-fields (some issues will occur in Entity Viewer if remove them)
             list.push({
                 ___id: data[key].___id,
                 ___parentId: data[key].___parentId,
+                ___level: data[key].___level,
                 ___type: data[key].___type,
-                ___subtotal_type: data[key].___subtotal_type
+                ___subtotal_type: data[key].___subtotal_type,
+                ___items_count: data[key].___items_count,
+                ___group_name: data[key].___group_name,
+                ___is_open: data[key].___is_open,
+                ___is_selected: data[key].___is_selected,
+                ___has_selected_child: data[key].___has_selected_child,
             });
 
         });
