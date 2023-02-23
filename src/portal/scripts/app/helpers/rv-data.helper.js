@@ -831,7 +831,8 @@
 
             data = getNewDataInstance(evDataService);
 
-            console.log('data', data);
+            console.log('getFlatStructure.data', data);
+            console.log('getFlatStructure.data length', Object.keys(data).length);
 
             console.timeEnd("Copying data");
 
