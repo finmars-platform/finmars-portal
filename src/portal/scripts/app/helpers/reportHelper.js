@@ -551,10 +551,12 @@
 
             var key = '-';
 
-            if (item[reportOptions.calculationGroup]) {
-                key = item[reportOptions.calculationGroup];
-            }
-
+            // TODO wtf magic is here????
+            // NEED REFACTOR AND ANALYSIS
+            // if (item[reportOptions.calculationGroup]) {
+            //     key = item[reportOptions.calculationGroup];
+            // }
+            //
             if (!groups.hasOwnProperty(key)) {
                 groups[key] = []
             }
@@ -565,6 +567,8 @@
 
         var groupsTotalMarketValue = {};
         var groupsTotalExposure = {};
+
+
 
         Object.keys(groups).forEach(function (key) {
 
@@ -593,13 +597,16 @@
 
         });
 
+        console.log('calculateMarketValueAndExposurePercents.groups', groups);
+        console.log('calculateMarketValueAndExposurePercents.groupsTotalMarketValue', groupsTotalMarketValue);
+
         return items.map(function (item) {
 
             var key = '-';
 
-            if (item[reportOptions.calculationGroup]) {
-                key = item[reportOptions.calculationGroup];
-            }
+            // if (item[reportOptions.calculationGroup]) {
+            //     key = item[reportOptions.calculationGroup];
+            // }
 
             if (item.market_value) {
                 var percent = (item.market_value / groupsTotalMarketValue[key] * 100).toFixed(10);
