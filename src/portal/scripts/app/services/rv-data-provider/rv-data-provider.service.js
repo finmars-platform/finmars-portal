@@ -156,6 +156,7 @@
         delete reportOptions.item_currencies;
         delete reportOptions.item_accounts; */
 		reportOptions = reportHelper.cleanReportOptionsFromTmpProps(reportOptions);
+        reportOptions.filters = entityViewerDataService.getFilters(); // for transaction report only
 		//</editor-fold>
 
         reportOptions.task_id = null;
