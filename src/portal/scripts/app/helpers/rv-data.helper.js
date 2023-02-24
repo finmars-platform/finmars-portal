@@ -28,6 +28,8 @@
 
         // Reset subtotals if previously calculated
 
+        item.subtotal = {};
+
         console.log('calculateItemSubtotal.item', item)
 
         if (item.___level === level) {
@@ -71,7 +73,7 @@
 
             dataList.forEach(function (item) {
 
-                item.subtotal = {};
+
 
                 if (item.___level === i) {
                     calculateItemSubtotal(item, evDataService);
