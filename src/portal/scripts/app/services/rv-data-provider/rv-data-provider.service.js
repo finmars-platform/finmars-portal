@@ -192,10 +192,13 @@
                 // reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
                 // reportOptions.items = reportHelper.convertItemsToFlat(reportOptions.items);
                 reportOptions.items = reportHelper.extendAttributes(reportOptions.items, attributeExtensions);
-                entityViewerDataService.setUnfilteredFlatList(reportOptions.items);
 
                 // Report options.items - origin table without filtering and grouping. Save to entityViewerDataService.
                 reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
+
+                entityViewerDataService.setUnfilteredFlatList(reportOptions.items);
+
+
 
             }
 

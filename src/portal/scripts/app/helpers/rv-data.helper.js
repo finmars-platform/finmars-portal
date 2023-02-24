@@ -26,7 +26,7 @@
 
         // console.log('calculateItemSubtotal.item', item)
 
-        item.subtotal = {}; // Reset subtotals if previously calculated
+        // Reset subtotals if previously calculated
 
         console.log('calculateItemSubtotal.item', item)
 
@@ -70,6 +70,8 @@
             // console.log('calculateSubtotals.current_level', i);
 
             dataList.forEach(function (item) {
+
+                item.subtotal = {};
 
                 if (item.___level === i) {
                     calculateItemSubtotal(item, evDataService);
@@ -650,6 +652,7 @@
 
             result[key] = simpleObjectCopy(sourceData[key]); // performance issue
             // result[key] = Object.assign({}, sourceData[key])
+
 
         });
 
