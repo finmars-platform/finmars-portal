@@ -1,5 +1,9 @@
 (function () {
 
+    'use strict';
+
+    var metaHelper = require('../../helpers/meta.helper');
+
     function orderSort(property, sortOrder) {
 
         return function (a, b) {
@@ -98,6 +102,8 @@
         orderNumsList.forEach(function (orderKey) {
             result.push(...orderedItems[orderKey])
         })
+
+        missedItems = metaHelper.textWithDashSort(missedItems, key);
 
         result = result.concat(missedItems);
 

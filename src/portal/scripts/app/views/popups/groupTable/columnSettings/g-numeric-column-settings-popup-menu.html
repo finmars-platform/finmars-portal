@@ -24,7 +24,7 @@
     </div>
 
     <div ng-if="!popupData.data.isReport || popupData.data.columnHasCorrespondingGroup(popupData.data.item.key)">
-        <md-button data-ng-click="popupData.data.unGroup(popupData.data.item.___column_id || popupData.data.item.___group_type_id)"
+        <md-button data-ng-click="popupData.data.unGroup(popupData.data.item.key, _$popup)"
                    class="popup-menu-item">
             <!--            <ng-md-icon icon="visibility_off"
                                     style="visibility: hidden;"></ng-md-icon>-->

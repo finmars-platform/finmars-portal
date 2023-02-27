@@ -1,5 +1,3 @@
-const objectComparisonHelper = require("../../helpers/objectsComparisonHelper");
-const uiService = require("../../services/uiService");
 (function () {
 
     'use strict';
@@ -7,15 +5,15 @@ const uiService = require("../../services/uiService");
     const uiService = require('../../services/uiService');
     const objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
 
-    module.exports = function ($scope, $mdDialog, data, entityViewerDataService) {
+    module.exports = function ($scope, $mdDialog, toastNotificationService, data, entityViewerDataService) {
 
         let vm = this;
 
         vm.column = data.column ? JSON.parse(angular.toJson( data.column )) : { options: {sort_settings: {}} };
         let originalSortSettings = JSON.parse(JSON.stringify( vm.column.options.sort_settings ));
 
-        if (!vm.column.options) vm.column.options = {};
-        if (!vm.column.options.sort_settings) vm.column.options.sort_settings = {mode: null};
+        /*if (!vm.column.options) vm.column.options = {};
+        if (!vm.column.options.sort_settings) vm.column.options.sort_settings = {mode: null};*/
 
         vm.columnLayouts = [];
         vm.commonLayouts = [];
@@ -158,7 +156,7 @@ const uiService = require("../../services/uiService");
 
                 if (res.status === 'agree') {
 
-                    uiService.deleteEditLayoutByKey(item.id).then(function (data) {
+                    uiService.deleteColumnSortData(item.id).then(function (data) {
 
                         /*vm.getColumnLayouts();
                           vm.getCommonLayouts();*/
@@ -168,6 +166,8 @@ const uiService = require("../../services/uiService");
                         const index = layoutsList.findIndex(layout => layout.id === item.id);
 
                         layoutsList.splice(index, 1);
+
+                        toastNotificationService.success(`Manual sorting layout '${item.name}' deleted.`)
 
                         $scope.$apply();
 
@@ -233,6 +233,8 @@ const uiService = require("../../services/uiService");
             const resData = {
                 sort_settings: vm.column.options.sort_settings,
             };
+
+            if ( !resData.sort_settings.layout_user_code ) resData.sort_settings.mode = 'native';
 
             $mdDialog.hide( {status: 'agree', data: resData} );
 

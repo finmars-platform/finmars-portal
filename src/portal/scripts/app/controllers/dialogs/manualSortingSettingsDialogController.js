@@ -58,11 +58,12 @@
 
         }
 
-        vm.addSelected = function () {
+        vm.addSelectedValues = function () {
 
-            vm.newValues.forEach(function (item) {
+            vm.newValues.forEach((item, index) => {
 
                 if (item.selected) {
+
                     vm.layout.data.items.push({
                         order: vm.layout.data.items.length,
                         value: item.value
@@ -104,12 +105,13 @@
             })
 
             if (vm.layout.data.items.length) {
+                // if existing layout opened, group values into selected and not
 
-                var exist = false;
+                // var exist = false;
 
                 uniqueColumnValues.forEach(function (value, index) {
 
-                    exist = false;
+                    /*exist = false;
 
                     vm.layout.data.items.forEach(function (item) {
 
@@ -126,18 +128,31 @@
                             value: value
                         })
 
-                    }
+                    } */
 
+                    let valueNotSelected = !vm.layout.data.items.find(item => {
+                        return item.value === value;
+                    });
+
+                    if (valueNotSelected) {
+
+                        vm.newValues.push({
+                            order: vm.newValues.length,
+                            value: value
+                        })
+
+                    }
 
                 })
 
 
-            } else {
+            }
+            else {
 
                 uniqueColumnValues.forEach(function (value, index) {
 
                     vm.layout.data.items.push({
-                        order: index + 1,
+                        order: index,
                         value: value
                     })
 
@@ -151,9 +166,7 @@
 
         vm.moveUp = function (item) {
 
-            console.log('moveUp', item);
-
-            var currentOrder = item.order
+            /* var currentOrder = item.order
             var order;
 
             vm.layout.data.items = vm.layout.data.items.map(function (item, index) {
@@ -175,15 +188,27 @@
 
             vm.layout.data.items = vm.layout.data.items.sort(function (a, b) {
                 return a.order - b.order
-            })
+            })*/
+            const itemIndex = item.order;
+            const prevItemIndex = itemIndex - 1;
+
+            if (prevItemIndex >= 0) {
+
+                const itemToMove = JSON.parse(angular.toJson( vm.layout.data.items[itemIndex] ));
+                itemToMove.order -= 1;
+
+                vm.layout.data.items[itemIndex] = vm.layout.data.items[prevItemIndex];
+                vm.layout.data.items[itemIndex].order += 1;
+
+                vm.layout.data.items[prevItemIndex] = itemToMove;
+
+            }
 
         }
 
         vm.moveDown = function (item) {
 
-            console.log('moveDown', item);
-
-            var currentOrder = item.order
+            /* var currentOrder = item.order
             var order;
 
             vm.layout.data.items = vm.layout.data.items.map(function (item, index) {
@@ -205,13 +230,27 @@
 
             vm.layout.data.items = vm.layout.data.items.sort(function (a, b) {
                 return a.order - b.order
-            })
+            }) */
+            const itemIndex = item.order;
+            const nextItemIndex = itemIndex + 1;
+
+            if (vm.layout.data.items[nextItemIndex]) {
+
+                const itemToMove = JSON.parse(angular.toJson( vm.layout.data.items[itemIndex] ));
+                itemToMove.order += 1;
+
+                vm.layout.data.items[itemIndex] = vm.layout.data.items[nextItemIndex];
+                vm.layout.data.items[itemIndex].order -= 1;
+
+                vm.layout.data.items[nextItemIndex] = itemToMove;
+
+            }
 
         }
 
-        vm.delete = function (item, $index) {
+        vm.delete = function (item) {
 
-            var currentOrder = item.order
+            /*var currentOrder = item.order
             var order;
 
             vm.layout.data.items = vm.layout.data.items.filter(function (item, index) {
@@ -237,7 +276,19 @@
 
             vm.layout.data.items = vm.layout.data.items.sort(function (a, b) {
                 return a.order - b.order
-            })
+            })*/
+
+            vm.newValues.push({
+                order: vm.newValues.length,
+                value: item.value,
+            });
+
+            vm.layout.data.items.splice(item.order, 1);
+
+            vm.layout.data.items = vm.layout.data.items.map( (layout, index) => {
+                layout.order = index;
+                return layout;
+            });
 
         }
 

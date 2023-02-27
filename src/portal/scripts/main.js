@@ -485,7 +485,7 @@ export default (function () {
     portal.controller('CustomFieldEditDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService', require('./app/controllers/dialogs/customFieldEditDialogController')]);
 
     portal.controller('ManualSortingSettingsDialogController', ['$scope', '$mdDialog', 'data', 'entityViewerDataService', require('./app/controllers/dialogs/manualSortingSettingsDialogController')]);
-    portal.controller('ManualSortingLayoutManagerDialogController', ['$scope', '$mdDialog', 'data', 'entityViewerDataService', require('./app/controllers/dialogs/manualSortingLayoutManagerDialogController')]);
+    portal.controller('ManualSortingLayoutManagerDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'data', 'entityViewerDataService', require('./app/controllers/dialogs/manualSortingLayoutManagerDialogController')]);
     portal.controller('ManualSortingLayoutManagerController', ['$scope', '$mdDialog', require('./app/controllers/manualSortingLayoutManagerController')]);
 
     // Reports Missing Prices
