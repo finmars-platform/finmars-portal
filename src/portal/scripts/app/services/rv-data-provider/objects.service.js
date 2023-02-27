@@ -68,9 +68,12 @@
                 // console.log('groups filters length', items.length);
 
                 // console.log('objectService.getList.options', options);
-
+                var sortProp = options.ordering;
                 var activeColumnSort = entityViewerDataService.getActiveColumnSort();
-                var sortProp = activeColumnSort.options.sort === 'DESC' ? '-' + options.ordering : options.ordering;
+
+                if (activeColumnSort && activeColumnSort.options.sort === 'DESC') {
+                    sortProp = '-' + options.ordering;
+                }
 
                 if (options.ordering_mode === 'manual') {
 
