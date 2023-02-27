@@ -209,7 +209,6 @@
                 "value_entity": "instrument",
                 "value_type": "field"
             },
-
             {
                 "key": "country",
                 "name": "Country",

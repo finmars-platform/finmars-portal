@@ -156,6 +156,7 @@
         delete reportOptions.item_currencies;
         delete reportOptions.item_accounts; */
 		reportOptions = reportHelper.cleanReportOptionsFromTmpProps(reportOptions);
+        reportOptions.filters = entityViewerDataService.getFilters(); // for transaction report only
 		//</editor-fold>
 
         reportOptions.task_id = null;
@@ -185,14 +186,19 @@
 
 				var attributeExtensions = entityViewerDataService.getCrossEntityAttributeExtensions();
 
-				reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions, entityType);
-                reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
-                reportOptions.items = reportHelper.convertItemsToFlat(reportOptions.items);
+                reportOptions.items = reportHelper.injectIntoItemsV2(reportOptions.items, reportOptions, entityType);
+
+				// reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions, entityType);
+                // reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
+                // reportOptions.items = reportHelper.convertItemsToFlat(reportOptions.items);
                 reportOptions.items = reportHelper.extendAttributes(reportOptions.items, attributeExtensions);
-                entityViewerDataService.setUnfilteredFlatList(reportOptions.items);
 
                 // Report options.items - origin table without filtering and grouping. Save to entityViewerDataService.
                 reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
+
+                entityViewerDataService.setUnfilteredFlatList(reportOptions.items);
+
+
 
             }
 
