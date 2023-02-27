@@ -1,4 +1,6 @@
-<md-dialog class="draggable-dialog width-50" drag-dialog>
+<md-dialog class="draggable-dialog width-50"
+           aria-label="manual sorting settings dialog"
+           drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
@@ -46,17 +48,20 @@
                     </div>
                 </div>
 
-                <div data-ng-repeat="item in vm.layout.data.items track by $index" layout="row">
+                <div data-ng-repeat="item in vm.layout.data.items track by $index"
+                     class="flex-row fc-space-between">
 
-                    <div class="m-8">
-                        {{item.order + 1}}
+                    <div class="flex-row">
+                        <div class="m-8">
+                            {{item.order + 1}}
+                        </div>
+
+                        <div class="m-8">
+                            {{item.value}}
+                        </div>
                     </div>
 
-                    <div class="m-8">
-                        {{item.value}}
-                    </div>
-
-                    <div layout="row">
+                    <div class="flex-row">
 
                         <md-button class="md-raised"
                                    data-ng-disabled="item.order === 0"
