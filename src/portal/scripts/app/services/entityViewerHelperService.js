@@ -422,7 +422,7 @@ import uiService from "./uiService";
 
     /**
      * Turn table attribute into group, column or filter
-     * @param {string} form - In what form get attribute
+     * @param {string} form - In what form get attribute. Can be 'column', 'group', 'filter'.
      * @param {object} attrInstance - Object with attribute data on which attribute form will be based
      * @memberOf module:entityViewerHelperService
      * @return {object} Return attribute in form of group, column or filter
