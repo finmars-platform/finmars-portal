@@ -39,7 +39,7 @@
 
         var last_key;
 
-        console.log('convertNameKeyToUserCodeKey.pieces', pieces)
+        // console.log('convertNameKeyToUserCodeKey.pieces', pieces)
         if (pieces.length > 1) {
             last_key = pieces.pop()
 
@@ -86,7 +86,7 @@
             identifier_key = convertNameKeyToUserCodeKey(group.key)
             identifier_value = item[identifier_key];
 
-            console.log('identifier_key', identifier_key);
+            // console.log('identifier_key', identifier_key);
 
             if (identifier_value !== null && identifier_value !== undefined && identifier_value !== '-') {
 

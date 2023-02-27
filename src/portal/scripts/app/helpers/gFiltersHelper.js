@@ -184,7 +184,17 @@
 			if (filtersChangedFromAbove) {
 
 				evDataService.setFilters(filters);
-				evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+				var entityType = evDataService.getEntityType()
+
+				if (entityType === 'transaction-report') {
+					// special logic, for heavy transaction report
+					// backend filters enabled
+
+					evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+				} else {
+					evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+				}
 
 			}
 

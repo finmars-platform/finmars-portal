@@ -13,7 +13,7 @@
 
     var evDataHelper = require('../../helpers/ev-data.helper');
 
-    var GModalSharedLogicHelper =  require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
+    var GModalSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
 
     module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
 
@@ -25,7 +25,7 @@
 
         vm.entityViewerDataService = entityViewerDataService;
         vm.entityViewerEventService = entityViewerEventService;
-		vm.attributeDataService = attributeDataService;
+        vm.attributeDataService = attributeDataService;
 
         vm.contentWrapElement = contentWrapElement;
 
@@ -71,7 +71,22 @@
 
         var transactionAttrsComp = [
             'transaction_code', 'transaction_class.name', 'position_size_with_sign', 'cash_consideration', 'principal_with_sign', 'carry_with_sign', 'overheads_with_sign',
-            'accounting_date', 'cash_date', 'reference_fx_rate', 'is_locked', 'is_canceled', 'factor', 'trade_price', 'notes'
+            'accounting_date', 'cash_date', 'reference_fx_rate', 'is_locked', 'is_canceled', 'factor', 'trade_price', 'notes',
+
+            'entry_account',
+            'entry_strategy',
+            'entry_item_name',
+            'entry_item_short_name',
+            'entry_item_user_code',
+            'entry_item_public_name',
+            'entry_amount',
+            'entry_item_type_name',
+            'entry_currency.user_code',
+            'entry_currency.name',
+            'entry_currency.short_name',
+            'entry_instrument.user_code',
+            'entry_instrument.name',
+            'entry_instrument.short_name'
         ];
 
         var transactionClassAttrsComp = [
@@ -138,7 +153,7 @@
         vm.getAttributes = function () {
 
             // contains attributes to show inside tab
-            vm.transactionAttrsFiltered= [];
+            vm.transactionAttrsFiltered = [];
             vm.complexTransactionAttrsFiltered = [];
             vm.complexTransactionStatusAttrsFiltered = [];
             vm.transactionTypeAttrsFiltered = [];
@@ -222,7 +237,7 @@
 
             transactionUserFields.forEach(function (field) {
 
-                vm.complexTransactionAttrs = vm.complexTransactionAttrs.filter(function (entityAttr){
+                vm.complexTransactionAttrs = vm.complexTransactionAttrs.filter(function (entityAttr) {
 
                     if (entityAttr.key === 'complex_transaction.' + field.key) {
                         return field.is_active;
@@ -232,7 +247,7 @@
 
                 })
 
-                userFieldsComp = userFieldsComp.filter(function (item){
+                userFieldsComp = userFieldsComp.filter(function (item) {
                     if (item === 'complex_transaction.' + field.key) {
                         return field.is_active;
                     }
@@ -273,7 +288,7 @@
 
                     return false;
 
-                } else if (entityAttr.key.indexOf('complex_transaction.status.name') !== -1 ) {
+                } else if (entityAttr.key.indexOf('complex_transaction.status.name') !== -1) {
 
                     vm.complexTransactionStatusAttrs.push(entityAttr);
 
@@ -448,6 +463,7 @@
             composeAttrsInsideTab('strategy2positionAttrs', strategiesAttrsComp);
             composeAttrsInsideTab('strategy3cashAttrs', strategiesAttrsComp);
             composeAttrsInsideTab('strategy3positionAttrs', strategiesAttrsComp);
+
 
             vm.syncAttrs();
             getSelectedAttrs();
@@ -751,58 +767,58 @@
         vm.selectedFilters = [];
 
         var getSelectedAttrs = function () {
-            
+
             const attributes = [
-               'transactionAttrs',
-               'complexTransactionAttrs',
-               'transactionTypeAttrs',
+                'transactionAttrs',
+                'complexTransactionAttrs',
+                'transactionTypeAttrs',
                 'complexTransactionStatusAttrs',
-               'complexTransactionDynamicAttrs',
-               'transactionTypeDynamicAttrs',
+                'complexTransactionDynamicAttrs',
+                'transactionTypeDynamicAttrs',
 
-               'portfolioAttrs',
-               'portfolioDynamicAttrs',
+                'portfolioAttrs',
+                'portfolioDynamicAttrs',
 
-               'instrumentAttrs',
-               'instrumentDynamicAttrs',
+                'instrumentAttrs',
+                'instrumentDynamicAttrs',
 
-               'responsibleAttrs',
-               'responsibleDynamicAttrs',
+                'responsibleAttrs',
+                'responsibleDynamicAttrs',
 
-               'counterpartyAttrs',
-               'counterpartyDynmicAttrs',
+                'counterpartyAttrs',
+                'counterpartyDynmicAttrs',
 
-               'linkedInstrumentAttrs',
-               'linkedInstrumentDynamicAttrs',
+                'linkedInstrumentAttrs',
+                'linkedInstrumentDynamicAttrs',
 
-               'allocationBalanceAttrs',
-               'allocationBalanceDynamicAttrs',
+                'allocationBalanceAttrs',
+                'allocationBalanceDynamicAttrs',
 
-               'allocationPlAttrs',
-               'allocationPlDnymaicAttrs',
+                'allocationPlAttrs',
+                'allocationPlDnymaicAttrs',
 
-               'transactionCurrencyAttrs',
-               'settlementCurrencyAttrs',
+                'transactionCurrencyAttrs',
+                'settlementCurrencyAttrs',
 
-               'accountPositionAttrs',
-               'accountPositionDynamicAttrs',
+                'accountPositionAttrs',
+                'accountPositionDynamicAttrs',
 
-               'accountCashAttrs',
-               'accountCashDynamicAttrs',
+                'accountCashAttrs',
+                'accountCashDynamicAttrs',
 
-               'accountInterimAttrs',
-               'accountInterimDynamicAttrs',
+                'accountInterimAttrs',
+                'accountInterimDynamicAttrs',
 
-               'strategy1cashAttrs',
-               'strategy1positionAttrs',
+                'strategy1cashAttrs',
+                'strategy1positionAttrs',
 
-               'strategy2cashAttrs',
-               'strategy2positionAttrs',
+                'strategy2cashAttrs',
+                'strategy2positionAttrs',
 
-               'strategy3cashAttrs',
-               'strategy3positionAttrs',
+                'strategy3cashAttrs',
+                'strategy3positionAttrs',
 
-               'custom',
+                'custom',
             ];
 
             const attrGroups = {groups, columns, filters}; // Victor 2020.12.10 I need variables: groups, columns, filters in gModalSharedLogicHelper
@@ -886,41 +902,41 @@
                         availableAttrs: availableAttrs,
                         title: dialogTitle,
                         isReport: true,
-						multiselector: true
+                        multiselector: true
                     }
                 }
             }).then(function (res) {
 
-				if (res && res.status === "agree") {
+                if (res && res.status === "agree") {
 
-					for (var j = 0; j < res.data.items.length; j++) {
+                    for (var j = 0; j < res.data.items.length; j++) {
 
-						for (var i = 0; i < vm.attrsList.length; i++) {
+                        for (var i = 0; i < vm.attrsList.length; i++) {
 
-							if (vm.attrsList[i].key === res.data.items[j].key) {
+                            if (vm.attrsList[i].key === res.data.items[j].key) {
 
-								switch (selectedGroup) {
-									case 'group':
-										vm.attrsList[i].groups = true;
-										break;
-									case 'column':
-										vm.attrsList[i].columns = true;
-										break;
-									case 'filter':
-										vm.attrsList[i].filters = true;
-										break;
-								}
+                                switch (selectedGroup) {
+                                    case 'group':
+                                        vm.attrsList[i].groups = true;
+                                        break;
+                                    case 'column':
+                                        vm.attrsList[i].columns = true;
+                                        break;
+                                    case 'filter':
+                                        vm.attrsList[i].filters = true;
+                                        break;
+                                }
 
-								break;
-							}
+                                break;
+                            }
 
-						}
+                        }
 
-					}
+                    }
 
-					vm.updateAttrs(vm.attrsList);
+                    vm.updateAttrs(vm.attrsList);
 
-				}
+                }
 
             });
 
