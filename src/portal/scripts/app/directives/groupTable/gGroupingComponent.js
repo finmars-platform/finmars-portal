@@ -381,11 +381,12 @@
                 };
 
                 scope.isGrandTotalAvailable = function () {
-                    if (scope.groups && scope.groups.length > 0) {
-                        return true;
-                    }
-
-                    return false;
+                    return true;
+                    // if (scope.groups && scope.groups.length > 0) {
+                    //     return true;
+                    // }
+                    //
+                    // return false;
                 };
 
                 function createDefaultOptions() {
