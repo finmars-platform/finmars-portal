@@ -107,9 +107,57 @@
         return [];
     };
 
+    var getModelsWithAttributes = function () {
+
+        var models = {
+            "portfolios.portfolio": require('../models/portfolioPropsModel').getAttributes(),
+            "audit.transactionaudit": require('../models/auditTransactionPropsModel').getAttributes(),
+            "audit.instrumentaudit": require('../models/auditInstrumentPropsModel').getAttributes(),
+            "accounts.account": require('../models/accountPropsModel').getAttributes(),
+            "accounts.accounttype": require('../models/accountTypePropsModel').getAttributes(),
+            "counterparties.counterparty": require('../models/counterpartyPropsModel').getAttributes(),
+            "counterparties.counterpartygroup": require('../models/counterpartyGroupPropsModel').getAttributes(),
+            "counterparties.responsible": require('../models/responsiblePropsModel').getAttributes(),
+            "counterparties.responsiblegroup": require('../models/responsibleGroupPropsModel').getAttributes(),
+            "instruments.pricingpolicy": require('../models/pricingPolicyPropsModel').getAttributes(),
+            "instruments.instrumenttype": require('../models/instrumentTypePropsModel').getAttributes(),
+            "instruments.instrument": require('../models/instrumentPropsModel').getAttributes(),
+            "instruments.generatedevent": require('../models/generatedEventPropsModel').getAttributes(),
+            "instruments.country": require('../models/countryPropsModel').getAttributes(),
+            "transactions.transaction": require('../models/transactionPropsModel').getAttributes(),
+            "transactions.transactionclass": require('../models/transactionClassPropsModel').getAttributes(),
+            "transactions.transactiontypegroup": require('../models/transactionTypeGroupPropsModel').getAttributes(),
+            "transactions.transactiontype": require('../models/transactionTypePropsModel').getAttributes(),
+            "transactions.complextransaction": require('../models/complexTransactionPropsModel').getAttributes(),
+            "currencies.currency": require('../models/currencyPropsModel').getAttributes(),
+            "currencies.currencyhistory": require('../models/currencyHistoryPropsModel').getAttributes(),
+            "instruments.pricehistory": require('../models/priceHistoryPropsModel').getAttributes(),
+            "strategies.strategy1": require('../models/strategy1PropsModel').getAttributes(),
+            "strategies.strategy2": require('../models/strategy2PropsModel').getAttributes(),
+            "strategies.strategy3": require('../models/strategy3PropsModel').getAttributes(),
+            "strategies.strategy1subgroup": require('../models/strategy1subgroupPropsModel').getAttributes(),
+            "strategies.strategy2subgroup": require('../models/strategy2subgroupPropsModel').getAttributes(),
+            "strategies.strategy3subgroup": require('../models/strategy3subgroupPropsModel').getAttributes(),
+            "strategies.strategy1group": require('../models/strategy1groupPropsModel').getAttributes(),
+            "strategies.strategy2group": require('../models/strategy2groupPropsModel').getAttributes(),
+            "strategies.strategy3group": require('../models/strategy3groupPropsModel').getAttributes(),
+            "reports.balancereport": require('../models/balanceReportPropsModel').getAttributes(),
+            "reports.balancereportperformance": require('../models/reportAddonPerformancePropsModel').getAttributes(),
+            "reports.balancereportmismatch":  require('../models/reportMismatchPropsModel').getAttributes(),
+            "reports.plreport": require('../models/pnlReportPropsModel').getAttributes(),
+            'reports.plreportperformance': require('../models/reportAddonPerformancePnlPropsModel').getAttributes(),
+            'reports.plreportmismatch': require('../models/reportMismatchPnlPropsModel').getAttributes(),
+            "reports.transactionreport": require('../models/transactionReportPropsModel').getAttributes(),
+            "reports.cashflowreport": require('../models/cashFlowProjectionReportPropsModel').getAttributes(),
+            "reports.performancereport": require('../models/performanceReportPropsModel').getAttributes()
+
+        };
+        return models
+    };
 
     module.exports = {
         getAttributesByEntityType: getAttributesByEntityType,
+        getModelsWithAttributes:getModelsWithAttributes,
         getAttributesByContentType: getAttributesByContentType
     }
 

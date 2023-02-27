@@ -105,7 +105,80 @@
                 "key": "trade_price",
                 "name": "Trade price",
                 "value_type": 20
-            }
+            },
+
+            // Entry Part
+
+            {
+                "key": "entry_account",
+                "name": "Entry Account",
+                "value_content_type": "accounts.account",
+                "value_entity": "account",
+                "code": "user_code",
+                "value_type": "field"
+            },
+
+            {
+                "key": "entry_strategy",
+                "name": "Entry Strategy",
+                "value_content_type": "strategies.strategy1",
+                "value_entity": "strategy-1",
+                "code": "user_code",
+                "value_type": "field"
+            },
+
+            {
+                "key": "entry_currency",
+                "name": "Entry Currency",
+                "value_type": "field",
+                "value_entity": "currency",
+                "value_content_type": "currencies.currency",
+                "code": "user_code"
+            },
+
+            {
+                "key": "entry_instrument",
+                "name": "Entry Instrument",
+                "value_content_type": "instruments.instrument",
+                "value_entity": "instrument",
+                "code": "user_code",
+                "value_type": "field"
+            },
+
+            {
+                "key": "entry_item_short_name",
+                "name": "Entry Item Short Name",
+                "value_type": 10
+            },
+
+            {
+                "key": "entry_item_name",
+                "name": "Entry Item Name",
+                "value_type": 10
+            },
+
+            {
+                "key": "entry_item_user_code",
+                "name": "Entry Item User Code",
+                "value_type": 10
+            },
+
+            {
+                "key": "entry_item_public_name",
+                "name": "Entry Item Public Name",
+                "value_type": 10
+            },
+
+            {
+                "key": "entry_amount",
+                "name": "Entry Amount",
+                "value_type": 20
+            },
+            {
+                "key": "entry_item_type_name",
+                "name": "Entry Item Type",
+                "value_type": 10
+            },
         ]
     };
 
