@@ -131,6 +131,18 @@
                          popup-event-service="evEventService"
 
                          class="g-column-sort-settings-opener"></div>-->
+                    <div custom-popup
+                         popup-id="{{column.key}}"
+                         popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"
+                         popup-data="{column: column, changeSortMode: changeSortMode}"
+                         position-relative-to="element"
+                         relative-popup-x="left"
+                         open-on="click"
+                         close-on-click-outside="true"
+                         popup-classes="column-sort-popup"
+                         popup-event-service="evEventService"
+
+                         class="g-column-sort-settings-opener"></div>
 
                     <div ng-if="column.report_settings.is_level_folded"
                          class="g-cell-button"
@@ -166,7 +178,8 @@
 
 <!--                                <span class="material-icons arrow-down">arrow_drop_down</span>-->
 
-                                <span data-ng-if="column.options.sort_mode === 'manual'" class="column-manual-sort-icon">
+                                <span data-ng-if="column.options.sort_settings && column.options.sort_settings.mode === 'manual'"
+                                      class="column-manual-sort-icon">
                                     m
                                     <md-tooltip md-direction="top">
                                        Manual Sorting Activated
@@ -270,8 +283,8 @@
 
 <!--                                <span ng-if="isReport" class="material-icons arrow-down">arrow_drop_down</span>-->
 
-                                <!--                            <span data-ng-if="column.manual_sort_layout_user_code" class="column-manual-sort-icon">-->
-                                <span data-ng-if="column.options.sort_mode === 'manual'" class="column-manual-sort-icon">
+                                <!--                            <span data-ng-if="column.options.sort_settings.layout_user_code" class="column-manual-sort-icon">-->
+                                <span data-ng-if="column.options.sort_settings && column.options.sort_settings.mode === 'manual'" class="column-manual-sort-icon">
                                     m
                                     <md-tooltip md-direction="top">
                                        Manual Sorting Activated

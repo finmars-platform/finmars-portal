@@ -42,6 +42,10 @@
             vm.accountsPosition = 0;
         }
 
+        if (!vm.reportOptions.depth_level) {
+            vm.reportOptions.depth_level = 'base_transaction'
+        }
+
         /* vm.selectOptions = [
             {
                 value: 0,
@@ -115,7 +119,11 @@
             // {id: 'user_date_10', name: 'User Date 10'},
         ];
 
-
+        vm.depthLevelOptions = [
+            {id: 'complex_transaction', name: 'Complex Transaction'},
+            {id: 'base_transaction', name: 'Base Transaction'},
+            {id: 'entry', name: 'Entry'},
+        ]
 
         vm.costMethod = [
 			{id: 1, name: 'AVCO'},
@@ -383,6 +391,7 @@
             }
 
             vm.reportOptions.table_font_size = vm.tableFontSize;
+
 
             vm.reportOptions.complex_transaction_statuses_filter = vm.complex_transaction_statuses_filter.join(',')
 

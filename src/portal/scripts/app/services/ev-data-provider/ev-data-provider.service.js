@@ -339,7 +339,8 @@
                 }
 
 
-            } else {
+            }
+            else {
 
                 obj = Object.assign({}, data);
                 obj.___group_name = event.groupName ? event.groupName : '-';
@@ -367,7 +368,7 @@
             return false;
         }); */
 
-        var groups = entityViewerDataService.getGroups();
+        var groupTypes = entityViewerDataService.getGroups();
         var parents = [];
 
         if (obj.___parentId !== null) {
@@ -397,13 +398,14 @@
 
                 item.___level = obj.___level + 1;
 
-                if (groups.length >= parents.length) {
+                if (groupTypes.length >= parents.length) {
                     item.___type = 'group';
                 } else {
                     item.___type = 'object';
                 }
 
                 item.___id = evRvCommonHelper.getId(item);
+
                 item.___index = index;
 
             }
@@ -621,15 +623,13 @@
                     options.page_size = itemsPerPage;
                     options.is_enabled = 'any';
 
-                    if (options.groups_types) {
+                    options.groups_types = options.groups_types.map(function (groupType) {
 
-                        options.groups_types = options.groups_types.map(function (groupType) {
+                        return groupType.key;
 
-                            return groupType.key;
+                    })
 
-                        })
-
-                    }
+                    var groupType = options.groups_types[options.groups_types.length - 1];
 
                     // evDataHelper.setDefaultGroups(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
 
@@ -655,6 +655,8 @@
                             result.___group_name = item.group_name;
                             result.___group_identifier = item.group_identifier;
                             result.___items_count = item.items_count;
+                            result.___group_type_key = groupType.key; // TODO assign ___group_type_key from a 'item' after backend starts to return it
+
 
                             return result
                         });

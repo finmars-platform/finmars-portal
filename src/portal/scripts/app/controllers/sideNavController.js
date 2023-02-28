@@ -102,6 +102,7 @@
         vm.sideNavStatus = 'expand';
 		vm.homepageUrl = redirectionService.getUrl('app.portal.home');
 		vm.performanceUrl = redirectionService.getUrl('app.portal.reports.performance-report');
+        vm.permissionsUrl = redirectionService.getUrl('app.portal.settings.users-groups');
 
         /* Old sidemenu */
         /*vm.resizeSideNav = function (status) {
