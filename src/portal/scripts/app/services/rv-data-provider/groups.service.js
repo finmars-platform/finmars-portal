@@ -39,7 +39,6 @@
 
         var last_key;
 
-        // console.log('convertNameKeyToUserCodeKey.pieces', pieces)
         if (pieces.length > 1) {
             last_key = pieces.pop()
 
@@ -60,33 +59,32 @@
     /**
      * Get list of unique groups
      * @param {object[]} items - collection of items
-     * @param {object} group - group type on which grouping is based
+     * @param {object} groupType - group type on which grouping is based
      * @return {object[]} return list of unique groups
      * @memberof module:ReportViewerDataProviderGroupsService
      */
-    var getUniqueGroups = function (items, group) {
+    var getUniqueGroups = function (items, groupType) {
 
         var result = [];
 
         var resultGroup;
 
-        console.log('getUniqueGroups.group', group)
+        console.log('getUniqueGroups.group', groupType)
 
         items.forEach(function (item) {
 
             resultGroup = {
                 ___group_name: null,
-                ___group_identifier: null
+                ___group_identifier: null,
+                ___group_type_key: groupType.key,
             };
 
-            var item_value = item[group.key];
-            var identifier_value = item[group.key];
+            var item_value = item[groupType.key];
+            var identifier_value = item[groupType.key];
             var identifier_key = null;
 
-            identifier_key = convertNameKeyToUserCodeKey(group.key)
+            identifier_key = convertNameKeyToUserCodeKey(groupType.key)
             identifier_value = item[identifier_key];
-
-            // console.log('identifier_key', identifier_key);
 
             if (identifier_value !== null && identifier_value !== undefined && identifier_value !== '-') {
 
@@ -94,7 +92,8 @@
                 resultGroup.___group_name = item_value.toString();
 
 
-                // if (group.key === 'complex_transaction.is_canceled') {
+
+                // if (groupType.key === 'complex_transaction.is_canceled') {
                 //
                 //     if (item_value) {
                 //         resultGroup.___group_name = 'Canceled'
@@ -104,7 +103,7 @@
                 //
                 // }
                 //
-                // if (group.key === 'complex_transaction.is_locked') {
+                // if (groupType.key === 'complex_transaction.is_locked') {
                 //
                 //     if (item_value) {
                 //         resultGroup.___group_name = 'Locked'
@@ -114,7 +113,7 @@
                 //
                 // }
 
-                if (group.key === 'complex_transaction.status') {
+                if (groupType.key === 'complex_transaction.status') {
 
                     if (item_value === 1) {
                         resultGroup.___group_name = 'Booked'
@@ -173,8 +172,6 @@
             var reportOptions = entityViewerDataService.getReportOptions();
             var globalTableSearch = entityViewerDataService.getGlobalTableSearch();
 
-            var groups = [];
-
             if (reportOptions.hasOwnProperty("items") && reportOptions.items.length > 0) {
 
                 var items = reportOptions.items.concat();
@@ -199,24 +196,24 @@
 
                                 }*/
 
-                var group = options.groups_types[options.groups_types.length - 1];
+                var groupType = options.groups_types[options.groups_types.length - 1];
 
                 console.log('before groups ', items);
 
-                var groups = getUniqueGroups(items, group);
+                var groups = getUniqueGroups(items, groupType);
 
                 console.log('groups', groups);
-
                 const groupSortProperty = options.groups_order === 'desc' ? '-___group_name' : '___group_name';
 
                 if (options.ordering_mode === 'manual') {
 
-                    const {key} = entityViewerDataService.getActiveGroupTypeSort();
+                    // const {key} = entityViewerDataService.getGroupTypeSort(groupType.key);
+                    const key = groupType.key;
 
-                    const columnSortData = entityViewerDataService.getColumnSortData(key)
+                    const groupTypeSortData = entityViewerDataService.getColumnSortData(key)
 
-                    if (columnSortData) {
-                        groups = sortService.sortItemsManual(groups, groupSortProperty, columnSortData);
+                    if (groupTypeSortData) {
+                        groups = sortService.sortItemsManual(groups, groupSortProperty, groupTypeSortData);
                     }
 
                 } else {

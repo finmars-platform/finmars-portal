@@ -50,7 +50,16 @@
             vm.processing = true;
             vm.isDeleted = true;
 
-            entityResolverService.deleteBulk(vm.entityType, {ids: ids}).then(function (data) {
+            var deleteProm;
+
+            if (ids.length > 1) {
+                deleteProm = entityResolverService.deleteBulk(vm.entityType, {ids: ids});
+
+            } else {
+                deleteProm = entityResolverService.deleteByKey(vm.entityType, ids[0]);
+            }
+
+            deleteProm.then(function (data) {
 
                 vm.processing = false;
 

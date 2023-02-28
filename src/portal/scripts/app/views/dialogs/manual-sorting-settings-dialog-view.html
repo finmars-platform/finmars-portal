@@ -1,4 +1,6 @@
-<md-dialog class="draggable-dialog width-50" drag-dialog>
+<md-dialog class="draggable-dialog width-50"
+           aria-label="manual sorting settings dialog"
+           drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
@@ -46,22 +48,28 @@
                     </div>
                 </div>
 
-                <div data-ng-repeat="item in vm.layout.data.items track by $index" layout="row">
+                <div data-ng-repeat="item in vm.layout.data.items track by $index"
+                     class="flex-row fc-space-between">
 
-                    <div class="m-8">
-                        {{item.order}}
+                    <div class="flex-row">
+                        <div class="m-8">
+                            {{item.order + 1}}
+                        </div>
+
+                        <div class="m-8">
+                            {{item.value}}
+                        </div>
                     </div>
 
-                    <div class="m-8">
-                        {{item.value}}
-                    </div>
+                    <div class="flex-row">
 
-                    <div layout="row">
-
-                        <md-button class="md-raised" data-ng-class="{'disabled-btn': item.order == 1}" data-ng-click="vm.moveUp(item)">
+                        <md-button class="md-raised"
+                                   data-ng-disabled="item.order === 0"
+                                   data-ng-click="vm.moveUp(item)">
                             Move up
                         </md-button>
-                        <md-button class="md-raised"  data-ng-class="{'disabled-btn': item.order == vm.layout.data.items.length}"
+                        <md-button class="md-raised"
+                                   data-ng-disabled="item.order === vm.layout.data.items.length - 1"
                                    data-ng-click="vm.moveDown(item)">Move down
                         </md-button>
 
@@ -99,7 +107,7 @@
 
             </div>
 
-            <div data-ng-if="vm.layout.id && vm.newValues.length">
+            <div data-ng-if="vm.newValues.length">
 
                 <h4>New Values</h4>
 
@@ -117,7 +125,7 @@
                             Value
                         </div>
                         <div class="m-8">
-                            <md-button class="md-raised" data-ng-click="vm.addSelected()">Add Selected</md-button>
+                            <md-button class="md-raised" data-ng-click="vm.addSelectedValues()">Add Selected</md-button>
                         </div>
                     </div>
 
@@ -154,7 +162,9 @@
 
         <md-button class="md-raised" data-ng-click="vm.cancel()">Close</md-button>
 
-        <md-button class="md-raised md-primary" data-ng-click="vm.agree()" data-ng-class="{'disabled-btn': !vm.layout.user_code}">Apply</md-button>
+        <md-button class="md-raised md-primary"
+                   data-ng-click="vm.agree()"
+                   data-ng-disabled="!vm.layout.user_code">Save</md-button>
 
     </md-dialog-actions>
 </md-dialog>

@@ -528,11 +528,11 @@
 
 						console.log('activeColumnSortProm.activeColumnSort', activeColumnSort);
 
-						if (activeColumnSort && activeColumnSort.manual_sort_layout_user_code) {
+						if (activeColumnSort && activeColumnSort.options.sort_settings.layout_user_code) {
 
 							uiService.getColumnSortDataList({
 								filters: {
-									user_code: activeColumnSort.manual_sort_layout_user_code
+									user_code: activeColumnSort.options.sort_settings.layout_user_code
 								}
 							}).then(function (data){
 
@@ -550,7 +550,7 @@
 
 									toastNotificationService.error("Manual Sort is not configured");
 
-									activeColumnSort.manual_sort_layout_user_code = null;
+									activeColumnSort.options.sort_settings.layout_user_code = null;
 
 								}
 
