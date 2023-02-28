@@ -796,7 +796,13 @@
 
 
     };
-
+    /**
+     * Returns group type and chain of parent group types based on level
+     *
+     * @param {Number} level
+     * @param evDataService
+     * @returns {*[]}
+     */
     var getGroupsTypesToLevel = function (level, evDataService) {
 
         var groups = evDataService.getGroups();

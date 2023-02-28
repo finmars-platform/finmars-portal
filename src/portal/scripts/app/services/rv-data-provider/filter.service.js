@@ -452,8 +452,6 @@
 
                     converted_key = convertNameKeyToUserCodeKey(key)
 
-                    // console.log('converted_key', converted_key);
-
                     match = getFilterMatch(item, converted_key, value);
 
                     if (match === false) {

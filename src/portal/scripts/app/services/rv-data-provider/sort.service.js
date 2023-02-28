@@ -1,5 +1,9 @@
 (function () {
 
+    'use strict';
+
+    var metaHelper = require('../../helpers/meta.helper');
+
     function orderSort(property, sortOrder) {
 
         return function (a, b) {
@@ -60,14 +64,18 @@
 
         for (var i = 0; i < items.length; i = i + 1) {
 
-            item_value = items[i][key]
+            item_value = items[i][key];
 
-            matched = false
+            if (key === '___group_name' && !item_value) { // when sorting groups
+                item_value = '-';
+            }
+
+            matched = false;
 
             for (var x = 0; x < columnSortData.items.length; x = x + 1) {
 
-                manual_sort_value = columnSortData.items[x].value
-                manual_sort_order = columnSortData.items[x].order
+                manual_sort_value = columnSortData.items[x].value;
+                manual_sort_order = columnSortData.items[x].order;
 
                 if (item_value === manual_sort_value) {
 
@@ -89,9 +97,13 @@
 
         }
 
-        Object.keys(orderedItems).forEach(function (orderKey) {
+        var orderNumsList = Object.keys(orderedItems).sort();
+
+        orderNumsList.forEach(function (orderKey) {
             result.push(...orderedItems[orderKey])
         })
+
+        missedItems = metaHelper.textWithDashSort(missedItems, key);
 
         result = result.concat(missedItems);
 

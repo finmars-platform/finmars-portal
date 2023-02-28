@@ -7,12 +7,12 @@
 
     var pricingProcedureService = require('../../../services/procedures/pricingProcedureService');
 
-    var portfolioService = require('../../../services/portfolioService');
+    /*var portfolioService = require('../../../services/portfolioService');
     var instrumentTypeService = require('../../../services/instrumentTypeService');
     var pricingPolicyService = require('../../../services/pricingPolicyService');
 
     var instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
-    var currencyPricingSchemeService = require('../../../services/pricing/currencyPricingSchemeService');
+    var currencyPricingSchemeService = require('../../../services/pricing/currencyPricingSchemeService');*/
 
     var getAndOverwriteKeysPairs = {
         'price_get_principal_prices': 'price_overwrite_principal_prices',
@@ -26,7 +26,8 @@
 
         vm.itemId = data.item.id;
 
-        vm.readyStatus = {procedure: false};
+        vm.readyStatus = {procedure: false, other: false};
+        vm.processing = false;
 
         vm.entityType = 'pricing-procedure';
 
@@ -63,7 +64,6 @@
         };
 
         vm.item = {};
-        vm.readyStatus = {content: false};
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
@@ -71,232 +71,255 @@
 
         vm.agree = function () {
 
+            vm.processing = true;
+            var pprocedureData = JSON.parse(angular.toJson( vm.item ));
 
-            if (vm.item.price_date_from_expr) {
-                vm.item.price_date_from = null
+            if (pprocedureData.price_date_from_expr) {
+                pprocedureData.price_date_from = null
             }
 
-            if (vm.item.price_date_to_expr) {
-                vm.item.price_date_to = null
+            if (pprocedureData.price_date_to_expr) {
+                pprocedureData.price_date_to = null
             }
 
-            if (vm.item.portfolio_filters) {
-                vm.item.portfolio_filters = vm.item.portfolio_filters.join(',');
+            if (pprocedureData.portfolio_filters) {
+                pprocedureData.portfolio_filters = pprocedureData.portfolio_filters.join(',');
             }
 
-            if (vm.item.pricing_policy_filters) {
-                vm.item.pricing_policy_filters = vm.item.pricing_policy_filters.join(',');
+            if (pprocedureData.pricing_policy_filters) {
+                pprocedureData.pricing_policy_filters = pprocedureData.pricing_policy_filters.join(',');
             }
 
-            if (vm.item.instrument_type_filters) {
-                vm.item.instrument_type_filters = vm.item.instrument_type_filters.join(',');
+            if (pprocedureData.instrument_type_filters) {
+                pprocedureData.instrument_type_filters = pprocedureData.instrument_type_filters.join(',');
             }
 
-            if (vm.item.instrument_pricing_scheme_filters) {
-                vm.item.instrument_pricing_scheme_filters = vm.item.instrument_pricing_scheme_filters.join(',');
+            if (pprocedureData.instrument_pricing_scheme_filters) {
+                pprocedureData.instrument_pricing_scheme_filters = pprocedureData.instrument_pricing_scheme_filters.join(',');
             }
 
-            if (vm.item.instrument_pricing_condition_filters) {
-                vm.item.instrument_pricing_condition_filters = vm.item.instrument_pricing_condition_filters.join(',');
+            if (pprocedureData.instrument_pricing_condition_filters) {
+                pprocedureData.instrument_pricing_condition_filters = pprocedureData.instrument_pricing_condition_filters.join(',');
             }
 
-            if (vm.item.currency_pricing_scheme_filters) {
-                vm.item.currency_pricing_scheme_filters = vm.item.currency_pricing_scheme_filters.join(',');
+            if (pprocedureData.currency_pricing_scheme_filters) {
+                pprocedureData.currency_pricing_scheme_filters = pprocedureData.currency_pricing_scheme_filters.join(',');
             }
 
-            if (vm.item.currency_pricing_condition_filters) {
-                vm.item.currency_pricing_condition_filters = vm.item.currency_pricing_condition_filters.join(',');
+            if (pprocedureData.currency_pricing_condition_filters) {
+                pprocedureData.currency_pricing_condition_filters = pprocedureData.currency_pricing_condition_filters.join(',');
             }
 
-            pricingProcedureService.update(vm.item.id, vm.item).then(function (data) {
+            pricingProcedureService.update(pprocedureData.id, pprocedureData).then(function (data) {
 
                 $mdDialog.hide({status: 'agree', data: {item: data}});
-            })
+
+            }, function () { vm.processing = false; })
 
         };
 
-        vm.getPortfolios = function () {
+        /*vm.getPortfolios = function () {
 
-            portfolioService.getList({
-                pageSize: 1000
-            }).then(function (data) {
+            return new Promise(function (resolve, reject) {
 
-                vm.portfolios = data.results.map(function (item) {
+                portfolioService.getList({
+                    pageSize: 1000
+                }).then(function (data) {
 
-                    return {
-                        id: item.user_code,
-                        name: item.user_code
-                    }
+                    vm.portfolios = data.results.map(function (item) {
 
-                });
+                        return {
+                            id: item.user_code,
+                            name: item.user_code
+                        }
 
-                console.log('vm.portfolios', vm.portfolios);
+                    });
 
-                $scope.$apply();
+                    resolve();
 
-            })
+                }).catch(function (e) { reject(e); });
+
+            });
 
         };
 
         vm.getInstrumentPricingSchemes = function () {
 
-            instrumentPricingSchemeService.getList({
-                pageSize: 1000
-            }).then(function (data) {
+            return new Promise(function (resolve, reject) {
 
-                vm.instrumentPricingSchemes = data.results.map(function (item) {
+                instrumentPricingSchemeService.getList({
+                    pageSize: 1000
+                }).then(function (data) {
 
-                    return {
-                        id: item.user_code,
-                        name: item.user_code
-                    }
+                    vm.instrumentPricingSchemes = data.results.map(function (item) {
 
-                });
+                        return {
+                            id: item.user_code,
+                            name: item.user_code
+                        }
 
-                console.log('vm.instrumentPricingSchemes', vm.instrumentPricingSchemes);
+                    });
 
-                $scope.$apply();
+                    resolve();
 
-            })
+                }).catch(function (e) { reject(e) });
+
+            });
 
         };
 
         vm.getCurrencyPricingSchemes = function () {
 
-            currencyPricingSchemeService.getList({
-                pageSize: 1000
-            }).then(function (data) {
+            return new Promise(function (resolve, reject) {
 
-                vm.currencyPricingSchemes = data.results.map(function (item) {
+                currencyPricingSchemeService.getList({
+                    pageSize: 1000
+                }).then(function (data) {
 
-                    return {
-                        id: item.user_code,
-                        name: item.user_code
-                    }
+                    vm.currencyPricingSchemes = data.results.map(function (item) {
 
-                });
+                        return {
+                            id: item.user_code,
+                            name: item.user_code
+                        }
 
-                console.log('vm.currencyPricingSchemes', vm.currencyPricingSchemes);
+                    });
 
-                $scope.$apply();
+                    resolve();
 
-            })
+                }).catch(function (e) { reject(e) });
+
+            });
 
         };
 
         vm.getInstrumentTypes = function () {
 
-            instrumentTypeService.getList({
-                pageSize: 1000
-            }).then(function (data) {
+            return new Promise(function (resolve, reject) {
 
-                vm.instrumentTypes = data.results.map(function (item) {
+                instrumentTypeService.getList({
+                    pageSize: 1000
+                }).then(function (data) {
 
-                    return {
-                        id: item.user_code,
-                        name: item.user_code
-                    }
+                    vm.instrumentTypes = data.results.map(function (item) {
 
-                });
+                        return {
+                            id: item.user_code,
+                            name: item.user_code
+                        }
 
-                console.log('vm.instrumentTypes', vm.instrumentTypes);
+                    });
 
-                $scope.$apply();
+                    console.log('vm.instrumentTypes', vm.instrumentTypes);
+                    resolve();
 
-            })
+                }).catch(function (e) { reject(e); });
+
+            });
 
         };
 
         vm.getPricingPolicies = function () {
 
-            pricingPolicyService.getList({
-                pageSize: 1000
-            }).then(function (data) {
+            return new Promise(function (resolve, reject) {
 
-                vm.pricingPolicies = data.results.map(function (item) {
+                pricingPolicyService.getList({
+                    pageSize: 1000
+                }).then(function (data) {
 
-                    return {
-                        id: item.user_code,
-                        name: item.user_code
-                    }
+                    vm.pricingPolicies = data.results.map(function (item) {
 
-                });
+                        return {
+                            id: item.user_code,
+                            name: item.user_code
+                        }
 
-                $scope.$apply();
+                    });
 
-            })
+                    resolve();
 
-        };
+                }).catch(function (e) { reject(e) });
+
+            });
+
+        };*/
 
         vm.getItem = function () {
 
-            pricingProcedureService.getByKey(vm.itemId).then(function (data) {
+            vm.readyStatus.procedure = false;
 
-                vm.originalItem = JSON.parse(JSON.stringify(data));
+            return new Promise(function (resolve, reject) {
 
-                vm.item = data;
+                pricingProcedureService.getByKey(vm.itemId)
+                .then(function (data) {
 
-                Object.keys(getAndOverwriteKeysPairs).forEach(vm.checkOverwriteValue);
+                    vm.originalItem = JSON.parse(JSON.stringify(data));
 
-                if (vm.item.portfolio_filters) {
+                    vm.item = data;
 
-                    vm.item.portfolio_filters = vm.item.portfolio_filters.split(',');
+                    Object.keys(getAndOverwriteKeysPairs).forEach(vm.checkOverwriteValue);
 
-                }
+                    if (vm.item.portfolio_filters) {
 
-                if (vm.item.pricing_policy_filters) {
+                        vm.item.portfolio_filters = vm.item.portfolio_filters.split(',');
 
-                    vm.item.pricing_policy_filters = vm.item.pricing_policy_filters.split(',');
+                    }
 
-                }
+                    if (vm.item.pricing_policy_filters) {
 
-                if (vm.item.instrument_type_filters) {
+                        vm.item.pricing_policy_filters = vm.item.pricing_policy_filters.split(',');
 
-                    vm.item.instrument_type_filters = vm.item.instrument_type_filters.split(',');
+                    }
 
-                }
+                    if (vm.item.instrument_type_filters) {
 
-                if (vm.item.instrument_pricing_scheme_filters) {
+                        vm.item.instrument_type_filters = vm.item.instrument_type_filters.split(',');
 
-                    vm.item.instrument_pricing_scheme_filters = vm.item.instrument_pricing_scheme_filters.split(',');
+                    }
 
-                }
+                    if (vm.item.instrument_pricing_scheme_filters) {
 
-                if (vm.item.instrument_pricing_condition_filters) {
+                        vm.item.instrument_pricing_scheme_filters = vm.item.instrument_pricing_scheme_filters.split(',');
 
-                    vm.item.instrument_pricing_condition_filters = vm.item.instrument_pricing_condition_filters.split(',');
+                    }
 
-                }
+                    if (vm.item.instrument_pricing_condition_filters) {
 
-                if (vm.item.currency_pricing_scheme_filters) {
+                        vm.item.instrument_pricing_condition_filters = vm.item.instrument_pricing_condition_filters.split(',');
 
-                    vm.item.currency_pricing_scheme_filters = vm.item.currency_pricing_scheme_filters.split(',');
+                    }
 
-                }
+                    if (vm.item.currency_pricing_scheme_filters) {
 
-                if (vm.item.currency_pricing_condition_filters) {
+                        vm.item.currency_pricing_scheme_filters = vm.item.currency_pricing_scheme_filters.split(',');
 
-                    vm.item.currency_pricing_condition_filters = vm.item.currency_pricing_condition_filters.split(',');
+                    }
 
-                }
+                    if (vm.item.currency_pricing_condition_filters) {
 
-                if (vm.item.price_date_from_expr) {
+                        vm.item.currency_pricing_condition_filters = vm.item.currency_pricing_condition_filters.split(',');
 
-                    vm.toggleStatus.price_date_from = 'expr';
+                    }
 
-                }
+                    if (vm.item.price_date_from_expr) {
 
-                if (vm.item.price_date_to_expr) {
+                        vm.toggleStatus.price_date_from = 'expr';
 
-                    vm.toggleStatus.price_date_to = 'expr';
+                    }
 
-                }
+                    if (vm.item.price_date_to_expr) {
 
-                vm.readyStatus.procedure = true;
+                        vm.toggleStatus.price_date_to = 'expr';
 
-                $scope.$apply();
+                    }
 
-            })
+                    vm.readyStatus.procedure = true;
+
+                    resolve();
+
+                }).catch(function (e) { reject(e) })
+
+            });
 
         };
 
@@ -328,7 +351,7 @@
 
                 if (res.status === "agree") {
 
-                    vm.getItem();
+                    vm.getItem().then(function () { $scope.$apply(); });
 
                 }
             })
@@ -337,14 +360,39 @@
 
         vm.init = function () {
 
-            vm.getItem();
+            /*var promisesList = [
+                vm.getItem(),
 
-            vm.getInstrumentTypes();
-            vm.getPricingPolicies();
-            vm.getPortfolios();
+                vm.getInstrumentTypes(),
+                vm.getPricingPolicies(),
+                vm.getPortfolios(),
 
-            vm.getInstrumentPricingSchemes();
-            vm.getCurrencyPricingSchemes();
+                vm.getInstrumentPricingSchemes(),
+                vm.getCurrencyPricingSchemes(),
+            ];
+
+            Promise.all(promisesList).then(function () {
+
+                vm.readyStatus.other = true;
+                $scope.$apply();
+
+            });*/
+
+            Promise.all([vm.getItem(), pricingProcedureService.loadRelatedData()]).then(function (data) {
+
+                var relatedData = data[1];
+
+                vm.instrumentTypes = relatedData.instrumentTypes;
+                vm.pricingPolicies = relatedData.pricingPolicies;
+                vm.portfolios = relatedData.portfolios;
+
+                vm.instrumentPricingSchemes = relatedData.instrumentPricingSchemes;
+                vm.currencyPricingSchemes = relatedData.currencyPricingSchemes;
+
+                vm.readyStatus.other = true;
+                $scope.$apply();
+
+            });
 
         };
 

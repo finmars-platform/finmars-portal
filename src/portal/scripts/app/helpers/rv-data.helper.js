@@ -845,7 +845,6 @@
             console.time("Inserting subtotals");
 
             data = insertSubtotalsToResults(data, evDataService);
-
             console.timeEnd("Inserting subtotals");
 
 
@@ -872,8 +871,13 @@
         console.time("Converting to tree");
         console.log("Converting to tree data", data);
 
-        var tree = utilsHelper.convertToTree(data, rootGroup);
+        var optimize = false;
 
+        if (evDataService.getEntityType().indexOf('report') !== -1) {
+            optimize = true
+        }
+
+        var tree = utilsHelper.convertToTree(data, rootGroup, optimize);
         console.log("getFlatStructure.tree", tree)
 
         console.timeEnd("Converting to tree");
