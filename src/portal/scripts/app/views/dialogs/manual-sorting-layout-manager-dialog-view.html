@@ -17,13 +17,13 @@
                 <div data-ng-if="vm.columnLayouts.length">
 
                     <div data-ng-repeat="item in vm.columnLayouts" class="column-sorting-layout-manager-row"
-                         data-ng-class="{'active': item.user_code == vm.column.manual_sort_layout_user_code}">
+                         data-ng-class="{'active': item.user_code == vm.column.options.sort_settings.layout_user_code}">
 
                         {{item.user_code}}
 
-                        <md-button class="md-raised" data-ng-click="vm.editManualSortingLayout($event, item)">Edit
+                        <md-button class="md-raised" data-ng-click="vm.editManualSortingLayout($event, item, 'column')">Edit
                         </md-button>
-                        <md-button class="md-raised" data-ng-click="vm.deleteManualSortingLayout($event, item)">Delete
+                        <md-button class="md-raised" data-ng-click="vm.deleteManualSortingLayout($event, item, 'column')">Delete
                         </md-button>
 
                         <md-button class="md-raised md-primary"
@@ -49,13 +49,13 @@
                 <div data-ng-if="vm.commonLayouts.length">
 
                     <div data-ng-repeat="item in vm.commonLayouts" class="column-sorting-layout-manager-row"
-                         data-ng-class="{'active': item.user_code == vm.column.manual_sort_layout_user_code}">
+                         data-ng-class="{'active': item.user_code == vm.column.options.sort_settings.layout_user_code}">
 
                         {{item.user_code}}
 
-                        <md-button class="md-raised" data-ng-click="vm.editManualSortingLayout($event, item)">Edit
+                        <md-button class="md-raised" data-ng-click="vm.editManualSortingLayout($event, item, 'common')">Edit
                         </md-button>
-                        <md-button class="md-raised" data-ng-click="vm.deleteManualSortingLayout($event, item)">Delete
+                        <md-button class="md-raised" data-ng-click="vm.deleteManualSortingLayout($event, item, 'common')">Delete
                         </md-button>
 
                         <md-button class="md-raised md-primary"
@@ -97,13 +97,14 @@
 
         <div>
 
-            <md-button class="md-raised" data-ng-click="vm.cancel()">Close</md-button>
+            <md-button class="md-raised" data-ng-click="vm.cancel()">CANCEL</md-button>
             <md-button class="md-raised" data-ng-click="vm.clearManualSortingLayout($event)">Clear</md-button>
 
         </div>
 
         <div>
-            <md-button class="md-raised" data-ng-click="vm.agree($event)" data-ng-class="{'disabled-btn': !vm.column.manual_sort_layout_user_code}">Sort</md-button>
+            <md-button class="md-raised"
+                       data-ng-click="vm.agree($event)">SORT</md-button>
         </div>
 
     </md-dialog-actions>

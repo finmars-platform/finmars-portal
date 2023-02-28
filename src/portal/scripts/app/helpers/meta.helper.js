@@ -101,36 +101,13 @@
             const aStartsWithDash = a[key].startsWith('-');
             const bStartsWithDash = b[key].startsWith('-');
 
-            // if (a.name.indexOf('-') !== 0 && b.name.indexOf('-') === 0) {
-            //     return 1;
-            // }
-
             if (!aStartsWithDash && bStartsWithDash) {
                 return 1;
             }
 
-            // if (a.name.indexOf('-') === 0 && b.name.indexOf('-') !== 0) {
-            //     return -1;
-            // }
-
             if (aStartsWithDash && !bStartsWithDash) {
                 return -1;
             }
-
-            // if (a.name.indexOf('-') === 0 && b.name.indexOf('-') === 0) { // if both words starts with '-', filter as usual
-            //
-            //     var aWithoutDash = a.name.slice(1);
-            //     var bWithoutDash = b.name.slice(1);
-            //
-            //     if (aWithoutDash > bWithoutDash) {
-            //         return 1;
-            //     }
-            //
-            //     if (aWithoutDash < bWithoutDash) {
-            //         return -1;
-            //     }
-            //
-            // }
 
             if (aStartsWithDash && bStartsWithDash) {
 
@@ -149,17 +126,9 @@
 
             }
 
-            // if (a.name > b.name) {
-            //     return 1;
-            // }
-
             if (a[key] > b[key]) {
                 return 1;
             }
-
-            // if (a.name < b.name) {
-            //     return -1;
-            // }
 
             if (a[key] < b[key]) {
                 return -1;

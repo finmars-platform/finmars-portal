@@ -1,6 +1,6 @@
 (function () {
 
-	var localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
+    var localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
 
     var utilsHelper = require('./utils.helper');
     var evRvCommonHelper = require('./ev-rv-common.helper');
@@ -25,6 +25,12 @@
         var level = groups.length;
 
         // console.log('calculateItemSubtotal.item', item)
+
+        // Reset subtotals if previously calculated
+
+        item.subtotal = {};
+
+        console.log('calculateItemSubtotal.item', item)
 
         if (item.___level === level) {
 
@@ -67,6 +73,8 @@
 
             dataList.forEach(function (item) {
 
+
+
                 if (item.___level === i) {
                     calculateItemSubtotal(item, evDataService);
                 }
@@ -78,52 +86,52 @@
     };
 
     var insertSubtotalFns = {
-    	'line': function (subtotalObj, item) {
+        'line': function (subtotalObj, item) {
 
-    		subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-			subtotalObj.___subtotal_type = 'line';
+            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+            subtotalObj.___subtotal_type = 'line';
 
-			item.results.unshift(subtotalObj);
+            item.results.unshift(subtotalObj);
 
-		},
-		'area': function (subtotalObj, item) {
+        },
+        'area': function (subtotalObj, item) {
 
-			subtotalObj.___subtotal_type = 'proxyline';
-			subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+            subtotalObj.___subtotal_type = 'proxyline';
+            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
 
-			item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
+            item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
 
-			subtotalObj.___subtotal_type = 'area';
-			subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+            subtotalObj.___subtotal_type = 'area';
+            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
 
-			item.results.push(subtotalObj);
+            item.results.push(subtotalObj);
 
-		},
-		'arealine': function (subtotalObj, item) {
+        },
+        'arealine': function (subtotalObj, item) {
 
-    		subtotalObj.___subtotal_type = 'arealine';
+            subtotalObj.___subtotal_type = 'arealine';
 
-			subtotalObj.___subtotal_subtype = 'line';
-			subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+            subtotalObj.___subtotal_subtype = 'line';
+            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
 
-			item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
+            item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
 
 
-			subtotalObj.___subtotal_subtype = 'area';
-			subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+            subtotalObj.___subtotal_subtype = 'area';
+            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
 
-			item.results.push(subtotalObj);
+            item.results.push(subtotalObj);
 
-		}
-	}
+        }
+    }
 
     var insertSubtotalsToResults = function (data, evDataService) {
 
         var dataList = [];
         var groups = evDataService.getGroups();
-		/* var rootGroupOptions = evDataService.getRootGroupOptions();
-		var reportOptions = evDataService.getReportOptions();
-		var subtotalsOpts = reportOptions.subtotals_options; */
+        /* var rootGroupOptions = evDataService.getRootGroupOptions();
+        var reportOptions = evDataService.getReportOptions();
+        var subtotalsOpts = reportOptions.subtotals_options; */
 
         Object.keys(data).forEach(function (key) {
             dataList.push(data[key])
@@ -131,24 +139,24 @@
 
         var subtotalObj;
 
-		// insert Grand total
+        // insert Grand total
         if (dataList[0].results) {
 
-        	subtotalObj = Object.assign({}, dataList[0].subtotal, {
+            subtotalObj = Object.assign({}, dataList[0].subtotal, {
                 ___group_identifier: dataList[0].___group_identifier,
-				___group_name: dataList[0].___group_name,
-				___type: 'subtotal',
-				___parentId: dataList[0].___id,
-				___level: 0
-			});
+                ___group_name: dataList[0].___group_name,
+                ___type: 'subtotal',
+                ___parentId: dataList[0].___id,
+                ___level: 0
+            });
 
-        	subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-			subtotalObj.___subtotal_type = 'line';
+            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
+            subtotalObj.___subtotal_type = 'line';
 
-			dataList[0].results.unshift(subtotalObj);
+            dataList[0].results.unshift(subtotalObj);
 
-		}
-		// < insert Grand total >
+        }
+        // < insert Grand total >
 
         /* if (subtotalsOpts) {
 
@@ -179,35 +187,35 @@
 
 		} */
 
-		dataList.forEach(function (item) {
+        dataList.forEach(function (item) {
 
-			if (item.results.length) {
+            if (item.results.length) {
 
-				groups.forEach(function (group, index) {
+                groups.forEach(function (group, index) {
 
-					if (item.___level === index + 1 && item.___level <= groups.length &&
-						group.report_settings.subtotal_type) {
+                    if (item.___level === index + 1 && item.___level <= groups.length &&
+                        group.report_settings.subtotal_type) {
 
-						subtotalObj = Object.assign({}, item.subtotal, {
+                        subtotalObj = Object.assign({}, item.subtotal, {
                             ___group_identifier: item.___group_identifier,
-							___group_name: item.___group_name,
-							___type: 'subtotal',
-							___parentId: item.___id,
-							___level: item.___level + 1
-						});
+                            ___group_name: item.___group_name,
+                            ___type: 'subtotal',
+                            ___parentId: item.___id,
+                            ___level: item.___level + 1
+                        });
 
-						var insertSubtotal = insertSubtotalFns[group.report_settings.subtotal_type];
-						insertSubtotal(subtotalObj, item);
+                        var insertSubtotal = insertSubtotalFns[group.report_settings.subtotal_type];
+                        insertSubtotal(subtotalObj, item);
 
-					}
+                    }
 
-				});
+                });
 
-			}
+            }
 
-		});
+        });
 
-		/* dataList.forEach(function (item) {
+        /* dataList.forEach(function (item) {
 
             if (item.results.length) {
 
@@ -246,9 +254,9 @@
 
                 }
 
-				else {
+                else {
 
-					groups.forEach(function (group, index) {
+                    groups.forEach(function (group, index) {
 
                         if (item.___level === index + 1 && item.___level <= groups.length) {
 
@@ -623,6 +631,8 @@
 
                 result[key] = Object.assign({}, obj[key]) // WARNING, Nested objects is not supported
 
+            } else {
+                result[key] = obj[key]
             }
 
 
@@ -642,7 +652,9 @@
 
         Object.keys(sourceData).forEach(function (key) {
 
-            result[key] = simpleObjectCopy(sourceData[key]);
+            result[key] = simpleObjectCopy(sourceData[key]); // performance issue
+            // result[key] = Object.assign({}, sourceData[key])
+
 
         });
 
@@ -650,73 +662,73 @@
 
     };
 
-	const getMarkedRowsAndSubtotals = function (color, evDataService, globalDataService) {
+    const getMarkedRowsAndSubtotals = function (color, evDataService, globalDataService) {
 
         const entityType = evDataService.getEntityType();
         // const markedReportRows = localStorageService.getMarkedRows(true, entityType);
-		const rvSettings = globalDataService.getMemberEntityViewersSettings(true, entityType);
-		const markedReportRows = rvSettings.marked_rows;
+        const rvSettings = globalDataService.getMemberEntityViewersSettings(true, entityType);
+        const markedReportRows = rvSettings.marked_rows;
 
-		const markedSubtotals = evDataService.getMarkedSubtotals();
+        const markedSubtotals = evDataService.getMarkedSubtotals();
 
-		const markedRowsAndSubtotals = Object.keys(markedReportRows)
-			.filter(key => markedReportRows[key].color === color)
-			.concat(
-				Object.keys(markedSubtotals).filter(key => markedSubtotals[key] === color)
-			);
+        const markedRowsAndSubtotals = Object.keys(markedReportRows)
+            .filter(key => markedReportRows[key].color === color)
+            .concat(
+                Object.keys(markedSubtotals).filter(key => markedSubtotals[key] === color)
+            );
 
-		return markedRowsAndSubtotals;
+        return markedRowsAndSubtotals;
 
-	};
+    };
 
-	const filterByRowColor = function (list, evDataService, globalDataService) {
+    const filterByRowColor = function (list, evDataService, globalDataService) {
 
-		const rowTypeFilters = evDataService.getRowTypeFilters();
-		const color = rowTypeFilters.markedRowFilters;
+        const rowTypeFilters = evDataService.getRowTypeFilters();
+        const color = rowTypeFilters.markedRowFilters;
 
-		if (color === 'none') { //  color filter disabled
-			return list;
-		}
+        if (color === 'none') { //  color filter disabled
+            return list;
+        }
 
-		const markedRowsAndSubtotals = getMarkedRowsAndSubtotals(color, evDataService, globalDataService);
-		const notDeletedKeys = [];
+        const markedRowsAndSubtotals = getMarkedRowsAndSubtotals(color, evDataService, globalDataService);
+        const notDeletedKeys = [];
 
-		list.forEach(item => {
+        list.forEach(item => {
 
-			if (item.___group_name === 'root') { // root subtotal is present always
+            if (item.___group_name === 'root') { // root subtotal is present always
 
-				notDeletedKeys.push(item.___id)
+                notDeletedKeys.push(item.___id)
 
-			}
+            }
 
-			const rowColored = markedRowsAndSubtotals.includes(item.id || item.___id);
+            const rowColored = markedRowsAndSubtotals.includes(item.id || item.___id);
 
-			if (rowColored) {
+            if (rowColored) {
 
-				const parents = evRvCommonHelper.getParents(item.___parentId, evDataService);
-				notDeletedKeys.push(item.___id);
-				notDeletedKeys.push(...parents.map(parent => parent.___id));
+                const parents = evRvCommonHelper.getParents(item.___parentId, evDataService);
+                notDeletedKeys.push(item.___id);
+                notDeletedKeys.push(...parents.map(parent => parent.___id));
 
-			}
+            }
 
-		})
+        })
 
-		return list.filter(item => {
+        return list.filter(item => {
 
-			const isSubtotalContainsMarkedRows = item.___subtotal_type === 'line' && notDeletedKeys.includes(item.___parentId);
-			const isRowColored = notDeletedKeys.includes(item.___id);
+            const isSubtotalContainsMarkedRows = item.___subtotal_type === 'line' && notDeletedKeys.includes(item.___parentId);
+            const isRowColored = notDeletedKeys.includes(item.___id);
 
-			if (isSubtotalContainsMarkedRows) {
+            if (isSubtotalContainsMarkedRows) {
 
-				item.results = item.results.filter(row => notDeletedKeys.includes(row.id));
+                item.results = item.results.filter(row => notDeletedKeys.includes(row.id));
 
-			}
+            }
 
-			return isRowColored || isSubtotalContainsMarkedRows;
+            return isRowColored || isSubtotalContainsMarkedRows;
 
-		});
+        });
 
-	};
+    };
     // Deprecated
     var getFlatStructureOld = function (evDataService, globalDataService) {
 
@@ -770,8 +782,8 @@
         }
 
 
-
-        var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
+        // var rootGroup = simpleObjectCopy(evDataService.getRootGroupData()); # poor performance
+        var rootGroup = Object.assign({}, evDataService.getRootGroupData());
 
         console.time("Converting to tree");
         console.log("Converting to tree data", data);
@@ -789,7 +801,7 @@
         var list = utilsHelper.convertTreeToList(tree);
 
         console.timeEnd("Converting tree to list");
-        console.log('Converted list length',  list.length);
+        console.log('Converted list length', list.length);
 
         // console.log('getFlatStructure.list', list);
 
@@ -824,7 +836,8 @@
 
             data = getNewDataInstance(evDataService);
 
-            console.log('data', data);
+            console.log('getFlatStructure.data', data);
+            console.log('getFlatStructure.data length', Object.keys(data).length);
 
             console.timeEnd("Copying data");
 
@@ -832,7 +845,6 @@
             console.time("Inserting subtotals");
 
             data = insertSubtotalsToResults(data, evDataService);
-
             console.timeEnd("Inserting subtotals");
 
 
@@ -853,14 +865,13 @@
         }
 
 
-
-        var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
+        // var rootGroup = simpleObjectCopy(evDataService.getRootGroupData()); # poor performance
+        var rootGroup = Object.assign({}, evDataService.getRootGroupData());
 
         console.time("Converting to tree");
         console.log("Converting to tree data", data);
 
         var tree = utilsHelper.convertToTree(data, rootGroup);
-
         console.log("getFlatStructure.tree", tree)
 
         console.timeEnd("Converting to tree");
@@ -872,15 +883,20 @@
         var list = utilsHelper.convertTreeToList(tree);
 
         console.timeEnd("Converting tree to list");
-        console.log('Converted list length',  list.length);
+
+        console.time("Filling list with data");
+        var filledList = utilsHelper.fillListWithData(list, data);
+        console.timeEnd("Filling list with data");
+
+        console.log('Converted list length', filledList.length);
 
         // console.log('getFlatStructure.list', list);
 
-        list = removeItemsFromFoldedGroups(list, evDataService);
+        filledList = removeItemsFromFoldedGroups(filledList, evDataService);
 
-        list = filterByRowColor(list, evDataService, globalDataService);
+        filledList = filterByRowColor(filledList, evDataService, globalDataService);
 
-        return list;
+        return filledList;
 
     };
 
@@ -937,8 +953,8 @@
         }
 
 
-
-        var rootGroup = simpleObjectCopy(evDataService.getRootGroupData());
+        // var rootGroup = simpleObjectCopy(evDataService.getRootGroupData()); # poor prformance
+        var rootGroup = Object.assign({}, evDataService.getRootGroupData());
 
         console.time("Converting to tree");
         console.log("Converting to tree data", data);
@@ -956,13 +972,18 @@
         var list = utilsHelper.convertTreeToList(tree);
 
         console.timeEnd("Converting tree to list");
-        console.log('Converted list length',  list.length);
+
+        console.time("Filling list with data");
+        var filledList = utilsHelper.fillListWithData(list, data);
+        console.timeEnd("Filling list with data");
+
+        console.log('Converted list length', filledList.length);
 
         // console.log('getFlatStructure.list', list);
 
-        list = filterByRowColor(list, evDataService, globalDataService);
+        filledList = filterByRowColor(filledList, evDataService, globalDataService);
 
-        return list;
+        return filledList;
 
     };
 
@@ -1084,32 +1105,32 @@
 
         parents.pop() // skip root group
 
-		var reportData = localStorageService.getReportData();
+        var reportData = localStorageService.getReportData();
 
-		if (!reportData[contentType]) reportData[contentType] = {};
+        if (!reportData[contentType]) reportData[contentType] = {};
 
-		if (!reportData[contentType][layout.user_code]) {
-			reportData[contentType][layout.user_code] = {
-				groups: {}
-			}
-		}
+        if (!reportData[contentType][layout.user_code]) {
+            reportData[contentType][layout.user_code] = {
+                groups: {}
+            }
+        }
 
-		var full_path = parents.map(function (item) {
-			return item.___group_name
-		})
+        var full_path = parents.map(function (item) {
+            return item.___group_name
+        })
 
         full_path.push(group.___group_name);
 
         var full_path_prop = full_path.join('___'); // TODO check if safe enough
 
         console.log('full_path', full_path);
-		console.log('full_path_prop', full_path_prop);
+        console.log('full_path_prop', full_path_prop);
 
         var groupSettings;
 
-		if (reportData[contentType][layout.user_code]['groups'][full_path_prop]) {
-			groupSettings = reportData[contentType][layout.user_code]['groups'][full_path_prop];
-		}
+        if (reportData[contentType][layout.user_code]['groups'][full_path_prop]) {
+            groupSettings = reportData[contentType][layout.user_code]['groups'][full_path_prop];
+        }
 
         if (!groupSettings) {
 
@@ -1118,9 +1139,9 @@
                 is_open: true
             }
 
-			reportData[contentType][layout.user_code]['groups'][full_path_prop] = groupSettings;
+            reportData[contentType][layout.user_code]['groups'][full_path_prop] = groupSettings;
 
-			localStorageService.cacheReportData(reportData);
+            localStorageService.cacheReportData(reportData);
 
         }
 
@@ -1134,108 +1155,108 @@
         var contentType = evDataService.getContentType();
         var groups = evDataService.getGroups();
 
-		var reportData = localStorageService.getReportDataForLayout(contentType, layout.user_code);
+        var reportData = localStorageService.getReportDataForLayout(contentType, layout.user_code);
 
-		if (!reportData['groups']) {
-			reportData['groups'] = {}
-		}
+        if (!reportData['groups']) {
+            reportData['groups'] = {}
+        }
 
-		var full_path_prop = groupSettings.full_path;
+        var full_path_prop = groupSettings.full_path;
 
-		if (Array.isArray(full_path_prop)) {
-			full_path_prop = full_path_prop.join('___')
-		}
+        if (Array.isArray(full_path_prop)) {
+            full_path_prop = full_path_prop.join('___')
+        }
 
-		reportData['groups'][full_path_prop] = groupSettings;
+        reportData['groups'][full_path_prop] = groupSettings;
 
-		reportData.groupsList = [];
+        reportData.groupsList = [];
 
-		groups.forEach(group => {
+        groups.forEach(group => {
 
-			var groupObj = {
-				key: group.key,
-				report_settings: {
-					is_level_folded: false
-				}
-			};
+            var groupObj = {
+                key: group.key,
+                report_settings: {
+                    is_level_folded: false
+                }
+            };
 
-			if (group.report_settings) {
-				groupObj.report_settings.is_level_folded = !!group.report_settings.is_level_folded;
-			}
+            if (group.report_settings) {
+                groupObj.report_settings.is_level_folded = !!group.report_settings.is_level_folded;
+            }
 
-			/* if (group.report_settings && group.report_settings.is_level_folded) {
-				reportData.fullyFoldedGroups.push(group.key);
-			} */
-			reportData.groupsList.push(groupObj);
+            /* if (group.report_settings && group.report_settings.is_level_folded) {
+                reportData.fullyFoldedGroups.push(group.key);
+            } */
+            reportData.groupsList.push(groupObj);
 
-		});
+        });
 
-		localStorageService.cacheReportDataForLayout(contentType, layout.user_code, reportData);
+        localStorageService.cacheReportDataForLayout(contentType, layout.user_code, reportData);
 
     }
 
-	var markHiddenColumnsBasedOnFoldedGroups = function (evDataService) {
+    var markHiddenColumnsBasedOnFoldedGroups = function (evDataService) {
 
-		var groups = evDataService.getGroups();
-		var columns = evDataService.getColumns();
-		var foldedGroup = false;
-		var firstColWithoutGroupIndex = 0;
+        var groups = evDataService.getGroups();
+        var columns = evDataService.getColumns();
+        var foldedGroup = false;
+        var firstColWithoutGroupIndex = 0;
 
-		if (groups.length) {
+        if (groups.length) {
 
-			foldedGroup = groups.find(group => group.report_settings && group.report_settings.is_level_folded);
-			firstColWithoutGroupIndex = groups.length; // index of first column without group
+            foldedGroup = groups.find(group => group.report_settings && group.report_settings.is_level_folded);
+            firstColWithoutGroupIndex = groups.length; // index of first column without group
 
-		}
+        }
 
-		if (foldedGroup) { // if there is fully folded group, hide columns without visible content
+        if (foldedGroup) { // if there is fully folded group, hide columns without visible content
 
-			for (var i = firstColWithoutGroupIndex; i < columns.length; i++) {
+            for (var i = firstColWithoutGroupIndex; i < columns.length; i++) {
 
-				var columnWithoutSubtotal = !columns[i].report_settings || !columns[i].report_settings.subtotal_formula_id;
-				if (columnWithoutSubtotal && !columns[i].error_data) columns[i].isHidden = true;
+                var columnWithoutSubtotal = !columns[i].report_settings || !columns[i].report_settings.subtotal_formula_id;
+                if (columnWithoutSubtotal && !columns[i].error_data) columns[i].isHidden = true;
 
-			}
+            }
 
-			/* columns.forEach((column, index) => {
+            /* columns.forEach((column, index) => {
 
-				var colLevel = index + 1;
-				var columnWithoutSubtotal = !column.report_settings || !column.report_settings.subtotal_formula_id;
-				var columnWithoutGroup = groups.length < colLevel;
+                var colLevel = index + 1;
+                var columnWithoutSubtotal = !column.report_settings || !column.report_settings.subtotal_formula_id;
+                var columnWithoutGroup = groups.length < colLevel;
 
-				var colIsHidden = !!(columnWithoutGroup && columnWithoutSubtotal && !column.error);
+                var colIsHidden = !!(columnWithoutGroup && columnWithoutSubtotal && !column.error);
 
-				if (column.isHidden !== colIsHidden) columnsChanged = true;
+                if (column.isHidden !== colIsHidden) columnsChanged = true;
 
-				column.isHidden = colIsHidden;
+                column.isHidden = colIsHidden;
 
-			}); */
+            }); */
 
-		} else {
+        } else {
 
-			for (var i = firstColWithoutGroupIndex; i < columns.length; i++) {
-				columns[i].isHidden = false;
-			}
+            for (var i = firstColWithoutGroupIndex; i < columns.length; i++) {
+                columns[i].isHidden = false;
+            }
 
-			/*columns.forEach((column, index) => {
+            /*columns.forEach((column, index) => {
 
-				var colLevel = index + 1;
-				var columnWithoutGroup = groups.length < colLevel;
+                var colLevel = index + 1;
+                var columnWithoutGroup = groups.length < colLevel;
 
-				if (columnWithoutGroup) {
+                if (columnWithoutGroup) {
 
-					// if (column.isHidden) columnsChanged = true;
-					column.isHidden = false;
+                    // if (column.isHidden) columnsChanged = true;
+                    column.isHidden = false;
 
-				}
+                }
 
-			});*/
+            });*/
 
-		}
+        }
 
-		evDataService.setColumns(columns);
+        evDataService.setColumns(columns);
 
-	};
+    };
 
     module.exports = {
         getOrCreateGroupSettings: getOrCreateGroupSettings,
@@ -1246,7 +1267,7 @@
         getPureFlatStructure: getPureFlatStructure,
         calculateProjection: calculateProjection,
 
-		markHiddenColumnsBasedOnFoldedGroups: markHiddenColumnsBasedOnFoldedGroups
+        markHiddenColumnsBasedOnFoldedGroups: markHiddenColumnsBasedOnFoldedGroups
     }
 
 

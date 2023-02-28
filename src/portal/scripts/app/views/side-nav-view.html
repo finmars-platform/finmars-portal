@@ -1020,11 +1020,15 @@
                                 </md-button>
                             </li>
                             <li data-ng-if="vm.accessTable.settings_users_groups_permission">
-                                <md-button class="sidemenu-btn"
+                                <!--<md-button class="sidemenu-btn"
                                            ui-sref="app.portal.settings.users-groups">
                                     <span class="side-nav-title">Permissions</span>
-                                    <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
-                                </md-button>
+                                </md-button>-->
+                                <a href="{{vm.permissionsUrl}}">
+                                    <md-button class="sidemenu-btn">
+                                        <span class="side-nav-title">Permissions</span>
+                                    </md-button>
+                                </a>
                             </li>
                             <li data-ng-if="vm.accessTable.settings_ecosystem_default">
                                 <md-button class="sidemenu-btn"

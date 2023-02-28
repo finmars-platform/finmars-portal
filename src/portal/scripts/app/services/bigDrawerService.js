@@ -180,6 +180,11 @@
 
         this.hide = function (data) {
 
+            if (_this.drawersPromise === null) {
+                console.warn("There is no bigDrawer to close");
+                return;
+            }
+
             drawerWrap.classList.remove('big-drawer-opens');
             drawerWrap.classList.add('big-drawer-closes');
 
@@ -212,6 +217,9 @@
                 let resolve = _this.drawersPromise;
 
                 resolve(data);
+
+                _this.drawersPromise = null;
+
             }
 
             if (closeAnimation) {

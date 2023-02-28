@@ -422,7 +422,7 @@ import uiService from "./uiService";
 
     /**
      * Turn table attribute into group, column or filter
-     * @param {string} form - In what form get attribute
+     * @param {string} form - In what form get attribute. Can be 'column', 'group', 'filter'.
      * @param {object} attrInstance - Object with attribute data on which attribute form will be based
      * @memberOf module:entityViewerHelperService
      * @return {object} Return attribute in form of group, column or filter
@@ -464,23 +464,32 @@ import uiService from "./uiService";
             attrTypeToAdd.layout_name = attrInstance.layout_name;
         }
 
+        if (!attrTypeToAdd.options) {
+            attrTypeToAdd.options = {};
+        }
+
         switch (form) {
 
             case 'group':
                 attrTypeToAdd.groups = true;
+
+                attrTypeToAdd.options.sort = null;
+                attrTypeToAdd.options.sort_settings = {};
+
                 break;
 
             case 'column':
+
                 attrTypeToAdd.columns = true;
+
+                attrTypeToAdd.options.sort = null;
+                attrTypeToAdd.options.sort_settings = {};
+
                 break;
 
             case 'filter':
 
                 attrTypeToAdd.filters = true;
-
-                if (!attrTypeToAdd.options) {
-                    attrTypeToAdd.options = {};
-                }
 
                 if (!attrTypeToAdd.options.filter_type) {
                     attrTypeToAdd.options.filter_type = metaHelper.getDefaultFilterType(attrTypeToAdd.value_type);
@@ -1386,7 +1395,7 @@ import uiService from "./uiService";
 
     }
 
-    var openComplexTransactionViewDrawer = function (evDataService, evEventService, $bigDrawer, $mdDialog, entityId, layout) {
+    var openComplexTransactionPreviewDrawer = function (evDataService, evEventService, $bigDrawer, $mdDialog, entityId, layout) {
 
         try {
             metaHelper.closeComponent('big-drawer', $mdDialog, $bigDrawer, {status: 'disagree'});
@@ -1397,8 +1406,8 @@ import uiService from "./uiService";
 
 
         $bigDrawer.show({
-            controller: 'complexTransactionViewDialogController as vm',
-            templateUrl: 'views/entity-viewer/complex-transaction-view-drawer-view.html',
+            controller: 'ComplexTransactionEditDialogController as vm',
+            templateUrl: 'views/entity-viewer/complex-transaction-edit-drawer-view.html',
             addResizeButton: false,
             drawerWidth: bigDrawerWidth,
             showBackdrop: false,
@@ -1409,7 +1418,8 @@ import uiService from "./uiService";
                 entityId: entityId,
                 data: {
                     openedIn: 'big-drawer',
-                    editLayout: layout
+                    editLayout: layout,
+                    previewMode: true,
                 }
             }
 
@@ -1960,7 +1970,7 @@ import uiService from "./uiService";
 
         openComplexTransactionEditDrawer: openComplexTransactionEditDrawer,
         openComplexTransactionAddDrawer: openComplexTransactionAddDrawer,
-        openComplexTransactionViewDrawer: openComplexTransactionViewDrawer,
+        openComplexTransactionViewDrawer: openComplexTransactionPreviewDrawer,
 
         postAdditionActions: postAdditionActions,
 
