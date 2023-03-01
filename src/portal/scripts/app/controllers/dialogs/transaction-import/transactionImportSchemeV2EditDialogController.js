@@ -137,6 +137,7 @@ const importTransactionService = require("../../../services/import/importTransac
         vm.getItem = function () {
 
             transactionImportSchemeService.getByKey(schemeId).then(function (data) {
+
                 vm.scheme = data;
 
                 if (vm.scheme.inputs.length) {
@@ -186,13 +187,21 @@ const importTransactionService = require("../../../services/import/importTransac
                 }
 
                 if (vm.scheme.rule_scenarios.length) {
+
                     vm.scenarios = [];
 
                     vm.scheme.rule_scenarios.forEach(function (scenario) {
 
+                        scenario.transaction_type_object.inputs =
+                            scenario.transaction_type_object.inputs.filter(function (input) {
+                                return input.value_type !== 120;
+                            });
+
                         if (scenario.is_default_rule_scenario) {
-                            vm.defaultRuleScenario = scenario
-                        } else {
+                            vm.defaultRuleScenario = scenario;
+
+                        }
+                        else {
 
                             scenario.transaction_type_object.inputs.forEach(function (input_item) {
 
@@ -206,10 +215,10 @@ const importTransactionService = require("../../../services/import/importTransac
 
                                 })
 
-
                             })
 
                             vm.scenarios.push(scenario);
+
                         }
 
                     })
@@ -354,7 +363,7 @@ const importTransactionService = require("../../../services/import/importTransac
 
         vm.agree = function ($event) {
 
-            var result = JSON.parse(JSON.stringify(vm.scheme))
+            var result = JSON.parse(JSON.stringify( vm.scheme ));
 
 
             result.calculated_inputs = vm.calculatedFields;
