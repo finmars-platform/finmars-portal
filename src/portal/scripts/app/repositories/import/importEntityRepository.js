@@ -26,7 +26,7 @@
                     'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
-                data: config
+                body: config
             })
     };
 
@@ -44,7 +44,7 @@
                     'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
-                data: config
+                body: config
             })
     };
 

@@ -1,5 +1,6 @@
 <div class="g-filters-holder width-100 flex-row fc-space-between flex-i-start"
-     ng-class="{'hide-ev-front-filters': !isReport && thereAreFrontendFilters && shownFiltersType === 'frontend'}">
+     ng-class="{'hide-ev-front-filters': !isReport && thereAreFrontendFilters && shownFiltersType === 'frontend'}"
+     xmlns="http://www.w3.org/1999/html">
 
     <div class="flex-row flex-i-start">
 
@@ -41,7 +42,8 @@
             <div data-ng-if="!isReport" layout="row">
 
                 <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
-                           data-ng-click="evAddEntity($event)" data-ng-if="entityType != 'instrument' && entityType != 'instrument-type' && entityType != 'account-type' && entityType != 'transaction-type'">
+                           data-ng-click="evAddEntity($event)"
+                           data-ng-if="entityType != 'instrument' && entityType != 'instrument-type' && entityType != 'account-type' && entityType != 'transaction-type'">
                     <span class="material-icons">add</span>
                     <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
                 </md-button>
@@ -49,8 +51,8 @@
                 <md-menu data-ng-if="entityType == 'instrument'">
                     <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
                                data-ng-click="$mdOpenMenu($event)">
-                    <span class="material-icons">add</span>
-                    <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
+                        <span class="material-icons">add</span>
+                        <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
                     </md-button>
 
                     <md-menu-content width="4">
@@ -80,8 +82,8 @@
                 <md-menu data-ng-if="entityType == 'instrument-type'">
                     <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
                                data-ng-click="$mdOpenMenu($event)">
-                    <span class="material-icons">add</span>
-                    <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
+                        <span class="material-icons">add</span>
+                        <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
                     </md-button>
 
                     <md-menu-content width="4">
@@ -103,8 +105,8 @@
                 <md-menu data-ng-if="entityType == 'account-type'">
                     <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
                                data-ng-click="$mdOpenMenu($event)">
-                    <span class="material-icons">add</span>
-                    <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
+                        <span class="material-icons">add</span>
+                        <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
                     </md-button>
 
                     <md-menu-content width="4">
@@ -126,8 +128,8 @@
                 <md-menu data-ng-if="entityType == 'transaction-type'">
                     <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
                                data-ng-click="$mdOpenMenu($event)">
-                    <span class="material-icons">add</span>
-                    <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
+                        <span class="material-icons">add</span>
+                        <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
                     </md-button>
 
                     <md-menu-content width="4">
@@ -191,7 +193,23 @@
             <div class="flex-column flex-i-center">
                 <span class="material-icons">refresh</span>
                 <span>Refresh</span>
-                <md-tooltip md-direction="top">Refresh Database Filters</md-tooltip>
+                <md-tooltip md-direction="bottom">
+                    <div data-ng-if="isReport">
+                        <div data-ng-if="reportOptions.auth_time">
+                            Auth Time: {{reportOptions.auth_time}}s</br>
+                            Execution Time: {{reportOptions.execution_time}}s</br>
+                            Relation Prefetch Time: {{reportOptions.relation_prefetch_time}}s</br>
+                            Serialization Time: {{reportOptions.serialization_time}}s </br>
+                            Render Time: {{renderTime}}s </br>
+                            Rows downloaded: {{reportOptions.items.length}} </br>
+                        </div>
+                        Refresh Database Filters
+                    </div>
+                    <div data-ng-if="!isReport">
+                        Refresh Database Filters
+                    </div>
+
+                </md-tooltip>
             </div>
 
         </md-button>

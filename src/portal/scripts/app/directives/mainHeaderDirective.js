@@ -3,7 +3,7 @@
 // const cookieService = require('../../../../core/services/cookieService');
 import websocketService from "../../../../shell/scripts/app/services/websocketService.js";
 import crossTabEvents from "../../../../shell/scripts/app/services/events/crossTabEvents.js";
-import baseUrlService from "../../../../shell/scripts/app/services/baseUrlService.js";
+// import {sys} from "browserify/lib/builtins";
 // import {window} from "../../../../../libs/js/d3"; // wtf?
 
 const metaService = require('../services/metaService'); // TODO inject into angular dependencies
@@ -32,6 +32,8 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             scope.homepageUrl = redirectionService.getUrl('app.portal.home');
             scope.profileUrl = redirectionService.getUrl('app.profile');
+
+            scope.alertsStatus = 'healthy'
 
             scope.notiPopupData = {
                 noti: [],
@@ -117,7 +119,34 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                 systemMessageService.getList(options).then(messagesData => {
                     scope.notiPopupData.noti = messagesData.results;
 
-                }).catch(e => { console.error(e) });
+                }).catch(e => {
+                    console.error(e)
+                });
+
+            };
+
+            const loadAlerts = function () {
+
+                scope.alertsStatus = 'healthy'
+
+                systemMessageService.getAlerts().then(function (data) {
+
+                    for (var i = 0; i < data.results.length; i = i + 1) {
+
+                        if (data.results[i].type === 2 && data.results[i].action_status === 2) {
+                            scope.alertsStatus = 'warn'
+                        }
+
+                        if (data.results[i].type === 3 && data.results[i].action_status === 2) {
+                            scope.alertsStatus = 'danger'
+                            break;
+                        }
+
+                    }
+
+                    scope.alertsCount = data.count;
+                    scope.$apply();
+                })
 
             };
 
@@ -379,6 +408,14 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             };
 
+            scope.toggleWarningsSideNav = function ($event) {
+
+                $event.stopPropagation();
+
+                middlewareService.toggleWarningsSideNav();
+
+            }
+
             scope.onAutosaveToggle = function () {
 
                 globalDataService.setMember(scope.member);
@@ -430,6 +467,8 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                 });
 
                 loadNoti();
+
+                loadAlerts();
 
                 scope.notiPopupData.homepageUrl = scope.homepageUrl;
 

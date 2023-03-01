@@ -1,13 +1,13 @@
 /**
  * Created by szhitenev on 22.08.2016.
  */
-(function(){
+(function () {
 
     'use strict';
 
     var importTransactionRepository = require('../../repositories/import/importTransactionRepository');
 
-    var startImport = function(config){
+    var startImport = function (config) {
         return importTransactionRepository.startImport(config);
     };
 
@@ -19,10 +19,15 @@
         return importTransactionRepository.preprocessFile(config);
     };
 
+    var dryRun = function (config) {
+        return importTransactionRepository.dryRun(config)
+    }
+
     module.exports = {
         startImport: startImport,
         validateImport: validateImport,
-        preprocessFile: preprocessFile
+        preprocessFile: preprocessFile,
+        dryRun: dryRun
     }
 
 }());

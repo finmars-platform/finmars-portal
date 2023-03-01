@@ -87,6 +87,8 @@ import toastNotificationService from "../../../../../shell/scripts/app/services/
 
                     console.log('renderReportViewer');
 
+                    var begin = Date.now();
+
                     scope.evDataService.setDataLoadStatus(true);
 
 
@@ -139,6 +141,16 @@ import toastNotificationService from "../../../../../shell/scripts/app/services/
 
                         rvRenderer.render(contentElem, projection, globalDataService, scope.evDataService, scope.evEventService);
                         cellContentOverflow();
+
+                        var end = Date.now();
+
+                        var timeSpent = (end - begin) / 1000 // secs;
+
+                        console.log("Report viewer render time", timeSpent);
+
+                        scope.evDataService.setRenderTime(timeSpent)
+
+                        scope.evEventService.dispatchEvent(evEvents.FINISH_RENDER)
 
                     });
 
@@ -611,29 +623,29 @@ import toastNotificationService from "../../../../../shell/scripts/app/services/
 
                     }
 
-					if (toggleBookmarksBtn) {
+                    if (toggleBookmarksBtn) {
 
-						toggleBookmarksBtn.addEventListener('click', function () {
+                        toggleBookmarksBtn.addEventListener('click', function () {
 
-							var interfaceLayout = scope.evDataService.getInterfaceLayout();
+                            var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
-							var headerToolbar = document.querySelector('md-toolbar.header');
+                            var headerToolbar = document.querySelector('md-toolbar.header');
 
-							interfaceLayout.headerToolbar.height = headerToolbar.clientHeight;
+                            interfaceLayout.headerToolbar.height = headerToolbar.clientHeight;
 
-							scope.evDataService.setInterfaceLayout(interfaceLayout);
+                            scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-							/* delete var splitPanelIsActive = scope.evDataService.isSplitPanelActive();
+                            /* delete var splitPanelIsActive = scope.evDataService.isSplitPanelActive();
 
-							 if (isRootEntityViewer && splitPanelIsActive) {
-								scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
-							} */
+                             if (isRootEntityViewer && splitPanelIsActive) {
+                                scope.evEventService.dispatchEvent(evEvents.UPDATE_ENTITY_VIEWER_CONTENT_WRAP_SIZE);
+                            } */
 
-							scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                            scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-						});
+                        });
 
-					}
+                    }
 
                 };
 

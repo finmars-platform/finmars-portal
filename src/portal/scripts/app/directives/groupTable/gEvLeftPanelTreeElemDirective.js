@@ -237,7 +237,7 @@
                 }
 
                 scope.getGroupType = function () {
-                    console.log('tree elem, ', scope.item)
+                    // console.log('tree elem, ', scope.item)
 
                     var groups = scope.evDataService.getGroups();
 
@@ -248,8 +248,8 @@
                         scope.isLastLevel = true;
                     }
 
-                    console.log('tree groups, ', groups)
-                    console.log('tree groupType, ', scope.groupType)
+                    // console.log('tree groups, ', groups)
+                    // console.log('tree groupType, ', scope.groupType)
                 }
 
                 var init = async function () {

@@ -10,10 +10,12 @@
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
+    var metaHelper = require('../../helpers/meta.helper')
+
     var baseUrl = baseUrlService.resolve();
 
 
-    module.exports = function explorerController($scope, $state, $stateParams, authorizerService, globalDataService, $mdDialog) {
+    module.exports = function explorerController($scope, $state, $stateParams, $sce, authorizerService, globalDataService, $mdDialog) {
 
         var vm = this;
 
@@ -22,6 +24,11 @@
         vm.currentPath = []
 
         vm.showHiddenFiles = false;
+        vm.showWorkflow = false;
+        vm.showEditor = false;
+
+        vm.fileEditor = {}
+        vm.fileEditorLoading = false;
 
         vm.breadcrumbsNavigation = function ($index) {
 
@@ -39,9 +46,9 @@
 
         }
 
-        vm.selectItem = function ($event, item){
+        vm.selectItem = function ($event, item) {
 
-            vm.items = vm.items.map(function (_item){
+            vm.items = vm.items.map(function (_item) {
                 _item.selected = false
                 return _item
             })
@@ -49,11 +56,11 @@
             item.selected = true;
         }
 
-        vm.triggerMenu = function ($event){
+        vm.triggerMenu = function ($event) {
 
             console.log("$event", $event)
             // Cause md-menu on right click has wrong absolute position calc
-            setTimeout(function (){
+            setTimeout(function () {
                 $event.currentTarget.querySelector('.explorer-md-menu-trigger').click()
             }, 0)
 
@@ -74,7 +81,7 @@
 
         }
 
-        vm.previewFile = function ($event, item, $mdMenu) {
+        vm.previewFileDialog = function ($event, item, $mdMenu) {
 
             if ($mdMenu) {
                 $mdMenu.close()
@@ -106,7 +113,7 @@
 
         }
 
-        vm.editFile =  function ($event, item, $mdMenu) {
+        vm.editFileDialog = function ($event, item, $mdMenu) {
 
             if ($mdMenu) {
                 $mdMenu.close()
@@ -133,7 +140,7 @@
                             currentPath: vm.currentPath
                         }
                     }
-                }).then(function (res){
+                }).then(function (res) {
 
                     if (res.status === 'agree') {
 
@@ -147,6 +154,137 @@
 
         }
 
+        vm.editFile = function ($event, item, $mdMenu) {
+
+            vm.fileEditor = {}
+
+            if ($mdMenu) {
+                $mdMenu.close()
+            }
+
+            vm.fileEditor.name = item.name
+
+            var itemPath = vm.currentPath.join('/') + '/' + item.name
+
+            vm.showEditor = true;
+
+            vm.calculateExplorerStateClass();
+
+            vm.fileEditorLoading = true;
+
+            explorerService.viewFile(itemPath).then(function (blob) {
+
+                var reader = new FileReader();
+
+                reader.addEventListener("loadend", function (e) {
+                    vm.fileEditor.content = reader.result;
+
+                    vm.fileEditorLoading = false;
+
+                    $scope.$apply();
+
+                    vm.initFileEditor() // call after angular.js render
+
+
+                });
+
+                reader.readAsText(blob);
+
+
+            });
+
+        }
+
+
+        vm.initFileEditor = function () {
+
+            console.log('vm.initFileEditor.fileEditor ', vm.fileEditor)
+
+            setTimeout(function () {
+
+                vm.editor = ace.edit('fileEditorAceEditor');
+                vm.editor.setTheme("ace/theme/monokai");
+
+                if (vm.fileEditor.name.indexOf('.py') !== -1) {
+                    vm.editor.getSession().setMode("ace/mode/python");
+                }
+
+                if (vm.fileEditor.name.indexOf('.json') !== -1) {
+                    vm.editor.getSession().setMode("ace/mode/json");
+                }
+
+                if (vm.fileEditor.name.indexOf('.yaml') !== -1) {
+                    vm.editor.getSession().setMode("ace/mode/yaml");
+                }
+
+                vm.editor.getSession().setUseWorker(false);
+                vm.editor.setHighlightActiveLine(false);
+                vm.editor.setShowPrintMargin(false);
+                ace.require("ace/ext/language_tools");
+                vm.editor.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableSnippets: true
+                });
+                vm.editor.setFontSize(14)
+                vm.editor.setBehavioursEnabled(true);
+                vm.editor.setValue(vm.fileEditor.content)
+
+                vm.editor.focus();
+                vm.editor.navigateFileStart();
+
+            }, 100)
+
+        }
+
+        vm.saveFileEditor = function () {
+            vm.fileSaveProcessing = true;
+
+            var name = vm.fileEditor.name
+
+            var path = vm.currentPath.join('/');
+
+            let formData = new FormData();
+
+            var content = vm.editor.getValue()
+
+            console.log('path', path)
+            console.log('name', name)
+
+            const blob = new Blob([content], {type: vm.contentType});
+            const file = new File([blob], name)
+
+            formData.append("file", file)
+            formData.append('path', path)
+
+            explorerService.uploadFiles(formData).then(function (e) {
+
+                toastNotificationService.success("File Saved")
+
+                vm.fileSaveProcessing = false;
+
+                $scope.$apply();
+
+            })
+        }
+
+        vm.closeFileEditor = function () {
+
+            vm.showEditor = false;
+
+            vm.calculateExplorerStateClass();
+
+        }
+
+        vm.copyFilePath = function ($event, item, $mdMenu){
+
+            if ($mdMenu) {
+                $mdMenu.close()
+            }
+
+            metaHelper.copyToBuffer(item.file_path)
+
+        }
+
         vm.downloadFile = function ($mdMenu, $event, item) {
 
             $mdMenu.close()
@@ -156,7 +294,7 @@
                 itemPath = vm.currentPath.join('/') + '/' + item.name
             }
 
-            explorerService.viewFile(itemPath).then(function (blob){
+            explorerService.viewFile(itemPath).then(function (blob) {
 
 
                 // IE doesn't allow using a blob object directly as link href
@@ -176,7 +314,7 @@
                 document.body.appendChild(link); // For Mozilla Firefox
                 link.click();
 
-                setTimeout(function(){
+                setTimeout(function () {
                     document.body.removeChild(link);
                     window.URL.revokeObjectURL(data);
                 }, 100);
@@ -211,21 +349,21 @@
 
             explorerService.deleteFile(itemPath, is_dir)
 
-            setTimeout(function (){
+            setTimeout(function () {
                 vm.listFiles();
             }, 600)
 
         }
 
-        vm.listFiles = function (){
+        vm.listFiles = function () {
 
             vm.processing = true;
 
-            explorerService.listFiles(vm.currentPath.join('/')).then(function (data){
+            explorerService.listFiles(vm.currentPath.join('/')).then(function (data) {
 
                 vm.items = data.results;
 
-                vm.items = vm.items.filter(function (item){
+                vm.items = vm.items.filter(function (item) {
 
                     var result = true
 
@@ -254,9 +392,7 @@
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 locals: {
-                    data: {
-
-                    }
+                    data: {}
                 }
 
             }).then(function (res) {
@@ -268,7 +404,7 @@
                         itemPath = vm.currentPath.join('/') + '/' + res.name
                     }
 
-                    explorerService.createFolder(itemPath).then(function (){
+                    explorerService.createFolder(itemPath).then(function () {
 
                         vm.listFiles();
 
@@ -288,9 +424,7 @@
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 locals: {
-                    data: {
-
-                    }
+                    data: {}
                 }
 
             }).then(function (res) {
@@ -316,7 +450,7 @@
                                 currentPath: vm.currentPath,
                             }
                         }
-                    }).then(function (res){
+                    }).then(function (res) {
 
                         if (res.status === 'agree') {
 
@@ -356,7 +490,7 @@
 
             formData.append('path', path)
 
-            explorerService.uploadFiles(formData).then(function (data){
+            explorerService.uploadFiles(formData).then(function (data) {
 
                 document.querySelector('#explorerFileUploadInput').value = "";
 
@@ -367,7 +501,7 @@
 
         }
 
-        vm.toggleHidden = function (){
+        vm.toggleHidden = function () {
 
             vm.showHiddenFiles = !vm.showHiddenFiles;
 
@@ -375,7 +509,55 @@
 
         }
 
+        vm.trustSrc = function (src) {
+            return $sce.trustAsResourceUrl(src);
+        }
+
+        vm.resolveWorkflowIframeUrl = function () {
+
+            vm.workflowIframeUrl = 'http://0.0.0.0:8084/space00000/workflow/'
+
+            if (window.location.href.indexOf('finmars') !== -1) {
+                vm.workflowIframeUrl = window.location.protocol + '//' + window.location.host + '/' + baseUrlService.getMasterUserPrefix() + '/workflow/'
+            }
+
+        }
+
+        vm.calculateExplorerStateClass = function () {
+
+            var result = '';
+
+            if (vm.showWorkflow && !vm.showEditor) {
+
+                result = 'show-explorer-workflow'
+
+            }
+
+            if (!vm.showWorkflow && vm.showEditor) {
+
+                result = 'show-explorer-editor'
+
+            }
+
+            if (vm.showWorkflow && vm.showEditor) {
+
+                result = 'show-explorer-editor-workflow'
+
+            }
+
+            vm.explorerStateClass = result;
+
+        }
+
+        vm.toggleWorkflow = function () {
+
+            vm.showWorkflow = !vm.showWorkflow;
+            vm.calculateExplorerStateClass()
+        }
+
         vm.init = function () {
+
+            vm.resolveWorkflowIframeUrl();
 
             console.log('$stateParams', $stateParams);
 
@@ -391,7 +573,7 @@
 
             document.querySelector('.explorer-page').addEventListener('click', function (e) {
 
-                vm.items = vm.items.map(function (_item){
+                vm.items = vm.items.map(function (_item) {
                     _item.selected = false
                     return _item
                 })
@@ -399,6 +581,7 @@
             })
 
         };
+
 
         vm.init();
 

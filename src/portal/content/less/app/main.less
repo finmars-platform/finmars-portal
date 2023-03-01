@@ -246,9 +246,11 @@ md-sidenav {
   position: absolute;
   //background-color: #5a3e5a;
   background-color: #000;
-  top: 0;
+  // top: 0;
+  top: -5px;
   right: -200px;
   padding-left: 0;
+  border-top: 5px solid transparent; // makes mouseover to submenu easier
   z-index: 1;
 
   .sidenav-dropdown-menu-btn {
@@ -3550,10 +3552,6 @@ span.highlight {
 
 }
 
-.entity-tabs-menu.complex-transaction-entity-tabs-menu button.entity-tabs-menu-btn {
-  margin-top: 90px;
-}
-
 .copy-text-button {
   cursor: pointer;
   margin: 4px;
@@ -3750,7 +3748,7 @@ md-dialog.width-50.draggable-dialog.log-dialog {
 
 .import-section {
   float: left;
-  margin-right: 60px;
+  margin-right: 120px;
 }
 
 .progress-section {
@@ -3776,4 +3774,11 @@ md-dialog.width-50.draggable-dialog.log-dialog {
 
 mdp-time-picker .md-button {
   display: none;
+}
+.md-tooltip.md-show {
+  height: auto;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
 }

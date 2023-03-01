@@ -124,16 +124,17 @@ app.run([function () {
 
     // window.ws = new WebSocket("__WS_HOST__");
 
-    if (PROJECT_ENV !== 'local') {
+    // if (PROJECT_ENV !== 'local') {
 
-        websocketService.connect();
-        websocketService.reconnectIfError();
+        // DEPRECATED
+        // websocketService.connect();
+        // websocketService.reconnectIfError();
+        //
+        // websocketService.addEventListener('simple_message', function (data) {
+        //     toastNotificationService.info(data.message)
+        // })
 
-        websocketService.addEventListener('simple_message', function (data) {
-            toastNotificationService.info(data.message)
-        })
-
-    }
+    // }
 
     // window.ws.onopen = function () {
     // 	console.log("Websocket. Initial Auth");

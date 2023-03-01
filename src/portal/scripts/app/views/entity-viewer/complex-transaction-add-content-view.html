@@ -1,8 +1,8 @@
 <div data-ng-if="vm.checkReadyStatus()">
 
-    <div class="p-24">
+    <div class="entity-editor-fixed-area">
 
-        <div layout="row" style="height: 90px;">
+        <div class="flex-row">
 
             <!-- <div layout="row" flex="50" class="p-t-24"
                  style="border: 1px solid #000; background: #ffeee8">
@@ -36,7 +36,7 @@
                 </md-input-container>
 
             </div> -->
-            <div class="flex-1-1-50 p-t-24">
+            <div class="flex-1-1-50">
                 <complex-dropdown-select label="Transaction type"
                                          model="vm.transactionTypeId"
                                          menu-options="vm.transactionGroups"
@@ -113,7 +113,7 @@
 
     <div data-ng-if="vm.readyStatus.layout && vm.transactionTypeId">
 
-        <div data-ng-if="!vm.missingLayoutError">
+        <div data-ng-if="!vm.missingLayoutError" class="position-relative">
 
             <div data-ng-if="vm.fixedArea.isActive"
                  class="entity-editor-fixed-area-container"

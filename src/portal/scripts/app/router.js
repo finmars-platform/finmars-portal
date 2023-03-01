@@ -381,6 +381,12 @@
                 controller: 'UpdateConfigurationPageController as vm'
             })
 
+            .state('app.portal.system-page', {
+                url: '/system-dashboard',
+                templateUrl: 'views/pages/system-page-view.html',
+                controller: 'SystemPageController as vm'
+            })
+
             .state('app.portal.processes', {
                 url: '/processes',
                 templateUrl: 'views/pages/processes-view.html',
@@ -388,7 +394,7 @@
             })
 
             .state('app.portal.explorer', {
-                url: '/explorer/{folderPath:[a-zA-Z0-9/]*}',
+                url: '/explorer/{folderPath:[a-zA-Z0-9_/\.]*}',
                 templateUrl: 'views/pages/explorer-page-view.html',
                 controller: 'ExplorerPageController as vm',
                 params: {
@@ -688,7 +694,7 @@
                 controller: 'SettingsFormDesignController as vm'
             })
             .state('app.portal.settings.users-groups', {
-                url: '/users-and-groups',
+                url: '/users-and-groups?tab=',
                 templateUrl: 'views/settings/users-and-groups-view.html',
                 controller: 'SettingsMembersAndGroupsController as vm'
             })

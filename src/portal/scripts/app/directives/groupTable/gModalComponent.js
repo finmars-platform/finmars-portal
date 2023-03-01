@@ -13,6 +13,7 @@
 
     var metaService = require('../../services/metaService');
     var GModalSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
+    var evHelperService = require('../../services/entityViewerHelperService');
 
     module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
 
@@ -331,7 +332,7 @@
                             break;
                         }
                     } else {
-                        if (typeAttrs[i].name === columns[c].name) {
+                        if (typeAttrs[i].name === columns[c].name) { // for ttype inputs?
                             columnExist = true;
                             if (typeAttrs[i].columns === false) {
                                 columns.splice(c, 1);
@@ -343,9 +344,14 @@
                 }
 
                 if (!columnExist) {
+
                     if (typeAttrs[i].columns === true) {
-                        columns.push(typeAttrs[i]);
+
+                        var columnToAdd = evHelperService.getTableAttrInFormOf( 'column', typeAttrs[i] );
+                        columns.push(columnToAdd);
+
                     }
+
                 }
 
                 /////// GROUPING
@@ -360,58 +366,37 @@
                             }
                             break;
                         }
-                    } else {
-                        if (typeAttrs[i].id === groups[g].id) {
-                            groupExist = true;
-                            if (typeAttrs[i].groups === false) {
-                                groups.splice(g, 1);
-                                g = g - 1;
-                            }
-                            break;
-                        }
                     }
                 }
+
                 if (!groupExist) {
+
                     if (typeAttrs[i].groups === true) {
-                        groups.push(typeAttrs[i]);
+
+                        var groupToAdd = evHelperService.getTableAttrInFormOf( 'group', typeAttrs[i] );
+                        groups.push(groupToAdd);
+
                     }
+
                 }
 
                 //region FILTERING
-
-                /* for (f = 0; f < filters.length; f = f + 1) {
-                    if (typeAttrs[i].hasOwnProperty('key')) {
-                        if (typeAttrs[i].key === filters[f].key) {
-                            filterExist = true;
-                            if (typeAttrs[i].filters === false) {
-                                filters.splice(f, 1);
-                                f = f - 1;
-                            }
-                            break;
-                        }
-                    } else {
-                        if (typeAttrs[i].name === filters[f].name) {
-                            filterExist = true;
-                            if (typeAttrs[i].filters === false) {
-                                filters.splice(f, 1);
-                                f = f - 1;
-                            }
-                            break;
-                        }
-                    }
-                } */
 
                 var checkForFilterExistence = function (filtersList) {
 
                     for (f = 0; f < filtersList.length; f = f + 1) {
 
                         if (typeAttrs[i].key === filtersList[f].key) {
+
                             filterExist = true;
+
                             if (typeAttrs[i].filters === false) {
                                 filtersList.splice(f, 1);
                                 f = f - 1;
                             }
+
                             break;
+
                         }
 
                     }
@@ -424,9 +409,14 @@
                 filters.backend = checkForFilterExistence(filters.backend);
 
                 if (!filterExist) {
+
                     if (typeAttrs[i].filters === true) {
-                        filters.backend.push(typeAttrs[i]);
+
+                        var filterToAdd = evHelperService.getTableAttrInFormOf( 'filter', typeAttrs[i] );
+                        filters.backend.push(filterToAdd);
+
                     }
+
                 }
                 //endregion
 

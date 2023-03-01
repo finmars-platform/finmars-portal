@@ -15,6 +15,8 @@
 
     var GModalSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
 
+    var evHelperService = require('../../services/entityViewerHelperService');
+
     module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
 
         logService.controller('gModalController', 'initialized');
@@ -478,15 +480,15 @@
                 }
 
                 if (!columnExist && attr.columns === true) {
-                    columns.push(attr);
+                    columns.push( evHelperService.getTableAttrInFormOf('column', attr ) );
                 }
 
                 if (!groupExist && attr.groups === true) {
-                    groups.push(attr);
+                    groups.push( evHelperService.getTableAttrInFormOf('group', attr ) );
                 }
 
                 if (!filterExist && attr.filters === true) {
-                    filters.push(attr);
+                    filters.push( evHelperService.getTableAttrInFormOf('filter', attr ) );
                 }
 
             });

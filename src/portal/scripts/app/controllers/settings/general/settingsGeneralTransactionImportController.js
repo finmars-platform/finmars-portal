@@ -146,9 +146,7 @@ const transactionImportSchemeService = require("../../../services/import/transac
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-dialog-view.html',
                 targetEvent: $event,
                 locals: {
-                    data: {
-
-                    }
+                    data: {}
                 }
             }).then(function (res) {
 
@@ -189,6 +187,41 @@ const transactionImportSchemeService = require("../../../services/import/transac
             });
 
         };
+
+        vm.editSchemeV2 = function ($event, item) {
+
+            $mdDialog.show({
+                controller: 'TransactionImportSchemeV2EditDialogController as vm',
+                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-v2-dialog-view.html',
+                locals: {
+                    schemeId: item.id
+                },
+                targetEvent: $event,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    vm.getData();
+
+                } else if (res.status === 'copy') {
+
+                    res.dialogPromise.then(function (copyRes) {
+
+                        if (copyRes.status === 'agree') {
+                            vm.getData();
+                        }
+
+                    });
+
+                }
+
+            });
+
+        }
 
         vm.deleteScheme = function ($event, item) {
 

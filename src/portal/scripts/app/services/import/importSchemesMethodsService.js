@@ -66,6 +66,37 @@
 
         };
 
+        var openExprBuilder = function (item, key, viewModel, $event) {
+
+            $mdDialog.show({
+                controller: 'ExpressionEditorDialogController as vm',
+                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
+                targetEvent: $event,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    item: {expression: item[key]},
+                    data: {
+                        groups: [viewModel.inputsGroup],
+                        functions: [viewModel.inputsFunctions]
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    item[key] = res.data.item.expression;
+                    viewModel.inputsFunctions = viewModel.getFunctions();
+
+                }
+
+            });
+
+        };
+
+
         var openMappingDialog = function (locals, $event) {
 
             $mdDialog.show({
@@ -205,6 +236,7 @@
             setCalculatedFieldExpression: setCalculatedFieldExpression,
             checkForUserExpr: checkForUserExpr,
             openFxBtnExprBuilder: openFxBtnExprBuilder,
+            openExprBuilder: openExprBuilder,
             openMappingDialog: openMappingDialog,
             checkForClassifierMapping: checkForClassifierMapping,
             openClassifierMapping: openClassifierMapping,
