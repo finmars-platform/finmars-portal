@@ -1,0 +1,4 @@
+window.API_HOST = '__API_HOST__'
+window.WS_HOST = '__WS_HOST__'
+window.AUTHORIZER_URL = '__AUTHORIZER_URL__'
+window.HEALTHCHECK_HOST = '__HEALTHCHECK_HOST__'
