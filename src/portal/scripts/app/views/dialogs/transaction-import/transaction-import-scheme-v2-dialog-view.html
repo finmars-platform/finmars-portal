@@ -400,6 +400,15 @@
                                                             </md-input-container>
                                                         </div>
                                                         <div>
+                                                            <md-input-container>
+                                                                <label for="">Status</label>
+                                                                <md-select data-ng-model="item.status">
+                                                                    <md-option value="active">Active</md-option>
+                                                                    <md-option value="skip">Skip</md-option>
+                                                                </md-select>
+                                                            </md-input-container>
+                                                        </div>
+                                                        <div>
                                                             <two-fields-multiselect
                                                                     ng-model="item.selector_values"
                                                                     data-title="Selector values"
@@ -571,22 +580,18 @@
                                             </md-button>
                                         </div>
 
+                                        <h4>Default Rule Scenario</h4>
+
                                         <div layout="column">
                                             <div layout="row">
-                                                <div layout="row" >
-                                                    <div flex="30">
-                                                        <div layout="row">
-                                                            <div>
-                                                                -
-                                                            </div>
-                                                        </div>
+                                                <div layout="row" style="width: 100%;" >
+                                                    <div style="width: 100px" >
+                                                        -
                                                     </div>
-                                                    <div flex="20">
-                                                        <div layout="row">
-                                                            -
-                                                        </div>
+                                                    <div style="width: 100px">
+                                                        -
                                                     </div>
-                                                    <div flex="20">
+                                                    <div style="width: 200px">
                                                         <md-input-container style="width: 80%"
                                                                             aria-label="select with filter">
 
@@ -634,7 +639,91 @@
                                                                 style="line-height: 1">x
                                                         </md-button>
                                                     </div>-->
-                                                    <div flex="30">
+                                                    <div>
+
+                                                        <md-button
+                                                                class="md-raised md-primary {{vm.defaultRuleScenario.transaction_type ? '' : 'disabled-btn'}}"
+                                                                ng-click="vm.openInputs(vm.defaultRuleScenario, $event)">
+                                                            Inputs
+                                                        </md-button>
+
+                                                        <md-button
+                                                                class="md-raised md-primary import-mapping-small-btn"
+                                                                ng-class="{'disabled-btn': !vm.defaultRuleScenario.transaction_type}"
+                                                                ng-click="vm.editTransactionType(vm.defaultRuleScenario.transaction_type, $event)">
+                                                            <ng-md-icon icon="mode_edit"
+                                                                        size="20"></ng-md-icon>
+                                                            <md-tooltip class="tooltip_1"
+                                                                        md-direction="top">Edit
+                                                                transaction type
+                                                            </md-tooltip>
+                                                        </md-button>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <h4>Error Rule Scenario</h4>
+
+                                        <div layout="column">
+                                            <div layout="row">
+                                                <div layout="row" style="width: 100%">
+                                                    <div style="width: 100px">
+                                                        -
+                                                    </div>
+                                                    <div style="width: 100px">
+                                                        -
+                                                    </div>
+                                                    <div  style="width: 200px" >
+                                                        <md-input-container style="width: 80%"
+                                                                            aria-label="select with filter">
+
+                                                            <label for="">Transaction type</label>
+                                                            <md-select
+                                                                    ng-model="vm.errorRuleScenario.transaction_type"
+                                                                    md-container-class="common-select-container"
+                                                                    md-on-close="searchTerm = ''"
+                                                                    style="margin: 0;">
+
+                                                                <md-select-header>
+                                                                    <input data-ng-model="searchTerm"
+                                                                           type="search"
+                                                                           placeholder="Search for a ..."
+                                                                           class="md-text md-select-search-pattern select-input-filter"
+                                                                           ng-keydown="$event.stopPropagation()">
+                                                                </md-select-header>
+
+                                                                <div class="select-options-holder">
+
+                                                                    <md-option
+                                                                            data-ng-repeat="transactionType in vm.transactionTypes | filter: {name: searchTerm}"
+                                                                            ng-value="transactionType.id"
+                                                                            ng-bind="transactionType.name">
+                                                                    </md-option>
+
+                                                                </div>
+
+                                                            </md-select>
+                                                        </md-input-container>
+                                                    </div>
+                                                    <!--<div flex="20">
+                                                        <md-button
+                                                                class="md-raised md-primary {{item.transaction_type ? '' : 'disabled-btn'}}"
+                                                                ng-click="vm.openInputs(item, $event)">
+                                                            Inputs
+                                                        </md-button>
+                                                    </div>
+                                                    <div flex="10">
+                                                        <md-button
+                                                                class="custom-small-icon-btn md-raised"
+                                                                ng-click="vm.removeMappingField(item, $index)"
+                                                                data-ng-if="!item.required"
+                                                                class="md-raised"
+                                                                style="line-height: 1">x
+                                                        </md-button>
+                                                    </div>-->
+                                                    <div >
 
                                                         <md-button
                                                                 class="md-raised md-primary {{vm.defaultRuleScenario.transaction_type ? '' : 'disabled-btn'}}"

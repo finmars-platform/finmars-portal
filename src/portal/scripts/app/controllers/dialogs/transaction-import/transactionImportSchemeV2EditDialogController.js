@@ -31,8 +31,15 @@ const importTransactionService = require("../../../services/import/importTransac
 
         vm.defaultRuleScenario = {
             name: '-',
-            is_default_rule_scenario: true
+            is_default_rule_scenario: true,
+            is_error_rule_scenario: false
         };
+
+        vm.errorRuleScenario = {
+            name: '-',
+            is_error_rule_scenario: true,
+            is_default_rule_scenario: false
+        }
 
         vm.inputsFunctions = [];
         vm.selector_values_projection = [];
@@ -198,27 +205,37 @@ const importTransactionService = require("../../../services/import/importTransac
                             });
 
                         if (scenario.is_default_rule_scenario) {
-                            vm.defaultRuleScenario = scenario;
+                            vm.defaultRuleScenario = scenario
 
                         }
                         else {
 
-                            scenario.transaction_type_object.inputs.forEach(function (input_item) {
+                            if (scenario.is_error_rule_scenario) {
 
-                                scenario.fields.forEach(function (field) {
+                                vm.errorRuleScenario = scenario
 
-                                    if (field.transaction_type_input === input_item.id) {
 
-                                        input_item.expression = field.value_expr
+                            } else {
 
-                                    }
+                                scenario.transaction_type_object.inputs.forEach(function (input_item) {
+
+                                    scenario.fields.forEach(function (field) {
+
+                                        if (field.transaction_type_input === input_item.id) {
+
+                                            input_item.expression = field.value_expr
+
+                                        }
+
+                                    })
+
 
                                 })
 
-                            })
 
-                            vm.scenarios.push(scenario);
+                                vm.scenarios.push(scenario);
 
+                            }
                         }
 
                     })
@@ -398,6 +415,7 @@ const importTransactionService = require("../../../services/import/importTransac
             })
 
             result.rule_scenarios.push(vm.defaultRuleScenario)
+            result.rule_scenarios.push(vm.errorRuleScenario)
 
             result.recon_scenarios = vm.reconFields;
 
