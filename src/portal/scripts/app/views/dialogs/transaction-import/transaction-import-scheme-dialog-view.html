@@ -399,6 +399,7 @@
                                             </div>
 
                                             <div layout="column">
+                                                <h4>Default Rule Scenario</h4>
                                                 <div layout="row" flex="100">
                                                     <div layout="row" flex="100">
                                                         <div flex="30">
@@ -471,6 +472,91 @@
                                                                     class="md-raised md-primary import-mapping-small-btn"
                                                                     ng-class="{'disabled-btn': !vm.defaultRuleScenario.transaction_type}"
                                                                     ng-click="vm.editTransactionType(vm.defaultRuleScenario.transaction_type, $event)">
+                                                                <ng-md-icon icon="mode_edit" size="20"></ng-md-icon>
+                                                                <md-tooltip class="tooltip_1" md-direction="top">Edit
+                                                                    transaction type
+                                                                </md-tooltip>
+                                                            </md-button>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div layout="column">
+                                                <h4>Error Rule Scenario</h4>
+                                                <div layout="row" flex="100">
+                                                    <div layout="row" flex="100">
+                                                        <div flex="30">
+                                                            <div layout="row">
+                                                                <div>
+                                                                    -
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div flex="20">
+                                                            <div layout="row">
+                                                                -
+                                                            </div>
+                                                        </div>
+                                                        <div flex="20">
+                                                            <md-input-container style="width: 80%"
+                                                                                aria-label="select with filter">
+
+                                                                <label for="">Transaction type</label>
+                                                                <md-select ng-model="vm.errorRuleScenario.transaction_type"
+                                                                           md-container-class="common-select-container"
+                                                                           md-on-close="searchTerm = ''" style="margin: 0;">
+
+                                                                    <md-select-header>
+                                                                        <input data-ng-model="searchTerm"
+                                                                               type="search"
+                                                                               placeholder="Search for a ..."
+                                                                               class="md-text md-select-search-pattern select-input-filter"
+                                                                               ng-keydown="$event.stopPropagation()">
+                                                                    </md-select-header>
+
+                                                                    <div class="select-options-holder">
+
+                                                                        <md-option
+                                                                                data-ng-repeat="transactionType in vm.transactionTypes | filter: {name: searchTerm}"
+                                                                                ng-value="transactionType.id"
+                                                                                ng-bind="transactionType.name">
+                                                                        </md-option>
+
+                                                                    </div>
+
+                                                                </md-select>
+                                                            </md-input-container>
+                                                        </div>
+                                                        <!--<div flex="20">
+                                                            <md-button
+                                                                    class="md-raised md-primary {{item.transaction_type ? '' : 'disabled-btn'}}"
+                                                                    ng-click="vm.openInputs(item, $event)">
+                                                                Inputs
+                                                            </md-button>
+                                                        </div>
+                                                        <div flex="10">
+                                                            <md-button
+                                                                    class="custom-small-icon-btn md-raised"
+                                                                    ng-click="vm.removeMappingField(item, $index)"
+                                                                    data-ng-if="!item.required"
+                                                                    class="md-raised"
+                                                                    style="line-height: 1">x
+                                                            </md-button>
+                                                        </div>-->
+                                                        <div flex="30">
+
+                                                            <md-button
+                                                                    class="md-raised md-primary {{vm.errorRuleScenario.transaction_type ? '' : 'disabled-btn'}}"
+                                                                    ng-click="vm.openInputs(vm.errorRuleScenario, $event)">
+                                                                Inputs
+                                                            </md-button>
+
+                                                            <md-button
+                                                                    class="md-raised md-primary import-mapping-small-btn"
+                                                                    ng-class="{'disabled-btn': !vm.errorRuleScenario.transaction_type}"
+                                                                    ng-click="vm.editTransactionType(vm.errorRuleScenario.transaction_type, $event)">
                                                                 <ng-md-icon icon="mode_edit" size="20"></ng-md-icon>
                                                                 <md-tooltip class="tooltip_1" md-direction="top">Edit
                                                                     transaction type
