@@ -81,7 +81,8 @@ function connect(isReconnect) {
 
     try {
 
-        window.ws = new WebSocket("__WS_HOST__");
+        // window.ws = new WebSocket("__WS_HOST__");
+        window.ws = new WebSocket(window.WS_HOST);
 
         console.log("client try to connect...");
 

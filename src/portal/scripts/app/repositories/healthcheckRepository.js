@@ -14,7 +14,8 @@
         // var prefix = baseUrlService.getMasterUserPrefix();
         // var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch('__HEALTHCHECK_HOST__',
+        // return xhrService.fetch('__HEALTHCHECK_HOST__',
+        return xhrService.fetch(window.HEALTHCHECK_HOST,
             {
                 method: 'GET',
                 credentials: 'include',
