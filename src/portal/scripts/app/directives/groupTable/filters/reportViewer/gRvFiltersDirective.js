@@ -492,6 +492,18 @@
                         scope.currentAdditions = scope.evDataService.getAdditions();
                     });
 
+                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function (){
+
+                        scope.reportOptions = scope.evDataService.getReportOptions(); // for refresh tooltip -> auth time
+
+                    })
+
+                    scope.evEventService.addEventListener(evEvents.FINISH_RENDER, function (){
+
+                        scope.renderTime = scope.evDataService.getRenderTime(); // for refresh tooltip -> auth time
+
+                    })
+
                 };
 
                 const init = function () {

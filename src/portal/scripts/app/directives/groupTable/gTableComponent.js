@@ -285,6 +285,12 @@
 
                 scope.init();
 
+                scope.$on("$destroy", function() {
+
+                    console.log("==== Table is destroyed ==== ")
+
+                });
+
             },
             // controller: function ($scope) {
             //

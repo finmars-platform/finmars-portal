@@ -13,6 +13,8 @@
 
     var GModalSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
 
+    var evHelperService = require('../../services/entityViewerHelperService');
+
     module.exports = function ($scope, $mdDialog, entityViewerDataService, entityViewerEventService, attributeDataService, contentWrapElement) {
 
         var vm = this;
@@ -82,7 +84,7 @@
         ];
 
         var portfolioAttrsComp = ['portfolio.name', 'portfolio.short_name', 'portfolio.notes', 'portfolio.user_code', 'portfolio.public_name'];
-        var currencyAttrsComp = ['currency.name', 'currency.short_name', 'currency.notes', 'currency.user_code', 'currency.public_name'];
+        var currencyAttrsComp = ['currency.name', 'currency.short_name', 'currency.notes', 'currency.user_code', 'currency.public_name', 'currency.pricing_condition'];
 
         var instrumentAttrsComp = [
             'instrument.name',
@@ -535,15 +537,15 @@
                 }
 
                 if (!columnExist && attr.columns === true) {
-                    columns.push(attr);
+                    columns.push( evHelperService.getTableAttrInFormOf('column', attr ) );
                 }
 
                 if (!groupExist && attr.groups === true) {
-                    groups.push(attr);
+                    groups.push( evHelperService.getTableAttrInFormOf('group', attr ) );
                 }
 
                 if (!filterExist && attr.filters === true) {
-                    filters.push(attr);
+                    filters.push( evHelperService.getTableAttrInFormOf('filter', attr ) );
                 }
 
             });

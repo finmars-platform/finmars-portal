@@ -25,7 +25,7 @@
                     'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
-                data: config
+                body: config
             })
     };
 
@@ -42,7 +42,7 @@
                     'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
-                data: config
+                body: config
             })
     };
 
@@ -59,14 +59,33 @@
                     'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
-                data: config
+                body: config
             })
     };
+
+    var dryRun = function (config) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/transaction-import/dry-run/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    'X-CSRFToken': cookieService.getCookie('csrftoken')
+                },
+                body: config
+            })
+    };
+
 
     module.exports = {
         startImport: startImport,
         validateImport: validateImport,
-        preprocessFile: preprocessFile
+        preprocessFile: preprocessFile,
+        dryRun: dryRun
     }
 
 }());

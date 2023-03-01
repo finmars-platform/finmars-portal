@@ -18,6 +18,7 @@
         vm.readyStatus = {transactionType: false};
 
         vm.data = data;
+
         vm.item = JSON.parse(JSON.stringify(vm.data.item));
 
         vm.inputs = [];
@@ -48,6 +49,10 @@
             vm.inputIds = [];
 
             vm.transactionType.inputs.forEach(function (input) {
+
+                if (input.value_type === 120) {
+                    return;
+                }
 
                 var inputObject = Object.assign({}, input);
 

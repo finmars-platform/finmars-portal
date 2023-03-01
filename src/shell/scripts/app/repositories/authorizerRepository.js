@@ -673,9 +673,9 @@ export default function (cookieService, xhrService) {
 
     };
 
-    const getInvitesList = function (options) {
+    const getInvitesList = function (base_api_url) {
 
-        return xhrService.fetch(authorizerUrl + '/invite-to-user/',
+        return xhrService.fetch(authorizerUrl + '/invite-to-user/?base_api_url=' + base_api_url,
             {
                 method: 'GET',
                 credentials: 'include',
@@ -815,7 +815,6 @@ const getInitialConfiguration = function () {
     })
 
 };
-
 
 
 // module.exports = {

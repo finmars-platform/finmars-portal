@@ -30,6 +30,7 @@
                 scope.columns = scope.evDataService.getColumns();
 
                 scope.groups = scope.evDataService.getGroups();
+
                 scope.viewContext = scope.evDataService.getViewContext();
                 // scope.isReport = metaService.isReport(scope.entityType);
                 scope.isReport = scope.evDataService.isEntityReport();
@@ -229,11 +230,20 @@
                 function openNumberFormatDialog(column) {
 
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
-                    // column.options.number_format
-                    let dialogData = {settings: column.options.numberFormat};
 
+                    let dialogData = {
+                        settings: {}
+                    }
+                    // column.options.number_format
+                    if (column.options) {
+                        dialogData.settings = column.options.numberFormat
+                    }
+
+                    if (!column.options) {
+                        dialogData.settings = column.report_settings;
+                    }
                     // for old layouts
-                    if ( scope.isReport && !column.options.hasOwnProperty('numberFormat') ) {
+                    if (scope.isReport && column.options && !column.options.hasOwnProperty('numberFormat')) {
                         dialogData.settings = column.report_settings;
                     }
 
@@ -422,40 +432,40 @@
 
                 // scope.rowFilterColor = localStorageService.getRowTypeFilter(scope.isReport, scope.entityType);
 
-				scope.removeColorMarkFromAllRows = function ($event) {
+                scope.removeColorMarkFromAllRows = function ($event) {
 
-					$mdDialog.show({
-						controller: 'WarningDialogController as vm',
-						templateUrl: 'views/dialogs/warning-dialog-view.html',
-						parent: angular.element(document.body),
-						targetEvent: $event,
-						multiple: true,
-						locals: {
-							warning: {
-								title: 'Warning',
-								description: "Color marks will be removed for all rows in this table. Proceed?",
-								actionsButtons: [
-									{
-										name: "OK",
-										response: {status: 'agree'}
-									},
-									{
-										name: "CANCEL",
-										response: {status: 'disagree'}
-									}
-								]
-							}
-						}
+                    $mdDialog.show({
+                        controller: 'WarningDialogController as vm',
+                        templateUrl: 'views/dialogs/warning-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            warning: {
+                                title: 'Warning',
+                                description: "Color marks will be removed for all rows in this table. Proceed?",
+                                actionsButtons: [
+                                    {
+                                        name: "OK",
+                                        response: {status: 'agree'}
+                                    },
+                                    {
+                                        name: "CANCEL",
+                                        response: {status: 'disagree'}
+                                    }
+                                ]
+                            }
+                        }
 
-					}).then(function (res) {
+                    }).then(function (res) {
 
-						if (res.status === 'agree') {
-							evRvDomManagerService.removeColorMarkFromAllRows(scope.evDataService, scope.evEventService, usersService, globalDataService);
-						}
+                        if (res.status === 'agree') {
+                            evRvDomManagerService.removeColorMarkFromAllRows(scope.evDataService, scope.evEventService, usersService, globalDataService);
+                        }
 
-					});
+                    });
 
-				};
+                };
 
                 // <Victor 2020.12.14 #69 New report viewer design>
 
@@ -498,12 +508,12 @@
 
                 scope.changeSortMode = function (column, sortMode) {
 
-                    scope.hideArrowDown();
+                    // scope.hideArrowDown();
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
-                    const direction = column.options && column.options.sort ? column.options.sort : 'ASC'; // save direction before clear sort options for all columns
+                    // const direction = column.options && column.options.sort ? column.options.sort : 'ASC'; // save direction before clear sort options for all columns
 
-                    if (scope.columnHasCorrespondingGroup(column.key)) {
+                    /*if (scope.columnHasCorrespondingGroup(column.key)) {
 
                         clearAllSortOptions(scope.groups);
 
@@ -511,19 +521,22 @@
 
                         clearAllSortOptions(scope.columns);
 
-                    }
+                    }*/
 
-                    column.options.sort_mode = sortMode;
-                    column.options.sort = direction;
+                    column.options.sort_settings.mode = sortMode;
+                    // column.options.sort = direction;
+                    if (!column.options) column.options = {};
+                    if (!column.options.sort) column.options.sort = 'ASC';
+
                     sort(column);
 
                 }
 
-                scope.changeSortDirection = function (column, direction) {
+                scope.changeSortDirection = function (columnOrGroup, direction) {
 
                     scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 
-                    if (scope.columnHasCorrespondingGroup(column.key)) {
+                    /*if (scope.columnHasCorrespondingGroup(column.key)) {
 
                         clearAllSortOptions(scope.groups);
 
@@ -531,51 +544,60 @@
 
                         clearAllSortOptions(scope.columns);
 
-                    }
+                    }*/
+                    if (!columnOrGroup.options) columnOrGroup.options = {};
 
-                    column.options.sort = direction;
-                    sort(column);
+                    columnOrGroup.options.sort = direction;
+                    sort(columnOrGroup);
 
                 };
 
-                const signalSortChange = function (column) {
+                const signalSortChange = function (columnOrGroup) {
 
-                    if (scope.columnHasCorrespondingGroup(column.key)) {
+                    if (scope.columnHasCorrespondingGroup(columnOrGroup.key)) {
 
-                        scope.evDataService.setActiveGroupTypeSort(column);
+                        const placeholder1 = scope.groups.find(group => group.key === columnOrGroup.key);
+                        placeholder1.options.sort = columnOrGroup.options.sort;
+                        placeholder1.options.sort_settings = columnOrGroup.options.sort_settings;
+
+                        scope.evDataService.setGroups(scope.groups);
+
+                        scope.evDataService.setActiveGroupTypeSort(columnOrGroup);
                         scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
 
                     } else {
 
-                        scope.evDataService.setActiveColumnSort(column);
+                        scope.evDataService.setActiveColumnSort(columnOrGroup);
                         scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
 
                     }
 
                 };
 
-                const sort = function (column) {
+                const sort = function (columnOrGroup) {
 
-                    if (column.options.sort_mode === 'manual') { // manual sort handler
+                    if (columnOrGroup.options.sort_settings.mode === 'manual') { // manual sort handler
 
-                        uiService.getColumnSortDataList({
-                            filters: {
-                                user_code: column.manual_sort_layout_user_code
+                        uiService.getColumnSortDataList(
+                            {
+                                filters: {
+                                    user_code: columnOrGroup.options.sort_settings.layout_user_code
+                                }
                             }
-                        }).then(function (data) {
+                        ).then(function (data) {
 
                             if (data.results.length) {
 
                                 var layout = data.results[0];
 
-                                scope.evDataService.setColumnSortData(column.key, layout.data)
+                                scope.evDataService.setColumnSortData(columnOrGroup.key, layout.data)
 
-                                signalSortChange(column);
+                                signalSortChange(columnOrGroup);
 
                             } else {
 
                                 toastNotificationService.error("Manual Sort is not configured");
-                                column.manual_sort_layout_user_code = null;
+                                columnOrGroup.options.sort_settings.layout_user_code = null;
 
                             }
 
@@ -583,7 +605,7 @@
 
                     } else { // default sort handler TODO External sort mode is not defined, and handling as default
 
-                        signalSortChange(column);
+                        signalSortChange(columnOrGroup);
 
                     }
 
@@ -908,11 +930,14 @@
 
                 scope.sortHandler = function (column, sort) {
 
-                    if (column.manual_sort_layout_user_code) { // manual sort handler
+                    if (!column.options) column.options = {};
+                    if (!column.options.sort_settings) column.options.sort_settings = {};
+
+                    if (column.options.sort_settings.layout_user_code) { // manual sort handler
 
                         uiService.getColumnSortDataList({
                             filters: {
-                                user_code: column.manual_sort_layout_user_code
+                                user_code: column.options.sort_settings.layout_user_code
                             }
                         }).then(function (data) {
 
@@ -931,7 +956,7 @@
                                 }
 
                                 column.options.sort = sort;
-                                column.options.sort_mode = 'manual';
+                                column.options.sort_settings.mode = 'manual';
 
                                 console.log('sortHandler.column', column);
 
@@ -948,7 +973,7 @@
 
                                 toastNotificationService.error("Manual Sort is not configured");
 
-                                column.manual_sort_layout_user_code = null;
+                                column.options.sort_settings.layout_user_code = null;
 
                             }
 
@@ -966,7 +991,7 @@
                         }
 
                         column.options.sort = sort;
-                        column.options.sort_mode = 'default';
+                        column.options.sort_settings.mode = 'default';
 
                         console.log('sortHandler.column', column);
 
@@ -1514,8 +1539,17 @@
 
                         if (res.status === 'agree') {
 
-                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-                            scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED);
+                            /* scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                            scope.evEventService.dispatchEvent(evEvents.REPORT_TABLE_VIEW_CHANGED); */
+
+                            column.options.sort_settings = {
+                                ...column.options.sort_settings,
+                                ...res.data.sort_settings
+                            };
+
+                            if (!column.options.sort) column.options.sort = 'ASC';
+
+                            sort(column);
 
                         }
 
@@ -1785,6 +1819,8 @@
                         classes += 'p-r-8';
                     }
                 };*/
+
+
 
                 const updateGroupTypeIds = function () {
 
@@ -2153,9 +2189,9 @@
 
                     availableAttrs = allAttrsList.filter(function (attr) {
 
-						if (attr.value_type === "mc_field") return false;
+                        if (attr.value_type === "mc_field") return false;
 
-                    	for (var i = 0; i < scope.columns.length; i++) {
+                        for (var i = 0; i < scope.columns.length; i++) {
                             if (scope.columns[i].key === attr.key) {
                                 return false;
                             }
@@ -2175,7 +2211,7 @@
                                 availableAttrs: availableAttrs,
                                 title: 'Choose column to add',
                                 isReport: scope.isReport,
-								multiselector: true
+                                multiselector: true
                             }
                         }
                     }).then(function (res) {
@@ -2185,7 +2221,10 @@
                             res.data.columns = true;
 
                             for (var i = 0; i < res.data.items.length; i = i + 1) {
-                                scope.columns.push(res.data.items[i]);
+
+                                var colData = evHelperService.getTableAttrInFormOf('column', res.data.items[i])
+                                scope.columns.push(colData);
+
                             }
                             console.log("testing98.addColumn set columns", JSON.parse(JSON.stringify(scope.columns)));
                             scope.evDataService.setColumns(scope.columns);
@@ -2294,7 +2333,8 @@
 
                     }
 
-                } else {
+                }
+                else {
 
                     onGroupsChange = function () {
 
@@ -2422,7 +2462,7 @@
                     }
 
                     var evSettings = globalDataService.getMemberEntityViewersSettings(scope.isReport, scope.entityType);
-					scope.rowFilterColor = evSettings.row_type_filter;
+                    scope.rowFilterColor = evSettings.row_type_filter;
 
                     initEventListeners();
 

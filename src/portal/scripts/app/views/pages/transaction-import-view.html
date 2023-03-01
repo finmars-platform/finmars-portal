@@ -10,10 +10,18 @@
                     small-options="{noIndicatorBtn: true, dialogParent: '.dialog-containers-wrap'}"
                     class="m-t-16 width-100"></dropdown-select>
             <md-button
+                    style="opacity: .8; background: grey;"
                     class="scheme-edit-button md-fab {{vm.config.scheme && vm.hasSchemeEditPermission? '' : 'disabled-btn' }}"
                     data-ng-click="vm.editScheme($event)">
                 <ng-md-icon icon="edit" size="24"></ng-md-icon>
                 <md-tooltip class="tooltip_1" md-direction="top">Edit Scheme</md-tooltip>
+            </md-button>
+            <md-button
+                    style="right: -120px;"
+                    class="scheme-edit-button md-fab {{vm.config.scheme && vm.hasSchemeEditPermission? '' : 'disabled-btn' }}"
+                    data-ng-click="vm.editSchemeV2($event)">
+                <ng-md-icon icon="developer_dashboard" size="24"></ng-md-icon>
+                <md-tooltip class="tooltip_1" md-direction="top">Edit Scheme (v2)</md-tooltip>
             </md-button>
         </div>
 
@@ -49,15 +57,15 @@
             </div>
         </div>
 
-        <div layout="row" layout-align="end center" class="m-t-8">
-            <md-checkbox data-ng-click="vm.togglePreprocessFile($event)"
-                         data-ng-checked="vm.config.preprocess_file"
-                         tabindex="0"
-                         type="checkbox"
-                         role="checkbox" aria-checked="false" class="m-b-0">
-                Preprocess file
-            </md-checkbox>
-        </div>
+<!--        <div layout="row" layout-align="end center" class="m-t-8">-->
+<!--            <md-checkbox data-ng-click="vm.togglePreprocessFile($event)"-->
+<!--                         data-ng-checked="vm.config.preprocess_file"-->
+<!--                         tabindex="0"-->
+<!--                         type="checkbox"-->
+<!--                         role="checkbox" aria-checked="false" class="m-b-0">-->
+<!--                Preprocess file-->
+<!--            </md-checkbox>-->
+<!--        </div>-->
 
         <div layout="row" layout-align="end center" class="m-t-8">
 
@@ -84,16 +92,16 @@
 
         </div>
 
-        <div layout="row" layout-align="end center" class="m-t-8">
+<!--        <div layout="row" layout-align="end center" class="m-t-8">-->
 
-            <md-button
-                    style="font-size: 8px;"
-                    class="md-raised import-button {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
-                    data-ng-click="vm.preprocessFile($event)">
-                Preprocess only
-            </md-button>
+<!--            <md-button-->
+<!--                    style="font-size: 8px;"-->
+<!--                    class="md-raised import-button {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"-->
+<!--                    data-ng-click="vm.preprocessFile($event)">-->
+<!--                Preprocess only-->
+<!--            </md-button>-->
 
-        </div>
+<!--        </div>-->
 
 
     </div>

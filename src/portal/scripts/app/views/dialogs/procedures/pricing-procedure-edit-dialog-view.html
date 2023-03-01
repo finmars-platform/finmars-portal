@@ -1,15 +1,15 @@
-<md-dialog aria-label="" ng-cloak class="draggable-dialog width-50" drag-dialog>
-    <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
+<md-dialog class="width-50 draggable-dialog dialog-actions-bottom"
+           aria-label="pricing procedure edit dialog"
+           drag-dialog>
 
-            <h2>Update Pricing Procedure</h2>
-            <span flex></span>
-        </div>
+    <md-toolbar>
+        <dialog-header title="Update Pricing Procedure"
+                       cancel-dialog="vm.cancel()"></dialog-header>
     </md-toolbar>
+
     <md-dialog-content class="p-24">
 
-        <div layout="column" data-ng-if="vm.readyStatus.procedure">
+        <div data-ng-if="vm.readyStatus.procedure && vm.readyStatus.other" layout="column">
 
             <div>
 
@@ -336,7 +336,7 @@
 
         </div>
 
-        <div data-ng-if="!vm.readyStatus.procedure">
+        <div data-ng-if="!vm.readyStatus.procedure || !vm.readyStatus.other">
 
             <div class="m-16" layout="row" layout-sm="column" layout-align="space-around">
                 <progress-circular diameter="100"></progress-circular>
@@ -345,6 +345,7 @@
         </div>
 
     </md-dialog-content>
+
     <md-dialog-actions layout="row">
         <md-button ng-click="vm.cancel()">
             Close
@@ -352,8 +353,12 @@
         <md-button ng-click="vm.editAsJson($event)">
             Edit as JSON
         </md-button>
-        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button data-ng-disabled="vm.processing"
+                   class="md-raised"
+                   style="margin-right:20px;"
+                   data-ng-click="vm.agree()" >
             Save
         </md-button>
     </md-dialog-actions>
+
 </md-dialog>

@@ -2,82 +2,101 @@
 
     'use strict';
 
-    var uiService = require('../../services/uiService')
+    const uiService = require('../../services/uiService');
+    const objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
 
-    module.exports = function ($scope, $mdDialog, data, entityViewerDataService) {
+    module.exports = function ($scope, $mdDialog, toastNotificationService, data, entityViewerDataService) {
 
-        var vm = this;
+        let vm = this;
 
-        vm.column = data.column;
+        vm.column = data.column ? JSON.parse(angular.toJson( data.column )) : { options: {sort_settings: {}} };
+        let originalSortSettings = JSON.parse(JSON.stringify( vm.column.options.sort_settings ));
+
+        /*if (!vm.column.options) vm.column.options = {};
+        if (!vm.column.options.sort_settings) vm.column.options.sort_settings = {mode: null};*/
 
         vm.columnLayouts = [];
         vm.commonLayouts = [];
 
         vm.readyStatus = {columnLayouts: false, commonLayouts: false};
 
-        vm.agree = function ($event) {
-
-            $mdDialog.hide({status: 'agree'});
-
-        };
-
-        vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };
-
-
-        vm.getColumnLayouts = function (){
+        const getColumnLayouts = function (){
 
             vm.readyStatus.columnLayouts = false;
+            vm.columnLayouts = [];
 
-            uiService.getColumnSortDataList({
-                filters: {
-                    is_common: false,
-                    column_key: vm.column.key
-                }
-            }).then(function (data){
+            return new Promise((resolve, reject) => {
 
-                if (data.results.length) {
+                uiService.getColumnSortDataList({
+                    filters: {
+                        is_common: false,
+                        column_key: vm.column.key
+                    }
+                }).then(function (data){
 
-                    vm.columnLayouts = data.results
+                    if (data.results.length) {
+                        vm.columnLayouts = data.results
+                    }
 
-                }
+                    vm.readyStatus.columnLayouts = true;
 
-                vm.readyStatus.columnLayouts = true;
+                    // $scope.$apply();
+                    resolve();
 
-                $scope.$apply();
 
+                }).catch( e => reject(e) );
 
-            })
+            });
 
-        }
+        };
 
-        vm.getCommonLayouts = function (){
+        const getCommonLayouts = function (){
 
             vm.readyStatus.commonLayouts = false;
+            vm.commonLayouts = [];
 
-            uiService.getColumnSortDataList({
-                filters: {
-                    is_common: true
-                }
-            }).then(function (data){
+            return new Promise((resolve, reject) => {
 
-                if (data.results.length) {
+                uiService.getColumnSortDataList({
+                    filters: {
+                        is_common: true
+                    }
+                }).then(function (data){
 
-                    vm.commonLayouts = data.results
+                    if (data.results.length) {
+                        vm.commonLayouts = data.results
+                    }
 
-                }
+                    vm.readyStatus.commonLayouts = true;
 
-                vm.readyStatus.commonLayouts = true;
+                    resolve();
 
-                $scope.$apply();
-
+                }).catch( e => reject(e) );
 
             })
 
         }
 
-        vm.editManualSortingLayout = function ($event, item) {
+        vm.getLayouts = function () {
+
+
+
+        }
+
+        const getLayoutsByType = function (type) {
+
+            if (type === 'column') {
+                return vm.columnLayouts;
+
+            } else if (type === 'common') {
+                return vm.commonLayouts;
+            }
+
+            throw new Error("No layouts with type: " + type);
+
+        }
+
+        vm.editManualSortingLayout = function ($event, item, layoutType) {
 
             $mdDialog.show({
                 controller: 'ManualSortingSettingsDialogController as vm',
@@ -96,7 +115,18 @@
 
                 if (res.status === 'agree') {
 
-                    $mdDialog.hide({status: 'agree'});
+                    /*const layoutsList = getLayoutsByType(layoutType);
+                    const changedLayoutIndex = layoutsList.findIndex(layout => layout.id === item.id);
+                    layoutsList.splice(changedLayoutIndex, 1, res.data);*/
+
+
+                    /*setTimeout(function () {
+                        $scope.$apply();
+                    }, 0);*/
+
+                    Promise.all( [getColumnLayouts(), getCommonLayouts()] ).then(() => {
+                        $scope.$apply();
+                    })
 
                 }
 
@@ -104,7 +134,7 @@
 
         }
 
-        vm.deleteManualSortingLayout = function ($event, item) {
+        vm.deleteManualSortingLayout = function ($event, item, layoutType) {
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
@@ -126,11 +156,20 @@
 
                 if (res.status === 'agree') {
 
-                    uiService.deleteEditLayoutByKey(item.id).then(function (data) {
+                    uiService.deleteColumnSortData(item.id).then(function (data) {
 
-                        vm.getColumnLayouts();
-                        vm.getCommonLayouts();
+                        /*vm.getColumnLayouts();
+                          vm.getCommonLayouts();*/
 
+                        let layoutsList = getLayoutsByType(layoutType);
+
+                        const index = layoutsList.findIndex(layout => layout.id === item.id);
+
+                        layoutsList.splice(index, 1);
+
+                        toastNotificationService.success(`Manual sorting layout '${item.name}' deleted.`)
+
+                        $scope.$apply();
 
                     })
 
@@ -158,7 +197,16 @@
 
                 if (res.status === 'agree') {
 
-                    $mdDialog.hide({status: 'agree'});
+                    if (res.data.is_common) {
+                        vm.commonLayouts.unshift(res.data);
+
+                    } else {
+                        vm.columnLayouts.unshift(res.data);
+                    }
+
+                    setTimeout(function () {
+                        $scope.$apply();
+                    }, 0);
 
                 }
 
@@ -167,19 +215,40 @@
         }
 
         vm.applyManualSortingLayout = function ($event, item) {
-
-            vm.column.manual_sort_layout_user_code = item.user_code
-
-        }
+            vm.column.options.sort_settings.mode = 'manual';
+            vm.column.options.sort_settings.layout_user_code = item.user_code;
+        };
 
         vm.clearManualSortingLayout = function ($event, item) {
-            vm.column.manual_sort_layout_user_code = null;
-        }
+            vm.column.options.sort_settings.layout_user_code = null;
+        };
+
+        vm.newSortingNotAvailable = function () {
+            return !vm.column.options.sort_settings.layout_user_code ||
+                objectComparisonHelper.areObjectsTheSame(vm.column.options.sort_settings, originalSortSettings);
+        };
+
+        vm.agree = function ($event) {
+
+            const resData = {
+                sort_settings: vm.column.options.sort_settings,
+            };
+
+            if ( !resData.sort_settings.layout_user_code ) resData.sort_settings.mode = 'native';
+
+            $mdDialog.hide( {status: 'agree', data: resData} );
+
+        };
+
+        vm.cancel = function () {
+            $mdDialog.hide({status: 'disagree'});
+        };
 
         vm.init = function () {
 
-            vm.getColumnLayouts();
-            vm.getCommonLayouts();
+            Promise.all( [getColumnLayouts(), getCommonLayouts()] ).then(() => {
+                $scope.$apply();
+            })
 
         };
 

@@ -125,13 +125,15 @@
                 data: null
             },
             allRowsSelected: false,
+            // used to mark for updating group or column whose sorting has just been changed
             activeGroupTypeSort: null,
             activeColumnSort: null,
+
             rootEntityViewer: false,
             splitPanelIsActive: false,
             verticalSplitPanelIsActive: false,
             splitPanelDefaultLayout: {}, // serves to manage default layout inside split panel
-            splitPanelLayoutToOpen: null, // Only for frontend. Do not sent to server.
+            splitPanelLayoutToOpen: null, // Only for frontend. Do not send to server.
             additions: {},
             report: {},
             export: {},
@@ -469,26 +471,26 @@
          * @param {String=} dateTo
          * @memberof module:entityViewerDataService
          */
-        function stashReportDates (dateFrom, dateTo) {
+        function stashReportDates(dateFrom, dateTo) {
 
             const entityType = getEntityType();
             const datesProps = reportHelper.getDateProperties(entityType);
 
-			// if dates were not passed as arguments take them from reportOptions
-			if (dateFrom === undefined && dateTo === undefined) {
+            // if dates were not passed as arguments take them from reportOptions
+            if (dateFrom === undefined && dateTo === undefined) {
 
-				const reportOptions = getReportOptions();
+                const reportOptions = getReportOptions();
 
-				var dateFromProp = datesProps[0];
-				var dateToProp = datesProps[1];
+                var dateFromProp = datesProps[0];
+                var dateToProp = datesProps[1];
 
-				if (dateFromProp) {
-					dateFrom = reportOptions[dateFromProp];
-				}
+                if (dateFromProp) {
+                    dateFrom = reportOptions[dateFromProp];
+                }
 
-				dateTo = reportOptions[dateToProp];
+                dateTo = reportOptions[dateToProp];
 
-			}
+            }
 
             let datesData = {
                 dateTo: {
@@ -518,7 +520,7 @@
             return data.reportDatesData || {};
         }
 
-        function applyStashedReportDates (reportOptions) {
+        function applyStashedReportDates(reportOptions) {
 
             const datesData = getStashedReportDates();
 
@@ -667,7 +669,7 @@
                 return result;
 
             } else {
-                throw Error('Object is not exist')
+                throw Error('Object does not exist')
             }
         }
 
@@ -935,8 +937,36 @@
             return data.activeObject;
         }
 
+        function clearColumnSort(column) {
+
+            column.options.sort = null;
+            column.options.sort_settings = {
+                mode: null
+            };
+
+            setColumnSortData(column.key, null);
+
+        }
+
         function setActiveColumnSort(column) {
+
+            var columns = getColumns();
+
+            columns.forEach(function (col) {
+
+                if (col.key === column.key) {
+                    return;
+                }
+
+                /*if (!col.options) col.options = {};
+                if (!col.options.sort_settings) col.options.sort_settings = {};*/
+
+                clearColumnSort(col);
+
+            })
+
             data.activeColumnSort = column;
+
         }
 
         function getActiveColumnSort() {
@@ -1308,6 +1338,18 @@
 
             }
 
+            listLayout.data.columns = listLayout.data.columns.map(column => {
+                if (!column.options) column.options = {}
+                if (!column.options.sort_settings) column.options.sort_settings = {}
+                return column;
+            })
+
+            listLayout.data.grouping = listLayout.data.grouping.map(group => {
+                if (!group.options) group.options = {}
+                if (!group.options.sort_settings) group.options.sort_settings = {}
+                return group;
+            })
+
             setColumns(listLayout.data.columns);
             setGroups(listLayout.data.grouping);
 
@@ -1320,32 +1362,33 @@
 
             setListLayout(listLayout);
 
-            const setActiveColumn = async (column) => {
+            const setActiveColumnGroupSort = async (columnOrGroup) => {
 
-                if (column.options && column.options.sort) {
+                if (!columnOrGroup.options.sort) {
+                    return;
+                }
 
-                    var columnWithGroup = !!listLayout.data.grouping.find(group => group.key === column.key);
+                var columnWithGroup = !!listLayout.data.grouping.find(group => group.key === columnOrGroup.key);
 
-                    if (columnWithGroup) {
-                        setActiveGroupTypeSort(column);
-                    } else {
-                        setActiveColumnSort(column);
-                    }
+                if (columnWithGroup) {
+                    setActiveGroupTypeSort(columnOrGroup);
 
-                    if (column.options.sort_mode === 'manual') {
+                } else {
+                    setActiveColumnSort(columnOrGroup);
+                }
 
-                        const {results} = await uiService.getColumnSortDataList({
-                            filters: {
-                                user_code: column.manual_sort_layout_user_code
-                            }
-                        });
+                if (columnOrGroup.options.sort_settings.mode === 'manual') {
 
-                        if (results.length) {
-
-                            const layout = results[0];
-                            setColumnSortData(column.key, layout.data);
-
+                    const {results} = await uiService.getColumnSortDataList({
+                        filters: {
+                            user_code: columnOrGroup.options.sort_settings.layout_user_code
                         }
+                    });
+
+                    if (results.length) {
+
+                        const layout = results[0];
+                        setColumnSortData(columnOrGroup.key, layout.data);
 
                     }
 
@@ -1353,8 +1396,8 @@
 
             };
 
-            data.columns.forEach(setActiveColumn);
-            data.groups.forEach(setActiveColumn);
+            data.columns.forEach(setActiveColumnGroupSort);
+            data.groups.forEach(setActiveColumnGroupSort);
 
             listLayout.data.components = {
                 filterArea: true,
@@ -1603,6 +1646,12 @@
             data.columnSortData[key] = item;
         }
 
+        /**
+         * Contains sorting data loaded from server (e.g. manual sorting). Used for groupType and column sorting.
+         *
+         * @param {String} key - key of column
+         * @returns {*|null}
+         */
         function getColumnSortData(key) {
 
             if (data.columnSortData && data.columnSortData.hasOwnProperty(key)) {
@@ -1701,6 +1750,14 @@
 
         function getGlobalTableSearch() {
             return data.globalTableSearch;
+        }
+
+        function setRenderTime(time) {
+            data.renderTime = time
+        }
+
+        function getRenderTime() {
+            return data.renderTime;
         }
 
 
@@ -1970,7 +2027,10 @@
             setSelectedGroups: setSelectedGroups,
 
             setGlobalTableSearch: setGlobalTableSearch,
-            getGlobalTableSearch: getGlobalTableSearch
+            getGlobalTableSearch: getGlobalTableSearch,
+
+            setRenderTime: setRenderTime,
+            getRenderTime: getRenderTime
 
         }
     }
