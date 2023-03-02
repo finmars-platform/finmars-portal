@@ -1,14 +1,11 @@
-(function () {
+'use strict';
 
-    'use strict';
+import baseUrlService from '../services/baseUrlService';
+const baseUrl = baseUrlService.resolve();
 
-    var baseUrlService = require('../services/baseUrlService');
-    var cookieService = require('../../../../core/services/cookieService');
-    var xhrService = require('../../../../core/services/xhrService');
-    var baseUrl = baseUrlService.resolve();
-
-
-    var getSystemInfo = function () {
+/** @module utilsService */
+export default function (cookieService, xhrService) {
+    const getSystemInfo = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
@@ -27,7 +24,7 @@
     };
 
 
-    var getSystemLogs = function () {
+    const getSystemLogs = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
@@ -45,7 +42,7 @@
             })
     };
 
-    var getSystemLog = function (file_name) {
+    const getSystemLog = function (file_name) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
@@ -65,10 +62,10 @@
         })
     };
 
-    module.exports = {
+    return {
         getSystemInfo: getSystemInfo,
         getSystemLogs: getSystemLogs,
         getSystemLog: getSystemLog
     }
 
-}());
+}

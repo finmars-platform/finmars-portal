@@ -39,11 +39,14 @@ import reportHelper from "./app/helpers/reportHelper";
 import rvDataProviderService from "./app/services/rv-data-provider/rv-data-provider.service";
 import reconDataProviderService from "./app/services/recon-data-provider/recon-data-provider.service";
 
+import utilsService from "./app/services/utilsService";
+
 import portalController from './app/controllers/portalController.js';
 import enterUserCodeDialogController from "./app/controllers/dialogs/enterUserCodeDialogController.js";
 import portfolioRegisterDialogController from "./app/controllers/dialogs/portfolioRegisterDialogController";
 import dialogHeaderDirective from "./app/directives/dialogHeaderDirective";
 import dashboard2ReportViewerComponentMatrixController from "./app/controllers/dashboard/_version2/reportViewer/componentMatrixController";
+import systemPageController from "./app/controllers/pages/systemPageController";
 // form - tabs
 import instrumentTypePricingTabController
     from "./app/controllers/tabs/instrument-type/instrumentTypePricingTabController.js";
@@ -130,6 +133,7 @@ export default (function () {
 	portal.service('fieldResolverService', ['instrumentService', 'transactionTypeService', 'metaContentTypesService', fieldResolverService]);
 	portal.service('expressionService', ['cookieService', 'xhrService', expressionService]);
 	portal.service('dashboardConstructorMethodsService', ['uiService', dashboardConstructorMethodsService]);
+	portal.service('utilsService', ['cookieService', 'xhrService', utilsService]);
 
 	//<editor-fold desc="Services for import and export">
 	portal.service('configurationImportGetService', ['entityResolverService', 'customFieldService', 'attributeTypeService', 'transactionTypeService', configurationImportGetService]);
@@ -228,12 +232,12 @@ export default (function () {
     // Common
 
 	// portal.controller('ShellController', ['$scope', '$state', '$stateParams', '$rootScope', '$mdDialog', '$transitions', require('./app/controllers/shellController')]);
-	portal.controller('PortalController', ['$scope', '$state',  'authorizerService', 'usersService', 'globalDataService', 'redirectionService', portalController]);
+	portal.controller('PortalController', ['$scope', '$state',  'authorizerService', 'usersService', 'globalDataService', 'redirectionService', 'middlewareService', portalController]);
 	portal.controller('BookmarksController', ['$scope', '$mdDialog', '$state', 'toastNotificationService', require('./app/controllers/bookmarksController')]);
 	portal.controller('SideNavController', ['$scope', '$mdDialog', '$transitions', 'usersService', 'globalDataService', 'redirectionService', 'uiService', require('./app/controllers/sideNavController')]);
 	portal.controller('AlertSideNavController', ['$scope', 'globalDataService', 'systemMessageService', require('./app/controllers/alertSideNavController')]);
 	portal.controller('HomeController', ['$scope', '$state', '$mdDialog', 'authorizerService', 'usersService', 'globalDataService', 'systemMessageService', 'redirectionService', require('./app/controllers/homeController')]);
-	portal.controller('SystemPageController', ['$scope', '$mdDialog', 'globalDataService', require('./app/controllers/pages/systemPageController')]);
+	portal.controller('SystemPageController', ['$scope', '$mdDialog', 'globalDataService', 'utilsService', systemPageController]);
 	// portal.controller('SetupController', ['$scope', '$state', 'usersService', require('./app/controllers/setupController')]);
 	portal.controller('NotFoundPageController', ['$scope', require('./app/controllers/notFoundPageController')]);
 	portal.controller(
@@ -353,7 +357,7 @@ export default (function () {
 	portal.controller('SimpleEntityImportDialogController', ['$scope', '$mdDialog', 'usersService', 'metaContentTypesService', 'data', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportDialogController')]);
 	portal.controller('SimpleEntityImportErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportErrorsDialogController')]);
 	portal.controller('SimpleEntityImportSchemeEditDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'attributeTypeService', 'schemeId', 'importSchemesMethodsService', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeEditDialogController')]);
-	portal.controller('SimpleEntityImportSchemeV2EditDialogController', ['$scope', '$mdDialog', 'schemeId', 'importSchemesMethodsService', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeV2EditDialogController')]);
+	portal.controller('SimpleEntityImportSchemeV2EditDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'metaContentTypesService', 'attributeTypeService', 'importSchemesMethodsService', 'schemeId', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeV2EditDialogController')]);
 	portal.controller('SimpleEntityImportSchemeCreateDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'metaContentTypesService', 'attributeTypeService', 'data', 'importSchemesMethodsService', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeCreateDialogController')]);
 
     // Complex Import
@@ -367,9 +371,9 @@ export default (function () {
     // Transaction Import
 
 	portal.controller('TransactionImportSchemeAddDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'ecosystemDefaultService', 'transactionTypeService', 'data', 'importSchemesMethodsService', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeAddDialogController')]);
-	portal.controller('TransactionImportSchemeEditDialogController', ['$scope', '$mdDialog', 'schemeId', 'importSchemesMethodsService', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeEditDialogController')]);
-	portal.controller('TransactionImportSchemeV2EditDialogController', ['$scope', '$mdDialog', 'schemeId', 'importSchemesMethodsService', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeV2EditDialogController')]);
-	portal.controller('TransactionImportSchemeInputsDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeInputsDialogController')]);
+	portal.controller('TransactionImportSchemeEditDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'transactionTypeService', 'importSchemesMethodsService', 'schemeId', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeEditDialogController')]);
+	portal.controller('TransactionImportSchemeV2EditDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'transactionTypeService', 'importSchemesMethodsService', 'schemeId', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeV2EditDialogController')]);
+	portal.controller('TransactionImportSchemeInputsDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'transactionTypeService', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeInputsDialogController')]);
 	portal.controller('TransactionImportDialogController', ['$scope', '$mdDialog', 'data', 'usersService', require('./app/controllers/dialogs/transaction-import/transactionImportDialogController')]);
 	portal.controller('TransactionImportErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportErrorsDialogController')]);
 	portal.controller('TransactionImportSchemeScenarioFieldsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transaction-import/transactionImportSchemeScenarioFieldsDialogController')]);

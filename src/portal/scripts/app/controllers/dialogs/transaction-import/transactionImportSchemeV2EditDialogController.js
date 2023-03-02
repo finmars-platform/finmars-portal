@@ -9,10 +9,7 @@ const importTransactionService = require("../../../services/import/importTransac
     var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
     var transactionTypeService = require('../../../services/transactionTypeService');
 
-    var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
-
-
-    module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, schemeId, importSchemesMethodsService) {
+    module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, toastNotificationService, transactionTypeService, importSchemesMethodsService, schemeId) {
 
         var vm = this;
 

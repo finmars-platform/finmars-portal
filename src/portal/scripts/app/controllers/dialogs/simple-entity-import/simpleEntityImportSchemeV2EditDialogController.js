@@ -20,8 +20,7 @@
 
     var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
 
-
-    module.exports = function simpleEntityImportSchemeEditDialogController($scope, $mdDialog, schemeId, importSchemesMethodsService) {
+    module.exports = function simpleEntityImportSchemeEditDialogController($scope, $mdDialog, toastNotificationService, metaContentTypesService, attributeTypeService, importSchemesMethodsService, schemeId) {
 
         var vm = this;
 

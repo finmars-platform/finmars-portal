@@ -210,8 +210,8 @@ export default function (cookieService, globalDataService, xhrService) {
 
                 // const base_api_url = window.location.pathname.split('/')[1];
                 const pathNamePartsList = window.location.pathname.split('/');
-                const base_api_url = pathNamePartsList.find(part => part.startsWith('client'));
-                console.log("testing.880 getCurrentMasterUser pathNamePartsList, base_api_url", pathNamePartsList, base_api_url);
+                const base_api_url = pathNamePartsList.find(part => part.startsWith('space'));
+
                 let currentMasterUser = null;
 
                 if (base_api_url.startsWith('space')) {

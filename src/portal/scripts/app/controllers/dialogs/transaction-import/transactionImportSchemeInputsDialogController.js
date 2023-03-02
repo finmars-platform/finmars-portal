@@ -5,13 +5,9 @@
 
     'use strict';
 
-    var logService = require('../../../../../../core/services/logService');
+    // var transactionTypeService = require('../../../services/transactionTypeService');
 
-    var transactionTypeService = require('../../../services/transactionTypeService');
-
-    module.exports = function transactionImportSchemeInputsDialogController($scope, $mdDialog, metaContentTypesService, data) {
-
-        logService.controller('TransactionImportSchemeInputsDialogController', 'initialized');
+    module.exports = function transactionImportSchemeInputsDialogController($scope, $mdDialog, metaContentTypesService, transactionTypeService, data) {
 
         var vm = this;
 
