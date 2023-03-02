@@ -1,6 +1,7 @@
 'use strict';
 
 import CommonDialogsService from "../../../../shell/scripts/app/services/commonDialogsService";
+import rvDataProviderService from "../services/rv-data-provider/rv-data-provider.service";
 
 (function () {
 
@@ -116,10 +117,14 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
         const onSetLayoutEnd = () => {
 
             viewModel.readyStatus.layout = true;
-            rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
 
+            var viewContext = viewModel.entityViewerDataService.getViewContext();
             var reportOptions = viewModel.entityViewerDataService.getReportOptions();
             var entityType = viewModel.entityViewerDataService.getEntityType();
+
+            if (viewContext !== 'split_panel' || entityType !== 'transaction-report') {
+                rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+            }
 
             if (entityType !== 'transaction-report') {
 
