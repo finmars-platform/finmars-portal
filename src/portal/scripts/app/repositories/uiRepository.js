@@ -25,7 +25,7 @@ export default function (cookieService, xhrService, metaContentTypesService) {
         if (['POST', 'PATCH', 'PUT'].includes(method)) {
 
             reqestParamsObj.headers['X-CSRFToken'] = cookieService.getCookie('csrftoken');
-            reqestParamsObj.data = JSON.stringify(bodyData);
+            reqestParamsObj.body = JSON.stringify(bodyData);
 
         } else if (method === 'DELETE') {
             reqestParamsObj.headers['X-CSRFToken'] = cookieService.getCookie('csrftoken');
