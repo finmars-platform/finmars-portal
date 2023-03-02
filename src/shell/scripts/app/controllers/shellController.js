@@ -150,10 +150,9 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         };
 
         if (vm.iframeMode) {
-            console.log("testing.880 iframeMode onBefore hook ");
+
             $transitions.onBefore({}, function (transition) {
-                console.log("testing.880 onBefore ", transition.to().name);
-                console.trace("testing.880 onBefore ");
+
                 if (['app.authentication', 'app.portal.home', 'app.profile'].includes(transition.to().name)) {
                     // resetUrlAfterAbortion();
                     return false;
@@ -314,12 +313,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
             cookieService.setCookie('access_token', $uiRouterGlobals.params.atoken);
             // globalDataService.setIframeData(iframeData);
-            console.log("testing.880 vm.iframeMode ", vm.iframeMode);
         }
-
-        cookieService.setCookie('access_token', $uiRouterGlobals.params.atoken);
-
-        vm.accessToken = cookieService.getCookie('access_token');
 
         /* if (PROJECT_ENV !== 'local') {
 
@@ -372,10 +366,10 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         var pathname = window.location.pathname;
         var base_api_url;
 
-        if (pathname.startsWith('/space')) {
+        if (pathname.includes('/space')) {
 
             var pathnamePartsList = pathname.split('/');
-            base_api_url = pathnamePartsList.find(part => part.startsWith('client'));
+            base_api_url = pathnamePartsList.find(part => part.startsWith('space'));
 
             baseUrlService.setMasterUserPrefix(base_api_url);
 
@@ -383,10 +377,6 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             console.error("ShellController: no base_api_url in the pathname", pathname);
         }
 
-        if (!pathname.includes('/client')) {
-            console.log("testing.880 shellController init() pathname without base_api_url", pathname);
-        }
-        console.log("testing.880 shellController init() base_api_url", base_api_url);
         homepageUrl = redirectionService.getUrl('app.portal.home');
         profileUrl = redirectionService.getUrl('app.profile');
 

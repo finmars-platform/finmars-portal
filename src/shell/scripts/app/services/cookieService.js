@@ -2,9 +2,9 @@
 
 export default function () {
 
-	 // IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally.
+	 //# region IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally.
 
-	let cookieStorage = {};
+	/*let cookieStorage = {};
 
 	const getStoredCookie = function () {
 
@@ -25,15 +25,17 @@ export default function () {
 
 		cookieStorage[prop] = keyAndVal[1];
 
-	}
+	}*/
 
-	/*const getStoredCookie = function () {
+	//# endregion Only for development purpose.
+
+	const getStoredCookie = function () {
 		return document.cookie;
 	}
 
 	const storeCookie = function (value) {
 		document.cookie = value;
-	}*/
+	}
 
 	const getCookie = function (name) {
 		let cookieValue = null;
@@ -96,10 +98,5 @@ export default function () {
 		setCookie: setCookie,
 		deleteCookie: deleteCookie
 	}
-	/*module.exports = {
-		getCookie: getCookie,
-		setCookie: setCookie,
-		deleteCookie: deleteCookie
-	}*/
 
 };

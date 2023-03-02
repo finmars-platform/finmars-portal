@@ -376,7 +376,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
             })
     };
 
-    module.exports = {
+    return {
         // getList: getList,
         getListLight: getListLight,
         getListLightWithInputs: getListLightWithInputs,
