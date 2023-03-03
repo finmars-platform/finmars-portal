@@ -152,8 +152,8 @@ export default (function () {
 	portal.service('gridTableHelperService', ['multitypeFieldService', require('./app/helpers/gridTableHelperService')]);
 
 	//<editor-fold desc="Helpers">
-	portal.service('dashboardHelper', [dashboardHelper]);
 	portal.service('evRvLayoutsHelper', ['toastNotificationService', 'uiService', evRvLayoutsHelper]);
+	portal.service('dashboardHelper', ['toastNotificationService', 'uiService', 'evRvLayoutsHelper', dashboardHelper]);
 	portal.service('reportHelper', ['expressionService', reportHelper]);
 	portal.service('rvDataProviderService', ['entityResolverService', 'pricesCheckerService', 'reportHelper', rvDataProviderService]);
 	portal.service('reconDataProviderService', ['entityResolverService', 'reportHelper', reconDataProviderService]);

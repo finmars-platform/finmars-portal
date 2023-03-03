@@ -4,6 +4,11 @@ export default function (toastNotificationService, uiService) {
 
 	let getLinkingToFilters = function (layout) {
 
+		if (!layout.data) {
+			console.error("Broken layout: ", layout);
+			return [];
+		}
+
 		let linkingToFilters = [];
 
 		layout.data.filters.forEach(function (filter) {
@@ -57,6 +62,8 @@ export default function (toastNotificationService, uiService) {
 		let result = [];
 
 		layouts.forEach(function (layout) {
+
+			if (!layout.data) console.error("Broken list layout: ", layout);
 
 			let layoutObj = {
 				id: layout.id,
