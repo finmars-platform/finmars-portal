@@ -1484,6 +1484,18 @@ mdp-time-picker.custom-time-picker {
   #width-fallback {
     display: block;
   }
+
+  iframe {
+
+    #root {
+      display: initial;
+    }
+
+    #width-fallback:not(.inside-iframe) {
+      display: none;
+    }
+
+  }
 }
 
 .textarea-bind-field {
