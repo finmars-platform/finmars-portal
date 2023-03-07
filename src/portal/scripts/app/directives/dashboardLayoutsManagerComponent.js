@@ -184,6 +184,7 @@
                         if (res.status === 'agree') {
 
                             scope.layout.name = res.data.name;
+                            scope.layout.user_code = res.data.user_code;
 
                             uiService.updateDashboardLayout(scope.layout.id, scope.layout).then(async function (data) {
                                 scope.dashboardDataService.updateModifiedDate(data.modified);
