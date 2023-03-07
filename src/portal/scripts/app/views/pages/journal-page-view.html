@@ -1,0 +1,142 @@
+<div class="journal-page p-24">
+
+    <div layout="row">
+        <h1 style="margin-top: 5px;">Journal</h1>
+
+        <md-button data-ng-class="{'disabled-btn': !vm.readyStatus.data}"
+                   data-ng-click="vm.getData()" class="md-raised md-icon-button md-primary"><span
+                class="material-icons">refresh</span>
+            <md-tooltip md-direction="top">Refresh</md-tooltip>
+        </md-button>
+
+        <span style="padding-top: 20px;font-size: 14px;">Records: <b>{{vm.count}}</b></span>
+
+    </div>
+
+    <div class="m-t-8 m-b-8 journal-page-filters">
+
+        <md-input-container class="journal-page-filters-date-from">
+            <label for="">Date From</label>
+            <zh-date-picker data-date-value="vm.date_from" data-callback-method="vm.searchProcesses()"></zh-date-picker>
+        </md-input-container>
+
+        <md-input-container class="journal-page-filters-date-to">
+            <label for="">Date To</label>
+            <zh-date-picker data-date-value="vm.date_to" data-callback-method="vm.searchProcesses()"></zh-date-picker>
+        </md-input-container>
+
+
+        <md-input-container class="journal-page-filters-search">
+            <label for="">Search</label>
+            <input aria-label="search" type="text" data-ng-model="vm.query" data-ng-change="vm.searchProcesses()">
+        </md-input-container>
+
+
+    </div>
+
+
+    <div data-ng-if="vm.readyStatus.data">
+
+        <div data-ng-if="vm.items.length">
+
+
+            <div>
+
+                <table class="error-history-table">
+
+                    <thead>
+                    <tr>
+                        <th>
+                            Date
+                        </th>
+                        <th>User</th>
+                        <th>Action</th>
+                        <th>User Code</th>
+                        <th>Content Type</th>
+                        <th>Notes</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr data-ng-repeat="item in vm.items">
+
+                        <td class="history-record-date-td">{{item.created_pretty}}</td>
+                        <td class="history-record-username-td">
+
+                            <div class="history-record-username-td-wrap">
+
+                                <div class="user-avatar-simple"
+                                     ng-style="{'backgroundColor': vm.getAvatar(comment.member_object.username[0])}">
+
+                                    {{item.member_object.username[0]}}
+
+                                </div>
+
+                                {{item.member_object.username}}
+                            </div>
+
+                        </td>
+                        <td>{{item.action}}</td>
+                        <td>{{item.user_code}}</td>
+                        <td>{{item.content_type}}</td>
+                        <td class="history-record-notes-td">
+                            <div class="history-record-notes-td-wrap">
+                                <pre class="" data-ng-click="vm.previewNotes($event, item)">{{item.notes_pretty}}</pre>
+                            </div>
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+
+            </div>
+
+            <div layout="row" class="m-t-16">
+                <md-button class="md-raised" data-ng-show="vm.currentPage != 1" data-ng-click="vm.openPreviousPage()">
+                    Previous
+                </md-button>
+
+                <div layout="row">
+
+                    <div data-ng-repeat="page in vm.pages">
+
+                        <md-button data-ng-click="vm.openPage(page)" data-ng-if="page.number"
+                                   class="md-raised {{vm.currentPage == page.number ? 'md-primary' : ''}}">
+                            {{page.caption}}
+                        </md-button>
+
+                        <div data-ng-if="!page.number" style="margin: 10px;">
+                            {{page.caption}}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <md-button class="md-raised" data-ng-show="vm.currentPage < vm.totalPages"
+                           data-ng-click="vm.openNextPage()">Next
+                </md-button>
+            </div>
+
+
+        </div>
+
+
+        <div data-ng-if="!vm.items.length">
+            <h4 class="text-center">No History Records Found</h4>
+        </div>
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.data" style="width: 100%">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="100"></progress-circular>
+        </div>
+    </div>
+
+
+</div>

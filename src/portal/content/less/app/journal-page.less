@@ -1,0 +1,74 @@
+.journal-page {
+
+  .journal-page-filters-date-from {
+    width: 100px;
+  }
+
+  .journal-page-filters-date-to {
+    width: 100px;
+  }
+
+  .journal-page-filters-search {
+    width: 400px;
+  }
+
+  .error-history-table {
+
+    font-size: 14px;
+
+    th {
+      padding: 4px;
+    }
+
+    td {
+      padding: 4px;
+    }
+
+    .history-record-date-td {
+      width: 120px;
+    }
+
+    .history-record-username-td {
+
+    }
+
+    .history-record-username-td-wrap {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+
+      .user-avatar-simple {
+        margin-right: 4px;
+      }
+    }
+
+    .history-record-notes-td-wrap {
+      padding: 4px;
+      max-width: 400px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      max-height: 140px;
+      overflow-y: auto;
+
+      pre {
+        width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+
+        background: #ddd;
+        padding: 4px;
+        cursor: pointer;
+        font-size: 12px;
+
+        &:hover {
+          opacity: .7;
+        }
+      }
+    }
+
+  }
+
+
+}
