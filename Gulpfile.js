@@ -20,6 +20,7 @@
     var WS_HOST = process.env.WS_HOST || 'ws://0.0.0.0:6969';
     var HEALTHCHECK_HOST = process.env.HEALTHCHECK_HOST || '';
     var AUTHORIZER_URL = process.env.AUTHORIZER_URL || 'http://0.0.0.0:8083/authorizer';
+    var KEYCLOAK_ACCOUNT_PAGE = process.env.KEYCLOAK_ACCOUNT_PAGE || 'https://dev-auth.finmars.com/realms/finmars/account/';
 
     // gulp.task('default', gulp.parallel('core-min-All', 'profile-HTML-to-JS', 'portal-min-All', 'shell-min-All'));
 	gulp.task('default', gulp.parallel('core-min-All', 'profile-min-All', 'database-min-All', 'portal-min-All', 'shell-min-All'));
@@ -60,6 +61,7 @@
             .pipe(string_replace('__WS_HOST__', WS_HOST))
             .pipe(string_replace('__AUTHORIZER_URL__', AUTHORIZER_URL))
             .pipe(string_replace('__HEALTHCHECK_HOST__', HEALTHCHECK_HOST))
+            .pipe(string_replace('__KEYCLOAK_ACCOUNT_PAGE__', KEYCLOAK_ACCOUNT_PAGE))
             .pipe(gulp.dest('dist/'))
 
     });
