@@ -228,19 +228,16 @@
                             }
 
 
-
-
                         } catch (e) {
                             item.context_url_pretty = item.context_url;
                         }
-
 
 
                         try {
                             item.notes_pretty = JSON.stringify(JSON.parse(item.notes), null, 4)
 
                         } catch (e) {
-                            item.notes_pretty = notes
+                            item.notes_pretty = item.notes
                         }
                         return item;
 
@@ -289,6 +286,34 @@
                     }
                 }
             });
+        }
+
+        vm.showRecordData = function ($event, record) {
+
+            historyService.getRecordData(record.id).then(function (data) {
+
+                $mdDialog.show({
+                    controller: 'FilePreviewDialogController as vm',
+                    templateUrl: 'views/dialogs/file-preview-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            content: data,
+                            file_descriptor: {
+                                name: record.user_code + '.json'
+                            }
+                        }
+                    }
+                });
+
+            })
+
         }
 
         vm.init = function () {

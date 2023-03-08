@@ -55,6 +55,7 @@
                         <th>Content Type</th>
                         <th>Context URL</th>
                         <th>Notes</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
 
@@ -104,9 +105,12 @@
                             <md-tooltip md-direction="bottom">{{item.context_url}}</md-tooltip>
                         </td>
                         <td class="history-record-notes-td">
-                            <div class="history-record-notes-td-wrap">
+                            <div class="history-record-notes-td-wrap" data-ng-if="item.notes">
                                 <pre class="" data-ng-click="vm.previewNotes($event, item)">{{item.notes_pretty}}</pre>
                             </div>
+                        </td>
+                        <td>
+                            <md-button class="history-record-show-data-button" data-ng-click="vm.showRecordData($event, item)">Show Data</md-button>
                         </td>
 
                     </tr>
