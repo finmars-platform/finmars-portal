@@ -1,4 +1,4 @@
-<div class="journal-page p-24">
+<div class="journal-page">
 
     <div layout="row">
         <h1 style="margin-top: 5px;">Journal</h1>
@@ -53,6 +53,7 @@
                         <th>Action</th>
                         <th>User Code</th>
                         <th>Content Type</th>
+                        <th>Context URL</th>
                         <th>Notes</th>
                     </tr>
                     </thead>
@@ -61,7 +62,15 @@
 
                     <tr data-ng-repeat="item in vm.items">
 
-                        <td class="history-record-date-td">{{item.created_pretty}}</td>
+                        <td class="history-record-date-td">
+                            <div class="history-record-date-td-date-holder">
+                                {{item.created_date_pretty}}
+                            </div>
+                            <div class="history-record-date-td-time-holder">
+                                {{item.created_time_pretty}}
+                            </div>
+                            <md-tooltip md-direction="bottom">{{item.created}}</md-tooltip>
+                        </td>
                         <td class="history-record-username-td">
 
                             <div class="history-record-username-td-wrap">
@@ -77,9 +86,23 @@
                             </div>
 
                         </td>
-                        <td>{{item.action}}</td>
+                        <td class="history-record-action-td">
+
+                            <span data-ng-if="item.action == 'delete'" style="color: red">{{item.action}}</span>
+                            <span data-ng-if="item.action == 'create'" style="color: green">{{item.action}}</span>
+                            <span data-ng-if="item.action == 'change'">{{item.action}}</span>
+
+
+                        </td>
                         <td>{{item.user_code}}</td>
-                        <td>{{item.content_type}}</td>
+                        <td class="history-record-content-type-td">
+                            {{item.content_type_pretty}}
+                            <md-tooltip md-direction="bottom">{{item.content_type}}</md-tooltip>
+                        </td>
+                        <td class="history-record-context-url-td">
+                            {{item.context_url_pretty}}
+                            <md-tooltip md-direction="bottom">{{item.context_url}}</md-tooltip>
+                        </td>
                         <td class="history-record-notes-td">
                             <div class="history-record-notes-td-wrap">
                                 <pre class="" data-ng-click="vm.previewNotes($event, item)">{{item.notes_pretty}}</pre>
