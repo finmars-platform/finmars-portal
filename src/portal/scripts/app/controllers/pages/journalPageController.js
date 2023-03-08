@@ -218,10 +218,22 @@
                         item.content_type_pretty = metaContentTypesService.getEntityNameByContentType(item.content_type)
 
                         try {
-                            item.context_url_pretty = item.context_url.split('/api/v1')[1];
+
+                            var pieces = item.context_url.split('/api/v1')
+
+                            if (pieces.length >= 2) {
+                                item.context_url_pretty = pieces[1];
+                            } else {
+                                item.context_url_pretty = pieces[0]; // because celery tasks do not have API URL context its has task name
+                            }
+
+
+
+
                         } catch (e) {
                             item.context_url_pretty = item.context_url;
                         }
+
 
 
                         try {
