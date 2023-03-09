@@ -20,7 +20,7 @@
         vm.interval = null;
 
         vm.currentPage = 1;
-        vm.pageSize = 100;
+        vm.pageSize = 40;
 
         vm.pages = []
 
@@ -149,11 +149,11 @@
                         return true
                     }
 
-                    if (index > vm.currentPageIndex - 2 && index < vm.currentPageIndex) {
+                    if (index > vm.currentPageIndex - 3 && index < vm.currentPageIndex) {
                         return true
                     }
 
-                    if (index < vm.currentPageIndex + 2 && index > vm.currentPageIndex) {
+                    if (index < vm.currentPageIndex + 3 && index > vm.currentPageIndex) {
                         return true
                     }
 
