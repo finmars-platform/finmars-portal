@@ -66,10 +66,29 @@
             })
     };
 
+    var getAvailableContentTypes = function (id) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/history/historical-record/content-types/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
     module.exports = {
         getList: getList,
         getByKey: getByKey,
-        getRecordData: getRecordData
+        getRecordData: getRecordData,
+        getAvailableContentTypes: getAvailableContentTypes
     }
 
 }());

@@ -17,6 +17,7 @@
         vm.readyStatus = {data: false};
 
         vm.filters = {}
+        vm.contentTypes = []
 
 
         vm.interval = null;
@@ -73,9 +74,12 @@
 
             $state.go('app.portal.journal', {
                 page: vm.currentPage,
-                date_from: vm.date_from,
-                date_to: vm.date_to,
-                query: vm.query
+                date_from: vm.filters.date_from,
+                date_to: vm.filters.date_to,
+                query: vm.filters.query,
+                member: vm.filters.member,
+                action: vm.filters.action,
+                content_type: vm.filters.content_type
             }, {notify: false});
 
             vm.getData()
@@ -90,7 +94,10 @@
                 page: vm.currentPage,
                 date_from: vm.filters.date_from,
                 date_to: vm.filters.date_to,
-                query: vm.filters.query
+                query: vm.filters.query,
+                member: vm.filters.member,
+                action: vm.filters.action,
+                content_type: vm.filters.content_type
             }, {notify: false});
 
             vm.getData()
@@ -107,7 +114,10 @@
                     page: vm.currentPage,
                     date_from: vm.filters.date_from,
                     date_to: vm.filters.date_to,
-                    query: vm.filters.query
+                    query: vm.filters.query,
+                    member: vm.filters.member,
+                    action: vm.filters.action,
+                    content_type: vm.filters.content_type
                 }, {notify: false});
 
                 vm.getData();
@@ -199,7 +209,8 @@
                 date_to: vm.filters.date_to,
                 query: vm.filters.query,
                 member: vm.filters.member,
-                action: vm.filters.action
+                action: vm.filters.action,
+                content_type: vm.filters.content_type
             }, {notify: false});
 
             vm.getData();
@@ -334,13 +345,35 @@
 
         }
 
-        vm.getMembers = function (){
+        vm.getMembers = function () {
 
             usersService.getMemberList().then(function (data) {
 
                 vm.members = data.results;
 
                 $scope.$apply()
+
+            })
+
+        }
+
+        vm.getAvailableContentTypes = function () {
+
+            historyService.getAvailableContentTypes().then(function (data) {
+
+                vm.contentTypes = data.results.map(function (item) {
+
+                    item.name = metaContentTypesService.getEntityNameByContentType(item.key)
+
+                    if (!item.name) {
+                        item.name = item.key
+                    }
+
+                    return item
+
+                })
+
+                $scope.$apply();
 
             })
 
@@ -374,8 +407,13 @@
                 vm.filters.member = $stateParams.member
             }
 
+            if ($stateParams.content_type) {
+                vm.filters.content_type = $stateParams.content_type
+            }
+
             vm.getData()
             vm.getMembers()
+            vm.getAvailableContentTypes()
 
         };
 
