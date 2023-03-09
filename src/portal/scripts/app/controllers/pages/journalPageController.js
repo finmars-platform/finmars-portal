@@ -9,12 +9,14 @@
     var metaContentTypesService = require('../../services/metaContentTypesService');
 
 
-    module.exports = function journalPageController($scope, $state, $stateParams, $mdDialog) {
+    module.exports = function journalPageController($scope, $state, $stateParams, $mdDialog, usersService) {
 
         var vm = this;
 
         vm.items = [];
         vm.readyStatus = {data: false};
+
+        vm.filters = {}
 
 
         vm.interval = null;
@@ -86,9 +88,9 @@
 
             $state.go('app.portal.journal', {
                 page: vm.currentPage,
-                date_from: vm.date_from,
-                date_to: vm.date_to,
-                query: vm.query
+                date_from: vm.filters.date_from,
+                date_to: vm.filters.date_to,
+                query: vm.filters.query
             }, {notify: false});
 
             vm.getData()
@@ -103,9 +105,9 @@
 
                 $state.go('app.portal.journal', {
                     page: vm.currentPage,
-                    date_from: vm.date_from,
-                    date_to: vm.date_to,
-                    query: vm.query
+                    date_from: vm.filters.date_from,
+                    date_to: vm.filters.date_to,
+                    query: vm.filters.query
                 }, {notify: false});
 
                 vm.getData();
@@ -187,15 +189,17 @@
 
         }
 
-        vm.searchProcesses = function () {
+        vm.updateFilters = function () {
 
             vm.currentPage = 1;
 
             $state.go('app.portal.journal', {
                 page: vm.currentPage,
-                date_from: vm.date_from,
-                date_to: vm.date_to,
-                query: vm.query
+                date_from: vm.filters.date_from,
+                date_to: vm.filters.date_to,
+                query: vm.filters.query,
+                member: vm.filters.member,
+                action: vm.filters.action
             }, {notify: false});
 
             vm.getData();
@@ -208,25 +212,10 @@
 
             return new Promise(function (resolve, reject) {
 
-                var filters = {}
-
-                if (vm.query) {
-                    filters.query = vm.query;
-                }
-
-                if (vm.date_from) {
-                    filters.created_after = vm.date_from
-                }
-
-                if (vm.date_to) {
-                    filters.created_before = vm.date_to
-                }
-
-
                 historyService.getList({
                     pageSize: vm.pageSize,
                     page: vm.currentPage,
-                    filters: filters,
+                    filters: vm.filters,
                     sort: {
                         direction: "DESC",
                         key: "created"
@@ -345,6 +334,18 @@
 
         }
 
+        vm.getMembers = function (){
+
+            usersService.getMemberList().then(function (data) {
+
+                vm.members = data.results;
+
+                $scope.$apply()
+
+            })
+
+        }
+
         vm.init = function () {
 
             console.log('$stateParams', $stateParams);
@@ -354,18 +355,27 @@
             }
 
             if ($stateParams.query) {
-                vm.query = $stateParams.query
+                vm.filters.query = $stateParams.query
             }
 
             if ($stateParams.date_from) {
-                vm.date_from = $stateParams.date_from
+                vm.filters.date_from = $stateParams.date_from
             }
 
             if ($stateParams.date_to) {
-                vm.date_to = $stateParams.date_to
+                vm.filters.date_to = $stateParams.date_to
+            }
+
+            if ($stateParams.action) {
+                vm.filters.action = $stateParams.action
+            }
+
+            if ($stateParams.member) {
+                vm.filters.member = $stateParams.member
             }
 
             vm.getData()
+            vm.getMembers()
 
         };
 
