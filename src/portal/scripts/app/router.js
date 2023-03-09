@@ -41,7 +41,7 @@
         });
 
         $stateProvider.state('app.portal.journal', {
-            url: '/journal?page&query&date_from&date_to',
+            url: '/journal?page&query&date_from&date_to&action&member',
             templateUrl: 'views/pages/journal-page-view.html',
             controller: 'JournalPageController as vm',
             reloadOnSearch: false,
@@ -50,6 +50,8 @@
                 query: null,
                 date_from: null,
                 date_to: null,
+                action: null,
+                member: null
             }
         });
 
