@@ -33,8 +33,10 @@
         <div class="journal-page-filters-user">
             <md-input-container style="margin-top: 0;">
                 <label>Member</label>
-                <md-select aria-label="" data-ng-model="vm.filters.member" multiple="true" data-ng-change="vm.updateFilters()">
-                    <md-option data-ng-repeat="member in vm.members" ng-value="member.username">{{member.username}}</md-option>
+                <md-select aria-label="" data-ng-model="vm.filters.member" multiple="true"
+                           data-ng-change="vm.updateFilters()">
+                    <md-option data-ng-repeat="member in vm.members" ng-value="member.username">{{member.username}}
+                    </md-option>
                 </md-select>
             </md-input-container>
         </div>
@@ -42,10 +44,21 @@
         <div class="journal-page-filters-action">
             <md-input-container style="margin-top: 0;">
                 <label>Action</label>
-                <md-select aria-label="" data-ng-model="vm.filters.action" multiple="true" data-ng-change="vm.updateFilters()">
+                <md-select aria-label="" data-ng-model="vm.filters.action" multiple="true"
+                           data-ng-change="vm.updateFilters()">
                     <md-option value="create">Create</md-option>
                     <md-option value="change">Change</md-option>
                     <md-option value="delete">Delete</md-option>
+                </md-select>
+            </md-input-container>
+        </div>
+
+        <div class="journal-page-filters-content-type">
+            <md-input-container style="margin-top: 0;">
+                <label>Content Type</label>
+                <md-select aria-label="" data-ng-model="vm.filters.content_type" multiple="true"
+                           data-ng-change="vm.updateFilters()">
+                    <md-option data-ng-repeat="item in vm.contentTypes" ng-value="item.key">{{item.name}}</md-option>
                 </md-select>
             </md-input-container>
         </div>
