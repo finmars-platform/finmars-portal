@@ -34,6 +34,36 @@
 
     </div>
 
+    <div layout="row" class="m-t-16 pagination-bar">
+        <md-button
+                class="md-raised pagination-bar-button pagination-bar-previous-button {{vm.currentPage == 1 ? 'disabled-btn' : ''}}"
+                data-ng-click="vm.openPreviousPage()">
+            Previous
+        </md-button>
+
+        <div layout="row">
+
+            <div data-ng-repeat="page in vm.pages">
+
+                <md-button data-ng-click="vm.openPage(page)" data-ng-if="page.number"
+                           class="md-raised pagination-bar-button {{vm.currentPage == page.number ? 'md-primary' : ''}}">
+                    {{page.caption}}
+                </md-button>
+
+                <div data-ng-if="!page.number" style="margin: 10px;">
+                    {{page.caption}}
+                </div>
+
+            </div>
+
+        </div>
+
+        <md-button class="md-raised pagination-bar-button pagination-bar-previous-button"
+                   data-ng-show="vm.currentPage < vm.totalPages"
+                   data-ng-click="vm.openNextPage()">Next
+        </md-button>
+    </div>
+
 
     <div data-ng-if="vm.readyStatus.data">
 
@@ -95,7 +125,7 @@
 
 
                         </td>
-                        <td>{{item.user_code}}</td>
+                        <td class="history-record-user-code-td">{{item.user_code}}</td>
                         <td class="history-record-content-type-td">
                             {{item.content_type_pretty}}
                             <md-tooltip md-direction="bottom">{{item.content_type}}</md-tooltip>
@@ -107,10 +137,13 @@
                         <td class="history-record-notes-td">
                             <div class="history-record-notes-td-wrap" data-ng-if="item.notes">
                                 <pre class="" data-ng-click="vm.previewNotes($event, item)">{{item.notes_pretty}}</pre>
+                                <md-tooltip md-direction="bottom">Click to see full</md-tooltip>
                             </div>
                         </td>
                         <td>
-                            <md-button class="history-record-show-data-button" data-ng-click="vm.showRecordData($event, item)">Show Data</md-button>
+                            <md-button class="history-record-show-data-button"
+                                       data-ng-click="vm.showRecordData($event, item)">Show Data
+                            </md-button>
                         </td>
 
                     </tr>
@@ -122,8 +155,10 @@
 
             </div>
 
-            <div layout="row" class="m-t-16">
-                <md-button class="md-raised" data-ng-show="vm.currentPage != 1" data-ng-click="vm.openPreviousPage()">
+            <div layout="row" class="m-t-16 pagination-bar">
+                <md-button
+                        class="md-raised pagination-bar-button pagination-bar-previous-button {{vm.currentPage == 1 ? 'disabled-btn' : ''}}"
+                        data-ng-click="vm.openPreviousPage()">
                     Previous
                 </md-button>
 
@@ -132,7 +167,7 @@
                     <div data-ng-repeat="page in vm.pages">
 
                         <md-button data-ng-click="vm.openPage(page)" data-ng-if="page.number"
-                                   class="md-raised {{vm.currentPage == page.number ? 'md-primary' : ''}}">
+                                   class="md-raised pagination-bar-button {{vm.currentPage == page.number ? 'md-primary' : ''}}">
                             {{page.caption}}
                         </md-button>
 
@@ -144,7 +179,8 @@
 
                 </div>
 
-                <md-button class="md-raised" data-ng-show="vm.currentPage < vm.totalPages"
+                <md-button class="md-raised pagination-bar-button pagination-bar-previous-button"
+                           data-ng-show="vm.currentPage < vm.totalPages"
                            data-ng-click="vm.openNextPage()">Next
                 </md-button>
             </div>
