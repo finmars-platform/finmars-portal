@@ -9,7 +9,7 @@
     var metaContentTypesService = require('../../services/metaContentTypesService');
 
 
-    module.exports = function journalPageController($scope, $mdDialog) {
+    module.exports = function journalPageController($scope, $state, $stateParams, $mdDialog) {
 
         var vm = this;
 
@@ -20,6 +20,7 @@
         vm.interval = null;
 
         vm.currentPage = 1;
+        vm.pageSize = 100;
 
         vm.pages = []
 
@@ -68,6 +69,13 @@
 
             vm.currentPage = vm.currentPage - 1;
 
+            $state.go('app.portal.journal', {
+                page: vm.currentPage,
+                date_from: vm.date_from,
+                date_to: vm.date_to,
+                query: vm.query
+            }, {notify: false});
+
             vm.getData()
 
         }
@@ -75,6 +83,13 @@
         vm.openNextPage = function () {
 
             vm.currentPage = vm.currentPage + 1;
+
+            $state.go('app.portal.journal', {
+                page: vm.currentPage,
+                date_from: vm.date_from,
+                date_to: vm.date_to,
+                query: vm.query
+            }, {notify: false});
 
             vm.getData()
 
@@ -86,6 +101,13 @@
 
                 vm.currentPage = page.number;
 
+                $state.go('app.portal.journal', {
+                    page: vm.currentPage,
+                    date_from: vm.date_from,
+                    date_to: vm.date_to,
+                    query: vm.query
+                }, {notify: false});
+
                 vm.getData();
             }
 
@@ -93,7 +115,7 @@
 
         vm.generatePages = function (data) {
 
-            vm.totalPages = Math.round(data.count / 40)
+            vm.totalPages = Math.ceil(data.count / vm.pageSize)
 
             vm.pages = []
 
@@ -169,6 +191,13 @@
 
             vm.currentPage = 1;
 
+            $state.go('app.portal.journal', {
+                page: vm.currentPage,
+                date_from: vm.date_from,
+                date_to: vm.date_to,
+                query: vm.query
+            }, {notify: false});
+
             vm.getData();
 
         }
@@ -195,7 +224,7 @@
 
 
                 historyService.getList({
-                    pageSize: 40,
+                    pageSize: vm.pageSize,
                     page: vm.currentPage,
                     filters: filters,
                     sort: {
@@ -317,6 +346,24 @@
         }
 
         vm.init = function () {
+
+            console.log('$stateParams', $stateParams);
+
+            if ($stateParams.page) {
+                vm.currentPage = $stateParams.page
+            }
+
+            if ($stateParams.query) {
+                vm.query = $stateParams.query
+            }
+
+            if ($stateParams.date_from) {
+                vm.date_from = $stateParams.date_from
+            }
+
+            if ($stateParams.date_to) {
+                vm.date_to = $stateParams.date_to
+            }
 
             vm.getData()
 

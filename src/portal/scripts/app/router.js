@@ -41,9 +41,16 @@
         });
 
         $stateProvider.state('app.portal.journal', {
-            url: '/journal',
+            url: '/journal?page&query&date_from&date_to',
             templateUrl: 'views/pages/journal-page-view.html',
-            controller: 'JournalPageController as vm'
+            controller: 'JournalPageController as vm',
+            reloadOnSearch: false,
+            params: {
+                page: null,
+                query: null,
+                date_from: null,
+                date_to: null,
+            }
         });
 
         $stateProvider.state('app.portal.dashboard-constructor', {
