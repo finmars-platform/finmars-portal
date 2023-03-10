@@ -400,15 +400,29 @@
             }
 
             if ($stateParams.action) {
-                vm.filters.action = $stateParams.action
+
+                if (typeof ($stateParams.action) == 'string') {
+                    vm.filters.action = [$stateParams.action]
+                } else {
+                    vm.filters.action = $stateParams.action
+                }
             }
 
             if ($stateParams.member) {
-                vm.filters.member = $stateParams.member
+
+                if (typeof ($stateParams.member) == 'string') {
+                    vm.filters.member = [$stateParams.member]
+                } else {
+                    vm.filters.member = $stateParams.member
+                }
             }
 
             if ($stateParams.content_type) {
-                vm.filters.content_type = $stateParams.content_type
+                if (typeof ($stateParams.content_type) == 'string') {
+                    vm.filters.content_type = [$stateParams.content_type]
+                } else {
+                    vm.filters.content_type = $stateParams.content_type
+                }
             }
 
             vm.getData()
