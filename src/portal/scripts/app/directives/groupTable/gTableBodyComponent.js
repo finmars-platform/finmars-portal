@@ -532,16 +532,27 @@
 
                 var init = function () {
 
-                    setTimeout(function () {
+                    if (viewContext === 'split_panel' && entityType === 'transaction-report') {
 
-                        if (!scope.firstRender) { // Force Table render if not rendered in first 60 second
+                        scope.dataLoadStatus = true;
+                        scope.firstRender = true;
 
-                            console.log("Special render trigger")
+                    }
+                    else {
 
-                            updateTableContent();
-                        }
+                        setTimeout(function () {
 
-                    }, 60 * 1000)
+                            if (!scope.firstRender) { // Force Table render if not rendered in first 60 second
+
+                                console.log("Special render trigger")
+
+                                updateTableContent();
+                            }
+
+                        }, 60 * 1000)
+
+
+                    }
 
                     window.addEventListener('resize', onWindowResize);
 

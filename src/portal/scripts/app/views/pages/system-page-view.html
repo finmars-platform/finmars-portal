@@ -2,60 +2,107 @@
 
     <h1 style="padding-left: 8px">System Dashboard</h1>
 
-    <div>
+    <div layout="row">
 
-        <h2>Stats</h2>
+        <div layout="column">
 
-        <div data-ng-if="!vm.readyStatus.stats">
-            <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
-                <progress-circular diameter="50"></progress-circular>
-            </div>
-        </div>
+            <div>
 
-        <div data-ng-if="vm.readyStatus.stats">
+                <h2>Stats</h2>
 
-            <div class="system-info-cards">
+                <div data-ng-if="!vm.readyStatus.stats">
+                    <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
+                        <progress-circular diameter="50"></progress-circular>
+                    </div>
+                </div>
 
-                <md-card data-ng-repeat="item in vm.systemInfoItems" class="system-info-card">
+                <div data-ng-if="vm.readyStatus.stats">
 
-                    <div class="system-info-card-name">{{item.name}}</div>
+                    <div class="system-info-cards">
 
-                    <div class="system-info-card-val-holder">
+                        <md-card data-ng-repeat="item in vm.systemInfoItems" class="system-info-card">
 
-                        <div data-ng-repeat="val in item.values" class="system-info-card-val">
+                            <div class="system-info-card-name">{{item.name}}</div>
 
-                            <b>{{val.name}}</b>: {{val.value}}
+                            <div class="system-info-card-val-holder">
 
-                        </div>
+                                <div data-ng-repeat="val in item.values" class="system-info-card-val">
+
+                                    <b>{{val.name}}</b>: {{val.value}}
+
+                                </div>
+
+                            </div>
+
+                        </md-card>
 
                     </div>
 
-                </md-card>
+                </div>
+
+            </div>
+
+            <div>
+
+                <h2>Logs</h2>
+
+                <div data-ng-if="!vm.readyStatus.logs">
+                    <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
+                        <progress-circular diameter="50"></progress-circular>
+                    </div>
+                </div>
+
+                <div data-ng-if="vm.readyStatus.logs">
+
+                    <div data-ng-repeat="item in vm.logFiles">
+
+                        <span class="log-file-name">{{item}}</span>
+
+                        <md-button class="md-raised" data-ng-click="vm.previewLog($event, item)">Preview</md-button>
+                        <md-button class="md-raised" data-ng-click="vm.downloadLog($event, item)">Download</md-button>
+
+                    </div>
+
+                </div>
 
             </div>
 
         </div>
 
-    </div>
+        <div layout="column">
 
-    <div>
+            <div>
 
-        <h2>Logs</h2>
+                <h2>Tables Size</h2>
 
-        <div data-ng-if="!vm.readyStatus.logs">
-            <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
-                <progress-circular diameter="50"></progress-circular>
-            </div>
-        </div>
+                <div data-ng-if="!vm.readyStatus.tablesSize">
+                    <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
+                        <progress-circular diameter="50"></progress-circular>
+                    </div>
+                </div>
 
-        <div data-ng-if="vm.readyStatus.logs">
+                <div data-ng-if="vm.readyStatus.tablesSize">
 
-            <div data-ng-repeat="item in vm.logFiles">
+                    <div style="max-height: 600px; overflow: auto">
 
-                <span class="log-file-name">{{item}}</span>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Table Name</th>
+                                <th>Size</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr data-ng-repeat="item in vm.tablesSizes">
+                                <td>{{item.table_name}}</td>
+                                <td>{{item.pg_size_pretty}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
-                <md-button class="md-raised" data-ng-click="vm.previewLog($event, item)">Preview</md-button>
-                <md-button class="md-raised" data-ng-click="vm.downloadLog($event, item)">Download</md-button>
+                    </div>
+
+                </div>
 
             </div>
 
