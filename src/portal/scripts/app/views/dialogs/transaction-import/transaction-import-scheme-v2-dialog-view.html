@@ -726,15 +726,15 @@
                                                     <div >
 
                                                         <md-button
-                                                                class="md-raised md-primary {{vm.defaultRuleScenario.transaction_type ? '' : 'disabled-btn'}}"
-                                                                ng-click="vm.openInputs(vm.defaultRuleScenario, $event)">
+                                                                class="md-raised md-primary {{vm.errorRuleScenario.transaction_type ? '' : 'disabled-btn'}}"
+                                                                ng-click="vm.openInputs(vm.errorRuleScenario, $event)">
                                                             Inputs
                                                         </md-button>
 
                                                         <md-button
                                                                 class="md-raised md-primary import-mapping-small-btn"
-                                                                ng-class="{'disabled-btn': !vm.defaultRuleScenario.transaction_type}"
-                                                                ng-click="vm.editTransactionType(vm.defaultRuleScenario.transaction_type, $event)">
+                                                                ng-class="{'disabled-btn': !vm.errorRuleScenario.transaction_type}"
+                                                                ng-click="vm.editTransactionType(vm.errorRuleScenario.transaction_type, $event)">
                                                             <ng-md-icon icon="mode_edit"
                                                                         size="20"></ng-md-icon>
                                                             <md-tooltip class="tooltip_1"
