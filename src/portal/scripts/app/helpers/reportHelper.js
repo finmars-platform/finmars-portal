@@ -266,7 +266,7 @@ export default function (expressionService) {
 
         for (const item of items) {
 
-            result[item.id] = item
+            var result_item = Object.assign({}, item)
 
             if (item.hasOwnProperty('attributes')) {
 
@@ -278,28 +278,28 @@ export default function (expressionService) {
                     // localResultKey = resultKey + '.' + attribute.attribute_type;
                     localResultKey = resultKey + '.' + attribute.attribute_type_object.user_code;
 
-                    result[localResultKey] = null;
+                    result_item[localResultKey] = null;
 
                     if (attribute.attribute_type_object.value_type === 10) {
-                        result[localResultKey] = attribute.value_string
+                        result_item[localResultKey] = attribute.value_string
                     }
 
                     if (attribute.attribute_type_object.value_type === 20) {
-                        result[localResultKey] = attribute.value_float
+                        result_item[localResultKey] = attribute.value_float
                     }
 
                     if (attribute.attribute_type_object.value_type === 30) {
 
                         if (attribute.classifier_object) {
 
-                            result[localResultKey] = attribute.classifier_object.name
+                            result_item[localResultKey] = attribute.classifier_object.name
 
                         }
 
                     }
 
                     if (attribute.attribute_type_object.value_type === 40) {
-                        result[localResultKey] = attribute.value_date
+                        result_item[localResultKey] = attribute.value_date
                     }
 
 
@@ -308,6 +308,8 @@ export default function (expressionService) {
 
             }
 
+
+            result[item.id] = result_item
 
         }
 
@@ -342,6 +344,8 @@ export default function (expressionService) {
         var accounts_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_accounts)
         var currencies_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_currencies)
         var portfolios_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_portfolios)
+
+        console.log('portfolios_as_dict', portfolios_as_dict);
 
         var counterparties_as_dict = null
         if (reportOptions.item_counterparties) {

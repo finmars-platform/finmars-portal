@@ -74,6 +74,22 @@ export default function ($scope, $mdDialog, utilsService) {
 
     }
 
+    vm.getTablesSize = function () {
+
+        vm.readyStatus.tablesSize = false;
+
+        utilsService.getTablesSize().then(function (data) {
+
+            vm.tablesSizes = data.results;
+
+            vm.readyStatus.tablesSize = true;
+            $scope.$apply()
+
+        })
+
+
+    }
+
     vm.downloadLog = function ($event, log_file_name) {
 
         utilsService.getSystemLog(log_file_name).then(function (data) {
@@ -88,6 +104,8 @@ export default function ($scope, $mdDialog, utilsService) {
 
         vm.getStats();
         vm.getLogs()
+
+            vm.getTablesSize()
 
 
     };

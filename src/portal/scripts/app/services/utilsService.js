@@ -62,10 +62,29 @@ export default function (cookieService, xhrService) {
         })
     };
 
+    var getTablesSize = function () {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'utils/tables-size/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
     return {
         getSystemInfo: getSystemInfo,
         getSystemLogs: getSystemLogs,
-        getSystemLog: getSystemLog
+        getSystemLog: getSystemLog,
+        getTablesSize: getTablesSize,
     }
 
 }

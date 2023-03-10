@@ -10,7 +10,8 @@ import cookieService from "./cookieService";
 
 
     const ax = axios.create({
-        baseURL: '__API_HOST__',
+        // baseURL: '__API_HOST__',
+        baseURL: window.API_HOST,
         headers: {
             'Content-type': 'application/json'
         }

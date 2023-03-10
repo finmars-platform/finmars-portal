@@ -9,7 +9,8 @@
 
         if ('__PROJECT_ENV__' === 'development') {
 
-            var host = '__API_HOST__';
+            // var host = '__API_HOST__';
+            var host = window.API_HOST;
 
             return host + '/api/v1/';
 

@@ -40,6 +40,22 @@
             controller: 'DashboardController as vm'
         });
 
+        $stateProvider.state('app.portal.journal', {
+            url: '/journal?page&query&date_from&date_to&action&member&content_type',
+            templateUrl: 'views/pages/journal-page-view.html',
+            controller: 'JournalPageController as vm',
+            reloadOnSearch: false,
+            params: {
+                page: null,
+                query: null,
+                date_from: null,
+                date_to: null,
+                action: null,
+                member: null,
+                content_type: null
+            }
+        });
+
         $stateProvider.state('app.portal.dashboard-constructor', {
             url: '/dashboard-constructor/:id',
             templateUrl: 'views/dashboard-constructor-view.html',

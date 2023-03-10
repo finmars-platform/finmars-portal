@@ -22,6 +22,8 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
             // let user;
             const user = globalDataService.getUser();
 
+            scope.keycloakAccountPage = window.KEYCLOAK_ACCOUNT_PAGE
+
             scope.currentLocation = '';
             scope.currentMasterUser = globalDataService.getMasterUser();
             scope.userName = '';
@@ -270,7 +272,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                 // var checkLayoutForChanges = middlewareService.getWarningOfLayoutChangesLossFn();
                 const changeMasterUser = function () {
 
-                    if ('__PROJECT_ENV__' === 'local') {
+                    if (window.PROJECT_ENV === 'local') {
                         window.location.href = '/' + master.base_api_url + '/a/#!/'
                     } else {
                         window.location.href = '/' + master.base_api_url + '/v/home'
