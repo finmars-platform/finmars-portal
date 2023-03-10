@@ -5,15 +5,18 @@
     var baseUrlService = require('../services/baseUrlService');
     var cookieService = require('../../../../core/services/cookieService');
     var xhrService = require('../../../../core/services/xhrService');
+
+    var configureRepositoryUrlService = require('./configureRepositoryUrlService');
     var baseUrl = baseUrlService.resolve();
 
 
-    var getList = function (content_type, user_code) {
+    var getList = function (options) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'history/historical-record/?content_type=' + content_type + '&user_code=' + user_code,
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/history/historical-record/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -45,10 +48,47 @@
             })
     };
 
+    var getRecordData = function (id) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/history/historical-record/' + id + '/data/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var getAvailableContentTypes = function (id) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/history/historical-record/content-types/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
 
     module.exports = {
         getList: getList,
-        getByKey: getByKey
+        getByKey: getByKey,
+        getRecordData: getRecordData,
+        getAvailableContentTypes: getAvailableContentTypes
     }
 
 }());

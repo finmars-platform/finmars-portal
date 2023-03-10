@@ -20,6 +20,7 @@
     var WS_HOST = process.env.WS_HOST || 'ws://0.0.0.0:6969';
     var HEALTHCHECK_HOST = process.env.HEALTHCHECK_HOST || '';
     var AUTHORIZER_URL = process.env.AUTHORIZER_URL || 'http://0.0.0.0:8083/authorizer';
+    var KEYCLOAK_ACCOUNT_PAGE = process.env.KEYCLOAK_ACCOUNT_PAGE || 'https://dev-auth.finmars.com/realms/finmars/account/';
 
     // gulp.task('default', gulp.parallel('core-min-All', 'profile-HTML-to-JS', 'portal-min-All', 'shell-min-All'));
 	gulp.task('default', gulp.parallel('core-min-All', 'profile-min-All', 'database-min-All', 'portal-min-All', 'shell-min-All'));
@@ -51,7 +52,7 @@
             console.log("UPDATED API_HOST ADD HTTPS: " + API_HOST)
         }
 
-        return gulp.src(['dist/shell/scripts/main.min.js'])
+        return gulp.src(['dist/config.js'])
             // .pipe(replace(/__API_HOST__/g, API_HOST))
             // .pipe(replace(/__WS_HOST__/g, WS_HOST))
             // .pipe(replace(/__AUTHORIZER_URL__/g, AUTHORIZER_URL))
@@ -60,7 +61,8 @@
             .pipe(string_replace('__WS_HOST__', WS_HOST))
             .pipe(string_replace('__AUTHORIZER_URL__', AUTHORIZER_URL))
             .pipe(string_replace('__HEALTHCHECK_HOST__', HEALTHCHECK_HOST))
-            .pipe(gulp.dest('dist/shell/scripts/'))
+            .pipe(string_replace('__KEYCLOAK_ACCOUNT_PAGE__', KEYCLOAK_ACCOUNT_PAGE))
+            .pipe(gulp.dest('dist/'))
 
     });
 
