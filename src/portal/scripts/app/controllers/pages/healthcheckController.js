@@ -118,7 +118,8 @@
 
         vm.init = function () {
 
-            if ('__HEALTHCHECK_HOST__') {
+            // if ('__HEALTHCHECK_HOST__') {
+            if (window.HEALTHCHECK_HOST) {
 
                 vm.getData()
 
