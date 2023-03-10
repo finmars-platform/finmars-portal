@@ -23,6 +23,8 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
     // vm.isIdentified = false; // check if has proper settings (e.g. has master users to work with)
     const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
 
+    vm.keycloakAccountPage = window.KEYCLOAK_ACCOUNT_PAGE
+
     let homepageUrl;
     let profileUrl;
 

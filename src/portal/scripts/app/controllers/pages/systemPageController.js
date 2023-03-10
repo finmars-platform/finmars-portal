@@ -14,8 +14,6 @@
     var baseUrl = baseUrlService.resolve();
 
 
-
-
     module.exports = function systemPageController($scope, $mdDialog, globalDataService) {
 
         var vm = this;
@@ -84,6 +82,22 @@
 
         }
 
+        vm.getTablesSize = function () {
+
+            vm.readyStatus.tablesSize = false;
+
+            utilsService.getTablesSize().then(function (data) {
+
+                vm.tablesSizes = data.results;
+
+                vm.readyStatus.tablesSize = true;
+                $scope.$apply()
+
+            })
+
+
+        }
+
         vm.downloadLog = function ($event, log_file_name) {
 
             utilsService.getSystemLog(log_file_name).then(function (data) {
@@ -98,6 +112,8 @@
 
             vm.getStats();
             vm.getLogs()
+
+            vm.getTablesSize()
 
 
         };

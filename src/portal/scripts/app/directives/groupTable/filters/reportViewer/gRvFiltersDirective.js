@@ -459,7 +459,7 @@
                     scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
 
                         if (useFromAboveFilters.length) {
-
+                            // UPDATE_TABLE or REQUEST_REPORT dispatched inside gFiltersHelper.insertActiveObjectDataIntoFilters()
                             const filtersChangedFromAbove = gFiltersHelper.insertActiveObjectDataIntoFilters(scope.evDataService, scope.evEventService);
                             if (filtersChangedFromAbove) formatFiltersForChips();
 

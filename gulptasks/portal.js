@@ -60,6 +60,10 @@
 		return commonTasks.mainHtmlMin();
 	});
 
+    gulp.task('main-copy-config', function () {
+        return commonTasks.copyConfig();
+    });
+
     gulp.task(appName + '-json-min', function () {
 
         var pathToJSON = ['src/' + appName + '/content/json/**/*.json'];
@@ -223,6 +227,7 @@
      gulp.task(appName + '-min-All', gulp.parallel(
         // appName + '-html-min',
 		'main-html-min',
+        'main-copy-config',
         // appName + '-HTML-to-JS',
 		// appName + '-js-min-All',
 		// appName + '-html-js-min',
