@@ -145,7 +145,8 @@
 
             console.log("Run Pricing Procedure")
 
-            if ('__HEALTHCHECK_HOST__') {
+            // if ('__HEALTHCHECK_HOST__') {
+            if (window.HEALTHCHECK_HOST) {
 
                 vm.getData()
 
