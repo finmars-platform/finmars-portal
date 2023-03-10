@@ -371,11 +371,16 @@ import reportHelper from "../../helpers/reportHelper";
             parentEvEventListeners['ACTIVE_OBJECT_CHANGE'] = parentEntityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
 
                 var activeObject = parentEntityViewerDataService.getActiveObject();
+
+                // transaction report must ignore active object from groups for now
+                if (vm.entityType === 'transaction-report' && activeObject && activeObject.___type === 'group') {
+                    return;
+                }
+
                 var columns = parentEntityViewerDataService.getColumns();
 
                 vm.entityViewerDataService.setActiveObjectFromAbove(activeObject);
                 vm.entityViewerDataService.setAttributesFromAbove(columns);
-
 
                 vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
 
