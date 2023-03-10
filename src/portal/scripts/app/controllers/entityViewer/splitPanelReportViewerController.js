@@ -48,8 +48,10 @@ import reportHelper from "../../helpers/reportHelper";
         vm.entityViewerEventService = null;
 
         var autosaveLayoutService;
-            var autosaveLayoutOn = globalDataService.isAutosaveLayoutOn();
+        var autosaveLayoutOn = globalDataService.isAutosaveLayoutOn();
         var useDateFromAbove;
+        /** Used to remove eventListeners from parentEntityViewerEventService **/
+        var parentEvEventListeners = {};
         //region Functions for context menu
 
         /* var updateTableAfterEntityChanges = function (res) {
@@ -362,30 +364,35 @@ import reportHelper from "../../helpers/reportHelper";
             vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
         };
 
-        var procIndex;
+        // var procIndex;
 
         vm.setEventListeners = function () {
 
-            parentEntityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+            parentEvEventListeners['ACTIVE_OBJECT_CHANGE'] = parentEntityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
 
                 var activeObject = parentEntityViewerDataService.getActiveObject();
+
+                // transaction report must ignore active object from groups for now
+                if (vm.entityType === 'transaction-report' && activeObject && activeObject.___type === 'group') {
+                    return;
+                }
+
                 var columns = parentEntityViewerDataService.getColumns();
 
                 vm.entityViewerDataService.setActiveObjectFromAbove(activeObject);
                 vm.entityViewerDataService.setAttributesFromAbove(columns);
 
-
                 vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
 
             });
 
-            parentEntityViewerEventService.addEventListener(evEvents.UPDATE_SPLIT_PANEL_TABLE_VIEWPORT, function () {
+            parentEvEventListeners['UPDATE_SPLIT_PANEL_TABLE_VIEWPORT'] = parentEntityViewerEventService.addEventListener(evEvents.UPDATE_SPLIT_PANEL_TABLE_VIEWPORT, function () {
 
                 vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
             });
 
-            parentEntityViewerEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
+            parentEvEventListeners['TOGGLE_FILTER_AREA'] = parentEntityViewerEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
 
                 vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_FILTER_AREA_SIZE);
 
@@ -456,7 +463,7 @@ import reportHelper from "../../helpers/reportHelper";
             // parentLayout.content_type !== parentAdditions.content_type prevents two layouts from overriding each other by auto saving
             if (parentLayout.content_type !== parentAdditions.layoutData.content_type) {
 
-                parentEntityViewerEventService.addEventListener(evEvents.TOGGLE_AUTOSAVE, function () {
+                parentEvEventListeners['TOGGLE_AUTOSAVE'] = parentEntityViewerEventService.addEventListener(evEvents.TOGGLE_AUTOSAVE, function () {
 
                         autosaveLayoutOn = globalDataService.isAutosaveLayoutOn();
 
@@ -521,7 +528,7 @@ import reportHelper from "../../helpers/reportHelper";
 
                     await applyDatesFromParentLayout();
 
-                    procIndex = parentEntityViewerEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, onParentRoChange);
+                    parentEvEventListeners['REPORT_OPTIONS_CHANGE'] = parentEntityViewerEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, onParentRoChange);
 
                 } else {
 
@@ -536,7 +543,8 @@ import reportHelper from "../../helpers/reportHelper";
                     vm.entityViewerDataService.applyStashedReportDates(reportOptions);
 
                     await sharedLogicHelper.calculateReportDatesExprs();
-                    parentEntityViewerEventService.removeEventListener(evEvents.REPORT_OPTIONS_CHANGE, procIndex);
+                    parentEntityViewerEventService.removeEventListener( evEvents.REPORT_OPTIONS_CHANGE, parentEvEventListeners['REPORT_OPTIONS_CHANGE'] );
+                    delete parentEvEventListeners['REPORT_OPTIONS_CHANGE'];
 
                 }
 
@@ -730,7 +738,7 @@ import reportHelper from "../../helpers/reportHelper";
 
                     if (reportLayoutOptions.useDateFromAbove) {
                         // should be called after vm.setLayout()
-                        procIndex = parentEntityViewerEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, onParentRoChange);
+                        parentEvEventListeners['REPORT_OPTIONS_CHANGE'] = parentEntityViewerEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, onParentRoChange);
                     }
 
                     $scope.$apply();
@@ -750,6 +758,18 @@ import reportHelper from "../../helpers/reportHelper";
         };
 
         vm.init();
+
+        $scope.$on('$destroy', function () {
+
+            Object.keys(parentEvEventListeners).forEach(function (eventName) {
+
+                var eventIndex = parentEvEventListeners[eventName];
+
+                parentEntityViewerEventService.removeEventListener(eventName, eventIndex);
+
+            });
+
+        });
 
     }
 

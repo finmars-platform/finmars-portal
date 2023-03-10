@@ -505,54 +505,64 @@
             <div class="side-menu-bottom-menu side-menu-main-buttons">
                 <ul class="side-menu" data-ng-if="vm.readyStatus.access">
 
-                    <li data-ng-if="vm.accessSectionTable.journal">
-                        <div class="sidenav-dropdown-menu-wrapper" sidenav-dropdown-menu menu-type="journal">
-                            <md-button class="sidemenu-btn journal-sidenav-menu-btn">
-                                <span class="side-nav-icon">
-                                    <ng-md-icon icon="book" size="24"></ng-md-icon>
-                                </span>
-                                <span class="side-nav-title">Journal</span>
-                                <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
-                            </md-button>
+                    <!--                    <li data-ng-if="vm.accessSectionTable.journal">-->
+                    <!--                        <div class="sidenav-dropdown-menu-wrapper" sidenav-dropdown-menu menu-type="journal">-->
+                    <!--                            <md-button class="sidemenu-btn journal-sidenav-menu-btn">-->
+                    <!--                                <span class="side-nav-icon">-->
+                    <!--                                    <ng-md-icon icon="book" size="24"></ng-md-icon>-->
+                    <!--                                </span>-->
+                    <!--                                <span class="side-nav-title">Journal</span>-->
+                    <!--                                &lt;!&ndash;<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>&ndash;&gt;-->
+                    <!--                            </md-button>-->
 
-                            <ul class="sidenav-dropdown-menu open-upward journal-dropdown-menu-element ng-hide">
-                                <li data-ng-if="vm.accessTable.report_instrument_audit">
-                                    <md-button class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.portal.data.instruments">
-                                        <span class="side-nav-title">Instruments Audit</span>
-                                        <span class="md-visually-hidden"
-                                              data-ng-if="isSelected()">current page</span>
-                                    </md-button>
-                                </li>
-                                <li data-ng-if="vm.accessTable.report_transaction_audit">
-                                    <md-button class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.portal.data.transactions">
-                                        <span class="side-nav-title">Transactions Audit</span>
-                                        <span class="md-visually-hidden"
-                                              data-ng-if="isSelected()">current page</span>
-                                    </md-button>
-                                </li>
-                                <li data-ng-if="vm.accessTable.report_activity_log">
-                                    <md-button class="sidenav-dropdown-menu-btn"
-                                               ui-sref="#"
-                                               disabled>
-                                        <span class="side-nav-title">Activity Log</span>
-                                        <span class="md-visually-hidden"
-                                              data-ng-if="isSelected()">current page</span>
-                                    </md-button>
-                                </li>
-                                <li data-ng-if="vm.accessTable.report_activity_log">
-                                    <md-button class="sidenav-dropdown-menu-btn"
-                                               ui-sref="app.portal.system.file-reports">
-                                        <span class="side-nav-title">System Files</span>
-                                        <span class="md-visually-hidden"
-                                              data-ng-if="isSelected()">current page</span>
-                                    </md-button>
-                                </li>
-                            </ul>
+                    <!--                            <ul class="sidenav-dropdown-menu open-upward journal-dropdown-menu-element ng-hide">-->
+                    <!--                                <li data-ng-if="vm.accessTable.report_instrument_audit">-->
+                    <!--                                    <md-button class="sidenav-dropdown-menu-btn"-->
+                    <!--                                               ui-sref="app.portal.data.instruments">-->
+                    <!--                                        <span class="side-nav-title">Instruments Audit</span>-->
+                    <!--                                        <span class="md-visually-hidden"-->
+                    <!--                                              data-ng-if="isSelected()">current page</span>-->
+                    <!--                                    </md-button>-->
+                    <!--                                </li>-->
+                    <!--                                <li data-ng-if="vm.accessTable.report_transaction_audit">-->
+                    <!--                                    <md-button class="sidenav-dropdown-menu-btn"-->
+                    <!--                                               ui-sref="app.portal.data.transactions">-->
+                    <!--                                        <span class="side-nav-title">Transactions Audit</span>-->
+                    <!--                                        <span class="md-visually-hidden"-->
+                    <!--                                              data-ng-if="isSelected()">current page</span>-->
+                    <!--                                    </md-button>-->
+                    <!--                                </li>-->
+                    <!--                                <li data-ng-if="vm.accessTable.report_activity_log">-->
+                    <!--                                    <md-button class="sidenav-dropdown-menu-btn"-->
+                    <!--                                               ui-sref="#"-->
+                    <!--                                               disabled>-->
+                    <!--                                        <span class="side-nav-title">Activity Log</span>-->
+                    <!--                                        <span class="md-visually-hidden"-->
+                    <!--                                              data-ng-if="isSelected()">current page</span>-->
+                    <!--                                    </md-button>-->
+                    <!--                                </li>-->
+                    <!--                                <li data-ng-if="vm.accessTable.report_activity_log">-->
+                    <!--                                    <md-button class="sidenav-dropdown-menu-btn"-->
+                    <!--                                               ui-sref="app.portal.system.file-reports">-->
+                    <!--                                        <span class="side-nav-title">System Files</span>-->
+                    <!--                                        <span class="md-visually-hidden"-->
+                    <!--                                              data-ng-if="isSelected()">current page</span>-->
+                    <!--                                    </md-button>-->
+                    <!--                                </li>-->
+                    <!--                            </ul>-->
 
-                        </div>
-                    </li>
+                    <!--                        </div>-->
+                    <!--                    </li>-->
+                    <md-button ui-sref-active="active"
+                               class="sidemenu-btn sidenav-settings-toggle-btn"
+                               aria-label="toggle settings side menu"
+                               ui-sref="app.portal.journal">
+                        <span class="side-nav-icon">
+                            <ng-md-icon icon="book" size="24"></ng-md-icon>
+                        </span>
+                        <span class="side-nav-title"> Journal</span>
+
+                    </md-button>
 
                     <li>
                         <md-button class="sidemenu-btn sidenav-settings-toggle-btn"
