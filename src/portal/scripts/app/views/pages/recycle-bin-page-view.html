@@ -1,0 +1,66 @@
+<div class="recycle-bin-page">
+
+    <h1 style="padding-left: 8px">Recycle Bin</h1>
+
+    <div layout="column" data-ng-if="vm.readyStatus.data">
+
+        <div>
+            <md-input-container class="journal-page-filters-date-from">
+                <label for="">Date From</label>
+                <zh-date-picker data-date-value="vm.filters.date_from"
+                                data-callback-method="vm.updateFilters()"></zh-date-picker>
+            </md-input-container>
+
+            <md-input-container class="journal-page-filters-date-to">
+                <label for="">Date To</label>
+                <zh-date-picker data-date-value="vm.filters.date_to"
+                                data-callback-method="vm.updateFilters()"></zh-date-picker>
+            </md-input-container>
+
+        </div>
+
+        <div data-ng-repeat="groupItem in vm.groupedItems">
+
+            Date: {{groupItem.modified_pretty}}
+
+            <div style="padding: 8px; padding-left: 24px;">
+                <table>
+
+                    <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Code</th>
+                        <th>Deleted Transaction Unique Code</th>
+                        <th>Deletion Date</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr data-ng-repeat="item in groupItem.items">
+                        <td></td>
+                        <td>{{item.code}}</td>
+                        <td>{{item.transaction_unique_code}}</td>
+                        <td>{{item.modified}}</td>
+                    </tr>
+
+                    </tbody>
+
+
+                </table>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.data">
+        <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="50"></progress-circular>
+        </div>
+    </div>
+
+</div>

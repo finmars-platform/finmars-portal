@@ -394,6 +394,16 @@
                 controller: 'SystemPageController as vm'
             })
 
+            .state('app.portal.recycle-bin-page', {
+                url: '/recycle-bin?date_from&date_to',
+                templateUrl: 'views/pages/recycle-bin-page-view.html',
+                controller: 'RecycleBinPageController as vm',
+                params: {
+                    date_from: null,
+                    date_to: null,
+                }
+            })
+
             .state('app.portal.processes', {
                 url: '/processes',
                 templateUrl: 'views/pages/processes-view.html',
