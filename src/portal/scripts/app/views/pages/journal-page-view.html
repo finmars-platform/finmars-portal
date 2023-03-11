@@ -49,6 +49,7 @@
                     <md-option value="create">Create</md-option>
                     <md-option value="change">Change</md-option>
                     <md-option value="delete">Delete</md-option>
+                    <md-option value="danger">Danger</md-option>
                     <md-option value="recycle_bin">Recycle Bin</md-option>
                 </md-select>
             </md-input-container>
@@ -130,7 +131,7 @@
 
                     <tbody>
 
-                    <tr data-ng-repeat="item in vm.items">
+                    <tr data-ng-repeat="item in vm.items" class="{{item.action == 'danger' ? 'danger-row': ''}}">
 
                         <td class="history-record-date-td">
                             <div class="history-record-date-td-date-holder">
@@ -161,6 +162,7 @@
                             <span data-ng-if="item.action == 'delete'" style="color: red">{{item.action}}</span>
                             <span data-ng-if="item.action == 'create'" style="color: green">{{item.action}}</span>
                             <span data-ng-if="item.action == 'change'">{{item.action}}</span>
+                            <span data-ng-if="item.action == 'danger'">{{item.action}}</span>
                             <span data-ng-if="item.action == 'recycle_bin'" style="color: orange">{{item.action}}</span>
 
                             <md-tooltip md-direction="bottom">{{item.action}}</md-tooltip>

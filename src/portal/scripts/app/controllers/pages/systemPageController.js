@@ -9,7 +9,9 @@
 
     var baseUrlService = require('../../services/baseUrlService');
     var utilsService = require('../../services/utilsService');
+    var masterUserService = require('../../services/masterUserService');
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     var baseUrl = baseUrlService.resolve();
 
@@ -22,7 +24,8 @@
 
         vm.readyStatus = {
             stats: false,
-            logs: false
+            logs: false,
+            master_user: false
         }
 
 
@@ -32,6 +35,9 @@
 
             utilsService.getSystemInfo().then(function (data) {
                 vm.systemInfoItems = data.results;
+                vm.readyStatus.stats = true;
+                $scope.$apply();
+            }).catch(function (error) {
                 vm.readyStatus.stats = true;
                 $scope.$apply();
             })
@@ -49,6 +55,9 @@
                 vm.readyStatus.logs = true;
                 $scope.$apply()
 
+            }).catch(function (error) {
+                vm.readyStatus.logs = true;
+                $scope.$apply()
             })
 
         }
@@ -93,6 +102,9 @@
                 vm.readyStatus.tablesSize = true;
                 $scope.$apply()
 
+            }).catch(function (error) {
+                vm.readyStatus.tablesSize = true;
+                $scope.$apply()
             })
 
 
@@ -108,13 +120,49 @@
 
         }
 
+        vm.checkReadyStatus = function () {
+            return vm.readyStatus.tablesSize && vm.readyStatus.stats && vm.readyStatus.logs && vm.readyStatus.master_user
+        }
+
+        vm.getMasterUser = function () {
+
+            vm.readyStatus.master_user = false;
+
+            masterUserService.getMasterUser().then(function (data) {
+
+                vm.master_user = data;
+
+                vm.readyStatus.master_user = true;
+                $scope.$apply()
+
+            })
+
+        }
+
+        vm.saveMasterUser = function ($event) {
+
+            vm.masterUserProcessing = true
+
+            masterUserService.updateMasterUser(vm.master_user).then(function () {
+
+                toastNotificationService.success("Space Updated")
+
+                vm.masterUserProcessing = false;
+                $scope.$apply();
+
+                vm.getMasterUser();
+
+            })
+
+        }
+
         vm.init = function () {
 
             vm.getStats();
             vm.getLogs()
 
             vm.getTablesSize()
-
+            vm.getMasterUser()
 
         };
 
