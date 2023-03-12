@@ -87,9 +87,15 @@
         });
 
         $stateProvider.state('app.portal.home', {
-            url: '/',
+            url: '/?state&code&session_state&kc_action_status',
             templateUrl: 'views/home-view.html',
-            controller: 'HomeController as vm'
+            controller: 'HomeController as vm',
+            params: {
+                state: null,
+                code: null,
+                session_state: null,
+                kc_action_status: null
+            }
         });
 
         $stateProvider.state('app.portal.actions', {

@@ -73,3 +73,13 @@ Helper - some utility code that can be shared across multiple services.  Locatio
 - **What is Core and Portal folders?**  
 Our source code placed in `portal` folder. `core` contains libraries/external code
 
+
+### Keycloak Help
+https://github.com/keycloak/keycloak-documentation/blob/main/securing_apps/topics/oidc/javascript-adapter.adoc
+https://stackoverflow.com/questions/52040265/how-to-specify-refresh-tokens-lifespan-in-keycloak
+
+### Local Development CORS error
+
+chrome://flags/#block-insecure-private-network-requests
+
+P.S. https://stackoverflow.com/questions/66534759/cors-error-on-request-to-localhost-dev-server-from-remote-site

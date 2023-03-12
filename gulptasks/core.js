@@ -374,6 +374,7 @@
             'node_modules/toastr/build/toastr.min.js',
             'node_modules/jsondiffpatch/dist/jsondiffpatch.umd.js',
             'src/core/datepicker/pickmeup.js',
+            'src/core/keycloak/keycloak.js',
             'src/core/ace/ace.js',
             'src/core/ace/mode-json.js',
             'src/core/ace/mode-python.js',

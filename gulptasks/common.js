@@ -37,6 +37,10 @@
     const AUTHORIZER_URL = process.env.AUTHORIZER_URL || 'http://0.0.0.0:8083/authorizer';
     const WS_HOST = process.env.WS_HOST || 'ws://0.0.0.0:6969';
     const HEALTHCHECK_HOST = process.env.HEALTHCHECK_HOST || '';
+    const KEYCLOAK_ACCOUNT_PAGE = process.env.KEYCLOAK_ACCOUNT_PAGE || 'https://dev-auth.finmars.com/realms/finmars/account/';
+    const KEYCLOAK_URL = process.env.KEYCLOAK_URL || 'https://dev-auth.finmars.com';
+    const KEYCLOAK_REALM = process.env.KEYCLOAK_REALM || 'finmars';
+    const KEYCLOAK_CLIENT_ID = process.env.KEYCLOAK_CLIENT_ID || 'finmars';
 
     function mainHtmlMin() {
         var pathToHTML = ['src/*.html'];
@@ -59,6 +63,10 @@
             .pipe(gulpif(PROJECT_ENV === 'local', replace(/__AUTHORIZER_URL__/g, AUTHORIZER_URL)))
             .pipe(gulpif(PROJECT_ENV === 'local', replace(/__WS_HOST__/g, WS_HOST)))
             .pipe(gulpif(PROJECT_ENV === 'local', replace(/__HEALTHCHECK_HOST__/g, HEALTHCHECK_HOST)))
+            .pipe(gulpif(PROJECT_ENV === 'local', replace(/__KEYCLOAK_ACCOUNT_PAGE__/g, KEYCLOAK_ACCOUNT_PAGE)))
+            .pipe(gulpif(PROJECT_ENV === 'local', replace(/__KEYCLOAK_URL__/g, KEYCLOAK_URL)))
+            .pipe(gulpif(PROJECT_ENV === 'local', replace(/__KEYCLOAK_REALM__/g, KEYCLOAK_REALM)))
+            .pipe(gulpif(PROJECT_ENV === 'local', replace(/__KEYCLOAK_CLIENT_ID__/g, KEYCLOAK_CLIENT_ID)))
             .pipe(gulp.dest('dist/'));
     }
 
