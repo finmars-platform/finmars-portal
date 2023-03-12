@@ -9,6 +9,7 @@
 
     var baseUrlService = require('../../services/baseUrlService');
     var utilsService = require('../../services/utilsService');
+    var complexTransactionService = require('../../services/transaction/complexTransactionService');
     var masterUserService = require('../../services/masterUserService');
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
@@ -46,6 +47,130 @@
 
         }
 
+        vm.toggleGroupSelected = function ($event, groupedItem) {
+
+            groupedItem.allSelected = !groupedItem.allSelected
+
+
+            groupedItem.items.forEach(function (item) {
+
+                item.selected = groupedItem.allSelected
+
+            })
+        }
+
+        vm.toggleSelected = function ($event, item, groupedItem) {
+
+            groupedItem.allSelected = false;
+
+            item.selected = !item.selected;
+
+            var allSelected = true;
+
+            groupedItem.items.forEach(function (item) {
+
+                if (!item.selected) {
+                    allSelected = false;
+                }
+
+            })
+
+            groupedItem.allSelected = allSelected
+
+        }
+
+        vm.restoreSelected = function ($event, groupedItem) {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                targetEvent: $event,
+                locals: {
+                    warning: {
+                        title: "Warning!",
+                        description: 'Transactions could be restored if <b>Unique Transaction Code</b> is free to use. Transactions that failed restore process will stay in Recycle Bin'
+                    }
+                },
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    var ids = []
+
+                    groupedItem.items.forEach(function (item) {
+
+                        if (item.selected) {
+                            ids.push(item.id)
+                        }
+
+                    })
+
+                    complexTransactionService.restoreBulk({ids: ids}).then(function (data) {
+
+                        toastNotificationService.info("Transactions were restored")
+
+                        vm.getData();
+
+                    })
+
+
+                }
+
+
+            })
+
+        }
+
+
+        vm.destroySelected = function ($event, groupedItem) {
+
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                targetEvent: $event,
+                locals: {
+                    warning: {
+                        title: "Warning!",
+                        description: 'Selected Transactions will be <b>Deleted</b> completely.'
+                    }
+                },
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    var ids = []
+
+                    groupedItem.items.forEach(function (item) {
+
+                        if (item.selected) {
+                            ids.push(item.id)
+                        }
+
+                    })
+
+                    complexTransactionService.deleteBulk({ids: ids}).then(function (data) {
+
+                        toastNotificationService.info("Transactions were deleted")
+
+                        vm.getData();
+
+                    })
+
+                }
+
+            })
+
+        }
+
 
         vm.getData = function () {
 
@@ -63,6 +188,8 @@
                 vm.groupedItems = []
 
                 vm.items.forEach(function (item) {
+
+                    item.modified_datetime_prettty = moment(new Date(item.modified)).format('DD-MM-YYYY HH:mm');
 
                     var modified_pretty = new Date(item.modified).toISOString().split('T')[0]
 
