@@ -21,7 +21,7 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
     // let finmarsBroadcastChannel = new BroadcastChannel('finmars_broadcast');
     // vm.isIdentified = false; // check if has proper settings (e.g. has master users to work with)
-    const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
+    vm.PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
 
     vm.keycloakAccountPage = window.KEYCLOAK_ACCOUNT_PAGE
 
@@ -294,7 +294,7 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
             document.body.classList.add('iframe')
         }
 
-        if (PROJECT_ENV !== 'local') {
+        if (vm.PROJECT_ENV !== 'local') {
 
             websocketService.addEventListener('master_user_change', function (data) {
 
@@ -369,7 +369,14 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
                 vm.isAuthenticated = false;
 
-                $state.go('app.authentication');
+                // Important LOGIC, if in developer mode move to local auth page
+                // If production, move to keycloak
+
+                if (vm.PROJECT_ENV === 'local') {
+                    $state.go('app.authentication');
+                } else {
+                    window.location = '/login'
+                }
 
             } else {
 
@@ -381,9 +388,16 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
                     globalDataService.setCurrentMasterUserStatus(false);
 
-                    if ($state.current.name !== 'app.profile') {
-                        // $state.go('app.profile', {}, {});
-                        window.open(profileUrl, '_self');
+                    if (vm.PROJECT_ENV === 'local') {
+
+                        $state.go('app.portal.home');
+
+                    } else {
+
+                        if ($state.current.name !== 'app.profile') {
+                            // $state.go('app.profile', {}, {});
+                            window.open(profileUrl, '_self');
+                        }
                     }
 
                 }
