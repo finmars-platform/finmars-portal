@@ -1,6 +1,5 @@
 import axios from 'axios'
 import baseUrlService from "../../shell/scripts/app/services/baseUrlService";
-import cookieService from "./cookieService";
 
 (function () {
 
@@ -32,28 +31,32 @@ import cookieService from "./cookieService";
                 })
             }
 
-            return window.keycloak.updateToken().then(function (){
+            return new Promise((resolve, reject) => {
 
-                const config = err.response.config
-                config.headers.Authorization = 'Token ' + window.keycloak.token
+                window.keycloak.updateToken().then(function () {
 
-                cookieService.setCookie('access_token', window.keycloak.token);
-                cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
-                cookieService.setCookie('id_token', window.keycloak.idToken);
+                    const config = err.response.config
+                    config.headers.Authorization = 'Token ' + window.keycloak.token
 
-                return ax(config)
+                    cookieService.setCookie('access_token', window.keycloak.token);
+                    cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
+                    cookieService.setCookie('id_token', window.keycloak.idToken);
 
-            }).catch(function(error) {
+                    resolve(ax(config))
 
-                console.log("Keycloak update error", error)
+                }).catch(function (error) {
 
-                // in case if refresh token is expired
+                    console.log("Keycloak update error", error)
 
-                window.keycloak.init({
-                    onLoad: 'login-required'
-                })
+                    // in case if refresh token is expired
 
-            });
+                    window.keycloak.init({
+                        onLoad: 'login-required'
+                    })
+                    reject()
+
+                });
+            })
 
             // // error on login
             // if (err.response.config.url.indexOf('/token-auth/') !== -1) {
