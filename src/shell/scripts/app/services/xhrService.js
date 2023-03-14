@@ -75,6 +75,8 @@ export default function (errorService, cookieService) {
 			})
 			.catch(function (reason) {
 
+				console.log('xhrService.reason', reason);
+
 				if (window.developerConsoleService) {
 					window.developerConsoleService.rejectRequest(requestId, reason)
 				}

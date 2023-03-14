@@ -56,6 +56,9 @@
     var deleteBulk = function (data) {
         return complexTransactionRepository.deleteBulk(data);
     };
+    var restoreBulk = function (data) {
+        return complexTransactionRepository.restoreBulk(data)
+    }
 
     var recalculatePermissionTransaction = function (data) {
         return complexTransactionRepository.recalculatePermissionTransaction(data)
@@ -89,6 +92,7 @@
         rebookPendingComplexTransaction: rebookPendingComplexTransaction,
 
         deleteBulk: deleteBulk,
+        restoreBulk: restoreBulk,
 
         recalculatePermissionTransaction: recalculatePermissionTransaction,
         recalculatePermissionComplexTransaction: recalculatePermissionComplexTransaction,

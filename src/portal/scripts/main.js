@@ -8,6 +8,7 @@
 require('../../profile/scripts/main.js'); */
 /*import middlewareService from "../../shell/scripts/app/services/middlewareService";
 import authorizerService from '../../shell/scripts/app/services/authorizerService.js';*/
+import masterUserService from "./app/services/masterUserService";
 
 import uiService from "./app/services/uiServiceNew";
 import metaContentTypesService from "./app/services/metaContentTypesService";
@@ -116,6 +117,7 @@ export default (function () {
 
 	/* portal.service('authorizerService', [authorizerService]);
 	portal.service('middlewareService', [middlewareService]); */
+	portal.service('masterUserService', ['cookieService', 'xhrService', masterUserService]);
 	portal.service('ecosystemDefaultService', ['cookieService', 'xhrService', ecosystemDefaultService]);
 	portal.service('uiService', ['cookieService', 'xhrService', 'ecosystemDefaultService', 'metaContentTypesService', uiService]);
 	portal.service('metaContentTypesService', ['cookieService', 'xhrService', metaContentTypesService]);
@@ -237,8 +239,9 @@ export default (function () {
 	portal.controller('SideNavController', ['$scope', '$mdDialog', '$transitions', 'usersService', 'globalDataService', 'redirectionService', 'uiService', require('./app/controllers/sideNavController')]);
 	portal.controller('AlertSideNavController', ['$scope', 'globalDataService', 'systemMessageService', require('./app/controllers/alertSideNavController')]);
 	portal.controller('HomeController', ['$scope', '$state', '$mdDialog', 'authorizerService', 'usersService', 'globalDataService', 'systemMessageService', 'redirectionService', require('./app/controllers/homeController')]);
-	portal.controller('SystemPageController', ['$scope', '$mdDialog', 'globalDataService', 'utilsService', systemPageController]);
-	// portal.controller('SetupController', ['$scope', '$state', 'usersService', require('./app/controllers/setupController')]);
+	portal.controller('SystemPageController', ['$scope', '$mdDialog', 'toastNotificationService', 'masterUserService', 'utilsService', systemPageController]);
+    portal.controller('RecycleBinPageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'globalDataService', require('./app/controllers/pages/recycleBinPageController')]);
+    // portal.controller('SetupController', ['$scope', '$state', 'usersService', require('./app/controllers/setupController')]);
 	portal.controller('NotFoundPageController', ['$scope', require('./app/controllers/notFoundPageController')]);
 	portal.controller(
 		'EntityDataConstructorDialogController',

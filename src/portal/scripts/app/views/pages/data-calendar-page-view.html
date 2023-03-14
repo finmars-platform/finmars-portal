@@ -69,7 +69,8 @@
                    class="delete-calendar-event-payload">Delete</a>
 
                 <a data-ng-if="vm.calendarEventPayload && vm.calendarEvent.extendedProps.type === 'workflow'"
-                   class="calendar-event-payload-open-workflow" target="_blank" href="{{vm.generateWorkflowUrl()}}">Open Workflow</a>
+                   class="calendar-event-payload-open-workflow" target="_blank" href="{{vm.generateWorkflowUrl()}}">Open
+                    Workflow</a>
 
                 <h1 style="word-break: break-word; font-size: 24px;">{{vm.calendarEvent.title}}</h1>
                 <div class="calendar-event-detail-field">
@@ -80,6 +81,12 @@
                     <span class="calendar-event-detail-field-definition">Start Time</span>:
                     {{vm.calendarEvent.start | date:'HH:mm' : 'UTC'}}
                 </div>
+
+                <div class="calendar-event-detail-field" data-ng-if="vm.calendarEvent.extendedProps.finished_at">
+                    <span class="calendar-event-detail-field-definition">Finished Time</span>:
+                    {{vm.calendarEvent.extendedProps.finished_at | date:'HH:mm' : 'UTC'}}
+                </div>
+
                 <div class="calendar-event-detail-field" data-ng-if="vm.calendarEvent.extendedProps.id">
                     <span class="calendar-event-detail-field-definition">Id</span>:
                     {{vm.calendarEvent.extendedProps.id}}
@@ -432,6 +439,11 @@
                                     <div class="calendar-event-detail-field">
                                         <span class="calendar-event-detail-field-definition">Start Time</span>:
                                         {{task.created | date:'HH:mm' : 'UTC'}}
+                                    </div>
+
+                                    <div class="calendar-event-detail-field">
+                                        <span class="calendar-event-detail-field-definition">Finished Time</span>:
+                                        {{task.finished_at | date:'HH:mm' : 'UTC'}}
                                     </div>
 
 

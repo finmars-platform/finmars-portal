@@ -2,6 +2,21 @@
 
   padding: 8px;
 
+  .error-history-table {
+    tr.danger-row {
+      background: red;
+      color: #fff;
+
+      .history-record-notes-td-wrap pre {
+        background: transparent;
+      }
+
+      .history-record-date-td-time-holder {
+        color: #fff;
+      }
+    }
+  }
+
   .journal-page-filters {
     font-size: 14px;
 
@@ -9,6 +24,7 @@
       margin: 0 4px;
     }
   }
+
   .md-raised.md-primary.journal-page-refresh-button {
     height: 24px;
     width: 24px;
@@ -80,12 +96,15 @@
         margin-right: 4px;
       }
     }
+
     .history-record-action-td {
       max-width: 40px;
       width: 40px;
       min-width: 40px;
       text-transform: Capitalize;
       padding-top: 10px;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     .history-record-context-url-td {

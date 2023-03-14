@@ -58,6 +58,8 @@
 
         vm.readyStatus = {};
 
+
+        // DEPRECATED
         vm.getTokens = function () {
 
             authorizerService.authTokenManagerGetList().then(function (data) {
