@@ -10,6 +10,7 @@
 import websocketService from "../../../../shell/scripts/app/services/websocketService.js";
 import baseUrlService from "../services/baseUrlService.js";
 import crossTabEvents from "../services/events/crossTabEvents";
+import toastNotificationService from "../services/toastNotificationService";
 
 export default function ($scope, $state, $transitions, $urlService, $uiRouterGlobals, $mdDialog, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService, redirectionService) {
 
@@ -21,7 +22,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
     // let finmarsBroadcastChannel = new BroadcastChannel('finmars_broadcast');
     // vm.isIdentified = false; // check if has proper settings (e.g. has master users to work with)
-    const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
+    vm.PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
 
     vm.keycloakAccountPage = window.KEYCLOAK_ACCOUNT_PAGE
 
@@ -306,6 +307,17 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
     const init = function () {
 
+        // keycloak adapter passes params as redirect_url + &state=
+        // and ui-router if see /&state instead of ?state become mad
+        // so solution is to add fake param ?foo=bar
+        // and keycloak will do redirect_url?foo=bar&state
+        // should work
+
+        if (window.location.hash.indexOf('?') === -1) {
+
+            window.location.hash = window.location.hash + '?auth'
+        }
+
         if (window.location.href.indexOf('iframe=true') !== -1) {
 
             globalDataService.setIframeMode(true);
@@ -317,7 +329,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             // globalDataService.setIframeData(iframeData);
         }
 
-        /* if (PROJECT_ENV !== 'local') {
+        /* if (vm.PROJECT_ENV !== 'local') {
 
             websocketService.addEventListener('master_user_change', function (data) {
 
@@ -382,80 +394,129 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         homepageUrl = redirectionService.getUrl('app.portal.home');
         profileUrl = redirectionService.getUrl('app.profile');
 
-        authorizerService.ping().then(function (data) {
-            // console.log('ping data', data);
+        window.keycloak = new Keycloak({
+            url: window.KEYCLOAK_URL,
+            realm: window.KEYCLOAK_REALM,
+            clientId: window.KEYCLOAK_CLIENT_ID
+        })
 
-            if (!data.is_authenticated) {
+        console.log("Keycloak init")
 
-                vm.isAuthenticated = false;
+        const keycloakProm = window.keycloak.init({
+            onLoad: 'login-required',
+            // checkLoginIframe: false
+        })
+        console.log("testingME keycloakProm", keycloakProm);
+        keycloakProm.then(function (authenticated) {
 
-                $state.go('app.authentication');
+            console.log("Keycloak authenticated", authenticated)
 
-            } else {
+            if (authenticated) {
 
-                vm.isAuthenticated = true;
+                cookieService.setCookie('access_token', window.keycloak.token);
+                cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
+                cookieService.setCookie('id_token', window.keycloak.idToken);
 
-                if (!base_api_url) { // logging in without specifying database
+                // debugger;
 
-                    baseUrlService.setMasterUserPrefix(null);
+                authorizerService.ping()
+                .then(function (data) {
 
-                    globalDataService.setCurrentMasterUserStatus(false);
+                    console.log('ping data', data);
 
-                    if ($state.current.name !== 'app.profile') {
-                        // $state.go('app.profile', {}, {});
-                        console.log("redirection shellController init() 3");
-                        window.open(profileUrl, '_self'); // REDIRECTION: app.profile
-                    }
+                    if (!data.is_authenticated) {
 
-                }
+                        vm.isAuthenticated = false;
 
-                /* if (!data.current_master_user_id && $state.current.name !== 'app.profile') {
+                        // Important LOGIC, if in developer mode move to local auth page
+                        // If production, move to keycloak
 
-                    $state.go('app.profile', {}, {});
+                        if (vm.PROJECT_ENV === 'local') {
+                            $state.go('app.authentication');
+                        } else {
+                            window.location = '/login'
+                        }
+
+                    } else {
+
+                        vm.isAuthenticated = true;
+
+                        if (!base_api_url) { // logging in without specifying database
+
+                            baseUrlService.setMasterUserPrefix(null);
+
+                            globalDataService.setCurrentMasterUserStatus(false);
+
+                            if (vm.PROJECT_ENV === 'local') {
+
+                                $state.go('app.portal.home');
+
+                            } else {
+
+                                if ($state.current.name !== 'app.profile') {
+                                    // $state.go('app.profile', {}, {});
+                                    console.log("redirection shellController init() 3");
+                                    window.open(profileUrl, '_self'); // REDIRECTION: app.profile
+                                }
+                            }
+
+                        }
+
+                        /* if (!data.current_master_user_id && $state.current.name !== 'app.profile') {
+
+                            $state.go('app.profile', {}, {});
 
                 } else if (vm.isAuthenticationPage) {
                     $state.go('app.portal.home');
                 } */
 
-                getUser().then(async () => {
+                        getUser().then(async () => {
 
-                    if (base_api_url) {
+                            if (base_api_url) {
 
-                        try {
+                                try {
 
-                            const masterUser = await authorizerService.getCurrentMasterUser();
+                                    const masterUser = await authorizerService.getCurrentMasterUser();
 
-                            console.log("Setting base api url ", masterUser.base_api_url);
-                            // baseUrlService.setMasterUserPrefix(base_api_url);
+                                    console.log("Setting base api url ", masterUser.base_api_url);
+                                    // baseUrlService.setMasterUserPrefix(base_api_url);
 
-                            globalDataService.setCurrentMasterUserStatus(true);
+                                    globalDataService.setCurrentMasterUserStatus(true);
 
-                            if (vm.isAuthenticationPage) {
-                                // $state.go('app.portal.home');
-                                window.open(homepageUrl, '_self');
+                                    if (vm.isAuthenticationPage) {
+                                        // $state.go('app.portal.home');
+                                        window.open(homepageUrl, '_self');
+                                    }
+
+                                } catch (e) {
+                                    e.___custom_message = 'location: shellController -> init() -> getCurrentMasterUser()';
+                                    console.error(e);
+                                }
+
                             }
 
-                        } catch (e) {
-                            e.___custom_message = 'location: shellController -> init() -> getCurrentMasterUser()';
-                            console.error(e);
-                        }
+
+                            vm.readyStatus = true;
+                            $scope.$apply();
+
+                        });
 
                     }
 
+                })
+                .catch(error => {
 
-                    vm.readyStatus = true;
-                    $scope.$apply();
+                    if (!error.is_authenticated) {
+                        console.log("redirection shellController init() 4");
+                        $state.go('app.authentication'); // REDIRECTION: app.authentication
+                    }
 
-                });
+                })
 
+            } else {
+                toastNotificationService.error("Auth error")
             }
 
-        }).catch(error => {
-
-            if (!error.is_authenticated) {
-                console.log("redirection shellController init() 4");
-                $state.go('app.authentication'); // REDIRECTION: app.authentication
-            }
         })
 
     };

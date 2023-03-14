@@ -262,6 +262,31 @@
 			})
 	};
 
+    var restoreBulk = function (data) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/complex-transaction/bulk-restore/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                data: JSON.stringify(data)
+            })
+            .then(function (data) {
+                return new Promise(function (resolve, reject) {
+                    resolve({status: 'deleted'});
+                });
+            })
+    };
+
+
     var recalculatePermissionTransaction = function (data) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
@@ -336,6 +361,7 @@
         rebookPendingComplexTransaction: rebookPendingComplexTransaction,
 
         deleteBulk: deleteBulk,
+        restoreBulk: restoreBulk,
 
         recalculatePermissionTransaction: recalculatePermissionTransaction,
         recalculatePermissionComplexTransaction: recalculatePermissionComplexTransaction,

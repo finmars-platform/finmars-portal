@@ -96,9 +96,15 @@
         });
 
         $stateProvider.state('app.portal.home', {
-            url: '/',
+            url: '/?state&code&session_state&kc_action_status',
             templateUrl: 'views/home-view.html',
-            controller: 'HomeController as vm'
+            controller: 'HomeController as vm',
+            params: {
+                state: null,
+                code: null,
+                session_state: null,
+                kc_action_status: null
+            }
         });
 
         $stateProvider.state('app.portal.actions', {
@@ -401,6 +407,16 @@
                 url: '/system-dashboard',
                 templateUrl: 'views/pages/system-page-view.html',
                 controller: 'SystemPageController as vm'
+            })
+
+            .state('app.portal.recycle-bin-page', {
+                url: '/recycle-bin?date_from&date_to',
+                templateUrl: 'views/pages/recycle-bin-page-view.html',
+                controller: 'RecycleBinPageController as vm',
+                params: {
+                    date_from: null,
+                    date_to: null,
+                }
             })
 
             .state('app.portal.processes', {

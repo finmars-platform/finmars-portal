@@ -929,7 +929,7 @@ export default function (expressionService) {
 
     }
 
-    var reportOptionsTemporaryPropsList = [
+    /*var reportOptionsTemporaryPropsList = [
         'items',
         'item_complex_transactions',
         'item_transaction_classes',
@@ -951,6 +951,52 @@ export default function (expressionService) {
         'custom_fields_object',
         'save_report',
         'report_uuid',
+    ];*/
+    const reportOptionsConstantProps = [
+        "account_mode",
+        "accounts",
+        "accounts_cash",
+        "accounts_cash_object",
+        "accounts_object",
+        "accounts_position",
+        "accounts_position_object",
+        "allocation_detailing",
+        "allocation_mode",
+        "approach_multiplier",
+        "calculate_pl",
+        "calculationGroup",
+        "complex_transaction_statuses_filter",
+        "cost_method",
+        "cost_method_object",
+        "custom_fields_to_calculate",
+        "date_field",
+        "depth_level",
+        "filters",
+        "pl_include_zero",
+        "portfolio_mode",
+        "portfolios",
+        "portfolios_object",
+        "pricing_policy",
+        "pricing_policy_object",
+        "report_currency",
+        "report_currency_object",
+        "pl_first_date",
+        "report_date",
+        "report_type",
+        "show_balance_exposure_details",
+        "show_transaction_details",
+        "strategies1",
+        "strategies1_object",
+        "strategies2",
+        "strategies2_object",
+        "strategies3",
+        "strategies3_object",
+        "strategy1_mode",
+        "strategy2_mode",
+        "strategy3_mode",
+        "table_font_size",
+        "transaction_classes",
+        "transaction_classes_object",
     ];
 
     /**
@@ -960,8 +1006,15 @@ export default function (expressionService) {
      */
     var cleanReportOptionsFromTmpProps = function (reportOptions) {
 
-        reportOptionsTemporaryPropsList.forEach(propName => {
+        /*reportOptionsTemporaryPropsList.forEach(propName => {
             delete reportOptions[propName]
+        });*/
+        Object.keys(reportOptions).forEach(prop => {
+
+            if ( !reportOptionsConstantProps.includes(prop) ) {
+                delete reportOptions[prop];
+            }
+
         });
 
         return reportOptions;
