@@ -2,19 +2,13 @@
 
     <h1 style="padding-left: 8px">System Dashboard</h1>
 
-    <div layout="row">
+    <div layout="row" data-ng-if="vm.checkReadyStatus()">
 
         <div layout="column">
 
             <div>
 
                 <h2>Stats</h2>
-
-                <div data-ng-if="!vm.readyStatus.stats">
-                    <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
-                        <progress-circular diameter="50"></progress-circular>
-                    </div>
-                </div>
 
                 <div data-ng-if="vm.readyStatus.stats">
 
@@ -46,11 +40,7 @@
 
                 <h2>Logs</h2>
 
-                <div data-ng-if="!vm.readyStatus.logs">
-                    <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
-                        <progress-circular diameter="50"></progress-circular>
-                    </div>
-                </div>
+
 
                 <div data-ng-if="vm.readyStatus.logs">
 
@@ -74,12 +64,6 @@
             <div>
 
                 <h2>Tables Size</h2>
-
-                <div data-ng-if="!vm.readyStatus.tablesSize">
-                    <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
-                        <progress-circular diameter="50"></progress-circular>
-                    </div>
-                </div>
 
                 <div data-ng-if="vm.readyStatus.tablesSize">
 
@@ -108,6 +92,38 @@
 
         </div>
 
+        <div layout="column">
+
+            <h4>Space</h4>
+
+            <div>
+
+                <p>
+                    <div><b>Full</b> - Finmars will track changes of all important objects.</div>
+                    <div><b>Disabled</b> - Journal is disabled, changes will not be tracked.</div>
+                </p>
+
+                <md-input-container style="margin-top: 0;">
+                    <label>Journal Status</label>
+                    <md-select aria-label="" data-ng-model="vm.master_user.journal_status">
+                        <md-option value="full">Full</md-option>
+                        <md-option value="disabled">Disabled</md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+
+            <div>
+                <md-button class="md-raised md-primary {{vm.masterUserProcessing ? 'disabled-btn' : ''}}" data-ng-click="vm.saveMasterUser($event)">Save Space Settings</md-button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div data-ng-if="!vm.checkReadyStatus()">
+        <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="50"></progress-circular>
+        </div>
     </div>
 
 </div>

@@ -1,0 +1,92 @@
+<div class="recycle-bin-page">
+
+    <h1 style="padding-left: 8px">Recycle Bin</h1>
+
+    <div layout="column" data-ng-if="vm.readyStatus.data">
+
+        <div>
+            <md-input-container class="journal-page-filters-date-from">
+                <label for="">Date From</label>
+                <zh-date-picker data-date-value="vm.filters.date_from"
+                                data-callback-method="vm.updateFilters()"></zh-date-picker>
+            </md-input-container>
+
+            <md-input-container class="journal-page-filters-date-to">
+                <label for="">Date To</label>
+                <zh-date-picker data-date-value="vm.filters.date_to"
+                                data-callback-method="vm.updateFilters()"></zh-date-picker>
+            </md-input-container>
+
+        </div>
+
+        <div data-ng-repeat="groupedItem in vm.groupedItems" class="recycle-bin-group">
+
+            <div class="recycle-bin-group-date">Date: {{groupedItem.modified_pretty}}</div>
+
+            <div style="padding: 8px; padding-left: 24px;">
+                <table class="recycle-bin-table">
+
+                    <thead>
+                    <tr>
+                        <th>
+
+                            <md-checkbox data-ng-click="vm.toggleGroupSelected($event, groupedItem)"
+                                         data-ng-checked="groupedItem.allSelected"
+                                         tabindex="0"
+                                         type="checkbox"
+                                         role="checkbox" aria-checked="false" class="m-b-0">
+
+                            </md-checkbox>
+
+                        </th>
+                        <th>Code</th>
+                        <th>Deleted Transaction Unique Code</th>
+                        <th>Deletion Date</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr data-ng-repeat="item in groupedItem.items">
+                        <td>
+                            <md-checkbox data-ng-click="vm.toggleSelected($event, item, groupedItem)"
+                                         data-ng-checked="item.selected"
+                                         tabindex="0"
+                                         type="checkbox"
+                                         role="checkbox" aria-checked="false" class="m-b-0">
+
+                            </md-checkbox>
+                        </td>
+                        <td>{{item.code}}</td>
+                        <td>{{item.transaction_unique_code}}</td>
+                        <td>{{item.modified_datetime_prettty}}</td>
+                    </tr>
+
+                    </tbody>
+
+
+                </table>
+
+            </div>
+
+            <div>
+                <md-button class="md-raised md-primary" data-ng-click="vm.restoreSelected($event, groupedItem)">Restore
+                    Selected
+                </md-button>
+                <md-button class="md-raised md-warn" data-ng-click="vm.destroySelected($event, groupedItem)">Delete
+                    Selected
+                </md-button>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.data">
+        <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="50"></progress-circular>
+        </div>
+    </div>
+
+</div>
