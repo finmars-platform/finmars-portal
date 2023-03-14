@@ -5,6 +5,12 @@
 
     'use strict';
 
+    /**
+     *
+     * @param {Object} obj1
+     * @param {Object} obj2
+     * @returns {boolean} - Returns 'true' if objects have same properties and values. Otherwise, returns 'false'.
+     */
     function areObjectsTheSame (obj1, obj2) {
 
             console.log('object comparison objects', obj1, obj2);
