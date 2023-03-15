@@ -982,6 +982,8 @@ export default function (expressionService) {
         "report_currency_object",
         "pl_first_date",
         "report_date",
+        "begin_date",
+        "end_date",
         "report_type",
         "show_balance_exposure_details",
         "show_transaction_details",
