@@ -38,6 +38,7 @@
             'short_name',
             'public_name',
             'notes',
+            'pricing_condition'
         ]
 
         vm.instrumentPricingAttributes = [

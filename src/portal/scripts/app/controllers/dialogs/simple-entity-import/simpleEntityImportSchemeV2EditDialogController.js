@@ -44,7 +44,8 @@
             'short_name',
             'public_name',
             'notes',
-            'country'
+            'country',
+            'pricing_condition'
         ]
 
         vm.instrumentPricingAttributes = [
