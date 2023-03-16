@@ -7,6 +7,7 @@
 
     var entityResolverService = require('../../services/entityResolverService');
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
+    var metaHelper = require('../../helpers/meta.helper');
 
 
     module.exports = function ($scope, $mdDialog, data) {
@@ -89,6 +90,12 @@
 
         vm.resizeDialogCallback = function () {
             vm.editor.resize();
+        }
+
+        vm.copyContent = function (){
+
+            metaHelper.copyToBuffer(vm.editor.getValue())
+
         }
 
         vm.agree = function () {
