@@ -111,7 +111,7 @@ export default function (cookieService, xhrService) {
         })
     };
 
-    module.exports = {
+    return {
 
         getList: getList,
         getByKey: getByKey,

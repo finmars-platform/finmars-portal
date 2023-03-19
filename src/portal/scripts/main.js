@@ -126,7 +126,7 @@ export default (function () {
 	portal.service('attributeTypeService', ['cookieService', 'xhrService', 'metaRestrictionsService', attributeTypeService]);
 
 	portal.service('transactionTypeService', ['cookieService', 'xhrService', transactionTypeService]);
-	portal.service('instrumentService', ['cookieService', 'xhrService', instrumentService]);
+	portal.service('instrumentService', ['cookieService', 'xhrService', 'uiService', 'gridTableHelperService', 'multitypeFieldService', instrumentService]);
 	portal.service('reportService', ['cookieService', 'xhrService', reportService]);
 	portal.service('priceHistoryService', ['cookieService', 'xhrService', priceHistoryService]);
 	portal.service('currencyHistoryService', ['cookieService', 'xhrService', currencyHistoryService]);
@@ -491,7 +491,7 @@ export default (function () {
 	portal.controller('AccrualCalculationSchedulesController', ['$scope', '$mdDialog', 'instrumentService', 'gridTableHelperService', 'multitypeFieldService', require('./app/controllers/tabs/instrument/accrualCalculationSchedulesController')]);
 	portal.controller('EventSchedulesTabController', ['$scope', '$mdDialog', 'instrumentService', 'gridTableHelperService', require('./app/controllers/tabs/instrument/eventSchedulesTabController')]);
 	// portal.controller('PricingPoliciesTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument/pricingPoliciesTabController')]);
-	portal.controller('InstrumentPricingTabController', ['$scope', '$mdDialog', require('./app/controllers/tabs/instrument/instrumentPricingTabController')]);
+	portal.controller('InstrumentPricingTabController', ['$scope', '$mdDialog', 'gridTableHelperService', require('./app/controllers/tabs/instrument/instrumentPricingTabController')]);
 	portal.controller('InstrumentTypePricingTabController', ['$scope', '$mdDialog', instrumentTypePricingTabController]);
 	portal.controller('FactorScheduleTabController', ['$scope', require('./app/controllers/tabs/instrument/factorScheduleTabController')]);
 	portal.controller('ManualPricingFormulasTabController', ['$scope', 'fieldResolverService', require('./app/controllers/tabs/instrument/manualPricingFormulasTabController')]);
