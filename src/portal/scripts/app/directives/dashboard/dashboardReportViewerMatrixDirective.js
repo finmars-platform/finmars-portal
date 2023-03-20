@@ -342,7 +342,10 @@
                     // Victor 2021.05.27 #113 number format from report layout
                     const layoutId = componentData.settings.layout;
                     const valueKey = componentData.settings.value_key;
-                    componentData.settings.number_format = await getNumberFormatFromLayoutByValueKey(layoutId, valueKey);
+
+                    if ( !componentData.settings.number_format ) {
+                        componentData.settings.number_format = await getNumberFormatFromLayoutByValueKey(layoutId, valueKey);
+                    }
                     // <Victor 2021.05.27 #113 number format from report layout>
 
                     scope.initEventListeners();
