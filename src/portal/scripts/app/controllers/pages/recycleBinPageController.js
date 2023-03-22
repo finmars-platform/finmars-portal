@@ -22,10 +22,16 @@
         var vm = this;
 
         vm.processing = false;
+        vm.allSelected = false;
 
         vm.readyStatus = {
             data: false
         }
+
+        vm.currentPage = 1;
+        vm.pageSize = 100;
+
+        vm.pages = []
 
         var priorDate = new Date(new Date().setDate(new Date().getDate() - 30));
 
@@ -34,11 +40,132 @@
             date_to: new Date().toISOString().split('T')[0]
         }
 
+        vm.openPreviousPage = function () {
+
+            vm.currentPage = vm.currentPage - 1;
+
+            $state.go('app.portal.recycle-bin', {
+                page: vm.currentPage,
+                date_from: vm.filters.date_from,
+                date_to: vm.filters.date_to,
+            }, {notify: false});
+
+            vm.getData()
+
+        }
+
+        vm.openNextPage = function () {
+
+            vm.currentPage = vm.currentPage + 1;
+
+            $state.go('app.portal.recycle-bin', {
+                page: vm.currentPage,
+                date_from: vm.filters.date_from,
+                date_to: vm.filters.date_to,
+            }, {notify: false});
+
+            vm.getData()
+
+        }
+
+        vm.openPage = function (page) {
+
+            if (page.number) {
+
+                vm.currentPage = page.number;
+
+                $state.go('app.portal.recycle-bin', {
+                    page: vm.currentPage,
+                    date_from: vm.filters.date_from,
+                    date_to: vm.filters.date_to,
+                }, {notify: false});
+
+                vm.getData();
+            }
+
+        }
+
+        vm.generatePages = function (data) {
+
+            vm.totalPages = Math.ceil(data.count / vm.pageSize)
+
+            vm.pages = []
+
+            for (var i = 1; i <= vm.totalPages; i = i + 1) {
+                vm.pages.push({
+                    number: i,
+                    caption: i.toString()
+                })
+
+            }
+
+            if (vm.totalPages > 10) {
+
+                vm.currentPageIndex = 0;
+
+                vm.pages.forEach(function (item, index) {
+
+                    if (vm.currentPage === item.number) {
+                        vm.currentPageIndex = index;
+                    }
+
+                })
+
+                vm.pages = vm.pages.filter(function (item, index) {
+
+                    if (index < 2 || index > vm.totalPages - 3) {
+                        return true
+                    }
+
+                    if (index === vm.currentPageIndex) {
+                        return true
+                    }
+
+                    if (index > vm.currentPageIndex - 3 && index < vm.currentPageIndex) {
+                        return true
+                    }
+
+                    if (index < vm.currentPageIndex + 3 && index > vm.currentPageIndex) {
+                        return true
+                    }
+
+                    return false
+
+                })
+
+                for (var i = 0; i < vm.pages.length; i = i + 1) {
+
+                    var j = i + 1;
+
+                    if (j < vm.pages.length) {
+
+                        if (vm.pages[j].number && vm.pages[i].number) {
+                            if (vm.pages[j].number - vm.pages[i].number > 1) {
+
+
+                                vm.pages.splice(i + 1, 0, {
+                                    caption: '...'
+                                })
+
+                            }
+                        }
+
+                    }
+
+                }
+
+
+            }
+
+        }
+
+
         vm.updateFilters = function () {
 
             vm.currentPage = 1;
 
             $state.go('app.portal.recycle-bin', {
+                page: vm.currentPage,
                 date_from: vm.filters.date_from,
                 date_to: vm.filters.date_to,
             }, {notify: false});
@@ -47,27 +174,27 @@
 
         }
 
-        vm.toggleGroupSelected = function ($event, groupedItem) {
+        vm.toggleAll = function ($event) {
 
-            groupedItem.allSelected = !groupedItem.allSelected
+            vm.allSelected = !vm.allSelected
 
 
-            groupedItem.items.forEach(function (item) {
+            vm.items.forEach(function (item) {
 
-                item.selected = groupedItem.allSelected
+                item.selected = vm.allSelected
 
             })
         }
 
-        vm.toggleSelected = function ($event, item, groupedItem) {
+        vm.toggleSelected = function ($event, item) {
 
-            groupedItem.allSelected = false;
+            vm.allSelected = false;
 
             item.selected = !item.selected;
 
             var allSelected = true;
 
-            groupedItem.items.forEach(function (item) {
+            vm.items.forEach(function (item) {
 
                 if (!item.selected) {
                     allSelected = false;
@@ -75,11 +202,11 @@
 
             })
 
-            groupedItem.allSelected = allSelected
+            vm.allSelected = allSelected
 
         }
 
-        vm.restoreSelected = function ($event, groupedItem) {
+        vm.restoreSelected = function ($event) {
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
@@ -101,7 +228,7 @@
 
                     var ids = []
 
-                    groupedItem.items.forEach(function (item) {
+                    vm.items.forEach(function (item) {
 
                         if (item.selected) {
                             ids.push(item.id)
@@ -126,7 +253,7 @@
         }
 
 
-        vm.destroySelected = function ($event, groupedItem) {
+        vm.destroySelected = function ($event) {
 
 
             $mdDialog.show({
@@ -149,7 +276,7 @@
 
                     var ids = []
 
-                    groupedItem.items.forEach(function (item) {
+                    vm.items.forEach(function (item) {
 
                         if (item.selected) {
                             ids.push(item.id)
@@ -171,47 +298,66 @@
 
         }
 
+        vm.clearBin = function ($event) {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                targetEvent: $event,
+                locals: {
+                    warning: {
+                        title: "Warning!",
+                        description: 'Transactions from ' + vm.filters.date_from + ' to ' + vm.filters.date_to + ' will be <b>Deleted</b> completely.'
+                    }
+                },
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    utilsService.clearRecycleBin({
+                        date_from: vm.filters.date_from,
+                        date_to: vm.filters.date_to
+                    }).then(function (data) {
+
+                        vm.getData()
+
+                    })
+
+                }
+
+            })
+
+        }
 
         vm.getData = function () {
 
-            vm.readyStatus.stats = false;
+            vm.readyStatus.data = false;
 
             utilsService.getRecycleBin({
-                filters: vm.filters
+                pageSize: vm.pageSize,
+                page: vm.currentPage,
+                filters: vm.filters,
+                sort: {
+                    direction: "DESC",
+                    key: "created"
+                }
             }).then(function (data) {
+
+                vm.generatePages(data)
 
 
                 vm.items = data.results;
-
-                vm.groupedItemsDict = {}
-
-                vm.groupedItems = []
+                vm.count = data.count
 
                 vm.items.forEach(function (item) {
 
                     item.modified_datetime_prettty = moment(new Date(item.modified)).format('DD-MM-YYYY HH:mm');
 
-                    var modified_pretty = new Date(item.modified).toISOString().split('T')[0]
-
-                    if (!vm.groupedItemsDict.hasOwnProperty(modified_pretty)) {
-                        vm.groupedItemsDict[modified_pretty] = {
-                            'modified_pretty': modified_pretty,
-                            'items': []
-                        }
-                    }
-                    vm.groupedItemsDict[modified_pretty]['items'].push(item)
-
-
                 })
-
-                Object.keys(vm.groupedItemsDict).forEach(function (key) {
-                    vm.groupedItems.push(vm.groupedItemsDict[key])
-
-                })
-
-
-                console.log('groupedItems', vm.groupedItems);
-
 
                 vm.readyStatus.data = true;
                 $scope.$apply();
