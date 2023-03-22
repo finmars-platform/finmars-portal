@@ -2,7 +2,7 @@
 
     <h1 style="padding-left: 8px">Recycle Bin</h1>
 
-    <div layout="column" data-ng-if="vm.readyStatus.data">
+    <div layout="column">
 
         <div>
             <md-input-container class="journal-page-filters-date-from">
@@ -17,11 +17,50 @@
                                 data-callback-method="vm.updateFilters()"></zh-date-picker>
             </md-input-container>
 
+            <md-button data-ng-class="{'disabled-btn': !vm.readyStatus.data}"
+                       data-ng-click="vm.getData()"
+                       class="md-raised md-icon-button md-primary journal-page-refresh-button"><span
+                    class="material-icons">refresh</span>
+                <md-tooltip md-direction="top">Refresh</md-tooltip>
+            </md-button>
+
+            <md-button class="md-raised md-warn" data-ng-click="vm.clearBin($event)">Clear Bin
+            </md-button>
+
         </div>
 
-        <div data-ng-repeat="groupedItem in vm.groupedItems" class="recycle-bin-group">
+        <div layout="row" class="m-t-16 pagination-bar">
+            <md-button
+                    class="md-raised pagination-bar-button pagination-bar-previous-button {{vm.currentPage == 1 ? 'disabled-btn' : ''}}"
+                    data-ng-click="vm.openPreviousPage()">
+                Previous
+            </md-button>
 
-            <div class="recycle-bin-group-date">Date: {{groupedItem.modified_pretty}}</div>
+            <div layout="row">
+
+                <div data-ng-repeat="page in vm.pages">
+
+                    <md-button data-ng-click="vm.openPage(page)" data-ng-if="page.number"
+                               class="md-raised pagination-bar-button {{vm.currentPage == page.number ? 'md-primary' : ''}}">
+                        {{page.caption}}
+                    </md-button>
+
+                    <div data-ng-if="!page.number" style="margin: 10px;">
+                        {{page.caption}}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <md-button class="md-raised pagination-bar-button pagination-bar-previous-button"
+                       data-ng-show="vm.currentPage < vm.totalPages"
+                       data-ng-click="vm.openNextPage()">Next
+            </md-button>
+            <span style="padding-top: 6px;font-size: 14px; margin-left: 8px">Records: <b>{{vm.count}}</b></span>
+        </div>
+
+        <div data-ng-if="vm.readyStatus.data">
 
             <div style="padding: 8px; padding-left: 24px;">
                 <table class="recycle-bin-table">
@@ -30,7 +69,7 @@
                     <tr>
                         <th>
 
-                            <md-checkbox data-ng-click="vm.toggleGroupSelected($event, groupedItem)"
+                            <md-checkbox data-ng-click="vm.toggleAll($event)"
                                          data-ng-checked="groupedItem.allSelected"
                                          tabindex="0"
                                          type="checkbox"
@@ -47,9 +86,9 @@
 
                     <tbody>
 
-                    <tr data-ng-repeat="item in groupedItem.items">
+                    <tr data-ng-repeat="item in vm.items">
                         <td>
-                            <md-checkbox data-ng-click="vm.toggleSelected($event, item, groupedItem)"
+                            <md-checkbox data-ng-click="vm.toggleSelected($event, item)"
                                          data-ng-checked="item.selected"
                                          tabindex="0"
                                          type="checkbox"
@@ -70,16 +109,46 @@
             </div>
 
             <div>
-                <md-button class="md-raised md-primary" data-ng-click="vm.restoreSelected($event, groupedItem)">Restore
+                <md-button class="md-raised md-primary" data-ng-click="vm.restoreSelected($event)">Restore
                     Selected
                 </md-button>
-                <md-button class="md-raised md-warn" data-ng-click="vm.destroySelected($event, groupedItem)">Delete
+                <md-button class="md-raised md-warn" data-ng-click="vm.destroySelected($event)">Delete
                     Selected
                 </md-button>
             </div>
 
         </div>
 
+        <div layout="row" class="m-t-16 pagination-bar">
+            <md-button
+                    class="md-raised pagination-bar-button pagination-bar-previous-button {{vm.currentPage == 1 ? 'disabled-btn' : ''}}"
+                    data-ng-click="vm.openPreviousPage()">
+                Previous
+            </md-button>
+
+            <div layout="row">
+
+                <div data-ng-repeat="page in vm.pages">
+
+                    <md-button data-ng-click="vm.openPage(page)" data-ng-if="page.number"
+                               class="md-raised pagination-bar-button {{vm.currentPage == page.number ? 'md-primary' : ''}}">
+                        {{page.caption}}
+                    </md-button>
+
+                    <div data-ng-if="!page.number" style="margin: 10px;">
+                        {{page.caption}}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <md-button class="md-raised pagination-bar-button pagination-bar-previous-button"
+                       data-ng-show="vm.currentPage < vm.totalPages"
+                       data-ng-click="vm.openNextPage()">Next
+            </md-button>
+            <span style="padding-top: 6px;font-size: 14px; margin-left: 8px">Records: <b>{{vm.count}}</b></span>
+        </div>
 
     </div>
 
