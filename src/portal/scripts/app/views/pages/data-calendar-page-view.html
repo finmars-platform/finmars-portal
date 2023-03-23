@@ -79,12 +79,14 @@
                 </div>
                 <div class="calendar-event-detail-field">
                     <span class="calendar-event-detail-field-definition">Start Time</span>:
-                    {{vm.calendarEvent.start | date:'HH:mm' : 'UTC'}}
+                    {{vm.calendarEvent.start | date:'HH:mm:ss' : 'UTC'}}
+                    <md-tooltip md-direction="bottom">{{vm.calendarEvent.start}}</md-tooltip>
                 </div>
 
                 <div class="calendar-event-detail-field" data-ng-if="vm.calendarEvent.extendedProps.finished_at">
                     <span class="calendar-event-detail-field-definition">Finished Time</span>:
-                    {{vm.calendarEvent.extendedProps.finished_at | date:'HH:mm' : 'UTC'}}
+                    {{vm.calendarEvent.extendedProps.finished_at | date:'HH:mm:ss' : 'UTC'}}
+                    <md-tooltip md-direction="bottom">{{vm.calendarEvent.start}}</md-tooltip>
                 </div>
 
                 <div class="calendar-event-detail-field" data-ng-if="vm.calendarEvent.extendedProps.id">

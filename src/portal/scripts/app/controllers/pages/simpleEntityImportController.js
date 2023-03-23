@@ -24,7 +24,7 @@ import importEntityService from "../../services/import/importEntityService";
     var baseUrl = baseUrlService.resolve();
 
 
-    module.exports = function simpleEntityImportController($scope, $mdDialog, usersService) {
+    module.exports = function simpleEntityImportController($scope, $mdDialog, usersService, systemMessageService) {
 
         var vm = this;
 
@@ -797,6 +797,37 @@ import importEntityService from "../../services/import/importEntityService";
 
 
         };
+
+        vm.downloadFile = function ($event, item) {
+
+            // TODO WTF why systemMessage Service, replace with FilePreview Service later
+            systemMessageService.viewFile(item.file_report).then(function (data) {
+
+                console.log('data', data);
+
+                $mdDialog.show({
+                    controller: 'FilePreviewDialogController as vm',
+                    templateUrl: 'views/dialogs/file-preview-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            content: data,
+                            info: item
+                        }
+                    }
+                });
+
+            })
+
+
+        }
+
 
         vm.init = function () {
 
