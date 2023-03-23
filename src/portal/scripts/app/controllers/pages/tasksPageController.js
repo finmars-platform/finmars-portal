@@ -276,9 +276,9 @@
                 const diffTime = Math.abs(date2 - date1);
 
                 item.execution_time_pretty = vm.toPrettyTime(Math.floor(diffTime / 1000));
+                item.finished_at_pretty = moment(new Date(item.finished_at)).format('HH:mm:ss');
             }
 
-            item.finished_at_pretty = moment(new Date(item.finished_at)).format('HH:mm:ss');
 
             item.options_object = JSON.stringify(item.options_object, null, 4);
             item.result_object = JSON.stringify(item.result_object, null, 4);
