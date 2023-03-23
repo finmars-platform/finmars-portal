@@ -173,6 +173,7 @@ export default (function () {
     portal.controller('HomeController', ['$scope', '$state', '$mdDialog', 'authorizerService', 'usersService', 'globalDataService', 'systemMessageService', 'redirectionService', require('./app/controllers/homeController')]);
     portal.controller('SystemPageController', ['$scope', '$mdDialog', 'globalDataService', require('./app/controllers/pages/systemPageController')]);
     portal.controller('RecycleBinPageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'globalDataService', require('./app/controllers/pages/recycleBinPageController')]);
+    portal.controller('TasksPageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'globalDataService', require('./app/controllers/pages/tasksPageController')]);
     // portal.controller('SetupController', ['$scope', '$state', 'usersService', require('./app/controllers/setupController')]);
     portal.controller('NotFoundPageController', ['$scope', require('./app/controllers/notFoundPageController')]);
     portal.controller(
