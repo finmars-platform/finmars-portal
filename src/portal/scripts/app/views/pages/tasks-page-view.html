@@ -180,10 +180,8 @@
 
                     <div data-ng-if="!vm.activeTaskProcessing">
 
-                        <a data-ng-click="vm.loadCalendarEvent($event)"
-                           class="refresh-task-payload">Refresh</a>
-                        <a data-ng-click="vm.deleteCeleryTask($event)"
-                           class="delete-task-payload">Delete</a>
+                        <a data-ng-click="vm.refreshTask($event)"
+                           class="refresh-task-button">Refresh</a>
 
                         <h1 style="word-break: break-word; font-size: 24px;">{{vm.activeTask.verbose_name}}</h1>
                         <div class="task-detail-field">
