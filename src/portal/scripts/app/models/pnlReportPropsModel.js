@@ -322,11 +322,6 @@
                 "value_type": 20
             },
             {
-                "key": "pricing_currency_fx_rate",
-                "name": "Pricing Ccy FX rate",
-                "value_type": 20
-            },
-            {
                 "key": "detail",
                 "name": "Transaction Detail",
                 "value_type": 10

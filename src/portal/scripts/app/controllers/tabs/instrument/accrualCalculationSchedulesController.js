@@ -524,7 +524,8 @@
 				];
 
 				var periodicityNTypesList = JSON.parse(JSON.stringify(accrualMultitypeFieldsData['periodicity_n'].fieldTypesList));
-				schedule.periodicity_n_value_type = multitypeFieldService.setActiveTypeByValueType(periodicityNTypesList, schedule.periodicity_n, schedule.periodicity_n_value_type);
+
+                schedule.periodicity_n_value_type = multitypeFieldService.setActiveTypeByValueType(periodicityNTypesList, schedule.periodicity_n, schedule.periodicity_n_value_type);
 				periodicityNTypesList.forEach(type => type.label = 'Number of days');
 
 				rowObj.columns[3].settings.popupSettings.popupData[1].fieldTypesData = periodicityNTypesList;

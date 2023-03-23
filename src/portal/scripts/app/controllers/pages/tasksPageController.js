@@ -1,11 +1,11 @@
 /**
- * Created by szhitenev on 11.03.2023.
+ * Created by szhitenev on 22.03.2023.
  */
 (function () {
 
     'use strict';
 
-    var processesService = require('../../services/processesService');
+    var tasksService = require('../../services/tasksService');
 
     var baseUrlService = require('../../services/baseUrlService');
     var utilsService = require('../../services/utilsService');
@@ -17,7 +17,7 @@
     var baseUrl = baseUrlService.resolve();
 
 
-    module.exports = function recycleBinPageController($scope, $state, $stateParams, $mdDialog, globalDataService) {
+    module.exports = function tasksPageController($scope, $state, $stateParams, $mdDialog, globalDataService) {
 
         var vm = this;
 
@@ -29,9 +29,10 @@
         }
 
         vm.currentPage = 1;
-        vm.pageSize = 100;
+        vm.pageSize = 20;
 
         vm.pages = []
+
 
         var priorDate = new Date(new Date().setDate(new Date().getDate() - 30));
 
@@ -40,14 +41,69 @@
             date_to: new Date().toISOString().split('T')[0]
         }
 
+        vm.activeTask = null;
+        vm.activeTaskProcessing = false;
+
+        vm.selectActiveTask = function ($event, item) {
+
+            vm.items.forEach(function (_item) {
+                _item.active = false;
+            })
+
+            item.active = true;
+            vm.activeTask = item;
+        }
+
+        // TODO move to separate service to keep it DRY
+        vm.alphabets = [
+            '#357EC7', // A
+            '#C11B17', // B
+            '#008080', // C
+            '#728C00', // D
+            '#0020C2', // E
+            '#347C17', // F
+            '#D4A017', // G
+            '#7D0552', // H
+            '#9F000F', // I
+            '#E42217', // J
+            '#F52887', // K
+            '#571B7E', // L
+            '#1F45FC', // M
+            '#C35817', // N
+            '#F87217', // O
+            '#41A317', // P
+            '#4C4646', // Q
+            '#4CC417', // R
+            '#C12869', // S
+            '#15317E', // T
+            '#AF7817', // U
+            '#F75D59', // V
+            '#FF0000', // W
+            '#000000', // X
+            '#E9AB17', // Y
+            '#8D38C9' // Z
+        ]
+
+        vm.getAvatar = function (char) {
+
+            let charCode = char.charCodeAt(0);
+            let charIndex = charCode - 65
+
+            let colorIndex = charIndex % vm.alphabets.length;
+
+            return vm.alphabets[colorIndex]
+
+        }
+
         vm.openPreviousPage = function () {
 
             vm.currentPage = vm.currentPage - 1;
 
-            $state.go('app.portal.recycle-bin', {
+            $state.go('app.portal.tasks-page', {
                 page: vm.currentPage,
                 date_from: vm.filters.date_from,
                 date_to: vm.filters.date_to,
+                query: vm.filters.query
             }, {notify: false});
 
             vm.getData()
@@ -58,10 +114,11 @@
 
             vm.currentPage = vm.currentPage + 1;
 
-            $state.go('app.portal.recycle-bin', {
+            $state.go('app.portal.tasks-page', {
                 page: vm.currentPage,
                 date_from: vm.filters.date_from,
                 date_to: vm.filters.date_to,
+                query: vm.filters.query
             }, {notify: false});
 
             vm.getData()
@@ -74,10 +131,11 @@
 
                 vm.currentPage = page.number;
 
-                $state.go('app.portal.recycle-bin', {
+                $state.go('app.portal.tasks-page', {
                     page: vm.currentPage,
                     date_from: vm.filters.date_from,
                     date_to: vm.filters.date_to,
+                    query: vm.filters.query
                 }, {notify: false});
 
                 vm.getData();
@@ -164,180 +222,75 @@
 
             vm.currentPage = 1;
 
-            $state.go('app.portal.recycle-bin', {
+            $state.go('app.portal.tasks-page', {
                 page: vm.currentPage,
                 date_from: vm.filters.date_from,
                 date_to: vm.filters.date_to,
+                query: vm.filters.query
             }, {notify: false});
 
             vm.getData();
 
         }
 
-        vm.toggleAll = function ($event) {
+        vm.toPrettyTime = function (sec) {
 
-            vm.allSelected = !vm.allSelected
+            var sec_num = parseInt(sec, 10); // don't forget the second param
+            var hours = Math.floor(sec_num / 3600);
+            var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+            var seconds = sec_num - (hours * 3600) - (minutes * 60);
 
-
-            vm.items.forEach(function (item) {
-
-                item.selected = vm.allSelected
-
-            })
-        }
-
-        vm.toggleSelected = function ($event, item) {
-
-            vm.allSelected = false;
-
-            item.selected = !item.selected;
-
-            var allSelected = true;
-
-            vm.items.forEach(function (item) {
-
-                if (!item.selected) {
-                    allSelected = false;
-                }
-
-            })
-
-            vm.allSelected = allSelected
+            if (hours < 10) {
+                hours = "0" + hours;
+            }
+            if (minutes < 10) {
+                minutes = "0" + minutes;
+            }
+            if (seconds < 10) {
+                seconds = "0" + seconds;
+            }
+            return hours + ':' + minutes + ':' + seconds;
 
         }
 
-        vm.restoreSelected = function ($event) {
+        vm.refreshTask = function ($event) {
 
-            $mdDialog.show({
-                controller: 'WarningDialogController as vm',
-                templateUrl: 'views/dialogs/warning-dialog-view.html',
-                targetEvent: $event,
-                locals: {
-                    warning: {
-                        title: "Warning!",
-                        description: 'Transactions could be restored if <b>Unique Transaction Code</b> is free to use. Transactions that failed restore process will stay in Recycle Bin'
-                    }
-                },
-                multiple: true,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true
-            }).then(function (res) {
+            vm.activeTaskProcessing = true;
 
-                if (res.status === 'agree') {
+            tasksService.getByKey(vm.activeTask.id).then(function (data) {
 
-                    var ids = []
+                vm.activeTask = vm.formatTask(data)
 
-                    vm.items.forEach(function (item) {
-
-                        if (item.selected) {
-                            ids.push(item.id)
-                        }
-
-                    })
-
-                    complexTransactionService.restoreBulk({ids: ids}).then(function (data) {
-
-                        toastNotificationService.info("Transactions were restored")
-
-                        vm.getData();
-
-                    })
-
-
-                }
-
+                vm.activeTaskProcessing = false;
+                $scope.$apply();
 
             })
 
         }
 
+        vm.formatTask = function (item) {
 
-        vm.destroySelected = function ($event) {
+            if (item.finished_at) {
+                const date1 = new Date(item.created);
+                const date2 = new Date(item.finished_at);
+                const diffTime = Math.abs(date2 - date1);
+
+                item.execution_time_pretty = vm.toPrettyTime(Math.floor(diffTime / 1000));
+                item.finished_at_pretty = moment(new Date(item.finished_at)).format('HH:mm:ss');
+            }
 
 
-            $mdDialog.show({
-                controller: 'WarningDialogController as vm',
-                templateUrl: 'views/dialogs/warning-dialog-view.html',
-                targetEvent: $event,
-                locals: {
-                    warning: {
-                        title: "Warning!",
-                        description: 'Selected Transactions will be <b>Deleted</b> completely.'
-                    }
-                },
-                multiple: true,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true
-            }).then(function (res) {
+            item.options_object = JSON.stringify(item.options_object, null, 4);
+            item.result_object = JSON.stringify(item.result_object, null, 4);
+            item.progress_object = JSON.stringify(item.progress_object, null, 4);
 
-                if (res.status === 'agree') {
-
-                    var ids = []
-
-                    vm.items.forEach(function (item) {
-
-                        if (item.selected) {
-                            ids.push(item.id)
-                        }
-
-                    })
-
-                    complexTransactionService.deleteBulk({ids: ids}).then(function (data) {
-
-                        toastNotificationService.info("Transactions were deleted")
-
-                        vm.getData();
-
-                    })
-
-                }
-
-            })
-
-        }
-
-        vm.clearBin = function ($event) {
-
-            $mdDialog.show({
-                controller: 'WarningDialogController as vm',
-                templateUrl: 'views/dialogs/warning-dialog-view.html',
-                targetEvent: $event,
-                locals: {
-                    warning: {
-                        title: "Warning!",
-                        description: 'Transactions from ' + vm.filters.date_from + ' to ' + vm.filters.date_to + ' will be <b>Deleted</b> completely.'
-                    }
-                },
-                multiple: true,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true
-            }).then(function (res) {
-
-                if (res.status === 'agree') {
-
-                    utilsService.clearRecycleBin({
-                        date_from: vm.filters.date_from,
-                        date_to: vm.filters.date_to
-                    }).then(function (data) {
-
-                        vm.getData()
-
-                    })
-
-                }
-
-            })
+            return item
 
         }
 
         vm.getData = function () {
 
-            vm.readyStatus.data = false;
-
-            utilsService.getRecycleBin({
+            tasksService.getList({
                 pageSize: vm.pageSize,
                 page: vm.currentPage,
                 filters: vm.filters,
@@ -347,17 +300,31 @@
                 }
             }).then(function (data) {
 
-                vm.generatePages(data)
+                console.log('vm.getData.data', data);
 
+                vm.generatePages(data)
 
                 vm.items = data.results;
                 vm.count = data.count
 
-                vm.items.forEach(function (item) {
+                if (!vm.activeTask) {
 
-                    item.modified_datetime_prettty = moment(new Date(item.modified)).format('DD-MM-YYYY HH:mm');
+                    if (vm.items.length) {
+                        vm.activeTask = vm.items[0]
+                        vm.items[0].active = true;
+                    }
 
+                }
+
+                vm.items = vm.items.map(function (item) {
+
+                    item = vm.formatTask(item);
+
+
+                    return item
                 })
+
+                // vm.items[0].status = 'P'
 
                 vm.readyStatus.data = true;
                 $scope.$apply();
@@ -371,6 +338,8 @@
 
         vm.init = function () {
 
+            // vm.readyStatus.data = false;
+
             if ($stateParams.date_from) {
                 vm.filters.date_from = $stateParams.date_from
             }
@@ -379,7 +348,17 @@
                 vm.filters.date_to = $stateParams.date_to
             }
 
+            if ($stateParams.query) {
+                vm.filters.query = $stateParams.query
+            }
+
             vm.getData();
+
+            setInterval(function () {
+
+                vm.getData();
+
+            }, 1000 * 30)
 
         };
 
