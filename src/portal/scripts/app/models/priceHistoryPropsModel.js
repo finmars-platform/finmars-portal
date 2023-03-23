@@ -58,7 +58,11 @@
                 "name": "Cash Flow",
                 "value_type": 20
             },
-
+            {
+                "key": "factor",
+                "name": "Factor",
+                "value_type": 20
+            },
             {
                 "key": "procedure_modified_datetime",
                 "name": "Modified Date And Time",
