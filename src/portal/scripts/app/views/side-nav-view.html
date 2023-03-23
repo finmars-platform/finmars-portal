@@ -267,6 +267,16 @@
 
                                 <li>
                                     <md-button class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.portal.tasks-page">
+                                        <span class="side-nav-title">Tasks</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+
+                                </li>
+
+                                <li>
+                                    <md-button class="sidenav-dropdown-menu-btn"
                                                ui-sref="app.portal.workflows">
                                         <span class="side-nav-title">Workflows</span>
                                         <span class="md-visually-hidden"
