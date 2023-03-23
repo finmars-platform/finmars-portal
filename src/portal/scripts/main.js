@@ -241,6 +241,7 @@ export default (function () {
 	portal.controller('HomeController', ['$scope', '$state', '$mdDialog', 'authorizerService', 'usersService', 'globalDataService', 'systemMessageService', 'redirectionService', require('./app/controllers/homeController')]);
 	portal.controller('SystemPageController', ['$scope', '$mdDialog', 'toastNotificationService', 'masterUserService', 'utilsService', systemPageController]);
     portal.controller('RecycleBinPageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'globalDataService', require('./app/controllers/pages/recycleBinPageController')]);
+    portal.controller('TasksPageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'globalDataService', require('./app/controllers/pages/tasksPageController')]);
     // portal.controller('SetupController', ['$scope', '$state', 'usersService', require('./app/controllers/setupController')]);
 	portal.controller('NotFoundPageController', ['$scope', require('./app/controllers/notFoundPageController')]);
 	portal.controller(
@@ -657,15 +658,15 @@ export default (function () {
 
     portal.controller('DeveloperPanelController', ['$scope', '$mdDialog', require('./app/controllers/pages/developerPanelController')]);
 
-	portal.controller('SimpleEntityImportController', ['$scope', '$mdDialog', 'usersService', 'metaContentTypesService', require('./app/controllers/pages/simpleEntityImportController')]);
-	portal.controller('UnifiedEntityImportController', ['$scope', '$mdDialog', 'usersService', 'metaContentTypesService', require('./app/controllers/pages/unifiedEntityImportController')]);
-	portal.controller('TransactionImportController', ['$scope', '$mdDialog', 'usersService', 'systemMessageService', require('./app/controllers/pages/transactionImportController')]);
-	portal.controller('ComplexImportController', ['$scope', '$mdDialog', 'usersService', require('./app/controllers/pages/complexImportController')]);
-	portal.controller('InstrumentDownloadCbondsController', ['$scope', '$mdDialog', require('./app/controllers/pages/instrumentDownloadCbondsController')]);
-	portal.controller('InstrumentDownloadController', ['$scope', '$mdDialog', 'instrumentService', require('./app/controllers/pages/instrumentDownloadController')]);
-	portal.controller('FillPriceHistoryController', ['$scope', '$mdDialog', require('./app/controllers/pages/fillPriceHistoryController')]);
-	portal.controller('MappingTablesController', ['$scope', '$mdDialog', require('./app/controllers/pages/mappingTablesController')]);
-	portal.controller('ProcessesController', ['$scope', '$mdDialog', require('./app/controllers/pages/processesController')]);
+    portal.controller('SimpleEntityImportController', ['$scope', '$mdDialog', 'usersService', 'metaContentTypesService', 'systemMessageService', require('./app/controllers/pages/simpleEntityImportController')]);
+    portal.controller('UnifiedEntityImportController', ['$scope', '$mdDialog', 'usersService', 'metaContentTypesService', require('./app/controllers/pages/unifiedEntityImportController')]);
+    portal.controller('TransactionImportController', ['$scope', '$mdDialog', 'usersService', 'systemMessageService', require('./app/controllers/pages/transactionImportController')]);
+    portal.controller('ComplexImportController', ['$scope', '$mdDialog', 'usersService', require('./app/controllers/pages/complexImportController')]);
+    portal.controller('InstrumentDownloadCbondsController', ['$scope', '$mdDialog', require('./app/controllers/pages/instrumentDownloadCbondsController')]);
+    portal.controller('InstrumentDownloadController', ['$scope', '$mdDialog', 'instrumentService', require('./app/controllers/pages/instrumentDownloadController')]);
+    portal.controller('FillPriceHistoryController', ['$scope', '$mdDialog', require('./app/controllers/pages/fillPriceHistoryController')]);
+    portal.controller('MappingTablesController', ['$scope', '$mdDialog', require('./app/controllers/pages/mappingTablesController')]);
+    portal.controller('ProcessesController', ['$scope', '$mdDialog', require('./app/controllers/pages/processesController')]);
     portal.controller('JournalPageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'usersService', require('./app/controllers/pages/journalPageController')]);
     portal.controller('UpdateCenterController', ['$scope', 'authorizerService', 'globalDataService', require('./app/controllers/pages/updateCenterController')]);
 	portal.controller('SystemMessagesController', ['$scope', '$mdDialog', 'systemMessageService', require('./app/controllers/pages/systemMessagesController')]);

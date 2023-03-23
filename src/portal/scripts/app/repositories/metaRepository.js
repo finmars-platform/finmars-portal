@@ -354,6 +354,11 @@
                         label: 'Execution Log',
                         type: 'system_tab',
                         templateUrl: 'views/tabs/complex-transaction/complex-transaction-execution-log-tab.html'
+                    },
+                    {
+                        label: 'Source',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/complex-transaction/complex-transaction-source-tab.html'
                     }
                 ];
             default:
