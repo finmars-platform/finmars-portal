@@ -253,6 +253,40 @@
 
         }
 
+        vm.refreshTask = function ($event) {
+
+            vm.activeTaskProcessing = true;
+
+            tasksService.getByKey(vm.activeTask.id).then(function (data) {
+
+                vm.activeTask = vm.formatTask(data)
+
+                vm.activeTaskProcessing = false;
+                $scope.$apply();
+
+            })
+
+        }
+
+        vm.formatTask = function (item) {
+
+            if (item.finished_at) {
+                const date1 = new Date(item.created);
+                const date2 = new Date(item.finished_at);
+                const diffTime = Math.abs(date2 - date1);
+
+                item.execution_time_pretty = vm.toPrettyTime(Math.floor(diffTime / 1000));
+            }
+
+            item.finished_at_pretty = moment(new Date(item.finished_at)).format('HH:mm:ss');
+
+            item.options_object = JSON.stringify(item.options_object, null, 4);
+            item.result_object = JSON.stringify(item.result_object, null, 4);
+            item.progress_object = JSON.stringify(item.progress_object, null, 4);
+
+            return item
+
+        }
 
         vm.getData = function () {
 
@@ -284,19 +318,7 @@
 
                 vm.items = vm.items.map(function (item) {
 
-                    if (item.finished_at) {
-                        const date1 = new Date(item.created);
-                        const date2 = new Date(item.finished_at);
-                        const diffTime = Math.abs(date2 - date1);
-
-                        item.execution_time_pretty = vm.toPrettyTime(Math.floor(diffTime / 1000));
-                    }
-
-                    item.finished_at_pretty = moment(new Date(item.finished_at)).format('HH:mm:ss');
-
-                    item.options_object = JSON.stringify(item.options_object, null, 4);
-                    item.result_object = JSON.stringify(item.result_object, null, 4);
-                    item.progress_object = JSON.stringify(item.progress_object, null, 4);
+                    item = vm.formatTask(item);
 
 
                     return item

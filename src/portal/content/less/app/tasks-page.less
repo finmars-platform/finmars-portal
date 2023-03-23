@@ -28,7 +28,6 @@
   }
 
 
-
   .task-detail {
     padding: 16px 16px 100px;
     width: 450px;
@@ -50,6 +49,23 @@
       overflow: auto;
     }
 
+  }
+
+  .refresh-task-button {
+    position: absolute;
+    right: 10px;
+    z-index: 1;
+    display: block;
+    padding: 8px;
+    top: 0;
+    cursor: pointer;
+    color: #f05a22;
+    border-radius: 16px;
+
+    &:hover {
+      background-color: rgba(240, 90, 34, .1);
+
+    }
   }
 
   .tasks-table-holder {
@@ -152,6 +168,7 @@
     margin: 2px 4px;
     font-size: 11px;
     display: flex;
+
     ng-md-icon {
       margin-right: 2px;
     }
@@ -161,6 +178,7 @@
     margin: 2px 4px;
     font-size: 11px;
     display: flex;
+
     ng-md-icon {
       margin-right: 2px;
     }
