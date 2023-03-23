@@ -3007,6 +3007,7 @@ md-tabs [role="tabpanel"] {
     .toast-title {
       margin-bottom: 4px;
     }
+
     .toast-message {
       font-size: 12px;
     }
@@ -3044,8 +3045,10 @@ md-tabs [role="tabpanel"] {
     background: #f1f1f1;
     max-width: 800px;
   }
+
   .error-record-card-field {
     margin: 4px 0;
+
     span {
       opacity: .6;
     }
@@ -3599,10 +3602,28 @@ span.highlight {
   max-width: 100%;
 }
 
-.ace-editor-dialog {
+md-dialog.ace-editor-dialog {
   width: 90%;
 
   background: #2F3129;
+
+  md-dialog-content {
+    position: relative;
+  }
+
+  .copy-text-button {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    z-index: 2;
+    cursor: pointer;
+    fill: #fff;
+
+    &:hover {
+      opacity: .7;
+    }
+  }
+
 
   .progress.progress-circular {
     color: #fff;
@@ -3612,8 +3633,12 @@ span.highlight {
     padding: 20px;
   }
 
-  .md-toolbar-tools {
+  div.md-toolbar-tools {
     background: #2F3129;
+
+    h2 {
+      color: #fff;
+    }
   }
 
   .ace-editor {
@@ -3624,7 +3649,12 @@ span.highlight {
   md-dialog-actions {
     .md-button {
       color: #fff;
+      margin: 0;
     }
+  }
+
+  dialog-window-resizer .resize-dialog-icon {
+    fill: #fff;
   }
 }
 
@@ -3787,6 +3817,7 @@ md-dialog.width-50.draggable-dialog.log-dialog {
 mdp-time-picker .md-button {
   display: none;
 }
+
 .md-tooltip.md-show {
   height: auto;
 }

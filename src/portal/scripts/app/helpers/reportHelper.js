@@ -999,6 +999,8 @@ export default function (expressionService) {
         "table_font_size",
         "transaction_classes",
         "transaction_classes_object",
+        "end_date",
+        "begin_date"
     ];
 
     /**

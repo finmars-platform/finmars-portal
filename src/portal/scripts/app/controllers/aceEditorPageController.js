@@ -71,6 +71,8 @@
                 vm.editor.setShowPrintMargin(false);
 
                 ace.require("ace/ext/language_tools");
+                // ace.config.set("basePath", "path");
+                // ace.config.loadModule("ace/ext/searchbox", function(m) {m.Search(vm.editor)});
                 vm.editor.setOptions({
                     enableBasicAutocompletion: true,
                     enableLiveAutocompletion: true,
@@ -79,6 +81,7 @@
                 vm.editor.setFontSize(14)
                 vm.editor.setBehavioursEnabled(true);
                 vm.editor.setValue(vm.item.expression)
+                // vm.editor.searchBox.hide();
 
                 vm.editor.focus();
                 vm.editor.navigateFileStart();
