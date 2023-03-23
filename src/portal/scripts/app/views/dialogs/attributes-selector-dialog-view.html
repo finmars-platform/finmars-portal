@@ -1,0 +1,15 @@
+<md-dialog class="attrs-selector-dialog"
+           aria-label="attributes selector dialog"
+           drag-dialog>
+<!--  <md-toolbar></md-toolbar>-->
+
+  <md-dialog-content>
+      <div class="iframe-wrap">
+          <iframe id="{{ 'id_' + vm.iframeId}}"
+                  height="100%" width="100%"
+                  src="{{ vm.widgetSrc | trustAsUrl }}"></iframe>
+      </div>
+
+  </md-dialog-content>
+
+</md-dialog>

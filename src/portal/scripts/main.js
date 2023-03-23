@@ -48,6 +48,7 @@ import portfolioRegisterDialogController from "./app/controllers/dialogs/portfol
 import dialogHeaderDirective from "./app/directives/dialogHeaderDirective";
 import dashboard2ReportViewerComponentMatrixController from "./app/controllers/dashboard/_version2/reportViewer/componentMatrixController";
 import systemPageController from "./app/controllers/pages/systemPageController";
+import attributesSelectorDialogController from "./app/controllers/dialogs/attributesSelectorDialogController";
 // form - tabs
 import instrumentTypePricingTabController
     from "./app/controllers/tabs/instrument-type/instrumentTypePricingTabController.js";
@@ -260,7 +261,8 @@ export default (function () {
 	portal.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', 'instrumentService', require('./app/controllers/dialogs/instrumentSelectDialogController')]);
 	portal.controller('EntitySearchDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/entitySearchDialogController')]);
 	portal.controller('TwoFieldsMultiselectDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/twoFieldsMultiselectDialogController')]);
-	portal.controller('TableAttributeSelectorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/tableAttributeSelectorDialogController')]);
+	portal.controller('TableAttributeSelectorDialogController', ['$scope', '$mdDialog', 'usersService', 'globalDataService', 'data', require('./app/controllers/dialogs/tableAttributeSelectorDialogController')]);
+	portal.controller('AttributesSelectorDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'usersService', 'globalDataService', 'data', attributesSelectorDialogController]);
 	portal.controller('TableAttributesMenuConstructorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/tableAttributesMenuConstructorDialogController')]);
 	portal.controller('LayoutChangesLossWarningDialogController', ['$scope', 'data', '$mdDialog', require('./app/controllers/dialogs/layoutChangesLossWarningDialogController')]);
 	portal.controller('ClassifierSelectDialogController', ['$scope', '$mdDialog', 'commonDialogsService', 'data', require('./app/controllers/dialogs/classifierSelectDialogController')]);
