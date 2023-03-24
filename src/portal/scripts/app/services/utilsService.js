@@ -99,6 +99,25 @@ export default function (cookieService, xhrService) {
             })
     };
 
+    var clearRecycleBin = function (data) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'utils/recycle-bin/clear-bin/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                data: JSON.stringify(data)
+            })
+    };
+
     return {
         getSystemInfo: getSystemInfo,
         getSystemLogs: getSystemLogs,
@@ -106,6 +125,7 @@ export default function (cookieService, xhrService) {
         getTablesSize: getTablesSize,
 
         getRecycleBin: getRecycleBin,
+        clearRecycleBin: clearRecycleBin
     }
 
 }

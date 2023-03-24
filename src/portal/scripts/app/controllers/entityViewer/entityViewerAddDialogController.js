@@ -1346,13 +1346,14 @@
 
 							if ((data.instrument[prop] || data.instrument[prop] === 0) && acceptsInstrTypeVal) {
 
-								if (exposureProperties.includes(prop)) {
+								/*if ( exposureProperties.includes(prop) ) {
 
 									vm.entity[prop] = getExposureOptionId(prop, data.instrument[prop]);
 
 								} else {
 									vm.entity[prop] = data.instrument[prop];
-								}
+								}*/
+                                vm.entity[prop] = data.instrument[prop];
 
 							}
 
@@ -1764,6 +1765,7 @@
 				vm.sharedLogic.getDataForInstrumentExposureTab().then(function (data) {
 					vm.instrumentsSelectorOptions = data[0];
 					vm.currenciesSelectorOptions = data[1];
+
                     vm.readyStatus.exposureTab = true;
 				});
 

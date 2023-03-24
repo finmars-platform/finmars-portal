@@ -402,12 +402,10 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
         console.log("Keycloak init")
 
-        const keycloakProm = window.keycloak.init({
+        window.keycloak.init({
             onLoad: 'login-required',
             // checkLoginIframe: false
-        })
-        console.log("testingME keycloakProm", keycloakProm);
-        keycloakProm.then(function (authenticated) {
+        }).then(function (authenticated) {
 
             console.log("Keycloak authenticated", authenticated)
 
