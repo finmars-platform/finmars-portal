@@ -169,7 +169,9 @@ import importEntityService from "../../services/import/importEntityService";
                 controller: 'SimpleEntityImportSchemeV2EditDialogController as vm',
                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-v2-dialog-view.html',
                 locals: {
-                    schemeId: vm.config.scheme
+                    data: {
+                        schemeId: vm.config.scheme
+                    }
                 },
                 targetEvent: $event,
                 preserveScope: true,
