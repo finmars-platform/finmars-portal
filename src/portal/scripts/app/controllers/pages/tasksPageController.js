@@ -340,6 +340,10 @@
 
             // vm.readyStatus.data = false;
 
+            if ($stateParams.page) {
+                vm.currentPage = $stateParams.page
+            }
+
             if ($stateParams.date_from) {
                 vm.filters.date_from = $stateParams.date_from
             }
