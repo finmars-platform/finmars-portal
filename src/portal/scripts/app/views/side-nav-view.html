@@ -267,6 +267,16 @@
 
                                 <li>
                                     <md-button class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.portal.tasks-page">
+                                        <span class="side-nav-title">Tasks</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+
+                                </li>
+
+                                <li>
+                                    <md-button class="sidenav-dropdown-menu-btn"
                                                ui-sref="app.portal.workflows">
                                         <span class="side-nav-title">Workflows</span>
                                         <span class="md-visually-hidden"
@@ -1047,13 +1057,13 @@
                                     <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
                                 </md-button>
                             </li>
+                            <!--<li>
+                                <md-button class="sidemenu-btn"
+                                           ui-sref="app.portal.processes">
+                                    <span class="side-nav-title">Active Processes</span>
+                                </md-button>
+                            </li>-->
                             <li>
-<!--                                <md-button class="sidemenu-btn"-->
-<!--                                           ui-sref="#"-->
-<!--                                           disabled>-->
-<!--                                    <span class="side-nav-title">Security</span>-->
-<!--                                    &lt;!&ndash;<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>&ndash;&gt;-->
-<!--                                </md-button>-->
                                 <md-button class="sidemenu-btn"
                                            ui-sref="app.portal.recycle-bin-page">
                                     <span class="side-nav-title">Recycle Bin</span>

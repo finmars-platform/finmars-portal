@@ -5,21 +5,21 @@
 
     module.exports = function ($stateProvider) {
 
-		/* $urlRouterProvider.otherwise('/');
+        /* $urlRouterProvider.otherwise('/');
 
-		$stateProvider.state('app', {
-			url: '',
-			abstract: true,
-			templateUrl: 'views/shell-view.html',
-			controller: 'ShellController as vm'
-		}); */
+        $stateProvider.state('app', {
+            url: '',
+            abstract: true,
+            templateUrl: 'views/shell-view.html',
+            controller: 'ShellController as vm'
+        }); */
 
-		$stateProvider.state('app.portal', {
-			url: '',
-			abstract: true,
-			templateUrl: 'views/portal-view.html',
-			controller: 'PortalController as vm'
-		});
+        $stateProvider.state('app.portal', {
+            url: '',
+            abstract: true,
+            templateUrl: 'views/portal-view.html',
+            controller: 'PortalController as vm'
+        });
 
         $stateProvider.state('app.portal.healthcheck', {
             url: '/healthcheck',
@@ -233,7 +233,7 @@
                     layoutUserCode: null
                 }
             })
-			/* .state('app.portal.data.pricing-policy', {
+            /* .state('app.portal.data.pricing-policy', {
                 url: '/pricing-policy',
                 templateUrl: 'views/data/data-pricing-policy-view.html',
                 controller: 'DataPricingPolicyController as vm',
@@ -289,7 +289,7 @@
                     layoutUserCode: null
                 }
             })
-			//.state('app.portal.data.pricing', {
+            //.state('app.portal.data.pricing', {
             //    url: '/pricing',
             //    templateUrl: 'views/data/data-pricing-view.html',
             //    controller: 'DataPortfolioController as vm'
@@ -410,12 +410,27 @@
             })
 
             .state('app.portal.recycle-bin-page', {
-                url: '/recycle-bin?date_from&date_to',
+                url: '/recycle-bin?date_from&date_to&page',
                 templateUrl: 'views/pages/recycle-bin-page-view.html',
                 controller: 'RecycleBinPageController as vm',
+                reloadOnSearch: false,
                 params: {
                     date_from: null,
                     date_to: null,
+                    page: null
+                }
+            })
+
+            .state('app.portal.tasks-page', {
+                url: '/tasks?date_from&date_to&query',
+                templateUrl: 'views/pages/tasks-page-view.html',
+                controller: 'TasksPageController as vm',
+                reloadOnSearch: false,
+                params: {
+                    date_from: null,
+                    date_to: null,
+                    query: null,
+                    page: null
                 }
             })
 
@@ -811,11 +826,11 @@
                 url: '/palettes',
                 templateUrl: 'views/colorPicker/color-palettes-settings-view.html',
                 controller: 'ColorPalettesSettingsController as vm',
-				resolve: {
-                	data: function() { // setting 'data' dependency
-                		return '';
-					}
-				}
+                resolve: {
+                    data: function () { // setting 'data' dependency
+                        return '';
+                    }
+                }
             })
             .state('app.portal.settings.import-configuration', {
                 url: '/import-configuration',

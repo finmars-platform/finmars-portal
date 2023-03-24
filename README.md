@@ -79,7 +79,7 @@ https://github.com/keycloak/keycloak-documentation/blob/main/securing_apps/topic
 https://stackoverflow.com/questions/52040265/how-to-specify-refresh-tokens-lifespan-in-keycloak
 https://keycloak.discourse.group/t/issue-on-userinfo-endpoint-at-keycloak-20/18461/4
 
-### Local Development CORS error
+### Local Development CORS error.
 
 chrome://flags/#block-insecure-private-network-requests
 
