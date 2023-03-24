@@ -413,7 +413,7 @@
             })
 
             .state('app.portal.tasks-page', {
-                url: '/tasks?date_from&date_to&query',
+                url: '/tasks?date_from&date_to&query&page',
                 templateUrl: 'views/pages/tasks-page-view.html',
                 controller: 'TasksPageController as vm',
                 reloadOnSearch: false,
