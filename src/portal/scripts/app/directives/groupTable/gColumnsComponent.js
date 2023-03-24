@@ -2098,7 +2098,8 @@
 
                         allAttrsList = scope.attributeDataService.getReconciliationAttributes();
 
-                    } else {
+                    }
+                    else {
 
                         switch (scope.entityType) {
                             case 'balance-report':
@@ -2182,6 +2183,8 @@
                             key: attr.key,
                             name: attr.name,
                             value_type: attr.value_type,
+                            // TODO: receive description from backend
+                            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut quis nunc eget mauris facilisis elementum vel nec est. Aliquam in ligula fermentum lectus tristique tristique a eu felis. Praesent facilisis in nisi sit amet elementum. Donec in malesuada purus, sit amet sodales metus. Etiam vulputate sem mattis massa vestibulum, sit amet mattis turpis fermentum. Cras tincidunt interdum ultrices. Vivamus semper, urna id efficitur mattis, erat velit aliquet augue, in congue lacus velit eget mi.'
                         }
 
                         const colThatUsesAttr = scope.columns.find( colData => colData.key === attrData.key );
@@ -2191,7 +2194,6 @@
                         }
 
                         return attrData;
-                        // add attrData.description
 
                     });
 
@@ -2220,6 +2222,7 @@
 
                     const allAttrs = getAttributes();
                     const selectedAttrs = scope.columns.map( col => col.key );
+                    const member = globalDataService.getMember();
 
                     /*$mdDialog.show({
                         controller: "TableAttributeSelectorDialogController as vm",
@@ -2250,7 +2253,7 @@
                             data: {
                                 attributes: allAttrs,
                                 selectedAttributes: selectedAttrs,
-                                favoriteAttributes: [],
+                                favoriteAttributes: member.data.favorites.attributes,
                             }
                         }
                     })
@@ -2261,8 +2264,13 @@
 
                             for (var i = 0; i < res.data.items.length; i = i + 1) {
 
-                                var colData = evHelperService.getTableAttrInFormOf('column', res.data.items[i])
-                                scope.columns.push(colData);
+                                var item = res.data.items[i];
+                                var noColumn = !scope.columns.find( function (col) { return col.key === item.key; } );
+
+                                if (noColumn) {
+                                    var colData = evHelperService.getTableAttrInFormOf( 'column', item );
+                                    scope.columns.push(colData);
+                                }
 
                             }
                             console.log("testing98.addColumn set columns", JSON.parse(JSON.stringify(scope.columns)));

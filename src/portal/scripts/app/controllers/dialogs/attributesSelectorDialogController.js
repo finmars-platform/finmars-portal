@@ -5,7 +5,7 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
     const vm = this;
 
     vm.iframeId = metaHelper.generateUniqueId("attributeSelector");
-    vm.widgetSrc = 'http://localhost:3000/space0ni5k/v/external/components/modal_add_columns?iframeId=' + vm.iframeId;
+    vm.iframeSrc = 'http://localhost:3000/space0ni5k/v/external/components/modal_add_columns?iframeId=' + vm.iframeId;
 
     let iframeElem;
     let iframeWindow; // iframeElem.contentWindow;
@@ -13,13 +13,16 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
     const initSettings = {
         attributes: data.attributes || [],
         selectedAttributes: data.selectedAttributes || [],
-        favoriteAttributes: data.favoriteAttributes || {},
+        favoriteAttributes: data.favoriteAttributes || [],
     };
 
     const saveFavAttrs = function (favAttrsData) {
 
-        if ( !favAttrsData ) throw new Error(`Saving of favorite attributes called without data.`);
-        if (typeof favAttrsData !== 'object') throw new Error(`'favoriteAttributes' should contain an object. Got a '${typeof favAttrsData}'.`);
+        if ( !Array.isArray(favAttrsData) ) {
+            const errorData = new Error(`Expected array. Got an '${typeof favAttrsData}'.`);
+            errorData.___recievedParameter = favAttrsData;
+            throw errorData;
+        }
 
         const member = globalDataService.getMember();
         member.data.favorites.attributes = favAttrsData;
@@ -35,7 +38,7 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
         if ( payload.favoriteAttributes ) {
             saveFavAttrs(payload.favoriteAttributes);
         }
-        console.log("testing753.processMessagesFromIframe SAVE_DIALOG ", payload);
+
         const resItems = payload.selectedAttributes.map(attrData => {
 
             const data = {
@@ -60,11 +63,11 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
     };
 
     function processMessagesFromIframe(event) {
-        console.log("testing753.processMessagesFromIframe ");
+
         if (!event.data || event.data.iframeId !== vm.iframeId) {
             return;
         }
-        console.log("testing753.processMessagesFromIframe action");
+
         switch (event.data.action) {
 
             /*case 'IFRAME_READY':
@@ -80,7 +83,6 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
                 break;
 
             case 'CANCEL_DIALOG':
-                console.log("testing753.processMessagesFromIframe CANCEL_DIALOG");
                 window.removeEventListener( "message", processMessagesFromIframe );
                 $mdDialog.hide( {status: 'disagree'} );
                 break;
@@ -90,21 +92,19 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
     }
 
     function iframeReadyHandler (event) {
-        console.log("testing753 iframeReadyHandler message ", event);
+
         if (event.data &&
             event.data.iframeId === vm.iframeId &&
             event.data.action === 'IFRAME_READY') {
 
-            console.log("testing753 iframeReadyHandler IFRAME_READY called");
             iframeElem = document.querySelector("#id_" + vm.iframeId);
-            console.log("testing753 iframeReadyHandler iframeElem 1", iframeElem);
+
             iframeWindow = iframeElem.contentWindow;
-            console.log("testing753 iframeReadyHandler vm.selectIframe 2", iframeElem, iframeWindow);
 
             window.addEventListener("message", processMessagesFromIframe);
             window.removeEventListener("message", iframeReadyHandler);
 
-            iframeWindow.postMessage({ action: 'INITIALIZATION_SETTINGS_TRANSMISSION', payload: initSettings }, 'http://localhost:3000/space0ni5k/v/external/components/modal_add_columns' );
+            iframeWindow.postMessage({ action: 'INITIALIZATION_SETTINGS_TRANSMISSION', payload: initSettings }, vm.iframeSrc );
 
         }
 
