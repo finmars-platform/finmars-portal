@@ -401,14 +401,15 @@
             })
 
             .state('app.portal.recycle-bin-page', {
-                url: '/recycle-bin?date_from&date_to&page',
+                url: '/recycle-bin?date_from&date_to&page&query',
                 templateUrl: 'views/pages/recycle-bin-page-view.html',
                 controller: 'RecycleBinPageController as vm',
                 reloadOnSearch: false,
                 params: {
                     date_from: null,
                     date_to: null,
-                    page: null
+                    page: null,
+                    query: null
                 }
             })
 
