@@ -129,12 +129,16 @@
             activeGroupTypeSort: null,
             activeColumnSort: null,
 
+            //# region properties for split panel
             rootEntityViewer: false,
             splitPanelIsActive: false,
             verticalSplitPanelIsActive: false,
             splitPanelDefaultLayout: {}, // serves to manage default layout inside split panel
             splitPanelLayoutToOpen: null, // Only for frontend. Do not send to server.
+            rootWrapElemData: null, // used by split panel inside iframe
             additions: {},
+            //# endregion
+
             report: {},
             export: {},
             data: {},
@@ -1451,6 +1455,14 @@
             return splitPanelActiveLayoutName;
         }
 
+        function setRootWrapElemData(elemData) {
+            data.rootWrapElemData = elemData;
+        }
+
+        function getRootWrapElemData() {
+            return data.rootWrapElemData;
+        }
+
         function setViewType(viewType) {
             return data.viewType = viewType;
         }
@@ -1939,6 +1951,8 @@
             getSplitPanelDefaultLayout: getSplitPanelDefaultLayout,
             setSplitPanelLayoutToOpen: setSplitPanelLayoutToOpen,
             getSplitPanelLayoutToOpen: getSplitPanelLayoutToOpen,
+            setRootWrapElemData: setRootWrapElemData,
+            getRootWrapElemData: getRootWrapElemData,
 
             setActiveObjectRow: setActiveObjectRow,
             getActiveObjectRow: getActiveObjectRow,
