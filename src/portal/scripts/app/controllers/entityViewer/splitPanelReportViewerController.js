@@ -444,12 +444,14 @@ import evEvents from "../../services/entityViewerEvents";
 
             vm.entityViewerEventService.addEventListener(evEvents.ROWS_ACTION_FIRED, sharedLogicHelper.executeRowAction);
 
-            // Events that dispatch events inside parent
+            //# region Events that dispatch events inside parent
+            /* Probably for old report viewer interface
             vm.entityViewerEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
 
                 parentEntityViewerEventService.dispatchEvent(evEvents.UPDATE_FILTER_AREA_SIZE);
 
-            });
+            });*/
+            //# endregion
 
             var parentLayout = parentEntityViewerDataService.getListLayout();
             var parentAdditions = parentEntityViewerDataService.getAdditions();
@@ -479,12 +481,12 @@ import evEvents from "../../services/entityViewerEvents";
 
                     if (autosaveLayoutOn) {
 
-                    const alcIndex = vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, function () {
-                        autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
-                        vm.entityViewerEventService.removeEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, alcIndex);
-                    });
+                        const alcIndex = vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, function () {
+                            autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
+                            vm.entityViewerEventService.removeEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, alcIndex);
+                        });
 
-                }
+                    }
 
             }
 
@@ -642,6 +644,52 @@ import evEvents from "../../services/entityViewerEvents";
 
         };
 
+        var getLayoutForSp = function (additions) {
+
+            /**
+             * @type Number
+             * ID of a layout set by gLayoutsManager to be opened
+             **/
+            var splitPanelLayoutToOpen = parentEntityViewerDataService.getSplitPanelLayoutToOpen();
+
+            if (splitPanelLayoutToOpen) {
+                return uiService.getListLayoutByKey(splitPanelLayoutToOpen);
+
+            }
+            else { // open default for split panel layout
+
+                if (additions.layoutData && additions.layoutData.layoutId) {
+
+                    if (additions.layoutData.user_code) {
+
+                        return new Promise(function (resolve, reject) {
+
+                            uiService.getListLayoutByUserCode(vm.entityType, additions.layoutData.user_code).then(function (resData) {
+
+                                if (resData.results.length) {
+
+                                    var layoutData = resData.results[0];
+
+                                    resolve(layoutData);
+
+                                } else {
+                                    reject( new Error("Layout with user_code: '" + additions.layoutData.user_code + "' was not found") );
+                                }
+
+                            }).catch( function (e) { reject(e) } );
+
+                        })
+
+                    } else if (additions.layoutData.layoutId) {
+                        return uiService.getListLayoutByKey(additions.layoutData.layoutId);
+                    }
+
+                }
+
+            }
+
+        }
+
         vm.getView = function () {
             // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
@@ -666,10 +714,13 @@ import evEvents from "../../services/entityViewerEvents";
             var downloadAttrsProm = sharedLogicHelper.downloadAttributes();
 
             var columns = parentEntityViewerDataService.getColumns();
-
-            var splitPanelLayoutToOpen = parentEntityViewerDataService.getSplitPanelLayoutToOpen();
             var additions = parentEntityViewerDataService.getAdditions();
             var member = parentEntityViewerDataService.getCurrentMember();
+            var rootWrapElemData = parentEntityViewerDataService.getRootWrapElemData();
+
+            if (rootWrapElemData) {
+                vm.entityViewerDataService.setRootWrapElemData(rootWrapElemData);
+            }
 
             vm.entityViewerDataService.setCurrentMember(member)
 
@@ -679,50 +730,27 @@ import evEvents from "../../services/entityViewerEvents";
                 content_type: additions.layoutData.content_type
             };
 
-            var defaultLayoutId;
+            /*var defaultLayoutId;
 
             if (splitPanelLayoutToOpen) {
                 defaultLayoutId = splitPanelLayoutToOpen;
 
             } else { // open default for split panel layout
 
-                defaultLayoutId = additions.layoutId; // needed in order for old system layouts work
+                defaultLayoutId = additions.layoutId; // needed in order for old system layouts to work
 
                 if (additions.layoutData && additions.layoutData.layoutId) {
                     defaultLayoutId = additions.layoutData.layoutId;
                 }
 
-            }
+            }*/
 
             vm.entityViewerDataService.setAttributesFromAbove(columns);
 
             vm.setEventListeners();
 
-            // var setLayoutProm;
-
-            /* if (defaultLayoutId) {
-
-                uiService.getListLayoutByKey(defaultLayoutId).then(function (spLayoutData) {
-
-                    //  if (spLayoutData) {
-                    //     middlewareService.setNewSplitPanelLayoutName(spLayoutData.name);
-                    // }
-
-                    setLayoutProm = vm.setLayout(spLayoutData, spDefaultLayoutData);
-
-                }).catch(function (reason) {
-                    setLayoutProm = evHelperService.getDefaultLayout(vm, 'split_panel');
-                });
-
-            } else {
-                setLayoutProm = evHelperService.getDefaultLayout(vm, 'split_panel');
-            }
-
-            Promise.allSettled([downloadAttrsProm, setLayoutProm]).then(function () {
-                $scope.$apply();
-            }); */
-
-            uiService.getListLayoutByKey(defaultLayoutId).then(function (spLayoutData) {
+            // uiService.getListLayoutByKey(defaultLayoutId).then(function (spLayoutData) {
+            getLayoutForSp(additions).then(function (spLayoutData) {
 
                 var setLayoutProm = vm.setLayout(spLayoutData, spDefaultLayoutData);
 

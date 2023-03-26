@@ -53,7 +53,7 @@ import toastNotificationService from "../../../../../shell/scripts/app/services/
                     contentElem: contentElem,
                     workareaWrapElem: scope.workareaWrapElement,
                     contentWrapElem: scope.contentWrapElement,
-                    rootWrapElem: scope.rootWrapElement
+                    rootWrapElem: scope.rootWrapElement // 'null' when rv / ev is inside split panel that is inside iframe
                 };
 
                 var projection;

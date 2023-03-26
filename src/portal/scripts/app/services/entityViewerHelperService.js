@@ -1,8 +1,9 @@
 /**
  * Created by szhitenev on 06.05.2016.
  */
-const reportHelper = require('../helpers/reportHelper');
 import uiService from "./uiService";
+import ReportHelper from "../helpers/reportHelper";
+const reportHelper = new ReportHelper();
 
 /**
  * Entity viewer helper service.
