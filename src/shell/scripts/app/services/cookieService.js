@@ -2,32 +2,32 @@
 
 export default function () {
 
-	 //# region IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally.
+	/* //# region IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally.
 
-	/*let cookieStorage = {};
+	let cookieStorage = {};
 
 	const getStoredCookie = function () {
 
-		const cookieString = Object.keys(cookieStorage).reduce(function (prev, propName) {
-			return prev + propName + '=' + cookieStorage[propName] + ';';
-		}, '');
+	   const cookieString = Object.keys(cookieStorage).reduce(function (prev, propName) {
+		   return prev + propName + '=' + cookieStorage[propName] + ';';
+	   }, '');
 
-		return cookieString;
+	   return cookieString;
 
 	}
 
 	const storeCookie = function (value) {
 
-		const attributeToStore = value.split(';')[0].trim();
-		const keyAndVal = attributeToStore.split('=');
+	   const attributeToStore = value.split(';')[0].trim();
+	   const keyAndVal = attributeToStore.split('=');
 
-		const prop = keyAndVal[0];
+	   const prop = keyAndVal[0];
 
-		cookieStorage[prop] = keyAndVal[1];
+	   cookieStorage[prop] = keyAndVal[1];
 
-	}*/
+	}
 
-	//# endregion Only for development purpose.
+	//# endregion IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally. */
 
 	const getStoredCookie = function () {
 		return document.cookie;

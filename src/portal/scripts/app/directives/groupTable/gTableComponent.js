@@ -11,7 +11,7 @@
     var rvDataHelper = require('../../helpers/rv-data.helper');
     var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
-    module.exports = function () {
+    module.exports = function (globalDataService) {
         return {
             restrict: 'AE',
             scope: {
@@ -42,7 +42,7 @@
 
 
                 console.log('scope.components', scope.components);
-
+                var iframeMode = globalDataService.insideIframe();
                 var interfaceLayout = scope.evDataService.getInterfaceLayout();
                 var viewContext = scope.evDataService.getViewContext();
                 var contentType = scope.evDataService.getContentType();
@@ -83,12 +83,13 @@
 
                 scope.contentWrapElem = elem[0].querySelector('.g-content-wrap');
                 scope.workareaWrapElem = elem[0].querySelector('.g-workarea-wrap');
-                scope.rootWrapElem = document.querySelector('.g-wrapper.g-root-wrapper');  // we are looking for parent
+                scope.rootWrapElem = document.querySelector('.g-wrapper.g-root-wrapper'); // we are looking for parent
+
 
                 if (scope.isRootEntityViewer) {
 
                     // we took a local root wrapper = .g-wrapper
-                    // because there is a issue with ng-class, we can't set 'g-root-wrapper' before querying it from DOM
+                    // because there is an issue with ng-class, we can't set 'g-root-wrapper' before querying it from DOM
 
                     scope.rootWrapElem = elem[0].querySelector('.g-wrapper');
                 }
@@ -255,13 +256,6 @@
 
                     });
 
-                    scope.evEventService.addEventListener(evEvents.UPDATE_TABLE_VIEWPORT, function () {
-
-                        var interfaceLayout = scope.evDataService.getInterfaceLayout();
-
-                    });
-
-                    // Victor 2020.11.30 #67
                     scope.evEventService.addEventListener(evEvents.REPORT_OPTIONS_CHANGE, function () {
 
                         scope.reportOptions = scope.evDataService.getReportOptions();

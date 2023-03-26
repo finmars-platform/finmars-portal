@@ -1343,8 +1343,11 @@
         evScrollManager.setViewportElem(elements.viewportElem); // .ev-viewport
         evScrollManager.setContentElem(elements.contentElem); // .ev-content
         evScrollManager.setContentWrapElem(elements.contentWrapElem);
-        evScrollManager.setRootWrapElem(elements.rootWrapElem);
         evScrollManager.setLeftPanelElem(elements.leftPanelElem);
+
+        /* if (elements.rootWrapElem) { // split panel inside iframe does not have access to rootWrapElem
+            evScrollManager.setRootWrapElem(elements.rootWrapElem);
+        } */
 
         var interfaceLayout = evDataService.getInterfaceLayout();
         var components = evDataService.getComponents();

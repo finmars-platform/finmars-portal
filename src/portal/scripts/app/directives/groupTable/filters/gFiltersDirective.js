@@ -361,6 +361,7 @@
                                                 additions.layoutData = {};
                                             }
 
+                                            additions.layoutData.user_code = res.selected.user_code;
                                             additions.layoutData.layoutId = res.selected.id;
                                             additions.layoutData.name = res.selected.name;
 
