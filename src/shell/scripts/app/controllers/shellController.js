@@ -10,9 +10,8 @@
 import websocketService from "../../../../shell/scripts/app/services/websocketService.js";
 import baseUrlService from "../services/baseUrlService.js";
 import crossTabEvents from "../services/events/crossTabEvents";
-import toastNotificationService from "../services/toastNotificationService";
 
-export default function ($scope, $state, $transitions, $urlService, $uiRouterGlobals, $mdDialog, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService, redirectionService) {
+export default function ($scope, $state, $transitions, $urlService, $uiRouterGlobals, $mdDialog, toastNotificationService, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService, redirectionService) {
 
     let vm = this;
 
@@ -305,7 +304,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
     }
 
-    const init = function () {
+    const init = async function () {
 
         // keycloak adapter passes params as redirect_url + &state=
         // and ui-router if see /&state instead of ?state become mad
@@ -323,10 +322,8 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             globalDataService.setIframeMode(true);
             vm.iframeMode = true;
 
-            document.body.classList.add('iframe')
+            document.body.classList.add('iframe');
 
-            cookieService.setCookie('access_token', $uiRouterGlobals.params.atoken);
-            // globalDataService.setIframeData(iframeData);
         }
 
         /* if (vm.PROJECT_ENV !== 'local') {
@@ -394,128 +391,98 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         homepageUrl = redirectionService.getUrl('app.portal.home');
         profileUrl = redirectionService.getUrl('app.profile');
 
-        window.keycloak = new Keycloak({
+         window.keycloak = new Keycloak({
             url: window.KEYCLOAK_URL,
             realm: window.KEYCLOAK_REALM,
             clientId: window.KEYCLOAK_CLIENT_ID
-        })
+        });
 
         console.log("Keycloak init")
+        /* //# region IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally.
+        let authenticated;
 
-        window.keycloak.init({
-            onLoad: 'login-required',
-            // checkLoginIframe: false
-        }).then(function (authenticated) {
+        if (!vm.iframeMode) {
+            authenticated = await window.keycloak.init( { onLoad: 'login-required', } );
 
-            console.log("Keycloak authenticated", authenticated)
+        } else {
+            authenticated = window.keycloak.authenticated
+        }
+        //# endregion */
 
-            if (authenticated) {
+        const authenticated = await window.keycloak.init( { onLoad: 'login-required', } );
 
-                cookieService.setCookie('access_token', window.keycloak.token);
-                cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
-                cookieService.setCookie('id_token', window.keycloak.idToken);
+        if (authenticated) {
 
-                // debugger;
+            cookieService.setCookie('access_token', window.keycloak.token);
+            cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
+            cookieService.setCookie('id_token', window.keycloak.idToken);
 
-                authorizerService.ping()
-                .then(function (data) {
+            vm.isAuthenticated = true;
 
-                    console.log('ping data', data);
+            if (!base_api_url) { // logging in without specifying database
 
-                    if (!data.is_authenticated) {
+                baseUrlService.setMasterUserPrefix(null);
 
-                        vm.isAuthenticated = false;
+                globalDataService.setCurrentMasterUserStatus(false);
 
-                        // Important LOGIC, if in developer mode move to local auth page
-                        // If production, move to keycloak
+                if (vm.PROJECT_ENV === 'local') {
 
-                        if (vm.PROJECT_ENV === 'local') {
-                            $state.go('app.authentication');
-                        } else {
-                            window.location = '/login'
-                        }
+                    console.log("redirection shellController init() 1");
+                    $state.go('app.portal.home'); // REDIRECTION: app.portal.home
 
-                    } else {
+                } else {
 
-                        vm.isAuthenticated = true;
-
-                        if (!base_api_url) { // logging in without specifying database
-
-                            baseUrlService.setMasterUserPrefix(null);
-
-                            globalDataService.setCurrentMasterUserStatus(false);
-
-                            if (vm.PROJECT_ENV === 'local') {
-
-                                $state.go('app.portal.home');
-
-                            } else {
-
-                                if ($state.current.name !== 'app.profile') {
-                                    // $state.go('app.profile', {}, {});
-                                    console.log("redirection shellController init() 3");
-                                    window.open(profileUrl, '_self'); // REDIRECTION: app.profile
-                                }
-                            }
-
-                        }
-
-                        /* if (!data.current_master_user_id && $state.current.name !== 'app.profile') {
-
-                            $state.go('app.profile', {}, {});
-
-                } else if (vm.isAuthenticationPage) {
-                    $state.go('app.portal.home');
-                } */
-
-                        getUser().then(async () => {
-
-                            if (base_api_url) {
-
-                                try {
-
-                                    const masterUser = await authorizerService.getCurrentMasterUser();
-
-                                    console.log("Setting base api url ", masterUser.base_api_url);
-                                    // baseUrlService.setMasterUserPrefix(base_api_url);
-
-                                    globalDataService.setCurrentMasterUserStatus(true);
-
-                                    if (vm.isAuthenticationPage) {
-                                        // $state.go('app.portal.home');
-                                        window.open(homepageUrl, '_self');
-                                    }
-
-                                } catch (e) {
-                                    e.___custom_message = 'location: shellController -> init() -> getCurrentMasterUser()';
-                                    console.error(e);
-                                }
-
-                            }
-
-
-                            vm.readyStatus = true;
-                            $scope.$apply();
-
-                        });
-
+                    if ($state.current.name !== 'app.profile') {
+                        // $state.go('app.profile', {}, {});
+                        console.log("redirection shellController init() 2");
+                        window.open(profileUrl, '_self'); // REDIRECTION: app.profile
                     }
+                }
 
-                })
-                .catch(error => {
-
-                    if (!error.is_authenticated) {
-                        console.log("redirection shellController init() 4");
-                        $state.go('app.authentication'); // REDIRECTION: app.authentication
-                    }
-
-                })
-
-            } else {
-                toastNotificationService.error("Auth error")
             }
 
-        })
+            /* if (!data.current_master_user_id && $state.current.name !== 'app.profile') {
+
+                $state.go('app.profile', {}, {});
+
+            } else if (vm.isAuthenticationPage) {
+                $state.go('app.portal.home');
+            } */
+            getUser().then(async () => {
+
+                if (base_api_url) {
+
+                    try {
+
+                        const masterUser = await authorizerService.getCurrentMasterUser();
+
+                        console.log("Setting base api url ", masterUser.base_api_url);
+                        // baseUrlService.setMasterUserPrefix(base_api_url);
+
+                        globalDataService.setCurrentMasterUserStatus(true);
+
+                        if (vm.isAuthenticationPage) {
+                            // $state.go('app.portal.home');
+                            console.log("redirection shellController init() 3");
+                            window.open(homepageUrl, '_self'); // REDIRECTION: app.portal.home
+                        }
+
+                    } catch (e) {
+                        e.___custom_message = 'location: shellController -> init() -> getCurrentMasterUser()';
+                        console.error(e);
+                    }
+
+                }
+
+
+                vm.readyStatus = true;
+                $scope.$apply();
+
+            });
+
+        } else {
+            toastNotificationService.error("Auth error")
+        }
 
     };
 

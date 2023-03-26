@@ -131,6 +131,14 @@
             controller: 'TemplateLayoutManagerController as vm'
         });
 
+        /* Used for opening split panel inside iframe
+
+        $stateProvider.state('app.portal.split-panel-widget', {
+            url: '/split-panel-widget?atoken&content_type&user_code&layoutId&name',
+            templateUrl: 'views/widgets/split-panel-report-viewer-view.html',
+            controller: 'SplitPanelReportViewerWidgetController as vm'
+        });*/
+
         $stateProvider
             .state('app.portal.data', {
                 url: '/data',

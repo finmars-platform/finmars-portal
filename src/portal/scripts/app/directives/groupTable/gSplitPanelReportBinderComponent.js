@@ -40,7 +40,8 @@
 
                     templateScope.$parent.vm = {};
                     templateScope.$parent.vm.entityType = additions.type;
-                    templateScope.$parent.vm.contentType = metaContentTypesService.findContentTypeByEntity( additions.type);
+                    // templateScope.$parent.vm.contentType = metaContentTypesService.findContentTypeByEntity( additions.type);
+                    templateScope.$parent.vm.contentType = additions.layoutData.content_type;
 
                     ctrl = $controller('SplitPanelReportViewerController as vm', {
                         '$scope': templateScope,

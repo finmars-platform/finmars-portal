@@ -1,14 +1,11 @@
 'use strict';
 
 import CommonDialogsService from "../../../../shell/scripts/app/services/commonDialogsService";
-import rvDataProviderService from "../services/rv-data-provider/rv-data-provider.service";
 
 (function () {
 
-    // const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
 
     const evEvents = require('../services/entityViewerEvents');
-
 
 	const rvHelper = require('../helpers/rv.helper')
 
@@ -50,7 +47,6 @@ import rvDataProviderService from "../services/rv-data-provider/rv-data-provider
                 Promise.all(promises).then(function (data) {
 
                     viewModel.readyStatus.attributes = true;
-
                     resolve(data);
 
                 }).catch(function (error) {
@@ -112,13 +108,8 @@ import rvDataProviderService from "../services/rv-data-provider/rv-data-provider
 
             viewModel.readyStatus.layout = true;
 
-            var viewContext = viewModel.entityViewerDataService.getViewContext();
-            var reportOptions = viewModel.entityViewerDataService.getReportOptions();
-            var entityType = viewModel.entityViewerDataService.getEntityType();
-
-            if (viewContext !== 'split_panel' || entityType !== 'transaction-report') {
-                rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
-            }
+            let reportOptions = viewModel.entityViewerDataService.getReportOptions();
+            const entityType = viewModel.entityViewerDataService.getEntityType();
 
             if (entityType !== 'transaction-report') {
 
@@ -167,6 +158,12 @@ import rvDataProviderService from "../services/rv-data-provider/rv-data-provider
             }
 
             putUseFromAboveFiltersFirst();
+
+            const viewContext = viewModel.entityViewerDataService.getViewContext();
+
+            if (viewContext !== 'split_panel' || entityType !== 'transaction-report') {
+                rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+            }
 
             $scope.$apply();
 
