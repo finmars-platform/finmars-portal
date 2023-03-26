@@ -181,7 +181,15 @@
                     <div data-ng-if="!vm.activeTaskProcessing">
 
                         <a data-ng-click="vm.refreshTask($event)"
-                           class="refresh-task-button">Refresh</a>
+                           class="refresh-task-button"><span
+                                class="material-icons">refresh</span>
+                            <md-tooltip md-direction="bottom">Refresh</md-tooltip></a>
+
+                        <a data-ng-click="vm.cancelTask($event)"
+                           data-ng-if="vm.activeTask.status == 'P' || vm.activeTask.status == 'progress'"
+                           class="cancel-task-button"><span
+                                class="material-icons">cancel</span>
+                            <md-tooltip md-direction="bottom">Cancel</md-tooltip></a>
 
                         <h1 style="word-break: break-word; font-size: 24px;">{{vm.activeTask.verbose_name}}</h1>
                         <div class="task-detail-field">

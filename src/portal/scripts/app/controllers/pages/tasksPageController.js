@@ -268,6 +268,38 @@
 
         }
 
+        vm.cancelTask = function ($event) {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                targetEvent: $event,
+                locals: {
+                    warning: {
+                        title: "Warning!",
+                        description: 'Are you sure you want to cancel task?'
+                    }
+                },
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    vm.activeTaskProcessing = true;
+
+                    tasksService.cancel(vm.activeTask.id).then(function (data) {
+
+                        vm.refreshTask($event);
+
+                    })
+                }
+            })
+
+        }
+
         vm.formatTask = function (item) {
 
             if (item.finished_at) {
