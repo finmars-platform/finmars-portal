@@ -245,6 +245,18 @@
                         <hr>
 
                         <div class="task-detail-field"
+                             data-ng-if="vm.activeTask.notes">
+                            <span class="task-detail-field-definition">Notes</span>:
+
+                            <div>
+                                {{vm.activeTask.notes}}
+                            </div>
+
+                        </div>
+
+                        <hr>
+
+                        <div class="task-detail-field"
                              data-ng-if="vm.activeTask.verbose_result">
                             <span class="task-detail-field-definition">Verbose result</span>:
 

@@ -542,11 +542,12 @@
                 templateUrl: 'views/pages/data-procedure-instance-page-view.html',
                 controller: 'DataProcedureInstancePageController as vm'
             })
-            .state('app.portal.expression-procedure-instance', {
-                url: '/expression-procedure-instance',
-                templateUrl: 'views/pages/expression-procedure-instance-page-view.html',
-                controller: 'ExpressionProcedureInstancePageController as vm'
-            })
+            // deprecated
+            // .state('app.portal.expression-procedure-instance', {
+            //     url: '/expression-procedure-instance',
+            //     templateUrl: 'views/pages/expression-procedure-instance-page-view.html',
+            //     controller: 'ExpressionProcedureInstancePageController as vm'
+            // })
             .state('app.portal.import', {
                 url: '/import',
                 abstract: true,
