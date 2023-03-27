@@ -353,6 +353,7 @@
             "strategy2_mode": 0,
             "strategy3_mode": 0,
             "table_font_size": "small",
+            "expression_iterations_count": 1,
             "pricing_policy": ecosystemDefaultData.pricing_policy,
         };
 
