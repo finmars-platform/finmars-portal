@@ -77,7 +77,7 @@ import importEntityService from "../../services/import/importEntityService";
 
                 var ext = file.name.split('.')[1]
 
-                if (ext !== 'csv' && ext !== 'xlsx' ) {
+                if (ext !== 'csv' && ext !== 'xlsx' && ext !== 'json') {
 
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',

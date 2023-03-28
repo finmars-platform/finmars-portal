@@ -1079,7 +1079,11 @@
                     '<div class="ev-dropdown-option"' +
                     ' data-ev-dropdown-action="activate_transaction"' +
                     ' data-object-id="' + objectId + '"' +
-                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Activate Transaction</div>';
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">Activate Transaction</div>' +
+                    '<div class="ev-dropdown-option"' +
+                    ' data-ev-dropdown-action="view_json"' +
+                    ' data-object-id="' + objectId + '"' +
+                    ' data-parent-group-hash-id="' + parentGroupHashId + '">View JSON</div>';
             }
 
             if (entityType === 'instrument') {
