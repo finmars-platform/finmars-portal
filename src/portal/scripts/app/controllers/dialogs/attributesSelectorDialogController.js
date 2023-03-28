@@ -1,4 +1,4 @@
-import {favoritesList} from "./classifierSelectDialogController";
+import baseUrlService from "../../../../../shell/scripts/app/services/baseUrlService";
 
 const metaHelper = require('../../helpers/meta.helper');
 
@@ -7,8 +7,13 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
     const vm = this;
 
     vm.iframeId = metaHelper.generateUniqueId("attributeSelector");
-    vm.iframeSrc = 'http://localhost:3000/space0ni5k/v/external/components/modal_add_columns?iframeId=' + vm.iframeId;
 
+    const urlBeginning = baseUrlService.resolve();
+    const base_api_url = baseUrlService.getMasterUserPrefix();
+
+    vm.iframeSrc = `${urlBeginning}/${base_api_url}/v/external/components/modal_add_columns?iframeId=${vm.iframeId}`;
+
+    const windowOrigin = window.origin;
     let iframeElem;
     let iframeWindow; // iframeElem.contentWindow;
 
@@ -84,11 +89,13 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
             return;
         }
 
-        switch (event.data.action) {
+        // This 'if' is separate to signal about message that contains the same event.data.iframeId but a different origin
+        if (event.origin !== windowOrigin) {
+            console.error('Received message from a different origin', event.origin);
+            return;
+        }
 
-            /*case 'IFRAME_READY':
-                iframeWindow.postMessage({ action: 'INITIALIZATION_SETTINGS_TRANSMISSION', payload: initSettings }, iframeWindow.origin );
-                break;*/
+        switch (event.data.action) {
 
             case 'SAVE_FAVORITE_ATTRIBUTES':
                 saveFavAttrs(event.data.payload);
@@ -120,7 +127,7 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
             window.addEventListener("message", processMessagesFromIframe);
             window.removeEventListener("message", iframeReadyHandler);
 
-            iframeWindow.postMessage({ action: 'INITIALIZATION_SETTINGS_TRANSMISSION', payload: initSettings }, vm.iframeSrc );
+            iframeWindow.postMessage({ action: 'INITIALIZATION_SETTINGS_TRANSMISSION', payload: initSettings }, windowOrigin );
 
         }
 
