@@ -47,7 +47,7 @@ import importEntityService from "../../services/import/importEntityService";
         vm.hasSchemeEditPermission = false;
 
         vm.loadIsAvailable = function () {
-            return vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined && vm.readyStatus.processing === false;
+            return !vm.readyStatus.processing && vm.config.scheme;
         };
 
         vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport().map(function (item){
