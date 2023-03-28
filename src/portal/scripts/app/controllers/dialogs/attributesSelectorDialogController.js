@@ -1,3 +1,5 @@
+import {favoritesList} from "./classifierSelectDialogController";
+
 const metaHelper = require('../../helpers/meta.helper');
 
 export default function ($scope, $mdDialog, toastNotificationService, usersService, globalDataService, data) {
@@ -35,21 +37,35 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
 
     const saveDialog = function (payload) {
 
-        if ( payload.favoriteAttributes ) {
-            saveFavAttrs(payload.favoriteAttributes);
+        const alreadySelAttrKey = payload.selectedAttributes.find(attrKey => {
+            return initSettings.selectedAttributes.find( selAttr => selAttr.key === attrKey )
+        });
+
+        if (alreadySelAttrKey) {
+            throw new Error(`Attribute '${alreadySelAttrKey}' already selected.`);
         }
 
-        const resItems = payload.selectedAttributes.map(attrData => {
+        let resItems = [];
 
-            const data = {
+        payload.selectedAttributes.forEach(attrKey => {
+
+            const attrData = initSettings.attributes.find( attr => attr.key === attrKey );
+
+            if (!attrData) {
+                return;
+            }
+
+            let selAttr = {
                 key: attrData.key,
                 name: attrData.name,
                 value_type: attrData.value_type,
-            };
+            }
 
-            if (attrData.layout_name) data.layout_name = attrData.layout_name;
+            const favAttr = initSettings.favoriteAttributes.find( attr => attr.key === attrKey );
 
-            return data;
+            if ( favAttr && favAttr.customName ) selAttr.layout_name = favAttr.customName;
+
+            resItems.push(selAttr);
 
         });
 
@@ -75,7 +91,7 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
                 break;*/
 
             case 'SAVE_FAVORITE_ATTRIBUTES':
-                saveFavAttrs(event.data.payload.favoriteAttributes);
+                saveFavAttrs(event.data.payload);
                 break;
 
             case 'SAVE_DIALOG':

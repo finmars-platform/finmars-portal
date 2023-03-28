@@ -401,11 +401,11 @@
             return []
         }
 
-        function getAllAttributesByEntityType(entityType) {
+        function getAllAttributesByEntityType(entityType, viewContext) {
 
-            var result = [];
+            var result;
 
-            if (reportsEntityTypes.indexOf(entityType) === -1) {
+            /* if (reportsEntityTypes.indexOf(entityType) === -1) {
 
                 var entityAttributes = getEntityAttributesByEntityType(entityType);
                 var dynamicAttributes = getDynamicAttributesByEntityType(entityType);
@@ -440,6 +440,90 @@
 
                 if (entityType === 'transaction-report') {
                     result = _getTransactionReportAttributes()
+                }
+
+            } */
+            if (viewContext === 'reconciliation_viewer') {
+                result = getReconciliationAttributes();
+
+            }
+            else {
+
+                switch (entityType) {
+                    case 'balance-report':
+                        result = _getBalanceReportAttributes();
+                        break;
+
+                    case 'pl-report':
+                        result = _getPlReportAttributes();
+                        break;
+
+                    case 'transaction-report':
+                        result = _getTransactionReportAttributes();
+                        break;
+
+                    default: // get attributes for entity viewer
+
+                        var contentType = metaContentTypesService.findContentTypeByEntity(entityType);
+                        var entityAttrs = [];
+                        var dynamicAttrs = [];
+
+                        result = [];
+
+                        entityAttrs = getEntityAttributesByEntityType(entityType);
+
+                        entityAttrs.forEach(function (item) {
+                            if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
+                                item.name = 'Group';
+                            }
+                            item.entity = entityType;
+                        });
+
+                        var instrumentUserFields = getInstrumentUserFields();
+                        var transactionUserFields = getTransactionUserFields();
+
+                        instrumentUserFields.forEach(function (field) {
+
+                            entityAttrs.forEach(function (entityAttr) {
+
+                                if (entityAttr.key === field.key) {
+                                    entityAttr.name = field.name;
+                                }
+
+                            })
+
+                        });
+                        transactionUserFields.forEach(function (field) {
+
+                            entityAttrs.forEach(function (entityAttr) {
+
+                                if (entityAttr.key === field.key) {
+                                    entityAttr.name = field.name;
+                                }
+
+                            })
+
+                        });
+
+                        dynamicAttrs = getDynamicAttributesByEntityType(entityType);
+
+
+                        dynamicAttrs = dynamicAttrs.map(function (attribute) {
+
+                            var result = {};
+
+                            result.attribute_type = Object.assign({}, attribute);
+                            result.value_type = attribute.value_type;
+                            result.content_type = contentType;
+                            result.key = 'attributes.' + attribute.user_code;
+                            result.name = attribute.name;
+
+                            return result
+
+                        });
+
+                        result = result.concat(entityAttrs);
+                        result = result.concat(dynamicAttrs);
                 }
 
             }
