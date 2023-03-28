@@ -2090,7 +2090,8 @@
 
 
                 }; */
-                const getAttributes = function () {
+
+                /* const getAttributes = function () {
 
                     var allAttrsList = [];
 
@@ -2175,7 +2176,7 @@
                                 allAttrsList = allAttrsList.concat(dynamicAttrs);
                         }
 
-                    }
+1                    }
 
                     allAttrsList = allAttrsList.map(attr => {
 
@@ -2199,7 +2200,7 @@
 
                     return allAttrsList;
 
-                };
+                }; */
 
                 scope.addColumn = function ($event) {
 
@@ -2220,7 +2221,7 @@
                         return true;
                     });*/
 
-                    const allAttrs = getAttributes();
+                    const allAttrs = evHelperService.getDataForAttributeSelector(scope.attributeDataService, scope.entityType, scope.columns);
                     const selectedAttrs = scope.columns.map( col => col.key );
                     const member = globalDataService.getMember();
 
@@ -2244,12 +2245,6 @@
                         targetEvent: $event,
                         multiple: true,
                         locals: {
-                            /*data: {
-                                title: 'Choose column to add',
-                                availableAttrs: availableAttrs,
-                                isReport: scope.isReport,
-                                multiselector: true
-                            }*/
                             data: {
                                 attributes: allAttrs,
                                 selectedAttributes: selectedAttrs,
@@ -2264,13 +2259,8 @@
 
                             for (var i = 0; i < res.data.items.length; i = i + 1) {
 
-                                var item = res.data.items[i];
-                                var noColumn = !scope.columns.find( function (col) { return col.key === item.key; } );
-
-                                if (noColumn) {
-                                    var colData = evHelperService.getTableAttrInFormOf( 'column', item );
-                                    scope.columns.push(colData);
-                                }
+                                var colData = evHelperService.getTableAttrInFormOf( 'column', res.data.items[i] );
+                                scope.columns.push(colData);
 
                             }
                             console.log("testing98.addColumn set columns", JSON.parse(JSON.stringify(scope.columns)));

@@ -429,7 +429,7 @@ const reportHelper = new ReportHelper();
      * @memberOf module:entityViewerHelperService
      * @return {object} Return attribute in form of group, column or filter
      */
-    let getTableAttrInFormOf = function (form, attrInstance) {
+    const getTableAttrInFormOf = function (form, attrInstance) {
         console.log("add filter getTableAttrInFormOf attrInstance", attrInstance);
         let attrTypeToAdd = {};
 
@@ -517,6 +517,52 @@ const reportHelper = new ReportHelper();
         }
 
         return attrTypeToAdd;
+
+    };
+
+    /**
+     * Returns array with attributes formatted for attributesSelector
+     *
+     * @param {Object} attributeDataService
+     * @param {string} entityType
+     * @param {Object[]} [columns]
+     * @param {string} [viewContext]
+     * @returns {{value_type, name, description: string, key}[]}
+     */
+    const getDataForAttributeSelector = function (attributeDataService, entityType, columns, viewContext) {
+
+        if (!columns) columns = [];
+        let attributes;
+
+        if (viewContext === 'reconciliation_viewer') {
+            attributes = attributeDataService.getReconciliationAttributes();
+
+        } else {
+            attributes = attributeDataService.getAllAttributesByEntityType(entityType);
+        }
+
+        attributes = attributes.map(attr => {
+
+            let attrData = {
+                key: attr.key,
+                name: attr.name,
+                value_type: attr.value_type,
+                // TODO: receive description from backend
+                description: '',
+                // description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut quis nunc eget mauris facilisis elementum vel nec est. Aliquam in ligula fermentum lectus tristique tristique a eu felis. Praesent facilisis in nisi sit amet elementum. Donec in malesuada purus, sit amet sodales metus. Etiam vulputate sem mattis massa vestibulum, sit amet mattis turpis fermentum. Cras tincidunt interdum ultrices. Vivamus semper, urna id efficitur mattis, erat velit aliquet augue, in congue lacus velit eget mi.'
+            }
+
+            const colThatUsesAttr = columns.find( colData => colData.key === attrData.key );
+
+            if (colThatUsesAttr && colThatUsesAttr.layout_name) {
+                attrData.layout_name = colThatUsesAttr.layout_name;
+            }
+
+            return attrData;
+
+        });
+
+        return attributes;
 
     };
 
@@ -1947,6 +1993,7 @@ const reportHelper = new ReportHelper();
         checkSplitPanelForChanges: checkSplitPanelForChanges,
         warnAboutChangesToLoose: warnAboutChangesToLoose,
         getTableAttrInFormOf: getTableAttrInFormOf,
+        getDataForAttributeSelector: getDataForAttributeSelector,
 
         getDynamicAttrValue: getDynamicAttrValue,
         setDynamicAttrValue: setDynamicAttrValue,
