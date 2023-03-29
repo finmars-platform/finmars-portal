@@ -21,7 +21,7 @@
     var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function simpleEntityImportSchemeEditDialogController($scope, $mdDialog, schemeId, importSchemesMethodsService) {
+    module.exports = function simpleEntityImportSchemeEditDialogController($scope, $mdDialog, data, importSchemesMethodsService) {
 
         var vm = this;
 
@@ -31,6 +31,7 @@
 
         vm.scheme = {};
         vm.readyStatus = {scheme: false, entitySchemeAttributes: false};
+        vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport();
 
         vm.dynamicAttributes = [];
 
@@ -113,7 +114,7 @@
 
         vm.getItem = function () {
 
-            csvImportSchemeService.getByKey(schemeId).then(function (data) {
+            csvImportSchemeService.getByKey(vm.schemeId).then(function (data) {
 
                 vm.scheme = data;
 
@@ -423,32 +424,67 @@
 
                 vm.processing = true;
 
-                csvImportSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
+                if (vm.scheme.id) {
 
-                    toastNotificationService.success("Simple Import Scheme " + vm.scheme.user_code + ' was successfully saved');
+                    csvImportSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
 
-                    vm.processing = false;
+                        toastNotificationService.success("Simple Import Scheme " + vm.scheme.user_code + ' was successfully saved');
 
-                    $mdDialog.hide({status: 'agree'});
+                        vm.processing = false;
 
-                }).catch(function (reason) {
+                        $mdDialog.hide({status: 'agree'});
 
-                    vm.processing = false;
+                    }).catch(function (reason) {
 
-                    $mdDialog.show({
-                        controller: 'ValidationDialogController as vm',
-                        templateUrl: 'views/dialogs/validation-dialog-view.html',
-                        targetEvent: $event,
-                        locals: {
-                            validationData: reason.message
-                        },
-                        multiple: true,
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true
-                    })
+                        vm.processing = false;
 
-                });
+                        $mdDialog.show({
+                            controller: 'ValidationDialogController as vm',
+                            templateUrl: 'views/dialogs/validation-dialog-view.html',
+                            targetEvent: $event,
+                            locals: {
+                                validationData: reason.message
+                            },
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true
+                        })
+
+                    });
+
+                } else {
+
+                    csvImportSchemeService.create(vm.scheme).then(function (data) {
+
+                        vm.schemeId = data.id;
+
+                        toastNotificationService.success("Simple Import Scheme " + vm.scheme.user_code + ' was successfully created');
+
+                        vm.processing = false;
+
+                        vm.getItem();
+
+                    }).catch(function (reason) {
+
+                        vm.processing = false;
+
+                        $mdDialog.show({
+                            controller: 'ValidationDialogController as vm',
+                            templateUrl: 'views/dialogs/validation-dialog-view.html',
+                            targetEvent: $event,
+                            locals: {
+                                validationData: reason.message
+                            },
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true
+                        })
+
+                    });
+
+                }
             }
         };
 
@@ -593,7 +629,19 @@
 
         vm.init = function () {
 
-            vm.getItem();
+            vm.schemeId = data.schemeId
+
+            if (vm.schemeId) {
+                vm.getItem();
+            } else {
+                vm.scheme = {
+
+                    entity_fields: [],
+                    csv_fields: []
+
+                }
+                vm.readyStatus.scheme = true;
+            }
 
         };
 
