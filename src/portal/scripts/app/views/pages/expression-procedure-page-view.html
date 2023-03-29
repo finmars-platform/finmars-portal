@@ -51,34 +51,35 @@
                                         <div class="procedure-card-result-field-holder">
                                             <span class="procedure-card-result-field">Status:</span>
                                             <div class="procedure-card-result-value">
-                                                {{item.result.status}}
+                                                {{item.task.status}}
                                             </div>
                                         </div>
 
                                         <div class="procedure-card-result-field-holder">
-                                            <span class="procedure-card-result-field">Log</span>:
+                                            <span class="procedure-card-result-field">Notes</span>:
                                             <div class="procedure-card-result-value">
-                                                <pre>{{item.result.log}}</pre>
+                                                <pre>{{item.task.notes}}</pre>
                                             </div>
                                         </div>
+
+                                        <div class="procedure-card-result-field-holder">
+                                            <span class="procedure-card-result-field">Options:</span>
+                                            <div class="procedure-card-result-value">
+                                                <pre>{{item.task.options_object}}</pre>
+                                            </div>
+                                        </div>
+
                                         <div class="procedure-card-result-field-holder">
                                             <span class="procedure-card-result-field">Error Message</span>:
                                             <div class="procedure-card-result-value">
-                                                <pre>{{item.result.error_message}}</pre>
-                                            </div>
-                                        </div>
-
-                                        <div class="procedure-card-result-field-holder">
-                                            <span class="procedure-card-result-field">Notes:</span>
-                                            <div class="procedure-card-result-value">
-                                                <pre>{{item.result.notes}}</pre>
+                                                <pre>{{item.task.error_message}}</pre>
                                             </div>
                                         </div>
 
                                         <div class="procedure-card-result-field-holder">
                                             <span class="procedure-card-result-field">Result:</span>
                                             <div class="procedure-card-result-value">
-                                                <pre>{{item.result.result}}</pre>
+                                                <pre>{{item.task.result_object}}</pre>
                                             </div>
                                         </div>
 
@@ -97,8 +98,13 @@
             </div>
 
             <div layout="row">
-                <md-button ui-sref="app.portal.expression-procedure-instance" class="md-raised">Check Procedure Status
-                </md-button>
+<!-- Deprecated               <md-button ui-sref="app.portal.expression-procedure-instance" class="md-raised">Check Procedure Status-->
+<!--                </md-button>-->
+
+                <div>
+                    <a ui-sref="app.portal.tasks-page()" target="_blank">Check Procedure Status</a>
+                </div>
+
                 <md-button ui-sref="app.portal.ace-editor" class="md-raised md-primary">Open Code Editor</md-button>
 
                 <md-menu>

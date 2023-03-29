@@ -56,16 +56,16 @@
                 caption: "Independent"
             }
         ]; */
-		vm.selectOptions = [
-			{
-				id: 0,
-				name: "Ignore"
-			},
-			{
-				id: 1,
-				name: "Independent"
-			}
-		];
+        vm.selectOptions = [
+            {
+                id: 0,
+                name: "Ignore"
+            },
+            {
+                id: 1,
+                name: "Independent"
+            }
+        ];
 
         /*vm.strategiesSelectOptions = [
             {
@@ -81,25 +81,31 @@
                 caption: 'Offsetting (Interdependent - 0/100, 100/0, 50/50)'
             }
         ];*/
-		vm.strategiesSelectOptions = [
-			{
-				id: 0,
-				name: "Ignore"
-			},
-			{
-				id: 1,
-				name: "Independent"
-			},
-			{
-				id: 2,
-				name: 'Offsetting (Interdependent - 0/100, 100/0, 50/50)'
-			}
-		];
+        vm.strategiesSelectOptions = [
+            {
+                id: 0,
+                name: "Ignore"
+            },
+            {
+                id: 1,
+                name: "Independent"
+            },
+            {
+                id: 2,
+                name: 'Offsetting (Interdependent - 0/100, 100/0, 50/50)'
+            }
+        ];
 
         vm.tableFontSizeOptions = [
             {id: 'small', name: 'Small'},
             {id: 'medium', name: 'Medium'},
             {id: 'large', name: 'Large'},
+        ];
+
+        vm.expressionIterationsCountOptions = [
+            {id: 1, name: '1'},
+            {id: 2, name: '2'},
+            {id: 3, name: '3'},
         ];
 
         vm.dateFieldOptions = [
@@ -126,52 +132,56 @@
         ]
 
         vm.costMethod = [
-			{id: 1, name: 'AVCO'},
-			{id: 2, name: 'FIFO'},
-		];
+            {id: 1, name: 'AVCO'},
+            {id: 2, name: 'FIFO'},
+        ];
 
-		vm.approachMultiplierOptions = [
-			{
-				id: 0,
-				name: "0/100"
-			},
-			{
-				id: 0.5,
-				name: "50/50"
-			},
-			{
-				id: 1,
-				name: "100/0"
-			}
-		];
+        vm.approachMultiplierOptions = [
+            {
+                id: 0,
+                name: "0/100"
+            },
+            {
+                id: 0.5,
+                name: "50/50"
+            },
+            {
+                id: 1,
+                name: "100/0"
+            }
+        ];
 
-		vm.calculationGroupOptions = [
-			{
-				id: 'portfolio',
-				name: 'Portfolio'
-			},
-			{
-				id: 'account',
-				name: 'Account'
-			},
-			{
-				id: 'strategy1',
-				name: 'Strategy 1'
-			},
-			{
-				id: 'strategy2',
-				name: 'Strategy 2'
-			},
-			{
-				id: 'strategy3',
-				name: 'Strategy 3'
-			}
-		];
+        vm.calculationGroupOptions = [
+            {
+                id: 'portfolio',
+                name: 'Portfolio'
+            },
+            {
+                id: 'account',
+                name: 'Account'
+            },
+            {
+                id: 'strategy1',
+                name: 'Strategy 1'
+            },
+            {
+                id: 'strategy2',
+                name: 'Strategy 2'
+            },
+            {
+                id: 'strategy3',
+                name: 'Strategy 3'
+            }
+        ];
 
         if (vm.reportOptions.table_font_size) {
             vm.tableFontSize = vm.reportOptions.table_font_size;
         } else {
             vm.tableFontSize = vm.tableFontSizeOptions[0].id;
+        }
+
+        if (!vm.reportOptions.expression_iterations_count) {
+            vm.reportOptions.expression_iterations_count = 1
         }
 
         /* vm.entityType = options.entityType;
@@ -204,11 +214,11 @@
             await pricingPolicyService.getListLight(opitons).then(function (data) {
 
                 vm.pricingPolicies = data.results.map(function (pPolicy) {
-                	return {
-                		id: pPolicy.id,
-						name: pPolicy.short_name
-					}
-				});
+                    return {
+                        id: pPolicy.id,
+                        name: pPolicy.short_name
+                    }
+                });
 
                 vm.readyStatus.pricingPolicy = true;
 
@@ -233,11 +243,11 @@
             await currencyService.getListLight(options).then(function (data) {
 
                 vm.currencies = data.results.map(function (currency) {
-                	return {
-                		id: currency.id,
-                		name: currency.short_name,
-					};
-				});
+                    return {
+                        id: currency.id,
+                        name: currency.short_name,
+                    };
+                });
 
                 vm.readyStatus.currency = true;
 
@@ -391,6 +401,7 @@
             }
 
             vm.reportOptions.table_font_size = vm.tableFontSize;
+            vm.reportOptions.expression_iterations_count = parseInt(vm.reportOptions.expression_iterations_count, 10);
 
 
             vm.reportOptions.complex_transaction_statuses_filter = vm.complex_transaction_statuses_filter.join(',')
@@ -417,7 +428,7 @@
 
         };
 
-        vm.getCustomFields = function(){
+        vm.getCustomFields = function () {
 
             customFieldService.getList(vm.entityType).then(function (data) {
 
@@ -442,14 +453,14 @@
 
         const getEcosystemDefaultCurrencies = async () => {
 
-        	if (!ecosystemDefaultData) {
-                ecosystemDefaultData = await ecosystemDefaultService.getList().then (res => res.results[0]);
+            if (!ecosystemDefaultData) {
+                ecosystemDefaultData = await ecosystemDefaultService.getList().then(res => res.results[0]);
             }
 
-        	vm.currencies.push({
-				id: ecosystemDefaultData.currency_object.id,
-				name: ecosystemDefaultData.currency_object.short_name,
-			});
+            vm.currencies.push({
+                id: ecosystemDefaultData.currency_object.id,
+                name: ecosystemDefaultData.currency_object.short_name,
+            });
 
             vm.reportOptions.report_currency = ecosystemDefaultData.currency_object.id;
 
@@ -457,7 +468,7 @@
 
         const getEcosystemDefaultPricingPolicies = async () => {
             if (!ecosystemDefaultData) {
-                ecosystemDefaultData = await ecosystemDefaultService.getList().then (res => res.results[0]);
+                ecosystemDefaultData = await ecosystemDefaultService.getList().then(res => res.results[0]);
             }
             vm.pricingPolicies.push(ecosystemDefaultData.pricing_policy_object);
             vm.reportOptions.pricing_policy = ecosystemDefaultData.pricing_policy_object.id;
@@ -469,27 +480,27 @@
 
             if (vm.entityType === 'transaction-report') {
 
-				vm.transactionsUserDates = [];
+                vm.transactionsUserDates = [];
 
                 let options = {
                     pageSize: 1000,
                     page: 1
                 };
 
-				metaService.loadDataFromAllPages(uiService.getTransactionFieldList, [options]).then(function (transactionFields) {
+                metaService.loadDataFromAllPages(uiService.getTransactionFieldList, [options]).then(function (transactionFields) {
 
-					vm.transactionsUserDates = transactionFields.filter(function (field) {
-						return ['user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'].includes(field.key);
+                    vm.transactionsUserDates = transactionFields.filter(function (field) {
+                        return ['user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'].includes(field.key);
 
-					}).map(function (dateField) {
-						return {name: dateField.name, id: dateField.key};
-					});
+                    }).map(function (dateField) {
+                        return {name: dateField.name, id: dateField.key};
+                    });
 
-					vm.transactionsUserDates.push({name: "Transaction date", id: null});
+                    vm.transactionsUserDates.push({name: "Transaction date", id: null});
 
-				});
+                });
 
-			}
+            }
 
             let ecosystemDefProms = [];
             if (!vm.currencies.length) {
@@ -530,9 +541,9 @@
 
                 data.results.forEach(function (field) {
 
-                    vm.dateFieldOptions.forEach(function (item){
+                    vm.dateFieldOptions.forEach(function (item) {
 
-                        if(field.key === item.id) {
+                        if (field.key === item.id) {
                             item.name = field.name
                         }
 
