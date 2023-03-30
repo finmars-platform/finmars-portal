@@ -70,6 +70,22 @@
 
                 }
 
+                if (key === 'accrual_calculation_schedules') {
+
+                    obj.accrual_calculation_schedules = obj.accrual_calculation_schedules.map(function (item) {
+
+                        delete item['id']
+                        item['accrual_calculation_model'] = item['accrual_calculation_model_object']['user_code']
+                        delete item['accrual_calculation_model_object']
+
+                        item['periodicity'] = item['periodicity_object']['user_code']
+                        delete item['periodicity_object']
+
+                        return item
+                    })
+
+                }
+
 
             })
 
