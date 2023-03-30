@@ -189,6 +189,7 @@ export default (function () {
     portal.controller('JsonEditorDialogController', ['$scope', '$mdDialog', 'item', 'data', require('./app/controllers/dialogs/jsonEditorDialogController')]);
     portal.controller('UniversalInputDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/universalInputDialogController')]);
     portal.controller('EntityAsJsonEditorDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/entityAsJsonEditorDialogController')]);
+    portal.controller('BulkJsonViewDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/bulkJsonViewDialogController')]);
     portal.controller('ConfigurationPackageDialogController', ['$scope', '$mdDialog', 'backendConfigurationImportService', 'data', require('./app/controllers/dialogs/configurationPackageDialogController')]);
     portal.controller('UseFromAboveDialogController', ['$scope', '$mdDialog', 'data', 'attributeDataService', require('./app/controllers/dialogs/useFromAboveDialogController')]);
     portal.controller('InstrumentSelectDialogController', ['$scope', '$mdDialog', require('./app/controllers/dialogs/instrumentSelectDialogController')]);

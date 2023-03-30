@@ -568,6 +568,29 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
 
         }
 
+        var bulkViewItemAsJson = async function (entityType, actionData, items) {
+
+            console.log("bulkViewItemAsJson.items", items)
+            console.log("bulkViewItemAsJson.entityType", entityType)
+            console.log("bulkViewItemAsJson.actionData", actionData)
+
+            $mdDialog.show({
+                controller: 'BulkJsonViewDialogController as vm',
+                templateUrl: 'views/dialogs/bulk-json-view-dialog-view.html',
+                multiple: true,
+                locals: {
+                    data: {
+                        item: items,
+                        entityType: entityType,
+                    }
+                }
+            }).then(function (res) {
+
+
+            })
+
+        }
+
         var restoreDeletedEntities = function (event, entityType, entitiesToRestore) {
 
             $mdDialog.show({
@@ -848,7 +871,40 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
                             restoreDeletedEntities(actionData.event, entitytype, itemsToRestore);
 
                             break;
+                        case 'bulk_view_json':
+                            var objects = vm.entityViewerDataService.getObjects();
 
+                            var selectedRows = objects.filter(function (row) {
+                                return row.___is_activated;
+                            });
+
+                            var ids = selectedRows.map(function (item) {
+                                return item.id;
+                            });
+
+                            var promises = []
+
+                            ids.forEach(function (id) {
+
+                                promises.push(new Promise(function (resolve, reject) {
+
+                                    entityResolverService.getByKey(vm.entityType, id).then(function (data) {
+                                        resolve(data)
+                                    })
+
+                                }))
+
+                            })
+                            Promise.allSettled(promises).then(function (data) {
+
+                                data = data.map(function (item){
+                                    return item.value;
+                                })
+
+                                bulkViewItemAsJson(entitytype, actionData, data);
+                            })
+
+                            break;
                         case 'restore_deleted':
                             restoreDeletedEntities(actionData.event, entitytype, [actionData.object]);
                             break;
