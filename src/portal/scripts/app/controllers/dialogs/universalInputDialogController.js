@@ -49,9 +49,13 @@
 
         vm.agree = function () {
 
+            vm.processing = true;
+
             utilsService.universalInput(vm.editor.getValue()).then(function (data) {
 
                 toastNotificationService.success("Successfully Imported")
+
+                vm.processing = false;
 
                 $mdDialog.hide({status: 'agree', data: {}});
 

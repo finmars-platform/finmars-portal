@@ -3,7 +3,7 @@
            drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2 >Universal Input</h2>
+            <h2>Universal Input</h2>
             <span flex></span>
         </div>
     </md-toolbar>
@@ -16,8 +16,20 @@
         <md-button ng-click="vm.cancel()" style="margin-right:20px;">
             Close
         </md-button>
-        <md-button ng-click="vm.agree()">
-            Import
-        </md-button>
+
+        <div layout="row">
+            <md-button ng-click="vm.agree()">
+                Import
+            </md-button>
+            <div style="padding-top: 12px; width: 30px" data-ng-if="!vm.processing">
+                &nbsp;
+            </div>
+
+            <div layout="row" layout-sm="column" layout-align="space-around" class="m-l-8" data-ng-if="vm.processing"
+                 style="padding-top: 6px; width: 30px">
+                <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
+                <progress-circular diameter="20"></progress-circular>
+            </div>
+        </div>
     </md-dialog-actions>
 </md-dialog>
