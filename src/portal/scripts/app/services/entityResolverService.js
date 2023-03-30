@@ -259,7 +259,7 @@
                 return currencyService.getByKey(id);
                 break;
             case 'complex-transaction':
-                return complexTransactionService.initRebookComplexTransaction(id);
+                return complexTransactionService.getByKey(id);
                 break;
             case 'pricing-policy':
                 return pricingPolicyService.getByKey(id);
