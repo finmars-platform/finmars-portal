@@ -11,7 +11,7 @@
     var evFilterService = require('../../services/ev-data-provider/filter.service');
     var evHelperService = require('../../services/entityViewerHelperService');
 
-    module.exports = function ($mdDialog, globalDataService) {
+    module.exports = function ($mdDialog) {
         return {
             restrict: 'E',
             templateUrl: 'views/directives/groupTable/g-ev-left-panel-view.html',
@@ -30,6 +30,7 @@
                 scope.sliderButtonState = 'unfolded';
 
                 const entityType = scope.evDataService.getEntityType();
+                const contentType = scope.evDataService.getContentType();
                 let finishRenderIndex;
 
                 scope.recursiveMarkHasSelected = function (tree, selectedGroups) {
@@ -383,7 +384,7 @@
 
                 scope.addGroupType = function ($event) {
 
-                    const allAttrsList = scope.attributeDataService.getAllAttributesByEntityType(entityType);
+                    /*const allAttrsList = scope.attributeDataService.getAllAttributesByEntityType(entityType);
 
                     const availableAttrs = allAttrsList.filter(function (attr) {
 
@@ -395,13 +396,13 @@
                             }
                         }
                         return true;
-                    });
+                    });*/
 
-                    /* const allAttrs = evHelperService.getDataForAttributeSelector(scope.attributeDataService, entityType);
+                    const allAttrs = scope.attributeDataService.getAllAttributesByEntityType(entityType);
+                    const columns = scope.evDataService.getColumns();
                     const selectedAttrs = scope.groupTypes.map( col => col.key );
-                    const member = globalDataService.getMember(); */
 
-                    $mdDialog.show({
+                    /*$mdDialog.show({
                         controller: "TableAttributeSelectorDialogController as vm",
                         templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
                         targetEvent: $event,
@@ -414,8 +415,8 @@
                                 multiselector: true
                             }
                         }
-                    })
-                    /*$mdDialog.show({
+                    })*/
+                    $mdDialog.show({
                         controller: "AttributesSelectorDialogController as vm",
                         templateUrl: "views/dialogs/attributes-selector-dialog-view.html",
                         targetEvent: $event,
@@ -423,11 +424,12 @@
                         locals: {
                             data: {
                                 attributes: allAttrs,
+                                layoutNames: evHelperService.getAttributesLayoutNames(columns),
                                 selectedAttributes: selectedAttrs,
-                                favoriteAttributes: member.data.favorites.attributes,
+                                contentType: contentType,
                             }
                         }
-                    })*/
+                    })
                     .then(function (res) {
 
                         if (res && res.status === "agree") {

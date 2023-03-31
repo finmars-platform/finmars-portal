@@ -521,52 +521,6 @@ const reportHelper = new ReportHelper();
     };
 
     /**
-     * Returns array with attributes formatted for attributesSelector
-     *
-     * @param {Object} attributeDataService
-     * @param {string} entityType
-     * @param {Object[]} [columns]
-     * @param {string} [viewContext]
-     * @returns {{value_type, name, description: string, key}[]}
-     */
-    const getDataForAttributeSelector = function (attributeDataService, entityType, columns, viewContext) {
-
-        if (!columns) columns = [];
-        let attributes;
-
-        if (viewContext === 'reconciliation_viewer') {
-            attributes = attributeDataService.getReconciliationAttributes();
-
-        } else {
-            attributes = attributeDataService.getAllAttributesByEntityType(entityType);
-        }
-
-        attributes = attributes.map(attr => {
-
-            let attrData = {
-                key: attr.key,
-                name: attr.name,
-                value_type: attr.value_type,
-                // TODO: receive description from backend
-                description: '',
-                // description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut quis nunc eget mauris facilisis elementum vel nec est. Aliquam in ligula fermentum lectus tristique tristique a eu felis. Praesent facilisis in nisi sit amet elementum. Donec in malesuada purus, sit amet sodales metus. Etiam vulputate sem mattis massa vestibulum, sit amet mattis turpis fermentum. Cras tincidunt interdum ultrices. Vivamus semper, urna id efficitur mattis, erat velit aliquet augue, in congue lacus velit eget mi.'
-            }
-
-            const colThatUsesAttr = columns.find( colData => colData.key === attrData.key );
-
-            if (colThatUsesAttr && colThatUsesAttr.layout_name) {
-                attrData.layout_name = colThatUsesAttr.layout_name;
-            }
-
-            return attrData;
-
-        });
-
-        return attributes;
-
-    };
-
-    /**
      * Get value of dynamic attribute by it's user_code
      * @param {object} dAttrData - Data of dynamic attribute
      * @memberOf module:entityViewerHelperService
@@ -709,6 +663,18 @@ const reportHelper = new ReportHelper();
         }
 
         return dAttrsList;
+
+    };
+
+    const getAttributesLayoutNames = function (columns) {
+
+        const result = {};
+
+        columns.forEach(col => {
+            if (col.layout_name) result[col.key] = col.layout_name;
+        })
+
+        return result;
 
     };
 
@@ -1993,7 +1959,6 @@ const reportHelper = new ReportHelper();
         checkSplitPanelForChanges: checkSplitPanelForChanges,
         warnAboutChangesToLoose: warnAboutChangesToLoose,
         getTableAttrInFormOf: getTableAttrInFormOf,
-        getDataForAttributeSelector: getDataForAttributeSelector,
 
         getDynamicAttrValue: getDynamicAttrValue,
         setDynamicAttrValue: setDynamicAttrValue,
@@ -2001,6 +1966,7 @@ const reportHelper = new ReportHelper();
         getDefaultLayout: getDefaultLayout,
         getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
         setDynamicAttrValueByUserCode: setDynamicAttrValueByUserCode,
+        getAttributesLayoutNames: getAttributesLayoutNames,
 
         getEditLayoutMaxColumns: getEditLayoutMaxColumns,
         getBigDrawerWidth: getBigDrawerWidth,
