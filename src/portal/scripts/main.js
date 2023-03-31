@@ -860,7 +860,7 @@ export default (function () {
 	// New report viewer interface
 	portal.directive('gTopPart', ['$mdDialog', '$state', 'usersService', 'ecosystemDefaultService', 'globalDataService', 'evRvLayoutsHelper', 'reportHelper', require('./app/directives/groupTable/gTopPartDirective')]);
 
-    portal.directive('gEvLeftPanel', ['$mdDialog', 'globalDataService', require('./app/directives/groupTable/gEvLeftPanelDirective')]);
+    portal.directive('gEvLeftPanel', ['$mdDialog', require('./app/directives/groupTable/gEvLeftPanelDirective')]);
     portal.directive('gEvLeftPanelTreeElem', ['$mdDialog', '$state', require('./app/directives/groupTable/gEvLeftPanelTreeElemDirective')]);
 
     //# endregion GROUP TABLE

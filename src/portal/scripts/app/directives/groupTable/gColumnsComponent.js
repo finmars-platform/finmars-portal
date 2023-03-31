@@ -2221,9 +2221,8 @@
                         return true;
                     });*/
 
-                    const allAttrs = evHelperService.getDataForAttributeSelector(scope.attributeDataService, scope.entityType, scope.columns);
+                    const allAttrs = scope.attributeDataService.getAllAttributesByEntityType(scope.entityType);
                     const selectedAttrs = scope.columns.map( col => col.key );
-                    const member = globalDataService.getMember();
 
                     /*$mdDialog.show({
                         controller: "TableAttributeSelectorDialogController as vm",
@@ -2247,8 +2246,9 @@
                         locals: {
                             data: {
                                 attributes: allAttrs,
+                                layoutNames: evHelperService.getAttributesLayoutNames(scope.columns),
                                 selectedAttributes: selectedAttrs,
-                                favoriteAttributes: member.data.favorites.attributes,
+                                contentType: scope.contentType,
                             }
                         }
                     })
