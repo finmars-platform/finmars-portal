@@ -878,31 +878,39 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
                                 return row.___is_activated;
                             });
 
-                            var ids = selectedRows.map(function (item) {
-                                return item.id;
-                            });
+                            if (vm.entityType === 'price-history' || vm.entityType === 'currency-history') {
 
-                            var promises = []
+                                bulkViewItemAsJson(entitytype, actionData, selectedRows);
 
-                            ids.forEach(function (id) {
+                            } else {
 
-                                promises.push(new Promise(function (resolve, reject) {
+                                var ids = selectedRows.map(function (item) {
+                                    return item.id;
+                                });
 
-                                    entityResolverService.getByKey(vm.entityType, id).then(function (data) {
-                                        resolve(data)
+                                var promises = []
+
+                                ids.forEach(function (id) {
+
+                                    promises.push(new Promise(function (resolve, reject) {
+
+                                        entityResolverService.getByKey(vm.entityType, id).then(function (data) {
+                                            resolve(data)
+                                        })
+
+                                    }))
+
+                                })
+                                Promise.allSettled(promises).then(function (data) {
+
+                                    data = data.map(function (item){
+                                        return item.value;
                                     })
 
-                                }))
-
-                            })
-                            Promise.allSettled(promises).then(function (data) {
-
-                                data = data.map(function (item){
-                                    return item.value;
+                                    bulkViewItemAsJson(entitytype, actionData, data);
                                 })
 
-                                bulkViewItemAsJson(entitytype, actionData, data);
-                            })
+                            }
 
                             break;
                         case 'restore_deleted':
