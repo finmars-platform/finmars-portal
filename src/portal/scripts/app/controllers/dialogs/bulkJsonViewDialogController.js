@@ -54,12 +54,28 @@
                         delete obj.id
                     }
 
+                    if (key.indexOf('___') !== -1) {
+                        delete obj[key]
+                    }
+
                     if (key === 'deleted_user_code') {
                         delete obj.deleted_user_code
                     }
 
                     if (key === 'is_deleted') {
                         delete obj.is_deleted
+                    }
+
+                    if (key === 'procedure_modified_datetime') {
+                        delete obj['procedure_modified_datetime']
+                    }
+
+                    if (key === 'created') {
+                        delete obj.created
+                    }
+
+                    if (key === 'modified') {
+                        delete obj.modified
                     }
 
                     if (obj.hasOwnProperty(key + '_object')) {

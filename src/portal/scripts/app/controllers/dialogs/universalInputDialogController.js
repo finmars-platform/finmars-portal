@@ -53,7 +53,7 @@
 
             utilsService.universalInput(vm.editor.getValue()).then(function (data) {
 
-                toastNotificationService.success("Successfully Imported")
+                toastNotificationService.success("Imported Initialized. Please, check Task status.")
 
                 vm.processing = false;
 
