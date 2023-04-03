@@ -46,7 +46,7 @@ import importEntityService from "../../services/import/importEntityService";
         vm.hasSchemeEditPermission = false;
 
         vm.loadIsAvailable = function () {
-            return vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined && vm.readyStatus.processing === false;
+            return !vm.readyStatus.processing && vm.config.scheme;
         };
 
         vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport().map(function (item){
@@ -76,7 +76,7 @@ import importEntityService from "../../services/import/importEntityService";
 
                 var ext = file.name.split('.')[1]
 
-                if (ext !== 'csv' && ext !== 'xlsx' ) {
+                if (ext !== 'csv' && ext !== 'xlsx' && ext !== 'json') {
 
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
@@ -168,7 +168,9 @@ import importEntityService from "../../services/import/importEntityService";
                 controller: 'SimpleEntityImportSchemeV2EditDialogController as vm',
                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-v2-dialog-view.html',
                 locals: {
-                    schemeId: vm.config.scheme
+                    data: {
+                        schemeId: vm.config.scheme
+                    }
                 },
                 targetEvent: $event,
                 preserveScope: true,
