@@ -1038,7 +1038,7 @@ import evEvents from "../../services/entityViewerEvents";
             middlewareService.onAutosaveLayoutToggle(function () {
 
                 autosaveLayoutOn = globalDataService.isAutosaveLayoutOn();
-                console.log("autosave77 rv isAutosaveLayoutOn", autosaveLayoutOn);
+
                 if (autosaveLayoutOn) {
 
                     autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);

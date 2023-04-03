@@ -1104,14 +1104,20 @@
     <!--    </div>-->
 
     <div class="sidenav-api-subtitle">
-        <div><a class="sidenav-api-link" href="{{ vm.getCurrentApiUrl() }}" target="_blank">API</a>: <span
-                data-ng-click="vm.copyToBuffer(vm.getCurrentBaseApiUrl())" class="sidenav-tech-button">
-            {{ vm.getCurrentBaseApiUrl() }}
+        <div>
 
-            <md-tooltip class="tooltip_1" md-direction="top">Copy</md-tooltip>
+            <a class="sidenav-api-link" href="{{ vm.getCurrentApiUrl() }}" target="_blank">
+                API
+            </a>:
 
-        </span>
-            &nbsp; <a class="sidenav-api-link" ui-sref="app.portal.update-center">{{vm.getCurrentVersion()}}</a>
+            <span data-ng-click="vm.copyToBuffer(vm.getCurrentBaseApiUrl())"
+                  class="sidenav-tech-button">
+                {{ vm.getCurrentBaseApiUrl() }}
+
+                <md-tooltip class="tooltip_1" md-direction="top">Copy</md-tooltip>
+            </span>
+
+            <a class="sidenav-api-link" ui-sref="app.portal.update-center">{{vm.getCurrentVersion()}}</a>
 
         </div>
     </div>

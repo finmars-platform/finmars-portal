@@ -4,6 +4,8 @@
 
 'use strict';
 
+import cookieService from "../../../../core/services/cookieService";
+
 export default function (errorService, cookieService) {
 
 	// var axService = require('../../../../core/services/axService')
@@ -106,20 +108,21 @@ export default function (errorService, cookieService) {
 
 		return window
 			.fetch(url, params)
-			.then(function (response) {
+			.then(async function (response) {
 
-				return new Promise(function (resolve, reject) {
+				// return new Promise(function (resolve, reject) {
 
-					if (window.developerConsoleService) {
+					/*if (window.developerConsoleService) {
 						window.developerConsoleService.resolveRequest(requestId, response.clone())
-					}
+					}*/
 
 					if (response.status === 204) { // No content
-						resolve(response);
+						// resolve(response);
+						return response;
 					}
 					else if (response.status >= 400 && response.status < 500) {
 
-						response.json().then(function (data) {
+						/*response.json().then(function (data) {
 
 							const error = {
 								status: response.status,
@@ -129,7 +132,17 @@ export default function (errorService, cookieService) {
 
 							reject(error)
 
-						})
+						})*/
+
+						const data = await response.json();
+
+						const error = {
+							status: response.status,
+							statusText: response.statusText,
+							message: data
+						};
+
+						throw error;
 
 					} else if (response.status >= 500 && response.status < 600) {
 
@@ -139,44 +152,75 @@ export default function (errorService, cookieService) {
 							message: response.statusText
 						};
 
-						reject(error)
+						throw error;
 
 					} else {
 
 						if (params.method !== "DELETE") {
-							resolve(response.json());
+							return response.json();
 						}
 						else {
-							resolve(response);
+							return response;
 						}
 
 					}
 
-				})
+				// })
 			})
 			.catch(async function (reason) {
 
-				if (
-					reason.status !== 401 &&
-					url.includes('/token-refresh/') &&
-					!url.includes('/token-auth/')
-				) {
+				if (reason.status !== 401) {
 
-					cookieService.deleteCookie('access_token')
-                    cookieService.deleteCookie('refresh_token')
-					window.location.reload();
+					if (url.includes('/token-refresh/') &&
+						!url.includes('/token-auth/')) {
 
-					throw reason;
+						cookieService.deleteCookie('access_token')
+						cookieService.deleteCookie('refresh_token')
+						window.location.reload();
+
+						throw reason;
+
+					}
+
+
+				}
+				else {
+
+					try {
+
+						const res = await window.keycloak.updateToken()
+
+						cookieService.setCookie('access_token', window.keycloak.token);
+						cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
+						cookieService.setCookie('id_token', window.keycloak.idToken);
+
+
+						errorService.error("Authentication failed. Please reload this page.");
+
+					} catch (error) {
+
+						error.___custom_message = 'Keycloak update error';
+						console.error(error)
+
+						// in case if refresh token is expired
+
+						window.keycloak.init({
+							onLoad: 'login-required'
+						})
+
+						throw null;
+
+					}
 
 				}
 
-				if (window.developerConsoleService) {
+				/*if (window.developerConsoleService) {
 					window.developerConsoleService.rejectRequest(requestId, reason)
-				}
+				}*/
 
-				errorService.notifyError(reason);
+				await errorService.notifyError(reason);
 
-				console.log('XHR Service catch error', reason);
+				console.error('XHR Service catch error', reason);
 
 				throw reason;
 
