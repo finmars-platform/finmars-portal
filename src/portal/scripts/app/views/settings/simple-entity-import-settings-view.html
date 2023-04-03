@@ -5,28 +5,9 @@
     <div data-ng-if="vm.readyStatus.entitySchemes">
         <div layout="row" layout-align="end center">
 
-            <md-menu>
-                <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
-                    Add New
-                </md-button>
-
-                <md-menu-content>
-                    <md-menu-item>
-                        <md-button class="md-raised"
-                                   data-ng-click="vm.addScheme($event)">Add Blank
-                        </md-button>
-                    </md-menu-item>
-
-                    <md-menu-item>
-                        <md-button class="md-raised"
-                                   package-manager-button
-                                   content-type="'csv_import.csvimportscheme'">
-                            Select from List
-                        </md-button>
-                    </md-menu-item>
-
-                </md-menu-content>
-            </md-menu>
+            <md-button class="md-raised"
+                       data-ng-click="vm.addScheme($event)">Add Blank
+            </md-button>
 
 
         </div>
