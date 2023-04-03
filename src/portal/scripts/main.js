@@ -244,7 +244,7 @@ export default (function () {
 	portal.controller('HomeController', ['$scope', '$state', '$mdDialog', 'authorizerService', 'usersService', 'globalDataService', 'systemMessageService', 'redirectionService', require('./app/controllers/homeController')]);
 	portal.controller('SystemPageController', ['$scope', '$mdDialog', 'toastNotificationService', 'masterUserService', 'utilsService', systemPageController]);
     portal.controller('RecycleBinPageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'globalDataService', require('./app/controllers/pages/recycleBinPageController')]);
-    portal.controller('TasksPageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'globalDataService', require('./app/controllers/pages/tasksPageController')]);
+    portal.controller('TasksPageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'globalDataService', 'systemMessageService', require('./app/controllers/pages/tasksPageController')]);
     // portal.controller('SetupController', ['$scope', '$state', 'usersService', require('./app/controllers/setupController')]);
 	portal.controller('NotFoundPageController', ['$scope', require('./app/controllers/notFoundPageController')]);
 	portal.controller(
@@ -365,7 +365,7 @@ export default (function () {
 	portal.controller('SimpleEntityImportDialogController', ['$scope', '$mdDialog', 'usersService', 'metaContentTypesService', 'data', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportDialogController')]);
 	portal.controller('SimpleEntityImportErrorsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportErrorsDialogController')]);
 	portal.controller('SimpleEntityImportSchemeEditDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'attributeTypeService', 'schemeId', 'importSchemesMethodsService', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeEditDialogController')]);
-	portal.controller('SimpleEntityImportSchemeV2EditDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'metaContentTypesService', 'attributeTypeService', 'importSchemesMethodsService', 'schemeId', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeV2EditDialogController')]);
+	portal.controller('SimpleEntityImportSchemeV2EditDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'metaContentTypesService', 'attributeTypeService', 'importSchemesMethodsService', 'schemeId', 'data', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeV2EditDialogController')]);
 	portal.controller('SimpleEntityImportSchemeCreateDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'metaContentTypesService', 'attributeTypeService', 'data', 'importSchemesMethodsService', require('./app/controllers/dialogs/simple-entity-import/simpleEntityImportSchemeCreateDialogController')]);
 
     // Complex Import

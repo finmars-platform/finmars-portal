@@ -418,19 +418,20 @@
             })
 
             .state('app.portal.recycle-bin-page', {
-                url: '/recycle-bin?date_from&date_to&page',
+                url: '/recycle-bin?date_from&date_to&page&query',
                 templateUrl: 'views/pages/recycle-bin-page-view.html',
                 controller: 'RecycleBinPageController as vm',
                 reloadOnSearch: false,
                 params: {
                     date_from: null,
                     date_to: null,
-                    page: null
+                    page: null,
+                    query: null
                 }
             })
 
             .state('app.portal.tasks-page', {
-                url: '/tasks?date_from&date_to&query',
+                url: '/tasks?date_from&date_to&query&page',
                 templateUrl: 'views/pages/tasks-page-view.html',
                 controller: 'TasksPageController as vm',
                 reloadOnSearch: false,
@@ -558,11 +559,12 @@
                 templateUrl: 'views/pages/data-procedure-instance-page-view.html',
                 controller: 'DataProcedureInstancePageController as vm'
             })
-            .state('app.portal.expression-procedure-instance', {
-                url: '/expression-procedure-instance',
-                templateUrl: 'views/pages/expression-procedure-instance-page-view.html',
-                controller: 'ExpressionProcedureInstancePageController as vm'
-            })
+            // deprecated
+            // .state('app.portal.expression-procedure-instance', {
+            //     url: '/expression-procedure-instance',
+            //     templateUrl: 'views/pages/expression-procedure-instance-page-view.html',
+            //     controller: 'ExpressionProcedureInstancePageController as vm'
+            // })
             .state('app.portal.import', {
                 url: '/import',
                 abstract: true,

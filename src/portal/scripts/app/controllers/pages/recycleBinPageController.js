@@ -47,6 +47,7 @@
                 page: vm.currentPage,
                 date_from: vm.filters.date_from,
                 date_to: vm.filters.date_to,
+                query: vm.filters.query,
             }, {notify: false});
 
             vm.getData()
@@ -61,6 +62,7 @@
                 page: vm.currentPage,
                 date_from: vm.filters.date_from,
                 date_to: vm.filters.date_to,
+                query: vm.filters.query,
             }, {notify: false});
 
             vm.getData()
@@ -77,6 +79,7 @@
                     page: vm.currentPage,
                     date_from: vm.filters.date_from,
                     date_to: vm.filters.date_to,
+                    query: vm.filters.query,
                 }, {notify: false});
 
                 vm.getData();
@@ -167,6 +170,7 @@
                 page: vm.currentPage,
                 date_from: vm.filters.date_from,
                 date_to: vm.filters.date_to,
+                query: vm.filters.query,
             }, {notify: false});
 
             vm.getData();
@@ -369,6 +373,14 @@
 
 
         vm.init = function () {
+
+            if ($stateParams.page) {
+                vm.currentPage = $stateParams.page
+            }
+
+            if ($stateParams.query) {
+                vm.filters.query = $stateParams.query
+            }
 
             if ($stateParams.date_from) {
                 vm.filters.date_from = $stateParams.date_from

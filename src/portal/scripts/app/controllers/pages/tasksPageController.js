@@ -17,7 +17,7 @@
     var baseUrl = baseUrlService.resolve();
 
 
-    module.exports = function tasksPageController($scope, $state, $stateParams, $mdDialog, globalDataService) {
+    module.exports = function tasksPageController($scope, $state, $stateParams, $mdDialog, globalDataService, systemMessageService) {
 
         var vm = this;
 
@@ -268,6 +268,38 @@
 
         }
 
+        vm.cancelTask = function ($event) {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                targetEvent: $event,
+                locals: {
+                    warning: {
+                        title: "Warning!",
+                        description: 'Are you sure you want to cancel task?'
+                    }
+                },
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    vm.activeTaskProcessing = true;
+
+                    tasksService.cancel(vm.activeTask.id).then(function (data) {
+
+                        vm.refreshTask($event);
+
+                    })
+                }
+            })
+
+        }
+
         vm.formatTask = function (item) {
 
             if (item.finished_at) {
@@ -335,10 +367,44 @@
 
         }
 
+        vm.downloadFile = function ($event, item) {
+
+            // TODO WTF why systemMessage Service, replace with FilePreview Service later
+            systemMessageService.viewFile(item.file_report).then(function (data) {
+
+                console.log('data', data);
+
+                $mdDialog.show({
+                    controller: 'FilePreviewDialogController as vm',
+                    templateUrl: 'views/dialogs/file-preview-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            content: data,
+                            info: item
+                        }
+                    }
+                });
+
+            })
+
+
+        }
+
 
         vm.init = function () {
 
             // vm.readyStatus.data = false;
+
+            if ($stateParams.page) {
+                vm.currentPage = $stateParams.page
+            }
 
             if ($stateParams.date_from) {
                 vm.filters.date_from = $stateParams.date_from

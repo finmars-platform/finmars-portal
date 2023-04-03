@@ -101,6 +101,15 @@
                         </dropdown-select>
                     </div>
 
+                    <div class="g-report-settings-row p-b-8">
+                        <div class="default-f-s">Expression Iterations Count</div>
+                        <dropdown-select model="vm.reportOptions.expression_iterations_count"
+                                         menu-options="vm.expressionIterationsCountOptions"
+                                         small-options="{tooltipText: 'Custom Fields Calculation Depth'}"
+                                         class="g-report-settings-field">
+                        </dropdown-select>
+                    </div>
+
                 </div>
 
                 <h5 class="default-f-s">Consolidation</h5>
@@ -276,7 +285,8 @@
                     <div class="flex-row-reverse">
                         <div class="g-report-settings-field">
                             <md-input-container class="m-0">
-                                <md-checkbox data-ng-model="vm.reportOptions.show_balance_exposure_details" class="m-b-20">
+                                <md-checkbox data-ng-model="vm.reportOptions.show_balance_exposure_details"
+                                             class="m-b-20">
                                     Show exposure details
                                 </md-checkbox>
                             </md-input-container>
@@ -396,6 +406,16 @@
                         <dropdown-select model="vm.tableFontSize"
                                          menu-options="vm.tableFontSizeOptions"
                                          small-options="{tooltipText: 'Table font size'}"
+                                         class="g-report-settings-field">
+                        </dropdown-select>
+                    </div>
+
+                    <div class="g-report-settings-row p-b-8">
+                        <div class="default-f-s">Expression Iterations Count</div>
+
+                        <dropdown-select model="vm.reportOptions.expression_iterations_count"
+                                         menu-options="vm.expressionIterationsCountOptions"
+                                         small-options="{tooltipText: 'Custom Fields Calculation Depth'}"
                                          class="g-report-settings-field">
                         </dropdown-select>
                     </div>
