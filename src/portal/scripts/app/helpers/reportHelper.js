@@ -997,6 +997,7 @@ export default function (expressionService) {
         "strategy2_mode",
         "strategy3_mode",
         "table_font_size",
+        "expression_iterations_count",
         "transaction_classes",
         "transaction_classes_object",
         "end_date",
