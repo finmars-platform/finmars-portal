@@ -79,9 +79,9 @@ export default function (errorService, cookieService) {
 
 				console.log('xhrService.reason', reason);
 
-				if (window.developerConsoleService) {
+				/*if (window.developerConsoleService) {
 					window.developerConsoleService.rejectRequest(requestId, reason)
-				}
+				}*/
 
 				if (notifyError !== false) {
 					errorService.notifyError(reason);
@@ -95,9 +95,10 @@ export default function (errorService, cookieService) {
 
 	};
 
-	const fetch = function (url, params) {
+	const fetch = function (url, params, options) {
 
 		let requestId;
+		const notifyError = options && options.hasOwnProperty('notifyError') ? options.notifyError : true;
 
 		if (window.developerConsoleService) {
 			requestId = window.developerConsoleService.pushRequest({
@@ -134,24 +135,13 @@ export default function (errorService, cookieService) {
 
 						})*/
 
-						const data = await response.json();
-
-						const error = {
-							status: response.status,
-							statusText: response.statusText,
-							message: data
-						};
+						const error = await response.json();
 
 						throw error;
 
 					} else if (response.status >= 500 && response.status < 600) {
 
-						const error = {
-							status: response.status,
-							statusText: response.statusText,
-							message: response.statusText
-						};
-
+						const error = await response.json();
 						throw error;
 
 					} else {
@@ -218,7 +208,10 @@ export default function (errorService, cookieService) {
 					window.developerConsoleService.rejectRequest(requestId, reason)
 				}*/
 
-				await errorService.notifyError(reason);
+				if (notifyError !== false) {
+					await errorService.notifyError(reason);
+				}
+
 
 				console.error('XHR Service catch error', reason);
 
