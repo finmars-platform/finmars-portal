@@ -13,7 +13,7 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
     const base_api_url = baseUrlService.getMasterUserPrefix();
 
     vm.iframeSrc = `${urlBeginning}/${base_api_url}/v/external/components/modal_add_columns?iframeId=${vm.iframeId}`;
-    // vm.iframeSrc = `http://localhost:3000/space0ni5k/v/external/components/modal_add_columns?iframeId=${vm.iframeId}`;
+    // vm.iframeSrc = `http://localhost:3000/space0ni5k/v/external/components/modal_add_columns?iframeId=${vm.iframeId}`; // for development
 
     const windowOrigin = window.origin;
     // const windowOrigin = 'http://localhost:3000'; // for development
@@ -96,6 +96,7 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
 
         member = globalDataService.getMember();
         member.data.favorites.attributes[contentType] = favAttrsData;
+        initSettings.favoriteAttributes = member.data.favorites.attributes[contentType];
 
         usersService.updateMember(member.id, member).then(() => {
             toastNotificationService.success('Favorite attributes updated.')
