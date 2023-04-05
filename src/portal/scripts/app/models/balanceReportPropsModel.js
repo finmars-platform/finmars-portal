@@ -67,6 +67,18 @@
                 "name": "Item Type",
                 "value_type": 10
             },
+
+            {
+                "key": "price",
+                "name": "Price",
+                "value_type": 20
+            },
+            {
+                "key": "fx_rate",
+                "name": "FX Rate",
+                "value_type": 20
+            },
+
             {
                 "key": "position_size",
                 "name": "Position size",
