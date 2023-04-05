@@ -378,7 +378,7 @@
 				'allocation_balance_phantom', 'allocation_pl', 'allocation_pl_input',
 				'allocation_pl_phantom', 'carry_with_sign', 'cash_consideration', 'cash_date',
 				'counterparty', 'counterparty_input', 'factor', 'instrument', 'instrument_input', 'instrument_phantom',
-				'linked_instrument', 'linked_instrument_input', 'linked_instrument_phantom', 'notes',
+				'linked_instrument', 'linked_instrument_input', 'linked_instrument_phantom', 'notes', 'comment',
 				'overheads_with_sign', 'portfolio', 'portfolio_input', 'position_size_with_sign',
 				'principal_with_sign', 'reference_fx_rate', 'responsible', 'responsible_input',
 				'settlement_currency', 'settlement_currency_input', 'strategy1_cash', 'strategy1_cash_input',
