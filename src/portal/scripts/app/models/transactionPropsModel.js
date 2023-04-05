@@ -13,6 +13,11 @@
                 "value_type": 10
             },
             {
+                "key": "comment",
+                "name": "Comment",
+                "value_type": 10
+            },
+            {
                 "key": "transaction_code",
                 "name": "Transaction Code",
                 "value_type": 20
