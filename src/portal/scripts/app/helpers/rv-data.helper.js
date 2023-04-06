@@ -1005,11 +1005,11 @@
 
         evDataService.setProjectionLastFrom(from);
 
-        var to = from + step * 5/4;
+        var to = from + step * 3/2;
 
         // console.timeEnd('Creating projection');
 
-        from = from - (step / 4) // two rows, before viewport
+        from = from - (step / 2) // two rows, before viewport
         if (from < 0) {
             from = 0;
         }
