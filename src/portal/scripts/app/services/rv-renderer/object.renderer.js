@@ -506,9 +506,9 @@
 
             cell = '<div data-column="' + columnNumber + '" class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + column.style.width + '">' +
                 '<div class="g-cell ' + cellModified + ' cell-status-' + column.status + ' ' + cellClasses + '"' + gCellTitle + '>' +
-                '<div class="g-cell-content-wrap">' +
+                // '<div class="g-cell-content-wrap">' +
                 resultValue +
-                '</div>' +
+                // '</div>' +
                 '</div>' +
                 '</div>';
 
