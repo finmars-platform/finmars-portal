@@ -364,15 +364,72 @@
             </div>
         </div>
         <div layout="row" class="ttype-action-inputs-container">
-            <div flex="100" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
-                <!--<md-input-container class="expression-input-container">
-                    <label for="" class="uncut-text-on-focus-label" content-title>Notes: Text</label>
-                    <input type="text" value-title data-ng-model="item.transaction.notes">
-                </md-input-container>
-                <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
-                        data-item="item.transaction.notes"></expression-editor-button>-->
-                <expression-input label="Comment: Text"
-                                  model="item.transaction.comment"
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Text 1: Text"
+                                  model="item.transaction.user_text_1"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Text 2: Text"
+                                  model="item.transaction.user_text_2"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Text 3: Text"
+                                  model="item.transaction.user_text_3"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+        </div>
+
+        <div layout="row" class="ttype-action-inputs-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Number 1: Float"
+                                  model="item.transaction.user_number_1"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Number 2: Float"
+                                  model="item.transaction.user_number_2"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Number 3: Float"
+                                  model="item.transaction.user_number_3"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+        </div>
+
+        <div layout="row" class="ttype-action-inputs-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Date 1: Date"
+                                  model="item.transaction.user_date_1"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Date 2: Date"
+                                  model="item.transaction.user_date_2"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Date 3: Date"
+                                  model="item.transaction.user_date_3"
                                   data-data="vm.expressionData"
                                   class="width-100"></expression-input>
             </div>
