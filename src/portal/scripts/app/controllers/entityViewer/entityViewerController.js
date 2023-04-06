@@ -1257,7 +1257,7 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
             vm.entityViewerDataService.setViewContext('entity_viewer');
             vm.entityViewerDataService.setCurrentMember(vm.currentMember);
             // vm.entityViewerDataService.setVirtualScrollStep(200);
-            vm.entityViewerDataService.setVirtualScrollStep(50);
+            vm.entityViewerDataService.setVirtualScrollStep(80);
 
             vm.entityViewerDataService.setRowHeight(36);
 
