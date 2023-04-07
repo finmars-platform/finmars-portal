@@ -536,6 +536,42 @@
 
         };
 
+		const applyTransactionUserFieldsAliases = function (tabs) {
+
+			return new Promise((resolve, reject) => {
+
+				uiService.getTransactionFieldList().then(function (data) {
+
+					data.results.forEach(function (userField) {
+
+						tabs.forEach(function (tab) {
+
+							tab.layout.fields.forEach(function (field) {
+
+								if (field.attribute && field.attribute.key && field.attribute.key === userField.key) {
+
+									if (!field.options) {
+										field.options = {};
+									}
+
+									field.options.fieldName = userField.name;
+
+								}
+
+							})
+
+						})
+
+					});
+
+					resolve();
+
+				}).catch(() => resolve());
+
+			});
+
+		};
+
         const onBigDrawerResizeButtonClick = function () {
 
         	/* FIXED AREA POPUP
@@ -1157,6 +1193,8 @@
 			}
 
 			const tabs = await getUserTabsAndFixedAreaData(formLayout);
+
+			if (viewModel.entityType === 'transaction') await applyTransactionUserFieldsAliases(tabs);
 
             if (viewModel.openedIn === 'big-drawer') {
 

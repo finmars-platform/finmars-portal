@@ -1237,7 +1237,7 @@
                         case 'ui.transactionuserfieldmodel':
                             resolve(new Promise(function (resolve, reject) {
 
-                                uiRepository.getTransactionFieldList({
+                                uiRepository.getComplexTransactionFieldList({
                                     filters: {
                                         key: item.key
                                     }
@@ -1259,14 +1259,14 @@
 
                                             item.id = result.id;
 
-                                            resolve(uiRepository.updateTransactionField(item.id, item));
+                                            resolve(uiRepository.updateComplexTransactionField(item.id, item));
 
                                         } else {
-                                            resolve(uiRepository.createTransactionField(item));
+                                            resolve(uiRepository.createComplexTransactionField(item));
                                         }
                                     } else {
 
-                                        resolve(uiRepository.createTransactionField(item));
+                                        resolve(uiRepository.createComplexTransactionField(item));
 
                                     }
 
@@ -2145,7 +2145,7 @@
                         case 'ui.transactionuserfieldmodel':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                uiRepository.getTransactionFieldList({
+                                uiRepository.getComplexTransactionFieldList({
                                     filters: {
                                         key: item.key,
                                     }
@@ -2182,13 +2182,13 @@
 
                                         } else {
 
-                                            resolveLocal(uiRepository.createTransactionField(item));
+                                            resolveLocal(uiRepository.createComplexTransactionField(item));
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(uiRepository.createTransactionField(item));
+                                        resolveLocal(uiRepository.createComplexTransactionField(item));
 
                                     }
 

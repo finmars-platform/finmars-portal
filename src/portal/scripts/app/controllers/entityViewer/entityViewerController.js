@@ -1256,7 +1256,8 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
             vm.entityViewerDataService.setIsReport(false);
             vm.entityViewerDataService.setViewContext('entity_viewer');
             vm.entityViewerDataService.setCurrentMember(vm.currentMember);
-            vm.entityViewerDataService.setVirtualScrollStep(500);
+            // vm.entityViewerDataService.setVirtualScrollStep(200);
+            vm.entityViewerDataService.setVirtualScrollStep(80);
 
             vm.entityViewerDataService.setRowHeight(36);
 
@@ -1362,12 +1363,16 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
                 promises.push(vm.attributeDataService.downloadInstrumentUserFields());
             }
 
-            if (vm.entityType === 'complex-transaction') {
+            if (vm.entityType === 'transaction') {
                 promises.push(vm.attributeDataService.downloadTransactionUserFields());
             }
 
+            if (vm.entityType === 'complex-transaction') {
+                promises.push(vm.attributeDataService.downloadComplexTransactionUserFields());
+            }
+
             if (vm.entityType === 'transaction-type') {
-                promises.push(vm.attributeDataService.downloadTransactionUserFields());
+                promises.push(vm.attributeDataService.downloadComplexTransactionUserFields());
             }
 
             Promise.all(promises).then(function (data) {

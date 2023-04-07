@@ -729,89 +729,6 @@
         });
 
     };
-    // Deprecated
-    var getFlatStructureOld = function (evDataService, globalDataService) {
-
-        var rootGroupOptions = evDataService.getRootGroupOptions();
-
-        var groups = evDataService.getGroups();
-
-        console.log('getFlatStructure.rootGroupOptions', rootGroupOptions);
-        console.log('getFlatStructure.groups', groups);
-
-        var data;
-
-        if (groups.length || rootGroupOptions.subtotal_type) {
-
-            console.time("Calculating subtotals");
-
-            calculateSubtotals(evDataService);
-
-            console.timeEnd("Calculating subtotals");
-
-            console.time("Copying data");
-
-            data = getNewDataInstance(evDataService);
-
-            console.log('data', data);
-
-            console.timeEnd("Copying data");
-
-
-            console.time("Inserting subtotals");
-
-            data = insertSubtotalsToResults(data, evDataService);
-
-            console.timeEnd("Inserting subtotals");
-
-
-            console.time("Calculating blankline");
-
-            data = insertBlankLinesToResults(data, evDataService);
-
-            localStorage.setItem('flags', [
-                '2,2,1,1,1,1', '2,2,1,1,1,1'
-            ])
-
-            console.timeEnd("Calculating blankline");
-
-            // console.log('data', data);
-
-        } else {
-            data = getNewDataInstance(evDataService)
-        }
-
-
-        // var rootGroup = simpleObjectCopy(evDataService.getRootGroupData()); # poor performance
-        var rootGroup = Object.assign({}, evDataService.getRootGroupData());
-
-        console.time("Converting to tree");
-        console.log("Converting to tree data", data);
-
-        var tree = utilsHelper.convertToTree(data, rootGroup);
-
-        console.log("getFlatStructure.tree", tree)
-
-        console.timeEnd("Converting to tree");
-
-        // console.log('getFlatStructure.tree', tree);
-
-        console.time("Converting tree to list");
-
-        var list = utilsHelper.convertTreeToList(tree);
-
-        console.timeEnd("Converting tree to list");
-        console.log('Converted list length', list.length);
-
-        // console.log('getFlatStructure.list', list);
-
-        list = removeItemsFromFoldedGroups(list, evDataService);
-
-        list = filterByRowColor(list, evDataService, globalDataService);
-
-        return list;
-
-    };
 
     var getFlatStructure = function (evDataService, globalDataService) {
 
@@ -1088,7 +1005,7 @@
 
         evDataService.setProjectionLastFrom(from);
 
-        var to = from + (step / 2);
+        var to = from + step * 3/2;
 
         // console.timeEnd('Creating projection');
 
@@ -1264,6 +1181,45 @@
 
     };
 
+    /**
+     * Creates nested groups by object properties.
+     * `properties` array nest from highest(index = 0) to lowest level.
+     *
+     * @param {String[]} properties
+     * @returns {Object}
+     */
+    function nestGroupsBy(arr, properties) {
+        properties = Array.from(properties);
+        if (properties.length === 1) {
+            return groupBy(arr, properties[0]);
+        }
+        const property = properties.shift();
+        var grouped = groupBy(arr, property);
+        for (let key in grouped) {
+            grouped[key] = nestGroupsBy(grouped[key], Array.from(properties));
+        }
+        return grouped;
+    }
+
+    /**
+     * Group objects by property.
+     * `nestGroupsBy` helper method.
+     *
+     * @param {String} property
+     * @param {Object[]} conversions
+     * @returns {Object}
+     */
+    function groupBy(conversions, property) {
+        return conversions.reduce((acc, obj) => {
+            let key = obj[property];
+            if (!acc[key]) {
+                acc[key] = [];
+            }
+            acc[key].push(obj);
+            return acc;
+        }, {});
+    }
+
     module.exports = {
         getOrCreateGroupSettings: getOrCreateGroupSettings,
         setGroupSettings: setGroupSettings,
@@ -1273,7 +1229,8 @@
         getPureFlatStructure: getPureFlatStructure,
         calculateProjection: calculateProjection,
 
-        markHiddenColumnsBasedOnFoldedGroups: markHiddenColumnsBasedOnFoldedGroups
+        markHiddenColumnsBasedOnFoldedGroups: markHiddenColumnsBasedOnFoldedGroups,
+        nestGroupsBy: nestGroupsBy
     }
 
 

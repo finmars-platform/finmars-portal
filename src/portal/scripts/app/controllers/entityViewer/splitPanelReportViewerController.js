@@ -597,7 +597,7 @@ import reportHelper from "../../helpers/reportHelper";
 
             if (vm.entityType === 'transaction-report') {
                 promises.push(vm.attributeDataService.downloadInstrumentUserFields());
-                promises.push(vm.attributeDataService.downloadTransactionUserFields());
+                promises.push(vm.attributeDataService.downloadComplexTransactionUserFields());
             }
 
             Promise.all(promises).then(function (data) {
