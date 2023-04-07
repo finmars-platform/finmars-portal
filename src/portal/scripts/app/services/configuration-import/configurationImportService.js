@@ -1259,14 +1259,14 @@
 
                                             item.id = result.id;
 
-                                            resolve(uiRepository.updateTransactionField(item.id, item));
+                                            resolve(uiRepository.updateComplexTransactionField(item.id, item));
 
                                         } else {
-                                            resolve(uiRepository.createTransactionField(item));
+                                            resolve(uiRepository.createComplexTransactionField(item));
                                         }
                                     } else {
 
-                                        resolve(uiRepository.createTransactionField(item));
+                                        resolve(uiRepository.createComplexTransactionField(item));
 
                                     }
 
@@ -2182,13 +2182,13 @@
 
                                         } else {
 
-                                            resolveLocal(uiRepository.createTransactionField(item));
+                                            resolveLocal(uiRepository.createComplexTransactionField(item));
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(uiRepository.createTransactionField(item));
+                                        resolveLocal(uiRepository.createComplexTransactionField(item));
 
                                     }
 

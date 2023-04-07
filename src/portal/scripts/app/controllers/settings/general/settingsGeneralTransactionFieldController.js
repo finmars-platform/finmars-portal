@@ -255,11 +255,11 @@
             return new Promise(function (resolve, reject) {
 
                 if (item.id) {
-                    uiService.updateTransactionField(item.id, item).then(function (data) {
+                    uiService.updateComplexTransactionField(item.id, item).then(function (data) {
                         resolve(data)
                     })
                 } else {
-                    uiService.createTransactionField(item).then(function (data) {
+                    uiService.createComplexTransactionField(item).then(function (data) {
                         resolve(data)
                     })
                 }

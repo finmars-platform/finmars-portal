@@ -547,12 +547,12 @@
         return uiRepository.getComplexTransactionFieldList(options)
     };
 
-	const createTransactionField = function (data) {
-        return uiRepository.createTransactionField(data);
+	const createComplexTransactionField = function (data) {
+        return uiRepository.createComplexTransactionField(data);
     };
 
-	const updateTransactionField = function (id, data) {
-        return uiRepository.updateTransactionField(id, data);
+	const updateComplexTransactionField = function (id, data) {
+        return uiRepository.updateComplexTransactionField(id, data);
     };
 
 	const getInstrumentFieldList = function () {
@@ -786,8 +786,8 @@
 
 
         getComplexTransactionFieldList: getComplexTransactionFieldList,
-        createTransactionField: createTransactionField,
-        updateTransactionField: updateTransactionField,
+        createComplexTransactionField: createComplexTransactionField,
+        updateComplexTransactionField: updateComplexTransactionField,
 
 
         getInstrumentFieldList: getInstrumentFieldList,
