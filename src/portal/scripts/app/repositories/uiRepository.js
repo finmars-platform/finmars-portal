@@ -459,7 +459,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         })
     };
 
-    var getTransactionFieldList = function (options) {
+    var getComplexTransactionFieldList = function (options) {
 
         console.log('options', options);
 
@@ -467,7 +467,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/complex-transaction-user-field/', options),
             getRequestParams('GET'))
 
     };
@@ -894,7 +894,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         updateConfigurationExportLayout: updateConfigurationExportLayout,
         deleteConfigurationExportLayoutByKey: deleteConfigurationExportLayoutByKey,
 
-        getTransactionFieldList: getTransactionFieldList,
+        getComplexTransactionFieldList: getComplexTransactionFieldList,
         createTransactionField: createTransactionField,
         updateTransactionField: updateTransactionField,
 

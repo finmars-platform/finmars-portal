@@ -1237,7 +1237,7 @@
                         case 'ui.transactionuserfieldmodel':
                             resolve(new Promise(function (resolve, reject) {
 
-                                uiRepository.getTransactionFieldList({
+                                uiRepository.getComplexTransactionFieldList({
                                     filters: {
                                         key: item.key
                                     }
@@ -2145,7 +2145,7 @@
                         case 'ui.transactionuserfieldmodel':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                uiRepository.getTransactionFieldList({
+                                uiRepository.getComplexTransactionFieldList({
                                     filters: {
                                         key: item.key,
                                     }
