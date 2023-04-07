@@ -273,7 +273,7 @@
             // var getTransactionTypeFields = function () {
 			const getTTypeProm = new Promise((resolve, reject) => {
 
-            	uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
+            	uiService.getComplexTransactionFieldList({pageSize: 1000}).then(function (data) {
 
 					data.results.forEach(function (field) {
 

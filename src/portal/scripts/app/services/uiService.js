@@ -543,8 +543,8 @@
     };
 
 
-	const getTransactionFieldList = function (options) {
-        return uiRepository.getTransactionFieldList(options)
+	const getComplexTransactionFieldList = function (options) {
+        return uiRepository.getComplexTransactionFieldList(options)
     };
 
 	const createTransactionField = function (data) {
@@ -785,7 +785,7 @@
         deleteConfigurationByKey: deleteConfigurationByKey,
 
 
-        getTransactionFieldList: getTransactionFieldList,
+        getComplexTransactionFieldList: getComplexTransactionFieldList,
         createTransactionField: createTransactionField,
         updateTransactionField: updateTransactionField,
 
