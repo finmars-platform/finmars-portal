@@ -459,6 +459,39 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         })
     };
 
+    var getComplexTransactionFieldList = function (options) {
+
+        console.log('options', options);
+
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/complex-transaction-user-field/', options),
+            getRequestParams('GET'))
+
+    };
+
+    var createComplexTransactionField = function (data) {
+
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/complex-transaction-user-field/',
+            getRequestParams('POST', data));
+    };
+
+    var updateComplexTransactionField = function (id, data) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/complex-transaction-user-field/' + id + '/',
+            getRequestParams('PUT', data));
+    };
+
+
     var getTransactionFieldList = function (options) {
 
         console.log('options', options);
@@ -490,6 +523,8 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/' + id + '/',
             getRequestParams('PUT', data));
     };
+
+
 
     var getInstrumentFieldList = function (options) {
 
@@ -894,9 +929,14 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         updateConfigurationExportLayout: updateConfigurationExportLayout,
         deleteConfigurationExportLayoutByKey: deleteConfigurationExportLayoutByKey,
 
+        getComplexTransactionFieldList: getComplexTransactionFieldList,
+        createComplexTransactionField: createComplexTransactionField,
+        updateComplexTransactionField: updateComplexTransactionField,
+
         getTransactionFieldList: getTransactionFieldList,
         createTransactionField: createTransactionField,
         updateTransactionField: updateTransactionField,
+
 
         getInstrumentFieldList: getInstrumentFieldList,
         createInstrumentField: createInstrumentField,

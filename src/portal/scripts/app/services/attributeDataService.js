@@ -672,6 +672,27 @@
 
         }
 
+        function downloadComplexTransactionUserFields() {
+
+            return new Promise(function (resolve, reject) {
+
+                var result = [];
+
+                uiService.getComplexTransactionFieldList({pageSize: 1000}).then(function (data) {
+
+                    result = data.results;
+
+                    transactionUserFieldsData = result;
+
+                    resolve(result)
+
+                });
+
+
+            })
+
+        }
+
         function downloadTransactionUserFields() {
 
             return new Promise(function (resolve, reject) {
@@ -692,6 +713,8 @@
             })
 
         }
+
+
 
         function appendEntityAttribute(entityType, field) {
 
@@ -860,6 +883,7 @@
 
             downloadInstrumentUserFields: downloadInstrumentUserFields,
             downloadTransactionUserFields: downloadTransactionUserFields,
+            downloadComplexTransactionUserFields: downloadComplexTransactionUserFields,
 
             // Get method belows
 
