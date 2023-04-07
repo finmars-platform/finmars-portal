@@ -478,7 +478,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/complex-transaction-user-field/',
             getRequestParams('POST', data));
     };
 
@@ -487,9 +487,44 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/complex-transaction-user-field/' + id + '/',
+            getRequestParams('PUT', data));
+    };
+
+
+    var getTransactionFieldList = function (options) {
+
+        console.log('options', options);
+
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/', options),
+            getRequestParams('GET'))
+
+    };
+
+    var createTransactionField = function (data) {
+
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/',
+            getRequestParams('POST', data));
+    };
+
+    var updateTransactionField = function (id, data) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
         return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/' + id + '/',
             getRequestParams('PUT', data));
     };
+
+
 
     var getInstrumentFieldList = function (options) {
 
@@ -897,6 +932,11 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         getComplexTransactionFieldList: getComplexTransactionFieldList,
         createComplexTransactionField: createComplexTransactionField,
         updateComplexTransactionField: updateComplexTransactionField,
+
+        getTransactionFieldList: getTransactionFieldList,
+        createTransactionField: createTransactionField,
+        updateTransactionField: updateTransactionField,
+
 
         getInstrumentFieldList: getInstrumentFieldList,
         createInstrumentField: createInstrumentField,
