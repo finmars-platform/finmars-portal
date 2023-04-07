@@ -1363,12 +1363,16 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
                 promises.push(vm.attributeDataService.downloadInstrumentUserFields());
             }
 
-            if (vm.entityType === 'complex-transaction') {
+            if (vm.entityType === 'transaction') {
                 promises.push(vm.attributeDataService.downloadTransactionUserFields());
             }
 
+            if (vm.entityType === 'complex-transaction') {
+                promises.push(vm.attributeDataService.downloadComplexTransactionUserFields());
+            }
+
             if (vm.entityType === 'transaction-type') {
-                promises.push(vm.attributeDataService.downloadTransactionUserFields());
+                promises.push(vm.attributeDataService.downloadComplexTransactionUserFields());
             }
 
             Promise.all(promises).then(function (data) {

@@ -51,7 +51,7 @@ import rvDataProviderService from "../services/rv-data-provider/rv-data-provider
                 }
 
                 if (viewModel.entityType === 'transaction-report') {
-                    promises.push(viewModel.attributeDataService.downloadTransactionUserFields());
+                    promises.push(viewModel.attributeDataService.downloadComplexTransactionUserFields());
                 }
 
                 Promise.all(promises).then(function (data) {
