@@ -394,17 +394,17 @@
             /* return new Promise(async (resolve, reject) => {
 
                 if (item.id) {
-                    uiService.updateTransactionField(item.id, item).then(function (data) {
+                    uiService.updateComplexTransactionField(item.id, item).then(function (data) {
                         resolve(data)
                     })
                 } else {
-                    uiService.createTransactionField(item).then(function (data) {
+                    uiService.createComplexTransactionField(item).then(function (data) {
                         resolve(data)
                     })
                 }
 
             }) */
-			return updateOrCreateField(item, uiService.updateTransactionField, uiService.createTransactionField);
+			return updateOrCreateField(item, uiService.updateComplexTransactionField, uiService.createComplexTransactionField);
 
         };
 

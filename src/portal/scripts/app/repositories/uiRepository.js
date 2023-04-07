@@ -472,7 +472,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
     };
 
-    var createTransactionField = function (data) {
+    var createComplexTransactionField = function (data) {
 
 
         var prefix = baseUrlService.getMasterUserPrefix();
@@ -482,7 +482,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
             getRequestParams('POST', data));
     };
 
-    var updateTransactionField = function (id, data) {
+    var updateComplexTransactionField = function (id, data) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
@@ -895,8 +895,8 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         deleteConfigurationExportLayoutByKey: deleteConfigurationExportLayoutByKey,
 
         getComplexTransactionFieldList: getComplexTransactionFieldList,
-        createTransactionField: createTransactionField,
-        updateTransactionField: updateTransactionField,
+        createComplexTransactionField: createComplexTransactionField,
+        updateComplexTransactionField: updateComplexTransactionField,
 
         getInstrumentFieldList: getInstrumentFieldList,
         createInstrumentField: createInstrumentField,
