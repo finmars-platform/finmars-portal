@@ -78,7 +78,7 @@
                 let attrsWithoutFilters = ['notes'];
                 // let customFields = $scope.attributeDataService.getCustomFieldsByEntityType(vm.entityType);
 
-                const getAttributes = () => {
+                /* const getAttributes = () => {
 
                     let allAttrsList;
 
@@ -170,7 +170,7 @@
 
                     return allAttrsList;
 
-                };
+                }; */
 
                 /* function clearAdditions() {
 
@@ -537,7 +537,7 @@
                 }*/
                 const getAttrsForFilterAddition = () => {
 
-                    const allAttrsList = getAttributes();
+                    const allAttrsList = $scope.attributeDataService.getForAttributesSelector(vm.entityType);
 
                     let availableAttrs = allAttrsList.filter(attr => {
                         return !attrsWithoutFilters.includes(attr.key);

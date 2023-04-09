@@ -531,6 +531,14 @@
             return result;
         }
 
+        function getForAttributesSelector(entityType, viewContext) {
+            var attrs = getAllAttributesByEntityType(entityType, viewContext);
+
+            return attrs.filter(function (attr) {
+                return attr.value_type !== 'mc_field';
+            })
+        }
+
         function getInstrumentUserFields() {
 
             if (instrumentUserFieldsData) {
@@ -849,6 +857,7 @@
             // Get method belows
 
             getAllAttributesByEntityType: getAllAttributesByEntityType,
+            getForAttributesSelector: getForAttributesSelector,
 
 
             getInstrumentUserFields: getInstrumentUserFields,
