@@ -7,6 +7,7 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
 
     const vm = this;
 
+    vm.readyStatus = false;
     vm.iframeId = metaHelper.generateUniqueId("attributeSelector");
 
     const urlBeginning = baseUrlService.resolve();
@@ -185,6 +186,7 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
             event.data.iframeId === vm.iframeId &&
             event.data.action === 'IFRAME_READY') {
 
+            vm.readyStatus = true;
             iframeElem = document.querySelector("#id_" + vm.iframeId);
 
             iframeWindow = iframeElem.contentWindow;
@@ -197,6 +199,8 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
         }
 
     }
+
+
 
     window.addEventListener("message", iframeReadyHandler);
 

@@ -2221,7 +2221,7 @@
                         return true;
                     });*/
 
-                    const allAttrs = scope.attributeDataService.getAllAttributesByEntityType(scope.entityType);
+                    const allAttrs = scope.attributeDataService.getForAttributesSelector(scope.entityType);
                     const selectedAttrs = scope.columns.map( col => col.key );
 
                     /*$mdDialog.show({

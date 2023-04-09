@@ -398,7 +398,7 @@
                         return true;
                     });*/
 
-                    const allAttrs = scope.attributeDataService.getAllAttributesByEntityType(entityType);
+                    const allAttrs = scope.attributeDataService.getForAttributesSelector(entityType);
                     const columns = scope.evDataService.getColumns();
                     const selectedAttrs = scope.groupTypes.map( col => col.key );
 

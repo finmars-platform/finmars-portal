@@ -8,7 +8,14 @@
           <iframe id="{{ 'id_' + vm.iframeId}}"
                   height="100%" width="100%"
                   src="{{ vm.iframeSrc | trustAsUrl }}"></iframe>
+
+
+          <div data-ng-if="!vm.readyStatus"
+               class="loader flex-row fc-space-around fi-center">
+              <progress-circular diameter="100"></progress-circular>
+          </div>
       </div>
+
 
   </md-dialog-content>
 
