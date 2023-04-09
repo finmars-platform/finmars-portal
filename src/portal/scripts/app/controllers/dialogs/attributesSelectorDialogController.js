@@ -187,6 +187,8 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
             event.data.action === 'IFRAME_READY') {
 
             vm.readyStatus = true;
+            $scope.$apply();
+
             iframeElem = document.querySelector("#id_" + vm.iframeId);
 
             iframeWindow = iframeElem.contentWindow;
