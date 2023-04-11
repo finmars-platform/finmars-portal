@@ -417,7 +417,7 @@
                                     item.entity = entityType;
                                 });
 
-                                let instrumentUserFields = scope.attributeDataService.getInstrumentUserFields();
+                               /* let instrumentUserFields = scope.attributeDataService.getInstrumentUserFields();
                                 let transactionUserFields = scope.attributeDataService.getTransactionUserFields();
 
                                 instrumentUserFields.forEach(function (field) {
@@ -442,7 +442,7 @@
 
                                     })
 
-                                });
+                                }); */
 
                                 dynamicAttrs = scope.attributeDataService.getDynamicAttributesByEntityType(entityType);
 
