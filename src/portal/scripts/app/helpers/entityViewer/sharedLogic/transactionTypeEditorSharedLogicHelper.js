@@ -389,7 +389,10 @@
                 'strategy1_position', 'strategy1_position_input', 'strategy2_cash', 'strategy2_cash_input',
                 'strategy2_position', 'strategy2_position_input', 'strategy3_cash', 'strategy3_cash_input',
                 'strategy3_position', 'strategy3_position_input', 'trade_price', 'transaction_class', 'transaction_currency',
-                'transaction_currency_input'
+                'transaction_currency_input',
+
+                'is_canceled'
+
             ],
             'instrument': [
                 'accrued_currency', 'accrued_currency_input', 'accrued_multiplier',
