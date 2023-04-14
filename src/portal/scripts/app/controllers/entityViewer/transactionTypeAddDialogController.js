@@ -45,7 +45,13 @@
 
         var sharedLogic = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog);
 
-        vm.readyStatus = {content: false, entity: true, permissions: true, inputs: false};
+        vm.readyStatus = {
+            content: false,
+            entity: true,
+            permissions: true,
+            inputs: false
+        };
+
         vm.entityType = entityType;
 
         vm.entity = {$_isValid: true, visibility_status: 1};
@@ -293,9 +299,9 @@
 
         };
 
-        vm.checkReadyStatus = function () {
-            return vm.readyStatus.content && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.inputs;
-        };
+        vm.checkMainDataReadyStatus = function () {
+            return vm.readyStatus.content && sharedLogic.checkMainDataReadyStatus();
+        }
 
         vm.range = gridHelperService.range;
 
@@ -825,24 +831,8 @@
 
                     })
                         .catch(function (data) {
-
-                            $mdDialog.show({
-                                controller: 'ValidationDialogController as vm',
-                                templateUrl: 'views/dialogs/validation-dialog-view.html',
-                                targetEvent: $event,
-                                locals: {
-                                    validationData: data
-                                },
-                                preserveScope: true,
-                                multiple: true,
-                                autoWrap: true,
-                                skipHide: true
-                            });
-
                             vm.processing = false;
-
                             reject();
-
                         })
 
                 })
@@ -958,15 +948,6 @@
 
             return item;
         };*/
-
-        vm.checkReadyStatus = function () {
-            if (vm.readyStatus.transactionTypeGroups == true &&
-                vm.readyStatus.portfolios == true &&
-                vm.readyStatus.instrumentTypes == true) {
-                return true;
-            }
-            return false;
-        };
 
 
         // Transaction Type General Controller end
@@ -2265,6 +2246,8 @@
 
                 vm.readyStatus.entity = true;
                 vm.readyStatus.inputs = true;
+
+                $scope.$apply();
 
             });
 

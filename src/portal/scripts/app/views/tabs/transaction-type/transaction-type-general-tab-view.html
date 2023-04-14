@@ -1,5 +1,5 @@
 <div>
-    <div data-ng-if="vm.checkReadyStatus()">
+    <div data-ng-if="vm.checkMainDataReadyStatus()">
 
 
         <div layout="row" style="margin-bottom: 20px; padding-left: 12px; font-size: 16px;">
@@ -168,7 +168,7 @@
         </div>
 
     </div>
-    <div data-ng-if="!vm.checkReadyStatus()">
+    <div data-ng-if="!vm.checkMainDataReadyStatus()">
         <div layout="row" layout-sm="column" layout-align="space-around">
             <md-progress-circular md-mode="indeterminate"></md-progress-circular>
         </div>

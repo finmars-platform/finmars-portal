@@ -1,7 +1,7 @@
 <div class="big-drawer-content universal-editor">
     <div class="big-drawer-header">
 
-        <div data-ng-if="vm.checkReadyStatus()"
+        <div data-ng-if="vm.checkMainDataReadyStatus()"
              data-ng-class="{'disabled-input-form': !vm.hasEditPermission}">
 
             <h2 data-ng-if="vm.hasEditPermission"  class="big-drawer-header-h">Edit Transaction type: {{vm.entity.name}}</h2>
@@ -26,7 +26,7 @@
 
     <div class="big-drawer-main">
 
-            <div data-ng-if="vm.checkReadyStatus()">
+            <div data-ng-if="vm.checkMainDataReadyStatus()">
 
                 <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
 
@@ -222,7 +222,7 @@
 
                 </md-tabs>
             </div>
-            <div data-ng-if="!vm.checkReadyStatus()">
+            <div data-ng-if="!vm.checkMainDataReadyStatus()">
                 <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
                     <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
                     <progress-circular diameter="100"></progress-circular>
@@ -252,7 +252,7 @@
 
                     <md-menu-item>
                         <md-button ng-click="vm.copy('big-drawer')"
-                                   data-ng-disabled="!vm.checkReadyStatus() || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing">
+                                   data-ng-disabled="!vm.checkMainDataReadyStatus() || !vm.entity.is_enabled || !vm.hasEditPermission || vm.processing">
                             <div class="flex-row flex-i-center">
                                 <ng-md-icon icon="content_copy" class="flex-row"></ng-md-icon>
                                 <span class="m-l-16">Duplicate</span>
@@ -310,12 +310,12 @@
             </md-menu>
 
             <md-button class="outline-button"
-                       ng-disabled="vm.processing || !vm.hasEditPermission"
+                       data-ng-disabled="!vm.checkMainDataReadyStatus() || vm.processing || !vm.hasEditPermission"
                        ng-click="vm.save()">
                 Save
             </md-button>
 
-            <md-button ng-disabled="vm.processing || !vm.hasEditPermission"
+            <md-button ng-disabled="!vm.checkMainDataReadyStatus() || vm.processing || !vm.hasEditPermission"
                        ng-click="vm.saveAndExit()"
                        class="m-r-24 primary-button">
                 Save and Exit

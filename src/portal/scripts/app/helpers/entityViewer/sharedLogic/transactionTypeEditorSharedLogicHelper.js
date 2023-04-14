@@ -53,6 +53,15 @@
             return valueTypes;
         }
 
+        const checkMainDataReadyStatus = function () {
+            return viewModel.readyStatus.entity &&
+                viewModel.readyStatus.permissions &&
+                viewModel.readyStatus.inputs &&
+                viewModel.readyStatus.transactionTypeGroups &&
+                viewModel.readyStatus.portfolios &&
+                viewModel.readyStatus.instrumentTypes;
+        }
+
         const contextProperties = {
             'instruments.instrument': [
                 {
@@ -3618,7 +3627,6 @@
 
             createDataForInputsGridTable();
 
-
             result.actionsMultitypeFieldsList = createDataForMultitypeFieldsList(viewModel.entity.actions);
             result.eventPhantomsOpts = findPhantoms('instrument_event_schedule');
 
@@ -4218,6 +4226,7 @@
         //endregion Context Parameters tab
 
         return {
+            checkMainDataReadyStatus: checkMainDataReadyStatus,
             getValueTypes: getValueTypes,
             getContextProperties: getContextProperties,
 

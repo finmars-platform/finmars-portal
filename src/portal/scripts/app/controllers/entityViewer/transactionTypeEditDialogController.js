@@ -444,26 +444,10 @@
             });
         };
 
-        vm.checkReadyStatus = function () {
+        /*vm.checkReadyStatus = function () {
             return vm.readyStatus.attrs && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.layout && vm.readyStatus.inputs;
-        };
-
-        vm.handleErrors = function (data, $event) {
-
-            $mdDialog.show({
-                controller: 'ValidationDialogController as vm',
-                templateUrl: 'views/dialogs/validation-dialog-view.html',
-                targetEvent: $event,
-                locals: {
-                    validationData: data
-                },
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true
-            });
-
-        };
+        };*/
+        vm.checkMainDataReadyStatus = sharedLogic.checkMainDataReadyStatus;
 
         vm.updateEntityBeforeSave = function (entity) {
 
@@ -807,9 +791,7 @@
                         vm.processing = false;
                         $scope.$apply();
 
-                        if (data.status === 400) {
-                            vm.handleErrors(data);
-                        } else {
+                        if (data.status !== 400) {
 
                             toastNotificationService.success("Transaction Type " + vm.entity.name + ' was successfully saved');
 
@@ -2282,6 +2264,7 @@
 				vm.eventPhantomsOpts = iamdlResult.eventPhantomsOpts;
 
 				vm.readyStatus.inputs = true;
+                $scope.$apply();
 
             });
 
