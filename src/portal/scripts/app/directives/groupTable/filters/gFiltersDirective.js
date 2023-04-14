@@ -9,8 +9,7 @@
     const evEvents = require('../../../services/entityViewerEvents');
     const popupEvents = require('../../../services/events/popupEvents');
 
-    const metaHelper = require('../../../helpers/meta.helper');
-
+    const evHelperService = require('../../../services/entityViewerHelperService');
     const downloadFileHelper = require('../../../helpers/downloadFileHelper');
 
     const convertReportHelper = require('../../../helpers/converters/convertReportHelper');
@@ -38,6 +37,7 @@
                 let vm = this;
 
                 vm.entityType = $scope.evDataService.getEntityType();
+                $scope.contentType = $scope.evDataService.getContentType();
                 $scope.isReport = metaService.isReport(vm.entityType);
                 // $scope.currentAdditions = $scope.evDataService.getAdditions();
                 $scope.isRootEntityViewer = $scope.evDataService.isRootEntityViewer();
@@ -78,7 +78,7 @@
                 let attrsWithoutFilters = ['notes'];
                 // let customFields = $scope.attributeDataService.getCustomFieldsByEntityType(vm.entityType);
 
-                const getAttributes = () => {
+                /* const getAttributes = () => {
 
                     let allAttrsList;
 
@@ -170,7 +170,7 @@
 
                     return allAttrsList;
 
-                };
+                }; */
 
                 /* function clearAdditions() {
 
@@ -361,6 +361,7 @@
                                                 additions.layoutData = {};
                                             }
 
+                                            additions.layoutData.user_code = res.selected.user_code;
                                             additions.layoutData.layoutId = res.selected.id;
                                             additions.layoutData.name = res.selected.name;
 
@@ -503,20 +504,7 @@
 
                 //region Chips filters
 
-                /* $scope.removeFilter = function (filtersToRemove) {
-
-                    filters = filters.filter(filter => {
-                        return filtersToRemove.find(item => item.id !== filter.key);
-                    });
-
-                    // $scope.evDataService.setFilters($scope.filters);
-                    setFilters();
-                    $scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-                    $scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-
-                }; */
-
-                const getAttrsForFilterAddition = filtersList => {
+                /*const getAttrsForFilterAddition = filtersList => {
 
                     const allAttrsList = getAttributes();
 
@@ -546,7 +534,26 @@
 
                     return availableAttrs;
 
-                }
+                }*/
+                const getAttrsForFilterAddition = () => {
+
+                    const allAttrsList = $scope.attributeDataService.getForAttributesSelector(vm.entityType);
+
+                    let availableAttrs = allAttrsList.filter(attr => {
+                        return !attrsWithoutFilters.includes(attr.key);
+                    });
+
+                    if (!$scope.isReport) {
+
+                        availableAttrs = availableAttrs.filter(attr => {
+                            return attr.value_type !== "mc_field" && attr.key !== "notes";
+                        });
+
+                    }
+
+                    return availableAttrs;
+
+                };
 
                 vm.openAddFilterDialog = function (event, filters) {
 
@@ -555,9 +562,13 @@
 
                         try {
 
-                            let availableAttrs = getAttrsForFilterAddition(filters);
+                            // const availableAttrs = getAttrsForFilterAddition(filters);
 
-                            $mdDialog.show({
+                            const availableAttrs = getAttrsForFilterAddition(filters);
+                            const columns = $scope.evDataService.getColumns();
+                            const selectedAttrs = filters.map( col => col.key );
+
+                            /* $mdDialog.show({
                                 controller: "TableAttributeSelectorDialogController as vm",
                                 templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
                                 targetEvent: event,
@@ -571,27 +582,23 @@
                                     }
                                 }
 
+                            }) */
+                            $mdDialog.show({
+                                controller: "AttributesSelectorDialogController as vm",
+                                templateUrl: "views/dialogs/attributes-selector-dialog-view.html",
+                                multiple: true,
+                                locals: {
+                                    data: {
+                                        attributes: availableAttrs,
+                                        layoutNames: evHelperService.getAttributesLayoutNames(columns),
+                                        selectedAttributes: selectedAttrs,
+                                        contentType: $scope.contentType,
+                                    }
+                                }
                             })
 							.then(function (res) {
 
 								if (res && res.status === "agree") {
-
-									// res.data.groups = true;
-									/* if (!res.data.options) {
-										res.data.options = {};
-									}
-
-									if (!res.data.options.filter_type) {
-										res.data.options.filter_type = metaHelper.getDefaultFilterType(res.data.value_type);
-									}
-
-									if (!res.data.options.filter_values) {
-										res.data.options.filter_values = [];
-									}
-
-									if (!res.data.options.hasOwnProperty('exclude_empty_cells')) {
-										res.data.options.exclude_empty_cells = false;
-									} */
 
 									for (var i = 0; i < res.data.items.length; i = i + 1) {
 										res.data.items[i] = gFiltersHelper.setFilterDefaultOptions(res.data.items[i]);

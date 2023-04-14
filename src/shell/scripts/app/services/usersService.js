@@ -107,6 +107,22 @@ export default function (cookieService, globalDataService, xhrService) {
 
 			usersRepository.getMyCurrentMember().then(memberData => {
 
+				if (!memberData.data) {
+					memberData.data = {};
+				}
+
+				if (!memberData.data.favorites) {
+					memberData.data.favorites = {};
+				}
+
+				if (!memberData.data.favorites.transaction_type) {
+					memberData.data.favorites.transaction_type = [];
+				}
+
+				if (!memberData.data.favorites.attributes) {
+					memberData.data.favorites.attributes = {};
+				}
+
 				globalDataService.setMember(memberData);
 				resolve(memberData);
 

@@ -28,13 +28,13 @@
 
                 if (reportRecievedAt == null) {
                     reportRecievedAt = reportOptions.recieved_at;
-                    // itemsCache = metaHelper.recursiveDeepCopy(reportOptions.items); // do we actually need it here?
+                    itemsCache = metaHelper.recursiveDeepCopy(reportOptions.items); // do we actually need it here?
                     itemsCache = reportOptions.items; // do we actually need it here?
                 }
 
                 if (reportRecievedAt !== reportOptions.recieved_at) {
                     reportRecievedAt = reportOptions.recieved_at;
-                    // itemsCache = metaHelper.recursiveDeepCopy(reportOptions.items);  // do we actually need it here?
+                    itemsCache = metaHelper.recursiveDeepCopy(reportOptions.items);  // do we actually need it here?
                     itemsCache = reportOptions.items;
                 }
 

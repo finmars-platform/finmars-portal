@@ -9,8 +9,9 @@
     var evDataHelper = require('../../helpers/ev-data.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
     var evFilterService = require('../../services/ev-data-provider/filter.service');
+    var evHelperService = require('../../services/entityViewerHelperService');
 
-    module.exports = function ($mdDialog, $state,) {
+    module.exports = function ($mdDialog) {
         return {
             restrict: 'E',
             templateUrl: 'views/directives/groupTable/g-ev-left-panel-view.html',
@@ -28,6 +29,8 @@
 
                 scope.sliderButtonState = 'unfolded';
 
+                const entityType = scope.evDataService.getEntityType();
+                const contentType = scope.evDataService.getContentType();
                 let finishRenderIndex;
 
                 scope.recursiveMarkHasSelected = function (tree, selectedGroups) {
@@ -379,107 +382,11 @@
 
                 }
 
-                const getAttributes = () => {
-
-                    var allAttrsList;
-
-
-                    var entityType = scope.evDataService.getEntityType();
-
-                    if (scope.viewContext === 'reconciliation_viewer') {
-                        allAttrsList = scope.attributeDataService.getReconciliationAttributes();
-                    } else {
-
-                        switch (entityType) {
-                            case 'balance-report':
-                                allAttrsList = scope.attributeDataService.getBalanceReportAttributes();
-                                break;
-
-                            case 'pl-report':
-                                allAttrsList = scope.attributeDataService.getPlReportAttributes();
-                                break;
-
-                            case 'transaction-report':
-                                allAttrsList = scope.attributeDataService.getTransactionReportAttributes();
-                                break;
-
-                            default:
-                                var entityAttrs = [];
-                                var dynamicAttrs = [];
-                                allAttrsList = [];
-
-                                entityAttrs = scope.attributeDataService.getEntityAttributesByEntityType(entityType);
-
-                                entityAttrs.forEach(function (item) {
-                                    if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
-                                        item.name = 'Group';
-                                    }
-                                    item.entity = entityType;
-                                });
-
-                                let instrumentUserFields = scope.attributeDataService.getInstrumentUserFields();
-                                let transactionUserFields = scope.attributeDataService.getTransactionUserFields();
-
-                                instrumentUserFields.forEach(function (field) {
-
-                                    entityAttrs.forEach(function (entityAttr) {
-
-                                        if (entityAttr.key === field.key) {
-                                            entityAttr.name = field.name;
-                                        }
-
-                                    })
-
-                                });
-
-                                transactionUserFields.forEach(function (field) {
-
-                                    entityAttrs.forEach(function (entityAttr) {
-
-                                        if (entityAttr.key === field.key) {
-                                            entityAttr.name = field.name;
-                                        }
-
-                                    })
-
-                                });
-
-                                dynamicAttrs = scope.attributeDataService.getDynamicAttributesByEntityType(entityType);
-
-
-                                dynamicAttrs = dynamicAttrs.map(function (attribute) {
-
-                                    let result = {};
-
-                                    result.attribute_type = Object.assign({}, attribute);
-                                    result.value_type = attribute.value_type;
-                                    result.content_type = scope.contentType;
-                                    result.key = 'attributes.' + attribute.user_code;
-                                    result.name = attribute.name;
-
-                                    return result
-
-                                });
-
-                                allAttrsList = allAttrsList.concat(entityAttrs);
-                                allAttrsList = allAttrsList.concat(dynamicAttrs);
-
-                                break;
-                        }
-
-                    }
-
-                    return allAttrsList;
-
-                };
-
                 scope.addGroupType = function ($event) {
 
-                    var allAttrsList = getAttributes();
+                    /*const allAttrsList = scope.attributeDataService.getAllAttributesByEntityType(entityType);
 
-                    var availableAttrs;
-
-                    availableAttrs = allAttrsList.filter(function (attr) {
+                    const availableAttrs = allAttrsList.filter(function (attr) {
 
                         if (attr.value_type === "mc_field" || attr.key === "notes") return false;
 
@@ -488,11 +395,14 @@
                                 return false;
                             }
                         }
-
                         return true;
-                    });
+                    });*/
 
-                    $mdDialog.show({
+                    const allAttrs = scope.attributeDataService.getForAttributesSelector(entityType);
+                    const columns = scope.evDataService.getColumns();
+                    const selectedAttrs = scope.groupTypes.map( col => col.key );
+
+                    /*$mdDialog.show({
                         controller: "TableAttributeSelectorDialogController as vm",
                         templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
                         targetEvent: $event,
@@ -505,12 +415,30 @@
                                 multiselector: true
                             }
                         }
-                    }).then(function (res) {
+                    })*/
+                    $mdDialog.show({
+                        controller: "AttributesSelectorDialogController as vm",
+                        templateUrl: "views/dialogs/attributes-selector-dialog-view.html",
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                attributes: allAttrs,
+                                layoutNames: evHelperService.getAttributesLayoutNames(columns),
+                                selectedAttributes: selectedAttrs,
+                                contentType: contentType,
+                            }
+                        }
+                    })
+                    .then(function (res) {
 
                         if (res && res.status === "agree") {
 
                             for (var i = 0; i < res.data.items.length; i = i + 1) {
-                                scope.groupTypes.push(res.data.items[i]);
+
+                                var groupType = evHelperService.getTableAttrInFormOf( 'group', res.data.items[i] );
+                                scope.groupTypes.push(groupType);
+
                             }
 
                             scope.evDataService.setSelectedGroups([]);

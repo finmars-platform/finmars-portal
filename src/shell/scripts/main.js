@@ -170,7 +170,7 @@ app.service('systemMessageService', [systemMessageService]);
 app.service('redirectionService', [redirectionService]);
 app.service('commonDialogsService', ['$mdDialog', commonDialogsService]);
 
-app.controller('ShellController', ['$scope', '$state', '$transitions', '$urlService', '$uiRouterGlobals', '$mdDialog', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'globalDataService', 'redirectionService', shellController]);
+app.controller('ShellController', ['$scope', '$state', '$transitions', '$urlService', '$uiRouterGlobals', '$mdDialog', 'toastNotificationService', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'globalDataService', 'redirectionService', shellController]);
 
 app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', warningDialogController]);
 app.controller('InputsDialogController', ['$scope', '$mdDialog', 'data', inputsDialogController]);

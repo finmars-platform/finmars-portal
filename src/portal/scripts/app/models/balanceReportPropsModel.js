@@ -73,6 +73,11 @@
                 "value_type": 20
             },
             {
+                "key": "nominal_position_size",
+                "name": "Nominal Position size",
+                "value_type": 20
+            },
+            {
                 "key": "pricing_currency",
                 "name": "Pricing Currency",
                 "value_type": "field",
@@ -324,8 +329,8 @@
                 "value_type": 20
             },
             {
-                "key": "pricing_currency_fx_rate",
-                "name": "Pricing Ccy FX rate",
+                "key": "instrument_factor",
+                "name": "Factor",
                 "value_type": 20
             },
             {

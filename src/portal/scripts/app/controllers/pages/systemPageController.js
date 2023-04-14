@@ -6,27 +6,31 @@
 
 const downloadFileHelper = require('../../helpers/downloadFileHelper');
 
-export default function ($scope, $mdDialog, utilsService) {
+export default function ($scope, $mdDialog, toastNotificationService, masterUserService, utilsService) {
 
     const vm = this;
 
     vm.processing = false;
 
-    vm.readyStatus = {
-        stats: false,
-        logs: false
-    }
+        vm.readyStatus = {
+            stats: false,
+            logs: false,
+            master_user: false
+        }
 
 
     vm.getStats = function () {
 
         vm.readyStatus.stats = false;
 
-        utilsService.getSystemInfo().then(function (data) {
-            vm.systemInfoItems = data.results;
-            vm.readyStatus.stats = true;
-            $scope.$apply();
-        })
+            utilsService.getSystemInfo().then(function (data) {
+                vm.systemInfoItems = data.results;
+                vm.readyStatus.stats = true;
+                $scope.$apply();
+            }).catch(function (error) {
+                vm.readyStatus.stats = true;
+                $scope.$apply();
+            })
 
     }
 
@@ -41,7 +45,10 @@ export default function ($scope, $mdDialog, utilsService) {
             vm.readyStatus.logs = true;
             $scope.$apply()
 
-        })
+            }).catch(function (error) {
+                vm.readyStatus.logs = true;
+                $scope.$apply()
+            })
 
     }
 
@@ -74,6 +81,25 @@ export default function ($scope, $mdDialog, utilsService) {
 
     }
 
+    vm.getTablesSize = function () {
+
+        vm.readyStatus.tablesSize = false;
+
+        utilsService.getTablesSize().then(function (data) {
+
+            vm.tablesSizes = data.results;
+
+            vm.readyStatus.tablesSize = true;
+            $scope.$apply()
+
+            }).catch(function (error) {
+                vm.readyStatus.tablesSize = true;
+                $scope.$apply()
+            })
+
+
+    }
+
     vm.downloadLog = function ($event, log_file_name) {
 
         utilsService.getSystemLog(log_file_name).then(function (data) {
@@ -84,11 +110,49 @@ export default function ($scope, $mdDialog, utilsService) {
 
     }
 
-    vm.init = function () {
+        vm.checkReadyStatus = function () {
+            return vm.readyStatus.tablesSize && vm.readyStatus.stats && vm.readyStatus.logs && vm.readyStatus.master_user
+        }
+
+        vm.getMasterUser = function () {
+
+            vm.readyStatus.master_user = false;
+
+            masterUserService.getMasterUser().then(function (data) {
+
+                vm.master_user = data;
+
+                vm.readyStatus.master_user = true;
+                $scope.$apply()
+
+            })
+
+        }
+
+        vm.saveMasterUser = function ($event) {
+
+            vm.masterUserProcessing = true
+
+            masterUserService.updateMasterUser(vm.master_user).then(function () {
+
+                toastNotificationService.success("Space Updated")
+
+                vm.masterUserProcessing = false;
+                $scope.$apply();
+
+                vm.getMasterUser();
+
+            })
+
+        }
+
+        vm.init = function () {
 
         vm.getStats();
         vm.getLogs()
 
+            vm.getTablesSize()
+            vm.getMasterUser()
 
     };
 

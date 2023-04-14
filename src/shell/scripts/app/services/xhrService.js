@@ -4,6 +4,8 @@
 
 'use strict';
 
+import cookieService from "../../../../core/services/cookieService";
+
 export default function (errorService, cookieService) {
 
 	// var axService = require('../../../../core/services/axService')
@@ -75,9 +77,11 @@ export default function (errorService, cookieService) {
 			})
 			.catch(function (reason) {
 
-				if (window.developerConsoleService) {
+				console.log('xhrService.reason', reason);
+
+				/*if (window.developerConsoleService) {
 					window.developerConsoleService.rejectRequest(requestId, reason)
-				}
+				}*/
 
 				if (notifyError !== false) {
 					errorService.notifyError(reason);
@@ -91,9 +95,10 @@ export default function (errorService, cookieService) {
 
 	};
 
-	const fetch = function (url, params) {
+	const fetch = function (url, params, options) {
 
 		let requestId;
+		const notifyError = options && options.hasOwnProperty('notifyError') ? options.notifyError : true;
 
 		if (window.developerConsoleService) {
 			requestId = window.developerConsoleService.pushRequest({
@@ -104,20 +109,21 @@ export default function (errorService, cookieService) {
 
 		return window
 			.fetch(url, params)
-			.then(function (response) {
+			.then(async function (response) {
 
-				return new Promise(function (resolve, reject) {
+				// return new Promise(function (resolve, reject) {
 
-					if (window.developerConsoleService) {
+					/*if (window.developerConsoleService) {
 						window.developerConsoleService.resolveRequest(requestId, response.clone())
-					}
+					}*/
 
 					if (response.status === 204) { // No content
-						resolve(response);
+						// resolve(response);
+						return response;
 					}
 					else if (response.status >= 400 && response.status < 500) {
 
-						response.json().then(function (data) {
+						/*response.json().then(function (data) {
 
 							const error = {
 								status: response.status,
@@ -127,54 +133,87 @@ export default function (errorService, cookieService) {
 
 							reject(error)
 
-						})
+						})*/
+
+						const error = await response.json();
+
+						throw error;
 
 					} else if (response.status >= 500 && response.status < 600) {
 
-						const error = {
-							status: response.status,
-							statusText: response.statusText,
-							message: response.statusText
-						};
-
-						reject(error)
+						const error = await response.json();
+						throw error;
 
 					} else {
 
 						if (params.method !== "DELETE") {
-							resolve(response.json());
+							return response.json();
 						}
 						else {
-							resolve(response);
+							return response;
 						}
 
 					}
 
-				})
+				// })
 			})
 			.catch(async function (reason) {
 
-				if (
-					reason.status !== 401 &&
-					url.includes('/token-refresh/') &&
-					!url.includes('/token-auth/')
-				) {
+				if (reason.status !== 401) {
 
-					cookieService.deleteCookie('access_token')
-                    cookieService.deleteCookie('refresh_token')
-					window.location.reload();
+					if (url.includes('/token-refresh/') &&
+						!url.includes('/token-auth/')) {
 
-					throw reason;
+						cookieService.deleteCookie('access_token')
+						cookieService.deleteCookie('refresh_token')
+						window.location.reload();
+
+						throw reason;
+
+					}
+
+
+				}
+				else {
+
+					try {
+
+						const res = await window.keycloak.updateToken()
+
+						cookieService.setCookie('access_token', window.keycloak.token);
+						cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
+						cookieService.setCookie('id_token', window.keycloak.idToken);
+
+
+						errorService.error("Authentication failed. Please reload this page.");
+
+					} catch (error) {
+
+						error.___custom_message = 'Keycloak update error';
+						console.error(error)
+
+						// in case if refresh token is expired
+
+						window.keycloak.init({
+							onLoad: 'login-required'
+						})
+
+						throw null;
+
+					}
 
 				}
 
-				if (window.developerConsoleService) {
+				/*if (window.developerConsoleService) {
 					window.developerConsoleService.rejectRequest(requestId, reason)
+				}*/
+
+				if (notifyError !== false) {
+					await errorService.notifyError(reason);
 				}
 
-				errorService.notifyError(reason);
 
-				console.log('XHR Service catch error', reason);
+				console.error('XHR Service catch error', reason);
 
 				throw reason;
 

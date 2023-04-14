@@ -27,8 +27,15 @@
 
         vm.defaultRuleScenario = {
             name: '-',
-            is_default_rule_scenario: true
+            is_default_rule_scenario: true,
+            is_error_rule_scenario: false
         };
+
+        vm.errorRuleScenario = {
+            name: '-',
+            is_error_rule_scenario: true,
+            is_default_rule_scenario: false
+        }
 
         vm.inputsFunctions = [];
         vm.selector_values_projection = [];
@@ -42,9 +49,9 @@
                     "description": "Imported: " + input.name + " (column #" + input.column + ") " + "-> " + input.name_expr,
                     "groups": "input",
                     "func": input.name,
-					"validation": {
-						"func": input.name
-					}
+                    "validation": {
+                        "func": input.name
+                    }
                 }
 
             });
@@ -220,12 +227,16 @@
                         if (item.is_default_rule_scenario) {
                             vm.defaultRuleScenario = item
                         } else {
-                            vm.mapFields.push(item);
+
+                            if (item.is_error_rule_scenario) {
+                                vm.errorRuleScenario = item
+                            } else {
+                                vm.mapFields.push(item);
+
+                            }
                         }
 
                     })
-
-
 
 
                 }
@@ -237,7 +248,6 @@
                         vm.reconFields.push(item)
                     })
                 }
-
 
 
                 vm.selector_values_projection = vm.scheme.selector_values.map(function (item) {
@@ -318,7 +328,7 @@
 
         };
 
-        vm.addCalculatedField = function(){
+        vm.addCalculatedField = function () {
 
             var fieldsLength = vm.calculatedFields.length;
             var lastFieldNumber;
@@ -345,6 +355,7 @@
                 value: '',
                 transaction_type: null,
                 is_default_rule_scenario: false,
+                is_error_rule_scenario: false,
                 fields: []
             })
         };
@@ -481,6 +492,7 @@
             result.rule_scenarios = vm.mapFields;
 
             result.rule_scenarios.push(vm.defaultRuleScenario)
+            result.rule_scenarios.push(vm.errorRuleScenario)
 
             result.recon_scenarios = vm.reconFields;
 
@@ -593,7 +605,7 @@
             delete scheme.id;
             scheme["user_code"] = scheme["user_code"] + '_copy';
 
-             var copyPromise = $mdDialog.show({
+            var copyPromise = $mdDialog.show({
                 controller: 'TransactionImportSchemeAddDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-dialog-view.html',
                 parent: angular.element(document.body),
@@ -636,9 +648,9 @@
                 locals: {
                     entityType: 'transaction-type',
                     entityId: ttypeId,
-					data: {
-                    	openedIn: 'dialog'
-					}
+                    data: {
+                        openedIn: 'dialog'
+                    }
                 }
             })
 

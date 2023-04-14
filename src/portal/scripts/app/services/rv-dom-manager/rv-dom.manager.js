@@ -1225,7 +1225,10 @@ export default function (toastNotificationService, transactionTypeService, price
         rvScrollManager.setViewportElem(elements.viewportElem); // .ev-viewport
         rvScrollManager.setContentElem(elements.contentElem); // .ev-content
         rvScrollManager.setContentWrapElem(elements.contentWrapElem);
-        rvScrollManager.setRootWrapElem(elements.rootWrapElem);
+
+        /* if (elements.rootWrapElem) { // split panel inside iframe does not have access to rootWrapElem
+            rvScrollManager.setRootWrapElem(elements.rootWrapElem);
+        } */
 
         var isRootEntityViewer = evDataService.isRootEntityViewer();
         var viewContext = evDataService.getViewContext();
@@ -1235,7 +1238,6 @@ export default function (toastNotificationService, transactionTypeService, price
 
         var contentWrapElemHeight = rvScrollManager.getContentWrapElemHeight();
         var contentWrapElemWidth = rvScrollManager.getContentWrapElemWidth();
-
 
         var viewportTop;
         var viewportWidth;
@@ -1266,7 +1268,6 @@ export default function (toastNotificationService, transactionTypeService, price
         /* if (components.groupingArea) {
             viewportTop = viewportTop + interfaceLayout.groupingArea.height;
         } */
-
         viewportHeight = Math.floor(contentWrapElemHeight - viewportTop);
 
         var isRootTitle = 'isRoot'

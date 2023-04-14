@@ -694,6 +694,30 @@ const importTransactionService = require("../../../services/import/importTransac
 
         }
 
+        vm.openInputs = function (item, $event) {
+            $mdDialog.show({
+                controller: 'TransactionImportSchemeInputsDialogController as vm',
+                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-inputs-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        fields: vm.providerFields,
+                        item: item
+                    }
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    item.fields = res.data.item.fields;
+                }
+            });
+        };
+
+
         vm.init = function () {
 
             setTimeout(function () {
