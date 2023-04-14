@@ -5,21 +5,21 @@
 
     module.exports = function ($stateProvider) {
 
-		/* $urlRouterProvider.otherwise('/');
+        /* $urlRouterProvider.otherwise('/');
 
-		$stateProvider.state('app', {
-			url: '',
-			abstract: true,
-			templateUrl: 'views/shell-view.html',
-			controller: 'ShellController as vm'
-		}); */
+        $stateProvider.state('app', {
+            url: '',
+            abstract: true,
+            templateUrl: 'views/shell-view.html',
+            controller: 'ShellController as vm'
+        }); */
 
-		$stateProvider.state('app.portal', {
-			url: '',
-			abstract: true,
-			templateUrl: 'views/portal-view.html',
-			controller: 'PortalController as vm'
-		});
+        $stateProvider.state('app.portal', {
+            url: '',
+            abstract: true,
+            templateUrl: 'views/portal-view.html',
+            controller: 'PortalController as vm'
+        });
 
         $stateProvider.state('app.portal.healthcheck', {
             url: '/healthcheck',
@@ -38,6 +38,22 @@
             url: '/dashboard?layoutUserCode',
             templateUrl: 'views/dashboard-view.html',
             controller: 'DashboardController as vm'
+        });
+
+        $stateProvider.state('app.portal.journal', {
+            url: '/journal?page&query&date_from&date_to&action&member&content_type',
+            templateUrl: 'views/pages/journal-page-view.html',
+            controller: 'JournalPageController as vm',
+            reloadOnSearch: false,
+            params: {
+                page: null,
+                query: null,
+                date_from: null,
+                date_to: null,
+                action: null,
+                member: null,
+                content_type: null
+            }
         });
 
         $stateProvider.state('app.portal.dashboard-constructor', {
@@ -80,9 +96,15 @@
         });
 
         $stateProvider.state('app.portal.home', {
-            url: '/',
+            url: '/?state&code&session_state&kc_action_status',
             templateUrl: 'views/home-view.html',
-            controller: 'HomeController as vm'
+            controller: 'HomeController as vm',
+            params: {
+                state: null,
+                code: null,
+                session_state: null,
+                kc_action_status: null
+            }
         });
 
         $stateProvider.state('app.portal.actions', {
@@ -108,6 +130,14 @@
             templateUrl: 'views/pages/template-layout-manager-view.html',
             controller: 'TemplateLayoutManagerController as vm'
         });
+
+        /* Used for opening split panel inside iframe
+
+        $stateProvider.state('app.portal.split-panel-widget', {
+            url: '/split-panel-widget?atoken&content_type&user_code&layoutId&name',
+            templateUrl: 'views/widgets/split-panel-report-viewer-view.html',
+            controller: 'SplitPanelReportViewerWidgetController as vm'
+        });*/
 
         $stateProvider
             .state('app.portal.data', {
@@ -211,7 +241,7 @@
                     layoutUserCode: null
                 }
             })
-			/* .state('app.portal.data.pricing-policy', {
+            /* .state('app.portal.data.pricing-policy', {
                 url: '/pricing-policy',
                 templateUrl: 'views/data/data-pricing-policy-view.html',
                 controller: 'DataPricingPolicyController as vm',
@@ -267,7 +297,7 @@
                     layoutUserCode: null
                 }
             })
-			//.state('app.portal.data.pricing', {
+            //.state('app.portal.data.pricing', {
             //    url: '/pricing',
             //    templateUrl: 'views/data/data-pricing-view.html',
             //    controller: 'DataPortfolioController as vm'
@@ -387,6 +417,32 @@
                 controller: 'SystemPageController as vm'
             })
 
+            .state('app.portal.recycle-bin-page', {
+                url: '/recycle-bin?date_from&date_to&page&query',
+                templateUrl: 'views/pages/recycle-bin-page-view.html',
+                controller: 'RecycleBinPageController as vm',
+                reloadOnSearch: false,
+                params: {
+                    date_from: null,
+                    date_to: null,
+                    page: null,
+                    query: null
+                }
+            })
+
+            .state('app.portal.tasks-page', {
+                url: '/tasks?date_from&date_to&query&page',
+                templateUrl: 'views/pages/tasks-page-view.html',
+                controller: 'TasksPageController as vm',
+                reloadOnSearch: false,
+                params: {
+                    date_from: null,
+                    date_to: null,
+                    query: null,
+                    page: null
+                }
+            })
+
             .state('app.portal.processes', {
                 url: '/processes',
                 templateUrl: 'views/pages/processes-view.html',
@@ -503,11 +559,12 @@
                 templateUrl: 'views/pages/data-procedure-instance-page-view.html',
                 controller: 'DataProcedureInstancePageController as vm'
             })
-            .state('app.portal.expression-procedure-instance', {
-                url: '/expression-procedure-instance',
-                templateUrl: 'views/pages/expression-procedure-instance-page-view.html',
-                controller: 'ExpressionProcedureInstancePageController as vm'
-            })
+            // deprecated
+            // .state('app.portal.expression-procedure-instance', {
+            //     url: '/expression-procedure-instance',
+            //     templateUrl: 'views/pages/expression-procedure-instance-page-view.html',
+            //     controller: 'ExpressionProcedureInstancePageController as vm'
+            // })
             .state('app.portal.import', {
                 url: '/import',
                 abstract: true,
@@ -779,11 +836,11 @@
                 url: '/palettes',
                 templateUrl: 'views/colorPicker/color-palettes-settings-view.html',
                 controller: 'ColorPalettesSettingsController as vm',
-				resolve: {
-                	data: function() { // setting 'data' dependency
-                		return '';
-					}
-				}
+                resolve: {
+                    data: function () { // setting 'data' dependency
+                        return '';
+                    }
+                }
             })
             .state('app.portal.settings.import-configuration', {
                 url: '/import-configuration',

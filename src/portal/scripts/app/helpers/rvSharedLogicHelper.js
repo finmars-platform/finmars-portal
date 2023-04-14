@@ -4,10 +4,8 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
 (function () {
 
-    // const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
 
     const evEvents = require('../services/entityViewerEvents');
-
 
 	const rvHelper = require('../helpers/rv.helper')
 
@@ -49,7 +47,6 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                 Promise.all(promises).then(function (data) {
 
                     viewModel.readyStatus.attributes = true;
-
                     resolve(data);
 
                 }).catch(function (error) {
@@ -111,10 +108,8 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
             viewModel.readyStatus.layout = true;
 
-            rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
-
-            var reportOptions = viewModel.entityViewerDataService.getReportOptions();
-            var entityType = viewModel.entityViewerDataService.getEntityType();
+            let reportOptions = viewModel.entityViewerDataService.getReportOptions();
+            const entityType = viewModel.entityViewerDataService.getEntityType();
 
             if (entityType !== 'transaction-report') {
 
@@ -163,6 +158,12 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
             }
 
             putUseFromAboveFiltersFirst();
+
+            const viewContext = viewModel.entityViewerDataService.getViewContext();
+
+            if (viewContext !== 'split_panel' || entityType !== 'transaction-report') {
+                rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+            }
 
             $scope.$apply();
 

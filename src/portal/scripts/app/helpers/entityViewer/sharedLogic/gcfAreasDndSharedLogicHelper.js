@@ -318,7 +318,7 @@
 
 			} else {
 				filtersData = scope.evDataService.getFilters();
-				filters = filtersData[scope.shownFiltersType]; // scope.shownFiltersType assigned inside evGcfAreasDragAndDrop
+				filters = filtersData[scope.shownFiltersType]; // scope.shownFiltersType assigned inside evGcfAreasDndDirective
 			}
 
 			const filterAlreadyExist = filters.find(filter => filter.key === draggableAttrKey);

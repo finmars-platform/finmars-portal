@@ -17,7 +17,7 @@
 
             var splitPanelIsActive = evDataService.isSplitPanelActive();
 
-            if (splitPanelIsActive) {
+            if (splitPanelIsActive) { // for root entity / report viewer
 
                 var interfaceLayout = evDataService.getInterfaceLayout();
                 //var contentWrapElementHeight = document.body.clientHeight - interfaceLayout.headerToolbar.height - interfaceLayout.splitPanel.height;

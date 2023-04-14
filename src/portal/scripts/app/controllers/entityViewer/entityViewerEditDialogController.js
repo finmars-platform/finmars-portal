@@ -521,13 +521,13 @@
                 });
             }
 
-            if (["price-history", 'currency-history', 'transaction'].indexOf(vm.entityType) === -1) {
-                data.options.push({
-                    icon: "my_library_books",
-                    name: "View History",
-                    onClick: vm.viewHistory
-                });
-            }
+            // if (["price-history", 'currency-history', 'transaction'].indexOf(vm.entityType) === -1) {
+            //     data.options.push({
+            //         icon: "my_library_books",
+            //         name: "View History",
+            //         onClick: vm.viewHistory
+            //     });
+            // }
 
             data.options.push({
                 key: 'toggle_enable_status',

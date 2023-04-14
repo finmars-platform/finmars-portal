@@ -148,6 +148,15 @@
 
                                         </div>
 
+                                        <div class="m-b-16">
+                                            <md-input-container class="md-block">
+                                                <label for="">Expression Iterations Count</label>
+                                                <input type="number"
+                                                       min="1"
+                                                       data-ng-model="vm.scheme.expression_iterations_count">
+                                            </md-input-container>
+                                        </div>
+
                                     </md-card-content>
                                 </md-card>
                             </div>
@@ -245,7 +254,7 @@
 
                                         <div data-ng-repeat="item in vm.providerFields | filter: {$: vm.providerFieldsQuery} track by $index"
                                              class="transaction-import-scheme-v2-file-input"
-                                             >
+                                        >
 
                                             <md-input-container style="position: relative; width: 50px">
 
@@ -313,7 +322,7 @@
 
                                         <div data-ng-repeat="item in vm.calculatedFields | filter: {$: vm.calculatedFieldsQuery} track by $index"
                                              class="transaction-import-scheme-v2-calculated-input"
-                                             >
+                                        >
                                             <div class="fields-holder" layout="row">
                                                 <div class="iscm-item" layout="row">
 
@@ -528,19 +537,21 @@
 
 
                                                         <table class="transaction-import-scheme-v2-scenario-inputs-table">
-                                                            <tr data-ng-repeat="input_item in item.transaction_type_object.inputs" class="transaction-import-scheme-v2-scenario-inputs">
+                                                            <tr data-ng-repeat="input_item in item.transaction_type_object.inputs"
+                                                                class="transaction-import-scheme-v2-scenario-inputs">
                                                                 <td>
                                                                     <div class="transaction-import-scheme-v2-scenario-inputs-input-name">
                                                                         <span data-ng-bind="input_item.verbose_name"></span>
-                                                                        <div style="white-space: nowrap;">Input: <b><span
-                                                                                data-ng-bind="input_item.name"></span></b>
+                                                                        <div style="white-space: nowrap;">Input:
+                                                                            <b><span
+                                                                                    data-ng-bind="input_item.name"></span></b>
                                                                         </div>
                                                                     </div>
                                                                 </td>
                                                                 <td>
                                                                     <div layout="row"
                                                                          class="transaction-import-scheme-v2-scenario-inputs-input-expressio">
-                                                                        <div >
+                                                                        <div>
                                                                             <md-input-container>
                                                                                 <label for=""
                                                                                        data-ng-bind="vm.bindType(input_item)"></label>
@@ -548,7 +559,7 @@
                                                                                        data-ng-model="input_item.expression">
                                                                             </md-input-container>
                                                                         </div>
-                                                                        <div >
+                                                                        <div>
                                                                             <expression-editor-button
                                                                                     data-item="input_item.expression"
                                                                                     data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"></expression-editor-button>
@@ -584,8 +595,8 @@
 
                                         <div layout="column">
                                             <div layout="row">
-                                                <div layout="row" style="width: 100%;" >
-                                                    <div style="width: 100px" >
+                                                <div layout="row" style="width: 100%;">
+                                                    <div style="width: 100px">
                                                         -
                                                     </div>
                                                     <div style="width: 100px">
@@ -675,7 +686,7 @@
                                                     <div style="width: 100px">
                                                         -
                                                     </div>
-                                                    <div  style="width: 200px" >
+                                                    <div style="width: 200px">
                                                         <md-input-container style="width: 80%"
                                                                             aria-label="select with filter">
 
@@ -723,18 +734,18 @@
                                                                 style="line-height: 1">x
                                                         </md-button>
                                                     </div>-->
-                                                    <div >
+                                                    <div>
 
                                                         <md-button
-                                                                class="md-raised md-primary {{vm.defaultRuleScenario.transaction_type ? '' : 'disabled-btn'}}"
-                                                                ng-click="vm.openInputs(vm.defaultRuleScenario, $event)">
+                                                                class="md-raised md-primary {{vm.errorRuleScenario.transaction_type ? '' : 'disabled-btn'}}"
+                                                                ng-click="vm.openInputs(vm.errorRuleScenario, $event)">
                                                             Inputs
                                                         </md-button>
 
                                                         <md-button
                                                                 class="md-raised md-primary import-mapping-small-btn"
-                                                                ng-class="{'disabled-btn': !vm.defaultRuleScenario.transaction_type}"
-                                                                ng-click="vm.editTransactionType(vm.defaultRuleScenario.transaction_type, $event)">
+                                                                ng-class="{'disabled-btn': !vm.errorRuleScenario.transaction_type}"
+                                                                ng-click="vm.editTransactionType(vm.errorRuleScenario.transaction_type, $event)">
                                                             <ng-md-icon icon="mode_edit"
                                                                         size="20"></ng-md-icon>
                                                             <md-tooltip class="tooltip_1"

@@ -26,7 +26,7 @@ import evEvents from "../../services/entityViewerEvents";
 
     // var middlewareService = require('../../services/middlewareService');
 
-    module.exports = function ($scope, $mdDialog, $stateParams, $transitions, toastNotificationService, middlewareService, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, customFieldService, attributeTypeService, uiService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper) {
+    module.exports = function ($scope, $mdDialog, $stateParams, $transitions, toastNotificationService, middlewareService, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, customFieldService, attributeTypeService, uiService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper, evRvLayoutsHelper) {
 
         var vm = this;
 
@@ -867,19 +867,8 @@ import evEvents from "../../services/entityViewerEvents";
 
                     } catch (error) { // layout for split panel was not found
 
-                        var errorObj = {
-                            ___custom_message: 'Error on getting layout with id: ' + additions.layoutData.layoutId + ' for split panel'
-                        }
-
-                        if (error && typeof error === 'object') {
-                            errorObj = {...errorObj, ...error};
-
-                        } else {
-                            errorObj.error = error;
-                        }
-
-                        console.error(errorObj);
-                        if (error && error.response.status === 404) {
+                        console.error('Error on getting layout with an id: ' + additions.layoutData.layoutId + ' for split panel');
+                        if (error && error.error.status_code === 404) {
 
                             /* interfaceLayout.splitPanel.height = 0;
                             vm.entityViewerDataService.setInterfaceLayout(interfaceLayout);
@@ -1038,7 +1027,7 @@ import evEvents from "../../services/entityViewerEvents";
             middlewareService.onAutosaveLayoutToggle(function () {
 
                 autosaveLayoutOn = globalDataService.isAutosaveLayoutOn();
-                console.log("autosave77 rv isAutosaveLayoutOn", autosaveLayoutOn);
+
                 if (autosaveLayoutOn) {
 
                     autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);

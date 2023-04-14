@@ -1,6 +1,9 @@
 /**
  * Created by szhitenev on 06.05.2016.
  */
+import uiService from "./uiService";
+import ReportHelper from "../helpers/reportHelper";
+const reportHelper = new ReportHelper();
 
 /**
  * Entity viewer helper service.
@@ -9,7 +12,7 @@
 (function () {
 
     const objectComparisonHelper = require('../helpers/objectsComparisonHelper');
-    const uiService = require('../services/uiService');
+    // const uiService = require('../services/uiService');
 
     const entityResolverService = require('../services/entityResolverService');
 
@@ -75,19 +78,18 @@
      * @memberOf module:entityViewerHelperService
      * @return {boolean} Returns true if layout has not been changed, otherwise false
      */
-    let checkForLayoutConfigurationChanges = function (activeLayoutConfig, layoutCurrentConfig, isReport) {
+    const checkForLayoutConfigurationChanges = function (activeLayoutConfig, layoutCurrentConfig, isReport) {
 
         if (isReport) {
 
-            activeLayoutConfig.data
-
             if (activeLayoutConfig.data.reportOptions) {
-                delete activeLayoutConfig.data.reportOptions.task_id;
+                /*delete activeLayoutConfig.data.reportOptions.task_id;
                 delete activeLayoutConfig.data.reportOptions.recieved_at;
-                delete activeLayoutConfig.data.reportOptions.task_status;
+                delete activeLayoutConfig.data.reportOptions.task_status;*/
+                activeLayoutConfig.data.reportOptions = reportHelper.cleanReportOptionsFromTmpProps(activeLayoutConfig.data.reportOptions);
             }
 
-            if (activeLayoutConfig.data.hasOwnProperty('reportLayoutOptions') && activeLayoutConfig.data.reportLayoutOptions.hasOwnProperty('datepickerOptions')) {
+            if ( activeLayoutConfig.data.hasOwnProperty('reportLayoutOptions') && activeLayoutConfig.data.reportLayoutOptions.hasOwnProperty('datepickerOptions') ) {
 
                 if (activeLayoutConfig.data.reportLayoutOptions.datepickerOptions.reportFirstDatepicker.datepickerMode !== 'datepicker') {
                     delete activeLayoutConfig.data.reportOptions.pl_first_date;
@@ -102,9 +104,10 @@
             }
 
             if (layoutCurrentConfig.data.reportOptions) {
-                delete layoutCurrentConfig.data.reportOptions.task_id;
+                /*delete layoutCurrentConfig.data.reportOptions.task_id;
                 delete layoutCurrentConfig.data.reportOptions.recieved_at;
-                delete layoutCurrentConfig.data.reportOptions.task_status;
+                delete layoutCurrentConfig.data.reportOptions.task_status;*/
+                layoutCurrentConfig.data.reportOptions = reportHelper.cleanReportOptionsFromTmpProps(layoutCurrentConfig.data.reportOptions);
             }
 
             if (layoutCurrentConfig.data.hasOwnProperty('reportLayoutOptions') && layoutCurrentConfig.data.reportLayoutOptions.hasOwnProperty('datepickerOptions')) {
@@ -196,7 +199,7 @@
      * @param {Object=} activeLayoutConfig
      * @param {Object=} layoutCurrentConfig
      *
-     * @returns {boolean} Returns true if layout has been changed, otherwise false
+     * @returns {boolean} 'true' if layout has been changed, 'false' otherwise
      * */
     var checkRootLayoutForChanges = function (evDataService, isReport, activeLayoutConfig, layoutCurrentConfig) {
 
@@ -217,7 +220,7 @@
 
     };
 
-    /** @returns {boolean} Returns true if layout for split panel has been changed, otherwise false  */
+    /** @returns {boolean|Object} Returns a layout for split panel that has been changed, otherwise returns 'false'  */
     const checkSplitPanelForChanges = function (evDataService, splitPanelExchangeService) {
 
         const additions = evDataService.getAdditions();
@@ -250,11 +253,11 @@
         if (activeLayoutConfig && activeLayoutConfig.data) {
             layoutCurrentConfig = evDataService.getLayoutCurrentConfiguration(isReport);
         }
+        /** 'false' or object of a layout to update / create **/
+        var spChanged = checkSplitPanelForChanges(evDataService, splitPanelExchangeService);
+        var layoutChanged = checkRootLayoutForChanges(evDataService, isReport, activeLayoutConfig, layoutCurrentConfig);
 
-        var spDidNotChanged = !checkSplitPanelForChanges(evDataService, splitPanelExchangeService);
-        var layoutHasNoChanges = !checkRootLayoutForChanges(evDataService, isReport, activeLayoutConfig, layoutCurrentConfig);
-
-        if (layoutHasNoChanges && spDidNotChanged) {
+        if (!layoutChanged && !spChanged) {
 
             return new Promise(resolve => {
                 resolve(true)
@@ -284,7 +287,7 @@
 
                         const layoutNewName = (res.data && res.data.layoutName) ? res.data.layoutName : '';
 
-                        saveLayoutsChanges(spChangedLayout, layoutHasChanges, activeLayoutConfig, layoutCurrentConfig, layoutNewName, isReport)
+                        saveLayoutsChanges(spChanged, layoutChanged, activeLayoutConfig, layoutCurrentConfig, layoutNewName, isReport)
                             .then(function () {
                                 resolve(true);
 
@@ -426,7 +429,7 @@
      * @memberOf module:entityViewerHelperService
      * @return {object} Return attribute in form of group, column or filter
      */
-    let getTableAttrInFormOf = function (form, attrInstance) {
+    const getTableAttrInFormOf = function (form, attrInstance) {
         console.log("add filter getTableAttrInFormOf attrInstance", attrInstance);
         let attrTypeToAdd = {};
 
@@ -660,6 +663,18 @@
         }
 
         return dAttrsList;
+
+    };
+
+    const getAttributesLayoutNames = function (columns) {
+
+        const result = {};
+
+        columns.forEach(col => {
+            if (col.layout_name) result[col.key] = col.layout_name;
+        })
+
+        return result;
 
     };
 
@@ -1951,6 +1966,7 @@
         getDefaultLayout: getDefaultLayout,
         getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
         setDynamicAttrValueByUserCode: setDynamicAttrValueByUserCode,
+        getAttributesLayoutNames: getAttributesLayoutNames,
 
         getEditLayoutMaxColumns: getEditLayoutMaxColumns,
         getBigDrawerWidth: getBigDrawerWidth,
