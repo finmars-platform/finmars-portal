@@ -12,16 +12,16 @@
     var exportAll = function () {
 
 
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-return window.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'export/configuration/',
+        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'export/configuration/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
@@ -31,15 +31,15 @@ return window.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'export
     var getConfigurationData = function () {
 
 
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-return window.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'export/configuration/', {
+        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'export/configuration/', {
             method: 'GET',
             credentials: 'include',
             headers: {
-               'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
                 'Content-type': 'application/json'
             }
         }).then(function (data) {
@@ -51,15 +51,15 @@ return window.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'export
     var getMappingData = function () {
 
 
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-return window.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'export/mapping/', {
+        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'export/mapping/', {
             method: 'GET',
             credentials: 'include',
             headers: {
-               'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
                 'Content-type': 'application/json'
             }
         }).then(function (data) {
@@ -68,10 +68,52 @@ return window.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'export
 
     };
 
+    var getList = function () {
+
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(function (data) {
+            return data.json();
+        })
+
+    };
+
+    var exportConfiguration = function (id) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/' + id + '/export/', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }).then(function (data) {
+            return data.blob();
+        })
+
+    };
+
+
     module.exports = {
         exportAll: exportAll,
         getConfigurationData: getConfigurationData,
-        getMappingData: getMappingData
+        getMappingData: getMappingData,
+        getList: getList,
+        exportConfiguration: exportConfiguration
     }
 
 
