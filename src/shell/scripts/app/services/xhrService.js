@@ -4,225 +4,224 @@
 
 'use strict';
 
-import cookieService from "../../../../core/services/cookieService";
 
 export default function (errorService, cookieService) {
 
-	// var axService = require('../../../../core/services/axService')
+    // var axService = require('../../../../core/services/axService')
 
-	const axfetch = function (url, params, options) {
 
-		let requestId;
-		const notifyError = options && options.hasOwnProperty('notifyError') ? options.notifyError : true;
+    const axfetch = function (url, params, options) {
 
-		if (window.developerConsoleService) {
-			requestId = window.developerConsoleService.pushRequest({
-				url: url,
-				params: params
-			})
-		}
+        let requestId;
+        const notifyError = options && options.hasOwnProperty('notifyError') ? options.notifyError : true;
 
-		params.url = url
+        if (window.developerConsoleService) {
+            requestId = window.developerConsoleService.pushRequest({
+                url: url,
+                params: params
+            })
+        }
 
-		return axService.ax.request(params)
-			.then(function (response) {
+        params.url = url
 
-				return new Promise(function (resolve, reject) {
+        return axService.ax.request(params)
+            .then(function (response) {
 
-					if (window.developerConsoleService) {
-						window.developerConsoleService.resolveRequest(requestId, response.clone())
-					}
+                return new Promise(function (resolve, reject) {
 
-					if (response.status === 204) { // No content
-						resolve(response);
-					}
-					else if (response.status >= 400 && response.status < 500) {
+                    if (window.developerConsoleService) {
+                        window.developerConsoleService.resolveRequest(requestId, response.clone())
+                    }
 
-						response.json().then(function (data) {
+                    if (response.status === 204) { // No content
+                        resolve(response);
+                    } else if (response.status >= 400 && response.status < 500) {
 
-							const error = {
-								status: response.status,
-								statusText: response.statusText,
-								message: data
-							};
+                        response.json().then(function (data) {
 
-							reject(error)
+                            const error = {
+                                status: response.status,
+                                statusText: response.statusText,
+                                message: data
+                            };
 
-						})
+                            reject(error)
 
-					} else if (response.status >= 500 && response.status < 600) {
+                        })
 
-						const error = {
-							status: response.status,
-							statusText: response.statusText,
-							message: response.statusText
-						};
+                    } else if (response.status >= 500 && response.status < 600) {
 
-						reject(error)
+                        const error = {
+                            status: response.status,
+                            statusText: response.statusText,
+                            message: response.statusText
+                        };
 
-					} else {
+                        reject(error)
 
-						if (params.method !== "DELETE") {
-							resolve(response.data);
-						}
-						else {
-							resolve(response);
-						}
+                    } else {
 
+                        if (params.method !== "DELETE") {
+                            resolve(response.data);
+                        } else {
+                            resolve(response);
+                        }
 
 
-					}
+                    }
 
-				})
-			})
-			.catch(function (reason) {
+                })
+            })
+            .catch(function (reason) {
 
-				console.log('xhrService.reason', reason);
+                console.log('xhrService.reason', reason);
 
-				/*if (window.developerConsoleService) {
-					window.developerConsoleService.rejectRequest(requestId, reason)
-				}*/
+                /*if (window.developerConsoleService) {
+                    window.developerConsoleService.rejectRequest(requestId, reason)
+                }*/
 
-				if (notifyError !== false) {
-					errorService.notifyError(reason);
-				}
+                if (notifyError !== false) {
+                    errorService.notifyError(reason);
+                }
 
-				console.log('XHR Service catch error', reason);
+                console.log('XHR Service catch error', reason);
 
-				throw reason;
+                throw reason;
 
-			})
+            })
 
-	};
+    };
 
-	const fetch = function (url, params, options) {
+    const fetch = function (url, params, options) {
 
-		let requestId;
-		const notifyError = options && options.hasOwnProperty('notifyError') ? options.notifyError : true;
+        let requestId;
+        const notifyError = options && options.hasOwnProperty('notifyError') ? options.notifyError : true;
 
-		if (window.developerConsoleService) {
-			requestId = window.developerConsoleService.pushRequest({
-				url: url,
-				params: params
-			})
-		}
+        // Deprecated
+        // if (window.developerConsoleService) {
+        // 	requestId = window.developerConsoleService.pushRequest({
+        // 		url: url,
+        // 		params: params
+        // 	})
+        // }
 
-		return window
-			.fetch(url, params)
-			.then(async function (response) {
+        return window
+            .fetch(url, params)
+            .then(async function (response) {
 
-				// return new Promise(function (resolve, reject) {
+                if (response.status === 204) { // No content
+                    // resolve(response);
+                    return response;
+                } else if (response.status >= 400 && response.status < 500) {
 
-					/*if (window.developerConsoleService) {
-						window.developerConsoleService.resolveRequest(requestId, response.clone())
-					}*/
+                    /*response.json().then(function (data) {
 
-					if (response.status === 204) { // No content
-						// resolve(response);
-						return response;
-					}
-					else if (response.status >= 400 && response.status < 500) {
+                        const error = {
+                            status: response.status,
+                            statusText: response.statusText,
+                            message: data
+                        };
 
-						/*response.json().then(function (data) {
+                        reject(error)
 
-							const error = {
-								status: response.status,
-								statusText: response.statusText,
-								message: data
-							};
+                    })*/
 
-							reject(error)
+                    const error = await response.json();
 
-						})*/
+                    throw error;
 
-						const error = await response.json();
+                } else if (response.status >= 500 && response.status < 600) {
 
-						throw error;
+                    const error = await response.json();
+                    throw error;
 
-					} else if (response.status >= 500 && response.status < 600) {
+                } else {
 
-						const error = await response.json();
-						throw error;
+                    if (params.method !== "DELETE") {
+                        return response.json();
+                    } else {
+                        return response;
+                    }
 
-					} else {
+                }
 
-						if (params.method !== "DELETE") {
-							return response.json();
-						}
-						else {
-							return response;
-						}
+                // })
+            })
+            .catch(async function (reason) {
 
-					}
+                console.log('xhrService.reason', reason)
 
-				// })
-			})
-			.catch(async function (reason) {
+                if (reason.status !== 401 && (reason.error && reason.error.status_code !== 401)) {
 
-				if (reason.status !== 401) {
+                    if (url.includes('/token-refresh/') &&
+                        !url.includes('/token-auth/')) {
 
-					if (url.includes('/token-refresh/') &&
-						!url.includes('/token-auth/')) {
+                        cookieService.deleteCookie('access_token')
+                        cookieService.deleteCookie('refresh_token')
+                        window.location.reload();
 
-						cookieService.deleteCookie('access_token')
-						cookieService.deleteCookie('refresh_token')
-						window.location.reload();
+                        throw reason;
 
-						throw reason;
+                    }
 
-					}
 
+                } else {
 
-				}
-				else {
+                    try {
 
-					try {
+                        const res = await window.keycloak.updateToken()
 
-						const res = await window.keycloak.updateToken()
+                        console.log('res', res)
 
-						cookieService.setCookie('access_token', window.keycloak.token);
-						cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
-						cookieService.setCookie('id_token', window.keycloak.idToken);
+                        if (res) {
 
+                            cookieService.setCookie('access_token', window.keycloak.token);
+                            cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
+                            cookieService.setCookie('id_token', window.keycloak.idToken);
 
-						errorService.error("Authentication failed. Please reload this page.");
 
-					} catch (error) {
+                            return fetch(url, params, options); // try to request again with refreshed token
+                        } else {
+							window.keycloak.init({
+								onLoad: 'login-required'
+							})
+                        }
+                    } catch (error) {
 
-						error.___custom_message = 'Keycloak update error';
-						console.error(error)
+                        error.___custom_message = 'Keycloak update error';
+                        console.error(error)
 
-						// in case if refresh token is expired
+                        // in case if refresh token is expired
 
-						window.keycloak.init({
-							onLoad: 'login-required'
-						})
+                        window.keycloak.init({
+                            onLoad: 'login-required'
+                        })
 
-						throw null;
+                        throw null;
 
-					}
+                    }
 
-				}
+                }
 
-				/*if (window.developerConsoleService) {
-					window.developerConsoleService.rejectRequest(requestId, reason)
-				}*/
+                /*if (window.developerConsoleService) {
+                    window.developerConsoleService.rejectRequest(requestId, reason)
+                }*/
 
-				if (notifyError !== false) {
-					await errorService.notifyError(reason);
-				}
+                if (notifyError !== false) {
+                    await errorService.notifyError(reason);
+                }
 
 
-				console.error('XHR Service catch error', reason);
+                console.error('XHR Service catch error', reason);
 
-				throw reason;
+                throw reason;
 
-			})
+            })
 
-	};
+    };
 
-	return {
-		fetch: fetch
-	}
+    return {
+        fetch: fetch
+    }
 
 };
