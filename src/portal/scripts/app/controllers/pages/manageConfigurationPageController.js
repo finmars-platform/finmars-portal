@@ -5,9 +5,11 @@
 
     'use strict';
 
-    var historyService = require('../../services/historyService');
+    var configurationService = require('../../services/configurationService');
     var marketplaceService = require('../../services/marketplaceService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
+
+    var downloadFileHelper = require('../../helpers/downloadFileHelper');
 
 
     module.exports = function manageConfigurationPageController($scope, $state, $stateParams, $mdDialog, usersService) {
@@ -19,6 +21,12 @@
 
         vm.filters = {}
 
+        vm.activeConfiguration = null;
+
+        vm.setActivConfiguration = function ($event, item) {
+            vm.activeConfiguration = item;
+        }
+
 
         vm.getData = function () {
 
@@ -26,7 +34,7 @@
 
             return new Promise(function (resolve, reject) {
 
-                marketplaceService.getList({
+                configurationService.getList({
                     pageSize: vm.pageSize,
                     page: vm.currentPage,
                     filters: vm.filters,
@@ -38,6 +46,10 @@
 
                     vm.items = data.results;
                     vm.count = data.count;
+
+                    if (vm.items.length) {
+                        vm.activeConfiguration = vm.items[0];
+                    }
 
 
                     vm.readyStatus.data = true;
@@ -52,12 +64,15 @@
 
         };
 
-        vm.installConfiguration = function ($event, item){
+        vm.exportConfiguration = function () {
 
-            console.log("Install configuration", item);
+            configurationService.exportConfiguration(vm.activeConfiguration.id).then(function (data) {
 
-        }
+                downloadFileHelper.downloadFile(data, "application/zip", vm.activeConfiguration.name + '.zip');
 
+            })
+
+        };
 
         vm.init = function () {
 

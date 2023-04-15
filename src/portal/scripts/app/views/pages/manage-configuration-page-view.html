@@ -5,6 +5,22 @@
 
     </div>
 
+    <div layout="row">
+
+        <md-input-container>
+            <label for="">Configuration</label>
+            <md-select data-ng-model="vm.activeConfiguration.id">
+                <md-option ng-value="item.id" data-ng-click="vm.setActivConfiguration($event, item)"
+                           data-ng-repeat="item in vm.items">{{item.name}} ({{item.configuration_code}})
+                </md-option>
+            </md-select>
+        </md-input-container>
+
+        <md-button class="md-raised md-primary" data-ng-click="vm.exportConfiguration($event)">Export</md-button>
+
+
+    </div>
+
 
     <div data-ng-if="vm.readyStatus.data">
 
