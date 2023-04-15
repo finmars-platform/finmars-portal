@@ -6,15 +6,12 @@
     var evEvents = require('../../services/entityViewerEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-    var uiService = require('../../services/uiService');
-
     var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
     var DashboardComponentEventService = require('../../services/eventService');
 
-	var dashboardHelper = require('../../helpers/dashboard.helper');
     const localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
-	module.exports = function ($mdDialog) {
+	module.exports = function ($mdDialog, uiService, dashboardHelper) {
         return {
             restriction: 'E',
             templateUrl: 'views/directives/dashboard/dashboard-report-viewer-matrix-view.html',
@@ -342,7 +339,10 @@
                     // Victor 2021.05.27 #113 number format from report layout
                     const layoutId = componentData.settings.layout;
                     const valueKey = componentData.settings.value_key;
-                    componentData.settings.number_format = await getNumberFormatFromLayoutByValueKey(layoutId, valueKey);
+
+                    if ( !componentData.settings.number_format ) {
+                        componentData.settings.number_format = await getNumberFormatFromLayoutByValueKey(layoutId, valueKey);
+                    }
                     // <Victor 2021.05.27 #113 number format from report layout>
 
                     scope.initEventListeners();

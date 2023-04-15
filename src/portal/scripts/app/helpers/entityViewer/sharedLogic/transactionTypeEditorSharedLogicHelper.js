@@ -1,24 +1,19 @@
 (function () {
 
-    const fieldResolverService = require('../../../services/fieldResolverService');
-
-    const ecosystemDefaultService = require('../../../services/ecosystemDefaultService');
     const referenceTableService = require('../../../services/referenceTablesService');
 
     const metaHelper = require('../../meta.helper');
 
-	const uiService = require('../../../services/uiService');
 	const gridTableEvents = require('../../../services/gridTableEvents');
 	const directiveEvents = require('../../../services/events/directivesEvents');
 
-    const GridTableHelperService = require('../../../helpers/gridTableHelperService');
     const helpExpressionsService = require('../../../services/helpExpressionsService');
 
     'use strict';
 
-    module.exports = function (viewModel, $scope, $mdDialog) {
+    module.exports = function (viewModel, $scope, $mdDialog, ecosystemDefaultService, uiService, fieldResolverService, gridTableHelperService) {
 
-        const gridTableHelperService = new GridTableHelperService();
+        // const gridTableHelperService = new GridTableHelperService();
         const loadedRelationsList = [];
 
         const valueTypes = [

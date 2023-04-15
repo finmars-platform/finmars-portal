@@ -5,12 +5,9 @@
 
     'use strict';
 
-    var customFieldService = require('../../services/reports/customFieldService');
-
     var AttributeDataService = require('../../services/attributeDataService');
 
-
-    module.exports = function ($scope, $stateParams, $mdDialog) {
+    module.exports = function ($scope, $stateParams, $mdDialog, metaContentTypesService, customFieldService, attributeTypeService, uiService) {
 
         var vm = this;
 
@@ -126,7 +123,7 @@
 
         vm.init = function () {
 
-            vm.attributeDataService = new AttributeDataService();
+            vm.attributeDataService = new AttributeDataService(metaContentTypesService, customFieldService, attributeTypeService, uiService);
 
             vm.getList();
 

@@ -6,6 +6,7 @@
     var logService = require('../../../../../../core/services/logService');
 
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
+    var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -140,14 +141,14 @@
 
         vm.addScheme = function ($event) {
             $mdDialog.show({
-                controller: 'SimpleEntityImportSchemeCreateDialogController as vm',
-                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-dialog-view.html',
+                controller: 'SimpleEntityImportSchemeV2EditDialogController as vm',
+                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-v2-dialog-view.html',
                 targetEvent: $event,
                 locals: {
                     data: {}
                 }
             }).then(function (res) {
-                if (res.res === 'agree') {
+                if (res.status === 'agree') {
                     vm.getData();
                 }
             });
@@ -159,7 +160,9 @@
                 controller: 'SimpleEntityImportSchemeV2EditDialogController as vm',
                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-v2-dialog-view.html',
                 locals: {
-                    schemeId: item.id
+                    data: {
+                        schemeId: item.id
+                    }
                 },
                 targetEvent: $event,
                 preserveScope: true,
@@ -218,6 +221,8 @@
                 if (res.status === 'agree') {
                     console.log('res', res.data);
                     csvImportSchemeService.deleteByKey(item.id).then(function () {
+
+                        toastNotificationService.warning("Scheme was deleted")
                         /*setTimeout(function () {
                             vm.getList();
                         }, 100)*/

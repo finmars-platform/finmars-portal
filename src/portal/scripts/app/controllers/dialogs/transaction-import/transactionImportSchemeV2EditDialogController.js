@@ -9,10 +9,7 @@ const importTransactionService = require("../../../services/import/importTransac
     var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
     var transactionTypeService = require('../../../services/transactionTypeService');
 
-    var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
-
-
-    module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, schemeId, importSchemesMethodsService) {
+    module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, toastNotificationService, transactionTypeService, importSchemesMethodsService, schemeId) {
 
         var vm = this;
 
@@ -144,6 +141,7 @@ const importTransactionService = require("../../../services/import/importTransac
         vm.getItem = function () {
 
             transactionImportSchemeService.getByKey(schemeId).then(function (data) {
+
                 vm.scheme = data;
 
                 if (vm.scheme.inputs.length) {
@@ -193,15 +191,23 @@ const importTransactionService = require("../../../services/import/importTransac
                 }
 
                 if (vm.scheme.rule_scenarios.length) {
+
                     vm.scenarios = [];
 
                     vm.scheme.rule_scenarios.forEach(function (scenario) {
 
+                        scenario.transaction_type_object.inputs =
+                            scenario.transaction_type_object.inputs.filter(function (input) {
+                                return input.value_type !== 120;
+                            });
+
                         if (scenario.is_default_rule_scenario) {
                             vm.defaultRuleScenario = scenario
-                        } else {
 
-                            if (scenario.is_default_rule_scenario) {
+                        }
+                        else {
+
+                            if (scenario.is_error_rule_scenario) {
 
                                 vm.errorRuleScenario = scenario
 
@@ -371,7 +377,7 @@ const importTransactionService = require("../../../services/import/importTransac
 
         vm.agree = function ($event) {
 
-            var result = JSON.parse(JSON.stringify(vm.scheme))
+            var result = JSON.parse(JSON.stringify( vm.scheme ));
 
 
             result.calculated_inputs = vm.calculatedFields;
@@ -687,6 +693,30 @@ const importTransactionService = require("../../../services/import/importTransac
             })
 
         }
+
+        vm.openInputs = function (item, $event) {
+            $mdDialog.show({
+                controller: 'TransactionImportSchemeInputsDialogController as vm',
+                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-inputs-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        fields: vm.providerFields,
+                        item: item
+                    }
+                }
+            }).then(function (res) {
+                if (res.status === 'agree') {
+                    item.fields = res.data.item.fields;
+                }
+            });
+        };
+
 
         vm.init = function () {
 

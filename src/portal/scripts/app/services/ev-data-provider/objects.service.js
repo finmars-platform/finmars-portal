@@ -33,7 +33,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(options)
+                body: JSON.stringify(options)
             })
 
 

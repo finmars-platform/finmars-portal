@@ -1,34 +1,21 @@
 /**
  * Created by szhitenev on 12.09.2016.
  */
-(function () {
+var configurationImportRepository = require('../../repositories/import/configurationImportRepository');
 
-    'use strict';
+var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
+var complexImportSchemeService = require('../../services/import/complexImportSchemeService');
+var priceDownloadSchemeService = require('../../services/import/priceDownloadSchemeService');
+var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
+var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
 
-    var configurationImportRepository = require('../../repositories/import/configurationImportRepository');
+var bookmarkRepository = require('../../repositories/bookmarkRepository');
 
-    var entityResolverService = require('../../services/entityResolverService');
-    var attributeTypeService = require('../../services/attributeTypeService');
+var configurationImportCompatibilityService = require('./configurationImportCompatibilityService');
 
-    var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
-    var complexImportSchemeService = require('../../services/import/complexImportSchemeService');
-    var priceDownloadSchemeService = require('../../services/import/priceDownloadSchemeService');
-    var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
-    var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
-    var scheduleService = require('../scheduleService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
+var referenceTablesService = require('../../services/referenceTablesService');
 
-    var uiRepository = require('../../repositories/uiRepository');
-    var customFieldRepository = require('../../repositories/reports/customFieldRepository');
-    var bookmarkRepository = require('../../repositories/bookmarkRepository');
-
-    var configurationImportCompatibilityService = require('./configurationImportCompatibilityService');
-
-    var configurationImportGetService = require('./configurationImportGetService');
-    var configurationImportMapService = require('./configurationImportMapService');
-    var configurationImportSyncService = require('./configurationImportSyncService');
-
-    var referenceTablesService = require('../../services/referenceTablesService');
+export default function (metaContentTypesService, attributeTypeService, customFieldService, entityResolverService, uiService, configurationImportGetService, configurationImportMapService, configurationImportSyncService) {
 
     var assignPermissions = function (contentType, item, settings) {
 
@@ -797,13 +784,13 @@
                         case 'ui.listlayout':
                             resolve(new Promise(function (resolve, reject) {
 
-                                /* uiRepository.getListLayoutDefault({
+                                /* uiService.getListLayoutDefault({
                                     filters: {
                                         name: item.name,
                                         content_type: item.content_type
                                     }
                                 }) */
-                                uiRepository.getListLayout(
+                                uiService.getListLayout(
                                     null,
                                     {
                                         filters: {
@@ -829,14 +816,14 @@
 
                                             item.id = result.id;
 
-                                            resolve(uiRepository.updateListLayout(item.id, item));
+                                            resolve(uiService.updateListLayout(item.id, item));
 
                                         } else {
-                                            resolve(uiRepository.createListLayout(item));
+                                            resolve(uiService.createListLayout(item));
                                         }
                                     } else {
 
-                                        resolve(uiRepository.createListLayout(item));
+                                        resolve(uiService.createListLayout(item));
 
                                     }
 
@@ -847,7 +834,7 @@
                         case 'ui.templatelayout':
                             resolve(new Promise(function (resolve, reject) {
 
-                                uiRepository.getTemplateLayoutList({
+                                uiService.getTemplateLayoutList({
                                     filters: {
                                         name: item.name
                                     }
@@ -869,14 +856,14 @@
 
                                             item.id = result.id;
 
-                                            resolve(uiRepository.updateTemplateLayout(item.id, item));
+                                            resolve(uiService.updateTemplateLayout(item.id, item));
 
                                         } else {
-                                            resolve(uiRepository.createTemplateLayout(item));
+                                            resolve(uiService.createTemplateLayout(item));
                                         }
                                     } else {
 
-                                        resolve(uiRepository.createTemplateLayout(item));
+                                        resolve(uiService.createTemplateLayout(item));
 
                                     }
 
@@ -887,7 +874,7 @@
                         case 'ui.contextmenulayout':
                             resolve(new Promise(function (resolve, reject) {
 
-                                uiRepository.getContextMenuLayoutList({
+                                uiService.getContextMenuLayoutList({
                                     filters: {
                                         name: item.name
                                     }
@@ -909,14 +896,14 @@
 
                                             item.id = result.id;
 
-                                            resolve(uiRepository.updateContextMenuLayout(item.id, item));
+                                            resolve(uiService.updateContextMenuLayout(item.id, item));
 
                                         } else {
-                                            resolve(uiRepository.createContextMenuLayout(item));
+                                            resolve(uiService.createContextMenuLayout(item));
                                         }
                                     } else {
 
-                                        resolve(uiRepository.createContextMenuLayout(item));
+                                        resolve(uiService.createContextMenuLayout(item));
 
                                     }
 
@@ -943,10 +930,10 @@
 
                                 var entityType = metaContentTypesService.findEntityByContentType(item.content_type, 'ui');
 
-                                uiRepository.getEditLayoutByKey(entityType).then(function (data) {
+                                uiService.getEditLayoutByKey(entityType).then(function (data) {
 
                                     if (data.results.length) {
-                                        uiRepository.updateEditLayout(data.results[0].id, item).then(function (item) {
+                                        uiService.updateEditLayout(data.results[0].id, item).then(function (item) {
                                             resolve({})
                                         }).catch(function (reason) {
 
@@ -962,7 +949,7 @@
                                             resolve(reason);
                                         })
                                     } else {
-                                        uiRepository.createEditLayout(item).then(function (item) {
+                                        uiService.createEditLayout(item).then(function (item) {
                                             resolve({})
                                         }).catch(function (reason) {
 
@@ -986,13 +973,13 @@
                         case 'ui.reportlayout':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                /* uiRepository.getListLayoutDefault({
+                                /* uiService.getListLayoutDefault({
                                     filters: {
                                         name: item.name,
                                         content_type: item.content_type
                                     }
                                 }) */
-                                uiRepository.getListLayout(
+                                uiService.getListLayout(
                                     null,
                                     {
                                         filters: {
@@ -1018,15 +1005,15 @@
 
                                             item.id = result.id;
 
-                                            resolveLocal(uiRepository.updateListLayout(item.id, item));
+                                            resolveLocal(uiService.updateListLayout(item.id, item));
 
                                         } else {
 
-                                            resolveLocal(uiRepository.createListLayout(item));
+                                            resolveLocal(uiService.createListLayout(item));
                                         }
                                     } else {
 
-                                        resolveLocal(uiRepository.createListLayout(item));
+                                        resolveLocal(uiService.createListLayout(item));
 
                                     }
 
@@ -1037,7 +1024,7 @@
                         case 'ui.dashboardlayout':
                             resolve(new Promise(function (resolve, reject) {
 
-                                uiRepository.getDashboardLayoutList({
+                                uiService.getDashboardLayoutList({
                                     filters: {
                                         name: item.name
                                     }
@@ -1059,14 +1046,14 @@
 
                                             item.id = result.id;
 
-                                            resolve(uiRepository.updateDashboardLayout(item.id, item));
+                                            resolve(uiService.updateDashboardLayout(item.id, item));
 
                                         } else {
-                                            resolve(uiRepository.createDashboardLayout(item));
+                                            resolve(uiService.createDashboardLayout(item));
                                         }
                                     } else {
 
-                                        resolve(uiRepository.createDashboardLayout(item));
+                                        resolve(uiService.createDashboardLayout(item));
 
                                     }
 
@@ -1077,7 +1064,7 @@
                         case 'reports.balancereportcustomfield':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                customFieldRepository.getList('balance-report', {
+                                customFieldService.getList('balance-report', {
                                     filters: {
                                         user_code: item.user_code
                                     }
@@ -1099,14 +1086,14 @@
 
                                             item.id = result.id;
 
-                                            resolveLocal(customFieldRepository.update('balance-report', item.id, item));
+                                            resolveLocal(customFieldService.update('balance-report', item.id, item));
 
                                         } else {
-                                            resolveLocal(customFieldRepository.create('balance-report', item));
+                                            resolveLocal(customFieldService.create('balance-report', item));
                                         }
                                     } else {
 
-                                        resolveLocal(customFieldRepository.create('balance-report', item));
+                                        resolveLocal(customFieldService.create('balance-report', item));
 
                                     }
 
@@ -1117,7 +1104,7 @@
                         case 'reports.plreportcustomfield':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                customFieldRepository.getList('pl-report', {
+                                customFieldService.getList('pl-report', {
                                     filters: {
                                         user_code: item.user_code
                                     }
@@ -1139,14 +1126,14 @@
 
                                             item.id = result.id;
 
-                                            resolveLocal(customFieldRepository.update('pl-report', item.id, item));
+                                            resolveLocal(customFieldService.update('pl-report', item.id, item));
 
                                         } else {
-                                            resolveLocal(customFieldRepository.create('pl-report', item));
+                                            resolveLocal(customFieldService.create('pl-report', item));
                                         }
                                     } else {
 
-                                        resolveLocal(customFieldRepository.create('pl-report', item));
+                                        resolveLocal(customFieldService.create('pl-report', item));
 
                                     }
 
@@ -1157,7 +1144,7 @@
                         case 'reports.transactionreportcustomfield':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                customFieldRepository.getList('transaction-report', {
+                                customFieldService.getList('transaction-report', {
                                     filters: {
                                         user_code: item.user_code
                                     }
@@ -1179,14 +1166,14 @@
 
                                             item.id = result.id;
 
-                                            resolveLocal(customFieldRepository.update('transaction-report', item.id, item));
+                                            resolveLocal(customFieldService.update('transaction-report', item.id, item));
 
                                         } else {
-                                            resolveLocal(customFieldRepository.create('transaction-report', item));
+                                            resolveLocal(customFieldService.create('transaction-report', item));
                                         }
                                     } else {
 
-                                        resolveLocal(customFieldRepository.create('transaction-report', item));
+                                        resolveLocal(customFieldService.create('transaction-report', item));
 
                                     }
 
@@ -1197,7 +1184,7 @@
                         case 'ui.instrumentuserfieldmodel':
                             resolve(new Promise(function (resolve, reject) {
 
-                                uiRepository.getInstrumentFieldList({
+                                uiService.getInstrumentFieldList({
                                     filters: {
                                         key: item.key
                                     }
@@ -1219,14 +1206,14 @@
 
                                             item.id = result.id;
 
-                                            resolve(uiRepository.updateInstrumentField(item.id, item));
+                                            resolve(uiService.updateInstrumentField(item.id, item));
 
                                         } else {
-                                            resolve(uiRepository.createInstrumentField(item));
+                                            resolve(uiService.createInstrumentField(item));
                                         }
                                     } else {
 
-                                        resolve(uiRepository.createInstrumentField(item));
+                                        resolve(uiService.createInstrumentField(item));
 
                                     }
 
@@ -1237,7 +1224,7 @@
                         case 'ui.transactionuserfieldmodel':
                             resolve(new Promise(function (resolve, reject) {
 
-                                uiRepository.getTransactionFieldList({
+                                uiService.getTransactionFieldList({
                                     filters: {
                                         key: item.key
                                     }
@@ -1259,14 +1246,14 @@
 
                                             item.id = result.id;
 
-                                            resolve(uiRepository.updateTransactionField(item.id, item));
+                                            resolve(uiService.updateTransactionField(item.id, item));
 
                                         } else {
-                                            resolve(uiRepository.createTransactionField(item));
+                                            resolve(uiService.createTransactionField(item));
                                         }
                                     } else {
 
-                                        resolve(uiRepository.createTransactionField(item));
+                                        resolve(uiService.createTransactionField(item));
 
                                     }
 
@@ -1490,9 +1477,9 @@
 
             var layoutEntities = items.filter(function (item) {
                 return (item.entity === 'ui.editlayout' ||
-                    item.entity === 'ui.listlayout' ||
-                    item.entity === 'ui.templatelayout' ||
-                    item.entity === 'ui.reportlayout') &&
+                        item.entity === 'ui.listlayout' ||
+                        item.entity === 'ui.templatelayout' ||
+                        item.entity === 'ui.reportlayout') &&
                     item.entity !== 'ui.dashboardlayout'
             });
 
@@ -1629,10 +1616,10 @@
 
                                 var entityType = metaContentTypesService.findEntityByContentType(item.content_type, 'ui');
 
-                                uiRepository.getEditLayoutByKey(entityType).then(function (data) {
+                                uiService.getEditLayoutByKey(entityType).then(function (data) {
 
                                     if (data.results.length) {
-                                        uiRepository.updateEditLayout(data.results[0].id, item).then(function (item) {
+                                        uiService.updateEditLayout(data.results[0].id, item).then(function (item) {
                                             resolve({})
                                         }).catch(function (reason) {
 
@@ -1648,7 +1635,7 @@
                                             resolve(reason);
                                         })
                                     } else {
-                                        uiRepository.createEditLayout(item).then(function (item) {
+                                        uiService.createEditLayout(item).then(function (item) {
                                             resolve({})
                                         }).catch(function (reason) {
 
@@ -1672,13 +1659,13 @@
                         case 'ui.listlayout':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                /* uiRepository.getListLayoutDefault({
+                                /* uiService.getListLayoutDefault({
                                     filters: {
                                         name: item.name,
                                         content_type: item.content_type
                                     }
                                 }) */
-                                uiRepository.getListLayout(
+                                uiService.getListLayout(
                                     null,
                                     {
                                         filters: {
@@ -1719,13 +1706,13 @@
 
                                         } else {
 
-                                            resolveLocal(uiRepository.createListLayout(item));
+                                            resolveLocal(uiService.createListLayout(item));
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(uiRepository.createListLayout(item));
+                                        resolveLocal(uiService.createListLayout(item));
 
                                     }
 
@@ -1736,7 +1723,7 @@
                         case 'ui.templatelayout':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                uiRepository.getTemplateLayoutList({
+                                uiService.getTemplateLayoutList({
                                     filters: {
                                         name: item.name
                                     }
@@ -1773,13 +1760,13 @@
 
                                         } else {
 
-                                            resolveLocal(uiRepository.createTemplateLayout(item));
+                                            resolveLocal(uiService.createTemplateLayout(item));
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(uiRepository.createTemplateLayout(item));
+                                        resolveLocal(uiService.createTemplateLayout(item));
 
                                     }
 
@@ -1790,7 +1777,7 @@
                         case 'ui.contextmenulayout':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                uiRepository.getContextMenuLayoutList({
+                                uiService.getContextMenuLayoutList({
                                     filters: {
                                         name: item.name
                                     }
@@ -1827,7 +1814,7 @@
 
                                         } else {
 
-                                            uiRepository.createContextMenuLayout(item).then(function(data){
+                                            uiService.createContextMenuLayout(item).then(function(data){
                                                 resolveLocal(data);
                                             }).catch(function () {
                                                 resolveLocal()
@@ -1837,7 +1824,7 @@
 
                                     } else {
 
-                                        uiRepository.createContextMenuLayout(item).then(function(data){
+                                        uiService.createContextMenuLayout(item).then(function(data){
                                             resolveLocal(data);
                                         }).catch(function () {
                                             resolveLocal()
@@ -1866,13 +1853,13 @@
                         case 'ui.reportlayout':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                /* uiRepository.getListLayoutDefault({
+                                /* uiService.getListLayoutDefault({
                                     filters: {
                                         name: item.name,
                                         content_type: item.content_type
                                     }
                                 }) */
-                                uiRepository.getListLayout(
+                                uiService.getListLayout(
                                     null,
                                     {
                                         filters: {
@@ -1913,13 +1900,13 @@
 
                                         } else {
 
-                                            resolveLocal(uiRepository.createListLayout(item));
+                                            resolveLocal(uiService.createListLayout(item));
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(uiRepository.createListLayout(item));
+                                        resolveLocal(uiService.createListLayout(item));
 
                                     }
 
@@ -1930,7 +1917,7 @@
                         case 'ui.dashboardlayout':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                uiRepository.getDashboardLayoutList({
+                                uiService.getDashboardLayoutList({
                                     filters: {
                                         name: item.name
                                     }
@@ -1967,13 +1954,13 @@
 
                                         } else {
 
-                                            resolveLocal(uiRepository.createDashboardLayout(item));
+                                            resolveLocal(uiService.createDashboardLayout(item));
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(uiRepository.createDashboardLayout(item));
+                                        resolveLocal(uiService.createDashboardLayout(item));
 
                                     }
 
@@ -1984,13 +1971,13 @@
                         case 'ui.bookmark':
                             resolve(new Promise(function (resolve, reject) {
 
-                                /*uiRepository.getListLayoutDefault({
+                                /*uiService.getListLayoutDefault({
                                     filters: {
                                         name: item.___layout_name,
                                         content_type: item.___content_type
                                     }
                                 })*/
-                                uiRepository.getListLayout(
+                                uiService.getListLayout(
                                     null,
                                     {
                                         filters: {
@@ -2016,13 +2003,13 @@
 
                                             promises.push(new Promise(function (localResolve) {
 
-                                                /* uiRepository.getListLayoutDefault({
+                                                /* uiService.getListLayoutDefault({
                                                     filters: {
                                                         name: child.___layout_name,
                                                         content_type: child.___content_type
                                                     }
                                                 }) */
-                                                uiRepository.getListLayout(
+                                                uiService.getListLayout(
                                                     null,
                                                     {
                                                         filters: {
@@ -2091,7 +2078,7 @@
                         case 'ui.instrumentuserfieldmodel':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                uiRepository.getInstrumentFieldList({
+                                uiService.getInstrumentFieldList({
                                     filters: {
                                         key: item.key
                                     }
@@ -2128,13 +2115,13 @@
 
                                         } else {
 
-                                            resolveLocal(uiRepository.createInstrumentField(item));
+                                            resolveLocal(uiService.createInstrumentField(item));
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(uiRepository.createInstrumentField(item));
+                                        resolveLocal(uiService.createInstrumentField(item));
 
                                     }
 
@@ -2145,7 +2132,7 @@
                         case 'ui.transactionuserfieldmodel':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                uiRepository.getTransactionFieldList({
+                                uiService.getTransactionFieldList({
                                     filters: {
                                         key: item.key,
                                     }
@@ -2182,13 +2169,13 @@
 
                                         } else {
 
-                                            resolveLocal(uiRepository.createTransactionField(item));
+                                            resolveLocal(uiService.createTransactionField(item));
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(uiRepository.createTransactionField(item));
+                                        resolveLocal(uiService.createTransactionField(item));
 
                                     }
 
@@ -2554,7 +2541,7 @@
                         case 'reports.balancereportcustomfield':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                customFieldRepository.getList('balance-report', {
+                                customFieldService.getList('balance-report', {
                                     filters: {
                                         user_code: item.user_code,
                                     }
@@ -2591,13 +2578,13 @@
 
                                         } else {
 
-                                            resolveLocal(customFieldRepository.create('balance-report', item));
+                                            resolveLocal(customFieldService.create('balance-report', item));
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(customFieldRepository.create('balance-report', item));
+                                        resolveLocal(customFieldService.create('balance-report', item));
 
                                     }
 
@@ -2608,7 +2595,7 @@
                         case 'reports.plreportcustomfield':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                customFieldRepository.getList('pl-report', {
+                                customFieldService.getList('pl-report', {
                                     filters: {
                                         user_code: item.user_code,
                                     }
@@ -2645,13 +2632,13 @@
 
                                         } else {
 
-                                            resolveLocal(customFieldRepository.create('pl-report', item));
+                                            resolveLocal(customFieldService.create('pl-report', item));
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(customFieldRepository.create('pl-report', item));
+                                        resolveLocal(customFieldService.create('pl-report', item));
 
                                     }
 
@@ -2662,7 +2649,7 @@
                         case 'reports.transactionreportcustomfield':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                customFieldRepository.getList('transaction-report', {
+                                customFieldService.getList('transaction-report', {
                                     filters: {
                                         user_code: item.user_code,
                                     }
@@ -2699,13 +2686,13 @@
 
                                         } else {
 
-                                            resolveLocal(customFieldRepository.create('transaction-report', item));
+                                            resolveLocal(customFieldService.create('transaction-report', item));
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(customFieldRepository.create('transaction-report', item));
+                                        resolveLocal(customFieldService.create('transaction-report', item));
 
                                     }
 
@@ -2939,9 +2926,9 @@
 
             var layoutEntities = items.filter(function (item) {
                 return (item.entity === 'ui.editlayout' ||
-                    item.entity === 'ui.listlayout' ||
-                    item.entity === 'ui.templatelayout' ||
-                    item.entity === 'ui.reportlayout') &&
+                        item.entity === 'ui.listlayout' ||
+                        item.entity === 'ui.templatelayout' ||
+                        item.entity === 'ui.reportlayout') &&
                     item.entity !== 'ui.dashboardlayout'
             });
 
@@ -3104,9 +3091,8 @@
 
     };
 
-    module.exports = {
+    return {
         importConfiguration: importConfiguration,
         checkForDuplicates: checkForDuplicates
     }
-
-}());
+}

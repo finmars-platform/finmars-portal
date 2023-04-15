@@ -62,7 +62,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'tr
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(transaction)
+                body: JSON.stringify(transaction)
             })
     };
 
@@ -81,7 +81,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'tr
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(transaction)
+                body: JSON.stringify(transaction)
             })
     };
 
@@ -123,7 +123,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'tr
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(data)
+                body: JSON.stringify(data)
             })
             .then(function (data) {
                 return new Promise(function (resolve, reject) {

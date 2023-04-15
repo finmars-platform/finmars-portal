@@ -6,7 +6,8 @@ const resolve = () => {
 
 	if ('__PROJECT_ENV__') {
 
-		const host = '__API_HOST__';
+		// const host = '__API_HOST__';
+		const host = window.API_HOST;
 
 		return host;
 
@@ -17,7 +18,8 @@ const resolve = () => {
 };
 
 const getAuthorizerUrl = () => {
-	return '__AUTHORIZER_URL__'
+	// return '__AUTHORIZER_URL__'
+	return window.AUTHORIZER_URL
 }
 
 const setMasterUserPrefix = function (_prefix) {

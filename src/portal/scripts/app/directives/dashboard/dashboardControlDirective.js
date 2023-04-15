@@ -2,20 +2,13 @@
 
     'use strict';
 
-    var entityResolverService = require('../../services/entityResolverService');
-    var metaContentTypeService = require('../../services/metaContentTypesService');
-	var expressionsService = require('../../services/expression.service');
-
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
 	var directivesEvents = require('../../services/events/directivesEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
-	var reportHelper = require('../../helpers/reportHelper');
 
     var EventService = require('../../services/eventService');
-    var uiService = require('../../services/uiService');
 
-
-    module.exports = function () {
+    module.exports = function (metaContentTypesService, entityResolverService, uiService, reportHelper) {
         return {
             restriction: 'E',
             scope: {
@@ -69,7 +62,7 @@
                         return 'pricing-policy'
                     }*/
 
-                    return metaContentTypeService.findEntityByContentType(contentType);
+                    return metaContentTypesService.findEntityByContentType(contentType);
 
                 };
 
@@ -300,7 +293,7 @@
 
 							return new Promise(function (resolve) {
 
-								expressionsService.getResultOfExpression({'expression': dateExpr}).then(function (data) {
+								expressionService.getResultOfExpression({'expression': dateExpr}).then(function (data) {
 									resolve(data.result)
 
 								}).catch(function (error) {

@@ -2,12 +2,11 @@
 
     'use strict';
 
-    const uiService = require('../../../../services/uiService');
     const evEvents = require('../../../../services/entityViewerEvents');
 
     // const EventService = require('../../../../services/eventService');
 
-    module.exports = function ($mdDialog, gFiltersHelper) {
+    module.exports = function ($mdDialog, gFiltersHelper, uiService) {
         return {
             require: '^^gFilters',
             restrict: 'E',
@@ -459,7 +458,7 @@
                     scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
 
                         if (useFromAboveFilters.length) {
-
+                            // UPDATE_TABLE or REQUEST_REPORT dispatched inside gFiltersHelper.insertActiveObjectDataIntoFilters()
                             const filtersChangedFromAbove = gFiltersHelper.insertActiveObjectDataIntoFilters(scope.evDataService, scope.evEventService);
                             if (filtersChangedFromAbove) formatFiltersForChips();
 

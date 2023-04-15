@@ -3,13 +3,7 @@
  */
 (function () {
 
-    var uiService = require('../../services/uiService');
-    var attributeTypeService = require('../../services/attributeTypeService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
-
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
-    module.exports = function entityTooltipPage($scope, $mdDialog) {
+    module.exports = function entityTooltipPage($scope, toastNotificationService, attributeTypeService, metaContentTypesService, uiService) {
 
         var vm = this;
 

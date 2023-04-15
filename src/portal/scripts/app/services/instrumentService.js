@@ -1,60 +1,53 @@
 /**
  * Created by szhitenev on 04.05.2016.
  */
-(function () {
 
-	const gridTableEvents = require('./gridTableEvents');
+const evEditorEvents = require('./ev-editor/entityViewerEditorEvents');
+import InstrumentRepository from "../repositories/instrumentRepository";
 
-	const uiService = require('./uiService');
+export default function (cookieService, xhrService, uiService, gridTableHelperService, multitypeFieldService) {
 
-	const GridTableHelperService = require('../helpers/gridTableHelperService');
-	const gridTableHelperService = new GridTableHelperService();
-	const MultitypeFieldService = require('../services/multitypeFieldService');
-	const multitypeFieldService = new MultitypeFieldService();
-
-	const evEditorEvents = require('./ev-editor/entityViewerEditorEvents');
-
-	const instrumentRepository = require('../repositories/instrumentRepository');
+	const instrumentRepository = new InstrumentRepository(cookieService, xhrService);
 
 	const getList = function (options) {
-        return instrumentRepository.getList(options);
-    };
+		return instrumentRepository.getList(options);
+	};
 
 	const getListLight = function (options) {
-        return instrumentRepository.getListLight(options);
-    };
+		return instrumentRepository.getListLight(options);
+	};
 
 	const getListForSelect = function (options) {
 		return instrumentRepository.getListForSelect(options);
 	};
 
 	const getByKey = function (id) {
-        return instrumentRepository.getByKey(id);
-    };
+		return instrumentRepository.getByKey(id);
+	};
 
 	const create = function(instrument) {
-        return instrumentRepository.create(instrument);
-    };
+		return instrumentRepository.create(instrument);
+	};
 
 	const update = function(id, instrument) {
-        return instrumentRepository.update(id, instrument);
-    };
+		return instrumentRepository.update(id, instrument);
+	};
 
 	const patch = function (id, data) {
-        return instrumentRepository.patch(id, data);
-    };
+		return instrumentRepository.patch(id, data);
+	};
 
 	const deleteByKey = function (id) {
-        return instrumentRepository.deleteByKey(id);
-    };
+		return instrumentRepository.deleteByKey(id);
+	};
 
 	const updateBulk = function(instruments) {
-        return instrumentRepository.updateBulk(instruments);
-    };
+		return instrumentRepository.updateBulk(instruments);
+	};
 
 	const deleteBulk = function(data){
-        return instrumentRepository.deleteBulk(data);
-    };
+		return instrumentRepository.deleteBulk(data);
+	};
 
 	/**
 	 * Used for grid tables of accruals and events schedules
@@ -568,7 +561,7 @@
 		}
 	];
 
-    module.exports = {
+    return {
         getList: getList,
         getListLight: getListLight,
         getListForSelect: getListForSelect,
@@ -578,8 +571,8 @@
         patch: patch,
         deleteByKey: deleteByKey,
 
-        updateBulk: updateBulk,
-        deleteBulk: deleteBulk,
+		updateBulk: updateBulk,
+		deleteBulk: deleteBulk,
 
 		onGtCellChange: onGtCellChange,
 		onGtRowDeletion: onGtRowDeletion,
@@ -598,5 +591,4 @@
 
     }
 
-
-}());
+}

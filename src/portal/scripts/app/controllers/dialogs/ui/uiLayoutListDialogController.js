@@ -11,15 +11,11 @@ import uiService from "../../../services/uiService";
 
     var evEvents = require('../../../services/entityViewerEvents');
 
-    var uiService = require('../../../services/uiService');
-    var metaContentTypesService = require('../../../services/metaContentTypesService');
-    // var middlewareService = require('../../../services/middlewareService');
-
     var inviteToSharedConfigurationFileService = require('../../../services/inviteToSharedConfigurationFileService');
     var shareConfigurationFileService = require('../../../services/shareConfigurationFileService');
     // var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
 
-    module.exports = function ($scope, $mdDialog, backendConfigurationImportService, options) {
+    module.exports = function ($scope, $mdDialog, metaContentTypesService, uiService, backendConfigurationImportService, reportHelper, options) {
 
         var vm = this;
 
@@ -34,7 +30,7 @@ import uiService from "../../../services/uiService";
         var contentType = metaContentTypesService.findContentTypeByEntity(options.entityType);
         var splitPanelLayoutId = null;
 
-        var autosaveLayoutService = new AutosaveLayoutService();
+        var autosaveLayoutService = new AutosaveLayoutService(metaContentTypesService, uiService, reportHelper);
 
         if (!isRootEntityViewer) {
             var spDefaultLayoutData = entityViewerDataService.getSplitPanelDefaultLayout();

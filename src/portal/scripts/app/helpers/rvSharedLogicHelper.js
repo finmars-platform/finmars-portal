@@ -4,21 +4,12 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
 (function () {
 
-    const rvDataProviderService = require('../services/rv-data-provider/rv-data-provider.service');
-    const pricesCheckerService = require('../services/reports/pricesCheckerService');
-    const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
 
-    const metaContentTypeService = require('../services/metaContentTypesService');
-    const expressionService = require('../services/expression.service');
     const evEvents = require('../services/entityViewerEvents');
 
-    const priceHistoryService = require('../services/priceHistoryService');
-    const currencyHistoryService = require('../services/currencyHistoryService');
-
-	const reportHelper = require('../helpers/reportHelper');
 	const rvHelper = require('../helpers/rv.helper')
 
-    module.exports = function (viewModel, $scope, $mdDialog, globalDataService) {
+    module.exports = function (viewModel, $scope, $mdDialog, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper) {
 
         const commonDialogsService = new CommonDialogsService($mdDialog);
 
@@ -116,10 +107,9 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
         const onSetLayoutEnd = () => {
 
             viewModel.readyStatus.layout = true;
-            rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
 
-            var reportOptions = viewModel.entityViewerDataService.getReportOptions();
-            var entityType = viewModel.entityViewerDataService.getEntityType();
+            let reportOptions = viewModel.entityViewerDataService.getReportOptions();
+            const entityType = viewModel.entityViewerDataService.getEntityType();
 
             if (entityType !== 'transaction-report') {
 
@@ -169,6 +159,12 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
             putUseFromAboveFiltersFirst();
 
+            const viewContext = viewModel.entityViewerDataService.getViewContext();
+
+            if (viewContext !== 'split_panel' || entityType !== 'transaction-report') {
+                rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+            }
+
             $scope.$apply();
 
             return viewModel.readyStatus.layout;
@@ -204,7 +200,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
         const applyDatesFromAnotherLayout = function (contentType, reportOptions, reportLayoutOptions) {
 
             const result = [];
-            const pEntityType = metaContentTypeService.findEntityByContentType(contentType);
+            const pEntityType = metaContentTypesService.findEntityByContentType(contentType);
             const dateProps = reportHelper.getDateProperties(viewModel.entityType);
             const activeLayoutRo = viewModel.entityViewerDataService.getReportOptions();
 

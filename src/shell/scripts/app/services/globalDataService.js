@@ -7,8 +7,11 @@ export default function () {
 	let data = {
 		masterUser: null,
 		member: null,
-		user: null
+		user: null,
+
 	};
+
+	let iframeMode = false; // used when app inside iframe
 
 	const doUserHasCurrentMasterUser = function () {
 		return userHaveCurrentMasterUser;
@@ -131,6 +134,14 @@ export default function () {
 
 	};
 
+	const setIframeMode = function (modeStatus) {
+		iframeMode = modeStatus;
+	}
+
+	const insideIframe = function () {
+		return iframeMode;
+	}
+
 	return {
 		setCurrentMasterUserStatus: setCurrentMasterUserStatus,
 		doUserHasCurrentMasterUser: doUserHasCurrentMasterUser,
@@ -146,7 +157,10 @@ export default function () {
 
 		isAutosaveLayoutOn: isAutosaveLayoutOn,
 
-		clearAllData: clearAllData
+		clearAllData: clearAllData,
+
+		setIframeMode: setIframeMode,
+		insideIframe: insideIframe,
 	}
 
 };

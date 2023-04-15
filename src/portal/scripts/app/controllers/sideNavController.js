@@ -7,10 +7,9 @@
 
     var metaService = require('../services/metaService');
     // var usersService = require('../services/usersService');
-    var uiService = require('../services/uiService');
     var metaHelper = require('../helpers/meta.helper');
 
-    module.exports = function ($scope, $mdDialog, $transition, usersService, globalDataService, redirectionService) {
+    module.exports = function ($scope, $mdDialog, $transition, usersService, globalDataService, redirectionService, uiService) {
 
         var vm = this;
 
@@ -657,8 +656,8 @@
             // }
         }
 
-            vm.init();
-        }
+        vm.init();
 
-    }()
-);
+    }
+
+}());

@@ -1,19 +1,12 @@
-(function () {
+var evEvents = require('../entityViewerEvents');
+var groupsService = require('./groups.service');
+var objectsService = require('./objects.service');
+var evDataHelper = require('../../helpers/ev-data.helper');
+var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+var rvDataHelper = require('../../helpers/rv-data.helper');
+var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
-    var evEvents = require('../entityViewerEvents');
-    var dashboardEvents = require('../../services/dashboard/dashboardEvents');
-    var groupsService = require('./groups.service');
-    var objectsService = require('./objects.service');
-    var evDataHelper = require('../../helpers/ev-data.helper');
-    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
-    var entityViewerDataResolver = require('../entityViewerDataResolver');
-    var stringHelper = require('../../helpers/stringHelper');
-    var rvDataHelper = require('../../helpers/rv-data.helper');
-    var queryParamsHelper = require('../../helpers/queryParamsHelper');
-
-    var reportHelper = require('../../helpers/reportHelper');
-
-    var pricesCheckerService = require('../../services/reports/pricesCheckerService');
+export default function (entityResolverService, pricesCheckerService, reportHelper) {
 
     var requestData = function (evDataService) {
 
@@ -25,7 +18,7 @@
             // console.log('requestData.entityType', entityType);
             // console.log('requestData.reportOptions', reportOptions);
 
-            entityViewerDataResolver.getList(entityType, reportOptions).then(function (data) {
+            entityResolverService.getList(entityType, reportOptions).then(function (data) {
 
                 // console.log('requestData.data', data);
 
@@ -184,7 +177,7 @@
 
             if (reportOptions.items && reportOptions.items.length) {
 
-				var attributeExtensions = entityViewerDataService.getCrossEntityAttributeExtensions();
+                var attributeExtensions = entityViewerDataService.getCrossEntityAttributeExtensions();
 
                 reportOptions.items = reportHelper.injectIntoItemsV2(reportOptions.items, reportOptions, entityType);
 
@@ -350,7 +343,7 @@
 
                         if (!parentGroup.___is_open) {
 
-                        	obj.___is_open = false;
+                            obj.___is_open = false;
                             groupSettings.is_open = false;
 
                             rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
@@ -1026,7 +1019,7 @@
 
     };
 
-    module.exports = {
+    return {
         createDataStructure: createDataStructure,
         requestReport: requestReport,
         updateDataStructure: updateDataStructure,
@@ -1034,4 +1027,4 @@
         sortGroupType: sortGroupType
     }
 
-}());
+}

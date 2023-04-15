@@ -52,7 +52,7 @@ var apiVersion = baseUrlService.getApiVersion();
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(data)
+                body: JSON.stringify(data)
             });
     }
 
@@ -71,7 +71,7 @@ var apiVersion = baseUrlService.getApiVersion();
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify({})
+                body: JSON.stringify({})
             });
     }
 

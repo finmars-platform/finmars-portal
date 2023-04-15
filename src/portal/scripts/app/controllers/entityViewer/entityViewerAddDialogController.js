@@ -5,8 +5,6 @@
 
     'use strict';
 
-    var entityResolverService = require('../../services/entityResolverService');
-
     // var usersGroupService = require('../../services/usersGroupService');
     // var usersService = require('../../services/usersService');
 
@@ -20,14 +18,10 @@
     var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
     var EventService = require('../../services/eventService');
 
-    var attributeTypeService = require('../../services/attributeTypeService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var metaPermissionsService = require('../../services/metaPermissionsService');
     var tooltipsService = require('../../services/tooltipsService');
     var colorPalettesService = require('../../services/colorPalettesService');
-
-    var uiService = require('../../services/uiService');
 
     var metaHelper = require('../../helpers/meta.helper');
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
@@ -36,15 +30,13 @@
     var currencyPricingSchemeService = require('../../services/pricing/currencyPricingSchemeService');
     var instrumentPricingSchemeService = require('../../services/pricing/instrumentPricingSchemeService');
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
-    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, authorizerService, usersService, usersGroupService, globalDataService, entityType, entity, data) {
+    module.exports = function entityViewerAddDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, authorizerService, usersService, usersGroupService, globalDataService, metaContentTypesService, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService, entityType, entity, data) {
 
         var vm = this;
 
         vm.entityType = entityType;
 
-        vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
+        vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService);
 
         vm.processing = false;
 
@@ -1354,13 +1346,14 @@
 
 							if ((data.instrument[prop] || data.instrument[prop] === 0) && acceptsInstrTypeVal) {
 
-								if (exposureProperties.includes(prop)) {
+								/*if ( exposureProperties.includes(prop) ) {
 
 									vm.entity[prop] = getExposureOptionId(prop, data.instrument[prop]);
 
 								} else {
 									vm.entity[prop] = data.instrument[prop];
-								}
+								}*/
+                                vm.entity[prop] = data.instrument[prop];
 
 							}
 
@@ -1772,6 +1765,7 @@
 				vm.sharedLogic.getDataForInstrumentExposureTab().then(function (data) {
 					vm.instrumentsSelectorOptions = data[0];
 					vm.currenciesSelectorOptions = data[1];
+
                     vm.readyStatus.exposureTab = true;
 				});
 

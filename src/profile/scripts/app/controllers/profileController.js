@@ -13,7 +13,7 @@
 export default function ($scope, authorizerService, globalDataService, redirectionService) {
 
 	let vm = this;
-
+	console.log("redirection profileController to app.profile")
 	window.open(redirectionService.getUrl('app.profile'), '_self')
 
 	vm.readyStatus = false;

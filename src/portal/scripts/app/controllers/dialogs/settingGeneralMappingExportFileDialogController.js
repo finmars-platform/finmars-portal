@@ -5,10 +5,9 @@
 
     'use strict';
 
-    var metaContentTypesService = require('../../services/metaContentTypesService');
     var configurationService = require('../../services/configurationService');
 
-    module.exports = function ($scope, $mdDialog, file) {
+    module.exports = function ($scope, $mdDialog, metaContentTypesService, file) {
 
         var vm = this;
 

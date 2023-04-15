@@ -5,10 +5,7 @@
 
     'use strict';
 
-    //var instrumentService = require('../../services/instrumentService'); // TODO change to balance report service
-    var reportService = require('../../services/reportService');
-
-    module.exports = function($scope){
+    module.exports = function($scope, reportService){
 
         console.log('{"controller": "CashFlowProjectionReportController", status: "initialized"}');
 

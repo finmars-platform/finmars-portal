@@ -41,7 +41,7 @@
 				Accept: 'application/json',
 				'Content-type': 'application/json'
 			},
-			data: JSON.stringify(user)
+			body: JSON.stringify(user)
 		}).then(function (data) {
 			return new Promise(function (resolve, reject) {
 				data.json().then(function (result) {
@@ -84,7 +84,7 @@
 				Accept: 'application/json',
 				'Content-type': 'application/json'
 			},
-			data: JSON.stringify(user)
+			body: JSON.stringify(user)
 		}).then(function (data) {
 
 			if (data.status !== 200 && data.status !== 201) {
@@ -165,7 +165,7 @@
 				Accept: 'application/json',
 				'Content-type': 'application/json'
 			},
-			data: JSON.stringify(user)
+			body: JSON.stringify(user)
 		}).then(function (data) {
 			return data.json();
 		})
@@ -219,7 +219,7 @@
 				Accept: 'application/json',
 				'Content-type': 'application/json'
 			},
-			data: JSON.stringify(invite)
+			body: JSON.stringify(invite)
 		}).then(function (data) {
 			return data.json();
 		})
@@ -274,7 +274,7 @@
 				Accept: 'application/json',
 				'Content-type': 'application/json'
 			},
-			data: JSON.stringify(data)
+			body: JSON.stringify(data)
 		}).then(function (data) {
 
 			if (data.status !== 200 && data.status !== 201) {

@@ -3,7 +3,9 @@
     <div class="page-dnd-wrapper height-100 position-relative overflow-x-hidden" dnd-files-on-page>
 
         <div class="flex-column height-100">
-            <main-header opened-inside="portal" class="portal-header"></main-header>
+            <main-header ng-if="!vm.iframeMode"
+                         opened-inside="portal"
+                         class="portal-header"></main-header>
 
             <md-content class="app-md-content flex-0-1-100">
                 <div ui-view class="min-height space-for-sidenav"></div>

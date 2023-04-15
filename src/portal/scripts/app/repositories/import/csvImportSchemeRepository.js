@@ -61,7 +61,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(scheme)
+                body: JSON.stringify(scheme)
             })
     };
 
@@ -98,7 +98,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(scheme)
+                body: JSON.stringify(scheme)
             })
     };
 

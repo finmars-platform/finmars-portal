@@ -10,7 +10,6 @@ import importEntityService from "../../services/import/importEntityService";
 
     'use strict';
 
-    var metaContentTypesService = require('../../services/metaContentTypesService');
     var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
 
     var importEntityService = require('../../services/import/importEntityService');
@@ -24,7 +23,7 @@ import importEntityService from "../../services/import/importEntityService";
     var baseUrl = baseUrlService.resolve();
 
 
-    module.exports = function simpleEntityImportController($scope, $mdDialog, usersService) {
+    module.exports = function simpleEntityImportController($scope, $mdDialog, usersService, metaContentTypesService, systemMessageService) {
 
         var vm = this;
 
@@ -47,7 +46,7 @@ import importEntityService from "../../services/import/importEntityService";
         vm.hasSchemeEditPermission = false;
 
         vm.loadIsAvailable = function () {
-            return vm.config.scheme != null && vm.config.file !== null && vm.config.file !== undefined && vm.readyStatus.processing === false;
+            return !vm.readyStatus.processing && vm.config.scheme;
         };
 
         vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport().map(function (item){
@@ -77,7 +76,7 @@ import importEntityService from "../../services/import/importEntityService";
 
                 var ext = file.name.split('.')[1]
 
-                if (ext !== 'csv' && ext !== 'xlsx' ) {
+                if (ext !== 'csv' && ext !== 'xlsx' && ext !== 'json') {
 
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
@@ -169,7 +168,9 @@ import importEntityService from "../../services/import/importEntityService";
                 controller: 'SimpleEntityImportSchemeV2EditDialogController as vm',
                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-v2-dialog-view.html',
                 locals: {
-                    schemeId: vm.config.scheme
+                    data: {
+                        schemeId: vm.config.scheme
+                    }
                 },
                 targetEvent: $event,
                 preserveScope: true,
@@ -797,6 +798,37 @@ import importEntityService from "../../services/import/importEntityService";
 
 
         };
+
+        vm.downloadFile = function ($event, item) {
+
+            // TODO WTF why systemMessage Service, replace with FilePreview Service later
+            systemMessageService.viewFile(item.file_report).then(function (data) {
+
+                console.log('data', data);
+
+                $mdDialog.show({
+                    controller: 'FilePreviewDialogController as vm',
+                    templateUrl: 'views/dialogs/file-preview-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true,
+                    locals: {
+                        data: {
+                            content: data,
+                            info: item
+                        }
+                    }
+                });
+
+            })
+
+
+        }
+
 
         vm.init = function () {
 
