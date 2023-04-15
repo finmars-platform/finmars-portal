@@ -4,9 +4,8 @@
 
     var membersAndGroupsService = require('../../services/membersAndGroupsService');
     var entityResolverService = require('../../services/entityResolverService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
 
-    module.exports = function ($scope, $mdDialog, groupId) {
+    module.exports = function ($scope, $mdDialog, metaContentTypesService, groupId) {
 
         var vm = this;
 

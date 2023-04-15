@@ -49,7 +49,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(tooltipsList)
+                body: JSON.stringify(tooltipsList)
             })
     };
 

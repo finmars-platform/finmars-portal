@@ -6,15 +6,11 @@
     'use strict';
 
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
-    var metaContentTypesService = require('../../../services/metaContentTypesService');
     var metaService = require('../../../services/metaService');
-    var attributeTypeService = require('../../../services/attributeTypeService');
 
     var modelService = require('../../../services/modelService');
 
-    var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
-
-    module.exports = function simpleEntityImportSchemeCreateDialogController($scope, $mdDialog, data, importSchemesMethodsService) {
+    module.exports = function simpleEntityImportSchemeCreateDialogController($scope, $mdDialog, toastNotificationService, metaContentTypesService, attributeTypeService, data, importSchemesMethodsService) {
 
         var vm = this;
         vm.entityType = undefined;
@@ -38,6 +34,7 @@
             'short_name',
             'public_name',
             'notes',
+            'pricing_condition'
         ]
 
         vm.instrumentPricingAttributes = [

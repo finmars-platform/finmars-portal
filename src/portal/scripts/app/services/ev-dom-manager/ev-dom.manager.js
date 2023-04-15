@@ -1080,6 +1080,7 @@
                     ' data-ev-dropdown-action="activate_transaction"' +
                     ' data-object-id="' + objectId + '"' +
                     ' data-parent-group-hash-id="' + parentGroupHashId + '">Activate Transaction</div>';
+
             }
 
             if (entityType === 'instrument') {
@@ -1109,6 +1110,12 @@
             }
 
         }
+
+        innerHTMLString = innerHTMLString +
+        '<div class="ev-dropdown-option"' +
+        ' data-ev-dropdown-action="view_json"' +
+        ' data-object-id="' + objectId + '"' +
+        ' data-parent-group-hash-id="' + parentGroupHashId + '">View JSON</div>';
 
         innerHTMLString = innerHTMLString + '</div>';
 
@@ -1343,8 +1350,11 @@
         evScrollManager.setViewportElem(elements.viewportElem); // .ev-viewport
         evScrollManager.setContentElem(elements.contentElem); // .ev-content
         evScrollManager.setContentWrapElem(elements.contentWrapElem);
-        evScrollManager.setRootWrapElem(elements.rootWrapElem);
         evScrollManager.setLeftPanelElem(elements.leftPanelElem);
+
+        /* if (elements.rootWrapElem) { // split panel inside iframe does not have access to rootWrapElem
+            evScrollManager.setRootWrapElem(elements.rootWrapElem);
+        } */
 
         var interfaceLayout = evDataService.getInterfaceLayout();
         var components = evDataService.getComponents();

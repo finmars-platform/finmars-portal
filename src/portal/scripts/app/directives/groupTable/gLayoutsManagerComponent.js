@@ -6,18 +6,11 @@ import evEvents from "../../services/entityViewerEvents";
 (function () {
 
     const metaService = require('../../services/metaService');
-    const metaContentTypesService = require('../../services/metaContentTypesService');
     // const middlewareService = require('../../services/middlewareService');
     const evEvents = require("../../services/entityViewerEvents");
-    const evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
     const popupEvents = require('../../services/events/popupEvents');
 
     const evHelperService = require('../../services/entityViewerHelperService');
-    const uiService = require('../../services/uiService');
-
-    const toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
-    const ecosystemDefaultService = require('../../services/ecosystemDefaultService');
 
     const downloadFileHelper = require('../../helpers/downloadFileHelper');
 
@@ -30,7 +23,7 @@ import evEvents from "../../services/entityViewerEvents";
     const shareConfigurationFileService = require('../../services/shareConfigurationFileService');
     // const backendConfigurationImportService = require('../../services/backendConfigurationImportService');
 
-    module.exports = function ($mdDialog, $state, usersService, globalDataService, backendConfigurationImportService) {
+    module.exports = function ($mdDialog, $state, toastNotificationService, usersService, globalDataService, ecosystemDefaultService, metaContentTypesService, uiService, backendConfigurationImportService, reportHelper, evRvLayoutsHelper) {
         return {
             restrict: 'E',
             templateUrl: 'views/components/layouts-manager-view.html',
@@ -55,7 +48,7 @@ import evEvents from "../../services/entityViewerEvents";
                 const isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 let splitPanelLayoutId = null;
 				let spDefaultLayoutData = null;
-                let autosaveLayoutService = new AutosaveLayoutService();
+                let autosaveLayoutService = new AutosaveLayoutService(metaContentTypesService, uiService, reportHelper);
 
                 if (!isRootEntityViewer) {
                     spDefaultLayoutData = scope.evDataService.getSplitPanelDefaultLayout();

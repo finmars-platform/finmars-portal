@@ -101,7 +101,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify({
+                body: JSON.stringify({
                     'action': 'cancel'
                 })
             })
@@ -122,7 +122,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify({
+                body: JSON.stringify({
                     'action': 'abort-transaction-import'
                 })
             })

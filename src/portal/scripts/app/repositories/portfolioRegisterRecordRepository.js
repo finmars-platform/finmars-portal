@@ -79,7 +79,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(portfolio)
+                body: JSON.stringify(portfolio)
             })
     };
 
@@ -98,7 +98,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(portfolio)
+                body: JSON.stringify(portfolio)
             })
     };
 
@@ -117,7 +117,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(portfolios)
+                body: JSON.stringify(portfolios)
             })
     };
 
@@ -159,7 +159,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(data)
+                body: JSON.stringify(data)
             })
             .then(function (data) {
                 return new Promise(function (resolve, reject) {

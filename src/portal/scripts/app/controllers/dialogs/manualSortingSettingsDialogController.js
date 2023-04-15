@@ -2,7 +2,9 @@
 
     'use strict';
 
-    var uiService = require('../../services/uiService')
+    var uiService = require('../../services/uiService');
+
+    var rvDataHelper = require('../../helpers/rv-data.helper');
 
     module.exports = function ($scope, $mdDialog, data, entityViewerDataService) {
 
@@ -85,7 +87,8 @@
                 vm.layout.data.items = []
             }
 
-            var flatListItems = entityViewerDataService.getFlatList();
+            var flatListItems = rvDataHelper.getPureFlatStructure(entityViewerDataService);
+
             var uniqueColumnValues = []
             var value;
 

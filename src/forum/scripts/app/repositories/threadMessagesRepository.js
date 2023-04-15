@@ -63,7 +63,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'chats/message/',
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(thread)
+                body: JSON.stringify(thread)
             }).then(function (data) {
             return data.json();
         })
@@ -83,7 +83,7 @@ return window.fetch(baseUrl  + prefix + '/' + 'chats/message/' + id + '/',
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(thread)
+                body: JSON.stringify(thread)
             }).then(function (data) {
             return data.json();
         })

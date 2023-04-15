@@ -6,15 +6,13 @@ const processesService = require("../../../services/processesService");
 
     'use strict';
 
-    var metaContentTypesService = require('../../../services/metaContentTypesService');
     var metaService = require('../../../services/metaService');
     // var usersService = require('../../../services/usersService');
     // var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
     // var usersGroupService = require('../../../services/usersGroupService');
-    var configurationImportService = require('../../../services/configuration-import/configurationImportService');
     var mappingsImportService = require('../../../services/mappings-import/mappingsImportService');
 
-    module.exports = function configurationImportDialogController($scope, $mdDialog, usersService, usersGroupService, backendConfigurationImportService, systemMessageService, data) {
+    module.exports = function configurationImportDialogController($scope, $mdDialog, usersService, usersGroupService, backendConfigurationImportService, systemMessageService, metaContentTypesService, configurationImportService, data) {
 
         console.log("file", data.file);
 

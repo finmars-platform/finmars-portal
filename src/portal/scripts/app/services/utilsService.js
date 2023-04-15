@@ -1,14 +1,12 @@
-(function () {
+'use strict';
 
-    'use strict';
+import configureRepositoryUrlService from "../../../../shell/scripts/app/services/configureRepositoryUrlService";
+import baseUrlService from '../services/baseUrlService';
+const baseUrl = baseUrlService.resolve();
 
-    var baseUrlService = require('../services/baseUrlService');
-    var cookieService = require('../../../../core/services/cookieService');
-    var xhrService = require('../../../../core/services/xhrService');
-    var baseUrl = baseUrlService.resolve();
-
-
-    var getSystemInfo = function () {
+/** @module utilsService */
+export default function (cookieService, xhrService) {
+    const getSystemInfo = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
@@ -27,7 +25,7 @@
     };
 
 
-    var getSystemLogs = function () {
+    const getSystemLogs = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
@@ -45,7 +43,7 @@
             })
     };
 
-    var getSystemLog = function (file_name) {
+    const getSystemLog = function (file_name) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
@@ -65,10 +63,69 @@
         })
     };
 
-    module.exports = {
+    var getTablesSize = function () {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'utils/tables-size/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    const getRecycleBin = function (options) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'utils/recycle-bin/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+    var clearRecycleBin = function (data) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'utils/recycle-bin/clear-bin/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                data: JSON.stringify(data)
+            })
+    };
+
+    return {
         getSystemInfo: getSystemInfo,
         getSystemLogs: getSystemLogs,
-        getSystemLog: getSystemLog
+        getSystemLog: getSystemLog,
+        getTablesSize: getTablesSize,
+
+        getRecycleBin: getRecycleBin,
+        clearRecycleBin: clearRecycleBin
     }
 
-}());
+}

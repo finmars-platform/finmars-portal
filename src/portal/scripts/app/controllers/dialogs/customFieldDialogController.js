@@ -7,11 +7,9 @@
 
     var evEvents = require('../../services/entityViewerEvents');
 
-    var customFieldService = require('../../services/reports/customFieldService');
-
     //var AttributeDataService = require('../../services/attributeDataService');
 
-    module.exports = function ($scope, $mdDialog, attributeDataService, entityViewerEventService, data) {
+    module.exports = function ($scope, $mdDialog, customFieldService, attributeDataService, entityViewerEventService, data) {
 
         var vm = this;
 

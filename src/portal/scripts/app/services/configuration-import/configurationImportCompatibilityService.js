@@ -8,7 +8,6 @@
     var accountTypeModel = require('../../models/accountTypePropsModel');
     var instrumentType = require('../../models/instrumentTypePropsModel');
     var currencyModel = require('../../models/currencyPropsModel');
-    var metaContentTypesService = require('../metaContentTypesService');
 
     var entityResolverService = require('../entityResolverService');
 

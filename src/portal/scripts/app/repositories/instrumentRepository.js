@@ -1,16 +1,12 @@
 /**
  * Created by szhitenev on 04.05.2016.
  */
-(function () {
+import baseUrlService from "../../../../shell/scripts/app/services/baseUrlService";
+import configureRepositoryUrlService from "../../../../shell/scripts/app/services/configureRepositoryUrlService";
 
-	'use strict';
+export default function (cookieService, xhrService) {
 
-	var cookieService = require('../../../../core/services/cookieService');
-	var xhrService = require('../../../../core/services/xhrService');
-	var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
-	var baseUrlService = require('../services/baseUrlService');
-
-	var baseUrl = baseUrlService.resolve();
+	const baseUrl = baseUrlService.resolve();
 
 	var getList = function (options) {
 
@@ -110,7 +106,7 @@
 					Accept: 'application/json',
 					'Content-type': 'application/json'
 				},
-				data: JSON.stringify(instrument)
+				body: JSON.stringify(instrument)
 			})
 	};
 
@@ -129,7 +125,7 @@
 					Accept: 'application/json',
 					'Content-type': 'application/json'
 				},
-				data: JSON.stringify(instrument)
+				body: JSON.stringify(instrument)
 			})
 	};
 
@@ -148,7 +144,7 @@
 					Accept: 'application/json',
 					'Content-type': 'application/json'
 				},
-				data: JSON.stringify(data)
+				body: JSON.stringify(data)
 			})
 	};
 
@@ -167,7 +163,7 @@
 					Accept: 'application/json',
 					'Content-type': 'application/json'
 				},
-				data: JSON.stringify(instruments)
+				body: JSON.stringify(instruments)
 			})
 	};
 
@@ -209,7 +205,7 @@
 					Accept: 'application/json',
 					'Content-type': 'application/json'
 				},
-				data: JSON.stringify(data)
+				body: JSON.stringify(data)
 			})
 			.then(function (data) {
 				return new Promise(function (resolve, reject) {
@@ -218,7 +214,7 @@
 			})
 	};
 
-	module.exports = {
+	return {
 		getList: getList,
 		getListLight: getListLight,
 		getListForSelect: getListForSelect,
@@ -232,4 +228,4 @@
 		deleteBulk: deleteBulk
 	}
 
-}());
+};

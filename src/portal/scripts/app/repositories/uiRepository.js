@@ -1,19 +1,9 @@
-/**
- * Created by szhitenev on 16.06.2016.
- */
-(function () {
+import baseUrlService from "../services/baseUrlService";
+import configureRepositoryUrlService from "../../../../shell/scripts/app/services/configureRepositoryUrlService";
 
-    'use strict';
+export default function (cookieService, xhrService, metaContentTypesService) {
 
-    var cookieService = require('../../../../core/services/cookieService');
-    var xhrService = require('../../../../core/services/xhrService');
-    var metaContentTypesService = require('../services/metaContentTypesService');
-    var metaRestrictionsRepository = require('./metaRestrictionsRepository');
-    var baseUrlService = require('../services/baseUrlService');
-
-    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
-
-    var baseUrl = baseUrlService.resolve();
+    const baseUrl = baseUrlService.resolve();
 
     var getRequestParams = function (method, bodyData) { // TODO: move to xhrService
 
@@ -35,7 +25,7 @@
         if (['POST', 'PATCH', 'PUT'].includes(method)) {
 
             reqestParamsObj.headers['X-CSRFToken'] = cookieService.getCookie('csrftoken');
-            reqestParamsObj.data = JSON.stringify(bodyData);
+            reqestParamsObj.body = JSON.stringify(bodyData);
 
         } else if (method === 'DELETE') {
             reqestParamsObj.headers['X-CSRFToken'] = cookieService.getCookie('csrftoken');
@@ -241,8 +231,8 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
     var getListLayoutTemplate = function (isReport) {
         const template = {
             "name": "",
-			"user_code": "",
-			"content_type": "",
+            "user_code": "",
+            "content_type": "",
             "data": {
                 "entityType": null,
                 "folding": false,
@@ -266,10 +256,10 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         };
 
         if (isReport) {
-			template.data.filters = [];
-			template.data.reportOptions = {};
-			template.data.reportLayoutOptions = {};
-		}
+            template.data.filters = [];
+            template.data.reportOptions = {};
+            template.data.reportLayoutOptions = {};
+        }
 
         return [template];
     };
@@ -850,8 +840,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         })
     };
 
-
-    module.exports = {
+    return {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
 
@@ -944,4 +933,4 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
     }
 
-}());
+};

@@ -50,7 +50,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(map)
+                body: JSON.stringify(map)
             })
     };
 
@@ -87,7 +87,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(map)
+                body: JSON.stringify(map)
             })
     };
 

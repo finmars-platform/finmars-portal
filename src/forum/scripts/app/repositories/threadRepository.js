@@ -70,7 +70,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(thread)
+                body: JSON.stringify(thread)
             }).then(function (data) {
             return data.json();
         })
@@ -89,7 +89,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(thread)
+                body: JSON.stringify(thread)
             }).then(function (data) {
             return data.json();
         })

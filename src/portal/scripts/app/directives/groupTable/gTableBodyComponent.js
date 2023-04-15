@@ -1,6 +1,9 @@
 /**
  * Created by szhitenev on 05.05.2016.
  */
+import RvDomManager from "../../services/rv-dom-manager/rv-dom.manager";
+import toastNotificationService from "../../../../../shell/scripts/app/services/toastNotificationService";
+
 (function () {
 
     'use strict';
@@ -9,7 +12,6 @@
     var evRenderer = require('../../services/ev-renderer/ev.renderer');
     var rvRenderer = require('../../services/rv-renderer/rv.renderer');
     var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
-    var rvDomManager = require('../../services/rv-dom-manager/rv-dom.manager');
     var evDataHelper = require('../../helpers/ev-data.helper');
     var rvDataHelper = require('../../helpers/rv-data.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
@@ -19,7 +21,7 @@
     var metaService = require('../../services/metaService');
     var EvScrollManager = require('../../services/ev-dom-manager/ev-scroll.manager');
 
-    module.exports = function (usersService, globalDataService, evRvDomManagerService) {
+    module.exports = function (toastNotificationService, usersService, globalDataService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService) {
         return {
             restrict: 'AE',
             scope: {
@@ -51,7 +53,7 @@
                     contentElem: contentElem,
                     workareaWrapElem: scope.workareaWrapElement,
                     contentWrapElem: scope.contentWrapElement,
-                    rootWrapElem: scope.rootWrapElement
+                    rootWrapElem: scope.rootWrapElement // 'null' when rv / ev is inside split panel that is inside iframe
                 };
 
                 var projection;
@@ -60,6 +62,8 @@
 
                 scope.isReport = metaService.isReport(entityType);
                 var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
+
+                var rvDomManager = new RvDomManager(toastNotificationService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService);
 
                 var activeLayoutConfigIsSet = false;
 
@@ -532,16 +536,27 @@
 
                 var init = function () {
 
-                    setTimeout(function () {
+                    if (viewContext === 'split_panel' && entityType === 'transaction-report') {
 
-                        if (!scope.firstRender) { // Force Table render if not rendered in first 60 second
+                        scope.dataLoadStatus = true;
+                        scope.firstRender = true;
 
-                            console.log("Special render trigger")
+                    }
+                    else {
 
-                            updateTableContent();
-                        }
+                        setTimeout(function () {
 
-                    }, 60 * 1000)
+                            if (!scope.firstRender) { // Force Table render if not rendered in first 60 second
+
+                                console.log("Special render trigger")
+
+                                updateTableContent();
+                            }
+
+                        }, 60 * 1000)
+
+
+                    }
 
                     window.addEventListener('resize', onWindowResize);
 

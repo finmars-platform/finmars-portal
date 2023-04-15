@@ -26,7 +26,7 @@ export default function (cookieService) {
 				Accept: 'application/json',
 				'Content-type': 'application/json'
 			},
-			data: JSON.stringify(data)
+			body: JSON.stringify(data)
 		})
 	};
 

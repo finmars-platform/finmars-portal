@@ -5,15 +5,7 @@
 
     'use strict';
 
-    var uiService = require('../../../services/uiService');
-    var dashboardHelper = require('../../../helpers/dashboard.helper');
-    var evRvLayoutsHelper = require('../../../helpers/evRvLayoutsHelper');
-    var dashboardConstructorMethodsService = require('../../../services/dashboard-constructor/dashboardConstructorMethodsService');
-
-    var portfolioService = require('../../../services/portfolioService');
-    var strategyService = require('../../../services/strategyService');
-
-    module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService, multitypeFieldService, data) {
+    module.exports = function ($scope, $mdDialog, uiService, dashboardConstructorMethodsService, dashboardHelper, evRvLayoutsHelper, item, dataService, eventService, attributeDataService, multitypeFieldService, data) {
 
         var vm = this;
 
@@ -442,14 +434,6 @@
             $mdDialog.hide({status: 'agree', action: actionAfterClosing});
 
         };
-
-        /*vm.getPortfolios = function () {
-            return portfolioService.getList({page: 1, pageSize: 1000});
-        };
-
-        vm.getStrategies = function (strategyNumber) {
-            return strategyService.getList(strategyNumber, {page: 1, pageSize: 1000});
-        };*/
 
         // Victor 2020.10.26 Issue #47
         vm.exportToDashboards = function () {

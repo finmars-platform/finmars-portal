@@ -2,7 +2,6 @@
 
     'use strict';
 
-    const evRvLayoutsHelper = require('../helpers/evRvLayoutsHelper');
     const popupEvents = require('../services/events/popupEvents');
     const dashboardEvents = require('../services/dashboard/dashboardEvents');
 
@@ -13,7 +12,7 @@
     const toastNotificationService = require('../../../../core/services/toastNotificationService');
 
 
-    module.exports = function ($mdDialog, $state, backendConfigurationImportService) {
+    module.exports = function ($mdDialog, $state, toastNotificationService, uiService, backendConfigurationImportService, evRvLayoutsHelper) {
         return {
             restrict: 'E',
             templateUrl: 'views/components/layouts-manager-view.html',
@@ -184,6 +183,7 @@
                         if (res.status === 'agree') {
 
                             scope.layout.name = res.data.name;
+                            scope.layout.user_code = res.data.user_code;
 
                             uiService.updateDashboardLayout(scope.layout.id, scope.layout).then(async function (data) {
                                 scope.dashboardDataService.updateModifiedDate(data.modified);

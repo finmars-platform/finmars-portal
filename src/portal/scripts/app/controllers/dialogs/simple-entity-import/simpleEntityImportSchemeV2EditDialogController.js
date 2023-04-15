@@ -20,8 +20,7 @@
 
     var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
 
-
-    module.exports = function simpleEntityImportSchemeEditDialogController($scope, $mdDialog, schemeId, importSchemesMethodsService) {
+    module.exports = function simpleEntityImportSchemeEditDialogController($scope, $mdDialog, toastNotificationService, metaContentTypesService, attributeTypeService, importSchemesMethodsService, schemeId, data) {
 
         var vm = this;
 
@@ -31,6 +30,7 @@
 
         vm.scheme = {};
         vm.readyStatus = {scheme: false, entitySchemeAttributes: false};
+        vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport();
 
         vm.dynamicAttributes = [];
 
@@ -44,7 +44,8 @@
             'short_name',
             'public_name',
             'notes',
-            'country'
+            'country',
+            'pricing_condition'
         ]
 
         vm.instrumentPricingAttributes = [
@@ -85,8 +86,6 @@
 
         vm.dynamicAttrPicked = true;
 
-        var pickedDynamicAttrs = [];
-
         vm.inputsFunctions = [];
 
         /**
@@ -103,34 +102,18 @@
                     "description": "Imported: " + input.name + " (column #" + input.column + ") " + "-> " + input.name_expr,
                     "groups": "input",
                     "func": input.name,
-					"validation": {
-						"func": input.name
-					}
+                    "validation": {
+                        "func": input.name
+                    }
                 }
 
             })
 
         };
 
-        var findPickedDynamicAttrs = function () {
-            if (vm.dynamicAttrPicked) {
-                pickedDynamicAttrs = [];
+        vm.getItem = function () {
 
-                vm.scheme.entity_fields.map(function (field) {
-                    if (field.dynamic_attribute_id) {
-
-                        pickedDynamicAttrs.push(field.dynamic_attribute_id);
-
-                    }
-                });
-
-                vm.dynamicAttrPicked = false;
-            }
-        };
-
-        vm.getItem = function(){
-
-            csvImportSchemeService.getByKey(schemeId).then(function (data) {
+            csvImportSchemeService.getByKey(vm.schemeId).then(function (data) {
 
                 vm.scheme = data;
 
@@ -161,7 +144,7 @@
 
                 if (deprecated_fields.hasOwnProperty(vm.scheme.content_type)) {
 
-                    vm.scheme.entity_fields = vm.scheme.entity_fields.filter(function(field) {
+                    vm.scheme.entity_fields = vm.scheme.entity_fields.filter(function (field) {
 
                         return deprecated_fields[vm.scheme.content_type].indexOf(field.system_property_key) === -1;
 
@@ -171,7 +154,7 @@
 
                 vm.scheme.entity_fields.map(function (entityField, entityFieldIndex) {
 
-                        if (entityField.system_property_key) {
+                    if (entityField.system_property_key) {
 
                         modelAttributes.forEach(function (attribute) {
 
@@ -202,7 +185,6 @@
 
                 vm.inputsFunctions = vm.getFunctions();
 
-                findPickedDynamicAttrs();
 
                 $scope.$apply();
 
@@ -280,18 +262,6 @@
             return vm.readyStatus.scheme;
         };
 
-        vm.onDynamicAttributePick = function () {
-            findPickedDynamicAttrs();
-            vm.extendEntityFields();
-        };
-
-        vm.checkForUsedDynamicAttr = function (attrId) {
-            if (pickedDynamicAttrs.indexOf(attrId) !== -1) {
-                return true;
-            }
-
-            return false;
-        };
 
         vm.addCsvField = function () {
             var fieldsLength = vm.scheme.csv_fields.length;
@@ -316,77 +286,16 @@
 
         };
 
-        vm.addDynamicAttribute = function () {
-            var lastAttributeIndex = vm.scheme.entity_fields.length - 1;
-
-            vm.scheme.entity_fields.push({
-                expression: '',
-                name: '',
-                order: lastAttributeIndex
-            });
-
-            console.log("scheme order", vm.scheme.entity_fields);
-        };
-
         vm.removeCsvField = function (item, $index) {
             vm.scheme.csv_fields.splice($index, 1);
 
             vm.inputsFunctions = vm.getFunctions();
         };
 
-        vm.removeDynamicAttribute = function (item, $index) {
-
-            var i;
-            for (i = 0; i < pickedDynamicAttrs.length; i++) {
-                if (vm.scheme.entity_fields[$index].dynamic_attribute_id === pickedDynamicAttrs[i]) {
-                    pickedDynamicAttrs.splice(i, 1);
-                    break;
-                }
-            }
-
-            vm.scheme.entity_fields.splice($index, 1);
-        };
-
-        /*vm.setProviderFieldExpression = function (item) {
-
-            if (!item.name_expr || item.name_expr === '') {
-                item.name_expr = item.name;
-                vm.inputsFunctions = vm.getFunctions();
-            }
-
-        };*/
         vm.setProviderFieldExpression = function (item) {
             importSchemesMethodsService.setProviderFieldExpression(vm, item);
         }
 
-        /*vm.openProviderFieldExpressionBuilder = function (item, $event) {
-
-            $mdDialog.show({
-                controller: 'ExpressionEditorDialogController as vm',
-                templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
-                targetEvent: $event,
-                multiple: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    item: {expression: item.name_expr},
-                    data: {
-                        groups: [vm.inputsGroup],
-                        functions: [vm.inputsFunctions]
-                    }
-                }
-            }).then(function (res) {
-
-                if (res.status === 'agree') {
-
-                    item.name_expr = res.data.item.expression;
-                    vm.inputsFunctions = vm.getFunctions();
-
-                }
-
-            });
-
-        };*/
         vm.openProviderFieldExpressionBuilder = function (item, $event) {
             importSchemesMethodsService.openFxBtnExprBuilder(item, vm, $event);
         }
@@ -395,22 +304,15 @@
             importSchemesMethodsService.openExprBuilder(item, 'expression', vm, $event);
         }
 
-        /*vm.checkForUserExpr = function (item) {
-            if (item.name_expr) {
-                if (item.name && item.name === item.name_expr) {
-                    return false;
-                }
+        vm.openItemPostProcessScriptExpressionBuilder = function (item, $event) {
+            importSchemesMethodsService.openExprBuilder(vm.scheme, 'item_post_process_script', vm, $event);
+        }
 
-                return 'md-primary';
-            }
-
-            return false;
-        };*/
         vm.checkForUserExpr = function (item) {
             return importSchemesMethodsService.checkForUserExpr(item);
         }
 
-        vm.makeCopy = function($event){
+        vm.makeCopy = function ($event) {
 
             var scheme = JSON.parse(JSON.stringify(vm.scheme));
 
@@ -521,105 +423,80 @@
 
                 vm.processing = true;
 
-                csvImportSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
+                if (vm.scheme.id) {
 
-                    toastNotificationService.success("Simple Import Scheme " + vm.scheme.user_code + ' was successfully saved');
+                    csvImportSchemeService.update(vm.scheme.id, vm.scheme).then(function (data) {
 
-                    vm.processing = false;
+                        toastNotificationService.success("Simple Import Scheme " + vm.scheme.user_code + ' was successfully saved');
 
-                    $mdDialog.hide({status: 'agree'});
+                        vm.processing = false;
 
-                }).catch(function (reason) {
+                        $mdDialog.hide({status: 'agree'});
 
-                    vm.processing = false;
+                    }).catch(function (reason) {
 
-                    $mdDialog.show({
-                        controller: 'ValidationDialogController as vm',
-                        templateUrl: 'views/dialogs/validation-dialog-view.html',
-                        targetEvent: $event,
-                        locals: {
-                            validationData: reason.message
-                        },
-                        multiple: true,
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true
-                    })
+                        vm.processing = false;
 
-                });
+                        $mdDialog.show({
+                            controller: 'ValidationDialogController as vm',
+                            templateUrl: 'views/dialogs/validation-dialog-view.html',
+                            targetEvent: $event,
+                            locals: {
+                                validationData: reason.message
+                            },
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true
+                        })
+
+                    });
+
+                } else {
+
+                    csvImportSchemeService.create(vm.scheme).then(function (data) {
+
+                        vm.schemeId = data.id;
+
+                        toastNotificationService.success("Simple Import Scheme " + vm.scheme.user_code + ' was successfully created');
+
+                        vm.processing = false;
+
+                        vm.getItem();
+
+                    }).catch(function (reason) {
+
+                        vm.processing = false;
+
+                        $mdDialog.show({
+                            controller: 'ValidationDialogController as vm',
+                            templateUrl: 'views/dialogs/validation-dialog-view.html',
+                            targetEvent: $event,
+                            locals: {
+                                validationData: reason.message
+                            },
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true
+                        })
+
+                    });
+
+                }
             }
         };
 
-        /*vm.openMapping = function ($event, item) {
 
-            console.log('item', item);
-
-            $mdDialog.show({
-                controller: 'EntityTypeMappingDialogController as vm',
-                templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                preserveScope: true,
-                multiple: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    mapItem: {complexExpressionEntity: item.entity}
-                }
-            })
-
-        };*/
         vm.openMapping = function ($event, item) {
             var locals = {mapItem: {complexExpressionEntity: item.entity}}
             importSchemesMethodsService.openMappingDialog(locals, $event);
         };
 
-        /*vm.checkForClassifierMapping = function (classifierId) {
-
-            if (classifierId) {
-
-                var i;
-                for (i = 0; i < vm.dynamicAttributes.length; i++) {
-
-                    if (vm.dynamicAttributes[i].id === classifierId) {
-
-                        if (vm.dynamicAttributes[i].value_type === 30) {
-                            return true;
-                        }
-
-                    }
-
-                }
-
-            }
-
-            return false;
-
-        };*/
         vm.checkForClassifierMapping = function (classifierId) {
             importSchemesMethodsService.checkForClassifierMapping(vm.dynamicAttributes, classifierId);
         };
 
-        /*vm.openClassifierMapping = function (classifierId, $event) {
-
-            $mdDialog.show({
-                controller: 'EntityTypeClassifierMappingDialogController as vm',
-                templateUrl: 'views/dialogs/entity-type-classifier-mapping-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true,
-                locals: {
-                    options: {
-                        entityType: vm.entityType,
-                        id: classifierId
-                    }
-                }
-            })
-
-        };*/
         vm.openClassifierMapping = function (classifierId, $event) {
             var localsObj = {
                 options: {
@@ -703,7 +580,7 @@
         };
 
 
-        vm.addCalculatedField = function(){
+        vm.addCalculatedField = function () {
 
             var fieldsLength = vm.scheme.calculated_inputs.length;
             var lastFieldNumber;
@@ -751,7 +628,19 @@
 
         vm.init = function () {
 
-            vm.getItem();
+            vm.schemeId = data.schemeId
+
+            if (vm.schemeId) {
+                vm.getItem();
+            } else {
+                vm.scheme = {
+
+                    entity_fields: [],
+                    csv_fields: []
+
+                }
+                vm.readyStatus.scheme = true;
+            }
 
         };
 

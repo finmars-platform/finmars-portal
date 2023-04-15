@@ -7,12 +7,15 @@
 export default function ($stateProvider) {
 
 	$stateProvider.state('app.profile', {
-		url: '/profile',
+		url: '/profile?state&code&session_state&kc_action_status',
 		templateUrl: 'views/profile-view.html',
 		// abstract: true,
 		controller: 'ProfileController as vm',
 		params: {
-
+			state: null,
+			code: null,
+			session_state: null,
+			kc_action_status: null
 		}
 	});
 

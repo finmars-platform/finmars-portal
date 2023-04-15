@@ -2,19 +2,12 @@
  * Created by szhitenev on 13.02.2017.
  */
 
+const modelService = require('../services/modelService');
 /**
  * Report Viewer Helper.
  * @module reportHelper
  */
-
-(function () {
-
-    'use strict';
-
-    var transactionClassService = require('../services/transaction/transactionClassService');
-    var modelService = require('../services/modelService');
-    var metaService = require('../services/metaService');
-    var expressionsService = require('../services/expression.service');
+export default function (expressionService) {
 
     var models = modelService.getModelsWithAttributes();
 
@@ -273,7 +266,7 @@
 
         for (const item of items) {
 
-            result[item.id] = item
+            var result_item = Object.assign({}, item)
 
             if (item.hasOwnProperty('attributes')) {
 
@@ -285,28 +278,28 @@
                     // localResultKey = resultKey + '.' + attribute.attribute_type;
                     localResultKey = resultKey + '.' + attribute.attribute_type_object.user_code;
 
-                    result[localResultKey] = null;
+                    result_item[localResultKey] = null;
 
                     if (attribute.attribute_type_object.value_type === 10) {
-                        result[localResultKey] = attribute.value_string
+                        result_item[localResultKey] = attribute.value_string
                     }
 
                     if (attribute.attribute_type_object.value_type === 20) {
-                        result[localResultKey] = attribute.value_float
+                        result_item[localResultKey] = attribute.value_float
                     }
 
                     if (attribute.attribute_type_object.value_type === 30) {
 
                         if (attribute.classifier_object) {
 
-                            result[localResultKey] = attribute.classifier_object.name
+                            result_item[localResultKey] = attribute.classifier_object.name
 
                         }
 
                     }
 
                     if (attribute.attribute_type_object.value_type === 40) {
-                        result[localResultKey] = attribute.value_date
+                        result_item[localResultKey] = attribute.value_date
                     }
 
 
@@ -315,6 +308,8 @@
 
             }
 
+
+            result[item.id] = result_item
 
         }
 
@@ -349,6 +344,8 @@
         var accounts_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_accounts)
         var currencies_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_currencies)
         var portfolios_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_portfolios)
+
+        console.log('portfolios_as_dict', portfolios_as_dict);
 
         var counterparties_as_dict = null
         if (reportOptions.item_counterparties) {
@@ -932,7 +929,7 @@
 
     }
 
-    var reportOptionsTemporaryPropsList = [
+    /*var reportOptionsTemporaryPropsList = [
         'items',
         'item_complex_transactions',
         'item_transaction_classes',
@@ -954,6 +951,57 @@
         'custom_fields_object',
         'save_report',
         'report_uuid',
+    ];*/
+    const reportOptionsConstantProps = [
+        "account_mode",
+        "accounts",
+        "accounts_cash",
+        "accounts_cash_object",
+        "accounts_object",
+        "accounts_position",
+        "accounts_position_object",
+        "allocation_detailing",
+        "allocation_mode",
+        "approach_multiplier",
+        "calculate_pl",
+        "calculationGroup",
+        "complex_transaction_statuses_filter",
+        "cost_method",
+        "cost_method_object",
+        "custom_fields_to_calculate",
+        "date_field",
+        "depth_level",
+        "filters",
+        "pl_include_zero",
+        "portfolio_mode",
+        "portfolios",
+        "portfolios_object",
+        "pricing_policy",
+        "pricing_policy_object",
+        "report_currency",
+        "report_currency_object",
+        "pl_first_date",
+        "report_date",
+        "begin_date",
+        "end_date",
+        "report_type",
+        "show_balance_exposure_details",
+        "show_transaction_details",
+        "strategies1",
+        "strategies1_object",
+        "strategies2",
+        "strategies2_object",
+        "strategies3",
+        "strategies3_object",
+        "strategy1_mode",
+        "strategy2_mode",
+        "strategy3_mode",
+        "table_font_size",
+        "expression_iterations_count",
+        "transaction_classes",
+        "transaction_classes_object",
+        "end_date",
+        "begin_date"
     ];
 
     /**
@@ -963,8 +1011,15 @@
      */
     var cleanReportOptionsFromTmpProps = function (reportOptions) {
 
-        reportOptionsTemporaryPropsList.forEach(propName => {
+        /*reportOptionsTemporaryPropsList.forEach(propName => {
             delete reportOptions[propName]
+        });*/
+        Object.keys(reportOptions).forEach(prop => {
+
+            if ( !reportOptionsConstantProps.includes(prop) ) {
+                delete reportOptions[prop];
+            }
+
         });
 
         return reportOptions;
@@ -1027,7 +1082,7 @@
 
                 return new Promise(function (resolve) {
 
-                    expressionsService.getResultOfExpression({'expression': dateExpr}).then(function (data) {
+                    expressionService.getResultOfExpression({'expression': dateExpr}).then(function (data) {
 
                         resolve(data.result);
 
@@ -1048,7 +1103,7 @@
 
     };
 
-    module.exports = {
+    return {
         convertItemsToFlat: convertItemsToFlat,
         injectIntoItems: injectIntoItems,
         injectIntoItemsV2: injectIntoItemsV2,
@@ -1060,4 +1115,4 @@
         getReportDate: getReportDate,
     }
 
-}());
+}

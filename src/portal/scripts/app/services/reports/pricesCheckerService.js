@@ -1,17 +1,33 @@
 /**
  * Created by szhitenev on 06.11.2020.
  */
-(function () {
+import baseUrlService from "../../../../../shell/scripts/app/services/baseUrlService";
 
-    var pricesCheckerRepository = require('../../repositories/reports/pricesCheckerRepository');
+export default function (cookieService, xhrService) {
 
-    var check = function (data) {
-        return pricesCheckerRepository.check(data);
+    const baseUrl = baseUrlService.resolve();
+
+    const check = function (data) {
+
+        const prefix = baseUrlService.getMasterUserPrefix();
+        const apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'reports/price-history-check/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
     };
 
-    module.exports = {
+    return {
         check: check
     }
 
-
-}());
+}
