@@ -3,7 +3,7 @@
            drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>JSON Editor - {{vm.entityTypeSlug()}}</h2>
+            <h2>JSON View - {{vm.entityTypeSlug()}}</h2>
             <span flex></span>
         </div>
     </md-toolbar>
@@ -34,10 +34,6 @@
 
             <md-button ng-click="vm.export()" style="margin-right:20px;">
                 Download
-            </md-button>
-
-            <md-button ng-click="vm.agree()" class="{{vm.processing ? 'disabled-btn' : ''}}">
-                Save
             </md-button>
 
             <div style="padding-top: 12px; width: 30px" data-ng-if="!vm.processing">

@@ -299,6 +299,8 @@ export default (function () {
 	portal.controller('ContextMenuOptionSettingsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/contextMenuOptionSettingsDialogController')]);
 	portal.directive('contextMenuConstructorOption', [require('./app/directives/contextMenuConstructorOptionDirective')]);
 
+    portal.controller('UniversalInputDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/universalInputDialogController')]);
+    portal.controller('BulkJsonViewDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/bulkJsonViewDialogController')]);
 
 	portal.controller('InstrumentSelectDatabaseDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'instrumentService', 'data', require('./app/controllers/dialogs/instrumentSelectDatabaseDialogController')]);
 	portal.controller('UnifiedSelectDatabaseDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/unifiedSelectDatabaseDialogController')]);

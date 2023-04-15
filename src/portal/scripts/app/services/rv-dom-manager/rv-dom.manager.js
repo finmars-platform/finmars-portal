@@ -74,14 +74,8 @@ export default function (toastNotificationService, transactionTypeService, price
             // lastFrom = 400 now,
             // It means we render from 300 to 499
 
-            if (from < lastFrom) {
-                if(Math.abs(from - lastFrom) > halfstep - (halfstep / 4)) {
-                    evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
-                }
-            } else {
-                if(Math.abs(lastFrom - from) > halfstep - (halfstep / 4)) {
-                    evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
-                }
+            if (Math.abs(from - lastFrom) > (halfstep / 8)) {
+                evEventService.dispatchEvent(evEvents.UPDATE_PROJECTION);
             }
 
             calculateScroll(elements, evDataService)
