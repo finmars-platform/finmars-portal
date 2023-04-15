@@ -1,0 +1,22 @@
+<div class="journal-page">
+
+    <div layout="row">
+        <h1 style="margin-top: 5px; font-family: 'Roboto Light'; font-size: 20px">Manage Configuration</h1>
+
+    </div>
+
+
+    <div data-ng-if="vm.readyStatus.data">
+
+        <div>Hello world</div>
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.data" style="width: 100%">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="100"></progress-circular>
+        </div>
+    </div>
+
+
+</div>

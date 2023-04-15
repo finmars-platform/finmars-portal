@@ -842,6 +842,16 @@
                     }
                 }
             })
+            .state('app.portal.marketplace', {
+                url: '/marketplace',
+                templateUrl: 'views/pages/marketplace-page-view.html',
+                controller: 'MarketplacePageController as vm'
+            })
+            .state('app.portal.manage-configuration', {
+                url: '/manage-configuration',
+                templateUrl: 'views/pages/manage-configuration-page-view.html',
+                controller: 'ManageConfigurationPageController as vm'
+            })
             .state('app.portal.settings.import-configuration', {
                 url: '/import-configuration',
                 templateUrl: 'views/pages/import-configurations-view.html',

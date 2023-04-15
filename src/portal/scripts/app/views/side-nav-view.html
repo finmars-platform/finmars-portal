@@ -999,7 +999,7 @@
                                         <li data-ng-if="vm.accessTable.settings_export_configuration">
                                             <md-button class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.portal.settings.export-configuration">
-                                                <span class="side-nav-title">Export</span>
+                                                <span class="side-nav-title">Export (Deprecated)</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>
@@ -1007,7 +1007,25 @@
                                         <li>
                                             <md-button class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.portal.update-configuration">
-                                                <span class="side-nav-title">Update</span>
+                                                <span class="side-nav-title">Update (Deprecated)</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.portal.manage-configuration">
+                                                <span class="side-nav-title">Manage</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
+
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.portal.marketplace">
+                                                <span class="side-nav-title">Marketplace</span>
                                                 <span class="md-visually-hidden"
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>
