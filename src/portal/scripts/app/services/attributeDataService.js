@@ -81,6 +81,38 @@
 
         var attributesAvailableForColumns = [];
 
+        /** Use aliases as names for user field for complex transactions **/
+        function applyAliasesToAttrs (attributes, keyPrefix, namePrefix) {
+
+            let userFields;
+
+            if (attributes[0].content_type === 'transactions.complextransaction') {
+                userFields = getTransactionUserFields();
+            } else {
+                userFields = getInstrumentUserFields();
+            }
+
+            userFields.forEach(function (field) {
+
+                attributes = attributes.map(function (attr) {
+
+                    /*if (attr.key === 'complex_transaction.' + field.key) {
+                        attr.name = 'Complex Transaction. ' + field.name;
+                    }*/
+                    if (attr.key === keyPrefix + field.key) {
+                        attr.name = namePrefix + field.name;
+                    }
+
+                    return attr;
+
+                })
+
+            });
+
+            return attributes;
+
+        }
+
         function _getBalanceReportAttributes() {
 
             var result = [];
@@ -91,11 +123,14 @@
 
             var balancePerformanceAttrs = getAllAttributesAsFlatList('reports.balancereportperformance', '', 'Performance', {maxDepth: 1});
 
-            var allocationAttrs = getAllAttributesAsFlatList('instruments.instrument', 'allocation', 'Allocation', {maxDepth: 1});
-
             var instrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
+            instrumentAttrs = applyAliasesToAttrs(instrumentAttrs, 'instrument.', 'Instrument. ');
 
             var linkedInstrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
+            linkedInstrumentAttrs = applyAliasesToAttrs(linkedInstrumentAttrs, 'linked_instrument.', 'Linked Instrument. ');
+
+            var allocationAttrs = getAllAttributesAsFlatList('instruments.instrument', 'allocation', 'Allocation', {maxDepth: 1});
+            allocationAttrs = applyAliasesToAttrs(allocationAttrs, 'allocation.', 'Allocation. ');
 
             var currencyAttrs = getAllAttributesAsFlatList('currencies.currency', 'currency', 'Currency', {maxDepth: 1});
 
@@ -174,11 +209,14 @@
 
             var balancePerformanceAttrs = getAllAttributesAsFlatList('reports.plreportperformance', '', 'Performance', {maxDepth: 1});
 
-            var allocationAttrs = getAllAttributesAsFlatList('instruments.instrument', 'allocation', 'Allocation', {maxDepth: 1});
-
             var instrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
+            instrumentAttrs = applyAliasesToAttrs(instrumentAttrs, 'instrument.', 'Instrument. ');
 
             var linkedInstrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
+            linkedInstrumentAttrs = applyAliasesToAttrs(linkedInstrumentAttrs, 'linked_instrument.', 'Linked Instrument. ');
+
+            var allocationAttrs = getAllAttributesAsFlatList('instruments.instrument', 'allocation', 'Allocation', {maxDepth: 1});
+            allocationAttrs = applyAliasesToAttrs(allocationAttrs, 'allocation.', 'Allocation. ');
 
             var accountAttrs = getAllAttributesAsFlatList('accounts.account', 'account', 'Account', {maxDepth: 1});
 
@@ -237,6 +275,23 @@
 
         }
 
+        const ttypeUserFields  = [
+            'complex_transaction.transaction_type.user_text_1', 'complex_transaction.transaction_type.user_text_2', 'complex_transaction.transaction_type.user_text_3', 'complex_transaction.transaction_type.user_text_4', 'complex_transaction.transaction_type.user_text_5',
+            'complex_transaction.transaction_type.user_text_6', 'complex_transaction.transaction_type.user_text_7', 'complex_transaction.transaction_type.user_text_8', 'complex_transaction.transaction_type.user_text_9', 'complex_transaction.transaction_type.user_text_10',
+            'complex_transaction.transaction_type.user_text_11', 'complex_transaction.transaction_type.user_text_12', 'complex_transaction.transaction_type.user_text_13', 'complex_transaction.transaction_type.user_text_14', 'complex_transaction.transaction_type.user_text_15',
+            'complex_transaction.transaction_type.user_text_16', 'complex_transaction.transaction_type.user_text_17', 'complex_transaction.transaction_type.user_text_18', 'complex_transaction.transaction_type.user_text_19', 'complex_transaction.transaction_type.user_text_20',
+            'complex_transaction.transaction_type.user_text_21', 'complex_transaction.transaction_type.user_text_22', 'complex_transaction.transaction_type.user_text_23', 'complex_transaction.transaction_type.user_text_24', 'complex_transaction.transaction_type.user_text_25',
+            'complex_transaction.transaction_type.user_text_26', 'complex_transaction.transaction_type.user_text_27', 'complex_transaction.transaction_type.user_text_28', 'complex_transaction.transaction_type.user_text_29', 'complex_transaction.transaction_type.user_text_30',
+
+            'complex_transaction.transaction_type.user_number_1', 'complex_transaction.transaction_type.user_number_2', 'complex_transaction.transaction_type.user_number_3', 'complex_transaction.transaction_type.user_number_4',
+            'complex_transaction.transaction_type.user_number_5', 'complex_transaction.transaction_type.user_number_6', 'complex_transaction.transaction_type.user_number_7', 'complex_transaction.transaction_type.user_number_8',
+            'complex_transaction.transaction_type.user_number_9', 'complex_transaction.transaction_type.user_number_10', 'complex_transaction.transaction_type.user_number_11', 'complex_transaction.transaction_type.user_number_12',
+            'complex_transaction.transaction_type.user_number_13', 'complex_transaction.transaction_type.user_number_14', 'complex_transaction.transaction_type.user_number_15', 'complex_transaction.transaction_type.user_number_16',
+            'complex_transaction.transaction_type.user_number_17', 'complex_transaction.transaction_type.user_number_18', 'complex_transaction.transaction_type.user_number_19', 'complex_transaction.transaction_type.user_number_20',
+
+            'complex_transaction.transaction_type.user_date_1', 'complex_transaction.transaction_type.user_date_2', 'complex_transaction.transaction_type.user_date_3', 'complex_transaction.transaction_type.user_date_4', 'complex_transaction.transaction_type.user_date_5'
+        ];
+
         function _getTransactionReportAttributes() {
 
             var result = [];
@@ -245,9 +300,16 @@
 
             var complexTransactionAttrs = getAllAttributesAsFlatList('transactions.complextransaction', 'complex_transaction', 'Complex Transaction', {maxDepth: 1});
 
+            complexTransactionAttrs = complexTransactionAttrs.filter(function (attr) {
+                return ttypeUserFields.indexOf(attr.key) < 0;
+            });
+
+            complexTransactionAttrs = applyAliasesToAttrs(complexTransactionAttrs, 'complex_transaction.', 'Complex Transaction. ');
+
             var portfolioAttrs = getAllAttributesAsFlatList('portfolios.portfolio', 'portfolio', 'Portfolio', {maxDepth: 1});
 
             var instrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
+            instrumentAttrs = applyAliasesToAttrs(instrumentAttrs, 'instrument.', 'Instrument. ');
 
             var responsibleAttrs = getAllAttributesAsFlatList('counterparties.responsible', 'responsible', 'Responsible', {maxDepth: 1});
 
@@ -256,10 +318,13 @@
             // instruments
 
             var linkedInstrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
+            linkedInstrumentAttrs = applyAliasesToAttrs(linkedInstrumentAttrs, 'linked_instrument.', 'Linked Instrument. ');
 
             var allocationBalanceAttrs = getAllAttributesAsFlatList('instruments.instrument', 'allocation_balance', 'Allocation Balance', {maxDepth: 1});
+            allocationBalanceAttrs = applyAliasesToAttrs(allocationBalanceAttrs, 'allocation_balance.', 'Allocation Balance. ');
 
             var allocationPlAttrs = getAllAttributesAsFlatList('instruments.instrument', 'allocation_pl', 'Allocation P&L', {maxDepth: 1});
+            allocationPlAttrs = applyAliasesToAttrs(allocationPlAttrs, 'allocation_pl.', 'Allocation P&L. ');
 
             // currencies
 
@@ -384,7 +449,33 @@
 
             if (entityAttributesData[entityType]) {
 
-                return JSON.parse(JSON.stringify(entityAttributesData[entityType]))
+                let attrs = JSON.parse(JSON.stringify(entityAttributesData[entityType]));
+
+                // Use aliases as names for user fields
+                const applyAliases = function (uFields) {
+
+                    uFields.forEach(function (field) {
+
+                        attrs = attrs.map(function (attr) {
+
+                            if (attr.key === field.key) {
+                                attr.name = field.name;
+                            }
+
+                            return attr;
+
+                        })
+
+                    });
+
+                    return attrs;
+
+                };
+
+                attrs = applyAliases( getTransactionUserFields() );
+                attrs = applyAliases( getInstrumentUserFields() );
+
+                return attrs;
 
             }
 
@@ -581,6 +672,27 @@
 
         }
 
+        function downloadComplexTransactionUserFields() {
+
+            return new Promise(function (resolve, reject) {
+
+                var result = [];
+
+                uiService.getComplexTransactionFieldList({pageSize: 1000}).then(function (data) {
+
+                    result = data.results;
+
+                    transactionUserFieldsData = result;
+
+                    resolve(result)
+
+                });
+
+
+            })
+
+        }
+
         function downloadTransactionUserFields() {
 
             return new Promise(function (resolve, reject) {
@@ -601,6 +713,8 @@
             })
 
         }
+
+
 
         function appendEntityAttribute(entityType, field) {
 
@@ -769,6 +883,7 @@
 
             downloadInstrumentUserFields: downloadInstrumentUserFields,
             downloadTransactionUserFields: downloadTransactionUserFields,
+            downloadComplexTransactionUserFields: downloadComplexTransactionUserFields,
 
             // Get method belows
 

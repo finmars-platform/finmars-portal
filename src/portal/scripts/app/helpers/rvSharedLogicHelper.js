@@ -51,7 +51,7 @@ import rvDataProviderService from "../services/rv-data-provider/rv-data-provider
                 }
 
                 if (viewModel.entityType === 'transaction-report') {
-                    promises.push(viewModel.attributeDataService.downloadTransactionUserFields());
+                    promises.push(viewModel.attributeDataService.downloadComplexTransactionUserFields());
                 }
 
                 Promise.all(promises).then(function (data) {
@@ -100,8 +100,8 @@ import rvDataProviderService from "../services/rv-data-provider/rv-data-provider
             viewModel.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
             viewModel.entityViewerDataService.setIsReport(true);
             viewModel.entityViewerDataService.setCurrentMember(viewModel.currentMember);
-            viewModel.entityViewerDataService.setVirtualScrollStep(500);
-            // viewModel.entityViewerDataService.setVirtualScrollStep(50);
+            // viewModel.entityViewerDataService.setVirtualScrollStep(200);
+            viewModel.entityViewerDataService.setVirtualScrollStep(50);
 
             viewModel.entityViewerDataService.setRowHeight(36);
 

@@ -653,34 +653,7 @@
                                     item.entity = scope.entityType;
                                 });
 
-                                var instrumentUserFields = scope.attributeDataService.getInstrumentUserFields();
-                                var transactionUserFields = scope.attributeDataService.getTransactionUserFields();
-
-                                instrumentUserFields.forEach(function (field) {
-
-                                    entityAttrs.forEach(function (entityAttr) {
-
-                                        if (entityAttr.key === field.key) {
-                                            entityAttr.name = field.name;
-                                        }
-
-                                    })
-
-                                });
-                                transactionUserFields.forEach(function (field) {
-
-                                    entityAttrs.forEach(function (entityAttr) {
-
-                                        if (entityAttr.key === field.key) {
-                                            entityAttr.name = field.name;
-                                        }
-
-                                    })
-
-                                });
-
                                 dynamicAttrs = scope.attributeDataService.getDynamicAttributesByEntityType(scope.entityType);
-
 
                                 dynamicAttrs = dynamicAttrs.map(function (attribute) {
 
