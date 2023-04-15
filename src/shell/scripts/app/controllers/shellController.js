@@ -409,7 +409,13 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         }
         //# endregion */
 
-        const authenticated = await window.keycloak.init( { onLoad: 'login-required', } );
+        const authenticated = await window.keycloak.init( {
+            onLoad: 'login-required',
+            token: cookieService.getCookie('access_token'),
+            refreshToken: cookieService.getCookie('refresh_token'),
+            idToken: cookieService.getCookie('id_token')
+            // checkLoginIframe: false
+        } );
 
         if (authenticated) {
 

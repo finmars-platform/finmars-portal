@@ -1224,7 +1224,7 @@ export default function (metaContentTypesService, attributeTypeService, customFi
                         case 'ui.transactionuserfieldmodel':
                             resolve(new Promise(function (resolve, reject) {
 
-                                uiService.getTransactionFieldList({
+                                uiService.getComplexTransactionFieldList({
                                     filters: {
                                         key: item.key
                                     }
@@ -1246,14 +1246,14 @@ export default function (metaContentTypesService, attributeTypeService, customFi
 
                                             item.id = result.id;
 
-                                            resolve(uiService.updateTransactionField(item.id, item));
+                                            resolve(uiService.updateComplexTransactionField(item.id, item));
 
                                         } else {
-                                            resolve(uiService.createTransactionField(item));
+                                            resolve(uiService.updateComplexTransactionField(item));
                                         }
                                     } else {
 
-                                        resolve(uiService.createTransactionField(item));
+                                        resolve(uiService.updateComplexTransactionField(item));
 
                                     }
 
@@ -2132,7 +2132,7 @@ export default function (metaContentTypesService, attributeTypeService, customFi
                         case 'ui.transactionuserfieldmodel':
                             resolve(new Promise(function (resolveLocal, reject) {
 
-                                uiService.getTransactionFieldList({
+                                uiService.getComplexTransactionFieldList({
                                     filters: {
                                         key: item.key,
                                     }
@@ -2169,13 +2169,13 @@ export default function (metaContentTypesService, attributeTypeService, customFi
 
                                         } else {
 
-                                            resolveLocal(uiService.createTransactionField(item));
+                                            resolveLocal(uiService.createComplexTransactionField(item));
 
                                         }
 
                                     } else {
 
-                                        resolveLocal(uiService.createTransactionField(item));
+                                        resolveLocal(uiService.createComplexTransactionField(item));
 
                                     }
 

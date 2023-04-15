@@ -9,6 +9,9 @@
 
         var vm = this;
 
+        vm.validationData = validationData;
+        vm.validationDataPretty = JSON.stringify(validationData, null, 4)
+
         vm.errorData = validationData.errorData;
         vm.errorMessage = null;
         if (vm.errorData && vm.errorData.message) {

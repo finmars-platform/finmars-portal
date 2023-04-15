@@ -45,7 +45,7 @@
                             templateUrl: 'views/dialogs/validation-dialog-view.html',
                             targetEvent: $event,
                             locals: {
-                                validationData: reason.message
+                                validationData: reason
                             },
                             multiple: true,
                             preserveScope: true,
@@ -70,7 +70,7 @@
                             templateUrl: 'views/dialogs/validation-dialog-view.html',
                             targetEvent: $event,
                             locals: {
-                                validationData: reason.message
+                                validationData: reason
                             },
                             multiple: true,
                             preserveScope: true,

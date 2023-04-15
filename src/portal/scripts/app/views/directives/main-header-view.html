@@ -48,6 +48,14 @@
                     </md-button>
                 </div>
 
+                <md-button ng-if="openedInside === 'portal' && universalInputEnabled"
+                           class="md-button header-left-icon-btn header-cloud-layout-btn universal-input-button"
+                           data-ng-click="openUniversalInputDialog($event)">
+
+                    <span class="material-icons">add</span>
+                    <md-tooltip class="tooltip_1" md-direction="bottom">Universal Input</md-tooltip>
+                </md-button>
+
                 <md-button ng-if="openedInside === 'portal' && alertsCount"
                            class="md-button header-left-icon-btn header-cloud-layout-btn alerts-button-icon {{alertsStatus}}"
                            data-ng-click="toggleWarningsSideNav($event)">
