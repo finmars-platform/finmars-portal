@@ -40,12 +40,9 @@
                        data-ng-click="vm.showDevInfo = !vm.showDevInfo">Toggle Developer information</md-button>
 
             <div data-ng-if="vm.showDevInfo" class="validation-dialog-dev-info-container">
-                <div data-ng-if="vm.errorData.stack" layout="row" class="m-b-16">
-                    <div class="vd-dev-info-name">Stack:</div><div data-ng-bind="vm.errorData.stack"></div>
-                </div>
-                <div data-ng-if="vm.errorData.status" layout="row">
-                    <div class="vd-dev-info-name">Status:</div><div data-ng-bind="vm.errorData.status" flex="100"></div>
-                </div>
+
+                <pre>{{vm.validationDataPretty}}</pre>
+
             </div>
 
         </div>

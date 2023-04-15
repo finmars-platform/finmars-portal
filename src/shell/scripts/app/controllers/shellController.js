@@ -385,6 +385,9 @@ export default function ($scope, $state, $transitions, $urlService, $mdDialog, c
 
         window.keycloak.init({
             onLoad: 'login-required',
+            token: cookieService.getCookie('access_token'),
+            refreshToken: cookieService.getCookie('refresh_token'),
+            idToken: cookieService.getCookie('id_token')
             // checkLoginIframe: false
         }).then(function (authenticated) {
 

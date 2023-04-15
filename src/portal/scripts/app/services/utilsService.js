@@ -61,8 +61,8 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
-            }).then(function (data){
-                return data.text()
+            }).then(function (data) {
+            return data.text()
         })
     };
 
@@ -121,6 +121,26 @@
             })
     };
 
+    var universalInput = function (data) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'utils/universal-input/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                data: JSON.stringify(data)
+            })
+    };
+
+
     module.exports = {
         getSystemInfo: getSystemInfo,
         getSystemLogs: getSystemLogs,
@@ -128,7 +148,8 @@
         getTablesSize: getTablesSize,
 
         getRecycleBin: getRecycleBin,
-        clearRecycleBin: clearRecycleBin
+        clearRecycleBin: clearRecycleBin,
+        universalInput: universalInput
     }
 
 }());

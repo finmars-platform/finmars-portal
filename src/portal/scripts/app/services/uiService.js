@@ -543,17 +543,32 @@
     };
 
 
-	const getTransactionFieldList = function (options) {
+	const getComplexTransactionFieldList = function (options) {
+        return uiRepository.getComplexTransactionFieldList(options)
+    };
+
+	const createComplexTransactionField = function (data) {
+        return uiRepository.createComplexTransactionField(data);
+    };
+
+	const updateComplexTransactionField = function (id, data) {
+        return uiRepository.updateComplexTransactionField(id, data);
+    };
+
+
+    const getTransactionFieldList = function (options) {
         return uiRepository.getTransactionFieldList(options)
     };
 
-	const createTransactionField = function (data) {
+    const createTransactionField = function (data) {
         return uiRepository.createTransactionField(data);
     };
 
-	const updateTransactionField = function (id, data) {
+    const updateTransactionField = function (id, data) {
         return uiRepository.updateTransactionField(id, data);
     };
+
+
 
 	const getInstrumentFieldList = function () {
         return uiRepository.getInstrumentFieldList()
@@ -783,6 +798,11 @@
         createConfiguration: createConfiguration,
         updateConfiguration: updateConfiguration,
         deleteConfigurationByKey: deleteConfigurationByKey,
+
+
+        getComplexTransactionFieldList: getComplexTransactionFieldList,
+        createComplexTransactionField: createComplexTransactionField,
+        updateComplexTransactionField: updateComplexTransactionField,
 
 
         getTransactionFieldList: getTransactionFieldList,

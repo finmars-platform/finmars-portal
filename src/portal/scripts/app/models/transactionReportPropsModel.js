@@ -179,6 +179,69 @@
                 "name": "Entry Item Type",
                 "value_type": 10
             },
+            {
+                "key": "transaction_item_name",
+                "name": "Transaction Item Name",
+                "value_type": 10
+            },
+            {
+                "key": "transaction_item_short_name",
+                "name": "Transaction Item Short Name",
+                "value_type": 10
+            },
+            {
+                "key": "transaction_item_user_code",
+                "name": "Transaction Item User Code",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_text_1",
+                "name": "User Text 1",
+                "value_type": 10
+            },
+            {
+                "key": "user_text_2",
+                "name": "User Text 2",
+                "value_type": 10
+            },
+            {
+                "key": "user_text_3",
+                "name": "User Text 3",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_number_1",
+                "name": "User Number 1",
+                "value_type": 10
+            },
+            {
+                "key": "user_number_2",
+                "name": "User Number 2",
+                "value_type": 10
+            },
+            {
+                "key": "user_number_3",
+                "name": "User Number 3",
+                "value_type": 10
+            },
+
+            {
+                "key": "user_date_1",
+                "name": "User Date 1",
+                "value_type": 10
+            },
+            {
+                "key": "user_date_2",
+                "name": "User Date 2",
+                "value_type": 10
+            },
+            {
+                "key": "user_date_3",
+                "name": "User Date 3",
+                "value_type": 10
+            }
         ]
     };
 

@@ -11,7 +11,6 @@
     const toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
-
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
@@ -37,7 +36,7 @@
 
                     if (key === 'inputs') {
 
-                        obj.inputs = obj.inputs.map(function (input){
+                        obj.inputs = obj.inputs.map(function (input) {
 
                             input.transaction_type_input = input.transaction_type_input_object.name
                             delete input.transaction_type_input_object;
@@ -63,6 +62,10 @@
                         delete obj.deleted_user_code
                     }
 
+                    if (key === 'is_deleted') {
+                        delete obj.is_deleted
+                    }
+
                     if (key === 'procedure_modified_datetime') {
                         delete obj['procedure_modified_datetime']
                     }
@@ -73,10 +76,6 @@
 
                     if (key === 'modified') {
                         delete obj.modified
-                    }
-
-                    if (key === 'is_deleted') {
-                        delete obj.is_deleted
                     }
 
                     if (obj.hasOwnProperty(key + '_object')) {
@@ -95,7 +94,6 @@
                     if (key === 'registers') {
                         delete obj.registers
                     }
-
 
 
                     if (key === 'attributes') {
@@ -134,8 +132,6 @@
                 }
 
 
-
-
             })
 
             return obj
@@ -144,7 +140,24 @@
 
         vm.convertToExport = function ($event) {
 
-            var converted = recursiveConvert(JSON.parse(JSON.stringify(vm.item)))
+            var converted;
+
+            if (Array.isArray(vm.item)) {
+
+                converted = []
+
+                vm.item.forEach(function (item) {
+
+                    converted.push(recursiveConvert(JSON.parse(JSON.stringify(item))))
+
+                })
+
+
+            } else {
+
+                converted = recursiveConvert(JSON.parse(JSON.stringify(vm.item)))
+
+            }
 
             vm.editor.setValue(JSON.stringify(converted, null, 4))
 
@@ -234,52 +247,6 @@
 
         }
 
-        vm.agree = function () {
-
-            vm.processing = true
-
-            vm.item = JSON.parse(vm.editor.getValue())
-
-            try {
-
-                if (vm.item.id) {
-
-                    entityResolverService.update(vm.entityType, vm.item.id, vm.item).then(function (responseData) {
-
-                        vm.processing = false;
-
-                        $mdDialog.hide({status: 'agree', data: {item: vm.item}});
-
-                    }).catch(function (error) {
-
-                        vm.processing = false;
-                        $scope.$apply()
-
-                    })
-
-                } else {
-
-                    entityResolverService.create(vm.entityType, vm.item).then(function (responseData) {
-
-                        $mdDialog.hide({status: 'agree', data: {item: vm.item}});
-
-                    }).catch(function (error) {
-
-                        vm.processing = false;
-                        $scope.$apply()
-
-                    })
-
-                }
-
-            } catch (error) {
-
-                vm.processing = false;
-                $scope.$apply()
-
-            }
-
-        };
     }
 
 }());
