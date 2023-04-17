@@ -347,6 +347,11 @@ export default (function () {
     portal.controller('LogDialogController', ['$scope', '$mdDialog', 'globalDataService', 'data', require('./app/controllers/dialogs/logDialogController')]);
     portal.controller('HistoryDialogController', ['$scope', '$mdDialog', 'globalDataService', 'data', require('./app/controllers/dialogs/historyDialogController')]);
 
+    // Configuration
+
+    portal.controller('ConfigurationDialogController', ['$scope', '$mdDialog', 'globalDataService', 'toastNotificationService', 'data', require('./app/controllers/dialogs/configurationDialogController')]);
+
+
     // Actions
 
     portal.controller('ActionsController', ['$scope', '$mdDialog', require('./app/controllers/actionsController')]);

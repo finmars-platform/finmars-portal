@@ -89,7 +89,31 @@
             path = ''
         }
 
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/explorer/create_folder/',
+        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/explorer/create-folder/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({path: path})
+            }).then(function (response) {
+            return response.blob()
+        })
+    };
+
+    var deleteFolder = function (path) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        if (!path) {
+            path = ''
+        }
+
+        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/explorer/delete-folder/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -122,13 +146,39 @@
         })
     };
 
+    var downloadZip = function (path) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        if (!path) {
+            path = ''
+        }
+
+        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/explorer/download-folder-as-zip/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({path: path})
+            }).then(function (response) {
+            return response.blob()
+        })
+    };
+
 
     module.exports = {
         listFiles: listFiles,
         viewFile: viewFile,
         deleteFile: deleteFile,
         createFolder: createFolder,
-        uploadFiles: uploadFiles
+        deleteFolder: deleteFolder,
+        uploadFiles: uploadFiles,
+        downloadZip: downloadZip
     }
 
 }());

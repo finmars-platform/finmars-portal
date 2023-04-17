@@ -8,6 +8,7 @@ var portfolioRegisterRecordService = require('./portfolioRegisterRecordService')
 var accountService = require('./accountService');
 var accountTypeService = require('./accountTypeService');
 var responsibleService = require('./responsibleService');
+var configurationService = require('./configurationService');
 var responsibleGroupService = require('./responsibleGroupService');
 var counterpartyService = require('./counterpartyService');
 var counterpartyGroupService = require('./counterpartyGroupService');
@@ -199,6 +200,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'transaction-report':
                 return reportService.getTransactionReport(options);
                 break;
+            case 'configuration':
+                return configurationService.getList(options)
+                break;
 
             // default:
             //     throw new Error('entityResolverService: Unknown entityType ' + entityType);
@@ -354,11 +358,13 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'pricing-procedure':
                 return pricingProcedureService.getByKey(id);
                 break;
+            case 'configuration':
+                return configurationService.getByKey(id);
+                break;
         }
     };
 
     var create = function (entityType, entity) {
-
 
 
         switch (entityType) {
@@ -477,6 +483,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 break;
             case 'schedule':
                 return scheduleService.create(entity);
+                break;
+            case 'configuration':
+                return configurationService.create(entity);
                 break;
 
 

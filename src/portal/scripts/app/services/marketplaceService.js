@@ -29,29 +29,9 @@
             })
     };
 
-    var getVersionsList = function (options, user_code) {
+    var getByKey = function (id) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
-
-
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl('https://marketplace.finmars.com/api/v1/configuration/' + user_code + '/', options),
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
-    };
-
-
-    var getByKey = function (user_code, version) {
-
-        return xhrService.fetch('https://marketplace.finmars.com/api/v1/configuration/' + user_code + '/' + version + '/',
+        return xhrService.fetch('https://marketplace.finmars.com/api/v1/configuration/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -66,8 +46,7 @@
 
     module.exports = {
         getList: getList,
-        getVersionsList: getVersionsList,
-        getByKey: getByKey,
+        getByKey: getByKey
     }
 
 }());

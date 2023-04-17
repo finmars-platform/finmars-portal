@@ -13,14 +13,14 @@
     </div>
 
 
-    <div data-ng-if="vm.readyStatus.data">
+    <div data-ng-if="vm.readyStatus.data" style="display: flex;">
 
         <div data-ng-repeat="item in vm.items">
 
-            <md-card class="configuration-card p-16" style="max-width: 240px;">
+            <md-card class="configuration-card p-16" style="max-width: 240px; width: 240px">
 
                 <div><b>{{item.name}}</b></div>
-                <div>{{item.version}}</div>
+                <div>{{item.latest_release_object.version}}</div>
                 <div>{{item.configuration_code}}</div>
                 <div>{{item.description}}</div>
                 <div>{{item.organization_object.name}}</div>

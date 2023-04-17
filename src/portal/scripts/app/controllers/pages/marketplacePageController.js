@@ -6,8 +6,10 @@
     'use strict';
 
     var historyService = require('../../services/historyService');
+    var configurationService = require('../../services/configurationService');
     var marketplaceService = require('../../services/marketplaceService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
     module.exports = function marketplacePageController($scope, $state, $stateParams, $mdDialog, usersService) {
@@ -52,9 +54,18 @@
 
         };
 
-        vm.installConfiguration = function ($event, item){
+        vm.installConfiguration = function ($event, item) {
 
             console.log("Install configuration", item);
+
+            configurationService.installConfiguration({
+                configuration_code: item.configuration_code,
+                version: item.latest_release_object.version
+            }).then(function (data) {
+
+                toastNotificationService.info("Configuration is installing");
+
+            })
 
         }
 

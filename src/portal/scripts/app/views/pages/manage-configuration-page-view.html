@@ -5,27 +5,32 @@
 
     </div>
 
-    <div layout="row">
+    <div data-ng-if="vm.readyStatus.data" layout="column">
 
-        <md-input-container>
-            <label for="">Configuration</label>
-            <md-select data-ng-model="vm.activeConfiguration.id">
-                <md-option ng-value="item.id" data-ng-click="vm.setActivConfiguration($event, item)"
-                           data-ng-repeat="item in vm.items">{{item.name}} ({{item.configuration_code}})
-                </md-option>
-            </md-select>
-        </md-input-container>
+        <md-card data-ng-repeat="item in vm.items" class="p-16" style="max-width: 240px">
 
-        <md-button class="md-raised md-primary" data-ng-click="vm.exportConfiguration($event)">Export</md-button>
+            <div>
+                <b>{{item.name}}</b>
+            </div>
+            <div>
+                <b>{{item.description}}</b>
+            </div>
+            <div>
+                Code:{{item.configuration_code}}
+            </div>
+            <div>
+                Version: {{item.version}}
+            </div>
 
+            <md-button class="md-primary md-raised" data-ng-click="vm.editConfiguration($event, item)">Edit</md-button>
+
+        </md-card>
 
     </div>
 
-
-    <div data-ng-if="vm.readyStatus.data">
-
-        <div>Hello world</div>
-
+    <div>
+        <md-button class="md-raised md-primary" data-ng-click="vm.createConfiguration($event)">Add new Configuration
+        </md-button>
     </div>
 
     <div data-ng-if="!vm.readyStatus.data" style="width: 100%">
