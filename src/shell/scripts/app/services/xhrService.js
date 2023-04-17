@@ -179,12 +179,12 @@ export default function (errorService, cookieService) {
                             cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
                             cookieService.setCookie('id_token', window.keycloak.idToken);
 
-
-                            return fetch(url, params, options); // try to request again with refreshed token
+                            throw null;
+                            // return fetch(url, params, options); // try to request again with refreshed token
                         } else {
-							window.keycloak.init({
-								onLoad: 'login-required'
-							})
+                            window.keycloak.init({
+                                onLoad: 'login-required'
+                            })
                         }
                     } catch (error) {
 

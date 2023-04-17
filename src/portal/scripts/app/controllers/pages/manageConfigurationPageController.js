@@ -1,6 +1,7 @@
 /**
  * Created by szhitenev on 15.04.2023.
  */
+
 (function () {
 
     'use strict';
@@ -11,6 +12,8 @@
 
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
 
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+
 
     module.exports = function manageConfigurationPageController($scope, $state, $stateParams, $mdDialog, usersService) {
 
@@ -20,13 +23,6 @@
         vm.readyStatus = {data: false};
 
         vm.filters = {}
-
-        vm.activeConfiguration = null;
-
-        vm.setActivConfiguration = function ($event, item) {
-            vm.activeConfiguration = item;
-        }
-
 
         vm.getData = function () {
 
@@ -64,15 +60,57 @@
 
         };
 
-        vm.exportConfiguration = function () {
+        vm.editConfiguration = function ($event, item) {
 
-            configurationService.exportConfiguration(vm.activeConfiguration.id).then(function (data) {
+            $mdDialog.show({
+                controller: 'ConfigurationDialogController as vm',
+                templateUrl: 'views/dialogs/configuration-dialog-view.html',
+                locals: {
+                    data: {
+                        id: item.id
+                    }
+                },
+                targetEvent: $event,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
 
-                downloadFileHelper.downloadFile(data, "application/zip", vm.activeConfiguration.name + '.zip');
+                if (res.status === 'agree') {
 
-            })
+                    vm.getData();
 
-        };
+                }
+
+            });
+
+        }
+
+        vm.createConfiguration = function ($event) {
+
+            $mdDialog.show({
+                controller: 'ConfigurationDialogController as vm',
+                templateUrl: 'views/dialogs/configuration-dialog-view.html',
+                locals: {
+                    data: {}
+                },
+                targetEvent: $event,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    vm.getData();
+
+                }
+
+            });
+
+        }
 
         vm.init = function () {
 

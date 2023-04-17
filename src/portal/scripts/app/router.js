@@ -450,7 +450,7 @@
             })
 
             .state('app.portal.explorer', {
-                url: '/explorer/{folderPath:[a-zA-Z0-9_/\.]*}',
+                url: '/explorer/{folderPath:[a-zA-Z0-9_/\.\-]*}',
                 templateUrl: 'views/pages/explorer-page-view.html',
                 controller: 'ExplorerPageController as vm',
                 params: {

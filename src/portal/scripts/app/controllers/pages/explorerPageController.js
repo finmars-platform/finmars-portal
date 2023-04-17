@@ -267,6 +267,48 @@
             })
         }
 
+        vm.deleteFile = function ($event) {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "Are you sure that you want to delete file " + vm.fileEditor.name + "?",
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    var itemPath = vm.fileEditor.name;
+                    if (vm.currentPath.length) {
+                        itemPath = vm.currentPath.join('/') + '/' + vm.fileEditor.name
+                    }
+
+                    var is_dir = false;
+
+                    explorerService.deleteFile(itemPath, is_dir)
+
+                    setTimeout(function () {
+                        vm.showEditor = false;
+                        vm.listFiles();
+                    }, 600)
+
+                }
+
+            });
+
+        }
+
         vm.closeFileEditor = function () {
 
             vm.showEditor = false;
@@ -275,7 +317,7 @@
 
         }
 
-        vm.copyFilePath = function ($event, item, $mdMenu){
+        vm.copyFilePath = function ($event, item, $mdMenu) {
 
             if ($mdMenu) {
                 $mdMenu.close()
@@ -332,28 +374,6 @@
 
         }
 
-        vm.deleteFile = function ($mdMenu, $event, item) {
-
-            $mdMenu.close()
-
-            var itemPath = item.name
-            if (vm.currentPath.length) {
-                itemPath = vm.currentPath.join('/') + '/' + item.name
-            }
-
-            var is_dir = false;
-
-            if (item.type === 'dir') {
-                is_dir = true;
-            }
-
-            explorerService.deleteFile(itemPath, is_dir)
-
-            setTimeout(function () {
-                vm.listFiles();
-            }, 600)
-
-        }
 
         vm.listFiles = function () {
 
@@ -381,6 +401,43 @@
 
             })
 
+        }
+
+        vm.deleteFolder = function ($event) {
+
+            var path = vm.currentPath.join('/')
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "Are you sure that you want to delete folder " + path + "?",
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+                console.log('res', res);
+                if (res.status === 'agree') {
+
+                    explorerService.deleteFolder(path).then(function () {
+
+                        vm.currentPath.pop()
+
+                        vm.listFiles();
+
+                    })
+
+                }
+
+            })
         }
 
         vm.createFolder = function ($event) {
@@ -468,6 +525,42 @@
         vm.uploadFiles = function ($event) {
 
             document.querySelector('#explorerFileUploadInput').click();
+
+        }
+
+        vm.downloadZip = function ($event) {
+
+            var path = vm.currentPath.join('/')
+
+            $mdDialog.show({
+                controller: 'SaveAsDialogController as vm',
+                templateUrl: 'views/dialogs/save-as-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        name: vm.currentPath[vm.currentPath.length - 1]
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    var name = res.data.name + '.zip'
+
+                    explorerService.downloadZip(path).then(function (blob) {
+
+                        downloadFileHelper.downloadFile(blob, "application/zip", name)
+
+                    })
+
+                }
+            })
 
         }
 

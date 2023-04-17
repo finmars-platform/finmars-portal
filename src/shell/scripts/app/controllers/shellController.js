@@ -304,6 +304,20 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
     }
 
+    const refreshTokens = async () => {
+        const isRefreshed = await keycloak.updateToken()
+
+        if ( !isRefreshed ) {
+            await keycloak.login()
+        }
+    }
+
+    const setTokens = () => {
+        cookieService.setCookie('access_token', window.keycloak.token);
+        cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
+        cookieService.setCookie('id_token', window.keycloak.idToken);
+    }
+
     const init = async function () {
 
         // keycloak adapter passes params as redirect_url + &state=
@@ -396,6 +410,11 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             realm: window.KEYCLOAK_REALM,
             clientId: window.KEYCLOAK_CLIENT_ID
         });
+
+        keycloak.onAuthSuccess = setTokens
+        keycloak.onAuthRefreshSuccess = setTokens
+        keycloak.onTokenExpired = refreshTokens
+
 
         console.log("Keycloak init")
         /* //# region IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally.
