@@ -21,7 +21,7 @@
                 scope.usercode = '';
                 scope.convertedUserCode = '';
 
-                scope.updateUserCode = function (usercode, configuration_code){
+                scope.updateUserCode = function (usercode, configuration_code) {
 
                     console.log('scope.configuration_code', scope.configuration_code);
                     console.log('scope.usercode', scope.usercode);
@@ -33,7 +33,12 @@
                         scope.convertedUserCode = replaceSpecialCharsAndSpaces(scope.usercode).toLowerCase();
                     }
 
-                    scope.item.user_code = scope.configuration_code + ':' + scope.convertedUserCode;
+                    if (scope.item.content_type) {
+                        scope.item.user_code = scope.configuration_code + ':' + scope.item.content_type + ':' + scope.convertedUserCode;
+                    } else {
+                        scope.item.user_code = scope.configuration_code + ':' + scope.convertedUserCode;
+                    }
+
                     scope.item.configuration_code = scope.configuration_code;
 
 

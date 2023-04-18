@@ -411,9 +411,14 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             clientId: window.KEYCLOAK_CLIENT_ID
         });
 
-        keycloak.onAuthSuccess = setTokens
-        keycloak.onAuthRefreshSuccess = setTokens
-        keycloak.onTokenExpired = refreshTokens
+        window.keycloak.onReady = () => {
+            if ( window.keycloak.isTokenExpired() ) refreshTokens()
+        }
+
+
+        window.keycloak.onAuthSuccess = setTokens
+        window.keycloak.onAuthRefreshSuccess = setTokens
+        window.keycloak.onTokenExpired = refreshTokens
 
 
         console.log("Keycloak init")
