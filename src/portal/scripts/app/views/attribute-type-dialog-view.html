@@ -1,0 +1,124 @@
+<md-dialog aria-label="attribute manager dialog"
+           class="attribute-manager-dialog-view draggable-dialog attrManagerElemToResize"
+           drag-dialog
+           style="width: 60%">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+            <h2>Attribute manager</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div layout="row">
+            <div data-ng-if="vm.readyStatus.attribute" style="width: 100%">
+                <div class="a-m-tab-content">
+
+                    <usercode-input data-item="vm.attribute"></usercode-input>
+
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Attribute name</label>
+                        <input data-ng-model="vm.attribute.name">
+                    </md-input-container>
+
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Tooltip</label>
+                        <input data-ng-model="vm.attribute.tooltip">
+                    </md-input-container>
+
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <md-checkbox class="md-secondary"
+                                     ng-model="vm.attribute.can_recalculate"
+                                     data-ng-change="vm.attribute.expr = ''">Can recalculate
+                        </md-checkbox>
+                    </md-input-container>
+
+                    <div data-ng-if="vm.attribute.can_recalculate" layout="row">
+                        <md-input-container class="md-block" style="width: 80%">
+                            <label>Expression</label>
+                            <input data-ng-model="vm.attribute.expr">
+                        </md-input-container>
+
+                        <expression-editor-button
+                                data-item="vm.attribute.expr"></expression-editor-button>
+                    </div>
+
+                    <div data-ng-if="vm.attribute.id" flex-gt-sm>
+                        <md-input-container class="md-block">
+                            <label>Attribute type</label>
+                            <md-select ng-model="vm.attribute['value_type']" class="disabled-btn">
+                                <md-option ng-repeat="item in vm.valueTypes"
+                                           value="{{item.value}}">
+                                    {{item['name']}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+
+                    <div data-ng-if="!vm.attribute.id" flex-gt-sm>
+                        <md-input-container class="md-block">
+
+                            <label>Attribute type</label>
+                            <md-select ng-model="vm.attribute['value_type']"
+                                       md-container-class="common-select-container"
+                                       md-on-close="searchTerm = ''">
+                                <div>
+                                    <md-select-header>
+                                        <input data-ng-model="searchTerm"
+                                               type="search"
+                                               placeholder="Search for a ..."
+                                               class="md-text md-select-search-pattern select-input-filter"
+                                               ng-keydown="$event.stopPropagation()">
+                                    </md-select-header>
+
+                                    <div class="select-options-holder">
+
+                                        <md-option
+                                                data-ng-repeat="item in vm.valueTypes | filter: {name: searchTerm}"
+                                                ng-value="item.value">
+                                            {{item.name}}
+                                        </md-option>
+
+                                    </div>
+                                </div>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+
+                    <md-input-container class="md-block" flex-gt-sm style="margin-top: 10px">
+                        <md-checkbox data-ng-model="vm.attribute.is_hidden"
+                                     aria-label="checkbox">
+                            <label style="width: 100%; position: relative">Is hidden</label>
+                        </md-checkbox>
+                    </md-input-container>
+
+                </div>
+            </div>
+            <div data-ng-if="!vm.readyStatus.attribute" style="width: 100%" class="p-24">
+                <div layout="row" layout-sm="column" layout-align="space-around">
+                    <progress-circular diameter="100"></progress-circular>
+                </div>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+
+        <md-button class="md-raised" ng-click="vm.cancel()">
+            Cancel
+        </md-button>
+
+        <md-button class="md-raised md-primary" ng-click="vm.agree($event)"
+                   style="margin-right:20px;">
+            <span data-ng-if="vm.attribute.id">
+                Save
+            </span>
+            <span data-ng-if="!vm.attribute.id">
+                Create
+            </span>
+        </md-button>
+
+        <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
+                               data-elem-to-resize="vm.dialogElemToResize"
+                               class="dialog-window-resizer_type1"></dialog-window-resizer>
+    </md-dialog-actions>
+</md-dialog>
