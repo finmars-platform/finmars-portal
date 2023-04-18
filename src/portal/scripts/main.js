@@ -289,7 +289,7 @@ export default (function () {
 
     portal.controller('InputTemplateLayoutViewerDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'data', require('./app/controllers/dialogs/inputTemplateLayoutViewerDialogController')]);
     portal.controller('TemplateLayoutManagerController', ['$scope', '$mdDialog', 'ecosystemDefaultService', 'metaContentTypesService', 'uiService', 'fieldResolverService', 'gridTableHelperService', require('./app/controllers/pages/templateLayoutManagerController')]);
-    portal.controller('NewLayoutDialogController', ['$scope', '$mdDialog', 'commonDialogsService', 'data', require('./app/controllers/dialogs/newLayoutDialogController')]);
+    portal.controller('NewLayoutDialogController', ['$scope', '$mdDialog', 'commonDialogsService', 'metaContentTypesService', 'data', require('./app/controllers/dialogs/newLayoutDialogController')]);
     portal.controller('RenameDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/renameDialogController')]);
     portal.controller('SaveAsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/saveAsDialogController')]);
     portal.controller('LoaderDialogController', ['$scope', '$customDialog', 'data', require('./app/controllers/dialogs/loaderDialogController')]);
