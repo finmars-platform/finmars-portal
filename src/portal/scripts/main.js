@@ -679,7 +679,7 @@ export default (function () {
     portal.controller('FillPriceHistoryController', ['$scope', '$mdDialog', require('./app/controllers/pages/fillPriceHistoryController')]);
     portal.controller('MappingTablesController', ['$scope', '$mdDialog', require('./app/controllers/pages/mappingTablesController')]);
     portal.controller('ProcessesController', ['$scope', '$mdDialog', require('./app/controllers/pages/processesController')]);
-    portal.controller('JournalPageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'usersService', require('./app/controllers/pages/journalPageController')]);
+    portal.controller('JournalPageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'usersService', 'metaContentTypesService', require('./app/controllers/pages/journalPageController')]);
     portal.controller('MarketplacePageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'usersService', require('./app/controllers/pages/marketplacePageController')]);
     portal.controller('ManageConfigurationPageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'usersService', require('./app/controllers/pages/manageConfigurationPageController')]);
     portal.controller('UpdateCenterController', ['$scope', 'authorizerService', 'globalDataService', require('./app/controllers/pages/updateCenterController')]);
