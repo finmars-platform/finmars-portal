@@ -402,6 +402,20 @@ export default function (expressionService) {
                 joinFlatRelationToItem(item, 'instrument.accrued_currency', currencies_as_dict[item['instrument.accrued_currency']])
             }
 
+            if (item['instrument.instrument_type']) {
+
+                joinFlatRelationToItem(item, 'instrument.instrument_type', instrument_types_as_dict[item['instrument.instrument_type']])
+
+            }
+
+            if (item['instrument.pricing_currency']) {
+                joinFlatRelationToItem(item, 'instrument.pricing_currency', currencies_as_dict[item['instrument.pricing_currency']])
+            }
+
+            if (item['instrument.accrued_currency']) {
+                joinFlatRelationToItem(item, 'instrument.accrued_currency', currencies_as_dict[item['instrument.accrued_currency']])
+            }
+
 
             // Accounts
 
