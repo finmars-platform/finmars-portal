@@ -5,7 +5,7 @@
 
     </div>
 
-    <div data-ng-if="vm.readyStatus.data" layout="column">
+    <div data-ng-if="vm.readyStatus.data" style="display:flex;">
 
         <md-card data-ng-repeat="item in vm.items" class="p-16" style="max-width: 240px">
 
@@ -20,6 +20,18 @@
             </div>
             <div>
                 Version: {{item.version}}
+            </div>
+
+            <div>
+
+                <hr>
+
+                <div data-ng-if="item.is_package">
+                    Its a package
+                </div>
+                <div data-ng-if="!item.is_package">
+                    Its a configuration module
+                </div>
             </div>
 
             <md-button class="md-primary md-raised" data-ng-click="vm.editConfiguration($event, item)">Edit</md-button>

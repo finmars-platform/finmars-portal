@@ -9,7 +9,7 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
     var entityResolverService = require('../../services/entityResolverService');
 
-    var unifiedDataService = require('../../services/unifiedDataService')
+    var finmarsDatabaseService = require('../../services/finmarsDatabaseService')
     var importUnifiedDataService = require('../../services/import/importUnifiedDataService');
     var importCurrencyCbondsService = require('../../services/import/importCurrencyCbondsService');
     var currencyDatabaseSearchService = require('../../services/currency/currencyDatabaseSearchService');
@@ -286,6 +286,7 @@
             try {
 
                 if (vm.entityType === 'currency') {
+                    // TODO replace with finmarsDatabaseService
                     currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage - 1).then(function (data) {
 
                         vm.globalProcessing = false;
@@ -310,7 +311,7 @@
 
                     })
                 } else {
-                    unifiedDataService.getList(vm.entityType, {
+                    finmarsDatabaseService.getCounterpartiesList({
                         filters: {
                             query: vm.inputText
                         }
