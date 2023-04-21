@@ -18,13 +18,47 @@
             <div data-ng-if="vm.checkReadyStatus()" class="position-relative">
 
                 <div layout="row" layout-align="center center">
-                    <md-card flex="100" class="inm-card-special" style="padding-top: 16px">
+                    <md-card flex="100" class="inm-card-special">
                         <md-card-content layout="column">
-                            <md-input-container class="md-block" data-ng-if="vm.item.id">
-                                <label>Configuration Code</label>
-                                <input aria-label="configuration code" type="text"
-                                       data-ng-model="vm.item.configuration_code" class="disabled-btn">
-                            </md-input-container>
+
+                            <div>
+
+                                <div style="border: 1px solid #ddd; margin-bottom: 32px;" class="m-16 p-16"
+                                     data-ng-if="!vm.item.id">
+                                    <p>
+                                        Configuration code pattern:
+                                    </p>
+                                    <span style="background: orange">com.[organization_name].[configuration_name]</span>
+                                    <p>
+                                        Examples:
+                                    </p>
+                                    <div style="padding-left: 16px">
+                                        com.finmars.hnwi <span style="font-size: 10px">(good for packages)</span><br/>
+                                        com.finmars.asset-manager <span
+                                            style="font-size: 10px">(good for packages)</span><br/>
+
+                                        com.finmars.hnwi-transaction-types <span
+                                            style="font-size: 10px">(good for modules)</span><br/>
+                                        com.finmars.asset-manager-layouts <span
+                                            style="font-size: 10px">(good for modules)</span><br/>
+                                    </div>
+
+                                    <p>
+                                        Configuration code will be forcefully converted to lower case and special
+                                        characters
+                                        will be replaced with -
+                                    </p>
+
+                                </div>
+
+                                <md-input-container class="md-block" data-ng-if="vm.item.id">
+                                    <label>Configuration Code</label>
+                                    <input aria-label="configuration code" type="text"
+                                           data-ng-model="vm.item.configuration_code" class="disabled-btn"
+                                           data-ng-blur="vm.convertCode()">
+                                </md-input-container>
+
+                            </div>
 
                             <md-input-container class="md-block" data-ng-if="!vm.item.id">
                                 <label>Configuration Code</label>
@@ -47,6 +81,17 @@
                                 <label>Version</label>
                                 <input aria-label="description" type="text" data-ng-model="vm.item.version">
                             </md-input-container>
+
+                            <div data-ng-if="vm.item.id">
+
+                                <p>Manifest</p>
+
+                                <div class="ace-editor" id="aceEditor" style="height: 80vh;">
+
+                                </div>
+
+
+                            </div>
 
                             <div style="border: 1px solid #ddd" class="m-16 p-16"
                                  data-ng-if="!vm.item.id || vm.item.is_package">
@@ -80,6 +125,38 @@
                                     </md-input-container>
                                 </div>
 
+                            </div>
+
+                            <div style="border: 1px solid #ddd" class="m-16 p-16"
+                                 data-ng-if="vm.item.id">
+
+                                <h3>Dependencies</h3>
+
+                                <div>
+                                    How to add Dependency
+                                </div>
+                                <div>
+                                    1) in <b>manifest.json</b> find field <span
+                                        style="background: orange;">dependencies</span>
+                                </div>
+                                <div>2) Add dependency if following format:</div>
+                                <div>
+                                    "com.[organzation_name].[configuration_name]": "[version]"
+                                </div>
+
+                                <div>
+                                    Example:
+                                </div>
+                                <pre>{
+    "configuration_code": "com.finmars.hnwi",
+    "date": "2023-04-21",
+    "dependencies": {
+        "com.finmars.hnwi-transaction-types": "1.0.0",
+        "com.finmars.hnwi-layouts": "1.0.0"
+    },
+    "name": "HNWI Package",
+    "version": "1.0.0"
+}</pre>
                             </div>
 
 
