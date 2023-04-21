@@ -18,7 +18,7 @@
             <div data-ng-if="vm.checkReadyStatus()" class="position-relative">
 
                 <div layout="row" layout-align="center center">
-                    <md-card flex="100" class="inm-card-special">
+                    <md-card flex="100" class="inm-card-special" style="padding-top: 16px">
                         <md-card-content layout="column">
                             <md-input-container class="md-block" data-ng-if="vm.item.id">
                                 <label>Configuration Code</label>
@@ -48,6 +48,40 @@
                                 <input aria-label="description" type="text" data-ng-model="vm.item.version">
                             </md-input-container>
 
+                            <div style="border: 1px solid #ddd" class="m-16 p-16"
+                                 data-ng-if="!vm.item.id || vm.item.is_package">
+
+                                <h3>Package Mode</h3>
+
+                                <div>
+                                    <p>
+                                        Package - special type on configuration that consist of other configurations
+                                        together
+                                    </p>
+
+                                    <p>
+                                        When you push your <b>Package Configuration</b> to marketplace.
+                                        It scans <b>manifest.json</b> <span
+                                            style="background: orange;">dependencies</span> field and includes to result
+                                        .zip
+                                        file
+                                        all configurations that you have in your <b>System Storage</b>
+                                    </p>
+
+                                    <md-input-container class="md-block" data-ng-if="!vm.item.id">
+                                        <label style="text-align: center;
+    width: 100%;
+    display: block;
+    max-width: 100%;
+    position: static;
+    transform: none;">Is Package</label>
+                                        <input aria-label="description" type="checkbox"
+                                               data-ng-model="vm.item.is_package">
+                                    </md-input-container>
+                                </div>
+
+                            </div>
+
 
                             <div style="border: 1px solid #ddd" class="m-16 p-16" data-ng-if="vm.item.id">
 
@@ -55,7 +89,8 @@
 
                                 <div class="p-8">
 
-                                    <p>This action will trigger <b>save</b> and export all configuration files to local Storage system.
+                                    <p>This action will trigger <b>save</b> and export all configuration files to local
+                                        Storage system.
                                         You can find your configuration files in the <a ui-sref="app.portal.explorer"
                                                                                         target="_blank">Explorer</a>
 
@@ -153,7 +188,8 @@
 
             &nbsp;
 
-            <md-button class="md-raised md-warn" ng-click="vm.deleteConfiguration($event)" data-ng-if="vm.item.id && vm.item.configuration_code != 'com.finmars.local'" >
+            <md-button class="md-raised md-warn" ng-click="vm.deleteConfiguration($event)"
+                       data-ng-if="vm.item.id && vm.item.configuration_code != 'com.finmars.local'">
                 Delete
             </md-button>
 
