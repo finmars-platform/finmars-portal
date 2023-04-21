@@ -33,8 +33,11 @@
 
             configurationService.getByKey(id).then(function (data) {
 
+
                 vm.item = data
                 vm.readyStatus.data = true;
+
+                vm.initManifestEditor();
 
                 $scope.$apply();
 
@@ -45,11 +48,27 @@
             $mdDialog.hide({status: 'disagree'});
         };
 
+        vm.generateManifestIfNotExists = function () {
+
+            vm.item.manifest = {
+                "name": vm.item.name,
+                "configuration_code": vm.item.configuration_code,
+                "version": vm.item.version,
+                "description": vm.item.description,
+                "date": new Date().toJSON().slice(0, 10),
+                "dependencies": {},
+            }
+
+        }
+
         vm.agree = function ($event) {
 
             vm.processing = true;
 
+
             if (vm.item.id) {
+
+                vm.item.manifest = vm.editor.getValue();
 
                 configurationService.update(vm.item.id, vm.item).then(function (data) {
 
@@ -62,13 +81,17 @@
                 })
             } else {
 
+                vm.generateManifestIfNotExists()
+
                 configurationService.create(vm.item).then(function (data) {
+
+                    vm.item = data;
 
                     toastNotificationService.success("Configuration " + vm.item.user_code + ' was successfully created');
 
                     vm.processing = false;
 
-                    $mdDialog.hide({status: 'agree'});
+                    vm.getItem(vm.item.id)
 
                 })
 
@@ -192,10 +215,41 @@
 
                     configurationService.deleteByKey(vm.item.id);
 
-                    $mdDialog.hide({status: 'agree'});
+                    setTimeout(function () {
+                        $mdDialog.hide({status: 'agree'});
+                    }, 100);
 
                 }
             })
+
+        }
+
+        vm.initManifestEditor = function () {
+
+            setTimeout(function () {
+
+                vm.editor = ace.edit('aceEditor');
+                vm.editor.setTheme("ace/theme/monokai");
+                vm.editor.getSession().setMode("ace/mode/json");
+                vm.editor.getSession().setUseWorker(false);
+                vm.editor.setHighlightActiveLine(false);
+                vm.editor.setShowPrintMargin(false);
+
+                ace.require("ace/ext/language_tools");
+                vm.editor.setOptions({
+                    enableBasicAutocompletion: true,
+                    enableLiveAutocompletion: true,
+                    enableSnippets: true
+                });
+                vm.editor.setFontSize(14)
+                vm.editor.setBehavioursEnabled(true);
+                vm.editor.setValue(JSON.stringify(vm.item.manifest, null, 4))
+
+                vm.editor.focus();
+                vm.editor.navigateFileStart();
+
+            }, 100)
+
 
         }
 
@@ -205,6 +259,7 @@
             if (data.id) {
                 vm.getItem(data.id);
             } else {
+                vm.initManifestEditor();
 
                 vm.readyStatus.data = true;
 
