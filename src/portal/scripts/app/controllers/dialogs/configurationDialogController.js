@@ -68,7 +68,7 @@
 
             if (vm.item.id) {
 
-                vm.item.manifest = vm.editor.getValue();
+                vm.item.manifest = JSON.parse(vm.editor.getValue());
 
                 configurationService.update(vm.item.id, vm.item).then(function (data) {
 
