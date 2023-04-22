@@ -45,7 +45,7 @@
             if (vm.cron.day.indexOf(day) === -1) {
                 vm.cron.day.push(day);
             } else {
-                vm.cron.day = vm.cron.day.filter(function (day_number){
+                vm.cron.day = vm.cron.day.filter(function (day_number) {
                     return day_number !== day
                 })
             }
@@ -222,15 +222,13 @@
         };
 
 
-
-
         vm.getServerTime = function () {
 
             return new Date().toISOString().split('T')[1].split('.')[0]
 
         };
 
-        vm.deleteProcedure = function($event, item, $index)  {
+        vm.deleteProcedure = function ($event, item, $index) {
 
             vm.schedule.procedures.splice($index, 1);
 
@@ -296,6 +294,40 @@
 
                 }
             })
+
+        };
+
+        vm.makeCopy = function ($event) {
+
+            var schedule = JSON.parse(JSON.stringify(vm.originalItem));
+
+            delete schedule.id;
+            schedule["user_code"] = schedule["user_code"] + '_copy';
+
+            $mdDialog.show({
+                controller: 'ScheduleAddDialogController as vm',
+                templateUrl: 'views/dialogs/schedules/schedule-add-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        schedule: schedule
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+                    vm.getList();
+                }
+
+            })
+
+            $mdDialog.hide({status: 'disagree'});
 
         };
 
