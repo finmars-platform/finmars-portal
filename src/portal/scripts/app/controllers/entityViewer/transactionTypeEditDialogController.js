@@ -798,41 +798,41 @@
 
 
                 })
-                    .then(function () {
+                .then(function () {
 
-                        vm.processing = true;
+                    vm.processing = true;
 
-                        transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
+                    transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
 
-                            originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
-                            vm.entity.object_permissions = data.object_permissions;
+                        originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
+                        vm.entity.object_permissions = data.object_permissions;
 
-                            vm.processing = false;
-                            $scope.$apply();
+                        vm.processing = false;
+                        $scope.$apply();
 
-                            if (data.status !== 400) {
+                        if (data.status !== 400) {
 
-                                toastNotificationService.success("Transaction Type " + vm.entity.name + ' was successfully saved');
+                            toastNotificationService.success("Transaction Type " + vm.entity.name + ' was successfully saved');
 
-                                resolve(data)
+                            resolve(data)
 
-                            }
-
-                        })
-                            .catch(function (error) {
-
-                                console.log('error', error);
-
-                                vm.processing = false;
-
-                                $scope.$apply();
-
-                                reject()
-
-                            });
-
+                        }
 
                     })
+                    .catch(function (error) {
+
+                        console.log('error', error);
+
+                        vm.processing = false;
+
+                        $scope.$apply();
+
+                        reject()
+
+                    });
+
+
+                })
 
             });
 
