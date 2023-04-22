@@ -100,18 +100,24 @@
             promises.push(vm.getCurrentMember());
             promises.push(vm.getGroupList());
 
-            Promise.all(promises).then(function (data) {
+            return new Promise(function (resolve, reject) {
 
-                vm.readyStatus.permissions = true;
+                Promise.all(promises).then(function (data) {
 
-                vm.setPermissionsDefaults();
+                    vm.readyStatus.permissions = true;
 
-                if (vm.currentMember && vm.currentMember.is_admin) {
-                    vm.canManagePermissions = true;
-                }
+                    vm.setPermissionsDefaults();
 
-                $scope.$apply();
-            });
+                    if (vm.currentMember && vm.currentMember.is_admin) {
+                        vm.canManagePermissions = true;
+                    }
+
+                    resolve(true);
+                    // $scope.$apply();
+                }).catch(function (error) { reject(error) } );
+
+            })
+
 
         };
 
@@ -1432,7 +1438,7 @@
             }
         ];
 
-        vm.actionsKeysList = [
+        /*vm.actionsKeysList = [
             'instrument',
             'transaction',
             'instrument_factor_schedule',
@@ -1440,13 +1446,13 @@
             'instrument_accrual_calculation_schedules',
             'instrument_event_schedule',
             'instrument_event_schedule_action'
-        ];
+        ];*/
 
         vm.checkActionsIsNotNull = function () {
             return false;
         };
 
-        vm.entity.actions.forEach(function (action) {
+        /*vm.entity.actions.forEach(function (action) {
 
             var keys;
 
@@ -1466,65 +1472,10 @@
 
             })
 
+        });*/
+        vm.entity.actions = vm.entity.actions.map(function (action) {
+            return sharedLogic.setStateInActionsControls(action);
         });
-
-        /* var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
-
-            var relationType = '';
-            switch (fieldName) {
-                case 'linked_instrument':
-                case 'allocation_pl':
-                case 'allocation_balance':
-                    relationType = 'instrument';
-                    break;
-                default:
-                    relationType = fieldName;
-            }
-
-            var nameProperty = 'name';
-            if (fieldName === 'price_download_scheme') {
-                nameProperty = 'user_code';
-            }
-
-            var defaultValueKey = '';
-            switch (relationType) {
-                case 'account_position':
-                case 'account_cash':
-                case 'account_interim':
-                    defaultValueKey = 'account';
-                    break;
-                case 'settlement_currency':
-                case 'transaction_currency':
-                case 'accrued_currency':
-                case 'pricing_currency':
-                    defaultValueKey = 'currency';
-                    break;
-                case 'strategy1_position':
-                case 'strategy1_cash':
-                    defaultValueKey = 'strategy1';
-                    break;
-                case 'strategy2_position':
-                case 'strategy2_cash':
-                    defaultValueKey = 'strategy2';
-                    break;
-                case 'strategy3_position':
-                case 'strategy3_cash':
-                    defaultValueKey = 'strategy3';
-                    break;
-                default:
-                    defaultValueKey = relationType;
-            }
-
-            var defaultName = ecosystemDefaultData[defaultValueKey + '_object'][nameProperty];
-
-            actionData[propertyName][fieldName] = ecosystemDefaultData[defaultValueKey];
-
-            // needed for displaying default value after turning on 'relation' field
-            actionData[propertyName][fieldName + '_object'] = {};
-            actionData[propertyName][fieldName + '_object'][nameProperty] = defaultName;
-            actionData[propertyName][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
-
-        }; */
 
         vm.resetProperty = function (item, propertyName, fieldName) {
 
