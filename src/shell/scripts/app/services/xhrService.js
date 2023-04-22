@@ -165,12 +165,12 @@ export default function (errorService, cookieService) {
                     }
 
 
-                } else {
+                }
+                else {
 
                     try {
 
                         const res = await window.keycloak.updateToken()
-
                         console.log('res', res)
 
                         if (res) {
@@ -186,7 +186,9 @@ export default function (errorService, cookieService) {
                                 onLoad: 'login-required'
                             })
                         }
-                    } catch (error) {
+
+                    }
+                    catch (error) {
 
                         error.___custom_message = 'Keycloak update error';
                         console.error(error)
@@ -202,10 +204,6 @@ export default function (errorService, cookieService) {
                     }
 
                 }
-
-                /*if (window.developerConsoleService) {
-                    window.developerConsoleService.rejectRequest(requestId, reason)
-                }*/
 
                 if (notifyError !== false) {
                     await errorService.notifyError(reason);

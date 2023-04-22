@@ -41,6 +41,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                 }
 
                 if (viewModel.entityType === 'transaction-report') {
+                    promises.push(viewModel.attributeDataService.downloadTransactionUserFields());
                     promises.push(viewModel.attributeDataService.downloadComplexTransactionUserFields());
                 }
 

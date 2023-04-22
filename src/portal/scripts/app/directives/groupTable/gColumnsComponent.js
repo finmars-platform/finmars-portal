@@ -2318,7 +2318,6 @@
                     .then(function (res) {
 
                         if (res && res.status === "agree") {
-                            console.log("testing98.addColumn res", res);
 
                             for (var i = 0; i < res.data.items.length; i = i + 1) {
 
@@ -2326,7 +2325,7 @@
                                 scope.columns.push(colData);
 
                             }
-                            console.log("testing98.addColumn set columns", JSON.parse(JSON.stringify(scope.columns)));
+
                             scope.evDataService.setColumns(scope.columns);
 
                             scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
@@ -2491,7 +2490,7 @@
                         evDataHelper.setColumnsDefaultWidth(scope.evDataService);
 
                         scope.columns = scope.evDataService.getColumns();
-                        if (scope.columns) console.log("testing98.COLUMNS_CHANGE columns", JSON.parse(JSON.stringify(scope.columns)));
+
                         getColsAvailableForAdditions(); // when inside dashboard
                         // flagMissingColumns();
                         makePopupDataForColumns(scope.columns);
