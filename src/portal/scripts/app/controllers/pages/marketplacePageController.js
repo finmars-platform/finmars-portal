@@ -60,7 +60,8 @@
 
             configurationService.installConfiguration({
                 configuration_code: item.configuration_code,
-                version: item.latest_release_object.version
+                version: item.latest_release_object.version,
+                is_package: item.is_package
             }).then(function (data) {
 
                 toastNotificationService.info("Configuration is installing");
