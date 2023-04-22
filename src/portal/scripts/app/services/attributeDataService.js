@@ -68,20 +68,27 @@
 
         var instrumentUserFieldsData = [];
         var transactionUserFieldsData = [];
+        var complexTransactionUserFieldsData = [];
 
         var reconciliationAttributes = [];
 
         var attributesAvailableForColumns = [];
 
         /** Use aliases as names for user field for complex transactions **/
-        function applyAliasesToAttrs (attributes, keyPrefix, namePrefix) {
+        function applyAliasesToAttrs (attributes, contentType, keyPrefix='', namePrefix='') {
 
-            let userFields;
+            let userFields = [];
 
-            if (attributes[0].content_type === 'transactions.complextransaction') {
-                userFields = getTransactionUserFields();
-            } else {
-                userFields = getInstrumentUserFields();
+            switch (contentType) {
+                case 'transactions.transaction':
+                    userFields = getTransactionUserFields();
+                    break;
+                case 'transactions.complextransaction':
+                    userFields = getComplexTransactionUserFields();
+                    break;
+                case 'instruments.instrument':
+                    userFields = getInstrumentUserFields();
+                    break;
             }
 
             userFields.forEach(function (field) {
@@ -116,13 +123,13 @@
             var balancePerformanceAttrs = getAllAttributesAsFlatList('reports.balancereportperformance', '', 'Performance', {maxDepth: 1});
 
             var instrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
-            instrumentAttrs = applyAliasesToAttrs(instrumentAttrs, 'instrument.', 'Instrument. ');
+            instrumentAttrs = applyAliasesToAttrs(instrumentAttrs, 'instruments.instrument', 'instrument.', 'Instrument. ');
 
             var linkedInstrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
-            linkedInstrumentAttrs = applyAliasesToAttrs(linkedInstrumentAttrs, 'linked_instrument.', 'Linked Instrument. ');
+            linkedInstrumentAttrs = applyAliasesToAttrs(linkedInstrumentAttrs, 'instruments.instrument', 'linked_instrument.', 'Linked Instrument. ');
 
             var allocationAttrs = getAllAttributesAsFlatList('instruments.instrument', 'allocation', 'Allocation', {maxDepth: 1});
-            allocationAttrs = applyAliasesToAttrs(allocationAttrs, 'allocation.', 'Allocation. ');
+            allocationAttrs = applyAliasesToAttrs(allocationAttrs, 'instruments.instrument', 'allocation.', 'Allocation. ');
 
             var currencyAttrs = getAllAttributesAsFlatList('currencies.currency', 'currency', 'Currency', {maxDepth: 1});
 
@@ -160,10 +167,10 @@
             var allocationDynamicAttrsFormatted = formatAttributeTypes(allocationDynamicAttrs, 'instruments.instrument', 'allocation', 'Allocation');
             var linkedInstrumentDynamicAttrsFormatted = formatAttributeTypes(linkedInstrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
 
-			// remove attributes that area already inside currency from balance
-			balanceAttrs = balanceAttrs.filter(function (bAttr) {
-				return !!!currencyAttrs.find(function (cAttr) {return cAttr.key === bAttr.key});
-			});
+            // remove attributes that area already inside currency from balance
+            balanceAttrs = balanceAttrs.filter(function (bAttr) {
+                return !!!currencyAttrs.find(function (cAttr) {return cAttr.key === bAttr.key});
+            });
 
             result = result.concat(balanceAttrs);
             result = result.concat(balanceMismatchAttrs);
@@ -202,13 +209,13 @@
             var balancePerformanceAttrs = getAllAttributesAsFlatList('reports.plreportperformance', '', 'Performance', {maxDepth: 1});
 
             var instrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
-            instrumentAttrs = applyAliasesToAttrs(instrumentAttrs, 'instrument.', 'Instrument. ');
+            instrumentAttrs = applyAliasesToAttrs(instrumentAttrs, 'instruments.instrument', 'instrument.', 'Instrument. ');
 
             var linkedInstrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
-            linkedInstrumentAttrs = applyAliasesToAttrs(linkedInstrumentAttrs, 'linked_instrument.', 'Linked Instrument. ');
+            linkedInstrumentAttrs = applyAliasesToAttrs(linkedInstrumentAttrs, 'instruments.instrument', 'linked_instrument.', 'Linked Instrument. ');
 
             var allocationAttrs = getAllAttributesAsFlatList('instruments.instrument', 'allocation', 'Allocation', {maxDepth: 1});
-            allocationAttrs = applyAliasesToAttrs(allocationAttrs, 'allocation.', 'Allocation. ');
+            allocationAttrs = applyAliasesToAttrs(allocationAttrs, 'instruments.instrument', 'allocation.', 'Allocation. ');
 
             var accountAttrs = getAllAttributesAsFlatList('accounts.account', 'account', 'Account', {maxDepth: 1});
 
@@ -289,6 +296,7 @@
             var result = [];
 
             var transactionAttrs = getAllAttributesAsFlatList('reports.transactionreport', '', 'Transaction', {maxDepth: 1});
+            transactionAttrs = applyAliasesToAttrs(transactionAttrs, 'transactions.transaction', '', 'Transaction. ');
 
             var complexTransactionAttrs = getAllAttributesAsFlatList('transactions.complextransaction', 'complex_transaction', 'Complex Transaction', {maxDepth: 1});
 
@@ -296,12 +304,12 @@
                 return ttypeUserFields.indexOf(attr.key) < 0;
             });
 
-            complexTransactionAttrs = applyAliasesToAttrs(complexTransactionAttrs, 'complex_transaction.', 'Complex Transaction. ');
+            complexTransactionAttrs = applyAliasesToAttrs(complexTransactionAttrs, 'transactions.complextransaction', 'complex_transaction.', 'Complex Transaction. ');
 
             var portfolioAttrs = getAllAttributesAsFlatList('portfolios.portfolio', 'portfolio', 'Portfolio', {maxDepth: 1});
 
             var instrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
-            instrumentAttrs = applyAliasesToAttrs(instrumentAttrs, 'instrument.', 'Instrument. ');
+            instrumentAttrs = applyAliasesToAttrs(instrumentAttrs, 'instruments.instrument', 'instrument.', 'Instrument. ');
 
             var responsibleAttrs = getAllAttributesAsFlatList('counterparties.responsible', 'responsible', 'Responsible', {maxDepth: 1});
 
@@ -310,13 +318,13 @@
             // instruments
 
             var linkedInstrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
-            linkedInstrumentAttrs = applyAliasesToAttrs(linkedInstrumentAttrs, 'linked_instrument.', 'Linked Instrument. ');
+            linkedInstrumentAttrs = applyAliasesToAttrs(linkedInstrumentAttrs, 'instruments.instrument', 'linked_instrument.', 'Linked Instrument. ');
 
             var allocationBalanceAttrs = getAllAttributesAsFlatList('instruments.instrument', 'allocation_balance', 'Allocation Balance', {maxDepth: 1});
-            allocationBalanceAttrs = applyAliasesToAttrs(allocationBalanceAttrs, 'allocation_balance.', 'Allocation Balance. ');
+            allocationBalanceAttrs = applyAliasesToAttrs(allocationBalanceAttrs, 'instruments.instrument', 'allocation_balance.', 'Allocation Balance. ');
 
             var allocationPlAttrs = getAllAttributesAsFlatList('instruments.instrument', 'allocation_pl', 'Allocation P&L', {maxDepth: 1});
-            allocationPlAttrs = applyAliasesToAttrs(allocationPlAttrs, 'allocation_pl.', 'Allocation P&L. ');
+            allocationPlAttrs = applyAliasesToAttrs(allocationPlAttrs, 'instruments.instrument', 'allocation_pl.', 'Allocation P&L. ');
 
             // currencies
 
@@ -435,8 +443,6 @@
 
         }
 
-        // TODO come up with more efficient way of returning new copy of data
-
         function getEntityAttributesByEntityType(entityType) {
 
             if (entityAttributesData[entityType]) {
@@ -444,7 +450,7 @@
                 let attrs = JSON.parse(JSON.stringify(entityAttributesData[entityType]));
 
                 // Use aliases as names for user fields
-                const applyAliases = function (uFields) {
+                /*const applyAliases = function (uFields) {
 
                     uFields.forEach(function (field) {
 
@@ -462,10 +468,13 @@
 
                     return attrs;
 
-                };
+                }
 
-                attrs = applyAliases( getTransactionUserFields() );
+                attrs = applyAliases( getComplexTransactionUserFields() );
                 attrs = applyAliases( getInstrumentUserFields() );
+                attrs = applyAliases( getTransactionUserFields() );*/
+                var contentType = metaContentTypesService.findContentTypeByEntity(entityType);
+                attrs = applyAliasesToAttrs(attrs, contentType);
 
                 return attrs;
 
@@ -570,7 +579,7 @@
                             item.entity = entityType;
                         });
 
-                        var instrumentUserFields = getInstrumentUserFields();
+                        /*var instrumentUserFields = getInstrumentUserFields();
                         var transactionUserFields = getTransactionUserFields();
 
                         instrumentUserFields.forEach(function (field) {
@@ -594,7 +603,7 @@
 
                             })
 
-                        });
+                        });*/
 
                         dynamicAttrs = getDynamicAttributesByEntityType(entityType);
 
@@ -644,6 +653,16 @@
 
             if (transactionUserFieldsData) {
                 return transactionUserFieldsData
+            }
+
+            return []
+
+        }
+
+        function getComplexTransactionUserFields() {
+
+            if (complexTransactionUserFieldsData) {
+                return complexTransactionUserFieldsData
             }
 
             return []
@@ -766,7 +785,7 @@
 
                     result = data.results;
 
-                    transactionUserFieldsData = result;
+                    complexTransactionUserFieldsData = result;
 
                     resolve(result)
 
@@ -832,7 +851,6 @@
             var currentLevel = 0;
 
             _getAttributesRecursive(result, currentLevel, rootContentType, rootKey, rootName, _options);
-
             // console.log('currentLevel', currentLevel);
             // console.log('result', result);
 
