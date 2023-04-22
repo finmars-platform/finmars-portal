@@ -53,9 +53,9 @@
 
                     configurationService.getList().then(function (data) {
 
-                        scope.configuration_codes = data.filter(function (item) {
-                            return item.is_package === false // TODO Move to backend filtering someday
-                        }).results.map(function (item) {
+                        scope.configuration_codes = data.results.filter(function (item) {
+                            return !item.is_package; // TODO Move to backend filtering someday
+                        }).map(function (item) {
                             return item.configuration_code
                         });
 
