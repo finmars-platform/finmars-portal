@@ -8,7 +8,7 @@
     var pricingPolicyService = require('../../../services/pricingPolicyService');
 
     var currencyPricingSchemeService = require('../../../services/pricing/currencyPricingSchemeService');
-    var instrumentPricingSchemeService= require('../../../services/pricing/instrumentPricingSchemeService');
+    var instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
 
 
     module.exports = function ($scope, $mdDialog, data) {
@@ -81,6 +81,30 @@
             })
 
         };
+
+        vm.editAsJson = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityAsJsonEditorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        item: vm.item,
+                        entityType: 'pricing-policy'
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.getItem();
+
+                }
+            })
+
+        }
 
         vm.init = function () {
 
