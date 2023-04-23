@@ -28,8 +28,12 @@
         </div>
         <div layout="row">
 
+            <md-button ng-click="vm.convertToExport($event)" style="margin-right:20px;">
+                Convert to Export
+            </md-button>
+
             <md-button ng-click="vm.export()" style="margin-right:20px;">
-                Export
+                Download
             </md-button>
 
             <md-button ng-click="vm.agree()" class="{{vm.processing ? 'disabled-btn' : ''}}">

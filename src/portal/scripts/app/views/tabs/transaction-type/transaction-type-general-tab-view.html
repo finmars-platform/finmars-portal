@@ -1,27 +1,33 @@
 <div>
-    <div data-ng-if="vm.checkReadyStatus()">
+    <div data-ng-if="vm.checkMainDataReadyStatus()">
 
 
-        <div layout="row" style="margin-bottom: 20px; padding-left: 12px; font-size: 16px;" >
+        <div layout="row" style="margin-bottom: 20px; padding-left: 12px; font-size: 16px;">
 
             <div data-ng-if="vm.entity.type == 1"><b>Type</b>: Transaction</div>
             <div data-ng-if="vm.entity.type == 2"><b>Type</b>: Procedure</div>
 
         </div>
 
-        <div layout="row">
+        <div layout="row" style="width: 600px;">
 
-            <usercode-input ng-if="!vm.entity.id" data-item="vm.entity"></usercode-input>
+            <usercode-input data-item="vm.entity" style="width: 100%;"></usercode-input>
 
-            <md-input-container style="width: 300px" data-ng-if="vm.entity.id">
-                <label for="">User code</label>
-                <input type="text" data-ng-model="vm.entity.user_code">
-            </md-input-container>
+            <!--            <md-input-container style="width: 300px" data-ng-if="vm.entity.id">-->
+            <!--                <label for="">User code</label>-->
+            <!--                <input type="text" data-ng-model="vm.entity.user_code">-->
+            <!--            </md-input-container>-->
+
+
+        </div>
+
+        <div layout="row" class="m-b-16">
 
             <crud-select label="'Group'" item="vm.entity.group" entity-type="'transaction-type-group'"
                          options="vm.transactionTypeGroups"></crud-select>
 
         </div>
+
         <div layout="row">
             <md-input-container style="width: 300px">
                 <label for="">Name</label>
@@ -39,7 +45,7 @@
         <div layout="row">
             <md-input-container style="width: 300px">
                 <label for="">Notes</label>
-<!--                <textarea data-ng-model="vm.entity.notes" cols="30" rows="10"></textarea>-->
+                <!--                <textarea data-ng-model="vm.entity.notes" cols="30" rows="10"></textarea>-->
                 <input type="text" data-ng-model="vm.entity.notes">
             </md-input-container>
         </div>
@@ -135,10 +141,10 @@
 
         <div>
             <md-input-container style="margin-bottom: 13px;">
-                <label >Visibility Settings</label>
+                <label>Visibility Settings</label>
                 <md-select data-ng-model="vm.entity.visibility_status">
-                    <md-option ng-value="1" >Parameters are visible</md-option>
-                    <md-option ng-value="2" >Parameters are hidden</md-option>
+                    <md-option ng-value="1">Parameters are visible</md-option>
+                    <md-option ng-value="2">Parameters are hidden</md-option>
                 </md-select>
             </md-input-container>
         </div>
@@ -147,25 +153,28 @@
         <div layout="row"
              class="m-b-16">
 
-           <expression-input label="Transaction Unique Code Expression"
-                             model="vm.entity.transaction_unique_code_expr"
-                             data-data="vm.expressionEditorData"
-                             class="custom-input-bottom-space"
-                             style="margin-left: 12px;"></expression-input>
+            <expression-input label="Transaction Unique Code Expression"
+                              model="vm.entity.transaction_unique_code_expr"
+                              data-data="vm.expressionEditorData"
+                              class="custom-input-bottom-space"
+                              style="margin-left: 12px;"></expression-input>
         </div>
 
         <div>
-            <md-input-container>
-                <label >Transaction Unique Code Settings</label>
+            <md-input-container style="width: 300px">
+                <label>Transaction Unique Code Settings</label>
                 <md-select data-ng-model="vm.entity.transaction_unique_code_options">
-                    <md-option ng-value="1" >Book without unique code</md-option>
-                    <md-option ng-value="2" >Skip</md-option>
+                    <md-option ng-value="1">Skip (Create transaction with unique code if not exists)</md-option>
+                    <md-option ng-value="2">Book without unique code</md-option>
+                    <md-option ng-value="3">Overwrite (Create Transactions with unique code even if exists. Existing
+                        Transaction will be deleted)
+                    </md-option>
                 </md-select>
             </md-input-container>
         </div>
 
     </div>
-    <div data-ng-if="!vm.checkReadyStatus()">
+    <div data-ng-if="!vm.checkMainDataReadyStatus()">
         <div layout="row" layout-sm="column" layout-align="space-around">
             <md-progress-circular md-mode="indeterminate"></md-progress-circular>
         </div>

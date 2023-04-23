@@ -344,6 +344,7 @@ export default function (expressionService) {
         var accounts_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_accounts)
         var currencies_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_currencies)
         var portfolios_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_portfolios)
+        var instrument_types_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_instrument_types)
 
         console.log('portfolios_as_dict', portfolios_as_dict);
 
@@ -386,6 +387,33 @@ export default function (expressionService) {
 
             if (item.linked_instrument) {
                 joinFlatRelationToItem(item, 'linked_instrument', instruments_as_dict[item.linked_instrument])
+            }
+            if (item['instrument.instrument_type']) {
+
+                joinFlatRelationToItem(item, 'instrument.instrument_type', instrument_types_as_dict[item['instrument.instrument_type']])
+
+            }
+
+            if (item['instrument.pricing_currency']) {
+                joinFlatRelationToItem(item, 'instrument.pricing_currency', currencies_as_dict[item['instrument.pricing_currency']])
+            }
+
+            if (item['instrument.accrued_currency']) {
+                joinFlatRelationToItem(item, 'instrument.accrued_currency', currencies_as_dict[item['instrument.accrued_currency']])
+            }
+
+            if (item['instrument.instrument_type']) {
+
+                joinFlatRelationToItem(item, 'instrument.instrument_type', instrument_types_as_dict[item['instrument.instrument_type']])
+
+            }
+
+            if (item['instrument.pricing_currency']) {
+                joinFlatRelationToItem(item, 'instrument.pricing_currency', currencies_as_dict[item['instrument.pricing_currency']])
+            }
+
+            if (item['instrument.accrued_currency']) {
+                joinFlatRelationToItem(item, 'instrument.accrued_currency', currencies_as_dict[item['instrument.accrued_currency']])
             }
 
 

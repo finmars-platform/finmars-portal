@@ -72,6 +72,11 @@
 
 				}
 
+				optionsList.push({
+					name: "View JSON",
+					actionKey: "bulk_view_json"
+				})
+
 				const selectOption = function (option, _$popup, $event) {
 
 					_$popup.cancel();

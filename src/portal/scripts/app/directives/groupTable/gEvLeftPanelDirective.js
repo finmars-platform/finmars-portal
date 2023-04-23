@@ -382,6 +382,100 @@
 
                 }
 
+                // const getAttributes = () => {
+                //
+                //     var allAttrsList;
+                //
+                //
+                //     var entityType = scope.evDataService.getEntityType();
+                //
+                //     if (scope.viewContext === 'reconciliation_viewer') {
+                //         allAttrsList = scope.attributeDataService.getReconciliationAttributes();
+                //     } else {
+                //
+                //         switch (entityType) {
+                //             case 'balance-report':
+                //                 allAttrsList = scope.attributeDataService.getBalanceReportAttributes();
+                //                 break;
+                //
+                //             case 'pl-report':
+                //                 allAttrsList = scope.attributeDataService.getPlReportAttributes();
+                //                 break;
+                //
+                //             case 'transaction-report':
+                //                 allAttrsList = scope.attributeDataService.getTransactionReportAttributes();
+                //                 break;
+                //
+                //             default:
+                //                 var entityAttrs = [];
+                //                 var dynamicAttrs = [];
+                //                 allAttrsList = [];
+                //
+                //                 entityAttrs = scope.attributeDataService.getEntityAttributesByEntityType(entityType);
+                //
+                //                 entityAttrs.forEach(function (item) {
+                //                     if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
+                //                         item.name = 'Group';
+                //                     }
+                //                     item.entity = entityType;
+                //                 });
+                //
+                //                /* let instrumentUserFields = scope.attributeDataService.getInstrumentUserFields();
+                //                 let transactionUserFields = scope.attributeDataService.getTransactionUserFields();
+                //
+                //                 instrumentUserFields.forEach(function (field) {
+                //
+                //                     entityAttrs.forEach(function (entityAttr) {
+                //
+                //                         if (entityAttr.key === field.key) {
+                //                             entityAttr.name = field.name;
+                //                         }
+                //
+                //                     })
+                //
+                //                 });
+                //
+                //                 transactionUserFields.forEach(function (field) {
+                //
+                //                     entityAttrs.forEach(function (entityAttr) {
+                //
+                //                         if (entityAttr.key === field.key) {
+                //                             entityAttr.name = field.name;
+                //                         }
+                //
+                //                     })
+                //
+                //                 }); */
+                //
+                //                 dynamicAttrs = scope.attributeDataService.getDynamicAttributesByEntityType(entityType);
+                //
+                //
+                //                 dynamicAttrs = dynamicAttrs.map(function (attribute) {
+                //
+                //                     let result = {};
+                //
+                //                     result.attribute_type = Object.assign({}, attribute);
+                //                     result.value_type = attribute.value_type;
+                //                     result.content_type = scope.contentType;
+                //                     result.key = 'attributes.' + attribute.user_code;
+                //                     result.name = attribute.name;
+                //
+                //                     return result
+                //
+                //                 });
+                //
+                //                 allAttrsList = allAttrsList.concat(entityAttrs);
+                //                 allAttrsList = allAttrsList.concat(dynamicAttrs);
+                //
+                //                 break;
+                //         }
+                //
+                //     }
+                //
+                //     return allAttrsList;
+                //
+                // };
+
                 scope.addGroupType = function ($event) {
 
                     /*const allAttrsList = scope.attributeDataService.getAllAttributesByEntityType(entityType);

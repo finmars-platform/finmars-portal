@@ -23,10 +23,7 @@
 
                     <div class="width-100">
 
-                        <md-input-container>
-                            <label>User Code</label>
-                            <input type="text" data-ng-model="vm.item.user_code">
-                        </md-input-container>
+                        <usercode-input data-item="vm.item"></usercode-input>
 
                     </div>
 
@@ -112,6 +109,10 @@
     <md-dialog-actions layout="row">
         <md-button ng-click="vm.cancel()">
             Close
+        </md-button>
+        <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
+                   data-ng-if="vm.item.id">
+            Make Copy
         </md-button>
         <md-button ng-click="vm.editAsJson($event)">
             Edit as JSON

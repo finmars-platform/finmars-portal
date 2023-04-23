@@ -128,7 +128,7 @@
 
             };
 
-            return new Promise (function (resolve, reject) {
+            return new Promise(function (resolve, reject) {
 
                 if (variableName) {
                     getEntityAttributesMethod(resolve, reject);
@@ -184,8 +184,8 @@
 
         vm.addAttribute = function (entityType, ev) {
             $mdDialog.show({
-                controller: 'AttributesManagerAddDialogController as vm',
-                templateUrl: 'views/attribute-manager-dialog-view.html',
+                controller: 'AttributeTypeDialogController as vm',
+                templateUrl: 'views/attribute-type-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 locals: {
@@ -324,13 +324,13 @@
 
         vm.editAttr = function (item, entityType, ev) {
             $mdDialog.show({
-                controller: 'AttributesManagerEditDialogController as vm',
-                templateUrl: 'views/attribute-manager-dialog-view.html',
+                controller: 'AttributeTypeDialogController as vm',
+                templateUrl: 'views/attribute-type-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 locals: {
                     data: {
-                        attributeId: item.id,
+                        id: item.id,
                         entityType: entityType
                     }
                 }

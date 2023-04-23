@@ -3,7 +3,7 @@
            drag-dialog
            style="height: 100%">
     <md-toolbar>
-        <div data-ng-if="vm.checkReadyStatus()"
+        <div data-ng-if="vm.checkMainDataReadyStatus()"
              class="md-toolbar-tools"
              data-ng-class="{'disabled-input-form': !vm.hasEditPermission}">
             <is-draggable-sign></is-draggable-sign>
@@ -28,7 +28,7 @@
     <md-dialog-content style="height: 100%">
 
         <div style="min-width: 1450px">
-            <div data-ng-if="vm.checkReadyStatus()">
+            <div data-ng-if="vm.checkMainDataReadyStatus()">
 
                 <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
 
@@ -224,7 +224,7 @@
 
                 </md-tabs>
             </div>
-            <div data-ng-if="!vm.checkReadyStatus()">
+            <div data-ng-if="!vm.vm.checkMainDataReadyStatus()">
                 <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
                     <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
                     <progress-circular diameter="100"></progress-circular>
@@ -238,11 +238,11 @@
         <div layout="row">
             <md-button ng-click="vm.editLayout($event)"
                        class="md-raised md-primary"
-                       ng-disabled="!vm.checkReadyStatus() || vm.processing">
+                       data-ng-disabled="!vm.checkMainDataReadyStatus() || vm.processing">
                 Edit transaction form
             </md-button>
 
-            <md-button ng-click="vm.manageAttrs($event)" class="md-raised md-primary" ng-disabled="!vm.checkReadyStatus()">
+            <md-button ng-click="vm.manageAttrs($event)" class="md-raised md-primary" data-ng-disabled="!vm.checkMainDataReadyStatus()">
                 Manage attributes
             </md-button>
 
@@ -255,21 +255,21 @@
 
         <div style="margin-right: 10px;">
             <md-button class="md-raised m-r-24" ng-click="vm.copy()"
-                       ng-disabled="!vm.checkReadyStatus()" ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}">
+                       data-ng-disabled="!vm.checkMainDataReadyStatus()" ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}">
                 Make a copy
             </md-button>
             <md-button class="md-raised" ng-click="vm.cancel()">
                 Cancel
             </md-button>
             <md-button class="md-raised m-r-24"
+                       data-ng-disabled="!vm.checkMainDataReadyStatus() || vm.processing || !vm.hasEditPermission"
                        ng-click="vm.save()"
-                       ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}"
                        style="margin-left:20px;">
                 Save
             </md-button>
             <md-button class="md-raised"
                        ng-click="vm.saveAndExit()"
-                       ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}">
+                       data-ng-disabled="!vm.checkMainDataReadyStatus() || vm.processing || !vm.hasEditPermission">
                 Save and Exit
             </md-button>
         </div>

@@ -111,35 +111,45 @@
 
         var list = [];
 
-        var dataOrderReference = {}; // Only need for keep tracking on original item index
+        // var dataOrderReference = {}; // Only need for keep tracking on original item index
         var referenceItem;
 
-        Object.keys(data).forEach(function (key) {
+        // console.time("convertToTree.firstLoop");
 
-            dataOrderReference[key] = {
-                results: []
-            };
+        // Object.keys(data).forEach(function (key) {
+        //
+        //     dataOrderReference[key] = {
+        //         results: []
+        //     };
+        //
+        //     if (data[key].results) {
+        //         data[key].results.forEach(function (item, index) {
+        //
+        //             referenceItem = {___id: item.___id, index: index};
+        //
+        //             dataOrderReference[key].results.push(referenceItem)
+        //         })
+        //     }
+        //
+        //
+        // });
 
-            if (data[key].results) {
-                data[key].results.forEach(function (item) {
+        // console.timeEnd("convertToTree.firstLoop");
 
-                    referenceItem = {___id: item.___id};
+        console.time("convertToTree.secondLoop");
 
-                    dataOrderReference[key].results.push(referenceItem)
-                })
-            }
-
-
-        });
-
-        rootGroup.results.forEach(function (item) {
+        for (const item of rootGroup.results) {
             if (!data[item.___id]) {
 
                 if (item.___type === 'group' || item.___type === 'placeholder_group') {
                     data[item.___id] = item;
                 }
             }
-        });
+        }
+
+        console.timeEnd("convertToTree.secondLoop");
+
+        console.time("convertToTree.thirdLoop");
 
         var originalKeys = Object.keys(data);
 
@@ -161,16 +171,23 @@
 
         });
 
+        console.timeEnd("convertToTree.thirdLoop");
+
         var extendedKeys = Object.keys(data);
+
+        console.time("convertToTree.forthLoop");
 
         // console.log('convertToTree.extendedKeys', extendedKeys)
         // performance update
-        extendedKeys.forEach(function (key) {
+
+
+        extendedKeys.forEach(function (key, index) {
 
             if (optimize) {
 
                 // minimal amount of meta-fields (some issues will occur in Entity Viewer if remove them)
                 list.push({
+                    ___index: index,
                     ___id: data[key].___id,
                     ___parentId: data[key].___parentId,
                     ___level: data[key].___level,
@@ -189,8 +206,11 @@
             }
 
 
-
         });
+
+        console.timeEnd("convertToTree.forthLoop");
+
+        console.time("convertToTree.toTree");
 
         var map = {}, node, roots = [], i;
         for (i = 0; i < extendedKeys.length; i += 1) {
@@ -203,38 +223,25 @@
             if (node.___parentId !== null) {
 
                 if (node.___type === 'group' || node.___type === 'placeholder_group') {
-                    insertItemInNode(list, map, node, dataOrderReference)
-                }
-
-                if (node.___type === 'object' || node.___type === 'placeholder_object' || node.___type === 'control') {
+                    // insertItemInNode(list, map, node, dataOrderReference)
+                    list[map[node.___parentId]].results[node.___index] = node;
+                } else if (node.___type === 'object' || node.___type === 'placeholder_object' || node.___type === 'control') {
                     list[map[node.___parentId]].results.push(node)
-                }
-
-                if (node.___type === 'blankline' && node.___blankline_type === 'area') {
+                } else if (node.___type === 'blankline' && node.___blankline_type === 'area') {
 
                     list[map[node.___parentId]].results.push(node)
 
-                }
-
-                if (node.___type === 'subtotal' && node.___subtotal_type === 'proxyline') {
+                } else if (node.___type === 'subtotal' && node.___subtotal_type === 'proxyline') {
                     list[map[node.___parentId]].results.unshift(node)
-                }
-
-                if (node.___type === 'subtotal' && node.___subtotal_type === 'line') {
+                } else if (node.___type === 'subtotal' && node.___subtotal_type === 'line') {
                     list[map[node.___parentId]].results.unshift(node)
-                }
-
-                if (node.___type === 'subtotal' && node.___subtotal_type === 'area') {
+                } else if (node.___type === 'subtotal' && node.___subtotal_type === 'area') {
                     list[map[node.___parentId]].results.push(node)
-                }
-
-                if (node.___type === 'subtotal' && node.___subtotal_type === 'arealine') {
+                } else if (node.___type === 'subtotal' && node.___subtotal_type === 'arealine') {
 
                     if (node.___subtotal_subtype === 'line') {
                         list[map[node.___parentId]].results.unshift(node)
-                    }
-
-                    if (node.___subtotal_subtype === 'area') {
+                    } else if (node.___subtotal_subtype === 'area') {
                         list[map[node.___parentId]].results.push(node)
                     }
 
@@ -246,6 +253,8 @@
 
             }
         }
+
+        console.timeEnd("convertToTree.toTree");
 
         return roots[0];
 

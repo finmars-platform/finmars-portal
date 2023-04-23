@@ -272,7 +272,9 @@
             <md-button ng-click="vm.cancel()" class="md-raised">
                 Cancel
             </md-button>
-            <md-button ng-click="vm.saveLayout()" class="md-raised {{vm.processing ? 'disabled-btn' : ''}}" >
+            <md-button data-ng-click="vm.saveLayout()"
+                       data-ng-disabled="vm.processing"
+                       class="md-raised">
                 <span>Save & Return</span>
                 <span></span>
             </md-button>

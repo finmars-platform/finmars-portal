@@ -47,6 +47,9 @@
         var fullRowUserInputsList = entityDataConstructorService.fullRowUserInputsList;
 		var dialogParent = document.querySelector('.dialog-containers-wrap');
 
+        var defaultUserCode = metaContentTypesService.getEntityNameByContentType(vm.targetContentType);
+        defaultUserCode = defaultUserCode.toLowerCase().replace(' ', '_') + '_default';
+
         vm.fromEntityType = undefined;
         if (data.hasOwnProperty('fromEntityType')) {
             vm.fromEntityType = data.fromEntityType;
@@ -179,7 +182,8 @@
                 if (vm.formLayoutIsNew) { // There is no layout yet, so create one
 
                     vm.ui = {
-                        data: {}
+                        user_code: defaultUserCode,
+                        data: {},
                     }
 
                     resolveLayout();
@@ -201,6 +205,7 @@
                                     vm.formLayoutIsNew = true;
 
                                     vm.ui = {
+                                        user_code: defaultUserCode,
                                         data: {}
                                     }
                                     // vm.ui = uiService.getDefaultEditLayout(vm.entityType)[0];
@@ -235,6 +240,7 @@
                                 else { // There is no layout yet, so create one
                                 	vm.formLayoutIsNew = true;
                                     vm.ui = {
+                                        user_code: defaultUserCode,
                                         data: {}
                                     }
                                 }
@@ -248,6 +254,12 @@
                     }
 
                 }
+                vm.ui = {
+                    user_code: defaultUserCode,
+                    data: {},
+                }
+
+                resolveLayout();
 
             });
 
@@ -632,8 +644,11 @@
 
             if (!notSavedTabExist) {
 
-                for (var i = 0; i < vm.tabs.length; i = i + 1) {
-                    removeLastRow(vm.tabs[i]);
+                var uiData = vm.ui.data;
+                var tabsCopy = JSON.parse(angular.toJson( vm.tabs ));
+
+                for (var i = 0; i < tabsCopy.length; i = i + 1) {
+                    removeLastRow(tabsCopy[i]);
                 }
 
                 /* CODE FOR FIXED AREA INSIDE INPUT FORM EDITOR
@@ -649,7 +664,7 @@
                 };
 
                 if (vm.tabs) {
-                    vm.ui.data.tabs = JSON.parse(angular.toJson(vm.tabs));
+                    vm.ui.data.tabs = tabsCopy;
                 }
 
                 vm.ui.data.fixedArea = JSON.parse(JSON.stringify(vm.fixedArea));
@@ -667,16 +682,28 @@
 							id: layoutId,
 							user_code: vm.ui.user_code,
 							name: vm.ui.name,
-							is_default: vm.ui.is_default
+							is_default: vm.ui.is_default,
 						}
                     });
 
                 };
 
+                var onSavingError = function (error) {
+
+                    console.error(error);
+                    vm.ui.data = uiData;
+
+                    vm.processing = false;
+                    $scope.$apply();
+
+                }
+
                 if (vm.entityType === "complex-transaction") {
 
                     if (vm.instanceId || vm.instanceId === 0) {
-                        transactionTypeService.patch(vm.instanceId, {book_transaction_layout: vm.ui}).then(onSavingEnd);
+                        transactionTypeService.patch(vm.instanceId, {book_transaction_layout: vm.ui})
+                            .then(onSavingEnd)
+                            .catch(onSavingError);
                     } else {
                         toastNotificationService.error("Id of transaction type not found");
                     }
@@ -684,15 +711,20 @@
                 } else {
 
                     if (vm.formLayoutIsNew) {
-                        uiService.createEditLayout(vm.entityType, vm.ui).then(onSavingEnd);
+                        uiService.createEditLayout(vm.entityType, vm.ui)
+                            .then(onSavingEnd)
+                            .catch(onSavingError);
 
                     } else {
-                        uiService.updateEditLayout(vm.ui.id, vm.ui).then(onSavingEnd);
+                        uiService.updateEditLayout(vm.ui.id, vm.ui)
+                            .then(onSavingEnd)
+                            .catch(onSavingError);
                     }
 
                 }
 
-            } else {
+            }
+            else {
 
                 vm.processing = false;
 

@@ -116,7 +116,7 @@
 
                                 });
 
-                                let instrumentUserFields = $scope.attributeDataService.getInstrumentUserFields();
+                                /* let instrumentUserFields = $scope.attributeDataService.getInstrumentUserFields();
                                 let transactionUserFields = $scope.attributeDataService.getTransactionUserFields();
 
                                 instrumentUserFields.forEach(function (field) {
@@ -141,36 +141,36 @@
 
                                     })
 
-                                });
+                                }); */
 
-                                dynamicAttrs = $scope.attributeDataService.getDynamicAttributesByEntityType(vm.entityType);
-
-
-                                dynamicAttrs = dynamicAttrs.map(function (attribute) {
-
-                                    let result = {};
-
-                                    result.attribute_type = Object.assign({}, attribute);
-                                    result.value_type = attribute.value_type;
-                                    result.content_type = $scope.contentType;
-                                    result.key = 'attributes.' + attribute.user_code;
-                                    result.name = attribute.name;
-
-                                    return result
-
-                                });
-
-                                allAttrsList = allAttrsList.concat(entityAttrs);
-                                allAttrsList = allAttrsList.concat(dynamicAttrs);
-
-                                break;
-                        }
-
-                    }
-
-                    return allAttrsList;
-
-                }; */
+                //                 dynamicAttrs = $scope.attributeDataService.getDynamicAttributesByEntityType(vm.entityType);
+                //
+                //
+                //                 dynamicAttrs = dynamicAttrs.map(function (attribute) {
+                //
+                //                     let result = {};
+                //
+                //                     result.attribute_type = Object.assign({}, attribute);
+                //                     result.value_type = attribute.value_type;
+                //                     result.content_type = $scope.contentType;
+                //                     result.key = 'attributes.' + attribute.user_code;
+                //                     result.name = attribute.name;
+                //
+                //                     return result
+                //
+                //                 });
+                //
+                //                 allAttrsList = allAttrsList.concat(entityAttrs);
+                //                 allAttrsList = allAttrsList.concat(dynamicAttrs);
+                //
+                //                 break;
+                //         }
+                //
+                //     }
+                //
+                //     return allAttrsList;
+                //
+                // }
 
                 /* function clearAdditions() {
 
