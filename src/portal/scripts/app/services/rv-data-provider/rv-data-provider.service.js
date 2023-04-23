@@ -276,8 +276,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
             objectsService.getList(entityType, options, entityViewerDataService).then(function (data) {
 
                 var groupData = entityViewerDataService.getData(event.___id);
-
-                var obj;
+                var obj; // group that contains objects
 
                 if (!event.___id) {
 
@@ -314,7 +313,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                         //         obj.results[page * step + i] = data.results[i];
                         //     }
                         // }
-
                     }
                     else {
 
@@ -331,6 +329,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                         obj.___parentId = event.parentGroupId;
                         obj.___type = 'group';
                         obj.___id = event.___id;
+                        obj.___index = parentGroup.results.findIndex(group => group.___id === obj.___id);
                         obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
 
                         var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
@@ -586,9 +585,9 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         var requestParameters;
 
         var id = evRvCommonHelper.getId(item);
-        console.log("teseting1224.createRequestParameters createdIdsList.length", createdIdsList.length);
+
         if ( createdIdsList.includes(id) ) {
-            console.log("teseting1224.createRequestParameters duplicate id Error", testObj[id] );
+
             console.log("Error: duplicated id was created for an item: ", item);
             var customError = new Error("Item with an ___id " + item.___id + " already exist");
             customError.___item_data = item;

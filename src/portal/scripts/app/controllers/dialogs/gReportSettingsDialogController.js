@@ -484,7 +484,7 @@
                     page: 1
                 };
 
-                metaService.loadDataFromAllPages(uiService.getTransactionFieldList, [options]).then(function (transactionFields) {
+                metaService.loadDataFromAllPages(uiService.getComplexTransactionFieldList, [options]).then(function (transactionFields) {
 
                     vm.transactionsUserDates = transactionFields.filter(function (field) {
                         return ['user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'].includes(field.key);
@@ -530,7 +530,7 @@
             const viewContext = vm.evDataService.getViewContext();
             vm.disableDatepicker = viewContext === 'split_panel' && vm.reportLayoutOptions.useDateFromAbove;
 
-            uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
+            uiService.getComplexTransactionFieldList({pageSize: 1000}).then(function (data) {
 
                 vm.fieldsReady = true;
 

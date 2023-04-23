@@ -15,7 +15,7 @@
 
     <div class="big-drawer-main">
 
-        <div data-ng-if="vm.checkReadyStatus()">
+        <div data-ng-if="vm.checkMainDataReadyStatus()">
 
             <div data-ng-if="!vm.entity.type" style="padding-top: 64px">
 
@@ -230,7 +230,7 @@
             </div>
 
         </div>
-        <div data-ng-if="!vm.checkReadyStatus()">
+        <div data-ng-if="!vm.checkMainDataReadyStatus()">
             <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
                 <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
                 <progress-circular diameter="100"></progress-circular>
@@ -250,7 +250,7 @@
         <div style="margin-right: 10px;">
             <md-menu md-position-mode="target-right target">
 
-                <md-button class="outline-button" ng-click="$mdOpenMenu($event)">
+                <md-button class="outline-button" data-ng-click="$mdOpenMenu($event)">
                     <div class="flex-row flex-c-center">
                         <ng-md-icon icon="more_vert" class="flex-row"></ng-md-icon>
                     </div>
@@ -272,13 +272,13 @@
             </md-menu>
 
             <md-button class="outline-button"
-                       ng-disabled="vm.processing || !vm.entity.type"
-                       ng-click="vm.saveAndExit('edit')">
+                       data-ng-disabled="!vm.checkMainDataReadyStatus() || vm.processing || !vm.entity.type"
+                       data-ng-click="vm.saveAndExit('edit')">
                 Create
             </md-button>
 
-            <md-button ng-disabled="vm.processing || !vm.entity.type"
-                       ng-click="vm.saveAndExit()"
+            <md-button data-ng-disabled="!vm.checkMainDataReadyStatus() || vm.processing || !vm.entity.type"
+                       data-ng-click="vm.saveAndExit()"
                        class="m-r-24 primary-button">
                 Create and Exit
             </md-button>

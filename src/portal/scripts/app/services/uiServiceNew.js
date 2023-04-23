@@ -556,6 +556,18 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
         return uiRepository.deleteConfigurationExportLayoutByKey(id);
     };
 
+    const getComplexTransactionFieldList = function (options) {
+        return uiRepository.getComplexTransactionFieldList(options)
+    };
+
+    const createComplexTransactionField = function (data) {
+        return uiRepository.createComplexTransactionField(data);
+    };
+
+    const updateComplexTransactionField = function (id, data) {
+        return uiRepository.updateComplexTransactionField(id, data);
+    };
+
     const getTransactionFieldList = function (options) {
         return uiRepository.getTransactionFieldList(options)
     };
@@ -801,6 +813,10 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
         createConfigurationExportLayout: createConfigurationExportLayout,
         updateConfigurationExportLayout: updateConfigurationExportLayout,
         deleteConfigurationExportLayoutByKey: deleteConfigurationExportLayoutByKey,
+
+        getComplexTransactionFieldList: getComplexTransactionFieldList,
+        createComplexTransactionField: createComplexTransactionField,
+        updateComplexTransactionField: updateComplexTransactionField,
 
         getTransactionFieldList: getTransactionFieldList,
         createTransactionField: createTransactionField,

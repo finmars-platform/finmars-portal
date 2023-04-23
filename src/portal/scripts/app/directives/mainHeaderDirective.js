@@ -456,6 +456,23 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             });
 
+            scope.openUniversalInputDialog = function ($event) {
+
+                $mdDialog.show({
+                    controller: 'UniversalInputDialogController as vm',
+                    templateUrl: 'views/dialogs/universal-input-dialog-view.html',
+                    targetEvent: $event,
+                    locals: {
+                        data: {}
+                    },
+                    multiple: true,
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true
+                });
+
+            }
+
             const init = async function () {
 
                 const user = globalDataService.getUser();
@@ -479,6 +496,13 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                     scope.currentMasterUser = globalDataService.getMasterUser();
                     console.log("Header master user change")
                 })
+
+
+                scope.universalInputEnabled = false
+                var universalInputStatus = window.localStorage.getItem('universalInputEnabled')
+                if (universalInputStatus === 'true') {
+                    scope.universalInputEnabled = true
+                }
 
             };
 

@@ -1,13 +1,15 @@
 /**
  * Created by szhitenev on 08.06.2016.
  */
+import metaContentTypesService from "../../services/metaContentTypesService";
+
 (function () {
 
     'use strict';
 
 	const uiService = require('../../services/uiService');
 
-    module.exports = function ($scope, $mdDialog, commonDialogsService, data) {
+    module.exports = function ($scope, $mdDialog, commonDialogsService, metaContentTypesService, data) {
 
         var vm = this;
 
@@ -38,8 +40,11 @@
 		});
 
         vm.item = {
-            name: data.name || ''
+            name: data.name || '',
+			content_type: metaContentTypesService.findContentTypeByEntity(data.entityType)
         }
+
+		console.log('vm.item', vm.item);
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});

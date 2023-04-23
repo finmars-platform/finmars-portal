@@ -230,6 +230,26 @@
             });
         };
 
+        function removeIdKeyRecursively(data) {
+            if (typeof data !== 'object' || data === null) {
+                return data;
+            }
+
+            // Remove 'id' key if present
+            if (data.hasOwnProperty('id')) {
+                delete data.id;
+            }
+
+            // Recursively process nested objects
+            for (const key in data) {
+                if (typeof data[key] === 'object') {
+                    removeIdKeyRecursively(data[key]);
+                }
+            }
+
+            return data;
+        }
+
         vm.copy = function (windowType) {
 
             var entity = JSON.parse(JSON.stringify(vm.entity));
@@ -238,6 +258,14 @@
             entity["name"] = vm.entity["name"] + '_copy';
 
             console.log('copy entity', entity);
+
+            delete entity.id;
+            entity.inputs = entity.inputs.map(function (input){
+
+                return removeIdKeyRecursively(input)
+
+            })
+            // TODO fix id recursive removal
 
             // $mdDialog.hide();
             if (windowType === 'big-drawer') {
@@ -299,7 +327,7 @@
         vm.transactionUserFieldsState = {};
 
         vm.getTransactionUserFields = sharedLogic.getTransactionUserFields;
-		vm.updateContextParameters = sharedLogic.updateContextParametersFunctions;
+        vm.updateContextParameters = sharedLogic.updateContextParametersFunctions;
 
         vm.getItem = function () {
 
@@ -312,8 +340,8 @@
                     vm.entity = data;
 
                     vm.expressionData = sharedLogic.updateInputFunctions();
-					vm.updateContextParameters();
-					/* vm.expressionData.groups[0] = {
+                    vm.updateContextParameters();
+                    /* vm.expressionData.groups[0] = {
                         "name": "<b>Inputs</b>",
                         "key": 'input'
                     }
@@ -326,9 +354,9 @@
                                 "description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
                                 "groups": "input",
                                 "func": input.name,
-								"validation": {
-									"func": input.name
-								}
+                                "validation": {
+                                    "func": input.name
+                                }
                             }
 
                         });
@@ -407,10 +435,10 @@
                         vm.readyStatus.layout = true;
                         $scope.$apply();
 
-						// sharedLogic.setStateInActionsControls();
+                        // sharedLogic.setStateInActionsControls();
                         vm.entity.actions = sharedLogic.formatActionsForFrontend();
 
-						vm.paneActionsMenuPopups = vm.createSelectorPopupDataForActions();
+                        vm.paneActionsMenuPopups = vm.createSelectorPopupDataForActions();
 
                         res();
 
@@ -436,26 +464,10 @@
             });
         };
 
-        vm.checkReadyStatus = function () {
+        /*vm.checkReadyStatus = function () {
             return vm.readyStatus.attrs && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.layout && vm.readyStatus.inputs;
-        };
-
-        vm.handleErrors = function (data, $event) {
-
-            $mdDialog.show({
-                controller: 'ValidationDialogController as vm',
-                templateUrl: 'views/dialogs/validation-dialog-view.html',
-                targetEvent: $event,
-                locals: {
-                    validationData: data
-                },
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                multiple: true
-            });
-
-        };
+        };*/
+        vm.checkMainDataReadyStatus = sharedLogic.checkMainDataReadyStatus;
 
         vm.updateEntityBeforeSave = function (entity) {
 
@@ -769,7 +781,7 @@
                                     entityErrors: entityErrors
                                 }
                             }
-                        }).then(function (data){
+                        }).then(function (data) {
 
                             if (data.status === 'agree') {
                                 resolve()
@@ -780,14 +792,13 @@
                         })
 
 
-
                     } else {
                         resolve()
                     }
 
 
                 })
-                .then(function() {
+                .then(function () {
 
                     vm.processing = true;
 
@@ -799,9 +810,7 @@
                         vm.processing = false;
                         $scope.$apply();
 
-                        if (data.status === 400) {
-                            vm.handleErrors(data);
-                        } else {
+                        if (data.status !== 400) {
 
                             toastNotificationService.success("Transaction Type " + vm.entity.name + ' was successfully saved');
 
@@ -1005,7 +1014,7 @@
         vm.entity.book_transaction_layout = vm.entity.book_transaction_layout || '';
         vm.entity.actions = vm.entity.actions || [];
         vm.entity.inputs = vm.entity.inputs || [];
-		vm.entity.context_parameters = sharedLogic.getContextParameters();
+        vm.entity.context_parameters = sharedLogic.getContextParameters();
 
         vm.readyStatus = {transactionTypeGroups: false, instrumentTypes: false, portfolios: false};
 
@@ -1166,13 +1175,13 @@
                     }
 
                 }); */
-				vm.relationItems[entityKey].forEach(function (item) {
+                vm.relationItems[entityKey].forEach(function (item) {
 
-					if (item.id && item.id === obj_from_input.user_code) {
-						exist = true;
-					}
+                    if (item.id && item.id === obj_from_input.user_code) {
+                        exist = true;
+                    }
 
-				});
+                });
 
                 if (!exist) {
                     vm.relationItems[entityKey].push(obj_from_input)
@@ -1671,11 +1680,11 @@
 
         // Transaction Type Recon end
 
-		//region Transaction type Actions controller
+        //region Transaction type Actions controller
 
         vm.relationItems = {};
 
-		vm.onActionAccordionCollapse = sharedLogic.onActionAccordionCollapse;
+        vm.onActionAccordionCollapse = sharedLogic.onActionAccordionCollapse;
         vm.toggleItem = sharedLogic.toggleItem;
 
         vm.getActionTypeName = sharedLogic.getActionTypeName;
@@ -1729,19 +1738,19 @@
             },
             {
                 name: 'Regular Event',
-				id: 'regular_event'
+                id: 'regular_event'
             },
             {
                 name: 'Factor up',
-				id: 'factor_up'
+                id: 'factor_up'
             },
             {
                 name: 'Factor same',
-				id: 'factor_same'
+                id: 'factor_same'
             },
             {
                 name: 'Factor down',
-				id: 'factor_down'
+                id: 'factor_down'
             }
         ];
 
@@ -1756,11 +1765,11 @@
         vm.onMultitypeFieldValChange = sharedLogic.onMultitypeFieldValChange;
 
         vm.actionsMultitypeFieldsList = [];
-		vm.eventPhantomsOpts = [];
-		vm.paneActionsMenuPopups = [];
+        vm.eventPhantomsOpts = [];
+        vm.paneActionsMenuPopups = [];
 
-		// vm.createActionsMenuPopupsList
-		vm.createSelectorPopupDataForActions = sharedLogic.createSelectorPopupDataForActions;
+        // vm.createActionsMenuPopupsList
+        vm.createSelectorPopupDataForActions = sharedLogic.createSelectorPopupDataForActions;
 
         /* vm.deletePane = function ($index, $event) {
 
@@ -1829,68 +1838,68 @@
         vm.generateOperationPopupData = sharedLogic.generateOperationPopupData;
         vm.generateInstrumentOperationPopupData = sharedLogic.generateInstrumentOperationPopupData;
 
-		vm.getActionPaneId = sharedLogic.getActionPaneId;
+        vm.getActionPaneId = sharedLogic.getActionPaneId;
 
-		/* vm.makeCopyOfAction = function (actionToCopy, index, $event) {
+        /* vm.makeCopyOfAction = function (actionToCopy, index, $event) {
 
-			$event.stopPropagation();
-			var actionCopy = JSON.parse(JSON.stringify(actionToCopy));
+            $event.stopPropagation();
+            var actionCopy = JSON.parse(JSON.stringify(actionToCopy));
 
-			delete actionCopy.$$hashKey;
-			delete actionCopy.id;
-			delete actionCopy.order;
+            delete actionCopy.$$hashKey;
+            delete actionCopy.id;
+            delete actionCopy.order;
 
-			var actionName = actionCopy.action_notes + ' (Copy)';
-			var actionNameOccupied = true;
+            var actionName = actionCopy.action_notes + ' (Copy)';
+            var actionNameOccupied = true;
 
-			var c = 1;
-			while (actionNameOccupied) { // check that copy name is unique
+            var c = 1;
+            while (actionNameOccupied) { // check that copy name is unique
 
-				actionNameOccupied = false;
+                actionNameOccupied = false;
 
-				for (var a = 0; a < vm.entity.actions.length; a++) {
+                for (var a = 0; a < vm.entity.actions.length; a++) {
 
-					if (vm.entity.actions[a].action_notes === actionName) {
+                    if (vm.entity.actions[a].action_notes === actionName) {
 
-						c = c + 1;
-						actionName = actionCopy.action_notes + ' (Copy ' + c + ')';
-						actionNameOccupied = true;
+                        c = c + 1;
+                        actionName = actionCopy.action_notes + ' (Copy ' + c + ')';
+                        actionNameOccupied = true;
 
-						break;
+                        break;
 
-					}
+                    }
 
-				}
+                }
 
-				if (!actionNameOccupied) {
-					actionCopy.action_notes = actionName;
+                if (!actionNameOccupied) {
+                    actionCopy.action_notes = actionName;
 
-					if (actionCopy.transaction && actionCopy.transaction.hasOwnProperty('action_notes')) {
-						actionCopy.transaction.action_notes = actionName;
-					}
+                    if (actionCopy.transaction && actionCopy.transaction.hasOwnProperty('action_notes')) {
+                        actionCopy.transaction.action_notes = actionName;
+                    }
 
-					if (actionCopy.instrument) {
-						actionCopy.instrument.action_notes = actionName;
-					}
+                    if (actionCopy.instrument) {
+                        actionCopy.instrument.action_notes = actionName;
+                    }
 
-				}
+                }
 
-			}
+            }
 
-			vm.accordion.collapseAll();
+            vm.accordion.collapseAll();
 
-			actionCopy.isPaneExpanded = true;
+            actionCopy.isPaneExpanded = true;
 
-			vm.entity.actions.splice(index + 1, 0, actionCopy);
+            vm.entity.actions.splice(index + 1, 0, actionCopy);
 
-			vm.findPhantoms();
+            vm.findPhantoms();
 
-			vm.paneActionsMenuPopups = vm.createActionsMenuPopupsList();
+            vm.paneActionsMenuPopups = vm.createActionsMenuPopupsList();
 
-		}; */
+        }; */
 
-		vm.moveDown = sharedLogic.moveDown;
-		vm.moveUp = sharedLogic.moveUp;
+        vm.moveDown = sharedLogic.moveDown;
+        vm.moveUp = sharedLogic.moveUp;
 
         /* vm.setTransactionInstrumentInput = function (item, name, prop) {
 
@@ -1988,7 +1997,7 @@
 
             return typeName;
         };
-		//endregion Transaction type Actions controller
+        //endregion Transaction type Actions controller
 
 
         // Special case for split-panel
@@ -2036,18 +2045,20 @@
 
             return new Promise(function (res) {
 
-            	sharedLogic.getActionTemplates().then(function (actionTemplatesData) {
+                sharedLogic.getActionTemplates().then(function (actionTemplatesData) {
 
-					vm.actionTemplatesPopupData = actionTemplatesData;
+                    vm.actionTemplatesPopupData = actionTemplatesData;
 
-					vm.readyStatus.action_templates = true;
-					$scope.$apply();
+                    vm.readyStatus.action_templates = true;
+                    $scope.$apply();
 
-					res();
+                    res();
 
-				}).catch(function (error) {res()});
+                }).catch(function (error) {
+                    res()
+                });
 
-			});
+            });
 
         };
 
@@ -2154,7 +2165,7 @@
 
         }; */
         vm.appendFromTemplate = sharedLogic.appendFromTemplate;
-		vm.saveAsTemplate = sharedLogic.saveAsTemplate;
+        vm.saveAsTemplate = sharedLogic.saveAsTemplate;
 
         /* var updateLinkedInputsOptionsInsideGridTable = function () {
 
@@ -2233,9 +2244,9 @@
         }
 
         //region Context Parameters tab
-		vm.deleteContextParameter = sharedLogic.deleteContextParameter
+        vm.deleteContextParameter = sharedLogic.deleteContextParameter
         vm.addContextParameter = sharedLogic.addContextParameter;
-		//endregion Context Parameters tab
+        //endregion Context Parameters tab
 
         vm.init = function () {
 
@@ -2270,10 +2281,11 @@
             Promise.all([getItemPromise, getAttrsPromise, getRefTablesPromise, getInputTemplPromise, getActionsTemplPromise]).then(function () {
 
                 var iamdlResult = sharedLogic.initAfterMainDataLoaded();
-				vm.actionsMultitypeFieldsList = iamdlResult.actionsMultitypeFieldsList;
-				vm.eventPhantomsOpts = iamdlResult.eventPhantomsOpts;
+                vm.actionsMultitypeFieldsList = iamdlResult.actionsMultitypeFieldsList;
+                vm.eventPhantomsOpts = iamdlResult.eventPhantomsOpts;
 
-				vm.readyStatus.inputs = true;
+                vm.readyStatus.inputs = true;
+                $scope.$apply();
 
             });
 

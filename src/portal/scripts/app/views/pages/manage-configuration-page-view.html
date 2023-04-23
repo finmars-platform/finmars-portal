@@ -1,0 +1,57 @@
+<div class="journal-page">
+
+    <div layout="row">
+        <h1 style="margin-top: 5px; font-family: 'Roboto Light'; font-size: 20px">Manage Configuration</h1>
+
+    </div>
+
+    <div data-ng-if="vm.readyStatus.data" style="    display: flex;
+    width: 100%;
+    flex-wrap: wrap;">
+
+        <md-card data-ng-repeat="item in vm.items" class="p-16" style="max-width: 240px">
+
+            <div>
+                <b>{{item.name}}</b>
+            </div>
+            <div>
+                <b>{{item.description}}</b>
+            </div>
+            <div>
+                Code:{{item.configuration_code}}
+            </div>
+            <div>
+                Version: {{item.version}}
+            </div>
+
+            <div>
+
+                <hr>
+
+                <div data-ng-if="item.is_package">
+                    Its a package
+                </div>
+                <div data-ng-if="!item.is_package">
+                    Its a configuration module
+                </div>
+            </div>
+
+            <md-button class="md-primary md-raised" data-ng-click="vm.editConfiguration($event, item)">Edit</md-button>
+
+        </md-card>
+
+    </div>
+
+    <div>
+        <md-button class="md-raised md-primary" data-ng-click="vm.createConfiguration($event)">Add new Configuration
+        </md-button>
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.data" style="width: 100%">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="100"></progress-circular>
+        </div>
+    </div>
+
+
+</div>

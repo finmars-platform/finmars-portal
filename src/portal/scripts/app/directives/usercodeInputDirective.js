@@ -5,14 +5,8 @@
 
     'use strict';
 
-    // var usersService = require('../services/usersService');
+    var configurationService = require('../services/configurationService');
 
-    function uuidv4() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
 
     module.exports = function ($mdDialog, usersService) {
         return {
@@ -23,55 +17,48 @@
             },
             link: function (scope, elem, attrs, ngModelCtrl) {
 
-                scope.prefixType = 1;
-                scope.selectedGroupPrefix = null;
+                scope.configuration_code = 'com.finmars.local';
                 scope.usercode = '';
-                scope.groupPrefixes = [];
+                scope.convertedUserCode = '';
 
-                scope.updateUserCode = function (usercode) {
+                scope.updateUserCode = function (usercode, configuration_code) {
 
-					scope.usercode = usercode;
+                    console.log('scope.configuration_code', scope.configuration_code);
+                    console.log('scope.usercode', scope.usercode);
 
-                    if (scope.prefixType === 1) {
-                        scope.item.user_code = scope.usercode
+                    scope.usercode = usercode
+                    scope.configuration_code = configuration_code
+
+                    if (scope.usercode) {
+                        scope.convertedUserCode = replaceSpecialCharsAndSpaces(scope.usercode).toLowerCase();
                     }
 
-                    if (scope.prefixType === 2) {
-                        scope.item.user_code = scope.member.username + '@' + scope.usercode
+                    if (scope.item.content_type) {
+                        scope.item.user_code = scope.configuration_code + ':' + scope.item.content_type + ':' + scope.convertedUserCode;
+                    } else {
+                        scope.item.user_code = scope.configuration_code + ':' + scope.convertedUserCode;
                     }
 
-                    if (scope.prefixType === 3) {
-                        scope.usercode = '';
-                        scope.item.user_code  = '@@' + uuidv4();
-                    }
+                    scope.item.configuration_code = scope.configuration_code;
 
-                    if (scope.prefixType === 4) {
-                        scope.item.user_code = scope.selectedGroupPrefix + '@' + scope.usercode;
-                    }
-
-                    /* console.log('usercodeInputDirective.updateUserCode.selectedGroupPrefix', scope.selectedGroupPrefix);
-                    console.log('usercodeInputDirective.updateUserCode.item', scope.item);
-                    console.log('usercodeInputDirective.updateUserCode.usercode', scope.usercode); */
 
                 }
 
-                scope.init = function (){
+                function replaceSpecialCharsAndSpaces(str) {
+                    return str.replace(/[^A-Za-z0-9]+/g, '_');
+                }
 
-                    usersService.getUsercodePrefixList().then(function (data){
 
-                        scope.groupPrefixes = data.results;
+                scope.init = function () {
 
-                        if (scope.groupPrefixes && scope.groupPrefixes.length) {
-                        	scope.selectedGroupPrefix = scope.groupPrefixes[0].value;
-						}
+                    configurationService.getList().then(function (data) {
 
-                        scope.$apply();
+                        scope.configuration_codes = data.results.filter(function (item) {
+                            return !item.is_package; // TODO Move to backend filtering someday
+                        }).map(function (item) {
+                            return item.configuration_code
+                        });
 
-                    })
-
-                    usersService.getMyCurrentMember().then(function (data){
-
-                        scope.member = data;
                         scope.$apply();
 
                     })

@@ -22,36 +22,36 @@
 
             <div flex="33" layout="row">
 
-                 <!-- <div flex="20">
-                    <md-button
-                            class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.portfolio_toggle ? 'ref' : ''}}"
-                            style="transform: scale(0.7,0.7)"
-                            data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'portfolio')">
-                        <span data-ng-if="!!item.transaction.portfolio_toggle">R</span>
-                        <span data-ng-if="!!!item.transaction.portfolio_toggle">I</span>
-                    </md-button>
-                </div>
+                <!-- <div flex="20">
+                   <md-button
+                           class="ttype-action-field-toggle md-icon-button md-raised {{!!item.transaction.portfolio_toggle ? 'ref' : ''}}"
+                           style="transform: scale(0.7,0.7)"
+                           data-ng-click="vm.resetPropertyBtn(item, 'transaction', 'portfolio')">
+                       <span data-ng-if="!!item.transaction.portfolio_toggle">R</span>
+                       <span data-ng-if="!!!item.transaction.portfolio_toggle">I</span>
+                   </md-button>
+               </div>
 
-                <div flex="80">
+               <div flex="80">
 
-                    <div data-ng-if="item.transaction.portfolio_toggle">
-                        <entity-search-select data-item="item.transaction.portfolio"
-                                              data-user-code-for-item="true"
-                                              data-label="'Portfolio'"
-                                              data-item-name="item.transaction.portfolio_object.name"
-                                              data-entity-type="'portfolio'"
-                                              is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
-                    </div>
+                   <div data-ng-if="item.transaction.portfolio_toggle">
+                       <entity-search-select data-item="item.transaction.portfolio"
+                                             data-user-code-for-item="true"
+                                             data-label="'Portfolio'"
+                                             data-item-name="item.transaction.portfolio_object.name"
+                                             data-entity-type="'portfolio'"
+                                             is-disabled="vm.isRelationInputFieldDisabled()"></entity-search-select>
+                   </div>
 
-                    <div data-ng-if="!item.transaction.portfolio_toggle">
+                   <div data-ng-if="!item.transaction.portfolio_toggle">
 
-                        <ttype-actions-input-select label-title="Portfolio"
-                                                    model="item.transaction.portfolio_input"
-                                                    find-inputs="vm.findInputs('portfolio')"
-                                                    is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
-                    </div>
+                       <ttype-actions-input-select label-title="Portfolio"
+                                                   model="item.transaction.portfolio_input"
+                                                   find-inputs="vm.findInputs('portfolio')"
+                                                   is-disabled="vm.isRelationInputFieldDisabled()"></ttype-actions-input-select>
+                   </div>
 
-                </div> -->
+               </div> -->
                 <multitype-field label="Portfolio"
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].portfolio"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
@@ -359,6 +359,87 @@
                         data-item="item.transaction.notes"></expression-editor-button>-->
                 <expression-input label="Notes: Text"
                                   model="item.transaction.notes"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+        </div>
+        <div layout="row" class="ttype-action-inputs-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Text 1: Text"
+                                  model="item.transaction.user_text_1"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Text 2: Text"
+                                  model="item.transaction.user_text_2"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Text 3: Text"
+                                  model="item.transaction.user_text_3"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+        </div>
+
+        <div layout="row" class="ttype-action-inputs-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Number 1: Float"
+                                  model="item.transaction.user_number_1"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Number 2: Float"
+                                  model="item.transaction.user_number_2"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Number 3: Float"
+                                  model="item.transaction.user_number_3"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+        </div>
+
+        <div layout="row" class="ttype-action-inputs-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Date 1: Date"
+                                  model="item.transaction.user_date_1"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Date 2: Date"
+                                  model="item.transaction.user_date_2"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="User Date 3: Date"
+                                  model="item.transaction.user_date_3"
+                                  data-data="vm.expressionData"
+                                  class="width-100"></expression-input>
+            </div>
+        </div>
+
+        <div layout="row" class="ttype-action-inputs-container">
+            <div flex="33" layout="row" layout-align="start top" class="ttype-action-expr-input-wrap p-l-0">
+
+                <expression-input label="Is Canceled: Boolean"
+                                  model="item.transaction.is_canceled"
                                   data-data="vm.expressionData"
                                   class="width-100"></expression-input>
             </div>

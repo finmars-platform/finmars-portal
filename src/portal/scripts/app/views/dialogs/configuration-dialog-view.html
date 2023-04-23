@@ -1,0 +1,294 @@
+<md-dialog aria-label="data mapping" ng-cloak class="transaction-scheme-manager-dialog-view draggable-dialog"
+           drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+
+            <h2>Configuration Manager</h2>
+            <div data-ng-if="vm.processing" layout="row" class="m-l-16">
+                <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
+                    <progress-circular diameter="20"></progress-circular>
+                </div>
+                — Processing
+            </div>
+        </div>
+    </md-toolbar>
+    <md-dialog-content style="background: #E5E5E5;">
+        <md-content>
+            <div data-ng-if="vm.checkReadyStatus()" class="position-relative">
+
+                <div layout="row" layout-align="center center">
+                    <md-card flex="100" class="inm-card-special">
+                        <md-card-content layout="column">
+
+                            <div>
+
+                                <div style="border: 1px solid #ddd; margin-bottom: 32px;" class="m-16 p-16"
+                                     data-ng-if="!vm.item.id">
+                                    <p>
+                                        Configuration code pattern:
+                                    </p>
+                                    <span style="background: orange">com.[organization_name].[configuration_name]</span>
+                                    <p>
+                                        Examples:
+                                    </p>
+                                    <div style="padding-left: 16px">
+                                        com.finmars.hnwi <span style="font-size: 10px">(good for packages)</span><br/>
+                                        com.finmars.asset-manager <span
+                                            style="font-size: 10px">(good for packages)</span><br/>
+
+                                        com.finmars.hnwi-transaction-types <span
+                                            style="font-size: 10px">(good for modules)</span><br/>
+                                        com.finmars.asset-manager-layouts <span
+                                            style="font-size: 10px">(good for modules)</span><br/>
+                                    </div>
+
+                                    <p>
+                                        Configuration code will be forcefully converted to lower case and special
+                                        characters
+                                        will be replaced with -
+                                    </p>
+
+                                </div>
+
+                                <md-input-container class="md-block" data-ng-if="vm.item.id">
+                                    <label>Configuration Code</label>
+                                    <input aria-label="configuration code" type="text"
+                                           data-ng-model="vm.item.configuration_code" class="disabled-btn"
+                                           data-ng-blur="vm.convertCode()">
+                                </md-input-container>
+
+                            </div>
+
+                            <md-input-container class="md-block" data-ng-if="!vm.item.id">
+                                <label>Configuration Code</label>
+                                <input aria-label="configuration code" type="text"
+                                       data-ng-model="vm.item.configuration_code">
+                            </md-input-container>
+
+                            <md-input-container class="md-block">
+                                <label>Name</label>
+                                <input aria-label="scheme name" type="text" data-ng-model="vm.item.name">
+                            </md-input-container>
+
+                            <md-input-container class="md-block">
+                                <label>Description</label>
+                                <input aria-label="description" type="text" data-ng-model="vm.item.description">
+                            </md-input-container>
+
+
+                            <md-input-container class="md-block">
+                                <label>Version</label>
+                                <input aria-label="description" type="text" data-ng-model="vm.item.version">
+                            </md-input-container>
+
+                            <div data-ng-if="vm.item.id">
+
+                                <p>Manifest</p>
+
+                                <div class="ace-editor" id="aceEditor" style="height: 80vh;">
+
+                                </div>
+
+
+                            </div>
+
+                            <div style="border: 1px solid #ddd" class="m-16 p-16"
+                                 data-ng-if="!vm.item.id || vm.item.is_package">
+
+                                <h3>Package Mode</h3>
+
+                                <div>
+                                    <p>
+                                        Package - special type on configuration that consist of other configurations
+                                        together
+                                    </p>
+
+                                    <p>
+                                        When you push your <b>Package Configuration</b> to marketplace.
+                                        It scans <b>manifest.json</b> <span
+                                            style="background: orange;">dependencies</span> field and includes to result
+                                        .zip
+                                        file
+                                        all configurations that you have in your <b>System Storage</b>
+                                    </p>
+
+                                    <md-input-container class="md-block" data-ng-if="!vm.item.id">
+                                        <label style="text-align: center;
+    width: 100%;
+    display: block;
+    max-width: 100%;
+    position: static;
+    transform: none;">Is Package</label>
+                                        <input aria-label="description" type="checkbox"
+                                               data-ng-model="vm.item.is_package">
+                                    </md-input-container>
+                                </div>
+
+                            </div>
+
+                            <div style="border: 1px solid #ddd" class="m-16 p-16"
+                                 data-ng-if="vm.item.id">
+
+                                <h3>Dependencies</h3>
+
+                                <div>
+                                    How to add Dependency
+                                </div>
+                                <div>
+                                    1) in <b>manifest.json</b> find field <span
+                                        style="background: orange;">dependencies</span>
+                                </div>
+                                <div>2) Add dependency if following format:</div>
+                                <div>
+                                    "com.[organzation_name].[configuration_name]": "[version]"
+                                </div>
+
+                                <div>
+                                    Example:
+                                </div>
+                                <pre>{
+    "configuration_code": "com.finmars.hnwi",
+    "date": "2023-04-21",
+    "dependencies": {
+        "com.finmars.hnwi-transaction-types": "1.0.0",
+        "com.finmars.hnwi-layouts": "1.0.0"
+    },
+    "name": "HNWI Package",
+    "version": "1.0.0"
+}</pre>
+                            </div>
+
+
+                            <div style="border: 1px solid #ddd" class="m-16 p-16" data-ng-if="vm.item.id">
+
+                                <h3>Configuration Actions</h3>
+
+                                <div class="p-8">
+
+                                    <p>This action will trigger <b>save</b> and export all configuration files to local
+                                        Storage system.
+                                        You can find your configuration files in the <a ui-sref="app.portal.explorer"
+                                                                                        target="_blank">Explorer</a>
+
+                                    </p>
+
+                                    <p>Destination path is:</p>
+                                    <div><b>
+                                        configurations/{{vm.item.configuration_code}}/{{vm.item.version}}/
+                                    </b></div>
+
+                                    <md-button class="md-raised" data-ng-click="vm.exportToStorage($event)">Export to
+                                        Storage
+                                    </md-button>
+
+                                </div>
+
+                                <div class="p-8" data-ng-if="vm.item.configuration_code != 'com.finmars.local'">
+
+                                    <p>This action will trigger <b>save</b> and export current saved configuration (in
+                                        System Storage) as zip to
+                                        <b>Finmars Marketplace</b>
+                                    </p>
+                                    <p>Be aware of versions that you put there</p>
+                                    <p><b>Finmars Marketplace</b> work only in append mode</p>
+                                    <p>It means you cannot push multiple times the same version</p>
+                                    <p>Each push should create new unique version</p>
+
+                                    <md-input-container class="md-block">
+                                        <label>Changelog (optional)</label>
+                                        <input aria-label="description" type="text" data-ng-model="vm.changelog">
+                                    </md-input-container>
+
+                                    <span style="color: orange">Warning. Before pushing new version, please, check if it was exported to your System Storage</span>
+
+                                    <md-button class="md-raised" data-ng-click="vm.pushConfiguration($event)">Push
+                                        Configuration to Marketplace
+                                    </md-button>
+
+                                    <p>
+                                        You can find status of your push in the <a ui-sref="app.portal.tasks-page"
+                                                                                   target="_blank">Tasks</a> page
+                                    </p>
+                                    <p>
+                                        If everything is good, your configuration will appear on <a
+                                            ui-sref="app.portal.marketplace"
+                                            target="_blank">Marketplace</a>
+                                    </p>
+
+
+                                    <div>
+
+                                        <p>Configuration Sources and folders:</p>
+                                        <p>* If you install Configuration via unknown .zip file it will placed to
+                                            /configurations/custom/{configuration_code}</p>
+                                        <p>* If you install Configuration via Finmars Marketplace it will placed to
+                                            /configuration/{configuration_code}</p>
+
+                                        <p><b>Important!</b> So when you try to push new version to Markeplace priority
+                                            will go to /configuration/{configuration_code}</p>
+
+                                        <p>After you <b>installed configuration</b> and has right to modify it each new
+                                            Configuration Export will be place to /configuration/{configuration_code}
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+
+                        </md-card-content>
+                    </md-card>
+                </div>
+
+                <div class="loader-overlay" data-ng-show="vm.processing">
+                    <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                        <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
+                        <progress-circular diameter="100"></progress-circular>
+                    </div>
+                </div>
+
+            </div>
+            <div data-ng-if="!vm.checkReadyStatus()">
+                <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                    <progress-circular diameter="100"></progress-circular>
+                </div>
+            </div>
+        </md-content>
+    </md-dialog-content>
+    <md-dialog-actions layout="row" layout-align="space-between">
+
+        <div layout="row">
+
+            &nbsp;
+
+            <md-button class="md-raised md-warn" ng-click="vm.deleteConfiguration($event)"
+                       data-ng-if="vm.item.id && vm.item.configuration_code != 'com.finmars.local'">
+                Delete
+            </md-button>
+
+        </div>
+
+        <div layout="row">
+
+            <md-button class="md-raised" ng-click="vm.editAsJson($event)" data-ng-if="vm.item.id">
+                Edit as JSON
+            </md-button>
+            <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
+                       data-ng-if="vm.item.id">
+                Make Copy
+            </md-button>
+            <md-button class="md-raised" ng-click="vm.cancel()">
+                Cancel
+            </md-button>
+            <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;"
+                       data-ng-class="{'disabled-btn': vm.processing}">
+                <span data-ng-if="vm.item.id">Update</span>
+                <span data-ng-if="!vm.item.id">Create</span>
+            </md-button>
+        </div>
+    </md-dialog-actions>
+</md-dialog>

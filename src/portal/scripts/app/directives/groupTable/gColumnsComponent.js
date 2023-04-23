@@ -613,6 +613,69 @@
 
                 // <Victor 2021.04.07 #90 sort setting for column>
 
+                // const getAttributes = function () {
+                //
+                //     var allAttrsList = [];
+                //
+                //     if (scope.viewContext === 'reconciliation_viewer') {
+                //
+                //         allAttrsList = scope.attributeDataService.getReconciliationAttributes();
+                //
+                //     } else {
+                //
+                //         switch (scope.entityType) {
+                //             case 'balance-report':
+                //                 allAttrsList = scope.attributeDataService.getBalanceReportAttributes();
+                //                 break;
+                //
+                //             case 'pl-report':
+                //                 allAttrsList = scope.attributeDataService.getPlReportAttributes();
+                //                 break;
+                //
+                //             case 'transaction-report':
+                //                 allAttrsList = scope.attributeDataService.getTransactionReportAttributes();
+                //                 break;
+                //
+                //             default:
+                //                 entityAttrs = [];
+                //                 dynamicAttrs = [];
+                //                 allAttrsList = [];
+                //
+                //                 entityAttrs = scope.attributeDataService.getEntityAttributesByEntityType(scope.entityType);
+                //
+                //                 entityAttrs.forEach(function (item) {
+                //                     if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
+                //                         item.name = 'Group';
+                //                     }
+                //                     item.entity = scope.entityType;
+                //                 });
+                //
+                //                 dynamicAttrs = scope.attributeDataService.getDynamicAttributesByEntityType(scope.entityType);
+                //
+                //                 dynamicAttrs = dynamicAttrs.map(function (attribute) {
+                //
+                //                     var result = {};
+                //
+                //                     result.attribute_type = Object.assign({}, attribute);
+                //                     result.value_type = attribute.value_type;
+                //                     result.content_type = scope.contentType;
+                //                     result.key = 'attributes.' + attribute.user_code;
+                //                     result.name = attribute.name;
+                //
+                //                     return result
+                //
+                //                 });
+                //
+                //                 allAttrsList = allAttrsList.concat(entityAttrs);
+                //                 allAttrsList = allAttrsList.concat(dynamicAttrs);
+                //         }
+                //
+                //     }
+                //
+                //     return allAttrsList;
+                //
+                // };
+
                 scope.reportSetSubtotalType = function (group, type) {
 
                     if (!group.hasOwnProperty('report_settings') || group.report_settings === undefined) {
@@ -2255,7 +2318,6 @@
                     .then(function (res) {
 
                         if (res && res.status === "agree") {
-                            console.log("testing98.addColumn res", res);
 
                             for (var i = 0; i < res.data.items.length; i = i + 1) {
 
@@ -2263,7 +2325,7 @@
                                 scope.columns.push(colData);
 
                             }
-                            console.log("testing98.addColumn set columns", JSON.parse(JSON.stringify(scope.columns)));
+
                             scope.evDataService.setColumns(scope.columns);
 
                             scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
@@ -2428,7 +2490,7 @@
                         evDataHelper.setColumnsDefaultWidth(scope.evDataService);
 
                         scope.columns = scope.evDataService.getColumns();
-                        if (scope.columns) console.log("testing98.COLUMNS_CHANGE columns", JSON.parse(JSON.stringify(scope.columns)));
+
                         getColsAvailableForAdditions(); // when inside dashboard
                         // flagMissingColumns();
                         makePopupDataForColumns(scope.columns);

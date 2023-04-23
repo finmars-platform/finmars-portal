@@ -182,6 +182,41 @@
 
         };
 
+        vm.makeCopy = function ($event) {
+
+            var item = JSON.parse(JSON.stringify(vm.item));
+
+            delete item.id;
+            item["user_code"] = item["user_code"] + '_copy';
+
+            $mdDialog.show({
+                controller: 'DataProcedureAddDialogController as vm',
+                templateUrl: 'views/dialogs/procedures/data-procedure-add-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        item: item
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+                    vm.getList();
+                }
+
+            })
+
+            $mdDialog.hide({status: 'disagree'});
+
+        };
+
+
 
         vm.init = function () {
 

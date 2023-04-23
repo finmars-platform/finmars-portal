@@ -304,6 +304,20 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
     }
 
+    const refreshTokens = async () => {
+        const isRefreshed = await keycloak.updateToken()
+
+        if ( !isRefreshed ) {
+            await keycloak.login()
+        }
+    }
+
+    const setTokens = () => {
+        cookieService.setCookie('access_token', window.keycloak.token);
+        cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
+        cookieService.setCookie('id_token', window.keycloak.idToken);
+    }
+
     const init = async function () {
 
         // keycloak adapter passes params as redirect_url + &state=
@@ -397,6 +411,16 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             clientId: window.KEYCLOAK_CLIENT_ID
         });
 
+        window.keycloak.onReady = () => {
+            if ( window.keycloak.isTokenExpired() ) refreshTokens()
+        }
+
+
+        window.keycloak.onAuthSuccess = setTokens
+        window.keycloak.onAuthRefreshSuccess = setTokens
+        window.keycloak.onTokenExpired = refreshTokens
+
+
         console.log("Keycloak init")
         /* //# region IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally.
         let authenticated;
@@ -409,7 +433,13 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         }
         //# endregion */
 
-        const authenticated = await window.keycloak.init( { onLoad: 'login-required', } );
+        const authenticated = await window.keycloak.init( {
+            onLoad: 'login-required',
+            token: cookieService.getCookie('access_token'),
+            refreshToken: cookieService.getCookie('refresh_token'),
+            idToken: cookieService.getCookie('id_token')
+            // checkLoginIframe: false
+        } );
 
         if (authenticated) {
 

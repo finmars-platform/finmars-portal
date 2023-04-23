@@ -1118,7 +1118,7 @@
 
                     });
 
-                    uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
+                    uiService.getComplexTransactionFieldList({pageSize: 1000}).then(function (data) {
 
                         var transactionFields = data.results;
 

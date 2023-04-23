@@ -450,7 +450,7 @@
             })
 
             .state('app.portal.explorer', {
-                url: '/explorer/{folderPath:[a-zA-Z0-9_/\.]*}',
+                url: '/explorer/{folderPath:[a-zA-Z0-9_/\.\-]*}',
                 templateUrl: 'views/pages/explorer-page-view.html',
                 controller: 'ExplorerPageController as vm',
                 params: {
@@ -841,6 +841,16 @@
                         return '';
                     }
                 }
+            })
+            .state('app.portal.marketplace', {
+                url: '/marketplace',
+                templateUrl: 'views/pages/marketplace-page-view.html',
+                controller: 'MarketplacePageController as vm'
+            })
+            .state('app.portal.manage-configuration', {
+                url: '/manage-configuration',
+                templateUrl: 'views/pages/manage-configuration-page-view.html',
+                controller: 'ManageConfigurationPageController as vm'
             })
             .state('app.portal.settings.import-configuration', {
                 url: '/import-configuration',
