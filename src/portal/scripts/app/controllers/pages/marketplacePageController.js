@@ -41,12 +41,25 @@
                     vm.items = data.results;
                     vm.count = data.count;
 
+                    vm.items.forEach(function (remoteItem){
+
+                        vm.localItems.forEach(function (localItem){
+
+                            if (remoteItem.configuration_code === localItem.configuration_code){
+                                remoteItem.localItem = localItem;
+                            }
+
+                        })
+
+                    })
+
 
                     vm.readyStatus.data = true;
 
                     resolve();
 
                     $scope.$apply();
+
 
                 })
 
@@ -70,8 +83,20 @@
 
         }
 
+        vm.getLocalConfigurations = function ($event, item) {
+
+            configurationService.getList().then(function (data) {
+
+                vm.localItems = data.results;
+
+                vm.getData();
+
+            })
+        }
 
         vm.init = function () {
+
+            vm.getLocalConfigurations();
 
             console.log('$stateParams', $stateParams);
 
@@ -79,7 +104,7 @@
                 vm.filters.query = $stateParams.query
             }
 
-            vm.getData()
+
 
         };
 

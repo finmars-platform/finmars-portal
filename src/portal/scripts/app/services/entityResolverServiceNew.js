@@ -633,6 +633,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'schedule':
                 return scheduleService.update(id, entity);
                 break;
+            case 'configuration':
+                return configurationService.update(id, entity);
+                break;
         }
     };
 

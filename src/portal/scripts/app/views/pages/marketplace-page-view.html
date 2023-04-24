@@ -19,16 +19,31 @@
 
             <md-card class="configuration-card p-16" style="max-width: 240px; width: 240px">
 
-                <div><b>{{item.name}}</b></div>
-                <div>{{item.latest_release_object.version}}</div>
-                <div>{{item.configuration_code}}</div>
-                <div>{{item.description}}</div>
-                <div>{{item.organization_object.name}}</div>
+                <div><h3 style="margin: 4px 0">{{item.name}}</h3></div>
+                <div>Version: <b>{{item.latest_release_object.version}}</b></div>
+                <div>Code: <b>{{item.configuration_code}}</b></div>
+                <div>Organization: <b>{{item.organization_object.name}}</b></div>
+                <div data-ng-if="item.description">Description</div>
+                <div data-ng-if="item.description">{{item.description}}</div>
 
-                <div>
+                <div data-ng-if="!item.localItem">
                     <md-button class="md-primary md-raised" data-ng-click="vm.installConfiguration($event, item)">
                         Install
                     </md-button>
+                </div>
+
+                <div data-ng-if="item.localItem">
+
+                    <div data-ng-if="item.latest_release_object.version == item.localItem.version">
+                        <span style="background: #00cc7d; padding: 4px; border-radius: 4px; display: inline-block; margin: 4px;">Installed</span>
+                    </div>
+
+                    <div data-ng-if="item.latest_release_object.version != item.localItem.version">
+                        <md-button class="md-primary md-raised" data-ng-click="vm.installConfiguration($event, item)">
+                            Update
+                        </md-button>
+                    </div>
+
                 </div>
 
             </md-card>

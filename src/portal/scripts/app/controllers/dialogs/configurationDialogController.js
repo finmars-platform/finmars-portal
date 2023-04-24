@@ -116,7 +116,7 @@
 
                 if (res.status === "agree") {
 
-                    vm.getItem();
+                    vm.getItem(vm.item.id);
 
                 }
             })
@@ -228,7 +228,7 @@
 
             setTimeout(function () {
 
-                vm.editor = ace.edit('aceEditor');
+                vm.editor = ace.edit('aceEditorManifest');
                 vm.editor.setTheme("ace/theme/monokai");
                 vm.editor.getSession().setMode("ace/mode/json");
                 vm.editor.getSession().setUseWorker(false);
