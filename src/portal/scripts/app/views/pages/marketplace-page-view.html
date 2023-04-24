@@ -17,7 +17,7 @@
 
         <div data-ng-repeat="item in vm.items">
 
-            <md-card class="configuration-card p-16" style="max-width: 240px; width: 240px">
+            <md-card class="configuration-card p-16" style="max-width: 240px; width: 240px; min-height: 160px">
 
                 <div><h3 style="margin: 4px 0">{{item.name}}</h3></div>
                 <div>Version: <b>{{item.latest_release_object.version}}</b></div>
@@ -25,6 +25,18 @@
                 <div>Organization: <b>{{item.organization_object.name}}</b></div>
                 <div data-ng-if="item.description">Description</div>
                 <div data-ng-if="item.description">{{item.description}}</div>
+
+                <div>
+
+                    <hr>
+
+                    <div data-ng-if="item.is_package">
+                        Its a package
+                    </div>
+                    <div data-ng-if="!item.is_package">
+                        Its a configuration module
+                    </div>
+                </div>
 
                 <div data-ng-if="!item.localItem">
                     <md-button class="md-primary md-raised" data-ng-click="vm.installConfiguration($event, item)">
