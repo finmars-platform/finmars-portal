@@ -82,7 +82,8 @@
 
                 if (keyProperty !== 'ordering') {
 
-                    if (item.hasOwnProperty(keyProperty) && item[keyProperty]) { // check if cell used to filter row is not empty
+                    if ( item.hasOwnProperty(keyProperty) &&
+                        (item[keyProperty] || item[keyProperty] === 0) ) { // check if cell used to filter row is not empty
 
                         /*if (entityType === 'balance-report' || entityType === 'pl-report') {
                             if (keyProperty === 'name' || keyProperty.indexOf('instrument') !== -1) {
@@ -165,7 +166,6 @@
                                valueFromTable = valueFromTable;
                                filterArgument = filterArgument[0];
                             } */
-
                             match = filterValueFromTable(valueFromTable, filterArgument, filterType);
 
                             if (!match) {
