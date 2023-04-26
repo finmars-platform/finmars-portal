@@ -75,7 +75,7 @@
         var apiVersion = baseUrlService.getApiVersion();
 
         // TODO change fetch to universal fetch
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/', {
+        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/?page_size=1000', {
             method: 'GET',
             credentials: 'include',
             headers: {
