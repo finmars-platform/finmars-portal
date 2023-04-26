@@ -446,8 +446,9 @@
                                                                         <md-option
                                                                                 data-ng-repeat="transactionType in vm.transactionTypes | filter: {name: searchTerm}"
                                                                                 ng-value="transactionType.id"
-                                                                                >
-                                                                            {{transactionType.name}} ({{transactionType.user_code}})
+                                                                        >
+                                                                            {{transactionType.name}}
+                                                                            ({{transactionType.user_code}})
                                                                         </md-option>
 
                                                                     </div>
@@ -622,6 +623,8 @@
                                                                             data-ng-repeat="transactionType in vm.transactionTypes | filter: {name: searchTerm}"
                                                                             ng-value="transactionType.id"
                                                                             ng-bind="transactionType.name">
+                                                                        {{transactionType.name}}
+                                                                        ({{transactionType.user_code}})
                                                                     </md-option>
 
                                                                 </div>
@@ -706,6 +709,8 @@
                                                                             data-ng-repeat="transactionType in vm.transactionTypes | filter: {name: searchTerm}"
                                                                             ng-value="transactionType.id"
                                                                             ng-bind="transactionType.name">
+                                                                        {{transactionType.name}}
+                                                                        ({{transactionType.user_code}})
                                                                     </md-option>
 
                                                                 </div>
