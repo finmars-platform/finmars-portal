@@ -196,6 +196,8 @@ const importTransactionService = require("../../../services/import/importTransac
 
                     vm.scheme.rule_scenarios.forEach(function (scenario) {
 
+                        scenario.inputs = scenario.transaction_type_object.inputs;
+
                         scenario.transaction_type_object.inputs =
                             scenario.transaction_type_object.inputs.filter(function (input) {
                                 return input.value_type !== 120;
@@ -204,8 +206,7 @@ const importTransactionService = require("../../../services/import/importTransac
                         if (scenario.is_default_rule_scenario) {
                             vm.defaultRuleScenario = scenario
 
-                        }
-                        else {
+                        } else {
 
                             if (scenario.is_error_rule_scenario) {
 
@@ -214,7 +215,7 @@ const importTransactionService = require("../../../services/import/importTransac
 
                             } else {
 
-                                scenario.transaction_type_object.inputs.forEach(function (input_item) {
+                                scenario.inputs.forEach(function (input_item) {
 
                                     scenario.fields.forEach(function (field) {
 
@@ -377,7 +378,7 @@ const importTransactionService = require("../../../services/import/importTransac
 
         vm.agree = function ($event) {
 
-            var result = JSON.parse(JSON.stringify( vm.scheme ));
+            var result = JSON.parse(JSON.stringify(vm.scheme));
 
 
             result.calculated_inputs = vm.calculatedFields;
@@ -386,7 +387,11 @@ const importTransactionService = require("../../../services/import/importTransac
 
             result.rule_scenarios = result.rule_scenarios.map(function (scenario) {
 
-                scenario.transaction_type_object.inputs.forEach(function (input_item) {
+                scenario.inputs = scenario.inputs.filter(function (input) {
+                    return input.value_type !== 120;
+                })
+
+                scenario.inputs.forEach(function (input_item) {
 
                     var found = false;
 
@@ -404,6 +409,10 @@ const importTransactionService = require("../../../services/import/importTransac
                             value_expr: input_item.expression
                         })
                     }
+
+                    scenario.fields = scenario.fields.filter(function (field) {
+                        return field.value_expr
+                    })
 
                 })
 
@@ -691,6 +700,26 @@ const importTransactionService = require("../../../services/import/importTransac
 
 
             })
+
+        }
+
+        vm.onTransactionTypeChange = function ($event, item) {
+
+            item.inputs = []
+
+            item.processing = true;
+            transactionTypeService.getByKey(item.transaction_type).then(function (data) {
+                item.transaction_type_object = data
+                item.inputs = item.transaction_type_object.inputs.inputs.filter(function (input) {
+                    return input.value_type !== 120;
+                });
+
+                item.processing = false;
+                $scope.$apply();
+            });
+
+
+            console.log('vm.onTransactionTypeChange.item', item)
 
         }
 
