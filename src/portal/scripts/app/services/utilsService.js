@@ -2,6 +2,7 @@
 
 import configureRepositoryUrlService from "../../../../shell/scripts/app/services/configureRepositoryUrlService";
 import baseUrlService from '../services/baseUrlService';
+
 const baseUrl = baseUrlService.resolve();
 
 /** @module utilsService */
@@ -138,7 +139,7 @@ export default function (cookieService, xhrService) {
     };
 
 
-    module.exports = {
+    return {
         getSystemInfo: getSystemInfo,
         getSystemLogs: getSystemLogs,
         getSystemLog: getSystemLog,
