@@ -710,7 +710,7 @@ const importTransactionService = require("../../../services/import/importTransac
             item.processing = true;
             transactionTypeService.getByKey(item.transaction_type).then(function (data) {
                 item.transaction_type_object = data
-                item.inputs = item.transaction_type_object.inputs.inputs.filter(function (input) {
+                item.inputs = item.transaction_type_object.inputs.filter(function (input) {
                     return input.value_type !== 120;
                 });
 
