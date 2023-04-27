@@ -10,7 +10,7 @@
 
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var instrumentDailyPricingModelService = require('../../services/instrument/instrumentDailyPricingModelService');
-    var importPriceDownloadSchemeService = require('../../services/import/importPriceDownloadSchemeService');
+    // var importPriceDownloadSchemeService = require('../../services/import/importPriceDownloadSchemeService');
 
     var importInstrumentService = require('../../services/import/importInstrumentService');
     var instrumentPaymentSizeDetailService = require('../../services/instrument/instrumentPaymentSizeDetailService');
@@ -44,7 +44,7 @@
         };
 
         vm.dailyModels = [];
-        vm.priceDownloadSchemes = [];
+        // vm.priceDownloadSchemes = [];
         vm.instrumentTypes = [];
         vm.currencies = [];
 
@@ -326,11 +326,11 @@
                 $scope.$apply();
             });
 
-            importPriceDownloadSchemeService.getList().then(function (data) {
-                vm.priceDownloadSchemes = data.results;
-                vm.readyStatus.priceDownloadScheme = true;
-                $scope.$apply();
-            });
+            // importPriceDownloadSchemeService.getList().then(function (data) {
+            //     vm.priceDownloadSchemes = data.results;
+            //     vm.readyStatus.priceDownloadScheme = true;
+            //     $scope.$apply();
+            // });
 
             instrumentPaymentSizeDetailService.getList().then(function (data) {
                 vm.paymentSizeDefaults = data;
