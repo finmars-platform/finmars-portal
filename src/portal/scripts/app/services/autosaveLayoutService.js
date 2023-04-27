@@ -136,8 +136,7 @@ export default function (metaContentTypesService, uiService, reportHelper) {
     };
 
     const getAutosaveLayoutUserCode = function (contentType) {
-        const formattedContentType = contentType.replace('.', '_');
-        return 'system_autosave_' + formattedContentType;
+        return `com.finmars.local:${contentType}:autosave`;
     };
 
     const autosaveListLayout = function (evDataService, isReport) {
