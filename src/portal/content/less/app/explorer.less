@@ -19,6 +19,13 @@
         background: #ddd;
       }
     }
+    th button.md-button {
+      min-height: 20px;
+      height: 20px;
+      margin: 4px;
+      padding: 0;
+      line-height: 20px;
+    }
   }
 
   .md-raised.md-primary.explorer-page-refresh-button {
@@ -75,14 +82,20 @@
   }
 
   .explorer-item {
-    float: left;
     //width: 64px;
     //height: 64px;
-    margin: 4px;
+
     box-sizing: border-box;
     text-align: center;
 
     word-break: break-word;
+
+    td {
+      font-size: 16px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      padding: 1px;
+    }
 
 
 
@@ -113,7 +126,8 @@
       cursor: pointer;
       user-select: none;
       margin-right: 4px;
-      padding-top: 2px;
+      padding-top: 3px;
+      margin-left: 2px;
     }
 
   }
