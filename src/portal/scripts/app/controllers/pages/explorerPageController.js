@@ -21,6 +21,9 @@
 
         vm.items = [];
 
+        vm.reverse = true;
+        vm.propertyName = 'name';
+
         vm.currentPath = []
 
         vm.showHiddenFiles = false;
@@ -29,6 +32,11 @@
 
         vm.fileEditor = {}
         vm.fileEditorLoading = false;
+
+        vm.sortBy = function (propertyName) {
+            vm.reverse = (vm.propertyName === propertyName) ? !vm.reverse : false;
+            vm.propertyName = propertyName;
+        };
 
         vm.breadcrumbsNavigation = function ($index) {
 
