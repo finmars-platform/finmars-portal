@@ -226,6 +226,7 @@ export default function (toastNotificationService, uiService) {
 
 							listLayout.name = res.data.name;
 							listLayout.user_code = res.data.user_code;
+							listLayout.configuration_code = res.data.configuration_code; // Important
 
 							uiService.createListLayout(entityType, listLayout).then(function (data) {
 

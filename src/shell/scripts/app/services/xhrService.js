@@ -151,63 +151,68 @@ export default function (errorService, cookieService) {
 
                 console.log('xhrService.reason', reason)
 
-                if (reason.status !== 401 && (reason.error && reason.error.status_code !== 401)) {
-
-                    if (url.includes('/token-refresh/') &&
-                        !url.includes('/token-auth/')) {
-
-                        cookieService.deleteCookie('access_token')
-                        cookieService.deleteCookie('refresh_token')
-                        window.location.reload();
-
-                        throw reason;
-
-                    }
-
-
-                }
-                else {
-
-                    try {
-
-                        const res = await window.keycloak.updateToken()
-                        console.log('res', res)
-
-                        if (res) {
-
-                            cookieService.setCookie('access_token', window.keycloak.token);
-                            cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
-                            cookieService.setCookie('id_token', window.keycloak.idToken);
-
-                            throw null;
-                            // return fetch(url, params, options); // try to request again with refreshed token
-                        } else {
-                            window.keycloak.init({
-                                onLoad: 'login-required'
-                            })
-                        }
-
-                    }
-                    catch (error) {
-
-                        error.___custom_message = 'Keycloak update error';
-                        console.error(error)
-
-                        // in case if refresh token is expired
-
-                        window.keycloak.init({
-                            onLoad: 'login-required'
-                        })
-
-                        throw null;
-
-                    }
-
-                }
-
                 if (notifyError !== false) {
                     await errorService.notifyError(reason);
                 }
+
+                // Deprecated
+                // if (reason.status !== 401 && (reason.error && reason.error.status_code !== 401)) {
+                //
+                //     if (url.includes('/token-refresh/') &&
+                //         !url.includes('/token-auth/')) {
+                //
+                //         cookieService.deleteCookie('access_token')
+                //         cookieService.deleteCookie('refresh_token')
+                //         window.location.reload();
+                //
+                //         throw reason;
+                //
+                //     }
+                //
+                //
+                // }
+                // else {
+                //
+                //     try {
+                //
+                //         const res = await window.keycloak.updateToken()
+                //         console.log('res', res)
+                //
+                //         if (res) {
+                //
+                //             cookieService.setCookie('access_token', window.keycloak.token);
+                //             cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
+                //             cookieService.setCookie('id_token', window.keycloak.idToken);
+                //
+                //             throw null;
+                //             // return fetch(url, params, options); // try to request again with refreshed token
+                //         } else {
+                //             window.keycloak.init({
+                //                 onLoad: 'login-required'
+                //             })
+                //         }
+                //
+                //     }
+                //     catch (error) {
+                //
+                //         error.___custom_message = 'Keycloak update error';
+                //         console.error(error)
+                //
+                //         // in case if refresh token is expired
+                //
+                //         window.keycloak.init({
+                //             onLoad: 'login-required'
+                //         })
+                //
+                //         throw null;
+                //
+                //     }
+                //
+                // }
+                //
+                // if (notifyError !== false) {
+                //     await errorService.notifyError(reason);
+                // }
 
 
                 console.error('XHR Service catch error', reason);
