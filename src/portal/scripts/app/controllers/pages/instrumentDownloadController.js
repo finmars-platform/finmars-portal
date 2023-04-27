@@ -175,7 +175,7 @@
 
                     setTimeout(function () {
                         vm.load();
-                    }, 1000)
+                    }, 5000)
 
                 }
 

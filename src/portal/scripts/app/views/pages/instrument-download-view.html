@@ -33,7 +33,7 @@
         </div>
         <div layout="row">
 
-            <md-input-container aria-label="select with filter">
+            <md-input-container aria-label="select with filter" style="width: 400px">
                 <!--<label for="">Import scheme</label>
                 <md-select style="width: 200px"
                            data-ng-model="vm.config.instrument_download_scheme">
@@ -46,7 +46,7 @@
                 <md-select ng-model="vm.config.instrument_download_scheme"
                            md-container-class="common-select-container"
                            md-on-close="searchTerm = ''"
-                           style="width: 200px">
+                           >
 
                     <md-select-header>
                         <input data-ng-model="searchTerm"
@@ -81,8 +81,8 @@
                     data-ng-click="vm.load($event)">
                 Download
             </md-button>
-            <div data-ng-if="vm.readyStatus.processing">
-                <progress-circular diameter="50"></progress-circular>
+            <div data-ng-if="vm.readyStatus.processing" class="m-l-8">
+                <progress-circular diameter="20"></progress-circular>
             </div>
         </div>
     </div>
