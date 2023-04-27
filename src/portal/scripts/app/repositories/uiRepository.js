@@ -125,7 +125,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
             var prefix = baseUrlService.getMasterUserPrefix();
             var apiVersion = baseUrlService.getApiVersion();
 
-            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout-light/', options),
+            return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/light/', options),
                 getRequestParams('GET'));
 
         }
@@ -134,7 +134,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout-light/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/light/', options),
             getRequestParams('GET'));
 
     };

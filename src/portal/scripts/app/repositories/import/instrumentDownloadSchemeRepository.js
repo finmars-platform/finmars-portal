@@ -34,7 +34,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/instrument-scheme-light/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/instrument-scheme/light/',
             {
                 method: 'GET',
                 credentials: 'include',

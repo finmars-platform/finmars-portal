@@ -385,7 +385,7 @@ export default function (cookieService, xhrService) {
 
     const getMasterUsersListLight = function () {
 
-        return xhrService.fetch(authorizerUrl + '/master-user-light/', {
+        return xhrService.fetch(authorizerUrl + '/master-user/light/', {
             method: 'GET',
             credentials: 'include',
             headers: {
