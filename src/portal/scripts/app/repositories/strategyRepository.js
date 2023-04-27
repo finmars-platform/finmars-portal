@@ -44,7 +44,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
 var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'strategies/' + strategyNumber + '/strategy-light/', options),
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'strategies/' + strategyNumber + '/strategy/light/', options),
             {
                 method: 'GET',
                 credentials: 'include',
