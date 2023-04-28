@@ -38,6 +38,11 @@
                     <input type="text" data-ng-model="vm.item.target_configuration_version">
                 </md-input-container>
 
+                <md-input-container class="width-80">
+                    <label>Is Package</label>
+                    <input type="checkbox" data-ng-model="vm.item.target_configuration_is_package">
+                </md-input-container>
+
             </div>
 
             <div data-ng-if="!vm.isFromMarketplace">
