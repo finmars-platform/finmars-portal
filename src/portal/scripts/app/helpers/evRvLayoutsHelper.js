@@ -241,10 +241,6 @@ export default function (toastNotificationService, uiService) {
 
 						};
 
-						if (isRootEntityViewer) {
-							listLayout.is_default = true; // default layout for split panel does not have is_default === true
-						}
-
 						listLayout.is_systemic = false;
 
 						if (listLayout.id) { // if layout based on another existing layout
@@ -268,9 +264,6 @@ export default function (toastNotificationService, uiService) {
 
 							const layoutToOverwrite = layoutToOverwriteData.results[0];
 							overwriteLayout(layoutToOverwrite, listLayout).then(function (updatedLayoutData) {
-
-								/* if (isRootEntityViewer) listLayout.is_default = true; // default layout for split panel does not have is_default === true
-                                listLayout.modified = updatedLayoutData.modified; */
 
 								applyLayout(isRootEntityViewer, evDataService, evEventService, updatedLayoutData);
 								toastNotificationService.success("Success. Layout " + listLayout.name + " overwritten.");
