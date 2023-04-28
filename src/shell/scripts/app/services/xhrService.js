@@ -110,9 +110,23 @@ export default function (errorService, cookieService) {
             .then(async function (response) {
 
                 if (response.status === 204) { // No content
-                    // resolve(response);
                     return response;
-                } else if (response.status >= 400 && response.status < 500) {
+
+                }
+                else if (response.status === 404) {
+
+                    throw {
+                        error: {
+                            message: response.statusText,
+                            status_code: response.status,
+                            url: response.url,
+                            username: '',
+                            datetime: '',
+                            details: '',
+                        }
+                    };
+                }
+                else if (response.status >= 400 && response.status < 500) {
 
                     /*response.json().then(function (data) {
 
@@ -126,9 +140,7 @@ export default function (errorService, cookieService) {
 
                     })*/
 
-                    const error = await response.json();
-
-                    throw error;
+                    throw await response.json();
 
                 } else if (response.status >= 500 && response.status < 600) {
 
