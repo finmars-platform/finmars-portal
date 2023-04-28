@@ -182,9 +182,9 @@ export default function (errorService, cookieService) {
                             throw null;
                             // return fetch(url, params, options); // try to request again with refreshed token
                         } else {
-                            window.keycloak.init({
+                            /*window.keycloak.init({
                                 onLoad: 'login-required'
-                            })
+                            })*/
                         }
 
                     }
