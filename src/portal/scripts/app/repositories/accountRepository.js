@@ -51,7 +51,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'accounts/account-light/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'accounts/account/light/', options),
             {
                 method: 'GET',
                 credentials: 'include',

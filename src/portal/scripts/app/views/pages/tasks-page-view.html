@@ -186,7 +186,7 @@
                             <md-tooltip md-direction="bottom">Refresh</md-tooltip></a>
 
                         <a data-ng-click="vm.cancelTask($event)"
-                           data-ng-if="vm.activeTask.status == 'P' || vm.activeTask.status == 'progress'"
+                           data-ng-if="vm.activeTask.status == 'P' || vm.activeTask.status == 'progress' || vm.activeTask.status == 'W'"
                            class="cancel-task-button"><span
                                 class="material-icons">cancel</span>
                             <md-tooltip md-direction="bottom">Cancel</md-tooltip></a>
