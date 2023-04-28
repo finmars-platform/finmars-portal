@@ -197,6 +197,20 @@
 
         };
 
+        const generateTabsProjection = function () {
+
+            vm.projection = vm.generateProjection(vm.layout);
+
+            if (vm.projection && vm.projection.length) {
+                vm.projection[0].active = true;
+                vm.dashboardDataService.setActiveTab( vm.projection[0] );
+
+            }
+
+            vm.dashboardDataService.setProjection(vm.projection);
+
+        }
+
         vm.getDefaultLayout = function () {
 
             vm.readyStatus.data = false;
@@ -209,14 +223,7 @@
 
                 if (vm.layout) {
 
-                    vm.projection = vm.generateProjection(vm.layout);
-
-                    if (vm.projection && vm.projection.length) {
-                        vm.projection[0].active = true
-                    }
-
-
-                    vm.dashboardDataService.setProjection(vm.projection);
+                    generateTabsProjection();
 
                     vm.dashboardDataService.setData(vm.layout);
                     vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
@@ -265,14 +272,7 @@
                     vm.dashboardDataService.setData(vm.layout);
                     vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
 
-                    vm.projection = vm.generateProjection(vm.layout);
-
-                    if (vm.projection && vm.projection.length) {
-                        vm.projection[0].active = true
-                    }
-
-
-                    vm.dashboardDataService.setProjection(vm.projection);
+                    generateTabsProjection();
 
                     vm.readyStatus.data = true;
 
