@@ -11,7 +11,15 @@
 
         var vm = this;
 
+        vm.disabled = true;
+        vm.smallOptions = {
+            noIndicatorBtn: true
+        };
+
+        vm.smallOptions2 = Object.assign({readonly: true}, vm.smallOptions)
+
         vm.data = data;
+        vm.title = data.title || 'Rename';
 
         vm.layout_name = vm.data.layout_name;
 

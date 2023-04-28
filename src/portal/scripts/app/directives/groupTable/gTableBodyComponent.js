@@ -64,7 +64,6 @@ import toastNotificationService from "../../../../../shell/scripts/app/services/
                 var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
                 var rvDomManager = new RvDomManager(toastNotificationService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService);
-
                 var activeLayoutConfigIsSet = false;
 
                 if (!scope.isReport) {
@@ -574,7 +573,6 @@ import toastNotificationService from "../../../../../shell/scripts/app/services/
 
                             rvDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService, usersService, globalDataService);
                             // rvDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
-
 
                             rvDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
 
