@@ -32,7 +32,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type-light/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/light/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -86,7 +86,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type-light/' + id + '/',
+        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/light/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -161,7 +161,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type-light/bulk-update/',
+        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/light/bulk-update/',
             {
                 method: 'PATCH',
                 credentials: 'include',

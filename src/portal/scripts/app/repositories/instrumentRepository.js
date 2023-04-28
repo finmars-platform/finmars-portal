@@ -37,7 +37,7 @@ export default function (cookieService, xhrService) {
 		var prefix = baseUrlService.getMasterUserPrefix();
 		var apiVersion = baseUrlService.getApiVersion();
 
-		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument-light/', options),
+		return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'instruments/instrument/light/', options),
 			{
 				method: 'GET',
 				credentials: 'include',

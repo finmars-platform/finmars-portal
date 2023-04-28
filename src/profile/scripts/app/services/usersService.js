@@ -122,7 +122,7 @@
 
 		var prefix = baseUrlService.getMasterUserPrefix();
 
-		return window.fetch(baseUrl + prefix + '/' + 'users/master-user-light/', {
+		return window.fetch(baseUrl + prefix + '/' + 'users/master-user/light/', {
 			method: 'GET',
 			credentials: 'include',
 			headers: {
