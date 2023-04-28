@@ -269,7 +269,7 @@
         exportConfiguration: exportConfiguration,
         importConfiguration: importConfiguration,
         pushConfigurationToMarketplace: pushConfigurationToMarketplace,
-        installConfiguration: installConfiguration
+        installConfiguration: installConfiguration,
     }
 
 
