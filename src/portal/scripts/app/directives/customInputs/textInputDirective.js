@@ -97,6 +97,10 @@
 						classes += " render-hyperlinks"
 					}
 
+					if (scope.isReadonly) {
+						classes += " readonly"
+					}
+
 					return classes;
 
 				};
