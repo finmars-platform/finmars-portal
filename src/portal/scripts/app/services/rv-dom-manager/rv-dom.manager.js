@@ -2081,7 +2081,7 @@ export default function (toastNotificationService, transactionTypeService, price
 
                     ttypes = ttypes.concat(data.results);
 
-                    if (data.next) {
+                    /*if (data.next) {
 
                         options.page += 1;
                         getTTypePage();
@@ -2090,7 +2090,8 @@ export default function (toastNotificationService, transactionTypeService, price
 
                         resolve(ttypes);
 
-                    }
+                    }*/
+                    resolve(ttypes);
 
                 }).catch(function (error) {
                     reject(error);
