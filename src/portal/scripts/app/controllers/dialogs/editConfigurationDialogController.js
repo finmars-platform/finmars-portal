@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var uiService = require('../../services/uiService');
+    var newMemberSetupConfigurationService = require('../../services/newMemberSetupConfigurationService');
 
     module.exports = function ($scope, $mdDialog, item) {
 
@@ -17,54 +17,38 @@
             $mdDialog.hide({status: 'disagree'});
         };
 
+        vm.toggleMode = function () {
+            vm.isFromMarketplace = !vm.isFromMarketplace;
+            vm.item.target_configuration_code = null;
+            vm.item.target_configuration_version = null;
+            vm.file = null;
+        }
+
         vm.agree = function () {
 
             if (vm.file) {
 
-                var reader = new FileReader();
+                vm.item.file = vm.file
 
-
-                reader.readAsText(vm.file);
-
-                reader.onload = function (evt) {
-
-                    try {
-
-                        var file = JSON.parse(evt.target.result);
-
-                        uiService.updateConfiguration(vm.item.id,
-                            {
-                                name: vm.item.name,
-                                description: vm.item.description,
-                                data: file
-                            }
-                        ).then(function (value) {
-
-                            $mdDialog.hide({status: 'agree'});
-
-                        });
-
-                    } catch (e) {
-                        vm.error = true;
-                    }
-                };
-
-            } else {
-                uiService.updateConfiguration(vm.item.id,
-                    {
-                        name: vm.item.name,
-                        description: vm.item.description,
-                        data: vm.item.data
-                    }
+                newMemberSetupConfigurationService.update(vm.item.id, vm.item
                 ).then(function (value) {
 
                     $mdDialog.hide({status: 'agree'});
 
                 });
+
+            } else {
+
+                newMemberSetupConfigurationService.update(vm.item.id, vm.item
+                ).then(function (value) {
+
+                    $mdDialog.hide({status: 'agree'});
+
+                });
+
             }
 
-
-        };
+        }
     }
 
 }());
