@@ -177,7 +177,7 @@
                     var classes = '';
 
                     if (scope.isDisabled) {
-                        classes += "custom-input-is-disabled";
+                        classes = "custom-input-is-disabled";
 
                     } else if (scope.error) {
                         classes = 'custom-input-error';
@@ -474,6 +474,10 @@
                                             scope.error = 'Field should not be null';
                                         }
 
+                                        break;
+
+                                    case "error":
+                                        scope.error = scope.eventSignal.error;
                                         break;
 
                                     case 'set_style_preset1':
