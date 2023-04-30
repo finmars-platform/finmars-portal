@@ -11,7 +11,8 @@
 
         <div class="flex-row">
 
-          <button class="custom-input-indicator-btn"
+          <button data-ng-if="!noIndicatorButton"
+                  class="custom-input-indicator-btn"
                   ng-disabled="isDisabled"
                   ng-click="onIndBtnClick()">
             <span class="material-icons">{{indicatorBtn}}</span>

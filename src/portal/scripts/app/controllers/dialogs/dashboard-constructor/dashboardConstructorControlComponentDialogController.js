@@ -36,6 +36,11 @@
         vm.layouts = [];
         vm.layoutsWithLinkToFilters = [];
         vm.reportFields = [];
+
+        vm.desEventObj = {
+            event: {}
+        };
+
         vm.multiselectItems = [];
 
         vm.initialDefaultSettings = {
@@ -646,11 +651,29 @@
 
                 vm.multiselectItems = [];
 
-                if (vm.item.settings.multiple && entityType) {
+                /* if (vm.item.settings.multiple && entityType) {
 
                     vm.getDataForMultiselect(entityType).then(function (resData) {
                         vm.multiselectItems = JSON.parse(JSON.stringify(resData));
                     });
+
+                } */
+                if (entityType) {
+
+                    vm.getDataForMultiselect(entityType).then(function (resData) {
+                        vm.multiselectItems = JSON.parse(JSON.stringify(resData));
+                    });
+
+                    if (vm.defaultValue.setValue) {
+
+                        const selOption = vm.multiselectItems.find(item => item.id === vm.defaultValue.setValue);
+
+                        if (!selOption) {
+                            // If nonexistent attribute selected
+                            vm.desEventObj.event = {key: 'error', error: `Selected ${vm.currentContentType.name} '${vm.defaultValue.setValue}' does not exist in the Configuration`};
+                        }
+
+                    }
 
                 }
 
