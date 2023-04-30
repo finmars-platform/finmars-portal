@@ -77,7 +77,7 @@
 					var classes = "";
 
 					if (scope.disabled()) {
-						classes += "custom-input-is-disabled";
+						classes = "custom-input-is-disabled";
 
 					} else if (scope.error) {
 						classes = 'custom-input-error';
@@ -274,7 +274,7 @@
 										break;
 
 									case "error":
-										scope.error = JSON.parse(JSON.stringify(scope.eventSignal.error));
+										scope.error = scope.eventSignal.error;
 										break;
 
 									case "set_style_preset1":
