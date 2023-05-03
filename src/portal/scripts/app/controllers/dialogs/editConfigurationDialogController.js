@@ -26,11 +26,21 @@
 
         vm.agree = function () {
 
+            var formData = new FormData();
+
+            formData.append('name', vm.item.name);
+            formData.append('user_code', vm.item.user_code);
+            formData.append('notes', vm.item.notes);
+            formData.append('target_configuration_code', vm.item.target_configuration_code);
+            formData.append('target_configuration_version', vm.item.target_configuration_version);
+            formData.append('target_configuration_is_package', vm.item.target_configuration_is_package);
+
             if (vm.file) {
 
-                vm.item.file = vm.file
 
-                newMemberSetupConfigurationService.update(vm.item.id, vm.item
+                formData.append('file', vm.file);
+
+                newMemberSetupConfigurationService.update(vm.item.id, formData
                 ).then(function (value) {
 
                     $mdDialog.hide({status: 'agree'});
@@ -39,7 +49,7 @@
 
             } else {
 
-                newMemberSetupConfigurationService.update(vm.item.id, vm.item
+                newMemberSetupConfigurationService.update(vm.item.id, formData
                 ).then(function (value) {
 
                     $mdDialog.hide({status: 'agree'});

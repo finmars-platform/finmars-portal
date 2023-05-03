@@ -29,6 +29,7 @@
             vm.isFromMarketplace = !vm.isFromMarketplace;
             vm.item.target_configuration_code = null;
             vm.item.target_configuration_version = null;
+            vm.item.target_configuration_is_package = null;
             vm.file = null;
         }
 
@@ -41,6 +42,7 @@
             formData.append('notes', vm.item.notes);
             formData.append('target_configuration_code', vm.item.target_configuration_code);
             formData.append('target_configuration_version', vm.item.target_configuration_version);
+            formData.append('target_configuration_is_package', vm.item.target_configuration_is_package);
 
             if (vm.file) {
 
