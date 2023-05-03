@@ -43,7 +43,12 @@
                     }).then(function (res) {
 
                         if (res.status === "agree") {
-                            $mdDialog.hide({status: 'save_layout', data: {layoutName: res.data.name, layoutUserCode: res.data.user_code}});
+                            // TODO refactor
+                            $mdDialog.hide({status: 'save_layout', data: {
+                                layoutName: res.data.name,
+                                    layoutUserCode: res.data.user_code,
+                                    layoutConfigurationCode: res.data.configuration_code
+                            }});
                         }
 
                     });

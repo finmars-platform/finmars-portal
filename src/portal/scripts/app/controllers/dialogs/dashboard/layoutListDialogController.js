@@ -93,7 +93,9 @@
                     layoutData.name = res.data.name;
                     layout.name = res.data.name;
                     layoutData.user_code = res.data.user_code;
+                    layoutData.configuration_code = res.data.configuration_code;
                     layout.user_code = res.data.user_code;
+                    layout.configuration_code = res.data.configuration_code;
                     /*
                     uiService.updateDashboardLayout(layoutData.id, layoutData).then(function (data) {
                         $scope.$apply()
