@@ -60,7 +60,7 @@
             method: 'POST',
             credentials: 'include',
             headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token')
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
             },
             body: data
         }).then(function (data) {
