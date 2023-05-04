@@ -277,6 +277,10 @@ export default function (expressionService) {
 
                     // localResultKey = resultKey + '.' + attribute.attribute_type;
                     localResultKey = resultKey + '.' + attribute.attribute_type_object.user_code;
+                    // TODO IDK what to right now
+                    // TODO Important, refactor later, support of multiple attribute types of different configuration is possible
+                    // user_code pattern here [configuration_code].[content_type]:[user_code]
+                    // localResultKey = resultKey + '.' + attribute.attribute_type_object.user_code.split(':')[2];
 
                     result_item[localResultKey] = null;
 
@@ -345,6 +349,7 @@ export default function (expressionService) {
         var currencies_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_currencies)
         var portfolios_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_portfolios)
         var instrument_types_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_instrument_types)
+        var account_types_as_dict = unwrapRelationsAsFlatDicts(reportOptions.item_account_types)
 
         console.log('portfolios_as_dict', portfolios_as_dict);
 
@@ -371,28 +376,29 @@ export default function (expressionService) {
 
             if (item.instrument) {
                 joinFlatRelationToItem(item, 'instrument', instruments_as_dict[item.instrument])
+                joinFlatRelationToItem(item, 'instrument.instrument_type', instrument_types_as_dict[item['instrument.instrument_type']])
             }
 
             if (item.allocation) {
                 joinFlatRelationToItem(item, 'allocation', instruments_as_dict[item.allocation])
+                joinFlatRelationToItem(item, 'allocation.instrument_type', instrument_types_as_dict[item['allocation.instrument_type']])
             }
 
             if (item.allocation_pl) {
                 joinFlatRelationToItem(item, 'allocation_pl', instruments_as_dict[item.allocation_pl])
+                joinFlatRelationToItem(item, 'allocation_pl.instrument_type', instrument_types_as_dict[item['allocation_pl.instrument_type']])
             }
 
             if (item.allocation_balance) {
                 joinFlatRelationToItem(item, 'allocation_balance', instruments_as_dict[item.allocation_balance])
+                joinFlatRelationToItem(item, 'allocation_balance.instrument_type', instrument_types_as_dict[item['allocation_balance.instrument_type']])
             }
 
             if (item.linked_instrument) {
                 joinFlatRelationToItem(item, 'linked_instrument', instruments_as_dict[item.linked_instrument])
+                joinFlatRelationToItem(item, 'linked_instrument.instrument_type', instrument_types_as_dict[item['linked_instrument.instrument_type']])
             }
-            if (item['instrument.instrument_type']) {
 
-                joinFlatRelationToItem(item, 'instrument.instrument_type', instrument_types_as_dict[item['instrument.instrument_type']])
-
-            }
 
             if (item['instrument.pricing_currency']) {
                 joinFlatRelationToItem(item, 'instrument.pricing_currency', currencies_as_dict[item['instrument.pricing_currency']])
@@ -402,11 +408,7 @@ export default function (expressionService) {
                 joinFlatRelationToItem(item, 'instrument.accrued_currency', currencies_as_dict[item['instrument.accrued_currency']])
             }
 
-            if (item['instrument.instrument_type']) {
 
-                joinFlatRelationToItem(item, 'instrument.instrument_type', instrument_types_as_dict[item['instrument.instrument_type']])
-
-            }
 
             if (item['instrument.pricing_currency']) {
                 joinFlatRelationToItem(item, 'instrument.pricing_currency', currencies_as_dict[item['instrument.pricing_currency']])
@@ -421,18 +423,47 @@ export default function (expressionService) {
 
             if (item.account) {
                 joinFlatRelationToItem(item, 'account', accounts_as_dict[item.account])
+
+                if (item['account.type']) {
+
+                    joinFlatRelationToItem(item, 'account.type', account_types_as_dict[item['account.type']])
+
+                }
+
+
             }
+
+
 
             if (item.account_cash) {
                 joinFlatRelationToItem(item, 'account_cash', accounts_as_dict[item.account_cash])
+
+                if (item['account_cash.type']) {
+
+                    joinFlatRelationToItem(item, 'account_cash.type', account_types_as_dict[item['account_cash.type']])
+
+                }
+
             }
 
             if (item.account_interim) {
                 joinFlatRelationToItem(item, 'account_interim', accounts_as_dict[item.account_interim])
+
+                if (item['account_interim.type']) {
+
+                    joinFlatRelationToItem(item, 'account_interim.type', account_types_as_dict[item['account_interim.type']])
+
+                }
+
             }
 
             if (item.account_position) {
                 joinFlatRelationToItem(item, 'account_position', accounts_as_dict[item.account_position])
+                if (item['account_position.type']) {
+
+                    joinFlatRelationToItem(item, 'account_position.type', account_types_as_dict[item['account_position.type']])
+
+                }
             }
 
             // Currencies
