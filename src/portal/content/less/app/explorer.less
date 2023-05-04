@@ -7,7 +7,6 @@
   //overflow-y: hidden;
 
 
-
   overflow: auto;
   padding: 0;
   padding-bottom: 40px;
@@ -15,16 +14,30 @@
   .explorer-table {
     tr {
       border: 1px solid #000;
+
       &:hover {
         background: #ddd;
       }
     }
+
     th button.md-button {
       min-height: 20px;
       height: 20px;
       margin: 4px;
       padding: 0;
       line-height: 20px;
+    }
+    th {
+      md-checkbox {
+        margin: 0;
+        width: 10px;
+      }
+    }
+    td {
+      md-checkbox {
+        margin: 0 4px;
+        width: 10px;
+      }
     }
   }
 
@@ -62,7 +75,7 @@
 
   }
 
-  
+
   .explorer-breadcrumbs {
     overflow: hidden;
   }
@@ -73,6 +86,7 @@
     font-size: 20px;
     cursor: pointer;
     padding: 8px;
+
     &:hover {
       background: #ddd;
       opacity: 7;
@@ -98,7 +112,6 @@
     }
 
 
-
     .explorer-item-name {
 
       display: inline-block;
@@ -107,6 +120,7 @@
       overflow: hidden;
       width: 100%;
       cursor: pointer;
+
       &:hover {
         opacity: .7;
       }

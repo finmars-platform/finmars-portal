@@ -30,8 +30,8 @@
     }
 
 
-    var downloadZip = function (path) {
-        return explorerRepository.downloadZip(path)
+    var downloadZip = function (data) {
+        return explorerRepository.downloadZip(data)
     }
 
     module.exports = {
