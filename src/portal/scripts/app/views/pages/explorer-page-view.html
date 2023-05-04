@@ -18,17 +18,59 @@
         <div layout="column">
 
             <div class="explorer-toolbar" layout="row">
-                <md-button class="md-raised" data-ng-click="vm.createFile($event)">Create File</md-button>
-                <md-button class="md-raised" data-ng-click="vm.createFolder($event)">Create Folder</md-button>
-                <md-button class="md-raised" data-ng-click="vm.downloadZip($event)">Download Folder as .zip</md-button>
-                <md-button class="md-raised md-warn" data-ng-click="vm.deleteFolder($event)">Delete Folder</md-button>
-                <md-button class="md-raised" data-ng-click="vm.uploadFiles($event)">Upload Files</md-button>
+
+                <md-menu>
+                    <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
+                        Create
+                    </md-button>
+
+                    <md-menu-content>
+                        <md-menu-item>
+                            <md-button class="md-raised" data-ng-click="vm.createFile($event)">Create File</md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button class="md-raised" data-ng-click="vm.createFolder($event)">Create Folder
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button class="md-raised" data-ng-click="vm.uploadFiles($event)">Upload Files</md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+
+                </md-menu>
+
                 <md-button class="md-raised" data-ng-click="vm.toggleHidden($event)">
 
                     <span data-ng-if="!vm.showHiddenFiles">Show Invisible Files</span>
                     <span data-ng-if="vm.showHiddenFiles">Hide Invisible Files</span>
 
                 </md-button>
+
+                <div data-ng-if="vm.selectedCount" layout="row" style="align-items: center">
+                    Selected: {{vm.selectedCount}}
+
+                    <md-menu>
+
+                        <md-button class="md-raised md-icon-button" data-ng-click="$mdOpenMenu($event)">
+                            <span class="material-icons">more_vert</span>
+                        </md-button>
+
+                        <md-menu-content>
+                            <md-menu-item>
+                                <md-button class="md-raised" data-ng-click="vm.downloadZip($event)">Download Selected as
+                                    .zip
+                                </md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button class="md-raised md-warn" data-ng-click="vm.deleteSelected($event)">Delete
+                                    Selected
+                                </md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+
+                    </md-menu>
+
+                </div>
 
                 <input type="file" style="display: none" multiple id="explorerFileUploadInput" input-file-directive
                        read-file="vm.fileUploadInput"
@@ -64,7 +106,7 @@
 
                     <div>
                         <md-select-header>
-                            <input data-ng-model="searchTerm"
+                            <input data-ng-model="vm.searchTerm"
                                    type="search"
                                    placeholder="Search for a ..."
                                    class="md-text md-select-search-pattern select-input-filter"
@@ -73,7 +115,7 @@
                                     font-size: 12px;
                                     height: 24px;
                                     border: 1px solid #000; border-bottom: 0;"
-                                   ng-keydown="$event.stopPropagation()">
+                            >
                         </md-select-header>
                     </div>
 
@@ -82,6 +124,13 @@
                         <thead>
 
                         <tr>
+                            <th style="width: 10px">
+                                <md-checkbox data-ng-click="vm.toggleSelectAll($event)"
+                                             data-ng-checked="vm.allSelected"
+                                >
+                                </md-checkbox>
+                            </th>
+
                             <th>
                                 <div layout="row">
                                     <md-button data-ng-click="vm.sortBy('name')">Name</md-button>
@@ -140,42 +189,33 @@
                         <tbody>
 
 
-                        <tr data-ng-repeat="item in vm.items | filter: {name: searchTerm} | orderBy:vm.propertyName:vm.reverse"
-                            class="explorer-{{::item.type}} explorer-item {{item.selected ? 'selected' : ''}}">
+                        <tr data-ng-repeat="item in vm.items | filter: {name: vm.searchTerm} | orderBy:vm.propertyName:vm.reverse"
+                            class="explorer-{{::item.type}} explorer-item">
+
+                            <td style="width: 10px">
+                                <md-checkbox data-ng-click="vm.selectItem($event, item)"
+                                             data-ng-checked="item.selected"
+                                >
+                                </md-checkbox>
+                            </td>
 
                             <td>
 
                                 <div data-ng-if="item.type == 'dir'">
 
-                                    <md-menu>
-
-                                        <div
-                                                data-ng-click="vm.openFolder($event, item)"
-                                                layout="row">
+                                    <div
+                                            data-ng-click="vm.openFolder($event, item)"
+                                            layout="row">
                                         <span class="material-icons"
                                               data-ng-if="item.name !== vm.member.username && item.name !== 'import'">folder</span>
-                                            <span class="material-icons"
-                                                  data-ng-if="item.name === vm.member.username">folder_shared</span>
-                                            <span class="material-icons"
-                                                  data-ng-if="item.name === 'import'">folder_special</span>
-                                            <span class="explorer-item-name"
-                                                  title="{{::item.name}}">{{::item.name}}</span>
-                                        </div>
+                                        <span class="material-icons"
+                                              data-ng-if="item.name === vm.member.username">folder_shared</span>
+                                        <span class="material-icons"
+                                              data-ng-if="item.name === 'import'">folder_special</span>
+                                        <span class="explorer-item-name"
+                                              title="{{::item.name}}">{{::item.name}}</span>
+                                    </div>
 
-                                        <!--                                    <md-menu-content width="4">-->
-
-                                        <!--                                        <md-menu-item>-->
-                                        <!--                                            <md-button ng-click="vm.deleteFile($mdMenu, $event, item)"-->
-                                        <!--                                            >-->
-                                        <!--                                                <ng-md-icon icon="visibility_off"-->
-                                        <!--                                                            style="visibility: hidden;"></ng-md-icon>-->
-                                        <!--                                                <span>Delete</span>-->
-                                        <!--                                            </md-button>-->
-                                        <!--                                        </md-menu-item>-->
-
-                                        <!--                                    </md-menu-content>-->
-
-                                    </md-menu>
 
                                 </div>
 
@@ -224,6 +264,7 @@
                             <md-button class="md-raised" data-ng-click="vm.closeFileEditor($event)">Close Editor
                             </md-button>
                             <md-button class="md-raised" data-ng-click="vm.saveFileEditor($event)">Save</md-button>
+                            <md-button class="md-raised" data-ng-click="vm.renameFile($event)">Rename</md-button>
                             <md-button class="md-raised md-warn" data-ng-click="vm.deleteFile($event)">Delete
                             </md-button>
                             <div layout="row" layout-sm="column" layout-align="space-around" style="padding-top: 8px"
