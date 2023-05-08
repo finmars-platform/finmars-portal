@@ -1109,17 +1109,19 @@ import evEvents from "../../services/entityViewerEvents";
 
                 const getInvites = function () {
 
-                    inviteToSharedConfigurationFileService.getListOfMyInvites({
-                        filters: {
-                            status: '0'
-                        }
-                    }).then(function (data) {
-
-                        scope.invites = data.results;
-
-                        scope.$apply();
-
-                    })
+                    scope.invites = []
+                    // Deprecated
+                    // inviteToSharedConfigurationFileService.getListOfMyInvites({
+                    //     filters: {
+                    //         status: '0'
+                    //     }
+                    // }).then(function (data) {
+                    //
+                    //     scope.invites = data.results;
+                    //
+                    //     scope.$apply();
+                    //
+                    // })
 
                 };
 
