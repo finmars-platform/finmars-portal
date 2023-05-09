@@ -1300,7 +1300,7 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
             var getLayoutProm;
             var stateParams = $state.params;
 
-            if (vm.isLayoutFromUrl()) {
+            if ( vm.isLayoutFromUrl() ) {
 
                 var queryParams = window.location.href.split('?')[1];
                 var params = queryParams.split('&');
