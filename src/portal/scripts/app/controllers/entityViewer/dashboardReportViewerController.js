@@ -2171,22 +2171,22 @@
 
 			});
 
-			var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject){
+			// var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject){
+			//
+			// 	uiService.getCrossEntityAttributeExtensionList({
+			// 		filters: {
+			// 			context_content_type: $scope.$parent.vm.contentType
+			// 		}
+			// 	}).then(function (data){
+			//
+			// 		vm.entityViewerDataService.setCrossEntityAttributeExtensions(data.results);
+			// 		resolve();
+			//
+			// 	}).catch(error => reject(error));
+			//
+			// })
 
-				uiService.getCrossEntityAttributeExtensionList({
-					filters: {
-						context_content_type: $scope.$parent.vm.contentType
-					}
-				}).then(function (data){
-
-					vm.entityViewerDataService.setCrossEntityAttributeExtensions(data.results);
-					resolve();
-
-				}).catch(error => reject(error));
-
-			})
-
-			Promise.all([downloadAttrsPromise, setLayoutPromise, crossEntityAttributeExtensionProm]).then(function () {
+			Promise.all([downloadAttrsPromise, setLayoutPromise]).then(function () {
 
 				vm.dashboardComponentDataService.setEntityViewerDataService(vm.entityViewerDataService);
 				vm.dashboardComponentDataService.setEntityViewerEventService(vm.entityViewerEventService);

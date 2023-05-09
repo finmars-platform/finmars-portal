@@ -70,7 +70,7 @@
         vm.attributesLayout = [];
         vm.fixedAreaAttributesLayout = [];
 
-        vm.hasEditPermission = false;
+        vm.hasEditPermission = true; // deprecated
 
         vm.textFields = [];
         vm.numberFields = [];

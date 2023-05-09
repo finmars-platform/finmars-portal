@@ -1005,22 +1005,22 @@ import evEvents from "../../services/entityViewerEvents";
             var downloadAttrsProm = sharedLogicHelper.downloadAttributes();
             var setLayoutProm;
 
-            var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject) {
-
-                uiService.getCrossEntityAttributeExtensionList({
-                    filters: {
-                        context_content_type: $scope.$parent.vm.contentType
-                    }
-                }).then(function (data) {
-
-                    console.log('getCrossEntityAttributeExtensionList.data', data);
-
-                    vm.entityViewerDataService.setCrossEntityAttributeExtensions(data.results);
-                    resolve();
-
-                }).catch(error => reject(error))
-
-            })
+            // var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject) {
+            //
+            //     uiService.getCrossEntityAttributeExtensionList({
+            //         filters: {
+            //             context_content_type: $scope.$parent.vm.contentType
+            //         }
+            //     }).then(function (data) {
+            //
+            //         console.log('getCrossEntityAttributeExtensionList.data', data);
+            //
+            //         vm.entityViewerDataService.setCrossEntityAttributeExtensions(data.results);
+            //         resolve();
+            //
+            //     }).catch(error => reject(error))
+            //
+            // })
 
             vm.setEventListeners();
 
@@ -1086,7 +1086,7 @@ import evEvents from "../../services/entityViewerEvents";
                 setLayoutProm = evHelperService.getDefaultLayout(vm);
             }
 
-            Promise.allSettled([downloadAttrsProm, setLayoutProm, crossEntityAttributeExtensionProm]).then(function (getViewData) {
+            Promise.allSettled([downloadAttrsProm, setLayoutProm]).then(function (getViewData) {
 
                 metaService.logRejectedPromisesAfterAllSettled(getViewData, 'report viewer get view');
 

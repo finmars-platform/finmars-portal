@@ -50,7 +50,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type-light-with-inputs/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/light/', options),
             {
                 method: 'GET',
                 credentials: 'include',

@@ -402,19 +402,22 @@
 
         vm.getInvites = function () {
 
-            inviteToSharedConfigurationFileService.getListOfMyInvites({
-                filters: {
-                    status: '0'
-                }
-            }).then(function (data) {
+            vm.invites = [];
 
-                vm.invites = data.results;
-
-                console.log('vm.invites', vm.invites);
-
-                $scope.$apply();
-
-            })
+            // Deprecated
+            // inviteToSharedConfigurationFileService.getListOfMyInvites({
+            //     filters: {
+            //         status: '0'
+            //     }
+            // }).then(function (data) {
+            //
+            //     vm.invites = data.results;
+            //
+            //     console.log('vm.invites', vm.invites);
+            //
+            //     $scope.$apply();
+            //
+            // })
 
         };
 
