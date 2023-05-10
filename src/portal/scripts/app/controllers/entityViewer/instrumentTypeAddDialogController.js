@@ -38,7 +38,7 @@
 
         vm.processing = false;
 
-        vm.readyStatus = {permissions: false, entity: false, layout: false};
+        vm.readyStatus = {permissions: true, entity: false, layout: false};
 
         vm.entityType = 'instrument-type';
 

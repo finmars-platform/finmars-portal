@@ -438,7 +438,7 @@
 
                     vm.entity.$_isValid = true;
                     vm.readyStatus.entity = true;
-                    // vm.readyStatus.permissions = true;
+                    vm.readyStatus.permissions = true;
 					// vm.hasEditPermission = true;
 
                     // vm.getFormLayout();

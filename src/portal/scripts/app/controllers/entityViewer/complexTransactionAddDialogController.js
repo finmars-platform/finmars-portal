@@ -1505,7 +1505,7 @@
             vm.getPortfolios();
             vm.getInstrumentTypes();
             vm.loadTransactionTypes();
-            vm.loadPermissions();
+            // vm.loadPermissions();
 
             vm.getAttributeTypes();
 
