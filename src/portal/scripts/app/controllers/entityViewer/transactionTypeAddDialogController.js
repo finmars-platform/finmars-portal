@@ -2153,7 +2153,7 @@
 
             var attrsProm = vm.getAttributeTypes(); // this
             var userFieldsProm = vm.getTransactionUserFields();
-            var permissionProm = vm.loadPermissions();
+            // var permissionProm = vm.loadPermissions();
             var getRefTablesPromise = sharedLogic.getReferenceTables();
 
             vm.getTransactionTypeGroups();
@@ -2172,7 +2172,7 @@
             var allDataPromises = [
                 attrsProm,
                 userFieldsProm,
-                permissionProm,
+                // permissionProm,
                 getRefTablesPromise,
                 getInputTemplPromise
             ];

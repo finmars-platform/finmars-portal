@@ -17,7 +17,7 @@
 
         let bigDrawerResizeButton;
 
-        let readyStatusObj = {permissions: false, entity: false, layout: false};
+        let readyStatusObj = {permissions: true, entity: false, layout: false};
 
 		if (viewModel.entityType === 'instrument') readyStatusObj.exposureTab = false;
 
