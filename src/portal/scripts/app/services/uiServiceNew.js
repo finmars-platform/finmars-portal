@@ -338,23 +338,34 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
     };
 
 
-    const applyDefaultSettingsToLayoutTemplate = async function (layoutTemplate) {
-        const ecosystemDefaultData = await ecosystemDefaultService.getList().then (res => res.results[0]);
+    const applyDefaultSettingsToLayoutTemplate = async function (layoutTemplate, isReport) {
 
-        const reportOptions = {
-            "account_mode": 1,
-            "calculationGroup": "portfolio",
-            "cost_method": 1,
-            "report_date" : new Date().toISOString().slice(0, 10),
-            "portfolio_mode": 1,
-            "strategy1_mode": 0,
-            "strategy2_mode": 0,
-            "strategy3_mode": 0,
-            "table_font_size": "small",
-            "pricing_policy": ecosystemDefaultData.pricing_policy,
-        };
+        if (isReport) {
 
-        layoutTemplate[0].data.reportOptions = reportOptions;
+            const ecosystemDefaultData = await ecosystemDefaultService.getList().then (res => res.results[0]);
+
+            const reportOptions = {
+                "account_mode": 1,
+                "calculationGroup": "portfolio",
+                "cost_method": 1,
+                "report_date" : new Date().toISOString().slice(0, 10),
+                "portfolio_mode": 1,
+                "strategy1_mode": 0,
+                "strategy2_mode": 0,
+                "strategy3_mode": 0,
+                "table_font_size": "small",
+                "pricing_policy": ecosystemDefaultData.pricing_policy,
+            };
+
+            layoutTemplate.data.reportOptions = reportOptions;
+
+        }
+        else {
+
+            layoutTemplate.data.rowSettings = {};
+            layoutTemplate.data.ev_options = {};
+
+        }
 
         return layoutTemplate;
     }
@@ -390,7 +401,7 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
                         defaultLayout = uiRepository.getListLayoutTemplate(isReport);
                         defaultLayout[0].content_type = contentType;
 
-                        defaultLayout = await applyDefaultSettingsToLayoutTemplate(defaultLayout);
+                        defaultLayout[0] = await applyDefaultSettingsToLayoutTemplate(defaultLayout[0], isReport);
                         defaultLayoutData = {results: defaultLayout};
 
                     }
