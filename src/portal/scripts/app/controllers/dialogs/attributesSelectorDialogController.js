@@ -35,6 +35,8 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
         favoriteAttributes: member.data.favorites.attributes[contentType] || [],
     };
 
+    if (data.title) initSettings.title = data.title;
+
     const processAttrName = function (attr) {
 
         let formattedName = attr.name;
