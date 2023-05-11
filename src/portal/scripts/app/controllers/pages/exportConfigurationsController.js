@@ -6,10 +6,10 @@
     'use strict';
 
     var metaService = require('../../services/metaService');
-    var configurationService = require('../../services/configurationService');
+    // var configurationService = require('../../services/configurationService');
     // var usersService = require('../../services/usersService');
 
-    module.exports = function ($scope, $mdDialog, usersService, metaContentTypesService, uiService) {
+    module.exports = function ($scope, $mdDialog, usersService, metaContentTypesService, configurationService, uiService) {
 
         var vm = this;
 

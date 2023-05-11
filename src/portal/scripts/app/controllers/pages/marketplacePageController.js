@@ -12,7 +12,7 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function marketplacePageController($scope, $state, $stateParams, $mdDialog, usersService) {
+    module.exports = function marketplacePageController($scope, $state, $stateParams, configurationService) {
 
         var vm = this;
 
