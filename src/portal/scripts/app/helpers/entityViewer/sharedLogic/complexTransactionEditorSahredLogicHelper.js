@@ -225,6 +225,7 @@
 
             const dataConstructorLayout = JSON.parse(JSON.stringify(cTransactionData.book_transaction_layout)); // unchanged layout that is used to remove fields without attributes
 
+            viewModel.entity.attributes = viewModel.entity.attributes || [];
             viewModel.entity.attributes = updateAttributesInsideEntity(viewModel.entity.attributes);
 
 
