@@ -53,7 +53,7 @@ var pricingProcedureService = require('./procedures/pricingProcedureService');
 var scheduleService = require('./scheduleService');
 const auditService = require('./auditService');
 
-export default function (instrumentService, transactionTypeService, priceHistoryService, currencyHistoryService, reportService) {
+export default function (instrumentService, transactionTypeService, priceHistoryService, currencyHistoryService, configurationService, reportService) {
 
     var getList = function (entityType, options) {
 

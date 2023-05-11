@@ -99,13 +99,14 @@ import uiService from "../../../services/uiService";
 
             $mdDialog.show({
                 controller: 'UiLayoutSaveAsDialogController as vm',
-                templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
+                templateUrl: 'views/dialogs/ui/ui-layout-save-as-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 multiple: true,
                 clickOutsideToClose: false,
                 locals: {
-                    options: {
+                    data: {
+                        entityType: options.entityType,
                         layoutName: layoutData.name,
                         layoutUserCode: layoutData.user_code
                     }

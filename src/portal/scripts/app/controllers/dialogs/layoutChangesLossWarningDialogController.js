@@ -5,7 +5,7 @@
 
     'use strict';
 
-    module.exports = function($scope, data, $mdDialog){
+    module.exports = function($scope, $mdDialog, metaContentTypesService, data){
 
         var vm = this;
 
@@ -24,31 +24,36 @@
             if (data) {
                 var listLayout = evDataService.getListLayout();
 
-                if (!listLayout.hasOwnProperty('id')) {
+                if ( !listLayout.hasOwnProperty('id') ) {
 
                     $mdDialog.show({
                         controller: 'UiLayoutSaveAsDialogController as vm',
-                        templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
+                        templateUrl: 'views/dialogs/ui/ui-layout-save-as-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         clickOutsideToClose: false,
                         multiple: true,
                         locals: {
-                            options: {
-                                complexSaveAsLayoutDialog: {
-                                    entityType: entityType
-                                }
+                            data: {
+                                entityType: entityType,
+                                offerToOverride: true,
                             }
                         }
-                    }).then(function (res) {
+                    })
+                    .then(function (res) {
 
-                        if (res.status === "agree") {
-                            // TODO refactor
-                            $mdDialog.hide({status: 'save_layout', data: {
-                                layoutName: res.data.name,
-                                    layoutUserCode: res.data.user_code,
-                                    layoutConfigurationCode: res.data.configuration_code
-                            }});
+                        if (res.status === "agree" || res.status === "overwrite") {
+
+                            $mdDialog.hide(
+                                {
+                                    status: 'save_layout',
+                                    data: {
+                                        layoutName: res.data.name,
+                                        layoutUserCode: res.data.user_code,
+                                        layoutConfigurationCode: res.data.configuration_code
+                                    }
+                                }
+                            );
                         }
 
                     });

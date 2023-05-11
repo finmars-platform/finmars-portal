@@ -1,263 +1,190 @@
 /**
  * Created by szhitenev on 04.05.2016.
  */
-(function () {
 
-    var cookieService = require('../../../../core/services/cookieService');
-    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
-    var baseUrlService = require('../services/baseUrlService');
+import baseUrlService from "./baseUrlService";
 
-    var baseUrl = baseUrlService.resolve();
+export default function (cookieService, xhrService) {
 
-    var exportAll = function () {
+    const baseUrl = baseUrlService.resolve();
 
+    const exportAll = function () {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+        const prefix = baseUrlService.getMasterUserPrefix();
+        const apiVersion = baseUrlService.getApiVersion();
 
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'export/configuration/',
-            {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'export/configuration/',
+            xhrService.getRequestParams('GET'))
 
     };
 
-    var getConfigurationData = function () {
+    const getConfigurationData = function () {
 
+        const prefix = baseUrlService.getMasterUserPrefix();
+        const apiVersion = baseUrlService.getApiVersion();
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+        /*return new Promise((resolve, reject) => {
 
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'export/configuration/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            return data.json();
-        })
+            xhrService.fetch(
+                baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'export/configuration/',
+                xhrService.getRequestParams('GET')
+            )
+                .then( data => {
+                    resolve( data.json() )
+                })
+                .catch( error => reject(error) );
 
-    };
+        })*/
+        const res = xhrService.fetch(
+            baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'export/configuration/',
+            xhrService.getRequestParams('GET')
+        );
 
-    var getMappingData = function () {
-
-
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
-
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'export/mapping/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            return data.json();
-        })
+        return xhrService.processResponse(res);
 
     };
 
-    var getList = function () {
+    const getMappingData = function () {
 
+        const prefix = baseUrlService.getMasterUserPrefix();
+        const apiVersion = baseUrlService.getApiVersion();
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+        const res = xhrService.fetch(
+            baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'export/mapping/',
+            xhrService.getRequestParams('GET')
+        )
 
-        // TODO change fetch to universal fetch
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/?page_size=1000', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            return data.json();
-        })
+        return xhrService.processResponse(res);
 
     };
 
-    var getByKey = function (id) {
+    const getList = function () {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+        const prefix = baseUrlService.getMasterUserPrefix();
+        const apiVersion = baseUrlService.getApiVersion();
 
-        // TODO change fetch to universal fetch
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/' + id + '/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        }).then(function (data) {
-            return data.json();
-        })
+        const res = xhrService.fetch(
+            baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/?page_size=1000',
+            xhrService.getRequestParams('GET')
+        );
+
+        return xhrService.processResponse(res);
 
     };
 
-    var create = function (data) {
+    const getByKey = function (id) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+        const prefix = baseUrlService.getMasterUserPrefix();
+        const apiVersion = baseUrlService.getApiVersion();
 
-        // TODO change fetch to universal fetch
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then(function (data) {
-            return data.json();
-        })
+        const res = xhrService.fetch(
+            baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/' + id + '/',
+            xhrService.getRequestParams('GET')
+        );
+
+        return xhrService.processResponse(res);
 
     };
 
-    var update = function (id, data) {
+    const create = function (data) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+        const prefix = baseUrlService.getMasterUserPrefix();
+        const apiVersion = baseUrlService.getApiVersion();
 
-        // TODO change fetch to universal fetch
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/' + id + '/', {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then(function (data) {
-            return data.json();
-        })
+        const res = xhrService.fetch(
+            baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/',
+            xhrService.getRequestParams('POST', data)
+        );
+
+        return xhrService.processResponse(res);
 
     };
 
-    var deleteByKey = function (id) {
+    const update = function (id, data) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+        const prefix = baseUrlService.getMasterUserPrefix();
+        const apiVersion = baseUrlService.getApiVersion();
 
-        // TODO change fetch to universal fetch
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/' + id + '/', {
-            method: 'DELETE',
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-        })
+        const res = xhrService.fetch(
+            baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/' + id + '/',
+            xhrService.getRequestParams('PUT', data)
+        );
+
+        return xhrService.processResponse(res);
 
     };
 
-    var exportConfiguration = function (id) {
+    const deleteByKey = function (id) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+        const prefix = baseUrlService.getMasterUserPrefix();
+        const apiVersion = baseUrlService.getApiVersion();
 
-        // TODO change fetch to universal fetch
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/' + id + '/export-configuration/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            }
-            // }).then(function (data) {
-            //     return data.blob();
-            // })
-        }).then(function (data) {
-            return data.json();
-        })
+        const res = xhrService.fetch(
+            baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/' + id + '/',
+            xhrService.getRequestParams('DELETE')
+        );
+
+        return xhrService.processResponse(res);
 
     };
 
-    var importConfiguration = function (data) {
+    const exportConfiguration = function (id) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+        const prefix = baseUrlService.getMasterUserPrefix();
+        const apiVersion = baseUrlService.getApiVersion();
 
-        // TODO change fetch to universal fetch
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/import-configuration/', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                'X-CSRFToken': cookieService.getCookie('csrftoken')
-            },
-            body: data
-        }).then(function (data) {
-            return data.json();
-        })
+        const res = xhrService.fetch(
+            baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/' + id + '/export-configuration/',
+            xhrService.getRequestParams('GET')
+        );
+
+        return xhrService.processResponse(res);
 
     };
 
-    var pushConfigurationToMarketplace = function (id, data) {
+    const importConfiguration = function (data) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+        const prefix = baseUrlService.getMasterUserPrefix();
+        const apiVersion = baseUrlService.getApiVersion();
 
-        // TODO change fetch to universal fetch
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/' + id + '/push-configuration-to-marketplace/', {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then(function (data) {
-            return data.json();
-        })
+        const res = xhrService.fetch(
+            baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/import-configuration/',
+            xhrService.getRequestParams('POST', data)
+        );
+
+        return xhrService.processResponse(res);
 
     };
 
-    var installConfiguration = function (data) {
+    const pushConfigurationToMarketplace = function (id, data) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+        const prefix = baseUrlService.getMasterUserPrefix();
+        const apiVersion = baseUrlService.getApiVersion();
 
-        // TODO change fetch to universal fetch
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/install-configuration-from-marketplace/', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                Accept: 'application/json',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then(function (data) {
-            return data.json();
-        })
+        const res = xhrService.fetch(
+            baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/' + id + '/push-configuration-to-marketplace/',
+            xhrService.getRequestParams('PUT', data)
+        );
+
+        return xhrService.processResponse(res);
 
     };
 
+    const installConfiguration = function (data) {
 
+        const prefix = baseUrlService.getMasterUserPrefix();
+        const apiVersion = baseUrlService.getApiVersion();
 
+        const res = xhrService.fetch(
+            baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/' + id + '/push-configuration-to-marketplace/',
+            xhrService.getRequestParams('POST', data)
+        );
 
-    module.exports = {
+        return xhrService.processResponse(res);
+
+    };
+
+    return {
         exportAll: exportAll,
         getConfigurationData: getConfigurationData,
         getMappingData: getMappingData,
@@ -271,6 +198,4 @@
         pushConfigurationToMarketplace: pushConfigurationToMarketplace,
         installConfiguration: installConfiguration,
     }
-
-
-}());
+}
