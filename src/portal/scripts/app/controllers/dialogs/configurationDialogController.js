@@ -77,13 +77,14 @@
 
                 configurationService.create(vm.item).then(function (data) {
 
-                    vm.item = data;
+                    // vm.item = data;
 
                     toastNotificationService.success("Configuration " + vm.item.user_code + ' was successfully created');
 
-                    vm.processing = false;
+                    /*vm.processing = false;
 
-                    vm.getItem(vm.item.id)
+                    vm.getItem(vm.item.id)*/
+                    $mdDialog.hide( { status: 'agree', data: {configurationId: data.id} } );
 
                 })
 

@@ -8,7 +8,7 @@
 
     module.exports = function manageConfigurationPageController($scope, $state, $stateParams, $mdDialog, configurationService) {
 
-        var vm = this;
+        const vm = this;
 
         vm.items = [];
         vm.readyStatus = {data: false};
@@ -95,7 +95,13 @@
 
                 if (res.status === 'agree') {
 
-                    vm.getData();
+                    vm.getData().then(function () {
+
+                        const createdConfig = vm.items.find(item => item.id === res.data.configurationId);
+
+                        vm.editConfiguration($event, createdConfig);
+
+                    });
 
                 }
 
