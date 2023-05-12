@@ -609,7 +609,7 @@
                                                                 <md-option
                                                                         data-ng-repeat="transactionType in vm.transactionTypes | filter: {name: searchTerm}"
                                                                         ng-value="transactionType.user_code"
-                                                                        ng-bind="transactionType.name">
+                                                                        >
                                                                     {{transactionType.name}}
                                                                     ({{transactionType.user_code}})
                                                                 </md-option>
@@ -742,8 +742,8 @@
 
                                                                 <md-option
                                                                         data-ng-repeat="transactionType in vm.transactionTypes | filter: {name: searchTerm}"
-                                                                        ng-value="transactionType.id"
-                                                                        ng-bind="transactionType.user_code">
+                                                                        ng-value="transactionType.user_code"
+                                                                        >
                                                                     {{transactionType.name}}
                                                                     ({{transactionType.user_code}})
                                                                 </md-option>
