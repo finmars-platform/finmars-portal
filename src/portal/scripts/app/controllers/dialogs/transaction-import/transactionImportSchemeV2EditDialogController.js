@@ -196,12 +196,20 @@ const importTransactionService = require("../../../services/import/importTransac
 
                     vm.scheme.rule_scenarios.forEach(function (scenario) {
 
-                        scenario.inputs = scenario.transaction_type_object.inputs;
+                        if (scenario.transaction_type_object) {
 
-                        scenario.transaction_type_object.inputs =
-                            scenario.transaction_type_object.inputs.filter(function (input) {
-                                return input.value_type !== 120;
-                            });
+                            scenario.inputs = scenario.transaction_type_object.inputs;
+
+                            scenario.transaction_type_object.inputs =
+                                scenario.transaction_type_object.inputs.filter(function (input) {
+                                    return input.value_type !== 120;
+                                });
+
+
+                        } else {
+                            scenario.error_message = "⚠️ Transaction Type is not found"
+                        }
+
 
                         if (scenario.is_default_rule_scenario) {
                             vm.defaultRuleScenario = scenario
@@ -236,8 +244,8 @@ const importTransactionService = require("../../../services/import/importTransac
                             }
                         }
 
-                    })
 
+                    })
 
                 }
 
