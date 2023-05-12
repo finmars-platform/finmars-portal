@@ -7,76 +7,92 @@
 
     var uiService = require('../../../services/uiService');
 
-    module.exports = function ($scope, $mdDialog, options) {
+    module.exports = function ($scope, $mdDialog, metaContentTypesService, commonDialogsService, data) {
 
-        var vm = this;
+        const vm = this;
 
-        vm.complexSaveAsLayoutDialog = false;
-        vm.userCodeIsTouched = false;
+        vm.readyStatus = false;
+        // vm.complexSaveAsLayoutDialog = false;
         vm.userCodeError = false;
-        vm.label = '';
+        vm.label = data.label || '';
+        vm.error = null;
 
         vm.layout = {
             name: '',
             user_code: '',
-            configuration_code: ''
+            configuration_code: '',
         }
 
-        var layoutsUserCodes = ["New Layout"];
+        let offerToOverride = data.offerToOverride || false; // if layout with same user_code exist, offer to overwrite it
 
-        if (options) {
+        let dashboardLayout = data.dashboard || false;
+        const entityType = data.entityType;
 
-            vm.label = options.label;
+        let occupiedUserCodesList = [];
+        vm.occupiedUserCodes = []; // passed into usercodeInputDirecitve
 
-            if (options.complexSaveAsLayoutDialog) {
+        /*vm.complexSaveAsLayoutDialog = true;
+        vm.entityType = data.complexSaveAsLayoutDialog.entityType;*/
 
-                vm.complexSaveAsLayoutDialog = true;
-                vm.entityType = options.complexSaveAsLayoutDialog.entityType;
+        if (data.layoutName) vm.layout.name = data.layoutName;
 
-                uiService.getListLayout(vm.entityType).then(function (data) {
-
-                    var layouts = data.results;
-
-                    layouts.map(function (layout) {
-                        layoutsUserCodes.push(layout.user_code);
-                    });
-
-                });
-
-            }
-
-            if (options.layoutName) {
-
-                vm.layout.name = options.layoutName;
-
-            } else {
-
-                vm.layout.name = '';
-
-            }
-
-            if (options.layoutUserCode) {
-                vm.layout.user_code = options.layoutUserCode;
-            }
-
-        }
+        if (data.layoutUserCode) vm.layout.user_code = data.layoutUserCode;
+        vm.layout.content_type = metaContentTypesService.findContentTypeByEntity(entityType);
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
 
-        vm.agree = function ($event) {
+        /** @returns {Boolean} - 'true' if user code occupied */
+        const checkForUserCodeUniqueness = function () {
 
-            var layoutNameOccupied = false;
+            if ( !occupiedUserCodesList.includes(vm.layout.user_code) ) {
+                return false;
+            }
 
-            if (vm.complexSaveAsLayoutDialog) {
+            commonDialogsService.warning({
+                warning: {
+                    title: 'Warning',
+                    description: 'Layout with such user code already exists. Do you want to overwrite?',
+                    actionsButtons: [
+                        {
+                            name: "Cancel",
+                            response: {}
+                        },
+                        {
+                            name: "Overwrite",
+                            response: {status: 'overwrite'}
+                        }
+                    ]
+                }
+            })
+            .then(function (res) {
+
+                if (res.status === 'overwrite') {
+                    $mdDialog.hide({
+                        status: 'overwrite',
+                        data: vm.layout
+                    });
+                }
+
+            });
+
+            return true;
+
+        }
+
+        vm.agree = function () {
+
+            /*let userCodeOccupied = false;
+
+            if (offerToOverride) {
 
                 var i;
                 for (i = 0; i < layoutsUserCodes.length; i++) {
 
                     if (layoutsUserCodes[i] === vm.layoutUserCode) {
 
-                        layoutNameOccupied = true;
+                        userCodeOccupied = true;
 
                         $mdDialog.show({
                             controller: 'WarningDialogController as vm',
@@ -115,11 +131,13 @@
                         break;
                     }
                 }
+            }*/
+
+            if ( offerToOverride && checkForUserCodeUniqueness() ) { // user code is occupied
+                return;
             }
 
-            if (!layoutNameOccupied) {
-                $mdDialog.hide({status: 'agree', data: vm.layout});
-            }
+            $mdDialog.hide({status: 'agree', data: vm.layout});
 
         };
 
@@ -129,19 +147,37 @@
         //     }
         // };
 
-        vm.validateUserCode = function () {
+        const init = function () {
 
-            var expression = /^\w+$/;
-            vm.userCodeIsTouched = true;
+            let getLayoutsProm;
 
-            if (expression.test(vm.layoutUserCode)) {
-                vm.userCodeError = false;
+            if (dashboardLayout) {
+                // TODO: check for dashboard user code uniqueness using getDashboardLayoutLight
+                vm.readyStatus = true;
 
             } else {
-                vm.userCodeError = true;
+                getLayoutsProm = uiService.getListLayoutLight(entityType);
+
+                getLayoutsProm.then(function (data) {
+
+                    data.results.map(layout => {
+                        occupiedUserCodesList.push(layout.user_code);
+                    })
+
+                    if (!offerToOverride) {
+                        // validate user code for uniqueness inside usercodeInputDirective
+                        vm.occupiedUserCodes = occupiedUserCodesList;
+                    }
+
+                    vm.readyStatus = true;
+                    $scope.$apply();
+
+                });
             }
 
         };
+
+        init();
 
     };
 

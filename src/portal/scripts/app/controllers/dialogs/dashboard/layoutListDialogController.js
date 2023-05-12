@@ -1,6 +1,8 @@
 /**
  * Created by sergey on 04.11.16.
  */
+import metaContentTypesService from "../../../services/metaContentTypesService";
+
 (function () {
 
     'use strict';
@@ -11,7 +13,7 @@
     // var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
     var inviteToSharedConfigurationFileService = require('../../../services/inviteToSharedConfigurationFileService');
 
-    module.exports = function ($scope, $mdDialog, backendConfigurationImportService, data) {
+    module.exports = function ($scope, $mdDialog, metaContentTypesService, backendConfigurationImportService, data) {
 
         var vm = this;
 
@@ -74,15 +76,16 @@
 
             $mdDialog.show({
                 controller: 'UiLayoutSaveAsDialogController as vm',
-                templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
+                templateUrl: 'views/dialogs/ui/ui-layout-save-as-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 multiple: true,
                 clickOutsideToClose: false,
                 locals: {
-                    options: {
+                    data: {
                         layoutName: layoutData.name,
-                        layoutUserCode: layoutData.user_code
+                        layoutUserCode: layoutData.user_code,
+                        dashboard: true,
                     }
                 }
 

@@ -131,7 +131,7 @@ const reportHelper = new ReportHelper();
         return layoutIsNotChanged;
     };
 
-    const saveLayoutsChanges = function (spChangedLayout, layoutHasChanges, activeLayoutConfig, layoutCurrentConfig, layoutNewName, isReport) {
+    const saveLayoutsChanges = function (spChangedLayout, layoutHasChanges, activeLayoutConfig, layoutCurrentConfig, layoutNewName, entityType, isReport) {
 
         let layoutsSavePromises = [];
 
@@ -145,7 +145,7 @@ const reportHelper = new ReportHelper();
                         spLayoutSaveRes(true);
                     });
                 } else {
-                    uiService.createListLayout(vm.entityType, spChangedLayout).then(function () {
+                    uiService.createListLayout(entityType, spChangedLayout).then(function () {
                         spLayoutSaveRes(true);
                     });
                 }
@@ -178,7 +178,7 @@ const reportHelper = new ReportHelper();
                         layoutCurrentConfig.name = layoutNewName;
                     }
 
-                    uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                    uiService.createListLayout(entityType, layoutCurrentConfig).then(function () {
                         saveLayoutRes(true);
                     });
 
@@ -287,14 +287,18 @@ const reportHelper = new ReportHelper();
 
                         const layoutNewName = (res.data && res.data.layoutName) ? res.data.layoutName : '';
 
-                        saveLayoutsChanges(spChanged, layoutChanged, activeLayoutConfig, layoutCurrentConfig, layoutNewName, isReport)
+                        saveLayoutsChanges(spChanged, layoutChanged, activeLayoutConfig, layoutCurrentConfig, layoutNewName, entityType, isReport)
                             .then(function () {
+
                                 resolve(true);
+                                $mdDialog.hide();
 
                             }).catch(error => reject(error));
 
                     } else if (res.status === 'do_not_save_layout') {
+
                         resolve(true);
+                        $mdDialog.hide();
 
                     } else {
                         reject(false);

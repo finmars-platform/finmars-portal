@@ -517,6 +517,7 @@
                         multiple: true,
                         locals: {
                             data: {
+                                title: "Add groups",
                                 attributes: allAttrs,
                                 layoutNames: evHelperService.getAttributesLayoutNames(columns),
                                 selectedAttributes: selectedAttrs,
