@@ -176,7 +176,7 @@ export default function (cookieService, xhrService) {
         const apiVersion = baseUrlService.getApiVersion();
 
         const res = xhrService.fetch(
-            baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/' + id + '/push-configuration-to-marketplace/',
+            baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/install-configuration-from-marketplace/',
             xhrService.getRequestParams('POST', data)
         );
 
