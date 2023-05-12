@@ -219,7 +219,7 @@ const importTransactionService = require("../../../services/import/importTransac
 
                                     scenario.fields.forEach(function (field) {
 
-                                        if (field.transaction_type_input === input_item.id) {
+                                        if (field.transaction_type_input === input_item.name) {
 
                                             input_item.expression = field.value_expr
 
@@ -397,7 +397,7 @@ const importTransactionService = require("../../../services/import/importTransac
 
                     scenario.fields.forEach(function (field) {
 
-                        if (field.transaction_type_input === input_item.id) {
+                        if (field.transaction_type_input === input_item.name) {
                             field.value_expr = input_item.expression
                             found = true
                         }
@@ -405,7 +405,7 @@ const importTransactionService = require("../../../services/import/importTransac
                     })
                     if (!found) {
                         scenario.fields.push({
-                            transaction_type_input: input_item.id,
+                            transaction_type_input: input_item.name,
                             value_expr: input_item.expression
                         })
                     }
