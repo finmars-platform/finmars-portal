@@ -5,16 +5,8 @@
 
     'use strict';
 
-    var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
-    var metaService = require('../../services/metaService');
 
-    var modelService = require('../../services/modelService');
-
-
-    var configurationService = require('../../services/configurationService');
-    var marketplaceService = require('../../services/marketplaceService');
-
-    module.exports = function configurationDialog($scope, $mdDialog, globalDataService, toastNotificationService, data) {
+    module.exports = function configurationDialog($scope, $mdDialog, globalDataService, toastNotificationService, configurationService, data) {
 
         var vm = this;
 

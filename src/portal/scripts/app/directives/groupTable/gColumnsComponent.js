@@ -2308,6 +2308,7 @@
                         multiple: true,
                         locals: {
                             data: {
+                                title: "Add columns",
                                 attributes: allAttrs,
                                 layoutNames: evHelperService.getAttributesLayoutNames(scope.columns),
                                 selectedAttributes: selectedAttrs,

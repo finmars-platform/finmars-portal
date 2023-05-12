@@ -1,6 +1,6 @@
 import evEvents from "../services/entityViewerEvents";
 
-export default function (toastNotificationService, uiService) {
+export default function (toastNotificationService, metaContentTypesService, uiService) {
 
 	let getLinkingToFilters = function (layout) {
 
@@ -202,13 +202,14 @@ export default function (toastNotificationService, uiService) {
 			const isRootEntityViewer = evDataService.isRootEntityViewer();
 
 			$mdDialog.show({
-				controller: 'NewLayoutDialogController as vm',
-				templateUrl: 'views/dialogs/new-layout-dialog-view.html',
+				controller: 'UiLayoutSaveAsDialogController as vm',
+				templateUrl: 'views/dialogs/ui/ui-layout-save-as-dialog-view.html',
 				parent: angular.element(document.body),
 				targetEvent: $event,
 				preserveScope: false,
 				locals: {
 					data: {
+						label: "New layout",
 						entityType: entityType,
 						name: listLayout.name,
 					}
@@ -216,10 +217,10 @@ export default function (toastNotificationService, uiService) {
 			})
 				.then(res => {
 
+					/* TODO: forbid creation of layout with the same user code as for autosave
 					if (res.data && res.data.user_code && res.data.user_code.startsWith('system_autosave_')) {
 						throw "This user code reserved for system layout. Please use another one";
-					}
-
+					}*/
 					if (res.status === 'agree') {
 
 						const saveAsLayout = function () {
@@ -271,7 +272,9 @@ export default function (toastNotificationService, uiService) {
 
 								resolve({status: res.status});
 
-							}).catch(error => reject({status: res.status, error: error}));
+							}).catch(error => {
+								reject({status: res.status, error: error})
+							});
 
 						});
 

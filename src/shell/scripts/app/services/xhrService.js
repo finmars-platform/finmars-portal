@@ -8,7 +8,44 @@
 export default function (errorService, cookieService) {
 
     // var axService = require('../../../../core/services/axService')
+    const getRequestParams = function (method, bodyData) {
 
+        if (!['GET', 'POST', 'PATCH', 'PUT', 'DELETE'].includes(method)) {
+            throw new Error("Invalid request method");
+        }
+
+        let reqestParamsObj = {
+            method: method,
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        };
+
+        reqestParamsObj.headers['Authorization'] = 'Token ' + cookieService.getCookie('access_token');
+
+        if (['POST', 'PATCH', 'PUT'].includes(method)) {
+
+            reqestParamsObj.headers['X-CSRFToken'] = cookieService.getCookie('csrftoken');
+            reqestParamsObj.body = JSON.stringify(bodyData);
+
+        } else if (method === 'DELETE') {
+            reqestParamsObj.headers['X-CSRFToken'] = cookieService.getCookie('csrftoken');
+        }
+
+        return reqestParamsObj;
+
+    };
+
+    const processResponse = async function (response) {
+
+        try {
+            return await response;
+
+        } catch (error) { throw error; }
+
+    }
 
     const axfetch = function (url, params, options) {
 
@@ -236,7 +273,9 @@ export default function (errorService, cookieService) {
     };
 
     return {
-        fetch: fetch
+        fetch: fetch,
+        getRequestParams: getRequestParams,
+        processResponse: processResponse,
     }
 
 };

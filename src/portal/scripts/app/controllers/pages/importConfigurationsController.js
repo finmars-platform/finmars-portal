@@ -7,11 +7,10 @@ const processesService = require("../../services/processesService");
     'use strict';
 
     var metaService = require('../../services/metaService');
-    var configurationService = require('../../services/configurationService');
     var mappingsImportService = require('../../services/mappings-import/mappingsImportService');
 
 
-    module.exports = function ($scope, $mdDialog, usersService, usersGroupService, metaContentTypesService, backendConfigurationImportService, systemMessageService, configurationImportService) {
+    module.exports = function ($scope, $mdDialog, usersService, usersGroupService, metaContentTypesService, backendConfigurationImportService, systemMessageService, configurationService, configurationImportService) {
 
         var vm = this;
 

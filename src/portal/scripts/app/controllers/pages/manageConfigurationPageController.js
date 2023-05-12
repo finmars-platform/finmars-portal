@@ -6,16 +6,7 @@
 
     'use strict';
 
-    var configurationService = require('../../services/configurationService');
-    var marketplaceService = require('../../services/marketplaceService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
-
-    var downloadFileHelper = require('../../helpers/downloadFileHelper');
-
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
-
-    module.exports = function manageConfigurationPageController($scope, $state, $stateParams, $mdDialog, usersService) {
+    module.exports = function manageConfigurationPageController($scope, $state, $stateParams, $mdDialog, configurationService) {
 
         var vm = this;
 

@@ -6,9 +6,10 @@
 
             <md-input-container>
                 <label>Configuration</label>
-                <md-select data-ng-model="configuration_code">
-                    <md-option value="{{item}}" data-ng-repeat="item in configuration_codes"
-                               data-ng-click="updateUserCode(usercode, item)">
+                <md-select data-ng-model="configuration_code.value">
+                    <md-option data-ng-repeat="item in configuration_codes"
+                               value="{{item}}"
+                               data-ng-click="updateUserCode(usercode.value, item)">
                         {{item}}
                     </md-option>
                 </md-select>
@@ -16,8 +17,10 @@
 
             <md-input-container style="margin-top: 2px; width: 100%;">
                 <label>User code</label>
-                <input type="text" data-ng-model="usercode"
-                       data-ng-keyup="updateUserCode(usercode, configuration_code)">
+                <input type="text"
+                       data-ng-model="usercode.value"
+                       data-ng-change="validateUserCode(usercode.value)"
+                       data-ng-keyup="updateUserCode(usercode.value, configuration_code.value)">
             </md-input-container>
 
             <ng-md-icon class="tooltip-inline-block"
@@ -34,8 +37,12 @@
             </ng-md-icon>
         </div>
 
-        <div>
-            <p class="usercode-input-result"><i>Result: {{item.user_code}}</i></p>
+        <div ng-hide="errorDescription">
+            <p class="small-text"><i>Result: {{item.user_code}}</i></p>
+        </div>
+
+        <div ng-hide="!errorDescription">
+            <p class="small-text error-color" data-ng-bind="errorDescription"></p>
         </div>
 
     </div>
