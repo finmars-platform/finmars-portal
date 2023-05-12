@@ -716,14 +716,24 @@ const importTransactionService = require("../../../services/import/importTransac
             item.inputs = []
 
             item.processing = true;
-            transactionTypeService.getByKey(item.transaction_type).then(function (data) {
-                item.transaction_type_object = data
-                item.inputs = item.transaction_type_object.inputs.filter(function (input) {
-                    return input.value_type !== 120;
-                });
+            transactionTypeService.getList({
+                filters: {
+                    user_code: item.transaction_type
+                }
+            }).then(function (data) {
 
-                item.processing = false;
-                $scope.$apply();
+                if (data.results) {
+
+                    item.transaction_type_object = data.results[0];
+                    item.inputs = item.transaction_type_object.inputs.filter(function (input) {
+                        return input.value_type !== 120;
+                    });
+
+                    item.processing = false;
+                    $scope.$apply();
+                } else{
+                    toastNotificationService.error("Transaction type not found");
+                }
             });
 
 
