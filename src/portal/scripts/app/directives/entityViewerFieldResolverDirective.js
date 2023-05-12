@@ -356,6 +356,63 @@
                     return false
                 };
 
+                /** @returns {Promise<{type: String, key: String, data: Array}>} - mockup for instrumentSelect, unifiedDataSelect  */
+                function getFields() {
+
+                    return new Promise(function (resolve) {
+
+                        resolve({
+                            type: 'id',
+                            key: scope.item.content_type,
+                            data: [],
+                        })
+
+                    });
+
+                }
+
+                function getDataForComplexTransaction(resolve, reject, options) {
+
+                    if (scope.fieldsDataStore['fieldKeys']) {
+                        delete scope.fieldsDataStore['fieldKeys']['currencies.currency']
+                        delete scope.fieldsDataStore['fieldKeys']['instruments.instrument']
+                    }
+
+                    var getFieldsP;
+
+                    if ( ['instruments.instrument', 'counterparties.counterparty', 'currencies.currency'].indexOf(scope.item.content_type) > -1 ) {
+                        getFieldsP = getFields();
+
+                    } else {
+                        getFieldsP = fieldResolverService.getFieldsByContentType(scope.item.content_type, options, scope.fieldsDataStore);
+                    }
+
+                    getFieldsP.then(function (res) {
+
+                        console.log('res', res);
+
+                        scope.type = res.type;
+                        scope.fields = res.data;
+                        // scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
+
+                        if (scope.fieldKey === 'price_download_scheme') {
+                            scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
+
+                        } else {
+                            scope.selectorOptions = getSelectorOptions(res.data);
+                        }
+
+                        scope.readyStatus.content = true;
+                        fieldsDataIsLoaded = true;
+
+
+                        resolve();
+                        // scope.$apply();
+
+                    })
+
+                }
+
                 scope.getData = function () {
 
                     return new Promise(function (resolve, reject) {
@@ -376,36 +433,7 @@
 
                                 console.log('scope.fieldsDataStore', scope.fieldsDataStore);
 
-                                if (scope.fieldsDataStore['fieldKeys']) {
-                                    delete scope.fieldsDataStore['fieldKeys']['currencies.currency']
-                                    delete scope.fieldsDataStore['fieldKeys']['instruments.instrument']
-                                }
-
-
-                                fieldResolverService.getFieldsByContentType(scope.item.content_type, options, scope.fieldsDataStore).then(function (res) {
-
-                                    console.log('res', res);
-
-                                    scope.type = res.type;
-                                    scope.fields = res.data;
-                                    // scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
-
-                                    if (scope.fieldKey === 'price_download_scheme') {
-                                        scope.schemeSortedFields = scope.getListWithSchemeName(metaHelper.textWithDashSort(res.data, 'user_code'));
-
-                                    } else {
-                                        scope.selectorOptions = getSelectorOptions(res.data);
-                                    }
-
-                                    scope.readyStatus.content = true;
-                                    fieldsDataIsLoaded = true;
-
-
-                                    resolve();
-                                    // scope.$apply();
-
-
-                                })
+                                getDataForComplexTransaction(resolve, reject, options);
 
                             }
                             else {
