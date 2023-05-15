@@ -410,7 +410,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         });
 
         window.keycloak.onReady = () => {
-            if (window.keycloak.isTokenExpired()) refreshTokens()
+            if (window.keycloak.isTokenExpired(10)) refreshTokens()
         }
 
 
@@ -438,6 +438,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             idToken: cookieService.getCookie('id_token'),
             checkLoginIframe: true,
             checkLoginIframeInterval: 60, // Seconds
+            timeSkew: 0, // fix bag with update token
             // checkLoginIframe: false
         });
 
