@@ -2,7 +2,6 @@
 
 const metaService = require('../../../services/metaService');
 const portfolioRegisterService = require('../../../services/portfolioRegisterService');
-const instrumentService = require('../../../services/instrumentService');
 
 const GridTableDataService = require('../../../services/gridTableDataService');
 const EventService = require('../../../services/eventService');

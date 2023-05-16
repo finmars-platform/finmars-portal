@@ -11,10 +11,9 @@
     const metaHelper = require('../../../helpers/meta.helper');
     const metaService = require('../../../services/metaService');
 
-    const instrumentService = require('../../../services/instrumentService');
     const instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
 
-    module.exports = function instrumentTypeFactorsTabController ($scope, $mdDialog, multitypeFieldService, gridTableHelperService) {
+    module.exports = function instrumentTypeFactorsTabController ($scope, $mdDialog, instrumentService, multitypeFieldService, gridTableHelperService) {
         var vm = this;
         vm.entity = $scope.$parent.vm.entity;
 

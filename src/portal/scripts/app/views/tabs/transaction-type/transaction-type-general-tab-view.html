@@ -9,19 +9,25 @@
 
         </div>
 
-        <div layout="row">
+        <div layout="row" style="width: 600px;">
 
-            <usercode-input ng-if="!vm.entity.id" data-item="vm.entity"></usercode-input>
+            <usercode-input data-item="vm.entity" style="width: 100%;"></usercode-input>
 
-            <md-input-container style="width: 300px" data-ng-if="vm.entity.id">
-                <label for="">User code</label>
-                <input type="text" data-ng-model="vm.entity.user_code">
-            </md-input-container>
+            <!--            <md-input-container style="width: 300px" data-ng-if="vm.entity.id">-->
+            <!--                <label for="">User code</label>-->
+            <!--                <input type="text" data-ng-model="vm.entity.user_code">-->
+            <!--            </md-input-container>-->
+
+
+        </div>
+
+        <div layout="row" class="m-b-16">
 
             <crud-select label="'Group'" item="vm.entity.group" entity-type="'transaction-type-group'"
                          options="vm.transactionTypeGroups"></crud-select>
 
         </div>
+
         <div layout="row">
             <md-input-container style="width: 300px">
                 <label for="">Name</label>

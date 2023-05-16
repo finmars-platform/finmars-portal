@@ -11,23 +11,19 @@
     var gridHelperService = require('../../services/gridHelperService');
     var entityViewerHelperService = require('../../services/entityViewerHelperService');
 
-    var attributeTypeService = require('../../services/attributeTypeService');
-	var metaContentTypesService = require('../../services/metaContentTypesService');
 	var tooltipsService = require('../../services/tooltipsService');
 	var colorPalettesService = require('../../services/colorPalettesService');
 
 	var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
 	var EntityViewerEditorEventService = require('../../services/eventService');
 
-    var uiService = require('../../services/uiService');
-
 	var EntityViewerEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/entityViewerEditorSharedLogicHelper');
 
-	module.exports = function ($scope, $mdDialog, inputFormTabs, data) {
+	module.exports = function ($scope, $mdDialog, metaContentTypesService, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService, inputFormTabs, data) {
 
         var vm = this;
 
-		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, null);
+		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, null, instrumentService, entityResolverService, fieldResolverService, uiService, attributeTypeService);
 
         vm.entityType = data.entityType;
 

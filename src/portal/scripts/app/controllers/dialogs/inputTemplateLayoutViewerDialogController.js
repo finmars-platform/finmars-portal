@@ -5,10 +5,7 @@
 
     'use strict';
 
-    var metaContentTypesService = require('../../services/metaContentTypesService');
-
-
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, metaContentTypesService, data) {
 
         console.log('data', data);
 

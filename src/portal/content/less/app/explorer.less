@@ -1,54 +1,72 @@
 .explorer-page {
 
-  min-height: 100%;
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-  overflow-y: hidden;
+  //min-height: 100%;
+  //display: flex;
+  //flex-direction: row;
+  //height: 100%;
+  //overflow-y: hidden;
 
+
+  overflow: auto;
   padding: 0;
+  padding-bottom: 40px;
 
-  &.show-explorer-workflow {
+  .explorer-table {
+    tr {
+      border: 1px solid #000;
 
-    width: 150vw;
-
-    .explorer-explorer-section {
-      width: 50vw;
+      &:hover {
+        background: #ddd;
+      }
     }
 
-  }
-
-  &.show-explorer-editor {
-
-    width: 100vw;
-
-    .explorer-explorer-section {
-      width: 50vw;
+    th button.md-button {
+      min-height: 20px;
+      height: 20px;
+      margin: 4px;
+      padding: 0;
+      line-height: 20px;
     }
-
-  }
-
-  &.show-explorer-editor-workflow {
-
-    width: 200vw;
-
-    .explorer-explorer-section {
-      width: 50vw;
+    th {
+      md-checkbox {
+        margin: 0;
+        width: 10px;
+      }
     }
-
+    td {
+      md-checkbox {
+        margin: 0 4px;
+        width: 10px;
+      }
+    }
   }
+
+  .md-raised.md-primary.explorer-page-refresh-button {
+    height: 24px;
+    width: 24px;
+    min-height: 24px;
+    line-height: 24px;
+    text-align: center;
+    padding: 0;
+    font-size: 10px;
+    margin-top: 5px;
+    background: #F05A22;
+  }
+
 
   .explorer-explorer-section {
-    width: 100vw;
+    width: 100%;
     height: 100%;
     padding: 0 16px;
-    overflow: hidden;
+    box-sizing: border-box;
+    //overflow: hidden;
   }
 
   .explorer-file-edit-section {
-    width: 50vw;
+    width: 100%;
     height: 100%;
     position: relative;
+    box-sizing: border-box;
   }
 
   .explorer-workflow-section {
@@ -57,7 +75,7 @@
 
   }
 
-  
+
   .explorer-breadcrumbs {
     overflow: hidden;
   }
@@ -68,32 +86,44 @@
     font-size: 20px;
     cursor: pointer;
     padding: 8px;
+
     &:hover {
       background: #ddd;
       opacity: 7;
+      text-decoration: underline;
     }
 
   }
 
   .explorer-item {
-    float: left;
-    width: 64px;
-    height: 64px;
-    margin: 16px;
+    //width: 64px;
+    //height: 64px;
+
     box-sizing: border-box;
     text-align: center;
 
     word-break: break-word;
 
+    td {
+      font-size: 16px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      padding: 1px;
+    }
 
 
     .explorer-item-name {
 
       display: inline-block;
-      font-size: 12px;
+      font-size: 16px;
       text-overflow: ellipsis;
       overflow: hidden;
       width: 100%;
+      cursor: pointer;
+
+      &:hover {
+        opacity: .7;
+      }
     }
 
     &.selected {
@@ -106,9 +136,12 @@
     }
 
     .material-icons {
-      font-size: 48px;
+      font-size: 14px;
       cursor: pointer;
       user-select: none;
+      margin-right: 4px;
+      padding-top: 3px;
+      margin-left: 2px;
     }
 
   }
@@ -137,7 +170,8 @@
 
   .ace-editor {
     width: 100%;
-    height: 100%;
+    //height: 100%;
+    min-height: 60vh;
   }
 
   .explorer-file-edit-section-toolbar {

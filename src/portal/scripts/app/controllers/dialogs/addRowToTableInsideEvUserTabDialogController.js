@@ -4,9 +4,6 @@
 (function () {
     'use strict';
 
-    const metaHelper = require('../../helpers/meta.helper');
-    const instrumentService = require('../../services/instrumentService');
-
     module.exports = function addRowToTableInsideEvUserTabDialogController ($scope, $mdDialog, gridTableHelperService, multitypeFieldService, data) {
 
         var vm = this;

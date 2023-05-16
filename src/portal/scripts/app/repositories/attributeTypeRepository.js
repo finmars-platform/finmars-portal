@@ -2,18 +2,12 @@
  * Created by szhitenev on 15.06.2016.
  */
 
-(function () {
+import baseUrlService from "../../../../shell/scripts/app/services/baseUrlService";
+import configureRepositoryUrlService from "../../../../shell/scripts/app/services/configureRepositoryUrlService";
 
-    'use strict';
+export default function (cookieService, xhrService, metaRestrictionsService) {
 
-    var cookieService = require('../../../../core/services/cookieService');
-    var xhrService = require('../../../../core/services/xhrService');
-    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
-
-    var metaRestrictionsService = require('../services/metaRestrictionsService');
-    var baseUrlService = require('../services/baseUrlService');
-
-    var baseUrl = baseUrlService.resolve();
+    const baseUrl = baseUrlService.resolve();
 
     function endPointResolver(entity) {
         switch (entity) {
@@ -63,90 +57,90 @@
             })
         }
 
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + endPointResolver(entity), options),
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + endPointResolver(entity), options),
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
     };
 
     var getByKey = function (entity, id) {
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + endPointResolver(entity) + id + '/',
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + endPointResolver(entity) + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
     };
 
     var create = function (entity, attributeType) {
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + endPointResolver(entity),
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + endPointResolver(entity),
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(attributeType)
+                body: JSON.stringify(attributeType)
             })
     };
 
     var update = function (entity, id, attributeType) {
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + endPointResolver(entity) + id + '/',
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + endPointResolver(entity) + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(attributeType)
+                body: JSON.stringify(attributeType)
             })
     };
 
     var deleteByKey = function (entity, id) {
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + endPointResolver(entity) + id + '/',
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + endPointResolver(entity) + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
@@ -163,18 +157,18 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + end
 
     var recalculateAttributes = function(entity, id){
 
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + endPointResolver(entity) + id + '/recalculate/',
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + endPointResolver(entity) + id + '/recalculate/',
             {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
@@ -183,25 +177,25 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + end
 
     var getRecalculateAttributeCount = function(entity, id){
 
-        
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + endPointResolver(entity) + id + '/objects-to-recalculate/',
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + endPointResolver(entity) + id + '/objects-to-recalculate/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
 
     };
 
-    module.exports = {
+    return {
         getList: getList,
         getByKey: getByKey,
         create: create,
@@ -211,4 +205,4 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + end
         recalculateAttributes: recalculateAttributes,
         getRecalculateAttributeCount: getRecalculateAttributeCount
     }
-}());
+}

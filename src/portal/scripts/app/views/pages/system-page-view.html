@@ -41,7 +41,6 @@
                 <h2>Logs</h2>
 
 
-
                 <div data-ng-if="vm.readyStatus.logs">
 
                     <div data-ng-repeat="item in vm.logFiles">
@@ -99,8 +98,8 @@
             <div>
 
                 <p>
-                    <div><b>Full</b> - Finmars will track changes of all important objects.</div>
-                    <div><b>Disabled</b> - Journal is disabled, changes will not be tracked.</div>
+                <div><b>Full</b> - Finmars will track changes of all important objects.</div>
+                <div><b>Disabled</b> - Journal is disabled, changes will not be tracked.</div>
                 </p>
 
                 <md-input-container style="margin-top: 0;">
@@ -113,7 +112,27 @@
             </div>
 
             <div>
-                <md-button class="md-raised md-primary {{vm.masterUserProcessing ? 'disabled-btn' : ''}}" data-ng-click="vm.saveMasterUser($event)">Save Space Settings</md-button>
+
+                <p>
+                    <div><b>Week</b> - Finmars will delete all journal records older then 1 week.</div>
+                    <div><b>Month</b> - Finmars will delete all journal records older then 30 days.</div>
+                    <div><b>Quarter</b> - Finmars will delete all journal records older then 90 days.</div>
+                </p>
+
+                <md-input-container style="margin-top: 0;">
+                    <label>Journal Policy</label>
+                    <md-select aria-label="" data-ng-model="vm.master_user.journal_storage_policy">
+                        <md-option value="week">Week</md-option>
+                        <md-option value="month">Month</md-option>
+                        <md-option value="quarter">Quarter</md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+
+            <div>
+                <md-button class="md-raised md-primary {{vm.masterUserProcessing ? 'disabled-btn' : ''}}"
+                           data-ng-click="vm.saveMasterUser($event)">Save Space Settings
+                </md-button>
             </div>
 
         </div>

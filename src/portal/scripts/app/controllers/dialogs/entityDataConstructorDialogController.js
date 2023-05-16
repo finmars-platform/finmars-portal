@@ -5,13 +5,8 @@
 
     'use strict';
 
-    var attributeTypeService = require('../../services/attributeTypeService');
-
-    var uiService = require('../../services/uiService');
-
     var entityResolverService = require('../../services/entityResolverService');
     var metaService = require('../../services/metaService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
 
     var gridHelperService = require('../../services/gridHelperService');
     var ScrollHelper = require('../../helpers/scrollHelper');
@@ -19,13 +14,12 @@
 
     var transactionTypeService = require('../../services/transactionTypeService');
     var colorPalettesService = require('../../services/colorPalettesService');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     var metaHelper = require('../../helpers/meta.helper');
 
     var scrollHelper = new ScrollHelper();
 
-    module.exports = function ($scope, $stateParams, $state, $mdDialog, entityDataConstructorService, data) {
+    module.exports = function ($scope, $stateParams, $state, $mdDialog, toastNotificationService, metaContentTypesService, attributeTypeService, uiService, entityDataConstructorService, data) {
 
         var vm = this;
 

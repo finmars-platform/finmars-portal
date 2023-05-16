@@ -5,13 +5,11 @@
 
     'use strict';
 
-    var metaContentTypesService = require('../../services/metaContentTypesService');
-    var uiRepository = require('../../repositories/uiRepository');
     var metaService = require('../../services/metaService');
-    var configurationService = require('../../services/configurationService');
+    // var configurationService = require('../../services/configurationService');
     // var usersService = require('../../services/usersService');
 
-    module.exports = function ($scope, $mdDialog, usersService) {
+    module.exports = function ($scope, $mdDialog, usersService, metaContentTypesService, configurationService, uiService) {
 
         var vm = this;
 
@@ -354,7 +352,7 @@
 
             vm.readyStatus.layouts = false;
 
-            uiRepository.getConfigurationExportLayoutList().then(function (data) {
+            uiService.getConfigurationExportLayoutList().then(function (data) {
 
                 vm.layouts = data.results;
 

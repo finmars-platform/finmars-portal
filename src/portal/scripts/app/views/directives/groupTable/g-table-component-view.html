@@ -207,11 +207,11 @@
     <div class="g-additions" data-ng-if="isRootEntityViewer && additions.isOpen">
 
             <div data-ng-if="domElemsAreReady">
-                <div g-height-aligner
-                     ev-data-service="evDataService"
-                     ev-event-service="evEventService"
-                     root-wrap-elem="rootWrapElem"
-                     content-wrap-elem="contentWrapElem"></div>
+                <div data-g-height-aligner
+                     data-ev-data-service="evDataService"
+                     data-ev-event-service="evEventService"
+                     data-root-wrap-elem="rootWrapElem"
+                     data-content-wrap-elem="contentWrapElem"></div>
             </div>
 
             <div class="g-height-slider"></div>
@@ -234,7 +234,7 @@
 
             </div>
 
-            <div class="g-additions-workarea"
+            <!--<div class="g-additions-workarea"
                  data-ng-if="additions.type === 'balance-report'">
                 <group-split-panel-report-binder ev-data-service="evDataService"
                                                  ev-event-service="evEventService"
@@ -246,10 +246,14 @@
                 <group-split-panel-report-binder ev-data-service="evDataService"
                                                  ev-event-service="evEventService"
                                                  sp-exchange-service="spExchangeService"></group-split-panel-report-binder>
-            </div>
+            </div>-->
 
             <div class="g-additions-workarea"
-                 data-ng-if="additions.type === 'transaction-report'">
+                 data-ng-if="
+                    additions.type === 'balance-report' ||
+                    additions.type === 'pl-report' ||
+                    additions.type === 'transaction-report'"
+            >
                 <group-split-panel-report-binder ev-data-service="evDataService"
                                                  ev-event-service="evEventService"
                                                  sp-exchange-service="spExchangeService"></group-split-panel-report-binder>

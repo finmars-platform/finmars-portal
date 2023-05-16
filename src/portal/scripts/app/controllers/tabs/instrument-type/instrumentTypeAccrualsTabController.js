@@ -12,19 +12,16 @@
 	const evEditorEvents = require('../../../services/ev-editor/entityViewerEditorEvents');
 
     const metaHelper = require('../../../helpers/meta.helper');
-	const GridTableHelperService = require('../../../helpers/gridTableHelperService');
 
-	const fieldResolverService = require('../../../services/fieldResolverService');
 	const instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
 	const accrualCalculationModelService = require('../../../services/accrualCalculationModelService');
 
-	const instrumentService = require('../../../services/instrumentService');
 	const instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
 
-    module.exports = function instrumentTypeAccrualsTabController ($scope, $mdDialog, multitypeFieldService) {
+    module.exports = function instrumentTypeAccrualsTabController ($scope, $mdDialog, instrumentService, fieldResolverService, multitypeFieldService, gridTableHelperService) {
 
         var vm = this;
-		const gridTableHelperService = new GridTableHelperService();
+		// const gridTableHelperService = new GridTableHelperService();
 
         vm.entity = $scope.$parent.vm.entity;
 
@@ -51,7 +48,7 @@
 			'</div>' +
 			'<div class="ev-editor-tabs-popup-content popup-menu">' +
 				'<md-button class="entity-tabs-menu-option popup-menu-option" ' +
-						   'ng-click="popupData.makeCopy(popupData.item, _$popup)">MAKE COPY</md-button>' +
+						   'ng-click="popupData.makeCopy(popupData.item, _$popup)">Make a copy</md-button>' +
 			'</div>';
 		//</editor-fold>
 

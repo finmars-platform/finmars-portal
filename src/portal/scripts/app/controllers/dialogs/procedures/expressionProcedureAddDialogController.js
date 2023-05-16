@@ -94,6 +94,10 @@
 
         vm.init = function () {
 
+            if (data.item) {
+                vm.item = data.item;
+            }
+
             vm.initExpressionEditor();
 
             vm.readyStatus.procedure = true;

@@ -6,6 +6,7 @@
     'use strict';
 
     var uiService = require('../../services/uiService');
+    var newMemberSetupConfigurationService = require('../../services/newMemberSetupConfigurationService');
     // var usersService = require('../services/usersService');
     // var usersGroupService = require('../services/usersGroupService');
 
@@ -22,12 +23,27 @@
 
         vm.setActiveConfig = function ($event, id) {
 
-            var item = vm.items.find(function (item) {
-                return item.id === id
-            });
-
-            vm.applyItem($event, item)
+            // var item = vm.items.find(function (item) {
+            //     return item.id === id
+            // });
+            //
+            // vm.applyItem($event, item)
         };
+
+        vm.installConfiguration = function ($event, item) {
+            vm.processing = true;
+
+            newMemberSetupConfigurationService.install(item.id, item).then(function (data) {
+
+                toastNotificationService.info("Configuration is going to be installed.")
+
+                vm.processing = false;
+                $scope.$apply();
+
+
+            })
+
+        }
 
         /* vm.getMember = function () {
 
@@ -65,7 +81,7 @@
 
             vm.readyStatus.content = false;
 
-            uiService.getConfigurationList().then(function (data) {
+            newMemberSetupConfigurationService.getList().then(function (data) {
 
                 vm.items = data.results;
 
@@ -83,24 +99,34 @@
 
             console.log('vm.importConfig', vm.importConfig);
 
-            var blob = new Blob([JSON.stringify(vm.importConfig.data)], {type: 'application/json'})
-            var fileOfBlob = new File([blob], 'configuration.fcfg');
+            vm.processing = true;
 
-            $mdDialog.show({
-                controller: 'ConfigurationImportDialogController as vm',
-                templateUrl: 'views/dialogs/configuration-import/configuration-import-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    data: {
-                        file: vm.importConfig.data,
-                        rawFile: fileOfBlob
-                    }
-                }
+            newMemberSetupConfigurationService.install().then(function (data) {
+
+                vm.processing = false;
+                $scope.$apply();
+
             })
+
+
+            // var blob = new Blob([JSON.stringify(vm.importConfig.data)], {type: 'application/json'})
+            // var fileOfBlob = new File([blob], 'configuration.fcfg');
+            //
+            // $mdDialog.show({
+            //     controller: 'ConfigurationImportDialogController as vm',
+            //     templateUrl: 'views/dialogs/configuration-import/configuration-import-dialog-view.html',
+            //     parent: angular.element(document.body),
+            //     targetEvent: $event,
+            //     preserveScope: true,
+            //     autoWrap: true,
+            //     skipHide: true,
+            //     locals: {
+            //         data: {
+            //             file: vm.importConfig.data,
+            //             rawFile: fileOfBlob
+            //         }
+            //     }
+            // })
 
             // vm.processing = true;
             //
@@ -135,50 +161,50 @@
 
         };
 
-        vm.applyItem = function ($event, item) {
+        // vm.applyItem = function ($event, item) {
+        //
+        //     vm.importConfig = {
+        //         data: item.data,
+        //         mode: 'overwrite'
+        //     };
+        //
+        //     new Promise(function (resolve, reject) {
+        //
+        //         vm.importConfiguration($event, resolve)
+        //
+        //     }).then(function (value) {
+        //
+        //         toastNotificationService.info("Configuration is applied")
+        //
+        //     })
+        //
+        //
+        // };
 
-            vm.importConfig = {
-                data: item.data,
-                mode: 'overwrite'
-            };
-
-            new Promise(function (resolve, reject) {
-
-                vm.importConfiguration($event, resolve)
-
-            }).then(function (value) {
-
-                toastNotificationService.info("Configuration is applied")
-
-            })
-
-
-        };
-
-        vm.applyInitialConfiguration = function ($event) {
-
-            console.log('applyInitialConfiguration')
-
-            authorizerService.getInitialConfiguration().then(function (data) {
-
-                vm.importConfig = {
-                    data: data.data,
-                    mode: 'overwrite'
-                };
-
-                new Promise(function (resolve, reject) {
-
-                    vm.importConfiguration($event, resolve)
-
-                }).then(function (value) {
-
-                    toastNotificationService.info("Configuration is applied")
-
-                })
-
-            })
-
-        }
+        // vm.applyInitialConfiguration = function ($event) {
+        //
+        //     console.log('applyInitialConfiguration')
+        //
+        //     authorizerService.getInitialConfiguration().then(function (data) {
+        //
+        //         vm.importConfig = {
+        //             data: data.data,
+        //             mode: 'overwrite'
+        //         };
+        //
+        //         new Promise(function (resolve, reject) {
+        //
+        //             vm.importConfiguration($event, resolve)
+        //
+        //         }).then(function (value) {
+        //
+        //             toastNotificationService.info("Configuration is applied")
+        //
+        //         })
+        //
+        //     })
+        //
+        // }
 
         vm.init = function () {
 

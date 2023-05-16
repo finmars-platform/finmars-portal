@@ -6,13 +6,8 @@
     'use strict';
 
     var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
-    var transactionTypeService = require('../../../services/transactionTypeService');
-    var ecosystemDefaultService = require('../../../services/ecosystemDefaultService');
 
-    var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
-
-
-    module.exports = function transactionImportSchemeAddDialogController ($scope, $mdDialog, data, importSchemesMethodsService) {
+    module.exports = function transactionImportSchemeAddDialogController ($scope, $mdDialog, toastNotificationService, ecosystemDefaultService, transactionTypeService, data, importSchemesMethodsService) {
 
         var vm = this;
 

@@ -1,11 +1,11 @@
 /**
  * Created by szhitenev on 16.11.2016.
  */
-(function () {
+import ReportRepository from "../repositories/reportRepository";
 
-    'use strict';
+export default function (cookieService, xhrService) {
 
-    var reportRepository = require('../repositories/reportRepository');
+    const reportRepository = new ReportRepository(cookieService, xhrService);
 
     var getList = function (options) {
         return reportRepository.getList(options);
@@ -31,13 +31,13 @@
         return reportRepository.getPerformanceReport(options);
     };
 
-    module.exports = {
+    return {
         getList: getList,
         getBalanceReport: getBalanceReport,
         getPnlReport: getPnlReport,
         getCashFlowProjectionReport: getCashFlowProjectionReport,
         getTransactionReport: getTransactionReport,
         getPerformanceReport: getPerformanceReport
-    }
+    };
 
-}());
+};

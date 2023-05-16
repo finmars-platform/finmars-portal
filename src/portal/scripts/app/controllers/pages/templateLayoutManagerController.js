@@ -5,17 +5,13 @@
 
     'use strict';
 
-    var uiService = require('../../services/uiService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
 	var TransactionTypeEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/transactionTypeEditorSharedLogicHelper');
 
-	var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
-
-    module.exports = function ($scope, $mdDialog) {
+    module.exports = function ($scope, $mdDialog, ecosystemDefaultService, metaContentTypesService, uiService, fieldResolverService, gridTableHelperService) {
 
         var vm = this;
 
-		var ttypeSharedLogic = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog);
+		var ttypeSharedLogic = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog, ecosystemDefaultService, uiService, fieldResolverService, gridTableHelperService);
 
         vm.items = [];
         vm.readyStatus = {input: false, field: false, action: false};

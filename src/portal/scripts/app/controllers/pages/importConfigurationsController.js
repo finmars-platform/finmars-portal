@@ -6,13 +6,11 @@ const processesService = require("../../services/processesService");
 
     'use strict';
 
-    var metaContentTypesService = require('../../services/metaContentTypesService');
     var metaService = require('../../services/metaService');
-    var configurationImportService = require('../../services/configuration-import/configurationImportService');
     var mappingsImportService = require('../../services/mappings-import/mappingsImportService');
 
 
-    module.exports = function ($scope, $mdDialog, usersService, usersGroupService, backendConfigurationImportService, systemMessageService) {
+    module.exports = function ($scope, $mdDialog, usersService, usersGroupService, metaContentTypesService, backendConfigurationImportService, systemMessageService, configurationService, configurationImportService) {
 
         var vm = this;
 
@@ -29,7 +27,7 @@ const processesService = require("../../services/processesService");
 
             return new Promise(function (resolve, reject) {
 
-                if (file.name && file.name.indexOf('.fcfg') === file.name.length - '.fcfg'.length) {
+                if (file.name && file.name.indexOf('.fcfg') === file.name.length - '.fcfg'.length || file.name.indexOf('.zip') !== -1) {
 
                     resolve(true);
 
@@ -74,27 +72,56 @@ const processesService = require("../../services/processesService");
 
                 checkExtension(file, $event).then(function () {
 
-                    var reader = new FileReader();
-                    reader.readAsText(vm.configurationFile);
-                    reader.onload = function (evt) {
+                    if (file.name.indexOf('.zip') !== -1) {
 
-                        if (evt.target.result) {
-                            var parsedFile = JSON.parse(evt.target.result);
+                        var formData = new FormData();
 
-                            if (parsedFile.notes) {
-                                vm.configFileNotes = parsedFile.notes;
+                        formData.append('file', file);
+
+                        vm.pageState = 'import-progress';
+
+                        configurationService.importConfiguration(formData).then(function (data){
+
+                            vm.currentTaskId = data.task_id
+
+                            $scope.$apply();
+
+                            vm.getTask()
+
+                            vm.poolingInterval = setInterval(function () {
+
+                                vm.getTask();
+
+                            }, 1000)
+
+                        })
+
+
+                    } else {
+
+                        var reader = new FileReader();
+                        reader.readAsText(vm.configurationFile);
+                        reader.onload = function (evt) {
+
+                            if (evt.target.result) {
+                                var parsedFile = JSON.parse(evt.target.result);
+
+                                if (parsedFile.notes) {
+                                    vm.configFileNotes = parsedFile.notes;
+
+
+                                }
 
 
                             }
 
+                            vm.openImportConfigurationManager($event);
 
-                        }
+                            $scope.$apply();
 
-                        vm.openImportConfigurationManager($event);
+                        };
 
-                        $scope.$apply();
-
-                    };
+                    }
 
 
                 });
@@ -948,9 +975,9 @@ const processesService = require("../../services/processesService");
 
         };
 
-        vm.getTask = function (){
+        vm.getTask = function () {
 
-            processesService.getByKey(vm.currentTaskId).then(function (data){
+            processesService.getByKey(vm.currentTaskId).then(function (data) {
 
                 vm.task = data;
                 console.log('vm.task', vm.task);
@@ -980,7 +1007,6 @@ const processesService = require("../../services/processesService");
             clearInterval(vm.poolingInterval)
             vm.poolingInterval = null;
             vm.importIsFinished = false;
-
 
 
             vm.items.forEach(function (entity) {
@@ -1061,7 +1087,7 @@ const processesService = require("../../services/processesService");
 
                 vm.getTask()
 
-                vm.poolingInterval = setInterval(function (){
+                vm.poolingInterval = setInterval(function () {
 
                     vm.getTask();
 

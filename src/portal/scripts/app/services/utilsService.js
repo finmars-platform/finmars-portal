@@ -1,15 +1,13 @@
-(function () {
+'use strict';
 
-    'use strict';
+import configureRepositoryUrlService from "../../../../shell/scripts/app/services/configureRepositoryUrlService";
+import baseUrlService from '../services/baseUrlService';
 
-    var baseUrlService = require('../services/baseUrlService');
-    var cookieService = require('../../../../core/services/cookieService');
-    var xhrService = require('../../../../core/services/xhrService');
-    var baseUrl = baseUrlService.resolve();
+const baseUrl = baseUrlService.resolve();
 
-    var configureRepositoryUrlService = require('./configureRepositoryUrlService');
-
-    var getSystemInfo = function () {
+/** @module utilsService */
+export default function (cookieService, xhrService) {
+    const getSystemInfo = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
@@ -28,7 +26,7 @@
     };
 
 
-    var getSystemLogs = function () {
+    const getSystemLogs = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
@@ -46,7 +44,7 @@
             })
     };
 
-    var getSystemLog = function (file_name) {
+    const getSystemLog = function (file_name) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
@@ -84,7 +82,7 @@
             })
     };
 
-    var getRecycleBin = function (options) {
+    const getRecycleBin = function (options) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
@@ -141,7 +139,7 @@
     };
 
 
-    module.exports = {
+    return {
         getSystemInfo: getSystemInfo,
         getSystemLogs: getSystemLogs,
         getSystemLog: getSystemLog,
@@ -152,4 +150,4 @@
         universalInput: universalInput
     }
 
-}());
+}

@@ -11,7 +11,7 @@
     var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, schemeId, importSchemesMethodsService) {
+    module.exports = function transactionImportSchemeEditDialogController ($scope, $mdDialog, toastNotificationService, transactionTypeService, importSchemesMethodsService, schemeId) {
 
         var vm = this;
 

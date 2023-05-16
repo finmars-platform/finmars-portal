@@ -12,7 +12,6 @@
     var evEditorEvents = require('../../services/ev-editor/entityViewerEditorEvents');
 
     var gridHelperService = require('../../services/gridHelperService');
-    var attributeTypeService = require('../../services/attributeTypeService');
 
     var EventService = require('../../services/eventService');
     var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
@@ -20,7 +19,6 @@
     var transactionTypeService = require('../../services/transactionTypeService');
     var portfolioService = require('../../services/portfolioService');
     var instrumentTypeService = require('../../services/instrumentTypeService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
     var tooltipsService = require('../../services/tooltipsService');
     var colorPalettesService = require('../../services/colorPalettesService');
 
@@ -29,10 +27,7 @@
     var ComplexTransactionEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/complexTransactionEditorSahredLogicHelper');
     var transactionHelper = require('../../helpers/transaction.helper');
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
-
-    module.exports = function complexTransactionAddDialogController($scope, $mdDialog, $bigDrawer, $state, usersService, usersGroupService, globalDataService, entityType, entity, data) {
+    module.exports = function complexTransactionAddDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, usersService, usersGroupService, globalDataService, metaContentTypesService, attributeTypeService, entityType, entity, data) {
 
         var vm = this;
         var sharedLogicHelper = new ComplexTransactionEditorSharedLogicHelper(vm, $scope, $mdDialog);
@@ -1471,7 +1466,7 @@
                 } */
                 else if (data.isCopy) { // if copy
 
-                    console.log("Apply from make copy", entity);
+                    console.log("Apply from Make a copy", entity);
                     notCopiedTransaction = false;
                     vm.entity = entity;
                     vm.entity.frontOptions = {
@@ -1510,7 +1505,7 @@
             vm.getPortfolios();
             vm.getInstrumentTypes();
             vm.loadTransactionTypes();
-            vm.loadPermissions();
+            // vm.loadPermissions();
 
             vm.getAttributeTypes();
 

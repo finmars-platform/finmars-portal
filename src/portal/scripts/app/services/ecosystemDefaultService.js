@@ -1,9 +1,11 @@
 /**
  * Created by szhitenev on 04.05.2016.
  */
-(function () {
+import EcosystemDefaultRepository from "../repositories/ecosystemDefaultRepository";
 
-    var ecosystemDefaultRepository = require('../repositories/ecosystemDefaultRepository');
+export default function (cookieService, xhrService) {
+
+    const ecosystemDefaultRepository = new EcosystemDefaultRepository(cookieService, xhrService);
 
     var getList = function (options) {
         return ecosystemDefaultRepository.getList(options);
@@ -25,14 +27,11 @@
         return ecosystemDefaultRepository.deleteByKey(id);
     };
 
-
-    module.exports = {
+    return {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
         deleteByKey: deleteByKey
     }
-
-
-}());
+}
