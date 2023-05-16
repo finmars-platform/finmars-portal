@@ -66,7 +66,7 @@
 			'</div>' +
 			'<div class="ev-editor-tabs-popup-content popup-menu">' +
 				'<md-button class="entity-tabs-menu-option popup-menu-option" ' +
-						   'ng-click="popupData.makeCopy(popupData.item, _$popup)">MAKE COPY</md-button>' +
+						   'ng-click="popupData.makeCopy(popupData.item, _$popup)">Make a copy</md-button>' +
 			'</div>';
 		//</editor-fold>
 
