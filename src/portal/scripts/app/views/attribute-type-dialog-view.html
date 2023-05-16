@@ -7,6 +7,12 @@
             <is-draggable-sign></is-draggable-sign>
             <h2>Attribute manager</h2>
             <span flex></span>
+            <div data-ng-if="vm.processing" layout="row" class="m-l-16">
+                <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
+                    <progress-circular diameter="20"></progress-circular>
+                </div>
+                — Processing
+            </div>
         </div>
     </md-toolbar>
     <md-dialog-content>
@@ -105,6 +111,11 @@
 
         <md-button class="md-raised" ng-click="vm.cancel()">
             Cancel
+        </md-button>
+
+        <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
+                   data-ng-if="vm.attribute.id">
+            Make a copy
         </md-button>
 
         <md-button class="md-raised md-primary" ng-click="vm.agree($event)"

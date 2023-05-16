@@ -2058,7 +2058,7 @@
                         },
                         {
                             key: 'copy',
-                            name: 'MAKE COPY',
+                            name: 'Make a copy',
                             actionIndex: index
                         }
                     ],
