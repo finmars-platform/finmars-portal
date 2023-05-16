@@ -1,8 +1,9 @@
 /**
  * Created by szhitenev on 06.05.2016.
  */
-const reportHelper = require('../helpers/reportHelper');
 import uiService from "./uiService";
+import ReportHelper from "../helpers/reportHelper";
+const reportHelper = new ReportHelper();
 
 /**
  * Entity viewer helper service.
@@ -130,7 +131,7 @@ import uiService from "./uiService";
         return layoutIsNotChanged;
     };
 
-    const saveLayoutsChanges = function (spChangedLayout, layoutHasChanges, activeLayoutConfig, layoutCurrentConfig, layoutNewName, isReport) {
+    const saveLayoutsChanges = function (spChangedLayout, layoutHasChanges, activeLayoutConfig, layoutCurrentConfig, layoutNewName, entityType, isReport) {
 
         let layoutsSavePromises = [];
 
@@ -144,7 +145,7 @@ import uiService from "./uiService";
                         spLayoutSaveRes(true);
                     });
                 } else {
-                    uiService.createListLayout(vm.entityType, spChangedLayout).then(function () {
+                    uiService.createListLayout(entityType, spChangedLayout).then(function () {
                         spLayoutSaveRes(true);
                     });
                 }
@@ -177,7 +178,7 @@ import uiService from "./uiService";
                         layoutCurrentConfig.name = layoutNewName;
                     }
 
-                    uiService.createListLayout(vm.entityType, layoutCurrentConfig).then(function () {
+                    uiService.createListLayout(entityType, layoutCurrentConfig).then(function () {
                         saveLayoutRes(true);
                     });
 
@@ -286,14 +287,18 @@ import uiService from "./uiService";
 
                         const layoutNewName = (res.data && res.data.layoutName) ? res.data.layoutName : '';
 
-                        saveLayoutsChanges(spChanged, layoutChanged, activeLayoutConfig, layoutCurrentConfig, layoutNewName, isReport)
+                        saveLayoutsChanges(spChanged, layoutChanged, activeLayoutConfig, layoutCurrentConfig, layoutNewName, entityType, isReport)
                             .then(function () {
+
                                 resolve(true);
+                                $mdDialog.hide();
 
                             }).catch(error => reject(error));
 
                     } else if (res.status === 'do_not_save_layout') {
+
                         resolve(true);
+                        $mdDialog.hide();
 
                     } else {
                         reject(false);
@@ -428,7 +433,7 @@ import uiService from "./uiService";
      * @memberOf module:entityViewerHelperService
      * @return {object} Return attribute in form of group, column or filter
      */
-    let getTableAttrInFormOf = function (form, attrInstance) {
+    const getTableAttrInFormOf = function (form, attrInstance) {
         console.log("add filter getTableAttrInFormOf attrInstance", attrInstance);
         let attrTypeToAdd = {};
 
@@ -662,6 +667,18 @@ import uiService from "./uiService";
         }
 
         return dAttrsList;
+
+    };
+
+    const getAttributesLayoutNames = function (columns) {
+
+        const result = {};
+
+        columns.forEach(col => {
+            if (col.layout_name) result[col.key] = col.layout_name;
+        })
+
+        return result;
 
     };
 
@@ -1953,6 +1970,7 @@ import uiService from "./uiService";
         getDefaultLayout: getDefaultLayout,
         getValueFromDynamicAttrsByUserCode: getValueFromDynamicAttrsByUserCode,
         setDynamicAttrValueByUserCode: setDynamicAttrValueByUserCode,
+        getAttributesLayoutNames: getAttributesLayoutNames,
 
         getEditLayoutMaxColumns: getEditLayoutMaxColumns,
         getBigDrawerWidth: getBigDrawerWidth,

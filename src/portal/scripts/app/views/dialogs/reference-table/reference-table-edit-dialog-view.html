@@ -9,6 +9,17 @@
     </md-toolbar>
     <md-dialog-content class="custom-scrollbar p-24 dndScrollableElem">
 
+        <div>
+
+            <md-input-container>
+                <label>Name</label>
+                <input type="text" data-ng-model="vm.referenceTable.name">
+            </md-input-container>
+
+            <usercode-input data-item="vm.referenceTable"></usercode-input>
+
+        </div>
+
         <div layout="row" class="reference-table-columns-filters-container">
             <md-input-container class="reference-table-keys-filter" md-no-float="">
                 <input data-ng-model="vm.filterTerms.key"
@@ -81,7 +92,8 @@
             Close
         </md-button>
         <md-button class="md-raised" ng-click="vm.agree($event)" style="margin-right:20px;">
-            Update
+            <span data-ng-if="!vm.referenceTable.id">Create</span>
+            <span data-ng-if="vm.referenceTable.id">Update</span>
         </md-button>
     </md-dialog-actions>
 </md-dialog>

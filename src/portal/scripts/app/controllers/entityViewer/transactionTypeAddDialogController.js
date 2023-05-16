@@ -5,8 +5,6 @@
 
     'use strict';
 
-    var fieldResolverService = require('../../services/fieldResolverService');
-
     // var usersGroupService = require('../../services/usersGroupService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
@@ -14,22 +12,16 @@
 
     var gridHelperService = require('../../services/gridHelperService');
 
-    var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
-    var attributeTypeService = require('../../services/attributeTypeService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
+    // var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
     var transactionTypeGroupService = require('../../services/transaction/transactionTypeGroupService');
 
     var portfolioService = require('../../services/portfolioService');
     var instrumentTypeService = require('../../services/instrumentTypeService');
     // var usersService = require('../../services/usersService');
 
-    var transactionTypeService = require('../../services/transactionTypeService');
-
-    var uiService = require('../../services/uiService');
-
     var metaHelper = require('../../helpers/meta.helper');
 
-	var EventService = require("../../services/eventService");
+    var EventService = require("../../services/eventService");
 
     var GridTableDataService = require('../../services/gridTableDataService');
     var GridTableEventService = require('../../services/gridTableEventService');
@@ -37,13 +29,11 @@
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
     var TransactionTypeEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/transactionTypeEditorSharedLogicHelper');
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
-    module.exports = function transactionTypeAddDialogController($scope, $mdDialog, $bigDrawer, $state, entityType, entity, data, usersService, usersGroupService) {
+    module.exports = function transactionTypeAddDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, entityType, entity, data, usersService, usersGroupService, transactionTypeService, attributeTypeService, ecosystemDefaultService, metaContentTypesService, uiService, fieldResolverService, gridTableHelperService) {
 
         var vm = this;
 
-        var sharedLogic = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog);
+        var sharedLogic = new TransactionTypeEditorSharedLogicHelper(vm, $scope, $mdDialog, ecosystemDefaultService, uiService, fieldResolverService, gridTableHelperService);
 
         vm.readyStatus = {
             content: false,
@@ -99,9 +89,9 @@
         vm.inputsForMultiselector = [];
 
         vm.openedIn = data.openedIn;
-		vm.updateContextParameters = sharedLogic.updateContextParametersFunctions;
+        vm.updateContextParameters = sharedLogic.updateContextParametersFunctions;
 
-		// var ecosystemDefaultData = {};
+        // var ecosystemDefaultData = {};
 
         vm.loadPermissions = function () {
 
@@ -110,18 +100,26 @@
             promises.push(vm.getCurrentMember());
             promises.push(vm.getGroupList());
 
-            Promise.all(promises).then(function (data) {
+            return new Promise(function (resolve, reject) {
 
-                vm.readyStatus.permissions = true;
+                Promise.all(promises).then(function (data) {
 
-                vm.setPermissionsDefaults();
+                    vm.readyStatus.permissions = true;
 
-                if (vm.currentMember && vm.currentMember.is_admin) {
-                    vm.canManagePermissions = true;
-                }
+                    vm.setPermissionsDefaults();
 
-                $scope.$apply();
-            });
+                    if (vm.currentMember && vm.currentMember.is_admin) {
+                        vm.canManagePermissions = true;
+                    }
+
+                    resolve(true);
+                    // $scope.$apply();
+                }).catch(function (error) {
+                    reject(error)
+                });
+
+            })
+
 
         };
 
@@ -299,9 +297,7 @@
 
         };
 
-        vm.checkMainDataReadyStatus = function () {
-            return vm.readyStatus.content && sharedLogic.checkMainDataReadyStatus();
-        }
+        vm.checkMainDataReadyStatus = sharedLogic.checkMainDataReadyStatus;
 
         vm.range = gridHelperService.range;
 
@@ -631,7 +627,7 @@
                 return doNotUseForEditLayoutAttrs.indexOf(entity.key) === -1;
             });
 
-			var userInputs = getUserInputs(ttypeData.inputs);
+            var userInputs = getUserInputs(ttypeData.inputs);
 
             var addFields = function (attrType) {
 
@@ -771,7 +767,7 @@
                                     entityErrors: entityErrors
                                 }
                             }
-                        }).then(function (data){
+                        }).then(function (data) {
 
                             if (data.status === 'agree') {
                                 resolve()
@@ -842,7 +838,7 @@
         };
 
         vm.saveAndExit = function (action) {
-             vm.save().then(function (responseData) {
+            vm.save().then(function (responseData) {
 
                 let responseObj = {status: 'disagree'};
 
@@ -869,7 +865,7 @@
         vm.entity.book_transaction_layout = vm.entity.book_transaction_layout || '';
         vm.entity.actions = vm.entity.actions || [];
         vm.entity.inputs = vm.entity.inputs || [];
-		vm.entity.context_parameters = sharedLogic.getContextParameters();
+        vm.entity.context_parameters = sharedLogic.getContextParameters();
 
         vm.readyStatus = {transactionTypeGroups: false, instrumentTypes: false, portfolios: false};
 
@@ -1083,8 +1079,8 @@
 
         vm.saveItem = function (item) {
 
-			vm.expressionData = sharedLogic.updateInputFunctions();
-			vm.updateContextParameters();
+            vm.expressionData = sharedLogic.updateInputFunctions();
+            vm.updateContextParameters();
 
             item.editStatus = false;
         };
@@ -1370,8 +1366,8 @@
 
         vm.contentTypes = metaContentTypesService.getListForTransactionTypeInputs();
 
-		vm.onActionAccordionCollapse = sharedLogic.onActionAccordionCollapse;
-		vm.toggleItem = sharedLogic.toggleItem;
+        vm.onActionAccordionCollapse = sharedLogic.onActionAccordionCollapse;
+        vm.toggleItem = sharedLogic.toggleItem;
 
         vm.getActionTypeName = sharedLogic.getActionTypeName;
 
@@ -1442,7 +1438,7 @@
             }
         ];
 
-        vm.actionsKeysList = [
+        /*vm.actionsKeysList = [
             'instrument',
             'transaction',
             'instrument_factor_schedule',
@@ -1450,13 +1446,13 @@
             'instrument_accrual_calculation_schedules',
             'instrument_event_schedule',
             'instrument_event_schedule_action'
-        ];
+        ];*/
 
         vm.checkActionsIsNotNull = function () {
             return false;
         };
 
-        vm.entity.actions.forEach(function (action) {
+        /*vm.entity.actions.forEach(function (action) {
 
             var keys;
 
@@ -1476,65 +1472,10 @@
 
             })
 
+        });*/
+        vm.entity.actions = vm.entity.actions.map(function (action) {
+            return sharedLogic.setStateInActionsControls(action);
         });
-
-        /* var setDefaultValueForRelation = function (actionData, propertyName, fieldName) {
-
-            var relationType = '';
-            switch (fieldName) {
-                case 'linked_instrument':
-                case 'allocation_pl':
-                case 'allocation_balance':
-                    relationType = 'instrument';
-                    break;
-                default:
-                    relationType = fieldName;
-            }
-
-            var nameProperty = 'name';
-            if (fieldName === 'price_download_scheme') {
-                nameProperty = 'user_code';
-            }
-
-            var defaultValueKey = '';
-            switch (relationType) {
-                case 'account_position':
-                case 'account_cash':
-                case 'account_interim':
-                    defaultValueKey = 'account';
-                    break;
-                case 'settlement_currency':
-                case 'transaction_currency':
-                case 'accrued_currency':
-                case 'pricing_currency':
-                    defaultValueKey = 'currency';
-                    break;
-                case 'strategy1_position':
-                case 'strategy1_cash':
-                    defaultValueKey = 'strategy1';
-                    break;
-                case 'strategy2_position':
-                case 'strategy2_cash':
-                    defaultValueKey = 'strategy2';
-                    break;
-                case 'strategy3_position':
-                case 'strategy3_cash':
-                    defaultValueKey = 'strategy3';
-                    break;
-                default:
-                    defaultValueKey = relationType;
-            }
-
-            var defaultName = ecosystemDefaultData[defaultValueKey + '_object'][nameProperty];
-
-            actionData[propertyName][fieldName] = ecosystemDefaultData[defaultValueKey];
-
-            // needed for displaying default value after turning on 'relation' field
-            actionData[propertyName][fieldName + '_object'] = {};
-            actionData[propertyName][fieldName + '_object'][nameProperty] = defaultName;
-            actionData[propertyName][fieldName + '_object']['id'] = ecosystemDefaultData[defaultValueKey];
-
-        }; */
 
         vm.resetProperty = function (item, propertyName, fieldName) {
 
@@ -1543,14 +1484,14 @@
 
         };
 
-		vm.onActionMultitypeFieldToggle = sharedLogic.onActionMultitypeFieldToggle;
-		vm.onMultitypeFieldValChange = sharedLogic.onMultitypeFieldValChange;
+        vm.onActionMultitypeFieldToggle = sharedLogic.onActionMultitypeFieldToggle;
+        vm.onMultitypeFieldValChange = sharedLogic.onMultitypeFieldValChange;
 
-		vm.actionsMultitypeFieldsList = [];
-		vm.eventPhantomsOpts = [];
-		vm.paneActionsMenuPopups = [];
+        vm.actionsMultitypeFieldsList = [];
+        vm.eventPhantomsOpts = [];
+        vm.paneActionsMenuPopups = [];
 
-		vm.createSelectorPopupDataForActions = sharedLogic.createSelectorPopupDataForActions;
+        vm.createSelectorPopupDataForActions = sharedLogic.createSelectorPopupDataForActions;
 
         /* vm.deletePane = function (item, $index, $event) {
 
@@ -1613,10 +1554,10 @@
 
         };
 
-		vm.generateOperationPopupData = sharedLogic.generateOperationPopupData;
-		vm.generateInstrumentOperationPopupData = sharedLogic.generateInstrumentOperationPopupData;
+        vm.generateOperationPopupData = sharedLogic.generateOperationPopupData;
+        vm.generateInstrumentOperationPopupData = sharedLogic.generateInstrumentOperationPopupData;
 
-		vm.getActionPaneId = sharedLogic.getActionPaneId;
+        vm.getActionPaneId = sharedLogic.getActionPaneId;
 
         /* vm.makeCopyOfAction = function (actionToCopy, index) {
 
@@ -1848,143 +1789,145 @@
 
         };
 
-		vm.getActionTemplates = function () {
+        vm.getActionTemplates = function () {
 
-			vm.readyStatus.action_templates = false;
+            vm.readyStatus.action_templates = false;
 
-			return new Promise(function (res) {
+            return new Promise(function (res) {
 
-				sharedLogic.getActionTemplates().then(function (actionTemplatesData) {
+                sharedLogic.getActionTemplates().then(function (actionTemplatesData) {
 
-					vm.actionTemplatesPopupData = actionTemplatesData;
+                    vm.actionTemplatesPopupData = actionTemplatesData;
 
-					vm.readyStatus.action_templates = true;
-					$scope.$apply();
+                    vm.readyStatus.action_templates = true;
+                    $scope.$apply();
 
-					res();
+                    res();
 
-				}).catch(function (error) {res()});
+                }).catch(function (error) {
+                    res()
+                });
 
-			});
+            });
 
-		};
+        };
 
-		/* vm.getActionTemplates = function () {
+        /* vm.getActionTemplates = function () {
 
-			vm.readyStatus.action_templates = false;
+            vm.readyStatus.action_templates = false;
 
-			return uiService.getTemplateLayoutList({filters: {type: 'action_template'}}).then(function (data) {
+            return uiService.getTemplateLayoutList({filters: {type: 'action_template'}}).then(function (data) {
 
-				vm.actionTemplatesPopup = data.results;
+                vm.actionTemplatesPopup = data.results;
 
-				vm.readyStatus.action_templates = true;
+                vm.readyStatus.action_templates = true;
 
-				$scope.$apply();
+                $scope.$apply();
 
-			})
+            })
 
-		};
+        };
 
-		vm.appendFromTemplate = function ($event, template) {
+        vm.appendFromTemplate = function ($event, template) {
 
-			console.log("Append from Template", template);
+            console.log("Append from Template", template);
 
-			if (template.type === 'input_template') {
+            if (template.type === 'input_template') {
 
-				$mdDialog.show({
-					controller: 'InputTemplateLayoutViewerDialogController as vm',
-					templateUrl: 'views/dialogs/input-template-layout-viewer-dialog-view.html',
-					targetEvent: $event,
-					locals: {
-						data: {
-							template: template
-						}
-					},
-					preserveScope: true,
-					autoWrap: true,
-					skipHide: true,
-					multiple: true
-				}).then(function (res) {
+                $mdDialog.show({
+                    controller: 'InputTemplateLayoutViewerDialogController as vm',
+                    templateUrl: 'views/dialogs/input-template-layout-viewer-dialog-view.html',
+                    targetEvent: $event,
+                    locals: {
+                        data: {
+                            template: template
+                        }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true
+                }).then(function (res) {
 
-					if (res.status === 'agree') {
+                    if (res.status === 'agree') {
 
-						var template = res.data.template;
+                        var template = res.data.template;
 
-						template.data.inputs.forEach(function (input) {
+                        template.data.inputs.forEach(function (input) {
 
-							vm.entity.inputs.push(input);
+                            vm.entity.inputs.push(input);
 
-						})
+                        })
 
-					}
+                    }
 
-				})
+                })
 
-			}
-			else if (template.type === 'field_template') {
+            }
+            else if (template.type === 'field_template') {
 
-				Object.keys(vm.entity).forEach(function (key) {
+                Object.keys(vm.entity).forEach(function (key) {
 
-					if (key.indexOf('user_text_') !== -1) {
-						vm.entity[key] = '';
-					}
+                    if (key.indexOf('user_text_') !== -1) {
+                        vm.entity[key] = '';
+                    }
 
-					if (key.indexOf('user_number_') !== -1) {
-						vm.entity[key] = '';
-					}
+                    if (key.indexOf('user_number_') !== -1) {
+                        vm.entity[key] = '';
+                    }
 
-					if (key.indexOf('user_date_') !== -1) {
-						vm.entity[key] = '';
-					}
+                    if (key.indexOf('user_date_') !== -1) {
+                        vm.entity[key] = '';
+                    }
 
-				});
+                });
 
-				Object.keys(template.data.fields).forEach(function (key) {
+                Object.keys(template.data.fields).forEach(function (key) {
 
-					vm.entity[key] = template.data.fields[key];
+                    vm.entity[key] = template.data.fields[key];
 
-				})
+                })
 
-			}
-			else if (template.type === 'action_template') {
+            }
+            else if (template.type === 'action_template') {
 
-				var actionsToAdd = template.data.actions.map(function (action) {
+                var actionsToAdd = template.data.actions.map(function (action) {
 
-					Object.keys(action).forEach(function (key) {
+                    Object.keys(action).forEach(function (key) {
 
-						if (typeof action[key] === 'object' && action[key] !== null) {
+                        if (typeof action[key] === 'object' && action[key] !== null) {
 
-							Object.keys(action[key]).forEach(function (actionItemKey) {
+                            Object.keys(action[key]).forEach(function (actionItemKey) {
 
-								if (action[key].hasOwnProperty(actionItemKey + '_input')) {
+                                if (action[key].hasOwnProperty(actionItemKey + '_input')) {
 
-									if (action[key].hasOwnProperty(actionItemKey + '_field_type')) {
+                                    if (action[key].hasOwnProperty(actionItemKey + '_field_type')) {
 
-										action[key][actionItemKey + '_toggle'] = true;
+                                        action[key][actionItemKey + '_toggle'] = true;
 
-										setDefaultValueForRelation(action, key, actionItemKey);
+                                        setDefaultValueForRelation(action, key, actionItemKey);
 
-										delete action[key][actionItemKey + '_field_type']; // remove template specific properties before adding actions
-									}
+                                        delete action[key][actionItemKey + '_field_type']; // remove template specific properties before adding actions
+                                    }
 
-								}
+                                }
 
-							})
+                            })
 
-						}
+                        }
 
-					});
+                    });
 
-					return action;
-				});
+                    return action;
+                });
 
-				vm.entity.actions = vm.entity.actions.concat(actionsToAdd);
+                vm.entity.actions = vm.entity.actions.concat(actionsToAdd);
 
-			}
+            }
 
-		}; */
-		vm.appendFromTemplate = sharedLogic.appendFromTemplate;
-		vm.saveAsTemplate = sharedLogic.saveAsTemplate;
+        }; */
+        vm.appendFromTemplate = sharedLogic.appendFromTemplate;
+        vm.saveAsTemplate = sharedLogic.saveAsTemplate;
 
         /* vm.saveAsTemplate = function ($event, type) {
 
@@ -2185,12 +2128,12 @@
             })
         }
 
-		//endregion Transaction type Actions controller
+        //endregion Transaction type Actions controller
 
-		//region Context Parameters tab
-		vm.deleteContextParameter = sharedLogic.deleteContextParameter
-		vm.addContextParameter = sharedLogic.addContextParameter;
-		//endregion Context Parameters tab
+        //region Context Parameters tab
+        vm.deleteContextParameter = sharedLogic.deleteContextParameter
+        vm.addContextParameter = sharedLogic.addContextParameter;
+        //endregion Context Parameters tab
 
         vm.init = function () {
 
@@ -2198,7 +2141,7 @@
                 vm.dialogElemToResize = document.querySelector('.ttypeCreationElemToDrag');
             });
 
-			vm.actionsMFEventService = new EventService();
+            vm.actionsMFEventService = new EventService();
 
             vm.inputsGridTableDataService = new GridTableDataService();
             vm.inputsGridTableEventService = new GridTableEventService();
@@ -2212,7 +2155,7 @@
 
             var attrsProm = vm.getAttributeTypes(); // this
             var userFieldsProm = vm.getTransactionUserFields();
-            var permissionProm = vm.loadPermissions();
+            // var permissionProm = vm.loadPermissions();
             var getRefTablesPromise = sharedLogic.getReferenceTables();
 
             vm.getTransactionTypeGroups();
@@ -2225,27 +2168,31 @@
             vm.getFieldTemplates();
             vm.getActionTemplates();
 
-			vm.expressionData = sharedLogic.updateInputFunctions();
-			vm.updateContextParameters();
+            vm.expressionData = sharedLogic.updateInputFunctions();
+            vm.updateContextParameters();
 
             var allDataPromises = [
                 attrsProm,
                 userFieldsProm,
-                permissionProm,
+                // permissionProm,
                 getRefTablesPromise,
                 getInputTemplPromise
             ];
 
             Promise.all(allDataPromises).then(function () {
 
-				vm.paneActionsMenuPopups = vm.createSelectorPopupDataForActions();
+                vm.paneActionsMenuPopups = vm.createSelectorPopupDataForActions();
 
-				var iamdlResult = sharedLogic.initAfterMainDataLoaded(); // assembling of grid table and data for multitypeFields inside actions here
-				vm.actionsMultitypeFieldsList = iamdlResult.actionsMultitypeFieldsList;
-				vm.eventPhantomsOpts = iamdlResult.eventPhantomsOpts;
+                var iamdlResult = sharedLogic.initAfterMainDataLoaded(); // assembling of grid table and data for multitypeFields inside actions here
+                vm.actionsMultitypeFieldsList = iamdlResult.actionsMultitypeFieldsList;
+                vm.eventPhantomsOpts = iamdlResult.eventPhantomsOpts;
 
+                vm.readyStatus.permissions = true;
+                vm.readyStatus.content = true;
                 vm.readyStatus.entity = true;
                 vm.readyStatus.inputs = true;
+
+                console.log('vm.readyStatus', JSON.stringify(vm.readyStatus));
 
                 $scope.$apply();
 

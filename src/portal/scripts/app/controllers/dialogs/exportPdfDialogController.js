@@ -4,13 +4,11 @@
 
     var exportPdfService = require('../../services/exportPdfService');
     var rvRenderer = require('../../services/rv-renderer/rv.renderer');
-    var uiService = require('../../services/uiService');
     var evEvents = require('../../services/entityViewerEvents');
 
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
-    var reportHelper = require('../../helpers/reportHelper');
 
-    module.exports = function ($scope, $mdDialog, globalDataService, evDataService, evEventService, data) {
+    module.exports = function ($scope, $mdDialog, globalDataService, uiService, reportHelper, evDataService, evEventService, data) {
 
         var vm = this;
 

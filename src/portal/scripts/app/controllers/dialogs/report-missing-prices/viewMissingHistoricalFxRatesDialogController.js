@@ -5,10 +5,7 @@
 
     'use strict';
 
-    var currencyHistoryService = require('../../../services/currencyHistoryService');
-    var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
-
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, toastNotificationService, currencyHistoryService, data) {
 
         console.log('data', data);
 

@@ -1,26 +1,16 @@
 /**
  * Created by szhitenev on 02.02.2023.
  */
-(function () {
 
-    'use strict';
+'use strict';
 
-    var processesService = require('../../services/processesService');
+const downloadFileHelper = require('../../helpers/downloadFileHelper');
 
-    var baseUrlService = require('../../services/baseUrlService');
-    var utilsService = require('../../services/utilsService');
-    var masterUserService = require('../../services/masterUserService');
-    var downloadFileHelper = require('../../helpers/downloadFileHelper');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+export default function ($scope, $mdDialog, toastNotificationService, masterUserService, utilsService) {
 
-    var baseUrl = baseUrlService.resolve();
+    const vm = this;
 
-
-    module.exports = function systemPageController($scope, $mdDialog, globalDataService) {
-
-        var vm = this;
-
-        vm.processing = false;
+    vm.processing = false;
 
         vm.readyStatus = {
             stats: false,
@@ -29,9 +19,9 @@
         }
 
 
-        vm.getStats = function () {
+    vm.getStats = function () {
 
-            vm.readyStatus.stats = false;
+        vm.readyStatus.stats = false;
 
             utilsService.getSystemInfo().then(function (data) {
                 vm.systemInfoItems = data.results;
@@ -42,65 +32,65 @@
                 $scope.$apply();
             })
 
-        }
+    }
 
-        vm.getLogs = function () {
+    vm.getLogs = function () {
 
-            vm.readyStatus.logs = false;
+        vm.readyStatus.logs = false;
 
-            utilsService.getSystemLogs().then(function (data) {
+        utilsService.getSystemLogs().then(function (data) {
 
-                vm.logFiles = data.results;
+            vm.logFiles = data.results;
 
-                vm.readyStatus.logs = true;
-                $scope.$apply()
+            vm.readyStatus.logs = true;
+            $scope.$apply()
 
             }).catch(function (error) {
                 vm.readyStatus.logs = true;
                 $scope.$apply()
             })
 
-        }
+    }
 
-        vm.previewLog = function ($event, log_file_name) {
+    vm.previewLog = function ($event, log_file_name) {
 
-            utilsService.getSystemLog(log_file_name).then(function (data) {
+        utilsService.getSystemLog(log_file_name).then(function (data) {
 
-                $mdDialog.show({
-                    controller: 'FilePreviewDialogController as vm',
-                    templateUrl: 'views/dialogs/file-preview-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        data: {
-                            content: data,
-                            file_descriptor: {
-                                name: log_file_name
-                            }
+            $mdDialog.show({
+                controller: 'FilePreviewDialogController as vm',
+                templateUrl: 'views/dialogs/file-preview-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        content: data,
+                        file_descriptor: {
+                            name: log_file_name
                         }
                     }
-                });
+                }
+            });
 
 
-            })
+        })
 
-        }
+    }
 
-        vm.getTablesSize = function () {
+    vm.getTablesSize = function () {
 
-            vm.readyStatus.tablesSize = false;
+        vm.readyStatus.tablesSize = false;
 
-            utilsService.getTablesSize().then(function (data) {
+        utilsService.getTablesSize().then(function (data) {
 
-                vm.tablesSizes = data.results;
+            vm.tablesSizes = data.results;
 
-                vm.readyStatus.tablesSize = true;
-                $scope.$apply()
+            vm.readyStatus.tablesSize = true;
+            $scope.$apply()
 
             }).catch(function (error) {
                 vm.readyStatus.tablesSize = true;
@@ -108,17 +98,17 @@
             })
 
 
-        }
+    }
 
-        vm.downloadLog = function ($event, log_file_name) {
+    vm.downloadLog = function ($event, log_file_name) {
 
-            utilsService.getSystemLog(log_file_name).then(function (data) {
+        utilsService.getSystemLog(log_file_name).then(function (data) {
 
-                downloadFileHelper.downloadFile(data, "plain/text", log_file_name);
+            downloadFileHelper.downloadFile(data, "plain/text", log_file_name);
 
-            })
+        })
 
-        }
+    }
 
         vm.checkReadyStatus = function () {
             return vm.readyStatus.tablesSize && vm.readyStatus.stats && vm.readyStatus.logs && vm.readyStatus.master_user
@@ -158,16 +148,14 @@
 
         vm.init = function () {
 
-            vm.getStats();
-            vm.getLogs()
+        vm.getStats();
+        vm.getLogs()
 
             vm.getTablesSize()
             vm.getMasterUser()
 
-        };
-
-        vm.init();
-
     };
 
-}());
+    vm.init();
+
+};

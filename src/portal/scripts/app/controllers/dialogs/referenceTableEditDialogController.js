@@ -17,7 +17,7 @@
 
         var vm = this;
 
-        vm.referenceTable = data.referenceTable;
+        vm.referenceTable = data.referenceTable; // maybe refactor
         vm.validationEnabled = false;
         vm.dragAndDropInited = false;
 
@@ -105,7 +105,7 @@
                 var drake = this.dragula;
 
                 drake.on('drag', function () {
-					scrollHelper.enableDnDWheelScroll();
+                    scrollHelper.enableDnDWheelScroll();
                 });
 
                 drake.on('drop', function (elem, target, source, nextSiblings) {
@@ -194,11 +194,24 @@
                     return row
                 });
 
-                referenceTablesService.update(vm.referenceTable.id, vm.referenceTable).then(function () {
+                if (vm.referenceTable.id) {
 
-                    $mdDialog.hide({status: 'agree'});
+                    referenceTablesService.update(vm.referenceTable.id, vm.referenceTable).then(function () {
 
-                });
+                        $mdDialog.hide({status: 'agree'});
+
+                    });
+
+                } else {
+
+                    referenceTablesService.create(vm.referenceTable).then(function () {
+
+                        $mdDialog.hide({status: 'agree'});
+
+                    });
+
+                }
+
 
             } else {
 
@@ -231,10 +244,18 @@
 
         var init = function () {
 
-        	setTimeout(function () {
+            setTimeout(function () {
                 var DnDScrollElem = document.querySelector('.dndScrollableElem');
                 scrollHelper.setDnDScrollElem(DnDScrollElem);
             }, 500);
+
+            if (!vm.referenceTable) {
+                vm.referenceTable = {
+                    name: '',
+                    configuration_code: 'com.finmars.local',
+                    rows: []
+                }
+            }
 
             vm.referenceTable.rows = vm.referenceTable.rows.map(updateOrder);
 

@@ -114,7 +114,7 @@
         // var dataOrderReference = {}; // Only need for keep tracking on original item index
         var referenceItem;
 
-        console.time("convertToTree.firstLoop");
+        // console.time("convertToTree.firstLoop");
 
         // Object.keys(data).forEach(function (key) {
         //
@@ -134,7 +134,7 @@
         //
         // });
 
-        console.timeEnd("convertToTree.firstLoop");
+        // console.timeEnd("convertToTree.firstLoop");
 
         console.time("convertToTree.secondLoop");
 

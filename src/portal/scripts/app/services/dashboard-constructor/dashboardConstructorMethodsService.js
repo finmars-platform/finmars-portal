@@ -1,9 +1,6 @@
-(function () {
+const metaHelper = require('../../helpers/meta.helper');
 
-    'use strict';
-
-    var uiService = require('../uiService');
-    var metaHelper = require('../../helpers/meta.helper');
+export default function (uiService) {
 
     var getDataForComponentsSelector = function (viewModel, componentsForLinking, itemId) {
 
@@ -129,56 +126,55 @@
 
     const onReportTypeChange = async function (activeType, item, getLayoutsFn, $scope) {
 
-    	return new Promise(async res => {
+        return new Promise(async res => {
 
-    		item.settings.entity_type = activeType.key;
-			item.settings.layout = null;
+            item.settings.entity_type = activeType.key;
+            item.settings.layout = null;
 
-			if (activeType.custom.menuOptionsNotLoaded) {
+            if (activeType.custom.menuOptionsNotLoaded) {
 
-				activeType.fieldData.menuOptions = await getLayoutsFn();
-				activeType.custom.menuOptionsNotLoaded = false;
+                activeType.fieldData.menuOptions = await getLayoutsFn();
+                activeType.custom.menuOptionsNotLoaded = false;
 
-				$scope.$apply();
+                $scope.$apply();
 
-			}
+            }
 
-			res(item);
+            res(item);
 
-		});
+        });
 
-	};
+    };
 
     const prepareDataForReportLayoutSelector = function (layoutsSelectorsList, reportEntityType, selectedLayout, getLayoutsRes) {
 
-    	let activeSel = layoutsSelectorsList.find(function (selector) {
-			return selector.key === reportEntityType;
-		});
+        let activeSel = layoutsSelectorsList.find(function (selector) {
+            return selector.key === reportEntityType;
+        });
 
-		activeSel.isActive = true;
+        activeSel.isActive = true;
 
-		return new Promise((res) => {
+        return new Promise((res) => {
 
-			getLayoutsRes.then(function (layoutsList) {
+            getLayoutsRes.then(function (layoutsList) {
 
-				activeSel.model = selectedLayout;
-				activeSel.custom.menuOptionsNotLoaded = false;
-				activeSel.fieldData.menuOptions = layoutsList;
+                activeSel.model = selectedLayout;
+                activeSel.custom.menuOptionsNotLoaded = false;
+                activeSel.fieldData.menuOptions = layoutsList;
 
-				res(layoutsSelectorsList);
+                res(layoutsSelectorsList);
 
-			});
+            });
 
-		});
+        });
 
-	};
+    };
 
-    module.exports = {
+    return {
         getDataForComponentsSelector: getDataForComponentsSelector,
         exportComponentToDashboards: exportComponentToDashboards,
 
-		onReportTypeChange: onReportTypeChange,
-		prepareDataForReportLayoutSelector: prepareDataForReportLayoutSelector,
+        onReportTypeChange: onReportTypeChange,
+        prepareDataForReportLayoutSelector: prepareDataForReportLayoutSelector,
     }
-
-}());
+}

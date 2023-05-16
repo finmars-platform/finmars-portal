@@ -5,14 +5,9 @@
 
     'use strict';
 
-    var uiService = require('../services/uiService');
-    var metaContentTypesService = require('../services/metaContentTypesService');
-
     var transactionTypeService = require('../services/transactionTypeService');
 
-    var toastNotificationService = require('../../../../core/services/toastNotificationService');
-
-    module.exports = function ($scope, $stateParams, $state, $mdDialog) {
+    module.exports = function ($scope, $stateParams, $state, $mdDialog, toastNotificationService, metaContentTypesService, uiService) {
 
         var vm = this;
 

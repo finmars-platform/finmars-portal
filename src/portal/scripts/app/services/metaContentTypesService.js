@@ -1,9 +1,12 @@
 /**
  * Created by szhitenev on 12.09.2016.
  */
-(function () {
 
-    var metaContentTypesRepository = require('../repositories/metaContentTypesRepository');
+import MetaContentTypesRepository from "../repositories/metaContentTypesRepository";
+
+export default function (cookieService, xhrService) {
+
+    const metaContentTypesRepository = new MetaContentTypesRepository(xhrService);
 
     var getListForUi = function () {
         return metaContentTypesRepository.getListForUi();
@@ -337,7 +340,7 @@
 
     };
 
-    module.exports = {
+    return {
         getListForUi: getListForUi,
         getList: getList,
 
@@ -355,5 +358,4 @@
         getListForSimpleEntityImport: getListForSimpleEntityImport
     }
 
-
-}());
+}

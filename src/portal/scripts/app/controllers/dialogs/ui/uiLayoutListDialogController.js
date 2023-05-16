@@ -11,15 +11,11 @@ import uiService from "../../../services/uiService";
 
     var evEvents = require('../../../services/entityViewerEvents');
 
-    var uiService = require('../../../services/uiService');
-    var metaContentTypesService = require('../../../services/metaContentTypesService');
-    // var middlewareService = require('../../../services/middlewareService');
-
     var inviteToSharedConfigurationFileService = require('../../../services/inviteToSharedConfigurationFileService');
     var shareConfigurationFileService = require('../../../services/shareConfigurationFileService');
     // var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
 
-    module.exports = function ($scope, $mdDialog, backendConfigurationImportService, options) {
+    module.exports = function ($scope, $mdDialog, metaContentTypesService, uiService, backendConfigurationImportService, reportHelper, options) {
 
         var vm = this;
 
@@ -34,7 +30,7 @@ import uiService from "../../../services/uiService";
         var contentType = metaContentTypesService.findContentTypeByEntity(options.entityType);
         var splitPanelLayoutId = null;
 
-        var autosaveLayoutService = new AutosaveLayoutService();
+        var autosaveLayoutService = new AutosaveLayoutService(metaContentTypesService, uiService, reportHelper);
 
         if (!isRootEntityViewer) {
             var spDefaultLayoutData = entityViewerDataService.getSplitPanelDefaultLayout();
@@ -103,13 +99,14 @@ import uiService from "../../../services/uiService";
 
             $mdDialog.show({
                 controller: 'UiLayoutSaveAsDialogController as vm',
-                templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
+                templateUrl: 'views/dialogs/ui/ui-layout-save-as-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 multiple: true,
                 clickOutsideToClose: false,
                 locals: {
-                    options: {
+                    data: {
+                        entityType: options.entityType,
                         layoutName: layoutData.name,
                         layoutUserCode: layoutData.user_code
                     }
@@ -568,19 +565,21 @@ import uiService from "../../../services/uiService";
 
         vm.getInvites = function () {
 
-            inviteToSharedConfigurationFileService.getListOfMyInvites({
-                filters: {
-                    status: '0'
-                }
-            }).then(function (data) {
-
-                vm.invites = data.results;
-
-                console.log('vm.invites', vm.invites);
-
-                $scope.$apply();
-
-            })
+            vm.invites = []
+            // Deprecated
+            // inviteToSharedConfigurationFileService.getListOfMyInvites({
+            //     filters: {
+            //         status: '0'
+            //     }
+            // }).then(function (data) {
+            //
+            //     vm.invites = data.results;
+            //
+            //     console.log('vm.invites', vm.invites);
+            //
+            //     $scope.$apply();
+            //
+            // })
 
         };
 

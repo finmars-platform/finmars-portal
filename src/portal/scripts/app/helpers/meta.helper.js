@@ -141,12 +141,12 @@
 	/**
 	 *
 	 * @param {string} text - text to use as unique user code, name etc
-	 * @param {array<string>} [listOfTexts] - array of already existing strings
-	 * @param {string} textName - name to use in error
+	 * @param {array<string>|null} [listOfTexts] - array of already existing strings
+	 * @param {string} [textName] - name to use in error
 	 */
-	const validateTextForUserCode = (text, listOfTexts, textName) => {
+	const validateTextForUserCode = (text, listOfTexts, textName="") => {
 
-		if (!textName) textName = "";
+		// if (!textName) textName = "";
 		// let errorText = "";
 		if (!text) {
 			return `${ textName ? textName + ' ' : ''}should not be empty.`;

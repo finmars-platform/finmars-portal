@@ -6,37 +6,29 @@
 	'use strict';
 
 	var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
-	var uiService = require('../../services/uiService');
 	var evEvents = require('../../services/entityViewerEvents');
 	// var usersService = require('../../services/usersService');
 	var objectComparison = require('../../helpers/objectsComparisonHelper');
-
-	var priceHistoryService = require('../../services/priceHistoryService');
-	var currencyHistoryService = require('../../services/currencyHistoryService');
 
 	var RvSharedLogicHelper = require('../../helpers/rvSharedLogicHelper');
 	var EntityViewerDataService = require('../../services/entityViewerDataService');
 	var EntityViewerEventService = require('../../services/eventService');
 	var AttributeDataService = require('../../services/attributeDataService');
 
-	var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
-
-	var expressionService = require('../../services/expression.service');
 	// var middlewareService = require('../../services/middlewareService');
 
 	var rvDataHelper = require('../../helpers/rv-data.helper');
 
 	var renderHelper = require('../../helpers/render.helper');
-	var dashboardHelper = require('../../helpers/dashboard.helper');
 
 	var dashboardEvents = require('../../services/dashboard/dashboardEvents');
 	var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-        module.exports = function ($scope, $mdDialog, toastNotificationService, usersService, globalDataService, gFiltersHelper) {
+        module.exports = function ($scope, $mdDialog, toastNotificationService, usersService, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, customFieldService, attributeTypeService, uiService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper, gFiltersHelper, dashboardHelper) {
 
 		var vm = this;
 
-            var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService);
+            var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper);
 
 		vm.readyStatus = {
 			attributes: false,
@@ -515,10 +507,10 @@
 						resolve();
 					}); */
 
-                        var calcReportDateOptions = {
-                            noDateFromExpr: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 0),
-                            noDateToExpr: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 1)
-                        }
+					var calcReportDateOptions = {
+						noDateFromExpr: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 0),
+						noDateToExpr: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 1)
+					}
 
 					await sharedLogicHelper.calculateReportDatesExprs(calcReportDateOptions);
 
@@ -2043,9 +2035,9 @@
 
 			vm.readyStatus.layout = false;
 
-			vm.entityViewerDataService = new EntityViewerDataService();
+			vm.entityViewerDataService = new EntityViewerDataService(reportHelper);
 			vm.entityViewerEventService = new EntityViewerEventService();
-			vm.attributeDataService = new AttributeDataService();
+			vm.attributeDataService = new AttributeDataService(metaContentTypesService, customFieldService, attributeTypeService, uiService);
 
 			//console.log('$scope.$parent.vm.componentData', $scope.$parent.vm.componentData);
 
@@ -2179,22 +2171,22 @@
 
 			});
 
-			var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject){
+			// var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject){
+			//
+			// 	uiService.getCrossEntityAttributeExtensionList({
+			// 		filters: {
+			// 			context_content_type: $scope.$parent.vm.contentType
+			// 		}
+			// 	}).then(function (data){
+			//
+			// 		vm.entityViewerDataService.setCrossEntityAttributeExtensions(data.results);
+			// 		resolve();
+			//
+			// 	}).catch(error => reject(error));
+			//
+			// })
 
-				uiService.getCrossEntityAttributeExtensionList({
-					filters: {
-						context_content_type: $scope.$parent.vm.contentType
-					}
-				}).then(function (data){
-
-					vm.entityViewerDataService.setCrossEntityAttributeExtensions(data.results);
-					resolve();
-
-				}).catch(error => reject(error));
-
-			})
-
-			Promise.all([downloadAttrsPromise, setLayoutPromise, crossEntityAttributeExtensionProm]).then(function () {
+			Promise.all([downloadAttrsPromise, setLayoutPromise]).then(function () {
 
 				vm.dashboardComponentDataService.setEntityViewerDataService(vm.entityViewerDataService);
 				vm.dashboardComponentDataService.setEntityViewerEventService(vm.entityViewerEventService);
@@ -2207,7 +2199,6 @@
 				vm.dashboardComponentDataService.setViewerTableColumns(columns);
 
 				$scope.$apply();
-
 				//vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED);
 
 			}).catch(function (error) {

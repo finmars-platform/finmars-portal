@@ -1,39 +1,59 @@
-<div class="usercode-input" layout="row">
+<div class="usercode-input" layout="column">
 
-    <md-input-container>
-        <label>Type</label>
-        <md-select data-ng-model="prefixType" data-ng-change="updateUserCode()">
-            <md-option ng-value="1">
-                No Prefix
-            </md-option>
-            <md-option ng-value="2">
-                User ID
-            </md-option>
-            <md-option ng-value="5">
-                Hashed User ID
-            </md-option>
-            <md-option ng-value="3">
-                Unique User Code
-            </md-option>
-            <md-option ng-value="4">
-                Group Name
-            </md-option>
-        </md-select>
-    </md-input-container>
+    <div data-ng-if="!item.id">
 
-    <md-input-container style="height: 56px;" data-ng-if="prefixType == 4">
-        <label>Prefix</label>
-        <md-select data-ng-model="selectedGroupPrefix" data-ng-change="updateUserCode()">
-            <md-option  data-ng-repeat="item in groupPrefixes" ng-value="item.value">
-                {{item.value}}
-            </md-option>
-        </md-select>
-    </md-input-container>
+        <div layout="row">
 
-    <md-input-container data-ng-if="prefixType != 3">
-        <label>User code</label>
-        <input type="text" data-ng-model="usercode" data-ng-keyup="updateUserCode(usercode)" >
-    </md-input-container>
+            <md-input-container>
+                <label>Configuration</label>
+                <md-select data-ng-model="configuration_code.value">
+                    <md-option data-ng-repeat="item in configuration_codes"
+                               value="{{item}}"
+                               data-ng-click="updateUserCode(usercode.value, item)">
+                        {{item}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
 
+            <md-input-container style="margin-top: 2px; width: 100%;">
+                <label>User code</label>
+                <input type="text"
+                       data-ng-model="usercode.value"
+                       data-ng-change="validateUserCode(usercode.value)"
+                       data-ng-keyup="updateUserCode(usercode.value, configuration_code.value)">
+            </md-input-container>
+
+            <ng-md-icon class="tooltip-inline-block"
+                        icon="info"
+                        size="20"
+                        style="fill: #777777">
+                <md-tooltip class="tooltip_2"
+                            md-direction="top">
+                    Allowed symbols:
+                    Numbers: 0-9,
+                    Letters: a-z (lowercase)
+                    Special Symbols: _, - (underscore, dash)
+                </md-tooltip>
+            </ng-md-icon>
+        </div>
+
+        <div ng-hide="errorDescription">
+            <p class="small-text"><i>Result: {{item.user_code}}</i></p>
+        </div>
+
+        <div ng-hide="!errorDescription">
+            <p class="small-text error-color" data-ng-bind="errorDescription"></p>
+        </div>
+
+    </div>
+
+    <div data-ng-if="item.id">
+
+        <md-input-container style="margin-top: 2px; width: 100%;">
+            <label>User code</label>
+            <input type="text" data-ng-model="item.user_code" class="disabled-btn">
+        </md-input-container>
+
+    </div>
 
 </div>

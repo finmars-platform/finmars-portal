@@ -4,14 +4,11 @@ import QueuePromisesService from "./queuePromisesService";
 import evEvents from "./entityViewerEvents";
 import objectComparisonHelper from "../helpers/objectsComparisonHelper";
 import metaHelper from "../helpers/meta.helper";
-import reportHelper from "../helpers/reportHelper";
 import utilsHelper from "../helpers/utils.helper";
 
-const uiService = require("./uiService");
 const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
-const metaContentTypesService = require("./metaContentTypesService");
 
-export default function () {
+export default function (metaContentTypesService, uiService, reportHelper) {
 
     //region Autosave requests
     /**
@@ -139,8 +136,7 @@ export default function () {
     };
 
     const getAutosaveLayoutUserCode = function (contentType) {
-        const formattedContentType = contentType.replace('.', '_');
-        return 'system_autosave_' + formattedContentType;
+        return `com.finmars.local:${contentType}:autosave`;
     };
 
     const autosaveListLayout = function (evDataService, isReport) {

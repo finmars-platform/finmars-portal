@@ -36,8 +36,8 @@
 
         vm.addAttribute = function (ev) {
             $mdDialog.show({
-                controller: 'AttributesManagerAddDialogController as vm',
-                templateUrl: 'views/attribute-manager-dialog-view.html',
+                controller: 'AttributeTypeDialogController as vm',
+                templateUrl: 'views/attribute-type-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 locals: {
@@ -166,13 +166,13 @@
 
         vm.editAttr = function (ev, item) {
             $mdDialog.show({
-                controller: 'AttributesManagerEditDialogController as vm',
-                templateUrl: 'views/attribute-manager-dialog-view.html',
+                controller: 'AttributesTypeDialogController as vm',
+                templateUrl: 'views/attribute-type-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 locals: {
                     data: {
-                        attributeId: item.id,
+                        id: item.id,
                         entityType: vm.entityType
                     }
                 }

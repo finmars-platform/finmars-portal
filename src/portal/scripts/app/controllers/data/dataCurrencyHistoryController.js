@@ -5,9 +5,7 @@
 
     'use strict';
 
-    var currencyHistoryService = require('../../services/currencyHistoryService');
-
-    module.exports = function($scope){
+    module.exports = function($scope, currencyHistoryService){
 
         console.log('{"controller": "DataCurrencyHistoryController", status: "initialized"}');
 

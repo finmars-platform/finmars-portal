@@ -5,7 +5,7 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
     var entityResolverService = require('../../services/entityResolverService');
 
-    var unifiedDataService = require('../../services/unifiedDataService')
+    var finmarsDatabaseService = require('../../services/finmarsDatabaseService')
     var importUnifiedDataService = require('../../services/import/importUnifiedDataService');
     var importCurrencyCbondsService = require('../../services/import/importCurrencyCbondsService');
     var currencyDatabaseSearchService = require('../../services/currency/currencyDatabaseSearchService');
@@ -590,6 +590,7 @@
 
 
                         if (scope.entityType === 'currency') {
+                            // TODO replace with finmarsDatabaseService
                             currencyDatabaseSearchService.getList(scope.inputText, 0).then(function (data) {
 
                                 scope.databaseItemsTotal = data.resultCount;
@@ -607,7 +608,7 @@
 
                             })
                         } else {
-                            unifiedDataService.getList(scope.entityType, {
+                            finmarsDatabaseService.getCounterpartiesList(scope.entityType, {
                                 filters: {
                                     query: scope.inputText
                                 }

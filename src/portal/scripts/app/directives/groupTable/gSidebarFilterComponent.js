@@ -7,26 +7,17 @@
 
     'use strict';
 
-    var fieldResolverService = require('../../services/fieldResolverService');
     var evEvents = require('../../services/entityViewerEvents');
     var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
-    var rvDomManager = require('../../services/rv-dom-manager/rv-dom.manager');
-    var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
 
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
 
     // var middlewareService = require('../../services/middlewareService');
 
-    var attributeTypeService = require('../../services/attributeTypeService');
     var metaService = require('../../services/metaService');
 
-    var transactionTypeService = require('../../services/transactionTypeService');
-    var uiService = require('../../services/uiService');
-
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
-    module.exports = function ($mdDialog, $state) {
+    module.exports = function ($mdDialog, $state, fieldResolverService, evRvLayoutsHelper) {
         return {
             restrict: 'AE',
             scope: {

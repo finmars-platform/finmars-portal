@@ -7,12 +7,9 @@
 
     var logService = require('../../../../../core/services/logService');
     var pricingPolicyService = require('../../services/pricingPolicyService');
-    var instrumentService = require('../../services/instrumentService');
     var currencyService = require('../../services/currencyService');
-    var priceHistoryService = require('../../services/priceHistoryService');
-    var currencyHistoryService = require('../../services/currencyHistoryService');
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, instrumentService, priceHistoryService, currencyHistoryService, data) {
 
         logService.controller('FillPriceManuallyInstrumentDialogController', 'initialized');
 

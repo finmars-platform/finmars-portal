@@ -1,4 +1,3 @@
-
 # https://blog.callr.tech/building-docker-images-with-gitlab-ci-best-practices/
 
 stages:
@@ -15,6 +14,18 @@ Build:
     - docker pull $CI_REGISTRY_IMAGE:latest || true
     - docker build --pull --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME --build-arg PROJECT_ENV=production .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  except:
+    - develop
+
+Build Develop:
+  stage: build
+  script:
+    # fetches the latest image (not failing if image is not found)
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - docker build --pull --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME --build-arg PROJECT_ENV=development .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  only:
+    - develop
 
 Push latest:
   variables:

@@ -61,7 +61,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(bookmark)
+                body: JSON.stringify(bookmark)
             })
     };
 
@@ -80,7 +80,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(bookmark)
+                body: JSON.stringify(bookmark)
             })
     };
 

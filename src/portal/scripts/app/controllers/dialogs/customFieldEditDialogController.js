@@ -5,9 +5,7 @@
 
     'use strict';
 
-    var customFieldService = require('../../services/reports/customFieldService');
-
-    module.exports = function ($scope, $mdDialog, data, attributeDataService) {
+    module.exports = function ($scope, $mdDialog, customFieldService, data, attributeDataService) {
 
         var vm = this;
 

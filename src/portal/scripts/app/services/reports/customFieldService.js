@@ -1,9 +1,12 @@
 /**
  * Created by szhitenev on 04.05.2016.
  */
-(function () {
 
-    var customFieldRepository = require('../../repositories/reports/customFieldRepository');
+import CustomFieldRepository from "../../repositories/reports/customFieldRepository";
+
+export default function (cookieService, xhrService) {
+
+    const customFieldRepository = new CustomFieldRepository(cookieService, xhrService);
 
     var getList = function (entityType, options) {
         return customFieldRepository.getList(entityType, options);
@@ -25,8 +28,7 @@
         return customFieldRepository.deleteByKey(entityType, id);
     };
 
-
-    module.exports = {
+    return {
         getList: getList,
         getByKey: getByKey,
         create: create,
@@ -34,5 +36,4 @@
         deleteByKey: deleteByKey
     }
 
-
-}());
+};

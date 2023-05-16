@@ -1,16 +1,8 @@
 /**
  * Created by szhitenev on 12.09.2016.
  */
-(function () {
 
-    'use strict';
-
-    var metaContentTypesService = require('../../services/metaContentTypesService');
-
-
-    var configurationImportGetService = require('./configurationImportGetService');
-    var configurationImportMapService = require('./configurationImportMapService');
-
+export default function (metaContentTypesService, configurationImportGetService, configurationImportMapService) {
 
     var syncTransactionType = function (item, cacheContainer, errors) {
 
@@ -525,8 +517,7 @@
     };
 
 
-    module.exports = {
+    return {
         syncItem: syncItem
     }
-
-}());
+};

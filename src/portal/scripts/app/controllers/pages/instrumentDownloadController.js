@@ -6,19 +6,18 @@
     'use strict';
 
     var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
-    var instrumentService = require('../../services/instrumentService');
     var currencyService = require('../../services/currencyService');
 
     var instrumentTypeService = require('../../services/instrumentTypeService');
     var instrumentDailyPricingModelService = require('../../services/instrument/instrumentDailyPricingModelService');
-    var importPriceDownloadSchemeService = require('../../services/import/importPriceDownloadSchemeService');
+    // var importPriceDownloadSchemeService = require('../../services/import/importPriceDownloadSchemeService');
 
     var importInstrumentService = require('../../services/import/importInstrumentService');
     var instrumentPaymentSizeDetailService = require('../../services/instrument/instrumentPaymentSizeDetailService');
     var instrumentAttributeTypeService = require('../../services/instrument/instrumentAttributeTypeService');
 
 
-    module.exports = function instrumentDownloadController($scope, $mdDialog) {
+    module.exports = function instrumentDownloadController($scope, $mdDialog, instrumentService) {
 
         var vm = this;
 
@@ -45,7 +44,7 @@
         };
 
         vm.dailyModels = [];
-        vm.priceDownloadSchemes = [];
+        // vm.priceDownloadSchemes = [];
         vm.instrumentTypes = [];
         vm.currencies = [];
 
@@ -176,7 +175,7 @@
 
                     setTimeout(function () {
                         vm.load();
-                    }, 1000)
+                    }, 5000)
 
                 }
 
@@ -327,11 +326,11 @@
                 $scope.$apply();
             });
 
-            importPriceDownloadSchemeService.getList().then(function (data) {
-                vm.priceDownloadSchemes = data.results;
-                vm.readyStatus.priceDownloadScheme = true;
-                $scope.$apply();
-            });
+            // importPriceDownloadSchemeService.getList().then(function (data) {
+            //     vm.priceDownloadSchemes = data.results;
+            //     vm.readyStatus.priceDownloadScheme = true;
+            //     $scope.$apply();
+            // });
 
             instrumentPaymentSizeDetailService.getList().then(function (data) {
                 vm.paymentSizeDefaults = data;

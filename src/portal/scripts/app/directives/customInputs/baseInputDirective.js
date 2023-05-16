@@ -10,6 +10,7 @@ export default function () {
 			indicatorButtonIcon: "@",
 			model: "=",
 			eventSignal: "=",
+			noIndicatorButton: "@",
 			isDisabled: "=",
 			onChange: "&?",
 			onBlurCallback: "&?",
@@ -60,7 +61,7 @@ export default function () {
 					classes = 'custom-input-is-valid';
 				}
 
-				if (scope.noIndicatorBtn) {
+				if (scope.noIndicatorButton) {
 					classes += " no-indicator-btn";
 				}
 

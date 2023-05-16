@@ -17,7 +17,7 @@ import XhrService from '../services/xhrService';
 const xhrService = new XhrService(errorService);
 
 // const configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
-import configureRepositoryUrlService from "./configureRepositoryUrlService";
+import configureRepositoryUrlService from "../services/configureRepositoryUrlService";
 // const baseUrlService = require('../services/baseUrlService');
 import baseUrlService from "../services/baseUrlService";
 
@@ -72,7 +72,7 @@ const create = function (group) {
 				Accept: 'application/json',
 				'Content-type': 'application/json'
 			},
-			data: JSON.stringify(group)
+			body: JSON.stringify(group)
 		})
 };
 
@@ -91,7 +91,7 @@ const update = function (id, group) {
 				Accept: 'application/json',
 				'Content-type': 'application/json'
 			},
-			data: JSON.stringify(group)
+			body: JSON.stringify(group)
 		})
 };
 

@@ -34,7 +34,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/csv/scheme-light/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'import/csv/scheme/light/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -61,7 +61,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(scheme)
+                body: JSON.stringify(scheme)
             })
     };
 
@@ -98,7 +98,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(scheme)
+                body: JSON.stringify(scheme)
             })
     };
 

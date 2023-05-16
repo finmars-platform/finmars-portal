@@ -27,7 +27,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(config)
+                body: JSON.stringify(config)
             })
     };
 

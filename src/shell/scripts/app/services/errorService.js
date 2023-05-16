@@ -116,7 +116,7 @@ export default function (toastNotificationService) {
 
         console.log('notifyError.reason', reason);
 
-        let error_object = reason.response.data.error
+        let error_object = reason.hasOwnProperty('error') ? reason.error : reason.response.data.error;
 
         let message = ''
 
@@ -191,9 +191,15 @@ export default function (toastNotificationService) {
 
     };
 
+    const error = function (message) {
+        if (!message || typeof message !== 'string') throw "No message for an error were specified";
+        toastNotificationService.error(...arguments)
+    }
+
     return {
         handleXhrErrors: handleXhrErrors,
-        notifyError: notifyError
+        notifyError: notifyError,
+        error: error,
     }
 
 };
