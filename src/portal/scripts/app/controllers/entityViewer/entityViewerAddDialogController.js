@@ -55,7 +55,7 @@
             vm.hasEnabledStatus = false;
         }
 
-        if (Object.keys(entity).length) { // make copy option
+        if (Object.keys(entity).length) { // Make a copy option
             vm.entity = entity;
 			delete vm.entity.id; // lack of id indicates creation of entity
         }
