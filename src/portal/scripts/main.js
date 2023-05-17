@@ -44,7 +44,6 @@ import configurationService from "./app/services/configurationService";
 
 import utilsService from "./app/services/utilsService";
 //# endregion Services and helpers for them
-
 import portalController from './app/controllers/portalController.js';
 import enterUserCodeDialogController from "./app/controllers/dialogs/enterUserCodeDialogController.js";
 import portfolioRegisterDialogController from "./app/controllers/dialogs/portfolioRegisterDialogController";
@@ -350,6 +349,8 @@ export default (function () {
     portal.controller('SystemErrorLogDialogController', ['$scope', '$mdDialog', 'globalDataService', 'data', require('./app/controllers/dialogs/systemErrorLogDialogController')]);
     portal.controller('LogDialogController', ['$scope', '$mdDialog', 'globalDataService', 'data', require('./app/controllers/dialogs/logDialogController')]);
     portal.controller('HistoryDialogController', ['$scope', '$mdDialog', 'globalDataService', 'data', require('./app/controllers/dialogs/historyDialogController')]);
+
+    portal.controller('SimpleLoginDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/simpleLoginDialogController')]);
 
     // Configuration
 

@@ -161,25 +161,47 @@
 
             vm.processing = true;
 
-            configurationService.update(vm.item.id, vm.item).then(function (data) {
+            $mdDialog.show({
+                controller: 'SimpleLoginDialogController as vm',
+                templateUrl: 'views/dialogs/simple-login-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    data: {
 
-                vm.item = data;
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+                console.log('res', res);
+                if (res.status === 'agree') {
 
-                configurationService.pushConfigurationToMarketplace(vm.item.id, {
+                    configurationService.update(vm.item.id, vm.item).then(function (data) {
 
-                    changelog: vm.changelog
+                        vm.item = data;
 
-                }).then(function (data) {
+                        configurationService.pushConfigurationToMarketplace(vm.item.id, {
+                            username: res.data.username,
+                            password: res.data.password,
+                            changelog: vm.changelog
+                        }).then(function (data) {
 
-                    vm.changelog = '';
+                            vm.changelog = '';
 
-                    toastNotificationService.success("Configuration pushed successfully");
+                            toastNotificationService.success("Configuration pushed successfully");
 
-                    vm.processing = false;
-                    $scope.$apply();
+                            vm.processing = false;
+                            $scope.$apply();
 
-                })
+                        })
 
+                    })
+
+                }
             })
 
         }
