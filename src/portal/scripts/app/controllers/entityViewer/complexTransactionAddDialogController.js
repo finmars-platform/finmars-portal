@@ -1466,7 +1466,7 @@
                 } */
                 else if (data.isCopy) { // if copy
 
-                    console.log("Apply from make copy", entity);
+                    console.log("Apply from Make a copy", entity);
                     notCopiedTransaction = false;
                     vm.entity = entity;
                     vm.entity.frontOptions = {

@@ -121,10 +121,51 @@
 
         }
 
+        vm.makeCopy = function ($event) {
+
+            var attribute = JSON.parse(JSON.stringify(vm.attribute));
+
+            delete attribute.id;
+            attribute.user_code = attribute.user_code + '_copy';
+
+            if (attribute.classifiers) {
+
+                delete attribute.classifiers_flat
+
+                attribute.classifiers = attribute.classifiers.map(function (item){
+
+                    delete item.id; // TODO maybe an issue if nested classifiers, refactor later 2023-05-16
+
+                    return item
+                })
+
+            }
+
+            var copyPromise = $mdDialog.show({
+                controller: 'AttributeTypeDialogController as vm',
+                templateUrl: 'views/attribute-type-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        entityType: vm.entityType,
+                        attribute: attribute
+                    }
+                }
+            });
+
+            $mdDialog.hide({status: 'copy', dialogPromise: copyPromise});
+
+        };
+
         var init = function () {
 
             vm.entityType = data.entityType;
             vm.id = data.id;
+
+            if (data.attribute) {
+                vm.attribute = data.attribute;
+            }
 
             if (vm.id) {
 

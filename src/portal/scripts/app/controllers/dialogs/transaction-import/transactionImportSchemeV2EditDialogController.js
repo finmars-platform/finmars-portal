@@ -210,21 +210,26 @@ const importTransactionService = require("../../../services/import/importTransac
                             scenario.error_message = "⚠️ Transaction Type is not found"
                         }
 
-                        scenario.inputs.forEach(function (input_item) {
+                        if (scenario.inputs) {
 
-                            scenario.fields.forEach(function (field) {
+                            scenario.inputs.forEach(function (input_item) {
 
-                                if (field.transaction_type_input === input_item.name) {
+                                scenario.fields.forEach(function (field) {
 
-                                    input_item.expression = field.value_expr
+                                    if (field.transaction_type_input === input_item.name) {
 
-                                }
+                                        input_item.expression = field.value_expr
+
+                                    }
+
+                                })
+
 
                             })
 
-
-                        })
-
+                        } else {
+                            scenario.inputs = []
+                        }
 
                         if (scenario.is_default_rule_scenario) {
                             vm.defaultRuleScenario = scenario
