@@ -48,6 +48,8 @@
         vm.readyStatus = {attrs: false, permissions: true, entity: false, layout: false, userFields: false};
         vm.previewMode = !!data.previewMode;
 
+        if (!vm.previewMode) vm.readyStatus.transactionTypes = false;
+
         vm.editLayoutEntityInstanceId = null;
         vm.editLayoutByEntityInsance = false;
 
@@ -888,7 +890,7 @@
 
                     vm.dataConstructorData = {
                         entityType: vm.entityType,
-                        from: vm.entityType,
+                        fromEntityType: vm.entityType,
                         instanceId: vm.transactionTypeId
                     };
 
@@ -934,7 +936,8 @@
         };
 
         vm.checkReadyStatus = function () {
-            return vm.readyStatus.attrs && vm.readyStatus.entity && vm.readyStatus.permissions && vm.readyStatus.layout && vm.readyStatus.userFields;
+            // return true if values of all properties of vm.readyStatus equals to 'true'
+            return !Object.keys(vm.readyStatus).find( key => !vm.readyStatus[key] );
         };
 
         vm.bindFlex = sharedLogicHelper.bindFlex;
@@ -1785,7 +1788,6 @@
 
                 if (res.status === "agree") {
 
-                    vm.readyStatus.attrs = false;
                     vm.readyStatus.entity = false;
                     vm.readyStatus.layout = false;
 

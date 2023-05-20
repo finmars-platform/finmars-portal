@@ -50,6 +50,8 @@
 
                 scope.layoutAttrs = layoutService.getLayoutAttrs();
 
+                scope.readonly = false;
+
                 scope.palettesObj = {
                     palettesList: scope.palettesList
                 }
@@ -66,9 +68,12 @@
 
                 var tabs = entityDataConstructorVm.tabs;
 
+                var readonlyAttrs = layoutService.getReadonlyAttributes(scope.entityType);
+
                 function findItem() {
 
-                    scope.item = JSON.parse(JSON.stringify(scope.tabFieldsTree[scope.row][scope.column]));
+                    var attributeData = JSON.parse(JSON.stringify(scope.tabFieldsTree[scope.row][scope.column]));
+                    scope.item = attributeData;
 
                     if (scope.item.backgroundColor) {
 
@@ -95,18 +100,23 @@
                         scope.item.options = {};
                     }
 
-                    findAttribute();
+                    findAttribute(attributeData);
+                    if ( scope.item.attribute && readonlyAttrs.includes( scope.item.attribute.key ) ) {
+                        scope.readonly = true;
+                    }
+
+                    // scope.item.readonly = scope.item.attribute && readonlyAttrs.includes( scope.item.attribute.key );
 
                 }
 
-                function findAttribute() {
+                function findAttribute(attributeData) {
 
                     var attrFound = false;
 
                     var i, b, l, e, u;
                     for (i = 0; i < scope.attrs.length; i = i + 1) {
-                        if (scope.attrs[i].id && scope.item.id) {
-                            if (scope.attrs[i].id === scope.item.id) {
+                        if (scope.attrs[i].id && attributeData.id) {
+                            if (scope.attrs[i].id === attributeData.id) {
                                 scope.item.attribute = scope.attrs[i];
                                 attrFound = true;
                                 break;
@@ -116,7 +126,7 @@
 
                     if (!attrFound) {
                         for (e = 0; e < scope.entityAttrs.length; e = e + 1) {
-                            if (scope.entityAttrs[e].key === scope.item.key) {
+                            if (scope.entityAttrs[e].key === attributeData.key) {
                                 scope.item.attribute = scope.entityAttrs[e];
                                 attrFound = true;
                                 break;
