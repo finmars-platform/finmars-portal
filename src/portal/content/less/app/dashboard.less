@@ -329,6 +329,16 @@
   .z-index-2 {
     z-index: 2;
   }
+
+  // Refactor markup
+  .generate-z-index(@counter) when (@counter <= 1000) {
+    .z-index-@{counter} {
+      z-index: @counter;
+    }
+    .generate-z-index(@counter + 1);
+  }
+  .generate-z-index(1);
+
 }
 
 .g-dashboard-top-button {
