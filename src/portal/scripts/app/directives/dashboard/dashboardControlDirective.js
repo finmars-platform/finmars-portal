@@ -167,6 +167,8 @@
 
                                 scope.item.data.store.value = getSelectedIds(scope.item.data.store.user_codes);
 
+                            } else {
+                                scope.item.data.store.value = [];
                             }
 
 
@@ -214,18 +216,8 @@
                         } else {
                             changedData.data = JSON.parse(JSON.stringify(scope.item.data.store));
                         }
-                    } else {
-
-                        scope.componentData.value = null;
-                        var emptyVal = scope.componentData.settings.multiple ? [] : null;
-
-                        scope.entityData.value = null; // for entity search select
-
-                        scope.item.data.store.value = emptyVal
-                        scope.item.data.store.name = '';
-                        scope.item.data.store.user_codes = emptyVal;
-
                     }
+
 
                     console.log('valueChanged.value before output', scope.item.data.store.value);
 
