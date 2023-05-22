@@ -19,13 +19,13 @@ a {
 }
 
 // Generating z-index-1 to z-index-100
-.generate-z-index(@counter) when (@counter <= 100) {
+.generate-z-index(@counter) when (@counter <= 1000) {
   .z-index-@{counter} {
     z-index: @counter;
   }
   .generate-z-index(@counter + 1);
 }
-.generate-z-index(100);
+.generate-z-index(1);
 
 
 button {
