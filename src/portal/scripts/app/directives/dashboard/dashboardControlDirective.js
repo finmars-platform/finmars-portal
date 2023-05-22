@@ -4,12 +4,12 @@
 
     var entityResolverService = require('../../services/entityResolverService');
     var metaContentTypeService = require('../../services/metaContentTypesService');
-	var expressionsService = require('../../services/expression.service');
+    var expressionsService = require('../../services/expression.service');
 
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
-	var directivesEvents = require('../../services/events/directivesEvents');
+    var directivesEvents = require('../../services/events/directivesEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
-	var reportHelper = require('../../helpers/reportHelper');
+    var reportHelper = require('../../helpers/reportHelper');
 
     var EventService = require('../../services/eventService');
     var uiService = require('../../services/uiService');
@@ -26,14 +26,14 @@
                 dashboardDataService: '=',
                 dashboardEventService: '=',
             },
-			templateUrl: 'views/directives/dashboard/dashboard-control-view.html',
+            templateUrl: 'views/directives/dashboard/dashboard-control-view.html',
             link: function (scope, elem, attr) {
 
                 scope.fields = [];
                 scope.entityType = null;
                 scope.readyStatus = {
-                	componentWidthCalculated: false
-				};
+                    componentWidthCalculated: false
+                };
 
                 scope.attribute = {
                     key: 'value'
@@ -43,8 +43,8 @@
                     value: null
                 }
 
-				var dashboardControlElem = elem[0].querySelector(".dashboardControl");
-				var cellWidth;
+                var dashboardControlElem = elem[0].querySelector(".dashboardControl");
+                var cellWidth;
                 var entitiesList = [];
 
                 scope.getEntityTypeByContentType = function (contentType) {
@@ -146,7 +146,9 @@
                 function getSelectedIds(userCodes) {
 
                     return userCodes.map(function (uCode) {
-                        var selEntity = entitiesList.find(function (entity) { return entity.user_code === uCode });
+                        var selEntity = entitiesList.find(function (entity) {
+                            return entity.user_code === uCode
+                        });
                         return selEntity.id;
                     });
 
@@ -199,8 +201,22 @@
                     };
 
                     if (scope.item.data.store) {
-                        changedData.data = JSON.parse(JSON.stringify(scope.item.data.store));
+
+
+                        // Date control could not store values list, only single value
+                        if (scope.componentData.settings.value_type === 40) {
+
+                            if (Array.isArray(scope.item.data.store.value)) {
+                                scope.item.data.store.value = scope.item.data.store.value[0];
+                            } else {
+                                changedData.data = JSON.parse(JSON.stringify(scope.item.data.store));
+                            }
+                        } else {
+                            changedData.data = JSON.parse(JSON.stringify(scope.item.data.store));
+                        }
                     }
+
+                    console.log('valueChanged.value before output', scope.item.data.store.value);
 
                     scope.dashboardDataService.setComponentOutput(scope.item.data.id, changedData);
                     scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id);
@@ -244,20 +260,20 @@
 
                     if (scope.componentData.settings.multiple) {
 
-                    	scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENTS_SIZES_CHANGED, function () {
+                        scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENTS_SIZES_CHANGED, function () {
 
-							var componentUIData = scope.dashboardDataService.getComponentUIData(scope.item.data.id);
+                            var componentUIData = scope.dashboardDataService.getComponentUIData(scope.item.data.id);
 
-							if (componentUIData && componentUIData.width !== undefined && componentUIData.width !== null) {
-								dashboardControlElem.style.width = componentUIData.width;
-								scope.readyStatus.componentWidthCalculated = true; // needed so that multiselector chips can get actual component width
-							}
+                            if (componentUIData && componentUIData.width !== undefined && componentUIData.width !== null) {
+                                dashboardControlElem.style.width = componentUIData.width;
+                                scope.readyStatus.componentWidthCalculated = true; // needed so that multiselector chips can get actual component width
+                            }
 
-							scope.multiselectEventService.dispatchEvent(directivesEvents.CHIPS_LIST_ELEMENT_SIZE_CHANGED);
+                            scope.multiselectEventService.dispatchEvent(directivesEvents.CHIPS_LIST_ELEMENT_SIZE_CHANGED);
 
-						});
+                        });
 
-					}
+                    }
 
                 };
 
@@ -278,86 +294,86 @@
 
                 }
 
-				const reportDateKeys = ['report_date', 'pl_first_date', 'begin_date', 'end_date'];
+                const reportDateKeys = ['report_date', 'pl_first_date', 'begin_date', 'end_date'];
 
-				const getReportOptionsValue = function (layout, key) {
+                const getReportOptionsValue = function (layout, key) {
 
-					var rlOptions = layout.data.reportLayoutOptions;
+                    var rlOptions = layout.data.reportLayoutOptions;
 
-					/* if (rlOptions && rlOptions.datepickerOptions && reportDateKeys.indexOf(key) > -1) {
+                    /* if (rlOptions && rlOptions.datepickerOptions && reportDateKeys.indexOf(key) > -1) {
 
-						var dateFrom = reportDateKeys.indexOf(key) < 2;
-						var dateExpr = rlOptions.datepickerOptions.reportFirstDatepicker.expression;
+                        var dateFrom = reportDateKeys.indexOf(key) < 2;
+                        var dateExpr = rlOptions.datepickerOptions.reportFirstDatepicker.expression;
 
-						if (dateFrom) {
-							dateExpr = rlOptions.datepickerOptions.reportFirstDatepicker.expression;
+                        if (dateFrom) {
+                            dateExpr = rlOptions.datepickerOptions.reportFirstDatepicker.expression;
 
-						} else {
-							dateExpr = rlOptions.datepickerOptions.reportLastDatepicker.expression;
-						}
+                        } else {
+                            dateExpr = rlOptions.datepickerOptions.reportLastDatepicker.expression;
+                        }
 
-						if (dateExpr) {
+                        if (dateExpr) {
 
-							return new Promise(function (resolve) {
+                            return new Promise(function (resolve) {
 
-								expressionsService.getResultOfExpression({'expression': dateExpr}).then(function (data) {
-									resolve(data.result)
+                                expressionsService.getResultOfExpression({'expression': dateExpr}).then(function (data) {
+                                    resolve(data.result)
 
-								}).catch(function (error) {
-									console.error('Error occurred while trying to evaluate: ' + dateExpr, error);
-									resolve(null);
-								});
+                                }).catch(function (error) {
+                                    console.error('Error occurred while trying to evaluate: ' + dateExpr, error);
+                                    resolve(null);
+                                });
 
-							});
+                            });
 
-						}
+                        }
 
-					} */
-					if (rlOptions && reportDateKeys.indexOf(key) > -1) {
-						return reportHelper.getReportDate(layout.data.reportOptions, layout.data.reportLayoutOptions, key);
-					}
+                    } */
+                    if (rlOptions && reportDateKeys.indexOf(key) > -1) {
+                        return reportHelper.getReportDate(layout.data.reportOptions, layout.data.reportLayoutOptions, key);
+                    }
 
-					return new Promise(function (resolve) {
-						resolve(layout.data.reportOptions[key]);
-					});
+                    return new Promise(function (resolve) {
+                        resolve(layout.data.reportOptions[key]);
+                    });
 
-				};
+                };
 
-				var formatValueForDataStore = function (value, componentData) {
+                var formatValueForDataStore = function (value, componentData) {
 
-					if (!value) {
-						return {};
-					}
+                    if (!value) {
+                        return {};
+                    }
 
-					if (componentData.settings.multiple) {
+                    if (componentData.settings.multiple) {
 
-						return Array.isArray(value) ? {value: value} : {value: [value]};
+                        return Array.isArray(value) ? {value: value} : {value: [value]};
 
-					}
+                    }
 
-					if (componentData.settings.value_type === 100) {
+                    if (componentData.settings.value_type === 100) {
 
-						value = Array.isArray(value) ? value[0] : value;
+                        value = Array.isArray(value) ? value[0] : value;
 
-						var selectedRelation = scope.fields.find(function (field) {
+                        var selectedRelation = scope.fields.find(function (field) {
 
-							return field.id === value;
+                            return field.id === value;
 
-						});
+                        });
 
-						if (selectedRelation) {
+                        if (selectedRelation) {
 
-							return {value: value, name: selectedRelation.name};
+                            return {value: value, name: selectedRelation.name};
 
-						}
+                        }
 
-						return {};
+                        return {};
 
-					}
+                    }
 
-					return Array.isArray(value) ? {value: value[0]} : {value: value};
+                    return Array.isArray(value) ? {value: value[0]} : {value: value};
 
-				};
+                };
 
                 /**
                  * Returns data about selected by default entity
@@ -396,39 +412,40 @@
 
                         }
 
-                    } catch (e) {}
+                    } catch (e) {
+                    }
 
                     return {};
 
                 }
 
-				var resolveValueFromReportLayout = function (layoutData, componentData, resolve) {
+                var resolveValueFromReportLayout = function (layoutData, componentData, resolve) {
 
-					/* var layout;
+                    /* var layout;
 
-					if (layoutData.results) {
+                    if (layoutData.results) {
 
-						layout = layoutData.results.find(function (item) {
-							return item.user_code === user_code
-						})
+                        layout = layoutData.results.find(function (item) {
+                            return item.user_code === user_code
+                        })
 
-					} */
+                    } */
 
-					if (layoutData.results && layoutData.results[0]) {
+                    if (layoutData.results && layoutData.results[0]) {
 
-						var layout = layoutData.results[0];
-						var key = componentData.settings.defaultValue.reportOptionsKey;
-						// var value = layout.data.reportOptions[key];
-						getReportOptionsValue(layout, key).then(function (value) {
-							value = formatValueForDataStore(value, componentData);
-							resolve(value);
-						});
+                        var layout = layoutData.results[0];
+                        var key = componentData.settings.defaultValue.reportOptionsKey;
+                        // var value = layout.data.reportOptions[key];
+                        getReportOptionsValue(layout, key).then(function (value) {
+                            value = formatValueForDataStore(value, componentData);
+                            resolve(value);
+                        });
 
-					} else {
-						resolve({});
-					}
+                    } else {
+                        resolve({});
+                    }
 
-				};
+                };
 
                 /** Get data for selected relation by user code **/
                 var getRelSelDataStore = function () {
@@ -455,21 +472,21 @@
                             }
 
                         })
-                        .catch(function (e) {
+                            .catch(function (e) {
 
-                            e._customData = {
-                                user_code: scope.item.data.store.user_codes,
-                                tab: scope.tabNumber,
-                                row: scope.rowNumber,
-                                column: scope.columnNumber,
-                                title: scope.customName,
-                            };
+                                e._customData = {
+                                    user_code: scope.item.data.store.user_codes,
+                                    tab: scope.tabNumber,
+                                    row: scope.rowNumber,
+                                    column: scope.columnNumber,
+                                    title: scope.customName,
+                                };
 
-                            console.error("Failed to load selected option for control", e);
+                                console.error("Failed to load selected option for control", e);
 
-                            resolve({});
+                                resolve({});
 
-                        });
+                            });
 
                     });
 
@@ -492,7 +509,9 @@
 
                             scope.item.data.store.value = scope.item.data.store.user_codes.map(function (userCode) {
 
-                                var selected = entitiesList.find(function (entity) { return entity.user_code === userCode });
+                                var selected = entitiesList.find(function (entity) {
+                                    return entity.user_code === userCode
+                                });
                                 return selected.id;
 
                             });
@@ -567,28 +586,27 @@
                         } else {
                             return promisify({value: value, name: name, label: label});
                         }
-                    }
-                    else if (mode === 0) { // Get default value from report
+                    } else if (mode === 0) { // Get default value from report
 
                         var user_code = componentData.settings.defaultValue.layout;
                         var entityType = componentData.settings.defaultValue.entity_type;
 
-						return new Promise(function (resolve) {
+                        return new Promise(function (resolve) {
 
-							uiService.getListLayout(entityType, {
-								filters: {
-									user_code: user_code
-								}
-							}).then(function (data) {
+                            uiService.getListLayout(entityType, {
+                                filters: {
+                                    user_code: user_code
+                                }
+                            }).then(function (data) {
 
-								resolveValueFromReportLayout(data, componentData, resolve);
+                                resolveValueFromReportLayout(data, componentData, resolve);
 
-							}).catch(function (error) {
-								console.error(error);
-								resolve({});
-							});
+                            }).catch(function (error) {
+                                console.error(error);
+                                resolve({});
+                            });
 
-						});
+                        });
 
                     }
                     /*else {
@@ -607,6 +625,8 @@
                                 resolve();
                                 return;
                             }
+
+                            console.log('settingUpDefaultValue.store', store);
 
                             scope.item.data.store = store;
                             scope.$apply();
@@ -675,12 +695,12 @@
 
                     }
 
-					if (!scope.item.data.store) scope.item.data.store = {};
+                    if (!scope.item.data.store) scope.item.data.store = {};
 
                     if (scope.componentData.settings.multiple) {
 
-                        if ( !Array.isArray(scope.item.data.store.value) ) scope.item.data.store.value = [];
-                        if ( !Array.isArray(scope.item.data.store.user_codes) ) scope.item.data.store.user_codes = [];
+                        if (!Array.isArray(scope.item.data.store.value)) scope.item.data.store.value = [];
+                        if (!Array.isArray(scope.item.data.store.user_codes)) scope.item.data.store.user_codes = [];
 
                     }
 
@@ -688,7 +708,7 @@
 
                         scope.getData().then(function () {
 
-							scope.settingUpDefaultValue(scope.componentData).then(function () {
+                            scope.settingUpDefaultValue(scope.componentData).then(function () {
                                 scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                                 scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
                             });
@@ -696,8 +716,7 @@
 
                         });
 
-                    }
-                    else {
+                    } else {
 
                         scope.settingUpDefaultValue(scope.componentData).then(function () {
                             scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
@@ -708,19 +727,19 @@
 
                     if (scope.componentData.settings.multiple) {
 
-                    	scope.multiselectEventService = new EventService();
+                        scope.multiselectEventService = new EventService();
 
-						var componentUIData = scope.dashboardDataService.getComponentUIData(scope.item.data.id);
-						var componentSizeCalculated = componentUIData && componentUIData.width;
+                        var componentUIData = scope.dashboardDataService.getComponentUIData(scope.item.data.id);
+                        var componentSizeCalculated = componentUIData && componentUIData.width;
 
-						if (componentSizeCalculated) {
-							dashboardControlElem.style.width = componentUIData.width; // needed so that multiselector chips can get actual component width
-							scope.readyStatus.componentWidthCalculated = true;
-						}
+                        if (componentSizeCalculated) {
+                            dashboardControlElem.style.width = componentUIData.width; // needed so that multiselector chips can get actual component width
+                            scope.readyStatus.componentWidthCalculated = true;
+                        }
 
-					} else {
-						scope.readyStatus.componentWidthCalculated = true;
-					}
+                    } else {
+                        scope.readyStatus.componentWidthCalculated = true;
+                    }
 
                     if (scope.componentData.custom_component_name) {
                         scope.customName = scope.componentData.custom_component_name;
