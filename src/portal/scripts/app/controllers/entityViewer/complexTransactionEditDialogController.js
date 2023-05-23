@@ -85,7 +85,7 @@
         // vm.errorFieldsList = [];
         vm.inputsWithCalculations = null;
 
-        vm.fieldsDataStore = {}
+        vm.fieldsDataStore = {};
 
         vm.openedIn = data.openedIn;
 
@@ -94,8 +94,8 @@
         console.log('vm.entityTabs', vm.entityTabs);
 
         vm.entityTabsMenuTplt = sharedLogicHelper.entityTabsMenuTplt;
-        vm.entityTabsMenuPopupData = {viewModel: vm}
-        vm.entityTablePopupClasses = "border-radius-2"
+        vm.entityTabsMenuPopupData = {viewModel: vm};
+        vm.entityTablePopupClasses = "border-radius-2";
 
         var contentType = metaContentTypesService.findContentTypeByEntity("complex-transaction", "ui");
 
