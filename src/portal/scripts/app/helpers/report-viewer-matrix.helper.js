@@ -90,6 +90,7 @@
         subtotal_formula_id = parseInt(subtotal_formula_id, 10)
 
         console.log('getMatrix.subtotal_formula_id', subtotal_formula_id)
+        console.log('getMatrix.rows', rows)
 
         var result = [];
 
