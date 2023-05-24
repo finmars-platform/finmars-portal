@@ -47,7 +47,10 @@
                 <div data-ng-if="item.localItem">
 
                     <div data-ng-if="item.latest_release_object.version == item.localItem.version">
-                        <span style="background: #00cc7d; padding: 4px; border-radius: 4px; display: inline-block; margin: 4px;">Installed</span>
+<!--                        <span style="background: #00cc7d; padding: 4px; border-radius: 4px; display: inline-block; margin: 4px;">Installed</span>-->
+                        <md-button class="md-primary md-raised" data-ng-click="vm.installConfiguration($event, item)">
+                            Reinstall
+                        </md-button>
                     </div>
 
                     <div data-ng-if="item.latest_release_object.version != item.localItem.version">
