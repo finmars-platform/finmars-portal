@@ -1,7 +1,8 @@
 <div class="shell-view-container min-height position-relative">
 
-    <div data-ng-if="vm.PROJECT_ENV == 'local'" class="development-bar">
-        Local Development
+    <div data-ng-if="vm.PROJECT_ENV === 'local'"
+         class="flex-row flex-center text-bold development-bar">
+        DEV
     </div>
 
     <div ng-if="vm.showPageContent()" class="height-100">

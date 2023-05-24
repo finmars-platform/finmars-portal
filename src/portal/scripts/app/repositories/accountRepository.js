@@ -51,7 +51,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'accounts/account-light/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl  +  '/' + prefix + '/' + apiVersion + '/' + 'accounts/account/light/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -95,7 +95,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(account)
+                body: JSON.stringify(account)
             })
     };
 
@@ -114,7 +114,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(account)
+                body: JSON.stringify(account)
             })
     };
 
@@ -133,7 +133,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(accounts)
+                body: JSON.stringify(accounts)
             })
     };
 
@@ -176,7 +176,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(data)
+                body: JSON.stringify(data)
             })
             .then(function (data) {
                 return new Promise(function (resolve, reject) {

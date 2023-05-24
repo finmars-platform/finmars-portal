@@ -1,6 +1,8 @@
 /**
  * Created by sergey on 04.11.16.
  */
+import metaContentTypesService from "../../../services/metaContentTypesService";
+
 (function () {
 
     'use strict';
@@ -11,7 +13,7 @@
     // var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
     var inviteToSharedConfigurationFileService = require('../../../services/inviteToSharedConfigurationFileService');
 
-    module.exports = function ($scope, $mdDialog, backendConfigurationImportService, data) {
+    module.exports = function ($scope, $mdDialog, metaContentTypesService, backendConfigurationImportService, data) {
 
         var vm = this;
 
@@ -74,15 +76,16 @@
 
             $mdDialog.show({
                 controller: 'UiLayoutSaveAsDialogController as vm',
-                templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
+                templateUrl: 'views/dialogs/ui/ui-layout-save-as-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 multiple: true,
                 clickOutsideToClose: false,
                 locals: {
-                    options: {
+                    data: {
                         layoutName: layoutData.name,
-                        layoutUserCode: layoutData.user_code
+                        layoutUserCode: layoutData.user_code,
+                        dashboard: true,
                     }
                 }
 
@@ -93,7 +96,9 @@
                     layoutData.name = res.data.name;
                     layout.name = res.data.name;
                     layoutData.user_code = res.data.user_code;
+                    layoutData.configuration_code = res.data.configuration_code;
                     layout.user_code = res.data.user_code;
+                    layout.configuration_code = res.data.configuration_code;
                     /*
                     uiService.updateDashboardLayout(layoutData.id, layoutData).then(function (data) {
                         $scope.$apply()
@@ -400,19 +405,22 @@
 
         vm.getInvites = function () {
 
-            inviteToSharedConfigurationFileService.getListOfMyInvites({
-                filters: {
-                    status: '0'
-                }
-            }).then(function (data) {
+            vm.invites = [];
 
-                vm.invites = data.results;
-
-                console.log('vm.invites', vm.invites);
-
-                $scope.$apply();
-
-            })
+            // Deprecated
+            // inviteToSharedConfigurationFileService.getListOfMyInvites({
+            //     filters: {
+            //         status: '0'
+            //     }
+            // }).then(function (data) {
+            //
+            //     vm.invites = data.results;
+            //
+            //     console.log('vm.invites', vm.invites);
+            //
+            //     $scope.$apply();
+            //
+            // })
 
         };
 

@@ -34,7 +34,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
 var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'counterparties/responsible-light/', options),
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'counterparties/responsible/light/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -78,7 +78,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'co
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(responsible)
+                body: JSON.stringify(responsible)
             })
     };
 
@@ -97,7 +97,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'co
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(responsible)
+                body: JSON.stringify(responsible)
             })
     };
 
@@ -116,7 +116,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'co
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(responsibles)
+                body: JSON.stringify(responsibles)
             })
     };
 
@@ -158,7 +158,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'co
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(data)
+                body: JSON.stringify(data)
             })
             .then(function (data) {
                 return new Promise(function (resolve, reject) {

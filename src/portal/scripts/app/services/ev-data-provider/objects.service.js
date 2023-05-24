@@ -23,7 +23,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + entityUrl + '-ev/filtered/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + entityUrl + '/ev-item/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -33,7 +33,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(options)
+                body: JSON.stringify(options)
             })
 
 

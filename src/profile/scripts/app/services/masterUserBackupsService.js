@@ -62,7 +62,7 @@
 				Accept: 'application/json',
 				'Content-type': 'application/json'
 			},
-			data: JSON.stringify(user)
+			body: JSON.stringify(user)
 		}).then(function (data) {
 			return data.json();
 		})

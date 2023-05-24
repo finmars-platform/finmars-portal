@@ -5,7 +5,6 @@
 
     'use strict';
 
-    var instrumentService = require('../../../services/instrumentService')
     var metaNotificationClassService = require('../../../services/metaNotificationClassService');
     var metaEventClassService = require('../../../services/metaEventClassService');
     var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
@@ -33,7 +32,7 @@
         "event_class": null
     };
 
-    module.exports = function eventSchedulesTabController($scope, $mdDialog, gridTableHelperService) {
+    module.exports = function eventSchedulesTabController($scope, $mdDialog, instrumentService, gridTableHelperService) {
 
         var vm = this;
 

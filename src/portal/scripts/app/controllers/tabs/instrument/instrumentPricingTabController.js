@@ -14,15 +14,12 @@
     const gridTableEvents = require('../../../services/gridTableEvents');
 
     const metaHelper = require('../../../helpers/meta.helper');
-    const GridTableHelperService = require('../../../helpers/gridTableHelperService');
 
 	const pricingPolicyService = require('../../../services/pricingPolicyService');
 
-    module.exports = function InstrmentPricingTabController($scope, $mdDialog) {
+    module.exports = function InstrmentPricingTabController($scope, $mdDialog, gridTableHelperService) {
 
         var vm = this;
-
-        const gridTableHelperService = new GridTableHelperService();
 
 		vm.readyStatus = false;
 		vm.instrumentPricingSchemes = null;

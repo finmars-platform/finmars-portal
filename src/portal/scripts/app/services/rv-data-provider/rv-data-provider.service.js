@@ -1,19 +1,12 @@
-(function () {
+var evEvents = require('../entityViewerEvents');
+var groupsService = require('./groups.service');
+var objectsService = require('./objects.service');
+var evDataHelper = require('../../helpers/ev-data.helper');
+var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+var rvDataHelper = require('../../helpers/rv-data.helper');
+var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
-    var evEvents = require('../entityViewerEvents');
-    var dashboardEvents = require('../../services/dashboard/dashboardEvents');
-    var groupsService = require('./groups.service');
-    var objectsService = require('./objects.service');
-    var evDataHelper = require('../../helpers/ev-data.helper');
-    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
-    var entityViewerDataResolver = require('../entityViewerDataResolver');
-    var stringHelper = require('../../helpers/stringHelper');
-    var rvDataHelper = require('../../helpers/rv-data.helper');
-    var queryParamsHelper = require('../../helpers/queryParamsHelper');
-
-    var reportHelper = require('../../helpers/reportHelper');
-
-    var pricesCheckerService = require('../../services/reports/pricesCheckerService');
+export default function (entityResolverService, pricesCheckerService, reportHelper) {
 
     var requestData = function (evDataService) {
 
@@ -25,7 +18,7 @@
             // console.log('requestData.entityType', entityType);
             // console.log('requestData.reportOptions', reportOptions);
 
-            entityViewerDataResolver.getList(entityType, reportOptions).then(function (data) {
+            entityResolverService.getList(entityType, reportOptions).then(function (data) {
 
                 // console.log('requestData.data', data);
 
@@ -184,7 +177,7 @@
 
             if (reportOptions.items && reportOptions.items.length) {
 
-				var attributeExtensions = entityViewerDataService.getCrossEntityAttributeExtensions();
+                var attributeExtensions = entityViewerDataService.getCrossEntityAttributeExtensions();
 
                 reportOptions.items = reportHelper.injectIntoItemsV2(reportOptions.items, reportOptions, entityType);
 
@@ -283,8 +276,7 @@
             objectsService.getList(entityType, options, entityViewerDataService).then(function (data) {
 
                 var groupData = entityViewerDataService.getData(event.___id);
-
-                var obj;
+                var obj; // group that contains objects
 
                 if (!event.___id) {
 
@@ -321,7 +313,6 @@
                         //         obj.results[page * step + i] = data.results[i];
                         //     }
                         // }
-
                     }
                     else {
 
@@ -338,6 +329,7 @@
                         obj.___parentId = event.parentGroupId;
                         obj.___type = 'group';
                         obj.___id = event.___id;
+                        obj.___index = parentGroup.results.findIndex(group => group.___id === obj.___id);
                         obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
 
                         var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
@@ -350,7 +342,7 @@
 
                         if (!parentGroup.___is_open) {
 
-                        	obj.___is_open = false;
+                            obj.___is_open = false;
                             groupSettings.is_open = false;
 
                             rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
@@ -593,9 +585,9 @@
         var requestParameters;
 
         var id = evRvCommonHelper.getId(item);
-        console.log("teseting1224.createRequestParameters createdIdsList.length", createdIdsList.length);
+
         if ( createdIdsList.includes(id) ) {
-            console.log("teseting1224.createRequestParameters duplicate id Error", testObj[id] );
+
             console.log("Error: duplicated id was created for an item: ", item);
             var customError = new Error("Item with an ___id " + item.___id + " already exist");
             customError.___item_data = item;
@@ -1026,7 +1018,7 @@
 
     };
 
-    module.exports = {
+    return {
         createDataStructure: createDataStructure,
         requestReport: requestReport,
         updateDataStructure: updateDataStructure,
@@ -1034,4 +1026,4 @@
         sortGroupType: sortGroupType
     }
 
-}());
+}

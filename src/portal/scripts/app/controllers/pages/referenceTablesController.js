@@ -56,31 +56,6 @@
 
         };
 
-        vm.renameReferenceTable = function ($event, item) {
-
-            $mdDialog.show({
-                controller: 'ReferenceTableRenameDialogController as vm',
-                templateUrl: 'views/dialogs/reference-table/reference-table-rename-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
-                locals: {
-                    data: {
-                        referenceTable: JSON.parse(JSON.stringify(item))
-                    }
-                }
-            }).then(function (res) {
-
-                if (res && res.status === 'agree') {
-                    vm.getData();
-                }
-
-            })
-
-        };
-
         vm.deleteReferenceTable = function ($event, item) {
 
             $mdDialog.show({
@@ -117,7 +92,7 @@
                 name = "New Reference Table";
             }
 
-            if(!index) {
+            if (!index) {
                 index = 1
             }
 
@@ -135,24 +110,32 @@
 
         };
 
-        vm.createReferenceTable = function () {
+        vm.createReferenceTable = function ($event) {
 
-            var name = vm.getNewName();
+            $mdDialog.show({
+                controller: 'ReferenceTableEditDialogController as vm',
+                templateUrl: 'views/dialogs/reference-table/reference-table-edit-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                locals: {
+                    data: {
+                        referenceTable: null
+                    }
+                }
+            }).then(function (res) {
 
-            var referenceTable = {
-                name: name,
-                rows: []
-            };
-
-            referenceTablesService.create(referenceTable).then(function () {
-
-                vm.getData()
+                if (res && res.status === 'agree') {
+                    vm.getData();
+                }
 
             })
 
         };
 
-        vm.exportReferenceTable = function($event, item){
+        vm.exportReferenceTable = function ($event, item) {
 
             $mdDialog.show({
                 controller: 'ReferenceTableExportDialogController as vm',
@@ -175,7 +158,7 @@
 
         };
 
-        vm.importReferenceTable = function($event, item){
+        vm.importReferenceTable = function ($event, item) {
 
             $mdDialog.show({
                 controller: 'ReferenceTableImportDialogController as vm',

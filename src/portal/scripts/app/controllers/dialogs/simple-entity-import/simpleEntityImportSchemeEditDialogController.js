@@ -12,16 +12,13 @@
     'use strict';
 
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
-    var attributeTypeService = require('../../../services/attributeTypeService');
-
-    var metaContentTypesService = require('../../../services/metaContentTypesService');
 
     var modelService = require('../../../services/modelService');
 
     var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function simpleEntityImportSchemeEditDialogController($scope, $mdDialog, schemeId, importSchemesMethodsService) {
+    module.exports = function simpleEntityImportSchemeEditDialogController($scope, $mdDialog, metaContentTypesService, attributeTypeService, schemeId, importSchemesMethodsService) {
 
         var vm = this;
 

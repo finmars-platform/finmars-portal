@@ -64,7 +64,7 @@
                 return true;
             }
 
-            var valueFromTable = null;
+            var valueFromTable = null; // for dynamic attributes
 
             //region Get valueFromTable for dynamic attribute
             if (item.___type !== 'group' && keyProperty.startsWith("attributes.")) {
@@ -112,7 +112,9 @@
             }
             //endregion
 
-            if ((item.hasOwnProperty(keyProperty) && item[keyProperty]) || valueFromTable) { // check whether attribute value is empty
+            var valNotEmpty = item.hasOwnProperty(keyProperty) && ( item[keyProperty] || item[keyProperty] === 0 );
+
+            if (valNotEmpty || valueFromTable) { // check whether attribute value is empty
 
                 if (filterType === 'empty') { // prevents pass of cells with values
                     return false;

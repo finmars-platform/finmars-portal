@@ -4,6 +4,7 @@
 (function () {
 
     var uiService = require('../../../services/uiService');
+    var newMemberSetupConfigurationService = require('../../../services/newMemberSetupConfigurationService');
 
     module.exports = function ($scope, $mdDialog) {
 
@@ -17,7 +18,7 @@
 
             vm.readyStatus.content = false;
 
-            uiService.getConfigurationList().then(function (data) {
+            newMemberSetupConfigurationService.getList().then(function (data) {
 
                 vm.items = data.results;
 
@@ -37,7 +38,7 @@
                 targetEvent: $event,
                 preserveScope: true,
                 locals: {
-                  item: item
+                    item: item
                 },
                 autoWrap: true,
                 skipHid: true
@@ -71,7 +72,7 @@
             }).then(function (res) {
                 if (res.status === 'agree') {
 
-                    uiService.deleteConfigurationByKey(item.id);
+                    newMemberSetupConfigurationService.deleteByKey(item.id);
                     setTimeout(function () {
                         vm.getList();
                     }, 100)

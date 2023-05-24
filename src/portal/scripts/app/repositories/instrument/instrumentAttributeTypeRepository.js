@@ -90,7 +90,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'in
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(account)
+                body: JSON.stringify(account)
             })
     };
 
@@ -109,7 +109,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'in
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(account)
+                body: JSON.stringify(account)
             })
     };
 

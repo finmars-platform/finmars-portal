@@ -21,7 +21,7 @@
 
 				const sharedLogic = new GcfAreasDndSharedLogicHelper(scope, $mdDialog, false);
 
-				scope.shownFiltersType = 'frontend';
+				scope.shownFiltersType = 'backend';
 
 				scope.dndAreas = {};
 

@@ -3,8 +3,6 @@
  */
 (function () {
 
-    var metaContentTypesService = require('../metaContentTypesService');
-
     var entityTypeMappingResolveService = require('../entityTypeMappingResolveService');
     var entityResolverService = require('../entityResolverService');
 

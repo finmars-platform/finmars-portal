@@ -9,9 +9,8 @@
     const popupEvents = require("../../services/events/popupEvents");
 
     const entityResolverService = require('../../services/entityResolverService');
-    const metaContentTypeService = require('../../services/metaContentTypesService');
 
-    module.exports = function ($mdDialog) {
+    module.exports = function ($mdDialog, metaContentTypesService) {
         return {
             restrict: 'E',
             scope: {
@@ -178,7 +177,7 @@
                     var classes = '';
 
                     if (scope.isDisabled) {
-                        classes += "custom-input-is-disabled";
+                        classes = "custom-input-is-disabled";
 
                     } else if (scope.error) {
                         classes = 'custom-input-error';
@@ -477,6 +476,10 @@
 
                                         break;
 
+                                    case "error":
+                                        scope.error = scope.eventSignal.error;
+                                        break;
+
                                     case 'set_style_preset1':
                                         stylePreset = 1;
 
@@ -526,7 +529,7 @@
 
                     // scope.iconData = entityIndicatorIcons[scope.entityType];
 
-                    var entitiesData = metaContentTypeService.getList();
+                    var entitiesData = metaContentTypesService.getList();
 
                     for (var i = 0; i < entitiesData.length; i++) {
 

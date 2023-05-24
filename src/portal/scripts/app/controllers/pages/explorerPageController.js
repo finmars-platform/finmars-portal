@@ -21,6 +21,9 @@
 
         vm.items = [];
 
+        vm.reverse = true;
+        vm.propertyName = 'name';
+
         vm.currentPath = []
 
         vm.showHiddenFiles = false;
@@ -29,6 +32,16 @@
 
         vm.fileEditor = {}
         vm.fileEditorLoading = false;
+
+        vm.allSelected = false;
+        vm.selectedCount = 0;
+
+        vm.searchTerm = '';
+
+        vm.sortBy = function (propertyName) {
+            vm.reverse = (vm.propertyName === propertyName) ? !vm.reverse : false;
+            vm.propertyName = propertyName;
+        };
 
         vm.breadcrumbsNavigation = function ($index) {
 
@@ -44,16 +57,6 @@
             // IMPORTANT! State.go escaping slashes and router goes mad
             window.location.hash = '#!/explorer/' + vm.currentPath.join('/')
 
-        }
-
-        vm.selectItem = function ($event, item) {
-
-            vm.items = vm.items.map(function (_item) {
-                _item.selected = false
-                return _item
-            })
-
-            item.selected = true;
         }
 
         vm.triggerMenu = function ($event) {
@@ -78,79 +81,6 @@
             window.location.hash = '#!/explorer/' + vm.currentPath.join('/')
 
             // vm.listFiles()
-
-        }
-
-        vm.previewFileDialog = function ($event, item, $mdMenu) {
-
-            if ($mdMenu) {
-                $mdMenu.close()
-            }
-
-            var itemPath = vm.currentPath.join('/') + '/' + item.name
-
-            explorerService.viewFile(itemPath).then(function (blob) {
-
-                $mdDialog.show({
-                    controller: 'FilePreviewDialogController as vm',
-                    templateUrl: 'views/dialogs/file-preview-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        data: {
-                            blob: blob,
-                            file_descriptor: item
-                        }
-                    }
-                });
-
-            });
-
-        }
-
-        vm.editFileDialog = function ($event, item, $mdMenu) {
-
-            if ($mdMenu) {
-                $mdMenu.close()
-            }
-
-            var itemPath = vm.currentPath.join('/') + '/' + item.name
-
-            explorerService.viewFile(itemPath).then(function (blob) {
-
-                $mdDialog.show({
-                    controller: 'FileEditDialogController as vm',
-                    templateUrl: 'views/dialogs/file-edit-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        data: {
-                            blob: blob,
-                            file_descriptor: item,
-                            currentPath: vm.currentPath
-                        }
-                    }
-                }).then(function (res) {
-
-                    if (res.status === 'agree') {
-
-                        vm.listFiles();
-
-                    }
-
-                })
-
-            });
 
         }
 
@@ -194,7 +124,6 @@
             });
 
         }
-
 
         vm.initFileEditor = function () {
 
@@ -267,15 +196,120 @@
             })
         }
 
+        vm.deleteSelected = function ($event) {
+
+            var itemsToDelete = vm.items.filter(function (item) {
+                return item.selected;
+            })
+
+            var names = itemsToDelete.map(function (item) {
+                return item.name
+            }).join(', ');
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "Are you sure that you want to delete " + names + "?",
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    var promises = [];
+
+                    itemsToDelete.forEach(function (item) {
+
+                        var itemPath = vm.currentPath.join('/') + '/' + item.name
+
+                        if (item.type === 'dir') {
+                            promises.push(new Promise(function (resolve) {
+                                explorerService.deleteFolder(itemPath).then(function (data) {
+                                    resolve()
+                                })
+                            }))
+
+                        } else {
+                            promises.push(new Promise(function (resolve) {
+                                explorerService.deleteFile(itemPath, false).then(function (data) {
+                                    resolve()
+                                })
+                            }))
+
+                        }
+
+                    })
+
+                    Promise.allSettled(promises).then(function () {
+                        toastNotificationService.success("Items deleted")
+                        vm.listFiles();
+                    })
+
+                }
+            })
+
+        }
+
+        vm.deleteFile = function ($event) {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "Are you sure that you want to delete file " + vm.fileEditor.name + "?",
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    var itemPath = vm.fileEditor.name;
+                    if (vm.currentPath.length) {
+                        itemPath = vm.currentPath.join('/') + '/' + vm.fileEditor.name
+                    }
+
+                    var is_dir = false;
+
+                    explorerService.deleteFile(itemPath, is_dir)
+
+                    setTimeout(function () {
+                        vm.showEditor = false;
+                        vm.listFiles();
+                    }, 600)
+
+                }
+
+            });
+
+        }
+
         vm.closeFileEditor = function () {
 
             vm.showEditor = false;
 
-            vm.calculateExplorerStateClass();
-
+            vm.listFiles();
         }
 
-        vm.copyFilePath = function ($event, item, $mdMenu){
+        vm.copyFilePath = function ($event, item, $mdMenu) {
 
             if ($mdMenu) {
                 $mdMenu.close()
@@ -326,38 +360,97 @@
 
         vm.renameFile = function ($mdMenu, $event, item) {
 
-            $mdMenu.close()
+            $mdDialog.show({
+                controller: 'CreateFileDialogController as vm',
+                templateUrl: 'views/dialogs/create-file-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {}
+                }
 
-            item.rename = true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    var itemPath = vm.fileEditor.name;
+                    if (vm.currentPath.length) {
+                        itemPath = vm.currentPath.join('/') + '/' + vm.fileEditor.name
+                    }
+
+                    var is_dir = false;
+
+                    explorerService.deleteFile(itemPath, is_dir)
+
+                    vm.fileEditor.name = res.name;
+
+                    vm.saveFileEditor();
+
+                }
+            })
 
         }
 
-        vm.deleteFile = function ($mdMenu, $event, item) {
+        vm.toggleSelectAll = function ($event) {
 
-            $mdMenu.close()
+            vm.allSelected = !vm.allSelected;
 
-            var itemPath = item.name
-            if (vm.currentPath.length) {
-                itemPath = vm.currentPath.join('/') + '/' + item.name
-            }
+            vm.selectedCount = 0;
 
-            var is_dir = false;
+            console.log('toggleSelectAll searchTerm', vm.searchTerm);
 
-            if (item.type === 'dir') {
-                is_dir = true;
-            }
+            vm.items.filter(function (item) {
+                if (vm.searchTerm) {
+                    return item.name.indexOf(vm.searchTerm) !== -1
+                }
 
-            explorerService.deleteFile(itemPath, is_dir)
+                return true;
 
-            setTimeout(function () {
-                vm.listFiles();
-            }, 600)
+            }).forEach(function (item) {
+                item.selected = vm.allSelected;
 
+                if (item.selected) {
+                    vm.selectedCount = vm.selectedCount + 1;
+                }
+
+            })
+
+
+        }
+
+        vm.selectItem = function ($event, item) {
+
+            item.selected = !item.selected;
+
+            console.log(" vm.selectItem item", item)
+
+            var allSelected = true;
+
+            vm.selectedCount = 0;
+
+            vm.items.filter(function (item) {
+                if (vm.searchTerm) {
+                    return item.name.indexOf(vm.searchTerm) !== -1
+                }
+                return true;
+
+            }).forEach(function (item) {
+                if (!item.selected) {
+                    allSelected = false;
+                }
+
+                if (item.selected) {
+                    vm.selectedCount = vm.selectedCount + 1;
+                }
+            })
+
+            vm.allSelected = allSelected;
         }
 
         vm.listFiles = function () {
 
             vm.processing = true;
+            vm.selectedCount = 0;
 
             explorerService.listFiles(vm.currentPath.join('/')).then(function (data) {
 
@@ -383,8 +476,44 @@
 
         }
 
-        vm.createFolder = function ($event) {
+        vm.deleteFolder = function ($event) {
 
+            var path = vm.currentPath.join('/')
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "Are you sure that you want to delete folder " + path + "?",
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+                console.log('res', res);
+                if (res.status === 'agree') {
+
+                    explorerService.deleteFolder(path).then(function () {
+
+                        vm.currentPath.pop()
+
+                        vm.listFiles();
+
+                    })
+
+                }
+
+            })
+        }
+
+        vm.createFolder = function ($event) {
 
             $mdDialog.show({
                 controller: 'CreateFolderDialogController as vm',
@@ -417,7 +546,6 @@
 
         vm.createFile = function ($event) {
 
-
             $mdDialog.show({
                 controller: 'CreateFileDialogController as vm',
                 templateUrl: 'views/dialogs/create-file-dialog-view.html',
@@ -431,34 +559,15 @@
 
                 if (res.status === 'agree') {
 
-                    $mdDialog.show({
-                        controller: 'FileEditDialogController as vm',
-                        templateUrl: 'views/dialogs/file-edit-dialog-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        clickOutsideToClose: false,
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        multiple: true,
-                        locals: {
-                            data: {
-                                content: '',
-                                file_descriptor: {
-                                    name: res.name
-                                },
-                                currentPath: vm.currentPath,
-                            }
-                        }
-                    }).then(function (res) {
+                    vm.fileEditor = {}
 
-                        if (res.status === 'agree') {
+                    vm.fileEditor.name = res.name;
+                    vm.fileEditor.content = '';
 
-                            vm.listFiles();
+                    vm.showEditor = true;
 
-                        }
+                    vm.initFileEditor() // call after angular.js render
 
-                    })
                 }
 
             });
@@ -468,6 +577,57 @@
         vm.uploadFiles = function ($event) {
 
             document.querySelector('#explorerFileUploadInput').click();
+
+        }
+
+        vm.downloadZip = function ($event) {
+
+            var path = vm.currentPath.join('/')
+
+            $mdDialog.show({
+                controller: 'SaveAsDialogController as vm',
+                templateUrl: 'views/dialogs/save-as-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        name: 'Archive'
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    var name = res.data.name + '.zip'
+
+                    var paths = []
+
+                    vm.items.forEach(function (item) {
+                        if (item.selected) {
+
+                            if (item.type === 'dir') {
+                                paths.push(vm.currentPath.join('/') + '/' + item.name + '/') // important to add trailing slash
+                            } else {
+                                paths.push(vm.currentPath.join('/') + '/' + item.name)
+                            }
+                        }
+                    })
+
+                    console.log('paths', paths);
+
+                    explorerService.downloadZip({paths: paths}).then(function (blob) {
+
+                        downloadFileHelper.downloadFile(blob, "application/zip", name)
+
+                    })
+
+                }
+            })
 
         }
 
@@ -549,12 +709,6 @@
 
         }
 
-        vm.toggleWorkflow = function () {
-
-            vm.showWorkflow = !vm.showWorkflow;
-            vm.calculateExplorerStateClass()
-        }
-
         vm.init = function () {
 
             vm.resolveWorkflowIframeUrl();
@@ -571,17 +725,7 @@
 
             vm.member = globalDataService.getMember();
 
-            document.querySelector('.explorer-page').addEventListener('click', function (e) {
-
-                vm.items = vm.items.map(function (_item) {
-                    _item.selected = false
-                    return _item
-                })
-
-            })
-
         };
-
 
         vm.init();
 

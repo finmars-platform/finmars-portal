@@ -4,15 +4,7 @@
  */
 (function () {
 
-    'use strict';
-
-    var metaContentTypesService = require('./metaContentTypesService');
-
-    var customFieldService = require('./reports/customFieldService');
-    var attributeTypeService = require('./attributeTypeService');
-    var uiService = require('./uiService');
-
-    module.exports = function () {
+    module.exports = function (metaContentTypesService, customFieldService, attributeTypeService, uiService) {
 
         var reportsEntityTypes = ['balance-report', 'pl-report', 'transaction-report'];
 
@@ -76,20 +68,27 @@
 
         var instrumentUserFieldsData = [];
         var transactionUserFieldsData = [];
+        var complexTransactionUserFieldsData = [];
 
         var reconciliationAttributes = [];
 
         var attributesAvailableForColumns = [];
 
         /** Use aliases as names for user field for complex transactions **/
-        function applyAliasesToAttrs (attributes, keyPrefix, namePrefix) {
+        function applyAliasesToAttrs (attributes, contentType, keyPrefix='', namePrefix='') {
 
-            let userFields;
+            let userFields = [];
 
-            if (attributes[0].content_type === 'transactions.complextransaction') {
-                userFields = getTransactionUserFields();
-            } else {
-                userFields = getInstrumentUserFields();
+            switch (contentType) {
+                case 'transactions.transaction':
+                    userFields = getTransactionUserFields();
+                    break;
+                case 'transactions.complextransaction':
+                    userFields = getComplexTransactionUserFields();
+                    break;
+                case 'instruments.instrument':
+                    userFields = getInstrumentUserFields();
+                    break;
             }
 
             userFields.forEach(function (field) {
@@ -124,13 +123,13 @@
             var balancePerformanceAttrs = getAllAttributesAsFlatList('reports.balancereportperformance', '', 'Performance', {maxDepth: 1});
 
             var instrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
-            instrumentAttrs = applyAliasesToAttrs(instrumentAttrs, 'instrument.', 'Instrument. ');
+            instrumentAttrs = applyAliasesToAttrs(instrumentAttrs, 'instruments.instrument', 'instrument.', 'Instrument. ');
 
             var linkedInstrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
-            linkedInstrumentAttrs = applyAliasesToAttrs(linkedInstrumentAttrs, 'linked_instrument.', 'Linked Instrument. ');
+            linkedInstrumentAttrs = applyAliasesToAttrs(linkedInstrumentAttrs, 'instruments.instrument', 'linked_instrument.', 'Linked Instrument. ');
 
             var allocationAttrs = getAllAttributesAsFlatList('instruments.instrument', 'allocation', 'Allocation', {maxDepth: 1});
-            allocationAttrs = applyAliasesToAttrs(allocationAttrs, 'allocation.', 'Allocation. ');
+            allocationAttrs = applyAliasesToAttrs(allocationAttrs, 'instruments.instrument', 'allocation.', 'Allocation. ');
 
             var currencyAttrs = getAllAttributesAsFlatList('currencies.currency', 'currency', 'Currency', {maxDepth: 1});
 
@@ -168,10 +167,10 @@
             var allocationDynamicAttrsFormatted = formatAttributeTypes(allocationDynamicAttrs, 'instruments.instrument', 'allocation', 'Allocation');
             var linkedInstrumentDynamicAttrsFormatted = formatAttributeTypes(linkedInstrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
 
-			// remove attributes that area already inside currency from balance
-			balanceAttrs = balanceAttrs.filter(function (bAttr) {
-				return !!!currencyAttrs.find(function (cAttr) {return cAttr.key === bAttr.key});
-			});
+            // remove attributes that area already inside currency from balance
+            balanceAttrs = balanceAttrs.filter(function (bAttr) {
+                return !!!currencyAttrs.find(function (cAttr) {return cAttr.key === bAttr.key});
+            });
 
             result = result.concat(balanceAttrs);
             result = result.concat(balanceMismatchAttrs);
@@ -210,13 +209,13 @@
             var balancePerformanceAttrs = getAllAttributesAsFlatList('reports.plreportperformance', '', 'Performance', {maxDepth: 1});
 
             var instrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
-            instrumentAttrs = applyAliasesToAttrs(instrumentAttrs, 'instrument.', 'Instrument. ');
+            instrumentAttrs = applyAliasesToAttrs(instrumentAttrs, 'instruments.instrument', 'instrument.', 'Instrument. ');
 
             var linkedInstrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
-            linkedInstrumentAttrs = applyAliasesToAttrs(linkedInstrumentAttrs, 'linked_instrument.', 'Linked Instrument. ');
+            linkedInstrumentAttrs = applyAliasesToAttrs(linkedInstrumentAttrs, 'instruments.instrument', 'linked_instrument.', 'Linked Instrument. ');
 
             var allocationAttrs = getAllAttributesAsFlatList('instruments.instrument', 'allocation', 'Allocation', {maxDepth: 1});
-            allocationAttrs = applyAliasesToAttrs(allocationAttrs, 'allocation.', 'Allocation. ');
+            allocationAttrs = applyAliasesToAttrs(allocationAttrs, 'instruments.instrument', 'allocation.', 'Allocation. ');
 
             var accountAttrs = getAllAttributesAsFlatList('accounts.account', 'account', 'Account', {maxDepth: 1});
 
@@ -297,6 +296,7 @@
             var result = [];
 
             var transactionAttrs = getAllAttributesAsFlatList('reports.transactionreport', '', 'Transaction', {maxDepth: 1});
+            transactionAttrs = applyAliasesToAttrs(transactionAttrs, 'transactions.transaction', '', 'Transaction. ');
 
             var complexTransactionAttrs = getAllAttributesAsFlatList('transactions.complextransaction', 'complex_transaction', 'Complex Transaction', {maxDepth: 1});
 
@@ -304,12 +304,12 @@
                 return ttypeUserFields.indexOf(attr.key) < 0;
             });
 
-            complexTransactionAttrs = applyAliasesToAttrs(complexTransactionAttrs, 'complex_transaction.', 'Complex Transaction. ');
+            complexTransactionAttrs = applyAliasesToAttrs(complexTransactionAttrs, 'transactions.complextransaction', 'complex_transaction.', 'Complex Transaction. ');
 
             var portfolioAttrs = getAllAttributesAsFlatList('portfolios.portfolio', 'portfolio', 'Portfolio', {maxDepth: 1});
 
             var instrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'instrument', 'Instrument', {maxDepth: 1});
-            instrumentAttrs = applyAliasesToAttrs(instrumentAttrs, 'instrument.', 'Instrument. ');
+            instrumentAttrs = applyAliasesToAttrs(instrumentAttrs, 'instruments.instrument', 'instrument.', 'Instrument. ');
 
             var responsibleAttrs = getAllAttributesAsFlatList('counterparties.responsible', 'responsible', 'Responsible', {maxDepth: 1});
 
@@ -318,13 +318,13 @@
             // instruments
 
             var linkedInstrumentAttrs = getAllAttributesAsFlatList('instruments.instrument', 'linked_instrument', 'Linked Instrument', {maxDepth: 1});
-            linkedInstrumentAttrs = applyAliasesToAttrs(linkedInstrumentAttrs, 'linked_instrument.', 'Linked Instrument. ');
+            linkedInstrumentAttrs = applyAliasesToAttrs(linkedInstrumentAttrs, 'instruments.instrument', 'linked_instrument.', 'Linked Instrument. ');
 
             var allocationBalanceAttrs = getAllAttributesAsFlatList('instruments.instrument', 'allocation_balance', 'Allocation Balance', {maxDepth: 1});
-            allocationBalanceAttrs = applyAliasesToAttrs(allocationBalanceAttrs, 'allocation_balance.', 'Allocation Balance. ');
+            allocationBalanceAttrs = applyAliasesToAttrs(allocationBalanceAttrs, 'instruments.instrument', 'allocation_balance.', 'Allocation Balance. ');
 
             var allocationPlAttrs = getAllAttributesAsFlatList('instruments.instrument', 'allocation_pl', 'Allocation P&L', {maxDepth: 1});
-            allocationPlAttrs = applyAliasesToAttrs(allocationPlAttrs, 'allocation_pl.', 'Allocation P&L. ');
+            allocationPlAttrs = applyAliasesToAttrs(allocationPlAttrs, 'instruments.instrument', 'allocation_pl.', 'Allocation P&L. ');
 
             // currencies
 
@@ -443,8 +443,6 @@
 
         }
 
-        // TODO come up with more efficient way of returning new copy of data
-
         function getEntityAttributesByEntityType(entityType) {
 
             if (entityAttributesData[entityType]) {
@@ -452,7 +450,7 @@
                 let attrs = JSON.parse(JSON.stringify(entityAttributesData[entityType]));
 
                 // Use aliases as names for user fields
-                const applyAliases = function (uFields) {
+                /*const applyAliases = function (uFields) {
 
                     uFields.forEach(function (field) {
 
@@ -470,10 +468,13 @@
 
                     return attrs;
 
-                };
+                }
 
-                attrs = applyAliases( getTransactionUserFields() );
+                attrs = applyAliases( getComplexTransactionUserFields() );
                 attrs = applyAliases( getInstrumentUserFields() );
+                attrs = applyAliases( getTransactionUserFields() );*/
+                var contentType = metaContentTypesService.findContentTypeByEntity(entityType);
+                attrs = applyAliasesToAttrs(attrs, contentType);
 
                 return attrs;
 
@@ -500,11 +501,11 @@
             return []
         }
 
-        function getAllAttributesByEntityType(entityType) {
+        function getAllAttributesByEntityType(entityType, viewContext) {
 
-            var result = [];
+            var result;
 
-            if (reportsEntityTypes.indexOf(entityType) === -1) {
+            /* if (reportsEntityTypes.indexOf(entityType) === -1) {
 
                 var entityAttributes = getEntityAttributesByEntityType(entityType);
                 var dynamicAttributes = getDynamicAttributesByEntityType(entityType);
@@ -541,9 +542,101 @@
                     result = _getTransactionReportAttributes()
                 }
 
+            } */
+            if (viewContext === 'reconciliation_viewer') {
+                result = getReconciliationAttributes();
+
+            }
+            else {
+
+                switch (entityType) {
+                    case 'balance-report':
+                        result = _getBalanceReportAttributes();
+                        break;
+
+                    case 'pl-report':
+                        result = _getPlReportAttributes();
+                        break;
+
+                    case 'transaction-report':
+                        result = _getTransactionReportAttributes();
+                        break;
+
+                    default: // get attributes for entity viewer
+
+                        var contentType = metaContentTypesService.findContentTypeByEntity(entityType);
+                        var entityAttrs = [];
+                        var dynamicAttrs = [];
+
+                        result = [];
+
+                        entityAttrs = getEntityAttributesByEntityType(entityType);
+
+                        entityAttrs.forEach(function (item) {
+                            if (item.key === 'subgroup' && item.value_entity.indexOf('strategy') !== -1) {
+                                item.name = 'Group';
+                            }
+                            item.entity = entityType;
+                        });
+
+                        /*var instrumentUserFields = getInstrumentUserFields();
+                        var transactionUserFields = getTransactionUserFields();
+
+                        instrumentUserFields.forEach(function (field) {
+
+                            entityAttrs.forEach(function (entityAttr) {
+
+                                if (entityAttr.key === field.key) {
+                                    entityAttr.name = field.name;
+                                }
+
+                            })
+
+                        });
+                        transactionUserFields.forEach(function (field) {
+
+                            entityAttrs.forEach(function (entityAttr) {
+
+                                if (entityAttr.key === field.key) {
+                                    entityAttr.name = field.name;
+                                }
+
+                            })
+
+                        });*/
+
+                        dynamicAttrs = getDynamicAttributesByEntityType(entityType);
+
+
+                        dynamicAttrs = dynamicAttrs.map(function (attribute) {
+
+                            var result = {};
+
+                            result.attribute_type = Object.assign({}, attribute);
+                            result.value_type = attribute.value_type;
+                            result.content_type = contentType;
+                            result.key = 'attributes.' + attribute.user_code;
+                            result.name = attribute.name;
+
+                            return result
+
+                        });
+
+                        result = result.concat(entityAttrs);
+                        result = result.concat(dynamicAttrs);
+                }
+
             }
 
             return result;
+        }
+
+        function getForAttributesSelector(entityType, viewContext) {
+            var attrs = getAllAttributesByEntityType(entityType, viewContext);
+
+            return attrs.filter(function (attr) {
+                return attr.value_type !== 'mc_field';
+            })
         }
 
         function getInstrumentUserFields() {
@@ -560,6 +653,16 @@
 
             if (transactionUserFieldsData) {
                 return transactionUserFieldsData
+            }
+
+            return []
+
+        }
+
+        function getComplexTransactionUserFields() {
+
+            if (complexTransactionUserFieldsData) {
+                return complexTransactionUserFieldsData
             }
 
             return []
@@ -682,7 +785,7 @@
 
                     result = data.results;
 
-                    transactionUserFieldsData = result;
+                    complexTransactionUserFieldsData = result;
 
                     resolve(result)
 
@@ -748,7 +851,6 @@
             var currentLevel = 0;
 
             _getAttributesRecursive(result, currentLevel, rootContentType, rootKey, rootName, _options);
-
             // console.log('currentLevel', currentLevel);
             // console.log('result', result);
 
@@ -888,6 +990,7 @@
             // Get method belows
 
             getAllAttributesByEntityType: getAllAttributesByEntityType,
+            getForAttributesSelector: getForAttributesSelector,
 
 
             getInstrumentUserFields: getInstrumentUserFields,

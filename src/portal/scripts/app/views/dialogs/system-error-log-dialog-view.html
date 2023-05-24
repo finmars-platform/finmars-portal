@@ -26,7 +26,7 @@
                 </div>
 
                 <div>
-                    <div data-ng-if="item.data" layout="column">
+                    <!--<div data-ng-if="item.data" layout="column">
 
                         <div>
                             <b>Status</b>: {{item.data.status}} {{item.data.statusText}}
@@ -63,6 +63,40 @@
 
                     <div data-ng-if="!item.data">
                         {{item.text}}
+                    </div>-->
+                    <div layout="column">
+
+                        <div>
+                            <b>Title</b>: {{item.message}}
+                        </div>
+
+                        <div>
+                            <b>Code</b>: {{item.status_code}}
+                        </div>
+
+                        <div>
+                            <b>URL</b>: {{item.url}}
+                        </div>
+
+                        <div>
+                            <b>Username</b>: {{item.username}}
+                        </div>
+
+                        <div>
+                            <b>Date & Time</b>: {{item.datetime}}
+                        </div>
+
+                        <div>
+                            <b>Details</b>:
+
+                            <div>
+                                <pre>
+                                    {{ JSON.stringify(item.details, null, 4) }}
+                                </pre>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
 

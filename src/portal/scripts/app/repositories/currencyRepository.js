@@ -44,7 +44,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
 var prefix = baseUrlService.getMasterUserPrefix();
 var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'currencies/currency-light/', options),
+return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'currencies/currency/light/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -88,7 +88,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'cu
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(currency)
+                body: JSON.stringify(currency)
             })
     };
 
@@ -107,7 +107,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'cu
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(currency)
+                body: JSON.stringify(currency)
             })
     };
 
@@ -149,7 +149,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'cu
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(data)
+                body: JSON.stringify(data)
 
             }).then(function (data) {
                 return new Promise(function (resolve, reject) {

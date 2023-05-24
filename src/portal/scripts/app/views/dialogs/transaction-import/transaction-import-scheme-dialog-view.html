@@ -21,12 +21,7 @@
                     <md-card flex="100" class="inm-card-special">
                         <md-card-content layout="column">
 
-                            <usercode-input data-item="vm.scheme" data-ng-if="!vm.scheme.id"></usercode-input>
-
-                            <md-input-container class="md-block" data-ng-if="vm.scheme.id">
-                                <label for="">User code</label>
-                                <input type="text" data-ng-model="vm.scheme.user_code">
-                            </md-input-container>
+                            <usercode-input data-item="vm.scheme"></usercode-input>
 
                             <md-input-container class="md-block">
                                 <label for="">Name</label>
@@ -726,7 +721,7 @@
             Edit as JSON
         </md-button>
         <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-if="vm.scheme.id" data-ng-class="{'disabled-btn': vm.processing}">
-            Make Copy
+            Make a copy
         </md-button>
         <md-button class="md-raised" ng-click="vm.cancel()">
             Cancel

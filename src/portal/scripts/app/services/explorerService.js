@@ -21,8 +21,17 @@
         return explorerRepository.createFolder(path);
     }
 
+    var deleteFolder = function (path) {
+        return explorerRepository.deleteFolder(path);
+    }
+
     var uploadFiles = function (formData) {
         return explorerRepository.uploadFiles(formData);
+    }
+
+
+    var downloadZip = function (data) {
+        return explorerRepository.downloadZip(data)
     }
 
     module.exports = {
@@ -30,7 +39,9 @@
         viewFile: viewFile,
         deleteFile: deleteFile,
         createFolder: createFolder,
-        uploadFiles: uploadFiles
+        deleteFolder: deleteFolder,
+        uploadFiles: uploadFiles,
+        downloadZip: downloadZip
     }
 
 

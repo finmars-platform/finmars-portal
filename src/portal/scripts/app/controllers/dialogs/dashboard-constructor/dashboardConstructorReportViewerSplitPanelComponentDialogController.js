@@ -5,10 +5,7 @@
 
     'use strict';
 
-    var uiService = require('../../../services/uiService');
-    var dashboardHelper = require('../../../helpers/dashboard.helper');
-
-    module.exports = function ($scope, $mdDialog, item, dataService, eventService, attributeDataService) {
+    module.exports = function ($scope, $mdDialog, uiService, dashboardHelper, item, dataService, eventService, attributeDataService) {
 
         var vm = this;
 

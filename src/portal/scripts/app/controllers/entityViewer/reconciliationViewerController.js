@@ -13,8 +13,6 @@
         var EntityViewerEventService = require('../../services/eventService');
         var AttributeDataService = require('../../services/attributeDataService');
 
-        var reconDataProviderService = require('../../services/recon-data-provider/recon-data-provider.service');
-
         var importTransactionService = require('../../services/import/importTransactionService');
 
         var baseUrlService = require('../../services/baseUrlService');
@@ -23,7 +21,7 @@
 
 
 
-        module.exports = function ($scope, $mdDialog, $transitions, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
+        module.exports = function ($scope, $mdDialog, $transitions, metaContentTypesService, customFieldService, attributeTypeService, uiService, reconDataProviderService, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
 
             var vm = this;
 
@@ -448,7 +446,7 @@
 
                 vm.entityViewerDataService = new EntityViewerDataService();
                 vm.entityViewerEventService = new EntityViewerEventService();
-                vm.attributeDataService = new AttributeDataService();
+                vm.attributeDataService = new AttributeDataService(metaContentTypesService, customFieldService, attributeTypeService, uiService);
 
                 parentEntityViewerDataService.setReconciliationDataService(vm.entityViewerDataService);
                 parentEntityViewerDataService.setReconciliationEventService(vm.entityViewerEventService);

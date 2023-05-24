@@ -24,7 +24,11 @@
                 "key": "user_code",
                 "name": "User code",
                 "value_type": 10,
-                "allow_null": true
+            },
+            {
+                "key": "configuration_code",
+                "name": "Configuration code",
+                "value_type": 10
             },
             {
                 "key": "public_name",

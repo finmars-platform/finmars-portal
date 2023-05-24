@@ -5,13 +5,14 @@
 
 'use strict';
 
-import authorizerRepository from '../repositories/authorizerRepository.js';
-import baseUrlService from "./baseUrlService";
+import AuthorizerRepository from '../repositories/authorizerRepository.js';
+
 import {getVersions} from "../../../../portal/scripts/app/controllers/pages/updateCenterController";
 // import usersRepository from "../repositories/usersRepository";
 /** @module authorizerService */
-export default function (globalDataService) {
+export default function (cookieService, globalDataService, xhrService) {
 
+    const authorizerRepository = new AuthorizerRepository(cookieService, xhrService);
     // Deprecated
     // const login = function (login, password) {
     // 	return authorizerRepository.login(login, password);
@@ -53,6 +54,7 @@ export default function (globalDataService) {
     }; */
 
     const ping = function () {
+        // debugger for FN-880
         return authorizerRepository.ping();
     };
 
@@ -99,7 +101,7 @@ export default function (globalDataService) {
 
         return new Promise((resolve, reject) => {
 
-			 authorizerRepository.getMe().then(userData => {
+			authorizerRepository.getMe().then(userData => {
 
 				if (!userData.data) userData.data = {};
 				globalDataService.setUser(userData);
@@ -112,7 +114,7 @@ export default function (globalDataService) {
         // return authorizerRepository.getMe();
     }
 
-    const getUserByKey = function (id, user) {
+    const getUserByKey = function (id) {
 
 		return new Promise((resolve, reject) => {
 
@@ -206,7 +208,10 @@ export default function (globalDataService) {
 
             authorizerRepository.getMasterUsersList().then(masterUsersData => {
 
-                const base_api_url = window.location.pathname.split('/')[1];
+                // const base_api_url = window.location.pathname.split('/')[1];
+                const pathNamePartsList = window.location.pathname.split('/');
+                const base_api_url = pathNamePartsList.find(part => part.startsWith('space'));
+
                 let currentMasterUser = null;
 
                 if (base_api_url.startsWith('space')) {

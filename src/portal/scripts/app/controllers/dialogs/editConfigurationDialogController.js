@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var uiService = require('../../services/uiService');
+    var newMemberSetupConfigurationService = require('../../services/newMemberSetupConfigurationService');
 
     module.exports = function ($scope, $mdDialog, item) {
 
@@ -17,54 +17,48 @@
             $mdDialog.hide({status: 'disagree'});
         };
 
+        vm.toggleMode = function () {
+            vm.isFromMarketplace = !vm.isFromMarketplace;
+            vm.item.target_configuration_code = null;
+            vm.item.target_configuration_version = null;
+            vm.file = null;
+        }
+
         vm.agree = function () {
+
+            var formData = new FormData();
+
+            formData.append('name', vm.item.name);
+            formData.append('user_code', vm.item.user_code);
+            formData.append('notes', vm.item.notes);
+            formData.append('target_configuration_code', vm.item.target_configuration_code);
+            formData.append('target_configuration_version', vm.item.target_configuration_version);
+            formData.append('target_configuration_is_package', vm.item.target_configuration_is_package);
 
             if (vm.file) {
 
-                var reader = new FileReader();
 
+                formData.append('file', vm.file);
 
-                reader.readAsText(vm.file);
-
-                reader.onload = function (evt) {
-
-                    try {
-
-                        var file = JSON.parse(evt.target.result);
-
-                        uiService.updateConfiguration(vm.item.id,
-                            {
-                                name: vm.item.name,
-                                description: vm.item.description,
-                                data: file
-                            }
-                        ).then(function (value) {
-
-                            $mdDialog.hide({status: 'agree'});
-
-                        });
-
-                    } catch (e) {
-                        vm.error = true;
-                    }
-                };
-
-            } else {
-                uiService.updateConfiguration(vm.item.id,
-                    {
-                        name: vm.item.name,
-                        description: vm.item.description,
-                        data: vm.item.data
-                    }
+                newMemberSetupConfigurationService.update(vm.item.id, formData
                 ).then(function (value) {
 
                     $mdDialog.hide({status: 'agree'});
 
                 });
+
+            } else {
+
+                newMemberSetupConfigurationService.update(vm.item.id, formData
+                ).then(function (value) {
+
+                    $mdDialog.hide({status: 'agree'});
+
+                });
+
             }
 
-
-        };
+        }
     }
 
 }());

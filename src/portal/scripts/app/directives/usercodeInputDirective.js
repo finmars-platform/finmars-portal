@@ -5,80 +5,150 @@
 
     'use strict';
 
-    // var usersService = require('../services/usersService');
+    const metaHelper = require("../helpers/meta.helper");
+    const utilsHelper = require("../helpers/utils.helper");
 
-    function uuidv4() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
-
-    module.exports = function ($mdDialog, usersService) {
+    module.exports = function (configurationService) {
         return {
             restrict: 'E',
             templateUrl: 'views/directives/usercode-input-view.html',
             scope: {
                 item: '=',
+                error: '=',
+                occupiedUserCodes: '<',
             },
-            link: function (scope, elem, attrs, ngModelCtrl) {
+            link: function (scope, elem, attrs) {
 
-                scope.prefixType = 1;
-                scope.selectedGroupPrefix = null;
-                scope.usercode = '';
-                scope.groupPrefixes = [];
+                scope.configuration_code = {
+                    value: 'com.finmars.local'
+                };
 
-                scope.updateUserCode = function (usercode) {
+                scope.usercode = {
+                    value: ''
+                };
 
-					scope.usercode = usercode;
+                let convertedUserCode = '';
 
-                    if (scope.prefixType === 1) {
-                        scope.item.user_code = scope.usercode
+                let errorText = '';
+
+                scope.errorData = {
+                    get value() {
+                        return errorText;
+                    },
+                    set value(errorString) {
+                        errorText = errorString
+
+                        if (scope.error !== undefined) {
+                            scope.error = errorString
+                        }
                     }
-
-                    if (scope.prefixType === 2) {
-                        scope.item.user_code = scope.member.username + '@' + scope.usercode
-                    }
-
-                    if (scope.prefixType === 3) {
-                        scope.usercode = '';
-                        scope.item.user_code  = '@@' + uuidv4();
-                    }
-
-                    if (scope.prefixType === 4) {
-                        scope.item.user_code = scope.selectedGroupPrefix + '@' + scope.usercode;
-                    }
-
-                    /* console.log('usercodeInputDirective.updateUserCode.selectedGroupPrefix', scope.selectedGroupPrefix);
-                    console.log('usercodeInputDirective.updateUserCode.item', scope.item);
-                    console.log('usercodeInputDirective.updateUserCode.usercode', scope.usercode); */
 
                 }
 
-                scope.init = function (){
+                scope.errorDescription = '';
 
-                    usersService.getUsercodePrefixList().then(function (data){
+                const assembleUserCode = function (userCodeEnd) {
 
-                        scope.groupPrefixes = data.results;
+                    let userCode = scope.configuration_code.value + ':';
 
-                        if (scope.groupPrefixes && scope.groupPrefixes.length) {
-                        	scope.selectedGroupPrefix = scope.groupPrefixes[0].value;
-						}
+                    if (scope.item.content_type) {
+                        userCode = userCode + scope.item.content_type + ':';
+                    }
+
+                    return userCode + userCodeEnd;
+
+                }
+
+                scope.updateUserCode = function (usercode, configuration_code) {
+
+                    console.log('scope.configuration_code', scope.configuration_code.value);
+                    console.log('scope.usercode', scope.usercode);
+
+                    scope.usercode.value = usercode
+                    scope.configuration_code.value = configuration_code
+
+                    if (scope.usercode.value) {
+                        convertedUserCode = replaceSpecialCharsAndSpaces(scope.usercode.value).toLowerCase();
+                    }
+
+                    scope.item.user_code = assembleUserCode(usercode);
+
+                    scope.item.configuration_code = scope.configuration_code.value;
+
+                }
+
+                function replaceSpecialCharsAndSpaces(str) {
+                    return str.replace(/[^A-Za-z0-9]+/g, '_');
+                }
+
+                const setErrorDescriptionD = utilsHelper.debounce(function (description) {
+                    scope.errorDescription = scope.errorData.value;
+                    scope.$apply();
+                }, 1000);
+
+                scope.validateUserCode = function (userCodeVal) {
+
+                    scope.errorData.value = metaHelper.validateTextForUserCode(userCodeVal, null, 'User code');
+
+                    const userCode = assembleUserCode(userCodeVal);
+
+                    if ( Array.isArray(scope.occupiedUserCodes) &&
+                        scope.occupiedUserCodes.includes(userCode) ) {
+
+                        scope.errorData.value = 'User code should be unique.';
+
+                    }
+
+                    setErrorDescriptionD( scope.errorData.value );
+
+                }
+
+                const parseUserCode = function () {
+
+                    if (!scope.item.user_code) {
+                        return;
+                    }
+
+                    const parts = scope.item.user_code.split(':');
+
+                    switch ( parts.length ) {
+
+                        case 1:
+                            scope.usercode.value = parts[0];
+                            break;
+
+                        case 2:
+                            scope.configuration_code.value = parts[0]
+                            scope.usercode.value = parts[1];
+                            break;
+
+                        case 3:
+                            scope.configuration_code.value = parts[0]
+                            scope.usercode.value = parts[2];
+                            break;
+                    }
+
+                }
+
+                const init = function () {
+
+                    configurationService.getList().then(function (data) {
+
+                        scope.configuration_codes = data.results.filter(function (item) {
+                            return !item.is_package; // TODO Move to backend filtering someday
+                        }).map(function (item) {
+                            return item.configuration_code
+                        });
+
+                        parseUserCode();
 
                         scope.$apply();
 
                     })
 
-                    usersService.getMyCurrentMember().then(function (data){
-
-                        scope.member = data;
-                        scope.$apply();
-
-                    })
-
                 }
 
-                scope.init();
+                init();
 
 
             }

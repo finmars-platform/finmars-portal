@@ -5,8 +5,6 @@
 
     'use strict';
 
-	const instrumentService = require('../../services/instrumentService');
-	const transactionTypeService = require('../../services/transactionTypeService');
 	const gridTableEvents = require('../../services/gridTableEvents');
 
 	const GridTableDataService = require('../../services/gridTableDataService');
@@ -15,7 +13,7 @@
 	const metaHelper = require('../../helpers/meta.helper');
     // var gridTableHelperService = require('../../helpers/gridTableHelperService');
 
-    module.exports = function singleInstrumentAddEventToTableDialogController($scope, $mdDialog, gridTableHelperService, multitypeFieldService, data) {
+    module.exports = function singleInstrumentAddEventToTableDialogController($scope, $mdDialog, instrumentService, transactionTypeService, gridTableHelperService, multitypeFieldService, data) {
 
     	let vm = this;
 

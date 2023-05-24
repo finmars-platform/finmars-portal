@@ -210,6 +210,11 @@
         vm.dragAndDrop = schedulesHelper.createDragAndDropObject($scope, vm);
 
         vm.init = function () {
+
+            if (data.schedule) {
+                vm.schedule = data.schedule;
+            }
+
             vm.getPricingProcedures();
             vm.getDataProcedures();
             vm.getExpressionProcedures();

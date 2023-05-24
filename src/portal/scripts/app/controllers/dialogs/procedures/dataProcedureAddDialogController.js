@@ -128,6 +128,10 @@
 
         vm.init = function () {
 
+            if (data.item) {
+                vm.item = data.item;
+            }
+
             vm.getTransactionImportSchemes();
             vm.getSimpleImportSchemes();
             vm.getProviders();

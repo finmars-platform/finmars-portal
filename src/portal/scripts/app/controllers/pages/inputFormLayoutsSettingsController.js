@@ -5,12 +5,7 @@
 
     'use strict';
 
-    var uiService = require('../../services/uiService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
-
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
-    module.exports = function ($scope, $mdDialog, $state) {
+    module.exports = function ($scope, $mdDialog, metaContentTypesService, uiService) {
 
         var vm = this;
 
@@ -273,13 +268,14 @@
 
             $mdDialog.show({
                 controller: 'UiLayoutSaveAsDialogController as vm',
-                templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
+                templateUrl: 'views/dialogs/ui/ui-layout-save-as-dialog-view.html',
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 multiple: true,
                 clickOutsideToClose: false,
                 locals: {
-                    options: {
+                    data: {
+                        entityType: entityType,
                         layoutName: layout.name,
                         layoutUserCode: layout.user_code
                     }

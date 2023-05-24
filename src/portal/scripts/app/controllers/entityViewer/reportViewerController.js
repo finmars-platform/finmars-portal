@@ -17,10 +17,6 @@ import evEvents from "../../services/entityViewerEvents";
     var evEvents = require('../../services/entityViewerEvents');
     var evHelperService = require('../../services/entityViewerHelperService');
     var usersService = require('../../services/usersService'); */
-    var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
-
-    var priceHistoryService = require('../../services/priceHistoryService');
-    var currencyHistoryService = require('../../services/currencyHistoryService');
 
     var RvSharedLogicHelper = require('../../helpers/rvSharedLogicHelper');
     var EntityViewerDataService = require('../../services/entityViewerDataService');
@@ -28,17 +24,13 @@ import evEvents from "../../services/entityViewerEvents";
     var SplitPanelExchangeService = require('../../services/groupTable/exchangeWithSplitPanelService');
     var AttributeDataService = require('../../services/attributeDataService');
 
-    var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
-    var pricesCheckerService = require('../../services/reports/pricesCheckerService');
-
-    var expressionService = require('../../services/expression.service');
     // var middlewareService = require('../../services/middlewareService');
 
-    module.exports = function ($scope, $mdDialog, $stateParams, $transitions, toastNotificationService, middlewareService, globalDataService) {
+    module.exports = function ($scope, $mdDialog, $stateParams, $transitions, toastNotificationService, middlewareService, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, customFieldService, attributeTypeService, uiService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper, evRvLayoutsHelper) {
 
         var vm = this;
 
-        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService);
+        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper);
 
         vm.readyStatus = {
             attributes: false,
@@ -875,19 +867,8 @@ import evEvents from "../../services/entityViewerEvents";
 
                     } catch (error) { // layout for split panel was not found
 
-                        var errorObj = {
-                            ___custom_message: 'Error on getting layout with id: ' + additions.layoutData.layoutId + ' for split panel'
-                        }
-
-                        if (error && typeof error === 'object') {
-                            errorObj = {...errorObj, ...error};
-
-                        } else {
-                            errorObj.error = error;
-                        }
-
-                        console.error(errorObj);
-                        if (error && error.response.status === 404) {
+                        console.error('Error on getting layout with an id: ' + additions.layoutData.layoutId + ' for split panel');
+                        if (error && error.error.status_code === 404) {
 
                             /* interfaceLayout.splitPanel.height = 0;
                             vm.entityViewerDataService.setInterfaceLayout(interfaceLayout);
@@ -996,10 +977,10 @@ import evEvents from "../../services/entityViewerEvents";
 
             vm.readyStatus.layout = false; // switched to true by sharedLogicHelper.onSetLayoutEnd()
 
-            vm.entityViewerDataService = new EntityViewerDataService();
+            vm.entityViewerDataService = new EntityViewerDataService(reportHelper);
             vm.entityViewerEventService = new EntityViewerEventService();
             vm.splitPanelExchangeService = new SplitPanelExchangeService();
-            vm.attributeDataService = new AttributeDataService();
+            vm.attributeDataService = new AttributeDataService(metaContentTypesService, customFieldService, attributeTypeService, uiService);
 
             vm.entityType = $scope.$parent.vm.entityType;
 
@@ -1024,29 +1005,29 @@ import evEvents from "../../services/entityViewerEvents";
             var downloadAttrsProm = sharedLogicHelper.downloadAttributes();
             var setLayoutProm;
 
-            var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject) {
-
-                uiService.getCrossEntityAttributeExtensionList({
-                    filters: {
-                        context_content_type: $scope.$parent.vm.contentType
-                    }
-                }).then(function (data) {
-
-                    console.log('getCrossEntityAttributeExtensionList.data', data);
-
-                    vm.entityViewerDataService.setCrossEntityAttributeExtensions(data.results);
-                    resolve();
-
-                }).catch(error => reject(error))
-
-            })
+            // var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject) {
+            //
+            //     uiService.getCrossEntityAttributeExtensionList({
+            //         filters: {
+            //             context_content_type: $scope.$parent.vm.contentType
+            //         }
+            //     }).then(function (data) {
+            //
+            //         console.log('getCrossEntityAttributeExtensionList.data', data);
+            //
+            //         vm.entityViewerDataService.setCrossEntityAttributeExtensions(data.results);
+            //         resolve();
+            //
+            //     }).catch(error => reject(error))
+            //
+            // })
 
             vm.setEventListeners();
 
             middlewareService.onAutosaveLayoutToggle(function () {
 
                 autosaveLayoutOn = globalDataService.isAutosaveLayoutOn();
-                console.log("autosave77 rv isAutosaveLayoutOn", autosaveLayoutOn);
+
                 if (autosaveLayoutOn) {
 
                     autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
@@ -1105,7 +1086,7 @@ import evEvents from "../../services/entityViewerEvents";
                 setLayoutProm = evHelperService.getDefaultLayout(vm);
             }
 
-            Promise.allSettled([downloadAttrsProm, setLayoutProm, crossEntityAttributeExtensionProm]).then(function (getViewData) {
+            Promise.allSettled([downloadAttrsProm, setLayoutProm]).then(function (getViewData) {
 
                 metaService.logRejectedPromisesAfterAllSettled(getViewData, 'report viewer get view');
 
@@ -1117,7 +1098,7 @@ import evEvents from "../../services/entityViewerEvents";
 
         vm.init = function () {
 
-            autosaveLayoutService = new AutosaveLayoutService();
+            autosaveLayoutService = new AutosaveLayoutService(metaContentTypesService, uiService, reportHelper);
 
             onUserChangeIndex = middlewareService.onMasterUserChanged(function () {
                 vm.entityViewerDataService.setLayoutChangesLossWarningState(false);

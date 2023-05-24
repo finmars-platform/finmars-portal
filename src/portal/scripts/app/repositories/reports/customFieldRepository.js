@@ -1,15 +1,13 @@
 /**
  * Created by szhitenev on 15.06.2016.
  */
+import baseUrlService from "../../../../../shell/scripts/app/services/baseUrlService";
+import configureRepositoryUrlService from "../../../../../shell/scripts/app/services/configureRepositoryUrlService";
 
-(function () {
+export default function (cookieService, xhrService) {
 
     'use strict';
 
-    var cookieService = require('../../../../../core/services/cookieService');
-    var xhrService = require('../../../../../core/services/xhrService');
-    var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService');
-    var baseUrlService = require('../../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 
@@ -63,7 +61,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 're
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(data)
+                body: JSON.stringify(data)
             })
     };
 
@@ -82,7 +80,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 're
  Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(data)
+                body: JSON.stringify(data)
             })
     };
 
@@ -113,11 +111,11 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 're
         })
     };
 
-    module.exports = {
+    return {
         getList: getList,
         getByKey: getByKey,
         create: create,
         update: update,
         deleteByKey: deleteByKey
     }
-}());
+};

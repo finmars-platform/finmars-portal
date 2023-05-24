@@ -1,11 +1,9 @@
-(function () {
+import baseUrlService from "../services/baseUrlService";
 
-    'use strict';
+/** @module masterUserService **/
+export default function (cookieService, xhrService) {
 
-    var baseUrlService = require('../services/baseUrlService');
-    var cookieService = require('../../../../core/services/cookieService');
-    var xhrService = require('../../../../core/services/xhrService');
-    var baseUrl = baseUrlService.resolve();
+    const baseUrl = baseUrlService.resolve();
 
     /*
     *
@@ -48,13 +46,13 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(master_user)
+                body: JSON.stringify(master_user)
             })
     };
 
-    module.exports = {
+    return {
         updateMasterUser: updateMasterUser,
         getMasterUser: getMasterUser
     }
 
-}());
+}

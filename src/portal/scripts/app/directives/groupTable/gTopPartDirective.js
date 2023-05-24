@@ -7,14 +7,10 @@
 
     var metaService = require('../../services/metaService');
     var evEvents = require('../../services/entityViewerEvents');
-    var reportHelper = require('../../helpers/reportHelper');
-    var evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
-
-    const ecosystemDefaultService = require('../../services/ecosystemDefaultService');
 
     var currencyService = require('../../services/currencyService');
 
-    module.exports = function ($mdDialog, $state, usersService, globalDataService) {
+    module.exports = function ($mdDialog, $state, usersService, ecosystemDefaultService, globalDataService, evRvLayoutsHelper, reportHelper) {
         return {
             restrict: 'E',
             templateUrl: 'views/directives/groupTable/g-top-part-view.html',

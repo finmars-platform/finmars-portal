@@ -6,10 +6,7 @@
     'use strict';
 
 
-    var uiRepository = require('../../repositories/uiRepository');
-
-
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, uiService, data) {
 
         console.log('data', data);
 
@@ -19,7 +16,7 @@
 
         vm.delete = function () {
 
-            uiRepository.deleteConfigurationExportLayoutByKey(vm.layout.id).then(function () {
+            uiService.deleteConfigurationExportLayoutByKey(vm.layout.id).then(function () {
 
                 $mdDialog.hide({status: 'agree'});
 
@@ -34,11 +31,11 @@
         vm.save = function () {
 
             if (vm.layout.id) {
-                uiRepository.updateConfigurationExportLayout(vm.layout.id, vm.layout).then(function () {
+                uiService.updateConfigurationExportLayout(vm.layout.id, vm.layout).then(function () {
                     $mdDialog.hide({status: 'agree'});
                 });
             } else {
-                uiRepository.createConfigurationExportLayout(vm.layout).then(function () {
+                uiService.createConfigurationExportLayout(vm.layout).then(function () {
                     $mdDialog.hide({status: 'agree'});
                 });
             }
@@ -49,7 +46,7 @@
 
             delete vm.layout.id;
 
-            uiRepository.createConfigurationExportLayout(vm.layout).then(function () {
+            uiService.createConfigurationExportLayout(vm.layout).then(function () {
                 $mdDialog.hide({status: 'agree'});
             }, function (rej) {
                 $mdDialog.hide();

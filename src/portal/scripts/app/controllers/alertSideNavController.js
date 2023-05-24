@@ -5,11 +5,6 @@
 
         'use strict';
 
-        var metaService = require('../services/metaService');
-        // var usersService = require('../services/usersService');
-        var uiService = require('../services/uiService');
-        var metaHelper = require('../helpers/meta.helper');
-
         module.exports = function ($scope, globalDataService, systemMessageService) {
 
             var vm = this;

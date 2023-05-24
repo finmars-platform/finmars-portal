@@ -8,16 +8,14 @@
     var processesService = require('../../services/processesService');
 
     var baseUrlService = require('../../services/baseUrlService');
-    var utilsService = require('../../services/utilsService');
     var complexTransactionService = require('../../services/transaction/complexTransactionService');
-    var masterUserService = require('../../services/masterUserService');
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
     var baseUrl = baseUrlService.resolve();
 
 
-    module.exports = function recycleBinPageController($scope, $state, $stateParams, $mdDialog, globalDataService) {
+    module.exports = function recycleBinPageController($scope, $state, $stateParams, $mdDialog, globalDataService, utilsService) {
 
         var vm = this;
 
@@ -374,6 +372,8 @@
 
 
         vm.init = function () {
+
+            console.log('utilsService', utilsService);
 
             if ($stateParams.page) {
                 vm.currentPage = $stateParams.page
