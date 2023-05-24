@@ -80,7 +80,7 @@
                 "key": "ytm",
                 "name": "YTM",
                 "value_type": 20,
-            }
+            },
             //{
             //    "key": "factor",
             //    "name": "Factor",

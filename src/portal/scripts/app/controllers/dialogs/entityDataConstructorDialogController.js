@@ -200,6 +200,7 @@
 
                                 if (data.book_transaction_layout) {
                                     vm.ui = data.book_transaction_layout;
+
                                 } else {
 
                                     vm.formLayoutIsNew = true;
@@ -229,7 +230,8 @@
 
                             }).catch(error => reject(error));
 
-                        } else { // if no edit layout id was specified, get default edit layout
+                        }
+                        else { // if no edit layout id was specified, get default edit layout
 
                             uiService.getDefaultEditLayout(vm.entityType).then(data => {
 
@@ -247,19 +249,35 @@
 
                                 resolveLayout();
 
-                            }).catch(error => reject(error));
+                            })
+                            .catch(error => {
+                                // for entities that do not have edit layout?
+                                console.error(error);
+
+                                vm.ui = {
+                                    user_code: defaultUserCode,
+                                    data: {}
+                                };
+
+                                resolveLayout();
+
+                            });
 
                         }
 
                     }
 
                 }
+
+                /*
+                Causes error by calling vm.createFieldsTree() earlier than layout loaded
+
                 vm.ui = {
                     user_code: defaultUserCode,
                     data: {},
                 }
 
-                resolveLayout();
+                resolveLayout();*/
 
             });
 
@@ -1383,10 +1401,12 @@
 
                 switch (vm.entityType) {
 
-                    case 'complex-transaction':
-                    case 'transaction-type':
 
-                        doNotShowAttrs = ['transaction_type', 'code', 'date', 'status', 'text',
+                    case 'transaction-type':
+                        doNotShowAttrs = ['code'];
+                    case 'complex-transaction':
+
+                        doNotShowAttrs = doNotShowAttrs.concat(['transaction_type', 'date', 'status', 'text',
                             'user_text_1', 'user_text_2', 'user_text_3', 'user_text_4', 'user_text_5', 'user_text_6',
                             'user_text_7', 'user_text_8', 'user_text_9', 'user_text_10', 'user_text_1', 'user_text_11',
                             'user_text_12', 'user_text_13', 'user_text_14', 'user_text_15', 'user_text_16', 'user_text_17',
@@ -1398,7 +1418,7 @@
                             'user_number_3', 'user_number_4', 'user_number_5', 'user_number_6', 'user_number_7',
                             'user_number_8', 'user_number_9', 'user_number_10', 'user_number_11', 'user_number_12',
                             'user_number_13', 'user_number_14', 'user_number_15', 'user_number_16', 'user_number_17',
-                            'user_number_18', 'user_number_19', 'user_number_20', 'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'];
+                            'user_number_18', 'user_number_19', 'user_number_20', 'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5']);
 
                         break;
 
@@ -1430,7 +1450,7 @@
                 doNotShowAttrs = doNotShowAttrs.concat(keysOfFixedFieldsAttrs);
 
                 if (doNotShowAttrs.length) {
-                    vm.entityAttrs = entityAttrs.filter(entity => !doNotShowAttrs.includes(entity.key));
+                    vm.entityAttrs = entityAttrs.filter( entity => !doNotShowAttrs.includes(entity.key) );
                 }
 
                 if (vm.entityType === 'instrument') {
