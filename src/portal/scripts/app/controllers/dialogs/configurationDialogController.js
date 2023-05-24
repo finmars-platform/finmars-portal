@@ -5,16 +5,8 @@
 
     'use strict';
 
-    var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
-    var metaService = require('../../services/metaService');
 
-    var modelService = require('../../services/modelService');
-
-
-    var configurationService = require('../../services/configurationService');
-    var marketplaceService = require('../../services/marketplaceService');
-
-    module.exports = function configurationDialog($scope, $mdDialog, globalDataService, toastNotificationService, data) {
+    module.exports = function configurationDialog($scope, $mdDialog, globalDataService, toastNotificationService, configurationService, data) {
 
         var vm = this;
 
@@ -85,13 +77,14 @@
 
                 configurationService.create(vm.item).then(function (data) {
 
-                    vm.item = data;
+                    // vm.item = data;
 
                     toastNotificationService.success("Configuration " + vm.item.user_code + ' was successfully created');
 
-                    vm.processing = false;
+                    /*vm.processing = false;
 
-                    vm.getItem(vm.item.id)
+                    vm.getItem(vm.item.id)*/
+                    $mdDialog.hide( { status: 'agree', data: {configurationId: data.id} } );
 
                 })
 
@@ -116,7 +109,7 @@
 
                 if (res.status === "agree") {
 
-                    vm.getItem();
+                    vm.getItem(vm.item.id);
 
                 }
             })
@@ -228,7 +221,7 @@
 
             setTimeout(function () {
 
-                vm.editor = ace.edit('aceEditor');
+                vm.editor = ace.edit('aceEditorManifest');
                 vm.editor.setTheme("ace/theme/monokai");
                 vm.editor.getSession().setMode("ace/mode/json");
                 vm.editor.getSession().setUseWorker(false);

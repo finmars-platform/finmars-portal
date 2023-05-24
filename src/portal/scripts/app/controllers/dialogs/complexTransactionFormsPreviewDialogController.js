@@ -38,7 +38,6 @@
 
         vm.readyStatus = {content: false, entity: true, transactionTypes: false, layout: false};
 
-
         vm.attrs = [];
         vm.layoutAttrs = layoutService.getLayoutAttrs();
         vm.entityAttrs = metaService.getEntityAttrs(vm.entityType) || [];
@@ -48,6 +47,7 @@
         vm.transactionTypeId = data.transactionTypeId;
 
         vm.attributesLayout = [];
+		vm.fieldsDataStore = {};
 
         var dataConstructorLayout = [];
 		var contentType = metaContentTypesService.findContentTypeByEntity('complex-transaction', 'ui');
@@ -476,7 +476,12 @@
 
 					vm.transactionType = data.transaction_type_object;
 					vm.entity = data.complex_transaction;
+					vm.entity.values = data.values;
 
+					vm.entity.frontOptions = {
+						dynamicAttributesValues: {},
+						userInputsValues: {}
+					};
 
 					vm.readyStatus.entity = true;
 
@@ -491,12 +496,6 @@
 						vm.missingLayoutError = false;
 
 						await postBookComplexTransactionActions(data);
-
-						/*vm.oldValues = {};
-
-						vm.userInputs.forEach(function (item) {
-							vm.oldValues[item.name] = vm.entity[item.name]
-						});*/
 
 					}
 

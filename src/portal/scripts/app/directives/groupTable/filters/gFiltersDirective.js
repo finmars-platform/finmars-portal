@@ -589,6 +589,7 @@
                                 multiple: true,
                                 locals: {
                                     data: {
+                                        title: 'Add filters',
                                         attributes: availableAttrs,
                                         layoutNames: evHelperService.getAttributesLayoutNames(columns),
                                         selectedAttributes: selectedAttrs,

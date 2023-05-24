@@ -86,7 +86,7 @@
 
         vm.currentMember = null;
 
-        vm.hasEditPermission = false;
+        vm.hasEditPermission = true; // deprecated
         vm.canManagePermissions = false;
 
         vm.attributeTypesByValueTypes = {}; // need for pricing tab

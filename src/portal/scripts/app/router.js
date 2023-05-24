@@ -786,9 +786,9 @@
                 templateUrl: 'views/settings/interface-access-settings-view.html',
                 controller: 'SettingsGeneralInterfaceAccessController as vm'
             })
-            .state('app.portal.settings.entities-custom-attributes', {
-                url: '/entities-custom-attributes',
-                templateUrl: 'views/pages/entities-custom-attributes-view.html',
+            .state('app.portal.settings.user-attributes', {
+                url: '/user-attributes',
+                templateUrl: 'views/pages/user-attributes-view.html',
                 controller: 'EntitiesCustomAttributesController as vm'
             })
             .state('app.portal.settings.price-download-scheme', {

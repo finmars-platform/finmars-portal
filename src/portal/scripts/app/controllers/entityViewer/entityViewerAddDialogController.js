@@ -40,7 +40,7 @@
 
         vm.processing = false;
 
-        vm.readyStatus = {permissions: false, entity: false, layout: false};
+        vm.readyStatus = {permissions: true, entity: false, layout: false};
 
         vm.entity = {$_isValid: true};
         vm.dataConstructorLayout = {};
@@ -55,7 +55,7 @@
             vm.hasEnabledStatus = false;
         }
 
-        if (Object.keys(entity).length) { // make copy option
+        if (Object.keys(entity).length) { // Make a copy option
             vm.entity = entity;
 			delete vm.entity.id; // lack of id indicates creation of entity
         }
@@ -1895,7 +1895,8 @@
             if (vm.entityType === 'price-history' || vm.entityType === 'currency-history' || vm.entityType === 'portfolio-register' || vm.entityType === 'portfolio-register-record') {
                 vm.readyStatus.permissions = true;
             } else {
-                vm.loadPermissions();
+                vm.readyStatus.permissions = true;
+                // vm.loadPermissions();
             }
 
             /* vm.sharedLogic.getFieldsForFixedAreaPopup().then(function (fields) {

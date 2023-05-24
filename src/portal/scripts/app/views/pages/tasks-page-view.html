@@ -186,12 +186,16 @@
                             <md-tooltip md-direction="bottom">Refresh</md-tooltip></a>
 
                         <a data-ng-click="vm.cancelTask($event)"
-                           data-ng-if="vm.activeTask.status == 'P' || vm.activeTask.status == 'progress'"
+                           data-ng-if="vm.activeTask.status == 'P' || vm.activeTask.status == 'progress' || vm.activeTask.status == 'W'"
                            class="cancel-task-button"><span
                                 class="material-icons">cancel</span>
                             <md-tooltip md-direction="bottom">Cancel</md-tooltip></a>
 
+
                         <h1 style="word-break: break-word; font-size: 24px;">{{vm.activeTask.verbose_name}}</h1>
+
+
+
                         <div class="task-detail-field">
                             <span class="task-detail-field-definition">Start Date</span>:
                             {{vm.activeTask.created | date:'yyyy-MM-dd' : 'UTC'}}
@@ -340,6 +344,16 @@
                                 <span class="download-file-button"
                                       data-ng-click="vm.downloadFile($event, item)">{{item.file_report_object.name}}</span>
                             </div>
+
+                        </div>
+
+                        <div>
+
+                            <h3>Actions:</h3>
+
+                            <md-button class="md-raised md-warn" data-ng-if="vm.activeTask.type == 'transaction_import'" data-ng-click="vm.abortTransactionImport($event, vm.activeTask)">
+                                Abort Transactions
+                            </md-button>
 
                         </div>
 

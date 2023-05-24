@@ -38,7 +38,7 @@
 
         vm.processing = false;
 
-        vm.readyStatus = {permissions: false, entity: false, layout: false};
+        vm.readyStatus = {permissions: true, entity: false, layout: false};
 
         vm.entityType = 'instrument-type';
 
@@ -49,7 +49,7 @@
         vm.hasEnabledStatus = false;
         vm.evEditorEvent = null;
 
-        if (Object.keys(entity).length) { // make copy option
+        if (Object.keys(entity).length) { // Make a copy option
             vm.entity = entity;
             delete vm.entity.id; // lack of id indicates creation of entity
         }

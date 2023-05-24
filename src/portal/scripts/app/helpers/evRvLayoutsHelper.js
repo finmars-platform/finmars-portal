@@ -1,6 +1,6 @@
 import evEvents from "../services/entityViewerEvents";
 
-export default function (toastNotificationService, uiService) {
+export default function (toastNotificationService, metaContentTypesService, uiService) {
 
 	let getLinkingToFilters = function (layout) {
 
@@ -202,13 +202,14 @@ export default function (toastNotificationService, uiService) {
 			const isRootEntityViewer = evDataService.isRootEntityViewer();
 
 			$mdDialog.show({
-				controller: 'NewLayoutDialogController as vm',
-				templateUrl: 'views/dialogs/new-layout-dialog-view.html',
+				controller: 'UiLayoutSaveAsDialogController as vm',
+				templateUrl: 'views/dialogs/ui/ui-layout-save-as-dialog-view.html',
 				parent: angular.element(document.body),
 				targetEvent: $event,
 				preserveScope: false,
 				locals: {
 					data: {
+						label: "New layout",
 						entityType: entityType,
 						name: listLayout.name,
 					}
@@ -216,16 +217,17 @@ export default function (toastNotificationService, uiService) {
 			})
 				.then(res => {
 
+					/* TODO: forbid creation of layout with the same user code as for autosave
 					if (res.data && res.data.user_code && res.data.user_code.startsWith('system_autosave_')) {
 						throw "This user code reserved for system layout. Please use another one";
-					}
-
+					}*/
 					if (res.status === 'agree') {
 
 						const saveAsLayout = function () {
 
 							listLayout.name = res.data.name;
 							listLayout.user_code = res.data.user_code;
+							listLayout.configuration_code = res.data.configuration_code; // Important
 
 							uiService.createListLayout(entityType, listLayout).then(function (data) {
 
@@ -239,10 +241,6 @@ export default function (toastNotificationService, uiService) {
 							});
 
 						};
-
-						if (isRootEntityViewer) {
-							listLayout.is_default = true; // default layout for split panel does not have is_default === true
-						}
 
 						listLayout.is_systemic = false;
 
@@ -262,21 +260,21 @@ export default function (toastNotificationService, uiService) {
 
 						listLayout.name = res.data.name;
 						listLayout.user_code = userCode;
+						listLayout.configuration_code = res.data.configuration_code; // Important
 
 						uiService.getListLayoutByUserCode(entityType, userCode).then(function (layoutToOverwriteData) {
 
 							const layoutToOverwrite = layoutToOverwriteData.results[0];
 							overwriteLayout(layoutToOverwrite, listLayout).then(function (updatedLayoutData) {
 
-								/* if (isRootEntityViewer) listLayout.is_default = true; // default layout for split panel does not have is_default === true
-                                listLayout.modified = updatedLayoutData.modified; */
-
 								applyLayout(isRootEntityViewer, evDataService, evEventService, updatedLayoutData);
 								toastNotificationService.success("Success. Layout " + listLayout.name + " overwritten.");
 
 								resolve({status: res.status});
 
-							}).catch(error => reject({status: res.status, error: error}));
+							}).catch(error => {
+								reject({status: res.status, error: error})
+							});
 
 						});
 

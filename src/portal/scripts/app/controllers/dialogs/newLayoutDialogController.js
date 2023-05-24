@@ -92,7 +92,8 @@ import metaContentTypesService from "../../services/metaContentTypesService";
 							$mdDialog.hide({
 								status: 'overwrite', data: {
 									name: vm.item.name,
-									user_code: vm.item.user_code
+									user_code: vm.item.user_code,
+									configuration_code: vm.item.configuration_code
 								}
 							});
 
@@ -106,7 +107,8 @@ import metaContentTypesService from "../../services/metaContentTypesService";
 					$mdDialog.hide({
 						status: 'agree', data: {
 							name: vm.item.name,
-							user_code: vm.item.user_code
+							user_code: vm.item.user_code,
+							configuration_code: vm.item.configuration_code
 						}
 					});
 

@@ -75,6 +75,11 @@
                 "name": "Is Temporary Price",
                 "value_type": 50,
                 "allow_null": true
+            },
+            {
+                "key": "ytm",
+                "name": "YTM",
+                "value_type": 20,
             }
             //{
             //    "key": "factor",

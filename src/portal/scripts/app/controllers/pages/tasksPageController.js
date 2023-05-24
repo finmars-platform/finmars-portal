@@ -397,6 +397,39 @@
 
         }
 
+        vm.abortTransactionImport = function ($event, item) {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                targetEvent: $event,
+                locals: {
+                    warning: {
+                        title: "Warning!",
+                        description: 'Are you sure you want to delete imported transactions?'
+                    }
+                },
+                multiple: true,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    tasksService.abortTransactionImport(item.id).then(function (data) {
+
+                        toastNotificationService.info("Transaction import aborted successfully")
+                        vm.refreshTask($event);
+                        vm.getData();
+
+                    })
+                }
+            })
+
+
+        }
+
 
         vm.init = function () {
 

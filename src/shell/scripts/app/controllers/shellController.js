@@ -7,7 +7,6 @@
 'use strict';
 // import * as authorizerService from '../services/authorizerService';
 // const cookieService = require('../../../../core/services/cookieService');
-import websocketService from "../../../../shell/scripts/app/services/websocketService.js";
 import baseUrlService from "../services/baseUrlService.js";
 import crossTabEvents from "../services/events/crossTabEvents";
 
@@ -163,8 +162,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
             });
 
-        }
-        else {
+        } else {
 
             $transitions.onBefore({}, function (transition) {
 
@@ -307,9 +305,9 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
     const refreshTokens = async () => {
         const isRefreshed = await keycloak.updateToken()
 
-        if ( !isRefreshed ) {
-            await keycloak.login()
-        }
+        // if ( !isRefreshed ) {
+        //     await keycloak.login()
+        // }
     }
 
     const setTokens = () => {
@@ -405,14 +403,14 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         homepageUrl = redirectionService.getUrl('app.portal.home');
         profileUrl = redirectionService.getUrl('app.profile');
 
-         window.keycloak = new Keycloak({
+        window.keycloak = new Keycloak({
             url: window.KEYCLOAK_URL,
             realm: window.KEYCLOAK_REALM,
             clientId: window.KEYCLOAK_CLIENT_ID
         });
 
         window.keycloak.onReady = () => {
-            if ( window.keycloak.isTokenExpired() ) refreshTokens()
+            if (window.keycloak.isTokenExpired(10)) refreshTokens()
         }
 
 
@@ -433,13 +431,16 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         }
         //# endregion */
 
-        const authenticated = await window.keycloak.init( {
+        const authenticated = await window.keycloak.init({
             onLoad: 'login-required',
             token: cookieService.getCookie('access_token'),
             refreshToken: cookieService.getCookie('refresh_token'),
-            idToken: cookieService.getCookie('id_token')
+            idToken: cookieService.getCookie('id_token'),
+            checkLoginIframe: true,
+            checkLoginIframeInterval: 60, // Seconds
+            timeSkew: 0, // fix bag with update token
             // checkLoginIframe: false
-        } );
+        });
 
         if (authenticated) {
 

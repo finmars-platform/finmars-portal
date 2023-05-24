@@ -149,7 +149,8 @@
   flex: 0 1 100%;
   min-width: 0;
   height: 23px;
-  padding-left: 8px;
+  // padding-left: 8px;
+  padding-left: 12px;
   border: none;
   border-radius: 6px 0 0 6px;
   color: #000;
@@ -853,6 +854,12 @@
 
 //region When input focused
 .custom-input-container.custom-input-focused {
+  .custom-input-indicator-btn {
+    outline: none;
+  }
+}
+
+.custom-input-container.custom-input-focused:not(.readonly) {
 
   .custom-input-main-container {
     .custom-input-borders {
@@ -865,9 +872,6 @@
     }
   }
 
-  .custom-input-indicator-btn {
-    outline: none;
-  }
 }
 
 .custom-input-container.custom-input-focused.dropdown-input-container {
@@ -907,6 +911,22 @@
   }*/
 }
 //endregion When input focused
+
+//region Readonly
+.custom-input-container.readonly {
+  .custom-input-borders {
+   border-left-width: 8px;
+  }
+
+  .custom-input-indicator-btn {
+    margin-left: 0;
+  }
+
+  .custom-input {
+    padding-left: 6px;
+  }
+}
+//endregion Readonly
 
 //region When input in error mode
 .custom-input-container.custom-input-error {
