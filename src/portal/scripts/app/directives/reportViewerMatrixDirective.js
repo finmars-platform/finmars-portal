@@ -495,8 +495,14 @@
 
                 var getValuesForMatrix = function () {
 
-                    var flatList = rvDataHelper.getPureFlatStructure(scope.evDataService);
-                    itemList = flatList.filter(item => item.___type === 'object');
+                    // Deprecated wtf why do we even need groped result here? get just raw items from server response
+                    // var flatList = rvDataHelper.getPureFlatStructure(scope.evDataService);
+                    //
+                    // console.log('getValuesForMatrix.flatList', flatList);
+                    //
+                    // itemList = flatList.filter(item => item.___type === 'object');
+
+                    itemList = scope.evDataService.getUnfilteredFlatList();
 
                     scope.columns = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.abscissa, scope.matrixSettings.value_key);
                     scope.rows = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.ordinate, scope.matrixSettings.value_key);

@@ -185,8 +185,8 @@
                     <div class="dashboard-rows-holder" data-row="{{row.row_number}}"
                          data-ng-repeat="row in vm.layout.data.fixed_area.layout.rows">
 
-                        <div data-ng-repeat="item in row.columns"
-                             class="dashboard-cell dashboardCell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}} {{item.data && item.data.type == 'control' ? 'z-index-2' : ''}}"
+                        <div data-ng-repeat="item in row.columns track by $index"
+                             class="dashboard-cell dashboardCell {{item.cell_type != 'empty' ? 'bordered':''}} {{item.data && item.data.type == 'control' ? 'dashboard-cell-no-overflow' : ''}} {{'z-index-' + (100 - ((row.row_number * 10) + $index + 1))}}"
                              data-tab="fixed_area"
                              data-row="{{row.row_number}}"
                              data-column="{{item.column_number}}"
@@ -571,7 +571,7 @@
 
                                 </div>
 
-<!--                                <div class="dashboard-empty-space dashboardEmptySpace"></div>-->
+                                <!--                                <div class="dashboard-empty-space dashboardEmptySpace"></div>-->
 
 
                             </div>
