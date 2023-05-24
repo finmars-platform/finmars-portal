@@ -30,11 +30,12 @@
                                      flex="{{vm.bindFlex(tab, field)}}"
                                      data-ng-if="vm.checkFieldRender(tab, row, field)">
                                     <bind-field-control
-                                            entity-type="vm.entityType"
-                                            entity="vm.entity"
-                                            ev-editor-event-service="vm.evEditorEventService"
-                                            ev-editor-data-service="vm.evEditorDataService"
-                                            item="vm.attributesLayout[tab.tabOrder][field.row][field.column]"></bind-field-control>
+                                            data-entity-type="vm.entityType"
+                                            data-entity="vm.entity"
+                                            data-ev-editor-event-service="vm.evEditorEventService"
+                                            data-ev-editor-data-service="vm.evEditorDataService"
+                                            data-item="vm.attributesLayout[tab.tabOrder][field.row][field.column]"
+                                            data-fields-data-store="vm.fieldsDataStore"></bind-field-control>
                                 </div>
                             </div>
                         </md-content>
