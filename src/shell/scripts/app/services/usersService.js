@@ -6,11 +6,12 @@
 
 'use strict';
 
-import usersRepository from '../repositories/usersRepository.js';
+import UsersRepository from '../repositories/usersRepository.js';
 // import authorizerRepository from "../repositories/authorizerRepository";
 /** @module usersService */
-export default function (globalDataService) {
+export default function (cookieService, globalDataService, xhrService) {
 
+	const usersRepository = new UsersRepository(cookieService, xhrService);
     // const usersRepository = require('../repositories/usersRepository');
 
     /* const login = function (login, password) {
@@ -105,6 +106,22 @@ export default function (globalDataService) {
 		return new Promise((resolve, reject) => {
 
 			usersRepository.getMyCurrentMember().then(memberData => {
+
+				if (!memberData.data) {
+					memberData.data = {};
+				}
+
+				if (!memberData.data.favorites) {
+					memberData.data.favorites = {};
+				}
+
+				if (!memberData.data.favorites.transaction_type) {
+					memberData.data.favorites.transaction_type = [];
+				}
+
+				if (!memberData.data.favorites.attributes) {
+					memberData.data.favorites.attributes = {};
+				}
 
 				globalDataService.setMember(memberData);
 				resolve(memberData);

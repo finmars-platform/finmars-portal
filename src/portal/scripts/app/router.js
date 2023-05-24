@@ -63,9 +63,18 @@
         });
 
         $stateProvider.state('app.portal.dashboard-layout-manager', {
-            url: '/dashboard-layouts',
+            url: '/dashboard-layouts/',
             templateUrl: 'views/dashboard-layout-manager-view.html',
             controller: 'DashboardLayoutManagerController as vm'
+        });
+
+        $stateProvider.state('app.portal.dashboard-rv-matrix', {
+            url: '/dashboard-component-rv-matrix?atoken&componentId&reportLayoutId&abscissa&ordinate&value_key',
+            templateUrl: 'views/dashboard/_version2/reportViewer/matrix-view.html',
+            controller: 'Dashboard2RvMatrixController as vm',
+            params: {
+                componentId: null,
+            }
         });
 
         $stateProvider.state('app.portal.context-menu-constructor', {
@@ -121,6 +130,14 @@
             templateUrl: 'views/pages/template-layout-manager-view.html',
             controller: 'TemplateLayoutManagerController as vm'
         });
+
+        /* Used for opening split panel inside iframe
+
+        $stateProvider.state('app.portal.split-panel-widget', {
+            url: '/split-panel-widget?atoken&content_type&user_code&layoutId&name',
+            templateUrl: 'views/widgets/split-panel-report-viewer-view.html',
+            controller: 'SplitPanelReportViewerWidgetController as vm'
+        });*/
 
         $stateProvider
             .state('app.portal.data', {
@@ -433,7 +450,7 @@
             })
 
             .state('app.portal.explorer', {
-                url: '/explorer/{folderPath:[a-zA-Z0-9_/\.]*}',
+                url: '/explorer/{folderPath:[a-zA-Z0-9_/\.\-]*}',
                 templateUrl: 'views/pages/explorer-page-view.html',
                 controller: 'ExplorerPageController as vm',
                 params: {
@@ -769,9 +786,9 @@
                 templateUrl: 'views/settings/interface-access-settings-view.html',
                 controller: 'SettingsGeneralInterfaceAccessController as vm'
             })
-            .state('app.portal.settings.entities-custom-attributes', {
-                url: '/entities-custom-attributes',
-                templateUrl: 'views/pages/entities-custom-attributes-view.html',
+            .state('app.portal.settings.user-attributes', {
+                url: '/user-attributes',
+                templateUrl: 'views/pages/user-attributes-view.html',
                 controller: 'EntitiesCustomAttributesController as vm'
             })
             .state('app.portal.settings.price-download-scheme', {
@@ -824,6 +841,16 @@
                         return '';
                     }
                 }
+            })
+            .state('app.portal.marketplace', {
+                url: '/marketplace',
+                templateUrl: 'views/pages/marketplace-page-view.html',
+                controller: 'MarketplacePageController as vm'
+            })
+            .state('app.portal.manage-configuration', {
+                url: '/manage-configuration',
+                templateUrl: 'views/pages/manage-configuration-page-view.html',
+                controller: 'ManageConfigurationPageController as vm'
             })
             .state('app.portal.settings.import-configuration', {
                 url: '/import-configuration',

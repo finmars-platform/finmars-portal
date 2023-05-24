@@ -79,8 +79,6 @@ export default function ($scope, $state, authorizerService, usersService, global
 
     const init = function () {
 
-
-
         middlewareService.onToggleWarningsSideNav(function () {
             vm.showWarningSideNav = !vm.showWarningSideNav;
 

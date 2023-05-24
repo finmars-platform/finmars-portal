@@ -9,10 +9,7 @@ const importTransactionService = require("../../../services/import/importTransac
     var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
     var transactionTypeService = require('../../../services/transactionTypeService');
 
-    var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
-
-
-    module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, schemeId, importSchemesMethodsService) {
+    module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, toastNotificationService, transactionTypeService, importSchemesMethodsService, schemeId) {
 
         var vm = this;
 
@@ -144,6 +141,7 @@ const importTransactionService = require("../../../services/import/importTransac
         vm.getItem = function () {
 
             transactionImportSchemeService.getByKey(schemeId).then(function (data) {
+
                 vm.scheme = data;
 
                 if (vm.scheme.inputs.length) {
@@ -193,12 +191,49 @@ const importTransactionService = require("../../../services/import/importTransac
                 }
 
                 if (vm.scheme.rule_scenarios.length) {
+
                     vm.scenarios = [];
 
                     vm.scheme.rule_scenarios.forEach(function (scenario) {
 
+                        if (scenario.transaction_type_object) {
+
+                            scenario.inputs = scenario.transaction_type_object.inputs;
+
+                            scenario.transaction_type_object.inputs =
+                                scenario.transaction_type_object.inputs.filter(function (input) {
+                                    return input.value_type !== 120;
+                                });
+
+
+                        } else {
+                            scenario.error_message = "⚠️ Transaction Type is not found"
+                        }
+
+                        if (scenario.inputs) {
+
+                            scenario.inputs.forEach(function (input_item) {
+
+                                scenario.fields.forEach(function (field) {
+
+                                    if (field.transaction_type_input === input_item.name) {
+
+                                        input_item.expression = field.value_expr
+
+                                    }
+
+                                })
+
+
+                            })
+
+                        } else {
+                            scenario.inputs = []
+                        }
+
                         if (scenario.is_default_rule_scenario) {
                             vm.defaultRuleScenario = scenario
+
                         } else {
 
                             if (scenario.is_error_rule_scenario) {
@@ -208,20 +243,7 @@ const importTransactionService = require("../../../services/import/importTransac
 
                             } else {
 
-                                scenario.transaction_type_object.inputs.forEach(function (input_item) {
 
-                                    scenario.fields.forEach(function (field) {
-
-                                        if (field.transaction_type_input === input_item.id) {
-
-                                            input_item.expression = field.value_expr
-
-                                        }
-
-                                    })
-
-
-                                })
 
 
                                 vm.scenarios.push(scenario);
@@ -229,8 +251,8 @@ const importTransactionService = require("../../../services/import/importTransac
                             }
                         }
 
-                    })
 
+                    })
 
                 }
 
@@ -369,41 +391,55 @@ const importTransactionService = require("../../../services/import/importTransac
             $mdDialog.hide({status: 'disagree'});
         };
 
+        function mapInput (scenario) {
+
+            scenario.inputs = scenario.inputs.filter(function (input) {
+                return input.value_type !== 120;
+            })
+
+            scenario.inputs.forEach(function (input_item) {
+
+                var found = false;
+
+                scenario.fields.forEach(function (field) {
+
+                    if (field.transaction_type_input === input_item.name) {
+                        field.value_expr = input_item.expression
+                        found = true
+                    }
+
+                })
+                if (!found) {
+                    scenario.fields.push({
+                        transaction_type_input: input_item.name,
+                        value_expr: input_item.expression
+                    })
+                }
+
+                scenario.fields = scenario.fields.filter(function (field) {
+                    return field.value_expr
+                })
+
+            })
+
+            return scenario;
+
+        }
+
         vm.agree = function ($event) {
 
-            var result = JSON.parse(JSON.stringify(vm.scheme))
+            var result = JSON.parse(JSON.stringify(vm.scheme));
 
 
             result.calculated_inputs = vm.calculatedFields;
             result.inputs = vm.providerFields;
             result.rule_scenarios = vm.scenarios;
 
-            result.rule_scenarios = result.rule_scenarios.map(function (scenario) {
+            result.rule_scenarios = result.rule_scenarios.map(mapInput)
 
-                scenario.transaction_type_object.inputs.forEach(function (input_item) {
 
-                    var found = false;
-
-                    scenario.fields.forEach(function (field) {
-
-                        if (field.transaction_type_input === input_item.id) {
-                            field.value_expr = input_item.expression
-                            found = true
-                        }
-
-                    })
-                    if (!found) {
-                        scenario.fields.push({
-                            transaction_type_input: input_item.id,
-                            value_expr: input_item.expression
-                        })
-                    }
-
-                })
-
-                return scenario;
-
-            })
+            vm.defaultRuleScenario = mapInput(vm.defaultRuleScenario)
+            vm.errorRuleScenario = mapInput(vm.errorRuleScenario)
 
             result.rule_scenarios.push(vm.defaultRuleScenario)
             result.rule_scenarios.push(vm.errorRuleScenario)
@@ -685,6 +721,36 @@ const importTransactionService = require("../../../services/import/importTransac
 
 
             })
+
+        }
+
+        vm.onTransactionTypeChange = function ($event, item) {
+
+            item.inputs = []
+
+            item.processing = true;
+            transactionTypeService.getList({
+                filters: {
+                    user_code: item.transaction_type
+                }
+            }).then(function (data) {
+
+                if (data.results) {
+
+                    item.transaction_type_object = data.results[0];
+                    item.inputs = item.transaction_type_object.inputs.filter(function (input) {
+                        return input.value_type !== 120;
+                    });
+
+                    item.processing = false;
+                    $scope.$apply();
+                } else{
+                    toastNotificationService.error("Transaction type not found");
+                }
+            });
+
+
+            console.log('vm.onTransactionTypeChange.item', item)
 
         }
 

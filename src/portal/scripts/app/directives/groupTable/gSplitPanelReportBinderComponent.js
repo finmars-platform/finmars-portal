@@ -6,9 +6,8 @@
     'use strict';
 
     var evEvents = require('../../services/entityViewerEvents');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
 
-    module.exports = function ($templateCache, $compile, $controller, $mdDialog, $state, $transitions) {
+    module.exports = function ($templateCache, $compile, $controller, $mdDialog, $state, $transitions, metaContentTypesService) {
         return {
             scope: {
                 evDataService: '=',
@@ -41,7 +40,8 @@
 
                     templateScope.$parent.vm = {};
                     templateScope.$parent.vm.entityType = additions.type;
-                    templateScope.$parent.vm.contentType = metaContentTypesService.findContentTypeByEntity( additions.type);
+                    // templateScope.$parent.vm.contentType = metaContentTypesService.findContentTypeByEntity( additions.type);
+                    templateScope.$parent.vm.contentType = additions.layoutData.content_type;
 
                     ctrl = $controller('SplitPanelReportViewerController as vm', {
                         '$scope': templateScope,

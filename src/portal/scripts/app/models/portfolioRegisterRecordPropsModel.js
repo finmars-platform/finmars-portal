@@ -118,6 +118,11 @@
                 "key": "modified",
                 "name": "Modified",
                 "value_type": 40
+            },
+            {
+                "key": "share_price_calculation_type",
+                "name": "Share Price Calculation Type",
+                "value_type": 10
             }
         ]
     };

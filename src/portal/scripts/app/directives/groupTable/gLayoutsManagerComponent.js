@@ -6,18 +6,11 @@ import evEvents from "../../services/entityViewerEvents";
 (function () {
 
     const metaService = require('../../services/metaService');
-    const metaContentTypesService = require('../../services/metaContentTypesService');
     // const middlewareService = require('../../services/middlewareService');
     const evEvents = require("../../services/entityViewerEvents");
-    const evRvLayoutsHelper = require('../../helpers/evRvLayoutsHelper');
     const popupEvents = require('../../services/events/popupEvents');
 
     const evHelperService = require('../../services/entityViewerHelperService');
-    const uiService = require('../../services/uiService');
-
-    const toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
-    const ecosystemDefaultService = require('../../services/ecosystemDefaultService');
 
     const downloadFileHelper = require('../../helpers/downloadFileHelper');
 
@@ -30,7 +23,7 @@ import evEvents from "../../services/entityViewerEvents";
     const shareConfigurationFileService = require('../../services/shareConfigurationFileService');
     // const backendConfigurationImportService = require('../../services/backendConfigurationImportService');
 
-    module.exports = function ($mdDialog, $state, usersService, globalDataService, backendConfigurationImportService) {
+    module.exports = function ($mdDialog, $state, toastNotificationService, usersService, globalDataService, ecosystemDefaultService, metaContentTypesService, uiService, backendConfigurationImportService, reportHelper, evRvLayoutsHelper) {
         return {
             restrict: 'E',
             templateUrl: 'views/components/layouts-manager-view.html',
@@ -55,7 +48,7 @@ import evEvents from "../../services/entityViewerEvents";
                 const isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 let splitPanelLayoutId = null;
 				let spDefaultLayoutData = null;
-                let autosaveLayoutService = new AutosaveLayoutService();
+                let autosaveLayoutService = new AutosaveLayoutService(metaContentTypesService, uiService, reportHelper);
 
                 if (!isRootEntityViewer) {
                     spDefaultLayoutData = scope.evDataService.getSplitPanelDefaultLayout();
@@ -751,93 +744,6 @@ import evEvents from "../../services/entityViewerEvents";
 					// scope.evEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
 					scope.parentPopup.cancel();
 
-                    /* const listLayout = scope.evDataService.getLayoutCurrentConfiguration(scope.isReport);
-
-                    $mdDialog.show({
-                        controller: 'UiLayoutSaveAsDialogController as vm',
-                        templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        locals: {
-                            options: {
-                            	label: "Save layout as",
-								layoutName: listLayout.name,
-                                complexSaveAsLayoutDialog: {
-                                    entityType: scope.entityType
-                                }
-                            }
-                        },
-                        clickOutsideToClose: false
-
-                    })
-					.then(function (res) {
-
-                        if (res.status === 'agree') {
-
-                            const saveAsLayout = function () {
-
-                                listLayout.name = res.data.name;
-                                listLayout.user_code = res.data.user_code;
-
-                                uiService.createListLayout(scope.entityType, listLayout).then(function (data) {
-
-                                    listLayout.id = data.id;
-                                    applyLayout(listLayout);
-
-                                }).catch(error => {
-                                    toastNotificationService.error("Error occurred");
-                                });
-
-                            };
-
-                            if (listLayout.id) { // if layout based on another existing layout
-
-                                if (isRootEntityViewer) {
-
-                                    listLayout.is_default = true;
-
-                                } else { // for split panel
-
-                                    listLayout.is_default = false;
-
-                                }
-
-                                delete listLayout.id;
-                                saveAsLayout();
-
-                            } else { // if layout was not based on another layout
-
-                                if (isRootEntityViewer) {
-                                    listLayout.is_default = true;
-                                }
-
-                                saveAsLayout();
-                            }
-                        }
-
-                        if (res.status === 'overwrite') {
-
-                            const userCode = res.data.user_code;
-
-                            listLayout.name = res.data.name;
-                            listLayout.user_code = userCode;
-
-                            scope.getLayoutByUserCode(userCode).then(function (changeableLayoutData) {
-
-                                const changeableLayout = changeableLayoutData.results[0];
-                                overwriteLayout(changeableLayout, listLayout).then(function (updatedLayoutData) {
-
-                                    listLayout.is_default = true;
-                                    listLayout.modified = updatedLayoutData.modified;
-                                    applyLayout(listLayout);
-
-                                });
-
-                            });
-
-                        }
-
-                    }); */
 					evRvLayoutsHelper.saveAsLayoutList(scope.evDataService, scope.evEventService, scope.isReport, $mdDialog, scope.entityType, $event).then(saveAsData => {
 						if (saveAsData.status !== 'disagree') scope.$apply();
 					});
@@ -961,13 +867,14 @@ import evEvents from "../../services/entityViewerEvents";
 
                     $mdDialog.show({
                         controller: 'UiLayoutSaveAsDialogController as vm',
-                        templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
+                        templateUrl: 'views/dialogs/ui/ui-layout-save-as-dialog-view.html',
                         parent: angular.element(document.body),
                         targetEvent: $event,
                         multiple: true,
                         clickOutsideToClose: false,
                         locals: {
-                            options: {
+                            data: {
+                                entityType: metaContentTypesService.findEntityByContentType(layoutData.content_type),
                                 layoutName: layoutData.name,
                                 layoutUserCode: layoutData.user_code
                             }
@@ -1116,17 +1023,19 @@ import evEvents from "../../services/entityViewerEvents";
 
                 const getInvites = function () {
 
-                    inviteToSharedConfigurationFileService.getListOfMyInvites({
-                        filters: {
-                            status: '0'
-                        }
-                    }).then(function (data) {
-
-                        scope.invites = data.results;
-
-                        scope.$apply();
-
-                    })
+                    scope.invites = []
+                    // Deprecated
+                    // inviteToSharedConfigurationFileService.getListOfMyInvites({
+                    //     filters: {
+                    //         status: '0'
+                    //     }
+                    // }).then(function (data) {
+                    //
+                    //     scope.invites = data.results;
+                    //
+                    //     scope.$apply();
+                    //
+                    // })
 
                 };
 

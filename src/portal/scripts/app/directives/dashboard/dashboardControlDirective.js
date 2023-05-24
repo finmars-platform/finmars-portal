@@ -12,10 +12,8 @@
     var reportHelper = require('../../helpers/reportHelper');
 
     var EventService = require('../../services/eventService');
-    var uiService = require('../../services/uiService');
 
-
-    module.exports = function () {
+    module.exports = function (metaContentTypesService, entityResolverService, uiService, reportHelper) {
         return {
             restriction: 'E',
             scope: {
@@ -69,7 +67,7 @@
                         return 'pricing-policy'
                     }*/
 
-                    return metaContentTypeService.findEntityByContentType(contentType);
+                    return metaContentTypesService.findEntityByContentType(contentType);
 
                 };
 

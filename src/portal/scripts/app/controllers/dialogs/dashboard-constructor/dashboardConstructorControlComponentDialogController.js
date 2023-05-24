@@ -5,15 +5,7 @@
 
     'use strict';
 
-    var uiService = require('../../../services/uiService');
-    var entityResolverService = require('../../../services/entityResolverService');
-    var dashboardConstructorMethodsService = require('../../../services/dashboard-constructor/dashboardConstructorMethodsService');
-
-    var evRvLayoutsHelper = require('../../../helpers/evRvLayoutsHelper');
-	var dashboardHelper = require('../../../helpers/dashboard.helper');
-	var reportHelper = require('../../../helpers/reportHelper');
-
-    module.exports = function ($scope, $mdDialog, item, dataService, multitypeFieldService, data) {
+    module.exports = function ($scope, $mdDialog, uiService, dashboardConstructorMethodsService, reportHelper, dashboardHelper, entityResolverService, item, dataService, multitypeFieldService) {
 
         var vm = this;
         vm.processing = false;
@@ -44,6 +36,11 @@
         vm.layouts = [];
         vm.layoutsWithLinkToFilters = [];
         vm.reportFields = [];
+
+        vm.desEventObj = {
+            event: {}
+        };
+
         vm.multiselectItems = [];
 
         vm.initialDefaultSettings = {
@@ -422,29 +419,6 @@
 
         	vm.processing = true;
 
-			/*return uiService.getListLayout(vm.defaultValue.entity_type).then(function (data) {
-
-				vm.layouts = data.results;
-
-				vm.layoutsWithLinkToFilters = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(vm.layouts).map(function (item){
-
-					item.id = item.user_code;
-
-					return item
-				})
-
-				console.log('layoutsWithLinkToFilters', vm.layoutsWithLinkToFilters);
-
-				vm.processing = false;
-				$scope.$apply();
-
-			}).catch(function() {
-
-				vm.processing = false;
-				$scope.$apply();
-
-			});*/
-
 			return new Promise(function (resolve) {
 
 				uiService.getListLayout(vm.defaultValue.entity_type).then(function (data) {
@@ -456,13 +430,6 @@
 						item.id = item.user_code;
 						return item
 					});
-
-					/* vm.layoutsWithLinkToFilters = evRvLayoutsHelper.getDataForLayoutSelectorWithFilters(vm.layouts).map(function (item){
-
-						item.id = item.user_code;
-
-						return item
-					}); */
 
 					vm.processing = false;
 					$scope.$apply();
@@ -684,11 +651,29 @@
 
                 vm.multiselectItems = [];
 
-                if (vm.item.settings.multiple && entityType) {
+                /* if (vm.item.settings.multiple && entityType) {
 
                     vm.getDataForMultiselect(entityType).then(function (resData) {
                         vm.multiselectItems = JSON.parse(JSON.stringify(resData));
                     });
+
+                } */
+                if (entityType) {
+
+                    vm.getDataForMultiselect(entityType).then(function (resData) {
+                        vm.multiselectItems = JSON.parse(JSON.stringify(resData));
+                    });
+
+                    if (vm.defaultValue.setValue) {
+
+                        const selOption = vm.multiselectItems.find(item => item.id === vm.defaultValue.setValue);
+
+                        if (!selOption) {
+                            // If nonexistent attribute selected
+                            vm.desEventObj.event = {key: 'error', error: `Selected ${vm.currentContentType.name} '${vm.defaultValue.setValue}' does not exist in the Configuration`};
+                        }
+
+                    }
 
                 }
 

@@ -5,8 +5,6 @@
 
     'use strict';
 
-    var entityResolverService = require('../../services/entityResolverService');
-
     // var usersGroupService = require('../../services/usersGroupService');
     // var usersService = require('../../services/usersService');
 
@@ -22,11 +20,8 @@
 
     // var attributeTypeService = require('../../services/attributeTypeService');
     var metaPermissionsService = require('../../services/metaPermissionsService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
     var tooltipsService = require('../../services/tooltipsService');
     var colorPalettesService = require('../../services/colorPalettesService');
-
-    var uiService = require('../../services/uiService');
 
     var metaHelper = require('../../helpers/meta.helper');
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
@@ -37,13 +32,11 @@
     var currencyPricingSchemeService = require('../../services/pricing/currencyPricingSchemeService');
     var instrumentPricingSchemeService = require('../../services/pricing/instrumentPricingSchemeService');
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
-    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, authorizerService, usersService, usersGroupService, entityType, entityId, data) {
+    module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, authorizerService, usersService, usersGroupService, metaContentTypesService, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService, entityType, entityId, data) {
 
         var vm = this;
 
-		var sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer);
+		var sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService);
 
         vm.processing = false;
 
@@ -445,7 +438,7 @@
 
                     vm.entity.$_isValid = true;
                     vm.readyStatus.entity = true;
-                    // vm.readyStatus.permissions = true;
+                    vm.readyStatus.permissions = true;
 					// vm.hasEditPermission = true;
 
                     // vm.getFormLayout();

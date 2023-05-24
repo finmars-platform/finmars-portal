@@ -1,103 +1,18 @@
-/**
- * Created by szhitenev on 04.05.2016.
- */
+import ToastNotificationService from "../../../../shell/scripts/app/services/toastNotificationService";
+import ErrorService from "../../../../shell/scripts/app/services/errorService";
+import CookieService from "../../../../shell/scripts/app/services/cookieService";
+import XhrService from "../../../../shell/scripts/app/services/xhrService";
+import TransactionTypeRepository from "../repositories/transactionTypeRepository";
+
 (function () {
 
-    var transactionTypeRepository = require('../repositories/transactionTypeRepository');
+    'use strict';
 
-    var getListLight = function (options) {
-        return transactionTypeRepository.getListLight(options)
-    };
+    const cookieService = new CookieService();
+    const toastNotificationService = new ToastNotificationService();
+    const errorService = new ErrorService(toastNotificationService);
+    const xhrService = new XhrService(errorService, cookieService);
 
-    var getListLightWithInputs = function (options) {
-        return transactionTypeRepository.getListLightWithInputs(options)
-    };
-
-    var getByKey = function (id) {
-        return transactionTypeRepository.getByKey(id);
-    };
-
-    var getByKeyLight = function (id) {
-        return transactionTypeRepository.getByKeyLight(id);
-    };
-
-    var create = function (transaction) {
-        return transactionTypeRepository.create(transaction);
-    };
-
-    var update = function (id, transaction) {
-        return transactionTypeRepository.update(id, transaction);
-    };
-
-    var patch = function (id, data) {
-        return transactionTypeRepository.patch(id, data);
-    };
-
-    var deleteByKey = function (id) {
-        return transactionTypeRepository.deleteByKey(id);
-    };
-
-    var updateBulkLight = function(entities){
-        return transactionTypeRepository.updateBulkLight(entities);
-    };
-
-    var updateBulk = function(entities){
-        return transactionTypeRepository.updateBulk(entities);
-    };
-
-    var initBookComplexTransaction = function (id, contextData) {
-        return transactionTypeRepository.initBookComplexTransaction(id, contextData);
-    };
-
-    var bookComplexTransaction = function (id, transaction) {
-        return transactionTypeRepository.bookComplexTransaction(id, transaction);
-    };
-
-    var recalculateComplexTransaction = function (id, transaction){
-        return transactionTypeRepository.recalculateComplexTransaction(id, transaction);
-    }
-
-    var initBookPendingComplexTransaction = function (id) {
-        return transactionTypeRepository.initBookPendingComplexTransaction(id);
-    };
-
-    var bookPendingComplexTransaction = function (id, transaction) {
-        return transactionTypeRepository.bookPendingComplexTransaction(id, transaction);
-    };
-
-    var deleteBulk = function(data){
-        return transactionTypeRepository.deleteBulk(data);
-    };
-
-    var recalculateUserFields = function (id, data){
-        return transactionTypeRepository.recalculateUserFields(id, data);
-    }
-
-    module.exports = {
-        // getList: getList,
-        getListLight: getListLight,
-        getListLightWithInputs: getListLightWithInputs,
-        getByKey: getByKey,
-        getByKeyLight: getByKeyLight,
-        create: create,
-        update: update,
-        patch: patch,
-        deleteByKey: deleteByKey,
-
-        initBookComplexTransaction: initBookComplexTransaction,
-        bookComplexTransaction: bookComplexTransaction,
-        recalculateComplexTransaction: recalculateComplexTransaction,
-
-        initBookPendingComplexTransaction: initBookPendingComplexTransaction,
-        bookPendingComplexTransaction: bookPendingComplexTransaction,
-
-        updateBulkLight: updateBulkLight,
-        updateBulk: updateBulk,
-        deleteBulk: deleteBulk,
-
-        recalculateUserFields: recalculateUserFields
-
-    }
-
+    module.exports = new TransactionTypeRepository(cookieService, xhrService);
 
 }());

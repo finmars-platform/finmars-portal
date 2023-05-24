@@ -129,7 +129,7 @@
                     'Content-type': 'application/json',
                     'X-CSRFToken': cookieService.getCookie('csrftoken')
                 },
-                data: JSON.stringify(data)
+                body: JSON.stringify(data)
             })
     };
 

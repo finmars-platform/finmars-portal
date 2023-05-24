@@ -4,7 +4,7 @@
 
 'use strict';
 
-// fixes angular module import error
+/** fixes angular module import error */
 // require('../../forum/scripts/main.js');
 import profile from '../../profile/scripts/main.js';
 import database from '../../database/scripts/main.js';
@@ -157,12 +157,12 @@ app.service('cookieService', [cookieService]);
 // app.service('localStorageService', ['globalDataService', localStorageService]);
 app.service('toastNotificationService', [toastNotificationService]);
 app.service('errorService', ['toastNotificationService', errorService]);
-app.service('xhrService', ['errorService', xhrService]);
+app.service('xhrService', ['errorService', 'cookieService', xhrService]);
 app.service('broadcastChannelService', [broadcastChannelService]);
 app.service('globalDataService', [globalDataService]);
-app.service('authorizerService', ['globalDataService', authorizerService]);
+app.service('authorizerService', ['cookieService', 'globalDataService', 'xhrService', authorizerService]);
 app.service('middlewareService', [middlewareService]);
-app.service('usersService', ['globalDataService', usersService]);
+app.service('usersService', ['cookieService', 'globalDataService', 'xhrService', usersService]);
 app.service('usersGroupService', ['globalDataService', usersGroupService]);
 app.service('backendConfigurationImportService', ['cookieService', backendConfigurationImportService]);
 app.service('systemMessageService', [systemMessageService]);
@@ -170,7 +170,7 @@ app.service('systemMessageService', [systemMessageService]);
 app.service('redirectionService', [redirectionService]);
 app.service('commonDialogsService', ['$mdDialog', commonDialogsService]);
 
-app.controller('ShellController', ['$scope', '$state', '$transitions', '$urlService', '$mdDialog', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'globalDataService', 'redirectionService', shellController]);
+app.controller('ShellController', ['$scope', '$state', '$transitions', '$urlService', '$uiRouterGlobals', '$mdDialog', 'toastNotificationService', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'globalDataService', 'redirectionService', shellController]);
 
 app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', warningDialogController]);
 app.controller('InputsDialogController', ['$scope', '$mdDialog', 'data', inputsDialogController]);

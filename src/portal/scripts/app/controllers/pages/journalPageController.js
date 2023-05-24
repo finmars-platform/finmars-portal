@@ -6,10 +6,9 @@
     'use strict';
 
     var historyService = require('../../services/historyService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
 
 
-    module.exports = function journalPageController($scope, $state, $stateParams, $mdDialog, usersService) {
+    module.exports = function journalPageController($scope, $state, $stateParams, $mdDialog, usersService, metaContentTypesService) {
 
         var vm = this;
 
@@ -244,7 +243,7 @@
                         item.created_pretty = moment(new Date(item.created)).format('DD-MM-YYYY HH:mm');
                         item.created_date_pretty = moment(new Date(item.created)).format('YYYY-MM-DD');
                         item.created_time_pretty = moment(new Date(item.created)).format('HH:mm');
-                        item.content_type_pretty = metaContentTypesService.getEntityNameByContentType(item.content_type)
+                        item.content_type_pretty = metaContentTypesService.findEntityByContentType(item.content_type)
 
                         try {
 

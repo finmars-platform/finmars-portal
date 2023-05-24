@@ -1,107 +1,98 @@
-import QueuePromisesService from "../services/queuePromisesService";
+import evEvents from "../services/entityViewerEvents";
 
-(function () {
+export default function (toastNotificationService, metaContentTypesService, uiService) {
 
-    'use strict';
+	let getLinkingToFilters = function (layout) {
 
-	const uiService = require('../services/uiService');
-	const metaContentTypesService = require('../services/metaContentTypesService');
+		if (!layout.data) {
+			console.error("Broken layout: ", layout);
+			return [];
+		}
 
-	const evEvents = require('../services/entityViewerEvents');
+		let linkingToFilters = [];
 
-	const toastNotificationService = require('../../../../core/services/toastNotificationService');
-	const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
+		layout.data.filters.forEach(function (filter) {
 
-	const metaHelper = require('./meta.helper');
-	const utilsHelper = require('./utils.helper');
-	const reportHelper = require('./reportHelper');
-	const objectComparisonHelper = require('./objectsComparisonHelper');
+			if (filter.options.use_from_above) {
 
-    let getLinkingToFilters = function (layout) {
+				if (typeof filter.options.use_from_above === 'object') {
 
-        let linkingToFilters = [];
+					if (Object.keys(filter.options.use_from_above).length) {
 
-        layout.data.filters.forEach(function (filter) {
+						let filterObj = {
+							key: filter.options.use_from_above.key,
+							name: filter.name,
+							filter_type: filter.options.filter_type
+						};
 
-            if (filter.options.use_from_above) {
+						if (filter.layout_name) {
+							filterObj.layout_name = filter.layout_name;
+						}
 
-                if (typeof filter.options.use_from_above === 'object') {
+						linkingToFilters.push(filterObj);
 
-                    if (Object.keys(filter.options.use_from_above).length) {
-
-                        let filterObj = {
-                            key: filter.options.use_from_above.key,
-                            name: filter.name,
-                            filter_type: filter.options.filter_type
-                        };
-
-                        if (filter.layout_name) {
-                            filterObj.layout_name = filter.layout_name;
-                        }
-
-                        linkingToFilters.push(filterObj);
-
-                    }
+					}
 
 
-                } else {
+				} else {
 
-                    let filterObj = {
-                        key: filter.options.use_from_above,
-                        name: filter.name,
-                        filter_type: filter.options.filter_type
-                    };
+					let filterObj = {
+						key: filter.options.use_from_above,
+						name: filter.name,
+						filter_type: filter.options.filter_type
+					};
 
-                    if (filter.layout_name) {
-                        filterObj.layout_name = filter.layout_name;
-                    }
+					if (filter.layout_name) {
+						filterObj.layout_name = filter.layout_name;
+					}
 
-                    linkingToFilters.push(filterObj);
+					linkingToFilters.push(filterObj);
 
-                }
+				}
 
-            }
+			}
 
-        });
+		});
 
-        return linkingToFilters;
-    };
+		return linkingToFilters;
+	};
 
-    let getDataForLayoutSelectorWithFilters = function (layouts) {
+	let getDataForLayoutSelectorWithFilters = function (layouts) {
 
-        let result = [];
+		let result = [];
 
-        layouts.forEach(function (layout) {
+		layouts.forEach(function (layout) {
 
-            let layoutObj = {
-                id: layout.id,
-                name: layout.name,
-                user_code: layout.user_code,
-                content_type: layout.content_type,
-                content: []
-            };
+			if (!layout.data) console.error("Broken list layout: ", layout);
 
-            layoutObj.content = getLinkingToFilters(layout);
+			let layoutObj = {
+				id: layout.id,
+				name: layout.name,
+				user_code: layout.user_code,
+				content_type: layout.content_type,
+				content: []
+			};
 
-            result.push(layoutObj);
+			layoutObj.content = getLinkingToFilters(layout);
 
-        });
+			result.push(layoutObj);
 
-        return result;
+		});
 
-    };
+		return result;
 
-    const saveRowTypeFilters = function (entityViewerDataService, isReport, usersService, globalDataService) {
+	};
 
-        const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
+	const saveRowTypeFilters = function (entityViewerDataService, isReport, usersService, globalDataService) {
 
-        if (rowTypeFilters) {
+		const rowTypeFilters = entityViewerDataService.getRowTypeFilters();
 
-        	const color = rowTypeFilters.markedRowFilters || 'none';
+		if (rowTypeFilters) {
+
+			const color = rowTypeFilters.markedRowFilters || 'none';
 			const entityType = entityViewerDataService.getEntityType();
 			// const viewerType = isReport ? 'report_viewer' : 'entity_viewer';
 
-			// localStorageService.cacheRowTypeFilter(isReport, entityType, color);
 			const entityViewersSettings = globalDataService.getMemberEntityViewersSettings(isReport, entityType);
 			entityViewersSettings.row_type_filter = color;
 
@@ -110,24 +101,24 @@ import QueuePromisesService from "../services/queuePromisesService";
 			var member = globalDataService.getMember();
 			usersService.updateMember(member.id, member);
 
-        }
+		}
 
-    };
+	};
 
-    const saveLayoutList = function (entityViewerDataService, isReport, usersService, globalDataService) {
+	const saveLayoutList = function (entityViewerDataService, isReport, usersService, globalDataService) {
 
-        saveRowTypeFilters(entityViewerDataService, isReport, usersService, globalDataService);
+		saveRowTypeFilters(entityViewerDataService, isReport, usersService, globalDataService);
 
-    	var currentLayoutConfig = entityViewerDataService.getLayoutCurrentConfiguration(isReport);
+		var currentLayoutConfig = entityViewerDataService.getLayoutCurrentConfiguration(isReport);
 
 		if (currentLayoutConfig.hasOwnProperty('id')) {
 
 			uiService.updateListLayout(currentLayoutConfig.id, currentLayoutConfig).then(function (updatedLayoutData) {
 
-                let listLayout = updatedLayoutData;
+				let listLayout = updatedLayoutData;
 
-                entityViewerDataService.setListLayout(listLayout);
-                entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: currentLayoutConfig});
+				entityViewerDataService.setListLayout(listLayout);
+				entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: currentLayoutConfig});
 
 				toastNotificationService.success("Success. Page was saved.");
 
@@ -137,22 +128,6 @@ import QueuePromisesService from "../services/queuePromisesService";
 
 	};
 
-    /* const getLayoutByUserCode = function (entityType, userCode) {
-
-		const contentType = metaContentTypesService.findContentTypeByEntity(entityType, 'ui');
-
-		return uiService.getListLayout(
-			null,
-			{
-				pageSize: 1000,
-				filters: {
-					content_type: contentType,
-					user_code: userCode
-				}
-			}
-		);
-
-	}; */
 	/**
 	 * @memberOf module:evRvLayoutsHelper
 	 *
@@ -219,114 +194,96 @@ import QueuePromisesService from "../services/queuePromisesService";
 	 *
 	 * @memberOf module:evRvLayoutsHelper
 	 */
-    const saveAsLayoutList = function (evDataService, evEventService, isReport, $mdDialog, entityType, $event) {
+	const saveAsLayoutList = function (evDataService, evEventService, isReport, $mdDialog, entityType, $event) {
 
-    	return new Promise((resolve, reject) => {
+		return new Promise((resolve, reject) => {
 
 			const listLayout = evDataService.getLayoutCurrentConfiguration(isReport);
 			const isRootEntityViewer = evDataService.isRootEntityViewer();
-			/* $mdDialog.show({
-				controller: 'UiLayoutSaveAsDialogController as vm',
-				templateUrl: 'views/dialogs/ui/ui-layout-save-as-view.html',
-				parent: angular.element(document.body),
-				targetEvent: $event,
-				locals: {
-					options: {
-						label: "Save layout as",
-						layoutName: listLayout.name,
-						complexSaveAsLayoutDialog: {
-							entityType: entityType
-						}
-					}
-				},
-				clickOutsideToClose: false
 
-			}) */
 			$mdDialog.show({
-				controller: 'NewLayoutDialogController as vm',
-				templateUrl: 'views/dialogs/new-layout-dialog-view.html',
+				controller: 'UiLayoutSaveAsDialogController as vm',
+				templateUrl: 'views/dialogs/ui/ui-layout-save-as-dialog-view.html',
 				parent: angular.element(document.body),
 				targetEvent: $event,
 				preserveScope: false,
 				locals: {
 					data: {
+						label: "New layout",
 						entityType: entityType,
 						name: listLayout.name,
 					}
 				}
 			})
-			.then(res => {
+				.then(res => {
 
-				if (res.data && res.data.user_code && res.data.user_code.startsWith('system_autosave_')) {
-					throw "This user code reserved for system layout. Please use another one";
-				}
+					/* TODO: forbid creation of layout with the same user code as for autosave
+					if (res.data && res.data.user_code && res.data.user_code.startsWith('system_autosave_')) {
+						throw "This user code reserved for system layout. Please use another one";
+					}*/
+					if (res.status === 'agree') {
 
-				if (res.status === 'agree') {
+						const saveAsLayout = function () {
 
-					const saveAsLayout = function () {
+							listLayout.name = res.data.name;
+							listLayout.user_code = res.data.user_code;
+							listLayout.configuration_code = res.data.configuration_code; // Important
+
+							uiService.createListLayout(entityType, listLayout).then(function (data) {
+
+								applyLayout(isRootEntityViewer, evDataService, evEventService, data);
+								toastNotificationService.success("Layout '" + listLayout.name + "' saved.");
+
+								resolve({status: res.status, layoutData: data});
+
+							}).catch(error => {
+								reject({status: res.status, error: error});
+							});
+
+						};
+
+						listLayout.is_systemic = false;
+
+						if (listLayout.id) { // if layout based on another existing layout
+
+							delete listLayout.id;
+							saveAsLayout();
+
+						} else { // if layout was not based on another layout
+							saveAsLayout();
+						}
+
+					}
+					else if (res.status === 'overwrite') {
+
+						const userCode = res.data.user_code;
 
 						listLayout.name = res.data.name;
-						listLayout.user_code = res.data.user_code;
+						listLayout.user_code = userCode;
+						listLayout.configuration_code = res.data.configuration_code; // Important
 
-						uiService.createListLayout(entityType, listLayout).then(function (data) {
+						uiService.getListLayoutByUserCode(entityType, userCode).then(function (layoutToOverwriteData) {
 
-							applyLayout(isRootEntityViewer, evDataService, evEventService, data);
-							toastNotificationService.success("Layout '" + listLayout.name + "' saved.");
+							const layoutToOverwrite = layoutToOverwriteData.results[0];
+							overwriteLayout(layoutToOverwrite, listLayout).then(function (updatedLayoutData) {
 
-							resolve({status: res.status, layoutData: data});
+								applyLayout(isRootEntityViewer, evDataService, evEventService, updatedLayoutData);
+								toastNotificationService.success("Success. Layout " + listLayout.name + " overwritten.");
 
-						}).catch(error => {
-							reject({status: res.status, error: error});
+								resolve({status: res.status});
+
+							}).catch(error => {
+								reject({status: res.status, error: error})
+							});
+
 						});
 
-					};
-
-					if (isRootEntityViewer) {
-						listLayout.is_default = true; // default layout for split panel does not have is_default === true
+					}
+					else {
+						resolve({status: 'disagree'});
 					}
 
-					listLayout.is_systemic = false;
-
-					if (listLayout.id) { // if layout based on another existing layout
-
-						delete listLayout.id;
-						saveAsLayout();
-
-					} else { // if layout was not based on another layout
-						saveAsLayout();
-					}
-
-				}
-				else if (res.status === 'overwrite') {
-
-					const userCode = res.data.user_code;
-
-					listLayout.name = res.data.name;
-					listLayout.user_code = userCode;
-
-					uiService.getListLayoutByUserCode(entityType, userCode).then(function (layoutToOverwriteData) {
-
-						const layoutToOverwrite = layoutToOverwriteData.results[0];
-						overwriteLayout(layoutToOverwrite, listLayout).then(function (updatedLayoutData) {
-
-							/* if (isRootEntityViewer) listLayout.is_default = true; // default layout for split panel does not have is_default === true
-							listLayout.modified = updatedLayoutData.modified; */
-
-							applyLayout(isRootEntityViewer, evDataService, evEventService, updatedLayoutData);
-							toastNotificationService.success("Success. Layout " + listLayout.name + " overwritten.");
-
-							resolve({status: res.status});
-
-						}).catch(error => reject({status: res.status, error: error}));
-
-					});
-
-				}
-				else {
-					resolve({status: 'disagree'});
-				}
-
-			});
+				});
 
 		});
 
@@ -372,10 +329,10 @@ import QueuePromisesService from "../services/queuePromisesService";
 		'app.portal.data.strategy',
 	];
 
-    /** @module evRvLayoutsHelper */
-    module.exports = {
-        getLinkingToFilters: getLinkingToFilters,
-        getDataForLayoutSelectorWithFilters: getDataForLayoutSelectorWithFilters,
+	/** @module evRvLayoutsHelper */
+	return {
+		getLinkingToFilters: getLinkingToFilters,
+		getDataForLayoutSelectorWithFilters: getDataForLayoutSelectorWithFilters,
 
 		saveLayoutList: saveLayoutList,
 		saveAsLayoutList: saveAsLayoutList,
@@ -383,6 +340,5 @@ import QueuePromisesService from "../services/queuePromisesService";
 		clearSplitPanelAdditions: clearSplitPanelAdditions,
 
 		statesWithLayouts: statesWithLayoutsList,
-    }
-
-}());
+	}
+};

@@ -1,19 +1,7 @@
 /**
  * Created by szhitenev on 12.09.2016.
  */
-(function () {
-
-    'use strict';
-
-    var metaContentTypesService = require('../../services/metaContentTypesService');
-
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
-    var configurationImportGetService = require('./configurationImportGetService');
-
-    var attributeTypeService = require('../../services/attributeTypeService');
-
-    var uiService = require('../../services/uiService');
+export default function (metaContentTypesService, attributeTypeService, uiService, configurationImportGetService) {
 
     var get_input_prop_by_content_type = function (model) {
 
@@ -1266,7 +1254,7 @@
         })
     };
 
-    module.exports = {
+    return {
         mapTransactionTypeInputsRelations: mapTransactionTypeInputsRelations,
         mapTransactionTypeActionsRelations: mapTransactionTypeActionsRelations,
         mapRelation: mapRelation,
@@ -1277,4 +1265,4 @@
         mapDashboardLayout: mapDashboardLayout
     }
 
-}());
+};

@@ -1,6 +1,9 @@
 /**
  * Created by szhitenev on 05.05.2016.
  */
+import RvDomManager from "../../services/rv-dom-manager/rv-dom.manager";
+import toastNotificationService from "../../../../../shell/scripts/app/services/toastNotificationService";
+
 (function () {
 
     'use strict';
@@ -9,7 +12,6 @@
     var evRenderer = require('../../services/ev-renderer/ev.renderer');
     var rvRenderer = require('../../services/rv-renderer/rv.renderer');
     var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
-    var rvDomManager = require('../../services/rv-dom-manager/rv-dom.manager');
     var evDataHelper = require('../../helpers/ev-data.helper');
     var rvDataHelper = require('../../helpers/rv-data.helper');
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
@@ -19,7 +21,7 @@
     var metaService = require('../../services/metaService');
     var EvScrollManager = require('../../services/ev-dom-manager/ev-scroll.manager');
 
-    module.exports = function (usersService, globalDataService, evRvDomManagerService) {
+    module.exports = function (toastNotificationService, usersService, globalDataService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService) {
         return {
             restrict: 'AE',
             scope: {
@@ -51,7 +53,7 @@
                     contentElem: contentElem,
                     workareaWrapElem: scope.workareaWrapElement,
                     contentWrapElem: scope.contentWrapElement,
-                    rootWrapElem: scope.rootWrapElement
+                    rootWrapElem: scope.rootWrapElement // 'null' when rv / ev is inside split panel that is inside iframe
                 };
 
                 var projection;
@@ -61,6 +63,7 @@
                 scope.isReport = metaService.isReport(entityType);
                 var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
+                var rvDomManager = new RvDomManager(toastNotificationService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService);
                 var activeLayoutConfigIsSet = false;
 
                 if (!scope.isReport) {
@@ -570,7 +573,6 @@
 
                             rvDomManager.initEventDelegation(contentElem, scope.evDataService, scope.evEventService, usersService, globalDataService);
                             // rvDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
-
 
                             rvDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService);
 

@@ -5,12 +5,9 @@
 
     'use strict';
 
-    var uiService = require('../../services/uiService');
     var metaService = require('../../services/metaService');
     var pricingPolicyService = require('../../services/pricingPolicyService');
     var currencyService = require('../../services/currencyService');
-    var customFieldService = require('../../services/reports/customFieldService');
-    var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
 
     var portfolioService = require('../../services/portfolioService');
     var accountService = require('../../services/accountService');
@@ -18,7 +15,7 @@
     var transactionClassService = require('../../services/transaction/transactionClassService');
 
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, customFieldService, ecosystemDefaultService, uiService, data) {
 
         var vm = this;
 

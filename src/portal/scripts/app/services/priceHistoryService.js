@@ -1,19 +1,21 @@
 /**
  * Created by szhitenev on 04.05.2016.
  */
-(function () {
+import PriceHistoryRepository from "../repositories/priceHistoryRepository";
 
-    var priceHistoryRepository = require('../repositories/priceHistoryRepository');
+export default function (cookieService, xhrService) {
 
-    var getList = function(options) {
+    const priceHistoryRepository = new PriceHistoryRepository(cookieService, xhrService);
+
+    const getList = function(options) {
         return priceHistoryRepository.getList(options);
     };
 
-    var getByKey = function (id) {
+    const getByKey = function (id) {
         return priceHistoryRepository.getByKey(id);
     };
 
-    var create = function(account) {
+    const create = function(account) {
         return priceHistoryRepository.create(account);
     };
 
@@ -29,8 +31,7 @@
         return priceHistoryRepository.deleteBulk(data)
     };
 
-
-    module.exports = {
+    return {
         getList: getList,
         getByKey: getByKey,
         create: create,
@@ -40,5 +41,4 @@
         deleteBulk: deleteBulk
     }
 
-
-}());
+}

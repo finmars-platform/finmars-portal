@@ -9,7 +9,6 @@
 
 
     var evEvents = require('../services/entityViewerEvents');
-    var dashboardHelper = require('../helpers/dashboard.helper');
 
     module.exports = function ($mdDialog) {
         return {

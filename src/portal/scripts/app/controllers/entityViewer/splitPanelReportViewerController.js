@@ -7,9 +7,7 @@
 
 import AutosaveLayoutService from "../../services/autosaveLayoutService";
 import evHelperService from "../../services/entityViewerHelperService";
-import uiService from "../../services/uiService";
 import evEvents from "../../services/entityViewerEvents";
-import reportHelper from "../../helpers/reportHelper";
 
 (function () {
 
@@ -17,23 +15,19 @@ import reportHelper from "../../helpers/reportHelper";
     var evEvents = require('../../services/entityViewerEvents');
     var evHelperService = require('../../services/entityViewerHelperService'); */
 
-    var priceHistoryService = require('../../services/priceHistoryService');
-    var currencyHistoryService = require('../../services/currencyHistoryService');
 
     var RvSharedLogicHelper = require('../../helpers/rvSharedLogicHelper');
     var EntityViewerDataService = require('../../services/entityViewerDataService');
     var EntityViewerEventService = require('../../services/eventService');
     var AttributeDataService = require('../../services/attributeDataService');
 
-    var rvDataProviderService = require('../../services/rv-data-provider/rv-data-provider.service');
     // var middlewareService = require('../../services/middlewareService');
-    var reportHelper = require('../../helpers/reportHelper');
 
-    module.exports = function ($scope, $mdDialog, $transitions, globalDataService, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
+    module.exports = function ($scope, $mdDialog, $transitions, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, customFieldService, attributeTypeService, rvDataProviderService, uiService, pricesCheckerService, expressionService, reportHelper, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
 
         var vm = this;
 
-        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService);
+        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper);
 
         console.log('parentEntityViewerDataService', parentEntityViewerDataService);
         console.log('parentEntityViewerEventService', parentEntityViewerEventService);
@@ -450,12 +444,14 @@ import reportHelper from "../../helpers/reportHelper";
 
             vm.entityViewerEventService.addEventListener(evEvents.ROWS_ACTION_FIRED, sharedLogicHelper.executeRowAction);
 
-            // Events that dispatch events inside parent
+            //# region Events that dispatch events inside parent
+            /* Probably for old report viewer interface
             vm.entityViewerEventService.addEventListener(evEvents.TOGGLE_FILTER_AREA, function () {
 
                 parentEntityViewerEventService.dispatchEvent(evEvents.UPDATE_FILTER_AREA_SIZE);
 
-            });
+            });*/
+            //# endregion
 
             var parentLayout = parentEntityViewerDataService.getListLayout();
             var parentAdditions = parentEntityViewerDataService.getAdditions();
@@ -485,12 +481,12 @@ import reportHelper from "../../helpers/reportHelper";
 
                     if (autosaveLayoutOn) {
 
-                    const alcIndex = vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, function () {
-                        autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
-                        vm.entityViewerEventService.removeEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, alcIndex);
-                    });
+                        const alcIndex = vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, function () {
+                            autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, true);
+                            vm.entityViewerEventService.removeEventListener(evEvents.ACTIVE_LAYOUT_CONFIGURATION_CHANGED, alcIndex);
+                        });
 
-                }
+                    }
 
             }
 
@@ -648,14 +644,60 @@ import reportHelper from "../../helpers/reportHelper";
 
         };
 
+        var getLayoutForSp = function (additions) {
+
+            /**
+             * @type Number
+             * ID of a layout set by gLayoutsManager to be opened
+             **/
+            var splitPanelLayoutToOpen = parentEntityViewerDataService.getSplitPanelLayoutToOpen();
+
+            if (splitPanelLayoutToOpen) {
+                return uiService.getListLayoutByKey(splitPanelLayoutToOpen);
+
+            }
+            else { // open default for split panel layout
+
+                if (additions.layoutData && additions.layoutData.layoutId) {
+
+                    if (additions.layoutData.user_code) {
+
+                        return new Promise(function (resolve, reject) {
+
+                            uiService.getListLayoutByUserCode(vm.entityType, additions.layoutData.user_code).then(function (resData) {
+
+                                if (resData.results.length) {
+
+                                    var layoutData = resData.results[0];
+
+                                    resolve(layoutData);
+
+                                } else {
+                                    reject( new Error("Layout with user_code: '" + additions.layoutData.user_code + "' was not found") );
+                                }
+
+                            }).catch( function (e) { reject(e) } );
+
+                        })
+
+                    } else if (additions.layoutData.layoutId) {
+                        return uiService.getListLayoutByKey(additions.layoutData.layoutId);
+                    }
+
+                }
+
+            }
+
+        }
+
         vm.getView = function () {
             // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
             vm.readyStatus.layout = false; // switched to true by sharedLogicHelper.onSetLayoutEnd()
 
-            vm.entityViewerDataService = new EntityViewerDataService();
+            vm.entityViewerDataService = new EntityViewerDataService(reportHelper);
             vm.entityViewerEventService = new EntityViewerEventService();
-            vm.attributeDataService = new AttributeDataService();
+            vm.attributeDataService = new AttributeDataService(metaContentTypesService, customFieldService, attributeTypeService, uiService);
 
             console.log('scope, ', $scope);
 
@@ -672,10 +714,13 @@ import reportHelper from "../../helpers/reportHelper";
             var downloadAttrsProm = sharedLogicHelper.downloadAttributes();
 
             var columns = parentEntityViewerDataService.getColumns();
-
-            var splitPanelLayoutToOpen = parentEntityViewerDataService.getSplitPanelLayoutToOpen();
             var additions = parentEntityViewerDataService.getAdditions();
             var member = parentEntityViewerDataService.getCurrentMember();
+            var rootWrapElemData = parentEntityViewerDataService.getRootWrapElemData();
+
+            if (rootWrapElemData) {
+                vm.entityViewerDataService.setRootWrapElemData(rootWrapElemData);
+            }
 
             vm.entityViewerDataService.setCurrentMember(member)
 
@@ -685,50 +730,27 @@ import reportHelper from "../../helpers/reportHelper";
                 content_type: additions.layoutData.content_type
             };
 
-            var defaultLayoutId;
+            /*var defaultLayoutId;
 
             if (splitPanelLayoutToOpen) {
                 defaultLayoutId = splitPanelLayoutToOpen;
 
             } else { // open default for split panel layout
 
-                defaultLayoutId = additions.layoutId; // needed in order for old system layouts work
+                defaultLayoutId = additions.layoutId; // needed in order for old system layouts to work
 
                 if (additions.layoutData && additions.layoutData.layoutId) {
                     defaultLayoutId = additions.layoutData.layoutId;
                 }
 
-            }
+            }*/
 
             vm.entityViewerDataService.setAttributesFromAbove(columns);
 
             vm.setEventListeners();
 
-            // var setLayoutProm;
-
-            /* if (defaultLayoutId) {
-
-                uiService.getListLayoutByKey(defaultLayoutId).then(function (spLayoutData) {
-
-                    //  if (spLayoutData) {
-                    //     middlewareService.setNewSplitPanelLayoutName(spLayoutData.name);
-                    // }
-
-                    setLayoutProm = vm.setLayout(spLayoutData, spDefaultLayoutData);
-
-                }).catch(function (reason) {
-                    setLayoutProm = evHelperService.getDefaultLayout(vm, 'split_panel');
-                });
-
-            } else {
-                setLayoutProm = evHelperService.getDefaultLayout(vm, 'split_panel');
-            }
-
-            Promise.allSettled([downloadAttrsProm, setLayoutProm]).then(function () {
-                $scope.$apply();
-            }); */
-
-            uiService.getListLayoutByKey(defaultLayoutId).then(function (spLayoutData) {
+            // uiService.getListLayoutByKey(defaultLayoutId).then(function (spLayoutData) {
+            getLayoutForSp(additions).then(function (spLayoutData) {
 
                 var setLayoutProm = vm.setLayout(spLayoutData, spDefaultLayoutData);
 
@@ -751,7 +773,7 @@ import reportHelper from "../../helpers/reportHelper";
 
         vm.init = function () {
 
-                autosaveLayoutService = new AutosaveLayoutService();
+            autosaveLayoutService = new AutosaveLayoutService(metaContentTypesService, uiService, reportHelper);
 
             vm.getView();
 

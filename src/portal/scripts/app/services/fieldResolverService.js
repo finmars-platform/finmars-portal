@@ -1,44 +1,40 @@
 /**
  * Created by szhitenev on 17.06.2016.
  */
-(function () {
 
-    'use strict';
+var entityFieldsRepository = require('../repositories/entityFieldsRepository');
+var accountRepository = require('../repositories/accountRepository');
+var accountTypeRepository = require('../repositories/accountTypeRepository');
+var instrumentService = require('../services/instrumentService');
+var instrumentTypeRepository = require('../repositories/instrumentTypeRepository');
+var importPriceDownloadSchemeRepository = require('../repositories/import/importPriceDownloadSchemeRepository');
+var instrumentClassRepository = require('../repositories/instrument/instrumentClassRepository');
+var pricingPolicyRepository = require('../repositories/pricingPolicyRepository');
+var currencyRepository = require('../repositories/currencyRepository');
+var portfolioRepository = require('../repositories/portfolioRepository');
+var portfolioRegisterRepository = require('../repositories/portfolioRegisterRepository');
+var counterpartyRepository = require('../repositories/counterpartyRepository');
+var counterpartyGroupRepository = require('../repositories/counterpartyGroupRepository');
+var responsibleRepository = require('../repositories/responsibleRepository');
+var responsibleGroupRepository = require('../repositories/responsibleGroupRepository');
+var transactionTypeGroupRepository = require('../repositories/transaction/transactionTypeGroupRepository');
 
-    var entityFieldsRepository = require('../repositories/entityFieldsRepository');
-    var accountRepository = require('../repositories/accountRepository');
-    var accountTypeRepository = require('../repositories/accountTypeRepository');
-    var instrumentService = require('../services/instrumentService');
-    var instrumentRepository = require('../repositories/instrumentRepository');
-    var instrumentTypeRepository = require('../repositories/instrumentTypeRepository');
-    var importPriceDownloadSchemeRepository = require('../repositories/import/importPriceDownloadSchemeRepository');
-    var instrumentClassRepository = require('../repositories/instrument/instrumentClassRepository');
-    var pricingPolicyRepository = require('../repositories/pricingPolicyRepository');
-    var currencyRepository = require('../repositories/currencyRepository');
-    var portfolioRepository = require('../repositories/portfolioRepository');
-    var portfolioRegisterRepository = require('../repositories/portfolioRegisterRepository');
-    var counterpartyRepository = require('../repositories/counterpartyRepository');
-    var counterpartyGroupRepository = require('../repositories/counterpartyGroupRepository');
-    var responsibleRepository = require('../repositories/responsibleRepository');
-    var responsibleGroupRepository = require('../repositories/responsibleGroupRepository');
-    var transactionTypeRepository = require('../repositories/transactionTypeRepository');
-    var transactionTypeGroupRepository = require('../repositories/transaction/transactionTypeGroupRepository');
-    var metaContentTypesRepository = require('../repositories/metaContentTypesRepository');
+var strategyRepository = require('../repositories/strategyRepository');
+var strategyGroupRepository = require('../repositories/strategyGroupRepository');
+var strategySubgroupRepository = require('../repositories/strategySubgroupRepository');
 
-    var strategyRepository = require('../repositories/strategyRepository');
-    var strategyGroupRepository = require('../repositories/strategyGroupRepository');
-    var strategySubgroupRepository = require('../repositories/strategySubgroupRepository');
-
-    var accrualCalculationModelRepository = require('../repositories/accrualCalculationModelRepository');
-    var instrumentPeriodicityRepository = require('../repositories/instrumentPeriodicityRepository');
-    var metaEventClassRepository = require('../repositories/metaEventClassRepository');
-    var metaNotificationClassRepository = require('../repositories/metaNotificationClassRepository');
+var accrualCalculationModelRepository = require('../repositories/accrualCalculationModelRepository');
+var instrumentPeriodicityRepository = require('../repositories/instrumentPeriodicityRepository');
+var metaEventClassRepository = require('../repositories/metaEventClassRepository');
+var metaNotificationClassRepository = require('../repositories/metaNotificationClassRepository');
 
 
-    var instrumentPricingSchemeRepository = require('../repositories/pricing/instrumentPricingSchemeRepository');
-    var currencyPricingSchemeRepository = require('../repositories/pricing/currencyPricingSchemeRepository');
+var instrumentPricingSchemeRepository = require('../repositories/pricing/instrumentPricingSchemeRepository');
+var currencyPricingSchemeRepository = require('../repositories/pricing/currencyPricingSchemeRepository');
 
-    var getFields = function (fieldKey, options, fieldsDataStore) {
+export default function (instrumentService, transactionTypeService, metaContentTypesService) {
+
+    const getFields = function (fieldKey, options, fieldsDataStore) {
 
         return new Promise(function (resolve, reject) {
 
@@ -176,7 +172,7 @@
                 case 'allocation_pl':
                 case 'long_underlying_instrument':
                 case 'short_underlying_instrument':
-                    instrumentRepository.getListLight({pageSize: 1000}).then(function (data) {
+                    instrumentService.getListLight({pageSize: 1000}).then(function (data) {
                         return resolve({type: 'id', key: 'instrument', data: data.results});
                     });
                     break;
@@ -299,7 +295,7 @@
                 case 'factor_same':
                 case 'factor_down':
                 case 'factor_up':
-                    transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
+                    transactionTypeService.getListLight({pageSize: 1000}).then(function (data) {
                         return resolve({type: 'id', key: 'transaction_type', data: data.results});
                     });
                     break;
@@ -425,7 +421,7 @@
                     });
                     break;
                 case 'transaction_types':
-                    transactionTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
+                    transactionTypeService.getListLight({pageSize: 1000}).then(function (data) {
                         return resolve({type: 'multiple-ids', key: 'transaction_types', data: data.results});
                     });
                     break;
@@ -448,7 +444,7 @@
                     return resolve({
                         type: 'multiple-ids',
                         key: 'content_types',
-                        data: metaContentTypesRepository.getList()
+                        data: metaContentTypesService.getList()
                     });
                     break;
                 case 'responsibles':
@@ -465,7 +461,7 @@
 
     };
 
-    var getFieldsByContentType = function (contentType, options, fieldsDataStore) {
+    const getFieldsByContentType = function (contentType, options, fieldsDataStore) {
 
         if (!fieldsDataStore['fieldKeys']) {
             fieldsDataStore['fieldKeys'] = {}
@@ -553,7 +549,7 @@
                         });
                         break;
                     case 'instruments.instrument':
-                        instrumentRepository.getListLight({pageSize: 1000}).then(function (data) {
+                        instrumentService.getListLight({pageSize: 1000}).then(function (data) {
 
                             fieldsDataStore['fieldKeys'][contentType] = {
                                 type: 'id',
@@ -741,9 +737,8 @@
         }
     };
 
-    module.exports = {
+    return {
         getFields: getFields,
-        getFieldsByContentType: getFieldsByContentType
+        getFieldsByContentType: getFieldsByContentType,
     }
-
-}());
+}

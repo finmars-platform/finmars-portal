@@ -10,9 +10,7 @@
     var metaService = require('../../services/metaService');
     var dataProvidersService = require('../../services/import/dataProvidersService');
     var scheduleService = require('../../services/import/scheduleService');
-    var attributeTypeService = require('../../services/attributeTypeService');
     var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
-    var instrumentService = require('../../services/instrumentService');
 
     var importInstrumentService = require('../../services/import/importInstrumentService');
     var importPricingService = require('../../services/import/importPricingService');

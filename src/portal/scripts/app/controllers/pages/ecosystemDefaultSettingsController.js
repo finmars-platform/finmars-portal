@@ -5,13 +5,7 @@
 
     'use strict';
 
-    var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
-    var fieldResolverService = require('../../services/fieldResolverService');
-    // var usersService = require('../../services/usersService');
-
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
-    module.exports = function ecosystemDefaultSettingsController($scope, $mdDialog, usersService) {
+    module.exports = function ecosystemDefaultSettingsController($scope, $mdDialog, toastNotificationService, usersService, ecosystemDefaultService, fieldResolverService) {
 
         var vm = this;
 

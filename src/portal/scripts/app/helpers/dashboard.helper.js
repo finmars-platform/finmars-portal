@@ -1,12 +1,6 @@
-(function () {
+const dashboardEvents = require('../services/dashboard/dashboardEvents');
 
-    'use strict';
-
-    var dashboardEvents = require('../services/dashboard/dashboardEvents');
-
-    const uiService = require('../services/uiService');
-
-    const toastNotificationService = require('../../../../core/services/toastNotificationService');
+export default function (toastNotificationService, uiService, evRvLayoutsHelper) {
 
     let componentsForLinking = [
         'report_viewer', 'report_viewer_split_panel', 'report_viewer_matrix',
@@ -14,71 +8,22 @@
         'report_viewer_table_chart'
     ];
 
-    const getLinkingToFilters = function (layout) {
-
-        var linkingToFilters = [];
-
-        layout.data.filters.forEach(function (filter) {
-
-            if (filter.options.use_from_above) {
-
-                if (typeof filter.options.use_from_above === 'object') {
-
-                    if (Object.keys(filter.options.use_from_above).length) {
-
-                        var filterObj = {
-                            key: filter.options.use_from_above.key,
-                            name: filter.name,
-                            filter_type: filter.options.filter_type
-                        };
-
-                        if (filter.layout_name) {
-                            filterObj.layout_name = filter.layout_name;
-                        }
-
-                        linkingToFilters.push(filterObj);
-
-                    }
-
-
-                } else {
-
-                    var filterObj = {
-                        key: filter.options.use_from_above,
-                        name: filter.name,
-                        filter_type: filter.options.filter_type
-                    };
-
-                    if (filter.layout_name) {
-                        filterObj.layout_name = filter.layout_name;
-                    }
-
-                    linkingToFilters.push(filterObj);
-
-                }
-
-            }
-
-        });
-
-        return linkingToFilters;
-
-    };
-
     const getDataForLayoutSelectorWithFilters = function (layouts) {
 
         var result = [];
 
         layouts.forEach(function (layout) {
 
+            if (!layout.data) console.error("Broken dashboard layout: ", layout);
+
             var layoutObj = {
                 id: layout.id,
-				user_code: layout.user_code,
+                user_code: layout.user_code,
                 name: layout.name,
                 content: []
             };
 
-            layoutObj.content = getLinkingToFilters(layout);
+            layoutObj.content = evRvLayoutsHelper.getLinkingToFilters(layout);
 
             result.push(layoutObj);
 
@@ -92,7 +37,7 @@
         return componentsForLinking;
     };
 
-    const saveComponentSettingsFromDashboard = function (dashboardDataService, componentData, showNotification) {
+    const saveComponentSettingsFromDashboard = function (dashboardDataService, uiService, componentData, showNotification) {
 
         var listLayout = dashboardDataService.getListLayout();
 
@@ -174,8 +119,9 @@
         scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.TOGGLE_FILTER_BLOCK);
     };
 
-    module.exports = {
-        getLinkingToFilters: getLinkingToFilters,
+    return {
+        // TODO: replace dashboard.helper with evRvLayoutsHelper in all parts that use getLinkingToFilters
+        getLinkingToFilters: evRvLayoutsHelper.getLinkingToFilters,
         getDataForLayoutSelectorWithFilters: getDataForLayoutSelectorWithFilters,
         getComponentsForLinking: getComponentsForLinking,
 
@@ -185,4 +131,4 @@
         toggleFilterBlock: toggleFilterBlock
     };
 
-}());
+}

@@ -10,7 +10,6 @@ import importEntityService from "../../services/import/importEntityService";
 
     'use strict';
 
-    var metaContentTypesService = require('../../services/metaContentTypesService');
     var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
 
     var importEntityService = require('../../services/import/importEntityService');
@@ -24,7 +23,7 @@ import importEntityService from "../../services/import/importEntityService";
     var baseUrl = baseUrlService.resolve();
 
 
-    module.exports = function simpleEntityImportController($scope, $mdDialog, usersService, systemMessageService) {
+    module.exports = function simpleEntityImportController($scope, $mdDialog, usersService, metaContentTypesService, systemMessageService) {
 
         var vm = this;
 
