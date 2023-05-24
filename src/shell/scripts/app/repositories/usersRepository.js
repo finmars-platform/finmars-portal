@@ -240,7 +240,7 @@ export default function (cookieService, xhrService) {
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/master-user-light/', {
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/master-user/light/', {
             method: 'GET',
             credentials: 'include',
             headers: {

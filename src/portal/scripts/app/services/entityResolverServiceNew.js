@@ -53,7 +53,7 @@ var pricingProcedureService = require('./procedures/pricingProcedureService');
 var scheduleService = require('./scheduleService');
 const auditService = require('./auditService');
 
-export default function (instrumentService, transactionTypeService, priceHistoryService, currencyHistoryService, reportService) {
+export default function (instrumentService, transactionTypeService, priceHistoryService, currencyHistoryService, configurationService, reportService) {
 
     var getList = function (entityType, options) {
 
@@ -632,6 +632,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 break;
             case 'schedule':
                 return scheduleService.update(id, entity);
+                break;
+            case 'configuration':
+                return configurationService.update(id, entity);
                 break;
         }
     };

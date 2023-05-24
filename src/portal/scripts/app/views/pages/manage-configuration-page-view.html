@@ -9,7 +9,7 @@
     width: 100%;
     flex-wrap: wrap;">
 
-        <md-card data-ng-repeat="item in vm.items" class="p-16" style="max-width: 240px">
+        <md-card data-ng-repeat="item in vm.items" class="p-16" style="max-width: 240px; width: 240px; min-height: 160px;">
 
             <div>
                 <b>{{item.name}}</b>
@@ -34,6 +34,10 @@
                 <div data-ng-if="!item.is_package">
                     Its a configuration module
                 </div>
+            </div>
+
+            <div data-ng-if="item.is_from_marketplace" style="background: #00cc7d; margin: 2px; border-radius: 4px; padding: 4px;">
+                From Marketplace
             </div>
 
             <md-button class="md-primary md-raised" data-ng-click="vm.editConfiguration($event, item)">Edit</md-button>

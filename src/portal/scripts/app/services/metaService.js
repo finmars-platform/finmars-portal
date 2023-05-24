@@ -461,7 +461,7 @@
                     break; */
 
 				//<editor-fold desc="Settings: ">
-				case 'app.portal.settings.entities-custom-attributes':
+				case 'app.portal.settings.user-attributes':
                     name += 'Data Types: User attributes';
                     break;
                 case 'app.portal.import.reference-tables':

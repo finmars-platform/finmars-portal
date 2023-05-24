@@ -45,7 +45,7 @@
         var notCopiedTransaction = true;
         var ttypesList;
 
-        vm.readyStatus = {attrs: false, permissions: false, entity: false, layout: false, userFields: false};
+        vm.readyStatus = {attrs: false, permissions: true, entity: false, layout: false, userFields: false};
         vm.previewMode = !!data.previewMode;
 
         vm.editLayoutEntityInstanceId = null;
@@ -68,7 +68,7 @@
         vm.attributesLayout = [];
         vm.fixedAreaAttributesLayout = [];
 
-        vm.hasEditPermission = false;
+        vm.hasEditPermission = true; // deprecated
 
         vm.textFields = [];
         vm.numberFields = [];
@@ -902,7 +902,7 @@
                         vm.oldValues[item.name] = vm.entity[item.name]
                     });
 
-                    vm.loadPermissions();
+                    // vm.loadPermissions();
 
                     resolve()
 

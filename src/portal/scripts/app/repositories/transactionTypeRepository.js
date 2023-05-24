@@ -9,30 +9,30 @@ export default function (cookieService, xhrService) {
 
     const baseUrl = baseUrlService.resolve();
 
-    /*var getList = function (options) {
+    var getList = function (options) {
 
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/', options),
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
-                   'Authorization': 'Token ' + cookieService.getCookie('access_token'),
- Accept: 'application/json',
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
                     'Content-type': 'application/json'
                 }
             })
-    };*/
+    };
 
     var getListLight = function (options) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type-light/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/light/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -50,7 +50,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type-light-with-inputs/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/light/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -68,7 +68,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -86,7 +86,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type-light/' + id + '/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/light/' + id + '/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -104,7 +104,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -123,7 +123,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -142,7 +142,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/',
             {
                 method: 'PATCH',
                 credentials: 'include',
@@ -161,7 +161,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type-light/bulk-update/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/light/bulk-update/',
             {
                 method: 'PATCH',
                 credentials: 'include',
@@ -180,7 +180,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/bulk-update/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/bulk-update/',
             {
                 method: 'PATCH',
                 credentials: 'include',
@@ -199,7 +199,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/',
             {
                 method: 'DELETE',
                 credentials: 'include',
@@ -240,7 +240,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/book/' + contextDataAsQueryParameters,
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/book/' + contextDataAsQueryParameters,
             {
                 method: 'GET',
                 credentials: 'include',
@@ -258,7 +258,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/book/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/book/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -277,7 +277,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/recalculate/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/recalculate/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -296,7 +296,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/book-pending/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/book-pending/',
             {
                 method: 'GET',
                 credentials: 'include',
@@ -314,7 +314,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/book-pending/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/book-pending/',
             {
                 method: 'PUT',
                 credentials: 'include',
@@ -357,7 +357,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/recalculate-user-fields/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/' + id + '/recalculate-user-fields/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -377,7 +377,7 @@ return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  
     };
 
     return {
-        // getList: getList,
+        getList: getList,
         getListLight: getListLight,
         getListLightWithInputs: getListLightWithInputs,
         getByKey: getByKey,

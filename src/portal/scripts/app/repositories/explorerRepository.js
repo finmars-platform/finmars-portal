@@ -146,16 +146,12 @@
         })
     };
 
-    var downloadZip = function (path) {
+    var downloadZip = function (data) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        if (!path) {
-            path = ''
-        }
-
-        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/explorer/download-folder-as-zip/',
+        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/explorer/download-as-zip/',
             {
                 method: 'POST',
                 credentials: 'include',
@@ -164,7 +160,7 @@
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify({path: path})
+                body: JSON.stringify(data)
             }).then(function (response) {
             return response.blob()
         })

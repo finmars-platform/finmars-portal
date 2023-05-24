@@ -18,6 +18,8 @@
 
         vm.getList = function () {
 
+            vm.readyStatus.procedures = false;
+
             dataProcedureService.getList().then(function (data) {
 
                 vm.procedures = data.results;

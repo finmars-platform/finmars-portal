@@ -1,4 +1,5 @@
-<md-dialog aria-label="data mapping" ng-cloak class="transaction-scheme-manager-dialog-view draggable-dialog"
+<md-dialog aria-label="configuration dialog"
+           class="draggable-dialog"
            drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
@@ -37,9 +38,9 @@
                                         com.finmars.asset-manager <span
                                             style="font-size: 10px">(good for packages)</span><br/>
 
-                                        com.finmars.hnwi-transaction-types <span
+                                        com.finmars.hnwi-transaction-type <span
                                             style="font-size: 10px">(good for modules)</span><br/>
-                                        com.finmars.asset-manager-layouts <span
+                                        com.finmars.asset-manager-layout <span
                                             style="font-size: 10px">(good for modules)</span><br/>
                                     </div>
 
@@ -86,7 +87,7 @@
 
                                 <p>Manifest</p>
 
-                                <div class="ace-editor" id="aceEditor" style="height: 80vh;">
+                                <div class="ace-editor" id="aceEditorManifest" style="height: 80vh;">
 
                                 </div>
 
@@ -151,8 +152,8 @@
     "configuration_code": "com.finmars.hnwi",
     "date": "2023-04-21",
     "dependencies": {
-        "com.finmars.hnwi-transaction-types": "1.0.0",
-        "com.finmars.hnwi-layouts": "1.0.0"
+        "com.finmars.hnwi-transaction-type": "1.0.0",
+        "com.finmars.hnwi-layout": "1.0.0"
     },
     "name": "HNWI Package",
     "version": "1.0.0"
@@ -279,7 +280,7 @@
             </md-button>
             <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
                        data-ng-if="vm.item.id">
-                Make Copy
+                Make a copy
             </md-button>
             <md-button class="md-raised" ng-click="vm.cancel()">
                 Cancel

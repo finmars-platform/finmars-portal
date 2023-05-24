@@ -6,18 +6,9 @@
 
     'use strict';
 
-    var configurationService = require('../../services/configurationService');
-    var marketplaceService = require('../../services/marketplaceService');
-    var metaContentTypesService = require('../../services/metaContentTypesService');
+    module.exports = function manageConfigurationPageController($scope, $state, $stateParams, $mdDialog, configurationService) {
 
-    var downloadFileHelper = require('../../helpers/downloadFileHelper');
-
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
-
-
-    module.exports = function manageConfigurationPageController($scope, $state, $stateParams, $mdDialog, usersService) {
-
-        var vm = this;
+        const vm = this;
 
         vm.items = [];
         vm.readyStatus = {data: false};
@@ -104,7 +95,13 @@
 
                 if (res.status === 'agree') {
 
-                    vm.getData();
+                    vm.getData().then(function () {
+
+                        const createdConfig = vm.items.find(item => item.id === res.data.configurationId);
+
+                        vm.editConfiguration($event, createdConfig);
+
+                    });
 
                 }
 

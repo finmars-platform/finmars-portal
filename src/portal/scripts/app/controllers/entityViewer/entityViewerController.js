@@ -1234,10 +1234,10 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
             // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
             vm.readyStatus.layout = false;
 
-                vm.entityViewerDataService = new EntityViewerDataService();
-                vm.entityViewerEventService = new EntityViewerEventService();
-                vm.splitPanelExchangeService = new SplitPanelExchangeService();
-                vm.attributeDataService = new AttributeDataService(metaContentTypesService, customFieldService, attributeTypeService, uiService);
+            vm.entityViewerDataService = new EntityViewerDataService();
+            vm.entityViewerEventService = new EntityViewerEventService();
+            vm.splitPanelExchangeService = new SplitPanelExchangeService();
+            vm.attributeDataService = new AttributeDataService(metaContentTypesService, customFieldService, attributeTypeService, uiService);
 
             vm.entityType = $scope.$parent.vm.entityType;
 
@@ -1300,7 +1300,7 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
             var getLayoutProm;
             var stateParams = $state.params;
 
-            if (vm.isLayoutFromUrl()) {
+            if ( vm.isLayoutFromUrl() ) {
 
                 var queryParams = window.location.href.split('?')[1];
                 var params = queryParams.split('&');

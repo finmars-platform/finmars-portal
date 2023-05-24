@@ -8,7 +8,44 @@
 export default function (errorService, cookieService) {
 
     // var axService = require('../../../../core/services/axService')
+    const getRequestParams = function (method, bodyData) {
 
+        if (!['GET', 'POST', 'PATCH', 'PUT', 'DELETE'].includes(method)) {
+            throw new Error("Invalid request method");
+        }
+
+        let reqestParamsObj = {
+            method: method,
+            credentials: 'include',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        };
+
+        reqestParamsObj.headers['Authorization'] = 'Token ' + cookieService.getCookie('access_token');
+
+        if (['POST', 'PATCH', 'PUT'].includes(method)) {
+
+            reqestParamsObj.headers['X-CSRFToken'] = cookieService.getCookie('csrftoken');
+            reqestParamsObj.body = JSON.stringify(bodyData);
+
+        } else if (method === 'DELETE') {
+            reqestParamsObj.headers['X-CSRFToken'] = cookieService.getCookie('csrftoken');
+        }
+
+        return reqestParamsObj;
+
+    };
+
+    const processResponse = async function (response) {
+
+        try {
+            return await response;
+
+        } catch (error) { throw error; }
+
+    }
 
     const axfetch = function (url, params, options) {
 
@@ -110,9 +147,23 @@ export default function (errorService, cookieService) {
             .then(async function (response) {
 
                 if (response.status === 204) { // No content
-                    // resolve(response);
                     return response;
-                } else if (response.status >= 400 && response.status < 500) {
+
+                }
+                else if (response.status === 404) {
+
+                    throw {
+                        error: {
+                            message: response.statusText,
+                            status_code: response.status,
+                            url: response.url,
+                            username: '',
+                            datetime: '',
+                            details: '',
+                        }
+                    };
+                }
+                else if (response.status >= 400 && response.status < 500) {
 
                     /*response.json().then(function (data) {
 
@@ -126,9 +177,7 @@ export default function (errorService, cookieService) {
 
                     })*/
 
-                    const error = await response.json();
-
-                    throw error;
+                    throw await response.json();
 
                 } else if (response.status >= 500 && response.status < 600) {
 
@@ -151,63 +200,68 @@ export default function (errorService, cookieService) {
 
                 console.log('xhrService.reason', reason)
 
-                if (reason.status !== 401 && (reason.error && reason.error.status_code !== 401)) {
-
-                    if (url.includes('/token-refresh/') &&
-                        !url.includes('/token-auth/')) {
-
-                        cookieService.deleteCookie('access_token')
-                        cookieService.deleteCookie('refresh_token')
-                        window.location.reload();
-
-                        throw reason;
-
-                    }
-
-
-                }
-                else {
-
-                    try {
-
-                        const res = await window.keycloak.updateToken()
-                        console.log('res', res)
-
-                        if (res) {
-
-                            cookieService.setCookie('access_token', window.keycloak.token);
-                            cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
-                            cookieService.setCookie('id_token', window.keycloak.idToken);
-
-                            throw null;
-                            // return fetch(url, params, options); // try to request again with refreshed token
-                        } else {
-                            window.keycloak.init({
-                                onLoad: 'login-required'
-                            })
-                        }
-
-                    }
-                    catch (error) {
-
-                        error.___custom_message = 'Keycloak update error';
-                        console.error(error)
-
-                        // in case if refresh token is expired
-
-                        window.keycloak.init({
-                            onLoad: 'login-required'
-                        })
-
-                        throw null;
-
-                    }
-
-                }
-
                 if (notifyError !== false) {
                     await errorService.notifyError(reason);
                 }
+
+                // Deprecated
+                // if (reason.status !== 401 && (reason.error && reason.error.status_code !== 401)) {
+                //
+                //     if (url.includes('/token-refresh/') &&
+                //         !url.includes('/token-auth/')) {
+                //
+                //         cookieService.deleteCookie('access_token')
+                //         cookieService.deleteCookie('refresh_token')
+                //         window.location.reload();
+                //
+                //         throw reason;
+                //
+                //     }
+                //
+                //
+                // }
+                // else {
+                //
+                //     try {
+                //
+                //         const res = await window.keycloak.updateToken()
+                //         console.log('res', res)
+                //
+                //         if (res) {
+                //
+                //             cookieService.setCookie('access_token', window.keycloak.token);
+                //             cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
+                //             cookieService.setCookie('id_token', window.keycloak.idToken);
+                //
+                //             throw null;
+                //             // return fetch(url, params, options); // try to request again with refreshed token
+                //         } else {
+                //             window.keycloak.init({
+                //                 onLoad: 'login-required'
+                //             })
+                //         }
+                //
+                //     }
+                //     catch (error) {
+                //
+                //         error.___custom_message = 'Keycloak update error';
+                //         console.error(error)
+                //
+                //         // in case if refresh token is expired
+                //
+                //         window.keycloak.init({
+                //             onLoad: 'login-required'
+                //         })
+                //
+                //         throw null;
+                //
+                //     }
+                //
+                // }
+                //
+                // if (notifyError !== false) {
+                //     await errorService.notifyError(reason);
+                // }
 
 
                 console.error('XHR Service catch error', reason);
@@ -219,7 +273,9 @@ export default function (errorService, cookieService) {
     };
 
     return {
-        fetch: fetch
+        fetch: fetch,
+        getRequestParams: getRequestParams,
+        processResponse: processResponse,
     }
 
 };
