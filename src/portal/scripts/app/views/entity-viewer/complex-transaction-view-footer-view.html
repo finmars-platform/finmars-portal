@@ -9,7 +9,9 @@
 
     <md-menu md-position-mode="target-right target">
 
-        <md-button class="outline-button" ng-click="$mdOpenMenu($event)">
+        <md-button data-ng-disabled="!vm.checkReadyStatus()"
+                   ng-click="$mdOpenMenu($event)"
+                   class="outline-button">
             <div class="flex-row flex-c-center">
                 <ng-md-icon icon="more_vert" class="flex-row"></ng-md-icon>
             </div>

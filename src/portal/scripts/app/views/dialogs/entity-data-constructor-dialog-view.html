@@ -102,9 +102,12 @@
                                 <label>User Code</label>
                                 <input aria-label="scheme user code" type="text" data-ng-model="vm.ui.user_code">
                             </md-input-container> -->
-                            <text-input label="User Code"
-                                        model="vm.ui.user_code"
-                                        class="m-r-8"></text-input>
+
+                            <usercode-input data-item="vm.ui"></usercode-input>
+
+<!--                            <text-input label="User Code"-->
+<!--                                        model="vm.ui.user_code"-->
+<!--                                        class="m-r-8"></text-input>-->
                             <!-- <md-input-container class="md-block">
                                 <label>Name</label>
                                 <input aria-label="scheme name" type="text" data-ng-model="vm.ui.name">
