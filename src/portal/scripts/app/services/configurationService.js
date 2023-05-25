@@ -149,7 +149,14 @@ export default function (cookieService, xhrService) {
 
         const res = xhrService.fetch(
             baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/import-configuration/',
-            xhrService.getRequestParams('POST', data)
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                },
+                body: data
+            }
         );
 
         return xhrService.processResponse(res);
