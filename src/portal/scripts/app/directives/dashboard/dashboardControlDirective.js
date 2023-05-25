@@ -158,8 +158,9 @@
 
                                 scope.item.data.store.value = getSelectedIds(scope.item.data.store.user_codes);
 
+                            } else {
+                                scope.item.data.store.value = [];
                             }
-
 
                         } else if (scope.entityData.value) { // for entity search select
 
@@ -192,8 +193,20 @@
                     };
 
                     if (scope.item.data.store) {
-                        changedData.data = JSON.parse(JSON.stringify(scope.item.data.store));
+
+                        // Date control could not store values list, only single value
+                        if (scope.componentData.settings.value_type === 40) {
+
+                            if (Array.isArray(scope.item.data.store.value)) {
+                                scope.item.data.store.value = scope.item.data.store.value[0];
+                            } else {
+                                changedData.data = JSON.parse(JSON.stringify(scope.item.data.store));
+                            }
+                        } else {
+                            changedData.data = JSON.parse(JSON.stringify(scope.item.data.store));
+                        }
                     }
+
 
                     scope.dashboardDataService.setComponentOutput(scope.item.data.id, changedData);
                     scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id);
