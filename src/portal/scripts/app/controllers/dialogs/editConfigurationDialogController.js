@@ -13,6 +13,13 @@
 
         vm.item = Object.assign({}, item);
 
+
+        vm.isFromMarketplace = false;
+
+        if (!vm.item.file_url) {
+            vm.isFromMarketplace = true;
+        }
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
@@ -21,6 +28,7 @@
             vm.isFromMarketplace = !vm.isFromMarketplace;
             vm.item.target_configuration_code = null;
             vm.item.target_configuration_version = null;
+            vm.item.target_configuration_is_package = false;
             vm.file = null;
         }
 
