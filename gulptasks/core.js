@@ -380,6 +380,9 @@
             'src/core/ace/ext-searchbox.js',
             'src/core/ace/mode-json.js',
             'src/core/ace/mode-python.js',
+            'src/core/ace/mode-css.js',
+            'src/core/ace/mode-html.js',
+            'src/core/ace/mode-javascript.js',
             'src/core/ace/theme-monokai.js',
 
             'node_modules/d3/dist/d3.js',
