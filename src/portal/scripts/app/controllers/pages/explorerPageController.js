@@ -146,6 +146,18 @@
                     vm.editor.getSession().setMode("ace/mode/yaml");
                 }
 
+                if (vm.fileEditor.name.indexOf('.html') !== -1) {
+                    vm.editor.getSession().setMode("ace/mode/html");
+                }
+
+                if (vm.fileEditor.name.indexOf('.js') !== -1) {
+                    vm.editor.getSession().setMode("ace/mode/javascript");
+                }
+
+                if (vm.fileEditor.name.indexOf('.css') !== -1) {
+                    vm.editor.getSession().setMode("ace/mode/css");
+                }
+
                 vm.editor.getSession().setUseWorker(false);
                 vm.editor.setHighlightActiveLine(false);
                 vm.editor.setShowPrintMargin(false);
