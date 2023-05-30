@@ -322,19 +322,21 @@
             vm.listFiles();
         }
 
-        vm.copyFilePath = function ($event, item, $mdMenu) {
+        vm.copyLink = function ($event, item) {
 
-            if ($mdMenu) {
-                $mdMenu.close()
-            }
+            const url = window.location.origin + '/' + baseUrlService.getMasterUserPrefix() + '/api/storage/' + item.file_path
+
+            metaHelper.copyToBuffer(url)
+
+        }
+
+        vm.copyFilePath = function ($event, item) {
 
             metaHelper.copyToBuffer(item.file_path)
 
         }
 
-        vm.downloadFile = function ($mdMenu, $event, item) {
-
-            $mdMenu.close()
+        vm.downloadFile = function ($event, item) {
 
             var itemPath = item.name
             if (vm.currentPath.length) {
@@ -719,6 +721,18 @@
             }
 
             vm.explorerStateClass = result;
+
+        }
+
+        vm.openInNewTab = function ($event, item) {
+
+            const url = window.location.origin + '/' + baseUrlService.getMasterUserPrefix() + '/api/storage/' + item.file_path
+
+
+            window.open(url, "_blank");
+        }
+
+        vm.deleteFile = function ($event, item) {
 
         }
 
