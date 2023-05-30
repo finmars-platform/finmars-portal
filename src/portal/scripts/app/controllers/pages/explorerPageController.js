@@ -324,7 +324,7 @@
 
         vm.copyLink = function ($event, item) {
 
-            const url = window.location.origin + '/' + baseUrlService.getMasterUserPrefix() + '/api/storage/' + item.file_path
+            const url = window.location.origin + '/' + baseUrlService.getMasterUserPrefix() + '/api/storage' + item.file_path
 
             metaHelper.copyToBuffer(url)
 
@@ -726,7 +726,7 @@
 
         vm.openInNewTab = function ($event, item) {
 
-            const url = window.location.origin + '/' + baseUrlService.getMasterUserPrefix() + '/api/storage/' + item.file_path
+            const url = window.location.origin + '/' + baseUrlService.getMasterUserPrefix() + '/api/storage' + item.file_path
 
 
             window.open(url, "_blank");
