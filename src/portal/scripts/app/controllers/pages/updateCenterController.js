@@ -1,5 +1,6 @@
 /**
  * Created by szhitenev on 18.08.2022.
+ *  DEPRECATED PAGE
  */
 (function () {
 
