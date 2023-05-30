@@ -182,6 +182,9 @@
                                     </div>
                                 </div>
                             </th>
+                            <th>
+                                &nbsp;
+                            </th>
                         </tr>
 
                         </thead>
@@ -224,7 +227,7 @@
                                     <div
                                             data-ng-click="vm.editFile($event, item)"
                                             layout="row">
-                                        <div data-ng-click="$mdMenu.open()" class="explorer-md-menu-trigger"></div>
+<!--                                        <div data-ng-click="$mdMenu.open()" class="explorer-md-menu-trigger"></div>-->
                                         <span class="material-icons">text_snippet</span>
                                         <span class="explorer-item-name" title="{{::item.name}}">{{::item.name}}</span>
                                     </div>
@@ -243,6 +246,49 @@
 
                             <td>
                                 {{::item.mime_type}}
+                            </td>
+
+                            <td>
+                                <md-menu data-ng-if="item.type == 'file'">
+
+                                    <md-button class="md-icon-button explorer-item-menu-button" data-ng-click="$mdOpenMenu($event)">
+                                        <md-icon>more_vert</md-icon>
+                                    </md-button>
+
+                                    <md-menu-content>
+                                        <md-menu-item>
+                                            <md-button class="md-raised" data-ng-click="vm.openInNewTab($event, item)">
+                                                Open In New Tab
+                                            </md-button>
+                                        </md-menu-item>
+                                        <md-menu-item>
+                                            <md-button class="md-raised" data-ng-click="vm.copyLink($event, item)">Copy
+                                                Link
+                                            </md-button>
+                                        </md-menu-item>
+                                        <md-menu-item>
+                                            <md-button class="md-raised" data-ng-click="vm.copyFilePath($event, item)">Copy
+                                                Explorer File Path
+                                            </md-button>
+                                        </md-menu-item>
+                                        <md-menu-item>
+                                            <md-button class="md-raised" data-ng-click="vm.editFile($event, item)">Edit
+                                            </md-button>
+                                        </md-menu-item>
+<!--                                        <md-menu-item>-->
+<!--                                            <md-button class="md-raised" data-ng-click="vm.renameFile($mdMenu, $event, item)">Rename-->
+<!--                                            </md-button>-->
+<!--                                        </md-menu-item>-->
+                                        <md-menu-item>
+                                            <md-button class="md-raised" data-ng-click="vm.downloadFile($event, item)">
+                                                Download
+                                            </md-button>
+                                        </md-menu-item>
+                                    </md-menu-content>
+
+                                </md-menu>
+
+
                             </td>
 
                         </tr>
