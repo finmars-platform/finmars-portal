@@ -164,7 +164,8 @@
                 ace.require("ace/ext/language_tools");
                 vm.editor.setOptions({
                     enableBasicAutocompletion: true,
-                    enableSnippets: true
+                    enableSnippets: true,
+                    enableLiveAutocompletion: true
                 });
                 vm.editor.setFontSize(14)
                 vm.editor.setBehavioursEnabled(true);
