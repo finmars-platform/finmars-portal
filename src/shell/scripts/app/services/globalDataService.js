@@ -28,6 +28,13 @@ export default function () {
 	};
 
 	const setUser = function (user) {
+
+		if (!user.data) user.data = {};
+
+		if ( typeof user.data.autosave_layouts !== 'boolean' ) {
+			user.data.autosave_layouts = true;
+		}
+
 		data.user = user;
 	};
 
@@ -46,6 +53,10 @@ export default function () {
 	const setMember = function (member) {
 		console.trace("autosave77 setMember");
 		console.log("autosave77 setMember", member);
+		if ( typeof member.data.autosave_layouts !== 'boolean' ) {
+			member.data.autosave_layouts = true;
+		}
+
 		data.member = member;
 	};
 

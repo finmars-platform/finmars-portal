@@ -47,6 +47,7 @@
     </div>
 
     <div ng-if="item.editMode">
+
         <md-card class="ec-attr-card" ng-class="{'active': item.editMode}">
 
             <md-input-container class="md-block ec-attr-row" flex-gt-sm>
@@ -107,109 +108,134 @@
                 </md-select>
             </md-input-container>
 
-                <div ng-if="item.type !== 'table'">
+            <div data-ng-if="readonly">
 
-                    <md-input-container class="md-block no-error-spacer ec-attr-row"
-                                        flex-gt-sm
-                                        aria-label="select with filter">
-                        <label>Element width</label>
-                        <md-select ng-model="item.colspan"
-                                   md-container-class="common-select-container"
-                                   md-on-close="searchTerm = ''"
-                                   ng-change="changeFieldColspan(item.colspan)">
-                            <div class="select-options-holder">
-                                <md-option
-                                        data-ng-repeat="colspan in getCols()"
-                                        value="{{colspan}}">
-                                    {{colspan}} column(s)
-                                </md-option>
-                            </div>
-                        </md-select>
-                    </md-input-container>
+                <md-input-container class="md-block no-error-spacer ec-attr-row">
+                    <md-checkbox class="m-b-0"
+                                 data-ng-checked="readonly"
+                                 data-ng-disabled="readonly"
+                                 aria-label="readonly attribute">
+                        Readonly
+                    </md-checkbox>
+                </md-input-container>
 
-                    <md-input-container class="md-block no-error-spacer ec-attr-row"
-                                        data-ng-if="item.attribute && item.attribute.value_type !== 'decoration'">
-                        <label>Custom label</label>
-                        <input data-ng-model="item.options.fieldName">
-                    </md-input-container>
+                <md-input-container class="md-block no-error-spacer ec-attr-row"
+                                    data-ng-if="item.attribute && item.attribute.value_type !== 'decoration'">
+                    <label>Custom label</label>
+                    <input data-ng-model="item.options.fieldName">
+                </md-input-container>
 
-                    <md-input-container class="md-block no-error-spacer ec-attr-row"
-                                        data-ng-if="item.attribute && item.attribute.value_type !== 'decoration'">
-                        <label>Tooltip text</label>
-                        <input data-ng-model="item.options.tooltipValue">
-                    </md-input-container>
+                <md-input-container class="md-block no-error-spacer ec-attr-row"
+                                    data-ng-if="item.attribute && item.attribute.value_type !== 'decoration'">
+                    <label>Tooltip text</label>
+                    <input data-ng-model="item.options.tooltipValue">
+                </md-input-container>
 
-                    <div data-ng-if="checkForSpecialOptions()">
-                        <div data-ng-include="specialOptionTemplate"></div>
-                    </div>
+            </div>
 
-                    <div ng-if="item.attribute_class === 'userInput'">
-                        <md-input-container class="ec-input-color-checkbox-container">
-                            <md-checkbox ng-model="item.options.notNull"
-                                         aria-label="input not null">
-                                Not null
-                            </md-checkbox>
-                        </md-input-container>
-                    </div>
+            <div data-ng-if="!readonly && item.type !== 'table'">
 
-                    <div data-ng-if="hasEditablesToggle()">
-
-                        <md-input-container class="ec-input-color-checkbox-container">
-                            <md-checkbox ng-model="item.editable" aria-label="text input is editable">
-                                Editable
-                            </md-checkbox>
-                        </md-input-container>
-
-                    </div>
-
-                    <!--<div >
-
-                        <md-input-container class="ec-input-color-checkbox-container">
-                            <md-checkbox ng-model="item.required" aria-label="input is required">
-                                Required
-                            </md-checkbox>
-                        </md-input-container>
-
-                    </div>-->
-
-                    <div data-ng-if="hasBackgroundColorInput()" class="ec-input-color-container">
-                        <div layout="row" layout-align="start center" class="m-b-8">
-
-                            <md-input-container class="ec-input-color-checkbox-container">
-                                <md-checkbox ng-checked="fieldUsesBackgroundColor"
-                                             ng-click="toggleBackgroundColor()">
-                                    Use colored background
-                                </md-checkbox>
-                            </md-input-container>
-
-                            <color-picker palettes-list="palettesObj.palettesList"
-                                          model="backgroundColor.color"
-                                          on-palettes-change-callback="onPalettesChange()"></color-picker>
-                            <!--<input type="color"
-                                   ng-model="fieldBackgroundColor"
-                                   class="ec-color-input"
-                                   ng-change="setFieldBackgroundColor(fieldBackgroundColor)"
-                                   ng-disabled="!fieldUsesBackgroundColor">-->
+                <md-input-container class="md-block no-error-spacer ec-attr-row"
+                                    flex-gt-sm
+                                    aria-label="select with filter">
+                    <label>Element width</label>
+                    <md-select ng-model="item.colspan"
+                               md-container-class="common-select-container"
+                               md-on-close="searchTerm = ''"
+                               ng-change="changeFieldColspan(item.colspan)">
+                        <div class="select-options-holder">
+                            <md-option
+                                    data-ng-repeat="colspan in getCols()"
+                                    value="{{colspan}}">
+                                {{colspan}} column(s)
+                            </md-option>
                         </div>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block no-error-spacer ec-attr-row"
+                                    data-ng-if="item.attribute && item.attribute.value_type !== 'decoration'">
+                    <label>Custom label</label>
+                    <input data-ng-model="item.options.fieldName">
+                </md-input-container>
+
+                <md-input-container class="md-block no-error-spacer ec-attr-row"
+                                    data-ng-if="item.attribute && item.attribute.value_type !== 'decoration'">
+                    <label>Tooltip text</label>
+                    <input data-ng-model="item.options.tooltipValue">
+                </md-input-container>
+
+                <div data-ng-if="checkForSpecialOptions()">
+                    <div data-ng-include="specialOptionTemplate"></div>
+                </div>
+
+                <div ng-if="item.attribute_class === 'userInput'">
+                    <md-input-container class="ec-input-color-checkbox-container">
+                        <md-checkbox ng-model="item.options.notNull"
+                                     aria-label="input not null">
+                            Not null
+                        </md-checkbox>
+                    </md-input-container>
+                </div>
+
+                <div data-ng-if="hasEditablesToggle()">
+
+                    <md-input-container class="ec-input-color-checkbox-container">
+                        <md-checkbox ng-model="item.editable" aria-label="text input is editable">
+                            Editable
+                        </md-checkbox>
+                    </md-input-container>
+
+                </div>
+
+                <!--<div >
+
+                    <md-input-container class="ec-input-color-checkbox-container">
+                        <md-checkbox ng-model="item.required" aria-label="input is required">
+                            Required
+                        </md-checkbox>
+                    </md-input-container>
+
+                </div>-->
+
+                <div data-ng-if="hasBackgroundColorInput()" class="ec-input-color-container">
+                    <div layout="row" layout-align="start center" class="m-b-8">
+
+                        <md-input-container class="ec-input-color-checkbox-container">
+                            <md-checkbox ng-checked="fieldUsesBackgroundColor"
+                                         ng-click="toggleBackgroundColor()">
+                                Use colored background
+                            </md-checkbox>
+                        </md-input-container>
+
+                        <color-picker palettes-list="palettesObj.palettesList"
+                                      model="backgroundColor.color"
+                                      on-palettes-change-callback="onPalettesChange()"></color-picker>
+                        <!--<input type="color"
+                               ng-model="fieldBackgroundColor"
+                               class="ec-color-input"
+                               ng-change="setFieldBackgroundColor(fieldBackgroundColor)"
+                               ng-disabled="!fieldUsesBackgroundColor">-->
                     </div>
-
                 </div>
 
-                <md-divider></md-divider>
+            </div>
 
-                <div layout="row" layout-align="space-between center" class="constructor-card-actions">
-                    <md-button aria-label="cancel"
-                               data-ng-click="cancel()"
-                               data-ng-class="{'CCA-small-btn': colsInTotal > 5}">
-                        Cancel
-                    </md-button>
-                    <md-button class="ec-field-btn"
-                               aria-label="save layout"
-                               data-ng-click="saveField()"
-                               data-ng-class="{'disabled': !item.attribute, 'CCA-small-btn': colsInTotal > 5}">
-                        <span>Ok</span>
-                    </md-button>
-                </div>
+            <md-divider></md-divider>
+
+            <div layout="row" layout-align="space-between center" class="constructor-card-actions">
+                <md-button aria-label="cancel"
+                           data-ng-click="cancel()"
+                           data-ng-class="{'CCA-small-btn': colsInTotal > 5}">
+                    Cancel
+                </md-button>
+                <md-button class="ec-field-btn"
+                           aria-label="save layout"
+                           data-ng-click="saveField()"
+                           data-ng-class="{'disabled': !item.attribute, 'CCA-small-btn': colsInTotal > 5}">
+                    <span>Ok</span>
+                </md-button>
+            </div>
 
         </md-card>
     </div>

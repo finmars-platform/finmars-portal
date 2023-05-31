@@ -22,6 +22,8 @@
   .dashboard-fixed-area-container {
     flex: 0 0 auto;
     margin-bottom: 10px;
+    z-index: 50;
+    position: relative;
   }
 
   .dashboard-tabs-holder {
@@ -329,6 +331,15 @@
   .z-index-2 {
     z-index: 2;
   }
+
+  .generate-z-index(@counter) when (@counter <= 1000) {
+    .z-index-@{counter} {
+      z-index: @counter;
+    }
+    .generate-z-index(@counter + 1);
+  }
+  .generate-z-index(1);
+
 }
 
 .g-dashboard-top-button {
@@ -655,6 +666,8 @@ button.md-button.dashboard-button-set-button {
   //background: #f2f2f2;
   background: #fff;
   //padding: 10px;
+  z-index: 1;
+  position: relative;
 }
 
 .dashboard-accordion-component {
