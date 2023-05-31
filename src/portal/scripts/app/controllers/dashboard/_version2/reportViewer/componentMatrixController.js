@@ -4,14 +4,14 @@ const DashboardEventService = require('../../../../services/eventService');
 const dashboardEvents = require('../../../../services/dashboard/dashboardEvents');
 const dashboardComponentStatuses = require('../../../../services/dashboard/dashboardComponentStatuses');
 
-export default function ($scope, $uiRouterGlobals, iframeService) {
+export default function ($scope, $uiRouterGlobals, metaContentTypesService) {
 
     const vm = this;
 
     vm.readyStatus = false;
 
-    const windowOrigin = window.origin;
-    // const windowOrigin = 'http://localhost:3000'; // for development
+    // const windowOrigin = window.origin;
+    const windowOrigin = 'http://localhost:3000'; // for development
     let iframeId = $uiRouterGlobals.params.iframeId;
 
 
@@ -30,7 +30,7 @@ export default function ($scope, $uiRouterGlobals, iframeService) {
     vm.rowNumber = 1;
     vm.colNumber = 1;
 
-    let componentDataMockup = {
+    let componentData = {
         "id": $uiRouterGlobals.params.componentId,
         "name": "",
         "settings": {
@@ -100,8 +100,6 @@ export default function ($scope, $uiRouterGlobals, iframeService) {
         "inside_iframe": true,
     };
 
-    vm.itemData.data.id = componentDataMockup.id;
-
     let layoutMockup = {
         data: {
             components_types: []
@@ -118,35 +116,80 @@ export default function ($scope, $uiRouterGlobals, iframeService) {
 
     }
 
+    function getComponentData(data) {
+
+        let settings = data.settings;
+        settings.abscissa = settings.axisX;
+        settings.ordinate = settings.axisY;
+        settings.entity_type = metaContentTypesService.findEntityByContentType(settings.content_type);
+
+        const userSettings = {
+            available_abscissa_keys: settings.available_abscissa_keys,
+            available_ordinate_keys: settings.available_ordinate_keys,
+            available_value_keys: settings.available_value_keys,
+        };
+
+        delete settings.axisX;
+        delete settings.axisY;
+        delete settings.available_abscissa_keys;
+        delete settings.available_ordinate_keys;
+        delete settings.available_value_keys;
+        delete settings.content_type;
+
+        componentData.id = data.id;
+        vm.itemData.data.id = componentData.id;
+        /*if (event.data.settings) {
+            componentDataMockup.settings = { ...componentDataMockup.settings, ...data.settings };
+        }*/
+        componentData.settings = { ...componentData.settings, ...settings };
+
+        /*if (event.data.user_settings) {
+            componentDataMockup.settings = { ...componentDataMockup.user_settings, ...data.user_settings };
+        }*/
+        componentData.user_settings = { ...componentData.user_settings, ...userSettings };
+
+        return componentData;
+
+    }
+
     function initMatrix (data) {
 
-        if (event.data.settings) {
-            componentDataMockup.settings = { ...componentDataMockup.settings, ...data.settings };
-        }
+        const componentData = getComponentData(data);
 
-        if (event.data.user_settings) {
-            componentDataMockup.settings = { ...componentDataMockup.user_settings, ...data.user_settings };
-        }
-        console.log("testing880 componentDataMockup", componentDataMockup);
-        layoutMockup.data.components_types.push(componentDataMockup);
+        layoutMockup.data.components_types.push(componentData);
 
         vm.dashboardDataService.setData(layoutMockup);
 
         vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
-            const status = vm.dashboardDataService.getComponentStatus(componentId);
+            const status = vm.dashboardDataService.getComponentStatus(componentData.id);
 
             if (status === dashboardComponentStatuses.INIT) {
-                vm.dashboardDataService.setComponentStatus(componentId, dashboardComponentStatuses.START);
+                vm.dashboardDataService.setComponentStatus(componentData.id, dashboardComponentStatuses.START);
                 vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
             }
 
         });
 
+        vm.readyStatus = true;
+        $scope.$apply();
+
+    }
+    function updateMatrix (data) {
+
+        componentData = getComponentData(data);
+
+        vm.dashboardDataService.updateComponent(componentData);
+
+        vm.dashboardEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
+        vm.dashboardDataService.setComponentStatus(componentData.id, dashboardComponentStatuses.ACTIVE);
+        vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
     }
 
     const onMessageStack = {
         'INITIALIZATION_SETTINGS_TRANSMISSION': initMatrix,
+        'SETTINGS_CHANGE': updateMatrix,
     };
 
     function onMessage (event) {
@@ -178,8 +221,6 @@ export default function ($scope, $uiRouterGlobals, iframeService) {
         window.addEventListener("message", onMessage);
 
         send( {action: 'IFRAME_READY'} );
-
-
 
         // uiService.getDashboard2LayoutByKey().then(
         // uiService.getDashboardLayoutByKey(layoutId)

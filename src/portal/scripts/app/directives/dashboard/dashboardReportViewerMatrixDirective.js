@@ -11,7 +11,7 @@
 
     const localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
-	module.exports = function ($mdDialog, uiService, dashboardHelper) {
+	module.exports = function ($mdDialog, globalDataService, uiService, dashboardHelper) {
         return {
             restriction: 'E',
             templateUrl: 'views/directives/dashboard/dashboard-report-viewer-matrix-view.html',
@@ -209,6 +209,12 @@
                             }
 
                         });
+
+                        /* May be needed for FN-1090
+                        scope.dashboardEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
+                            scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
+                        })
+                        */
 
                     }
 
