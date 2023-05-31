@@ -9,14 +9,18 @@
 
             <div layout="row">
 
-                <h2 data-ng-if="vm.hasEditPermission">Rebook Transaction</h2>
+                <h2 data-ng-if="vm.hasEditPermission">
+                    <span>Rebook Transaction</span>
+                    <span>Code: <span class="text-bold" data-ng-bind="vm.entity.code"></span>.</span>
+                    <span data-ng-if="vm.entity.transaction_unique_code"> Unique Code: <span data-ng-bind="vm.entity.transaction_unique_code"></span></span>
+                </h2>
+
                 <h2 data-ng-if="!vm.hasEditPermission">View Transaction</h2>
                 <span data-ng-if="!vm.hasEditPermission" style="margin-left: 12px;">
                     <ng-md-icon icon="lock" size="24">
                             <md-tooltip md-direction="bottom">You don't have permission to rebook this Transaction</md-tooltip>
                     </ng-md-icon>
                 </span>
-                <span flex></span>
 
                 <div data-ng-if="vm.processing" layout="row" class="m-l-16">
                     <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
