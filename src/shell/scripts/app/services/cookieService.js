@@ -2,7 +2,7 @@
 
 export default function () {
 
-	 //# region IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally.
+	/* //# region IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally.
 
 	let cookieStorage = {};
 
@@ -28,14 +28,15 @@ export default function () {
 	}
 
 	//# endregion IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally.
+*/
 
-	/* const getStoredCookie = function () {
+	const getStoredCookie = function () {
 		return document.cookie;
 	}
 
 	const storeCookie = function (value) {
 		document.cookie = value;
-	} */
+	}
 
 	const getCookie = function (name) {
 		let cookieValue = null;
