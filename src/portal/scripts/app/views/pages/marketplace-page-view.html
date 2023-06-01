@@ -36,7 +36,7 @@
 
                     <div class="configuration-card-image">
 
-                        <img data-ng-if="item.thumbnail" ng-src="item.thumbnail" alt="">
+                        <img data-ng-if="item.thumbnail" ng-src="{{item.thumbnail}}" alt="">
                         <div data-ng-if="!item.thumbnail" class="configuration-card-no-thumbnail"
                              ng-style="{'backgroundColor': vm.getAvatar(item.name[0])}">
                             {{item.name.charAt(0)}}
