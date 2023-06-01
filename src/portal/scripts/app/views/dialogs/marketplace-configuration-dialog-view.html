@@ -45,29 +45,35 @@
                                         <h3 class="configuration-card-name" style="margin: 4px 0">{{vm.item.name}}</h3>
                                     </div>
 
-                                    <div data-ng-if="!vm.item.localItem">
-                                        <md-button class="md-primary md-raised configuration-card-open"
-                                                   data-ng-click="vm.installConfiguration($event, vm.item)">
-                                            Install
-                                        </md-button>
-                                    </div>
+                                    <div layout="row">
 
-                                    <div data-ng-if="vm.item.localItem">
-
-                                        <div data-ng-if="vm.item.latest_release_object.version == vm.item.localItem.version">
-                                            <!--                        <span style="background: #00cc7d; padding: 4px; border-radius: 4px; display: inline-block; margin: 4px;">Installed</span>-->
+                                        <div data-ng-if="!vm.item.localItem">
                                             <md-button class="md-primary md-raised configuration-card-open"
                                                        data-ng-click="vm.installConfiguration($event, vm.item)">
-                                                Reinstall
+                                                Install
                                             </md-button>
                                         </div>
 
-                                        <div data-ng-if="vm.item.latest_release_object.version != vm.item.localItem.version">
-                                            <md-button class="md-primary md-raised configuration-card-open"
-                                                       data-ng-click="vm.installConfiguration($event, vm.item)">
-                                                Update
-                                            </md-button>
+                                        <div data-ng-if="vm.item.localItem">
+
+                                            <div data-ng-if="vm.item.latest_release_object.version == vm.item.localItem.version">
+                                                <!--                        <span style="background: #00cc7d; padding: 4px; border-radius: 4px; display: inline-block; margin: 4px;">Installed</span>-->
+                                                <md-button class="md-primary md-raised configuration-card-open"
+                                                           data-ng-click="vm.installConfiguration($event, vm.item)">
+                                                    Reinstall
+                                                </md-button>
+                                            </div>
+
+                                            <div data-ng-if="vm.item.latest_release_object.version != vm.item.localItem.version">
+                                                <md-button class="md-primary md-raised configuration-card-open"
+                                                           data-ng-click="vm.installConfiguration($event, vm.item)">
+                                                    Update
+                                                </md-button>
+                                            </div>
+
                                         </div>
+
+                                        <div style="padding: 0 8px;">Download count: {{vm.item.download_count}}</div>
 
                                     </div>
 
