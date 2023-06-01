@@ -22,8 +22,8 @@
             instrument_pricing_scheme_filters: [],
             currency_pricing_scheme_filters: [],
 
-            instrument_pricing_condition_filters: [2,3],
-            currency_pricing_condition_filters: [2,3],
+            instrument_pricing_condition_filters: [2, 3],
+            currency_pricing_condition_filters: [2, 3],
         };
 
         vm.portfolios = [];
@@ -66,7 +66,7 @@
 
             vm.creating = true;
 
-            var pprocedureData = JSON.parse(angular.toJson( vm.item ));
+            var pprocedureData = JSON.parse(angular.toJson(vm.item));
 
             if (pprocedureData.price_date_from_expr) {
                 pprocedureData.price_date_from = null
@@ -226,6 +226,10 @@
         };*/
 
         vm.init = function () {
+
+            if (data.item) {
+                vm.item = data.item;
+            }
 
             pricingProcedureService.loadRelatedData().then(function (relatedData) {
 
