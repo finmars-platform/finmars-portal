@@ -111,6 +111,8 @@
 
 				};
 
+                scope.layoutIsDefault = layout => layout.is_default;
+
                 scope.setAsDefault = (targetLayout) => {
 
 					if (targetLayout.is_default) {
