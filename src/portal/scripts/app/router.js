@@ -848,9 +848,14 @@
                 controller: 'MarketplacePageController as vm'
             })
             .state('app.portal.manage-configuration', {
-                url: '/manage-configuration',
+                url: '/manage-configuration?page&query',
                 templateUrl: 'views/pages/manage-configuration-page-view.html',
-                controller: 'ManageConfigurationPageController as vm'
+                controller: 'ManageConfigurationPageController as vm',
+                reloadOnSearch: false,
+                params: {
+                    page: null,
+                    query: null
+                }
             })
             .state('app.portal.settings.import-configuration', {
                 url: '/import-configuration',
