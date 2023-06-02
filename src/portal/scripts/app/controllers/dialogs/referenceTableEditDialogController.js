@@ -242,6 +242,29 @@
 
         };
 
+        vm.makeCopy = function ($event) {
+
+            var item = JSON.parse(JSON.stringify(vm.referenceTable));
+
+            delete item.id;
+            item["user_code"] = item["user_code"] + '_copy';
+
+            $mdDialog.show({
+                controller: 'ReferenceTableEditDialogController as vm',
+                templateUrl: 'views/dialogs/reference-table/reference-table-edit-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        referenceTable: item
+                    }
+                }
+            });
+
+            $mdDialog.hide({status: 'disagree'});
+
+        };
+
         var init = function () {
 
             setTimeout(function () {
