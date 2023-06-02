@@ -1,14 +1,14 @@
 /**
  * Created by szhitenev on 30.01.2020.
  */
-(function(){
+(function () {
 
     'use strict';
 
     var currencyPricingSchemeService = require('../../../services/pricing/currencyPricingSchemeService');
     var attributeTypeService = require('../../../services/attributeTypeService');
 
-    module.exports = function($scope, $mdDialog, data){
+    module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
 
@@ -39,7 +39,6 @@
         };
 
 
-
         vm.getAttributeTypes = function () {
 
             var entityType = 'currency';
@@ -56,7 +55,7 @@
 
         };
 
-        vm.getTypes = function(){
+        vm.getTypes = function () {
 
             currencyPricingSchemeService.getTypes().then(function (data) {
 
@@ -94,7 +93,7 @@
 
         };
 
-        vm.switchParameter = function($event, item) {
+        vm.switchParameter = function ($event, item) {
 
             if (item.___switch_state === 'default_value') {
                 item.___switch_state = 'attribute_key'
@@ -125,7 +124,7 @@
 
         };
 
-        vm.generateFunctionsForExpressionBuilder = function (){
+        vm.generateFunctionsForExpressionBuilder = function () {
 
             var result = []
 
@@ -134,9 +133,9 @@
                 "description": "-",
                 "groups": "context_var",
                 "func": "context_instrument",
-				"validation": {
-					"func": "context_instrument"
-				}
+                "validation": {
+                    "func": "context_instrument"
+                }
             })
 
             result.push({
@@ -144,9 +143,9 @@
                 "description": "-",
                 "groups": "context_var",
                 "func": "context_pricing_policy",
-				"validation": {
-					"func": "context_pricing_policy"
-				}
+                "validation": {
+                    "func": "context_pricing_policy"
+                }
             })
 
             result.push({
@@ -154,9 +153,9 @@
                 "description": "-",
                 "groups": "context_var",
                 "func": "context_date",
-				"validation": {
-					"func": "context_date"
-				}
+                "validation": {
+                    "func": "context_date"
+                }
             })
 
             return result
@@ -164,6 +163,10 @@
         }
 
         vm.init = function () {
+
+            if (data.item) {
+                vm.item = data.item;
+            }
 
             vm.getTypes();
             vm.getAttributeTypes();
