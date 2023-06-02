@@ -17,7 +17,6 @@
             scope: {
                 item: '=',
                 entity: '=',
-                content_type: '=',
                 options: '=',
                 entityType: '=',
                 evEditorDataService: '=',
@@ -50,6 +49,7 @@
                 scope.inputTextObj = {
                     value: null
                 };
+                var contentType = scope.item.value_content_type || scope.item.content_type;
 
                 var fieldsDataIsLoaded = false;
                 var elIndexesData = {};
@@ -78,7 +78,7 @@
 
                     if (scope.entityType === 'complex-transaction') {
 
-                        valueEntity = metaContentTypesService.findEntityByContentType(scope.item.content_type);
+                        valueEntity = metaContentTypesService.findEntityByContentType(contentType);
 
                         // console.log('valueEntity', valueEntity);
 
@@ -356,21 +356,6 @@
                     return false
                 };
 
-                /** @returns {Promise<{type: String, key: String, data: Array}>} - mockup for instrumentSelect, unifiedDataSelect  */
-                function getFields() {
-
-                    return new Promise(function (resolve) {
-
-                        resolve({
-                            type: 'id',
-                            key: scope.item.content_type,
-                            data: [],
-                        })
-
-                    });
-
-                }
-
                 function getDataForComplexTransaction(resolve, reject, options) {
 
                     if (scope.fieldsDataStore['fieldKeys']) {
@@ -380,11 +365,11 @@
 
                     var getFieldsP;
 
-                    if ( ['instruments.instrument', 'counterparties.counterparty', 'currencies.currency'].indexOf(scope.item.content_type) > -1 ) {
+                    if ( ['instruments.instrument', 'counterparties.counterparty', 'currencies.currency'].indexOf(contentType) > -1 ) {
                         getFieldsP = getFields();
 
                     } else {
-                        getFieldsP = fieldResolverService.getFieldsByContentType(scope.item.content_type, options, scope.fieldsDataStore);
+                        getFieldsP = fieldResolverService.getFieldsByContentType(contentType, options, scope.fieldsDataStore);
                     }
 
                     getFieldsP.then(function (res) {
@@ -413,6 +398,37 @@
 
                 }
 
+                /** @returns {Promise<{type: String, key: String, data: Array}>} - mockup for instrumentSelect, unifiedDataSelect  */
+                function getEmptyFields() {
+
+                    return new Promise(function (resolve) {
+
+                        resolve({
+                            type: 'id',
+                            key: scope.item.content_type,
+                            data: [],
+                        })
+
+                    });
+
+                }
+
+                function getFields (options) {
+
+                    if ( ['instruments.instrument', 'counterparties.counterparty', 'currencies.currency'].indexOf(contentType) > -1 ) {
+
+                        return getEmptyFields();
+
+                    } else if (scope.entityType === 'complex-transaction') {
+
+                        return fieldResolverService.getFieldsByContentType(contentType, options, scope.fieldsDataStore);
+
+                    } else {
+                        return fieldResolverService.getFields(scope.item.key, options, scope.fieldsDataStore)
+                    }
+
+                }
+
                 scope.getData = function () {
 
                     return new Promise(function (resolve, reject) {
@@ -429,7 +445,12 @@
                                 options.key = scope.options.key;
                             }
 
-                            if (scope.entityType === 'complex-transaction') {
+                            /*if (scope.fieldsDataStore['fieldKeys']) {
+                                delete scope.fieldsDataStore['fieldKeys']['currencies.currency']
+                                delete scope.fieldsDataStore['fieldKeys']['instruments.instrument']
+                            }*/
+
+                            /*if (scope.entityType === 'complex-transaction') {
 
                                 console.log('scope.fieldsDataStore', scope.fieldsDataStore);
 
@@ -460,7 +481,26 @@
                                 });
 
 
-                            }
+                            }*/
+                            getFields().then(function (res) {
+
+                                scope.type = res.type;
+                                scope.fields = res.data;
+                                // scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
+
+                                if (scope.fieldKey === 'price_download_scheme') {
+                                    scope.schemeSortedFields = scope.getListWithSchemeName( metaHelper.textWithDashSort(res.data, 'user_code') );
+
+                                } else {
+                                    scope.selectorOptions = getSelectorOptions(res.data);
+                                }
+
+                                scope.readyStatus.content = true;
+                                fieldsDataIsLoaded = true;
+
+                                resolve();
+                                // scope.$apply();
+                            });
 
                         } else {
                             resolve();

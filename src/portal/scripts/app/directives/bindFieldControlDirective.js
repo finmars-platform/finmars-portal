@@ -24,7 +24,7 @@
                 evEditorEventService: "=",
                 entityChange: "&?",
                 onFieldBlur: "&?", // for now implemented only for textInputDirective,
-                fieldsDataStore: '='
+                fieldsDataStore: '=', // for now used only by complex transaction
             },
             templateUrl: "views/directives/bind-field-control-view.html",
             controllerAs: 'vm',
