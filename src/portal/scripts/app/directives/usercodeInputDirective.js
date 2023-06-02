@@ -71,7 +71,8 @@
                         convertedUserCode = replaceSpecialCharsAndSpaces(scope.usercode.value).toLowerCase();
                     }
 
-                    scope.item.user_code = assembleUserCode(usercode);
+                    // scope.item.user_code = assembleUserCode(usercode);
+                    scope.item.user_code = assembleUserCode(convertedUserCode);
 
                     scope.item.configuration_code = scope.configuration_code.value;
 
