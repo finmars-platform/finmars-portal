@@ -403,12 +403,13 @@
                                  data-ng-repeat="field in tab.layout.fields | orderBy: 'column' track by $index"
                                  flex="{{vm.bindFlex(tab, field)}}"
                                  data-ng-if="vm.checkFieldRender(tab, row, field)">
-                                <bind-field-control entity-type="vm.entityType"
-                                                    entity="vm.entity"
-                                                    entity-change="vm.onEntityChange(fieldKey, fieldType)"
-                                                    ev-editor-data-service="vm.evEditorDataService"
-                                                    ev-editor-event-service="vm.evEditorEventService"
-                                                    item="vm.attributesLayout[tab.tabOrder][field.row][field.column]">
+                                <bind-field-control data-entity-type="vm.entityType"
+                                                    data-entity="vm.entity"
+                                                    data-entity-change="vm.onEntityChange(fieldKey, fieldType)"
+                                                    data-ev-editor-data-service="vm.evEditorDataService"
+                                                    data-ev-editor-event-service="vm.evEditorEventService"
+                                                    data-item="vm.attributesLayout[tab.tabOrder][field.row][field.column]"
+                                                    data-fields-data-store="vm.fieldsDataStore">
                                 </bind-field-control>
                             </div>
                         </div>
