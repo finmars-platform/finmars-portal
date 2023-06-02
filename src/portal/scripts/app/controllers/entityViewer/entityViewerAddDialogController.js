@@ -83,6 +83,8 @@
 
         vm.canManagePermissions = false;
 
+        vm.fieldsDataStore = {};
+
         vm.attributeTypesByValueTypes = {}; // need for pricing;
 
         vm.currencies = []; // need for instrument pricing tab;
