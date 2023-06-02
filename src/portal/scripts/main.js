@@ -748,6 +748,9 @@ export default (function () {
     portal.controller('PricingPolicyAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingPolicyAddDialogController')]);
     portal.controller('PricingPolicyEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingPolicyEditDialogController')]);
 
+    portal.controller('TransactionTypeGroupDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transactionTypeGroupDialogController')]);
+    portal.controller('TransactionTypeGroupPageController', ['$scope', '$mdDialog', require('./app/controllers/pages/transactionTypeGroupPageController')]);
+
 
     portal.controller('PricingMultipleParametersDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingMultipleParametersDialogController')]);
 
