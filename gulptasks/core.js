@@ -379,6 +379,7 @@
             'src/core/ace/ext-language_tools.js',
             'src/core/ace/ext-searchbox.js',
             'src/core/ace/mode-json.js',
+            'src/core/ace/mode-yaml.js',
             'src/core/ace/mode-python.js',
             'src/core/ace/mode-css.js',
             'src/core/ace/mode-html.js',
