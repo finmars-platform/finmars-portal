@@ -146,6 +146,10 @@
                     vm.editor.getSession().setMode("ace/mode/yaml");
                 }
 
+                if (vm.fileEditor.name.indexOf('.yml') !== -1) {
+                    vm.editor.getSession().setMode("ace/mode/yaml");
+                }
+
                 if (vm.fileEditor.name.indexOf('.html') !== -1) {
                     vm.editor.getSession().setMode("ace/mode/html");
                 }
