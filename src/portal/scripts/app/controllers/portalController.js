@@ -56,8 +56,6 @@ export default function ($scope, $state, authorizerService, usersService, global
                 globalDataService.setMember(member);
             }
 
-            globalDataService.setMemberLayout( res[1] );
-
         } catch(error) {
             console.error(error);
             throw error;

@@ -784,8 +784,25 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
 
     };
 
-    const getDefaultMemberLayout = function () {
-        return uiRepository.getDefaultMemberLayout();
+    const getDefaultMemberLayout = async function () {
+
+        try {
+            const data = uiRepository.getDefaultMemberLayout();
+            console.log("testing1570.uiServiceNew getDefaultMemberLayout data", data);
+            if (!data.data.favorites) {
+                data.data.favorites = {};
+            }
+
+            if (!data.data.favorites.attributes) {
+                data.data.favorites.attributes = {};
+            }
+            console.log("testing1570.uiServiceNew getDefaultMemberLayout result", data);
+            globalDataService.setMemberLayout(data);
+
+            return data;
+
+        } catch (error) { throw error; }
+
     }
 
     const updateMemberLayout = async function (id, ui) {
