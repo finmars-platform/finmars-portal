@@ -79,7 +79,7 @@
                     <div class="select-options-holder">
 
                         <md-option ng-repeat="item in currencies | filter:{name: searchTerm}"
-                                   ng-value="item.id">
+                                   ng-value="item.user_code">
                             {{item.name}}
                         </md-option>
 
