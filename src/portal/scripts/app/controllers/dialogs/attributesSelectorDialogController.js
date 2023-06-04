@@ -32,7 +32,7 @@ export default function ($scope, $mdDialog, toastNotificationService, uiService,
 
     const initSettings = {
         selectedAttributes: data.selectedAttributes || [],
-        favoriteAttributes: memberLayout || [],
+        favoriteAttributes: memberLayout.favorites.attributes[contentType] || [],
     };
 
     if (data.title) initSettings.title = data.title;
