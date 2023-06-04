@@ -5,8 +5,9 @@
 import UiRepository from "../repositories/uiRepository";
 import localStorageService from "../../../../shell/scripts/app/services/localStorageService";
 import metaService from "./metaService";
+import globalDataService from "../../../../shell/scripts/app/services/globalDataService";
 
-export default function (cookieService, xhrService, ecosystemDefaultService, metaContentTypesService) {
+export default function (cookieService, xhrService, ecosystemDefaultService, metaContentTypesService, globalDataService) {
 
     const uiRepository = new UiRepository(cookieService, xhrService, metaContentTypesService);
 
@@ -782,6 +783,22 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
         });
 
     };
+
+    const getDefaultMemberLayout = function () {
+        return uiRepository.getDefaultMemberLayout();
+    }
+
+    const updateMemberLayout = async function (id, ui) {
+
+        try {
+            const data = await uiRepository.updateMemberLayout(id, ui);
+            console.log("testing1570.uiServiceNew updateMemberLayout data", data);
+            globalDataService.setMemberLayout(data);
+
+        } catch (error) { throw error; }
+
+    };
+
     /** @module uiService */
     return {
         isCachedLayoutActual: isCachedLayoutActual,
@@ -879,6 +896,8 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
         updateColumnSortData: updateColumnSortData,
         deleteColumnSortData: deleteColumnSortData,
 
+        getDefaultMemberLayout: getDefaultMemberLayout,
+        updateMemberLayout: updateMemberLayout,
 
     }
 

@@ -177,7 +177,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/?is_default=2&content_type=' + contentType,
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/list-layout/?is_default=True&content_type=' + contentType,
             getRequestParams('GET'))
     };
 
@@ -308,7 +308,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/?is_default=2&content_type=' + contentType,
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/edit-layout/?is_default=True&content_type=' + contentType,
             getRequestParams('GET'))
     };
 
@@ -580,7 +580,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/?is_default=2',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/dashboard-layout/?is_default=True',
             getRequestParams('GET'))
     };
 
@@ -644,7 +644,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/?is_default=2',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/template-layout/?is_default=True',
             getRequestParams('GET'))
     };
 
@@ -875,6 +875,24 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         })
     };
 
+    var getDefaultMemberLayout = function () {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/member-layout/?is_default=True',
+            getRequestParams('GET'))
+    };
+
+    var updateMemberLayout = function (id, ui) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/member-layout/' + id + '/',
+            getRequestParams('PUT', ui));
+    };
+
     return {
 
         getPortalInterfaceAccess: getPortalInterfaceAccess,
@@ -970,6 +988,8 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         updateColumnSortData: updateColumnSortData,
         deleteColumnSortData: deleteColumnSortData,
 
+        getDefaultMemberLayout: getDefaultMemberLayout,
+        updateMemberLayout: updateMemberLayout,
 
     }
 
