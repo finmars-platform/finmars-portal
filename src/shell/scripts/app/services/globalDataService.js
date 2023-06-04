@@ -7,6 +7,7 @@ export default function () {
 	let data = {
 		masterUser: null,
 		member: null,
+		memberLayout: null,
 		user: null,
 
 	};
@@ -114,6 +115,13 @@ export default function () {
 
 	};
 
+	const setMemberLayout = function (layout) {
+		data.memberLayout = layout;
+		console.log("testing1570.globalDataService memberLayout", data.memberLayout);
+	}
+
+	const getMemberLayout = () => data.memberLayout;
+
 	const isAutosaveLayoutOn = function () {
 
 		const user = getUser();
@@ -165,6 +173,8 @@ export default function () {
 		getMember: getMember,
 		getMemberEntityViewersSettings: getMemberEntityViewersSettings,
 		setMemberEntityViewersSettings: setMemberEntityViewersSettings,
+		setMemberLayout: setMemberLayout,
+		getMemberLayout: getMemberLayout,
 
 		isAutosaveLayoutOn: isAutosaveLayoutOn,
 
