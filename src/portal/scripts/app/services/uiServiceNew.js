@@ -787,7 +787,7 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
     const getDefaultMemberLayout = async function () {
 
         try {
-            let data = uiRepository.getDefaultMemberLayout();
+            let data = await uiRepository.getDefaultMemberLayout();
 
             data = data.results[0] || {};
             console.log("testing1570.uiServiceNew getDefaultMemberLayout data", data);
