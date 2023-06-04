@@ -787,14 +787,16 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
     const getDefaultMemberLayout = async function () {
 
         try {
-            const data = uiRepository.getDefaultMemberLayout();
+            let data = uiRepository.getDefaultMemberLayout();
+
+            data = data.results[0] || {};
             console.log("testing1570.uiServiceNew getDefaultMemberLayout data", data);
-            if (!data.data.favorites) {
-                data.data.favorites = {};
+            if (!data.favorites) {
+                data.favorites = {};
             }
 
-            if (!data.data.favorites.attributes) {
-                data.data.favorites.attributes = {};
+            if (!data.favorites.attributes) {
+                data.favorites.attributes = {};
             }
             console.log("testing1570.uiServiceNew getDefaultMemberLayout result", data);
             globalDataService.setMemberLayout(data);
