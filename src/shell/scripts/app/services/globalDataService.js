@@ -117,7 +117,6 @@ export default function () {
 
 	const setMemberLayout = function (layout) {
 		data.memberLayout = layout;
-		console.log("testing1570.globalDataService memberLayout", data.memberLayout);
 	}
 
 	const getMemberLayout = () => data.memberLayout;
