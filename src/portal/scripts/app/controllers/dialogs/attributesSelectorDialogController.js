@@ -32,7 +32,7 @@ export default function ($scope, $mdDialog, toastNotificationService, uiService,
 
     const initSettings = {
         selectedAttributes: data.selectedAttributes || [],
-        favoriteAttributes: memberLayout.favorites.attributes[contentType] || [],
+        favoriteAttributes: memberLayout.data.favorites.attributes[contentType] || [],
     };
 
     if (data.title) initSettings.title = data.title;
@@ -98,8 +98,8 @@ export default function ($scope, $mdDialog, toastNotificationService, uiService,
         });
 
         const memberLayout = globalDataService.getMemberLayout();
-        memberLayout.favorites.attributes[contentType] = favAttrsData;
-        initSettings.favoriteAttributes = memberLayout.favorites.attributes[contentType];
+        memberLayout.data.favorites.attributes[contentType] = favAttrsData;
+        initSettings.favoriteAttributes = memberLayout.data.favorites.attributes[contentType];
 
         /*usersService.updateMember(member.id, member).then(() => {
             toastNotificationService.success('Favorite attributes updated.');
