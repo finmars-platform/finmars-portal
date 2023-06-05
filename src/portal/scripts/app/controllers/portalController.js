@@ -47,7 +47,7 @@ export default function ($scope, $state, authorizerService, usersService, global
                 usersService.getMyCurrentMember(),
                 uiService.getDefaultMemberLayout(),
             ]);
-            console.log("testing1570 res ", res);
+
             const member = res[0]
 
             // enable by default list layout autosave
