@@ -8,7 +8,7 @@ import utilsHelper from "../helpers/utils.helper";
 
 const localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
 
-export default function (metaContentTypesService, uiService, reportHelper) {
+export default function (metaContentTypesService, uiService, reportHelper, globalDataService) {
 
     //region Autosave requests
     /**
@@ -136,7 +136,8 @@ export default function (metaContentTypesService, uiService, reportHelper) {
     };
 
     const getAutosaveLayoutUserCode = function (contentType) {
-        return `com.finmars.local:${contentType}:autosave`;
+        // return `com.finmars.local:${contentType}:autosave`;
+        return globalDataService.getDefaultConfigurationCode() + `:${contentType}:autosave`;
     };
 
     const autosaveListLayout = function (evDataService, isReport) {

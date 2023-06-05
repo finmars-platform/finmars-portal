@@ -16,6 +16,8 @@
 
         vm.item = {}
 
+        vm.defaultConfigurationCode = globalDataService.getDefaultConfigurationCode();
+
         vm.checkReadyStatus = function () {
             return vm.readyStatus.data;
         };
