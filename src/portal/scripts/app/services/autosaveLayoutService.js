@@ -45,7 +45,7 @@ export default function (metaContentTypesService, uiService, reportHelper, globa
 
     const updateUsingCachedLayout = function (cachedLayout, layout, entityType) {
 
-        return new Promise (async function (resolve, reject) {
+        return new Promise(async function (resolve, reject) {
 
             try {
 
@@ -121,8 +121,7 @@ export default function (metaContentTypesService, uiService, reportHelper, globa
 
                 }).catch(error => reject(error));
 
-            }
-            else {
+            } else {
 
                 updateUsingUserCode(layout, entityType).then(updatedLayoutData => {
                     resolve(updatedLayoutData)
@@ -154,6 +153,7 @@ export default function (metaContentTypesService, uiService, reportHelper, globa
             layout.name = "Autosave";
 
             layout.user_code = getAutosaveLayoutUserCode(layout.content_type);
+            layout.configuration_code = globalDataService.getDefaultConfigurationCode();
 
             // In case of auto saving default layout
             layout.is_default = !!layout.is_systemic && layout.is_default;
@@ -163,20 +163,20 @@ export default function (metaContentTypesService, uiService, reportHelper, globa
 
             const entityType = metaContentTypesService.findEntityByContentType(layout.content_type);
 
-/*            setTimeout(function () {
+            /*            setTimeout(function () {
 
-                layout.modified = Date.now();
+                            layout.modified = Date.now();
 
-                evDataService.setListLayout(layout);
-                evDataService.setActiveLayoutConfiguration({layoutConfig: layout});
+                            evDataService.setListLayout(layout);
+                            evDataService.setActiveLayoutConfiguration({layoutConfig: layout});
 
-                resolve({message: 'layout ready', layoutToSave: layout});
-            }, 4000);*/
+                            resolve({message: 'layout ready', layoutToSave: layout});
+                        }, 4000);*/
             updateAutosaveListLayout(cachedLayout, layout, entityType).then(function (updateData) {
 
                 if (updateData === "Layout does not exist.") {
 
-                     uiService.createListLayout(entityType, layout).then(function (createdLayoutData) {
+                    uiService.createListLayout(entityType, layout).then(function (createdLayoutData) {
 
                         // evDataService.setListLayout(createdLayoutData);
                         // evDataService.setActiveLayoutConfiguration({layoutConfig: createdLayoutData});
@@ -419,7 +419,7 @@ export default function (metaContentTypesService, uiService, reportHelper, globa
 
         let alQueueService = new QueuePromisesService();
 
-         autosaveLayout = utilsHelper.throttle(function () {
+        autosaveLayout = utilsHelper.throttle(function () {
 
             const autosavePromFn = function () {
 
@@ -435,7 +435,7 @@ export default function (metaContentTypesService, uiService, reportHelper, globa
 
             alQueueService.enqueue(autosavePromFn);
 
-        }, 5*1000);
+        }, 5 * 1000);
 
         const groupsChangeEventIndex = evEventService.addEventListener(evEvents.GROUPS_CHANGE, function () {
 
@@ -630,8 +630,7 @@ export default function (metaContentTypesService, uiService, reportHelper, globa
 
             });
 
-        }
-        else {
+        } else {
 
             evSettingsIndex = evEventService.addEventListener(evEvents.ENTITY_VIEWER_SETTINGS_CHANGED, function () {
 
