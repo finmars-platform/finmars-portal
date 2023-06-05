@@ -789,16 +789,18 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
         try {
             let data = await uiRepository.getDefaultMemberLayout();
 
-            data = data.results[0] || {};
-            console.log("testing1570.uiServiceNew getDefaultMemberLayout data", data);
-            if (!data.favorites) {
-                data.favorites = {};
+            data = data.results[0];
+
+            if (!data.data) data.data = {};
+
+            if (!data.data.favorites) {
+                data.data.favorites = {};
             }
 
-            if (!data.favorites.attributes) {
-                data.favorites.attributes = {};
+            if (!data.data.favorites.attributes) {
+                data.data.favorites.attributes = {};
             }
-            console.log("testing1570.uiServiceNew getDefaultMemberLayout result", data);
+
             globalDataService.setMemberLayout(data);
 
             return data;
@@ -811,7 +813,7 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
 
         try {
             const data = await uiRepository.updateMemberLayout(id, ui);
-            console.log("testing1570.uiServiceNew updateMemberLayout data", data);
+
             globalDataService.setMemberLayout(data);
 
         } catch (error) { throw error; }
