@@ -22,7 +22,6 @@ export default function ($scope, $mdDialog, toastNotificationService, uiService,
     let iframeElem;
     let iframeWindow; // iframeElem.contentWindow;
 
-    const member = globalDataService.getMember();
     let memberLayout = globalDataService.getMemberLayout();
 
     const contentType = data.contentType;
@@ -105,7 +104,7 @@ export default function ($scope, $mdDialog, toastNotificationService, uiService,
         /*usersService.updateMember(member.id, member).then(() => {
             toastNotificationService.success('Favorite attributes updated.');
         });*/
-        uiService.updateMemberLayout(member.id, memberLayout).then(() => {
+        uiService.updateMemberLayout(memberLayout.id, memberLayout).then(() => {
             toastNotificationService.success('Favorite attributes updated.');
         });
 
