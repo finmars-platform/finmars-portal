@@ -273,6 +273,9 @@
 
         vm.installConfiguration = function ($event, item) {
 
+            $event.preventDefault();
+            $event.stopPropagation();
+
             console.log("Install configuration", item);
 
             configurationService.installConfiguration({
