@@ -152,8 +152,8 @@ export default function (metaContentTypesService, uiService, reportHelper, globa
 
             layout.name = "Autosave";
 
-            layout.user_code = getAutosaveLayoutUserCode(layout.content_type);
-            layout.configuration_code = globalDataService.getDefaultConfigurationCode();
+            layout.user_code = getAutosaveLayoutUserCode(layout.content_type); // Important
+            layout.configuration_code = globalDataService.getDefaultConfigurationCode(); // Important as well
 
             // In case of auto saving default layout
             layout.is_default = !!layout.is_systemic && layout.is_default;
