@@ -161,6 +161,12 @@ export default function () {
 		return iframeMode;
 	}
 
+	const getDefaultConfigurationCode = function (){
+
+		return 'local.poms.' + data.masterUser.base_api_url
+
+	}
+
 	return {
 		setCurrentMasterUserStatus: setCurrentMasterUserStatus,
 		doUserHasCurrentMasterUser: doUserHasCurrentMasterUser,
@@ -182,6 +188,8 @@ export default function () {
 
 		setIframeMode: setIframeMode,
 		insideIframe: insideIframe,
+
+		getDefaultConfigurationCode: getDefaultConfigurationCode
 	}
 
 };

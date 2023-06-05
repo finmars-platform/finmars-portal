@@ -8,7 +8,7 @@
     const metaHelper = require("../helpers/meta.helper");
     const utilsHelper = require("../helpers/utils.helper");
 
-    module.exports = function (configurationService) {
+    module.exports = function (configurationService, globalDataService) {
         return {
             restrict: 'E',
             templateUrl: 'views/directives/usercode-input-view.html',
@@ -18,9 +18,10 @@
                 occupiedUserCodes: '<',
             },
             link: function (scope, elem, attrs) {
-
+                
                 scope.configuration_code = {
-                    value: 'com.finmars.local'
+                    // value: 'com.finmars.local'
+                    value:  globalDataService.getDefaultConfigurationCode()
                 };
 
                 scope.usercode = {
@@ -93,14 +94,14 @@
 
                     const userCode = assembleUserCode(userCodeVal);
 
-                    if ( Array.isArray(scope.occupiedUserCodes) &&
-                        scope.occupiedUserCodes.includes(userCode) ) {
+                    if (Array.isArray(scope.occupiedUserCodes) &&
+                        scope.occupiedUserCodes.includes(userCode)) {
 
                         scope.errorData.value = 'User code should be unique.';
 
                     }
 
-                    setErrorDescriptionD( scope.errorData.value );
+                    setErrorDescriptionD(scope.errorData.value);
 
                 }
 
@@ -112,7 +113,7 @@
 
                     const parts = scope.item.user_code.split(':');
 
-                    switch ( parts.length ) {
+                    switch (parts.length) {
 
                         case 1:
                             scope.usercode.value = parts[0];
