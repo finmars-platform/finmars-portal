@@ -276,7 +276,7 @@
 
         vm.showLinkingToFilters = function () {
 
-            for (var i = 0; i < vm.layouts.length; i++) {
+            /*for (var i = 0; i < vm.layouts.length; i++) {
 
                 if (vm.layouts[i].id === vm.item.settings.layout) {
 
@@ -287,7 +287,8 @@
 
                 }
 
-            }
+            }*/
+            vm.linkingToFilters = dashboardConstructorMethodsService.showLinkingToFilters(vm.layouts, vm.item.settings.layout);
 
         };
 
@@ -312,13 +313,16 @@
                 delete vm.item.settings.ticks_number;
             }
 
-            vm.layouts.forEach(function (layout) {
+            /*vm.layouts.forEach(function (layout) {
 
                 if (layout.id === vm.item.settings.layout) {
                     layoutName = layout.name;
                 }
 
-            });
+            });*/
+            var selLayout = vm.layouts.find(layout => layout.user_code === vm.item.settings.layout);
+
+            if (selLayout) layoutName = selLayout.name;
 
             vm.item.settings.layout_name = layoutName;
             vm.item.settings.content_type = vm.getContentTypeByEntityType();
@@ -439,7 +443,7 @@
 
 			vm.getAttributes();
 			// vm.getLayouts();
-			dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts()).then(function (layoutsSelectorsList) {
+			dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts(), true).then(function (layoutsSelectorsList) {
 				vm.layoutsSelectorsList = layoutsSelectorsList;
 				vm.readyStatus.layouts = true;
 				$scope.$apply();

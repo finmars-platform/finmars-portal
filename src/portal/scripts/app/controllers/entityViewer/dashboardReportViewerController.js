@@ -24,7 +24,7 @@
 	var dashboardEvents = require('../../services/dashboard/dashboardEvents');
 	var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-        module.exports = function ($scope, $mdDialog, toastNotificationService, usersService, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, customFieldService, attributeTypeService, uiService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper, gFiltersHelper, dashboardHelper) {
+    module.exports = function ($scope, $mdDialog, toastNotificationService, usersService, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, customFieldService, attributeTypeService, uiService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper, gFiltersHelper, dashboardHelper) {
 
 		var vm = this;
 
@@ -45,6 +45,8 @@
 		vm.grandTotalProcessing = true;
 
 		vm.linkedActiveObjects = {}; // If we have several components linked to spit panel;
+
+		var contentType;
 		var lastActiveComponentId;
 		var savedInterfaceLayout;
 		var savedAddtions;
@@ -1887,6 +1889,8 @@
 		var setDataFromDashboard = function () {
 
 			vm.entityType = $scope.$parent.vm.entityType;
+			contentType = $scope.$parent.vm.contentType;
+
 			vm.componentData = $scope.$parent.vm.componentData;
 			vm.userSettings = vm.componentData.user_settings;
 			vm.dashboardComponentElement = $scope.$parent.vm.componentElement;
@@ -2001,7 +2005,7 @@
 
 		};
 
-		let getLayoutById = function (layoutId) {
+		/*let getLayoutById = function (layoutId) {
 
 			return new Promise(function (resolve, reject) {
 
@@ -2026,6 +2030,49 @@
 				}
 
 			});
+
+		};*/
+
+		let getLayoutByUserCode = function (userCode) {
+
+			const cachedLayoutsData = vm.dashboardDataService.getCachedLayoutsData();
+
+			if ( !cachedLayoutsData[contentType] ) {
+				cachedLayoutsData[contentType] = {};
+			}
+
+			if ( cachedLayoutsData[contentType].hasOwnProperty(userCode) ) {
+
+				const layoutId = cachedLayoutsData[contentType][userCode];
+
+				return new Promise(function (resolve) {
+					resolve( localStorageService.getCachedLayout(layoutId) );
+				});
+
+			}
+			else {
+
+				return new Promise(function (resolve, reject) {
+
+					uiService.getListLayoutByUserCode(vm.entityType, userCode).then(function (resData) {
+
+						if ( resData.results.length ) {
+
+							var layoutData = resData.results[0];
+
+							vm.dashboardDataService.setCachedLayoutsData(contentType, userCode, layoutData.id);
+
+							resolve(layoutData);
+
+						} else {
+							reject(`No layout with user code: ${userCode} found.`);
+						}
+
+					}).catch(function (error) { reject(error); });
+
+				});
+
+			}
 
 		};
 
@@ -2064,13 +2111,12 @@
 			vm.entityViewerDataService.setRootEntityViewer(true);
 			vm.entityViewerDataService.setUseFromAbove(true);
 
-			var layoutId = vm.componentData.settings.layout;
+			// var layoutId = vm.componentData.settings.layout;
+			var layoutUc = vm.componentData.settings.layout;
 
 			var setLayoutPromise = new Promise(function (resolve, reject) {
 
-				// uiService.getListLayoutByKey(layoutId).then(function (data) {
-				getLayoutById(layoutId).then(function (data) {
-
+				getLayoutByUserCode(layoutUc).then(function (data) {
 					// vm.layout = data;
 
 					vm.setLayout(data).then(function () {
