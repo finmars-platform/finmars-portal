@@ -15,7 +15,7 @@ import uiService from "../../../services/uiService";
     var shareConfigurationFileService = require('../../../services/shareConfigurationFileService');
     // var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
 
-    module.exports = function ($scope, $mdDialog, metaContentTypesService, uiService, backendConfigurationImportService, reportHelper, options) {
+    module.exports = function ($scope, $mdDialog, metaContentTypesService, uiService, backendConfigurationImportService, reportHelper,globalDataService, options) {
 
         var vm = this;
 
@@ -30,7 +30,7 @@ import uiService from "../../../services/uiService";
         var contentType = metaContentTypesService.findContentTypeByEntity(options.entityType);
         var splitPanelLayoutId = null;
 
-        var autosaveLayoutService = new AutosaveLayoutService(metaContentTypesService, uiService, reportHelper);
+        var autosaveLayoutService = new AutosaveLayoutService(metaContentTypesService, uiService, reportHelper, globalDataService);
 
         if (!isRootEntityViewer) {
             var spDefaultLayoutData = entityViewerDataService.getSplitPanelDefaultLayout();

@@ -643,7 +643,7 @@ export default (function () {
     // Layouts
 
     portal.controller('UiLayoutListInvitesDialogController', ['$scope', '$mdDialog', 'backendConfigurationImportService', 'options', require('./app/controllers/dialogs/ui/uiLayoutListInvitesDialogController')]);
-    portal.controller('UiLayoutListDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'uiService', 'backendConfigurationImportService', 'reportHelper', 'options', require('./app/controllers/dialogs/ui/uiLayoutListDialogController')]);
+    portal.controller('UiLayoutListDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'uiService', 'backendConfigurationImportService', 'reportHelper', 'globalDataService', 'options', require('./app/controllers/dialogs/ui/uiLayoutListDialogController')]);
     portal.controller('UiShareLayoutDialogController', ['$scope', '$mdDialog', 'options', require('./app/controllers/dialogs/ui/uiShareLayoutDialogController')]);
     portal.controller('UiLayoutSaveAsDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'commonDialogsService', 'data', require('./app/controllers/dialogs/ui/uiLayoutSaveAsDialogController')]);
     portal.controller('SelectLayoutDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'uiService', 'options', require('./app/controllers/dialogs/selectLayoutDialogController')]);
@@ -890,7 +890,7 @@ export default (function () {
     portal.directive('ttypeActionsRelationsSelect', [require('./app/directives/ttypeActionsRelationsSelectDirective')]);
     portal.directive('entitySearchSelect', ['$mdDialog', 'metaContentTypesService', require('./app/directives/customInputs/entitySearchSelect')]);
     portal.directive('crudSelect', ['$mdDialog', require('./app/directives/crudSelect')]);
-    portal.directive('usercodeInput', ['configurationService', require('./app/directives/usercodeInputDirective')]);
+    portal.directive('usercodeInput', ['configurationService', 'globalDataService', require('./app/directives/usercodeInputDirective')]);
     portal.directive('twoFieldsMultiselect', ['$mdDialog', require('./app/directives/twoFieldsMultiselectDirective')]);
     portal.directive('twoFieldsOptions', [require('./app/directives/twoFieldsOptionsDirective')]);
     portal.directive('tableAttributeSelector', ['$mdDialog', require('./app/directives/tableAttributeSelectorDirective')]);
