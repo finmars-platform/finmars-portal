@@ -185,7 +185,7 @@
 
                                 </div>
 
-                                <div class="p-8" data-ng-if="vm.item.configuration_code != 'com.finmars.local'">
+                                <div class="p-8" data-ng-if="vm.item.configuration_code != vm.defaultConfigurationCode">
 
                                     <p>This action will trigger <b>save</b> and export current saved configuration (in
                                         System Storage) as zip to
@@ -267,7 +267,7 @@
             &nbsp;
 
             <md-button class="md-raised md-warn" ng-click="vm.deleteConfiguration($event)"
-                       data-ng-if="vm.item.id && vm.item.configuration_code != 'com.finmars.local'">
+                       data-ng-if="vm.item.id && vm.item.configuration_code != vm.defaultConfigurationCode">
                 Delete
             </md-button>
 

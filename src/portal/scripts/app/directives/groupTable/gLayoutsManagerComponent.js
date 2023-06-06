@@ -48,7 +48,7 @@ import evEvents from "../../services/entityViewerEvents";
                 const isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 let splitPanelLayoutId = null;
 				let spDefaultLayoutData = null;
-                let autosaveLayoutService = new AutosaveLayoutService(metaContentTypesService, uiService, reportHelper);
+                let autosaveLayoutService = new AutosaveLayoutService(metaContentTypesService, uiService, reportHelper, globalDataService);
 
                 if (!isRootEntityViewer) {
                     spDefaultLayoutData = scope.evDataService.getSplitPanelDefaultLayout();

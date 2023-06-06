@@ -45,7 +45,7 @@
         vm.layoutUserCode = "";
 
         var fullRowUserInputsList = entityDataConstructorService.fullRowUserInputsList;
-		var dialogParent = document.querySelector('.dialog-containers-wrap');
+        var dialogParent = document.querySelector('.dialog-containers-wrap');
 
         var defaultUserCode = metaContentTypesService.getEntityNameByContentType(vm.targetContentType);
         defaultUserCode = defaultUserCode.toLowerCase().replace(' ', '_') + '_default';
@@ -188,8 +188,7 @@
 
                     resolveLayout();
 
-                }
-                else {
+                } else {
 
                     // for complex transaction edit layout stored inside transaction type object
                     if (vm.entityType === "complex-transaction") {
@@ -200,6 +199,7 @@
 
                                 if (data.book_transaction_layout) {
                                     vm.ui = data.book_transaction_layout;
+
                                 } else {
 
                                     vm.formLayoutIsNew = true;
@@ -217,8 +217,7 @@
 
                         }
 
-                    }
-                    else {
+                    } else {
 
                         if (vm.layoutId || vm.layoutId === 0) {
 
@@ -236,9 +235,8 @@
                                 if (data.results.length) {
                                     vm.ui = data.results[0];
 
-                                }
-                                else { // There is no layout yet, so create one
-                                	vm.formLayoutIsNew = true;
+                                } else { // There is no layout yet, so create one
+                                    vm.formLayoutIsNew = true;
                                     vm.ui = {
                                         user_code: defaultUserCode,
                                         data: {}
@@ -247,19 +245,35 @@
 
                                 resolveLayout();
 
-                            }).catch(error => reject(error));
+                            })
+                                .catch(error => {
+                                    // for entities that do not have edit layout?
+                                    console.error(error);
+
+                                    vm.ui = {
+                                        user_code: defaultUserCode,
+                                        data: {}
+                                    };
+
+                                    resolveLayout();
+
+                                });
 
                         }
 
                     }
 
                 }
+
+                /*
+                Causes error by calling vm.createFieldsTree() earlier than layout loaded
+
                 vm.ui = {
                     user_code: defaultUserCode,
                     data: {},
                 }
 
-                resolveLayout();
+                resolveLayout();*/
 
             });
 
@@ -300,7 +314,7 @@
             $mdDialog.show({
                 controller: 'TabsEditorDialogController as vm',
                 templateUrl: 'views/dialogs/tabs-editor-dialog-view.html',
-				parent: dialogParent,
+                parent: dialogParent,
                 multiple: true,
                 targetEvent: $event,
                 locals: {
@@ -645,7 +659,7 @@
             if (!notSavedTabExist) {
 
                 var uiData = vm.ui.data;
-                var tabsCopy = JSON.parse(angular.toJson( vm.tabs ));
+                var tabsCopy = JSON.parse(angular.toJson(vm.tabs));
 
                 for (var i = 0; i < tabsCopy.length; i = i + 1) {
                     removeLastRow(tabsCopy[i]);
@@ -671,19 +685,19 @@
 
                 var onSavingEnd = function (responseData) {
 
-					vm.processing = false;
-                	$scope.$apply(); // update scope in case of error from backend
+                    vm.processing = false;
+                    $scope.$apply(); // update scope in case of error from backend
 
-					var layoutId = vm.formLayoutIsNew ? responseData.id : vm.ui.id;
+                    var layoutId = vm.formLayoutIsNew ? responseData.id : vm.ui.id;
 
-					$mdDialog.hide({
-						status: 'agree',
-						data: {
-							id: layoutId,
-							user_code: vm.ui.user_code,
-							name: vm.ui.name,
-							is_default: vm.ui.is_default,
-						}
+                    $mdDialog.hide({
+                        status: 'agree',
+                        data: {
+                            id: layoutId,
+                            user_code: vm.ui.user_code,
+                            name: vm.ui.name,
+                            is_default: vm.ui.is_default,
+                        }
                     });
 
                 };
@@ -723,8 +737,7 @@
 
                 }
 
-            }
-            else {
+            } else {
 
                 vm.processing = false;
 
@@ -975,7 +988,7 @@
                     controller: 'WarningDialogController as vm',
                     templateUrl: 'views/dialogs/warning-dialog-view.html',
                     // targetEvent: $event,
-					parent: dialogParent,
+                    parent: dialogParent,
                     autoWrap: true,
                     skipHide: true,
                     multiple: true,
@@ -1008,7 +1021,7 @@
                 controller: 'AttributesManagerDialogController as vm',
                 templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
                 targetEvent: $event,
-				parent: dialogParent,
+                parent: dialogParent,
                 multiple: true,
                 preserveScope: false,
                 locals: {
@@ -1112,8 +1125,7 @@
                             }
                         }
 
-                    }
-                    else if (field.attribute_class === 'userInput') {
+                    } else if (field.attribute_class === 'userInput') {
 
                         for (u = 0; u < vm.userInputs.length; u = u + 1) {
 
@@ -1161,49 +1173,49 @@
 
         var fixTabSockets = function (tab) {
 
-			tab.layout.fields.forEach(function (field, fieldIndex) {
+            tab.layout.fields.forEach(function (field, fieldIndex) {
 
-				if (field.type === 'table') {
+                if (field.type === 'table') {
 
-					var rowsKeys = field.options.tableData.map(function (row) {
-						return row.key;
-					});
+                    var rowsKeys = field.options.tableData.map(function (row) {
+                        return row.key;
+                    });
 
-					var defaultTableSettings = vm.getTableDefaultSettings(field.attribute.key);
-					defaultTableSettings.tableData.forEach(function (row, index) {
+                    var defaultTableSettings = vm.getTableDefaultSettings(field.attribute.key);
+                    defaultTableSettings.tableData.forEach(function (row, index) {
 
-						if (rowsKeys.indexOf(row.key) < 0) {
-							row.to_show = false;
-							field.options.tableData.splice(index, 0, row);
-						}
+                        if (rowsKeys.indexOf(row.key) < 0) {
+                            row.to_show = false;
+                            field.options.tableData.splice(index, 0, row);
+                        }
 
-					});
+                    });
 
-				}
+                }
 
-			});
+            });
 
-			return tab;
+            return tab;
 
-		};
+        };
 
         var fixSocketsInsideLayout = function () {
 
-        	vm.tabs.forEach(function (tab, index) {
-				vm.tabs[index] = fixTabSockets(tab);
-			});
+            vm.tabs.forEach(function (tab, index) {
+                vm.tabs[index] = fixTabSockets(tab);
+            });
 
-			if (vm.fixedArea.isActive) {
-				vm.fixedArea = fixTabSockets(vm.fixedArea);
-			}
+            if (vm.fixedArea.isActive) {
+                vm.fixedArea = fixTabSockets(vm.fixedArea);
+            }
 
-		};
+        };
 
         /**
-		 * Get items for sockets of form's layout
-		 *
-		 * @returns {Promise<undefined>}
-		 */
+         * Get items for sockets of form's layout
+         *
+         * @returns {Promise<undefined>}
+         */
         vm.getItems = function () {
 
             return new Promise((resolve, reject) => {
@@ -1383,10 +1395,12 @@
 
                 switch (vm.entityType) {
 
-                    case 'complex-transaction':
-                    case 'transaction-type':
 
-                        doNotShowAttrs = ['transaction_type', 'code', 'date', 'status', 'text',
+                    case 'transaction-type':
+                        doNotShowAttrs = ['code'];
+                    case 'complex-transaction':
+
+                        doNotShowAttrs = doNotShowAttrs.concat(['transaction_type', 'date', 'status', 'text',
                             'user_text_1', 'user_text_2', 'user_text_3', 'user_text_4', 'user_text_5', 'user_text_6',
                             'user_text_7', 'user_text_8', 'user_text_9', 'user_text_10', 'user_text_1', 'user_text_11',
                             'user_text_12', 'user_text_13', 'user_text_14', 'user_text_15', 'user_text_16', 'user_text_17',
@@ -1398,17 +1412,17 @@
                             'user_number_3', 'user_number_4', 'user_number_5', 'user_number_6', 'user_number_7',
                             'user_number_8', 'user_number_9', 'user_number_10', 'user_number_11', 'user_number_12',
                             'user_number_13', 'user_number_14', 'user_number_15', 'user_number_16', 'user_number_17',
-                            'user_number_18', 'user_number_19', 'user_number_20', 'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5'];
+                            'user_number_18', 'user_number_19', 'user_number_20', 'user_date_1', 'user_date_2', 'user_date_3', 'user_date_4', 'user_date_5']);
 
                         break;
 
-					case 'strategy-1':
-					case 'strategy-2':
-					case 'strategy-3':
-					case 'responsible':
-					case 'counterparty':
-						doNotShowAttrs = ['group', 'subgroup'];
-						break;
+                    case 'strategy-1':
+                    case 'strategy-2':
+                    case 'strategy-3':
+                    case 'responsible':
+                    case 'counterparty':
+                        doNotShowAttrs = ['group', 'subgroup'];
+                        break;
 
                     /* case 'instrument':
 
@@ -1584,11 +1598,11 @@
             }
 
         };
-		/**
-		 *
-		 * @param attrKey {string}
-		 * @returns {Object|null}
-		 */
+        /**
+         *
+         * @param attrKey {string}
+         * @returns {Object|null}
+         */
         vm.getTableDefaultSettings = function (attrKey) {
 
             const entityTablesData = entityDataConstructorService.dataOfAttributes[vm.entityType];
@@ -2088,7 +2102,7 @@
             $mdDialog.show({
                 controller: previewController,
                 templateUrl: 'views/dialogs/data-constructor-forms-preview-dialog-view.html',
-				parent: dialogParent,
+                parent: dialogParent,
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 multiple: true,
@@ -2108,18 +2122,66 @@
             tabsHolderElem.style.height = elemThatSetsMaxHeight.clientHeight + 'px';
         };
 
+        vm.makeCopy = function ($event) {
+
+            var item = JSON.parse(JSON.stringify(vm.ui));
+
+            delete item.id;
+            item["user_code"] = item["user_code"] + '_copy';
+
+            $mdDialog.show({
+                controller: 'EntityDataConstructorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        item: item,
+                        entityType: vm.entityType,
+                    }
+                }
+            });
+
+            $mdDialog.hide({status: 'disagree'});
+
+        };
+
         vm.init = function () {
-
-
 
 
             window.addEventListener('resize', vm.setTabsHolderHeight);
 
             if (data.isCreateNew) {
-				vm.formLayoutIsNew = data.isCreateNew;
+                vm.formLayoutIsNew = data.isCreateNew;
             }
 
-            vm.getLayout().then(function () {
+
+            new Promise(function (resolve, reject) {
+
+                if (data.item) {
+
+                    vm.formLayoutIsNew = true;
+
+                    vm.ui = data.item;
+
+                    setDataConstructorLayout();
+
+                    vm.layoutUserCode = vm.ui.user_code;
+
+                    resolve()
+
+                } else {
+
+                    vm.getLayout().then(function () {
+                        resolve();
+                    })
+
+                }
+
+
+            }).then(function () {
+
+                console.log("Init layout finished, getting palettes...");
 
                 var palettesPromise = new Promise(function (res, rej) {
 
@@ -2133,7 +2195,7 @@
 
                 Promise.all([vm.getItems(), palettesPromise]).then(function () {
 
-					fixSocketsInsideLayout();
+                    fixSocketsInsideLayout();
                     vm.createFieldsTree();
 
                     if (vm.fixedArea.isActive) {
@@ -2155,7 +2217,9 @@
 
             });
 
+
         };
+
 
         vm.init();
 

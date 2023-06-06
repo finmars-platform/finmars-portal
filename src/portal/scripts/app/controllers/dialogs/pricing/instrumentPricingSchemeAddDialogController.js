@@ -190,7 +190,7 @@
 
         };
 
-        vm.removeTenor = function($event, item) {
+        vm.removeTenor = function ($event, item) {
 
             vm.item.type_settings.data.tenors.splice(item.index - 1, 1);
 
@@ -198,7 +198,7 @@
 
         };
 
-        vm.addTenor = function(){
+        vm.addTenor = function () {
 
             if (!vm.item.type_settings.data) {
                 vm.item.type_settings.data = {
@@ -219,7 +219,7 @@
 
         };
 
-        vm.refreshTenorIndexes = function(){
+        vm.refreshTenorIndexes = function () {
             vm.item.type_settings.data.tenors = vm.item.type_settings.data.tenors.map(function (item, index) {
 
                 item.index = index + 1;
@@ -229,7 +229,7 @@
             })
         };
 
-        vm.generateFunctionsForExpressionBuilder = function (){
+        vm.generateFunctionsForExpressionBuilder = function () {
 
             var result = []
 
@@ -238,9 +238,9 @@
                 "description": "-",
                 "groups": "context_var",
                 "func": "context_instrument",
-				"validation": {
-					"func": "context_instrument"
-				}
+                "validation": {
+                    "func": "context_instrument"
+                }
             })
 
             result.push({
@@ -248,9 +248,9 @@
                 "description": "-",
                 "groups": "context_var",
                 "func": "context_pricing_policy",
-				"validation": {
-					"func": "context_pricing_policy"
-				}
+                "validation": {
+                    "func": "context_pricing_policy"
+                }
             })
 
             result.push({
@@ -258,9 +258,9 @@
                 "description": "-",
                 "groups": "context_var",
                 "func": "context_date",
-				"validation": {
-					"func": "context_date"
-				}
+                "validation": {
+                    "func": "context_date"
+                }
             })
 
             return result
@@ -268,6 +268,10 @@
         }
 
         vm.init = function () {
+
+            if (data.item) {
+                vm.item = data.item;
+            }
 
             vm.getTypes();
             vm.getAttributeTypes();

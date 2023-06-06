@@ -130,11 +130,14 @@
 				popup.classList.add('ev-dropdown-opens-left');
 				popup.style.right = 0;
 
-			} else if (submenuItem && bodyWidth <= menuPosition.positionX + (popupMenuWidth * 2)) { // multiplying by 2 because of possibility of at least one submenu
-				popup.classList.add('ev-dropdown-opens-left');
-
 			} else {
+
+				if ( submenuItem && bodyWidth <= menuPosition.positionX + (popupMenuWidth * 2) ) { // multiplying by 2 because of the possibility of at least one submenu
+					popup.classList.add('ev-dropdown-opens-left');
+				}
+
 				popup.style.left = menuPosition.positionX + 'px';
+
 			}
 
 			var firstLevelOptionsNumber = menuOptionsContainer.childElementCount;

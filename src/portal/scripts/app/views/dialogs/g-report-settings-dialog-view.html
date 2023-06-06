@@ -458,6 +458,77 @@
 
                 </div>
 
+                <h5 class="default-f-s">Filters</h5>
+
+                <div class="flex-column">
+
+                    <div class="g-report-settings-row p-b-16">
+                        <div class="default-f-s">Portfolios multiselector</div>
+
+                        <two-fields-multiselect get-data-method="vm.getPortfolios(vm.optionsForMultiselect)"
+                                                model="vm.reportOptions.portfolios"
+                                                selected-items="vm.reportOptions.portfolios"
+                                                nothing-selected-text="Off"
+                                                selected-items-indication="chips"
+                                                name-property="short_name"
+                                                small-options="{tooltipText: 'Portfolios multiselector'}"
+                                                class="g-report-settings-field"></two-fields-multiselect>
+                    </div>
+
+                    <div class="g-report-settings-row p-b-16">
+                        <div class="default-f-s">Accounts multiselector</div>
+
+                        <two-fields-multiselect get-data-method="vm.getAccounts(vm.optionsForMultiselect)"
+                                                model="vm.reportOptions.accounts"
+                                                selected-items="vm.reportOptions.accounts"
+                                                nothing-selected-text="Off"
+                                                selected-items-indication="chips"
+                                                name-property="short_name"
+                                                small-options="{tooltipText: 'Accounts multiselector'}"
+                                                class="g-report-settings-field"></two-fields-multiselect>
+                    </div>
+
+                    <div class="g-report-settings-row p-b-16">
+                        <div class="default-f-s">Strategies 1 multiselector</div>
+
+                        <two-fields-multiselect get-data-method="vm.getStrategies1(vm.optionsForMultiselect)"
+                                                model="vm.reportOptions.strategies1"
+                                                data-selected-items="vm.reportOptions.strategies1"
+                                                nothing-selected-text="Off"
+                                                selected-items-indication="chips"
+                                                data-name-property="short_name"
+                                                small-options="{tooltipText: 'Strategies 1 multiselector'}"
+                                                class="g-report-settings-field"></two-fields-multiselect>
+                    </div>
+
+                    <div class="g-report-settings-row p-b-16">
+                        <div class="default-f-s">Strategies 2 multiselector</div>
+
+                        <two-fields-multiselect get-data-method="vm.getStrategies2(vm.optionsForMultiselect)"
+                                                model="vm.reportOptions.strategies2"
+                                                data-selected-items="vm.reportOptions.strategies2"
+                                                nothing-selected-text="Off"
+                                                selected-items-indication="chips"
+                                                data-name-property="short_name"
+                                                small-options="{tooltipText: 'Strategies 2 multiselector'}"
+                                                class="g-report-settings-field"></two-fields-multiselect>
+                    </div>
+
+                    <div class="g-report-settings-row p-b-16">
+                        <div class="default-f-s">Strategies 3 multiselector</div>
+
+                        <two-fields-multiselect get-data-method="vm.getStrategies3(vm.optionsForMultiselect)"
+                                                model="vm.reportOptions.strategies3"
+                                                data-selected-items="vm.reportOptions.strategies3"
+                                                nothing-selected-text="Off"
+                                                selected-items-indication="chips"
+                                                data-name-property="short_name"
+                                                small-options="{tooltipText: 'Strategies 3 multiselector'}"
+                                                class="g-report-settings-field"></two-fields-multiselect>
+                    </div>
+
+                </div>
+
                 <!-- <div layout="row">
 
                     <div layout="column" class="m-r-16">

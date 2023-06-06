@@ -355,7 +355,7 @@ export default function InstrmentTypePricingTabController($scope, $mdDialog) {
 				locals: {
 					info: {
 						title: 'Success',
-						description: "New Pricing Settings were applied"
+						description: "New Pricing Settings were applied \n" + JSON.stringify(data, null, 4)
 					}
 				}
 			});

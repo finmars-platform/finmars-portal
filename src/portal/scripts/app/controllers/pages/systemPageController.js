@@ -6,31 +6,33 @@
 
 const downloadFileHelper = require('../../helpers/downloadFileHelper');
 
-export default function ($scope, $mdDialog, toastNotificationService, masterUserService, utilsService) {
+export default function ($scope, $mdDialog, toastNotificationService, authorizerService, globalDataService, masterUserService, utilsService) {
 
     const vm = this;
 
     vm.processing = false;
 
-        vm.readyStatus = {
-            stats: false,
-            logs: false,
-            master_user: false
-        }
+    vm.readyStatus = {
+        stats: false,
+        logs: false,
+        master_user: false
+    }
+
+    vm.latestVersion = null;
 
 
     vm.getStats = function () {
 
         vm.readyStatus.stats = false;
 
-            utilsService.getSystemInfo().then(function (data) {
-                vm.systemInfoItems = data.results;
-                vm.readyStatus.stats = true;
-                $scope.$apply();
-            }).catch(function (error) {
-                vm.readyStatus.stats = true;
-                $scope.$apply();
-            })
+        utilsService.getSystemInfo().then(function (data) {
+            vm.systemInfoItems = data.results;
+            vm.readyStatus.stats = true;
+            $scope.$apply();
+        }).catch(function (error) {
+            vm.readyStatus.stats = true;
+            $scope.$apply();
+        })
 
     }
 
@@ -45,10 +47,10 @@ export default function ($scope, $mdDialog, toastNotificationService, masterUser
             vm.readyStatus.logs = true;
             $scope.$apply()
 
-            }).catch(function (error) {
-                vm.readyStatus.logs = true;
-                $scope.$apply()
-            })
+        }).catch(function (error) {
+            vm.readyStatus.logs = true;
+            $scope.$apply()
+        })
 
     }
 
@@ -92,10 +94,10 @@ export default function ($scope, $mdDialog, toastNotificationService, masterUser
             vm.readyStatus.tablesSize = true;
             $scope.$apply()
 
-            }).catch(function (error) {
-                vm.readyStatus.tablesSize = true;
-                $scope.$apply()
-            })
+        }).catch(function (error) {
+            vm.readyStatus.tablesSize = true;
+            $scope.$apply()
+        })
 
 
     }
@@ -110,49 +112,96 @@ export default function ($scope, $mdDialog, toastNotificationService, masterUser
 
     }
 
-        vm.checkReadyStatus = function () {
-            return vm.readyStatus.tablesSize && vm.readyStatus.stats && vm.readyStatus.logs && vm.readyStatus.master_user
-        }
+    vm.checkReadyStatus = function () {
+        return vm.readyStatus.tablesSize && vm.readyStatus.stats && vm.readyStatus.logs && vm.readyStatus.master_user
+    }
 
-        vm.getMasterUser = function () {
+    vm.getMasterUser = function () {
 
-            vm.readyStatus.master_user = false;
+        vm.readyStatus.master_user = false;
 
-            masterUserService.getMasterUser().then(function (data) {
+        masterUserService.getMasterUser().then(function (data) {
 
-                vm.master_user = data;
+            vm.master_user = data;
 
-                vm.readyStatus.master_user = true;
-                $scope.$apply()
+            vm.readyStatus.master_user = true;
+            $scope.$apply()
 
-            })
+        })
 
-        }
+    }
 
-        vm.saveMasterUser = function ($event) {
+    vm.saveMasterUser = function ($event) {
 
-            vm.masterUserProcessing = true
+        vm.masterUserProcessing = true
 
-            masterUserService.updateMasterUser(vm.master_user).then(function () {
+        masterUserService.updateMasterUser(vm.master_user).then(function () {
 
-                toastNotificationService.success("Space Updated")
+            toastNotificationService.success("Space Updated")
 
-                vm.masterUserProcessing = false;
-                $scope.$apply();
+            vm.masterUserProcessing = false;
+            $scope.$apply();
 
-                vm.getMasterUser();
+            vm.getMasterUser();
 
-            })
+        })
 
-        }
+    }
 
-        vm.init = function () {
+    vm.getVersions = function () {
+
+        authorizerService.getVersions().then(function (data) {
+
+            vm.versions = data.results;
+
+            vm.readyStatus.data = true;
+
+            if (vm.versions.length) {
+
+                vm.latestVersion = vm.versions[0];
+
+                vm.versions.forEach(function (version) {
+
+                    if (version.is_latest) {
+                        vm.latestVersion = version;
+                    }
+
+                })
+
+            }
+
+            $scope.$apply();
+
+        })
+
+    }
+
+    vm.updateFinmars = function () {
+
+        vm.processing = true;
+
+        authorizerService.updateFinmars(vm.currentMasterUser.base_api_url, vm.latestVersion.name).then(function (data) {
+
+            vm.processing = false;
+
+            toastNotificationService.info("Update Initialized");
+
+            $scope.$apply();
+
+        })
+
+    }
+
+    vm.init = function () {
 
         vm.getStats();
         vm.getLogs()
+        vm.getVersions();
 
-            vm.getTablesSize()
-            vm.getMasterUser()
+        vm.currentMasterUser = globalDataService.getMasterUser();
+
+        vm.getTablesSize()
+        vm.getMasterUser()
 
     };
 

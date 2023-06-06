@@ -1567,7 +1567,7 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
 
         vm.init = function () {
 
-            autosaveLayoutService = new AutosaveLayoutService(metaContentTypesService, uiService, null);
+            autosaveLayoutService = new AutosaveLayoutService(metaContentTypesService, uiService, null, globalDataService);
 
             /*if (vm.stateWithLayout) {
 

@@ -715,6 +715,14 @@
                                                       data-ng-if="isSelected()">current page</span>
                                             </md-button>
                                         </li>
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.portal.transaction-type-group">
+                                                <span class="side-nav-title">Transaction Type Groups</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
                                         <!-- <li data-ng-if="vm.accessTable.configuration_pricing_policy">
                                             <md-button class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.portal.data.pricing-policy">
@@ -1135,7 +1143,7 @@
                 <md-tooltip class="tooltip_1" md-direction="top">Copy</md-tooltip>
             </span>
 
-            <a class="sidenav-api-link" ui-sref="app.portal.update-center">{{vm.getCurrentVersion()}}</a>
+            <a class="sidenav-api-link" ui-sref="app.portal.system-page">{{vm.getCurrentVersion()}}</a>
 
         </div>
     </div>
