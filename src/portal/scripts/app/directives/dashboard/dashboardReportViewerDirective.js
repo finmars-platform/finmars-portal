@@ -9,7 +9,7 @@
     var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
     var DashboardComponentEventService = require('../../services/eventService');
 
-    module.exports = function ($mdDialog, dashboardHelper) {
+    module.exports = function ($mdDialog, dashboardHelper, metaContentTypesService) {
         return {
             restriction: 'E',
             scope: {
@@ -67,6 +67,7 @@
                     columnNumber: scope.columnNumber,
                     componentData: componentData,
                     entityType: componentData.settings.entity_type,
+                    contentType: metaContentTypesService.findContentTypeByEntity(componentData.settings.entity_type),
 					componentElement: componentElem,
                     dashboardDataService: scope.dashboardDataService,
                     dashboardEventService: scope.dashboardEventService,
