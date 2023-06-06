@@ -11,7 +11,7 @@
 
     const localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
-	module.exports = function ($mdDialog, globalDataService, uiService, dashboardHelper) {
+	module.exports = function ($mdDialog, uiService, dashboardHelper, metaContentTypesService) {
         return {
             restriction: 'E',
             templateUrl: 'views/directives/dashboard/dashboard-report-viewer-matrix-view.html',
@@ -63,6 +63,7 @@
                     columnNumber: scope.columnNumber,
                     componentData: componentData,
                     entityType: componentData.settings.entity_type,
+                    contentType: metaContentTypesService.findContentTypeByEntity(componentData.settings.entity_type),
 					componentElement: componentElem,
                     dashboardDataService: scope.dashboardDataService,
                     dashboardEventService: scope.dashboardEventService,

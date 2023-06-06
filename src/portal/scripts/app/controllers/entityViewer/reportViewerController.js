@@ -1098,7 +1098,7 @@ import evEvents from "../../services/entityViewerEvents";
 
         vm.init = function () {
 
-            autosaveLayoutService = new AutosaveLayoutService(metaContentTypesService, uiService, reportHelper);
+            autosaveLayoutService = new AutosaveLayoutService(metaContentTypesService, uiService, reportHelper, globalDataService);
 
             onUserChangeIndex = middlewareService.onMasterUserChanged(function () {
                 vm.entityViewerDataService.setLayoutChangesLossWarningState(false);

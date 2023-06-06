@@ -89,6 +89,8 @@
         vm.hasEditPermission = true; // deprecated
         vm.canManagePermissions = false;
 
+        vm.fieldsDataStore = {};
+
         vm.attributeTypesByValueTypes = {}; // need for pricing tab
 
         vm.currencies = []; // need for instrument pricing tab;

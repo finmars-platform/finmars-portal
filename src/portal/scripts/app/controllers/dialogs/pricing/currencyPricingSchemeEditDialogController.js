@@ -205,7 +205,7 @@
 
         };
 
-        vm.generateFunctionsForExpressionBuilder = function (){
+        vm.generateFunctionsForExpressionBuilder = function () {
 
             var result = []
 
@@ -214,9 +214,9 @@
                 "description": "-",
                 "groups": "context_var",
                 "func": 'context_instrument',
-				"validation": {
-					"func": "context_instrument"
-				}
+                "validation": {
+                    "func": "context_instrument"
+                }
             })
 
             result.push({
@@ -224,9 +224,9 @@
                 "description": "-",
                 "groups": "context_var",
                 "func": "context_pricing_policy",
-				"validation": {
-					"func": "context_pricing_policy"
-				}
+                "validation": {
+                    "func": "context_pricing_policy"
+                }
             })
 
             result.push({
@@ -234,9 +234,9 @@
                 "description": "-",
                 "groups": "context_var",
                 "func": "context_date",
-				"validation": {
-					"func": "context_date"
-				}
+                "validation": {
+                    "func": "context_date"
+                }
             })
 
             return result
@@ -266,6 +266,29 @@
             })
 
         }
+
+        vm.makeCopy = function ($event) {
+
+            var item = JSON.parse(JSON.stringify(vm.item));
+
+            delete item.id;
+            item["user_code"] = item["user_code"] + '_copy';
+
+            $mdDialog.show({
+                controller: 'CurrencyPricingSchemeAddDialogController as vm',
+                templateUrl: 'views/dialogs/pricing/currency-pricing-scheme-add-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        item: item
+                    }
+                }
+            });
+
+            $mdDialog.hide({status: 'disagree'});
+
+        };
 
         vm.init = function () {
 
