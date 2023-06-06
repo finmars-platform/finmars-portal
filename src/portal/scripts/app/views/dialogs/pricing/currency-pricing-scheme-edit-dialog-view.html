@@ -94,7 +94,8 @@
 
                 <md-input-container class="m-t-16">
                     <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type" data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
                         <md-option value="10">Text</md-option>
                         <md-option value="20">Number</md-option>
                         <md-option value="40">Date</md-option>
@@ -146,7 +147,6 @@
                 </div>
 
 
-
             </div>
 
             <div data-ng-if="vm.item.type == 4">
@@ -183,7 +183,8 @@
 
                 <md-input-container class="m-t-16">
                     <label>Value Type</label>
-                    <md-select data-ng-model="vm.item.type_settings.value_type" data-ng-change="vm.primaryParameterValueTypeUpdate()">
+                    <md-select data-ng-model="vm.item.type_settings.value_type"
+                               data-ng-change="vm.primaryParameterValueTypeUpdate()">
                         <md-option value="10">Text</md-option>
                         <md-option value="20">Number</md-option>
                         <md-option value="40">Date</md-option>
@@ -192,7 +193,8 @@
 
                 <div>
 
-                    <div data-ng-repeat="item in vm.item.type_settings.data.parameters" layout="row" data-ng-if="item.index != 0">
+                    <div data-ng-repeat="item in vm.item.type_settings.data.parameters" layout="row"
+                         data-ng-if="item.index != 0">
 
                         <md-input-container>
                             <label>Index</label>
@@ -206,7 +208,8 @@
 
                         <md-input-container class="m-t-16">
                             <label>Value Type</label>
-                            <md-select data-ng-model="item.value_type" data-ng-change="vm.multipleParameterValueTypeUpdate(item.index)">
+                            <md-select data-ng-model="item.value_type"
+                                       data-ng-change="vm.multipleParameterValueTypeUpdate(item.index)">
                                 <md-option value="10">Text</md-option>
                                 <md-option value="20">Number</md-option>
                                 <md-option value="40">Date</md-option>
@@ -233,7 +236,8 @@
                                 <md-input-container class="m-t-16">
                                     <label>Options</label>
                                     <md-select data-ng-model="item.attribute_key">
-                                        <md-option ng-value="item.user_code" data-ng-repeat="item in vm.optionsForMultipleParameters[item.index]">
+                                        <md-option ng-value="item.user_code"
+                                                   data-ng-repeat="item in vm.optionsForMultipleParameters[item.index]">
                                             {{item.name}} ({{item.user_code}})
                                         </md-option>
                                     </md-select>
@@ -327,7 +331,8 @@
                     <md-input-container class="m-t-16">
                         <label>Options</label>
                         <md-select data-ng-model="vm.item.type_settings.attribute_key">
-                            <md-option ng-value="attribute.user_code" data-ng-repeat="attribute in vm.optionsForPrimaryParameter">
+                            <md-option ng-value="attribute.user_code"
+                                       data-ng-repeat="attribute in vm.optionsForPrimaryParameter">
                                 {{attribute.name}}
                             </md-option>
                         </md-select>
@@ -378,7 +383,6 @@
                     <div>
                         <b>fx_rate_error</b>
                     </div>
-
 
 
                 </div>
@@ -497,7 +501,6 @@
                 </div>
 
 
-
             </div>
 
             <div data-ng-if="vm.item.type == 9">
@@ -590,7 +593,6 @@
                 </div>
 
 
-
             </div>
 
         </div>
@@ -608,7 +610,11 @@
         <md-button ng-click="vm.cancel()">
             Close
         </md-button>
-        <md-button class="md-raised" ng-click="vm.editAsJson($event)" >
+        <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
+        >
+            Make a copy
+        </md-button>
+        <md-button class="md-raised" ng-click="vm.editAsJson($event)">
             Edit as JSON
         </md-button>
         <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">

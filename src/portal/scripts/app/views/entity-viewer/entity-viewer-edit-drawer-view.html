@@ -12,9 +12,9 @@
             <h2 data-ng-if="vm.hasEditPermission && vm.entityType === 'transaction'"
                 class="big-drawer-header-h">
                 <span>Edit Transaction</span>
-                <span>Code: <span data-ng-bind="vm.entity.complex_transaction_object.code"></span></span>
+                <span>| Code: <span class="text-bold" data-ng-bind="vm.entity.transaction_code"></span></span>
                 <span data-ng-if="vm.entity.complex_transaction_object.transaction_unique_code">
-                     Unique Code: <span data-ng-bind="vm.entity.complex_transaction_object.transaction_unique_code"></span>
+                     | Complex Transaction Unique Code: <span class="text-bold" data-ng-bind="vm.entity.complex_transaction_object.transaction_unique_code"></span>
                 </span>
             </h2>
 

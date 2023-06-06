@@ -196,10 +196,13 @@
 
         var rawTextResult = '';
 
-        var pieces = column.key.split('.');
+        // var pieces = column.key.split('.');
+        var pieces = column.key.split('attributes.'); // probably should work TODO check
 
         // var id = parseInt(pieces[pieces.length - 1], 10);
         var user_code = pieces[pieces.length - 1];
+
+        console.log('user_code', user_code)
 
         obj.attributes.forEach(function (item) {
 
@@ -339,7 +342,8 @@
 
         }
 
-        if (column.attribute_type) {
+        if (column.attribute_type || column.key.indexOf('attributes.') !== -1) { // TODO check what is wrong
+            // why attribute_type is missing on column with user attribute
 
             return getAttributeTypeValue(obj, column);
 

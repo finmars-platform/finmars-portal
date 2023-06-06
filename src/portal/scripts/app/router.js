@@ -502,6 +502,12 @@
                 controller: 'PricingPolicyPageController as vm'
             })
 
+            .state('app.portal.transaction-type-group', {
+                url: '/transaction-type-group',
+                templateUrl: 'views/pages/transaction-type-group-page-view.html',
+                controller: 'TransactionTypeGroupPageController as vm'
+            })
+
             .state('app.portal.pricing-schemes', {
                 url: '/pricing-schemes',
                 templateUrl: 'views/pages/pricing-scheme-page-view.html',
@@ -848,9 +854,14 @@
                 controller: 'MarketplacePageController as vm'
             })
             .state('app.portal.manage-configuration', {
-                url: '/manage-configuration',
+                url: '/manage-configuration?page&query',
                 templateUrl: 'views/pages/manage-configuration-page-view.html',
-                controller: 'ManageConfigurationPageController as vm'
+                controller: 'ManageConfigurationPageController as vm',
+                reloadOnSearch: false,
+                params: {
+                    page: null,
+                    query: null
+                }
             })
             .state('app.portal.settings.import-configuration', {
                 url: '/import-configuration',

@@ -1433,7 +1433,7 @@
                     vm.contextData = Object.assign({}, data.contextData);
                     //delete entity.contextData;
 
-                    vm.transactionTypeId = entity.transaction_type;
+                    vm.transactionTypeId = parseInt(entity.transaction_type, 10);
 
                     vm.dataConstructorData = {
                         entityType: vm.entityType,

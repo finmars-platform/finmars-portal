@@ -3,7 +3,7 @@ import baseUrlService from "../../../../../shell/scripts/app/services/baseUrlSer
 const metaHelper = require('../../helpers/meta.helper');
 
 /** @module attributesSelectorDialogController **/
-export default function ($scope, $mdDialog, toastNotificationService, usersService, globalDataService, data) {
+export default function ($scope, $mdDialog, toastNotificationService, uiService, globalDataService, data) {
 
     const vm = this;
 
@@ -22,7 +22,7 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
     let iframeElem;
     let iframeWindow; // iframeElem.contentWindow;
 
-    let member = globalDataService.getMember();
+    let memberLayout = globalDataService.getMemberLayout();
 
     const contentType = data.contentType;
     if (!data.contentType) throw new Error("Content type not specified.");
@@ -32,7 +32,7 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
 
     const initSettings = {
         selectedAttributes: data.selectedAttributes || [],
-        favoriteAttributes: member.data.favorites.attributes[contentType] || [],
+        favoriteAttributes: memberLayout.data.favorites.attributes[contentType] || [],
     };
 
     if (data.title) initSettings.title = data.title;
@@ -97,13 +97,17 @@ export default function ($scope, $mdDialog, toastNotificationService, usersServi
 
         });
 
-        member = globalDataService.getMember();
-        member.data.favorites.attributes[contentType] = favAttrsData;
-        initSettings.favoriteAttributes = member.data.favorites.attributes[contentType];
+        const memberLayout = globalDataService.getMemberLayout();
+        memberLayout.data.favorites.attributes[contentType] = favAttrsData;
+        initSettings.favoriteAttributes = memberLayout.data.favorites.attributes[contentType];
 
-        usersService.updateMember(member.id, member).then(() => {
-            toastNotificationService.success('Favorite attributes updated.')
+        /*usersService.updateMember(member.id, member).then(() => {
+            toastNotificationService.success('Favorite attributes updated.');
+        });*/
+        uiService.updateMemberLayout(memberLayout.id, memberLayout).then(() => {
+            toastNotificationService.success('Favorite attributes updated.');
         });
+
 
     }
 

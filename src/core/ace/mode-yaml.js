@@ -1,4 +1,4 @@
-define("ace/mode/yaml_highlight_rules",["require","exports","module","ace/lib/oop","ace/mode/text_highlight_rules"], function(require, exports, module){"use strict";
+ace.define("ace/mode/yaml_highlight_rules",["require","exports","module","ace/lib/oop","ace/mode/text_highlight_rules"], function(require, exports, module){"use strict";
     var oop = require("../lib/oop");
     var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
     var YamlHighlightRules = function () {
@@ -140,7 +140,7 @@ define("ace/mode/yaml_highlight_rules",["require","exports","module","ace/lib/oo
 
 });
 
-define("ace/mode/matching_brace_outdent",["require","exports","module","ace/range"], function(require, exports, module){"use strict";
+ace.define("ace/mode/matching_brace_outdent",["require","exports","module","ace/range"], function(require, exports, module){"use strict";
     var Range = require("../range").Range;
     var MatchingBraceOutdent = function () { };
     (function () {
@@ -169,7 +169,7 @@ define("ace/mode/matching_brace_outdent",["require","exports","module","ace/rang
 
 });
 
-define("ace/mode/folding/coffee",["require","exports","module","ace/lib/oop","ace/mode/folding/fold_mode","ace/range"], function(require, exports, module){"use strict";
+ace.define("ace/mode/folding/coffee",["require","exports","module","ace/lib/oop","ace/mode/folding/fold_mode","ace/range"], function(require, exports, module){"use strict";
     var oop = require("../../lib/oop");
     var BaseFoldMode = require("./fold_mode").FoldMode;
     var Range = require("../../range").Range;
@@ -241,7 +241,7 @@ define("ace/mode/folding/coffee",["require","exports","module","ace/lib/oop","ac
 
 });
 
-define("ace/mode/yaml",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/yaml_highlight_rules","ace/mode/matching_brace_outdent","ace/mode/folding/coffee","ace/worker/worker_client"], function(require, exports, module){"use strict";
+ace.define("ace/mode/yaml",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/yaml_highlight_rules","ace/mode/matching_brace_outdent","ace/mode/folding/coffee","ace/worker/worker_client"], function(require, exports, module){"use strict";
     var oop = require("../lib/oop");
     var TextMode = require("./text").Mode;
     var YamlHighlightRules = require("./yaml_highlight_rules").YamlHighlightRules;
@@ -289,9 +289,10 @@ define("ace/mode/yaml",["require","exports","module","ace/lib/oop","ace/mode/tex
     exports.Mode = Mode;
 
 });                (function() {
-    window.require(["ace/mode/yaml"], function(m) {
+    ace.require(["ace/mode/yaml"], function(m) {
         if (typeof module == "object" && typeof exports == "object" && module) {
             module.exports = m;
         }
     });
 })();
+            

@@ -22,6 +22,6 @@ import UiService from "./uiServiceNew";
     const ecosystemDefaultService = new EcosystemDefaultService(cookieService, xhrService);
     const metaContentTypesService = new MetaContentTypesService(cookieService, xhrService);
 
-    module.exports = new UiService(cookieService, xhrService, ecosystemDefaultService, metaContentTypesService);
+    module.exports = new UiService(cookieService, xhrService, ecosystemDefaultService, metaContentTypesService, null);
 
 }());
