@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var getLayoutAttrs = function() {
+    const getLayoutAttrs = function() {
         return [
             {
                 key: 'layoutLine',
@@ -30,8 +30,20 @@
         ]
     };
 
+    const readonlyAttributes = Object.freeze({
+        'complex-transaction': ['code', 'transaction_unique_code'],
+        'base-transaction': ['transaction_code'],
+    });
+
+    const getReadonlyAttributes = function (entityType) {
+        return readonlyAttributes[entityType] || [];
+    };
+
+    /** Used by bindFieldControlDirective, entityDataConstructorDialogController and directives inside them
+     * @module: layoutService **/
     module.exports = {
-        getLayoutAttrs: getLayoutAttrs
+        getLayoutAttrs: getLayoutAttrs,
+        getReadonlyAttributes: getReadonlyAttributes,
     }
 
 }());

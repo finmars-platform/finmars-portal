@@ -24,7 +24,7 @@
                 evEditorEventService: "=",
                 entityChange: "&?",
                 onFieldBlur: "&?", // for now implemented only for textInputDirective,
-                fieldsDataStore: '='
+                fieldsDataStore: '=', // for now used only by complex transaction
             },
             templateUrl: "views/directives/bind-field-control-view.html",
             controllerAs: 'vm',
@@ -37,6 +37,7 @@
                 vm.entityType = $scope.entityType;
                 vm.evEditorDataService = $scope.evEditorDataService;
                 vm.evEditorEventService = $scope.evEditorEventService;
+                vm.disabled = false;
 
 				$scope.layoutAttrs = layoutService.getLayoutAttrs();
 
@@ -59,9 +60,11 @@
                 var palettesList = [];
 
                 var eventListenersIndexesData = {};
+                var readonlyAttributes = layoutService.getReadonlyAttributes(vm.entityType);
                 //$scope.numericInputValue = {};
 
                 $scope.isEditableField = function () {
+
                     if (vm.entityType === "complex-transaction" && $scope.item) {
                         if ($scope.item.can_recalculate || $scope.item.editable === false) {
                             return false;
@@ -765,6 +768,8 @@
                     $scope.tooltipText = setSettingsResult.tooltipText;
                     $scope.customStyles = setSettingsResult.customStyles;
                     $scope.ciEventObj.event = setSettingsResult.event;
+
+                    vm.disabled = readonlyAttributes.includes(vm.fieldKey) || !$scope.isEditableField();
 
                 };
 

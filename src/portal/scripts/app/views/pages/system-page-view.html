@@ -2,13 +2,70 @@
 
     <h1 style="padding-left: 8px">System Dashboard</h1>
 
+    <div>
+
+        <div layout="column">
+
+
+            <div data-ng-if="vm.readyStatus.data">
+
+                <md-card style="max-width: 400px;">
+
+                    <md-card-content layout="column">
+
+                        <h3>Finmars Update Center</h3>
+
+                        <div data-ng-if="vm.currentMasterUser.version == vm.latestVersion.name">
+                            Your ecosystem is up to date
+                        </div>
+
+                        <div data-ng-if="vm.currentMasterUser.version != vm.latestVersion.name">
+
+                            <h1>Latest Version: <b>{{vm.latestVersion.name}}</b></h1>
+
+                            <h2>Current Version: <b>{{vm.currentMasterUser.version}}</b></h2>
+
+                            <md-button class="md-raised primary-button" data-ng-click="vm.updateFinmars()">Update
+                                Finmars
+                            </md-button>
+
+                        </div>
+
+                    </md-card-content>
+
+                </md-card>
+
+                <!--                <div>-->
+
+                <!--                    <md-input-container class="md-block" flex-gt-sm style="margin-top: 10px">-->
+                <!--                        <md-checkbox data-ng-checked="vm.currentMasterUser.auto_update"-->
+                <!--                                     data-ng-click="vm.toggleAutoUpdate()"-->
+                <!--                                     aria-label="checkbox">-->
+                <!--                            <label style="width: 100%; position: relative">Autoupdate Finmars</label>-->
+                <!--                        </md-checkbox>-->
+                <!--                    </md-input-container>-->
+
+                <!--                </div>-->
+
+
+            </div>
+
+
+        </div>
+
+        <div data-ng-if="!vm.readyStatus.data" style="width: 100%">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <progress-circular diameter="100"></progress-circular>
+            </div>
+        </div>
+
+    </div>
+
     <div layout="row" data-ng-if="vm.checkReadyStatus()">
 
         <div layout="column">
 
             <div>
-
-                <h2>Stats</h2>
 
                 <div data-ng-if="vm.readyStatus.stats">
 
@@ -38,31 +95,40 @@
 
             <div>
 
-                <h2>Logs</h2>
+                <md-card>
 
+                    <md-card-content>
 
-                <div data-ng-if="vm.readyStatus.logs">
+                        <h3>Logs</h3>
+                        
+                        <div data-ng-if="vm.readyStatus.logs">
 
-                    <div data-ng-repeat="item in vm.logFiles">
+                            <div data-ng-repeat="item in vm.logFiles">
 
-                        <span class="log-file-name">{{item}}</span>
+                                <span class="log-file-name">{{item}}</span>
 
-                        <md-button class="md-raised" data-ng-click="vm.previewLog($event, item)">Preview</md-button>
-                        <md-button class="md-raised" data-ng-click="vm.downloadLog($event, item)">Download</md-button>
+                                <md-button class="md-raised" data-ng-click="vm.previewLog($event, item)">Preview
+                                </md-button>
+                                <md-button class="md-raised" data-ng-click="vm.downloadLog($event, item)">Download
+                                </md-button>
 
-                    </div>
+                            </div>
 
-                </div>
+                        </div>
+
+                    </md-card-content>
+
+                </md-card>
 
             </div>
 
         </div>
 
-        <div layout="column">
+        <md-card layout="column">
 
-            <div>
+            <md-card-content layout="column">
 
-                <h2>Tables Size</h2>
+                <h3>Database</h3>
 
                 <div data-ng-if="vm.readyStatus.tablesSize">
 
@@ -87,55 +153,59 @@
 
                 </div>
 
-            </div>
+            </md-card-content>
 
-        </div>
+        </md-card>
 
-        <div layout="column">
+        <md-card layout="column">
 
-            <h4>Space</h4>
+            <md-card-content layout="column">
 
-            <div>
+                <h3>Space</h3>
 
-                <p>
-                <div><b>Full</b> - Finmars will track changes of all important objects.</div>
-                <div><b>Disabled</b> - Journal is disabled, changes will not be tracked.</div>
-                </p>
+                <div>
 
-                <md-input-container style="margin-top: 0;">
-                    <label>Journal Status</label>
-                    <md-select aria-label="" data-ng-model="vm.master_user.journal_status">
-                        <md-option value="full">Full</md-option>
-                        <md-option value="disabled">Disabled</md-option>
-                    </md-select>
-                </md-input-container>
-            </div>
+                    <p>
+                    <div><b>Full</b> - Finmars will track changes of all important objects.</div>
+                    <div><b>Disabled</b> - Journal is disabled, changes will not be tracked.</div>
+                    </p>
 
-            <div>
+                    <md-input-container style="margin-top: 0;">
+                        <label>Journal Status</label>
+                        <md-select aria-label="" data-ng-model="vm.master_user.journal_status">
+                            <md-option value="full">Full</md-option>
+                            <md-option value="disabled">Disabled</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
 
-                <p>
+                <div>
+
+                    <p>
                     <div><b>Week</b> - Finmars will delete all journal records older then 1 week.</div>
                     <div><b>Month</b> - Finmars will delete all journal records older then 30 days.</div>
                     <div><b>Quarter</b> - Finmars will delete all journal records older then 90 days.</div>
-                </p>
+                    </p>
 
-                <md-input-container style="margin-top: 0;">
-                    <label>Journal Policy</label>
-                    <md-select aria-label="" data-ng-model="vm.master_user.journal_storage_policy">
-                        <md-option value="week">Week</md-option>
-                        <md-option value="month">Month</md-option>
-                        <md-option value="quarter">Quarter</md-option>
-                    </md-select>
-                </md-input-container>
-            </div>
+                    <md-input-container style="margin-top: 0;">
+                        <label>Journal Policy</label>
+                        <md-select aria-label="" data-ng-model="vm.master_user.journal_storage_policy">
+                            <md-option value="week">Week</md-option>
+                            <md-option value="month">Month</md-option>
+                            <md-option value="quarter">Quarter</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
 
-            <div>
-                <md-button class="md-raised md-primary {{vm.masterUserProcessing ? 'disabled-btn' : ''}}"
-                           data-ng-click="vm.saveMasterUser($event)">Save Space Settings
-                </md-button>
-            </div>
+                <div>
+                    <md-button class="md-raised md-primary {{vm.masterUserProcessing ? 'disabled-btn' : ''}}"
+                               data-ng-click="vm.saveMasterUser($event)">Save Space Settings
+                    </md-button>
+                </div>
 
-        </div>
+            </md-card-content>
+
+        </md-card>
 
     </div>
 

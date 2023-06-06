@@ -1,0 +1,47 @@
+<md-dialog aria-label="" ng-cloak class="draggable-dialog width-50" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+
+            <h2>Transaction Type Group</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="p-24">
+
+        <div layout="column"
+             data-ng-if="vm.readyStatus.data">
+
+            <usercode-input data-item="vm.item"></usercode-input>
+
+            <md-input-container>
+                <label>Name</label>
+                <input type="text" data-ng-model="vm.item.name">
+            </md-input-container>
+
+            <md-input-container>
+                <label>Short Name</label>
+                <input type="text" data-ng-model="vm.item.short_name">
+            </md-input-container>
+
+
+        </div>
+
+        <div data-ng-if="!vm.readyStatus.data">
+
+            <div class="m-16" layout="row" layout-sm="column" layout-align="space-around">
+                <progress-circular diameter="100"></progress-circular>
+            </div>
+
+        </div>
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="vm.cancel()">
+            Close
+        </md-button>
+        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+            Save
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

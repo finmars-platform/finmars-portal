@@ -1,14 +1,31 @@
+# Use an official Node.js runtime as a parent image
 FROM node:19.6-alpine
-USER root
+
+# Define argument
 ARG PROJECT_ENV
 
-RUN apk update && apk upgrade && apk add --no-cache bash && rm -rf /var/cache/apk/*
+# Update and install packages
+RUN apk update && apk upgrade && \
+    apk add --no-cache bash && \
+    rm -rf /var/cache/apk/*
 
+# Set working directory in the container
 WORKDIR /var/www/portal
-ADD docker/portal-run.sh /var/www/portal/docker/portal-run.sh
+
+# Copy the current directory contents into the container
 COPY . .
+
+# Change permission of the shell script
+RUN chmod +x docker/portal-run.sh
+
+# Install Node.js dependencies
 RUN npm install
-RUN PROJECT_ENV=$PROJECT_ENV npm run build
+
+# Build the application
+RUN npm run build -- --env $PROJECT_ENV
+
+# Make port 8080 available to the world outside this container
 EXPOSE 8080
 
-CMD ["/bin/bash", "/var/www/portal/docker/portal-run.sh"]
+# Run the command on container startup
+CMD ["/bin/bash", "docker/portal-run.sh"]

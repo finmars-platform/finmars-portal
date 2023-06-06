@@ -1176,19 +1176,24 @@
 
         vm.makeCopy = function ($event) {
 
-            var layout = JSON.parse(JSON.stringify(vm.layout));
+            // var layout = JSON.parse(JSON.stringify(vm.layout));
+            //
+            // delete layout.id;
+            // layout.name = layout.name + ' (Copy)';
+            // layout.user_code = layout.user_code + ' (Copy)';
+            //
+            // uiService.createDashboardLayout(layout).then(function (data) {
+            //
+            //     $state.go('app.portal.dashboard-constructor', {
+            //         id: data.id
+            //     })
+            //
+            // })
 
-            delete layout.id;
-            layout.name = layout.name + ' (Copy)';
-            layout.user_code = layout.user_code + ' (Copy)';
+            vm.layout.name = vm.layout.name + '_copy';
 
-            uiService.createDashboardLayout(layout).then(function (data) {
-
-                $state.go('app.portal.dashboard-constructor', {
-                    id: data.id
-                })
-
-            })
+            delete vm.layout.id
+            delete vm.layout.user_code;
 
         };
 

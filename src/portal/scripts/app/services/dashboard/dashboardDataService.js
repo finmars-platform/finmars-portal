@@ -19,7 +19,7 @@
             componentsStatuses: {},
             componentsRefreshRestriction: {},
             componentsErrors: {},
-            actualRvLayouts: [], // id of layouts stored in cache that are actual
+            actualRvLayouts: {}, // id of layouts stored in cache that are actual
 			componentsUIData: {}, // e.g. height, width of cell of component
         };
 
@@ -177,15 +177,20 @@
 
         }
 
-        function pushToActualRvLayoutsInCache (layoutId) {
+        function setCachedLayoutsData (contentType, userCode, id) {
 
-            if (!tmpData.actualRvLayouts.includes(layoutId)) {
+            /*if (!tmpData.actualRvLayouts.includes(layoutId)) {
                 tmpData.actualRvLayouts.push(layoutId);
+            }*/
+            if ( !tmpData.actualRvLayouts[contentType] ) {
+                tmpData.actualRvLayouts[contentType] = {};
             }
+
+            tmpData.actualRvLayouts[contentType][userCode] = id;
 
         }
 
-        function getActualRvLayoutsInCache () {
+        function getCachedLayoutsData () {
             return tmpData.actualRvLayouts;
         }
 
@@ -230,8 +235,8 @@
             setActiveTab: setActiveTab,
             getActiveTab: getActiveTab,
 
-            pushToActualRvLayoutsInCache: pushToActualRvLayoutsInCache,
-            getActualRvLayoutsInCache: getActualRvLayoutsInCache,
+            setCachedLayoutsData: setCachedLayoutsData,
+            getCachedLayoutsData: getCachedLayoutsData,
 
             getComponentStatusesAll: getComponentStatusesAll,
 

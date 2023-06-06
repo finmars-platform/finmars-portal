@@ -49,7 +49,8 @@
                 <md-card class="position-relative e-reference-table-row-card">
                     <div layout="row">
 
-                        <md-input-container class="no-error-spacer reference-table-key-input-container" style="width: 300px;">
+                        <md-input-container class="no-error-spacer reference-table-key-input-container"
+                                            style="width: 300px;">
                             <input type="text"
                                    data-ng-class="{'key-duplicate': item.is_duplicate && vm.validationEnabled}"
                                    data-ng-model="item.key"
@@ -91,6 +92,12 @@
         <md-button ng-click="vm.cancel()">
             Close
         </md-button>
+
+        <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
+        >
+            Make a copy
+        </md-button>
+
         <md-button class="md-raised" ng-click="vm.agree($event)" style="margin-right:20px;">
             <span data-ng-if="!vm.referenceTable.id">Create</span>
             <span data-ng-if="vm.referenceTable.id">Update</span>
