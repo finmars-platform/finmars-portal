@@ -275,7 +275,7 @@
             if (!vm.referenceTable) {
                 vm.referenceTable = {
                     name: '',
-                    configuration_code: 'com.finmars.local',
+                    // configuration_code: 'com.finmars.local',
                     rows: []
                 }
             }
