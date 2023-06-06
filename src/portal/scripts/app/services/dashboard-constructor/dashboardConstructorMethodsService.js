@@ -1,20 +1,18 @@
 const metaHelper = require('../../helpers/meta.helper');
 
-export default function (uiService) {
+export default function (uiService, dashboardHelper) {
 
     var getDataForComponentsSelector = function (viewModel, componentsForLinking, itemId) {
 
         var getComponentsTypesByContentType = function (contentType) {
 
-            var filteredComponentsTypes = viewModel.componentsTypes.filter(function (componentType) {
+            return viewModel.componentsTypes.filter(function (componentType) {
 
                 return componentType.type === 'control' &&
                     componentType.settings.value_type === 100 &&
                     componentType.settings.content_type === contentType
 
             });
-
-            return filteredComponentsTypes;
 
         }
 
@@ -146,7 +144,7 @@ export default function (uiService) {
 
     };
 
-    const prepareDataForReportLayoutSelector = function (layoutsSelectorsList, reportEntityType, selectedLayout, getLayoutsRes) {
+    const prepareDataForReportLayoutSelector = function (layoutsSelectorsList, reportEntityType, selectedLayout, getLayoutsRes, userCodeAsId) {
 
         let activeSel = layoutsSelectorsList.find(function (selector) {
             return selector.key === reportEntityType;
@@ -160,6 +158,16 @@ export default function (uiService) {
 
                 activeSel.model = selectedLayout;
                 activeSel.custom.menuOptionsNotLoaded = false;
+
+                if (userCodeAsId) {
+
+                    layoutsList = layoutsList.map(layout => {
+                        layout.id = layout.user_code;
+                        return layout;
+                    });
+
+                }
+
                 activeSel.fieldData.menuOptions = layoutsList;
 
                 res(layoutsSelectorsList);
@@ -170,11 +178,38 @@ export default function (uiService) {
 
     };
 
+    const showLinkingToFilters = function (layoutsList, layoutUserCode) {
+
+        /*for (var i = 0; i < vm.layouts.length; i++) {
+
+            if (vm.layouts[i].user_code === vm.item.settings.layout) {
+
+                var layout = vm.layouts[i];
+                vm.linkingToFilters = dashboardHelper.getLinkingToFilters(layout);
+
+                break;
+
+            }
+
+        }*/
+
+        var selLayout = layoutsList.find(layout => layout.user_code === layoutUserCode);
+
+        if (selLayout) {
+            return dashboardHelper.getLinkingToFilters(selLayout);
+        }
+
+        return [];
+
+    };
+
     return {
         getDataForComponentsSelector: getDataForComponentsSelector,
         exportComponentToDashboards: exportComponentToDashboards,
 
         onReportTypeChange: onReportTypeChange,
         prepareDataForReportLayoutSelector: prepareDataForReportLayoutSelector,
+
+        showLinkingToFilters: showLinkingToFilters,
     }
 }
