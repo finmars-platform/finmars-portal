@@ -593,8 +593,10 @@
                             // TODO replace with finmarsDatabaseService
                             currencyDatabaseSearchService.getList(scope.inputText, 0).then(function (data) {
 
-                                scope.databaseItemsTotal = data.resultCount;
-                                scope.databaseItems = data.foundItems;
+                                /*scope.databaseItemsTotal = data.resultCount;
+                                scope.databaseItems = data.foundItems;*/
+                                scope.databaseItemsTotal = data.count;
+                                scope.databaseItems = data.results;
 
                                 resolve()
 
