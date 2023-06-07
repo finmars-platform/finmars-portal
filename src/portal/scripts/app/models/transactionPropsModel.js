@@ -84,6 +84,8 @@
             {
                 "key": "transaction_currency",
                 "name": "Transaction currency",
+                "value_content_type": "currencies.currency",
+                "value_entity": "currency",
                 "value_type": "field"
             },
             {
@@ -102,6 +104,8 @@
             {
                 "key": "settlement_currency",
                 "name": "Settlement currency",
+                "value_content_type": "currencies.currency",
+                "value_entity": "currency",
                 "value_type": "field"
             },
             {
@@ -142,31 +146,43 @@
             {
                 "key": "account_cash",
                 "name": "Account cash",
+                "value_content_type": "accounts.account",
+                "value_entity": "account",
                 "value_type": 'field'
             },
             {
                 "key": "account_position",
                 "name": "Account position",
+                "value_content_type": "accounts.account",
+                "value_entity": "account",
                 "value_type": 'field'
             },
             {
                 "key": "account_interim",
                 "name": "Account interim",
+                "value_content_type": "accounts.account",
+                "value_entity": "account",
                 "value_type": 'field'
             },
             {
                 "key": "strategy1_position",
                 "name": "Strategy1 position",
+                "value_content_type": "strategies.strategy1",
+                "value_entity": "strategy-1",
                 "value_type": 'field'
             },
             {
                 "key": "strategy1_cash",
                 "name": "Strategy1 cash",
+                "value_content_type": "accounts.account",
+                "value_entity": "account",
                 "value_type": 'field'
             },
             {
                 "key": "strategy2_position",
                 "name": "Strategy2 position",
+                "value_content_type": "strategies.strategy2",
+                "value_entity": "strategy-2",
                 "value_type": 'field'
             },
             {
@@ -177,6 +193,8 @@
             {
                 "key": "strategy3_position",
                 "name": "Strategy3 position",
+                "value_content_type": "strategies.strategy3",
+                "value_entity": "strategy-3",
                 "value_type": 'field'
             },
             {
