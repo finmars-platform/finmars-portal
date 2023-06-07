@@ -291,11 +291,16 @@
 
                         vm.globalProcessing = false;
 
-                        vm.databaseItemsTotal = data.resultCount;
+                        /*vm.databaseItemsTotal = data.resultCount;
 
                         vm.databaseItems = data.foundItems
 
-                        vm.totalPages = Math.round(data.resultCount / 40)
+                        vm.totalPages = Math.round(data.resultCount / 40)*/
+                        vm.databaseItemsTotal = data.count;
+
+                        vm.databaseItems = data.results;
+
+                        vm.totalPages = Math.round(data.resultCount / 40);
 
                         $scope.$apply();
 
@@ -363,11 +368,16 @@
                 if (vm.entityType === 'currency') {
                     currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage - 1).then(function (data) {
 
-                        vm.databaseItemsTotal = data.resultCount;
+                        /*vm.databaseItemsTotal = data.resultCount;
 
                         vm.databaseItems = data.foundItems
 
-                        vm.totalPages = Math.round(data.resultCount / 40)
+                        vm.totalPages = Math.round(data.resultCount / 40)*/
+                        vm.databaseItemsTotal = data.count;
+
+                        vm.databaseItems = data.results;
+
+                        vm.totalPages = Math.round(data.resultCount / 40);
 
                         resolve()
 
