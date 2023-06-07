@@ -174,8 +174,8 @@
             {
                 "key": "strategy1_cash",
                 "name": "Strategy1 cash",
-                "value_content_type": "accounts.account",
-                "value_entity": "account",
+                "value_content_type": "strategies.strategy1",
+                "value_entity": "strategy-1",
                 "value_type": 'field'
             },
             {
@@ -188,6 +188,8 @@
             {
                 "key": "strategy2_cash",
                 "name": "Strategy2 cash",
+                "value_content_type": "strategies.strategy2",
+                "value_entity": "strategy-2",
                 "value_type": 'field'
             },
             {
@@ -200,6 +202,8 @@
             {
                 "key": "strategy3_cash",
                 "name": "Strategy3 cash",
+                "value_content_type": "strategies.strategy3",
+                "value_entity": "strategy-3",
                 "value_type": 'field'
             },
             {

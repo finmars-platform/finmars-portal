@@ -36,7 +36,7 @@ export default function (instrumentService, transactionTypeService, metaContentT
 
     const getFields = function (fieldKey, options, fieldsDataStore) {
 
-        return new Promise(function (resolve, reject) {
+        return new Promise(async function (resolve, reject) {
 
             if (!fieldKey) {
                 return reject("Invalid fieldKey: " + fieldKey);
@@ -59,52 +59,46 @@ export default function (instrumentService, transactionTypeService, metaContentT
 
             if (options && options.hasOwnProperty('entityType')) {
 
-                var entityTypePieces = options.entityType.split('-');
+                let promise;
 
-                var entity = entityTypePieces[0];
+                const entityTypePieces = options.entityType.split('-');
 
-                if (entity === 'transaction') {
+                const entity = entityTypePieces[0];
 
-                    if (fieldKey === 'group') {
-                        transactionTypeGroupRepository.getList().then(function (data) {
-                            return resolve({type: 'id', key: 'group', data: data.results});
-                        });
-                    }
+                if (entity === 'transaction' && fieldKey === 'group') {
+                    promise = transactionTypeGroupRepository.getList();
+
                 }
-
-                if (entity === 'strategy') {
+                else if (entity === 'strategy') {
 
                     var strategyNumber = entityTypePieces[1];
 
-                    console.log('strategyNumber', strategyNumber);
-
                     if (fieldKey === 'group') {
-                        strategyGroupRepository.getList(strategyNumber).then(function (data) {
-                            return resolve({type: 'id', key: 'group', data: data.results});
-                        });
+                        promise = strategyGroupRepository.getList(strategyNumber);
+                    }
+                    else if (fieldKey === 'subgroup') {
+                        promise = strategySubgroupRepository.getList(strategyNumber);
                     }
 
-                    if (fieldKey === 'subgroup') {
-                        strategySubgroupRepository.getList(strategyNumber).then(function (data) {
-                            return resolve({type: 'id', key: 'subgroup', data: data.results});
-                        });
-                    }
+                }
+                else if (entity === 'counterparty' && fieldKey === 'group') {
+                   promise = counterpartyGroupRepository.getList();
+
+                }
+                else if (entity === 'responsible' && fieldKey === 'group') {
+                    promise = responsibleGroupRepository.getList();
+
                 }
 
-                if (entity === 'counterparty') {
-                    if (fieldKey === 'group') {
-                        counterpartyGroupRepository.getList().then(function (data) {
-                            return resolve({type: 'id', key: 'group', data: data.results});
-                        });
-                    }
-                }
+                if (promise) {
 
-                if (entity === 'responsible') {
-                    if (fieldKey === 'group') {
-                        responsibleGroupRepository.getList().then(function (data) {
-                            return resolve({type: 'id', key: 'group', data: data.results});
-                        });
-                    }
+                    try {
+                        const resData = await promise;
+                        // fieldKey === 'group' or in case of strategies 'group' || 'subgroup'
+                        return resolve( {type: 'id', key: fieldKey, data: resData.results} );
+
+                    } catch (error) { return reject(error); }
+
                 }
 
             }
