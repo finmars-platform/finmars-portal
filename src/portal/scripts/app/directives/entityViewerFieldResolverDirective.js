@@ -25,7 +25,6 @@
             },
             templateUrl: 'views/directives/entity-viewer-field-resolver-view.html',
             link: function (scope, elem, attrs, bfcVm) {
-
                 // scope.readyStatus = {content: false};
                 scope.readyStatus = bfcVm.readyStatus;
                 scope.readyStatus.content = false;
@@ -49,7 +48,7 @@
                 scope.inputTextObj = {
                     value: null
                 };
-                var contentType = scope.item.value_content_type || scope.item.content_type;
+                var valueContentType = scope.item.value_content_type || scope.item.content_type;
 
                 var fieldsDataIsLoaded = false;
                 var elIndexesData = {};
@@ -66,37 +65,28 @@
                     return [
                         'instrument', 'portfolio', 'account', 'responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3',
                         'currency'
-                    ].indexOf(scope.getValueEntity()) !== -1;
+                    ].includes( scope.valueEntity );
                 };
 
                 scope.getValueEntity = function () {
 
-                    // console.log('scope.getModelKeyEntity scope.item.key', scope.item.key)
+                    // var valueEntity = scope.item.key;
+                    var valueEntity = metaContentTypesService.findEntityByContentType(valueContentType);
 
-                    //var key;
-                    var valueEntity = scope.item.key;
-
-                    if (scope.entityType === 'complex-transaction') {
+                    /*if (scope.entityType === 'complex-transaction') {
 
                         valueEntity = metaContentTypesService.findEntityByContentType(contentType);
 
-                        // console.log('valueEntity', valueEntity);
+                    }*/
+                    if (scope.entityType !== 'complex-transaction') {
 
-                    } else {
-
-                        if (scope.item.key && ['linked_instrument', 'allocation_balance', 'allocation_pl'].indexOf(scope.item.key) !== -1) {
+                        /*if (scope.item.key && ['linked_instrument', 'allocation_balance', 'allocation_pl'].indexOf(scope.item.key) !== -1) {
                             valueEntity = 'instrument';
-                        } else {
 
-                            switch (scope.item.name) {
-                                case 'account_interim':
-                                case 'account_cash':
-                                case 'account_position':
-                                    valueEntity = 'account';
-                                    break;
-                            }
+                        } else if ( ['account_interim', 'account_cash', 'account_position'].includes(scope.item.name) ) {
+                          valueEntity = 'account';
+                        }*/
 
-                        }
                     }
 
                     return valueEntity;
@@ -365,11 +355,11 @@
 
                     var getFieldsP;
 
-                    if ( ['instruments.instrument', 'counterparties.counterparty', 'currencies.currency'].indexOf(contentType) > -1 ) {
+                    if ( ['instruments.instrument', 'counterparties.counterparty', 'currencies.currency'].indexOf(valueContentType) > -1 ) {
                         getFieldsP = getFields();
 
                     } else {
-                        getFieldsP = fieldResolverService.getFieldsByContentType(contentType, options, scope.fieldsDataStore);
+                        getFieldsP = fieldResolverService.getFieldsByContentType(valueContentType, options, scope.fieldsDataStore);
                     }
 
                     getFieldsP.then(function (res) {
@@ -415,13 +405,13 @@
 
                 function getFields (options) {
 
-                    if ( ['instruments.instrument', 'counterparties.counterparty', 'currencies.currency'].indexOf(contentType) > -1 ) {
+                    if ( ['instruments.instrument', 'counterparties.counterparty', 'currencies.currency'].indexOf(valueContentType) > -1 ) {
 
                         return getEmptyFields();
 
                     } else if (scope.entityType === 'complex-transaction') {
 
-                        return fieldResolverService.getFieldsByContentType(contentType, options, scope.fieldsDataStore);
+                        return fieldResolverService.getFieldsByContentType(valueContentType, options, scope.fieldsDataStore);
 
                     } else {
                         return fieldResolverService.getFields(scope.item.key, options, scope.fieldsDataStore)
@@ -482,7 +472,7 @@
 
 
                             }*/
-                            getFields().then(function (res) {
+                            getFields(options).then(function (res) {
 
                                 scope.type = res.type;
                                 scope.fields = res.data;
@@ -731,7 +721,10 @@
                         scope.modelObj.model = bfcVm.getValueFromEntity();
                         scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
-                        scope.valueEntity = scope.getValueEntity();
+                        // scope.valueEntity = scope.getValueEntity();
+                        scope.valueEntity = valueContentType ?
+                            metaContentTypesService.findEntityByContentType(valueContentType) :
+                            scope.item.key;
 
                         if (scope.evEditorEventService) {
                             initEventListeners();
