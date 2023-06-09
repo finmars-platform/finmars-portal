@@ -92,6 +92,12 @@
                 }, 3 * 1000) // 2 seconds
 
 
+                scope.$on("$destroy", function() {
+
+                    clearInterval(scope.interval);
+
+                });
+
             }
         }
 
