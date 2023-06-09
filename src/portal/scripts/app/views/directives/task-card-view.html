@@ -1,0 +1,97 @@
+<div class="task-card">
+
+    <div data-ng-if="task">
+
+        <a class="task-card-name" data-ui-sref="app.portal.tasks-page" target="_blank">{{task.verbose_name}}
+            [{{task.id}}]
+        </a>
+
+        <div class="task-card-started-at">
+            Started at: <b>{{task.created | date:'HH:mm:ss' : 'UTC'}}</b>
+            <md-tooltip class="tooltip_2"
+                        md-direction="bottom">
+                {{task.created}}
+            </md-tooltip>
+        </div>
+
+        <div class="task-card-executed-by">
+            Executed by: <b>{{task.member_object.username}}</b>
+        </div>
+
+        <div data-ng-if="task.status == 'P'" class="task-card-progress-block">
+
+            <div layout="row" layout-sm="column" layout-align="space-around" class="loader-spinner">
+                <md-progress-linear md-mode="determinate"
+                                    value="{{task.progress_object.percent}}"></md-progress-linear>
+                <md-tooltip class="tooltip_2"
+                            md-direction="bottom">
+                    {{task.progress_object.percent}}%
+                </md-tooltip>
+            </div>
+
+            <div class="task-card-progress-text">
+                {{taskDescriptionPretty}}
+            </div>
+
+        </div>
+
+        <div data-ng-if="task.status == 'D'" class="task-card-success-block">
+
+            <div class="task-card-result">Task Finished</div>
+
+            <div class="text-center width-100">
+                <span class="material-icons task-card-result-icon"
+                      style="font-size: 40px; margin: 0;">check_circle</span>
+            </div>
+
+            <div class="task-detail-field"
+                 data-ng-if="task.attachments.length">
+
+                <span class="task-detail-field-definition">Attachments</span>
+
+                <div data-ng-repeat="item in task.attachments">
+                                <span class="download-file-button"
+                                      data-ng-click="downloadFile($event, item)">{{item.file_report_object.name}}</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div data-ng-if="task.status == 'E'" class="task-card-error-block">
+
+            <div class="task-card-result">Error</div>
+
+            <div class="text-center width-100">
+                <span class="material-icons task-card-result-icon"
+                      style="font-size: 40px; margin: 0;">error</span>
+            </div>
+
+            <div class="task-card-error-text">{{task.error_message}}</div>
+
+        </div>
+
+        <div data-ng-if="task.status == 'C'" class="task-card-warning-block">
+
+            <div class="task-card-result">Canceled</div>
+
+            <div class="text-center width-100">
+                <span class="material-icons task-card-result-icon"
+                      style="font-size: 40px; margin: 0;">warning</span>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div data-ng-if="!task">
+
+        <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="50"></progress-circular>
+        </div>
+
+    </div>
+
+
+</div>
