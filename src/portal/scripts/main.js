@@ -890,6 +890,7 @@ export default (function () {
     portal.directive('ttypeActionsRelationsSelect', [require('./app/directives/ttypeActionsRelationsSelectDirective')]);
     portal.directive('entitySearchSelect', ['$mdDialog', 'metaContentTypesService', require('./app/directives/customInputs/entitySearchSelect')]);
     portal.directive('crudSelect', ['$mdDialog', require('./app/directives/crudSelect')]);
+    portal.directive('taskCard', ['$mdDialog', 'systemMessageService',  require('./app/directives/taskCardDirective')]);
     portal.directive('usercodeInput', ['configurationService', 'globalDataService', require('./app/directives/usercodeInputDirective')]);
     portal.directive('twoFieldsMultiselect', ['$mdDialog', require('./app/directives/twoFieldsMultiselectDirective')]);
     portal.directive('twoFieldsOptions', [require('./app/directives/twoFieldsOptionsDirective')]);
