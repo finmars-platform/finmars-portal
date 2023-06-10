@@ -777,7 +777,7 @@ export default (function () {
 
     portal.controller('EntitiesCustomAttributesController', ['$scope', '$mdDialog', require('./app/controllers/pages/entitiesCustomAttributesController')]);
     portal.controller('PriceDownloadSchemeController', ['$scope', require('./app/controllers/pages/priceDownloadSchemeController')]);
-    portal.controller('TemplateFieldsController', ['$scope', '$mdDialog', require('./app/controllers/pages/templateFieldsController')]);
+    portal.controller('TemplateFieldsController', ['$scope', '$mdDialog', 'configurationService', 'globalDataService', require('./app/controllers/pages/templateFieldsController')]);
     portal.controller('EntityTooltipPageController', ['$scope', 'toastNotificationService', 'attributeTypeService', 'metaContentTypesService', 'uiService', require('./app/controllers/pages/entityTooltipPageController')]);
     portal.controller('CrossEntityAttributeExtensionPageController', ['$scope', 'toastNotificationService', 'attributeTypeService', 'uiService', require('./app/controllers/pages/crossEntityAttributeExtensionPageController')]);
     portal.controller('ImportConfigurationsController', ['$scope', '$mdDialog', 'usersService', 'usersGroupService', 'metaContentTypesService', 'backendConfigurationImportService', 'systemMessageService', 'configurationService', 'configurationImportService', require('./app/controllers/pages/importConfigurationsController')]);
