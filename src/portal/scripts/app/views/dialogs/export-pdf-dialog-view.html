@@ -72,7 +72,7 @@
                 <md-input-container style="width: 160px;">
 
                     <md-checkbox ng-model="vm.settings.splitLongWords"
-                                 data-ng-click="vm.generatePreview()"
+                                 ng-change="vm.generatePreview()"
                                  aria-label="">
                         Split Long Words
                     </md-checkbox>
@@ -97,7 +97,9 @@
 
         <div data-ng-show="vm.previewReady && vm.error">
 
-            <div style="color: red; white-space: pre; background: #ddd; border: grey">{{vm.error}}</div>
+            <div style="max-width: 300px; margin: 10px auto; color: red; white-space: pre; background: #ddd; border: grey">
+                {{vm.error}}
+            </div>
 
         </div>
 
