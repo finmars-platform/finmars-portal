@@ -164,6 +164,14 @@
                 // send the object url of the pdf to the PDF preview function
                 vm.previewPDF(_OBJECT_URL);
 
+            }).catch(function (error){
+
+                vm.error = error;
+
+                vm.previewReady = true;
+
+                $scope.$apply();
+
             })
 
         }
