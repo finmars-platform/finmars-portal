@@ -19,8 +19,34 @@
             customCSS: '',
             fontSize: '10px',
             logoURL: 'https://landing.finmars.com/wp-content/uploads/2023/06/logo.png',
-            notes: ''
+            notes: '',
+            splitLongWords: false,
         };
+
+        vm.previewReady = false;
+
+        function splitLongWords(sentence) {
+            const words = sentence.split(' ');
+            const maxLength = 10;
+
+            const splitWords = words.map(word => {
+                if (word.length > maxLength) {
+                    const splitParts = [];
+                    let currentIndex = 0;
+
+                    while (currentIndex < word.length) {
+                        splitParts.push(word.substr(currentIndex, maxLength));
+                        currentIndex += maxLength;
+                    }
+
+                    return splitParts.join(' ');
+                }
+
+                return word;
+            });
+
+            return splitWords.join(' ');
+        }
 
         vm.entityType = data.entityType;
 
@@ -124,6 +150,8 @@
 
         vm.generatePreview = function () {
 
+            vm.previewReady = false;
+
             vm.resultHTML = vm.getHTMLContent();
 
             exportPdfService.generatePdf({
@@ -141,6 +169,7 @@
         }
 
         vm.previewPDF = function (pdf_url) {
+
 
             window.pdfjsLib.getDocument({url: pdf_url}).promise.then(function (pdf_doc) {
                 vm.pdf_document = pdf_doc;
@@ -186,6 +215,10 @@
                     viewport: viewport
                 };
                 page.render(renderContext);
+
+                vm.previewReady = true;
+                $scope.$apply();
+
             });
 
         }
@@ -238,12 +271,12 @@
                 var result = '<th>';
 
                 if (column.layout_name) {
-                    result = result +  column.layout_name;
+                    result = result + column.layout_name;
                 } else {
-                    result = result +  column.name;
+                    result = result + column.name;
                 }
 
-                result = result  +'</th>';
+                result = result + '</th>';
 
                 return result
             }).join('');
@@ -261,8 +294,7 @@
 
                     if (item.___group_name && index === 0 && item.___level === 0) {
                         result = result + '<td style="white-space: pre; border-right: 0">GRAND TOTAL</td>';
-                    }
-                    else if (item.___group_name &&
+                    } else if (item.___group_name &&
                         item.___type === 'subtotal' &&
                         index === item.___level - 2) { // one because index, another of because of root group
                         result = result + '<td>' + item.___group_name + '</td>';
@@ -270,7 +302,7 @@
                         item.___type === 'subtotal' &&
                         index < item.___level - 2) { // one because index, another of because of root group
                         result = result + '<td style="background: #fff;">&nbsp;</td>';
-                    } else if (item[column.key] && index > item.___level - 2){
+                    } else if (item[column.key] && index > item.___level - 2) {
 
                         if (column.value_type === 20) {
 
@@ -290,7 +322,13 @@
                                 td_classes.push('no-border-left');
                             }
 
-                            result = result + '<td class="' + td_classes.join(' ') + '">' + item[column.key] + '</td>';
+                            var value = item[column.key];
+
+                            if (vm.settings.splitLongWords) {
+                                value = splitLongWords(value);
+                            }
+
+                            result = result + '<td class="' + td_classes.join(' ') + '">' + value + '</td>';
                         }
                     } else {
 
