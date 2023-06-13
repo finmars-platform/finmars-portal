@@ -144,7 +144,11 @@
 
 					        option.isActive = false;
 
-							addTo.push(option);
+                            // if option exist
+							if (!option.error_data || option.error_data.code !== 10) {
+                                addTo.push(option);
+                            }
+
 					        removeFrom.splice(i, 1);
 
 						}
@@ -170,7 +174,9 @@
 
 				scope.deselectAll = function () {
 
-					scope.allOptions = scope.allOptions.concat(scope.selectedOptions);
+                    scope.selectedOptions = scope.selectedOptions.filter( opt => !!opt.error_data );
+                    scope.allOptions = scope.allOptions.concat(scope.selectedOptions);
+
                     scope.allOptions.forEach(function (options) {
                         options.isActive = false
                     });
