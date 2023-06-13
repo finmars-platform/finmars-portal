@@ -1,4 +1,4 @@
-<md-dialog aria-label="" ng-cloak class="export-pdf-dialog" >
+<md-dialog aria-label="" ng-cloak class="export-pdf-dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Export to PDF</h2>
@@ -52,7 +52,8 @@
                         <span data-ng-if="vm.toggleCssEditor">Hide CSS Editor</span>
                     </md-button>
 
-                    <div class="ace-editor css-editor" id="aceEditor" style="height: 200px;" data-ng-show="vm.toggleCssEditor">
+                    <div class="ace-editor css-editor" id="aceEditor" style="height: 200px;"
+                         data-ng-show="vm.toggleCssEditor">
 
                     </div>
                 </div>
@@ -68,11 +69,27 @@
                     <input type="text" data-ng-model="vm.settings.notes">
                 </md-input-container>
 
+                <md-input-container style="width: 160px;">
+
+                    <md-checkbox ng-model="vm.settings.splitLongWords"
+                                 data-ng-click="vm.generatePreview()"
+                                 aria-label="">
+                        Split Long Words
+                    </md-checkbox>
+
+                </md-input-container>
+
             </div>
 
         </div>
 
-        <div>
+        <div data-ng-if="!vm.previewReady">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                <progress-circular diameter="100"></progress-circular>
+            </div>
+        </div>
+
+        <div data-ng-show="vm.previewReady">
 
             <canvas id="pdf-container" class="pdf-container"></canvas>
 
