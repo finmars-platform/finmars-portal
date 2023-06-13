@@ -150,10 +150,20 @@ input.two-fields-filter-input {
   padding-left: 18px;
 
   span.material-icons {
-    opacity: 0;
     font-size: 18px;
+  }
+
+  span.material-icons.two-fields-option-dragger {
+    opacity: 0;
     color: @gray;
     cursor: grab;
+  }
+
+  span.material-icons.error {
+    position: absolute;
+    color: @errorColor;
+    top: 0;
+    right: 12px;
   }
 
   &:hover {
