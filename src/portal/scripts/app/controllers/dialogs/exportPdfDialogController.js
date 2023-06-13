@@ -150,6 +150,8 @@
 
         vm.generatePreview = function () {
 
+            vm.error = null;
+
             vm.previewReady = false;
 
             vm.resultHTML = vm.getHTMLContent();
