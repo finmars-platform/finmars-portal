@@ -89,9 +89,15 @@
             </div>
         </div>
 
-        <div data-ng-show="vm.previewReady">
+        <div data-ng-show="vm.previewReady && !vm.error">
 
             <canvas id="pdf-container" class="pdf-container"></canvas>
+
+        </div>
+
+        <div data-ng-show="vm.previewReady && vm.error">
+
+            <div style="color: red; white-space: pre; background: #ddd; border: grey">{{vm.error}}</div>
 
         </div>
 
