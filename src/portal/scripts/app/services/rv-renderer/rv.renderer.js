@@ -10,27 +10,19 @@
 
     var evEvents = require('../../services/entityViewerEvents');
 
-    var render = function (elem, projection, globalDataService, evDataService, evEventService) {
-
-        console.time("Generating projection as HTML");
-
-        /* var columns = evDataService.getColumns();
-        var groups = evDataService.getGroups();
-
-        var nextItem;
-        var previousItem; */
-        var item;
+    var getHTML = function (items, evDataService, globalDataService) {
 
         var rows = [];
+        var item;
 
         const entityType = evDataService.getEntityType();
         // const markedReportRows = localStorageService.getMarkedRows(true, entityType);
-		const rvSettings = globalDataService.getMemberEntityViewersSettings(true, entityType);
-		const markedReportRows = rvSettings.marked_rows;
+        const rvSettings = globalDataService.getMemberEntityViewersSettings(true, entityType);
+        const markedReportRows = rvSettings.marked_rows;
 
-        for (var i = 0; i < projection.length; i = i + 1) {
+        for (var i = 0; i < items.length; i = i + 1) {
 
-            item = projection[i];
+            item = items[i];
 
             if (item.___type === 'placeholder_group' || item.___type === 'placeholder_object') {
                 rows.push('<div class="placeholder-row"></div>')
@@ -49,6 +41,21 @@
             }
 
         }
+        return rows
+    }
+
+    var render = function (elem, projection, globalDataService, evDataService, evEventService) {
+
+        console.time("Generating projection as HTML");
+
+        /* var columns = evDataService.getColumns();
+        var groups = evDataService.getGroups();
+
+        var nextItem;
+        var previousItem; */
+        var item;
+
+        var rows = getHTML(projection, evDataService, globalDataService);
 
         console.timeEnd("Generating projection as HTML");
 
@@ -67,8 +74,11 @@
 
     };
 
+
+
     module.exports = {
-        render: render
+        render: render,
+        getHTML: getHTML
     }
 
 
