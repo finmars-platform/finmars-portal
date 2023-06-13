@@ -8,8 +8,8 @@
 
     var generatePdf = function (data) {
 
-        // return window.fetch('http://0.0.0.0:5000/generate/',
-        return window.fetch('/services/pdf/generate/',
+        // return window.fetch('http://0.0.0.0:5001/generate/',
+            return window.fetch('/services/pdf/generate/',
             {
                 method: 'POST',
                 credentials: 'include', // disable on local development

@@ -7,55 +7,68 @@
     </md-toolbar>
     <md-dialog-content>
 
-        <div layout="row">
+        <div layout="column">
 
-            <md-input-container>
+            <div layout="row">
 
-                <label for="">Layout</label>
+                <md-input-container>
 
-                <md-select data-ng-model="vm.settings.layout" data-ng-change="vm.generatePreview()">
-                    <md-option data-ng-repeat="item in vm.layouts" ng-value="item.value">
-                        {{item.name}}
-                    </md-option>
-                </md-select>
+                    <label for="">Layout</label>
 
-            </md-input-container>
+                    <md-select data-ng-model="vm.settings.layout" data-ng-change="vm.generatePreview()">
+                        <md-option data-ng-repeat="item in vm.layouts" ng-value="item.value">
+                            {{item.name}}
+                        </md-option>
+                    </md-select>
 
-            <md-input-container style="width: 100px;">
+                </md-input-container>
 
-                <label for="">Font Size</label>
+                <md-input-container style="width: 100px;">
 
-                <md-select data-ng-model="vm.settings.fontSize" data-ng-change="vm.generatePreview()">
-                    <md-option data-ng-repeat="item in vm.fontSizes" ng-value="item.value">
-                        {{item.name}}
-                    </md-option>
-                </md-select>
+                    <label for="">Font Size</label>
 
-            </md-input-container>
+                    <md-select data-ng-model="vm.settings.fontSize" data-ng-change="vm.generatePreview()">
+                        <md-option data-ng-repeat="item in vm.fontSizes" ng-value="item.value">
+                            {{item.name}}
+                        </md-option>
+                    </md-select>
 
-            <md-input-container>
-                <label for="">Title</label>
-                <input type="text" data-ng-model="vm.settings.title">
-            </md-input-container>
+                </md-input-container>
 
-            <md-input-container>
-                <label for="">Logo (URL)</label>
-                <input type="text" data-ng-model="vm.settings.logoURL">
-            </md-input-container>
+                <md-input-container>
+                    <label for="">Title</label>
+                    <input type="text" data-ng-model="vm.settings.title">
+                </md-input-container>
 
-            <div>
+                <md-input-container>
+                    <label for="">Logo (URL)</label>
+                    <input type="text" data-ng-model="vm.settings.logoURL">
+                </md-input-container>
 
-                <md-button data-ng-click="vm.toggleCssEditor = !vm.toggleCssEditor">
-                    <span data-ng-if="!vm.toggleCssEditor">Show CSS Editor</span>
-                    <span data-ng-if="vm.toggleCssEditor">Hide CSS Editor</span>
-                </md-button>
+                <div>
 
-                <div class="ace-editor css-editor" id="aceEditor" style="height: 200px;" data-ng-show="vm.toggleCssEditor">
+                    <md-button data-ng-click="vm.toggleCssEditor = !vm.toggleCssEditor">
+                        <span data-ng-if="!vm.toggleCssEditor">Show CSS Editor</span>
+                        <span data-ng-if="vm.toggleCssEditor">Hide CSS Editor</span>
+                    </md-button>
 
+                    <div class="ace-editor css-editor" id="aceEditor" style="height: 200px;" data-ng-show="vm.toggleCssEditor">
+
+                    </div>
                 </div>
+
+                <md-button data-ng-click="vm.generatePreview()">Preview</md-button>
+
             </div>
 
-            <md-button data-ng-click="vm.generatePreview()">Preview</md-button>
+            <div layout="row">
+
+                <md-input-container>
+                    <label for="">Notes</label>
+                    <input type="text" data-ng-model="vm.settings.notes">
+                </md-input-container>
+
+            </div>
 
         </div>
 
