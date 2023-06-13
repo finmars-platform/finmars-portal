@@ -385,7 +385,6 @@
             'src/core/ace/mode-html.js',
             'src/core/ace/mode-javascript.js',
             'src/core/ace/theme-monokai.js',
-
             'node_modules/d3/dist/d3.js',
             'node_modules/qrious/dist/qrious.js'
         ];
@@ -408,11 +407,13 @@
 
         var pathToMinJs = [
             'src/temp/' + appName + '/plugins.min.js',
-            'node_modules/@simonwep/pickr/dist/pickr.min.js'
+            'node_modules/@simonwep/pickr/dist/pickr.min.js',
+            'node_modules/pdfjs-dist/build/pdf.min.js',
+            'node_modules/pdfjs-dist/build/pdf.worker.min.js'
         ];
 
         return gulp.src(pathToMinJs)
-            .pipe(strip({trim: true}))
+            // .pipe(strip({trim: true}))
             .pipe(concat('plugins.min.js'))
             .pipe(gulp.dest('dist/' + appName + '/scripts/'));
     }
@@ -426,6 +427,7 @@
             'node_modules/pickmeup/css/pickmeup.css',
             'node_modules/jsondiffpatch/dist/formatters-styles/annotated.css',
             'node_modules/jsondiffpatch/dist/formatters-styles/html.css',
+            'node_modules/pdfjs-dist/web/pdf_viewer.css'
         ];
 
         return gulp.src(pathToCSS)
