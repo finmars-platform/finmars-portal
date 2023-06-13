@@ -240,7 +240,8 @@
         vm.recalculate = function (paramsObj) {
 
             var inputs = paramsObj.inputs;
-            sharedLogicHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
+            console.log("testing1602 recalculate ", inputs, vm.transactionType.inputs);
+            inputs = sharedLogicHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
 
             if (inputs && inputs.length) {
 
@@ -266,6 +267,7 @@
                 transactionTypeService.initBookComplexTransaction(vm.transactionTypeId, contextParameters).then(async function (data) {
 
                     vm.transactionType = data.transaction_type_object;
+                    console.log("testing1602 transactionType ", structuredClone(vm.transactionType) );
                     vm.entity = data.complex_transaction;
                     vm.entity.values = data.values;
 

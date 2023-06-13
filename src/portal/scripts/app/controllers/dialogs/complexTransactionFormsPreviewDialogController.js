@@ -297,7 +297,7 @@
 		vm.recalculate = function (paramsObj) {
 
 			var inputs = paramsObj.inputs;
-			sharedLogicHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
+			inputs = sharedLogicHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
 
 			if (inputs && inputs.length) {
 

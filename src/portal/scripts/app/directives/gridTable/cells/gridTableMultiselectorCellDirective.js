@@ -149,7 +149,7 @@
 						scope.chipsOrderSettings = ''
 					}
 
-					if (!scope.column.settings.selectorOptions && scope.column.settings.getItemsMethod) {
+					if ( !scope.column.settings.selectorOptions && scope.column.settings.getItemsMethod ) {
 						await getMultiselectorOptions();
 					}
 
