@@ -19,6 +19,7 @@
             customCSS: '',
             fontSize: '10px',
             logoURL: 'https://landing.finmars.com/wp-content/uploads/2023/06/logo.png',
+            notes: ''
         };
 
         vm.entityType = data.entityType;
@@ -391,7 +392,7 @@ td.no-border-left {
   <div class="header">
     <div><img src="${vm.settings.logoURL}" class="logo" alt="logo"></div>
     <span class="title">${vm.settings.title}</span>
-    <span class="report-info">${vm.settings.reportInfo}</span>
+    <span class="report-info">${vm.settings.reportInfo} ${vm.settings.notes}</span>
   </div>
   <table>
     <thead>
