@@ -23,6 +23,11 @@
                     'Content-type': 'application/json'
                 }
             }).then(function (data) {
+
+                if (data.status !== 200) {
+                    throw new Error('Error while generating pdf');
+                }
+
             return data.blob();
         })
 
