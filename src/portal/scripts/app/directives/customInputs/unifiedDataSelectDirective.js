@@ -661,6 +661,7 @@
                         }
                         else if ( scope.entityType === 'counterparty' ) {
                             finmarsDatabaseService.getCounterpartiesList({
+                                pageSize: 40,
                                 filters: {
                                     query: scope.inputText,
                                     page: 0,
@@ -766,7 +767,7 @@
 
                 var init = function () {
 
-                    if ( ['currency', 'counterparty'].indexOf(scope.entityType) > -1 ) {
+                    if ( ['currency', 'counterparty'].indexOf(scope.entityType) < 0 ) {
 
                         scope.error = 'Unknown entity type';
                         throw new Error(`Wrong entity type of unifiedDataSelectDirective: ${scope.entityType}`);

@@ -303,15 +303,20 @@
             //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?page=' + vm.globalPage
             // }
             //
+            var opts = {
+                filters: {
+                    page: vm.globalPage,
+                    instrument_type: vm.instrument_type,
+                }
+            }
 
-
-            instrumentDatabaseSearchService.getList(vm.inputText, vm.globalPage, vm.instrument_type).then(function (data) {
+            instrumentDatabaseSearchService.getList(vm.inputText, opts).then(function (data) {
 
                 vm.globalProcessing = false;
 
-                vm.databaseInstrumentsTotal = data.resultCount
+                vm.databaseInstrumentsTotal = data.count;
 
-                data.foundItems.forEach(function (item) {
+                data.results.forEach(function (item) {
 
                     item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY")
 
@@ -319,7 +324,7 @@
 
                 })
 
-                vm.totalPages = Math.round(data.resultCount / data.pageSize)
+                vm.totalPages = Math.round(data.count / data.pageSize)
 
                 $scope.$apply();
 
@@ -350,12 +355,18 @@
                     // if (vm.instrument_type){
                     //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?instrument_type=' + vm.instrument_type
                     // }
+                    var opts = {
+                        filters: {
+                            page: 0,
+                            instrument_type: vm.instrument_type,
+                        }
+                    };
 
-                    instrumentDatabaseSearchService.getList(vm.inputText, 0, vm.instrument_type).then(function (data) {
+                    instrumentDatabaseSearchService.getList(vm.inputText, opts).then(function (data) {
                         // TODO: testing1736 properties of data will change
-                        vm.databaseInstrumentsTotal = data.resultCount
+                        vm.databaseInstrumentsTotal = data.count;
 
-                        vm.databaseInstruments = data.foundItems
+                        vm.databaseInstruments = data.results;
 
                         vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
 
@@ -367,7 +378,7 @@
 
                         resolve()
 
-                        vm.totalPages = Math.round(data.resultCount / data.pageSize)
+                        vm.totalPages = Math.round(data.count / data.pageSize)
 
                     }).catch(function (error) {
 

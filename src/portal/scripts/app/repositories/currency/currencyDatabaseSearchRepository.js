@@ -24,7 +24,7 @@
         // var url = baseUrl + '/' + prefix + '/api/v1/'  + 'currencies/currency-database-search/?query=' + searchString + '&page=' + page
 
 
-        return xhrService.fetch('https://database.finmars.com/api/v1/currency/?query=' + searchString + '&page=' + page,
+        return xhrService.fetch('https://database.finmars.com/api/v1/currency/?query=' + searchString + '&page_size=40' + '&page=' + page,
             {
                 method: 'GET',
                 // credentials: 'include',
