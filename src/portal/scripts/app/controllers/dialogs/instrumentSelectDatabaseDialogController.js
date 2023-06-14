@@ -8,7 +8,6 @@
     var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
     var instrumentDatabaseSearchService = require('../../services/instrument/instrumentDatabaseSearchService');
 
-
     module.exports = function ($scope, $mdDialog, toastNotificationService, instrumentService, data) {
 
         var vm = this;
@@ -353,7 +352,7 @@
                     // }
 
                     instrumentDatabaseSearchService.getList(vm.inputText, 0, vm.instrument_type).then(function (data) {
-
+                        // TODO: testing1736 properties of data will change
                         vm.databaseInstrumentsTotal = data.resultCount
 
                         vm.databaseInstruments = data.foundItems

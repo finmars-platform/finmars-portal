@@ -12,16 +12,17 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function (name, page, instrument_type) {
+    var getList = function (searchString, page, instrument_type) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+        /*var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();*/
 
         if (page === null || page === undefined) {
             page = 0
         }
 
-        var instrumentDatabaseUrl = baseUrl + '/' + prefix + '/api/'  + 'instruments/instrument-database-search/?name=' + name + '&page=' + page
+        // var instrumentDatabaseUrl = baseUrl + '/' + prefix + '/api/'  + 'instruments/instrument-database-search/?query=' + searchString + '&page=' + page
+        var instrumentDatabaseUrl = 'https://database.finmars.com/api/v1/instrument/?query=' + searchString + '&page=' + page;
 
         if (instrument_type) {
             instrumentDatabaseUrl = instrumentDatabaseUrl + '&instrument_type=' + instrument_type
