@@ -27,7 +27,7 @@
         return xhrService.fetch('https://database.finmars.com/api/v1/currency/?query=' + searchString + '&page=' + page,
             {
                 method: 'GET',
-                credentials: 'include',
+                // credentials: 'include',
                 headers: {
                     'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
