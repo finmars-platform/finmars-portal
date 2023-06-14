@@ -12,7 +12,7 @@ export default function (cookieService, xhrService) {
         return xhrService.fetch(configureRepositoryUrlService.configureUrl('https://database.finmars.com/api/v1/currency/'),
             {
                 method: 'GET',
-                credentials: 'include',
+                // credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     'Authorization': 'Token ' + cookieService.getCookie('access_token'),
@@ -27,7 +27,7 @@ export default function (cookieService, xhrService) {
         return xhrService.fetch(configureRepositoryUrlService.configureUrl('https://database.finmars.com/api/v1/company/', options),
             {
                 method: 'GET',
-                credentials: 'include',
+                // credentials: 'include',
                 headers: {
                     'X-CSRFToken': cookieService.getCookie('csrftoken'),
                     'Authorization': 'Token ' + cookieService.getCookie('access_token'),

@@ -32,7 +32,7 @@
         return xhrService.fetch(instrumentDatabaseUrl,
             {
                 method: 'GET',
-                credentials: 'include',
+                // credentials: 'include',
                 headers: {
                     'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
