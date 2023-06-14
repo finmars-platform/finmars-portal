@@ -9,13 +9,11 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
     var entityResolverService = require('../../services/entityResolverService');
 
-    var finmarsDatabaseService = require('../../services/finmarsDatabaseService')
-    var importUnifiedDataService = require('../../services/import/importUnifiedDataService');
     var importCurrencyCbondsService = require('../../services/import/importCurrencyCbondsService');
     var currencyDatabaseSearchService = require('../../services/currency/currencyDatabaseSearchService');
 
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, finmarsDatabaseService, data) {
 
         var vm = this;
 
@@ -93,7 +91,7 @@
 
                 if (selectedDatabaseItem) {
 
-                    if (vm.entityType === 'currency') {
+                    /* if (vm.entityType === 'currency') {
 
                         var config = {
                             currency_code: selectedDatabaseItem.code,
@@ -118,6 +116,7 @@
 
                             } else {
 
+                                // TODO: FN-1736 - check that properties of 'data' still the same
                                 vm.selectedItem = {
                                     id: data.result_id,
                                     name: selectedDatabaseItem.name,
@@ -131,7 +130,8 @@
 
                         })
 
-                    } else {
+                    }
+                    else {
 
 
                         var config = {
@@ -139,7 +139,7 @@
                             entity_type: vm.entityType
                         };
 
-                        importUnifiedDataService.download(config).then(function (data) {
+                        finmarsDatabaseService.downloadCounterparty(config).then(function (data) {
 
                             if (data.errors.length) {
 
@@ -169,7 +169,57 @@
                         })
 
 
+                    } */
+                    var promise;
+
+                    if (vm.entityType === 'currency') {
+
+                        promise = importCurrencyCbondsService.download(
+                            {
+                                currency_code: selectedDatabaseItem.code,
+                                mode: 1,
+                            }
+                        )
+
                     }
+                    else if (vm.entityType === 'counterparty') {
+
+                        promise = finmarsDatabaseService.downloadCounterparty(
+                            {
+                                company_id: '', // TODO: FN-1736 assign company id from item
+                            }
+                        )
+
+                    }
+
+                    promise.then(function (data) {
+
+                        if (data.errors.length) {
+
+                            vm.isDisabled = false;
+                            vm.selectedItem = null;
+
+                            toastNotificationService.error(data.errors[0])
+
+                            $scope.$apply();
+
+                            resolve()
+
+                        } else {
+
+                            // TODO: FN-1736 - check that properties of 'data' still the same
+                            vm.selectedItem = {
+                                id: data.result_id,
+                                name: selectedDatabaseItem.name,
+                                user_code: selectedDatabaseItem.code
+                            }
+
+                            resolve()
+
+
+                        }
+
+                    })
 
 
                 }
@@ -300,11 +350,12 @@
 
                         vm.databaseItems = data.results;
 
-                        vm.totalPages = Math.round(data.resultCount / 40);
+                        vm.totalPages = Math.round(data.count / 40);
 
                         $scope.$apply();
 
-                    }).catch(function (error) {
+                    })
+                    .catch(function (error) {
 
                         vm.globalProcessing = false;
 
@@ -315,12 +366,15 @@
                         $scope.$apply();
 
                     })
-                } else {
+                }
+                else {
+
                     finmarsDatabaseService.getCounterpartiesList({
                         filters: {
                             query: vm.inputText
                         }
-                    }).then(function (data) {
+                    })
+                    .then(function (data) {
 
                         vm.globalProcessing = false;
 
@@ -328,12 +382,12 @@
 
                         vm.databaseItems = data.results;
 
-
                         vm.totalPages = Math.round(data.count / 40)
 
                         $scope.$apply();
 
-                    }).catch(function (error) {
+                    })
+                    .catch(function (error) {
 
                         vm.globalProcessing = false;
 
@@ -377,7 +431,7 @@
 
                         vm.databaseItems = data.results;
 
-                        vm.totalPages = Math.round(data.resultCount / 40);
+                        vm.totalPages = Math.round(data.count / 40);
 
                         resolve()
 
@@ -390,30 +444,36 @@
                         resolve()
 
                     })
-                } else {
-                    unifiedDataService.getList(vm.entityType, {
+                }
+                else if (vm.entityType === 'counterparty') {
+
+                    finmarsDatabaseService.getCounterpartiesList({
                         filters: {
-                            query: vm.inputText
+                            query: vm.inputText,
+                            page: 0,
                         }
-                    }).then(function (data) {
-
-                        vm.databaseItemsTotal = data.count;
-
-                        vm.databaseItems = data.results;
-
-                        resolve()
-
-                        vm.totalPages = Math.round(data.count / 40)
-
-                    }).catch(function (error) {
-
-                        console.log("Database error occurred", error)
-
-                        vm.databaseItems = []
-
-                        resolve()
-
                     })
+                        .then(function (data) {
+
+                            vm.databaseItemsTotal = data.count;
+
+                            vm.databaseItems = data.results;
+
+                            resolve()
+
+                            vm.totalPages = Math.round(data.count / 40)
+
+                        })
+                        .catch(function (error) {
+
+                            console.log("Database error occurred", error)
+
+                            vm.databaseItems = []
+
+                            resolve()
+
+                        });
+
                 }
 
             }))

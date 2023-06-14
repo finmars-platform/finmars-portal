@@ -30,6 +30,7 @@ import expressionService from "./app/services/expression.serviceNew";
 import dashboardConstructorMethodsService
     from "./app/services/dashboard-constructor/dashboardConstructorMethodsService";
 
+import finmarsDatabaseService from "./app/services/finmarsDatabaseService";
 import configurationImportGetService from "./app/services/configuration-import/configurationImportGetService";
 import configurationImportMapService from "./app/services/configuration-import/configurationImportMapService";
 import configurationImportSyncService from "./app/services/configuration-import/configurationImportSyncService";
@@ -144,6 +145,7 @@ export default (function () {
     portal.service('dashboardConstructorMethodsService', ['uiService', 'dashboardHelper', dashboardConstructorMethodsService]);
     portal.service('utilsService', ['cookieService', 'xhrService', utilsService]);
     portal.service('configurationService', ['cookieService', 'xhrService', configurationService]);
+    portal.service('finmarsDatabaseService', ['cookieService', 'xhrService', finmarsDatabaseService]);
 
     //# region Services for import and export
     portal.service('configurationImportGetService', ['entityResolverService', 'customFieldService', 'attributeTypeService', 'transactionTypeService', configurationImportGetService]);
@@ -306,7 +308,7 @@ export default (function () {
     portal.controller('BulkJsonViewDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/bulkJsonViewDialogController')]);
 
     portal.controller('InstrumentSelectDatabaseDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'instrumentService', 'data', require('./app/controllers/dialogs/instrumentSelectDatabaseDialogController')]);
-    portal.controller('UnifiedSelectDatabaseDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/unifiedSelectDatabaseDialogController')]);
+    portal.controller('UnifiedSelectDatabaseDialogController', ['$scope', '$mdDialog', 'finmarsDatabaseService', 'data', require('./app/controllers/dialogs/unifiedSelectDatabaseDialogController')]);
 
 
     portal.controller('EcosystemDefaultSettingsController', ['$scope', '$mdDialog', 'toastNotificationService', 'usersService', 'ecosystemDefaultService', 'fieldResolverService', require('./app/controllers/pages/ecosystemDefaultSettingsController')]);
@@ -927,7 +929,7 @@ export default (function () {
     portal.directive('expressionInput', ['$mdDialog', require('./app/directives/customInputs/expressionInputDirective')]);
     portal.directive('dropdownSelect', ['$mdDialog', require('./app/directives/customInputs/dropdownSelectDirective')]);
     portal.directive('instrumentSelect', ['$mdDialog', 'toastNotificationService', 'instrumentService', require('./app/directives/customInputs/instrumentSelectDirective')]);
-    portal.directive('unifiedDataSelect', ['$mdDialog', require('./app/directives/customInputs/unifiedDataSelectDirective')]);
+    portal.directive('unifiedDataSelect', ['$mdDialog', 'finmarsDatabaseService', require('./app/directives/customInputs/unifiedDataSelectDirective')]);
     portal.directive('classifierSelect', ['$mdDialog', require('./app/directives/customInputs/classifierSelectDirective')]);
     portal.directive('multitypeField', [require('./app/directives/customInputs/multitypeFieldDirective')]);
     portal.directive('multiinputField', [multiinputFieldDirective]);
