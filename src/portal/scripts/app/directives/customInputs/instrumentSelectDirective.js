@@ -594,10 +594,10 @@
                         promises.push(new Promise(function (resolve, reject) {
 
                             instrumentDatabaseSearchService.getList(scope.inputText).then(function (data) {
-                                // TODO: testing1736 properties of data will change
-                                scope.databaseInstrumentsTotal = data.resultCount;
 
-                                scope.databaseInstruments = data.foundItems
+                                scope.databaseInstrumentsTotal = data.count;
+
+                                scope.databaseInstruments = data.results;
 
                                 scope.databaseInstruments = scope.databaseInstruments.map(function (item) {
 
