@@ -32,6 +32,7 @@
                 scope.dropdownMenuShown = false;
                 scope.dropdownMenuFilter = '';
                 scope.processing = false;
+                scope.loadingInstr = false;
 
                 scope.localInstrumentsTotal = 0;
                 scope.databaseInstrumentsTotal = 0;
@@ -96,7 +97,7 @@
 
                         scope.hoverInstrument.available_for_update = true;
 
-                        if (scope.hoverInstrument.id) {
+                        if (!scope.hoverInstrument.isin) {
                             if (scope.hoverInstrument.instrument_type_object.user_code === 'bonds' || scope.hoverInstrument.instrument_type_object.user_code === 'stocks') {
 
                                 let regexp = /^([A-Z]{2})([A-Z0-9]{9})([0-9]{1})/g
@@ -110,7 +111,8 @@
                             } else {
                                 scope.hoverInstrument.available_for_update = false;
                             }
-                        } else {
+                        }
+                        else {
                             // instrument that is not yet downloaded
                             scope.hoverInstrument.available_for_update = false;
                         }
@@ -190,13 +192,17 @@
                 }
 
                 var onSdiError = function (errorMessage) {
-
+                    console.log("testing1736 onSdiError", errorMessage);
                     toastNotificationService.error(errorMessage);
-
+                    console.log("testing1736 onSdiError 1");
                     scope.model = null;
 
                     scope.itemName = '';
                     scope.inputText = '';
+
+                    scope.processing = false;
+                    scope.loadingInstr = false;
+                    scope.isDisabled = false;
 
                     setTimeout(function () {
 
@@ -208,7 +214,7 @@
                 };
 
                 scope.selectDatabaseInstrument = function (item) {
-
+                    console.log('testing1736 selectDatabaseInstrument', item);
                     console.log('selectDatabaseInstrument.item', item);
 
                     closeDropdownMenu();
@@ -233,21 +239,19 @@
                         instrument_type_code: item.instrument_type,
                         mode: 1,
                     };
-
+                    console.log("testing1736 selectDatabaseInstrument config", config);
                     scope.itemName = item.name;
                     scope.inputText = item.name;
 
                     scope.processing = true;
+                    scope.loadingInstr = true;
                     scope.isDisabled = true;
 
                     importInstrumentCbondsService.download(config)
                         .then(function (data) {
 
                             console.log('data', data);
-
-                            scope.isDisabled = false;
-                            scope.processing = false;
-
+                            console.log("testing1736 selectDatabaseInstrument data", data);
                             if (data.errors && data.errors.length) {
 
                                 onSdiError( data.errors[0] );
@@ -259,6 +263,10 @@
 
                                     tasksService.getByKey(data.task)
                                         .then(function (taskData) {
+                                            console.log("testing1736 selectDatabaseInstrument taskData", taskData);
+                                            scope.isDisabled = false;
+                                            scope.loadingInstr = true;
+                                            scope.processing = false;
 
                                             if (taskData.status === 'D') {
 
@@ -432,7 +440,9 @@
                 scope.updateLocalInstrument = function (item) {
 
                     var config = {
-                        instrument_code: item.user_code,
+                        instrument_code: item.reference,
+                        instrument_name: item.name,
+                        instrument_type_code: item.instrument_type,
                         mode: 1
                     };
 
@@ -660,31 +670,31 @@
                     if (scope.inputText.length > 2) {
                         promises.push(new Promise(function (resolve, reject) {
 
-                            instrumentDatabaseSearchService.getList(scope.inputText).then(function (data) {
+                            instrumentDatabaseSearchService.getList(scope.inputText)
+                                .then(function (data) {
 
-                                scope.databaseInstrumentsTotal = data.count;
+                                    scope.databaseInstrumentsTotal = data.count;
 
-                                scope.databaseInstruments = data.results;
+                                    scope.databaseInstruments = data.results;
 
-                                scope.databaseInstruments = scope.databaseInstruments.map(function (item) {
+                                    scope.databaseInstruments = scope.databaseInstruments.map(function (item) {
 
-                                    item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY")
+                                        item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY");
+                                        return item;
 
-                                    return item;
+                                    })
+                                    console.log("testing1736 scope.databaseInstruments", scope.databaseInstruments);
+                                    resolve()
 
                                 })
+                                .catch(function (error) {
 
-                                resolve()
+                                    console.log("Instrument Database error occurred", error)
+                                    scope.databaseInstruments = []
 
-                            }).catch(function (error) {
+                                    resolve()
 
-                                console.log("Instrument Database error occurred", error)
-
-                                scope.databaseInstruments = []
-
-                                resolve()
-
-                            })
+                                });
 
                         }))
                     }
@@ -721,19 +731,19 @@
 
 
                     Promise.all(promises).then(function (data) {
-
+                        console.log("testing1736 scope.databaseInstruments 2", structuredClone(scope.databaseInstruments) );
                         scope.databaseInstruments = scope.databaseInstruments.filter(function (databaseInstrument) {
 
                             var exist = false;
 
                             scope.localInstruments.forEach(function (localInstrument) {
 
-                                if (localInstrument.user_code === databaseInstrument.referenceId) {
-                                    exist = true
+                                if (localInstrument.user_code === databaseInstrument.reference) {
+                                    exist = true;
                                 }
 
-                                if (localInstrument.reference_for_pricing === databaseInstrument.referenceId) {
-                                    exist = true
+                                if (localInstrument.reference_for_pricing === databaseInstrument.reference) {
+                                    exist = true;
                                 }
 
 

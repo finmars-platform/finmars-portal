@@ -25,7 +25,7 @@ import configureRepositoryUrlService from "../../../../../shell/scripts/app/serv
         options.filters.query = searchString;
 
         if (options.page === null || options.page === undefined) {
-            options.page = 0;
+            options.page = 1;
         }
 
         /*var instrumentDatabaseUrl = 'https://database.finmars.com/api/v1/instrument/?query=' + searchString + '&page_size=40' + '&page=' + page;

@@ -12,11 +12,17 @@
                 <div class="flex-row">
 
                     <button data-ng-if="!noIndicatorBtn"
-                                    class="custom-input-indicator-btn position-relative"
-                                    data-ng-click="openSelectorDialog($event)"
-                                    ng-disabled="isDisabled">
+                            data-ng-hide="loadingInstr"
+                            class="custom-input-indicator-btn position-relative"
+                            data-ng-click="openSelectorDialog($event)"
+                            data-ng-disabled="isDisabled">
                         <span class="material-icons">menu</span>
                     </button>
+
+                    <div data-ng-if="loadingInstr" class="loader">
+                        <progress-circular data-diameter="20"></progress-circular>
+                        <md-tooltip class="tooltip_1" data-md-direction="top">Loading instrument</md-tooltip>
+                    </div>
 
                     <input
                         type="text"
@@ -119,15 +125,15 @@
                             >
 
 
-                        <div class="instrument-select-instrument-name" data-ng-bind-html="getHighlighted(option.issueName)">
+                        <div class="instrument-select-instrument-name" data-ng-bind-html="getHighlighted(option.name)">
 
                         </div>
-                        <div class="instrument-select-instrument-isin" data-ng-bind-html="getHighlighted(option.referenceId)">
+                        <div class="instrument-select-instrument-isin" data-ng-bind-html="getHighlighted(option.reference)">
 
                         </div>
 
-                        <div class="instrument-select-instrument-ticker" data-ng-if="option.bloombergTicker">
-                            {{option.bloombergTicker}}
+                        <div class="instrument-select-instrument-ticker" data-ng-if="option.ticker">
+                            {{option.ticker}}
                         </div>
 
                     </div>
@@ -163,8 +169,9 @@
                     </div>
                     <div class="instrument-select-option-detail-value" style="width: 140px">
 
-                        <span data-ng-if="hoverInstrument.id">{{hoverInstrument.name}}</span>
-                        <span data-ng-if="!hoverInstrument.id">{{hoverInstrument.issueName}}</span>
+                        <!--<span data-ng-if="hoverInstrument.id">{{hoverInstrument.name}}</span>
+                        <span data-ng-if="!hoverInstrument.id">{{hoverInstrument.issueName}}</span>-->
+                        <span data-ng-if="hoverInstrument">{{hoverInstrument.name}}</span>
 
                     </div>
 
@@ -177,8 +184,8 @@
                     </div>
                     <div class="instrument-select-option-detail-value">
 
-                        <span data-ng-if="hoverInstrument.id">{{hoverInstrument.user_code}}</span>
-                        <span data-ng-if="!hoverInstrument.id">{{hoverInstrument.referenceId}}</span>
+                        <span data-ng-if="!hoverInstrument.isin">{{hoverInstrument.user_code}}</span>
+                        <span data-ng-if="hoverInstrument.isin">{{hoverInstrument.isin}}</span>
 
                     </div>
 
@@ -191,8 +198,8 @@
                     </div>
                     <div class="instrument-select-option-detail-value">
 
-                        <span data-ng-if="hoverInstrument.id">{{hoverInstrument.reference_for_pricing}}</span>
-                        <span data-ng-if="!hoverInstrument.id">{{hoverInstrument.bloombergTicker}}</span>
+                        <span data-ng-if="!hoverInstrument.isin">{{hoverInstrument.reference_for_pricing}}</span>
+                        <span data-ng-if="hoverInstrument.isin">{{hoverInstrument.ticker}}</span>
 
                     </div>
 
@@ -205,28 +212,28 @@
                     </div>
                     <div class="instrument-select-option-detail-value">
 
-                        <span data-ng-if="hoverInstrument.id">{{hoverInstrument.instrument_type_object.name}}</span>
-                        <span data-ng-if="!hoverInstrument.id">{{hoverInstrument.instrumentType}}</span>
+                        <span data-ng-if="!hoverInstrument.isin">{{hoverInstrument.instrument_type_object.name}}</span>
+                        <span data-ng-if="hoverInstrument.isin">{{hoverInstrument.instrument_type}}</span>
 
                     </div>
 
                 </div>
 
-                <div class="instrument-select-option-detail-field">
+                <!--<div class="instrument-select-option-detail-field">
 
                     <div class="instrument-select-option-detail-label">
                         FIGI / FIGI RegS
                     </div>
                     <div class="instrument-select-option-detail-value">
 
-                        <span data-ng-if="hoverInstrument.id">-</span>
-                        <span data-ng-if="!hoverInstrument.id">{{hoverInstrument.figi}}</span>
+                        <span data-ng-if="!hoverInstrument.isin">-</span>
+                        <span data-ng-if="hoverInstrument.isin">{{hoverInstrument.figi}}</span>
 
                     </div>
 
-                </div>
+                </div>-->
 
-                <div class="instrument-select-option-detail-field">
+                <!--<div class="instrument-select-option-detail-field">
 
                     <div class="instrument-select-option-detail-label">
                         Common Code
@@ -238,7 +245,7 @@
 
                     </div>
 
-                </div>
+                </div>-->
 
                 <div class="instrument-select-option-detail-field">
 
@@ -254,7 +261,7 @@
 
                 </div>
 
-                <div class="instrument-select-option-detail-field">
+                <!--<div class="instrument-select-option-detail-field">
 
                     <div class="instrument-select-option-detail-label">
                         WKN Code
@@ -266,7 +273,7 @@
 
                     </div>
 
-                </div>
+                </div>-->
 
 
             </div>

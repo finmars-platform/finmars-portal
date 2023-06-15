@@ -450,7 +450,7 @@
                     finmarsDatabaseService.getCounterpartiesList({
                         filters: {
                             query: vm.inputText,
-                            page: 0,
+                            page: 1,
                         }
                     })
                         .then(function (data) {

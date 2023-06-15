@@ -18,7 +18,7 @@
         // var apiVersion = baseUrlService.getApiVersion();
 
         if (page === null || page === undefined) {
-            page = 0
+            page = 1
         }
 
         // var url = baseUrl + '/' + prefix + '/api/v1/'  + 'currencies/currency-database-search/?query=' + searchString + '&page=' + page
