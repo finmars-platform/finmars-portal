@@ -37,7 +37,7 @@ import configureRepositoryUrlService from "../../../../../shell/scripts/app/serv
             options.pageSize = 40;
         }
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl('https://database.finmars.com/api/v1/instrument/', options),
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl('https://database.finmars.com/api/v1/instrument-narrow/', options),
             {
                 method: 'GET',
                 // credentials: 'include',

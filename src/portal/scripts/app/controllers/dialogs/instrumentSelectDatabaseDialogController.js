@@ -62,15 +62,20 @@
 
             new Promise(function (resolve, reject) {
 
+                var localItemSelected = false;
 
                 vm.localInstruments.forEach(function (item) {
 
                     if (item.selected) {
                         vm.selectedItem = item;
-                        resolve()
+                        localItemSelected = true;
                     }
 
                 })
+
+                if (localItemSelected) {
+                    return resolve();
+                }
 
                 var selectedDatabaseInstrument;
 
@@ -83,13 +88,13 @@
                 })
 
                 if (selectedDatabaseInstrument) {
+
                     var config = {
-                        instrument_code: selectedDatabaseInstrument.referenceId,
-                        instrument_name: selectedDatabaseInstrument.issueName,
-                        instrument_type_code: selectedDatabaseInstrument.instrumentType,
+                        instrument_code: selectedDatabaseInstrument.reference,
+                        instrument_name: selectedDatabaseInstrument.name,
+                        instrument_type_code: selectedDatabaseInstrument.instrument_type,
                         mode: 1
                     };
-
 
                     vm.isDisabled = true;
 
@@ -101,7 +106,7 @@
 
                             vm.selectedItem = null;
 
-                            toastNotificationService.error(data.errors[0])
+                            toastNotificationService.error( data.errors[0] )
 
                             $scope.$apply();
 
@@ -111,8 +116,8 @@
 
                             vm.selectedItem = {
                                 id: data.result_id,
-                                name: selectedDatabaseInstrument.issueName,
-                                user_code: selectedDatabaseInstrument.referenceId
+                                name: selectedDatabaseInstrument.name,
+                                user_code: selectedDatabaseInstrument.reference,
                             }
 
                             resolve()
@@ -132,18 +137,19 @@
                 }
 
 
-            }).then(function (data) {
+            })
+                .then(function (data) {
 
-                if (vm.selectedItem) {
+                    if (vm.selectedItem) {
 
-                    if (vm.actionType === 'add_instrument_dialog') {
-                        toastNotificationService.success("Instrument has been downloaded")
+                        if (vm.actionType === 'add_instrument_dialog') {
+                            toastNotificationService.success("Instrument has been downloaded")
+                        }
+
+                        $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem}});
                     }
 
-                    $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem}});
-                }
-
-            })
+                })
 
 
         };
@@ -211,8 +217,14 @@
 
         vm.updateLocalInstrument = function (item) {
 
-            var config = {
+            /*var config = {
                 instrument_code: item.user_code,
+                mode: 1
+            };*/
+            var config = {
+                instrument_code: item.reference,
+                instrument_name: item.name,
+                instrument_type_code: item.instrument_type,
                 mode: 1
             };
 
