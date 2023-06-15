@@ -4,6 +4,7 @@
 
     var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
     var instrumentDatabaseSearchService = require('../../services/instrument/instrumentDatabaseSearchService');
+    var tasksService = require('../../services/tasksService');
 
     module.exports = function ($mdDialog, toastNotificationService, instrumentService) {
 
@@ -63,6 +64,7 @@
 
                 var inputContainer = elem[0].querySelector('.instrumentSelectInputContainer');
                 var inputElem = elem[0].querySelector('.instrumentSelectInputElem');
+                var taskIntervalId;
 
                 /*var entityIndicatorIcons = {
                     'type1': {
@@ -187,6 +189,24 @@
 
                 }
 
+                var onSdiError = function (errorMessage) {
+
+                    toastNotificationService.error(errorMessage);
+
+                    scope.model = null;
+
+                    scope.itemName = '';
+                    scope.inputText = '';
+
+                    setTimeout(function () {
+
+                        if (scope.onChangeCallback) scope.onChangeCallback();
+                        scope.$apply();
+
+                    }, 100);
+
+                };
+
                 scope.selectDatabaseInstrument = function (item) {
 
                     console.log('selectDatabaseInstrument.item', item);
@@ -198,8 +218,7 @@
                     stylePreset = '';
                     scope.error = '';
 
-
-                    var config = {
+                    /*var config = {
                         instrument_code: item.referenceId,
                         instrument_name: item.issueName,
                         instrument_type_code: item.instrumentType,
@@ -207,82 +226,130 @@
                     };
 
                     scope.itemName = item.issueName;
-                    scope.inputText = item.issueName;
+                    scope.inputText = item.issueName;*/
+                    var config = {
+                        instrument_code: item.reference,
+                        instrument_name: item.name,
+                        instrument_type_code: item.instrument_type,
+                        mode: 1,
+                    };
+
+                    scope.itemName = item.name;
+                    scope.inputText = item.name;
 
                     scope.processing = true;
                     scope.isDisabled = true;
 
-                    importInstrumentCbondsService.download(config).then(function (data) {
+                    importInstrumentCbondsService.download(config)
+                        .then(function (data) {
 
-                        console.log('data', data);
+                            console.log('data', data);
 
-                        scope.isDisabled = false;
-                        scope.processing = false;
+                            scope.isDisabled = false;
+                            scope.processing = false;
 
-                        if (data.errors && data.errors.length) {
+                            if (data.errors && data.errors.length) {
 
-                            toastNotificationService.error(data.errors[0])
+                                onSdiError( data.errors[0] );
+
+                            }
+                            else {
+
+                                taskIntervalId = setInterval(function () {
+
+                                    tasksService.getByKey(data.task)
+                                        .then(function (taskData) {
+
+                                            if (taskData.status === 'D') {
+
+                                                var entityData = taskData.result_object;
+
+                                                stylePreset = '';
+                                                scope.error = '';
+
+                                                scope.model = entityData.id;
+                                                scope.itemObject = {id: entityData.id, name: entityData.name, user_code: entityData.user_code};
+
+                                                scope.itemName = entityData.name;
+                                                scope.inputText = entityData.name;
+
+                                                scope.valueIsValid = true;
+
+                                                scope.$apply();
+
+                                                if (scope.onChangeCallback) {
+
+                                                    setTimeout(function () {
+
+                                                        scope.onChangeCallback();
+
+                                                        scope.$apply();
+
+                                                    }, 0);
+
+                                                }
+
+                                                clearInterval(taskIntervalId);
+
+                                            } /*else if (taskData.status === 'E') {
+                                                clearInterval(taskIntervalId);
+                                                toastNotificationService.error(taskData.error)
+                                            }*/
+
+                                        })
+                                        .catch(function (error) {
+
+                                            onSdiError(error.message);
+
+                                            throw error;
+
+                                        });
+
+                                }, 5*1000);
+
+                                /*stylePreset = '';
+                                scope.error = '';
+
+                                scope.model = data.result_id;
+                                scope.itemObject = {id: data.result_id, name: data.instrument_name, user_code: data.instrument_code}
+
+                                scope.itemName = data.instrument_name;
+                                scope.inputText = data.instrument_name;
+
+                                scope.valueIsValid = true;
+
+                                scope.$apply();
+
+                                setTimeout(function () {
+
+                                    if (scope.onChangeCallback) {
+
+                                        scope.onChangeCallback();
+
+                                        scope.$apply();
+
+                                    }
+
+
+                                }, 1);*/
+
+                            }
+
+                        })
+                        .catch(function (e) {
+
+                            console.log("selectDatabaseInstrument.error ", e)
+
+                            scope.processing = false;
+                            scope.isDisabled = false;
 
                             scope.model = null;
 
                             scope.itemName = ''
                             scope.inputText = ''
 
-                            setTimeout(function () {
-
-                                if (scope.onChangeCallback) scope.onChangeCallback();
-
-                                scope.$apply();
-
-                            }, 100);
-
-
-                        } else {
-
-                            stylePreset = '';
-                            scope.error = '';
-
-                            scope.model = data.result_id;
-                            scope.itemObject = {id: data.result_id, name: data.instrument_name, user_code: data.instrument_code}
-
-                            scope.itemName = data.instrument_name;
-                            scope.inputText = data.instrument_name;
-
-                            scope.valueIsValid = true;
-
                             scope.$apply();
-
-                            // scope.getList();
-
-                            setTimeout(function () {
-
-                                if (scope.onChangeCallback) {
-
-                                    scope.onChangeCallback();
-
-                                    scope.$apply();
-
-                                }
-
-
-                            }, 1);
-
-                        }
-
-                    }).catch(function (e){
-
-                        console.log("selectDatabaseInstrument.error ", e)
-
-                        scope.processing = false;
-                        scope.isDisabled = false;
-
-                        scope.model = null;
-
-                        scope.itemName = ''
-                        scope.inputText = ''
-
-                        scope.$apply();
-                    })
+                        })
 
 
                 };
