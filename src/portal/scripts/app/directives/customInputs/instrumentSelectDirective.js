@@ -265,21 +265,19 @@
                                         .then(function (taskData) {
                                             console.log("testing1736 selectDatabaseInstrument taskData", taskData);
                                             scope.isDisabled = false;
-                                            scope.loadingInstr = true;
+                                            scope.loadingInstr = false;
                                             scope.processing = false;
 
                                             if (taskData.status === 'D') {
 
-                                                var entityData = taskData.result_object;
-
                                                 stylePreset = '';
                                                 scope.error = '';
 
-                                                scope.model = entityData.id;
-                                                scope.itemObject = {id: entityData.id, name: entityData.name, user_code: entityData.user_code};
+                                                scope.model = item.id;
+                                                scope.itemObject = {id: item.id, name: item.name, user_code: item.reference};
 
-                                                scope.itemName = entityData.name;
-                                                scope.inputText = entityData.name;
+                                                scope.itemName = item.name;
+                                                scope.inputText = item.name;
 
                                                 scope.valueIsValid = true;
 
