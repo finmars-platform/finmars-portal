@@ -369,7 +369,7 @@
                     // }
                     var opts = {
                         filters: {
-                            page: 0,
+                            page: 1,
                             instrument_type: vm.instrument_type,
                         }
                     };

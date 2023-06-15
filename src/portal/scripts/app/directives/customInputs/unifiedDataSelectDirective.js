@@ -664,7 +664,7 @@
                                 pageSize: 40,
                                 filters: {
                                     query: scope.inputText,
-                                    page: 0,
+                                    page: 1,
                                 }
                             }).then(function (data) {
 
