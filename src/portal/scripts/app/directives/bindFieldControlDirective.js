@@ -97,7 +97,6 @@
 
                     } else if ($scope.item.hasOwnProperty('verbose_name')) {
                         return $scope.item.verbose_name;
-
                     }
 
                     return $scope.item.name;

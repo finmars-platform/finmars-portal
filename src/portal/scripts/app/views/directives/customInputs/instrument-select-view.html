@@ -12,14 +12,14 @@
                 <div class="flex-row">
 
                     <button data-ng-if="!noIndicatorBtn"
-                            data-ng-hide="loadingInstr"
+                            data-ng-hide="loadingEntity"
                             class="custom-input-indicator-btn position-relative"
                             data-ng-click="openSelectorDialog($event)"
                             data-ng-disabled="isDisabled">
                         <span class="material-icons">menu</span>
                     </button>
 
-                    <div data-ng-if="loadingInstr" class="loader">
+                    <div data-ng-if="loadingEntity" class="loader">
                         <progress-circular data-diameter="20"></progress-circular>
                         <md-tooltip class="tooltip_1" data-md-direction="top">Loading instrument</md-tooltip>
                     </div>
@@ -82,7 +82,7 @@
 
         <div class="custom-input-sel-menu-block" >
 
-            <div data-ng-if="!processing" style="height: 369px; overflow-y: auto">
+            <div data-ng-if="!processing && !loadingEntity" style="height: 369px; overflow-y: auto">
 
                 <b data-ng-if="localInstruments.length" class="instrument-select-options-group-title">Local Instruments ({{localInstrumentsTotal}})</b>
 
@@ -148,7 +148,7 @@
 
             </div>
 
-            <div data-ng-if="processing"  layout="row" layout-sm="column" layout-align="space-around" class="p-8">
+            <div data-ng-if="processing || loadingEntity"  layout="row" layout-sm="column" layout-align="space-around" class="p-8">
                 <progress-circular diameter="50"></progress-circular>
             </div>
 

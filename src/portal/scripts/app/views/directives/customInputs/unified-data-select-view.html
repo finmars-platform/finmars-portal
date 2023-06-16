@@ -81,11 +81,9 @@
                 <div data-ng-if="localItems.length">
 
                     <div
-                            data-ng-repeat="option in localItems"
-                            data-ng-click="selectLocalItem(option)"
-                            class="unified-data-select-input-sel-option"
-
-
+                        data-ng-repeat="option in localItems"
+                        data-ng-click="selectLocalItem(option)"
+                        class="unified-data-select-input-sel-option"
                     >
 
                         <div class="unified-data-select-name" data-ng-bind-html="getHighlighted(option.name)">

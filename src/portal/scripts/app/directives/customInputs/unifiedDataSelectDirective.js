@@ -540,15 +540,19 @@
 					scope.$watch('itemName', function () {
 
 						console.log('scope.model', scope.model);
-
+                        if (scope.label === 'Transaction Currency') {
+                            console.log("testing1736 scope.itemName ", scope.itemName);
+                        }
 						if (scope.itemName) {
 							itemName = scope.itemName;
-							scope.selectedItem = {id: scope.model, name: itemName, user_code: itemName}
+							scope.selectedItem = { id: scope.model, name: itemName };
 
 						} else {
 							itemName = '';
 						}
-
+                        if (scope.label === 'Transaction Currency') {
+                            console.log("testing1736 itemName watcher ", scope.model, scope.itemName);
+                        }
 						scope.inputText = itemName;
 
 					});
@@ -636,7 +640,6 @@
                     console.log('scope.inputText.length', scope.inputText.length);
 
                     promises.push(new Promise(function (resolve, reject) {
-
 
                         if (scope.entityType === 'currency') {
 
@@ -784,7 +787,7 @@
                         applyCustomStyles();
                     }
 
-                    scope.selectedItem = {id: scope.model, name: itemName, user_code: itemName}
+                    scope.selectedItem = {id: scope.model, name: itemName }
 
                 };
 
