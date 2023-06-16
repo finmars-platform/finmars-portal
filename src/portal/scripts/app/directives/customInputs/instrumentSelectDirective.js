@@ -32,7 +32,7 @@
                 scope.dropdownMenuShown = false;
                 scope.dropdownMenuFilter = '';
                 scope.processing = false;
-                scope.loadingInstr = false;
+                scope.loadingEntity = false;
 
                 scope.localInstrumentsTotal = 0;
                 scope.databaseInstrumentsTotal = 0;
@@ -201,7 +201,7 @@
                     scope.inputText = '';
 
                     scope.processing = false;
-                    scope.loadingInstr = false;
+                    scope.loadingEntity = false;
                     scope.isDisabled = false;
 
                     setTimeout(function () {
@@ -244,7 +244,7 @@
                     scope.inputText = item.name;
 
                     scope.processing = true;
-                    scope.loadingInstr = true;
+                    scope.loadingEntity = true;
                     scope.isDisabled = true;
 
                     importInstrumentCbondsService.download(config)
@@ -263,9 +263,9 @@
 
                                     tasksService.getByKey(data.task)
                                         .then(function (taskData) {
-                                            console.log("testing1736 selectDatabaseInstrument taskData", taskData);
+
                                             scope.isDisabled = false;
-                                            scope.loadingInstr = false;
+                                            scope.loadingEntity = false;
                                             scope.processing = false;
 
                                             if (taskData.status === 'D') {
@@ -460,7 +460,7 @@
 
                         } else {
 
-                            toastNotificationService.success('Instrument ' + item.user_code + ' was updated')
+                            toastNotificationService.success('Instrument ' + item.reference + ' was updated')
 
                         }
 
@@ -574,10 +574,9 @@
                         console.log('scope.model', scope.model);
 
                         if (scope.itemName) {
-                            // itemName = scope.itemName;
-                            scope.inputText = scope.itemName;
 
-                            // scope.selectedItem = {id: scope.model, name: scope.itemName, user_code: scope.itemName}
+                            scope.inputText = scope.itemName;
+                            scope.selectedItem = { id: scope.model, name: scope.itemName, }
 
                         } else {
                             // itemName = '';
@@ -681,13 +680,12 @@
                                         return item;
 
                                     })
-                                    console.log("testing1736 scope.databaseInstruments", scope.databaseInstruments);
+
                                     resolve()
 
                                 })
                                 .catch(function (error) {
 
-                                    console.log("Instrument Database error occurred", error)
                                     scope.databaseInstruments = []
 
                                     resolve()

@@ -2,6 +2,7 @@
 @onFocusShadow: 0 0 0 1px #7d7d7d;
 @ciColor: rgba(125,125,125,1);
 @ciColorLighten: rgba(125,125,125,.5);
+@indBtnMarginLeft: 6px;
 
 .entity-editor-fixed-fields-container {
   .custom-input-container {
@@ -9,6 +10,16 @@
       background-color: #fff7e1;
     }
   }
+}
+
+.indicator-btn-mixin() {
+  width: 30px;
+  flex-basis: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 23px;
+  padding: 2px 2px;
 }
 
 .custom-input-container {
@@ -19,12 +30,11 @@
   }
 
   .loader {
-    position: absolute;
     display: flex;
     flex-direction: column;
     justify-content: center;
     height: 40px;
-    left: 6px;
+    margin-left: @indBtnMarginLeft;
     top: 0;
   }
 }
@@ -257,20 +267,13 @@
 
 
 
-// Using transition will slow work of ng-if for .custom-input-indicator-btn
+// TIPS: Using transition will slow work of ng-if for .custom-input-indicator-btn
 .custom-input-indicator-btn {
-  width: 30px;
-  flex-basis: 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 23px;
+  .indicator-btn-mixin();
   background-color: transparent;
-  padding: 2px 2px;
   border: none;
   border-radius: 0;
-  margin-left: 6px;
-  // z-index: 9;
+  margin-left: @indBtnMarginLeft;
   color: @ciColor;
 
   &:not([disabled]):hover {
