@@ -295,12 +295,11 @@
 
                     var result = '';
 
-                    /*if (
+                    if (
                         scope.entityType === 'complex-transaction' &&
                         bfcVm.fieldType.type === 'userInput' &&
                         ['instruments.instrument', 'counterparties.counterparty', 'currencies.currency'].indexOf(valueContentType) > -1
-                    ) {*/
-                    if ( false ) {
+                    ) {
 
                         var item_object = scope.entity[scope.fieldKey + '_object'];
 
