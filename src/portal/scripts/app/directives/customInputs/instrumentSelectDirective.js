@@ -4,6 +4,7 @@
 
     var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
     var instrumentDatabaseSearchService = require('../../services/instrument/instrumentDatabaseSearchService');
+    var tasksService = require('../../services/tasksService');
 
     module.exports = function ($mdDialog, toastNotificationService, instrumentService) {
 
@@ -31,6 +32,7 @@
                 scope.dropdownMenuShown = false;
                 scope.dropdownMenuFilter = '';
                 scope.processing = false;
+                scope.loadingEntity = false;
 
                 scope.localInstrumentsTotal = 0;
                 scope.databaseInstrumentsTotal = 0;
@@ -63,6 +65,7 @@
 
                 var inputContainer = elem[0].querySelector('.instrumentSelectInputContainer');
                 var inputElem = elem[0].querySelector('.instrumentSelectInputElem');
+                var taskIntervalId;
 
                 /*var entityIndicatorIcons = {
                     'type1': {
@@ -94,7 +97,7 @@
 
                         scope.hoverInstrument.available_for_update = true;
 
-                        if (scope.hoverInstrument.id) {
+                        if (!scope.hoverInstrument.isin) {
                             if (scope.hoverInstrument.instrument_type_object.user_code === 'bonds' || scope.hoverInstrument.instrument_type_object.user_code === 'stocks') {
 
                                 let regexp = /^([A-Z]{2})([A-Z0-9]{9})([0-9]{1})/g
@@ -108,7 +111,8 @@
                             } else {
                                 scope.hoverInstrument.available_for_update = false;
                             }
-                        } else {
+                        }
+                        else {
                             // instrument that is not yet downloaded
                             scope.hoverInstrument.available_for_update = false;
                         }
@@ -187,8 +191,30 @@
 
                 }
 
-                scope.selectDatabaseInstrument = function (item) {
+                var onSdiError = function (errorMessage) {
+                    console.log("testing1736 onSdiError", errorMessage);
+                    toastNotificationService.error(errorMessage);
+                    console.log("testing1736 onSdiError 1");
+                    scope.model = null;
 
+                    scope.itemName = '';
+                    scope.inputText = '';
+
+                    scope.processing = false;
+                    scope.loadingEntity = false;
+                    scope.isDisabled = false;
+
+                    setTimeout(function () {
+
+                        if (scope.onChangeCallback) scope.onChangeCallback();
+                        scope.$apply();
+
+                    }, 100);
+
+                };
+
+                scope.selectDatabaseInstrument = function (item) {
+                    console.log('testing1736 selectDatabaseInstrument', item);
                     console.log('selectDatabaseInstrument.item', item);
 
                     closeDropdownMenu();
@@ -198,8 +224,7 @@
                     stylePreset = '';
                     scope.error = '';
 
-
-                    var config = {
+                    /*var config = {
                         instrument_code: item.referenceId,
                         instrument_name: item.issueName,
                         instrument_type_code: item.instrumentType,
@@ -207,82 +232,130 @@
                     };
 
                     scope.itemName = item.issueName;
-                    scope.inputText = item.issueName;
+                    scope.inputText = item.issueName;*/
+                    var config = {
+                        instrument_code: item.reference,
+                        instrument_name: item.name,
+                        instrument_type_code: item.instrument_type,
+                        mode: 1,
+                    };
+                    console.log("testing1736 selectDatabaseInstrument config", config);
+                    scope.itemName = item.name;
+                    scope.inputText = item.name;
 
                     scope.processing = true;
+                    scope.loadingEntity = true;
                     scope.isDisabled = true;
 
-                    importInstrumentCbondsService.download(config).then(function (data) {
+                    importInstrumentCbondsService.download(config)
+                        .then(function (data) {
 
-                        console.log('data', data);
+                            console.log('data', data);
+                            console.log("testing1736 selectDatabaseInstrument data", data);
+                            if (data.errors && data.errors.length) {
 
-                        scope.isDisabled = false;
-                        scope.processing = false;
+                                onSdiError( data.errors[0] );
 
-                        if (data.errors && data.errors.length) {
+                            }
+                            else {
 
-                            toastNotificationService.error(data.errors[0])
+                                taskIntervalId = setInterval(function () {
+
+                                    tasksService.getByKey(data.task)
+                                        .then(function (taskData) {
+
+                                            scope.isDisabled = false;
+                                            scope.loadingEntity = false;
+                                            scope.processing = false;
+
+                                            if (taskData.status === 'D') {
+
+                                                stylePreset = '';
+                                                scope.error = '';
+
+                                                scope.model = item.id;
+                                                scope.itemObject = {id: item.id, name: item.name, user_code: item.reference};
+
+                                                scope.itemName = item.name;
+                                                scope.inputText = item.name;
+
+                                                scope.valueIsValid = true;
+
+                                                scope.$apply();
+
+                                                if (scope.onChangeCallback) {
+
+                                                    setTimeout(function () {
+
+                                                        scope.onChangeCallback();
+
+                                                        scope.$apply();
+
+                                                    }, 0);
+
+                                                }
+
+                                                clearInterval(taskIntervalId);
+
+                                            } /*else if (taskData.status === 'E') {
+                                                clearInterval(taskIntervalId);
+                                                toastNotificationService.error(taskData.error)
+                                            }*/
+
+                                        })
+                                        .catch(function (error) {
+
+                                            onSdiError(error.message);
+
+                                            throw error;
+
+                                        });
+
+                                }, 5*1000);
+
+                                /*stylePreset = '';
+                                scope.error = '';
+
+                                scope.model = data.result_id;
+                                scope.itemObject = {id: data.result_id, name: data.instrument_name, user_code: data.instrument_code}
+
+                                scope.itemName = data.instrument_name;
+                                scope.inputText = data.instrument_name;
+
+                                scope.valueIsValid = true;
+
+                                scope.$apply();
+
+                                setTimeout(function () {
+
+                                    if (scope.onChangeCallback) {
+
+                                        scope.onChangeCallback();
+
+                                        scope.$apply();
+
+                                    }
+
+
+                                }, 1);*/
+
+                            }
+
+                        })
+                        .catch(function (e) {
+
+                            console.log("selectDatabaseInstrument.error ", e)
+
+                            scope.processing = false;
+                            scope.isDisabled = false;
 
                             scope.model = null;
 
                             scope.itemName = ''
                             scope.inputText = ''
 
-                            setTimeout(function () {
-
-                                if (scope.onChangeCallback) scope.onChangeCallback();
-
-                                scope.$apply();
-
-                            }, 100);
-
-
-                        } else {
-
-                            stylePreset = '';
-                            scope.error = '';
-
-                            scope.model = data.result_id;
-                            scope.itemObject = {id: data.result_id, name: data.instrument_name, user_code: data.instrument_code}
-
-                            scope.itemName = data.instrument_name;
-                            scope.inputText = data.instrument_name;
-
-                            scope.valueIsValid = true;
-
                             scope.$apply();
-
-                            // scope.getList();
-
-                            setTimeout(function () {
-
-                                if (scope.onChangeCallback) {
-
-                                    scope.onChangeCallback();
-
-                                    scope.$apply();
-
-                                }
-
-
-                            }, 1);
-
-                        }
-
-                    }).catch(function (e){
-
-                        console.log("selectDatabaseInstrument.error ", e)
-
-                        scope.processing = false;
-                        scope.isDisabled = false;
-
-                        scope.model = null;
-
-                        scope.itemName = ''
-                        scope.inputText = ''
-
-                        scope.$apply();
-                    })
+                        })
 
 
                 };
@@ -365,7 +438,9 @@
                 scope.updateLocalInstrument = function (item) {
 
                     var config = {
-                        instrument_code: item.user_code,
+                        instrument_code: item.reference,
+                        instrument_name: item.name,
+                        instrument_type_code: item.instrument_type,
                         mode: 1
                     };
 
@@ -385,7 +460,7 @@
 
                         } else {
 
-                            toastNotificationService.success('Instrument ' + item.user_code + ' was updated')
+                            toastNotificationService.success('Instrument ' + item.reference + ' was updated')
 
                         }
 
@@ -499,10 +574,9 @@
                         console.log('scope.model', scope.model);
 
                         if (scope.itemName) {
-                            // itemName = scope.itemName;
-                            scope.inputText = scope.itemName;
 
-                            // scope.selectedItem = {id: scope.model, name: scope.itemName, user_code: scope.itemName}
+                            scope.inputText = scope.itemName;
+                            scope.selectedItem = { id: scope.model, name: scope.itemName, }
 
                         } else {
                             // itemName = '';
@@ -593,31 +667,30 @@
                     if (scope.inputText.length > 2) {
                         promises.push(new Promise(function (resolve, reject) {
 
-                            instrumentDatabaseSearchService.getList(scope.inputText).then(function (data) {
+                            instrumentDatabaseSearchService.getList(scope.inputText)
+                                .then(function (data) {
 
-                                scope.databaseInstrumentsTotal = data.resultCount;
+                                    scope.databaseInstrumentsTotal = data.count;
 
-                                scope.databaseInstruments = data.foundItems
+                                    scope.databaseInstruments = data.results;
 
-                                scope.databaseInstruments = scope.databaseInstruments.map(function (item) {
+                                    scope.databaseInstruments = scope.databaseInstruments.map(function (item) {
 
-                                    item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY")
+                                        item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY");
+                                        return item;
 
-                                    return item;
+                                    })
+
+                                    resolve()
 
                                 })
+                                .catch(function (error) {
 
-                                resolve()
+                                    scope.databaseInstruments = []
 
-                            }).catch(function (error) {
+                                    resolve()
 
-                                console.log("Instrument Database error occurred", error)
-
-                                scope.databaseInstruments = []
-
-                                resolve()
-
-                            })
+                                });
 
                         }))
                     }
@@ -654,19 +727,19 @@
 
 
                     Promise.all(promises).then(function (data) {
-
+                        console.log("testing1736 scope.databaseInstruments 2", structuredClone(scope.databaseInstruments) );
                         scope.databaseInstruments = scope.databaseInstruments.filter(function (databaseInstrument) {
 
                             var exist = false;
 
                             scope.localInstruments.forEach(function (localInstrument) {
 
-                                if (localInstrument.user_code === databaseInstrument.referenceId) {
-                                    exist = true
+                                if (localInstrument.user_code === databaseInstrument.reference) {
+                                    exist = true;
                                 }
 
-                                if (localInstrument.reference_for_pricing === databaseInstrument.referenceId) {
-                                    exist = true
+                                if (localInstrument.reference_for_pricing === databaseInstrument.reference) {
+                                    exist = true;
                                 }
 
 
