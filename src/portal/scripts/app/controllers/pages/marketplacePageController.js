@@ -295,8 +295,6 @@
 
                 $scope.$apply();
 
-                toastNotificationService.info("Configuration is installing");
-
             })
 
         }
