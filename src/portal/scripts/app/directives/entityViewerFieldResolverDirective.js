@@ -55,7 +55,7 @@
                 // console.log('scope.item.name', scope.item);
                 // console.log('scope.entity', scope.entity);
 
-                if (['counterparties', 'accounts', 'responsibles', 'transaction_types'].indexOf(scope.item.key) !== -1) {
+                if ( ['counterparties', 'accounts', 'responsibles', 'transaction_types'].indexOf(scope.item.key) !== -1 ) {
                     scope.type = 'multiple-ids';
                 }
 
@@ -295,28 +295,51 @@
 
                     var result = '';
 
-                    // var id = scope.entity[scope.fieldKey];
-                    var id = scope.modelObj.model;
+                    if (
+                        scope.entityType === 'complex-transaction' &&
+                        bfcVm.fieldType.type === 'userInput' &&
+                        ['instruments.instrument', 'counterparties.counterparty', 'currencies.currency'].indexOf(valueContentType) > -1
+                    ) {
 
-                    if (scope.fields && scope.fields.length) {
+                        var item_object = scope.entity[scope.fieldKey + '_object'];
 
-                        for (var i = 0; i < scope.fields.length; i = i + 1) {
+                        if (item_object.short_name) {
+                            result = item_object.short_name;
 
-                            if (scope.fields[i].id === id) {
+                        } else if (item_object.name) {
+                            result = item_object.name;
 
-                                if (scope.fields[i].short_name) {
-                                    result = scope.fields[i].short_name;
+                        } else {
+                            result = item_object.public_name;
+                        }
 
-                                } else if (scope.fields[i].name) {
-                                    result = scope.fields[i].name;
+                    }
+                    else {
 
-                                } else {
-                                    result = scope.fields[i].public_name;
+                        // var id = scope.entity[scope.fieldKey];
+                        var id = scope.modelObj.model;
+
+                        if (scope.fields && scope.fields.length) {
+
+                            for (var i = 0; i < scope.fields.length; i = i + 1) {
+
+                                if (scope.fields[i].id === id) {
+
+                                    if (scope.fields[i].short_name) {
+                                        result = scope.fields[i].short_name;
+
+                                    } else if (scope.fields[i].name) {
+                                        result = scope.fields[i].name;
+
+                                    } else {
+                                        result = scope.fields[i].public_name;
+                                    }
                                 }
-                            }
 
-                            if (result) {
-                                break;
+                                if (result) {
+                                    break;
+                                }
+
                             }
 
                         }
@@ -346,7 +369,7 @@
                     return false
                 };
 
-                function getDataForComplexTransaction(resolve, reject, options) {
+                /*function getDataForComplexTransaction(resolve, reject, options) {
 
                     if (scope.fieldsDataStore['fieldKeys']) {
                         delete scope.fieldsDataStore['fieldKeys']['currencies.currency']
@@ -386,7 +409,7 @@
 
                     })
 
-                }
+                }*/
 
                 /** @returns {Promise<{type: String, key: String, data: Array}>} - mockup for instrumentSelect, unifiedDataSelect  */
                 function getEmptyFields() {
@@ -476,6 +499,9 @@
 
                                 scope.type = res.type;
                                 scope.fields = res.data;
+                                if (scope.item.key === 'transaction_currency') {
+                                    console.log("testing1736.evFieldResolver getData fields", structuredClone(scope.fields) );
+                                }
                                 // scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
 
                                 if (scope.fieldKey === 'price_download_scheme') {
@@ -628,6 +654,10 @@
 
                             scope.modelObj.model = bfcVm.getValueFromEntity();
 
+                            if (scope.item.key === 'transaction_currency') {
+                                console.log("testing1736.evFieldResolver FIELDS_RECALCULATION_END ", scope.item, scope.modelObj.model );
+                            }
+
                             if (scope.item &&
                                 scope.item.frontOptions && scope.item.frontOptions.recalculated &&
                                 (scope.modelObj.model || scope.modelObj.model === 0)) {
@@ -635,11 +665,15 @@
                                 fieldsDataIsLoaded = false;
 
                                 scope.getData().then(function () {
-
+                                    if (scope.item.key === 'transaction_currency') {
+                                        console.log("testing1736.evFieldResolver FIELDS_RECALCULATION_END fields", structuredClone(scope.fields) );
+                                    }
                                     setItemSpecificSettings();
                                     // prepareDataForSelector();
                                     scope.inputTextObj.value = scope.getInputTextForEntitySearch();
-
+                                    if (scope.item.key === 'transaction_currency') {
+                                        console.log("testing1736.evFieldResolver FIELDS_RECALCULATION_END inputTextObj", scope.inputTextObj.value );
+                                    }
 
                                     scope.$apply();
 

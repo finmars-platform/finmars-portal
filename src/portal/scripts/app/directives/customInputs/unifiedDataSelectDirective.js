@@ -5,13 +5,11 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
     var entityResolverService = require('../../services/entityResolverService');
 
-    var finmarsDatabaseService = require('../../services/finmarsDatabaseService')
-    var importUnifiedDataService = require('../../services/import/importUnifiedDataService');
     var importCurrencyCbondsService = require('../../services/import/importCurrencyCbondsService');
     var currencyDatabaseSearchService = require('../../services/currency/currencyDatabaseSearchService');
 
 
-    module.exports = function ($mdDialog) {
+    module.exports = function ($mdDialog, finmarsDatabaseService) {
 
         return {
             restrict: 'E',
@@ -189,7 +187,7 @@
                     itemName = item.name;
                     scope.inputText = item.name;
 
-                    if (scope.entityType === 'currency') {
+                    /*if (scope.entityType === 'currency') {
 
                         var config = {
                             currency_code: item.code,
@@ -220,7 +218,8 @@
                                 }, 0);
 
 
-                            } else {
+                            }
+                            else {
 
                                 scope.model = data.result_id;
                                 scope.itemObject = {id: data.result_id, name: item.name, user_code: item.code}
@@ -241,28 +240,10 @@
 
                         })
 
-                    } else {
+                    }
+                    else if (scope.entityType === 'counterparty') {
 
-                        // Download here?
-
-                        stylePreset = '';
-                        scope.error = '';
-
-
-                        var config = {
-                            id: item.id,
-                            entity_type: scope.entityType
-                        };
-
-                        scope.selectedItem = item;
-
-                        itemName = item.name;
-                        scope.inputText = item.name;
-
-                        scope.processing = true;
-                        scope.isDisabled = true;
-
-                        importUnifiedDataService.download(config).then(function (data) {
+                        finmarsDatabaseService.downloadCounterparty(config).then(function (data) {
 
                             scope.isDisabled = false;
 
@@ -304,8 +285,76 @@
                             }
 
                         })
+
+                    }*/
+                    var promise;
+
+                    if (scope.entityType === 'currency') {
+
+                        promise = importCurrencyCbondsService.download(
+                            {
+                                currency_code: item.code,
+                                mode: 1,
+                            }
+                        )
+
+                    }
+                    else if (scope.entityType === 'counterparty') {
+
+                        promise = finmarsDatabaseService.downloadCounterparty(
+                            {
+                                company_id: '', // TODO: FN-1736 assign company id from item
+                            }
+                        )
+
                     }
 
+                    promise.then(function (data) {
+
+                        scope.isDisabled = false;
+
+                        if (data.errors.length) {
+
+                            toastNotificationService.error(data.errors[0])
+
+                            scope.model = null;
+
+                            itemName = ''
+                            scope.inputText = ''
+
+                            scope.processing = false;
+
+                            setTimeout(function () {
+
+                                if (scope.onChangeCallback) scope.onChangeCallback();
+
+                                scope.$apply();
+
+                            }, 0);
+
+
+                        }
+                        else {
+
+                            scope.model = data.result_id;
+                            // TODO: FN-1736 - check that properties of 'data' still the same
+                            scope.itemObject = {id: data.result_id, name: item.name, user_code: item.code}
+
+                            scope.processing = false;
+
+                            scope.valueIsValid = true;
+
+                            setTimeout(function () {
+
+                                if (scope.onChangeCallback) scope.onChangeCallback();
+
+                                scope.$apply();
+
+                            }, 0);
+
+                        }
+
+                    })
 
                 };
 
@@ -491,15 +540,19 @@
 					scope.$watch('itemName', function () {
 
 						console.log('scope.model', scope.model);
-
+                        if (scope.label === 'Transaction Currency') {
+                            console.log("testing1736 scope.itemName ", scope.itemName);
+                        }
 						if (scope.itemName) {
 							itemName = scope.itemName;
-							scope.selectedItem = {id: scope.model, name: itemName, user_code: itemName}
+							scope.selectedItem = { id: scope.model, name: itemName };
 
 						} else {
 							itemName = '';
 						}
-
+                        if (scope.label === 'Transaction Currency') {
+                            console.log("testing1736 itemName watcher ", scope.model, scope.itemName);
+                        }
 						scope.inputText = itemName;
 
 					});
@@ -588,9 +641,8 @@
 
                     promises.push(new Promise(function (resolve, reject) {
 
-
                         if (scope.entityType === 'currency') {
-                            // TODO replace with finmarsDatabaseService
+
                             currencyDatabaseSearchService.getList(scope.inputText, 0).then(function (data) {
 
                                 /*scope.databaseItemsTotal = data.resultCount;
@@ -609,10 +661,13 @@
                                 resolve()
 
                             })
-                        } else {
-                            finmarsDatabaseService.getCounterpartiesList(scope.entityType, {
+                        }
+                        else if ( scope.entityType === 'counterparty' ) {
+                            finmarsDatabaseService.getCounterpartiesList({
+                                pageSize: 40,
                                 filters: {
-                                    query: scope.inputText
+                                    query: scope.inputText,
+                                    page: 1,
                                 }
                             }).then(function (data) {
 
@@ -715,6 +770,13 @@
 
                 var init = function () {
 
+                    if ( ['currency', 'counterparty'].indexOf(scope.entityType) < 0 ) {
+
+                        scope.error = 'Unknown entity type';
+                        throw new Error(`Wrong entity type of unifiedDataSelectDirective: ${scope.entityType}`);
+
+                    }
+
                     scope.databaseItems = []
                     scope.localItems = []
 
@@ -725,7 +787,7 @@
                         applyCustomStyles();
                     }
 
-                    scope.selectedItem = {id: scope.model, name: itemName, user_code: itemName}
+                    scope.selectedItem = {id: scope.model, name: itemName }
 
                 };
 

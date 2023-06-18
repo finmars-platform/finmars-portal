@@ -8,7 +8,6 @@
     var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
     var instrumentDatabaseSearchService = require('../../services/instrument/instrumentDatabaseSearchService');
 
-
     module.exports = function ($scope, $mdDialog, toastNotificationService, instrumentService, data) {
 
         var vm = this;
@@ -63,15 +62,20 @@
 
             new Promise(function (resolve, reject) {
 
+                var localItemSelected = false;
 
                 vm.localInstruments.forEach(function (item) {
 
                     if (item.selected) {
                         vm.selectedItem = item;
-                        resolve()
+                        localItemSelected = true;
                     }
 
                 })
+
+                if (localItemSelected) {
+                    return resolve();
+                }
 
                 var selectedDatabaseInstrument;
 
@@ -84,13 +88,13 @@
                 })
 
                 if (selectedDatabaseInstrument) {
+
                     var config = {
-                        instrument_code: selectedDatabaseInstrument.referenceId,
-                        instrument_name: selectedDatabaseInstrument.issueName,
-                        instrument_type_code: selectedDatabaseInstrument.instrumentType,
+                        instrument_code: selectedDatabaseInstrument.reference,
+                        instrument_name: selectedDatabaseInstrument.name,
+                        instrument_type_code: selectedDatabaseInstrument.instrument_type,
                         mode: 1
                     };
-
 
                     vm.isDisabled = true;
 
@@ -102,7 +106,7 @@
 
                             vm.selectedItem = null;
 
-                            toastNotificationService.error(data.errors[0])
+                            toastNotificationService.error( data.errors[0] )
 
                             $scope.$apply();
 
@@ -112,8 +116,8 @@
 
                             vm.selectedItem = {
                                 id: data.result_id,
-                                name: selectedDatabaseInstrument.issueName,
-                                user_code: selectedDatabaseInstrument.referenceId
+                                name: selectedDatabaseInstrument.name,
+                                user_code: selectedDatabaseInstrument.reference,
                             }
 
                             resolve()
@@ -133,18 +137,19 @@
                 }
 
 
-            }).then(function (data) {
+            })
+                .then(function (data) {
 
-                if (vm.selectedItem) {
+                    if (vm.selectedItem) {
 
-                    if (vm.actionType === 'add_instrument_dialog') {
-                        toastNotificationService.success("Instrument has been downloaded")
+                        if (vm.actionType === 'add_instrument_dialog') {
+                            toastNotificationService.success("Instrument has been downloaded")
+                        }
+
+                        $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem}});
                     }
 
-                    $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem}});
-                }
-
-            })
+                })
 
 
         };
@@ -212,8 +217,14 @@
 
         vm.updateLocalInstrument = function (item) {
 
-            var config = {
+            /*var config = {
                 instrument_code: item.user_code,
+                mode: 1
+            };*/
+            var config = {
+                instrument_code: item.reference,
+                instrument_name: item.name,
+                instrument_type_code: item.instrument_type,
                 mode: 1
             };
 
@@ -304,15 +315,20 @@
             //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?page=' + vm.globalPage
             // }
             //
+            var opts = {
+                filters: {
+                    page: vm.globalPage,
+                    instrument_type: vm.instrument_type,
+                }
+            }
 
-
-            instrumentDatabaseSearchService.getList(vm.inputText, vm.globalPage, vm.instrument_type).then(function (data) {
+            instrumentDatabaseSearchService.getList(vm.inputText, opts).then(function (data) {
 
                 vm.globalProcessing = false;
 
-                vm.databaseInstrumentsTotal = data.resultCount
+                vm.databaseInstrumentsTotal = data.count;
 
-                data.foundItems.forEach(function (item) {
+                data.results.forEach(function (item) {
 
                     item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY")
 
@@ -320,7 +336,7 @@
 
                 })
 
-                vm.totalPages = Math.round(data.resultCount / data.pageSize)
+                vm.totalPages = Math.round(data.count / data.pageSize)
 
                 $scope.$apply();
 
@@ -351,12 +367,18 @@
                     // if (vm.instrument_type){
                     //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?instrument_type=' + vm.instrument_type
                     // }
+                    var opts = {
+                        filters: {
+                            page: 1,
+                            instrument_type: vm.instrument_type,
+                        }
+                    };
 
-                    instrumentDatabaseSearchService.getList(vm.inputText, 0, vm.instrument_type).then(function (data) {
+                    instrumentDatabaseSearchService.getList(vm.inputText, opts).then(function (data) {
+                        // TODO: testing1736 properties of data will change
+                        vm.databaseInstrumentsTotal = data.count;
 
-                        vm.databaseInstrumentsTotal = data.resultCount
-
-                        vm.databaseInstruments = data.foundItems
+                        vm.databaseInstruments = data.results;
 
                         vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
 
@@ -368,7 +390,7 @@
 
                         resolve()
 
-                        vm.totalPages = Math.round(data.resultCount / data.pageSize)
+                        vm.totalPages = Math.round(data.count / data.pageSize)
 
                     }).catch(function (error) {
 
