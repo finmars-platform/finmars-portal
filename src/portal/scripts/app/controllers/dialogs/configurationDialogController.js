@@ -50,7 +50,7 @@
                 "version": vm.item.version,
                 "description": vm.item.description,
                 "date": new Date().toJSON().slice(0, 10),
-                "dependencies": {},
+                "dependencies": [],
             }
 
         }
