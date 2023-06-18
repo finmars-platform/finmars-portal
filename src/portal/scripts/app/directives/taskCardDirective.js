@@ -91,8 +91,11 @@
 
                 }, 3 * 1000) // 2 seconds
 
+                scope.close = function () {
+                    scope.taskId = null;
+                }
 
-                scope.$on("$destroy", function() {
+                scope.$on("$destroy", function () {
 
                     clearInterval(scope.interval);
 

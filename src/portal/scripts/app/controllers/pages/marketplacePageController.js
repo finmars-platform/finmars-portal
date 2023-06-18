@@ -23,6 +23,7 @@
 
         vm.currentPage = 1;
         vm.pageSize = 40;
+        vm.showModules = false;
 
         vm.pages = []
 
@@ -228,6 +229,12 @@
 
             vm.readyStatus.data = false;
 
+            if (vm.showModules) {
+                delete vm.filters['is_package']
+            } else {
+                vm.filters['is_package'] = true
+            }
+
             return new Promise(function (resolve, reject) {
 
                 marketplaceService.getList({
@@ -283,6 +290,10 @@
                 version: item.latest_release_object.version,
                 is_package: item.is_package
             }).then(function (data) {
+
+                vm.activeTaskId = data.task_id
+
+                $scope.$apply();
 
                 toastNotificationService.info("Configuration is installing");
 
