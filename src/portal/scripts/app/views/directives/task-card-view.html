@@ -1,5 +1,9 @@
 <div class="task-card">
 
+    <div class="task-card-close" data-ng-click="close($event)">
+        <span class="material-icons">close</span>
+    </div>
+
     <div data-ng-if="task">
 
         <a class="task-card-name" data-ui-sref="app.portal.tasks-page" target="_blank">{{task.verbose_name}}
