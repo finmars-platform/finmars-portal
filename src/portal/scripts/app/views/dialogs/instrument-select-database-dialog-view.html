@@ -96,16 +96,16 @@
                         >
 
 
-                            <div class="instrument-select-instrument-name" title="{{option.issueName}}" ng-bind-html="vm.getHighlighted(option.issueName)">
+                            <div class="instrument-select-instrument-name" title="{{option.name}}" ng-bind-html="vm.getHighlighted(option.name)">
 
                             </div>
 
-                            <div class="instrument-select-instrument-isin" title="{{option.referenceId}}" ng-bind-html="vm.getHighlighted(option.referenceId)">
+                            <div class="instrument-select-instrument-isin" title="{{option.reference}}" ng-bind-html="vm.getHighlighted(option.reference)">
 
                             </div>
 
-                            <div class="instrument-select-instrument-type" title="{{option.instrumentType}}">
-                                {{option.instrumentType}}
+                            <div class="instrument-select-instrument-type" title="{{option.instrument_type}}">
+                                {{option.instrument_type}}
                             </div>
 
                         </div>
@@ -133,9 +133,11 @@
 
                     <div data-ng-if="vm.hoverInstrument">
 
-                        <div data-ng-if="vm.hoverInstrument.id" class="instrument-select-update-instrument-button">
-                            <span class="material-icons  {{vm.isUpdatingInstrument ? 'disabled-btn' : ''}}" ng-click="vm.updateLocalInstrument(vm.hoverInstrument)">autorenew</span>
-                        </div>
+                        <md-button data-ng-if="vm.hoverInstrument.available_for_update"
+                                   data-ng-disabled="vm.isUpdatingInstrument"
+                                   class="instrument-select-update-instrument-button display-block">
+                            <span class="material-icons">autorenew</span>
+                        </md-button>
 
                         <div class="instrument-select-option-detail-field">
 

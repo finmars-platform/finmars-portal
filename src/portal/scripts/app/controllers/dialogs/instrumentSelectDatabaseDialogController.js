@@ -33,6 +33,7 @@
             {id: 'stocks', name: 'Stocks'}
         ]
 
+        var reqPageSize = 40;
 
         vm.clearHoverInstrument = function () {
 
@@ -57,27 +58,89 @@
             }, 0)
         }
 
-        vm.agree = function () {
+        var onSdiError = function (error) {
 
+            vm.selectedItem = null;
+            vm.isDisabled = false;
 
-            new Promise(function (resolve, reject) {
+            toastNotificationService.error(error);
 
-                var localItemSelected = false;
+            $scope.$apply();
 
-                vm.localInstruments.forEach(function (item) {
+        }
 
-                    if (item.selected) {
-                        vm.selectedItem = item;
-                        localItemSelected = true;
-                    }
+        var selectDatabaseItem = function (selItem) {
+            console.log("testing1736.instrumentSelectDatabaseDialog selectDatabaseItem ", selItem );
+            var config = {
+                instrument_code: selItem.reference,
+                instrument_name: selItem.name,
+                instrument_type_code: selItem.instrument_type,
+                mode: 1
+            };
 
-                })
+            vm.isDisabled = true;
 
-                if (localItemSelected) {
-                    return resolve();
+            importInstrumentCbondsService.download(config).then(function (data) {
+                console.log("testing1736.instrumentSelectDatabaseDialog selectDatabaseItem importInstrumentCbondsService ", data );
+                vm.isDisabled = false;
+
+                if (data.errors.length) {
+
+                    onSdiError( data.error[0] );
+
+                } else {
+                    console.log("testing1736.instrumentSelectDatabaseDialog selectDatabaseItem mdDialog.hide ", data.task );
+                    $mdDialog.hide({
+                        status: 'agree',
+                        data: {
+                            task: data.task,
+                            item: selItem,
+                        }
+                    });
+
                 }
 
-                var selectedDatabaseInstrument;
+            }).catch(function (e){
+
+                onSdiError(e);
+
+            })
+
+        };
+
+        vm.agree = function () {
+
+            //# region Local item selected
+            var localItemSelected = vm.localInstruments.find(function (item) { return item.selected });
+
+            if (localItemSelected) {
+                vm.selectedItem = localItemSelected;
+                console.log("testing1736.instrumentSelectDatabaseDialog agree localItemSelected ", vm.selectedItem );
+                return $mdDialog.hide( { status: 'agree', data: {item: vm.selectedItem} } );
+
+            }
+            //# endregion
+
+            //# region Database item selected
+            var selectedDatabaseInstrument = vm.databaseInstruments.find(function (item) { return item.selected });
+
+            if (selectedDatabaseInstrument) {
+                selectDatabaseItem(selectedDatabaseInstrument);
+            }
+            //# endregion
+
+            /*new Promise(function (resolve, reject) {
+
+                //# region Local item selected
+                var localItemSelected = vm.localInstruments.find(function (item) { return item.selected });
+
+                if (localItemSelected) {
+                    vm.selectedItem = localItemSelected;
+                    return resolve();
+                }
+                //# endregion
+
+                /!*var selectedDatabaseInstrument;
 
                 vm.databaseInstruments.forEach(function (item) {
 
@@ -85,55 +148,11 @@
                         selectedDatabaseInstrument = item
                     }
 
-                })
+                })*!/
+                var selectedDatabaseInstrument = vm.databaseInstruments.find(function (item) { return item.selected });
 
                 if (selectedDatabaseInstrument) {
-
-                    var config = {
-                        instrument_code: selectedDatabaseInstrument.reference,
-                        instrument_name: selectedDatabaseInstrument.name,
-                        instrument_type_code: selectedDatabaseInstrument.instrument_type,
-                        mode: 1
-                    };
-
-                    vm.isDisabled = true;
-
-                    importInstrumentCbondsService.download(config).then(function (data) {
-
-                        vm.isDisabled = false;
-
-                        if (data.errors.length) {
-
-                            vm.selectedItem = null;
-
-                            toastNotificationService.error( data.errors[0] )
-
-                            $scope.$apply();
-
-                            resolve()
-
-                        } else {
-
-                            vm.selectedItem = {
-                                id: data.result_id,
-                                name: selectedDatabaseInstrument.name,
-                                user_code: selectedDatabaseInstrument.reference,
-                            }
-
-                            resolve()
-
-
-                        }
-
-                    }).catch(function (e){
-                        vm.isDisabled = false;
-                        vm.selectedItem = null;
-                        $scope.$apply();
-
-                        resolve()
-                    })
-
-
+                    selectDatabaseItem(selectedDatabaseInstrument);
                 }
 
 
@@ -149,7 +168,7 @@
                         $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem}});
                     }
 
-                })
+                })*/
 
 
         };
@@ -316,6 +335,7 @@
             // }
             //
             var opts = {
+                pageSize: reqPageSize,
                 filters: {
                     page: vm.globalPage,
                     instrument_type: vm.instrument_type,
@@ -336,7 +356,7 @@
 
                 })
 
-                vm.totalPages = Math.round(data.count / data.pageSize)
+                vm.totalPages = Math.round(data.count / reqPageSize);
 
                 $scope.$apply();
 
@@ -368,39 +388,44 @@
                     //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?instrument_type=' + vm.instrument_type
                     // }
                     var opts = {
+                        pageSize: reqPageSize,
                         filters: {
                             page: 1,
                             instrument_type: vm.instrument_type,
                         }
                     };
 
-                    instrumentDatabaseSearchService.getList(vm.inputText, opts).then(function (data) {
-                        // TODO: testing1736 properties of data will change
-                        vm.databaseInstrumentsTotal = data.count;
+                    instrumentDatabaseSearchService.getList(vm.inputText, opts)
+                        .then(function (data) {
+                            console.log("testing1736.instrumentSelectDatabaseDialog getList data ", data );
+                            vm.databaseInstrumentsTotal = data.count;
 
-                        vm.databaseInstruments = data.results;
+                            vm.databaseInstruments = data.results;
 
-                        vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
+                            vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
 
-                            item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY")
+                                item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY")
 
-                            return item;
+                                return item;
+
+                            })
+
+                            vm.totalPages = Math.round(data.count / reqPageSize);
+                            console.log("testing1736.instrumentSelectDatabaseDialog getList end ", vm.databaseInstruments, );
+                            $scope.$apply();
+                            resolve();
 
                         })
+                        .catch(function (error) {
 
-                        resolve()
+                            console.log("Instrument Database error occurred", error)
 
-                        vm.totalPages = Math.round(data.count / data.pageSize)
+                            vm.databaseInstruments = [];
 
-                    }).catch(function (error) {
+                            $scope.$apply();
+                            resolve()
 
-                        console.log("Instrument Database error occurred", error)
-
-                        vm.databaseInstruments = []
-
-                        resolve()
-
-                    })
+                        });
 
                 }))
 
@@ -432,7 +457,6 @@
 
                     resolve()
 
-
                 })
 
             }))
@@ -445,14 +469,13 @@
 
                     vm.localInstruments.forEach(function (localInstrument) {
 
-                        if (localInstrument.user_code === databaseInstrument.referenceId) {
-                            exist = true
+                        if (localInstrument.user_code === databaseInstrument.reference) {
+                            exist = true;
                         }
 
-                        if (localInstrument.reference_for_pricing === databaseInstrument.referenceId) {
-                            exist = true
+                        if (localInstrument.reference_for_pricing === databaseInstrument.reference) {
+                            exist = true;
                         }
-
 
                     })
 

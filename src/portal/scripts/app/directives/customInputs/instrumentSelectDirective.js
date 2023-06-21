@@ -66,6 +66,7 @@
                 var inputContainer = elem[0].querySelector('.instrumentSelectInputContainer');
                 var inputElem = elem[0].querySelector('.instrumentSelectInputElem');
                 var taskIntervalId;
+                var loadingTime = 0;
 
                 /*var entityIndicatorIcons = {
                     'type1': {
@@ -193,6 +194,7 @@
 
                 var onSdiError = function (errorMessage) {
                     console.log("testing1736 onSdiError", errorMessage);
+                    clearInterval(taskIntervalId);
                     toastNotificationService.error(errorMessage);
                     console.log("testing1736 onSdiError 1");
                     scope.model = null;
@@ -210,6 +212,84 @@
                         scope.$apply();
 
                     }, 100);
+
+                };
+
+                var awaitInstrumentImport = function (taskId) {
+                    console.log("testing1736 awaitInstrumentImport", taskId );
+                    return setInterval(function () {
+
+                        tasksService.getByKey(taskId)
+                            .then(function (taskData) {
+                                console.log("testing1736 awaitInstrumentImport tasksService taskData", taskData );
+                                var resultData = taskData.result_object;
+
+                                switch (taskData.status) {
+                                    case 'D':
+
+                                        scope.isDisabled = false;
+                                        scope.loadingEntity = false;
+                                        scope.processing = false;
+
+                                        stylePreset = '';
+                                        scope.error = '';
+
+                                        scope.model = resultData.result_id;
+                                        scope.itemObject = {
+                                            id: resultData.result_id,
+                                            name: resultData.name,
+                                            user_code: resultData.user_code
+                                        };
+
+                                        scope.itemName = resultData.name;
+                                        scope.inputText = resultData.name;
+
+                                        scope.valueIsValid = true;
+
+                                        toastNotificationService.success("Instrument has been loaded");
+
+                                        scope.$apply();
+
+                                        if (scope.onChangeCallback) {
+
+                                            setTimeout(function () {
+
+                                                scope.onChangeCallback();
+
+                                                scope.$apply();
+
+                                            }, 0);
+
+                                        }
+
+                                        clearInterval(taskIntervalId);
+                                        console.log("testing1736 awaitInstrumentImport tasksService import done", scope.model, scope.itemObject );
+                                        break;
+
+                                    case 'T':
+                                    case 'C':
+                                        onSdiError("Import aborted");
+                                        break;
+
+                                    case 'E':
+
+                                        toastNotificationService.error(taskData.error);
+                                        onSdiError(taskData.error);
+
+                                        break;
+                                }
+
+
+                            })
+                            .catch(function (error) {
+
+                                onSdiError(error.message);
+
+                                throw error;
+
+                            });
+
+                    }, 5*1000);
 
                 };
 
@@ -259,59 +339,7 @@
                             }
                             else {
 
-                                taskIntervalId = setInterval(function () {
-
-                                    tasksService.getByKey(data.task)
-                                        .then(function (taskData) {
-
-                                            scope.isDisabled = false;
-                                            scope.loadingEntity = false;
-                                            scope.processing = false;
-
-                                            if (taskData.status === 'D') {
-
-                                                stylePreset = '';
-                                                scope.error = '';
-
-                                                scope.model = item.id;
-                                                scope.itemObject = {id: item.id, name: item.name, user_code: item.reference};
-
-                                                scope.itemName = item.name;
-                                                scope.inputText = item.name;
-
-                                                scope.valueIsValid = true;
-
-                                                scope.$apply();
-
-                                                if (scope.onChangeCallback) {
-
-                                                    setTimeout(function () {
-
-                                                        scope.onChangeCallback();
-
-                                                        scope.$apply();
-
-                                                    }, 0);
-
-                                                }
-
-                                                clearInterval(taskIntervalId);
-
-                                            } /*else if (taskData.status === 'E') {
-                                                clearInterval(taskIntervalId);
-                                                toastNotificationService.error(taskData.error)
-                                            }*/
-
-                                        })
-                                        .catch(function (error) {
-
-                                            onSdiError(error.message);
-
-                                            throw error;
-
-                                        });
-
-                                }, 5*1000);
+                                taskIntervalId = awaitInstrumentImport(data.task);
 
                                 /*stylePreset = '';
                                 scope.error = '';
@@ -378,7 +406,7 @@
                 }
 
                 var closeDropdownMenu = function (updateScope) {
-
+                    console.trace("testing1736 closeDropdownMenu");
                     inputContainer.classList.remove('custom-input-focused');
 
                     if (scope.itemName) scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
@@ -398,7 +426,7 @@
 
                     scope.dropdownMenuFilter = null;
 
-                    if (!inputContainer.contains(targetElem)) {
+                    if ( !inputContainer.contains(targetElem) ) {
                         closeDropdownMenu(true);
                     }
 
@@ -407,12 +435,12 @@
                 var onTabKeyPress = function (event) {
 
                     // TODO fix ALT + TAB closes
-                    // var pressedKey = event.key;
-                    // console.log('pressedKey', pressedKey)
-                    //
-                    // if (pressedKey === "Tab") {
-                    //     closeDropdownMenu(true);
-                    // }
+                    var pressedKey = event.key;
+                    console.log('pressedKey', pressedKey)
+
+                    if (pressedKey === "Tab") {
+                        closeDropdownMenu(true);
+                    }
 
                 }
 
@@ -498,8 +526,17 @@
                         }
 
                     }).then(function (res) {
+                        console.log("testing1736 openSelectorDialog res", res );
+                        if (res.status !== 'agree') {
+                            return;
+                        }
 
-                        if (res.status === 'agree') {
+                        if ( res.data.hasOwnProperty('task') ) { // database item selected
+
+                            taskIntervalId = awaitInstrumentImport(res.data.task);
+
+                        }
+                        else {
 
                             scope.model = res.data.item.id;
                             scope.itemObject = res.data.item;
@@ -516,6 +553,7 @@
                             }, 0);
 
                         }
+
 
                     })
 
@@ -594,7 +632,7 @@
                     scope.dropdownMenuShown = true;
 
                     window.addEventListener('click', closeDDMenuOnClick);
-                    document.addEventListener('keydown', onTabKeyPress);
+                    // document.addEventListener('keydown', onTabKeyPress);
 
                     scope.$apply();
                 }
@@ -778,13 +816,15 @@
                     if (scope.customStyles) {
                         applyCustomStyles();
                     }
+
                 };
 
                 init();
 
                 scope.$on("$destroy", function () {
                     window.removeEventListener('click', closeDDMenuOnClick);
-                    document.removeEventListener('keydown', onTabKeyPress);
+                    // document.removeEventListener('keydown', onTabKeyPress);
+                    clearInterval(taskIntervalId);
                 });
 
 
