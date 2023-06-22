@@ -13,12 +13,13 @@
 }
 
 .indicator-btn-mixin() {
+  position: relative;
   width: 30px;
   flex-basis: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 23px;
+  // height: 23px;
   padding: 2px 2px;
 }
 
@@ -30,10 +31,11 @@
   }
 
   .loader {
+    .indicator-btn-mixin();
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 40px;
+    // height: 40px;
     margin-left: @indBtnMarginLeft;
     top: 0;
   }
