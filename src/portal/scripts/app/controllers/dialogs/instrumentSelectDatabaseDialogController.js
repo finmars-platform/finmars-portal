@@ -51,11 +51,32 @@
 
             setTimeout(function () {
 
-                vm.hoverInstrument = option
-                console.log('scope.hoverInstrument', vm.hoverInstrument)
+                vm.hoverInstrument = option;
+                vm.hoverInstrument.available_for_update = true;
+
+                if ( !vm.hoverInstrument.isin ) {
+                    if ( vm.hoverInstrument.instrument_type_object.user_code.endsWith('bond') ||
+                        vm.hoverInstrument.instrument_type_object.user_code.endsWith('stock') ) {
+
+                        // check whether user_code is a valid isin
+                        const regexp = /^([A-Z]{2})([A-Z0-9]{9})([0-9]{1})/g;
+                        const invalidIsin = !vm.hoverInstrument.user_code.match(regexp);
+
+                        if (invalidIsin) {
+                            vm.hoverInstrument.available_for_update = false;
+                        }
+
+                    } else {
+                        vm.hoverInstrument.available_for_update = false;
+                    }
+                }
+                else {
+                    // instrument that is not yet downloaded
+                    vm.hoverInstrument.available_for_update = false;
+                }
 
                 $scope.$apply();
-            }, 0)
+            }, 100)
         }
 
         var onSdiError = function (error) {
@@ -72,9 +93,9 @@
         var selectDatabaseItem = function (selItem) {
             console.log("testing1736.instrumentSelectDatabaseDialog selectDatabaseItem ", selItem );
             var config = {
-                instrument_code: selItem.reference,
-                instrument_name: selItem.name,
-                instrument_type_code: selItem.instrument_type,
+                user_code: selItem.reference,
+                name: selItem.name,
+                instrument_type_user_code: selItem.instrument_type,
                 mode: 1
             };
 
@@ -84,9 +105,9 @@
                 console.log("testing1736.instrumentSelectDatabaseDialog selectDatabaseItem importInstrumentCbondsService ", data );
                 vm.isDisabled = false;
 
-                if (data.errors.length) {
+                if (data.errors) {
 
-                    onSdiError( data.error[0] );
+                    onSdiError( data.error );
 
                 } else {
                     console.log("testing1736.instrumentSelectDatabaseDialog selectDatabaseItem mdDialog.hide ", data.task );
@@ -123,7 +144,7 @@
 
             //# region Database item selected
             var selectedDatabaseInstrument = vm.databaseInstruments.find(function (item) { return item.selected });
-
+            console.log("testing1736.instrumentSelectDatabaseDialog agree selectedDatabaseInstrument ", selectedDatabaseInstrument );
             if (selectedDatabaseInstrument) {
                 selectDatabaseItem(selectedDatabaseInstrument);
             }
@@ -241,9 +262,9 @@
                 mode: 1
             };*/
             var config = {
-                instrument_code: item.reference,
-                instrument_name: item.name,
-                instrument_type_code: item.instrument_type,
+                user_code: item.reference,
+                name: item.name,
+                instrument_type_user_code: item.instrument_type,
                 mode: 1
             };
 

@@ -9,11 +9,11 @@
         <div class="custom-input-borders">
             <div class="custom-input-content">
 
-                <div class="flex-row">
+                <div class="flex-row flex-i-center">
 
                     <button data-ng-if="!noIndicatorBtn"
                             data-ng-hide="loadingEntity"
-                            class="custom-input-indicator-btn position-relative"
+                            class="custom-input-indicator-btn"
                             data-ng-click="openSelectorDialog($event)"
                             data-ng-disabled="isDisabled">
                         <span class="material-icons">menu</span>
@@ -174,7 +174,7 @@
 
                         <!--<span data-ng-if="hoverInstrument.id">{{hoverInstrument.name}}</span>
                         <span data-ng-if="!hoverInstrument.id">{{hoverInstrument.issueName}}</span>-->
-                        <span data-ng-if="hoverInstrument">{{hoverInstrument.name}}</span>
+                        <span>{{hoverInstrument.name}}</span>
 
                     </div>
 

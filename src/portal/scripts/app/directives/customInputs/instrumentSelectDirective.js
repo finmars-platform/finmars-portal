@@ -99,13 +99,13 @@
                         scope.hoverInstrument.available_for_update = true;
 
                         if (!scope.hoverInstrument.isin) {
-                            if (scope.hoverInstrument.instrument_type_object.user_code === 'bonds' || scope.hoverInstrument.instrument_type_object.user_code === 'stocks') {
+                            if (scope.hoverInstrument.instrument_type_object.user_code === 'bond' || scope.hoverInstrument.instrument_type_object.user_code === 'stock') {
 
-                                let regexp = /^([A-Z]{2})([A-Z0-9]{9})([0-9]{1})/g
+                                // check whether user_code is a valid isin
+                                const regexp = /^([A-Z]{2})([A-Z0-9]{9})([0-9]{1})/g;
+                                const invalidIsin = !scope.hoverInstrument.user_code.match(regexp);
 
-                                let result = scope.hoverInstrument.user_code.match(regexp)
-
-                                if (!result) {
+                                if (invalidIsin) {
                                     scope.hoverInstrument.available_for_update = false;
                                 }
 
@@ -314,9 +314,9 @@
                     scope.itemName = item.issueName;
                     scope.inputText = item.issueName;*/
                     var config = {
-                        instrument_code: item.reference,
-                        instrument_name: item.name,
-                        instrument_type_code: item.instrument_type,
+                        user_code: item.reference,
+                        name: item.name,
+                        instrument_type_user_code: item.instrument_type,
                         mode: 1,
                     };
                     console.log("testing1736 selectDatabaseInstrument config", config);
@@ -532,6 +532,10 @@
                         }
 
                         if ( res.data.hasOwnProperty('task') ) { // database item selected
+
+                            scope.processing = true;
+                            scope.loadingEntity = true;
+                            scope.isDisabled = true;
 
                             taskIntervalId = awaitInstrumentImport(res.data.task);
 
