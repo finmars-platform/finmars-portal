@@ -52,9 +52,12 @@
             setTimeout(function () {
 
                 vm.hoverInstrument = option;
-                vm.hoverInstrument.available_for_update = true;
+                vm.hoverInstrument.available_for_update = false;
 
-                if ( !vm.hoverInstrument.isin ) {
+                if (vm.hoverInstrument.frontOptions.type === 'local') {
+
+                    vm.hoverInstrument.available_for_update = true;
+
                     if ( vm.hoverInstrument.instrument_type_object.user_code.endsWith('bond') ||
                         vm.hoverInstrument.instrument_type_object.user_code.endsWith('stock') ) {
 
@@ -63,16 +66,12 @@
                         const invalidIsin = !vm.hoverInstrument.user_code.match(regexp);
 
                         if (invalidIsin) {
+                            // can not load 'bond', 'stock' with invalid isin as user code
                             vm.hoverInstrument.available_for_update = false;
                         }
 
-                    } else {
-                        vm.hoverInstrument.available_for_update = false;
                     }
-                }
-                else {
-                    // instrument that is not yet downloaded
-                    vm.hoverInstrument.available_for_update = false;
+
                 }
 
                 $scope.$apply();
@@ -91,7 +90,7 @@
         }
 
         var selectDatabaseItem = function (selItem) {
-            console.log("testing1736.instrumentSelectDatabaseDialog selectDatabaseItem ", selItem );
+
             var config = {
                 user_code: selItem.reference,
                 name: selItem.name,
@@ -102,7 +101,7 @@
             vm.isDisabled = true;
 
             importInstrumentCbondsService.download(config).then(function (data) {
-                console.log("testing1736.instrumentSelectDatabaseDialog selectDatabaseItem importInstrumentCbondsService ", data );
+
                 vm.isDisabled = false;
 
                 if (data.errors) {
@@ -110,7 +109,7 @@
                     onSdiError( data.error );
 
                 } else {
-                    console.log("testing1736.instrumentSelectDatabaseDialog selectDatabaseItem mdDialog.hide ", data.task );
+
                     $mdDialog.hide({
                         status: 'agree',
                         data: {
@@ -135,8 +134,9 @@
             var localItemSelected = vm.localInstruments.find(function (item) { return item.selected });
 
             if (localItemSelected) {
+
                 vm.selectedItem = localItemSelected;
-                console.log("testing1736.instrumentSelectDatabaseDialog agree localItemSelected ", vm.selectedItem );
+
                 return $mdDialog.hide( { status: 'agree', data: {item: vm.selectedItem} } );
 
             }
@@ -144,7 +144,7 @@
 
             //# region Database item selected
             var selectedDatabaseInstrument = vm.databaseInstruments.find(function (item) { return item.selected });
-            console.log("testing1736.instrumentSelectDatabaseDialog agree selectedDatabaseInstrument ", selectedDatabaseInstrument );
+
             if (selectedDatabaseInstrument) {
                 selectDatabaseItem(selectedDatabaseInstrument);
             }
@@ -371,7 +371,11 @@
 
                 data.results.forEach(function (item) {
 
-                    item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY")
+                    item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY");
+
+                    item.frontOptions = {
+                        type: 'database',
+                    };
 
                     vm.databaseInstruments.push(item)
 
@@ -418,21 +422,25 @@
 
                     instrumentDatabaseSearchService.getList(vm.inputText, opts)
                         .then(function (data) {
-                            console.log("testing1736.instrumentSelectDatabaseDialog getList data ", data );
+
                             vm.databaseInstrumentsTotal = data.count;
 
                             vm.databaseInstruments = data.results;
 
                             vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
 
-                                item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY")
+                                item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY");
+
+                                item.frontOptions = {
+                                    type: 'database',
+                                };
 
                                 return item;
 
                             })
 
                             vm.totalPages = Math.round(data.count / reqPageSize);
-                            console.log("testing1736.instrumentSelectDatabaseDialog getList end ", vm.databaseInstruments, );
+
                             $scope.$apply();
                             resolve();
 
@@ -470,7 +478,11 @@
 
                     vm.localInstruments = vm.localInstruments.map(function (item) {
 
-                        item.pretty_date = moment(item.modified).format("DD.MM.YYYY")
+                        item.pretty_date = moment(item.modified).format("DD.MM.YYYY");
+
+                        item.frontOptions = {
+                            type: 'local',
+                        };
 
                         return item;
 
