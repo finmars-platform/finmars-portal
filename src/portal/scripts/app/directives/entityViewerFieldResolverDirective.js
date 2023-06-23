@@ -655,10 +655,6 @@
 
                             scope.modelObj.model = bfcVm.getValueFromEntity();
 
-                            if (scope.item.key === 'transaction_currency') {
-                                console.log("testing1736.evFieldResolver FIELDS_RECALCULATION_END ", scope.item, scope.modelObj.model );
-                            }
-
                             if (scope.item &&
                                 scope.item.frontOptions && scope.item.frontOptions.recalculated &&
                                 (scope.modelObj.model || scope.modelObj.model === 0)) {
@@ -666,15 +662,10 @@
                                 fieldsDataIsLoaded = false;
 
                                 scope.getData().then(function () {
-                                    if (scope.item.key === 'transaction_currency') {
-                                        console.log("testing1736.evFieldResolver FIELDS_RECALCULATION_END fields", structuredClone(scope.fields) );
-                                    }
+
                                     setItemSpecificSettings();
                                     // prepareDataForSelector();
                                     scope.inputTextObj.value = scope.getInputTextForEntitySearch();
-                                    if (scope.item.key === 'transaction_currency') {
-                                        console.log("testing1736.evFieldResolver FIELDS_RECALCULATION_END inputTextObj", scope.inputTextObj.value );
-                                    }
 
                                     scope.$apply();
 
