@@ -23,6 +23,10 @@
 
                         <div>Secret: {{secret.path}}</div>
 
+                        <md-button class="md-raised" data-ng-click="vm.editSecret($event, engine, secret.path)">
+                            Edit
+                        </md-button>
+
                         <md-button class="md-raised md-warn" data-ng-click="vm.deleteSecret($event, engine, secret)">
                             Delete
                         </md-button>
