@@ -1,0 +1,41 @@
+<div class="vault-page">
+
+    <div layout="row">
+        <h1 style="margin-top: 5px; font-family: 'Roboto Light'; font-size: 20px">Vault</h1>
+    </div>
+
+    <div>
+
+        <div data-ng-repeat="engine in vm.engines">
+
+            <div>Engine: {{engine.engine_name}}</div>
+
+            <button data-ng-click="vm.toggleShowSecrets(engine)">
+                <span data-ng-if="engine.showSecrets">Hide Secrets</span>
+                <span data-ng-if="!engine.showSecrets">Show Secrets</span>
+            </button>
+
+            <div data-ng-if="engine.showSecrets">
+
+                <div data-ng-repeat="item in engine.secrets">
+
+                    Secret: {{item.path}}
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.data" style="width: 100%">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="100"></progress-circular>
+        </div>
+    </div>
+
+
+</div>

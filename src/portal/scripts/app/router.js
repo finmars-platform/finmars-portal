@@ -853,6 +853,11 @@
                 templateUrl: 'views/pages/marketplace-page-view.html',
                 controller: 'MarketplacePageController as vm'
             })
+            .state('app.portal.vault', {
+                url: '/vault',
+                templateUrl: 'views/pages/vault-page-view.html',
+                controller: 'VaultPageController as vm'
+            })
             .state('app.portal.manage-configuration', {
                 url: '/manage-configuration?page&query',
                 templateUrl: 'views/pages/manage-configuration-page-view.html',
