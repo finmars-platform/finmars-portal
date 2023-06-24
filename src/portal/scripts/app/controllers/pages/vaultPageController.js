@@ -134,7 +134,7 @@
                     locals: {
                         data: {
                             engine_name: engine.engine_name,
-                            path: path,
+                            path: secret.path,
                             data: secret_data['data']['data']
                         }
                     },
