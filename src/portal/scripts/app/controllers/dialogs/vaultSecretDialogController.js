@@ -27,7 +27,12 @@
                 vm.editor.setOptions({});
                 vm.editor.setFontSize(14)
                 vm.editor.setBehavioursEnabled(true);
-                vm.editor.setValue('{}')
+
+                if (vm.data.data) {
+                    vm.editor.setValue(JSON.stringify(vm.data.data, null, 4))
+                } else {
+                    vm.editor.setValue('{}')
+                }
 
                 vm.editor.focus();
                 vm.editor.navigateFileStart();
