@@ -38,26 +38,17 @@
 
                 <div class="vault-engine-card-title">Engine: {{engine.engine_name}}</div>
 
-                <button data-ng-click="vm.toggleShowSecrets(engine)" class="vault-engine-card-button">
-                    <span data-ng-if="engine.showSecrets">Hide Secrets</span>
-                    <span data-ng-if="!engine.showSecrets">Show Secrets</span>
-                </button>
+                <div data-ng-repeat="secret in engine.secrets" class="vault-engine-secret" layout="row">
 
-                <div class="vault-engine-card-secrets-holder" data-ng-if="engine.showSecrets">
+                    <div>Secret: {{secret.path}}</div>
 
-                    <div data-ng-repeat="secret in engine.secrets" class="vault-engine-secret" layout="row">
+                    <md-button class="md-raised" data-ng-click="vm.editSecret($event, engine, secret)">
+                        Edit
+                    </md-button>
 
-                        <div>Secret: {{secret.path}}</div>
-
-                        <md-button class="md-raised" data-ng-click="vm.editSecret($event, engine, secret)">
-                            Edit
-                        </md-button>
-
-                        <md-button class="md-raised md-warn" data-ng-click="vm.deleteSecret($event, engine, secret)">
-                            Delete
-                        </md-button>
-
-                    </div>
+                    <md-button class="md-raised md-warn" data-ng-click="vm.deleteSecret($event, engine, secret)">
+                        Delete
+                    </md-button>
 
                 </div>
 
