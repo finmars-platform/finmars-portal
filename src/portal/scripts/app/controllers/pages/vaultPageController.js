@@ -119,14 +119,11 @@
 
         }
 
-        vm.editSecret = function ($event, engine, path) {
+        vm.editSecret = function ($event, engine, secret) {
 
-            vaultService.getSecret({
-                engine_name: engine.engine_name,
-                path: path
-            }).then(function (secret) {
+            vaultService.getSecret(engine.engine_name, secret.path).then(function (secret_data) {
 
-                console.log('editSecret.data', secret);
+                console.log('editSecret.data', secret_data);
 
                 $mdDialog.show({
                     controller: 'VaultSecretDialogController as vm',
@@ -138,7 +135,7 @@
                         data: {
                             engine_name: engine.engine_name,
                             path: path,
-                            data: secret['data']['data']
+                            data: secret_data['data']['data']
                         }
                     },
                     preserveScope: true,
