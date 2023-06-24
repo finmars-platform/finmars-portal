@@ -1,7 +1,7 @@
 <div class="custom-input-container instrument-input-container instrumentSelectInputContainer"
          data-ng-class="getInputContainerClasses()">
 
-    <div ng-if="label" class="custom-input-top-row">
+    <div data-ng-if="label" class="custom-input-top-row">
         <span class="custom-input-textarea-span-pan">{{label}}</span>
     </div>
 
@@ -9,11 +9,11 @@
         <div class="custom-input-borders">
             <div class="custom-input-content">
 
-                <div class="flex-row">
+                <div class="flex-row flex-i-center">
 
                     <button data-ng-if="!noIndicatorBtn"
                             data-ng-hide="loadingEntity"
-                            class="custom-input-indicator-btn position-relative"
+                            class="custom-input-indicator-btn"
                             data-ng-click="openSelectorDialog($event)"
                             data-ng-disabled="isDisabled">
                         <span class="material-icons">menu</span>
@@ -30,7 +30,6 @@
                         data-ng-model="inputText"
                         data-ng-model-options="{debounce: 1000}"
                         data-ng-change="onInputTextChange()"
-                        data-ng-focus="onInputFocus()"
                         data-ng-disabled="isDisabled"
                         data-ng-keypress="selectFirst($event)"
                         class="custom-input instrument-input instrumentSelectInputElem"
@@ -92,7 +91,7 @@
                             data-ng-repeat="option in localInstruments"
                             data-ng-click="selectLocalInstrument(option)"
                             class="instrument-select-input-sel-option"
-                            ng-mouseover="setHoverInstrument($event, option)"
+                            ng-mouseover="setHoverInstrument(option)"
 
                     >
 
@@ -121,7 +120,7 @@
                             data-ng-repeat="option in databaseInstruments"
                             data-ng-click="selectDatabaseInstrument(option)"
                             class="instrument-select-input-sel-option"
-                            ng-mouseover="setHoverInstrument($event, option)"
+                            ng-mouseover="setHoverInstrument(option)"
                             >
 
 
@@ -158,8 +157,11 @@
 
             <div data-ng-if="hoverInstrument">
 
-                <div data-ng-if="hoverInstrument.available_for_update" class="instrument-select-update-instrument-button">
-                    <span class="material-icons  {{isUpdatingInstrument ? 'disabled-btn' : ''}}" ng-click="updateLocalInstrument(hoverInstrument)">autorenew</span>
+                <div data-ng-if="hoverInstrument.available_for_update"
+                     data-ng-disabled="isUpdatingInstrument"
+                     class="instrument-select-update-instrument-button"
+                     data-ng-click="updateLocalInstrument(hoverInstrument)">
+                    <span class="material-icons">autorenew</span>
                 </div>
 
                 <div class="instrument-select-option-detail-field">
@@ -171,7 +173,7 @@
 
                         <!--<span data-ng-if="hoverInstrument.id">{{hoverInstrument.name}}</span>
                         <span data-ng-if="!hoverInstrument.id">{{hoverInstrument.issueName}}</span>-->
-                        <span data-ng-if="hoverInstrument">{{hoverInstrument.name}}</span>
+                        <span>{{hoverInstrument.name}}</span>
 
                     </div>
 
@@ -184,8 +186,12 @@
                     </div>
                     <div class="instrument-select-option-detail-value">
 
-                        <span data-ng-if="!hoverInstrument.isin">{{hoverInstrument.user_code}}</span>
-                        <span data-ng-if="hoverInstrument.isin">{{hoverInstrument.isin}}</span>
+                        <span data-ng-if="hoverInstrument.frontOptions.type === 'local'">
+                            {{hoverInstrument.user_code}}
+                        </span>
+                        <span data-ng-if="hoverInstrument.frontOptions.type === 'database'">
+                            {{hoverInstrument.isin}}
+                        </span>
 
                     </div>
 
@@ -198,7 +204,9 @@
                     </div>
                     <div class="instrument-select-option-detail-value">
 
-                        <span data-ng-if="!hoverInstrument.isin">{{hoverInstrument.reference_for_pricing}}</span>
+                        <span data-ng-if="hoverInstrument.frontOptions.type === 'local'">
+                            {{hoverInstrument.reference_for_pricing}}
+                        </span>
                         <span data-ng-if="hoverInstrument.isin">{{hoverInstrument.ticker}}</span>
 
                     </div>
@@ -212,7 +220,9 @@
                     </div>
                     <div class="instrument-select-option-detail-value">
 
-                        <span data-ng-if="!hoverInstrument.isin">{{hoverInstrument.instrument_type_object.name}}</span>
+                        <span data-ng-if="hoverInstrument.frontOptions.type === 'local'">
+                            {{hoverInstrument.instrument_type_object.name}}
+                        </span>
                         <span data-ng-if="hoverInstrument.isin">{{hoverInstrument.instrument_type}}</span>
 
                     </div>

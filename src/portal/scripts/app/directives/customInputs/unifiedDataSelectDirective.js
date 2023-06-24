@@ -293,7 +293,7 @@
 
                         promise = importCurrencyCbondsService.download(
                             {
-                                currency_code: item.code,
+                                user_code: item.user_code,
                                 mode: 1,
                             }
                         )
@@ -338,6 +338,7 @@
 
                             scope.model = data.result_id;
                             // TODO: FN-1736 - check that properties of 'data' still the same
+                            // TODO: FN-1736 - change item.code to item.user_code ?
                             scope.itemObject = {id: data.result_id, name: item.name, user_code: item.code}
 
                             scope.processing = false;
