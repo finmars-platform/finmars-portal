@@ -60,17 +60,7 @@
 
                 console.log('vm.getListEngines.data', data);
 
-                vm.engines = [];
-
-                Object.keys(data).forEach(function(key) {
-
-                    var item = data[key];
-
-                    item['engine_name'] = key
-
-                    vm.engines.push(item)
-
-                })
+                vm.engines = data;
 
                 vm.readyStatus.data = true;
 
