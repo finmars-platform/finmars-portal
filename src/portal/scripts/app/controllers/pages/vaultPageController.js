@@ -154,7 +154,7 @@
 
                             vm.getSecrets(engine);
 
-                            toastNotificationService.success("Secret created successfully");
+                            toastNotificationService.success("Secret updated successfully");
 
                             $scope.$apply();
 
