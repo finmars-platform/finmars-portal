@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var metaHelper = require('../../helpers/meta.helper');
+
     module.exports = function ($scope, $mdDialog, data) {
 
         console.log('data', data);
@@ -61,6 +63,12 @@
 
         function convertToAsterisks(str) {
             return '*'.repeat(str.length);
+        }
+
+        vm.copy = function ($event, item) {
+
+            metaHelper.copyToBuffer(item.value)
+
         }
 
         vm.init = function () {
