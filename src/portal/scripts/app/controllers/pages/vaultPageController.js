@@ -33,16 +33,19 @@
 
                 console.log('vm.getSecrets.data', data);
 
-                var secrets_keys = data['data']['keys']
-
                 var secret_items = []
 
-                secrets_keys.forEach(function (key) {
+                if (data.hasOwnProperty('data')) {
 
-                    secret_items.push({
-                        path: key
+                    var secrets_keys = data['data']['keys']
+
+                    secrets_keys.forEach(function (key) {
+
+                        secret_items.push({
+                            path: key
+                        })
                     })
-                })
+                }
 
                 engine.secrets = secret_items;
                 $scope.$apply();
@@ -116,13 +119,13 @@
 
         }
 
-        vm.addSecret = function ($event, engine) {
+        vm.createSecret = function ($event, engine) {
 
             $mdDialog.show({
                 controller: 'VaultSecretDialogController as vm',
                 templateUrl: 'views/dialogs/vault-secret-dialog-view.html',
                 parent: angular.element(document.body),
-                targetEvent: ev,
+                targetEvent: $event,
                 clickOutsideToClose: false,
                 locals: {
                     data: {
@@ -133,7 +136,7 @@
                 autoWrap: true,
                 skipHide: true,
                 multiple: true
-            }).then(function (res){
+            }).then(function (res) {
 
                 if (res.status === 'agree') {
 
@@ -164,7 +167,7 @@
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
-                targetEvent: ev,
+                targetEvent: $event,
                 clickOutsideToClose: false,
                 locals: {
                     warning: {
@@ -208,7 +211,7 @@
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
                 parent: angular.element(document.body),
-                targetEvent: ev,
+                targetEvent: $event,
                 clickOutsideToClose: false,
                 locals: {
                     warning: {
