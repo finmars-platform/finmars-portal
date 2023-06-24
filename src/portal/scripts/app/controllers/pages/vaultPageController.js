@@ -121,7 +121,7 @@
 
         vm.editSecret = function ($event, engine, secret) {
 
-            vaultService.getSecret(engine.engine_name, secret.path).then(function (secret_metadata) {
+            vaultService.getSecretMetadata(engine.engine_name, secret.path).then(function (secret_metadata) {
 
                 var version = secret_metadata['data']['versions'].length;
 
