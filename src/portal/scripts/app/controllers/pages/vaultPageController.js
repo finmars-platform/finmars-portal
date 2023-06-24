@@ -297,7 +297,23 @@
 
         }
 
+        vm.getStatus = function (){
+
+            vaultService.getStatus().then(function (data) {
+
+                console.log('vm.getStatus.data', data);
+
+                vm.status = data;
+
+                $scope.$apply();
+
+            });
+
+        }
+
         vm.init = function () {
+
+            vm.getStatus();
 
             vm.getData();
 
