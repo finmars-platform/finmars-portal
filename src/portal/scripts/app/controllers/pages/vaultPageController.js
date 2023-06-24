@@ -25,29 +25,29 @@
 
             item.showSecrets = !item.showSecrets;
 
-            if (item.showSecrets) {
+        }
 
-                vaultService.getListSecrets(engine['engine_name']).then(function (data){
+        vm.getSecrets = function (engine) {
 
-                    console.log('vm.getSecrets.data', data);
+            vaultService.getListSecrets(engine['engine_name']).then(function (data) {
 
-                    secrets_keys = data['data']['keys']
+                console.log('vm.getSecrets.data', data);
 
-                    secret_items = []
+                var secrets_keys = data['data']['keys']
 
-                    secrets_keys.forEach(function(key) {
+                var secret_items = []
 
-                        secret_items.push({
-                            path: key
-                        })
+                secrets_keys.forEach(function (key) {
+
+                    secret_items.push({
+                        path: key
                     })
-
-                    item.secrets = secret_items;
-                    $scope.$apply();
-
                 })
 
-            }
+                engine.secrets = secret_items;
+                $scope.$apply();
+
+            })
 
         }
 
@@ -56,11 +56,17 @@
 
             vm.readyStatus.data = false;
 
-            vaultService.getListEngines().then(function (data){
+            vaultService.getListEngines().then(function (data) {
 
                 console.log('vm.getListEngines.data', data);
 
                 vm.engines = data;
+
+                vm.engines.forEach(function (engine) {
+
+                    vm.getSecrets(engine);
+
+                })
 
                 vm.readyStatus.data = true;
 
