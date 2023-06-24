@@ -9,7 +9,7 @@
     var configureRepositoryUrlService = require('./configureRepositoryUrlService');
     var baseUrl = baseUrlService.resolve();
 
-    var getStatus = function (){
+    var getStatus = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
@@ -99,12 +99,16 @@
             })
     };
 
-    var getSecret = function (engineName, path) {
+    var getSecret = function (engineName, path, version) {
+
+        if (!version) {
+            version = 1
+        }
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/vault/vault-secret/get/?engine_name=' + engineName + '&path=' + path,
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/vault/vault-secret/get/?engine_name=' + engineName + '&path=' + path + '&version=' + version,
             {
                 method: 'GET',
                 credentials: 'include',
@@ -115,6 +119,24 @@
                 }
             })
     };
+
+    var getSecretMetadata = function (engineName, path) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/vault/vault-secret/get-metadata/?engine_name=' + engineName + '&path=' + path,
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
 
     var createSecret = function (data) {
 
@@ -183,6 +205,7 @@
         getListSecrets: getListSecrets,
 
         getSecret: getSecret,
+        getSecretMetadata: getSecretMetadata,
         createSecret: createSecret,
         updateSecret: updateSecret,
 
