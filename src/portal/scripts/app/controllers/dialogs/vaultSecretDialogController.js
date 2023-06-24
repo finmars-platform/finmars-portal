@@ -49,7 +49,7 @@
                 status: 'agree', data: {
                     engine_name: vm.data.engine_name,
                     path: vm.data.path,
-                    data: vm.editor.getValue()
+                    data: JSON.parse(vm.editor.getValue())
                 }
             });
         };

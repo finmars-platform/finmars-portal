@@ -119,6 +119,59 @@
 
         }
 
+        vm.editSecret = function ($event, engine, path) {
+
+            vaultService.getSecret({
+                engine_name: engine.engine_name,
+                path: path
+            }).then(function (secret) {
+
+                console.log('editSecret.data', secret);
+
+                $mdDialog.show({
+                    controller: 'VaultSecretDialogController as vm',
+                    templateUrl: 'views/dialogs/vault-secret-dialog-view.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: false,
+                    locals: {
+                        data: {
+                            engine_name: engine.engine_name,
+                            path: path,
+                            data: secret['data']['data']
+                        }
+                    },
+                    preserveScope: true,
+                    autoWrap: true,
+                    skipHide: true,
+                    multiple: true
+                }).then(function (res) {
+
+                    if (res.status === 'agree') {
+
+                        vaultService.updateSecret({
+                            "engine_name": engine['engine_name'],
+                            "path": res.data.path,
+                            "data": res.data.data
+                        }).then(function (data) {
+
+                            vm.getSecrets(engine);
+
+                            toastNotificationService.success("Secret created successfully");
+
+                            $scope.$apply();
+
+
+                        })
+
+                    }
+
+                })
+
+            })
+
+        }
+
         vm.createSecret = function ($event, engine) {
 
             $mdDialog.show({
