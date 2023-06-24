@@ -44,7 +44,7 @@
             })
     };
 
-    var deleteEngine = function (engineName) {
+    var deleteEngine = function (data) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
@@ -53,6 +53,7 @@
             {
                 method: 'POST',
                 credentials: 'include',
+                body: JSON.stringify(data),
                 headers: {
                     'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
@@ -133,7 +134,7 @@
             })
     };
 
-    var deleteSecret = function (engineName) {
+    var deleteSecret = function (data) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
@@ -142,6 +143,7 @@
             {
                 method: 'POST',
                 credentials: 'include',
+                body: JSON.stringify(data),
                 headers: {
                     'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',

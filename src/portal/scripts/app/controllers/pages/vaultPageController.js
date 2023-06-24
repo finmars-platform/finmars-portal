@@ -76,6 +76,135 @@
 
         };
 
+        vm.createEngine = function ($event) {
+
+            $mdDialog.show({
+                controller: 'SaveAsDialogController as vm',
+                templateUrl: 'views/dialogs/save-as-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        name: 'Finmars'
+                    }
+                }
+            }).then(function (res) {
+
+                console.log('res', res);
+
+                if (res.status === 'agree') {
+
+                    vaultService.createEngine({
+                        'engine_name': res.data.name
+                    }).then(function (data) {
+
+                        vm.getData();
+
+                        toastNotificationService.success("Engine created successfully");
+
+                    })
+
+                }
+
+
+            })
+
+        }
+
+        vm.addSecret = function ($event, engine) {
+
+        }
+
+        vm.deleteSecret = function ($event, engine, secret) {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "Are you sure you want delete secret " + secret.path + "?"
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+                console.log('res', res);
+                if (res.status === 'agree') {
+
+                    vaultService.deleteSecret({
+                        "engine_name": engine['engine_name'],
+                        "path": secret.path
+                    }).then(function (data) {
+
+                        console.log('vm.deleteSecret.data', data);
+
+                        vm.getSecrets(engine);
+
+                        toastNotificationService.success("Secret deleted successfully");
+
+                        $scope.$apply();
+
+                    })
+
+                }
+            })
+
+
+        }
+
+        vm.deleteEngine = function ($event, engine) {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "Are you sure you want delete engine " + engine.engine_name + "?"
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+                console.log('res', res);
+                if (res.status === 'agree') {
+
+                    vaultService.deleteEngine({
+                        "engine_name": engine['engine_name']
+                    }).then(function (data) {
+
+                        console.log('vm.deleteSecret.data', data);
+
+                        vm.getData();
+
+                        toastNotificationService.success("Engine deleted successfully");
+
+                        $scope.$apply();
+
+                    })
+
+                }
+            })
+
+
+        }
+
         vm.init = function () {
 
             vm.getData();
