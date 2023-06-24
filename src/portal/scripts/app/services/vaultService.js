@@ -9,6 +9,24 @@
     var configureRepositoryUrlService = require('./configureRepositoryUrlService');
     var baseUrl = baseUrlService.resolve();
 
+    var getStatus = function (){
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/vault/vault-status/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+
+    }
+
     var getListEngines = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
@@ -154,6 +172,9 @@
 
 
     module.exports = {
+
+        getStatus: getStatus,
+
         getListEngines: getListEngines,
         createEngine: createEngine,
         deleteEngine: deleteEngine,

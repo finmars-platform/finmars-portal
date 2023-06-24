@@ -4,6 +4,32 @@
         <h1 style="margin-top: 5px; font-family: 'Roboto Light'; font-size: 20px">Vault</h1>
     </div>
 
+    <div data-ng-if="vm.status">
+
+        <md-card data-ng-if="vm.status.status == 'ok'">
+
+            <md-card-content>
+
+                <span style="color: green">OK</span>: Vault Configured
+                {{vm.status.text}}
+
+            </md-card-content>
+
+        </md-card>
+
+        <md-card data-ng-if="vm.status.status != 'ok'">
+
+            <md-card-content>
+
+                <span style="color: red">Unknown</span>: Vault Is Not Configured
+                {{vm.status.text}}
+
+            </md-card-content>
+
+        </md-card>
+
+    </div>
+
     <div>
 
         <md-card data-ng-repeat="engine in vm.engines" class="vault-engine-card">
