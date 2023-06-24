@@ -6,28 +6,40 @@
 
     <div>
 
-        <div data-ng-repeat="engine in vm.engines">
+        <md-card data-ng-repeat="engine in vm.engines" class="vault-engine-card">
 
-            <div>Engine: {{engine.engine_name}}</div>
+            <md-card-content>
 
-            <button data-ng-click="vm.toggleShowSecrets(engine)">
-                <span data-ng-if="engine.showSecrets">Hide Secrets</span>
-                <span data-ng-if="!engine.showSecrets">Show Secrets</span>
-            </button>
+                <div class="vault-engine-card-title">Engine: {{engine.engine_name}}</div>
 
-            <div data-ng-if="engine.showSecrets">
+                <button data-ng-click="vm.toggleShowSecrets(engine)" class="vault-engine-card-button">
+                    <span data-ng-if="engine.showSecrets">Hide Secrets</span>
+                    <span data-ng-if="!engine.showSecrets">Show Secrets</span>
+                </button>
 
-                <div data-ng-repeat="item in engine.secrets">
+                <div class="vault-engine-card-secrets-holder" data-ng-if="engine.showSecrets">
 
-                    Secret: {{item.path}}
+                    <div data-ng-repeat="secret in engine.secrets" class="vault-engine-secret" layout="row">
+
+                        <div>Secret: {{secret.path}}</div>
+
+                        <md-button class="md-raised md-warn" data-ng-click="vm.deleteSecret($event, engine, secret)">
+                            Delete
+                        </md-button>
+
+                    </div>
 
                 </div>
 
-            </div>
+                <md-button class="md-raised" data-ng-click="vm.addSecret($event, engine)">Add Secret</md-button>
+                <md-button class="md-raised md-warn" data-ng-click="vm.deleteEngine($event, engine)">Delete Engine</md-button>
+
+            </md-card-content>
 
 
-        </div>
+        </md-card>
 
+        <md-button class="md-raised" data-ng-click="vm.createEngine($event)">Add Engine</md-button>
 
     </div>
 
