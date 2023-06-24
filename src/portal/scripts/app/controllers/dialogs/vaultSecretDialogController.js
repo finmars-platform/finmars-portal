@@ -59,7 +59,30 @@
             });
         };
 
+        function convertToAsterisks(str) {
+            return '*'.repeat(str.length);
+        }
+
         vm.init = function () {
+
+            if (vm.data.data) {
+
+                vm.items = [];
+
+                Object.keys(vm.data.data).forEach(function (key) {
+
+                    vm.items.push({
+                        key: key,
+                        value: vm.data.data[key],
+                        maskedValue: convertToAsterisks(vm.data.data[key])
+                    })
+
+
+                })
+
+
+            }
+
             vm.initExpressionEditor();
         }
 
