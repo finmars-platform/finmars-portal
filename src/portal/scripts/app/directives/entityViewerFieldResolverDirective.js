@@ -25,6 +25,7 @@
             },
             templateUrl: 'views/directives/entity-viewer-field-resolver-view.html',
             link: function (scope, elem, attrs, bfcVm) {
+
                 // scope.readyStatus = {content: false};
                 scope.readyStatus = bfcVm.readyStatus;
                 scope.readyStatus.content = false;
@@ -301,9 +302,12 @@
                         ['instruments.instrument', 'counterparties.counterparty', 'currencies.currency'].indexOf(valueContentType) > -1
                     ) {
 
-                        var item_object = scope.entity[scope.fieldKey + '_object'];
+                        var item_object = scope.entity.values[scope.fieldKey + '_object'];
 
-                        if (item_object.short_name) {
+                        if (!item_object) {
+                            result = '';
+                        }
+                        else if (item_object.short_name) {
                             result = item_object.short_name;
 
                         } else if (item_object.name) {
@@ -499,9 +503,6 @@
 
                                 scope.type = res.type;
                                 scope.fields = res.data;
-                                if (scope.item.key === 'transaction_currency') {
-                                    console.log("testing1736.evFieldResolver getData fields", structuredClone(scope.fields) );
-                                }
                                 // scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
 
                                 if (scope.fieldKey === 'price_download_scheme') {
@@ -654,10 +655,6 @@
 
                             scope.modelObj.model = bfcVm.getValueFromEntity();
 
-                            if (scope.item.key === 'transaction_currency') {
-                                console.log("testing1736.evFieldResolver FIELDS_RECALCULATION_END ", scope.item, scope.modelObj.model );
-                            }
-
                             if (scope.item &&
                                 scope.item.frontOptions && scope.item.frontOptions.recalculated &&
                                 (scope.modelObj.model || scope.modelObj.model === 0)) {
@@ -665,15 +662,10 @@
                                 fieldsDataIsLoaded = false;
 
                                 scope.getData().then(function () {
-                                    if (scope.item.key === 'transaction_currency') {
-                                        console.log("testing1736.evFieldResolver FIELDS_RECALCULATION_END fields", structuredClone(scope.fields) );
-                                    }
+
                                     setItemSpecificSettings();
                                     // prepareDataForSelector();
                                     scope.inputTextObj.value = scope.getInputTextForEntitySearch();
-                                    if (scope.item.key === 'transaction_currency') {
-                                        console.log("testing1736.evFieldResolver FIELDS_RECALCULATION_END inputTextObj", scope.inputTextObj.value );
-                                    }
 
                                     scope.$apply();
 

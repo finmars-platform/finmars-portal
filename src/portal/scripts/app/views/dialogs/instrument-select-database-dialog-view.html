@@ -4,7 +4,7 @@
     </md-toolbar>
     <md-dialog-content>
 
-        <div>
+        <div class="position-relative">
 
             <div layout="row">
 
@@ -96,16 +96,16 @@
                         >
 
 
-                            <div class="instrument-select-instrument-name" title="{{option.issueName}}" ng-bind-html="vm.getHighlighted(option.issueName)">
+                            <div class="instrument-select-instrument-name" title="{{option.name}}" ng-bind-html="vm.getHighlighted(option.name)">
 
                             </div>
 
-                            <div class="instrument-select-instrument-isin" title="{{option.referenceId}}" ng-bind-html="vm.getHighlighted(option.referenceId)">
+                            <div class="instrument-select-instrument-isin" title="{{option.reference}}" ng-bind-html="vm.getHighlighted(option.reference)">
 
                             </div>
 
-                            <div class="instrument-select-instrument-type" title="{{option.instrumentType}}">
-                                {{option.instrumentType}}
+                            <div class="instrument-select-instrument-type" title="{{option.instrument_type}}">
+                                {{option.instrument_type}}
                             </div>
 
                         </div>
@@ -133,9 +133,12 @@
 
                     <div data-ng-if="vm.hoverInstrument">
 
-                        <div data-ng-if="vm.hoverInstrument.id" class="instrument-select-update-instrument-button">
-                            <span class="material-icons  {{vm.isUpdatingInstrument ? 'disabled-btn' : ''}}" ng-click="vm.updateLocalInstrument(vm.hoverInstrument)">autorenew</span>
-                        </div>
+                        <md-button data-ng-if="vm.hoverInstrument.available_for_update"
+                                   data-ng-disabled="vm.isUpdatingInstrument"
+                                   class="instrument-select-update-instrument-button small-button-icon display-block"
+                                   data-ng-click="vm.updateLocalInstrument(vm.hoverInstrument)">
+                            <span class="material-icons">autorenew</span>
+                        </md-button>
 
                         <div class="instrument-select-option-detail-field">
 
@@ -144,8 +147,9 @@
                             </div>
                             <div class="instrument-select-option-detail-value" style="width: 140px">
 
-                                <span data-ng-if="vm.hoverInstrument.id">{{vm.hoverInstrument.name}}</span>
-                                <span data-ng-if="!vm.hoverInstrument.id">{{vm.hoverInstrument.issueName}}</span>
+                                <!--span data-ng-if="vm.hoverInstrument.id">{{vm.hoverInstrument.name}}</span>
+                                <span data-ng-if="!vm.hoverInstrument.id">{{vm.hoverInstrument.issueName}}</span>-->
+                                <span>{{vm.hoverInstrument.name}}</span>
 
                             </div>
 
@@ -158,8 +162,8 @@
                             </div>
                             <div class="instrument-select-option-detail-value">
 
-                                <span data-ng-if="vm.hoverInstrument.id">{{vm.hoverInstrument.user_code}}</span>
-                                <span data-ng-if="!vm.hoverInstrument.id">{{vm.hoverInstrument.referenceId}}</span>
+                                <span data-ng-if="!vm.hoverInstrument.isin">{{vm.hoverInstrument.user_code}}</span>
+                                <span data-ng-if="vm.hoverInstrument.isin">{{vm.hoverInstrument.isin}}</span>
 
                             </div>
 
@@ -172,8 +176,8 @@
                             </div>
                             <div class="instrument-select-option-detail-value">
 
-                                <span data-ng-if="vm.hoverInstrument.id">{{vm.hoverInstrument.reference_for_pricing}}</span>
-                                <span data-ng-if="!vm.hoverInstrument.id">{{vm.hoverInstrument.bloombergTicker}}</span>
+                                <span data-ng-if="!vm.hoverInstrument.isin">{{vm.hoverInstrument.reference_for_pricing}}</span>
+                                <span data-ng-if="vm.hoverInstrument.isin">{{vm.hoverInstrument.ticker}}</span>
 
                             </div>
 
@@ -186,14 +190,14 @@
                             </div>
                             <div class="instrument-select-option-detail-value">
 
-                                <span data-ng-if="vm.hoverInstrument.id">{{vm.hoverInstrument.instrument_type_object.name}}</span>
-                                <span data-ng-if="!vm.hoverInstrument.id">{{vm.hoverInstrument.instrumentType}}</span>
+                                <span data-ng-if="!vm.hoverInstrument.isin">{{vm.hoverInstrument.instrument_type_object.name}}</span>
+                                <span data-ng-if="vm.hoverInstrument.isin">{{vm.hoverInstrument.instrument_type}}</span>
 
                             </div>
 
                         </div>
 
-                        <div class="instrument-select-option-detail-field">
+                        <!--<div class="instrument-select-option-detail-field">
 
                             <div class="instrument-select-option-detail-label">
                                 FIGI / FIGI RegS
@@ -205,9 +209,9 @@
 
                             </div>
 
-                        </div>
+                        </div>-->
 
-                        <div class="instrument-select-option-detail-field">
+                        <!--<div class="instrument-select-option-detail-field">
 
                             <div class="instrument-select-option-detail-label">
                                 Common Code
@@ -219,7 +223,7 @@
 
                             </div>
 
-                        </div>
+                        </div>-->
 
                         <div class="instrument-select-option-detail-field">
 
@@ -235,7 +239,7 @@
 
                         </div>
 
-                        <div class="instrument-select-option-detail-field">
+                        <!--<div class="instrument-select-option-detail-field">
 
                             <div class="instrument-select-option-detail-label">
                                 WKN Code
@@ -247,7 +251,7 @@
 
                             </div>
 
-                        </div>
+                        </div>-->
 
 
                     </div>
