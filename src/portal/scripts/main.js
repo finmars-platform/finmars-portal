@@ -691,6 +691,7 @@ export default (function () {
     portal.controller('MarketplacePageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'configurationService', require('./app/controllers/pages/marketplacePageController')]);
     portal.controller('VaultPageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'configurationService', require('./app/controllers/pages/vaultPageController')]);
     portal.controller('VaultSecretDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/vaultSecretDialogController')]);
+    portal.controller('UnsealVaultDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/unsealVaultDialogController')]);
     portal.controller('ManageConfigurationPageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'configurationService', require('./app/controllers/pages/manageConfigurationPageController')]);
     portal.controller('UpdateCenterController', ['$scope', 'authorizerService', 'globalDataService', require('./app/controllers/pages/updateCenterController')]);
     portal.controller('SystemMessagesController', ['$scope', '$mdDialog', 'systemMessageService', require('./app/controllers/pages/systemMessagesController')]);

@@ -303,6 +303,54 @@
 
         }
 
+        vm.seal = function ($event) {
+
+            vaultService.seal().then(function (data) {
+
+                toastNotificationService.success("Vault is sealed.");
+
+                vm.getStatus();
+
+                vm.getData();
+
+            })
+
+        }
+
+        vm.unseal = function ($event) {
+
+            $mdDialog.show({
+                controller: 'UnsealVaultDialogController as vm',
+                templateUrl: 'views/dialogs/unseal-vault-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    data: {}
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+                console.log('res', res);
+                if (res.status === 'agree') {
+
+                    vaultService.unseal(res.data.key).then(function (data) {
+
+                        toastNotificationService.success("Unseal Key provided successfully");
+
+                        vm.getStatus();
+
+                        vm.getData();
+
+                    })
+
+                }
+            })
+
+        }
+
         vm.getStatus = function () {
 
             vaultService.getStatus().then(function (data) {
@@ -310,6 +358,16 @@
                 console.log('vm.getStatus.data', data);
 
                 vm.status = data;
+
+                if (vm.status.data) {
+                    const lines = vm.status.data.text.split("\n");
+                    vm.statusData = lines.join("\n");
+
+
+                    const sealedRegex = /Sealed\s+true/g;
+                    vm.isSealed = sealedRegex.test(vm.status.data.text);
+
+                }
 
                 $scope.$apply();
 
