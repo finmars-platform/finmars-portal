@@ -75,7 +75,7 @@
 
         </md-card>
 
-        <md-button class="md-raised" data-ng-click="vm.createEngine($event)">Add Engine</md-button>
+        <md-button class="md-raised" data-ng-if="!vm.isSealed" data-ng-click="vm.createEngine($event)">Add Engine</md-button>
 
     </div>
 

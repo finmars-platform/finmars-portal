@@ -36,8 +36,8 @@
             {
                 method: 'POST',
                 credentials: 'include',
+                body: JSON.stringify({'action': 'seal'}),
                 headers: {
-                    body: JSON.stringify({'action': 'seal'}),
                     'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
@@ -55,8 +55,8 @@
             {
                 method: 'POST',
                 credentials: 'include',
+                body: JSON.stringify({'action': 'unseal', 'key': key}),
                 headers: {
-                    body: JSON.stringify({'action': 'unseal', 'key': key}),
                     'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
