@@ -367,7 +367,7 @@
 
         }
 
-        vm.goToVault = function () {
+        vm.goToVault = function ($event) {
 
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
