@@ -94,7 +94,7 @@
                 multiple: true,
                 locals: {
                     data: {
-                        name: 'Finmars'
+                        name: 'finmars'
                     }
                 }
             }).then(function (res) {
@@ -403,9 +403,14 @@
 
         vm.getStatus = function () {
 
+            vm.readyStatus.health = false;
+
             vaultService.getHealth().then(function (healthData) {
 
                 vm.isInited = healthData.data.initialized
+
+                vm.readyStatus.health = false;
+                $scope.$apply();
 
                 if (vm.isInited) {
 
