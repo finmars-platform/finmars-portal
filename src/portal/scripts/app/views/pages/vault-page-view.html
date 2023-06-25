@@ -146,9 +146,9 @@
                 vault is unsealed you can access secrets that stored inside.</p>
 
             <div>
-                <div data-ng-repeat="key in vm.initVaultData.keys track by $index" layout="row">
+                <div data-ng-repeat="key in vm.initVaultData.keys track by $index" layout="row" class="vault-seal-key-item">
 
-                    Unseal Key #{{$index + 1}}:
+                    <div>Unseal Key #{{$index + 1}}:</div>
                     <pre>{{key}}</pre>
 
                 </div>
@@ -159,7 +159,7 @@
                 You will need it on next configuration step.
             </p>
 
-            <div layout="row">
+            <div layout="row" class="vault-seal-key-item">
                 <div>Vault Token:</div>
                 <pre>{{vm.initVaultData.root_token}}</pre>
             </div>
