@@ -4,85 +4,149 @@
         <h1 style="margin-top: 5px; font-family: 'Roboto Light'; font-size: 20px">Vault</h1>
     </div>
 
-    <div data-ng-if="vm.status">
+    <div data-ng-if="vm.isInited">
 
-        <md-card data-ng-if="vm.status.status == 'ok'">
+        <div data-ng-if="vm.status">
 
-            <md-card-content>
+            <md-card data-ng-if="vm.status.status == 'ok'">
 
-                <span style="color: green">OK</span>: Vault Configured.
-                {{vm.status.text}}
+                <md-card-content>
 
-                <div data-ng-if="vm.statusData">
-                    <div>Vault info:</div>
-                    <pre>{{vm.statusData}}</pre>
-                </div>
+                    <span style="color: green">OK</span>: Vault Configured.
+                    {{vm.status.text}}
 
-                <div>
+                    <div data-ng-if="vm.statusData">
+                        <div>Vault info:</div>
+                        <pre>{{vm.statusData}}</pre>
+                    </div>
 
-                    <md-button class="md-raised" data-ng-if="!vm.isSealed" data-ng-click="vm.seal($event)">Seal
-                    </md-button>
-                    <md-button class="md-raised" data-ng-if="vm.isSealed" data-ng-click="vm.unseal($event)">Unseal
-                    </md-button>
+                    <div>
 
-                </div>
+                        <md-button class="md-raised" data-ng-if="!vm.isSealed" data-ng-click="vm.seal($event)">Seal
+                        </md-button>
+                        <md-button class="md-raised" data-ng-if="vm.isSealed" data-ng-click="vm.unseal($event)">Unseal
+                        </md-button>
 
-            </md-card-content>
+                    </div>
 
-        </md-card>
+                </md-card-content>
 
-        <md-card data-ng-if="vm.status.status != 'ok'">
+            </md-card>
 
-            <md-card-content>
+            <md-card data-ng-if="vm.status.status != 'ok'">
 
-                <span style="color: red">Unknown</span>: Vault Is Not Configured.
-                {{vm.status.text}}
+                <md-card-content>
 
-            </md-card-content>
+                    <span style="color: red">Unknown</span>: Vault Is Not Configured.
+                    {{vm.status.text}}
 
-        </md-card>
+                </md-card-content>
 
-    </div>
+            </md-card>
 
-    <div>
-
-        <md-card data-ng-repeat="engine in vm.engines" class="vault-engine-card">
-
-            <md-card-content>
-
-                <div class="vault-engine-card-title">Engine: {{engine.engine_name}}</div>
-
-                <div data-ng-repeat="secret in engine.secrets" class="vault-engine-secret" layout="row">
-
-                    <div>Secret: {{secret.path}}</div>
-
-                    <md-button class="md-raised" data-ng-click="vm.editSecret($event, engine, secret)">
-                        Edit
-                    </md-button>
-
-                    <md-button class="md-raised md-warn" data-ng-click="vm.deleteSecret($event, engine, secret)">
-                        Delete
-                    </md-button>
-
-                </div>
-
-                <md-button class="md-raised" data-ng-click="vm.createSecret($event, engine)">Add Secret</md-button>
-                <md-button class="md-raised md-warn" data-ng-click="vm.deleteEngine($event, engine)">Delete Engine
-                </md-button>
-
-            </md-card-content>
-
-
-        </md-card>
-
-        <md-button class="md-raised" data-ng-if="!vm.isSealed" data-ng-click="vm.createEngine($event)">Add Engine</md-button>
-
-    </div>
-
-    <div data-ng-if="!vm.readyStatus.data" style="width: 100%">
-        <div layout="row" layout-sm="column" layout-align="space-around">
-            <progress-circular diameter="100"></progress-circular>
         </div>
+
+        <div>
+
+            <md-card data-ng-repeat="engine in vm.engines" class="vault-engine-card">
+
+                <md-card-content>
+
+                    <div class="vault-engine-card-title">Engine: {{engine.engine_name}}</div>
+
+                    <div data-ng-repeat="secret in engine.secrets" class="vault-engine-secret" layout="row">
+
+                        <div>Secret: {{secret.path}}</div>
+
+                        <md-button class="md-raised" data-ng-click="vm.editSecret($event, engine, secret)">
+                            Edit
+                        </md-button>
+
+                        <md-button class="md-raised md-warn" data-ng-click="vm.deleteSecret($event, engine, secret)">
+                            Delete
+                        </md-button>
+
+                    </div>
+
+                    <md-button class="md-raised" data-ng-click="vm.createSecret($event, engine)">Add Secret</md-button>
+                    <md-button class="md-raised md-warn" data-ng-click="vm.deleteEngine($event, engine)">Delete Engine
+                    </md-button>
+
+                </md-card-content>
+
+
+            </md-card>
+
+            <md-button class="md-raised" data-ng-if="!vm.isSealed" data-ng-click="vm.createEngine($event)">Add Engine
+            </md-button>
+
+        </div>
+
+        <div data-ng-if="!vm.readyStatus.data" style="width: 100%">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+                <progress-circular diameter="100"></progress-circular>
+            </div>
+        </div>
+
+    </div>
+
+    <div data-ng-if="!vm.isInited">
+
+        <div data-ng-if="!vm.initVaultData">
+
+            <h3>Finmars Vault</h3>
+            <p>
+                Vault is a secure storage solution for storing sensitive information such as secrets, bank credentials,
+                and
+                other data related to access external resources.
+            </p>
+
+            <p>To activate Vault, please click the button below. Please note that this is an
+                important action, and it is crucial to save the outputted information in a secure location on your
+                side.</p>
+
+            <md-button data-ng-click="vm.initVault($event)" class="md-raised md-primary">Init Vault</md-button>
+
+            <div data-ng-if="vm.initProcessing">
+                <div layout="row" layout-sm="column" layout-align="space-around">
+                    <progress-circular diameter="50"></progress-circular>
+                </div>
+            </div>
+
+        </div>
+
+        <div data-ng-if="vm.initVaultData">
+
+            <h3>Vault is initialized!</h3>
+
+            <p>
+                This output generated only once and we do not store its content
+                Save the outputted information in a secure location on your
+                side.
+            </p>
+
+            <div>
+                <div>Unseal keys:</div>
+                <div data-ng-repeat="key in vm.initVaultData.keys track by $index" layout="row">
+
+                    Unseal Key #{{$index + 1}}:
+                    <pre>{{key}}</pre>
+
+                </div>
+            </div>
+
+            <div layout="row">
+                <div>Root token:</div>
+                <pre>{{vm.initVaultData.root_token}}</pre>
+            </div>
+
+
+            <div>
+                <md-button data-ng-click="vm.goToVault($event)" class="md-raised">Go to Vault</md-button>
+            </div>
+
+        </div>
+
     </div>
 
 
