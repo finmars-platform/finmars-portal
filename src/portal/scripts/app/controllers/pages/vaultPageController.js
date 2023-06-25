@@ -409,7 +409,8 @@
 
                 vm.isInited = healthData.data.initialized
 
-                vm.readyStatus.health = false;
+                vm.readyStatus.health = true;
+
                 $scope.$apply();
 
                 if (vm.isInited) {
