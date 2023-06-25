@@ -13,6 +13,20 @@
                 <span style="color: green">OK</span>: Vault Configured.
                 {{vm.status.text}}
 
+                <div data-ng-if="vm.statusData">
+                    <div>Vault info:</div>
+                    <pre>{{vm.statusData}}</pre>
+                </div>
+
+                <div>
+
+                    <md-button class="md-raised" data-ng-if="!vm.isSealed" data-ng-click="vm.seal($event)">Seal
+                    </md-button>
+                    <md-button class="md-raised" data-ng-if="vm.isSealed" data-ng-click="vm.unseal($event)">Unseal
+                    </md-button>
+
+                </div>
+
             </md-card-content>
 
         </md-card>
