@@ -153,7 +153,8 @@
                             vaultService.updateSecret({
                                 "engine_name": engine['engine_name'],
                                 "path": res.data.path,
-                                "data": res.data.data
+                                "data": res.data.data,
+                                "version": version
                             }).then(function (data) {
 
                                 vm.getSecrets(engine);
