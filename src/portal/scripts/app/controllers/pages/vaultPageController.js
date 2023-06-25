@@ -378,7 +378,7 @@
                 locals: {
                     warning: {
                         title: 'Warning',
-                        description: "I saved keys of my vault and ready to go to vault."
+                        description: "I saved keys of my vault and ready proceed."
                     }
                 },
                 preserveScope: true,
