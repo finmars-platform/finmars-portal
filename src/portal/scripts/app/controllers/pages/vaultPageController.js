@@ -360,12 +360,10 @@
                 vm.status = data;
 
                 if (vm.status.data) {
-                    const lines = vm.status.data.text.split("\n");
-                    vm.statusData = lines.join("\n");
 
+                    vm.statusData = JSON.stringify(vm.status.data, null, 4)
 
-                    const sealedRegex = /Sealed\s+true/g;
-                    vm.isSealed = sealedRegex.test(vm.status.data.text);
+                    vm.isSealed = vm.status.data.sealed
 
                 }
 

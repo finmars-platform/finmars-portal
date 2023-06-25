@@ -9,6 +9,25 @@
     var configureRepositoryUrlService = require('./configureRepositoryUrlService');
     var baseUrl = baseUrlService.resolve();
 
+    var initVault = function () {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/vault/vault/init/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                body: JSON.stringify({'action': 'init'}),
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+
+    }
+
     var getStatus = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
@@ -232,6 +251,8 @@
 
 
     module.exports = {
+
+        initVault: initVault,
 
         getStatus: getStatus,
         seal: seal,
