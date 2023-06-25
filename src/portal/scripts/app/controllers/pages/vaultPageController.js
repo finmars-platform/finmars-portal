@@ -123,7 +123,7 @@
 
             vaultService.getSecretMetadata(engine.engine_name, secret.path).then(function (secret_metadata) {
 
-                var version = secret_metadata['data']['versions'].length;
+                var version = Object.keys(secret_metadata['data']['versions']).length;
 
                 vaultService.getSecret(engine.engine_name, secret.path, version).then(function (secret_data) {
 
