@@ -14,11 +14,49 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/vault/vault-status/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/vault/vault/status/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+
+    }
+
+    var seal = function () {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/vault/vault/seal/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    body: JSON.stringify({'action': 'seal'}),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+
+    }
+
+    var unseal = function (key) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/vault/vault/unseal/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    body: JSON.stringify({'action': 'unseal', 'key': key}),
                     'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',
                     'Content-type': 'application/json'
@@ -196,6 +234,8 @@
     module.exports = {
 
         getStatus: getStatus,
+        seal: seal,
+        unseal: unseal,
 
         getListEngines: getListEngines,
         createEngine: createEngine,
