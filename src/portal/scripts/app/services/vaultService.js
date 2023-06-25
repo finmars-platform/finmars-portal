@@ -28,6 +28,24 @@
 
     }
 
+    var getHealth = function () {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/vault/vault/health/',
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+
+    }
+
     var getStatus = function () {
 
         var prefix = baseUrlService.getMasterUserPrefix();
@@ -254,6 +272,7 @@
 
         initVault: initVault,
 
+        getHealth: getHealth,
         getStatus: getStatus,
         seal: seal,
         unseal: unseal,

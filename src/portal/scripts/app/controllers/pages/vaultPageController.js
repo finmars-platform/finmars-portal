@@ -351,26 +351,87 @@
 
         }
 
-        vm.getStatus = function () {
+        vm.initVault = function ($event) {
 
-            vaultService.getStatus().then(function (data) {
+            vm.initProcessing = true;
 
-                console.log('vm.getStatus.data', data);
+            vaultService.initVault().then(function (initData) {
 
-                vm.status = data;
+                vm.initVaultData = initData.data
 
-                if (vm.status.data) {
+                vm.initProcessing = false;
+                $scope.$apply();
 
-                    vm.statusData = JSON.stringify(vm.status.data, null, 4)
+            })
 
-                    vm.isSealed = vm.status.data.sealed
+        }
+
+        vm.goToVault = function () {
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "I am saved keys of my vault and ready to go to vault."
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+                console.log('res', res);
+                if (res.status === 'agree') {
+
+                    vm.initVaultData = null;
+
+                    vm.getStatus();
+
+                    vm.getData();
 
                 }
 
-                $scope.$apply();
+            })
 
-            });
+        }
 
+        vm.getStatus = function () {
+
+            vaultService.getHealth().then(function (healthData) {
+
+                vm.isInited = healthData.data.initialized
+
+                if (vm.isInited) {
+
+                    vaultService.getStatus().then(function (data) {
+
+                        console.log('vm.getStatus.data', data);
+
+                        vm.status = data;
+
+                        if (vm.status.data) {
+
+                            vm.statusData = JSON.stringify(vm.status.data, null, 4)
+
+                            vm.isSealed = vm.status.data.sealed
+
+                        }
+
+                        $scope.$apply();
+
+                    });
+
+                } else {
+
+                    $scope.$apply();
+                }
+
+            })
         }
 
         vm.init = function () {
