@@ -125,8 +125,10 @@
                 side.
             </p>
 
+            <p>These keys used to seal and unseal vault. To unseal vault you need to provide at least 3 keys of 5. After
+                vault is unsealed you can access secrets that stored inside.</p>
+
             <div>
-                <div>Unseal keys:</div>
                 <div data-ng-repeat="key in vm.initVaultData.keys track by $index" layout="row">
 
                     Unseal Key #{{$index + 1}}:
@@ -134,6 +136,10 @@
 
                 </div>
             </div>
+
+            <p>
+                Root Token needs to be passed to Finmars Core to access Vault API.
+            </p>
 
             <div layout="row">
                 <div>Root token:</div>
