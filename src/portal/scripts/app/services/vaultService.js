@@ -27,6 +27,24 @@
             })
 
     }
+    var setVaultToken = function (base_api_url, vaultToken) {
+
+        const authorizerUrl = baseUrlService.getAuthorizerUrl();
+
+        return xhrService.fetch(authorizerUrl + '/master-user/' + base_api_url + '/set-vault-token/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                body: JSON.stringify({'vault_token': vaultToken}),
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+
+    }
+
 
     var getHealth = function () {
 
@@ -271,6 +289,7 @@
     module.exports = {
 
         initVault: initVault,
+        setVaultToken: setVaultToken,
 
         getHealth: getHealth,
         getStatus: getStatus,
