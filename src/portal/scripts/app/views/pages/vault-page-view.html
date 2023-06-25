@@ -40,6 +40,23 @@
                     <span style="color: red">Unknown</span>: Vault Is Not Configured.
                     {{vm.status.text}}
 
+
+                    <div>
+                        <p>Warning, passing <b>Vault Token</b> restarts Space</p>
+                        <div layout="row">
+
+                            <md-input-container>
+                                <label>Vault Token</label>
+                                <input type="text" data-ng-model="vm.vaultToken">
+                            </md-input-container>
+
+                            <md-button data-ng-click="vm.setVaultToken()"
+                                       class="md-raised {{vm.vaultToken ? '' : 'disabled-btn'}}">Set Vault Token
+                            </md-button>
+
+                        </div>
+                    </div>
+
                 </md-card-content>
 
             </md-card>
@@ -138,17 +155,21 @@
             </div>
 
             <p>
-                Root Token needs to be passed to Finmars Core to access Vault API.
+                Vault Token needs to be passed to Finmars Core to access Vault API.<br/>
+                You will need it on next configuration step.
             </p>
 
             <div layout="row">
-                <div>Root token:</div>
+                <div>Vault Token:</div>
                 <pre>{{vm.initVaultData.root_token}}</pre>
             </div>
 
 
             <div>
-                <md-button data-ng-click="vm.goToVault($event)" class="md-raised">Go to Vault</md-button>
+
+                <md-button data-ng-click="vm.goToVault($event)"
+                           class="md-raised">Go to Vault
+                </md-button>
             </div>
 
         </div>

@@ -12,12 +12,13 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function vaultPageController($scope, $state, $stateParams, $mdDialog, configurationService) {
+    module.exports = function vaultPageController($scope, $state, $stateParams, $mdDialog, globalDataService) {
 
         var vm = this;
 
         vm.items = [];
         vm.readyStatus = {data: false};
+        vm.vaultTokenIsSet = false;
 
         vm.filters = {}
 
@@ -434,7 +435,23 @@
             })
         }
 
+        vm.setVaultToken = function ($event) {
+
+            vaultService.setVaultToken(vm.currentMasterUser.base_api_url, vm.vaultToken).then(function (data) {
+
+                toastNotificationService.info("Vault token is set. System is going to restart.");
+
+                vm.vaultTokenIsSet = true;
+
+                $scope.$apply();
+
+            })
+
+        }
+
         vm.init = function () {
+
+            vm.currentMasterUser = globalDataService.getMasterUser();
 
             vm.getStatus();
 
