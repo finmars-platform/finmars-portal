@@ -33,6 +33,7 @@
                 if (vm.data.data) {
                     vm.editor.setValue(JSON.stringify(vm.data.data, null, 4))
                 } else {
+                    vm.showJson = true;
                     vm.editor.setValue('{}')
                 }
 
