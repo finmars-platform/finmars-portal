@@ -1,5 +1,5 @@
 /**
- * Created by szhitenev on 08.06.2016.
+ * Created by szhitenev on 25.06.2023.
  */
 (function () {
 
@@ -11,9 +11,8 @@
 
         var vm = this;
 
-        vm.data = data;
 
-        vm.name = vm.data.name;
+        vm.key = '';
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
@@ -21,9 +20,7 @@
 
         vm.agree = function () {
 
-            vm.data.name = vm.name;
-
-            $mdDialog.hide({status: 'agree', data: vm.data});
+            $mdDialog.hide({status: 'agree', data: {key: vm.key}});
 
         };
     }
