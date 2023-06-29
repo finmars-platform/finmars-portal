@@ -72,7 +72,7 @@
                 }
 
                 var modelValue = scope.modelValue || 'id';
-                console.log("testing1736 unifiedDataSelect modelValue", modelValue);
+
                 var stylePreset;
 
                 var inputContainer = elem[0].querySelector('.unifiedDataSelectInputContainer');
@@ -211,6 +211,7 @@
 
                     stylePreset = '';
                     scope.error = '';
+                    var prop = modelValue === 'id' ? 'result_id' : modelValue;
 
                     /*if (scope.entityType === 'currency') {
                         scope.model = resultData.user_code;
@@ -219,7 +220,7 @@
                     else if (scope.entityType === 'counterparty') {
                         scope.model = resultData.result_id;
                     }*/
-                    scope.model = resultData[modelValue];
+                    scope.model = resultData[prop];
 
                     scope.itemObject = {
                         id: resultData.result_id,
