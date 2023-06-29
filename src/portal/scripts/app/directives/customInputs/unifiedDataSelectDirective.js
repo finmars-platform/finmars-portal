@@ -19,6 +19,7 @@
                 label: '@',
                 placeholderText: '@',
                 model: '=',
+                modelValue: '@',
                 customButtons: '=',
                 customStyles: '=',
                 eventSignal: '=',
@@ -70,6 +71,8 @@
                     scope.dialogParent = scope.smallOptions.dialogParent
                 }
 
+                var modelValue = scope.modelValue || 'id';
+                console.log("testing1736 unifiedDataSelect modelValue", modelValue);
                 var stylePreset;
 
                 var inputContainer = elem[0].querySelector('.unifiedDataSelectInputContainer');
@@ -150,14 +153,14 @@
 
                     // Local item, just put ID
 
-                    if (item.id !== scope.model) {
+                    if (item[modelValue] !== scope.model) {
 
                         stylePreset = '';
                         scope.error = '';
 
                         scope.selectedItem = item;
 
-                        scope.model = item.id;
+                        scope.model = item[modelValue];
                         scope.itemObject = item;
                         scope.valueIsValid = true;
 
@@ -173,7 +176,7 @@
                         }, 0);
 
                     } else {
-                        scope.model = item.id;
+                        scope.model = item[modelValue];
                         scope.itemObject = item;
                         itemName = item.name;
                         scope.inputText = item.name;
@@ -209,13 +212,14 @@
                     stylePreset = '';
                     scope.error = '';
 
-                    if (scope.entityType === 'currency') {
+                    /*if (scope.entityType === 'currency') {
                         scope.model = resultData.user_code;
 
                     }
                     else if (scope.entityType === 'counterparty') {
                         scope.model = resultData.result_id;
-                    }
+                    }*/
+                    scope.model = resultData[modelValue];
 
                     scope.itemObject = {
                         id: resultData.result_id,
@@ -559,13 +563,14 @@
                         }
                         else {
 
-                            if (scope.entityType === 'currency') {
+                            /*if (scope.entityType === 'currency') {
                                 scope.model = res.data.item.user_code;
 
                             }
                             else if (scope.entityType === 'counterparty') {
                                 scope.model = res.data.item.id;
-                            }
+                            }*/
+                            scope.model = res.data.item[modelValue];
 
                             scope.itemObject = res.data.item;
 
@@ -865,18 +870,18 @@
 
                         scope.databaseItems = scope.databaseItems.filter(function (databaseItem) {
 
-                            var exist = false;
+                            /* var exist = false;
 
-                            // TODO: remove 'if' after settings fields user_code for counterparties
-                            if (scope.entityType === 'currency') {
+                            exist = scope.localItems.find(function (item) {
+                                return item.user_code === databaseItem.user_code;
+                            })
 
-                                exist = scope.localItems.find(function (item) {
-                                    return item.user_code === databaseItem.user_code;
-                                })
+                            return !exist; */
 
-                            }
-
-                            return !exist;
+                            // database item does not exist locally
+                            return !!scope.localItems.find(function (localItem) {
+                                return localItem.user_code !== databaseItem.user_code;
+                            });
 
                         })
 
