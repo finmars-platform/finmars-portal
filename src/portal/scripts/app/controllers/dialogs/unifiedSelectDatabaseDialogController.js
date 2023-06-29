@@ -436,7 +436,7 @@
 
                 vm.databaseItems = vm.databaseItems.filter(function (databaseItem) {
 
-                    var exist = false;
+                    /* var exist = false;
 
                     if (vm.entityType === 'currency') {
 
@@ -461,7 +461,12 @@
 
                     }
 
-                    return !exist;
+                    return !exist; */
+
+                    // database item does not exist locally
+                    return !!vm.localItems.find(function (localItem) {
+                        return localItem.user_code !== databaseItem.user_code;
+                    });
 
                 });
 
