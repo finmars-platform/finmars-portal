@@ -95,22 +95,20 @@
                         scope.hoverInstrument = option;
                         scope.hoverInstrument.available_for_update = false;
 
-                        if (scope.hoverInstrument.frontOptions.type === 'local') {
+                        var bondOrStock = scope.hoverInstrument.instrument_type_object.user_code.endsWith('bond') ||
+                            scope.hoverInstrument.instrument_type_object.user_code.endsWith('stock');
+
+                        if (scope.hoverInstrument.frontOptions.type === 'local' && bondOrStock) {
 
                             scope.hoverInstrument.available_for_update = true;
 
-                            if ( scope.hoverInstrument.instrument_type_object.user_code.endsWith('bond') ||
-                                 scope.hoverInstrument.instrument_type_object.user_code.endsWith('stock') ) {
+                            // check whether user_code is a valid isin
+                            const regexp = /^([A-Z]{2})([A-Z0-9]{9})([0-9]{1})/g;
+                            const invalidIsin = !scope.hoverInstrument.user_code.match(regexp);
 
-                                // check whether user_code is a valid isin
-                                const regexp = /^([A-Z]{2})([A-Z0-9]{9})([0-9]{1})/g;
-                                const invalidIsin = !scope.hoverInstrument.user_code.match(regexp);
-
-                                if (invalidIsin) {
-                                    // can not load 'bond', 'stock' with invalid isin as user code
-                                    scope.hoverInstrument.available_for_update = false;
-                                }
-
+                            if (invalidIsin) {
+                                // can not load 'bond', 'stock' with invalid isin as user code
+                                scope.hoverInstrument.available_for_update = false;
                             }
 
                         }
@@ -488,9 +486,9 @@
                 scope.updateLocalInstrument = function (item) {
 
                     var config = {
-                        instrument_code: item.reference,
-                        instrument_name: item.name,
-                        instrument_type_code: item.instrument_type,
+                        user_code: item.user_code,
+                        name: item.name,
+                        instrument_type_user_code: item.instrument_type_object.user_code,
                         mode: 1
                     };
 
@@ -500,17 +498,16 @@
 
                         scope.isUpdatingInstrument = false;
 
-                        scope.$apply();
+                        scope.getList();
 
+                        scope.$apply();
 
                         if (data.errors) {
 
                             toastNotificationService.error(data.errors);
 
                         } else {
-
-                            toastNotificationService.success('Instrument ' + item.reference + ' was updated')
-
+                            toastNotificationService.success('Instrument ' + item.reference + ' was updated');
                         }
 
                     })
@@ -762,17 +759,16 @@
                                 })
                                 .catch(function (error) {
 
-                                    scope.databaseInstruments = []
+                                    scope.databaseInstruments = [];
 
-                                    resolve()
+                                    resolve();
 
                                 });
 
                         }))
                     }
 
-                    promises.push(new Promise(function (resolve, reject) {
-
+                    promises.push( new Promise(function (resolve, reject) {
 
                         instrumentService.getListForSelect({
                             pageSize: 500,
@@ -803,7 +799,7 @@
 
                         })
 
-                    }))
+                    } ))
 
 
                     Promise.all(promises).then(function (data) {
