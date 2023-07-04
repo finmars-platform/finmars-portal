@@ -29,8 +29,8 @@
         vm.actionType = 'default';
 
         vm.instrumentTypeOptions = [
-            {id: 'bonds', name: 'Bonds'},
-            {id: 'stocks', name: 'Stocks'}
+            {id: 'bond', name: 'Bonds'},
+            {id: 'stock', name: 'Stocks'}
         ]
 
         var reqPageSize = 40;
@@ -40,9 +40,9 @@
             setTimeout(function () {
 
                 vm.hoverInstrument = null
-                console.log('vm.hoverInstrument', vm.hoverInstrument)
-
+                console.log('vm.hoverInstrument', vm.hoverInstrument);
                 $scope.$apply();
+
             }, 0)
 
         }
@@ -54,27 +54,26 @@
                 vm.hoverInstrument = option;
                 vm.hoverInstrument.available_for_update = false;
 
-                if (vm.hoverInstrument.frontOptions.type === 'local') {
+                var bondOrStock = vm.hoverInstrument.instrument_type_object.user_code.endsWith('bond') ||
+                    vm.hoverInstrument.instrument_type_object.user_code.endsWith('stock');
+
+                if (vm.hoverInstrument.frontOptions.type === 'local' && bondOrStock) {
 
                     vm.hoverInstrument.available_for_update = true;
 
-                    if ( vm.hoverInstrument.instrument_type_object.user_code.endsWith('bond') ||
-                        vm.hoverInstrument.instrument_type_object.user_code.endsWith('stock') ) {
+                    // check whether user_code is a valid isin
+                    const regexp = /^([A-Z]{2})([A-Z0-9]{9})([0-9]{1})/g;
+                    const invalidIsin = !vm.hoverInstrument.user_code.match(regexp);
 
-                        // check whether user_code is a valid isin
-                        const regexp = /^([A-Z]{2})([A-Z0-9]{9})([0-9]{1})/g;
-                        const invalidIsin = !vm.hoverInstrument.user_code.match(regexp);
-
-                        if (invalidIsin) {
-                            // can not load 'bond', 'stock' with invalid isin as user code
-                            vm.hoverInstrument.available_for_update = false;
-                        }
-
+                    if (invalidIsin) {
+                        // can not load 'bond', 'stock' with invalid isin as user code
+                        vm.hoverInstrument.available_for_update = false;
                     }
 
                 }
 
                 $scope.$apply();
+
             }, 100)
         }
 
@@ -262,9 +261,9 @@
                 mode: 1
             };*/
             var config = {
-                user_code: item.reference,
+                user_code: item.user_code,
                 name: item.name,
-                instrument_type_user_code: item.instrument_type,
+                instrument_type_user_code: item.instrument_type_object.user_code,
                 mode: 1
             };
 
