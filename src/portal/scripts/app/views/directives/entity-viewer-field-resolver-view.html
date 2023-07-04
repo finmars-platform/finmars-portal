@@ -25,16 +25,17 @@
             <div data-ng-if="valueEntity == 'counterparty' || valueEntity == 'currency'">
 
                 <unified-data-select
-                        label="{{getName()}}"
-                        model="modelObj.model"
-                        item-object="entity[fieldKey + '_object']"
-                        item-name="inputTextObj.value"
-                        custom-buttons="item.buttons"
-                        custom-styles="customStyles"
-                        event-signal="ciEventObj.event"
-                        small-options="{notNull: options.notNull, tooltipText: tooltipText, dialogParent: '.dialog-containers-wrap'}"
-                        entity-type="valueEntity"
-                        on-change-callback="changeHandler()"
+                        data-label="{{getName()}}"
+                        data-model="modelObj.model"
+                        data-model-value="{{ valueEntity == 'currency' ? 'user_code' : 'id' }}"
+                        data-item-object="entity[fieldKey + '_object']"
+                        data-item-name="inputTextObj.value"
+                        data-custom-buttons="item.buttons"
+                        data-custom-styles="customStyles"
+                        data-event-signal="ciEventObj.event"
+                        data-small-options="{notNull: options.notNull, tooltipText: tooltipText, dialogParent: '.dialog-containers-wrap'}"
+                        data-entity-type="valueEntity"
+                        data-on-change-callback="changeHandler()"
                 ></unified-data-select>
 
             </div>

@@ -61,7 +61,6 @@
                     scope.dialogParent = scope.smallOptions.dialogParent
                 }
 
-                var focused = false;
                 var stylePreset;
 
                 var inputContainer = elem[0].querySelector('.instrumentSelectInputContainer');
@@ -96,22 +95,20 @@
                         scope.hoverInstrument = option;
                         scope.hoverInstrument.available_for_update = false;
 
-                        if (scope.hoverInstrument.frontOptions.type === 'local') {
+                        var bondOrStock = scope.hoverInstrument.instrument_type_object.user_code.endsWith('bond') ||
+                            scope.hoverInstrument.instrument_type_object.user_code.endsWith('stock');
+
+                        if (scope.hoverInstrument.frontOptions.type === 'local' && bondOrStock) {
 
                             scope.hoverInstrument.available_for_update = true;
 
-                            if ( scope.hoverInstrument.instrument_type_object.user_code.endsWith('bond') ||
-                                 scope.hoverInstrument.instrument_type_object.user_code.endsWith('stock') ) {
+                            // check whether user_code is a valid isin
+                            const regexp = /^([A-Z]{2})([A-Z0-9]{9})([0-9]{1})/g;
+                            const invalidIsin = !scope.hoverInstrument.user_code.match(regexp);
 
-                                // check whether user_code is a valid isin
-                                const regexp = /^([A-Z]{2})([A-Z0-9]{9})([0-9]{1})/g;
-                                const invalidIsin = !scope.hoverInstrument.user_code.match(regexp);
-
-                                if (invalidIsin) {
-                                    // can not load 'bond', 'stock' with invalid isin as user code
-                                    scope.hoverInstrument.available_for_update = false;
-                                }
-
+                            if (invalidIsin) {
+                                // can not load 'bond', 'stock' with invalid isin as user code
+                                scope.hoverInstrument.available_for_update = false;
                             }
 
                         }
@@ -189,6 +186,7 @@
 
                 }
 
+                /** Called on error when executing scope.selectDatabaseInstrument() */
                 var onSdiError = function (errorMessage) {
 
                     clearInterval(taskIntervalId);
@@ -233,7 +231,7 @@
                 var taskIntervalId;
                 var intervalTime = 5000;
 
-                var awaitInstrumentImport = function (taskId) {
+                var awaitInstrumentImport = function (taskId, currentName) {
 
                     return setInterval(function () {
 
@@ -296,10 +294,15 @@
 
                                 scope.model = null;
 
-                                scope.itemName = '';
-                                scope.inputText = '';
+                                scope.itemName = currentName || '';
+                                scope.inputText = currentName || '';
 
-                                onSdiError(error.message);
+                                clearInterval(taskIntervalId);
+                                toastNotificationService.error(error);
+
+                                scope.processing = false;
+                                scope.loadingEntity = false;
+                                scope.isDisabled = false;
 
                                 throw error;
 
@@ -312,6 +315,7 @@
                 scope.selectDatabaseInstrument = function (item) {
 
                     console.log('selectDatabaseInstrument.item', item);
+                    var currentName = scope.itemName || '';
 
                     closeDropdownMenu();
 
@@ -329,14 +333,16 @@
 
                     scope.itemName = item.issueName;
                     scope.inputText = item.issueName;*/
+
                     var config = {
                         user_code: item.reference,
                         name: item.name,
                         instrument_type_user_code: item.instrument_type,
                         mode: 1,
                     };
-                    /*scope.itemName = item.name;
-                    scope.inputText = item.name;*/
+
+                    scope.itemName = item.name;
+                    scope.inputText = item.name;
 
                     scope.processing = true;
                     scope.loadingEntity = true;
@@ -346,14 +352,14 @@
                         .then(function (data) {
 
                             console.log('data', data);
-                            if (data.errors && data.errors.length) {
+                            if (data.errors) {
 
-                                onSdiError( data.errors[0] );
+                                onSdiError( data.errors );
 
                             }
                             else {
 
-                                taskIntervalId = awaitInstrumentImport(data.task);
+                                taskIntervalId = awaitInstrumentImport(data.task, currentName);
 
                                 /*stylePreset = '';
                                 scope.error = '';
@@ -394,12 +400,11 @@
 
                             scope.model = null;
 
-                            scope.itemName = ''
-                            scope.inputText = ''
+                            scope.itemName = currentName;
+                            scope.inputText = currentName;
 
                             scope.$apply();
                         })
-
 
                 };
 
@@ -421,10 +426,10 @@
                 }*/
 
                 var closeDropdownMenu = function (updateScope) {
-                    console.trace("testingME17 closeDropdownMenu");
+
                     inputContainer.classList.remove('custom-input-focused');
 
-                    if (scope.itemName) scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+                    if (scope.itemName) scope.inputText = scope.itemName;
 
                     scope.dropdownMenuShown = false;
 
@@ -481,9 +486,9 @@
                 scope.updateLocalInstrument = function (item) {
 
                     var config = {
-                        instrument_code: item.reference,
-                        instrument_name: item.name,
-                        instrument_type_code: item.instrument_type,
+                        user_code: item.user_code,
+                        name: item.name,
+                        instrument_type_user_code: item.instrument_type_object.user_code,
                         mode: 1
                     };
 
@@ -493,18 +498,16 @@
 
                         scope.isUpdatingInstrument = false;
 
+                        scope.getList();
+
                         scope.$apply();
 
+                        if (data.errors) {
 
-                        if (data.errors.length) {
-
-                            toastNotificationService.error(data.errors[0])
-
+                            toastNotificationService.error(data.errors);
 
                         } else {
-
-                            toastNotificationService.success('Instrument ' + item.reference + ' was updated')
-
+                            toastNotificationService.success('Instrument ' + item.reference + ' was updated');
                         }
 
                     })
@@ -546,22 +549,24 @@
                             return;
                         }
 
+                        var currentName = scope.itemName;
+
+                        scope.itemName = res.data.item.name;
+                        scope.inputText = res.data.item.name;
+
                         if ( res.data.hasOwnProperty('task') ) { // database item selected
 
                             scope.processing = true;
                             scope.loadingEntity = true;
                             scope.isDisabled = true;
 
-                            taskIntervalId = awaitInstrumentImport(res.data.task);
+                            taskIntervalId = awaitInstrumentImport(res.data.task, currentName);
 
                         }
                         else {
 
                             scope.model = res.data.item.id;
                             scope.itemObject = res.data.item;
-
-                            scope.itemName = res.data.item.name;
-                            scope.inputText = res.data.item.name;
 
                             setTimeout(function () {
 
@@ -754,17 +759,16 @@
                                 })
                                 .catch(function (error) {
 
-                                    scope.databaseInstruments = []
+                                    scope.databaseInstruments = [];
 
-                                    resolve()
+                                    resolve();
 
                                 });
 
                         }))
                     }
 
-                    promises.push(new Promise(function (resolve, reject) {
-
+                    promises.push( new Promise(function (resolve, reject) {
 
                         instrumentService.getListForSelect({
                             pageSize: 500,
@@ -795,7 +799,7 @@
 
                         })
 
-                    }))
+                    } ))
 
 
                     Promise.all(promises).then(function (data) {
