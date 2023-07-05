@@ -732,6 +732,7 @@
 
                         window.addEventListener('click', closeDDMenuOnClick);
                         // document.addEventListener('keydown', onTabKeyPress);
+                        scope.getList();
 
                         scope.$apply();
 
