@@ -403,7 +403,7 @@
                 entityResolverService.getListLight(vm.entityType, {
                     pageSize: 500,
                     filters: {
-                        user_code: vm.inputText
+                        query: vm.inputText
                     }
                 }).then(function (data) {
 

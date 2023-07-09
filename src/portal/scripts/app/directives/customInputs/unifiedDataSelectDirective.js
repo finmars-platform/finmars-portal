@@ -732,6 +732,7 @@
 
                         window.addEventListener('click', closeDDMenuOnClick);
                         // document.addEventListener('keydown', onTabKeyPress);
+                        scope.getList();
 
                         scope.$apply();
 
@@ -843,7 +844,7 @@
                         entityResolverService.getListLight(scope.entityType, {
                             pageSize: 500,
                             filters: {
-                                user_code: scope.inputText
+                                query: scope.inputText
                             }
                         }).then(function (data) {
 
@@ -878,10 +879,17 @@
                             })
 
                             return !exist; */
+                            const test = scope.localItems.find(function (localItem) {
+                                return localItem.user_code !== databaseItem.user_code;
+                            });
+
+                            const test2 = !scope.localItems.find(function (localItem) {
+                                return localItem.user_code !== databaseItem.user_code;
+                            });
 
                             // database item does not exist locally
-                            return !!scope.localItems.find(function (localItem) {
-                                return localItem.user_code !== databaseItem.user_code;
+                            return !scope.localItems.find(function (localItem) {
+                                return localItem.user_code === databaseItem.user_code;
                             });
 
                         })
