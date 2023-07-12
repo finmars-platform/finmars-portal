@@ -818,7 +818,7 @@
             if ($stateParams.folderPath) {
                 vm.currentPath = $stateParams.folderPath.split('/')
 
-                if (vm.currentPath[vm.currentPath.length - 1].indexOf('.') !== -1) { // possible file is opened
+                if (vm.currentPath[vm.currentPath.length - 1].indexOf('.') !== -1 && vm.currentPath[vm.currentPath.length - 1][0] !== '.') { // possible file is opened
                     vm.showEditor = true;
 
                     vm.downloadAndEdit();
