@@ -5,7 +5,57 @@
         <span class="material-icons">close</span>
     </div>
 
-    <div data-ng-if="!vm.processing" class="alert-sidenav-wrapper-inner-alerts">
+    <div>
+
+        <div layout="row">
+            <a class="active-tasks-header" data-ui-sref="app.portal.tasks-page" target="_blank">Active Tasks</a>
+
+            <md-button data-ng-class="{'disabled-btn': !vm.readyStatus.tasks}"
+                       data-ng-click="vm.getTasks()"
+                       class="md-raised md-icon-button md-primary small-refresh-button"><span
+                    class="material-icons">refresh</span>
+                <md-tooltip md-direction="top">Refresh</md-tooltip>
+            </md-button>
+
+
+        </div>
+
+        <div data-ng-if="vm.readyStatus.tasks">
+
+            <div data-ng-repeat="item in vm.tasks">
+
+                <task-card task-id="item.id"></task-card>
+
+            </div>
+
+        </div>
+
+        <div data-ng-if="!vm.readyStatus.tasks">
+
+            <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
+                <progress-circular diameter="50"></progress-circular>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div data-ng-if="vm.readyStatus.alerts" class="alert-sidenav-wrapper-inner-alerts" style="margin-top: 24px;">
+
+        <div layout="row">
+            <h1 style="margin-top: 5px; font-family: 'Roboto Light'; font-size: 20px">Alerts</h1>
+
+            <md-button data-ng-class="{'disabled-btn': !vm.readyStatus.alerts}"
+                       data-ng-click="vm.getAlerts()"
+                       class="md-raised md-icon-button md-primary small-refresh-button"><span
+                    class="material-icons">refresh</span>
+                <md-tooltip md-direction="top">Refresh</md-tooltip>
+            </md-button>
+
+
+        </div>
+
 
         <md-card data-ng-repeat="alert in vm.alerts"
                  class="alert-card {{alert.action_status == 3 ? 'alert-solved' : ''}}">
@@ -100,7 +150,7 @@
 
     </div>
 
-    <div data-ng-if="vm.processing">
+    <div data-ng-if="!vm.readyStatus.alerts">
 
         <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
             <progress-circular diameter="50"></progress-circular>

@@ -36,13 +36,15 @@
 
             selectedItems.forEach(function (selItem) {
 
+                var selItemId = selItem;
+
+                if (typeof selItem === 'object') {
+                    selItemId = selItem.id;
+                }
+
+                var notFound = true;
+
                 items.forEach(function (item, itemIndex) {
-
-                	let selItemId = selItem;
-
-                	if (typeof selItem === 'object') {
-						selItemId = selItem.id;
-					}
 
                     if (item.id === selItemId) {
 
@@ -53,9 +55,25 @@
                         vm.selectedItems.push(item);
                         items.splice(itemIndex, 1);
 
+                        notFound = false;
+
                     }
 
                 });
+
+                if ( notFound ) {
+
+                    vm.selectedItems.push({
+                        id: selItemId,
+                        name: 'Not found',
+                        error_data: {
+                            code: 10,
+                            description: ''
+                        },
+                    });
+
+                }
+
             })
 
         };
