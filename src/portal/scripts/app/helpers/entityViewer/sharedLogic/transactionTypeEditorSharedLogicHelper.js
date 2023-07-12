@@ -1188,7 +1188,7 @@
             let fieldKey = resolveRelation(contentTypeCell.settings.value);
             fieldKey = fieldKey.replace(/-/g, "_");
 
-            if (loadedRelationsList.includes(fieldKey)) {
+            if ( loadedRelationsList.includes(fieldKey) ) {
                 changedCell.settings.selectorOptions = viewModel.relationItems[fieldKey];
 
             } else {
@@ -1747,7 +1747,7 @@
                             isChecked: false
                         };
 
-                        if (input.settings.recalc_on_change_linked_inputs.includes(linkedInputName)) {
+                        if ( input.settings.recalc_on_change_linked_inputs.includes(linkedInputName) ) {
 
                             linkedInput.isChecked = true;
 

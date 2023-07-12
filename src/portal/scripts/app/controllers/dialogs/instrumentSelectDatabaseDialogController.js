@@ -8,7 +8,6 @@
     var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
     var instrumentDatabaseSearchService = require('../../services/instrument/instrumentDatabaseSearchService');
 
-
     module.exports = function ($scope, $mdDialog, toastNotificationService, instrumentService, data) {
 
         var vm = this;
@@ -30,19 +29,20 @@
         vm.actionType = 'default';
 
         vm.instrumentTypeOptions = [
-            {id: 'bonds', name: 'Bonds'},
-            {id: 'stocks', name: 'Stocks'}
+            {id: 'bond', name: 'Bonds'},
+            {id: 'stock', name: 'Stocks'}
         ]
 
+        var reqPageSize = 40;
 
         vm.clearHoverInstrument = function () {
 
             setTimeout(function () {
 
                 vm.hoverInstrument = null
-                console.log('vm.hoverInstrument', vm.hoverInstrument)
-
+                console.log('vm.hoverInstrument', vm.hoverInstrument);
                 $scope.$apply();
+
             }, 0)
 
         }
@@ -51,29 +51,116 @@
 
             setTimeout(function () {
 
-                vm.hoverInstrument = option
-                console.log('scope.hoverInstrument', vm.hoverInstrument)
+                vm.hoverInstrument = option;
+                vm.hoverInstrument.available_for_update = false;
+
+                var bondOrStock = vm.hoverInstrument.instrument_type_object.user_code.endsWith('bond') ||
+                    vm.hoverInstrument.instrument_type_object.user_code.endsWith('stock');
+
+                if (vm.hoverInstrument.frontOptions.type === 'local' && bondOrStock) {
+
+                    vm.hoverInstrument.available_for_update = true;
+
+                    // check whether user_code is a valid isin
+                    const regexp = /^([A-Z]{2})([A-Z0-9]{9})([0-9]{1})/g;
+                    const invalidIsin = !vm.hoverInstrument.user_code.match(regexp);
+
+                    if (invalidIsin) {
+                        // can not load 'bond', 'stock' with invalid isin as user code
+                        vm.hoverInstrument.available_for_update = false;
+                    }
+
+                }
 
                 $scope.$apply();
-            }, 0)
+
+            }, 100)
         }
+
+        var onSdiError = function (error) {
+
+            vm.selectedItem = null;
+            vm.isDisabled = false;
+
+            toastNotificationService.error(error);
+
+            $scope.$apply();
+
+        }
+
+        var selectDatabaseItem = function (selItem) {
+
+            var config = {
+                user_code: selItem.reference,
+                name: selItem.name,
+                instrument_type_user_code: selItem.instrument_type,
+                mode: 1
+            };
+
+            vm.isDisabled = true;
+
+            importInstrumentCbondsService.download(config).then(function (data) {
+
+                vm.isDisabled = false;
+
+                if (data.errors) {
+
+                    onSdiError( data.error );
+
+                } else {
+
+                    $mdDialog.hide({
+                        status: 'agree',
+                        data: {
+                            task: data.task,
+                            item: selItem,
+                        }
+                    });
+
+                }
+
+            }).catch(function (e){
+
+                onSdiError(e);
+
+            })
+
+        };
 
         vm.agree = function () {
 
+            //# region Local item selected
+            var localItemSelected = vm.localInstruments.find(function (item) { return item.selected });
 
-            new Promise(function (resolve, reject) {
+            if (localItemSelected) {
 
+                vm.selectedItem = localItemSelected;
 
-                vm.localInstruments.forEach(function (item) {
+                return $mdDialog.hide( { status: 'agree', data: {item: vm.selectedItem} } );
 
-                    if (item.selected) {
-                        vm.selectedItem = item;
-                        resolve()
-                    }
+            }
+            //# endregion
 
-                })
+            //# region Database item selected
+            var selectedDatabaseInstrument = vm.databaseInstruments.find(function (item) { return item.selected });
 
-                var selectedDatabaseInstrument;
+            if (selectedDatabaseInstrument) {
+                selectDatabaseItem(selectedDatabaseInstrument);
+            }
+            //# endregion
+
+            /*new Promise(function (resolve, reject) {
+
+                //# region Local item selected
+                var localItemSelected = vm.localInstruments.find(function (item) { return item.selected });
+
+                if (localItemSelected) {
+                    vm.selectedItem = localItemSelected;
+                    return resolve();
+                }
+                //# endregion
+
+                /!*var selectedDatabaseInstrument;
 
                 vm.databaseInstruments.forEach(function (item) {
 
@@ -81,70 +168,27 @@
                         selectedDatabaseInstrument = item
                     }
 
-                })
+                })*!/
+                var selectedDatabaseInstrument = vm.databaseInstruments.find(function (item) { return item.selected });
 
                 if (selectedDatabaseInstrument) {
-                    var config = {
-                        instrument_code: selectedDatabaseInstrument.referenceId,
-                        instrument_name: selectedDatabaseInstrument.issueName,
-                        instrument_type_code: selectedDatabaseInstrument.instrumentType,
-                        mode: 1
-                    };
-
-
-                    vm.isDisabled = true;
-
-                    importInstrumentCbondsService.download(config).then(function (data) {
-
-                        vm.isDisabled = false;
-
-                        if (data.errors.length) {
-
-                            vm.selectedItem = null;
-
-                            toastNotificationService.error(data.errors[0])
-
-                            $scope.$apply();
-
-                            resolve()
-
-                        } else {
-
-                            vm.selectedItem = {
-                                id: data.result_id,
-                                name: selectedDatabaseInstrument.issueName,
-                                user_code: selectedDatabaseInstrument.referenceId
-                            }
-
-                            resolve()
-
-
-                        }
-
-                    }).catch(function (e){
-                        vm.isDisabled = false;
-                        vm.selectedItem = null;
-                        $scope.$apply();
-
-                        resolve()
-                    })
-
-
+                    selectDatabaseItem(selectedDatabaseInstrument);
                 }
 
-
-            }).then(function (data) {
-
-                if (vm.selectedItem) {
-
-                    if (vm.actionType === 'add_instrument_dialog') {
-                        toastNotificationService.success("Instrument has been downloaded")
-                    }
-
-                    $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem}});
-                }
 
             })
+                .then(function (data) {
+
+                    if (vm.selectedItem) {
+
+                        if (vm.actionType === 'add_instrument_dialog') {
+                            toastNotificationService.success("Instrument has been downloaded")
+                        }
+
+                        $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem}});
+                    }
+
+                })*/
 
 
         };
@@ -212,8 +256,14 @@
 
         vm.updateLocalInstrument = function (item) {
 
-            var config = {
+            /*var config = {
                 instrument_code: item.user_code,
+                mode: 1
+            };*/
+            var config = {
+                user_code: item.user_code,
+                name: item.name,
+                instrument_type_user_code: item.instrument_type_object.user_code,
                 mode: 1
             };
 
@@ -304,23 +354,33 @@
             //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?page=' + vm.globalPage
             // }
             //
+            var opts = {
+                pageSize: reqPageSize,
+                filters: {
+                    page: vm.globalPage,
+                    instrument_type: vm.instrument_type,
+                }
+            }
 
-
-            instrumentDatabaseSearchService.getList(vm.inputText, vm.globalPage, vm.instrument_type).then(function (data) {
+            instrumentDatabaseSearchService.getList(vm.inputText, opts).then(function (data) {
 
                 vm.globalProcessing = false;
 
-                vm.databaseInstrumentsTotal = data.resultCount
+                vm.databaseInstrumentsTotal = data.count;
 
-                data.foundItems.forEach(function (item) {
+                data.results.forEach(function (item) {
 
-                    item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY")
+                    item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY");
+
+                    item.frontOptions = {
+                        type: 'database',
+                    };
 
                     vm.databaseInstruments.push(item)
 
                 })
 
-                vm.totalPages = Math.round(data.resultCount / data.pageSize)
+                vm.totalPages = Math.round(data.count / reqPageSize);
 
                 $scope.$apply();
 
@@ -351,34 +411,49 @@
                     // if (vm.instrument_type){
                     //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?instrument_type=' + vm.instrument_type
                     // }
+                    var opts = {
+                        pageSize: reqPageSize,
+                        filters: {
+                            page: 1,
+                            instrument_type: vm.instrument_type,
+                        }
+                    };
 
-                    instrumentDatabaseSearchService.getList(vm.inputText, 0, vm.instrument_type).then(function (data) {
+                    instrumentDatabaseSearchService.getList(vm.inputText, opts)
+                        .then(function (data) {
 
-                        vm.databaseInstrumentsTotal = data.resultCount
+                            vm.databaseInstrumentsTotal = data.count;
 
-                        vm.databaseInstruments = data.foundItems
+                            vm.databaseInstruments = data.results;
 
-                        vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
+                            vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
 
-                            item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY")
+                                item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY");
 
-                            return item;
+                                item.frontOptions = {
+                                    type: 'database',
+                                };
+
+                                return item;
+
+                            })
+
+                            vm.totalPages = Math.round(data.count / reqPageSize);
+
+                            $scope.$apply();
+                            resolve();
 
                         })
+                        .catch(function (error) {
 
-                        resolve()
+                            console.log("Instrument Database error occurred", error)
 
-                        vm.totalPages = Math.round(data.resultCount / data.pageSize)
+                            vm.databaseInstruments = [];
 
-                    }).catch(function (error) {
+                            $scope.$apply();
+                            resolve()
 
-                        console.log("Instrument Database error occurred", error)
-
-                        vm.databaseInstruments = []
-
-                        resolve()
-
-                    })
+                        });
 
                 }))
 
@@ -402,14 +477,17 @@
 
                     vm.localInstruments = vm.localInstruments.map(function (item) {
 
-                        item.pretty_date = moment(item.modified).format("DD.MM.YYYY")
+                        item.pretty_date = moment(item.modified).format("DD.MM.YYYY");
+
+                        item.frontOptions = {
+                            type: 'local',
+                        };
 
                         return item;
 
                     })
 
                     resolve()
-
 
                 })
 
@@ -423,14 +501,13 @@
 
                     vm.localInstruments.forEach(function (localInstrument) {
 
-                        if (localInstrument.user_code === databaseInstrument.referenceId) {
-                            exist = true
+                        if (localInstrument.user_code === databaseInstrument.reference) {
+                            exist = true;
                         }
 
-                        if (localInstrument.reference_for_pricing === databaseInstrument.referenceId) {
-                            exist = true
+                        if (localInstrument.reference_for_pricing === databaseInstrument.reference) {
+                            exist = true;
                         }
-
 
                     })
 

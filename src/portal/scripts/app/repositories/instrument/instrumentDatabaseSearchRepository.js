@@ -1,6 +1,8 @@
 /**
  * Created by szhitenev on 04.05.2016.
  */
+import configureRepositoryUrlService from "../../../../../shell/scripts/app/services/configureRepositoryUrlService";
+
 (function () {
 
     'use strict';
@@ -12,26 +14,33 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function (name, page, instrument_type) {
+    var getList = function ( searchString, options={} ) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
-
-        if (page === null || page === undefined) {
-            page = 0
+        /*var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();*/
+        if (!options.filters) {
+            options.filters = {}
         }
 
-        var instrumentDatabaseUrl = baseUrl + '/' + prefix + '/api/'  + 'instruments/instrument-database-search/?name=' + name + '&page=' + page
+        options.filters.query = searchString;
+
+        if (options.page === null || options.page === undefined) {
+            options.page = 1;
+        }
+
+        /*var instrumentDatabaseUrl = 'https://database.finmars.com/api/v1/instrument/?query=' + searchString + '&page_size=40' + '&page=' + page;
 
         if (instrument_type) {
-            instrumentDatabaseUrl = instrumentDatabaseUrl + '&instrument_type=' + instrument_type
-
+            instrumentDatabaseUrl = instrumentDatabaseUrl + '&instrument_type=' + instrument_type;
+        }*/
+        if (!options.pageSize) {
+            options.pageSize = 40;
         }
 
-        return xhrService.fetch(instrumentDatabaseUrl,
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl('https://database.finmars.com/api/v1/instrument-narrow/', options),
             {
                 method: 'GET',
-                credentials: 'include',
+                // credentials: 'include',
                 headers: {
                     'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',

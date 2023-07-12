@@ -42,7 +42,9 @@
 
         const removeUserInputsInvalidForRecalculation = function (inputsList, actualUserInputs) {
 
-            inputsList.forEach(function (inputName, index) { // remove deleted inputs from list for recalculation
+            let invalidInputsList = [];
+
+            inputsList.forEach(function (inputName) { // remove deleted inputs from list for recalculation
 
                 let inputInvalid = true;
 
@@ -67,12 +69,12 @@
                 }
 
                 if (inputInvalid) {
-                    inputsList.splice(index, 1);
+                    invalidInputsList.push(inputName);
                 }
 
             });
 
-            // return inputsList;
+            return inputsList.filter( name => !invalidInputsList.includes(name) );
 
         };
 

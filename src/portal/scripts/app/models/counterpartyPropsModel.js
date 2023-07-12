@@ -44,6 +44,8 @@
             {
                 "key": "portfolios",
                 "name": "Portfolios",
+                "value_content_type": "portfolios.portfolio",
+                "value_entity": "portfolio",
                 "value_type": "mc_field"
             },
             {

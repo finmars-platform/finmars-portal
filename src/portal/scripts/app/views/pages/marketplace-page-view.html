@@ -10,6 +10,22 @@
             <md-tooltip md-direction="top">Refresh</md-tooltip>
         </md-button>
 
+        <md-input-container style="width: 160px; padding-top: 6px;">
+
+            <md-checkbox ng-model="vm.showModules"
+                         ng-change="vm.getData()"
+                         aria-label="">
+                Show Modules
+            </md-checkbox>
+
+        </md-input-container>
+
+        <div data-ng-if="vm.activeTaskId" style="position: absolute; right: 10px; z-index: 1; background: #fff;">
+
+            <task-card task-id="vm.activeTaskId"></task-card>
+
+        </div>
+
 
     </div>
 
