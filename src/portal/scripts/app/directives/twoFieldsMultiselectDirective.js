@@ -371,6 +371,7 @@
 									// text: '<span>&lt;Not found&gt;</span>',
 									text: 'Not found',
 									error_data: {
+										code: 10,
 										description: ''
 									}
 								}
@@ -416,7 +417,6 @@
 				let init = function () {
 
 					scope.chipsListEventService = new ChipsListEventService();
-					const parent = elem[0].parentElement;
 
 					if (scope.selectedItemsIndication === 'chips') {
 

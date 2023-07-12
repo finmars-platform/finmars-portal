@@ -1,72 +1,112 @@
-<md-dialog aria-label="" ng-cloak class="g-report-settings-dialog-view draggable-dialog" drag-dialog style="width: 50%">
+<md-dialog aria-label="" ng-cloak class="export-pdf-dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
             <h2>Export to PDF</h2>
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content style="padding: 8px">
+    <md-dialog-content>
 
-        <h2 style="margin: 10px 12px 28px;">Settings</h2>
+        <div layout="column">
 
-        <div layout="row">
+            <div layout="row">
 
-            <md-input-container>
+                <md-input-container>
 
-                <label for="">Layout</label>
+                    <label for="">Layout</label>
 
-                <md-select data-ng-model="vm.settings.layout">
-                    <md-option data-ng-repeat="item in vm.layouts" ng-value="item.value">
-                        {{item.name}}
-                    </md-option>
-                </md-select>
+                    <md-select data-ng-model="vm.settings.layout" data-ng-change="vm.generatePreview()">
+                        <md-option data-ng-repeat="item in vm.layouts" ng-value="item.value">
+                            {{item.name}}
+                        </md-option>
+                    </md-select>
 
-            </md-input-container>
+                </md-input-container>
 
-            <md-input-container>
+                <md-input-container style="width: 100px;">
 
-                <label for="">Zoom %</label>
+                    <label for="">Font Size</label>
 
-                <input type="text" data-ng-model="vm.zoomPercent" placeholder="100">
+                    <md-select data-ng-model="vm.settings.fontSize" data-ng-change="vm.generatePreview()">
+                        <md-option data-ng-repeat="item in vm.fontSizes" ng-value="item.value">
+                            {{item.name}}
+                        </md-option>
+                    </md-select>
 
-            </md-input-container>
+                </md-input-container>
 
-            <md-input-container>
+                <md-input-container>
+                    <label for="">Title</label>
+                    <input type="text" data-ng-model="vm.settings.title">
+                </md-input-container>
 
-                <label for="">Margin</label>
+                <md-input-container>
+                    <label for="">Logo (URL)</label>
+                    <input type="text" data-ng-model="vm.settings.logoURL">
+                </md-input-container>
 
-                <input type="text" data-ng-model="vm.settings.margin" placeholder="4">
+                <div>
 
-            </md-input-container>
+                    <md-button data-ng-click="vm.toggleCssEditor = !vm.toggleCssEditor">
+                        <span data-ng-if="!vm.toggleCssEditor">Show CSS Editor</span>
+                        <span data-ng-if="vm.toggleCssEditor">Hide CSS Editor</span>
+                    </md-button>
+
+                    <div class="ace-editor css-editor" id="aceEditor" style="height: 200px;"
+                         data-ng-show="vm.toggleCssEditor">
+
+                    </div>
+                </div>
+
+                <md-button data-ng-click="vm.generatePreview()">Preview</md-button>
+
+            </div>
+
+            <div layout="row">
+
+                <md-input-container>
+                    <label for="">Notes</label>
+                    <input type="text" data-ng-model="vm.settings.notes">
+                </md-input-container>
+
+                <md-input-container style="width: 160px;">
+
+                    <md-checkbox ng-model="vm.settings.splitLongWords"
+                                 ng-change="vm.generatePreview()"
+                                 aria-label="">
+                        Split Long Words
+                    </md-checkbox>
+
+                </md-input-container>
+
+            </div>
 
         </div>
 
-        <div layout="row" class="m-t-16">
-            <!--<div class="copy-report-to-buffer">
-                <md-button class="md-button md-raised"
-                           data-ng-click="vm.copyReport($event)"
-                           aria-label="Copy report">
-                    <ng-md-icon icon="content_copy" size="24">
-                        <md-tooltip class="tooltip_1" md-direction="bottom">Copy report in buffer</md-tooltip>
-                    </ng-md-icon>
-                    <ng-md-icon icon="content_copy" size="24"></ng-md-icon>
-                    Copy to clipboard
-                </md-button>
-            </div>-->
-            <div>
-                <md-button class="md-raised" ng-click="vm.fitLayoutOnAPage()">Autocalculate zoom for layout</md-button>
+        <div data-ng-if="!vm.previewReady">
+            <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                <progress-circular diameter="100"></progress-circular>
             </div>
+        </div>
+
+        <div data-ng-show="vm.previewReady && !vm.error">
+
+            <canvas id="pdf-container" class="pdf-container"></canvas>
+
+        </div>
+
+        <div data-ng-show="vm.previewReady && vm.error">
+
+            <div style="max-width: 300px; margin: 10px auto; color: red; white-space: pre; background: #ddd; border: grey">
+                {{vm.error}}
+            </div>
+
         </div>
 
     </md-dialog-content>
     <md-dialog-actions layout="row">
         <md-button ng-click="vm.cancel()">
             Cancel
-        </md-button>
-        <md-button class="md-primary md-raised" ng-click="vm.saveExportOptions()">
-            Apply
         </md-button>
         <md-button ng-click="vm.agree()" class="md-primary md-raised" style="margin-right:20px;">
             Download

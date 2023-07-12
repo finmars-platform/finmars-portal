@@ -3,27 +3,38 @@
  */
 (function () {
 
-	'use strict';
+    'use strict';
 
-	var generatePdf = function (data) {
+    var cookieService = require('../../../../core/services/cookieService');
 
-		return window.fetch('/services/pdf',
-			{
-				method: 'POST',
-				credentials: 'include',
-				body: JSON.stringify(data),
-				headers: {
-					Accept: 'application/json',
-					'Content-type': 'application/json'
-				}
-			}).then(function (data) {
-			return data.blob();
-		})
 
-	};
+    var generatePdf = function (data) {
 
-	module.exports = {
-		generatePdf: generatePdf
-	}
+        // return window.fetch('http://0.0.0.0:5001/generate/',
+            return window.fetch('/services/pdf/generate/',
+            {
+                method: 'POST',
+                credentials: 'include', // disable on local development
+                body: JSON.stringify(data),
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'), // need to pass through WAF
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            }).then(function (data) {
+
+                if (data.status !== 200) {
+                    throw new Error('Error while generating pdf');
+                }
+
+            return data.blob();
+        })
+
+    };
+
+    module.exports = {
+        generatePdf: generatePdf
+    }
 
 }());
