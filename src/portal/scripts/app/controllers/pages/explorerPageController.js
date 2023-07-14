@@ -809,6 +809,22 @@
 
         }
 
+        function getFileExtension(path) {
+            // Split the path into segments
+            let segments = path.split('/');
+            // Take the last segment
+            let lastSegment = segments[segments.length - 1];
+
+            // If the last segment contains more than one dot, treat it as a directory
+            if ((lastSegment.match(/\./g) || []).length > 1) {
+                return null; // or whatever you want to return for directories
+            } else {
+                // Check for a file extension
+                let extension = lastSegment.slice((lastSegment.lastIndexOf(".") - 1 >>> 0) + 2);
+                return extension || null; // If there's no extension, return null
+            }
+        }
+
         vm.init = function () {
 
             vm.resolveWorkflowIframeUrl();
@@ -818,7 +834,9 @@
             if ($stateParams.folderPath) {
                 vm.currentPath = $stateParams.folderPath.split('/')
 
-                if (vm.currentPath[vm.currentPath.length - 1].indexOf('.') !== -1 && vm.currentPath[vm.currentPath.length - 1][0] !== '.') { // possible file is opened
+                var extension = getFileExtension($stateParams.folderPath);
+
+                if (extension) { // possible file is opened
                     vm.showEditor = true;
 
                     vm.downloadAndEdit();
