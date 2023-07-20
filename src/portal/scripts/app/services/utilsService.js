@@ -115,7 +115,7 @@ export default function (cookieService, xhrService) {
                     Accept: 'application/json',
                     'Content-type': 'application/json'
                 },
-                data: JSON.stringify(data)
+                body: JSON.stringify(data)
             })
     };
 
