@@ -70,10 +70,20 @@ import multiinputFieldDirective from "./app/directives/customInputs/multiinputFi
 import entityNamesFieldDirective from "./app/directives/customInputs/entityNamesFieldDirective";
 import closeDialogButtonDirective from "./app/directives/closeDialogButtonDirective";
 
+import * as Sentry from "@sentry/browser";
+import { Angular as AngularIntegration } from "@sentry/integrations";
+
 // noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
 
+    Sentry.init({
+        dsn: "https://c2822efa4c0c45ceb21c50a361bf05b2@sentry.finmars.com/5",
+        integrations: [new AngularIntegration()],
+    });
+
+
     let portal = angular.module('finmars.portal', [
+        'ngSentry',
         'ngAria',
         'ngMaterial',
         'ngMessages',
@@ -1007,6 +1017,7 @@ export default (function () {
     // 	_paq.push(['trackContentImpressionsWithinNode', content]);
     // 	_paq.push(['enableLinkTracking']);
     // });
+
 
 
 })();
