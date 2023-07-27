@@ -2009,7 +2009,7 @@
 
 			return new Promise(function (resolve, reject) {
 
-				let actualLayoutsIds = vm.dashboardDataService.getActualRvLayoutsInCache();
+				let actualLayoutsIds = vm.dashboardDataService.getCachedLayoutsData();
 
 				if (actualLayoutsIds.includes(layoutId)) {
 
@@ -2020,7 +2020,7 @@
 
 					uiService.getListLayoutByKey(layoutId).then(function (layoutData) {
 
-						vm.dashboardDataService.pushToActualRvLayoutsInCache(layoutId);
+						vm.dashboardDataService.setCachedLayoutsData();
 						resolve(layoutData);
 
 					}).catch(function (error) {
