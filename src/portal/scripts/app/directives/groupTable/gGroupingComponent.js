@@ -364,9 +364,14 @@
 
                     var groups = scope.evDataService.getGroups();
 
+                    var groupsByLevel = evDataHelper.getAllGroupsByLevel($index, scope.evDataService);
+
+                    console.log('unfoldLevel.groupsByLevel', groupsByLevel);
+                    console.log('unfoldLevel.maxLevel', $index);
+
                     for (; $index >= 0; $index = $index - 1) {
 
-                        var groupsContent = evDataHelper.getGroupsByLevel($index + 1, scope.evDataService);
+                        var groupsContent = groupsByLevel[$index + 1];
                         groups[$index].report_settings.is_level_folded = false;
 
                         groupsContent.forEach(function (groupItem) {
@@ -495,7 +500,7 @@
                             return false;
                         }
 
-						if (attr.value_type === "mc_field") return false;
+                        if (attr.value_type === "mc_field") return false;
 
                         return true;
                     });
@@ -510,7 +515,7 @@
                                 availableAttrs: availableAttrs,
                                 title: 'Choose column to add',
                                 isReport: scope.isReport,
-								multiselector: true
+                                multiselector: true
                             }
                         }
                     }).then(function (res) {
@@ -518,7 +523,7 @@
                         if (res && res.status === "agree") {
                             res.data.groups = true;
 
-                            for (var i = 0; i < res.data.items.length; i = i +1) {
+                            for (var i = 0; i < res.data.items.length; i = i + 1) {
                                 scope.groups.push(res.data.items[i]);
                             }
 
@@ -568,7 +573,7 @@
 
                                 attributes.forEach(function (attribute) {
 
-                                    if(group.key === attribute.key) {
+                                    if (group.key === attribute.key) {
                                         isMissing = false;
                                     }
 

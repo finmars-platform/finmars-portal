@@ -8,6 +8,8 @@
     var evEvents = require('../../services/entityViewerEvents');
     var popupEvents = require('../../services/events/popupEvents');
     var evDataHelper = require('../../helpers/ev-data.helper');
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+
 
     // var metaService = require('../../services/metaService');
     var evHelperService = require('../../services/entityViewerHelperService');
@@ -1988,8 +1990,14 @@
                 };
 
                 scope.unfoldLevel = function (key, $index) {
+                    // Optimized unfold logic
+                    // TODO probabaly still need a refactor, code looks too complicated
+
+                    var layout = scope.evDataService.getListLayout();
+                    var contentType = scope.evDataService.getContentType();
 
                     scope.groups = scope.evDataService.getGroups();
+                    var groups = scope.evDataService.getGroups(); // probably refactor
 
                     var item = scope.groups[$index];
 
@@ -2003,26 +2011,104 @@
                     }
 
                     scope.evDataService.setGroups(scope.groups);
+
+                    var maxLevel = 10
+                    var groupsByLevel = evDataHelper.getAllGroupsByLevel(maxLevel, scope.evDataService);
+
+                    console.log('groupsByLevel', groupsByLevel);
+                    console.log('maxLevel', $index);
                     //</editor-fold>
+
+                    var reportData = localStorageService.getReportDataForLayout(contentType, layout.user_code);
 
                     for (i = $index; i >= 0; i--) {
 
-                        var groupsContent = evDataHelper.getGroupsByLevel(i + 1, scope.evDataService);
+                        var groupsContent = groupsByLevel[i + 1];
 
                         groupsContent.forEach(function (groupItem) {
 
-                            var groupSettings = rvDataHelper.getOrCreateGroupSettings(scope.evDataService, groupItem);
+                            var parents = evRvCommonHelper.getParents(groupItem.___parentId, scope.evDataService);
+
+                            parents.pop() // skip root group
+
+                            if (!reportData[contentType]) {
+                                reportData[contentType] = {};
+                            }
+
+                            if (!reportData[contentType][layout.user_code]) {
+                                reportData[contentType][layout.user_code] = {
+                                    groups: {}
+                                }
+                            }
+
+                            var full_path = parents.map(function (item) {
+                                return item.___group_name
+                            })
+
+                            full_path.push(groupItem.___group_name);
+
+                            var full_path_prop = full_path.join('___'); // TODO check if safe enough
+
+                            var groupSettings;
+
+                            if (reportData[contentType][layout.user_code]['groups'][full_path_prop]) {
+                                groupSettings = reportData[contentType][layout.user_code]['groups'][full_path_prop];
+                            }
+
+                            if (!groupSettings) {
+
+                                groupSettings = {
+                                    full_path: full_path,
+                                    is_open: true
+                                }
+
+                                reportData[contentType][layout.user_code]['groups'][full_path_prop] = groupSettings;
+
+                            }
 
                             groupItem.___is_open = true;
                             groupSettings.is_open = true;
 
-                            rvDataHelper.setGroupSettings(scope.evDataService, groupItem, groupSettings);
+                            if (!reportData['groups']) {
+                                reportData['groups'] = {}
+                            }
+
+                            var full_path_prop = groupSettings.full_path;
+
+                            if (Array.isArray(full_path_prop)) {
+                                full_path_prop = full_path_prop.join('___')
+                            }
+
+                            reportData['groups'][full_path_prop] = groupSettings;
+
+                            reportData.groupsList = [];
+
+                            groups.forEach(group => {
+
+                                var groupObj = {
+                                    key: group.key,
+                                    report_settings: {
+                                        is_level_folded: false
+                                    }
+                                };
+
+                                if (group.report_settings) {
+                                    groupObj.report_settings.is_level_folded = !!group.report_settings.is_level_folded;
+                                }
+
+
+                                reportData.groupsList.push(groupObj);
+
+                            });
 
                             scope.evDataService.setData(groupItem);
 
                         });
 
                     }
+
+                    localStorageService.cacheReportData(reportData);
+                    localStorageService.cacheReportDataForLayout(contentType, layout.user_code, reportData);
 
                     rvDataHelper.markHiddenColumnsBasedOnFoldedGroups(scope.evDataService);
 
