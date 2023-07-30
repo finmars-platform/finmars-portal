@@ -696,6 +696,8 @@ export default (function () {
     portal.controller('InstrumentDownloadController', ['$scope', '$mdDialog', 'instrumentService', require('./app/controllers/pages/instrumentDownloadController')]);
     portal.controller('FillPriceHistoryController', ['$scope', '$mdDialog', require('./app/controllers/pages/fillPriceHistoryController')]);
     portal.controller('MappingTablesController', ['$scope', '$mdDialog', require('./app/controllers/pages/mappingTablesController')]);
+    portal.controller('MappingTablePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/mappingTablePageController')]);
+    portal.controller('MappingTableDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/mappingTableDialogController')]);
     portal.controller('ProcessesController', ['$scope', '$mdDialog', require('./app/controllers/pages/processesController')]);
     portal.controller('JournalPageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'usersService', 'metaContentTypesService', require('./app/controllers/pages/journalPageController')]);
     portal.controller('MarketplacePageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'configurationService', require('./app/controllers/pages/marketplacePageController')]);
