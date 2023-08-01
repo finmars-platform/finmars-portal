@@ -37,6 +37,7 @@
 
                     }).then(function (data) {
 
+                        scope.executing = false;
                         scope.activeCell.outputs = [data.result]
                         scope.$apply();
 
