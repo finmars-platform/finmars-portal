@@ -110,7 +110,7 @@
 
             <div data-ng-if="!vm.processing" class="height-100">
 
-                <div style="overflow: auto;" class="height-100" data-ng-if="!vm.showEditor">
+                <div style="overflow: auto;" class="height-100" data-ng-if="!vm.showEditor && !vm.showPlaybook">
 
                     <div>
                         <md-select-header>
@@ -380,6 +380,12 @@
                         </div>
 
                     </div>
+
+                </div>
+
+                <div class="explorer-file-playbook-section" data-ng-if="vm.showPlaybook">
+
+                    <finmars-playbook data-item="vm.playbook" data-name="vm.playbookName" data-file-path-list="vm.currentPath"></finmars-playbook>
 
                 </div>
 

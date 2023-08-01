@@ -1,0 +1,53 @@
+<div class="finmars-playbook">
+
+    <div>
+        Playbook
+
+        <md-button data-ng-click="save($event)">
+            <span data-ng-if="fileSaveProcessing">Saving...</span>
+            <span data-ng-if="!fileSaveProcessing">Save</span>
+        </md-button>
+
+        <md-button data-ng-click="execute($event)" class="{{activeCell ? '' : 'disabled-btn'}}">
+            <span data-ng-if="executing">Executing...</span>
+            <span data-ng-if="!executing">Execute</span>
+        </md-button>
+
+        <md-button data-ng-click="addCell($event)">
+            Add Cell
+        </md-button>
+
+    </div>
+
+    <div class="finmars-playbook-cell-holder">
+
+        <div data-ng-if="item.cells.length">
+
+            <div data-ng-repeat="cell in item.cells track by $index"
+                 class="finmars-playbook-cell {{cell.active ? 'active' : ''}}" data-ng-click="activateCell($event, cell)">
+
+                <div class="finmars-playbook-cell-content">
+
+                    <python-editor source="cell.source" index="$index"></python-editor>
+
+                    <md-button class="finmars-playbook-cell-delete-cell-button" data-ng-click="deleteCell($event, $index, cell)">Delete</md-button>
+
+                    <div data-ng-if="cell.outputs">
+                        <div data-ng-repeat="output in cell.outputs" class="finmars-playbook-cell-output">
+                            <pre>{{output}}</pre>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div data-ng-if="!item.cells.length">
+                <p>No Cells found. You can add a new one.</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
