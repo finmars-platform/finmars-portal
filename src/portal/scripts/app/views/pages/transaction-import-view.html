@@ -57,15 +57,15 @@
             </div>
         </div>
 
-<!--        <div layout="row" layout-align="end center" class="m-t-8">-->
-<!--            <md-checkbox data-ng-click="vm.togglePreprocessFile($event)"-->
-<!--                         data-ng-checked="vm.config.preprocess_file"-->
-<!--                         tabindex="0"-->
-<!--                         type="checkbox"-->
-<!--                         role="checkbox" aria-checked="false" class="m-b-0">-->
-<!--                Preprocess file-->
-<!--            </md-checkbox>-->
-<!--        </div>-->
+        <!--        <div layout="row" layout-align="end center" class="m-t-8">-->
+        <!--            <md-checkbox data-ng-click="vm.togglePreprocessFile($event)"-->
+        <!--                         data-ng-checked="vm.config.preprocess_file"-->
+        <!--                         tabindex="0"-->
+        <!--                         type="checkbox"-->
+        <!--                         role="checkbox" aria-checked="false" class="m-b-0">-->
+        <!--                Preprocess file-->
+        <!--            </md-checkbox>-->
+        <!--        </div>-->
 
         <div layout="row" layout-align="end center" class="m-t-8">
 
@@ -78,30 +78,24 @@
                 VALIDATE
             </md-button>
             <md-button
-                    class="md-raised import-button {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
-                    data-ng-click="vm.startImportWithValidation($event)">
-                IMPORT
-            </md-button>
-
-            <md-button
                     style="font-size: 8px;"
                     class="md-raised import-button {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
                     data-ng-click="vm.startImport($event)">
-                IMPORT (NO VALIDATE)
+                IMPORT
             </md-button>
 
         </div>
 
-<!--        <div layout="row" layout-align="end center" class="m-t-8">-->
+        <!--        <div layout="row" layout-align="end center" class="m-t-8">-->
 
-<!--            <md-button-->
-<!--                    style="font-size: 8px;"-->
-<!--                    class="md-raised import-button {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"-->
-<!--                    data-ng-click="vm.preprocessFile($event)">-->
-<!--                Preprocess only-->
-<!--            </md-button>-->
+        <!--            <md-button-->
+        <!--                    style="font-size: 8px;"-->
+        <!--                    class="md-raised import-button {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"-->
+        <!--                    data-ng-click="vm.preprocessFile($event)">-->
+        <!--                Preprocess only-->
+        <!--            </md-button>-->
 
-<!--        </div>-->
+        <!--        </div>-->
 
 
     </div>
@@ -115,7 +109,8 @@
         <div data-ng-if="vm.task.progress_object">
 
             <div class="m-t-8" layout="row" layout-align="space-between">
-                <span>Progress:</span> <span>{{vm.task.progress_object.current}} / {{vm.task.progress_object.total}}</span>
+                <span>Progress:</span>
+                <span>{{vm.task.progress_object.current}} / {{vm.task.progress_object.total}}</span>
             </div>
 
             <div layout="row" layout-sm="column" layout-align="space-around" class="loader-spinner">
