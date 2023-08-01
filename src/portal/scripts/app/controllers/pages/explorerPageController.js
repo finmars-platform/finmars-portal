@@ -111,9 +111,36 @@
             });
         }
 
-        vm.editFile = function ($event, item, $mdMenu) {
+        vm.downloadAndOpenPlaybook = function () {
 
-            vm.fileEditor = {}
+            var itemPath = vm.currentPath.join('/');
+
+            explorerService.viewFile(itemPath).then(function (blob) {
+
+                var reader = new FileReader();
+
+                reader.addEventListener("loadend", function (e) {
+
+                    vm.showPlaybook = true;
+
+                    vm.playbook = JSON.parse(reader.result);
+                    vm.playbookName = vm.currentPath[vm.currentPath.length - 1];
+
+                    console.log('vm.playbook', vm.playbook);
+                    console.log('vm.playbookName', vm.playbookName);
+
+                    $scope.$apply();
+
+                });
+
+                reader.readAsText(blob);
+
+
+            });
+
+        }
+
+        vm.editFile = function ($event, item, $mdMenu) {
 
             if ($mdMenu) {
                 $mdMenu.close()
@@ -121,15 +148,27 @@
 
             vm.currentPath.push(item.name);
 
-            vm.showEditor = true;
-
             window.location.hash = '#!/explorer/' + vm.currentPath.join('/')
 
-            vm.calculateExplorerStateClass();
+            if (item.name.indexOf('.ipynb') !== -1) {
 
-            vm.fileEditorLoading = true;
 
-            vm.downloadAndEdit();
+
+                vm.fileEditorLoading = true;
+
+                vm.downloadAndOpenPlaybook();
+
+            } else {
+
+                vm.fileEditor = {};
+
+                vm.showEditor = true;
+
+                vm.fileEditorLoading = true;
+
+                vm.downloadAndEdit();
+
+            }
 
         }
 
@@ -147,6 +186,10 @@
                 }
 
                 if (vm.fileEditor.name.indexOf('.json') !== -1) {
+                    vm.editor.getSession().setMode("ace/mode/json");
+                }
+
+                if (vm.fileEditor.name.indexOf('.ipynb') !== -1) {
                     vm.editor.getSession().setMode("ace/mode/json");
                 }
 
@@ -589,7 +632,30 @@
 
                     let formData = new FormData();
 
-                    var content = '';
+                    var defaultPlaybook = {
+                        "metadata": {
+                            "kernelspec": {
+                                "name": "python",
+                                "display_name": "Python (Pyodide)",
+                                "language": "python"
+                            },
+                            "language_info": {
+                                "codemirror_mode": {
+                                    "name": "python",
+                                    "version": 3
+                                },
+                                "file_extension": ".py",
+                                "mimetype": "text/x-python",
+                                "name": "python",
+                                "nbconvert_exporter": "python",
+                                "pygments_lexer": "ipython3",
+                                "version": "3.8"
+                            }
+                        },
+                        "cells": []
+                    }
+
+                    var content = JSON.stringify(defaultPlaybook);
 
                     console.log('path', path)
                     console.log('name', res.name)
@@ -602,10 +668,21 @@
 
                     explorerService.uploadFiles(formData).then(function (e) {
 
-                        vm.fileEditor.name = res.name;
-                        vm.fileEditor.content = '';
+                        if (res.name.indexOf('.ipynb') !== -1) {
 
-                        vm.showEditor = true;
+                            vm.playbook = null;
+                            vm.playbookName = res.name;
+
+                            vm.showPlaybook = true;
+
+                        } else {
+
+                            vm.fileEditor.name = res.name;
+                            vm.fileEditor.content = '';
+
+                            vm.showEditor = true;
+
+                        }
 
                         setTimeout(function () {
                             window.location.hash = '#!/explorer/' + vm.currentPath.join('/')
@@ -730,32 +807,6 @@
 
         }
 
-        vm.calculateExplorerStateClass = function () {
-
-            var result = '';
-
-            if (vm.showWorkflow && !vm.showEditor) {
-
-                result = 'show-explorer-workflow'
-
-            }
-
-            if (!vm.showWorkflow && vm.showEditor) {
-
-                result = 'show-explorer-editor'
-
-            }
-
-            if (vm.showWorkflow && vm.showEditor) {
-
-                result = 'show-explorer-editor-workflow'
-
-            }
-
-            vm.explorerStateClass = result;
-
-        }
-
         vm.openInNewTab = function ($event, item) {
 
             const url = window.location.origin + '/' + baseUrlService.getMasterUserPrefix() + '/api/storage' + item.file_path
@@ -837,9 +888,18 @@
                 var extension = getFileExtension($stateParams.folderPath);
 
                 if (extension) { // possible file is opened
-                    vm.showEditor = true;
 
-                    vm.downloadAndEdit();
+                    if (extension == 'ipynb') {
+
+                        vm.downloadAndOpenPlaybook();
+
+                    } else {
+
+                        vm.showEditor = true;
+
+                        vm.downloadAndEdit();
+
+                    }
 
                 } else {
                     vm.listFiles();

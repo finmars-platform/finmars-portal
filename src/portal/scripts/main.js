@@ -71,7 +71,7 @@ import entityNamesFieldDirective from "./app/directives/customInputs/entityNames
 import closeDialogButtonDirective from "./app/directives/closeDialogButtonDirective";
 
 import * as Sentry from "@sentry/browser";
-import { Angular as AngularIntegration } from "@sentry/integrations";
+import {Angular as AngularIntegration} from "@sentry/integrations";
 
 // noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
@@ -907,6 +907,8 @@ export default (function () {
     portal.directive('ttypeActionsRelationsSelect', [require('./app/directives/ttypeActionsRelationsSelectDirective')]);
     portal.directive('entitySearchSelect', ['$mdDialog', 'metaContentTypesService', require('./app/directives/customInputs/entitySearchSelect')]);
     portal.directive('crudSelect', ['$mdDialog', require('./app/directives/crudSelect')]);
+    portal.directive('finmarsPlaybook', ['$mdDialog', require('./app/directives/finmarsPlaybookDirective')]);
+    portal.directive('pythonEditor', ['$mdDialog', require('./app/directives/pythonEditorDirective')]);
     portal.directive('taskCard', ['$mdDialog', 'systemMessageService', require('./app/directives/taskCardDirective')]);
     portal.directive('usercodeInput', ['configurationService', 'globalDataService', require('./app/directives/usercodeInputDirective')]);
     portal.directive('twoFieldsMultiselect', ['$mdDialog', require('./app/directives/twoFieldsMultiselectDirective')]);
@@ -1019,7 +1021,6 @@ export default (function () {
     // 	_paq.push(['trackContentImpressionsWithinNode', content]);
     // 	_paq.push(['enableLinkTracking']);
     // });
-
 
 
 })();
