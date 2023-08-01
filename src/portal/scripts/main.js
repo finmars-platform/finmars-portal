@@ -70,10 +70,20 @@ import multiinputFieldDirective from "./app/directives/customInputs/multiinputFi
 import entityNamesFieldDirective from "./app/directives/customInputs/entityNamesFieldDirective";
 import closeDialogButtonDirective from "./app/directives/closeDialogButtonDirective";
 
+import * as Sentry from "@sentry/browser";
+import {Angular as AngularIntegration} from "@sentry/integrations";
+
 // noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
 
+    Sentry.init({
+        dsn: "https://c2822efa4c0c45ceb21c50a361bf05b2@sentry.finmars.com/5",
+        integrations: [new AngularIntegration()],
+    });
+
+
     let portal = angular.module('finmars.portal', [
+        'ngSentry',
         'ngAria',
         'ngMaterial',
         'ngMessages',
@@ -686,6 +696,8 @@ export default (function () {
     portal.controller('InstrumentDownloadController', ['$scope', '$mdDialog', 'instrumentService', require('./app/controllers/pages/instrumentDownloadController')]);
     portal.controller('FillPriceHistoryController', ['$scope', '$mdDialog', require('./app/controllers/pages/fillPriceHistoryController')]);
     portal.controller('MappingTablesController', ['$scope', '$mdDialog', require('./app/controllers/pages/mappingTablesController')]);
+    portal.controller('MappingTablePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/mappingTablePageController')]);
+    portal.controller('MappingTableDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/mappingTableDialogController')]);
     portal.controller('ProcessesController', ['$scope', '$mdDialog', require('./app/controllers/pages/processesController')]);
     portal.controller('JournalPageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'usersService', 'metaContentTypesService', require('./app/controllers/pages/journalPageController')]);
     portal.controller('MarketplacePageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'configurationService', require('./app/controllers/pages/marketplacePageController')]);
@@ -895,6 +907,8 @@ export default (function () {
     portal.directive('ttypeActionsRelationsSelect', [require('./app/directives/ttypeActionsRelationsSelectDirective')]);
     portal.directive('entitySearchSelect', ['$mdDialog', 'metaContentTypesService', require('./app/directives/customInputs/entitySearchSelect')]);
     portal.directive('crudSelect', ['$mdDialog', require('./app/directives/crudSelect')]);
+    portal.directive('finmarsPlaybook', ['$mdDialog', require('./app/directives/finmarsPlaybookDirective')]);
+    portal.directive('pythonEditor', ['$mdDialog', require('./app/directives/pythonEditorDirective')]);
     portal.directive('taskCard', ['$mdDialog', 'systemMessageService', require('./app/directives/taskCardDirective')]);
     portal.directive('usercodeInput', ['configurationService', 'globalDataService', require('./app/directives/usercodeInputDirective')]);
     portal.directive('twoFieldsMultiselect', ['$mdDialog', require('./app/directives/twoFieldsMultiselectDirective')]);

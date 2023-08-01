@@ -27,6 +27,30 @@
                 "name": "Position return (Pricing Currency)",
                 "value_type": 20
             },
+
+            //
+
+            {
+                "key": "net_position_return_fixed",
+                "name": "Net Position Return Fixed",
+                "value_type": 20
+            },
+            {
+                "key": "net_position_return_loc",
+                "name": "Net Position Return Fixed(Pricing Currency)",
+                "value_type": 20
+            },
+            {
+                "key": "position_return_fixed",
+                "name": "Position Return Fixed",
+                "value_type": 20
+            },
+            {
+                "key": "position_return_fixed_loc",
+                "name": "Position Return Fixed (Pricing Currency)",
+                "value_type": 20
+            },
+
             {
                 "key": "daily_price_change",
                 "name": "Daily price change",

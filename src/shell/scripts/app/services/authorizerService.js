@@ -309,8 +309,8 @@ export default function (cookieService, globalDataService, xhrService) {
         return authorizerRepository.authTokenManagerCreateToken(data)
     }
 
-    const getVersions = function (){
-        return authorizerRepository.getVersions()
+    const getVersions = function (is_latest){
+        return authorizerRepository.getVersions(is_latest)
     }
 
     const updateFinmars = function (base_api_url, tag){

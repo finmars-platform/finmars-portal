@@ -462,6 +462,7 @@ import importEntityService from "../../services/import/importEntityService";
             })
         };
 
+        // DEPRECATED
         vm.startImportWithValidation = function ($event) {
 
             return new Promise(function (resolve, reject) {

@@ -1,0 +1,56 @@
+.finmars-playbook {
+
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-top: 40px;
+  height: 60vh;
+
+
+  .finmars-playbook-cell-holder {
+
+    flex-grow: 1; /* This allows this div to take up remaining space */
+    overflow-y: auto; /* This provides a vertical scrollbar if content overflows */
+
+    .finmars-playbook-toolbar {
+      position: absolute;
+      z-index: 10;
+      background: #fff;
+      width: 100%;
+      top: 0;
+    }
+
+    .finmars-playbook-cell {
+      margin: 10px;
+      padding: 10px;
+
+
+      .finmars-playbook-cell-content {
+        padding-left: 60px;
+        position: relative;
+      }
+      .finmars-playbook-cell-delete-cell-button {
+        position: absolute;
+        right: 4px;
+        top: 4px;
+        color: red;
+        background: rgba(255,255,255,.12);
+      }
+
+      border-left: 6px solid transparent;
+
+      &.active {
+        border-left: 6px solid #F05A22;
+      }
+
+      .finmars-playbook-cell-output {
+        width: 100%;
+        overflow: hidden;
+
+      }
+
+    }
+
+  }
+
+}
