@@ -1,7 +1,24 @@
 .finmars-playbook {
 
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-top: 40px;
+  height: 60vh;
+
 
   .finmars-playbook-cell-holder {
+
+    flex-grow: 1; /* This allows this div to take up remaining space */
+    overflow-y: auto; /* This provides a vertical scrollbar if content overflows */
+
+    .finmars-playbook-toolbar {
+      position: absolute;
+      z-index: 10;
+      background: #fff;
+      width: 100%;
+      top: 0;
+    }
 
     .finmars-playbook-cell {
       margin: 10px;
