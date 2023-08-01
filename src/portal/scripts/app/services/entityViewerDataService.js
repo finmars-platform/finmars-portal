@@ -95,13 +95,25 @@
 
     var emptyUseFromAboveFilters = function (filters) {
 
+        var result;
+
         if (filters && Array.isArray(filters)) {
-            filters.forEach(function (filter) {
+
+            result = structuredClone(filters);
+
+            result.forEach(function (filter) {
                 if (filter.options.use_from_above && Object.keys(filter.options.use_from_above).length > 0) {
                     filter.options.filter_values = [];
                 }
             });
+
+            return result;
+
+        } else {
+            return filters;
         }
+
+
 
     };
     /** @module entityViewerDataService */
@@ -1312,7 +1324,7 @@
                     }
                 }
 
-                emptyUseFromAboveFilters(listLayout.data.filters);
+                listLayout.data.filters = emptyUseFromAboveFilters(listLayout.data.filters);
 
             } else {
 

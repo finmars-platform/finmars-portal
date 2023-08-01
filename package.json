@@ -49,6 +49,8 @@
     "@babel/polyfill": "^7.12.1",
     "@cyclonedx/bom": "^4.0.2",
     "@fortawesome/fontawesome-free": "^5.13.0",
+    "@sentry/browser": "^6.19.7",
+    "@sentry/integrations": "^6.19.0",
     "@simonwep/pickr": "^1.7.1",
     "@superset-ui/embedded-sdk": "^0.1.0-alpha.7",
     "ace-builds": "^1.6.1",
