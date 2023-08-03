@@ -745,6 +745,7 @@ export default (function () {
 
 
     portal.controller('PricingPolicyPageController', ['$scope', '$mdDialog', require('./app/controllers/pages/pricingPolicyPageController')]);
+    portal.controller('PortfolioBundlePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/PortfolioBundlePageController')]);
     portal.controller('PricingSchemePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/pricingSchemePageController')]);
     portal.controller('RunPricingInstrumentDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/runPricingInstrumentDialogController')]);
     portal.controller('RunPricingCurrencyDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/runPricingCurrencyDialogController')]);
@@ -764,6 +765,7 @@ export default (function () {
 
     portal.controller('PricingPolicyAddDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingPolicyAddDialogController')]);
     portal.controller('PricingPolicyEditDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/pricing/pricingPolicyEditDialogController')]);
+    portal.controller('PortfolioBundleDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/portfolioBundleDialogController')]);
 
     portal.controller('TransactionTypeGroupDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/transactionTypeGroupDialogController')]);
     portal.controller('TransactionTypeGroupPageController', ['$scope', '$mdDialog', require('./app/controllers/pages/transactionTypeGroupPageController')]);
