@@ -611,10 +611,15 @@
                 templateUrl: 'views/pages/fill-price-history-view.html',
                 controller: 'FillPriceHistoryController as vm'
             })
-            .state('app.portal.import.mapping-tables', {
+            .state('app.portal.import.mapping-tables', { // DEPRECATED, delete soon
                 url: '/mapping-tables-import',
                 templateUrl: 'views/pages/mapping-table-view.html',
                 controller: 'MappingTablesController as vm'
+            })
+            .state('app.portal.import.mapping-table', {
+                url: '/mapping-table',
+                templateUrl: 'views/pages/mapping-table-page-view.html',
+                controller: 'MappingTablePageController as vm'
             })
             .state('app.portal.import.reference-tables', {
                 url: '/reference-tables',

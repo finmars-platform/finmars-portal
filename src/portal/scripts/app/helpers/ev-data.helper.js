@@ -296,6 +296,40 @@
 
     };
 
+    var getAllGroupsByLevel = function (maxLevel, evDataService) {
+
+        var data = evDataService.getData();
+
+        var keys = Object.keys(data);
+
+        var items = [];
+
+        keys.forEach(function (key) {
+            items.push(data[key])
+        });
+
+        var groupsByLevel = {};
+
+        var $index;
+
+        for ($index = 0; $index < maxLevel; $index = $index + 1) {
+
+            groupsByLevel[$index] = []
+
+            items.forEach(function (group) {
+
+                if (group.___level === $index) {
+                    groupsByLevel[$index].push(group)
+                }
+
+            })
+
+        }
+
+        return groupsByLevel;
+
+    };
+
     var removeItemsFromFoldedGroups = function (list) {
 
         var _list = list.concat();
@@ -1034,6 +1068,7 @@
         getUnfoldedGroups: getUnfoldedGroups,
         getUnfoldedGroupsByLevel: getUnfoldedGroupsByLevel,
         getGroupsByLevel: getGroupsByLevel,
+        getAllGroupsByLevel: getAllGroupsByLevel,
 
         getObject: getObject,
 

@@ -13,10 +13,15 @@
         return workflowRepository.getByKey(id);
     };
 
+    var executeCode = function (data) {
+        return workflowRepository.executeCode(data);
+    }
+
 
     module.exports = {
         getList: getList,
-        getByKey: getByKey
+        getByKey: getByKey,
+        executeCode: executeCode
     }
 
 
