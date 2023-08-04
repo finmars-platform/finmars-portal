@@ -150,7 +150,9 @@ export default function ($scope, $mdDialog, toastNotificationService, authorizer
 
     vm.getVersions = function () {
 
-        authorizerService.getVersions().then(function (data) {
+        var is_latest = true;
+
+        authorizerService.getVersions(is_latest).then(function (data) {
 
             vm.versions = data.results;
 

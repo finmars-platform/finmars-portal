@@ -59,7 +59,10 @@
         ];
 
         var performanceAttrsComp = [
-            'net_position_return', 'net_position_return_loc', 'position_return', 'position_return_loc', 'daily_price_change', 'mtd_price_change', 'total_opened',
+            'net_position_return', 'net_position_return_loc', 'position_return', 'position_return_loc',
+            'net_position_return_fixed', 'net_position_return_fixed_loc', 'position_return_fixed', 'position_return_fixed_loc',
+
+            'daily_price_change', 'mtd_price_change', 'total_opened',
             'total_fixed_opened', 'total_fx_opened', 'principal_opened', 'principal_fixed_opened', 'principal_fx_opened', 'carry_opened', 'carry_fixed_opened',
             'carry_fx_opened', 'overheads_opened', 'overheads_fixed_opened', 'overheads_fx_opened', 'total_opened_loc', 'total_fixed_opened_loc', 'total_fx_opened_loc',
             'principal_opened_loc', 'principal_fixed_opened_loc', 'principal_fx_opened_loc', 'carry_opened_loc', 'carry_fixed_opened_loc', 'carry_fx_opened_loc',

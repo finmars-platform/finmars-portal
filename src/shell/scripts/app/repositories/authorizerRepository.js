@@ -756,9 +756,15 @@ export default function (cookieService, xhrService) {
 
     };
 
-    const getVersions = function () {
+    const getVersions = function (is_latest) {
 
-        return xhrService.fetch(authorizerUrl + '/version/', {
+        var url = authorizerUrl + '/version/';
+
+        if (is_latest) {
+            url += '?is_latest=true';
+        }
+
+        return xhrService.fetch(url, {
             method: 'GET',
             credentials: 'include',
             headers: {
