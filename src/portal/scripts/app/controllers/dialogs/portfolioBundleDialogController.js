@@ -6,6 +6,8 @@
     'use strict';
 
     var portfolioBundleService = require('../../services/portfolioBundleService');
+    var portfolioRegisterService = require('../../services/portfolioRegisterService');
+    var portfolioService = require('../../services/portfolioService');
 
     module.exports = function ($scope, $mdDialog, data) {
 
@@ -45,6 +47,10 @@
             }
 
 
+        };
+
+        vm.getRegisters = function (options) {
+            return portfolioRegisterService.getList(options);
         };
 
         vm.getItem = function () {

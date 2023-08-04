@@ -29,6 +29,19 @@
 
             </div>
 
+            <div class="g-report-settings-row p-b-16">
+                <div class="default-f-s">Portfolios multiselector</div>
+
+                <two-fields-multiselect get-data-method="vm.getRegisters()"
+                                        model="vm.item.registers"
+                                        selected-items="vm.item.registers"
+                                        nothing-selected-text="Off"
+                                        selected-items-indication="chips"
+                                        name-property="short_name"
+                                        small-options="{tooltipText: 'Portfolios multiselector'}"
+                                        class="g-report-settings-field"></two-fields-multiselect>
+            </div>
+
 
         </div>
 
