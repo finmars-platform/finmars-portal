@@ -53,12 +53,26 @@
             item.active = true;
 
             vm.activeTaskProcessing = true;
+            vm.activeTask = null;
 
             tasksService.getByKey(item.id).then(function (data) {
 
                 vm.activeTaskProcessing = false;
 
                 vm.activeTask = data;
+                vm.activeTask.options_object = JSON.stringify(vm.activeTask.options_object, null, 4);
+                vm.activeTask.result_object = JSON.stringify(vm.activeTask.result_object, null, 4);
+
+                if (vm.activeTask.finished_at) {
+                    const date1 = new Date(vm.activeTask.created);
+                    const date2 = new Date(vm.activeTask.finished_at);
+                    const diffTime = Math.abs(date2 - date1);
+
+                    vm.activeTask.execution_time_pretty = vm.toPrettyTime(Math.floor(diffTime / 1000));
+                }
+
+                console.log('vm.activeTask', vm.activeTask);
+
 
                 $scope.$apply();
             })
@@ -322,12 +336,53 @@
                 item.finished_at_pretty = moment(new Date(item.finished_at)).format('HH:mm:ss');
             }
 
+            item.created_date = moment(new Date(item.created)).format('YYYY-MM-DD');
+
 
             item.options_object = JSON.stringify(item.options_object, null, 4);
             item.result_object = JSON.stringify(item.result_object, null, 4);
             item.progress_object = JSON.stringify(item.progress_object, null, 4);
 
             return item
+
+        }
+
+        function convertSecondsToTime(secs) {
+            let hours = Math.floor(secs / (60 * 60));
+
+            let divisor_for_minutes = secs % (60 * 60);
+            let minutes = Math.floor(divisor_for_minutes / 60);
+
+            let divisor_for_seconds = divisor_for_minutes % 60;
+            let seconds = Math.ceil(divisor_for_seconds);
+
+            let obj = {
+                "h": hours,
+                "m": minutes,
+                "s": seconds
+            };
+            return ("0" + obj.h).slice(-2) + ":" + ("0" + obj.m).slice(-2) + ":" + ("0" + obj.s).slice(-2);
+        }
+
+        vm.getStats = function () {
+
+            tasksService.getStats().then(function (data) {
+
+                vm.statsItems = []
+
+                Object.keys(data).forEach(function (key) {
+
+                    data[key]['name'] = key
+
+                    data[key]['uptime'] = convertSecondsToTime(data[key]['uptime'])
+
+                    vm.statsItems.push(data[key])
+
+                })
+
+                $scope.$apply();
+
+            })
 
         }
 
@@ -350,22 +405,18 @@
                 vm.items = data.results;
                 vm.count = data.count
 
-                if (!vm.activeTask) {
-
-                    if (vm.items.length) {
-                        vm.activeTask = vm.items[0]
-                        vm.items[0].active = true;
-                    }
-
-                }
-
                 vm.items = vm.items.map(function (item) {
 
                     item = vm.formatTask(item);
 
-
                     return item
                 })
+
+
+                if (!vm.activeTask && vm.items.length) {
+                    vm.selectActiveTask(new Event(), vm.items[0])
+                }
+
 
                 // vm.items[0].status = 'P'
 
@@ -463,10 +514,12 @@
             }
 
             vm.getData();
+            vm.getStats();
 
             setInterval(function () {
 
                 vm.getData();
+                vm.getStats();
 
             }, 1000 * 30)
 
