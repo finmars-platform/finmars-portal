@@ -911,6 +911,7 @@ export default (function () {
     portal.directive('crudSelect', ['$mdDialog', require('./app/directives/crudSelect')]);
     portal.directive('finmarsPlaybook', ['$mdDialog', require('./app/directives/finmarsPlaybookDirective')]);
     portal.directive('pythonEditor', ['$mdDialog', require('./app/directives/pythonEditorDirective')]);
+    portal.directive('jsonEditor', ['$mdDialog', require('./app/directives/jsonEditorDirective')]);
     portal.directive('taskCard', ['$mdDialog', 'systemMessageService', require('./app/directives/taskCardDirective')]);
     portal.directive('usercodeInput', ['configurationService', 'globalDataService', require('./app/directives/usercodeInputDirective')]);
     portal.directive('twoFieldsMultiselect', ['$mdDialog', require('./app/directives/twoFieldsMultiselectDirective')]);
