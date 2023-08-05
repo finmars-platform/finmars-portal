@@ -43,6 +43,37 @@
 
         vm.activeTask = null;
         vm.activeTaskProcessing = false;
+        vm.activeTaskId = null;
+
+        vm.getActiveTask = function () {
+
+            if (vm.activeTaskId) {
+
+                tasksService.getByKey(vm.activeTaskId).then(function (data) {
+
+                    vm.activeTaskProcessing = false;
+
+                    vm.activeTask = data;
+                    vm.activeTask.options_object = JSON.stringify(vm.activeTask.options_object, null, 4);
+                    vm.activeTask.result_object = JSON.stringify(vm.activeTask.result_object, null, 4);
+
+                    if (vm.activeTask.finished_at) {
+                        const date1 = new Date(vm.activeTask.created);
+                        const date2 = new Date(vm.activeTask.finished_at);
+                        const diffTime = Math.abs(date2 - date1);
+
+                        vm.activeTask.execution_time_pretty = vm.toPrettyTime(Math.floor(diffTime / 1000));
+                    }
+
+                    console.log('vm.activeTask', vm.activeTask);
+
+
+                    $scope.$apply();
+                })
+
+            }
+
+        }
 
         vm.selectActiveTask = function ($event, item) {
 
@@ -54,28 +85,9 @@
 
             vm.activeTaskProcessing = true;
             vm.activeTask = null;
+            vm.activeTaskId = item.id
 
-            tasksService.getByKey(item.id).then(function (data) {
-
-                vm.activeTaskProcessing = false;
-
-                vm.activeTask = data;
-                vm.activeTask.options_object = JSON.stringify(vm.activeTask.options_object, null, 4);
-                vm.activeTask.result_object = JSON.stringify(vm.activeTask.result_object, null, 4);
-
-                if (vm.activeTask.finished_at) {
-                    const date1 = new Date(vm.activeTask.created);
-                    const date2 = new Date(vm.activeTask.finished_at);
-                    const diffTime = Math.abs(date2 - date1);
-
-                    vm.activeTask.execution_time_pretty = vm.toPrettyTime(Math.floor(diffTime / 1000));
-                }
-
-                console.log('vm.activeTask', vm.activeTask);
-
-
-                $scope.$apply();
-            })
+            vm.getActiveTask();
 
         }
 
@@ -520,6 +532,7 @@
 
                 vm.getData();
                 vm.getStats();
+                vm.getActiveTask();
 
             }, 1000 * 30)
 
