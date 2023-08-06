@@ -6,6 +6,7 @@
     'use strict';
 
     var tasksService = require('../../services/tasksService');
+    var explorerService = require('../../services/explorerService');
 
     var baseUrlService = require('../../services/baseUrlService');
     var utilsService = require('../../services/utilsService');
@@ -443,30 +444,43 @@
 
         vm.downloadFile = function ($event, item) {
 
-            // TODO WTF why systemMessage Service, replace with FilePreview Service later
-            systemMessageService.viewFile(item.file_report).then(function (data) {
+            explorerService.viewFile(item.file_report_object.file_url).then(function (blob) {
 
-                console.log('data', data);
+                var reader = new FileReader();
 
-                $mdDialog.show({
-                    controller: 'FilePreviewDialogController as vm',
-                    templateUrl: 'views/dialogs/file-preview-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        data: {
-                            content: data,
-                            info: item
-                        }
+                reader.addEventListener("loadend", function (e) {
+
+                    var content = reader.result;
+
+                    if (item.file_report_object.file_url.indexOf('.json') !== -1) {
+                        content = JSON.parse(content)
                     }
+
+                    $mdDialog.show({
+                        controller: 'FilePreviewDialogController as vm',
+                        templateUrl: 'views/dialogs/file-preview-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                content: content,
+                                info: item
+                            }
+                        }
+                    });
+
+
                 });
 
-            })
+                reader.readAsText(blob);
+
+
+            });
 
 
         }

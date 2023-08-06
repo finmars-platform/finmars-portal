@@ -75,14 +75,17 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/',
+        // Warning, response could not be JSON (it can be txt, xml, png etc)
+        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/',
             {
                 method: 'GET',
                 credentials: 'include',
                 headers: {
                     'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                 }
-            })
+            }).then(function (response) {
+            return response.blob()
+        })
 
     }
 
