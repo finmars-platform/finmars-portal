@@ -213,7 +213,7 @@
                         </a>
 
                         <a data-ng-click="vm.cancelTask($event)"
-                           data-ng-if="vm.activeTask.status == 'P' || vm.activeTask.status == 'progress' || vm.activeTask.status == 'W'"
+                           data-ng-if="vm.activeTask.status == 'I' || vm.activeTask.status == 'P' || vm.activeTask.status == 'progress' || vm.activeTask.status == 'W'"
                            class="cancel-task-button"><span
                                 class="material-icons">cancel</span>
                             <md-tooltip md-direction="bottom">Cancel</md-tooltip>
@@ -340,7 +340,8 @@
 
                         </div>
 
-                        <div class="task-detail-field" data-ng-if="vm.activeTask.status == 'P'">
+                        <div class="task-detail-field"
+                             data-ng-if="vm.activeTask.status == 'P' && vm.activeTask.progress_object">
 
                             <div class="task-detail-field-definition m-b-8">Progress</div>
 

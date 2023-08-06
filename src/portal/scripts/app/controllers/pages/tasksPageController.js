@@ -353,7 +353,7 @@
 
             item.options_object = JSON.stringify(item.options_object, null, 4);
             item.result_object = JSON.stringify(item.result_object, null, 4);
-            item.progress_object = JSON.stringify(item.progress_object, null, 4);
+            // item.progress_object = JSON.stringify(item.progress_object, null, 4);
 
             return item
 
