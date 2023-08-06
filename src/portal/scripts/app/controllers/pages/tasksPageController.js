@@ -504,6 +504,13 @@
 
         }
 
+        vm.doRefresh = function () {
+
+            vm.getData();
+            vm.getStats();
+            vm.getActiveTask();
+
+        }
 
         vm.init = function () {
 
