@@ -30,7 +30,8 @@
 
         vm.getData = function () {
 
-            uiService.getInstrumentFieldList().then(function (data) {
+            // uiService.getInstrumentFieldList().then(function (data) {
+            uiService.getInstrumentFieldPrimaryList().then(function (data) {
 
                 data.results.forEach(function (field) {
 

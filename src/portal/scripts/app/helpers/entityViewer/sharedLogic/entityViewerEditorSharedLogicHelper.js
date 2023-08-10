@@ -499,7 +499,8 @@
 
             return new Promise((resolve, reject) => {
 
-                uiService.getInstrumentFieldList().then(function (data) {
+                // uiService.getInstrumentFieldList().then(function (data) {
+                uiService.getInstrumentFieldPrimaryList().then(function (data) {
 
                     data.results.forEach(function (userField) {
 
@@ -535,7 +536,8 @@
 
 			return new Promise((resolve, reject) => {
 
-				uiService.getTransactionFieldList().then(function (data) {
+				// uiService.getTransactionFieldList().then(function (data) {
+				uiService.getTransactionFieldPrimaryList().then(function (data) {
 
 					data.results.forEach(function (userField) {
 

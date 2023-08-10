@@ -178,7 +178,8 @@
 
         vm.getTransactionUserFields = function () {
 
-            return uiService.getComplexTransactionFieldList({pageSize: 1000}).then(function (data) {
+            // return uiService.getComplexTransactionFieldList({pageSize: 1000}).then(function (data) {
+            return uiService.getComplexTransactionFieldPrimaryList({pageSize: 1000}).then(function (data) {
 
                 data.results.forEach(function (field) {
 
