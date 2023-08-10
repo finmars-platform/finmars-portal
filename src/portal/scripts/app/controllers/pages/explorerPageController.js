@@ -32,6 +32,7 @@
 
         vm.fileEditor = {}
         vm.fileEditorLoading = false;
+        vm.playBookLoading = false;
 
         vm.allSelected = false;
         vm.selectedCount = 0;
@@ -115,16 +116,20 @@
 
             var itemPath = vm.currentPath.join('/');
 
+            vm.playBookLoading = true;
+
+            vm.showPlaybook = true;
+
             explorerService.viewFile(itemPath).then(function (blob) {
 
                 var reader = new FileReader();
 
                 reader.addEventListener("loadend", function (e) {
 
-                    vm.showPlaybook = true;
-
                     vm.playbook = JSON.parse(reader.result);
                     vm.playbookName = vm.currentPath[vm.currentPath.length - 1];
+
+                    vm.playBookLoading = false;
 
                     console.log('vm.playbook', vm.playbook);
                     console.log('vm.playbookName', vm.playbookName);

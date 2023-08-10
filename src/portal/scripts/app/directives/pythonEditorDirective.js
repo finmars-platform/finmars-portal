@@ -15,7 +15,7 @@
             },
             link: function (scope, elem, attrs, ngModelCtrl) {
 
-                // console.log('pythonEditor', scope.source);
+                console.log('pythonEditor', scope.source);
 
                 scope.init = function () {
 

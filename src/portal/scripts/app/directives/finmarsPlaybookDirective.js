@@ -8,6 +8,7 @@
     var toastNotificationService = require('../../../../core/services/toastNotificationService');
     var explorerService = require('../services/explorerService')
     var workflowService = require('../services/workflowService')
+    var md5Helper = require('../helpers/md5.helper')
 
     module.exports = function ($mdDialog) {
         return {
@@ -93,9 +94,15 @@
 
                 }
 
+                function generateUniqueID() {
+                    const currentDatetime = new Date().toISOString();
+                    return md5Helper.md5(currentDatetime);
+                }
+
                 scope.addCell = function ($event) {
 
                     scope.item.cells.push({
+                        "id": generateUniqueID(),
                         "cell_type": "code",
                         "source": "",
                         "metadata": {
@@ -107,6 +114,8 @@
                 }
 
                 scope.deleteCell = function ($event, $index, cell) {
+
+                    console.log('deleteCell', $index, cell)
 
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
@@ -127,7 +136,20 @@
                     }).then(function (res) {
 
                         if (res.status === 'agree') {
-                            scope.item.cells.splice($index, 1);
+
+                            scope.processing = true;
+
+                            scope.item.cells = scope.item.cells.filter(function (item, index) {
+                                return item.id != cell.id
+                            })
+
+                            setTimeout(function (){
+
+                                scope.processing = false;
+                                scope.$apply();
+
+                            }, 1000)
+
                         }
                     });
                 }
