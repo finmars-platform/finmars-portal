@@ -760,7 +760,8 @@
 
                 var result = [];
 
-                uiService.getInstrumentFieldList().then(function (data) {
+                // uiService.getInstrumentFieldList().then(function (data) {
+                uiService.getInstrumentFieldPrimaryList().then(function (data) {
 
                     result = data.results;
 
@@ -781,7 +782,8 @@
 
                 var result = [];
 
-                uiService.getComplexTransactionFieldList({pageSize: 1000}).then(function (data) {
+                // uiService.getComplexTransactionFieldList({pageSize: 1000}).then(function (data) {
+                uiService.getComplexTransactionFieldPrimaryList({pageSize: 1000}).then(function (data) {
 
                     result = data.results;
 
@@ -802,7 +804,8 @@
 
                 var result = [];
 
-                uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
+                // uiService.getTransactionFieldList({pageSize: 1000}).then(function (data) {
+                uiService.getTransactionFieldPrimaryList({pageSize: 1000}).then(function (data) {
 
                     result = data.results;
 

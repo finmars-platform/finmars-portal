@@ -572,6 +572,9 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
         return uiRepository.getComplexTransactionFieldList(options)
     };
 
+    const getComplexTransactionFieldPrimaryList = function (options) {
+        return uiRepository.getComplexTransactionFieldPrimaryList(options)
+    };
     const createComplexTransactionField = function (data) {
         return uiRepository.createComplexTransactionField(data);
     };
@@ -584,6 +587,10 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
         return uiRepository.getTransactionFieldList(options)
     };
 
+    const getTransactionFieldPrimaryList = function (options) {
+        return uiRepository.getTransactionFieldPrimaryList(options)
+    };
+
     const createTransactionField = function (data) {
         return uiRepository.createTransactionField(data);
     };
@@ -594,6 +601,10 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
 
     const getInstrumentFieldList = function () {
         return uiRepository.getInstrumentFieldList()
+    };
+
+    const getInstrumentFieldPrimaryList = function () {
+        return uiRepository.getInstrumentFieldPrimaryList()
     };
 
     const createInstrumentField = function (data) {
@@ -864,15 +875,18 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
         deleteConfigurationExportLayoutByKey: deleteConfigurationExportLayoutByKey,
 
         getComplexTransactionFieldList: getComplexTransactionFieldList,
+        getComplexTransactionFieldPrimaryList: getComplexTransactionFieldPrimaryList,
         createComplexTransactionField: createComplexTransactionField,
         updateComplexTransactionField: updateComplexTransactionField,
 
         getTransactionFieldList: getTransactionFieldList,
+        getTransactionFieldPrimaryList: getTransactionFieldPrimaryList,
         createTransactionField: createTransactionField,
         updateTransactionField: updateTransactionField,
 
 
         getInstrumentFieldList: getInstrumentFieldList,
+        getInstrumentFieldPrimaryList: getInstrumentFieldPrimaryList,
         createInstrumentField: createInstrumentField,
         updateInstrumentField: updateInstrumentField,
 
