@@ -386,7 +386,9 @@
             'src/core/ace/mode-javascript.js',
             'src/core/ace/theme-monokai.js',
             'node_modules/d3/dist/d3.js',
-            'node_modules/qrious/dist/qrious.js'
+            'node_modules/qrious/dist/qrious.js',
+
+            'src/core/tsparticles/*.js',
         ];
 
         /*return gulp.src(pathToJS)
@@ -409,7 +411,16 @@
             'src/temp/' + appName + '/plugins.min.js',
             'node_modules/@simonwep/pickr/dist/pickr.min.js',
             'node_modules/pdfjs-dist/build/pdf.min.js',
-            'node_modules/pdfjs-dist/build/pdf.worker.min.js'
+            'node_modules/pdfjs-dist/build/pdf.worker.min.js',
+
+            'node_modules/tsparticles-engine/umd/bundle.js',
+            'node_modules/tsparticles-move-base/umd/index.js',
+            'node_modules/tsparticles-shape-circle/umd/index.js',
+            'node_modules/tsparticles-updater-color/umd/index.js',
+            'node_modules/tsparticles-updater-opacity/umd/index.js',
+            'node_modules/tsparticles-updater-out-modes/umd/index.js',
+            'node_modules/tsparticles-updater-size/umd/index.js',
+            'node_modules/tsparticles-preset-stars/umd/bundle.js',
         ];
 
         return gulp.src(pathToMinJs)
