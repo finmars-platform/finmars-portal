@@ -77,9 +77,9 @@
                     scope.diameter = 10
                 }
 
-                scope.init = function (){
+                scope.init = function () {
 
-                    setInterval(function (){
+                    scope.progressInterval = setInterval(function () {
                         scope.color = getRandomBrightColor();
                         scope.$apply()
                     }, 2000)
@@ -87,6 +87,12 @@
                 }
 
                 scope.init();
+
+                scope.$on('destroy', function () {
+
+                    clearInterval(scope.progressInterval);
+
+                })
 
             }
         }
