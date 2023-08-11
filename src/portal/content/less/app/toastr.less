@@ -1,0 +1,29 @@
+.toast-success {
+  background: #fff;
+  color: #363636;
+  border-left: 8px solid #47D764;
+  box-shadow: 0 0 8px rgba(0,0,0,.5);
+  font-size: 16px;
+  border-left: 8px;
+
+  .toast-message {
+    color: #363636;
+  }
+
+  &:after {
+    content: "✓";
+    color: green;
+    display: block;
+    width: 32px;
+    height: 32px;
+    background: #47D764;
+    color: #fff;
+    text-align: center;
+    border-radius: 50%;
+    position: absolute;
+    top: 10px;
+    left: 8px;
+    line-height: 32px;
+    font-size: 24px;
+  }
+}
