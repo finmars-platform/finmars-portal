@@ -782,7 +782,7 @@
                                             </md-button>
                                         </li>
 
-                                        <li >
+                                        <li>
                                             <md-button class="sidenav-dropdown-menu-btn"
                                                        ui-sref="app.portal.portfolio-bundle">
                                                 <span class="side-nav-title">Portfolio Bundles</span>
@@ -1146,8 +1146,8 @@
     Build date: __BUILD_DATE__
 
 
-    <span class="websocket-connection-status {{vm.getWsStatus()}}"
-          title="Websocket status: {{vm.getWsStatus()}}"></span>
+    <!--    <span class="websocket-connection-status {{vm.getWsStatus()}}"-->
+    <!--          title="Websocket status: {{vm.getWsStatus()}}"></span>-->
 
     <br/>
     <!--    <div>-->
@@ -1163,18 +1163,8 @@
                 Session Remaining Time: {{vm.remainingTimePretty}}
             </div>
 
-            <a class="sidenav-api-link" href="{{ vm.getCurrentApiUrl() }}" target="_blank">
-                API
-            </a>:
-
-            <span data-ng-click="vm.copyToBuffer(vm.getCurrentBaseApiUrl())"
-                  class="sidenav-tech-button">
-                {{ vm.getCurrentBaseApiUrl() }}
-
-                <md-tooltip class="tooltip_1" md-direction="top">Copy</md-tooltip>
-            </span>
-
-            <a class="sidenav-api-link" ui-sref="app.portal.system-page">{{vm.getCurrentVersion()}}</a>
+            <a href="https://finmars.com" target="_blank" class="finmars-site-link">© {{vm.currentYear}} Finmars
+                SCSA</a>
 
         </div>
     </div>

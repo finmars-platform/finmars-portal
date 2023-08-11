@@ -656,6 +656,8 @@
 
             vm.getMember();
 
+            vm.currentYear = new Date().getFullYear();
+
             vm.getSessionRemainingTime();
 
             vm.sessionRemainingInterval = setInterval(function () {
