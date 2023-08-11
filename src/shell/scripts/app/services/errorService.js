@@ -127,10 +127,10 @@ export default function (toastNotificationService) {
         message = message + '<span class="toast-error-field">Date & Time</span>: ' + error_object.datetime + '<br/>'
         message = message + '<span class="toast-error-field">Details</span>: <div><pre>' + JSON.stringify(error_object.details, null, 4) + '</pre></div>'
 
-        let raw_title = 'Client Error'
+        let raw_title = '<span class="glitch" data-text="Client Error">Client Error</span>'
 
         if (error_object.status_code === 500) {
-            raw_title = 'Server Error'
+            raw_title = '<span class="glitch" data-text="Server Error">Server Error</span>'
         }
 
         let title = raw_title + '<span class="toast-click-to-copy">click to copy</span>'
@@ -139,7 +139,7 @@ export default function (toastNotificationService) {
             progressBar: true,
             closeButton: true,
             tapToDismiss: false,
-            onclick: function (event){
+            onclick: function (event) {
 
                 var listener = function (e) {
 
@@ -155,8 +155,10 @@ export default function (toastNotificationService) {
                 document.removeEventListener('copy', listener, false);
 
             },
-            timeOut: '10000',
-            extendedTimeOut: '10000'
+            // timeOut: '10000',
+            // extendedTimeOut: '10000'
+            timeOut: 0,
+            extendedTimeOut: 0
         });
 
         // DEPRECATED
