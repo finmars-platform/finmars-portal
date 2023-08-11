@@ -155,10 +155,10 @@ export default function (toastNotificationService) {
                 document.removeEventListener('copy', listener, false);
 
             },
-            // timeOut: '10000',
-            // extendedTimeOut: '10000'
-            timeOut: 0,
-            extendedTimeOut: 0
+            timeOut: '10000',
+            extendedTimeOut: '10000'
+            // timeOut: 0,
+            // extendedTimeOut: 0
         });
 
         // DEPRECATED
