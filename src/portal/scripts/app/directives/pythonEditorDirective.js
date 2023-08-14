@@ -11,11 +11,12 @@
             templateUrl: 'views/directives/python-editor-view.html',
             scope: {
                 source: '=',
-                index: '='
+                index: '=',
+                filePathList: '=',
             },
             link: function (scope, elem, attrs, ngModelCtrl) {
 
-                console.log('pythonEditor', scope.source);
+                // console.log('pythonEditor', scope.source);
 
                 scope.init = function () {
 
@@ -39,9 +40,41 @@
 
                         scope.editor.focus();
                         scope.editor.navigateFileStart();
-                        scope.editor.getSession().on('change', function() {
+                        scope.editor.getSession().on('change', function () {
                             scope.source = scope.editor.getValue();
                         });
+
+                        var undoManager = scope.editor.session.getUndoManager();
+
+                        var path = scope.filePathList.join('__')
+
+
+                        undoManager.toJSON = function () {
+                            return {
+                                $redoStack: this.$redoStack,
+                                $undoStack: this.$undoStack
+                            };
+                        }
+
+                        undoManager.fromJSON = function (json) {
+                            this.reset();
+                            this.$undoStack = json.$undoStack;
+                            this.$redoStack = json.$redoStack;
+                        }
+
+                        scope.editor.session.on('change', function () {
+                            var history = undoManager.toJSON();
+                            // console.log('vm.editor.session history', history);
+                            localStorage.setItem('ace_editor_' + path + '__' + scope.index, JSON.stringify(history));
+                        });
+
+                        var savedHistory = localStorage.getItem('ace_editor_' + path + '__' + scope.index);
+                        if (savedHistory) {
+                            undoManager.fromJSON(JSON.parse(savedHistory));
+
+                            // console.log('undoManager.$undoStack', undoManager.$undoStack)
+                            // console.log('undoManager.$redoStack', undoManager.$redoStack)
+                        }
 
 
                     }, 100)
