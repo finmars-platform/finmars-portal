@@ -185,7 +185,7 @@
 
                 vm.inputsFunctions = vm.getFunctions();
 
-
+                vm.draftUserCode = vm.generateUserCodeForDraft();
                 $scope.$apply();
 
             });
@@ -626,6 +626,34 @@
 
         }
 
+        // DRAFT STARTED
+
+        vm.generateUserCodeForDraft = function (){
+
+            if (!vm.scheme.id) {
+                return 'csv_import.csvimportscheme.new'
+            }
+
+            return 'csv_import.csvimportscheme.' + vm.scheme.user_code
+
+        }
+
+        vm.exportToDraft = function ($event) {
+
+            return JSON.parse(JSON.stringify(vm.scheme))
+
+        }
+
+        vm.applyDraft = function ($event, data) {
+
+            console.log('applyDraft', data);
+
+            vm.scheme = data;
+
+        }
+
+        // DRAFT ENDED
+
         vm.init = function () {
 
             vm.schemeId = data.schemeId
@@ -639,7 +667,10 @@
                     csv_fields: []
 
                 }
+                vm.draftUserCode = vm.generateUserCodeForDraft();
                 vm.readyStatus.scheme = true;
+
+
             }
 
         };
