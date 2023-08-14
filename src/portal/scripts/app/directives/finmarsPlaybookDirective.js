@@ -25,6 +25,8 @@
                 console.log('playbookDirective.name', scope.name);
                 console.log('playbookDirective.filePathList', scope.filePathList);
 
+
+
                 scope.activeCell = null;
 
                 scope.execute = function ($event) {
