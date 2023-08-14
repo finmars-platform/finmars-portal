@@ -593,7 +593,8 @@
 
             if (windowType === 'big-drawer') {
 
-                const responseObj = {status: 'copy',
+                const responseObj = {
+                    status: 'copy',
                     data: {
                         entity: entity,
                         entityType: vm.entityType,
@@ -873,6 +874,8 @@
 
                 cTransactionDataProm.then(async function (cTransactionData) {
 
+                    vm.draftUserCode = vm.generateUserCodeForDraft();
+
                     vm.originalComplexTransaction = JSON.parse(JSON.stringify(cTransactionData));
 
                     vm.complexTransactionData = cTransactionData;
@@ -939,7 +942,7 @@
 
         vm.checkReadyStatus = function () {
             // return true if values of all properties of vm.readyStatus equals to 'true'
-            return !Object.keys(vm.readyStatus).find( key => !vm.readyStatus[key] );
+            return !Object.keys(vm.readyStatus).find(key => !vm.readyStatus[key]);
         };
 
         vm.bindFlex = sharedLogicHelper.bindFlex;
@@ -1198,8 +1201,7 @@
                     }
                 }) */
 
-            }
-            else {
+            } else {
 
                 var result = entityEditorHelper.removeNullFields(vm.entity, vm.entityType);
 
@@ -1868,6 +1870,77 @@
 
         }
 
+        // DRAFT STARTED
+
+        vm.generateUserCodeForDraft = function () {
+
+            if (!vm.entity.id) {
+                return 'transactions.complextransaciton.new'
+            }
+
+            return 'transactions.complextransaction.' + vm.entity.code
+
+        }
+
+        vm.exportToDraft = function ($event) {
+
+            var entity = JSON.parse(JSON.stringify(vm.entity));
+            var result = entityEditorHelper.removeNullFields(entity, vm.entityType);
+
+            result.values = {};
+
+            result.values = sharedLogicHelper.mapUserInputsOnEntityValues(result.values);
+
+            return JSON.parse(JSON.stringify(result))
+
+        }
+
+        vm.applyDraft = function ($event, data) {
+
+            vm.readyStatus.layout = false;
+
+            setTimeout(function () {
+
+                vm.entity = data;
+
+                vm.baseTransactions = vm.entity.transactions_object;
+                vm.reconFields = vm.entity.recon_fields;
+
+                vm.fillUserFields();
+                vm.fillTransactionInputs();
+
+                vm.dataConstructorData = {
+                    entityType: vm.entityType,
+                    fromEntityType: vm.entityType,
+                    instanceId: vm.transactionTypeId
+                };
+
+                vm.readyStatus.entity = true;
+                vm.readyStatus.layout = true;
+                vm.readyStatus.userFields = true;
+
+                vm.oldValues = {};
+
+                var cTransactionData = JSON.parse(JSON.stringify(vm.complexTransactionData));
+
+                cTransactionData.complex_transaction = vm.entity;
+                cTransactionData.values = vm.entity.values;
+
+                postRebookComplexTransactionActions(cTransactionData);
+
+                vm.userInputs.forEach(function (item) {
+                    vm.oldValues[item.name] = vm.entity[item.name]
+                });
+
+                $scope.$apply();
+
+            }, 1000)
+
+
+        }
+
+        // DRAFT ENDED
+
         vm.init = function () {
 
             /*
@@ -1902,7 +1975,7 @@
                 vm.getItem();
             });
 
-            if (!vm.previewMode)  vm.loadTransactionTypes();
+            if (!vm.previewMode) vm.loadTransactionTypes();
 
         };
 

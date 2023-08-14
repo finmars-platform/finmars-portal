@@ -660,6 +660,8 @@
 
             vm.getSessionRemainingTime();
 
+            vm.currentVersion = vm.getCurrentVersion();
+
             vm.sessionRemainingInterval = setInterval(function () {
                 vm.getSessionRemainingTime()
                 $scope.$apply();
