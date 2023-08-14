@@ -26,7 +26,6 @@
                 console.log('playbookDirective.filePathList', scope.filePathList);
 
 
-
                 scope.activeCell = null;
 
                 scope.execute = function ($event) {
@@ -47,6 +46,29 @@
                         toastNotificationService.success("Executed")
 
                     })
+
+                }
+
+                scope.exportToDraft = function () {
+
+                    return JSON.parse(JSON.stringify(scope.item));
+
+                }
+
+                scope.applyDraft = function ($event, data) {
+
+                    // console.log('data', data);
+
+                    scope.processing = true;
+
+                    scope.item = data;
+
+                    setTimeout(function () {
+
+                        scope.processing = false;
+                        scope.$apply();
+
+                    }, 1000)
 
                 }
 
@@ -145,7 +167,7 @@
                                 return item.id != cell.id
                             })
 
-                            setTimeout(function (){
+                            setTimeout(function () {
 
                                 scope.processing = false;
                                 scope.$apply();
@@ -159,6 +181,8 @@
                 scope.init = function () {
 
                     scope.activeCell = null;
+
+                    scope.draftUserCode = 'explorer.' + scope.filePathList.join('__')
 
                     scope.item.cells = scope.item.cells.map(function (item) {
 

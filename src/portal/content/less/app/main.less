@@ -2942,6 +2942,11 @@ md-dialog.two-rows-dialog-actions {
     background-color: rgb(51, 51, 51);
     //height: 78px;
     flex: 0 0 @header-height;
+    display: flex;
+    &>div {
+      display: flex;
+      align-items: center;
+    }
 
     .big-drawer-header-h {
       margin: 0;
@@ -2955,15 +2960,17 @@ md-dialog.two-rows-dialog-actions {
       line-height: @header-height;
     }
 
+
+
     .big-drawer-header-processing {
-      display: inline-block;
+      display: flex;
       color: #fff;
 
-      div {
-        display: inline-block;
-        position: relative;
-        top: 4px;
-      }
+      //div {
+      //  display: inline-block;
+      //  position: relative;
+      //  top: 4px;
+      //}
     }
 
   }

@@ -37,6 +37,10 @@
 
                 <div data-ng-if="vm.entity.type">
 
+                    <draft-button user-code="vm.draftUserCode"
+                                  on-export-to-draft-callback="vm.exportToDraft($event)"
+                                  on-draft-apply-callback="vm.applyDraft(event, data)"></draft-button>
+
                     <md-tabs md-dynamic-height md-border-bottom class="tabs-colored">
 
                         <md-tab>

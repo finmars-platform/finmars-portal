@@ -316,6 +316,10 @@
 
                     <div data-ng-show="!vm.fileEditorLoading" class="height-100">
 
+                        <draft-button user-code="vm.draftUserCode" data-ng-if="vm.draftUserCode"
+                                      on-export-to-draft-callback="vm.exportToDraft($event)"
+                                      on-draft-apply-callback="vm.applyDraft(event, data)"></draft-button>
+
                         <div layout="row" class="explorer-file-edit-section-toolbar" layout-align="space-between">
 
                             <div layout="row">
