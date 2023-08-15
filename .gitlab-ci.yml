@@ -77,6 +77,8 @@ Push Version:
   variables:
     # Again, we do not need the source code here. Just playing with Docker.
     GIT_STRATEGY: none
+  before_script:
+    - apt install curl git
   script:
     - >
       curl -X POST https://license.finmars.com/api/v1/version/ \
