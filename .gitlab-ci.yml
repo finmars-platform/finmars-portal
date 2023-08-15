@@ -65,7 +65,7 @@ Build:
     # Use the IMAGE_TAG if set, otherwise fall back to CI_COMMIT_REF_NAME
     - IMAGE_TAG=${IMAGE_TAG:-$CI_COMMIT_REF_NAME}
     - docker pull $CI_REGISTRY_IMAGE:latest || true
-    - docker build --pull --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME --build-arg PROJECT_ENV=production .
+    - docker build --pull --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$IMAGE_TAG --build-arg PROJECT_ENV=production .
     - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
   except:
     - develop
