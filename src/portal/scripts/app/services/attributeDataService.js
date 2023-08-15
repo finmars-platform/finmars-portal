@@ -761,7 +761,7 @@
                 var result = [];
 
                 // uiService.getInstrumentFieldList().then(function (data) {
-                uiService.getInstrumentFieldPrimaryList().then(function (data) {
+                /*uiService.getInstrumentFieldPrimaryList().then(function (data) {
 
                     result = data.results;
 
@@ -769,8 +769,8 @@
 
                     resolve(result)
 
-                });
-
+                });*/
+                resolve(result);
 
             })
 
