@@ -43,10 +43,10 @@ Versioning:
       if [[ $CI_COMMIT_REF_NAME == *"-rc" ]]; then
       
         # Fancy Name Generation using Haikunator
-        FANCY_NAME=$(python -c 'from haikunator import Haikunator; print(Haikunator().haikunate())')
+        FANCY_NAME=$(python -c 'from haikunator import Haikunator; print(Haikunator().haikunate(0))')
 
         # Construct full version name
-        FULL_VERSION_NAME="$CI_COMMIT_REF_NAME-rc-$NEW_BUILD_NUMBER-$FANCY_NAME"
+        FULL_VERSION_NAME="$CI_COMMIT_REF_NAME-$CI_PIPELINE_ID-$FANCY_NAME"
       
         # Export the generated version name for later stages to use
         echo "IMAGE_TAG=$(echo $FULL_VERSION_NAME)" >> build.env
