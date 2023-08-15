@@ -77,9 +77,6 @@ Push Version:
     # Again, we do not need the source code here. Just playing with Docker.
     GIT_STRATEGY: none
   script:
-    # Load the generated variables from build.env to access IMAGE_TAG
-    - source build.env
-    # Make the POST request using curl
     - >
       curl -X POST https://license.finmars.com/api/v1/version/ \
       -H "Content-Type: application/json" \
