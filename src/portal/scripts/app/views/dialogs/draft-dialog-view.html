@@ -1,0 +1,35 @@
+<md-dialog class="draft-dialog draggable-dialog dialog-actions-bottom"
+           aria-label="draft dialog"
+           drag-dialog>
+
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Draft</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+
+        <div data-ng-if="vm.draft">
+
+            <json-editor data-source="vm.dataPretty" data-index="'draft'"></json-editor>
+
+        </div>
+
+
+
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row" layout-align="space-between center">
+
+        <md-button ng-click="vm.cancel()">
+            Close
+        </md-button>
+
+        <md-button ng-click="vm.agree()" style="margin-right:20px;">
+            Apply Draft
+        </md-button>
+
+    </md-dialog-actions>
+</md-dialog>

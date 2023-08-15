@@ -99,6 +99,8 @@
 
                     vm.fileEditorLoading = false;
 
+                    vm.draftUserCode = 'explorer.' + vm.currentPath.join('__');
+
                     $scope.$apply();
 
                     vm.initFileEditor() // call after angular.js render
@@ -176,6 +178,28 @@
 
         }
 
+        // DRAFT STARTED
+
+        vm.exportToDraft = function () {
+
+            var data = vm.editor.getValue()
+
+            console.log('data', data);
+
+            return data
+
+        }
+
+        vm.applyDraft = function ($event, data) {
+
+            // console.log('data', data);
+
+            vm.editor.setValue(data);
+
+        }
+
+        // DRAFT ENDED
+
         vm.initFileEditor = function () {
 
             console.log('vm.initFileEditor.fileEditor ', vm.fileEditor)
@@ -238,8 +262,6 @@
                 var path = vm.currentPath.join('__')
 
 
-
-
                 undoManager.toJSON = function () {
                     return {
                         $redoStack: this.$redoStack,
@@ -266,8 +288,6 @@
                     // console.log('undoManager.$undoStack', undoManager.$undoStack)
                     // console.log('undoManager.$redoStack', undoManager.$redoStack)
                 }
-
-
 
 
             }, 100)
@@ -726,6 +746,8 @@
 
                             vm.fileEditor.name = res.name;
                             vm.fileEditor.content = '';
+
+                            vm.draftUserCode = 'explorer.' + vm.currentPath.join('__');
 
                             vm.showEditor = true;
 

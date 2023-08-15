@@ -1,5 +1,9 @@
 <div data-ng-if="vm.checkReadyStatus()">
 
+    <draft-button user-code="vm.draftUserCode"
+                  on-export-to-draft-callback="vm.exportToDraft($event)"
+                  on-draft-apply-callback="vm.applyDraft(event, data)"></draft-button>
+
     <div class="entity-editor-fixed-area">
 
         <div class="flex-row">
