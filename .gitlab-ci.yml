@@ -1,6 +1,7 @@
 # https://blog.callr.tech/building-docker-images-with-gitlab-ci-best-practices/
 
 stages:
+  - versioning
   - build
   - push
 
@@ -30,13 +31,42 @@ variables:
   # This instructs Docker not to start over TLS.
   DOCKER_TLS_CERTDIR: ""
 
+
+# This new job will handle the versioning mechanism
+Versioning:
+  image: python:3.9
+  stage: versioning
+  before_script:
+    - pip install haikunator
+  script:
+    - |
+      if [[ $CI_COMMIT_REF_NAME == *"-rc" ]]; then
+      
+        # Fancy Name Generation using Haikunator
+        FANCY_NAME=$(python -c 'from haikunator import Haikunator; print(Haikunator().haikunate())')
+
+        # Construct full version name
+        FULL_VERSION_NAME="$CI_COMMIT_REF_NAME-rc-$NEW_BUILD_NUMBER-$FANCY_NAME"
+      
+        # Export the generated version name for later stages to use
+        echo "export IMAGE_TAG=$FULL_VERSION_NAME" >> build.env
+      
+      fi
+  artifacts:
+    reports:
+      dotenv: build.env
+  only:
+    - /^.*-rc$/
+
 Build:
   stage: build
   script:
     # fetches the latest image (not failing if image is not found)
+    # Use the IMAGE_TAG if set, otherwise fall back to CI_COMMIT_REF_NAME
+    - IMAGE_TAG=${IMAGE_TAG:-$CI_COMMIT_REF_NAME}
     - docker pull $CI_REGISTRY_IMAGE:latest || true
     - docker build --pull --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME --build-arg PROJECT_ENV=production .
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
   except:
     - develop
 
