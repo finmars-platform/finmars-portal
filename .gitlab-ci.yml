@@ -49,7 +49,7 @@ Versioning:
         FULL_VERSION_NAME="$CI_COMMIT_REF_NAME-rc-$NEW_BUILD_NUMBER-$FANCY_NAME"
       
         # Export the generated version name for later stages to use
-        echo "export IMAGE_TAG=$FULL_VERSION_NAME" >> build.env
+        echo "IMAGE_TAG=$(echo $FULL_VERSION_NAME)" >> build.env
       
       fi
   artifacts:
