@@ -4,6 +4,7 @@ stages:
   - versioning
   - build
   - push
+  - pushVersion
 
 default:
   image: docker:20.10.16
@@ -69,6 +70,28 @@ Build:
     - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
   except:
     - develop
+
+Push Version:
+  stage: pushVersion
+  variables:
+    # Again, we do not need the source code here. Just playing with Docker.
+    GIT_STRATEGY: none
+  script:
+    # Load the generated variables from build.env to access IMAGE_TAG
+    - source build.env
+    # Make the POST request using curl
+    - >
+      curl -X POST https://license.finmars.com/api/v1/version/ \
+      -H "Content-Type: application/json" \
+      -d '{
+            "app": "'"$CI_PROJECT_NAME"'",
+            "version": "'"$IMAGE_TAG"'",
+            "build_number": "'"$CI_PIPELINE_ID"'",
+            "notes": "'$(git log -1 --pretty=%B)'"
+          }'
+  only:
+    - /^.*-rc$/
+    - tags
 
 Build Develop:
   stage: build
