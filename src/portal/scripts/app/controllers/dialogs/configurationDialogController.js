@@ -283,7 +283,7 @@
             if (data.id) {
                 vm.getItem(data.id);
             } else {
-                vm.initManifestEditor();
+                // vm.initManifestEditor();
 
                 vm.readyStatus.data = true;
 
