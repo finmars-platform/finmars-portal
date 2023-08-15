@@ -43,7 +43,7 @@ Versioning:
       if [[ $CI_COMMIT_REF_NAME == *"-rc" ]]; then
       
         # Fancy Name Generation using Haikunator
-        FANCY_NAME=$(python -c 'from haikunator import Haikunator; print(Haikunator().haikunate(0))')
+        FANCY_NAME=$(python -c 'from haikunator import Haikunator; print(Haikunator().haikunate(token_length=0))')
 
         # Construct full version name
         FULL_VERSION_NAME="$CI_COMMIT_REF_NAME-$CI_PIPELINE_ID-$FANCY_NAME"
