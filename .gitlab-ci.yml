@@ -73,6 +73,7 @@ Build:
 
 Push Version:
   stage: pushVersion
+  image: python:3.9
   variables:
     # Again, we do not need the source code here. Just playing with Docker.
     GIT_STRATEGY: none
