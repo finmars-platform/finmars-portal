@@ -174,7 +174,7 @@
 
 				scope.deselectAll = function () {
 
-                    scope.selectedOptions = scope.selectedOptions.filter( opt => !!opt.error_data );
+                    scope.selectedOptions = scope.selectedOptions.filter( opt => !opt.error_data );
                     scope.allOptions = scope.allOptions.concat(scope.selectedOptions);
 
                     scope.allOptions.forEach(function (options) {
