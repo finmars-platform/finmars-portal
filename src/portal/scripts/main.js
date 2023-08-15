@@ -326,6 +326,8 @@ export default (function () {
     // Dialog selectors
     portal.controller('ItemsSelectorWithGroupsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/selectors/itemsSelectorWithGroupsDialogController')]);
 
+    portal.controller('DraftDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/draftDialogController')]);
+
     // Common - unknown
     portal.controller('NumberFormatSettingsDialogController', ['$scope', '$element', '$mdDialog', 'data', require('./app/controllers/dialogs/numberFormatSettingsDialogController')]);
     // Victor 20210601 #115 new design for number format dialog
@@ -681,6 +683,7 @@ export default (function () {
 
     portal.directive('onFinishRender', [require('./app/directives/onFinishRenderDirective')]);
 
+    portal.directive('draftButton', ['$mdDialog', 'toastNotificationService', require('./app/directives/draftButtonDirective')]);
     portal.directive('initialLoader', [require('./app/directives/initialLoaderDirective')]);
     portal.directive('progressCircular', [require('./app/directives/progressCircularDirective')]);
     portal.directive('progressLinear', [require('./app/directives/progressLinearDirective')]);

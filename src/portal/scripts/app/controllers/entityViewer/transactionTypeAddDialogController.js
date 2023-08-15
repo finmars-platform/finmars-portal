@@ -2135,11 +2135,51 @@
         vm.addContextParameter = sharedLogic.addContextParameter;
         //endregion Context Parameters tab
 
+        // DRAFT STARTED
+
+        vm.generateUserCodeForDraft = function (){
+
+            if (!vm.entity.id) {
+                return 'transactions.transactiontype.new'
+            }
+
+            return 'transactions.transactiontype.' + vm.entity.user_code
+
+        }
+
+        vm.exportToDraft = function ($event) {
+
+            var entityToSave = JSON.parse(JSON.stringify(vm.entity));
+            entityToSave = vm.updateEntityBeforeSave(entityToSave);
+
+            return JSON.parse(JSON.stringify(entityToSave))
+
+        }
+
+        vm.applyDraft = function ($event, data) {
+
+            console.log('applyDraft', data);
+
+            vm.readyStatus.inputs = false;
+            vm.readyStatus.entity = true;
+            vm.readyStatus.permissions = true;
+            vm.readyStatus.layout = true;
+
+            vm.entity = data;
+
+            vm.init();
+
+        }
+
+        // DRAFT ENDED
+
         vm.init = function () {
 
             setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.ttypeCreationElemToDrag');
             });
+
+            vm.draftUserCode = vm.generateUserCodeForDraft();
 
             vm.actionsMFEventService = new EventService();
 

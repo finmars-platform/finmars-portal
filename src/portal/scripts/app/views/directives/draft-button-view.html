@@ -1,0 +1,51 @@
+<div class="draft-toolbar">
+
+    <div data-ng-if="readyStatus.draft" class="draft-toolbar-content">
+
+        <md-menu>
+            <div class="draft-toolbar-button" data-ng-click="$mdOpenMenu($event)">
+
+                <ng-md-icon class="tooltip-inline-block"
+                            icon="gesture"
+                            size="20"
+                            style="fill: #f05a22">
+                    <md-tooltip class="tooltip_2"
+                                md-direction="bottom">
+                        Draft Manager
+                    </md-tooltip>
+                </ng-md-icon>
+
+            </div>
+
+            <md-menu-content>
+                <md-menu-item>
+                    <md-button data-ng-click="previewDraft($event)">Preview Draft
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button data-ng-click="userSaveDraft($event)">Save Draft
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button data-ng-click="applyDraft($event)">Apply Draft to Form
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+
+        </md-menu>
+
+        <div data-ng-if="lastUpdate" class="draft-toolbar-content-last-update">
+            Last Updated: {{lastUpdate}}
+        </div>
+
+    </div>
+
+    <div data-ng-if="!readyStatus.draft">
+
+        <div layout="row" layout-sm="column" layout-align="space-around" class="">
+            <progress-circular diameter="20"></progress-circular>
+        </div>
+
+    </div>
+
+</div>
