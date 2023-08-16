@@ -1143,7 +1143,13 @@
 </md-sidenav>
 
 <div class="build-date" data-ng-show="vm.sideNavStatus == 'expand'">
-    Build date: __BUILD_DATE__ {{vm.currentVersion}}
+<!--    Build date: __BUILD_DATE__ {{vm.currentVersion}}-->
+
+    <div data-ng-repeat="version in vm.versions">
+
+        {{version.version}}
+
+    </div>
 
 
     <!--    <span class="websocket-connection-status {{vm.getWsStatus()}}"-->

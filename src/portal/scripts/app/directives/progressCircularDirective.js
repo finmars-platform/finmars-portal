@@ -81,7 +81,6 @@
 
                     scope.progressInterval = $interval(function () {
                         scope.color = getRandomBrightColor();
-                        scope.$apply()
                     }, 2000)
 
                 }
