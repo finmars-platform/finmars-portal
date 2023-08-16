@@ -479,7 +479,7 @@
                 classes: 'divider-bottom'
             }
 
-            if (['price-history', 'currency-history', 'transaction'].includes(vm.entityType)) {
+            /*if (['price-history', 'currency-history', 'transaction'].includes(vm.entityType)) {
 
                 duplicateOpt.isDisabled = !vm.entity.is_enabled || !vm.hasEditPermission;
                 duplicateOpt.onClick = function (option, _$popup) {
@@ -499,7 +499,15 @@
 
                 };
 
-            }
+            }*/
+
+            duplicateOpt.isDisabled = !vm.hasEditPermission;
+            duplicateOpt.onClick = function (option, _$popup) {
+
+                _$popup.cancel();
+                vm.copy(vm.openedIn);
+
+            };
 
             data.options.push(duplicateOpt);
 
