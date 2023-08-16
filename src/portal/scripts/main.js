@@ -255,7 +255,7 @@ export default (function () {
     // portal.controller('ShellController', ['$scope', '$state', '$stateParams', '$rootScope', '$mdDialog', '$transitions', require('./app/controllers/shellController')]);
     portal.controller('PortalController', ['$scope', '$state', 'authorizerService', 'usersService', 'globalDataService', 'redirectionService', 'middlewareService', 'uiService', portalController]);
     portal.controller('BookmarksController', ['$scope', '$mdDialog', '$state', 'toastNotificationService', require('./app/controllers/bookmarksController')]);
-    portal.controller('SideNavController', ['$scope', '$mdDialog', '$transitions', 'usersService', 'globalDataService', 'redirectionService', 'uiService', require('./app/controllers/sideNavController')]);
+    portal.controller('SideNavController', ['$scope', '$interval', '$mdDialog', '$transitions', 'usersService', 'globalDataService', 'redirectionService', 'uiService', require('./app/controllers/sideNavController')]);
     portal.controller('AlertSideNavController', ['$scope', 'globalDataService', 'systemMessageService', require('./app/controllers/alertSideNavController')]);
     portal.controller('HomeController', ['$scope', '$state', '$mdDialog', 'authorizerService', 'usersService', 'globalDataService', 'systemMessageService', 'redirectionService', require('./app/controllers/homeController')]);
     portal.controller('SystemPageController', ['$scope', '$mdDialog', 'toastNotificationService', 'authorizerService', 'globalDataService', 'masterUserService', 'utilsService', systemPageController]);
@@ -626,7 +626,7 @@ export default (function () {
 
     // Configuration Import
 
-    portal.controller('ConfigurationImportDialogController', ['$scope', '$mdDialog', 'usersService', 'usersGroupService', 'backendConfigurationImportService', 'systemMessageService', 'metaContentTypesService', 'configurationImportService', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportDialogController')]);
+    portal.controller('ConfigurationImportDialogController', ['$scope', '$interval', '$mdDialog', 'usersService', 'usersGroupService', 'backendConfigurationImportService', 'systemMessageService', 'metaContentTypesService', 'configurationImportService', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportDialogController')]);
     portal.controller('ConfigurationImportResultDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'data', require('./app/controllers/dialogs/configuration-import/configurationImportResultDialogController')]);
 
     // Configuration Export
@@ -685,7 +685,7 @@ export default (function () {
 
     portal.directive('draftButton', ['$mdDialog', 'toastNotificationService', require('./app/directives/draftButtonDirective')]);
     portal.directive('initialLoader', [require('./app/directives/initialLoaderDirective')]);
-    portal.directive('progressCircular', [require('./app/directives/progressCircularDirective')]);
+    portal.directive('progressCircular', ['$interval', require('./app/directives/progressCircularDirective')]);
     portal.directive('progressLinear', [require('./app/directives/progressLinearDirective')]);
 
     // Pages
@@ -957,7 +957,7 @@ export default (function () {
     portal.directive('classifierSelect', ['$mdDialog', require('./app/directives/customInputs/classifierSelectDirective')]);
     portal.directive('multitypeField', [require('./app/directives/customInputs/multitypeFieldDirective')]);
     portal.directive('multiinputField', [multiinputFieldDirective]);
-    portal.directive('entityNamesField', [entityNamesFieldDirective]);
+    portal.directive('entityNamesField', ['metaContentTypesService', 'globalDataService', entityNamesFieldDirective]);
     portal.directive('complexDropdownSelect', [complexDropdownSelectDirective]);
     portal.directive('complexDropdownSelectMenu', [complexDropdownSelectMenuDirective]);
     portal.directive('dropdownSelect2', [require('./app/directives/customInputs/dropdownSelect2Directive')]);

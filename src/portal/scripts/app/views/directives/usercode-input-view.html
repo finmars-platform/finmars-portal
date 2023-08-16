@@ -9,7 +9,7 @@
                 <md-select data-ng-model="configuration_code.value">
                     <md-option data-ng-repeat="item in configuration_codes"
                                value="{{item}}"
-                               data-ng-click="updateUserCode(usercode.value, item)">
+                               data-ng-click="updateUserCode(usercodeEnd.value, item)">
                         {{item}}
                     </md-option>
                 </md-select>
@@ -18,9 +18,9 @@
             <md-input-container style="margin-top: 2px; width: 100%;">
                 <label>User code</label>
                 <input type="text"
-                       data-ng-model="usercode.value"
-                       data-ng-change="validateUserCode(usercode.value)"
-                       data-ng-keyup="updateUserCode(usercode.value, configuration_code.value)">
+                       data-ng-model="usercodeEnd.value"
+                       data-ng-change="validateUserCode(usercodeEnd.value)"
+                       data-ng-keyup="updateUserCode(usercodeEnd.value, configuration_code.value)">
             </md-input-container>
 
             <ng-md-icon class="tooltip-inline-block"

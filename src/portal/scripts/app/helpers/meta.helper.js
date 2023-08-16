@@ -172,6 +172,20 @@
 
 	};
 
+    /**
+     *
+     * @param {String} str
+     * @return {String}
+     */
+    const replaceCharsForUserCode = (str) => {
+        /*return str.replace(/[^A-Za-z0-9]+/g, '_')
+            .replace(/^[^A-Za-z]+/g, '');*/
+        const res = str.replaceAll(/[^A-Za-z0-9]+/g, '_')
+            .replace(/^[^A-Za-z]+/g, '');
+
+        return res;
+    }
+
 	const openLinkInNewTab = function (event) {
 
 		event.preventDefault();
@@ -272,6 +286,7 @@
         deletePropertyByPath: deletePropertyByPath,
         textWithDashSort: textWithDashSort,
 		validateTextForUserCode: validateTextForUserCode,
+        replaceCharsForUserCode: replaceCharsForUserCode,
 		openLinkInNewTab: openLinkInNewTab,
 
         closeComponent: closeComponent,
