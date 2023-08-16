@@ -5,7 +5,7 @@
 
     'use strict';
 
-    module.exports = function () {
+    module.exports = function ($interval) {
         return {
             scope: {
                 diameter: '@',
@@ -79,9 +79,8 @@
 
                 scope.init = function () {
 
-                    scope.progressInterval = setInterval(function () {
+                    scope.progressInterval = $interval(function () {
                         scope.color = getRandomBrightColor();
-                        scope.$apply()
                     }, 2000)
 
                 }
@@ -90,7 +89,9 @@
 
                 scope.$on('destroy', function () {
 
-                    clearInterval(scope.progressInterval);
+                    // clearInterval(scope.progressInterval);
+                    $interval.cancel(scope.progressInterval);
+                    scope.progressInterval = undefined;
 
                 })
 

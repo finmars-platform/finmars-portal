@@ -11,7 +11,7 @@
     var metaHelper = require('../helpers/meta.helper');
     var cookieService = require('../../../../core/services/cookieService');
 
-    module.exports = function ($scope, $mdDialog, $transition, usersService, globalDataService, redirectionService, uiService) {
+    module.exports = function ($scope, $interval, $mdDialog, $transition, usersService, globalDataService, redirectionService, uiService) {
 
         var vm = this;
 
@@ -662,9 +662,8 @@
 
             vm.currentVersion = vm.getCurrentVersion();
 
-            vm.sessionRemainingInterval = setInterval(function () {
-                vm.getSessionRemainingTime()
-                $scope.$apply();
+            vm.sessionRemainingInterval = $interval(function () {
+                vm.getSessionRemainingTime();
             }, 1000);
 
 
@@ -697,7 +696,9 @@
 
         $scope.$on('destroy', function () {
 
-            clearInterval(vm.sessionRemainingInterval);
+            // clearInterval(vm.sessionRemainingInterval);
+            $interval.cancel(vm.sessionRemainingInterval);
+            vm.sessionRemainingInterval = undefined;
 
         })
 
