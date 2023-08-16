@@ -1143,12 +1143,18 @@
 </md-sidenav>
 
 <div class="build-date" data-ng-show="vm.sideNavStatus == 'expand'">
-<!--    Build date: __BUILD_DATE__ {{vm.currentVersion}}-->
+    <!--    Build date: __BUILD_DATE__ {{vm.currentVersion}}-->
 
-    <div data-ng-repeat="version in vm.versions">
+    <div class="side-nav-versions-block">
+        <div data-ng-repeat="version in vm.versions">
 
-        {{version.version}}
 
+            <div>{{version.app}}:{{version.version}}
+                <md-tooltip md-direction="top">{{version.notes}}&nbsp;{{version.modified | date: 'yyyy-MM-dd HH:mm'}}
+                </md-tooltip>
+            </div>
+
+        </div>
     </div>
 
 

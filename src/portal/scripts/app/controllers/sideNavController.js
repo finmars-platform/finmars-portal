@@ -579,6 +579,49 @@
             var currentMasterUser = globalDataService.getMasterUser();
 
             vm.versions =  currentMasterUser.versions;
+
+            // vm.versions = [
+            //     {
+            //         "id": 2,
+            //         "app": "portal",
+            //         "version": "1.1.5-rc-4969-lucky-king",
+            //         "build_number": 4969,
+            //         "notes": "Change setInterval to",
+            //         "created": "2023-08-15T21:13:44.088477Z",
+            //         "modified": "2023-08-15T21:13:44.088508Z"
+            //     },
+            //     {
+            //         "id": 4,
+            //         "app": "vue-portal",
+            //         "version": "1.1.5-rc-4977-still-poetry",
+            //         "build_number": 4977,
+            //         "notes": "FN-2010 update ci",
+            //         "created": "2023-08-15T22:25:59.706479Z",
+            //         "modified": "2023-08-15T22:25:59.706510Z"
+            //     },
+            //     {
+            //         "id": 5,
+            //         "app": "backend",
+            //         "version": "1.1.5-rc-4978-solitary-limit",
+            //         "build_number": 4978,
+            //         "notes": "FN-2010 figx gitlab ci",
+            //         "created": "2023-08-15T22:32:57.521882Z",
+            //         "modified": "2023-08-15T22:32:57.521918Z"
+            //     },
+            //     {
+            //         "id": 3,
+            //         "app": "workflow",
+            //         "version": "1.1.5-rc-4973-calm-block",
+            //         "build_number": 4973,
+            //         "notes": "FN-2010 update ci",
+            //         "created": "2023-08-15T22:15:44.582737Z",
+            //         "modified": "2023-08-15T22:15:44.582771Z"
+            //     }
+            // ]
+
+
+            console.log('vm.versions', vm.versions);
+
         }
 
         vm.copyToBuffer = function (content) {
