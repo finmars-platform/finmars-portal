@@ -31,10 +31,18 @@
             },
             link: function (scope, elem, attrs) {
 
+                scope.readyStatus = false;
                 scope.configuration_code = {
                     // value: 'com.finmars.local'
                     value:  globalDataService.getDefaultConfigurationCode()
                 };
+
+                scope.configuration_codes = [
+                    {
+                        id: scope.configuration_code.value,
+                        name: scope.configuration_code.value,
+                    }
+                ];
 
                 scope.usercodeEnd = {
                     value: ''
@@ -59,6 +67,11 @@
                 }
 
                 scope.errorDescription = '';
+
+                scope.iSmallOpts = {
+                    noIndicatorBtn: true,
+                    tooltipText: 'Allowed symbols: Numbers: 0-9, Letters: a-z (lowercase) Special Symbols: _, - (underscore, dash)'
+                }
 
                 const assembleUserCode = function (userCodeEnd) {
 
@@ -131,6 +144,14 @@
 
                 }
 
+                scope.onUserCodeChange = function (usercodeEnd, configuration_code) {
+
+                    scope.validateUserCode(usercodeEnd);
+
+                    scope.updateUserCode(usercodeEnd, configuration_code);
+
+                }
+
                 const parseUserCode = function () {
 
                     const uc = scope.item ? scope.item.user_code : scope.userCode;
@@ -162,15 +183,20 @@
 
                 const init = function () {
 
+                    parseUserCode();
+
                     configurationService.getList().then(function (data) {
 
                         scope.configuration_codes = data.results.filter(function (item) {
                             return !item.is_package; // TODO Move to backend filtering someday
                         }).map(function (item) {
-                            return item.configuration_code
+                            return {
+                                id: item.configuration_code,
+                                name: item.configuration_code,
+                            }
                         });
 
-                        parseUserCode();
+                        scope.readyStatus = true;
 
                         scope.$apply();
 
