@@ -43,7 +43,7 @@
 
         vm.entityType = entityType;
 
-		vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService);
+        vm.sharedLogic = new EntityViewerEditorSharedLogicHelper(vm, $scope, $mdDialog, $bigDrawer, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService);
 
         vm.processing = false;
 
@@ -479,7 +479,7 @@
                 classes: 'divider-bottom'
             }
 
-            if (['price-history', 'currency-history', 'transaction'].includes(vm.entityType)) {
+            /*if (['price-history', 'currency-history', 'transaction'].includes(vm.entityType)) {
 
                 duplicateOpt.isDisabled = !vm.entity.is_enabled || !vm.hasEditPermission;
                 duplicateOpt.onClick = function (option, _$popup) {
@@ -499,7 +499,15 @@
 
                 };
 
-            }
+            }*/
+
+            duplicateOpt.isDisabled = !vm.hasEditPermission;
+            duplicateOpt.onClick = function (option, _$popup) {
+
+                _$popup.cancel();
+                vm.copy(vm.openedIn);
+
+            };
 
             data.options.push(duplicateOpt);
 
@@ -664,71 +672,81 @@
 
         }; */
 
+        vm.transformSourceEntityToFrontendLogic = function (resolve) {
+
+            vm.entity.$_isValid = true;
+            var promises = [];
+            // vm.readyStatus.entity = true;
+            // vm.readyStatus.permissions = true;
+
+            if (['price-history', 'currency-history', 'price-history-error', 'currency-history-error'].indexOf(vm.entityType) === -1) {
+
+                promises.push(vm.loadPermissions());
+
+            } else {
+
+                vm.readyStatus.permissions = true;
+                vm.hasEditPermission = true;
+
+            }
+
+            // vm.getFormLayout();
+            promises.push(vm.sharedLogic.getFormLayout(formLayout));
+
+            Promise.allSettled(promises).then(resData => {
+
+                var formLayoutDataRes = resData.pop();
+
+                if (formLayoutDataRes.status === 'fulfilled') {
+
+                    var formLayoutData = formLayoutDataRes.value;
+
+                    vm.typeSelectorOptions = formLayoutData.typeSelectorOptions;
+                    vm.groupSelectorOptions = formLayoutData.groupSelectorOptions;
+
+                    // vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
+                    // vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
+
+                    vm.attributeTypes = formLayoutData.attributeTypes;
+                    vm.entity.attributes = formLayoutData.attributes;
+
+                    vm.tabs = formLayoutData.tabs;
+                    vm.tabColumns = formLayoutData.tabColumns;
+
+                    vm.attributesLayout = formLayoutData.attributesLayout;
+
+                    vm.footerPopupData = getFooterPopupData(); // have to be called after vm.loadPermissions()
+
+                    vm.readyStatus.layout = true;
+                    vm.readyStatus.entity = true;
+
+                }
+
+
+                // Resolving promise to inform child about end of editor building
+                resolve();
+
+            });
+
+        }
 
         vm.getItem = function () {
 
-            return new Promise(async function (resolve, reject) {
+            vm.readyStatus.layout = false;
+            vm.readyStatus.entity = false;
 
-                var promises = [];
+            return new Promise(async function (resolve, reject) {
 
                 entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
 
                     vm.entity = data;
 
+                    vm.draftUserCode = vm.generateUserCodeForDraft();
+
                     console.log('vm.entity', vm.entity)
 
-                    vm.entity.$_isValid = true;
-                    // vm.readyStatus.entity = true;
-                    // vm.readyStatus.permissions = true;
+                    vm.transformSourceEntityToFrontendLogic(resolve);
 
-                    if (['price-history', 'currency-history', 'price-history-error', 'currency-history-error'].indexOf(vm.entityType) === -1) {
-
-                        promises.push(vm.loadPermissions());
-
-                    } else {
-
-                        vm.readyStatus.permissions = true;
-                        vm.hasEditPermission = true;
-
-                    }
-
-                    // vm.getFormLayout();
-                    promises.push(vm.sharedLogic.getFormLayout(formLayout));
-
-                    Promise.allSettled(promises).then(resData => {
-
-                        var formLayoutDataRes = resData.pop();
-
-                        if (formLayoutDataRes.status === 'fulfilled') {
-
-                            var formLayoutData = formLayoutDataRes.value;
-
-                            vm.typeSelectorOptions = formLayoutData.typeSelectorOptions;
-                            vm.groupSelectorOptions = formLayoutData.groupSelectorOptions;
-
-                            // vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
-                            // vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
-
-                            vm.attributeTypes = formLayoutData.attributeTypes;
-                            vm.entity.attributes = formLayoutData.attributes;
-
-                            vm.tabs = formLayoutData.tabs;
-                            vm.tabColumns = formLayoutData.tabColumns;
-
-                            vm.attributesLayout = formLayoutData.attributesLayout;
-
-                            vm.footerPopupData = getFooterPopupData(); // have to be called after vm.loadPermissions()
-
-                            vm.readyStatus.layout = true;
-                            vm.readyStatus.entity = true;
-
-                        }
-
-
-                        // Resolving promise to inform child about end of editor building
-                        resolve();
-
-                    });
 
                 });
 
@@ -767,76 +785,6 @@
 
         };
 
-        vm.updateEntityBeforeSave = function () {
-
-            if (vm.entityType === 'instrument-type') {
-
-                if (!vm.entity.instrument_factor_schedule_data) {
-                    vm.entity.instrument_factor_schedule_data = ''
-                }
-
-            }
-
-            /* if (vm.entity.attributes) {
-
-                vm.entity.attributes.forEach(function (attribute) {
-
-                    var value_type = attribute.attribute_type_object.value_type;
-                    var key = attribute.attribute_type_object.user_code;
-
-                    if (value_type === 10) {
-                        attribute.value_string = vm.entity[key];
-                    }
-                    if (value_type === 20) {
-                        attribute.value_float = vm.entity[key];
-                    }
-                    if (value_type === 30) {
-                        attribute.classifier = vm.entity[key];
-                    }
-                    if (value_type === 40) {
-                        attribute.value_date = vm.entity[key];
-                    }
-
-                })
-
-            } */
-
-            vm.entity.object_permissions = [];
-
-            if (vm.groups) {
-
-                vm.groups.forEach(function (group) {
-
-                    if (group.objectPermissions && group.objectPermissions.manage === true) {
-                        vm.entity.object_permissions.push({
-                            member: null,
-                            group: group.id,
-                            permission: "manage_" + vm.entityType.split('-').join('')
-                        })
-                    }
-
-                    if (group.objectPermissions && group.objectPermissions.change === true) {
-                        vm.entity.object_permissions.push({
-                            member: null,
-                            group: group.id,
-                            permission: "change_" + vm.entityType.split('-').join('')
-                        })
-                    }
-
-                    if (group.objectPermissions && group.objectPermissions.view === true) {
-                        vm.entity.object_permissions.push({
-                            member: null,
-                            group: group.id,
-                            permission: "view_" + vm.entityType.split('-').join('')
-                        })
-                    }
-
-                });
-
-            }
-
-        };
-
         vm.updateItem = function () {
 
             console.log('updateItem', vm.entity.$_isValid);
@@ -844,8 +792,6 @@
             // TMP save method for instrument
 
             return new Promise(function (resolve) {
-
-                vm.updateEntityBeforeSave();
 
                 vm.entity.$_isValid = entityEditorHelper.checkForNotNullRestriction(vm.entity, vm.entityAttrs, vm.attributeTypes);
 
@@ -1007,8 +953,6 @@
         };
 
         vm.save = function ($event, isAutoExitAfterSave) {
-
-            vm.updateEntityBeforeSave();
 
             /* var errors = entityEditorHelper.validateEntityFields(vm.entity,
                 vm.entityType,
@@ -1998,6 +1942,53 @@
 
         }
 
+        // DRAFT STARTED
+
+        vm.generateUserCodeForDraft = function () {
+
+            var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType);
+
+
+            if (!vm.entity.id) {
+                return contentType + '.new'
+            }
+
+            if (vm.entity.user_code) {
+                return contentType + '.' + vm.entity.user_code
+            }
+
+            return contentType + '.' + vm.entity.id
+
+
+        }
+
+        vm.exportToDraft = function ($event) {
+
+            var entity = JSON.parse(JSON.stringify(vm.entity));
+
+            return JSON.parse(JSON.stringify(entity))
+
+        }
+
+        vm.applyDraft = function ($event, data) {
+
+            vm.readyStatus.layout = false;
+            vm.readyStatus.entity = false;
+
+            return new Promise(function (resolve, reject) {
+
+                vm.entity = data;
+
+                vm.transformSourceEntityToFrontendLogic(resolve);
+
+            }).then(function () {
+                $scope.$apply();
+            })
+
+        }
+
+        // DRAFT ENDED
+
         vm.init = function () {
 
             setTimeout(function () {
@@ -2098,6 +2089,7 @@
             vm.getCurrencies();
 
             vm.getItem().then(async function () {
+
 
                 if (vm.entityType === 'instrument') {
                     vm.getDataForInstrumentTabs();

@@ -9,6 +9,25 @@
 
     var configureRepositoryUrlService = require('./configureRepositoryUrlService');
 
+    var getStats = function (options) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'tasks/stats/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
+
     var getList = function (options) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
@@ -106,6 +125,7 @@
 
 
     module.exports = {
+        getStats: getStats,
         getList: getList,
         getListLight: getListLight,
         getByKey: getByKey,

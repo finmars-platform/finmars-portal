@@ -4,6 +4,10 @@
 
 <div ng-if="vm.readyStatus.permissions && vm.readyStatus.entity">
 
+    <draft-button user-code="vm.draftUserCode"
+                  on-export-to-draft-callback="vm.exportToDraft($event)"
+                  on-draft-apply-callback="vm.applyDraft(event, data)"></draft-button>
+
     <div ng-if="vm.fixedFieldsAttributes.length > 0"
          class="entity-editor-fixed-area"
          data-ng-class="{'disabled-element': !vm.entity.is_enabled && vm.hasEnabledStatus}">

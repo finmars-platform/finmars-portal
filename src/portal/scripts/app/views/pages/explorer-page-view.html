@@ -316,6 +316,10 @@
 
                     <div data-ng-show="!vm.fileEditorLoading" class="height-100">
 
+                        <draft-button user-code="vm.draftUserCode" data-ng-if="vm.draftUserCode"
+                                      on-export-to-draft-callback="vm.exportToDraft($event)"
+                                      on-draft-apply-callback="vm.applyDraft(event, data)"></draft-button>
+
                         <div layout="row" class="explorer-file-edit-section-toolbar" layout-align="space-between">
 
                             <div layout="row">
@@ -385,7 +389,22 @@
 
                 <div class="explorer-file-playbook-section" data-ng-if="vm.showPlaybook">
 
-                    <finmars-playbook data-item="vm.playbook" data-name="vm.playbookName" data-file-path-list="vm.currentPath"></finmars-playbook>
+
+                    <div data-ng-if="!vm.playBookLoading">
+
+                        <finmars-playbook data-item="vm.playbook" data-name="vm.playbookName"
+                                          data-file-path-list="vm.currentPath"></finmars-playbook>
+
+                    </div>
+
+                    <div data-ng-if="vm.playBookLoading">
+
+                        <div layout="row" layout-sm="column" layout-align="space-around" class="m-large">
+                            <progress-circular diameter="100"></progress-circular>
+                        </div>
+
+                    </div>
+
 
                 </div>
 

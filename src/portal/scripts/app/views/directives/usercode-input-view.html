@@ -2,28 +2,41 @@
 
     <div data-ng-if="!item.id">
 
-        <div layout="row">
+        <div class="flex-row flex-i-center">
 
-            <md-input-container>
+            <!--<md-input-container>
                 <label>Configuration</label>
                 <md-select data-ng-model="configuration_code.value">
                     <md-option data-ng-repeat="item in configuration_codes"
                                value="{{item}}"
-                               data-ng-click="updateUserCode(usercode.value, item)">
+                               data-ng-click="updateUserCode(usercodeEnd.value, item)">
                         {{item}}
                     </md-option>
                 </md-select>
-            </md-input-container>
+            </md-input-container>-->
+            <div style="flex: 0 0 200px; max-width: 200px;">
+                <dropdown-select data-label="Configuration"
+                                 data-model="configuration_code.value"
+                                 data-menu-options="configuration_codes"
+                                 data-small-options="selSmallOpts"
+                                 data-on-change-callback="updateUserCode(usercodeEnd.value, configuration_code.value)"></dropdown-select>
+            </div>
 
-            <md-input-container style="margin-top: 2px; width: 100%;">
+            <!--<md-input-container style="margin-top: 2px; width: 100%;">
                 <label>User code</label>
                 <input type="text"
-                       data-ng-model="usercode.value"
-                       data-ng-change="validateUserCode(usercode.value)"
-                       data-ng-keyup="updateUserCode(usercode.value, configuration_code.value)">
-            </md-input-container>
+                       data-ng-model="usercodeEnd.value"
+                       data-ng-change="validateUserCode(usercodeEnd.value)"
+                       data-ng-keyup="updateUserCode(usercodeEnd.value, configuration_code.value)">
+            </md-input-container>-->
+            <div class="flex-1-1-100" style="min-width: 0;">
+                <text-input data-label="User code"
+                            data-model="usercodeEnd.value"
+                            data-small-options="uciSmallOpts"
+                            data-on-change-callback="onUserCodeChange(usercodeEnd.value, configuration_code.value)"></text-input>
+            </div>
 
-            <ng-md-icon class="tooltip-inline-block"
+            <!--<ng-md-icon class="tooltip-inline-block"
                         icon="info"
                         size="20"
                         style="fill: #777777">
@@ -34,11 +47,13 @@
                     Letters: a-z (lowercase)
                     Special Symbols: _, - (underscore, dash)
                 </md-tooltip>
-            </ng-md-icon>
+            </ng-md-icon>-->
         </div>
 
         <div ng-hide="errorDescription">
-            <p class="small-text"><i>Result: {{item.user_code}}</i></p>
+            <p class="small-text overflow-hidden text-overflow-ellipsis">
+                <i>Result: {{ item ? item.user_code : userCode }}</i>
+            </p>
         </div>
 
         <div ng-hide="!errorDescription">

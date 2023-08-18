@@ -1,13 +1,15 @@
 <div class="selector2-popup popup-menu">
-    <md-button ng-repeat="option in popupData.options"
-               ng-disabled="option.isDisabled"
-               ng-class="option.classes"
-               ng-click="option.onClick(option, _$popup, $event)"
+    <md-button data-ng-repeat="option in popupData.options"
+               data-ng-disabled="option.isDisabled"
+               data-ng-class="option.classes"
+               data-ng-click="option.onClick(option, _$popup, $event)"
 
                class="popup-menu-item">
 
-        <div ng-if="option.icon" class="material-icons option-icon" ng-bind="option.icon"></div>
+        <div data-ng-if="option.icon"
+             class="material-icons option-icon"
+             zdata-ng-bind="option.icon"></div>
 
-        <div ng-bind="option.name"></div>
+        <div data-ng-bind="option.name"></div>
     </md-button>
 </div>
