@@ -1646,6 +1646,10 @@
         <md-button ng-click="vm.cancel()">
             Close
         </md-button>
+        <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
+                   >
+            Make a copy
+        </md-button>
         <md-button class="md-raised" ng-click="vm.editAsJson($event)" >
             Edit as JSON
         </md-button>

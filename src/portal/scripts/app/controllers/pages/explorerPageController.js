@@ -84,23 +84,9 @@
 
         }
 
-        vm.editFile = function ($event, item, $mdMenu) {
+        vm.downloadAndEdit = function () {
 
-            vm.fileEditor = {}
-
-            if ($mdMenu) {
-                $mdMenu.close()
-            }
-
-            vm.fileEditor.name = item.name
-
-            var itemPath = vm.currentPath.join('/') + '/' + item.name
-
-            vm.showEditor = true;
-
-            vm.calculateExplorerStateClass();
-
-            vm.fileEditorLoading = true;
+            var itemPath = vm.currentPath.join('/');
 
             explorerService.viewFile(itemPath).then(function (blob) {
 
@@ -108,6 +94,7 @@
 
                 reader.addEventListener("loadend", function (e) {
                     vm.fileEditor.content = reader.result;
+                    vm.fileEditor.name = vm.currentPath[vm.currentPath.length - 1];
 
                     vm.fileEditorLoading = false;
 
@@ -122,6 +109,66 @@
 
 
             });
+        }
+
+        vm.downloadAndOpenPlaybook = function () {
+
+            var itemPath = vm.currentPath.join('/');
+
+            explorerService.viewFile(itemPath).then(function (blob) {
+
+                var reader = new FileReader();
+
+                reader.addEventListener("loadend", function (e) {
+
+                    vm.showPlaybook = true;
+
+                    vm.playbook = JSON.parse(reader.result);
+                    vm.playbookName = vm.currentPath[vm.currentPath.length - 1];
+
+                    console.log('vm.playbook', vm.playbook);
+                    console.log('vm.playbookName', vm.playbookName);
+
+                    $scope.$apply();
+
+                });
+
+                reader.readAsText(blob);
+
+
+            });
+
+        }
+
+        vm.editFile = function ($event, item, $mdMenu) {
+
+            if ($mdMenu) {
+                $mdMenu.close()
+            }
+
+            vm.currentPath.push(item.name);
+
+            window.location.hash = '#!/explorer/' + vm.currentPath.join('/')
+
+            if (item.name.indexOf('.ipynb') !== -1) {
+
+
+
+                vm.fileEditorLoading = true;
+
+                vm.downloadAndOpenPlaybook();
+
+            } else {
+
+                vm.fileEditor = {};
+
+                vm.showEditor = true;
+
+                vm.fileEditorLoading = true;
+
+                vm.downloadAndEdit();
+
+            }
 
         }
 
@@ -142,8 +189,28 @@
                     vm.editor.getSession().setMode("ace/mode/json");
                 }
 
+                if (vm.fileEditor.name.indexOf('.ipynb') !== -1) {
+                    vm.editor.getSession().setMode("ace/mode/json");
+                }
+
                 if (vm.fileEditor.name.indexOf('.yaml') !== -1) {
                     vm.editor.getSession().setMode("ace/mode/yaml");
+                }
+
+                if (vm.fileEditor.name.indexOf('.yml') !== -1) {
+                    vm.editor.getSession().setMode("ace/mode/yaml");
+                }
+
+                if (vm.fileEditor.name.indexOf('.html') !== -1) {
+                    vm.editor.getSession().setMode("ace/mode/html");
+                }
+
+                if (vm.fileEditor.name.indexOf('.js') !== -1) {
+                    vm.editor.getSession().setMode("ace/mode/javascript");
+                }
+
+                if (vm.fileEditor.name.indexOf('.css') !== -1) {
+                    vm.editor.getSession().setMode("ace/mode/css");
                 }
 
                 vm.editor.getSession().setUseWorker(false);
@@ -152,7 +219,8 @@
                 ace.require("ace/ext/language_tools");
                 vm.editor.setOptions({
                     enableBasicAutocompletion: true,
-                    enableSnippets: true
+                    enableSnippets: true,
+                    enableLiveAutocompletion: true
                 });
                 vm.editor.setFontSize(14)
                 vm.editor.setBehavioursEnabled(true);
@@ -166,11 +234,15 @@
         }
 
         vm.saveFileEditor = function () {
+
             vm.fileSaveProcessing = true;
 
-            var name = vm.fileEditor.name
+            var name = vm.currentPath[vm.currentPath.length - 1];
 
-            var path = vm.currentPath.join('/');
+            var pathPieces = [...vm.currentPath]
+            pathPieces.pop()
+
+            var path = pathPieces.join('/'); // need to path folder path
 
             let formData = new FormData();
 
@@ -185,7 +257,7 @@
             formData.append("file", file)
             formData.append('path', path)
 
-            explorerService.uploadFiles(formData).then(function (e) {
+            return explorerService.uploadFiles(formData).then(function (e) {
 
                 toastNotificationService.success("File Saved")
 
@@ -305,56 +377,22 @@
         vm.closeFileEditor = function () {
 
             vm.showEditor = false;
+            vm.currentPath.pop();
 
             vm.listFiles();
         }
 
-        vm.copyFilePath = function ($event, item, $mdMenu) {
+        vm.copyLink = function ($event, item) {
 
-            if ($mdMenu) {
-                $mdMenu.close()
-            }
+            const url = window.location.origin + '/' + baseUrlService.getMasterUserPrefix() + '/api/storage' + item.file_path
 
-            metaHelper.copyToBuffer(item.file_path)
+            metaHelper.copyToBuffer(url)
 
         }
 
-        vm.downloadFile = function ($mdMenu, $event, item) {
+        vm.copyFilePath = function ($event, item) {
 
-            $mdMenu.close()
-
-            var itemPath = item.name
-            if (vm.currentPath.length) {
-                itemPath = vm.currentPath.join('/') + '/' + item.name
-            }
-
-            explorerService.viewFile(itemPath).then(function (blob) {
-
-
-                // IE doesn't allow using a blob object directly as link href
-                // instead it is necessary to use msSaveOrOpenBlob
-                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-                    window.navigator.msSaveOrOpenBlob(blob);
-                    return;
-                }
-
-                // For other browsers:
-                // Create a link pointing to the ObjectURL containing the blob.
-                var data = window.URL.createObjectURL(blob);
-                var link = document.createElement('a');
-                link.href = data;
-                link.download = item.name;
-
-                document.body.appendChild(link); // For Mozilla Firefox
-                link.click();
-
-                setTimeout(function () {
-                    document.body.removeChild(link);
-                    window.URL.revokeObjectURL(data);
-                }, 100);
-            })
-
-            console.log("download", item)
+            metaHelper.copyToBuffer(item.file_path)
 
         }
 
@@ -373,21 +411,45 @@
 
                 if (res.status === 'agree') {
 
-                    var itemPath = vm.fileEditor.name;
+                    var oldItemPath = vm.fileEditor.name;
                     if (vm.currentPath.length) {
-                        itemPath = vm.currentPath.join('/') + '/' + vm.fileEditor.name
+                        oldItemPath = vm.currentPath.join('/');
                     }
 
                     var is_dir = false;
 
-                    explorerService.deleteFile(itemPath, is_dir)
+                    explorerService.deleteFile(oldItemPath, is_dir)
+
+                    vm.currentPath.pop();
+                    vm.currentPath.push(res.name);
 
                     vm.fileEditor.name = res.name;
 
-                    vm.saveFileEditor();
+                    vm.saveFileEditor().then(function () {
+                        window.location.hash = '#!/explorer/' + vm.currentPath.join('/')
+                    })
 
                 }
             })
+
+        }
+
+        vm.downloadFile = function () {
+
+            var name = vm.currentPath[vm.currentPath.length - 1];
+
+            var content = vm.editor.getValue();
+
+            const blob = new Blob([content], {type: "plain/text"});
+
+            downloadFileHelper.downloadFile(blob, "plain/text", name)
+        }
+
+        vm.formatJSON = function ($event) {
+
+            vm.fileEditor.content = JSON.parse(vm.editor.getValue());
+
+            vm.editor.setValue(JSON.stringify(vm.fileEditor.content, null, 4));
 
         }
 
@@ -561,12 +623,74 @@
 
                     vm.fileEditor = {}
 
-                    vm.fileEditor.name = res.name;
-                    vm.fileEditor.content = '';
+                    vm.currentPath.push(res.name);
 
-                    vm.showEditor = true;
+                    var pathPieces = [...vm.currentPath]
+                    pathPieces.pop();
 
-                    vm.initFileEditor() // call after angular.js render
+                    var path = pathPieces.join('/');
+
+                    let formData = new FormData();
+
+                    var defaultPlaybook = {
+                        "metadata": {
+                            "kernelspec": {
+                                "name": "python",
+                                "display_name": "Python (Pyodide)",
+                                "language": "python"
+                            },
+                            "language_info": {
+                                "codemirror_mode": {
+                                    "name": "python",
+                                    "version": 3
+                                },
+                                "file_extension": ".py",
+                                "mimetype": "text/x-python",
+                                "name": "python",
+                                "nbconvert_exporter": "python",
+                                "pygments_lexer": "ipython3",
+                                "version": "3.8"
+                            }
+                        },
+                        "cells": []
+                    }
+
+                    var content = JSON.stringify(defaultPlaybook);
+
+                    console.log('path', path)
+                    console.log('name', res.name)
+
+                    const blob = new Blob([content], {type: vm.contentType});
+                    const file = new File([blob], res.name)
+
+                    formData.append("file", file)
+                    formData.append('path', path)
+
+                    explorerService.uploadFiles(formData).then(function (e) {
+
+                        if (res.name.indexOf('.ipynb') !== -1) {
+
+                            vm.playbook = null;
+                            vm.playbookName = res.name;
+
+                            vm.showPlaybook = true;
+
+                        } else {
+
+                            vm.fileEditor.name = res.name;
+                            vm.fileEditor.content = '';
+
+                            vm.showEditor = true;
+
+                        }
+
+                        setTimeout(function () {
+                            window.location.hash = '#!/explorer/' + vm.currentPath.join('/')
+                        }, 100);
+
+                        // vm.initFileEditor() // call after angular.js render
+
+                    })
 
                 }
 
@@ -683,30 +807,73 @@
 
         }
 
-        vm.calculateExplorerStateClass = function () {
+        vm.openInNewTab = function ($event, item) {
 
-            var result = '';
+            const url = window.location.origin + '/' + baseUrlService.getMasterUserPrefix() + '/api/storage' + item.file_path
 
-            if (vm.showWorkflow && !vm.showEditor) {
 
-                result = 'show-explorer-workflow'
+            window.open(url, "_blank");
+        }
 
+        vm.deleteFile = function ($event, item) {
+
+            var name = vm.currentPath[vm.currentPath.length - 1];
+
+            $mdDialog.show({
+                controller: 'WarningDialogController as vm',
+                templateUrl: 'views/dialogs/warning-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                locals: {
+                    warning: {
+                        title: 'Warning',
+                        description: "Are you sure that you want to delete " + name + "?",
+                    }
+                },
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    var itemPath = vm.currentPath.join('/');
+
+                    explorerService.deleteFile(itemPath, false).then(function (data) {
+
+                        vm.showEditor = false;
+
+                        vm.currentPath.pop();
+
+                        window.location.hash = '#!/explorer/' + vm.currentPath.join('/');
+
+                        vm.listFiles();
+
+                    })
+
+
+                }
+
+            });
+
+        }
+
+        function getFileExtension(path) {
+            // Split the path into segments
+            let segments = path.split('/');
+            // Take the last segment
+            let lastSegment = segments[segments.length - 1];
+
+            // If the last segment contains more than one dot, treat it as a directory
+            if ((lastSegment.match(/\./g) || []).length > 1) {
+                return null; // or whatever you want to return for directories
+            } else {
+                // Check for a file extension
+                let extension = lastSegment.slice((lastSegment.lastIndexOf(".") - 1 >>> 0) + 2);
+                return extension || null; // If there's no extension, return null
             }
-
-            if (!vm.showWorkflow && vm.showEditor) {
-
-                result = 'show-explorer-editor'
-
-            }
-
-            if (vm.showWorkflow && vm.showEditor) {
-
-                result = 'show-explorer-editor-workflow'
-
-            }
-
-            vm.explorerStateClass = result;
-
         }
 
         vm.init = function () {
@@ -717,11 +884,33 @@
 
             if ($stateParams.folderPath) {
                 vm.currentPath = $stateParams.folderPath.split('/')
+
+                var extension = getFileExtension($stateParams.folderPath);
+
+                if (extension) { // possible file is opened
+
+                    if (extension == 'ipynb') {
+
+                        vm.downloadAndOpenPlaybook();
+
+                    } else {
+
+                        vm.showEditor = true;
+
+                        vm.downloadAndEdit();
+
+                    }
+
+                } else {
+                    vm.listFiles();
+                }
+
+            } else {
+                vm.listFiles();
             }
 
             console.log("here?")
 
-            vm.listFiles();
 
             vm.member = globalDataService.getMember();
 

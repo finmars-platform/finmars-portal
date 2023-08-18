@@ -19,7 +19,7 @@
                 <input type="text" data-ng-model="vm.item.name">
             </md-input-container>
 
-            <md-button data-ng-click="vm.toggleMode()">
+            <md-button data-ng-click="vm.toggleMode()" class="md-raised m-b-16 m-t-16">
 
                 <span data-ng-if="vm.isFromMarketplace">I want to upload .zip file manually</span>
                 <span data-ng-if="!vm.isFromMarketplace">I want to provide code from marketplace</span>

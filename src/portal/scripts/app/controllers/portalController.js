@@ -6,14 +6,14 @@
 
 const localStorageService = require('../../../../shell/scripts/app/services/localStorageService'); // TODO inject localStorageService into angular dependencies
 
-export default function ($scope, $state, authorizerService, usersService, globalDataService, redirectionService, middlewareService) {
+export default function ($scope, $state, authorizerService, usersService, globalDataService, redirectionService, middlewareService, uiService) {
 
     let vm = this;
 
     vm.readyStatus = false;
-    vm.showWarningSideNav = false
+    vm.showWarningSideNav = false;
 
-    const getMember = function () {
+    /*const getMember = function () {
 
         return new Promise(function (resolve, reject) {
 
@@ -36,6 +36,30 @@ export default function ($scope, $state, authorizerService, usersService, global
             });
 
         });
+
+    }*/
+
+    const getMemberData = async function () {
+
+        try {
+
+            const res = await Promise.all([
+                usersService.getMyCurrentMember(),
+                uiService.getDefaultMemberLayout(),
+            ]);
+
+            const member = res[0]
+
+            // enable by default list layout autosave
+            if (member.data && typeof member.data.autosave_layouts !== 'boolean') {
+                member.data.autosave_layouts = true;
+                globalDataService.setMember(member);
+            }
+
+        } catch(error) {
+            console.error(error);
+            throw error;
+        }
 
     }
 
@@ -93,7 +117,7 @@ export default function ($scope, $state, authorizerService, usersService, global
             promises.push(getCurrentMasterUser());
         }
 
-        promises.push(getMember());
+        promises.push( getMemberData() );
 
         Promise.all(promises).then(resData => {
 

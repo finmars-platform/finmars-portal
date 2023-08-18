@@ -72,23 +72,45 @@
         return decimalAdjust('floor', value, exp);
     }
 
+    // Old method, not efficient
+    // function flattenTree(root, key) {
+    //
+    //     var flatten = [Object.assign({}, root)];
+    //     // delete flatten[0][key];
+    //
+    //     if (root[key] && root[key].length > 0) {
+    //         return flatten.concat(root[key]
+    //             .map(function (child) {
+    //                 return flattenTree(child, key)
+    //             })
+    //             .reduce(function (a, b) {
+    //                 return a.concat(b)
+    //             }, [])
+    //         );
+    //     }
+    //
+    //     return flatten;
+    // }
+
     function flattenTree(root, key) {
+        const stack = [root];
+        const result = [];
 
-        var flatten = [Object.assign({}, root)];
-        // delete flatten[0][key];
+        while (stack.length) {
+            const node = stack.pop();
 
-        if (root[key] && root[key].length > 0) {
-            return flatten.concat(root[key]
-                .map(function (child) {
-                    return flattenTree(child, key)
-                })
-                .reduce(function (a, b) {
-                    return a.concat(b)
-                }, [])
-            );
+            if (node) {
+                result.push(Object.assign({}, node));
+
+                if (node[key]) {
+                    for (let i = node[key].length - 1; i >= 0; i--) {
+                        stack.push(node[key][i]);
+                    }
+                }
+            }
         }
 
-        return flatten;
+        return result;
     }
 
     function insertItemInNode(list, map, node, data) {

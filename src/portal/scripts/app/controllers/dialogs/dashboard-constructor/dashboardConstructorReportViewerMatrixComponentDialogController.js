@@ -5,7 +5,7 @@
 
     'use strict';
 
-    module.exports = function ($scope, $mdDialog, uiService, dashboardConstructorMethodsService, dashboardHelper, item, dataService, eventService, attributeDataService, multitypeFieldService, data) {
+    module.exports = function ($scope, $mdDialog, uiService, dashboardConstructorMethodsService, dashboardHelper, item, dataService, eventService, attributeDataService, multitypeFieldService) {
 
         var vm = this;
 
@@ -271,9 +271,9 @@
 
         vm.showLinkingToFilters = function () {
 
-            for (var i = 0; i < vm.layouts.length; i++) {
+            /*for (var i = 0; i < vm.layouts.length; i++) {
 
-                if (vm.layouts[i].id === vm.item.settings.layout) {
+                if (vm.layouts[i].user_code === vm.item.settings.layout) {
 
                     var layout = vm.layouts[i];
                     vm.linkingToFilters = dashboardHelper.getLinkingToFilters(layout);
@@ -282,7 +282,9 @@
 
                 }
 
-            }
+            }*/
+
+            vm.linkingToFilters = dashboardConstructorMethodsService.showLinkingToFilters(vm.layouts, vm.item.settings.layout);
 
         };
 
@@ -309,13 +311,16 @@
 
             var layoutName;
 
-            vm.layouts.forEach(function (layout) {
+            /*vm.layouts.forEach(function (layout) {
 
                 if (layout.id === vm.item.settings.layout) {
                     layoutName = layout.name
                 }
 
-            });
+            });*/
+            var selLayout = vm.layouts.find(layout => layout.user_code === vm.item.settings.layout);
+
+            if (selLayout) layoutName = selLayout.name;
 
             vm.item.settings.layout_name = layoutName;
             vm.item.settings.content_type = vm.getContentTypeByEntityType();
@@ -371,11 +376,14 @@
             } */
 			vm.getAttributes();
 
-			dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts()).then(function (layoutsSelectorsList) {
-				vm.layoutsSelectorsList = layoutsSelectorsList;
-				vm.readyStatus.layouts = true;
-				$scope.$apply();
-			});
+			dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts(), true)
+                .then(function (layoutsSelectorsList) {
+
+                    vm.layoutsSelectorsList = layoutsSelectorsList;
+                    vm.readyStatus.layouts = true;
+                    $scope.$apply();
+
+			    });
 
         };
 

@@ -67,9 +67,9 @@
             templateUrl: 'views/dashboard-layout-manager-view.html',
             controller: 'DashboardLayoutManagerController as vm'
         });
-
+        // Used to launch matrix inside iframe
         $stateProvider.state('app.portal.dashboard-rv-matrix', {
-            url: '/dashboard-component-rv-matrix?atoken&componentId&reportLayoutId&abscissa&ordinate&value_key',
+            url: '/dashboard-component-rv-matrix?iframeId&componentId&reportLayoutId&abscissa&ordinate&value_key',
             templateUrl: 'views/dashboard/_version2/reportViewer/matrix-view.html',
             controller: 'Dashboard2RvMatrixController as vm',
             params: {
@@ -502,6 +502,12 @@
                 controller: 'PricingPolicyPageController as vm'
             })
 
+            .state('app.portal.transaction-type-group', {
+                url: '/transaction-type-group',
+                templateUrl: 'views/pages/transaction-type-group-page-view.html',
+                controller: 'TransactionTypeGroupPageController as vm'
+            })
+
             .state('app.portal.pricing-schemes', {
                 url: '/pricing-schemes',
                 templateUrl: 'views/pages/pricing-scheme-page-view.html',
@@ -605,10 +611,15 @@
                 templateUrl: 'views/pages/fill-price-history-view.html',
                 controller: 'FillPriceHistoryController as vm'
             })
-            .state('app.portal.import.mapping-tables', {
+            .state('app.portal.import.mapping-tables', { // DEPRECATED, delete soon
                 url: '/mapping-tables-import',
                 templateUrl: 'views/pages/mapping-table-view.html',
                 controller: 'MappingTablesController as vm'
+            })
+            .state('app.portal.import.mapping-table', {
+                url: '/mapping-table',
+                templateUrl: 'views/pages/mapping-table-page-view.html',
+                controller: 'MappingTablePageController as vm'
             })
             .state('app.portal.import.reference-tables', {
                 url: '/reference-tables',
@@ -847,10 +858,20 @@
                 templateUrl: 'views/pages/marketplace-page-view.html',
                 controller: 'MarketplacePageController as vm'
             })
+            .state('app.portal.vault', {
+                url: '/vault',
+                templateUrl: 'views/pages/vault-page-view.html',
+                controller: 'VaultPageController as vm'
+            })
             .state('app.portal.manage-configuration', {
-                url: '/manage-configuration',
+                url: '/manage-configuration?page&query',
                 templateUrl: 'views/pages/manage-configuration-page-view.html',
-                controller: 'ManageConfigurationPageController as vm'
+                controller: 'ManageConfigurationPageController as vm',
+                reloadOnSearch: false,
+                params: {
+                    page: null,
+                    query: null
+                }
             })
             .state('app.portal.settings.import-configuration', {
                 url: '/import-configuration',

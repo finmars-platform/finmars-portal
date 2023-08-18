@@ -240,7 +240,8 @@
         vm.recalculate = function (paramsObj) {
 
             var inputs = paramsObj.inputs;
-            sharedLogicHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
+
+            inputs = sharedLogicHelper.removeUserInputsInvalidForRecalculation(inputs, vm.transactionType.inputs);
 
             if (inputs && inputs.length) {
 
@@ -266,6 +267,7 @@
                 transactionTypeService.initBookComplexTransaction(vm.transactionTypeId, contextParameters).then(async function (data) {
 
                     vm.transactionType = data.transaction_type_object;
+
                     vm.entity = data.complex_transaction;
                     vm.entity.values = data.values;
 
@@ -1433,7 +1435,7 @@
                     vm.contextData = Object.assign({}, data.contextData);
                     //delete entity.contextData;
 
-                    vm.transactionTypeId = entity.transaction_type;
+                    vm.transactionTypeId = parseInt(entity.transaction_type, 10);
 
                     vm.dataConstructorData = {
                         entityType: vm.entityType,

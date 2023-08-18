@@ -113,15 +113,20 @@
                      ng-init="$last && initDnDEnabled && selOptionsDragAndDrop.init()"
                      data-option-id="{{sOption.id}}">
 
-                    <div class="two-fields-option-left-part flex-row">
-                        <span ng-if="strictOrder"
-                              class="material-icons two-fields-option-dragger"
-                              ng-mousedown="turnOnDragging()">drag_indicator</span>
+                    <div class="position-relative two-fields-option-left-part">
 
-                        <md-checkbox ng-if="selOptionsCheckboxes"
-                                     ng-model="sOption.isChecked"
-                                     ng-click="$event.stopPropagation()"
-                                     class="two-fields-options-checkbox"></md-checkbox>
+                        <div class="flex-row" data-ng-class="{'visibility-hidden': sOption.error_data}">
+                            <span ng-if="strictOrder"
+                                  class="material-icons two-fields-option-dragger"
+                                  ng-mousedown="turnOnDragging()">drag_indicator</span>
+
+                            <md-checkbox ng-if="selOptionsCheckboxes"
+                                         ng-model="sOption.isChecked"
+                                         ng-click="$event.stopPropagation()"
+                                         class="two-fields-options-checkbox"></md-checkbox>
+                        </div>
+
+                        <span ng-if="sOption.error_data" class="material-icons error">info</span>
                     </div>
 
                     <p class="two-fields-option-text" ng-bind="sOption['{{nameProperty}}']"></p>

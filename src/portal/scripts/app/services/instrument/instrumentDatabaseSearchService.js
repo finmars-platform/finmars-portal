@@ -5,8 +5,8 @@
 
     var instrumentDatabaseSearchRepository = require('../../repositories/instrument/instrumentDatabaseSearchRepository');
 
-    var getList = function (name, page, instrument_type) {
-        return instrumentDatabaseSearchRepository.getList(name, page, instrument_type);
+    var getList = function (name, options) {
+        return instrumentDatabaseSearchRepository.getList(name, options);
     };
 
 

@@ -103,7 +103,7 @@
                                 <input aria-label="scheme user code" type="text" data-ng-model="vm.ui.user_code">
                             </md-input-container> -->
 
-                            <usercode-input data-item="vm.ui"></usercode-input>
+                            <usercode-input data-item="vm.ui" style="width: 500px; margin-right: 16px;"></usercode-input>
 
 <!--                            <text-input label="User Code"-->
 <!--                                        model="vm.ui.user_code"-->
@@ -274,6 +274,10 @@
 
             <md-button ng-click="vm.cancel()" class="md-raised">
                 Cancel
+            </md-button>
+            <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
+                       data-ng-if="vm.ui.id">
+                Make a copy
             </md-button>
             <md-button data-ng-click="vm.saveLayout()"
                        data-ng-disabled="vm.processing"

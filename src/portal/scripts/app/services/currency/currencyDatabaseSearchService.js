@@ -5,8 +5,8 @@
 
     var currencyDatabaseSearchRepository = require('../../repositories/currency/currencyDatabaseSearchRepository');
 
-    var getList = function (name, page, instrument_type) {
-        return currencyDatabaseSearchRepository.getList(name, page, instrument_type);
+    var getList = function (name, page) {
+        return currencyDatabaseSearchRepository.getList(name, page);
     };
 
 

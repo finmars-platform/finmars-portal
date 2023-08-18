@@ -206,6 +206,11 @@
                 "name": "Return annually",
                 "value_type": 20
             },
+            {
+                "key": "return_annually_fixed",
+                "name": "Return Annually Fixed",
+                "value_type": 20
+            },
             //{
             //    "key": "net_cost_price",
             //    "name": "Net cost price",
@@ -291,6 +296,27 @@
             {
                 "key": "amount_invested_loc",
                 "name": "Amount invested (Pricing Currency)",
+                "value_type": 20
+            },
+
+            {
+                "key": "principal_invested_fixed",
+                "name": "Principal invested Fixed",
+                "value_type": 20
+            },
+            {
+                "key": "principal_invested_fixed_loc",
+                "name": "Principal invested Fixed (Pricing Currency)",
+                "value_type": 20
+            },
+            {
+                "key": "amount_invested_fixed",
+                "name": "Amount invested Fixed",
+                "value_type": 20
+            },
+            {
+                "key": "amount_invested_fixed_loc",
+                "name": "Amount invested Fixed (Pricing Currency)",
                 "value_type": 20
             },
 

@@ -9,13 +9,11 @@
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
     var entityResolverService = require('../../services/entityResolverService');
 
-    var finmarsDatabaseService = require('../../services/finmarsDatabaseService')
-    var importUnifiedDataService = require('../../services/import/importUnifiedDataService');
     var importCurrencyCbondsService = require('../../services/import/importCurrencyCbondsService');
     var currencyDatabaseSearchService = require('../../services/currency/currencyDatabaseSearchService');
 
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, finmarsDatabaseService, data) {
 
         var vm = this;
 
@@ -36,12 +34,6 @@
         vm.actionType = 'default';
 
         vm.entityType = data.entityType;
-
-        vm.instrumentTypeOptions = [
-            {id: 'bonds', name: 'Bonds'},
-            {id: 'stocks', name: 'Stocks'}
-        ]
-
 
         vm.clearHoverItem = function () {
 
@@ -66,125 +58,90 @@
             }, 0)
         }
 
-        vm.agree = function () {
+        var onSdiError = function (error) {
 
+            vm.selectedItem = null;
+            vm.isDisabled = false;
 
-            new Promise(function (resolve, reject) {
+            toastNotificationService.error(error);
 
+            $scope.$apply();
 
-                vm.localItems.forEach(function (item) {
+        }
 
-                    if (item.selected) {
-                        vm.selectedItem = item;
-                        resolve()
+        var selectDatabaseItem = function (selItem) {
+
+            var promise;
+
+            if (vm.entityType === 'currency') {
+
+                promise = importCurrencyCbondsService.download(
+                    {
+                        user_code: selItem.user_code,
+                        mode: 1,
                     }
+                )
 
-                })
+            }
+            else if (vm.entityType === 'counterparty') {
 
-                var selectedDatabaseItem;
-
-                vm.databaseItems.forEach(function (item) {
-
-                    if (item.selected) {
-                        selectedDatabaseItem = item
+                promise = finmarsDatabaseService.downloadCounterparty(
+                    {
+                        company_id: selItem.id,
                     }
+                )
 
-                })
+            }
 
-                if (selectedDatabaseItem) {
+            promise.then(function (data) {
 
-                    if (vm.entityType === 'currency') {
+                vm.isDisabled = false;
 
-                        var config = {
-                            currency_code: selectedDatabaseItem.code,
-                            mode: 1
-                        };
+                if (data.errors) {
 
+                    onSdiError( data.error );
 
-                        importCurrencyCbondsService.download(config).then(function (data) {
+                } else {
 
-
-                            if (data.errors.length) {
-
-                                vm.isDisabled = false;
-
-                                vm.selectedItem = null;
-
-                                toastNotificationService.error(data.errors[0])
-
-                                $scope.$apply();
-
-                                resolve()
-
-                            } else {
-
-                                vm.selectedItem = {
-                                    id: data.result_id,
-                                    name: selectedDatabaseItem.name,
-                                    user_code: selectedDatabaseItem.code
-                                }
-
-                                resolve()
-
-
-                            }
-
-                        })
-
-                    } else {
-
-
-                        var config = {
-                            id: selectedDatabaseItem.id,
-                            entity_type: vm.entityType
-                        };
-
-                        importUnifiedDataService.download(config).then(function (data) {
-
-                            if (data.errors.length) {
-
-                                vm.isDisabled = false;
-
-                                vm.selectedItem = null;
-
-                                toastNotificationService.error(data.errors[0])
-
-                                $scope.$apply();
-
-                                resolve()
-
-                            } else {
-
-                                vm.selectedItem = {
-                                    id: data.result_id,
-                                    name: selectedDatabaseItem.name,
-                                    user_code: selectedDatabaseItem.user_code
-                                }
-
-                                resolve()
-
-                            }
-
-
-                        })
-
-
-                    }
-
+                    $mdDialog.hide({
+                        status: 'agree',
+                        data: {
+                            task: data.task,
+                            item: selItem,
+                        }
+                    });
 
                 }
 
+            }).catch(function (e){
 
-            }).then(function (data) {
-
-                if (vm.selectedItem) {
-
-
-                    $mdDialog.hide({status: 'agree', data: {item: vm.selectedItem}});
-                }
+                onSdiError(e);
 
             })
 
+        };
+
+        vm.agree = function () {
+
+            //# region Local item selected
+            var localItemSelected = vm.localItems.find(function (item) { return item.selected });
+
+            if (localItemSelected) {
+
+                vm.selectedItem = localItemSelected;
+
+                return $mdDialog.hide( { status: 'agree', data: {item: vm.selectedItem} } );
+
+            }
+            //# endregion
+
+            //# region Database item selected
+            var selectedDatabaseItem = vm.databaseItems.find(function (item) { return item.selected });
+
+            if (selectedDatabaseItem) {
+                selectDatabaseItem(selectedDatabaseItem);
+            }
+            //# endregion
 
         };
 
@@ -291,15 +248,21 @@
 
                         vm.globalProcessing = false;
 
-                        vm.databaseItemsTotal = data.resultCount;
+                        /*vm.databaseItemsTotal = data.resultCount;
 
                         vm.databaseItems = data.foundItems
 
-                        vm.totalPages = Math.round(data.resultCount / 40)
+                        vm.totalPages = Math.round(data.resultCount / 40)*/
+                        vm.databaseItemsTotal = data.count;
+
+                        vm.databaseItems = data.results;
+
+                        vm.totalPages = Math.round(data.count / 40);
 
                         $scope.$apply();
 
-                    }).catch(function (error) {
+                    })
+                    .catch(function (error) {
 
                         vm.globalProcessing = false;
 
@@ -310,12 +273,15 @@
                         $scope.$apply();
 
                     })
-                } else {
+                }
+                else {
+
                     finmarsDatabaseService.getCounterpartiesList({
                         filters: {
                             query: vm.inputText
                         }
-                    }).then(function (data) {
+                    })
+                    .then(function (data) {
 
                         vm.globalProcessing = false;
 
@@ -323,12 +289,12 @@
 
                         vm.databaseItems = data.results;
 
-
                         vm.totalPages = Math.round(data.count / 40)
 
                         $scope.$apply();
 
-                    }).catch(function (error) {
+                    })
+                    .catch(function (error) {
 
                         vm.globalProcessing = false;
 
@@ -351,71 +317,93 @@
 
         }
 
+        var getDatabaseItems = function (resolve) {
+
+            var mapItems = function (item) {
+
+                item.frontOptions = {
+                    type: 'database',
+                }
+
+                return item;
+
+            }
+
+            if (vm.entityType === 'currency') {
+
+                currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage - 1)
+                    .then(function (data) {
+
+                        /*vm.databaseItemsTotal = data.resultCount;
+
+                        vm.databaseItems = data.foundItems
+
+                        vm.totalPages = Math.round(data.resultCount / 40)*/
+                        vm.databaseItemsTotal = data.count;
+
+                        vm.databaseItems = data.results.map(mapItems);
+
+                        vm.totalPages = Math.round(data.count / 40);
+
+                        resolve();
+
+                    })
+                    .catch(function (error) {
+
+                        console.log("Database error occurred", error)
+                        vm.databaseItems = []
+
+                        resolve()
+
+                    });
+
+            }
+            else if (vm.entityType === 'counterparty') {
+
+                finmarsDatabaseService.getCounterpartiesList({
+                    filters: {
+                        query: vm.inputText,
+                        page: 1,
+                    }
+                })
+                    .then(function (data) {
+
+                        vm.databaseItemsTotal = data.count;
+
+                        vm.databaseItems = data.results.map(mapItems);
+
+                        vm.totalPages = Math.round(data.count / 40);
+
+                        resolve();
+
+                    })
+                    .catch(function (error) {
+
+                        console.log("Database error occurred", error)
+                        vm.databaseItems = []
+
+                        resolve();
+
+                    });
+
+            }
+
+        };
+
         vm.getList = function () {
 
             vm.processing = true;
 
             var promises = []
 
-       
-            promises.push(new Promise(function (resolve, reject) {
-
-                if (vm.entityType === 'currency') {
-                    currencyDatabaseSearchService.getList(vm.inputText, vm.globalPage - 1).then(function (data) {
-
-                        vm.databaseItemsTotal = data.resultCount;
-
-                        vm.databaseItems = data.foundItems
-
-                        vm.totalPages = Math.round(data.resultCount / 40)
-
-                        resolve()
-
-                    }).catch(function (error) {
-
-                        console.log("Database error occurred", error)
-
-                        vm.databaseItems = []
-
-                        resolve()
-
-                    })
-                } else {
-                    unifiedDataService.getList(vm.entityType, {
-                        filters: {
-                            query: vm.inputText
-                        }
-                    }).then(function (data) {
-
-                        vm.databaseItemsTotal = data.count;
-
-                        vm.databaseItems = data.results;
-
-                        resolve()
-
-                        vm.totalPages = Math.round(data.count / 40)
-
-                    }).catch(function (error) {
-
-                        console.log("Database error occurred", error)
-
-                        vm.databaseItems = []
-
-                        resolve()
-
-                    })
-                }
-
-            }))
-
+            promises.push( new Promise( getDatabaseItems ) );
 
             promises.push(new Promise(function (resolve, reject) {
-
 
                 entityResolverService.getListLight(vm.entityType, {
                     pageSize: 500,
                     filters: {
-                        user_code: vm.inputText
+                        query: vm.inputText
                     }
                 }).then(function (data) {
 
@@ -425,7 +413,11 @@
 
                     vm.localItems = vm.localItems.map(function (item) {
 
-                        item.pretty_date = moment(item.modified).format("DD.MM.YYYY")
+                        item.pretty_date = moment(item.modified).format("DD.MM.YYYY");
+
+                        item.frontOptions = {
+                            type: 'local',
+                        }
 
                         return item;
 
@@ -440,12 +432,11 @@
 
             Promise.allSettled(promises).then(function (data) {
 
-
                 vm.processing = false;
 
                 vm.databaseItems = vm.databaseItems.filter(function (databaseItem) {
 
-                    var exist = false;
+                    /* var exist = false;
 
                     if (vm.entityType === 'currency') {
 
@@ -457,7 +448,8 @@
 
                         })
 
-                    } else {
+                    }
+                    else {
 
                         vm.localItems.forEach(function (localItem) {
 
@@ -469,9 +461,14 @@
 
                     }
 
-                    return !exist;
+                    return !exist; */
 
-                })
+                    // database item does not exist locally
+                    return !!vm.localItems.find(function (localItem) {
+                        return localItem.user_code !== databaseItem.user_code;
+                    });
+
+                });
 
                 $scope.$apply();
 
@@ -493,18 +490,13 @@
 
             vm.getList();
 
-            if (data.context) {
+            if (data.context && data.context.action) {
 
-                if (data.context.action) {
-
-                    vm.actionType = data.context.action;
-
-                }
+                vm.actionType = data.context.action;
 
             }
 
         }
-
 
         vm.init();
 
