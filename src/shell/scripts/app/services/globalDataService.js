@@ -7,6 +7,7 @@ export default function () {
 	let data = {
 		masterUser: null,
 		member: null,
+		memberLayout: null,
 		user: null,
 
 	};
@@ -28,6 +29,13 @@ export default function () {
 	};
 
 	const setUser = function (user) {
+
+		if (!user.data) user.data = {};
+
+		if ( typeof user.data.autosave_layouts !== 'boolean' ) {
+			user.data.autosave_layouts = true;
+		}
+
 		data.user = user;
 	};
 
@@ -46,6 +54,10 @@ export default function () {
 	const setMember = function (member) {
 		console.trace("autosave77 setMember");
 		console.log("autosave77 setMember", member);
+		if ( typeof member.data.autosave_layouts !== 'boolean' ) {
+			member.data.autosave_layouts = true;
+		}
+
 		data.member = member;
 	};
 
@@ -103,6 +115,12 @@ export default function () {
 
 	};
 
+	const setMemberLayout = function (layout) {
+		data.memberLayout = layout;
+	}
+
+	const getMemberLayout = () => data.memberLayout;
+
 	const isAutosaveLayoutOn = function () {
 
 		const user = getUser();
@@ -142,6 +160,12 @@ export default function () {
 		return iframeMode;
 	}
 
+	const getDefaultConfigurationCode = function (){
+
+		return 'local.poms.' + data.masterUser.base_api_url
+
+	}
+
 	return {
 		setCurrentMasterUserStatus: setCurrentMasterUserStatus,
 		doUserHasCurrentMasterUser: doUserHasCurrentMasterUser,
@@ -154,6 +178,8 @@ export default function () {
 		getMember: getMember,
 		getMemberEntityViewersSettings: getMemberEntityViewersSettings,
 		setMemberEntityViewersSettings: setMemberEntityViewersSettings,
+		setMemberLayout: setMemberLayout,
+		getMemberLayout: getMemberLayout,
 
 		isAutosaveLayoutOn: isAutosaveLayoutOn,
 
@@ -161,6 +187,8 @@ export default function () {
 
 		setIframeMode: setIframeMode,
 		insideIframe: insideIframe,
+
+		getDefaultConfigurationCode: getDefaultConfigurationCode
 	}
 
 };

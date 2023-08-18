@@ -72,7 +72,7 @@
         vm.agree = function () {
 
             vm.processing = true;
-            var pprocedureData = JSON.parse(angular.toJson( vm.item ));
+            var pprocedureData = JSON.parse(angular.toJson(vm.item));
 
             if (pprocedureData.price_date_from_expr) {
                 pprocedureData.price_date_from = null
@@ -114,7 +114,9 @@
 
                 $mdDialog.hide({status: 'agree', data: {item: data}});
 
-            }, function () { vm.processing = false; })
+            }, function () {
+                vm.processing = false;
+            })
 
         };
 
@@ -251,73 +253,75 @@
             return new Promise(function (resolve, reject) {
 
                 pricingProcedureService.getByKey(vm.itemId)
-                .then(function (data) {
+                    .then(function (data) {
 
-                    vm.originalItem = JSON.parse(JSON.stringify(data));
+                        vm.originalItem = JSON.parse(JSON.stringify(data));
 
-                    vm.item = data;
+                        vm.item = data;
 
-                    Object.keys(getAndOverwriteKeysPairs).forEach(vm.checkOverwriteValue);
+                        Object.keys(getAndOverwriteKeysPairs).forEach(vm.checkOverwriteValue);
 
-                    if (vm.item.portfolio_filters) {
+                        if (vm.item.portfolio_filters) {
 
-                        vm.item.portfolio_filters = vm.item.portfolio_filters.split(',');
+                            vm.item.portfolio_filters = vm.item.portfolio_filters.split(',');
 
-                    }
+                        }
 
-                    if (vm.item.pricing_policy_filters) {
+                        if (vm.item.pricing_policy_filters) {
 
-                        vm.item.pricing_policy_filters = vm.item.pricing_policy_filters.split(',');
+                            vm.item.pricing_policy_filters = vm.item.pricing_policy_filters.split(',');
 
-                    }
+                        }
 
-                    if (vm.item.instrument_type_filters) {
+                        if (vm.item.instrument_type_filters) {
 
-                        vm.item.instrument_type_filters = vm.item.instrument_type_filters.split(',');
+                            vm.item.instrument_type_filters = vm.item.instrument_type_filters.split(',');
 
-                    }
+                        }
 
-                    if (vm.item.instrument_pricing_scheme_filters) {
+                        if (vm.item.instrument_pricing_scheme_filters) {
 
-                        vm.item.instrument_pricing_scheme_filters = vm.item.instrument_pricing_scheme_filters.split(',');
+                            vm.item.instrument_pricing_scheme_filters = vm.item.instrument_pricing_scheme_filters.split(',');
 
-                    }
+                        }
 
-                    if (vm.item.instrument_pricing_condition_filters) {
+                        if (vm.item.instrument_pricing_condition_filters) {
 
-                        vm.item.instrument_pricing_condition_filters = vm.item.instrument_pricing_condition_filters.split(',');
+                            vm.item.instrument_pricing_condition_filters = vm.item.instrument_pricing_condition_filters.split(',');
 
-                    }
+                        }
 
-                    if (vm.item.currency_pricing_scheme_filters) {
+                        if (vm.item.currency_pricing_scheme_filters) {
 
-                        vm.item.currency_pricing_scheme_filters = vm.item.currency_pricing_scheme_filters.split(',');
+                            vm.item.currency_pricing_scheme_filters = vm.item.currency_pricing_scheme_filters.split(',');
 
-                    }
+                        }
 
-                    if (vm.item.currency_pricing_condition_filters) {
+                        if (vm.item.currency_pricing_condition_filters) {
 
-                        vm.item.currency_pricing_condition_filters = vm.item.currency_pricing_condition_filters.split(',');
+                            vm.item.currency_pricing_condition_filters = vm.item.currency_pricing_condition_filters.split(',');
 
-                    }
+                        }
 
-                    if (vm.item.price_date_from_expr) {
+                        if (vm.item.price_date_from_expr) {
 
-                        vm.toggleStatus.price_date_from = 'expr';
+                            vm.toggleStatus.price_date_from = 'expr';
 
-                    }
+                        }
 
-                    if (vm.item.price_date_to_expr) {
+                        if (vm.item.price_date_to_expr) {
 
-                        vm.toggleStatus.price_date_to = 'expr';
+                            vm.toggleStatus.price_date_to = 'expr';
 
-                    }
+                        }
 
-                    vm.readyStatus.procedure = true;
+                        vm.readyStatus.procedure = true;
 
-                    resolve();
+                        resolve();
 
-                }).catch(function (e) { reject(e) })
+                    }).catch(function (e) {
+                    reject(e)
+                })
 
             });
 
@@ -351,10 +355,35 @@
 
                 if (res.status === "agree") {
 
-                    vm.getItem().then(function () { $scope.$apply(); });
+                    vm.getItem().then(function () {
+                        $scope.$apply();
+                    });
 
                 }
             })
+
+        };
+
+        vm.makeCopy = function ($event) {
+
+            var item = JSON.parse(JSON.stringify(vm.item));
+
+            delete item.id;
+            item["user_code"] = item["user_code"] + '_copy';
+
+            $mdDialog.show({
+                controller: 'PricingProcedureAddDialogController as vm',
+                templateUrl: 'views/dialogs/procedures/pricing-procedure-add-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                locals: {
+                    data: {
+                        item: item
+                    }
+                }
+            });
+
+            $mdDialog.hide({status: 'disagree'});
 
         };
 

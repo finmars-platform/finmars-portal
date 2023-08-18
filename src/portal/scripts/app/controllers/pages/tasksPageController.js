@@ -51,7 +51,18 @@
             })
 
             item.active = true;
-            vm.activeTask = item;
+
+            vm.activeTaskProcessing = true;
+
+            tasksService.getByKey(item.id).then(function (data) {
+
+                vm.activeTaskProcessing = false;
+
+                vm.activeTask = data;
+
+                $scope.$apply();
+            })
+
         }
 
         // TODO move to separate service to keep it DRY
@@ -322,7 +333,7 @@
 
         vm.getData = function () {
 
-            tasksService.getList({
+            tasksService.getListLight({
                 pageSize: vm.pageSize,
                 page: vm.currentPage,
                 filters: vm.filters,

@@ -31,6 +31,8 @@
                     filters: false
                 }
 
+                scope.inputFormEditorBtn = !['complex-transaction', 'transaction-type', 'instrument'].includes(scope.entityType);
+
                 scope.filterPopupTemplate = 'views/popups/groupTable/filters/ev-filter-popup-view.html';
 
                 scope.popupPosX = gFiltersVm.popupPosX;

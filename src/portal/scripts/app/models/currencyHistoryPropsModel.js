@@ -27,7 +27,7 @@
                 "name": "Currency",
                 "value_type": "field",
                 "value_entity": "currency",
-                "value_content_type": "",
+                "value_content_type": "currencies.currency",
                 "code": "currencies.currency"
             },
             {

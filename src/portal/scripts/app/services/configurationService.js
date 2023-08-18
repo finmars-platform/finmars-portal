@@ -3,6 +3,7 @@
  */
 
 import baseUrlService from "./baseUrlService";
+const configureRepositoryUrlService = require('./configureRepositoryUrlService');
 
 export default function (cookieService, xhrService) {
 
@@ -58,13 +59,13 @@ export default function (cookieService, xhrService) {
 
     };
 
-    const getList = function () {
+    const getList = function (options) {
 
         const prefix = baseUrlService.getMasterUserPrefix();
         const apiVersion = baseUrlService.getApiVersion();
 
         const res = xhrService.fetch(
-            baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/?page_size=1000',
+            configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/', options),
             xhrService.getRequestParams('GET')
         );
 
@@ -149,7 +150,14 @@ export default function (cookieService, xhrService) {
 
         const res = xhrService.fetch(
             baseUrl + '/' + prefix + '/' + apiVersion + '/configuration/configuration/import-configuration/',
-            xhrService.getRequestParams('POST', data)
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                },
+                body: data
+            }
         );
 
         return xhrService.processResponse(res);

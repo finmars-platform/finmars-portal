@@ -151,10 +151,10 @@
                                 <pre>{
     "configuration_code": "com.finmars.hnwi",
     "date": "2023-04-21",
-    "dependencies": {
-        "com.finmars.hnwi-transaction-type": "1.0.0",
-        "com.finmars.hnwi-layout": "1.0.0"
-    },
+    "dependencies": [
+        {"configuration_code": "com.finmars.hnwi-transaction-type", version: "1.0.0"},
+        {"configuration_code": "com.finmars.hnwi-layout", version: "1.0.0"}
+    ],
     "name": "HNWI Package",
     "version": "1.0.0"
 }</pre>
@@ -183,9 +183,13 @@
                                         Storage
                                     </md-button>
 
+                                    <div data-ng-if="vm.exportTaskId">
+                                        <task-card task-id="vm.exportTaskId"></task-card>
+                                    </div>
+
                                 </div>
 
-                                <div class="p-8" data-ng-if="vm.item.configuration_code != 'com.finmars.local'">
+                                <div class="p-8" data-ng-if="vm.item.configuration_code != vm.defaultConfigurationCode">
 
                                     <p>This action will trigger <b>save</b> and export current saved configuration (in
                                         System Storage) as zip to
@@ -206,6 +210,10 @@
                                     <md-button class="md-raised" data-ng-click="vm.pushConfiguration($event)">Push
                                         Configuration to Marketplace
                                     </md-button>
+
+                                    <div data-ng-if="vm.pushTaskId">
+                                        <task-card task-id="vm.pushTaskId"></task-card>
+                                    </div>
 
                                     <p>
                                         You can find status of your push in the <a ui-sref="app.portal.tasks-page"
@@ -267,7 +275,7 @@
             &nbsp;
 
             <md-button class="md-raised md-warn" ng-click="vm.deleteConfiguration($event)"
-                       data-ng-if="vm.item.id && vm.item.configuration_code != 'com.finmars.local'">
+                       data-ng-if="vm.item.id && vm.item.configuration_code != vm.defaultConfigurationCode">
                 Delete
             </md-button>
 

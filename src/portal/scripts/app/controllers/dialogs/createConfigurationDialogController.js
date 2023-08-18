@@ -39,6 +39,7 @@
 
             formData.append('name', vm.item.name);
             formData.append('user_code', vm.item.user_code);
+            formData.append('configuration_code', vm.item.configuration_code);
             formData.append('notes', vm.item.notes);
             formData.append('target_configuration_code', vm.item.target_configuration_code);
             formData.append('target_configuration_version', vm.item.target_configuration_version);

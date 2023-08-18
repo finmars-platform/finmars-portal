@@ -5,13 +5,18 @@
 
         'use strict';
 
+        var tasksService = require('../services/tasksService');
+
         module.exports = function ($scope, globalDataService, systemMessageService) {
 
             var vm = this;
 
             vm.alerts = []
 
-            vm.processing = false;
+            vm.readyStatus = {
+                tasks: false,
+                alerts: false
+            }
 
             vm.alphabets = [
                 '#357EC7', // A
@@ -55,6 +60,8 @@
 
             vm.close = function ($event) {
 
+                vm.tasks = [];
+
                 document.body.dispatchEvent(new Event('click'))
 
             }
@@ -83,12 +90,12 @@
 
             vm.getAlerts = function () {
 
-                vm.processing = true;
+                vm.readyStatus.alerts = false;
 
                 systemMessageService.getAlerts().then(function (data) {
 
                     vm.alerts = data.results;
-                    vm.processing = false;
+                    vm.readyStatus.alerts = true;
                     $scope.$apply();
 
                 })
@@ -127,8 +134,28 @@
 
             }
 
+            vm.getTasks = function () {
+
+                vm.readyStatus.tasks = false;
+
+                tasksService.getList({
+                    filters: {
+                        status: 'P'
+                    }
+                }).then(function (data) {
+
+                    vm.readyStatus.tasks = true;
+
+                    vm.tasks = data.results;
+                    $scope.$apply();
+
+                })
+
+            }
+
             vm.init = function () {
 
+                vm.getTasks();
                 vm.getAlerts();
                 vm.member = globalDataService.getMember();
 

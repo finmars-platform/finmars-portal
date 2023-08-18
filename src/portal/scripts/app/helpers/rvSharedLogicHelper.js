@@ -338,7 +338,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
         };
 
-        const createEntity = function (event, locals) {
+        const createEntity = function (locals) {
 
             var dialogController = 'EntityViewerAddDialogController as vm';
             var dialogTemplateUrl = 'views/entity-viewer/entity-viewer-add-dialog-view.html';
@@ -352,7 +352,6 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                 controller: dialogController,
                 templateUrl: dialogTemplateUrl,
                 parent: angular.element(document.body),
-                targetEvent: event,
                 locals: locals
             }).then(function (res) {
 
@@ -381,7 +380,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
             locals.openedIn = 'modal';
 
-            if (locals.entityType && locals.entityType === 'complex-transaction') {
+            if (locals.entityType === 'complex-transaction') {
                 dialogController = 'ComplexTransactionEditDialogController as vm';
                 dialogTemplateUrl = 'views/entity-viewer/complex-transaction-edit-dialog-view.html';
             }
@@ -397,7 +396,27 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                 console.log('res', res);
 
-                if (res.status !== 'disagree') {
+                if (res.status === 'copy') {
+
+                    locals = {
+                        entity: res.data.entity,
+                        entityType: res.data.entityType,
+                        data: {
+                            openedIn: 'modal',
+                        }
+                    };
+
+                    if (locals.entityType === 'complex-transaction') {
+
+                        locals.data.isCopy = true;
+                        locals.data.originalComplexTransaction = res.data.originalComplexTransaction;
+
+                    }
+
+                    createEntity(locals);
+
+                }
+                else if (res.status !== 'disagree') {
 
                     updateTableAfterEntityChanges(res);
 
@@ -406,7 +425,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
         };
 
-        const offerToCreateEntity = function (event, warningDescription, createEntityLocals) {
+        const offerToCreateEntity = function (warningDescription, createEntityLocals) {
 
             /* $mdDialog.show({
                 controller: 'WarningDialogController as vm',
@@ -442,7 +461,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
             commonDialogsService.warning(warningLocals).then(function (res) {
                 if (res.status === 'agree') {
 
-                    createEntity(event, createEntityLocals);
+                    createEntity(createEntityLocals);
 
                 }
             });
@@ -590,7 +609,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                                 data: {}
                             };
 
-                            offerToCreateEntity(actionData.event, warningDescription, createEntityLocals);
+                            offerToCreateEntity(warningDescription, createEntityLocals);
 
                         }
 
@@ -645,7 +664,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                                 data: {}
                             };
 
-                            offerToCreateEntity(actionData.event, warningDescription, createEntityLocals);
+                            offerToCreateEntity(warningDescription, createEntityLocals);
 
                         }
 
@@ -693,7 +712,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                                 data: {}
                             };
 
-                            offerToCreateEntity(actionData.event, warningDescription, createEntityLocals);
+                            offerToCreateEntity(warningDescription, createEntityLocals);
 
                         }
 
@@ -741,7 +760,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                                 data: {}
                             };
 
-                            offerToCreateEntity(actionData.event, warningDescription, createEntityLocals);
+                            offerToCreateEntity(warningDescription, createEntityLocals);
 
 
                         }
@@ -790,7 +809,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                                 data: {}
                             };
 
-                            offerToCreateEntity(actionData.event, warningDescription, createEntityLocals);
+                            offerToCreateEntity(warningDescription, createEntityLocals);
 
 
                         }
@@ -817,7 +836,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                     locals.data.contextData = contextData;
 
 
-                    createEntity(actionData.event, locals);
+                    createEntity(locals);
 
                 }
                 else if (action === 'book_transaction_specific') {
@@ -837,7 +856,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                         locals.entity.transaction_type = actionData.id
                     }
 
-                    createEntity(actionData.event, locals);
+                    createEntity(locals);
 
                 }
                 else if (action === 'rebook_transaction') {
@@ -871,7 +890,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                     data: {}
                 };
 
-                createEntity({}, locals);
+                createEntity(locals);
 
             } else if (action === 'add_instrument') {
 
@@ -881,7 +900,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                     data: {}
                 };
 
-                createEntity({}, locals);
+                createEntity(locals);
 
             } else if (action === 'add_account') {
 
@@ -891,7 +910,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                     data: {}
                 };
 
-                createEntity({}, locals);
+                createEntity(locals);
 
             } else if (action === 'add_currency') {
 
@@ -901,7 +920,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                     data: {}
                 };
 
-                createEntity({}, locals);
+                createEntity(locals);
 
             } else if (action === 'add_price') {
 
@@ -911,7 +930,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                     data: {}
                 };
 
-                createEntity({}, locals);
+                createEntity(locals);
 
             } else if (action === 'add_fx_rate') {
 
@@ -921,7 +940,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                     data: {}
                 };
 
-                createEntity({}, locals);
+                createEntity(locals);
 
             }
 
@@ -933,7 +952,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                     data: {}
                 };
 
-                createEntity({}, locals);
+                createEntity(locals);
 
             }
         }

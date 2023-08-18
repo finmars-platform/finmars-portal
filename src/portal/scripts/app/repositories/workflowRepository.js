@@ -46,10 +46,29 @@
             })
     };
 
+    var executeCode = function (data) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/workflow/api/execute-code/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
     module.exports = {
 
         getList: getList,
         getByKey: getByKey,
+        executeCode: executeCode
 
     }
 

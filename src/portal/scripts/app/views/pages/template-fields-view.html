@@ -4,6 +4,17 @@
 
         <h2>Complex Transaction Fields</h2>
 
+        <md-input-container>
+            <label>Configuration</label>
+            <md-select data-ng-model="vm.configuration_code">
+                <md-option data-ng-repeat="item in vm.configuration_codes"
+                           value="{{item}}"
+                           data-ng-click="vm.configurationCodeUpdated(item)">
+                    {{item}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+
 
         <div layout="row">
 
@@ -20,11 +31,15 @@
                          style="width: 310px">
                         <b>{{field.key}}</b>
 
+                        <span style="font-size: 11px; color: grey;" data-ng-if="!field.id">Not created yet</span>
+
                         <div layout="row">
                             <div>
                                 <md-checkbox ng-model="field.is_active" style="margin-top: 6px;">
                                 </md-checkbox>
-                                <md-tooltip class="tooltip_1" md-direction="top">Check to show the Field in the Transaction Layouts</md-tooltip>
+                                <md-tooltip class="tooltip_1" md-direction="top">Check to show the Field in the
+                                    Transaction Layouts
+                                </md-tooltip>
                             </div>
 
                             <md-input-container style="height: 32px">
@@ -48,11 +63,14 @@
                     <div data-ng-repeat="field in vm.complexTransactionNumberFields" class="float-left m-b-8"
                          style="width: 335px">
                         <b>{{field.key}}</b>
+                        <span style="font-size: 11px; color: grey;" data-ng-if="!field.id">Not created yet</span>
                         <div layout="row">
                             <div>
                                 <md-checkbox ng-model="field.is_active" style="margin-top: 6px;">
                                 </md-checkbox>
-                                <md-tooltip class="tooltip_1" md-direction="top">Check to show the Field in the Transaction Layouts</md-tooltip>
+                                <md-tooltip class="tooltip_1" md-direction="top">Check to show the Field in the
+                                    Transaction Layouts
+                                </md-tooltip>
                             </div>
 
                             <md-input-container style="height: 32px">
@@ -77,9 +95,12 @@
                          class="float-left"
                          style="width: 300px">
                         <b>{{field.key}}</b>
+                        <span style="font-size: 11px; color: grey;" data-ng-if="!field.id">Not created yet</span>
                         <div layout="row">
                             <div>
-                                <md-tooltip class="tooltip_1" md-direction="top">Check to show the Field in the Transaction Layouts</md-tooltip>
+                                <md-tooltip class="tooltip_1" md-direction="top">Check to show the Field in the
+                                    Transaction Layouts
+                                </md-tooltip>
                                 <md-checkbox ng-model="field.is_active" style="margin-top: 6px;">
                                 </md-checkbox>
                             </div>
@@ -125,6 +146,7 @@
                     <div data-ng-repeat="field in vm.instrumentTextFields track by field.id" class="float-left m-b-8"
                          style="width: 310px">
                         <b>{{field.key}}</b>
+                        <span style="font-size: 11px; color: grey;" data-ng-if="!field.id">Not created yet</span>
                         <md-input-container style="height: 32px">
                             <input type="text" data-ng-model="field.name" value-title>
                         </md-input-container>
@@ -165,12 +187,15 @@
                          class="float-left m-b-8"
                          style="width: 310px">
                         <b>{{field.key}}</b>
+                        <span style="font-size: 11px; color: grey;" data-ng-if="!field.id">Not created yet</span>
 
                         <div layout="row">
                             <div>
                                 <md-checkbox ng-model="field.is_active" style="margin-top: 6px;">
                                 </md-checkbox>
-                                <md-tooltip class="tooltip_1" md-direction="top">Check to show the Field in the Transaction Layouts</md-tooltip>
+                                <md-tooltip class="tooltip_1" md-direction="top">Check to show the Field in the
+                                    Transaction Layouts
+                                </md-tooltip>
                             </div>
 
                             <md-input-container style="height: 32px">
@@ -194,11 +219,14 @@
                     <div data-ng-repeat="field in vm.transactionNumberFields" class="float-left m-b-8"
                          style="width: 335px">
                         <b>{{field.key}}</b>
+                        <span style="font-size: 11px; color: grey;" data-ng-if="!field.id">Not created yet</span>
                         <div layout="row">
                             <div>
                                 <md-checkbox ng-model="field.is_active" style="margin-top: 6px;">
                                 </md-checkbox>
-                                <md-tooltip class="tooltip_1" md-direction="top">Check to show the Field in the Transaction Layouts</md-tooltip>
+                                <md-tooltip class="tooltip_1" md-direction="top">Check to show the Field in the
+                                    Transaction Layouts
+                                </md-tooltip>
                             </div>
 
                             <md-input-container style="height: 32px">
@@ -223,9 +251,12 @@
                          class="float-left"
                          style="width: 300px">
                         <b>{{field.key}}</b>
+                        <span style="font-size: 11px; color: grey;" data-ng-if="!field.id">Not created yet</span>
                         <div layout="row">
                             <div>
-                                <md-tooltip class="tooltip_1" md-direction="top">Check to show the Field in the Transaction Layouts</md-tooltip>
+                                <md-tooltip class="tooltip_1" md-direction="top">Check to show the Field in the
+                                    Transaction Layouts
+                                </md-tooltip>
                                 <md-checkbox ng-model="field.is_active" style="margin-top: 6px;">
                                 </md-checkbox>
                             </div>

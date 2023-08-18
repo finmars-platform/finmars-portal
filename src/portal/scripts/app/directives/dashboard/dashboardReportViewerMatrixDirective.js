@@ -11,7 +11,7 @@
 
     const localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
-	module.exports = function ($mdDialog, uiService, dashboardHelper) {
+	module.exports = function ($mdDialog, uiService, dashboardHelper, metaContentTypesService) {
         return {
             restriction: 'E',
             templateUrl: 'views/directives/dashboard/dashboard-report-viewer-matrix-view.html',
@@ -57,12 +57,15 @@
                 scope.showFiltersArea = componentData.settings.filters.show_filters_area;
                 scope.showUseFromAboveFilters = componentData.settings.filters.show_use_from_above_filters;
 
+                let contentType = metaContentTypesService.findContentTypeByEntity(componentData.settings.entity_type);
+
                 scope.vm = {
                     tabNumber: scope.tabNumber,
                     rowNumber: scope.rowNumber,
                     columnNumber: scope.columnNumber,
                     componentData: componentData,
                     entityType: componentData.settings.entity_type,
+                    contentType: contentType,
 					componentElement: componentElem,
                     dashboardDataService: scope.dashboardDataService,
                     dashboardEventService: scope.dashboardEventService,
@@ -101,6 +104,7 @@
 
                             scope.vm.componentData = componentData;
                             scope.vm.entityType = componentData.settings.entity_type;
+                            contentType = metaContentTypesService.findContentTypeByEntity(componentData.settings.entity_type);
 
                             if (componentData.custom_component_name) {
                                 scope.customName = componentData.custom_component_name;
@@ -210,6 +214,12 @@
 
                         });
 
+                        /* May be needed for FN-1090
+                        scope.dashboardEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
+                            scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
+                        })
+                        */
+
                     }
 
 					//<editor-fold desc="Dashboard component events">
@@ -225,6 +235,7 @@
 
                         scope.vm.componentData = componentData;
                         scope.vm.entityType = componentData.settings.entity_type;
+                        contentType = metaContentTypesService.findContentTypeByEntity(componentData.settings.entity_type);
 
                         scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_CONTENT_OF_COMPONENT);
 
@@ -286,11 +297,11 @@
                 };
 
                 // Victor 2021.05.27 #113 number format from report layout
-                const getLayoutById = async function (layoutId) {
+                /* const getLayoutById = async function (layoutId) {
 
                     return new Promise(function (resolve, reject) {
 
-                        let actualLayoutsIds = scope.dashboardDataService.getActualRvLayoutsInCache();
+                        let actualLayoutsIds = scope.dashboardDataService.getCachedLayoutsData();
 
                         if (actualLayoutsIds.includes(layoutId)) {
 
@@ -301,7 +312,7 @@
 
                             uiService.getListLayoutByKey(layoutId).then(function (layoutData) {
 
-                                scope.dashboardDataService.pushToActualRvLayoutsInCache(layoutId);
+                                scope.dashboardDataService.setCachedLayoutsData();
                                 resolve(layoutData);
 
                             }).catch(function (error) {
@@ -312,9 +323,50 @@
 
                     });
 
+                }; */
+                const getLayoutByUserCode = function () {
+
+                    const userCode = componentData.settings.layout;
+                    const cachedLayoutsData = scope.dashboardDataService.getCachedLayoutsData();
+
+                    if ( !cachedLayoutsData[contentType] ) {
+                        cachedLayoutsData[contentType] = {};
+                    }
+
+                    if ( cachedLayoutsData[contentType].hasOwnProperty(userCode) ) {
+
+                        const layoutId = cachedLayoutsData[contentType][userCode];
+
+                        return new Promise(function (resolve) {
+                            resolve( localStorageService.getCachedLayout(layoutId) );
+                        });
+
+                    }
+                    else {
+
+                        return new Promise(function (resolve, reject) {
+
+                            uiService.getListLayoutByUserCode(scope.vm.entityType, userCode).then(function (resData) {
+
+                                if ( resData.results.length ) {
+
+                                    var layoutData = resData.results[0];
+
+                                    scope.dashboardDataService.setCachedLayoutsData(contentType, userCode, layoutData.id);
+
+                                    resolve(layoutData);
+
+                                }
+
+                            }).catch(function (error) { reject(error); });
+
+                        });
+
+                    }
+
                 };
 
-                const getNumberFormatFromLayoutByValueKey = async (layoutId, valueKey) => {
+                const getNumberFormatFromLayoutByValueKey = async () => {
 
                     const defaultNumberFormat = {
                         negative_color_format_id: 0,
@@ -325,9 +377,13 @@
                         zero_format_id: 0,
                     };
 
-                    const layoutData = await getLayoutById(layoutId);
+                    // const layoutData = await getLayoutById(layoutId);
+                    const layoutData = await getLayoutByUserCode();
+
                     const columns = layoutData.data.columns;
-                    const matrixValue = columns.find(column => column.key === valueKey)
+
+                    const valueKey = componentData.settings.value_key;
+                    const matrixValue = columns.find(column => column.key === valueKey);
 
                     return matrixValue ? matrixValue.report_settings : defaultNumberFormat;
 
@@ -337,11 +393,11 @@
                 scope.init = async function () {
 
                     // Victor 2021.05.27 #113 number format from report layout
-                    const layoutId = componentData.settings.layout;
-                    const valueKey = componentData.settings.value_key;
+                    /*const layoutUserCode = componentData.settings.layout;
+                    const valueKey = componentData.settings.value_key;*/
 
                     if ( !componentData.settings.number_format ) {
-                        componentData.settings.number_format = await getNumberFormatFromLayoutByValueKey(layoutId, valueKey);
+                        componentData.settings.number_format = await getNumberFormatFromLayoutByValueKey();
                     }
                     // <Victor 2021.05.27 #113 number format from report layout>
 

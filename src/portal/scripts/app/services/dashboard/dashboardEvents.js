@@ -1,5 +1,9 @@
 module.exports = {
 
+    //region Common events
+    'RELOAD_COMPONENT': 'RELOAD_COMPONENT',
+    //endregion
+
 	//region Dashboard events
 	'REFRESH_ACTIVE_TAB': 'REFRESH_ACTIVE_TAB',
     'REFRESH_ALL': 'REFRESH_ALL',
@@ -16,7 +20,6 @@ module.exports = {
 
 	//region Dashboard component events
 	'COMPONENT_STATUS_CHANGE': 'COMPONENT_STATUS_CHANGE',
-    'RELOAD_COMPONENT': 'RELOAD_COMPONENT',
     'RELOAD_CONTENT_OF_COMPONENT': 'RELOAD_CONTENT_OF_COMPONENT',
 
 	'CLEAR_USE_FROM_ABOVE_FILTERS': 'CLEAR_USE_FROM_ABOVE_FILTERS',

@@ -12,22 +12,22 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    var getList = function (name, page) {
+    var getList = function (searchString, page) {
 
-        var prefix = baseUrlService.getMasterUserPrefix();
-        var apiVersion = baseUrlService.getApiVersion();
+        // var prefix = baseUrlService.getMasterUserPrefix();
+        // var apiVersion = baseUrlService.getApiVersion();
 
         if (page === null || page === undefined) {
-            page = 0
+            page = 1
         }
 
-        var url = baseUrl + '/' + prefix + '/api/'  + 'currencies/currency-database-search/?name=' + name + '&page=' + page
+        // var url = baseUrl + '/' + prefix + '/api/v1/'  + 'currencies/currency-database-search/?query=' + searchString + '&page=' + page
 
 
-        return xhrService.fetch(url,
+        return xhrService.fetch('https://database.finmars.com/api/v1/currency/?query=' + searchString + '&page_size=40' + '&page=' + page,
             {
                 method: 'GET',
-                credentials: 'include',
+                // credentials: 'include',
                 headers: {
                     'Authorization': 'Token ' + cookieService.getCookie('access_token'),
                     Accept: 'application/json',

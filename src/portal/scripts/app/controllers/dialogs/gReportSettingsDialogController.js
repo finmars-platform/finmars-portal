@@ -212,7 +212,8 @@
 
                 vm.pricingPolicies = data.results.map(function (pPolicy) {
                     return {
-                        id: pPolicy.id,
+                        // id: pPolicy.id,
+                        id: pPolicy.user_code,
                         name: pPolicy.short_name
                     }
                 });
@@ -241,7 +242,8 @@
 
                 vm.currencies = data.results.map(function (currency) {
                     return {
-                        id: currency.id,
+                        // id: currency.id,
+                        id: currency.user_code,
                         name: currency.short_name,
                     };
                 });
@@ -455,11 +457,13 @@
             }
 
             vm.currencies.push({
-                id: ecosystemDefaultData.currency_object.id,
+                // id: ecosystemDefaultData.currency_object.id,
+                id: ecosystemDefaultData.currency_object.user_code,
                 name: ecosystemDefaultData.currency_object.short_name,
             });
 
-            vm.reportOptions.report_currency = ecosystemDefaultData.currency_object.id;
+            // vm.reportOptions.report_currency = ecosystemDefaultData.currency_object.id;
+            vm.reportOptions.report_currency = ecosystemDefaultData.currency_object.user_code;
 
         };
 
@@ -467,8 +471,14 @@
             if (!ecosystemDefaultData) {
                 ecosystemDefaultData = await ecosystemDefaultService.getList().then(res => res.results[0]);
             }
-            vm.pricingPolicies.push(ecosystemDefaultData.pricing_policy_object);
-            vm.reportOptions.pricing_policy = ecosystemDefaultData.pricing_policy_object.id;
+            // vm.pricingPolicies.push(ecosystemDefaultData.pricing_policy_object);
+            vm.pricingPolicies.push({
+                // id: ecosystemDefaultData.currency_object.id,
+                id: ecosystemDefaultData.pricing_policy_object.user_code,
+                name: ecosystemDefaultData.pricing_policy_object.name,
+            });
+            // vm.reportOptions.pricing_policy = ecosystemDefaultData.pricing_policy_object.id;
+            vm.reportOptions.pricing_policy = ecosystemDefaultData.pricing_policy_object.user_code;
         };
 
         vm.init = async function () {

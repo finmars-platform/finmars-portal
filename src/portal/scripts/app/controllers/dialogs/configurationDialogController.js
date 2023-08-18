@@ -16,6 +16,8 @@
 
         vm.item = {}
 
+        vm.defaultConfigurationCode = globalDataService.getDefaultConfigurationCode();
+
         vm.checkReadyStatus = function () {
             return vm.readyStatus.data;
         };
@@ -48,7 +50,7 @@
                 "version": vm.item.version,
                 "description": vm.item.description,
                 "date": new Date().toJSON().slice(0, 10),
-                "dependencies": {},
+                "dependencies": [],
             }
 
         }
@@ -84,7 +86,7 @@
                     /*vm.processing = false;
 
                     vm.getItem(vm.item.id)*/
-                    $mdDialog.hide( { status: 'agree', data: {configurationId: data.id} } );
+                    $mdDialog.hide({status: 'agree', data: {configurationId: data.id}});
 
                 })
 
@@ -118,6 +120,8 @@
 
         vm.exportToStorage = function ($event) {
 
+            vm.exportTaskId = null;
+
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
@@ -144,6 +148,9 @@
 
                         configurationService.exportConfiguration(vm.item.id).then(function (data) {
 
+                            vm.exportTaskId = data.task_id;
+                            $scope.$apply();
+
                             toastNotificationService.success("Configuration exported successfully");
 
                             // downloadFileHelper.downloadFile(data, "application/zip", vm.activeConfiguration.name + '.zip');
@@ -161,6 +168,8 @@
 
             vm.processing = true;
 
+            vm.pushTaskId = null;
+
             $mdDialog.show({
                 controller: 'SimpleLoginDialogController as vm',
                 templateUrl: 'views/dialogs/simple-login-dialog-view.html',
@@ -168,9 +177,7 @@
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 locals: {
-                    data: {
-
-                    }
+                    data: {}
                 },
                 preserveScope: true,
                 autoWrap: true,
@@ -189,6 +196,8 @@
                             password: res.data.password,
                             changelog: vm.changelog
                         }).then(function (data) {
+
+                            vm.pushTaskId = data.task_id;
 
                             vm.changelog = '';
 

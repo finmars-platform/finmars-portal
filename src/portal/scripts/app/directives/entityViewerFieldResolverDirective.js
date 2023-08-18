@@ -17,7 +17,6 @@
             scope: {
                 item: '=',
                 entity: '=',
-                content_type: '=',
                 options: '=',
                 entityType: '=',
                 evEditorDataService: '=',
@@ -50,13 +49,14 @@
                 scope.inputTextObj = {
                     value: null
                 };
+                var valueContentType = scope.item.value_content_type || scope.item.content_type;
 
                 var fieldsDataIsLoaded = false;
                 var elIndexesData = {};
                 // console.log('scope.item.name', scope.item);
                 // console.log('scope.entity', scope.entity);
 
-                if (['counterparties', 'accounts', 'responsibles', 'transaction_types'].indexOf(scope.item.key) !== -1) {
+                if ( ['counterparties', 'accounts', 'responsibles', 'transaction_types'].indexOf(scope.item.key) !== -1 ) {
                     scope.type = 'multiple-ids';
                 }
 
@@ -66,37 +66,28 @@
                     return [
                         'instrument', 'portfolio', 'account', 'responsible', 'counterparty', 'strategy-1', 'strategy-2', 'strategy-3',
                         'currency'
-                    ].indexOf(scope.getValueEntity()) !== -1;
+                    ].includes( scope.valueEntity );
                 };
 
                 scope.getValueEntity = function () {
 
-                    // console.log('scope.getModelKeyEntity scope.item.key', scope.item.key)
+                    // var valueEntity = scope.item.key;
+                    var valueEntity = metaContentTypesService.findEntityByContentType(valueContentType);
 
-                    //var key;
-                    var valueEntity = scope.item.key;
+                    /*if (scope.entityType === 'complex-transaction') {
 
-                    if (scope.entityType === 'complex-transaction') {
+                        valueEntity = metaContentTypesService.findEntityByContentType(contentType);
 
-                        valueEntity = metaContentTypesService.findEntityByContentType(scope.item.content_type);
+                    }*/
+                    if (scope.entityType !== 'complex-transaction') {
 
-                        // console.log('valueEntity', valueEntity);
-
-                    } else {
-
-                        if (scope.item.key && ['linked_instrument', 'allocation_balance', 'allocation_pl'].indexOf(scope.item.key) !== -1) {
+                        /*if (scope.item.key && ['linked_instrument', 'allocation_balance', 'allocation_pl'].indexOf(scope.item.key) !== -1) {
                             valueEntity = 'instrument';
-                        } else {
 
-                            switch (scope.item.name) {
-                                case 'account_interim':
-                                case 'account_cash':
-                                case 'account_position':
-                                    valueEntity = 'account';
-                                    break;
-                            }
+                        } else if ( ['account_interim', 'account_cash', 'account_position'].includes(scope.item.name) ) {
+                          valueEntity = 'account';
+                        }*/
 
-                        }
                     }
 
                     return valueEntity;
@@ -305,28 +296,54 @@
 
                     var result = '';
 
-                    // var id = scope.entity[scope.fieldKey];
-                    var id = scope.modelObj.model;
+                    if (
+                        scope.entityType === 'complex-transaction' &&
+                        bfcVm.fieldType.type === 'userInput' &&
+                        ['instruments.instrument', 'counterparties.counterparty', 'currencies.currency'].indexOf(valueContentType) > -1
+                    ) {
 
-                    if (scope.fields && scope.fields.length) {
+                        var item_object = scope.entity.values[scope.fieldKey + '_object'];
 
-                        for (var i = 0; i < scope.fields.length; i = i + 1) {
+                        if (!item_object) {
+                            result = '';
+                        }
+                        else if (item_object.short_name) {
+                            result = item_object.short_name;
 
-                            if (scope.fields[i].id === id) {
+                        } else if (item_object.name) {
+                            result = item_object.name;
 
-                                if (scope.fields[i].short_name) {
-                                    result = scope.fields[i].short_name;
+                        } else {
+                            result = item_object.public_name;
+                        }
 
-                                } else if (scope.fields[i].name) {
-                                    result = scope.fields[i].name;
+                    }
+                    else {
 
-                                } else {
-                                    result = scope.fields[i].public_name;
+                        // var id = scope.entity[scope.fieldKey];
+                        var id = scope.modelObj.model;
+
+                        if (scope.fields && scope.fields.length) {
+
+                            for (var i = 0; i < scope.fields.length; i = i + 1) {
+
+                                if (scope.fields[i].id === id) {
+
+                                    if (scope.fields[i].short_name) {
+                                        result = scope.fields[i].short_name;
+
+                                    } else if (scope.fields[i].name) {
+                                        result = scope.fields[i].name;
+
+                                    } else {
+                                        result = scope.fields[i].public_name;
+                                    }
                                 }
-                            }
 
-                            if (result) {
-                                break;
+                                if (result) {
+                                    break;
+                                }
+
                             }
 
                         }
@@ -356,22 +373,7 @@
                     return false
                 };
 
-                /** @returns {Promise<{type: String, key: String, data: Array}>} - mockup for instrumentSelect, unifiedDataSelect  */
-                function getFields() {
-
-                    return new Promise(function (resolve) {
-
-                        resolve({
-                            type: 'id',
-                            key: scope.item.content_type,
-                            data: [],
-                        })
-
-                    });
-
-                }
-
-                function getDataForComplexTransaction(resolve, reject, options) {
+                /*function getDataForComplexTransaction(resolve, reject, options) {
 
                     if (scope.fieldsDataStore['fieldKeys']) {
                         delete scope.fieldsDataStore['fieldKeys']['currencies.currency']
@@ -380,11 +382,11 @@
 
                     var getFieldsP;
 
-                    if ( ['instruments.instrument', 'counterparties.counterparty', 'currencies.currency'].indexOf(scope.item.content_type) > -1 ) {
+                    if ( ['instruments.instrument', 'counterparties.counterparty', 'currencies.currency'].indexOf(valueContentType) > -1 ) {
                         getFieldsP = getFields();
 
                     } else {
-                        getFieldsP = fieldResolverService.getFieldsByContentType(scope.item.content_type, options, scope.fieldsDataStore);
+                        getFieldsP = fieldResolverService.getFieldsByContentType(valueContentType, options, scope.fieldsDataStore);
                     }
 
                     getFieldsP.then(function (res) {
@@ -411,6 +413,37 @@
 
                     })
 
+                }*/
+
+                /** @returns {Promise<{type: String, key: String, data: Array}>} - mockup for instrumentSelect, unifiedDataSelect  */
+                function getEmptyFields() {
+
+                    return new Promise(function (resolve) {
+
+                        resolve({
+                            type: 'id',
+                            key: scope.item.content_type,
+                            data: [],
+                        })
+
+                    });
+
+                }
+
+                function getFields (options) {
+
+                    if ( ['instruments.instrument', 'counterparties.counterparty', 'currencies.currency'].indexOf(valueContentType) > -1 ) {
+
+                        return getEmptyFields();
+
+                    } else if (scope.entityType === 'complex-transaction') {
+
+                        return fieldResolverService.getFieldsByContentType(valueContentType, options, scope.fieldsDataStore);
+
+                    } else {
+                        return fieldResolverService.getFields(scope.item.key, options, scope.fieldsDataStore)
+                    }
+
                 }
 
                 scope.getData = function () {
@@ -429,7 +462,12 @@
                                 options.key = scope.options.key;
                             }
 
-                            if (scope.entityType === 'complex-transaction') {
+                            /*if (scope.fieldsDataStore['fieldKeys']) {
+                                delete scope.fieldsDataStore['fieldKeys']['currencies.currency']
+                                delete scope.fieldsDataStore['fieldKeys']['instruments.instrument']
+                            }*/
+
+                            /*if (scope.entityType === 'complex-transaction') {
 
                                 console.log('scope.fieldsDataStore', scope.fieldsDataStore);
 
@@ -460,7 +498,26 @@
                                 });
 
 
-                            }
+                            }*/
+                            getFields(options).then(function (res) {
+
+                                scope.type = res.type;
+                                scope.fields = res.data;
+                                // scope.sortedFields = scope.getListWithBindFields(metaHelper.textWithDashSort(res.data));
+
+                                if (scope.fieldKey === 'price_download_scheme') {
+                                    scope.schemeSortedFields = scope.getListWithSchemeName( metaHelper.textWithDashSort(res.data, 'user_code') );
+
+                                } else {
+                                    scope.selectorOptions = getSelectorOptions(res.data);
+                                }
+
+                                scope.readyStatus.content = true;
+                                fieldsDataIsLoaded = true;
+
+                                resolve();
+                                // scope.$apply();
+                            });
 
                         } else {
                             resolve();
@@ -610,7 +667,6 @@
                                     // prepareDataForSelector();
                                     scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
-
                                     scope.$apply();
 
 
@@ -691,7 +747,10 @@
                         scope.modelObj.model = bfcVm.getValueFromEntity();
                         scope.inputTextObj.value = scope.getInputTextForEntitySearch();
 
-                        scope.valueEntity = scope.getValueEntity();
+                        // scope.valueEntity = scope.getValueEntity();
+                        scope.valueEntity = valueContentType ?
+                            metaContentTypesService.findEntityByContentType(valueContentType) :
+                            scope.item.key;
 
                         if (scope.evEditorEventService) {
                             initEventListeners();

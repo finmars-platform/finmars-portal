@@ -40,6 +40,8 @@
             {
                 "key": "group",
                 "name": "Group",
+                "value_content_type": "transactions.transactiontypegroup",
+                "value_entity": 'transaction-type-group',
                 "value_type": "field"
             },
             {

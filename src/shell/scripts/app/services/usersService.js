@@ -115,6 +115,10 @@ export default function (cookieService, globalDataService, xhrService) {
 					memberData.data.favorites = {};
 				}
 
+				if (memberData.data.autosave_layouts !== 'boolean') {
+					memberData.data.autosave_layouts = true;
+				}
+
 				if (!memberData.data.favorites.transaction_type) {
 					memberData.data.favorites.transaction_type = [];
 				}
