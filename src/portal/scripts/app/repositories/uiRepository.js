@@ -462,6 +462,17 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
     };
 
+    var getComplexTransactionFieldPrimaryList = function (options) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/complex-transaction-user-field/primary/', options),
+            getRequestParams('GET'))
+
+    };
+
+
     var createComplexTransactionField = function (data) {
 
 
@@ -495,6 +506,18 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
 
     };
 
+    var getTransactionFieldPrimaryList = function (options) {
+
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/transaction-user-field/primary/', options),
+            getRequestParams('GET'))
+
+    };
+
+
     var createTransactionField = function (data) {
 
 
@@ -515,7 +538,6 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
     };
 
 
-
     var getInstrumentFieldList = function (options) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
@@ -525,6 +547,17 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
             getRequestParams('GET'))
 
     };
+
+    var getInstrumentFieldPrimaryList = function (options) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'ui/instrument-user-field/primary/', options),
+            getRequestParams('GET'))
+
+    };
+
 
     var createInstrumentField = function (data) {
 
@@ -937,15 +970,18 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'ui
         deleteConfigurationExportLayoutByKey: deleteConfigurationExportLayoutByKey,
 
         getComplexTransactionFieldList: getComplexTransactionFieldList,
+        getComplexTransactionFieldPrimaryList: getComplexTransactionFieldPrimaryList,
         createComplexTransactionField: createComplexTransactionField,
         updateComplexTransactionField: updateComplexTransactionField,
 
         getTransactionFieldList: getTransactionFieldList,
+        getTransactionFieldPrimaryList: getTransactionFieldPrimaryList,
         createTransactionField: createTransactionField,
         updateTransactionField: updateTransactionField,
 
 
         getInstrumentFieldList: getInstrumentFieldList,
+        getInstrumentFieldPrimaryList: getInstrumentFieldPrimaryList,
         createInstrumentField: createInstrumentField,
         updateInstrumentField: updateInstrumentField,
 

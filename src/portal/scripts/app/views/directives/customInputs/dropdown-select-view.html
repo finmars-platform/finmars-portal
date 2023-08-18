@@ -5,19 +5,20 @@
         <span class="custom-input-textarea-span-pan">{{label}}</span>
     </div>
 
-    <div custom-popup
-         popup-template-url="{{popupTemplate}}"
-         popup-data="menuOptionsPopupData"
-         popup-event-service="popupEventService"
-         position-relative-to="element"
-         relative-popup-x="left"
-         relative-popup-y="bottom"
-         offset-y="2"
-         open-on="click"
-         close-on-click-outside="true"
-         popup-width="{{popupWidth}}"
-         popup-classes="custom-select-popup-container mh-100vh-popup"
-         on-cancel="onMenuClose()"
+    <div data-custom-popup
+         data-popup-template-url="{{popupTemplate}}"
+         data-popup-data="menuOptionsPopupData"
+         data-popup-event-service="popupEventService"
+         data-position-relative-to="element"
+         data-relative-popup-x="left"
+         data-relative-popup-y="bottom"
+         data-offset-y="2"
+         data-open-on="click"
+         data-close-on-click-outside="true"
+         data-popup-width="{{popupWidth}}"
+         data-popup-min-width="{{popupMinWidth}}"
+         data-popup-classes="custom-select-popup-container mh-100vh-popup"
+         data-on-cancel="onMenuClose()"
 
          class="custom-input-main-container customInputPopup customInputBackgroundColor">
 

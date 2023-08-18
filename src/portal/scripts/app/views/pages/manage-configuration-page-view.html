@@ -59,6 +59,10 @@
                 From Marketplace
             </div>
 
+            <div data-ng-if="item.is_primary" class="configuration-card-from-primary-label">
+                Primary
+            </div>
+
             <md-button class="md-primary md-raised configuration-card-open"
                        data-ng-click="vm.editConfiguration($event, item)">Open
             </md-button>
@@ -99,7 +103,8 @@
 
 
     <div>
-        <md-button class="md-raised md-primary create-configuration-button" data-ng-click="vm.createConfiguration($event)">Add new Configuration
+        <md-button class="md-raised md-primary create-configuration-button"
+                   data-ng-click="vm.createConfiguration($event)">Add new Configuration
         </md-button>
     </div>
 

@@ -16,7 +16,7 @@
 				popupEventService: '=', // can be used to open popup
 				noBackdrop: '@',
 
-				openOn: '@', // ('click', 'right_click', 'mouse_over') - set event listener to open popup.
+				openOn: '@', // [ 'click', 'right_click', 'mouse_over' ] - set event listener to open popup.
 				closeOnClickOutside: '@', // Default - 'true'
 				closeOnMouseLeave: '@',
 				preventDefault: '@',
@@ -35,6 +35,7 @@
 				relativePopupY: '@', // [ 'top', 'bottom' ] Default - 'bottom'
 
 				popupWidth: '@', // [ 'element', 'content' ] Default - 'content'
+				popupMinWidth: '@', // [ 'element' ]
 				//endregion
 
 				// If you need to change classes dynamically, do it through template and popupData
@@ -109,7 +110,22 @@
 					if (scope.popupY) positionY = scope.popupY.value;
 
 					let popupHeight = popupElem.clientHeight;
+					let popupMinWidth = 0;
 					let popupWidth = popupElem.clientWidth;
+
+
+					if (scope.popupMinWidth === 'element') {
+
+						coords = elem[0].getBoundingClientRect();
+
+						popupMinWidth = coords.width;
+						popupWidth = Math.max(popupWidth, popupMinWidth);
+
+					}
+
+					if ( popupMinWidth && !isNaN(popupMinWidth) ) {
+						popupElem.style['min-width'] = popupMinWidth + 'px';
+					}
 
 					if (scope.positionRelativeTo === 'element') {
 
@@ -121,8 +137,8 @@
 
 						if (scope.popupWidth === 'element') {
 
-							popupElem.style.width = coords.width + 'px';
-							popupWidth = coords.width;
+							popupWidth = Math.max(coords.width, popupMinWidth);
+							popupElem.style.width = popupWidth + 'px';
 
 						}
 
@@ -182,11 +198,7 @@
 						popupElem.style.top = "";
 
 					}
-					/*else if (positionY < 20) {
-						popupElem.style.top = '0';
-						popupElem.style.bottom = "";
-
-					}*/ else {
+					else {
 						popupElem.style.top = positionY + 'px';
 						popupElem.style.bottom = "";
 					}

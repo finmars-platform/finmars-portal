@@ -83,6 +83,18 @@
                                 <input aria-label="description" type="text" data-ng-model="vm.item.version">
                             </md-input-container>
 
+
+                            <md-checkbox ng-model="vm.item.is_primary" aria-label="override">
+                                Is Primary
+                                <ng-md-icon class="tooltip-inline-block" icon="info" size="20"
+                                            style="fill: #777777">
+                                    <md-tooltip class="tooltip_1" md-direction="top">User Fields or other entities will
+                                        be take from Primary Configuration
+                                    </md-tooltip>
+                                </ng-md-icon>
+                            </md-checkbox>
+
+
                             <div data-ng-if="vm.item.id">
 
                                 <p>Manifest</p>

@@ -16,6 +16,10 @@
         <md-content class="height-100">
             <div data-ng-if="vm.checkReadyStatus()" class="height-100">
 
+                <draft-button user-code="vm.draftUserCode"
+                              on-export-to-draft-callback="vm.exportToDraft($event)"
+                              on-draft-apply-callback="vm.applyDraft(event, data)"></draft-button>
+
                 <md-tabs class="height-100">
                     <md-tab>
                         <md-tab-label>General</md-tab-label>

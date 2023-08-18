@@ -6,6 +6,7 @@
     'use strict';
 
     var tasksService = require('../../services/tasksService');
+    var explorerService = require('../../services/explorerService');
 
     var baseUrlService = require('../../services/baseUrlService');
     var utilsService = require('../../services/utilsService');
@@ -43,6 +44,37 @@
 
         vm.activeTask = null;
         vm.activeTaskProcessing = false;
+        vm.activeTaskId = null;
+
+        vm.getActiveTask = function () {
+
+            if (vm.activeTaskId) {
+
+                tasksService.getByKey(vm.activeTaskId).then(function (data) {
+
+                    vm.activeTaskProcessing = false;
+
+                    vm.activeTask = data;
+                    vm.activeTask.options_object = JSON.stringify(vm.activeTask.options_object, null, 4);
+                    vm.activeTask.result_object = JSON.stringify(vm.activeTask.result_object, null, 4);
+
+                    if (vm.activeTask.finished_at) {
+                        const date1 = new Date(vm.activeTask.created);
+                        const date2 = new Date(vm.activeTask.finished_at);
+                        const diffTime = Math.abs(date2 - date1);
+
+                        vm.activeTask.execution_time_pretty = vm.toPrettyTime(Math.floor(diffTime / 1000));
+                    }
+
+                    console.log('vm.activeTask', vm.activeTask);
+
+
+                    $scope.$apply();
+                })
+
+            }
+
+        }
 
         vm.selectActiveTask = function ($event, item) {
 
@@ -53,15 +85,10 @@
             item.active = true;
 
             vm.activeTaskProcessing = true;
+            vm.activeTask = null;
+            vm.activeTaskId = item.id
 
-            tasksService.getByKey(item.id).then(function (data) {
-
-                vm.activeTaskProcessing = false;
-
-                vm.activeTask = data;
-
-                $scope.$apply();
-            })
+            vm.getActiveTask();
 
         }
 
@@ -322,12 +349,53 @@
                 item.finished_at_pretty = moment(new Date(item.finished_at)).format('HH:mm:ss');
             }
 
+            item.created_date = moment(new Date(item.created)).format('YYYY-MM-DD');
+
 
             item.options_object = JSON.stringify(item.options_object, null, 4);
             item.result_object = JSON.stringify(item.result_object, null, 4);
-            item.progress_object = JSON.stringify(item.progress_object, null, 4);
+            // item.progress_object = JSON.stringify(item.progress_object, null, 4);
 
             return item
+
+        }
+
+        function convertSecondsToTime(secs) {
+            let hours = Math.floor(secs / (60 * 60));
+
+            let divisor_for_minutes = secs % (60 * 60);
+            let minutes = Math.floor(divisor_for_minutes / 60);
+
+            let divisor_for_seconds = divisor_for_minutes % 60;
+            let seconds = Math.ceil(divisor_for_seconds);
+
+            let obj = {
+                "h": hours,
+                "m": minutes,
+                "s": seconds
+            };
+            return ("0" + obj.h).slice(-2) + ":" + ("0" + obj.m).slice(-2) + ":" + ("0" + obj.s).slice(-2);
+        }
+
+        vm.getStats = function () {
+
+            tasksService.getStats().then(function (data) {
+
+                vm.statsItems = []
+
+                Object.keys(data).forEach(function (key) {
+
+                    data[key]['name'] = key
+
+                    data[key]['uptime'] = convertSecondsToTime(data[key]['uptime'])
+
+                    vm.statsItems.push(data[key])
+
+                })
+
+                $scope.$apply();
+
+            })
 
         }
 
@@ -350,22 +418,18 @@
                 vm.items = data.results;
                 vm.count = data.count
 
-                if (!vm.activeTask) {
-
-                    if (vm.items.length) {
-                        vm.activeTask = vm.items[0]
-                        vm.items[0].active = true;
-                    }
-
-                }
-
                 vm.items = vm.items.map(function (item) {
 
                     item = vm.formatTask(item);
 
-
                     return item
                 })
+
+
+                if (!vm.activeTask && vm.items.length) {
+                    vm.selectActiveTask(new Event(), vm.items[0])
+                }
+
 
                 // vm.items[0].status = 'P'
 
@@ -380,30 +444,43 @@
 
         vm.downloadFile = function ($event, item) {
 
-            // TODO WTF why systemMessage Service, replace with FilePreview Service later
-            systemMessageService.viewFile(item.file_report).then(function (data) {
+            explorerService.viewFile(item.file_report_object.file_url).then(function (blob) {
 
-                console.log('data', data);
+                var reader = new FileReader();
 
-                $mdDialog.show({
-                    controller: 'FilePreviewDialogController as vm',
-                    templateUrl: 'views/dialogs/file-preview-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        data: {
-                            content: data,
-                            info: item
-                        }
+                reader.addEventListener("loadend", function (e) {
+
+                    var content = reader.result;
+
+                    if (item.file_report_object.file_url.indexOf('.json') !== -1) {
+                        content = JSON.parse(content)
                     }
+
+                    $mdDialog.show({
+                        controller: 'FilePreviewDialogController as vm',
+                        templateUrl: 'views/dialogs/file-preview-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                content: content,
+                                info: item
+                            }
+                        }
+                    });
+
+
                 });
 
-            })
+                reader.readAsText(blob);
+
+
+            });
 
 
         }
@@ -441,6 +518,13 @@
 
         }
 
+        vm.doRefresh = function () {
+
+            vm.getData();
+            vm.getStats();
+            vm.getActiveTask();
+
+        }
 
         vm.init = function () {
 
@@ -463,10 +547,13 @@
             }
 
             vm.getData();
+            vm.getStats();
 
             setInterval(function () {
 
                 vm.getData();
+                vm.getStats();
+                vm.getActiveTask();
 
             }, 1000 * 30)
 

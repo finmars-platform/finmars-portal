@@ -1,6 +1,7 @@
 /**
  * Created by szhitenev on 05.05.2016.
  */
+
 (function () {
 
     'use strict';
@@ -8,8 +9,9 @@
     var metaService = require('../services/metaService');
     // var usersService = require('../services/usersService');
     var metaHelper = require('../helpers/meta.helper');
+    var cookieService = require('../../../../core/services/cookieService');
 
-    module.exports = function ($scope, $mdDialog, $transition, usersService, globalDataService, redirectionService, uiService) {
+    module.exports = function ($scope, $interval, $mdDialog, $transition, usersService, globalDataService, redirectionService, uiService) {
 
         var vm = this;
 
@@ -99,8 +101,8 @@
         };
 
         vm.sideNavStatus = 'expand';
-		vm.homepageUrl = redirectionService.getUrl('app.portal.home');
-		vm.performanceUrl = redirectionService.getUrl('app.portal.reports.performance-report');
+        vm.homepageUrl = redirectionService.getUrl('app.portal.home');
+        vm.performanceUrl = redirectionService.getUrl('app.portal.reports.performance-report');
         vm.permissionsUrl = redirectionService.getUrl('app.portal.settings.users-groups');
 
         /* Old sidemenu */
@@ -511,7 +513,7 @@
 
         vm.getMember = function () {
 
-			/* usersService.getMyCurrentMember().then(function (data) {
+            /* usersService.getMyCurrentMember().then(function (data) {
 
                 vm.currentMember = data;
 
@@ -526,8 +528,8 @@
                 })
 
             })*/
-			vm.member = globalDataService.getMember();
-			vm.getInterfaceAccess();
+            vm.member = globalDataService.getMember();
+            vm.getInterfaceAccess();
 
         };
 
@@ -564,7 +566,7 @@
             return window.system_errors.length
         }
 
-        vm.getCurrentApiUrl = function() {
+        vm.getCurrentApiUrl = function () {
 
             var currentMasterUser = globalDataService.getMasterUser();
 
@@ -579,7 +581,7 @@
             return currentMasterUser.version;
         }
 
-        vm.copyToBuffer = function(content) {
+        vm.copyToBuffer = function (content) {
 
             metaHelper.copyToBuffer(content)
 
@@ -601,7 +603,7 @@
 
                 document.querySelector('.log-dialog').remove()
 
-            } else  {
+            } else {
 
                 $mdDialog.show({
                     controller: 'LogDialogController as vm',
@@ -619,6 +621,30 @@
             }
 
 
+        }
+
+        function secondsToHms(d) {
+            d = Number(d);
+            const h = Math.floor(d / 3600);
+            const m = Math.floor(d % 3600 / 60);
+            const s = Math.floor(d % 3600 % 60);
+
+            const hDisplay = h > 0 ? (h < 10 ? '0' + h : h) + ':' : '00:';
+            const mDisplay = m > 0 ? (m < 10 ? '0' + m : m) + ':' : '00:';
+            const sDisplay = s > 0 ? (s < 10 ? '0' + s : s) : '00';
+            return hDisplay + mDisplay + sDisplay;
+        }
+
+        vm.getSessionRemainingTime = function () {
+
+            const token = cookieService.getCookie('refresh_token')
+            const decodedToken = JSON.parse(atob(token.split('.')[1]));
+            const currentTime = Math.floor(new Date().getTime() / 1000); // Current time in seconds since epoch
+            vm.remainingTime = decodedToken.exp - currentTime;
+
+            vm.remainingTimePretty = secondsToHms(vm.remainingTime);
+
+            // console.log('getSessionRemainingTime', vm.remainingTimePretty);
 
         }
 
@@ -629,6 +655,16 @@
             }
 
             vm.getMember();
+
+            vm.currentYear = new Date().getFullYear();
+
+            vm.getSessionRemainingTime();
+
+            vm.currentVersion = vm.getCurrentVersion();
+
+            vm.sessionRemainingInterval = $interval(function () {
+                vm.getSessionRemainingTime();
+            }, 1000);
 
 
             // if (toastr) {
@@ -657,6 +693,14 @@
         }
 
         vm.init();
+
+        $scope.$on('destroy', function () {
+
+            // clearInterval(vm.sessionRemainingInterval);
+            $interval.cancel(vm.sessionRemainingInterval);
+            vm.sessionRemainingInterval = undefined;
+
+        })
 
     }
 

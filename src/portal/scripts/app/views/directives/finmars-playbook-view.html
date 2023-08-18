@@ -1,5 +1,9 @@
 <div class="finmars-playbook">
 
+    <draft-button user-code="draftUserCode"
+                  on-export-to-draft-callback="exportToDraft($event)"
+                  on-draft-apply-callback="applyDraft(event, data)"></draft-button>
+
     <div class="finmars-playbook-toolbar">
         Playbook
 
@@ -21,16 +25,19 @@
 
     <div class="finmars-playbook-cell-holder">
 
-        <div data-ng-if="item.cells.length">
+        <div data-ng-if="item.cells.length && !processing">
 
             <div data-ng-repeat="cell in item.cells track by $index"
-                 class="finmars-playbook-cell {{cell.active ? 'active' : ''}}" data-ng-click="activateCell($event, cell)">
+                 class="finmars-playbook-cell {{cell.active ? 'active' : ''}}"
+                 data-ng-click="activateCell($event, cell)">
 
                 <div class="finmars-playbook-cell-content">
 
-                    <python-editor source="cell.source" index="$index"></python-editor>
+                    <python-editor source="cell.source" index="cell.id" file-path-list="filePathList"></python-editor>
 
-                    <md-button class="finmars-playbook-cell-delete-cell-button" data-ng-click="deleteCell($event, $index, cell)">Delete</md-button>
+                    <md-button class="finmars-playbook-cell-delete-cell-button"
+                               data-ng-click="deleteCell($event, $index, cell)">Delete
+                    </md-button>
 
                     <div data-ng-if="cell.outputs">
                         <div data-ng-repeat="output in cell.outputs" class="finmars-playbook-cell-output">
@@ -44,6 +51,14 @@
 
             <div data-ng-if="!item.cells.length">
                 <p>No Cells found. You can add a new one.</p>
+            </div>
+
+        </div>
+
+        <div data-ng-if="processing" class="p-t-16">
+
+            <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
+                <progress-circular diameter="50"></progress-circular>
             </div>
 
         </div>

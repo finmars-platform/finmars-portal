@@ -149,6 +149,10 @@
 
                         entityValues[uInput.name] = viewModel.entity.values[uInput.name];
 
+                        if (viewModel.entity.values[uInput.name + '_object']) {
+                            entityValues[uInput.name+ '_object'] = viewModel.entity.values[uInput.name+ '_object'];
+                        }
+
                         if (uInput.value_type === 120) entityValues[uInput.name] = true; // Required for button user input
 
                     }
