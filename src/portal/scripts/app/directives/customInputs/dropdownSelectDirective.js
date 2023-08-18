@@ -59,6 +59,7 @@
                     scope.dialogParent = scope.smallOptions.dialogParent;
                     scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
                     scope.popupWidth = scope.smallOptions.popupWidth || scope.popupWidth;
+                    scope.popupMinWidth = scope.smallOptions.popupMinWidth;
 
                 }
 

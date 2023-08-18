@@ -68,7 +68,13 @@
 
                 scope.errorDescription = '';
 
-                scope.iSmallOpts = {
+                scope.selSmallOpts = {
+                    noIndicatorBtn: true,
+                    popupWidth: 'content',
+                    popupMinWidth: 'element',
+                }
+
+                scope.uciSmallOpts = {
                     noIndicatorBtn: true,
                     tooltipText: 'Allowed symbols: Numbers: 0-9, Letters: a-z (lowercase) Special Symbols: _, - (underscore, dash)'
                 }

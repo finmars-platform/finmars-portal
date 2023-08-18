@@ -18,7 +18,7 @@
                 <dropdown-select data-label="Configuration"
                                  data-model="configuration_code.value"
                                  data-menu-options="configuration_codes"
-                                 data-small-options="{noIndicatorBtn: true}"
+                                 data-small-options="selSmallOpts"
                                  data-on-change-callback="updateUserCode(usercodeEnd.value, configuration_code.value)"></dropdown-select>
             </div>
 
@@ -32,7 +32,7 @@
             <div class="flex-1-1-100" style="min-width: 0;">
                 <text-input data-label="User code"
                             data-model="usercodeEnd.value"
-                            data-small-options="iSmallOpts"
+                            data-small-options="uciSmallOpts"
                             data-on-change-callback="onUserCodeChange(usercodeEnd.value, configuration_code.value)"></text-input>
             </div>
 
