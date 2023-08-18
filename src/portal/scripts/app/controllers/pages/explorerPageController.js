@@ -32,6 +32,7 @@
 
         vm.fileEditor = {}
         vm.fileEditorLoading = false;
+        vm.playBookLoading = false;
 
         vm.allSelected = false;
         vm.selectedCount = 0;
@@ -98,6 +99,8 @@
 
                     vm.fileEditorLoading = false;
 
+                    vm.draftUserCode = 'explorer.' + vm.currentPath.join('__');
+
                     $scope.$apply();
 
                     vm.initFileEditor() // call after angular.js render
@@ -115,16 +118,20 @@
 
             var itemPath = vm.currentPath.join('/');
 
+            vm.playBookLoading = true;
+
+            vm.showPlaybook = true;
+
             explorerService.viewFile(itemPath).then(function (blob) {
 
                 var reader = new FileReader();
 
                 reader.addEventListener("loadend", function (e) {
 
-                    vm.showPlaybook = true;
-
                     vm.playbook = JSON.parse(reader.result);
                     vm.playbookName = vm.currentPath[vm.currentPath.length - 1];
+
+                    vm.playBookLoading = false;
 
                     console.log('vm.playbook', vm.playbook);
                     console.log('vm.playbookName', vm.playbookName);
@@ -153,7 +160,6 @@
             if (item.name.indexOf('.ipynb') !== -1) {
 
 
-
                 vm.fileEditorLoading = true;
 
                 vm.downloadAndOpenPlaybook();
@@ -171,6 +177,28 @@
             }
 
         }
+
+        // DRAFT STARTED
+
+        vm.exportToDraft = function () {
+
+            var data = vm.editor.getValue()
+
+            console.log('data', data);
+
+            return data
+
+        }
+
+        vm.applyDraft = function ($event, data) {
+
+            // console.log('data', data);
+
+            vm.editor.setValue(data);
+
+        }
+
+        // DRAFT ENDED
 
         vm.initFileEditor = function () {
 
@@ -228,6 +256,39 @@
 
                 vm.editor.focus();
                 vm.editor.navigateFileStart();
+
+                var undoManager = vm.editor.session.getUndoManager();
+
+                var path = vm.currentPath.join('__')
+
+
+                undoManager.toJSON = function () {
+                    return {
+                        $redoStack: this.$redoStack,
+                        $undoStack: this.$undoStack
+                    };
+                }
+
+                undoManager.fromJSON = function (json) {
+                    this.reset();
+                    this.$undoStack = json.$undoStack;
+                    this.$redoStack = json.$redoStack;
+                }
+
+                vm.editor.session.on('change', function () {
+                    var history = undoManager.toJSON();
+                    // console.log('vm.editor.session history', history);
+                    localStorage.setItem('ace_editor_' + path, JSON.stringify(history));
+                });
+
+                var savedHistory = localStorage.getItem('ace_editor_' + path);
+                if (savedHistory) {
+                    undoManager.fromJSON(JSON.parse(savedHistory));
+
+                    // console.log('undoManager.$undoStack', undoManager.$undoStack)
+                    // console.log('undoManager.$redoStack', undoManager.$redoStack)
+                }
+
 
             }, 100)
 
@@ -632,30 +693,36 @@
 
                     let formData = new FormData();
 
-                    var defaultPlaybook = {
-                        "metadata": {
-                            "kernelspec": {
-                                "name": "python",
-                                "display_name": "Python (Pyodide)",
-                                "language": "python"
-                            },
-                            "language_info": {
-                                "codemirror_mode": {
+                    let defaultContent = '';
+
+                    if (res.name.indexOf('.ipynb') !== -1) {
+
+                        defaultContent = {
+                            "metadata": {
+                                "kernelspec": {
                                     "name": "python",
-                                    "version": 3
+                                    "display_name": "Python (Pyodide)",
+                                    "language": "python"
                                 },
-                                "file_extension": ".py",
-                                "mimetype": "text/x-python",
-                                "name": "python",
-                                "nbconvert_exporter": "python",
-                                "pygments_lexer": "ipython3",
-                                "version": "3.8"
-                            }
-                        },
-                        "cells": []
+                                "language_info": {
+                                    "codemirror_mode": {
+                                        "name": "python",
+                                        "version": 3
+                                    },
+                                    "file_extension": ".py",
+                                    "mimetype": "text/x-python",
+                                    "name": "python",
+                                    "nbconvert_exporter": "python",
+                                    "pygments_lexer": "ipython3",
+                                    "version": "3.8"
+                                }
+                            },
+                            "cells": []
+                        }
+
                     }
 
-                    var content = JSON.stringify(defaultPlaybook);
+                    var content = JSON.stringify(defaultContent);
 
                     console.log('path', path)
                     console.log('name', res.name)
@@ -679,6 +746,8 @@
 
                             vm.fileEditor.name = res.name;
                             vm.fileEditor.content = '';
+
+                            vm.draftUserCode = 'explorer.' + vm.currentPath.join('__');
 
                             vm.showEditor = true;
 

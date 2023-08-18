@@ -13,18 +13,38 @@
             restrict: 'E',
             templateUrl: 'views/directives/usercode-input-view.html',
             scope: {
-                item: '=',
+                /* Exaple of object structor for item
+                 * {
+                 *      configuration_code: String,
+                 *      content_type: String,
+                 *      user_code: String, // 'configuration_code' + ':' + content_type + ':' + user_code_editable_string
+                 * }
+                 */
+                item: '=', // legacy
+
+                configurationCode: '=',
+                contentType: '<',
+                userCode: '=',
+
                 error: '=',
                 occupiedUserCodes: '<',
             },
             link: function (scope, elem, attrs) {
-                
+
+                scope.readyStatus = false;
                 scope.configuration_code = {
                     // value: 'com.finmars.local'
                     value:  globalDataService.getDefaultConfigurationCode()
                 };
 
-                scope.usercode = {
+                scope.configuration_codes = [
+                    {
+                        id: scope.configuration_code.value,
+                        name: scope.configuration_code.value,
+                    }
+                ];
+
+                scope.usercodeEnd = {
                     value: ''
                 };
 
@@ -48,34 +68,59 @@
 
                 scope.errorDescription = '';
 
+                scope.selSmallOpts = {
+                    noIndicatorBtn: true,
+                    popupWidth: 'content',
+                    popupMinWidth: 'element',
+                }
+
+                scope.uciSmallOpts = {
+                    noIndicatorBtn: true,
+                    tooltipText: 'Allowed symbols: Numbers: 0-9, Letters: a-z (lowercase) Special Symbols: _, - (underscore, dash)'
+                }
+
                 const assembleUserCode = function (userCodeEnd) {
 
                     let userCode = scope.configuration_code.value + ':';
 
-                    if (scope.item.content_type) {
-                        userCode = userCode + scope.item.content_type + ':';
+                    const contentType = scope.item ? scope.item.content_type : scope.contentType;
+
+                    if (contentType) {
+                        userCode = userCode + contentType + ':';
                     }
 
                     return userCode + userCodeEnd;
 
                 }
 
-                scope.updateUserCode = function (usercode, configuration_code) {
+                scope.updateUserCode = function (usercodeEnd, configuration_code) {
 
                     console.log('scope.configuration_code', scope.configuration_code.value);
-                    console.log('scope.usercode', scope.usercode);
+                    console.log('scope.usercodeEnd', scope.usercodeEnd);
 
-                    scope.usercode.value = usercode
+                    scope.usercodeEnd.value = usercodeEnd
                     scope.configuration_code.value = configuration_code
 
-                    if (scope.usercode.value) {
-                        convertedUserCode = replaceSpecialCharsAndSpaces(scope.usercode.value).toLowerCase();
+                    if (scope.usercodeEnd.value) {
+                        convertedUserCode = replaceSpecialCharsAndSpaces(scope.usercodeEnd.value).toLowerCase();
                     }
 
                     // scope.item.user_code = assembleUserCode(usercode);
-                    scope.item.user_code = assembleUserCode(convertedUserCode);
+                    if (scope.item) {
+                        scope.item.user_code = assembleUserCode(convertedUserCode);
+                        scope.item.configuration_code = scope.configuration_code.value;
 
-                    scope.item.configuration_code = scope.configuration_code.value;
+                    }
+                    else {
+
+                        scope.userCode = assembleUserCode(convertedUserCode);
+
+                        if (typeof scope.configurationCod === 'string') {
+                            scope.configurationCod = scope.configuration_code.value;
+                        }
+
+                    }
+
 
                 }
 
@@ -105,28 +150,38 @@
 
                 }
 
+                scope.onUserCodeChange = function (usercodeEnd, configuration_code) {
+
+                    scope.validateUserCode(usercodeEnd);
+
+                    scope.updateUserCode(usercodeEnd, configuration_code);
+
+                }
+
                 const parseUserCode = function () {
 
-                    if (!scope.item.user_code) {
+                    const uc = scope.item ? scope.item.user_code : scope.userCode;
+
+                    if (!uc) {
                         return;
                     }
 
-                    const parts = scope.item.user_code.split(':');
+                    const parts = uc.split(':');
 
                     switch (parts.length) {
 
                         case 1:
-                            scope.usercode.value = parts[0];
+                            scope.usercodeEnd.value = parts[0];
                             break;
 
                         case 2:
                             scope.configuration_code.value = parts[0]
-                            scope.usercode.value = parts[1];
+                            scope.usercodeEnd.value = parts[1];
                             break;
 
                         case 3:
                             scope.configuration_code.value = parts[0]
-                            scope.usercode.value = parts[2];
+                            scope.usercodeEnd.value = parts[2];
                             break;
                     }
 
@@ -134,15 +189,20 @@
 
                 const init = function () {
 
+                    parseUserCode();
+
                     configurationService.getList().then(function (data) {
 
                         scope.configuration_codes = data.results.filter(function (item) {
                             return !item.is_package; // TODO Move to backend filtering someday
                         }).map(function (item) {
-                            return item.configuration_code
+                            return {
+                                id: item.configuration_code,
+                                name: item.configuration_code,
+                            }
                         });
 
-                        parseUserCode();
+                        scope.readyStatus = true;
 
                         scope.$apply();
 

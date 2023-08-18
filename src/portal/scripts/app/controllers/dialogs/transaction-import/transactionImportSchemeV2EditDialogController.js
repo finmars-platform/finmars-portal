@@ -138,143 +138,150 @@ const importTransactionService = require("../../../services/import/importTransac
             vm.reconFields.splice($index, 1);
         };
 
+        vm.transformSourceSchemeToFrontendLogic = function() {
+
+            if (vm.scheme.inputs.length) {
+
+                vm.providerFields = [];
+
+                vm.scheme.inputs.forEach(function (input) {
+                    vm.providerFields.push(input);
+                });
+
+                vm.providerFields = vm.providerFields.sort(function (a, b) {
+                    if (a.column > b.column) {
+                        return 1;
+                    }
+                    if (a.column < b.column) {
+                        return -1;
+                    }
+
+                    return 0;
+                });
+
+                vm.inputsFunctions = vm.getFunctions();
+
+            }
+
+            if (vm.scheme.calculated_inputs && vm.scheme.calculated_inputs.length) {
+
+                vm.calculatedFields = [];
+
+                vm.scheme.calculated_inputs.forEach(function (input) {
+                    vm.calculatedFields.push(input);
+                });
+
+                vm.calculatedFields = vm.calculatedFields.sort(function (a, b) {
+                    if (a.column > b.column) {
+                        return 1;
+                    }
+                    if (a.column < b.column) {
+                        return -1;
+                    }
+
+                    return 0;
+                });
+
+                vm.inputsFunctions = vm.getFunctions();
+
+            }
+
+            if (vm.scheme.rule_scenarios.length) {
+
+                vm.scenarios = [];
+
+                vm.scheme.rule_scenarios.forEach(function (scenario) {
+
+                    if (scenario.transaction_type_object) {
+
+                        scenario.inputs = scenario.transaction_type_object.inputs;
+
+                        scenario.transaction_type_object.inputs =
+                            scenario.transaction_type_object.inputs.filter(function (input) {
+                                return input.value_type !== 120;
+                            });
+
+
+                    } else {
+                        scenario.error_message = "⚠️ Transaction Type is not found"
+                    }
+
+                    if (scenario.inputs) {
+
+                        scenario.inputs.forEach(function (input_item) {
+
+                            scenario.fields.forEach(function (field) {
+
+                                if (field.transaction_type_input === input_item.name) {
+
+                                    input_item.expression = field.value_expr
+
+                                }
+
+                            })
+
+
+                        })
+
+                    } else {
+                        scenario.inputs = []
+                    }
+
+                    if (scenario.is_default_rule_scenario) {
+                        vm.defaultRuleScenario = scenario
+
+                    } else {
+
+                        if (scenario.is_error_rule_scenario) {
+
+                            vm.errorRuleScenario = scenario
+
+
+                        } else {
+
+
+
+
+                            vm.scenarios.push(scenario);
+
+                        }
+                    }
+
+
+                })
+
+            }
+
+            if (vm.scheme.recon_scenarios.length) {
+                vm.reconFields = [];
+
+                vm.scheme.recon_scenarios.forEach(function (item) {
+                    vm.reconFields.push(item)
+                })
+            }
+
+
+            vm.selector_values_projection = vm.scheme.selector_values.map(function (item) {
+                return {
+                    id: item.value,
+                    value: item.value
+                }
+            });
+
+            console.log('selector_values_projection', vm.selector_values_projection);
+            console.log('mapFields', vm.scenarios);
+            console.log('reconFields', vm.reconFields);
+
+        }
+
         vm.getItem = function () {
 
             transactionImportSchemeService.getByKey(schemeId).then(function (data) {
 
                 vm.scheme = data;
+                vm.draftUserCode = vm.generateUserCodeForDraft();
 
-                if (vm.scheme.inputs.length) {
-
-                    vm.providerFields = [];
-
-                    vm.scheme.inputs.forEach(function (input) {
-                        vm.providerFields.push(input);
-                    });
-
-                    vm.providerFields = vm.providerFields.sort(function (a, b) {
-                        if (a.column > b.column) {
-                            return 1;
-                        }
-                        if (a.column < b.column) {
-                            return -1;
-                        }
-
-                        return 0;
-                    });
-
-                    vm.inputsFunctions = vm.getFunctions();
-
-                }
-
-                if (vm.scheme.calculated_inputs && vm.scheme.calculated_inputs.length) {
-
-                    vm.calculatedFields = [];
-
-                    vm.scheme.calculated_inputs.forEach(function (input) {
-                        vm.calculatedFields.push(input);
-                    });
-
-                    vm.calculatedFields = vm.calculatedFields.sort(function (a, b) {
-                        if (a.column > b.column) {
-                            return 1;
-                        }
-                        if (a.column < b.column) {
-                            return -1;
-                        }
-
-                        return 0;
-                    });
-
-                    vm.inputsFunctions = vm.getFunctions();
-
-                }
-
-                if (vm.scheme.rule_scenarios.length) {
-
-                    vm.scenarios = [];
-
-                    vm.scheme.rule_scenarios.forEach(function (scenario) {
-
-                        if (scenario.transaction_type_object) {
-
-                            scenario.inputs = scenario.transaction_type_object.inputs;
-
-                            scenario.transaction_type_object.inputs =
-                                scenario.transaction_type_object.inputs.filter(function (input) {
-                                    return input.value_type !== 120;
-                                });
-
-
-                        } else {
-                            scenario.error_message = "⚠️ Transaction Type is not found"
-                        }
-
-                        if (scenario.inputs) {
-
-                            scenario.inputs.forEach(function (input_item) {
-
-                                scenario.fields.forEach(function (field) {
-
-                                    if (field.transaction_type_input === input_item.name) {
-
-                                        input_item.expression = field.value_expr
-
-                                    }
-
-                                })
-
-
-                            })
-
-                        } else {
-                            scenario.inputs = []
-                        }
-
-                        if (scenario.is_default_rule_scenario) {
-                            vm.defaultRuleScenario = scenario
-
-                        } else {
-
-                            if (scenario.is_error_rule_scenario) {
-
-                                vm.errorRuleScenario = scenario
-
-
-                            } else {
-
-
-
-
-                                vm.scenarios.push(scenario);
-
-                            }
-                        }
-
-
-                    })
-
-                }
-
-                if (vm.scheme.recon_scenarios.length) {
-                    vm.reconFields = [];
-
-                    vm.scheme.recon_scenarios.forEach(function (item) {
-                        vm.reconFields.push(item)
-                    })
-                }
-
-
-                vm.selector_values_projection = vm.scheme.selector_values.map(function (item) {
-                    return {
-                        id: item.value,
-                        value: item.value
-                    }
-                });
-
-                console.log('selector_values_projection', vm.selector_values_projection);
-                console.log('mapFields', vm.scenarios);
-                console.log('reconFields', vm.reconFields);
+                vm.transformSourceSchemeToFrontendLogic();
 
                 vm.readyStatus.scheme = true;
                 $scope.$apply();
@@ -426,7 +433,7 @@ const importTransactionService = require("../../../services/import/importTransac
 
         }
 
-        vm.agree = function ($event) {
+        vm.transformSchemeToBackendLogic = function () {
 
             var result = JSON.parse(JSON.stringify(vm.scheme));
 
@@ -445,6 +452,14 @@ const importTransactionService = require("../../../services/import/importTransac
             result.rule_scenarios.push(vm.errorRuleScenario)
 
             result.recon_scenarios = vm.reconFields;
+
+            return result
+
+        }
+
+        vm.agree = function ($event) {
+
+            var result = vm.transformSchemeToBackendLogic();
 
             var warningMessage = '';
             var warningTitle = '';
@@ -777,6 +792,37 @@ const importTransactionService = require("../../../services/import/importTransac
             });
         };
 
+        // DRAFT STARTED
+
+        vm.generateUserCodeForDraft = function (){
+
+            if (!vm.scheme.id) {
+                return 'integrations.complextransactionimportscheme.new'
+            }
+
+            return 'integrations.complextransactionimportscheme.' + vm.scheme.user_code
+
+        }
+
+        vm.exportToDraft = function ($event) {
+
+            var result = vm.transformSchemeToBackendLogic();
+
+            return JSON.parse(JSON.stringify(result))
+
+        }
+
+        vm.applyDraft = function ($event, data) {
+
+            console.log('applyDraft', data);
+
+            vm.scheme = data;
+
+            vm.transformSourceSchemeToFrontendLogic();
+
+        }
+
+        // DRAFT ENDED
 
         vm.init = function () {
 

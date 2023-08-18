@@ -502,6 +502,12 @@
                 controller: 'PricingPolicyPageController as vm'
             })
 
+            .state('app.portal.portfolio-bundle', {
+                url: '/portfolio-bundles',
+                templateUrl: 'views/pages/portfolio-bundle-page-view.html',
+                controller: 'PortfolioBundlePageController as vm'
+            })
+
             .state('app.portal.transaction-type-group', {
                 url: '/transaction-type-group',
                 templateUrl: 'views/pages/transaction-type-group-page-view.html',

@@ -20,17 +20,8 @@
 
     </div>
 
-    <div data-ng-if="!vm.showPageContent()" style="padding-top: 120px;">
+    <initial-loader data-ng-if="initLoaderProcessing"></initial-loader>
 
-        <div class="overlay-loader" layout="row" layout-sm="column" layout-align="space-around">
-            <progress-linear></progress-linear>
-        </div>
-
-        <div class="m-t-16 text-center">
-            Loading Database
-        </div>
-
-    </div>
 
     <div class="log-containers-wrap"></div>
 
