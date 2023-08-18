@@ -39,12 +39,47 @@
   height: 100px;
 }
 
+.progress-holder {
+  background: #fff;
+  position: relative;
+  border-radius: 50%;
+  /* border: 1px solid red; */
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0,0,0,1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 75%;
+    height: 75%;
+
+    animation: rotateCounterClockwise 20s linear infinite; /* Adjust duration as needed */
+
+  }
+
+  @keyframes rotateCounterClockwise {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(-360deg);
+    }
+  }
+
+}
+
 .progress-circular {
   border: .2em solid transparent;
-  border-top-color: currentcolor;
+  //border-top-color: currentcolor;
+  border-top-color: #F05A22;
   border-radius: 50%;
   animation: 1s progress-circular linear infinite;
-  position: relative;
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+  transition: border-top-color 2s linear, border-right-color 2s linear;
 
   &:before {
     content: '';
@@ -56,7 +91,7 @@
     left: -.2em;
     border: .2em solid currentcolor;
     border-radius: 50%;
-    opacity: .5;
+    opacity: .2;
   }
 }
 
@@ -137,4 +172,49 @@ progress-linear {
     background-size: 400% 100%;
     background-position: left -102% top 0%;
   }
+}
+
+
+
+.initial-loader {
+  background: #000;
+  color: #fff;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  .initial-loader-content {
+    position: relative;
+    z-index: 1;
+  }
+  progress-linear {
+    width: 75%;
+  }
+  .progress-linear {
+
+    position: relative;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100px; /* Adjust as needed */
+      background: linear-gradient(to left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+    }
+
+    &::before {
+      left: 0;
+    }
+
+    &::after {
+      right: 0;
+      transform: scaleX(-1);
+    }
+  }
+
 }

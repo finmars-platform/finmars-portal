@@ -1,6 +1,45 @@
-"use strict";
+/**
+ *
+ * @param {String} userCode
+ * @return {{configuration_code: string, userCodeEnd: string}}
+ */
+const splitUserCode = function (userCode) {
 
-export default function () {
+	let result = {
+		configuration_code: "",
+		userCodeEnd: "",
+	}
+
+	if (!userCode) {
+		return result;
+	}
+
+	const parts = userCode.split(':');
+
+	switch (parts.length) {
+
+		case 1:
+			result.userCodeEnd = parts[0];
+			break;
+
+		case 2:
+			result.configuration_code = parts[0]
+			result.userCodeEnd = parts[1];
+			break;
+
+		case 3:
+			result.configuration_code = parts[0]
+			result.userCodeEnd = parts[2];
+			break;
+	}
+
+	return result;
+
+}
+
+const metaHelper = require("../../helpers/meta.helper");
+
+export default function (metaContentTypesService, globalDataService) {
 
 	const EventService = require("../../services/eventService");
 	const metaService = require("../../services/metaService")
@@ -48,6 +87,7 @@ export default function () {
 				scope.valueToShow = scope.valueToShow || 'name';
 				scope.editingOn = scope.editing === 'true';
 				const reqAttrs = metaService.getRequiredEntityAttrs(scope.entityType);
+				const contentType = metaContentTypesService.findContentTypeByEntity(scope.entityType);
 
 				const getErrorData = function (value) {
 
@@ -153,6 +193,9 @@ export default function () {
 								return scope.entity.user_code;
 							},
 
+							// configuration_code:
+							content_type: contentType,
+
 							smallOptions: {notNull: reqAttrs.includes('user_code')},
 							event: {},
 							changeByInput: true,
@@ -225,16 +268,52 @@ export default function () {
 			},
 			post: function (scope, elem, attrs) {
 
+				// const contentType = metaContentTypesService.findContentTypeByEntity(scope.entityType);
+				const defConfigCode = globalDataService.getDefaultConfigurationCode();
+
 				const updateName = function (propName, newValue, oldValue) {
 
 					const value = scope.popupData.fields[propName].value;
 
-					// change field if it is empty or having the same value as baseInput
+					/*
+					 * change field inside popup if:
+					 * 1) it is empty
+					 * 2) its value equaled to value of base input (oldValue)
+					 */
 					if (!value || value === oldValue) {
 
 						scope.popupData.fields[propName].value = newValue;
 
 					}
+
+				};
+
+				const updateUserCode = function(newValue, oldValue) {
+
+					oldValue = metaHelper.replaceCharsForUserCode(oldValue);
+					const ucParts = splitUserCode(scope.popupData.fields.user_code.value);
+
+					const value = metaHelper.replaceCharsForUserCode(ucParts.userCodeEnd);
+					const configCode = ucParts.configuration_code || defConfigCode;
+					const contentType = scope.popupData.fields.user_code.content_type;
+
+					/*
+					 * change field inside popup if:
+					 * 1) it is empty
+					 * 2) its value equaled to value of base input (oldValue)
+					 */
+					if (value && value !== oldValue) {
+						return;
+					}
+
+					newValue = metaHelper.replaceCharsForUserCode(newValue);
+
+					/*scope.popupData.fields.user_code.value = {
+						configuration_code: configCode,
+						content_type: contentType,
+						user_code: `${configCode}:${contentType}:${value}`,
+					}*/
+					scope.popupData.fields.user_code.value = `${configCode}:${contentType}:${newValue}`;
 
 				};
 
@@ -244,7 +323,8 @@ export default function () {
 					updateName('short_name', newVal, prevVal);
 
 					if (!scope.editingOn) {
-						updateName('user_code', newVal, prevVal);
+						// updateName('user_code', newVal, prevVal);
+						updateUserCode(newVal, prevVal);
 					}
 
 					updateName('public_name', newVal, prevVal);

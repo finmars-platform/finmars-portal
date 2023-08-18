@@ -1398,10 +1398,76 @@
             return newBookData
         }
 
+        // DRAFT STARTED
+
+        vm.generateUserCodeForDraft = function () {
+
+            return 'transactions.complextransaciton.new'
+
+        }
+
+        vm.exportToDraft = function ($event) {
+
+            var entity = JSON.parse(JSON.stringify(vm.entity));
+            var result = entityEditorHelper.removeNullFields(entity, vm.entityType);
+
+            result.values = {};
+
+            result.values = sharedLogicHelper.mapUserInputsOnEntityValues(result.values);
+
+            return JSON.parse(JSON.stringify(result))
+
+        }
+
+        vm.applyDraft = function ($event, data) {
+
+            vm.readyStatus.layout = false;
+
+            setTimeout(function () {
+
+                vm.entity = data;
+
+                vm.baseTransactions = vm.entity.transactions_object;
+                vm.reconFields = vm.entity.recon_fields;
+
+                vm.dataConstructorData = {
+                    entityType: vm.entityType,
+                    fromEntityType: vm.entityType,
+                    instanceId: vm.transactionTypeId
+                };
+
+                vm.readyStatus.entity = true;
+                vm.readyStatus.layout = true;
+                vm.readyStatus.userFields = true;
+
+                vm.oldValues = {};
+
+                var cTransactionData = JSON.parse(JSON.stringify(vm.complexTransactionData));
+
+                cTransactionData.complex_transaction = vm.entity;
+                cTransactionData.values = vm.entity.values;
+
+                postRebookComplexTransactionActions(cTransactionData);
+
+                vm.userInputs.forEach(function (item) {
+                    vm.oldValues[item.name] = vm.entity[item.name]
+                });
+
+                $scope.$apply();
+
+            }, 1000)
+
+
+        }
+
+        // DRAFT ENDED
+
         vm.init = function () {
             setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.cTransactionEditorDialogElemToResize');
             }, 100);
+
+            vm.draftUserCode = vm.generateUserCodeForDraft();
 
             vm.evEditorEventService = new EventService();
             vm.evEditorDataService = new EntityViewerEditorDataService();

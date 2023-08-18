@@ -25,6 +25,7 @@ a {
   }
   .generate-z-index(@counter + 1);
 }
+
 .generate-z-index(1);
 
 
@@ -431,7 +432,7 @@ md-sidenav {
 
 .side-menu-bottom-menu {
   position: absolute;
-  bottom: 40px;
+  bottom: 75px;
   width: 100%;
 }
 
@@ -2032,10 +2033,18 @@ md-menu-content md-menu.md-menu {
   bottom: 0px;
   color: @gray;
   z-index: 100;
-  font-size: 9px;
+  //font-size: 9px;
+  font-size: 8.8px;
   text-align: left;
   margin: 6px;
 
+}
+
+.side-nav-versions-block div {
+  cursor: pointer;
+  &:hover {
+    color: #fff;
+  }
 }
 
 .sidenav-error-subtitle {
@@ -2941,6 +2950,11 @@ md-dialog.two-rows-dialog-actions {
     background-color: rgb(51, 51, 51);
     //height: 78px;
     flex: 0 0 @header-height;
+    display: flex;
+    &>div {
+      display: flex;
+      align-items: center;
+    }
 
     .big-drawer-header-h {
       margin: 0;
@@ -2954,15 +2968,17 @@ md-dialog.two-rows-dialog-actions {
       line-height: @header-height;
     }
 
+
+
     .big-drawer-header-processing {
-      display: inline-block;
+      display: flex;
       color: #fff;
 
-      div {
-        display: inline-block;
-        position: relative;
-        top: 4px;
-      }
+      //div {
+      //  display: inline-block;
+      //  position: relative;
+      //  top: 4px;
+      //}
     }
 
   }
@@ -3003,55 +3019,6 @@ md-tabs [role="tabpanel"] {
 //  margin-left: -150px;
 //}
 
-#toast-container {
-  .toast-error {
-    background: #fff;
-    color: #000;
-    padding: 8px 8px 12px;
-    border-left: 4px solid #ff623d;
-
-    button.toast-close-button {
-      right: 2px;
-      top: 0;
-    }
-
-    .toast-error-field {
-      opacity: .7;
-    }
-
-    span.toast-click-to-copy {
-      border: 1px solid #000;
-      margin-left: 8px;
-      padding: 2px 4px;
-      font-size: 11px;
-      border-radius: 8px;
-      opacity: .8;
-      position: relative;
-      top: -2px;
-    }
-
-    .toast-title {
-      margin-bottom: 4px;
-    }
-
-    .toast-message {
-      font-size: 12px;
-    }
-
-    .toast-close-button {
-      color: #000;
-    }
-
-    pre {
-      white-space: pre-wrap;
-      margin: 0;
-      padding: 4px;
-      border: 1px solid #ddd;
-      background: #f1f1f1;
-    }
-  }
-
-}
 
 
 .error-record-card {
@@ -3908,6 +3875,7 @@ button.md-raised.pagination-bar-button.md-button {
 .help-link {
   color: #000;
   font-size: 14px;
+
   &:hover {
     opacity: .7;
   }
@@ -3919,4 +3887,21 @@ button.md-button.header-left-icon-btn.header-help-button.md-button.md-ink-ripple
 
 .small-text {
   font-size: 12px;
+}
+
+a.finmars-site-link {
+  color: #fff;
+  margin-top: 2px;
+  display: block;
+
+  &:visited {
+    color: #fff;
+  }
+  &:active {
+    color: #fff;
+  }
+
+  &:hover {
+    opacity: .7;
+  }
 }

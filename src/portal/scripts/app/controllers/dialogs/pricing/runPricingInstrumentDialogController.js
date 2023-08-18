@@ -9,11 +9,12 @@
     var pricingPolicyService = require('../../../services/pricingPolicyService');
 
 
-    module.exports = function runPricingInstrumentDialogController($scope, $mdDialog, data) {
+    module.exports = function runPricingInstrumentDialogController($scope, $mdDialog, globalDataService, data) {
 
         console.log('runPricingInstrumentDialogController.data', data);
 
         var vm = this;
+        var configurationCode = globalDataService.getDefaultConfigurationCode();
 
         vm.instrument = data.instrument;
         vm.contextData = data.contextData;
@@ -35,6 +36,7 @@
 
         vm.agree = function () {
 
+            vm.item.configuration_code = configurationCode;
             vm.item.type = 2; // Created By Instrument
             vm.item.name = 'name_placeholder'; // backend will reassign this property
             vm.item.user_code = 'user_code_placeholder'; // backend will reassign this property

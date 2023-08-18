@@ -875,57 +875,6 @@
             return true;
         };
 
-        vm.updateEntityBeforeSave = function () {
-
-            console.log('updateEntityBeforeSave vm.entity', vm.entity);
-
-            /* if (metaService.getEntitiesWithoutDynAttrsList().indexOf(vm.entityType) === -1) {
-
-                vm.entity.attributes = [];
-
-                vm.attributeTypes.forEach(function (attributeType) {
-
-                    var value = vm.entity[attributeType.user_code];
-
-                    vm.entity.attributes.push(entityEditorHelper.appendAttribute(attributeType, value));
-
-                });
-            } */
-
-            vm.entity.object_permissions = [];
-            console.log('vm.groups', vm.groups);
-
-            // if (vm.groups) {
-            //     vm.groups.forEach(function (group) {
-            //
-            //         if (group.objectPermissions && group.objectPermissions.manage === true) {
-            //             vm.entity.object_permissions.push({
-            //                 member: null,
-            //                 group: group.id,
-            //                 permission: "manage_" + vm.entityType.split('-').join('')
-            //             })
-            //         }
-            //
-            //         if (group.objectPermissions && group.objectPermissions.change === true) {
-            //             vm.entity.object_permissions.push({
-            //                 member: null,
-            //                 group: group.id,
-            //                 permission: "change_" + vm.entityType.split('-').join('')
-            //             })
-            //         }
-            //         if (group.objectPermissions && group.objectPermissions.view === true) {
-            //             vm.entity.object_permissions.push({
-            //                 member: null,
-            //                 group: group.id,
-            //                 permission: "view_" + vm.entityType.split('-').join('')
-            //             })
-            //         }
-            //
-            //     });
-            // }
-
-        };
-
         var setValuesFromInstrumentType = function (entity) {
 
             return new Promise(async function (resolve) {
@@ -1047,7 +996,6 @@
                 vm.entity = await setValuesFromInstrumentType(vm.entity);
             }
 
-            vm.updateEntityBeforeSave();
 
             /* var errors = entityEditorHelper.validateEntityFields(vm.entity,
                 vm.entityType,
@@ -1744,7 +1692,41 @@
 
         };
 
+        // DRAFT STARTED
+
+        vm.generateUserCodeForDraft = function () {
+
+            var contentType = metaContentTypesService.findContentTypeByEntity(vm.entityType);
+
+
+            return contentType + '.new'
+
+        }
+
+        vm.exportToDraft = function ($event) {
+
+            var entity = JSON.parse(JSON.stringify(vm.entity));
+
+            return JSON.parse(JSON.stringify(entity))
+
+        }
+
+        vm.applyDraft = function ($event, data) {
+
+            vm.readyStatus.layout = false;
+            vm.readyStatus.entity = false;
+
+            vm.entity = data;
+
+            vm.init();
+
+        }
+
+        // DRAFT ENDED
+
         vm.init = async function () {
+
+            vm.draftUserCode = vm.generateUserCodeForDraft();
 
             /* setTimeout(function () {
 

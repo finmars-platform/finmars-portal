@@ -782,6 +782,14 @@
                                             </md-button>
                                         </li>
 
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.portal.portfolio-bundle">
+                                                <span class="side-nav-title">Portfolio Bundles</span>
+                                                <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
+                                            </md-button>
+                                        </li>
+
                                     </ul>
 
                                 </div>
@@ -1135,11 +1143,23 @@
 </md-sidenav>
 
 <div class="build-date" data-ng-show="vm.sideNavStatus == 'expand'">
-    Build date: __BUILD_DATE__
+    <!--    Build date: __BUILD_DATE__ {{vm.currentVersion}}-->
+
+    <div class="side-nav-versions-block">
+        <div data-ng-repeat="version in vm.versions">
 
 
-    <span class="websocket-connection-status {{vm.getWsStatus()}}"
-          title="Websocket status: {{vm.getWsStatus()}}"></span>
+            <div>{{version.app}}:{{version.version}}
+                <md-tooltip md-direction="top">{{version.notes}}&nbsp;{{version.modified | date: 'yyyy-MM-dd HH:mm'}}
+                </md-tooltip>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!--    <span class="websocket-connection-status {{vm.getWsStatus()}}"-->
+    <!--          title="Websocket status: {{vm.getWsStatus()}}"></span>-->
 
     <br/>
     <!--    <div>-->
@@ -1151,18 +1171,12 @@
     <div class="sidenav-api-subtitle">
         <div>
 
-            <a class="sidenav-api-link" href="{{ vm.getCurrentApiUrl() }}" target="_blank">
-                API
-            </a>:
+            <div>
+                Session Remaining Time: {{vm.remainingTimePretty}}
+            </div>
 
-            <span data-ng-click="vm.copyToBuffer(vm.getCurrentBaseApiUrl())"
-                  class="sidenav-tech-button">
-                {{ vm.getCurrentBaseApiUrl() }}
-
-                <md-tooltip class="tooltip_1" md-direction="top">Copy</md-tooltip>
-            </span>
-
-            <a class="sidenav-api-link" ui-sref="app.portal.system-page">{{vm.getCurrentVersion()}}</a>
+            <a href="https://finmars.com" target="_blank" class="finmars-site-link">© {{vm.currentYear}} Finmars
+                SCSA</a>
 
         </div>
     </div>

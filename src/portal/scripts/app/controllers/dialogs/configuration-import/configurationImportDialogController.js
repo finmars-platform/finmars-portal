@@ -12,7 +12,7 @@ const processesService = require("../../../services/processesService");
     // var usersGroupService = require('../../../services/usersGroupService');
     var mappingsImportService = require('../../../services/mappings-import/mappingsImportService');
 
-    module.exports = function configurationImportDialogController($scope, $mdDialog, usersService, usersGroupService, backendConfigurationImportService, systemMessageService, metaContentTypesService, configurationImportService, data) {
+    module.exports = function configurationImportDialogController($scope, $interval, $mdDialog, usersService, usersGroupService, backendConfigurationImportService, systemMessageService, metaContentTypesService, configurationImportService, data) {
 
         console.log("file", data.file);
 
@@ -718,10 +718,9 @@ const processesService = require("../../../services/processesService");
 
             try {
 
-                var timeout = setInterval(function () {
+                var timeout = $interval(function () {
 
                     vm.counter = window.importConfigurationCounter;
-                    $scope.$apply();
 
                 }, 1000);
 
@@ -732,7 +731,8 @@ const processesService = require("../../../services/processesService");
 
                     mappingsImportService.importMappings(mappingItems, vm.settings).then(function (mappingsData) {
 
-                        clearInterval(timeout);
+                        $interval.cancel(timeout);
+                        timeout = undefined;
 
                         console.log('mappingsData', configurationData);
                         console.log('mappingsData', mappingsData);
@@ -789,7 +789,8 @@ const processesService = require("../../../services/processesService");
 
                 }).catch(function (reason) {
 
-                    clearInterval(timeout);
+                    $interval.cancel(timeout);
+                    timeout = undefined;
 
                     vm.processing = false;
 
@@ -815,7 +816,10 @@ const processesService = require("../../../services/processesService");
 
 
                 if (vm.task.status === 'D' || vm.task.status === 'E') {
-                    clearInterval(vm.poolingInterval)
+
+                    $interval.cancel(vm.poolingInterval);
+                    vm.poolingInterval = undefined;
+
                     vm.poolingInterval = null;
                     vm.processing = false;
                     vm.importIsFinished = true;
@@ -834,7 +838,9 @@ const processesService = require("../../../services/processesService");
 
             vm.processing = true;
 
-            clearInterval(vm.poolingInterval)
+            $interval.cancel(vm.poolingInterval);
+            vm.poolingInterval = undefined;
+
             vm.poolingInterval = null;
             vm.importIsFinished = false;
 
@@ -918,7 +924,7 @@ const processesService = require("../../../services/processesService");
 
                 vm.getTask()
 
-                vm.poolingInterval = setInterval(function (){
+                vm.poolingInterval = $interval(function (){
 
                     vm.getTask();
 

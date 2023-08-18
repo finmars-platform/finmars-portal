@@ -31,6 +31,12 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
     let transitionFromState = '';
 
+    $scope.initLoaderProcessing = true;
+
+    $scope.$on('initialLoadComplete', function () {
+        $scope.initLoaderProcessing = false;
+    });
+
     vm.showPageContent = function () {
 
         if (vm.isAuthenticationPage) {

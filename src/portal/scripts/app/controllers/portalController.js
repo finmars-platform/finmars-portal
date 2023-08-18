@@ -125,6 +125,8 @@ export default function ($scope, $state, authorizerService, usersService, global
 
             vm.readyStatus = true;
 
+            $scope.$emit('initialLoadComplete'); // for turning off initial loader
+
             initAlertSideNavListeners();
             $scope.$apply();
 
