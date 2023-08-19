@@ -47,7 +47,7 @@
 
             </div>
 
-<!--            <div class="position-relative flex-column">-->
+            <!--            <div class="position-relative flex-column">-->
 
             <div class="flex-row">
                 <h4 data-ng-if="vm.layout.data.fixed_area.status == 'active'" class="p-l-8">Top Panel</h4>
@@ -154,11 +154,13 @@
                         <div>
                             <md-button class="md-raised"
                                        data-ng-click="vm.openTabsEditor($event)"
-                                       data-ng-disabled="!vm.layout.data.tabs || vm.layout.data.tabs.length < 2">Change order of tabs</md-button>
-<!--                            Deprecated since 01.2021-->
-<!--                            <md-button class="md-raised"-->
-<!--                                       data-ng-click="vm.openAccordionEditor($event)"-->
-<!--                                       data-ng-disabled="!vm.layout.data.tabs">Accordion manager</md-button>-->
+                                       data-ng-disabled="!vm.layout.data.tabs || vm.layout.data.tabs.length < 2">Change
+                                order of tabs
+                            </md-button>
+                            <!--                            Deprecated since 01.2021-->
+                            <!--                            <md-button class="md-raised"-->
+                            <!--                                       data-ng-click="vm.openAccordionEditor($event)"-->
+                            <!--                                       data-ng-disabled="!vm.layout.data.tabs">Accordion manager</md-button>-->
                         </div>
 
                         <div class="dashboard-constructor-tabs-holder">
@@ -180,7 +182,8 @@
                                         <div data-ng-if="tab.editState">
                                             <md-input-container class="ec-tab-item-edit">
                                                 <label>Tab name</label>
-                                                <input type="text" ng-model="tab.captionName" class="tabNameInput" data-tab-id="{{tab.id}}">
+                                                <input type="text" ng-model="tab.captionName" class="tabNameInput"
+                                                       data-tab-id="{{tab.id}}">
                                             </md-input-container>
 
                                             <md-button class="ec-tab-btn"
@@ -201,31 +204,31 @@
                                              dashboard-constructor-data-service="vm.dashboardConstructorDataService"
                                              dashboard-constructor-event-service="vm.dashboardConstructorEventService"
                                              tab-number="tab.tab_number">
-<!-- Deprecated since 01.2021
-                                            <div class="dashboard-constructor-accordion-guide">
+                                            <!-- Deprecated since 01.2021
+                                                                                        <div class="dashboard-constructor-accordion-guide">
 
-                                                <div >
+                                                                                            <div >
 
-                                                    <div data-ng-repeat="item in tab.accordions track by $index"
-                                                         class="accordion-constructor-row-accordion-guide" layout="column">
+                                                                                                <div data-ng-repeat="item in tab.accordions track by $index"
+                                                                                                     class="accordion-constructor-row-accordion-guide" layout="column">
 
-                                                        <div layout="row" data-ng-if="item.type === 'accordion'" style="margin: 0; padding: 8px; height: {{((item.to - item.from)+ 1) * 50}}px">
+                                                                                                    <div layout="row" data-ng-if="item.type === 'accordion'" style="margin: 0; padding: 8px; height: {{((item.to - item.from)+ 1) * 50}}px">
 
-                                                            <md-card title="{{item.name}}" class="width-100 p-8 accordion-constructor-row-accordion-guide-card" >
-                                                                {{item.name}}
-                                                            </md-card>
+                                                                                                        <md-card title="{{item.name}}" class="width-100 p-8 accordion-constructor-row-accordion-guide-card" >
+                                                                                                            {{item.name}}
+                                                                                                        </md-card>
 
-                                                        </div>
+                                                                                                    </div>
 
-                                                        <div layout="row" data-ng-if="item.type != 'accordion' && !vm.isAccordionOverlapped($index, tab)" style="height: 50px;">
+                                                                                                    <div layout="row" data-ng-if="item.type != 'accordion' && !vm.isAccordionOverlapped($index, tab)" style="height: 50px;">
 
-                                                        </div>
+                                                                                                    </div>
 
-                                                    </div>
+                                                                                                </div>
 
-                                                </div>
+                                                                                            </div>
 
-                                            </div> -->
+                                                                                        </div> -->
 
                                             <div class="dashboard-layout position-relative">
 
@@ -277,9 +280,11 @@
 
                                                         <md-button class="md-button dashboard-manage-row-btn"
                                                                    ng-click="vm.insertRow(tab, row)"
-                                                                   ng-disabled="!vm.isRowAddable(tab, row)" style="right: 55px">
+                                                                   ng-disabled="!vm.isRowAddable(tab, row)"
+                                                                   style="right: 55px">
                                                             +
-                                                            <md-tooltip class="tooltip_1" md-direction="top">Insert row below
+                                                            <md-tooltip class="tooltip_1" md-direction="top">Insert row
+                                                                below
                                                             </md-tooltip>
                                                         </md-button>
 
@@ -293,7 +298,8 @@
                                                                         ng-hide="!vm.isRowEmpty(row)">Remove row
                                                             </md-tooltip>
                                                             <md-tooltip class="tooltip_1" md-direction="top"
-                                                                        ng-hide="vm.isRowEmpty(row)">Empty row before removing
+                                                                        ng-hide="vm.isRowEmpty(row)">Empty row before
+                                                                removing
                                                                 it
                                                             </md-tooltip>
                                                         </md-button>
@@ -325,17 +331,20 @@
 
                         <md-menu-content width="3">
                             <md-menu-item>
-                                <md-button ng-click="vm.createComponent('accordion', $event)" class="g-settings-option-btn">
+                                <md-button ng-click="vm.createComponent('accordion', $event)"
+                                           class="g-settings-option-btn">
                                     <span>Add Accordion</span>
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
-                                <md-button ng-click="vm.createComponent('control', $event)" class="g-settings-option-btn">
+                                <md-button ng-click="vm.createComponent('control', $event)"
+                                           class="g-settings-option-btn">
                                     <span>Add Control</span>
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
-                                <md-button ng-click="vm.createComponent('button_set', $event)" class="g-settings-option-btn">
+                                <md-button ng-click="vm.createComponent('button_set', $event)"
+                                           class="g-settings-option-btn">
                                     <span>Add Button set</span>
                                 </md-button>
                             </md-menu-item>
@@ -346,7 +355,8 @@
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
-                                <md-button ng-click="vm.createComponent('report_viewer', $event)" class="g-settings-option-btn">
+                                <md-button ng-click="vm.createComponent('report_viewer', $event)"
+                                           class="g-settings-option-btn">
                                     <span>Report Viewer</span>
                                 </md-button>
                             </md-menu-item>
@@ -411,6 +421,12 @@
                                     <span>Finmars Widget</span>
                                 </md-button>
                             </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-click="vm.createComponent('apex_chart', $event)"
+                                           class="g-settings-option-btn">
+                                    <span>Apex Chart</span>
+                                </md-button>
+                            </md-menu-item>
                         </md-menu-content>
                     </md-menu>
                     <div class="p-t-24">
@@ -435,7 +451,8 @@
 
                     <div class="dashboard-constructor-comp-cards-container">
                         <div class="dashboard-constructor-draggable-card"
-                             data-ng-repeat="item in vm.availableComponentsTypes | filter: {name: nameFilterContext, type: typeFilterContext} track by item.id" style="padding: 4px">
+                             data-ng-repeat="item in vm.availableComponentsTypes | filter: {name: nameFilterContext, type: typeFilterContext} track by item.id"
+                             style="padding: 4px">
 
                             <md-card class=" dashboard-field-card" class="p-l-16" data-index="{{$index}}"
                                      data-component-id="{{item.id}}" layout="row">
@@ -464,7 +481,7 @@
                 </div>
             </div>
 
-<!--            </div>-->
+            <!--            </div>-->
 
             <div class="dashboard-constructor-bottom-row">
 
@@ -475,7 +492,8 @@
                     <md-button ng-click="vm.goToDashboard($event)" class="md-raised">
                         Go to Dashboard
                     </md-button>
-                    <md-button ng-click="vm.saveLayout()" ng-class="{'disabled-btn': !vm.layout.name || (vm.layout.sourced_from_global_layout && !vm.layout.origin_for_global_layout)}"
+                    <md-button ng-click="vm.saveLayout()"
+                               ng-class="{'disabled-btn': !vm.layout.name || (vm.layout.sourced_from_global_layout && !vm.layout.origin_for_global_layout)}"
                                class="md-raised">
                         Save
                     </md-button>
