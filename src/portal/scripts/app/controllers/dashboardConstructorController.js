@@ -490,6 +490,9 @@
                 case 'finmars_widget':
                     verboseName = 'Finmars Widget';
                     break;
+                case 'apex_chart':
+                    verboseName = 'Apex Chart';
+                    break;
             }
 
             return verboseName;
@@ -1263,6 +1266,11 @@
             finmars_widget: {
                 editorController: 'DashboardConstructorFinmarsWidgetComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-finmars-widget-component-dialog-view.html'
+            },
+            apex_chart: {
+                editorController: 'DashboardConstructorApexChartComponentDialogController as vm',
+                editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-apex-chart-component-dialog-view.html'
+
             }
         };
 
