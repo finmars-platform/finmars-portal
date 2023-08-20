@@ -16,16 +16,20 @@
 
             </div>
 
-            <!--<md-button class="md-button dashboard-component-settings-btn"
-                       data-ng-click="openComponentSettingsDialog($event)"
-                       aria-label="dashboard component settings btn">
-                <ng-md-icon size="20"  icon="settings"></ng-md-icon>
-                <md-tooltip class="tooltip_2"
-                            md-direction="top">Component settings</md-tooltip>
-            </md-button>-->
 
             <div class="dashboard-component-header-right">
 
+                <md-button data-ng-click="initChart({outputs: lastSavedOutput})"
+                           class="dashboard-comp-h-btn">
+                    <ng-md-icon size="20" icon="refresh"></ng-md-icon>
+                    <md-tooltip data-md-direction="top">Refresh</md-tooltip>
+                </md-button>
+
+                <md-button data-ng-click="clearLastSavedOutput()"
+                           class="dashboard-comp-h-btn">
+                    <ng-md-icon size="20" icon="pie_chart_outline"></ng-md-icon>
+                    <md-tooltip data-md-direction="top">Clear Modifiers</md-tooltip>
+                </md-button>
 
             </div>
         </div>

@@ -33,6 +33,8 @@
                     disabled: false
                 };
 
+                scope.lastSavedOutput = {};
+
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
 
@@ -136,6 +138,14 @@
                         })
 
                     });
+
+                    scope.clearLastSavedOutput = function () {
+
+                        scope.lastSavedOutput = {}
+
+                        scope.initChart({outputs: scope.lastSavedOutput});
+
+                    }
 
                     // Possible Deprecated
                     // scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE, function () {
@@ -319,6 +329,14 @@
 
                         return yesterday
 
+                    },
+                    getMonthName: function (dateString) {
+                        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                        const date = new Date(dateString);
+                        return months[date.getMonth()];
+                    },
+                    roundToTwo: function (num) {
+                        return Math.round((num + Number.EPSILON) * 100) / 100;
                     }
 
 
@@ -347,7 +365,7 @@
 
                     scope.readyStatus.data = 'ready';
                     setTimeout(function () {
-                        scope.initChart();
+                        scope.initChart({outputs: {}});
                     }, 0)
 
                 };

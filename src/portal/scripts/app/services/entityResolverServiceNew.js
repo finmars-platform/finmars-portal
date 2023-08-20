@@ -200,6 +200,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'transaction-report':
                 return reportService.getTransactionReport(options);
                 break;
+            case 'performance-report':
+                return reportService.getPerformanceReport(options);
+                break;
             case 'configuration':
                 return configurationService.getList(options)
                 break;
