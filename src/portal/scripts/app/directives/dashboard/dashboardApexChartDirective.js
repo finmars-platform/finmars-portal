@@ -127,25 +127,33 @@
 
                     scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_CHANGE, function () {
 
-                        var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputs();
+                        var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputsByUserCodes();
 
-                        console.log('apexChart.componentsOutputs', componentsOutputs)
+                        // console.log('apexChart.componentsOutputs', JSON.stringify(componentsOutputs, null, 4));
 
+                        scope.initChart({
+                            outputs: componentsOutputs
+                        })
 
                     });
 
                     scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE, function () {
 
-                        for (var i = 0; i < scope.vm.componentData.settings.linked_components.active_object.length; i++) {
 
-                            var componentId = JSON.parse(JSON.stringify(scope.vm.componentData.settings.linked_components.active_object[i]));
+                        if (scope.vm.componentData.settings.linked_components && scope.vm.componentData.settings.linked_components.active_object) {
+                            for (var i = 0; i < scope.vm.componentData.settings.linked_components.active_object.length; i++) {
 
-                            var componentOutput = scope.dashboardDataService.getComponentOutput(componentId);
+                                var componentId = JSON.parse(JSON.stringify(scope.vm.componentData.settings.linked_components.active_object[i]));
 
-                            console.log('apexChart.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE.componentOutput', componentOutput);
+                                var componentOutput = scope.dashboardDataService.getComponentOutput(componentId);
 
-                            scope.initChart(componentOutput.data)
+                                console.log('apexChart.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE.componentOutput', componentOutput);
+                                //
+                                scope.initChart({
+                                    outputs: [componentOutput.data]
+                                })
 
+                            }
                         }
 
 
@@ -276,7 +284,7 @@
 
                         return flattened;
                     },
-                    sumByCategory: function(items, category_key, value_key, fallback_category_key = 'Other') {
+                    sumByCategory: function (items, category_key, value_key, fallback_category_key = 'Other') {
                         return items.reduce((acc, item) => {
 
                             let categoryValue = item[category_key];

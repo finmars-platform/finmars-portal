@@ -20,7 +20,7 @@
             componentsRefreshRestriction: {},
             componentsErrors: {},
             actualRvLayouts: {}, // id of layouts stored in cache that are actual
-			componentsUIData: {}, // e.g. height, width of cell of component
+            componentsUIData: {}, // e.g. height, width of cell of component
         };
 
         function setData(data) {
@@ -57,11 +57,42 @@
             return layoutData.data.components;
         }
 
+        function getAllComponentsOutputsByUserCodes() {
+            if (!layoutData.data.components) {
+                layoutData.data.components = {}
+            }
+
+            var result = {}
+
+            layoutData.data.components.forEach(function (component) {
+
+                if (component.user_code) {
+                    // result[component.user_code] = component // TODO WTF??????
+                    if (layoutData.data.components[component.id]) {
+                        if (layoutData.data.components[component.id].data.value) {
+
+                            if (result[component.user_code] = layoutData.data.components[component.id].data.user_codes) {
+                                result[component.user_code] = layoutData.data.components[component.id].data.user_codes
+                            } else {
+                                result[component.user_code] = layoutData.data.components[component.id].data.value
+                            }
+                        }
+                    }
+                }
+
+            })
+
+            return result;
+
+        }
+
         function setComponentOutput(componentId, data) {
 
             if (!layoutData.data.components) {
                 layoutData.data.components = {}
             }
+
+            console.log('layoutData.data.components[componentId]', layoutData.data.components[componentId]);
 
             layoutData.data.components[componentId] = data
         }
@@ -83,15 +114,15 @@
             return tmpData.componentsStatuses[componentId]
         }
 
-        function setComponentError (componentId, error) {
+        function setComponentError(componentId, error) {
             tmpData.componentsErrors[componentId] = error;
         }
 
-        function getComponentError (componentId) {
+        function getComponentError(componentId) {
             return tmpData.componentsErrors[componentId];
         }
 
-        function setComponentRefreshRestriction (componentId, restrictionStatus) {
+        function setComponentRefreshRestriction(componentId, restrictionStatus) {
             tmpData.componentsRefreshRestriction[componentId] = restrictionStatus;
         }
 
@@ -105,31 +136,31 @@
             });
         }*/
 
-        function getAllComponentsRefreshRestriction () {
+        function getAllComponentsRefreshRestriction() {
             return tmpData.componentsRefreshRestriction;
         }
 
-		function setComponentUIData(componentId, uiData) {
-			tmpData.componentsUIData[componentId] = uiData;
-		}
+        function setComponentUIData(componentId, uiData) {
+            tmpData.componentsUIData[componentId] = uiData;
+        }
 
-		function getComponentUIData(componentId) {
-			return tmpData.componentsUIData[componentId];
-		}
+        function getComponentUIData(componentId) {
+            return tmpData.componentsUIData[componentId];
+        }
 
         function getComponentStatusesAll() {
             return tmpData.componentsStatuses
         }
 
-        function getComponents () {
+        function getComponents() {
             return layoutData.data.components_types;
         }
 
-        function setComponents (components) {
+        function setComponents(components) {
             layoutData.data.components_types = components;
         }
 
-        function getComponentById (componentId) {
+        function getComponentById(componentId) {
 
             for (var i = 0; i < layoutData.data.components_types.length; i++) {
                 if (layoutData.data.components_types[i].id === componentId) {
@@ -140,7 +171,7 @@
             return null;
         }
 
-        function updateComponent (componentData) {
+        function updateComponent(componentData) {
 
             for (var i = 0; i < layoutData.data.components_types.length; i++) {
                 if (layoutData.data.components_types[i].id === componentData.id) {
@@ -159,15 +190,15 @@
             return tmpData.activeTab
         }
 
-        function setListLayout (listLayout) {
+        function setListLayout(listLayout) {
             data.listLayout = listLayout;
         }
 
-        function getListLayout () {
+        function getListLayout() {
             return data.listLayout;
         }
 
-        function updateModifiedDate (modifiedDate) {
+        function updateModifiedDate(modifiedDate) {
             // updating listLayout prevents synchronization error when saving settings of component inside dashboard
             var listLayout = getListLayout();
             listLayout.modified = modifiedDate;
@@ -177,12 +208,12 @@
 
         }
 
-        function setCachedLayoutsData (contentType, userCode, id) {
+        function setCachedLayoutsData(contentType, userCode, id) {
 
             /*if (!tmpData.actualRvLayouts.includes(layoutId)) {
                 tmpData.actualRvLayouts.push(layoutId);
             }*/
-            if ( !tmpData.actualRvLayouts[contentType] ) {
+            if (!tmpData.actualRvLayouts[contentType]) {
                 tmpData.actualRvLayouts[contentType] = {};
             }
 
@@ -190,15 +221,15 @@
 
         }
 
-        function getCachedLayoutsData () {
+        function getCachedLayoutsData() {
             return tmpData.actualRvLayouts;
         }
 
-        function setLayoutToOpen (layoutToOpen) {
+        function setLayoutToOpen(layoutToOpen) {
             tmpData.layoutToOpen = layoutToOpen;
         }
 
-        function getLayoutToOpen () {
+        function getLayoutToOpen() {
             return tmpData.layoutToOpen;
         }
 
@@ -215,6 +246,7 @@
 
             setAllComponentsOutputs: setAllComponentsOutputs,
             getAllComponentsOutputs: getAllComponentsOutputs,
+            getAllComponentsOutputsByUserCodes: getAllComponentsOutputsByUserCodes,
             setComponentOutput: setComponentOutput,
             getComponentOutput: getComponentOutput,
             setComponentStatus: setComponentStatus,
@@ -225,8 +257,8 @@
             /* getComponentRefreshRestriction: getComponentRefreshRestriction,
             setAllComponentsRefreshRestriction: setAllComponentsRefreshRestriction, */
             getAllComponentsRefreshRestriction: getAllComponentsRefreshRestriction,
-			setComponentUIData: setComponentUIData,
-			getComponentUIData: getComponentUIData,
+            setComponentUIData: setComponentUIData,
+            getComponentUIData: getComponentUIData,
             getComponents: getComponents,
             setComponents: setComponents,
             updateComponent: updateComponent,
