@@ -92,7 +92,7 @@ export default function (errorService, cookieService) {
                 response = await window.fetch(url, params);
             }
 
-            console.log('response', response);
+            // console.log('response', response);
 
             // Handle the refreshed response
             if (response.status === 204) return response;

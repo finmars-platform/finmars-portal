@@ -188,7 +188,7 @@
 
                             } else if (status === dashboardComponentStatuses.ERROR) {
 
-                                scope.compErrorMessage = 'ERROR';
+                                scope.compErrorMessage = 'error';
                                 var componentError = scope.dashboardDataService.getComponentError(scope.item.data.id);
 
                                 if (componentError) {

@@ -214,6 +214,7 @@
                         }
                     }
 
+                    console.log('changedData', changedData);
 
                     scope.dashboardDataService.setComponentOutput(scope.item.data.id, changedData);
                     scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id);
@@ -532,7 +533,7 @@
 
                 }
 
-                var getItemDataStore = function (componentData) {
+                scope.getItemDataStore = function (componentData) {
 
                     if (scope.componentData.custom_component_name) {
                         scope.customName = scope.componentData.custom_component_name;
@@ -561,9 +562,9 @@
 
                     var mode;
 
-                    /*if (!componentData.settings.defaultValue) {
+                    if (!componentData.settings.defaultValue) {
                         return promisify({});
-                    }*/
+                    }
 
                     if (componentData.settings.defaultValue) {
                         mode = componentData.settings.defaultValue.mode;
@@ -616,7 +617,7 @@
 
                     return new Promise(function (resolve, reject) {
 
-                        getItemDataStore(componentData).then(function (store) {
+                        scope.getItemDataStore(componentData).then(function (store) {
 
                             if (!store.value) {
                                 resolve();

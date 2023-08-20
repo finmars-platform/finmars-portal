@@ -1,10 +1,10 @@
 .active-cell-mixin() {
   &.active {
-    color: #fff;
-    background: #f08947;
+    color: #000;
+    background: rgba(240,90,34,.11);
 
     &:hover {
-      background: #f08947;
+      //background: #f08947;
       opacity: .9;
     }
   }
@@ -26,7 +26,7 @@
   border-bottom: 1px solid rgba(224, 224, 224, 1);
 
   &:not(.report-viewer-empty-header-cell):hover {
-    background: #F4B083;
+    background: rgba(240,90,34,.11);
   }
 
   .active-cell-mixin();
@@ -44,6 +44,8 @@
     width: 100%;
     overflow: hidden;
     //display: block;
+    border: 1px solid #D8DDDC;
+    border-radius: 6px;
   }
 
   .axis-attr-selector-btns-holder {
@@ -104,20 +106,29 @@
     .report-viewer-matrix-column-header-cell {
       float: left;
       position: relative;
+      cursor: pointer;
 
       z-index: 2;
       text-align: center;
       overflow: hidden;
-      background-color: rgba(242, 242, 242, 1);
+      //background-color: rgba(242, 242, 242, 1);
+      background-color: #F7F8F8;
 
-      border-right: 1px solid rgba(224, 224, 224, 1);
+      //border-right: 1px solid rgba(224, 224, 224, 1);
+      //border-right: 1px solid #EAEEED;
+      border-right: none;
       .rv-matrix-cell-mixin();
       //padding-top: 4px;
 
       font-family: Roboto, "Helvetica Neue", sans-serif;
       color: #666;
       font-size: 13px;
-      font-weight: 700;
+      //font-weight: 700;
+
+      .selector-button-popup .selector-button-popup-btn {
+        position: relative;
+        top: -6px;
+      }
     }
 
     .report-viewer-empty-header-cell {
@@ -212,14 +223,20 @@
   }
 
   .report-viewer-matrix-bottom-row {
-    box-shadow: inset 0 1px 0 #ddd;
+    //box-shadow: inset 0 1px 0 #ddd;
+    .report-viewer-matrix-cell {
+      border: 0;
+      border-right: 1px solid #e0e0e0;
+    }
   }
 
   .report-viewer-cell-border-left {
-    box-shadow: inset 1px 0px 0px #ddd;
+    //box-shadow: inset 1px 0px 0px #ddd;
+    font-weight: 700;
   }
 
   .report-viewer-matrix-cell {
+    cursor: pointer;
     float: left;
     .rv-matrix-cell-mixin();
 
@@ -265,10 +282,13 @@
     color: #333;
     font-size: 14px;
     font-weight: 700;
-    background: rgba(242, 242, 242, 1);
+    //background: rgba(242, 242, 242, 1);
+    background: #F7F8F8;
+    border-bottom: 0;
 
     &:hover {
-      background: #F4B083;
+      //background: #F4B083;
+      background: rgba(240,90,34,.11);
     }
 
     .active-cell-mixin();
@@ -311,7 +331,8 @@
   }
 
   .rv-matrix-colored-cell {
-    background-color: rgba(242, 242, 242, 1);
+    //background-color: rgba(242, 242, 242, 1);
+    background-color: #F7F8F8;
     color: #666666;
     //text-align: left;
   }

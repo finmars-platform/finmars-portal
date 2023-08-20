@@ -308,15 +308,16 @@
   left: 0;
   background: #fff;
   padding: 5px 0;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 1);
+  box-shadow: 0 0 10px rgba(0,0,0,.2);
   overflow: auto;
   z-index: 52;
   box-sizing: border-box;
+  border-radius: 6px;
 
   .custom-input-dropdown-menu-filter {
     min-width: 100%;
     border: none;
-    border-bottom: 1px solid @borderGray;
+    border-bottom: 1px solid #e0e0e0;
     padding-left: 10px;
     padding-bottom: 4px;
     margin-bottom: 5px;
@@ -333,6 +334,7 @@
     padding: 4px 10px;
     cursor: pointer;
     white-space: nowrap;
+    font-size: 14px;
 
     &:hover {
       background-color: rgba(158, 158, 158, 0.18);
