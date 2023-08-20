@@ -152,6 +152,7 @@
                                 scope.initChart({
                                     outputs: [componentOutput.data]
                                 })
+                                scope.$apply();
 
                             }
                         }
@@ -306,8 +307,13 @@
 
                 scope.initChart = function (filters) {
 
-                    console.warn("Evaluating Chart source code")
-                    eval(scope.vm.componentData.source) // TODO dangerous operation, consider refactor
+                    var selector = '.dashboard-apex-chart-' + scope.vm.componentData.id;
+                    document.querySelector(selector).innerHTML = '';
+
+                    setTimeout(function () {
+                        console.warn("Evaluating Chart source code")
+                        eval(scope.vm.componentData.source) // TODO dangerous operation, consider refactor
+                    }, 100);
 
                 }
 
