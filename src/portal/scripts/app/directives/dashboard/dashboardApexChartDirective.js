@@ -361,11 +361,15 @@
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
 
-                    scope.initEventListeners();
-
                     scope.readyStatus.data = 'ready';
+
                     setTimeout(function () {
-                        scope.initChart({outputs: {}});
+
+                        var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputsByUserCodes();
+
+                        scope.initChart({outputs: componentsOutputs});
+
+                        scope.initEventListeners(); // init listeners after component init
                     }, 0)
 
                 };
