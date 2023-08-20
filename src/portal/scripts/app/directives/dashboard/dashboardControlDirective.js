@@ -215,8 +215,24 @@
                     }
 
                     console.log('changedData', changedData);
+                    console.log('scope.item.data.store.value', scope.item.data.store.value);
 
-                    scope.dashboardDataService.setComponentOutput(scope.item.data.id, changedData);
+                    scope.dashboardDataService.setComponentOutputOld(scope.item.data.id, changedData); // for backward compatibiliy, deprecated
+
+                    // Probably need refactor
+                    if (scope.item.data.store.user_codes) {
+                        if (scope.componentData.settings.multiple) {
+                            scope.dashboardDataService.setComponentOutput(scope.item.data.id, scope.item.data.store.user_codes);
+                        } else {
+                            if (Array.isArray(scope.dashboardDataService.setComponentOutput(scope.item.data.id, scope.item.data.store.user_codes))) {
+                                scope.dashboardDataService.setComponentOutput(scope.item.data.id, scope.item.data.store.user_codes[0]);
+                            } else {
+                                scope.dashboardDataService.setComponentOutput(scope.item.data.id, scope.item.data.store.user_codes);
+                            }
+                        }
+                    } else {
+                        scope.dashboardDataService.setComponentOutput(scope.item.data.id, scope.item.data.store.value);
+                    }
                     scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id);
 
                     /*if (scope.componentData.settings.auto_refresh) {

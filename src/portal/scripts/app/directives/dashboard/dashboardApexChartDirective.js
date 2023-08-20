@@ -129,7 +129,7 @@
 
                         var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputsByUserCodes();
 
-                        // console.log('apexChart.componentsOutputs', JSON.stringify(componentsOutputs, null, 4));
+                        console.log('apexChart.COMPONENT_OUTPUT_CHANGE', JSON.stringify(componentsOutputs, null, 4));
 
                         scope.initChart({
                             outputs: componentsOutputs
@@ -137,28 +137,30 @@
 
                     });
 
-                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE, function () {
+                    // Possible Deprecated
+                    // scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE, function () {
+                    //
+                    //
+                    //     if (scope.vm.componentData.settings.linked_components && scope.vm.componentData.settings.linked_components.active_object) {
+                    //         for (var i = 0; i < scope.vm.componentData.settings.linked_components.active_object.length; i++) {
+                    //
+                    //             var componentId = JSON.parse(JSON.stringify(scope.vm.componentData.settings.linked_components.active_object[i]));
+                    //
+                    //             var componentOutput = scope.dashboardDataService.getComponentOutputOld(componentId);
+                    //
+                    //             console.log('apexChart.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE.componentOutput', componentOutput);
+                    //             //
+                    //             scope.initChart({
+                    //                 outputs: [componentOutput.data]
+                    //             })
+                    //
+                    //
+                    //         }
+                    //     }
+                    //
+                    //
+                    // });
 
-
-                        if (scope.vm.componentData.settings.linked_components && scope.vm.componentData.settings.linked_components.active_object) {
-                            for (var i = 0; i < scope.vm.componentData.settings.linked_components.active_object.length; i++) {
-
-                                var componentId = JSON.parse(JSON.stringify(scope.vm.componentData.settings.linked_components.active_object[i]));
-
-                                var componentOutput = scope.dashboardDataService.getComponentOutput(componentId);
-
-                                console.log('apexChart.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE.componentOutput', componentOutput);
-                                //
-                                scope.initChart({
-                                    outputs: [componentOutput.data]
-                                })
-                                scope.$apply();
-
-                            }
-                        }
-
-
-                    });
 
                 };
 

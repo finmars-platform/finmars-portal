@@ -69,13 +69,10 @@
                 if (component.user_code) {
                     // result[component.user_code] = component // TODO WTF??????
                     if (layoutData.data.components[component.id]) {
-                        if (layoutData.data.components[component.id].data.value) {
+                        if (layoutData.data.components[component.id].output) {
 
-                            if (result[component.user_code] = layoutData.data.components[component.id].data.user_codes) {
-                                result[component.user_code] = layoutData.data.components[component.id].data.user_codes
-                            } else {
-                                result[component.user_code] = layoutData.data.components[component.id].data.value
-                            }
+                            result[component.user_code] = layoutData.data.components[component.id].output
+
                         }
                     }
                 }
@@ -86,7 +83,35 @@
 
         }
 
-        function setComponentOutput(componentId, data) {
+        function setComponentOutput(componentId, output) {
+
+            // Probably need refactor
+            if (!layoutData.data.components) {
+                layoutData.data.components = {}
+            }
+
+            if (!layoutData.data.components[componentId]) {
+                layoutData.data.components[componentId] = {};
+            }
+
+            layoutData.data.components[componentId].output = output
+        }
+
+        function getComponentOutput(componentId) {
+
+            // Probably need refactor
+            if (!layoutData.data.components) {
+                layoutData.data.components = {}
+            }
+
+            if (!layoutData.data.components[componentId]) {
+                layoutData.data.components[componentId] = {};
+            }
+
+            return layoutData.data.components[componentId].output
+        }
+
+        function setComponentOutputOld(componentId, data) {
 
             if (!layoutData.data.components) {
                 layoutData.data.components = {}
@@ -97,7 +122,7 @@
             layoutData.data.components[componentId] = data
         }
 
-        function getComponentOutput(componentId) {
+        function getComponentOutputOld(componentId) {
 
             if (!layoutData.data.components) {
                 layoutData.data.components = {}
@@ -247,8 +272,12 @@
             setAllComponentsOutputs: setAllComponentsOutputs,
             getAllComponentsOutputs: getAllComponentsOutputs,
             getAllComponentsOutputsByUserCodes: getAllComponentsOutputsByUserCodes,
-            setComponentOutput: setComponentOutput,
+
+            setComponentOutput: setComponentOutput, // szhitenev 2023-08-20
             getComponentOutput: getComponentOutput,
+
+            setComponentOutputOld: setComponentOutputOld,
+            getComponentOutputOld: getComponentOutputOld,
             setComponentStatus: setComponentStatus,
             getComponentStatus: getComponentStatus,
             setComponentError: setComponentError,
