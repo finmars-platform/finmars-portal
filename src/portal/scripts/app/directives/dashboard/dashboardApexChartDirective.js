@@ -302,6 +302,23 @@
                             return acc;
 
                         }, {});
+                    },
+                    getYesterdayDate: function () {
+
+                        const today = new Date();
+
+                        // Subtract one day to get yesterday's date
+                        today.setDate(today.getDate() - 1);
+
+                        // Format the date in yyyy-mm-dd format
+                        const yyyy = today.getFullYear();
+                        const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed in JS
+                        const dd = String(today.getDate()).padStart(2, '0');
+
+                        const yesterday = `${yyyy}-${mm}-${dd}`;
+
+                        return yesterday
+
                     }
 
 
