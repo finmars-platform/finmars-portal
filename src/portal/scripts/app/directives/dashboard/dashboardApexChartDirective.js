@@ -367,6 +367,8 @@
 
                         var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputsByUserCodes();
 
+                        scope.lastSavedOutput = componentsOutputs;
+
                         scope.initChart({outputs: componentsOutputs});
 
                         scope.initEventListeners(); // init listeners after component init
