@@ -15,16 +15,19 @@
     </div>
 
     <div>
-        <!--<text-input label="User Code"
-                    placeholder-text="User Code"
-                    model="popupData.fields.user_code.value"
-                    event-signal="popupData.fields.user_code.event"
-                    is-locked="{{popupData.fields.user_code.locked}}"
-                    small-options="{
+        <text-input data-ng-if="!popupData.useUserCodeInput"
+                    data-label="User Code"
+                    data-placeholder-text="User Code"
+                    data-model="popupData.fields.user_code.value"
+                    data-event-signal="popupData.fields.user_code.event"
+                    data-is-locked="{{popupData.fields.user_code.locked}}"
+                    data-small-options="{
                         dialogParent: '.dialog-containers-wrap',
                         notNull: popupData.fields.user_code.smallOptions.notNull
-                    }"></text-input>-->
-        <usercode-input data-content-type="popupData.fields.user_code.content_type"
+                    }"></text-input>
+
+        <usercode-input data-ng-if="popupData.useUserCodeInput"
+                        data-content-type="popupData.fields.user_code.content_type"
                         data-user-code="popupData.fields.user_code.value"></usercode-input>
     </div>
 

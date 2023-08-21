@@ -188,7 +188,7 @@
 
         vm.onPopupSaveCallback = vm.sharedLogic.onPopupSaveCallback;
         vm.onFixedAreaPopupCancel = vm.sharedLogic.onFixedAreaPopupCancel;*/
-        // <Victor 20020.11.20 #59: fields below needs for new design an fixed area popup>
+        vm.useUserCodeInput = vm.entityType === 'account-type';
         vm.onNameToShowChange = vm.sharedLogic.onNameToShowChange;
 
         vm.getFaField1Classes = vm.sharedLogic.getFaField1Classes;
