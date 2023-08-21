@@ -81,6 +81,11 @@
                 "name": "YTM",
                 "value_type": 20,
             },
+            {
+                "key": "modified_duration",
+                "name": "Modified Duration",
+                "value_type": 20,
+            },
             //{
             //    "key": "factor",
             //    "name": "Factor",
