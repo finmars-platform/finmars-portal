@@ -373,22 +373,27 @@
                 originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
             }
 
-            vm.getTransactionUserFields().then(function () {
+            return new Promise(function (resolve, reject) {
 
-                vm.readyStatus.entity = true;
-                vm.readyStatus.permissions = true;
+                vm.getTransactionUserFields().then(function () {
 
-                // vm.loadPermissions();
+                    vm.readyStatus.entity = true;
+                    vm.readyStatus.permissions = true;
 
-                vm.readyStatus.layout = true;
-                $scope.$apply();
+                    // vm.loadPermissions();
 
-                // sharedLogic.setStateInActionsControls();
-                vm.entity.actions = sharedLogic.formatActionsForFrontend();
+                    vm.readyStatus.layout = true;
+                    $scope.$apply();
 
-                vm.paneActionsMenuPopups = vm.createSelectorPopupDataForActions();
+                    // sharedLogic.setStateInActionsControls();
+                    vm.entity.actions = sharedLogic.formatActionsForFrontend();
+
+                    vm.paneActionsMenuPopups = vm.createSelectorPopupDataForActions();
+
+                    resolve();
 
 
+                }).catch(function (error) { reject(error) });
 
             })
 
@@ -406,9 +411,9 @@
 
                     vm.draftUserCode = vm.generateUserCodeForDraft();
 
-                    vm.transformSourceEntityToFrontendLogic();
-
-                    res();
+                    vm.transformSourceEntityToFrontendLogic().then(function () {
+                        res();
+                    });
 
 
                 }).catch(function (error) {
