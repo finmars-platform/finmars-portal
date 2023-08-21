@@ -32,6 +32,7 @@
 
           <input
             type="text"
+            placeholder="{{placeholderText}}"
             data-ng-model="inputText"
             data-ng-model-options="{debounce: 1000}"
             data-ng-change="onInputTextChange()"
@@ -80,7 +81,7 @@
 
   </div>
 
-  <!--<div data-ng-if="selectorOptions" class="custom-input-sel-menu-container selectMenuContainer m-t-8">
+  <div data-ng-if="selectorOptions" class="custom-input-sel-menu-container selectMenuContainer m-t-8">
     <div class="custom-input-sel-menu-block">
       <div data-ng-repeat="option in selectorOptions track by $index" data-ng-mousedown="selectOption(option)" tabindex="0"
         data-ng-bind="option.short_name" class="custom-input-sel-option"></div>
@@ -96,7 +97,7 @@
         </button>
       </div>
     </div>
-  </div>-->
+  </div>
 
   <div ng-if="error"
        ng-bind="error"
