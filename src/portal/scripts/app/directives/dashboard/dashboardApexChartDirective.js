@@ -337,8 +337,57 @@
                     },
                     roundToTwo: function (num) {
                         return Math.round((num + Number.EPSILON) * 100) / 100;
+                    },
+                    formatNumberWithApostrophe: function (num) {
+                        // Convert number to string and split by decimal
+                        const parts = num.toString().split(".");
+
+                        // Use a regex to add the single quote as a thousands separator
+                        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+
+                        // Return the formatted number
+                        return parts.join(".");
+                    },
+                    subtractDays: function (dateInput, days) {
+                        let date;
+
+                        if (typeof dateInput === 'string') {
+                            date = new Date(dateInput);
+                        } else if (dateInput instanceof Date) {
+                            date = new Date(dateInput.getTime());  // Create a new Date object to avoid modifying the original
+                        } else {
+                            throw new Error('Invalid date input provided');
+                        }
+
+                        date.setDate(date.getDate() - days);
+                        return date;
+                    },
+                    getLastBusinessDayOfPreviousMonth: function (dateInput) {
+                        let date;
+
+                        if (typeof dateInput === 'string') {
+                            date = new Date(dateInput);
+                        } else if (dateInput instanceof Date) {
+                            date = new Date(dateInput.getTime());
+                        } else {
+                            throw new Error('Invalid date input provided');
+                        }
+
+                        // Set the date to the 1st of the current month
+                        date.setDate(1);
+
+                        // Move back one day to get the last day of the previous month
+                        date.setDate(date.getDate() - 1);
+
+                        // Check if the day is a weekend (0 is Sunday, 6 is Saturday)
+                        while (date.getDay() === 0 || date.getDay() === 6) {
+                            // If it's a weekend, move back one day
+                            date.setDate(date.getDate() - 1);
+                        }
+
+                        // Format date to yyyy-mm-dd
+                        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
                     }
-                    
 
 
                 }
