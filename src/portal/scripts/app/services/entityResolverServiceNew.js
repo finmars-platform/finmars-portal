@@ -53,6 +53,11 @@ var pricingProcedureService = require('./procedures/pricingProcedureService');
 var scheduleService = require('./scheduleService');
 const auditService = require('./auditService');
 
+var cookieService = require('../../../../core/services/cookieService');
+var xhrService = require('../../../../core/services/xhrService');
+var configureRepositoryUrlService = require('./configureRepositoryUrlService');
+var baseUrlService = require('./baseUrlService');
+
 export default function (instrumentService, transactionTypeService, priceHistoryService, currencyHistoryService, configurationService, reportService) {
 
     var getList = function (entityType, options) {
@@ -913,6 +918,37 @@ export default function (instrumentService, transactionTypeService, priceHistory
         }
     };
 
+    var request = function (path, method, data) {
+
+        var method = method || 'GET';
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+        var baseUrl = baseUrlService.resolve();
+
+        if (path[0] !== '/') {
+            path.unshift('/');
+        }
+
+        var options = {
+            method: method,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        }
+
+        if (data) {
+            options.body = JSON.stringify(data)
+        }
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + path,
+            options)
+
+    }
+
     return {
         getList: getList,
         getListLight: getListLight,
@@ -921,7 +957,10 @@ export default function (instrumentService, transactionTypeService, priceHistory
         update: update,
         deleteByKey: deleteByKey,
         updateBulk: updateBulk,
-        deleteBulk: deleteBulk
+        deleteBulk: deleteBulk,
+
+
+        request: request
     }
 
 };
