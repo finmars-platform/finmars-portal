@@ -578,7 +578,7 @@
 
             var currentMasterUser = globalDataService.getMasterUser();
 
-            return currentMasterUser.version;
+            return currentMasterUser.versions;
         }
 
         vm.copyToBuffer = function (content) {
@@ -660,7 +660,7 @@
 
             vm.getSessionRemainingTime();
 
-            vm.currentVersion = vm.getCurrentVersion();
+            vm.versions = vm.getCurrentVersion();
 
             vm.sessionRemainingInterval = $interval(function () {
                 vm.getSessionRemainingTime();
