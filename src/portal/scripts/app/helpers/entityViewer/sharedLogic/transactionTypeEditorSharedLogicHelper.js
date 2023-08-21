@@ -2141,7 +2141,7 @@
                     'model': action.transaction.portfolio_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.transaction.portfolio_toggle,
+                    'isActive': !action.transaction.portfolio_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2174,7 +2174,7 @@
                     'model': action.transaction.settlement_currency_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.transaction.settlement_currency_toggle,
+                    'isActive': !action.transaction.settlement_currency_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2205,7 +2205,7 @@
                     'model': action.transaction.transaction_currency_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.transaction.transaction_currency_toggle,
+                    'isActive': !action.transaction.transaction_currency_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2399,7 +2399,7 @@
                     'model': action.transaction[resolveInstrumentProp(action, 'transaction', 'allocation_pl')],
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.transaction.allocation_pl_toggle,
+                    'isActive': !action.transaction.allocation_pl_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2433,7 +2433,7 @@
                     'model': action.transaction[resolveInstrumentProp(action, 'transaction', 'allocation_balance')],
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.transaction.allocation_balance_toggle,
+                    'isActive': !action.transaction.allocation_balance_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2471,7 +2471,7 @@
                     'model': action.transaction.strategy1_position_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.transaction.strategy1_position_toggle,
+                    'isActive': !action.transaction.strategy1_position_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2504,7 +2504,7 @@
                     'model': action.transaction.strategy2_position_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.transaction.strategy2_position_toggle,
+                    'isActive': !action.transaction.strategy2_position_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2537,7 +2537,7 @@
                     'model': action.transaction.strategy3_position_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.transaction.strategy3_position_toggle,
+                    'isActive': !action.transaction.strategy3_position_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2570,7 +2570,7 @@
                     'model': action.transaction.strategy1_cash_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.transaction.strategy1_cash_toggle,
+                    'isActive': !action.transaction.strategy1_cash_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2603,7 +2603,7 @@
                     'model': action.transaction.strategy2_cash_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.transaction.strategy2_cash_toggle,
+                    'isActive': !action.transaction.strategy2_cash_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2636,7 +2636,7 @@
                     'model': action.transaction.strategy3_cash_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.transaction.strategy3_cash_toggle,
+                    'isActive': !action.transaction.strategy3_cash_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2669,7 +2669,7 @@
                     'model': action.transaction.counterparty_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.transaction.counterparty_toggle,
+                    'isActive': !action.transaction.counterparty_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2702,7 +2702,7 @@
                     'model': action.transaction.responsible_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.transaction.responsible_toggle,
+                    'isActive': !action.transaction.responsible_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2800,7 +2800,7 @@
                     'model': action.instrument.pricing_currency_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.instrument.pricing_currency_toggle,
+                    'isActive': !action.instrument.pricing_currency_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2831,7 +2831,7 @@
                     'model': action.instrument.accrued_currency_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.instrument.accrued_currency_toggle,
+                    'isActive': !action.instrument.accrued_currency_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2862,7 +2862,7 @@
                     'model': action.instrument.pricing_condition_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.instrument.pricing_condition_toggle,
+                    'isActive': !action.instrument.pricing_condition_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2893,7 +2893,7 @@
                     'model': action.instrument.price_download_scheme_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.instrument.price_download_scheme_toggle,
+                    'isActive': !action.instrument.price_download_scheme_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2924,7 +2924,7 @@
                     'model': action.instrument.payment_size_detail_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.instrument.payment_size_detail_toggle,
+                    'isActive': !action.instrument.payment_size_detail_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -2963,7 +2963,7 @@
                     'model': action.instrument_factor_schedule[resolveInstrumentProp(action, 'instrument_factor_schedule', 'instrument')],
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.instrument_factor_schedule.instrument_toggle,
+                    'isActive': !action.instrument_factor_schedule.instrument_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -3010,7 +3010,7 @@
                     'model': action.instrument_manual_pricing_formula[resolveInstrumentProp(action, 'instrument_manual_pricing_formula', 'instrument')],
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.instrument_manual_pricing_formula.instrument_toggle,
+                    'isActive': !action.instrument_manual_pricing_formula.instrument_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -3048,7 +3048,7 @@
                     'model': action.instrument_manual_pricing_formula.pricing_policy_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.instrument_manual_pricing_formula.pricing_policy_toggle,
+                    'isActive': !action.instrument_manual_pricing_formula.pricing_policy_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -3089,7 +3089,7 @@
                     'model': action.instrument_accrual_calculation_schedules[resolveInstrumentProp(action, 'instrument_accrual_calculation_schedules', 'instrument')],
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.instrument_accrual_calculation_schedules.instrument_toggle,
+                    'isActive': !action.instrument_accrual_calculation_schedules.instrument_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -3127,7 +3127,7 @@
                     'model': action.instrument_accrual_calculation_schedules.periodicity_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.instrument_accrual_calculation_schedules.periodicity_toggle,
+                    'isActive': !action.instrument_accrual_calculation_schedules.periodicity_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -3160,7 +3160,7 @@
                     'model': action.instrument_accrual_calculation_schedules.accrual_calculation_model_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle,
+                    'isActive': !action.instrument_accrual_calculation_schedules.accrual_calculation_model_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -3195,7 +3195,7 @@
 
             let multitypeFieldsData = {};
 
-            // const toggled = !!!action.instrument_event_schedule.instrument_toggle;
+            // const toggled = !action.instrument_event_schedule.instrument_toggle;
 
             multitypeFieldsData.instrument = [
                 {
@@ -3203,7 +3203,7 @@
                     'model': action.instrument_event_schedule[resolveInstrumentProp(action, 'instrument_event_schedule', 'instrument')],
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.instrument_event_schedule.instrument_toggle,
+                    'isActive': !action.instrument_event_schedule.instrument_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -3241,7 +3241,7 @@
                     'model': action.instrument_event_schedule.notification_class_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.instrument_event_schedule.notification_class_toggle,
+                    'isActive': !action.instrument_event_schedule.notification_class_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -3274,7 +3274,7 @@
                     'model': action.instrument_event_schedule.periodicity_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.instrument_event_schedule.periodicity_toggle,
+                    'isActive': !action.instrument_event_schedule.periodicity_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
@@ -3307,7 +3307,7 @@
                     'model': action.instrument_event_schedule.event_class_input,
                     'fieldType': 'dropdownSelect',
                     'isDefault': true,
-                    'isActive': !!!action.instrument_event_schedule.event_class_toggle,
+                    'isActive': !action.instrument_event_schedule.event_class_toggle,
                     'sign': '<div class="multitype-field-type-letter">I</div>',
                     'value_type': 70,
                     'fieldData': {
