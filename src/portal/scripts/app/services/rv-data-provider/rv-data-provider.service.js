@@ -52,12 +52,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 // console.log('here?');
 
             })
-        }).then(function (data) {
-
-            // check finmarsOngoingRequests
-            // needed to ensure that each copy of report will modify own data;
-            return JSON.parse(JSON.stringify(data))
-
         })
 
 
