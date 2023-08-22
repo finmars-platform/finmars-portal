@@ -1297,7 +1297,8 @@ th {
 }
 
 .grey-tab {
-  background: #f5f5f5;
+  //background: #f5f5f5;
+  background: #eff4f7;
 }
 
 .table-misc-cell {
@@ -2042,6 +2043,7 @@ md-menu-content md-menu.md-menu {
 
 .side-nav-versions-block div {
   cursor: pointer;
+
   &:hover {
     color: #fff;
   }
@@ -2882,7 +2884,8 @@ md-dialog.two-rows-dialog-actions {
     height: 100%;
     float: right;
     animation-duration: .5s;
-    border-left: 2px solid #a2a2a2;
+    //border-left: 2px solid #a2a2a2;
+    border-left: 1px solid #e0e0e0;
     transition: width 0.5s linear;
 
     &.big-drawer-opens {
@@ -2921,10 +2924,10 @@ md-dialog.two-rows-dialog-actions {
     background-color: white;
     color: black;
     z-index: 50;
-    border-top: 2px solid #a2a2a2;
-    boorder-left: #2a2a2a;
-    border-bottom: 2px solid #a2a2a2;
-    border-left: 2px solid #a2a2a2;
+    border-top: 1px solid #e0e0e0;
+    //boorder-left: #2a2a2a;
+    border-bottom: 1px solid #e0e0e0;
+    border-left: 1px solid #e0e0e0;
     border-radius: 4px 0px 0px 4px;
 
     &:hover {
@@ -2952,7 +2955,8 @@ md-dialog.two-rows-dialog-actions {
     //height: 78px;
     flex: 0 0 @header-height;
     display: flex;
-    &>div {
+
+    & > div {
       display: flex;
       align-items: center;
     }
@@ -2968,7 +2972,6 @@ md-dialog.two-rows-dialog-actions {
       font-size: 16px;
       line-height: @header-height;
     }
-
 
 
     .big-drawer-header-processing {
@@ -3019,7 +3022,6 @@ md-tabs [role="tabpanel"] {
 //  left: 50%;
 //  margin-left: -150px;
 //}
-
 
 
 .error-record-card {
@@ -3898,6 +3900,7 @@ a.finmars-site-link {
   &:visited {
     color: #fff;
   }
+
   &:active {
     color: #fff;
   }
