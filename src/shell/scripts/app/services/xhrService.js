@@ -160,7 +160,7 @@ export default function (errorService, cookieService) {
         const requestPromise = doFetch(url, params, options).then(data => {
             // Remove from ongoing requests once completed.
             delete window.finmarsOngoingRequests[hash];
-            return data
+            return data // N.B. deep copy possible need, if one of components modify data it will changes in another one
         });
 
         window.finmarsOngoingRequests[hash] = requestPromise;
