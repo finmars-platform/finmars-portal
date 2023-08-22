@@ -48,7 +48,13 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 // console.log('here?');
 
             })
-        });
+        }).then(function (data) {
+
+            // check finmarsOngoingRequests
+            // needed to ensure that each copy of report will modify own data;
+            return JSON.parse(JSON.stringify(data))
+
+        })
 
 
     };
@@ -131,8 +137,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         var entityType = entityViewerDataService.getEntityType();
         var reportOptions = entityViewerDataService.getReportOptions();
 
-		//# region Delete report options items">
-		/* delete reportOptions.items;
+        //# region Delete report options items">
+        /* delete reportOptions.items;
         delete reportOptions.custom_fields;
         delete reportOptions.custom_fields_object;
         delete reportOptions.item_complex_transactions;
@@ -148,7 +154,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         delete reportOptions.item_currency_fx_rates;
         delete reportOptions.item_currencies;
         delete reportOptions.item_accounts; */
-		reportOptions = reportHelper.cleanReportOptionsFromTmpProps(reportOptions);
+        reportOptions = reportHelper.cleanReportOptionsFromTmpProps(reportOptions);
         reportOptions.filters = entityViewerDataService.getFilters(); // for transaction report only
         //# endregion
 
@@ -181,7 +187,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 reportOptions.items = reportHelper.injectIntoItemsV2(reportOptions.items, reportOptions, entityType);
 
-				// reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions, entityType);
+                // reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions, entityType);
                 // reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
                 // reportOptions.items = reportHelper.convertItemsToFlat(reportOptions.items);
                 reportOptions.items = reportHelper.extendAttributes(reportOptions.items, attributeExtensions);
@@ -190,7 +196,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
 
                 entityViewerDataService.setUnfilteredFlatList(reportOptions.items);
-
 
 
             }
@@ -313,8 +318,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                         //         obj.results[page * step + i] = data.results[i];
                         //     }
                         // }
-                    }
-                    else {
+                    } else {
 
                         var parentGroup = entityViewerDataService.getData(event.parentGroupId);
 
@@ -372,7 +376,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                     try {
                         duplicateObj = entityViewerDataService.getObject(item.___id, item.___parentId);// returns an error if a matching object is not found
-                    } catch (e) {}
+                    } catch (e) {
+                    }
 
                     if (duplicateObj) {
                         console.log("Error: duplicate ___id was created for an object: ", item);
@@ -451,8 +456,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                     }
 
 
-                }
-                else {
+                } else {
 
                     var groupData = entityViewerDataService.getData(event.___id);
 
@@ -475,8 +479,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                         }
 
 
-                    }
-                    else {
+                    } else {
 
 
                         var parentGroup = entityViewerDataService.getData(event.parentGroupId);
@@ -485,8 +488,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                         obj.___group_name = event.groupName ? event.groupName : '-';
                         obj.___group_identifier = event.groupId ? event.groupId : '-';
                         obj.___is_open = true;
-
-
 
 
                         // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
@@ -586,7 +587,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         var id = evRvCommonHelper.getId(item);
 
-        if ( createdIdsList.includes(id) ) {
+        if (createdIdsList.includes(id)) {
 
             console.log("Error: duplicated id was created for an item: ", item);
             var customError = new Error("Item with an ___id " + item.___id + " already exist");
@@ -624,8 +625,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 }
             };
 
-        }
-        else {
+        } else {
 
             requestParameters = {
                 requestType: 'objects',
@@ -999,7 +999,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         var promises = [];
 
         requestParametersForUnfoldedGroups.forEach(function (requestParameters) {
-            promises.push( getGroups(requestParameters, entityViewerDataService, entityViewerEventService) );
+            promises.push(getGroups(requestParameters, entityViewerDataService, entityViewerEventService));
         });
 
         return new Promise(function (resolve, reject) {
@@ -1012,7 +1012,9 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 resolve();
 
-            }).catch(function (error) { reject(error) })
+            }).catch(function (error) {
+                reject(error)
+            })
 
         })
 
