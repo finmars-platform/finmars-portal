@@ -1,0 +1,10 @@
+<div class="user-profile">
+
+    <img class="user-profile-picture" ng-src="{{user.profile_picture}}" alt="profile_picture">
+
+    <div class="user-profile-username" data-ng-if="showUsername">
+        <span data-ng-if="user.first_name">{{user.first_name}}</span>
+        <span data-ng-if="!user.first_name">{{user.username}}</span>
+    </div>
+
+</div>
