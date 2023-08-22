@@ -22,6 +22,10 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 // console.log('requestData.data', data);
 
+                // Checkout finmarsOngoingRequests
+                // need to ensure that each copy of report will modify own data;
+                data = JSON.parse(JSON.stringify(data))
+
                 if (!data.hasOwnProperty('non_field_errors')) {
 
                     var reportOptions = evDataService.getReportOptions();
