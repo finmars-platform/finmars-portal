@@ -696,6 +696,7 @@ export default (function () {
     portal.directive('initialLoader', [require('./app/directives/initialLoaderDirective')]);
     portal.directive('progressCircular', ['$interval', require('./app/directives/progressCircularDirective')]);
     portal.directive('progressLinear', [require('./app/directives/progressLinearDirective')]);
+    portal.directive('userProfile', ['globalDataService', require('./app/directives/userProfileDirective')]);
 
     // Pages
 
