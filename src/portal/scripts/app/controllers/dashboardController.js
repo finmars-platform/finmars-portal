@@ -560,7 +560,10 @@
 
         vm.initDashboardComponents = function () {
 
-            var LIMIT = 2;
+            // var LIMIT = 2;
+            // NEW DASHBOARD CHANGE
+            // szhitenev 2023-08-22
+            var LIMIT = 32;
             var waitingComponents = [];
 
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
