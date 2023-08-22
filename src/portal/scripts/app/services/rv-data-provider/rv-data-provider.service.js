@@ -575,7 +575,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     };
 
-    var createRequestParameters = function (item, level, evDataService, evEventService) {
+    var createRequestParameters = function (item, level, evDataService, evEventService, createdIdsList) {
 
         // console.log('createRequestParameters.item', item);
 
@@ -668,7 +668,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
      * @param {Object} evEventService
      * @returns {Promise<[]>} - returns arrays of nested promises for called methods updateDataStructureByRequestParameters
      */
-    var recursiveRequest = function (parentId, items, level, evDataService, evEventService) {
+    var recursiveRequest = function (parentId, items, level, evDataService, evEventService, createdIdsList) {
 
         return new Promise(function RecursiveRequestPromise(resolve, reject) {
 
@@ -677,7 +677,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
             items.forEach(function (item) {
 
-                requestParameters = createRequestParameters(item, level, evDataService, evEventService);
+                requestParameters = createRequestParameters(item, level, evDataService, evEventService, createdIdsList);
                 promises.push(updateDataStructureByRequestParameters(requestParameters, evDataService, evEventService));
 
             });
@@ -703,7 +703,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                         // console.log('item!', item.___group_name);
 
-                        recursiveRequestPromises.push(recursiveRequest(item.___id, item.results, level, evDataService, evEventService));
+                        recursiveRequestPromises.push(recursiveRequest(item.___id, item.results, level, evDataService, evEventService, createdIdsList));
 
                     });
 
@@ -723,28 +723,28 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     };
 
-    var initRecursiveRequestParametersCreation = function (evDataService, evEventService) {
+    var initRecursiveRequestParametersCreation = function (evDataService, evEventService, createdIdsList) {
 
         console.time('Creating Data Structure');
 
         var rootGroup = evDataService.getRootGroupData();
         var level = 0;
 
-        return recursiveRequest(rootGroup.___id, rootGroup.results, level, evDataService, evEventService).then(function () {
+        return recursiveRequest(rootGroup.___id, rootGroup.results, level, evDataService, evEventService, createdIdsList).then(function () {
             console.timeEnd('Creating Data Structure');
         })
 
     };
 
-    var createdIdsList = [];
     var testObj = {};
+    var createdIdsList = []; // WTF VERY BAD PATTERN, never do it again
 
     var createDataStructure = function (evDataService, evEventService) {
         // console.log('createDataStructure')
 
         evDataService.resetData();
         evDataService.resetRequestParameters();
-        createdIdsList = [];
+        var createdIdsList = [];
         testObj = {};
 
         var defaultRootRequestParameters = evDataService.getActiveRequestParameters();
@@ -765,7 +765,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                  * that is inside recursiveRequest()
                  * that is inside initRecursiveRequestParametersCreation()
                  */
-                initRecursiveRequestParametersCreation(evDataService, evEventService).then(function () {
+                initRecursiveRequestParametersCreation(evDataService, evEventService, createdIdsList).then(function () {
                     console.log('createDataStructure 2', defaultRootRequestParameters)
 
                     // var activeGroupTypeSort = evDataService.getActiveGroupTypeSort();
