@@ -35,7 +35,8 @@
 
         if (item.___type === 'group' || item.___type === 'placeholder_group') {
 
-            pattern = [item.___parentId, item.___group_type_key, item.___group_name, item.___group_identifier].join('');
+            // pattern = [item.___parentId, item.___group_type_key, item.___group_name, item.___group_identifier].join(''); seems its not working good
+            pattern = [item.___parentId, stringHelper.toHash(item.___group_name + item.___group_identifier), item.___index].join('');
 
         }
 
