@@ -99,6 +99,9 @@
                         case 'apex_chart':
                             verboseType = 'Apex Chart';
                             break;
+                        case 'iframe':
+                            verboseType = 'Iframe';
+                            break;
                     }
 
                     return verboseType;

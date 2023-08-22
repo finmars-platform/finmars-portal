@@ -6,7 +6,7 @@
     'use strict';
 
     var md5Helper = require('../helpers/md5.helper');
-	var metaHelper = require('../helpers/meta.helper');
+    var metaHelper = require('../helpers/meta.helper');
 
     var DashboardConstructorDataService = require('../services/dashboard-constructor/dashboardConstructorDataService');
     var DashboardConstructorEventService = require('../services/dashboard-constructor/dashboardConstructorEventService');
@@ -336,7 +336,7 @@
 
         var tabNameInput = null;
 
-    	var removeKeydownListener = function () {
+        var removeKeydownListener = function () {
             document.removeEventListener('keydown', addSpaceIntoTabName);
         };
 
@@ -492,6 +492,9 @@
                     break;
                 case 'apex_chart':
                     verboseName = 'Apex Chart';
+                    break;
+                case 'iframe':
+                    verboseName = 'Iframe';
                     break;
             }
 
@@ -729,7 +732,6 @@
                                 targetRow.columns[column_number].data.id = component_id;
 
                             }
-
 
 
                             vm.dashboardConstructorDataService.setData(layout);
@@ -1125,7 +1127,7 @@
 
                 uiService.updateDashboardLayout(layout.id, layout).then(function (data) {
 
-					vm.layout.modified = data.modified
+                    vm.layout.modified = data.modified
 
                     toastNotificationService.success('Dashboard layout ' + layout.name + ' was successfully saved');
 
@@ -1270,7 +1272,10 @@
             apex_chart: {
                 editorController: 'DashboardConstructorApexChartComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-apex-chart-component-dialog-view.html'
-
+            },
+            iframe: {
+                editorController: 'DashboardConstructorIframeComponentDialogController as vm',
+                editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-iframe-component-dialog-view.html'
             }
         };
 
@@ -1651,7 +1656,7 @@
 
             var overlappedIndexes = [];
 
-            tab.accordions.forEach(function (accordionItem){
+            tab.accordions.forEach(function (accordionItem) {
 
                 for (var i = accordionItem.from; i <= accordionItem.to; i = i + 1) {
                     overlappedIndexes.push(i);
