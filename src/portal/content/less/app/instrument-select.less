@@ -75,9 +75,17 @@ instrument-select {
   }
 }
 
+/*
+ * IMPORTANT: when changing this value,
+ * also change variable detailBlockWidth inside customInputs/instrumentSelectDirective.js
+ */
+
+@detailBlockWidth: 280px;
+
 .instrument-select-option-detail-box {
   width: 220px;
-  left: 280px;
+
+  left: @detailBlockWidth;
   top: 0;
   position: absolute;
   height: 380px;
@@ -86,7 +94,14 @@ instrument-select {
   box-shadow: 0 0 2px #000;
   padding: 11px 16px 2px 16px;
   box-sizing: border-box;
+
+  &.locate-right {
+    left: initial;
+    right: 330px;
+  }
 }
+
+
 
 .instrument-select-options-group-title {
   font-size: 14px;

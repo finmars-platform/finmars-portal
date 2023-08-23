@@ -7,10 +7,14 @@
 
     var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
     var instrumentDatabaseSearchService = require('../../services/instrument/instrumentDatabaseSearchService');
+    var tasksService = require('../../services/tasksService');
 
     module.exports = function ($scope, $mdDialog, toastNotificationService, instrumentService, data) {
 
         var vm = this;
+
+        vm.isDisabled = false;
+        vm.loadingEntity = false;
 
         vm.title = data.title || 'Select instrument';
         vm.localInstrumentsTotal = 0;
@@ -62,7 +66,7 @@
                     vm.hoverInstrument.available_for_update = true;
 
                     // check whether user_code is a valid isin
-                    const regexp = /^([A-Z]{2})([A-Z0-9]{9})([0-9]{1})/g;
+                    const regexp = /^([A-Z]{2})([-]{0,1}[A-Z0-9]{9}[-]{0,1})([0-9]{1})$/g;
                     const invalidIsin = !vm.hoverInstrument.user_code.match(regexp);
 
                     if (invalidIsin) {
@@ -81,6 +85,7 @@
 
             vm.selectedItem = null;
             vm.isDisabled = false;
+            vm.loadingEntity = false;
 
             toastNotificationService.error(error);
 
@@ -254,13 +259,74 @@
 
         }
 
+        var taskIntervalId;
+        var intervalTime = 5000;
+
+        var awaitInstrumentImport = function (taskId) {
+
+            return setInterval(function () {
+
+                tasksService.getByKey(taskId)
+                    .then(function (taskData) {
+
+                        var errorMsg = "Import aborted";
+
+                        switch (taskData.status) {
+                            case 'D':
+
+                                vm.isDisabled = false;
+                                vm.processing = false;
+                                vm.loadingEntity = false;
+
+                                toastNotificationService.success("Instrument has been loaded");
+
+                                $scope.$apply();
+
+                                clearInterval(taskIntervalId);
+
+                                break;
+
+                            case 'C':
+                            case 'T':
+                                errorMsg = "Import timed out"
+
+                                onSdiError(errorMsg);
+                                break;
+
+                            case 'E':
+
+                                toastNotificationService.error(taskData.error);
+                                onSdiError(taskData.error);
+
+                                break;
+                        }
+
+
+                    })
+                    .catch(function (error) {
+
+                        clearInterval(taskIntervalId);
+                        toastNotificationService.error(error);
+
+                        vm.processing = false;
+                        vm.isDisabled = false;
+                        vm.loadingEntity = false;
+
+                        throw error;
+
+                    });
+
+            }, intervalTime);
+
+        };
+
         vm.updateLocalInstrument = function (item) {
 
             /*var config = {
                 instrument_code: item.user_code,
                 mode: 1
             };*/
-            var config = {
+            /*var config = {
                 user_code: item.user_code,
                 name: item.name,
                 instrument_type_user_code: item.instrument_type_object.user_code,
@@ -286,6 +352,47 @@
                     toastNotificationService.success('Instrument ' + item.user_code + ' was updated')
 
                 }
+
+            })*/
+
+            /* var iTypeUc = null;
+
+            if (item.instrument_type_object) {
+                iTypeUc = item.instrument_type_object.user_code;
+
+            } else if (item.instrument_type && typeof item.instrument_type === 'string') { // property instrument_type contains user_code
+                // some instruments still have id as value for property instrument_type
+                iTypeUc = item.instrument_type;
+
+            } else {
+                console.log( "ERROR: instrument data", structuredClone(item) );
+                throw new Error("Lacking user_code of instrument type");
+            } */
+
+            var config = {
+                user_code: item.reference,
+                name: item.name,
+                instrument_type_user_code: item.instrument_type,
+                mode: 1
+            };
+
+            vm.loadingEntity = true;
+
+            importInstrumentCbondsService.download(config).then(function (data) {
+
+                vm.isDisabled = false;
+
+                if (data.errors) {
+
+                    onSdiError( data.error );
+
+                } else {
+                    taskIntervalId = awaitInstrumentImport(data.task);
+                }
+
+            }).catch(function (e){
+
+                onSdiError(e);
 
             })
 

@@ -37,6 +37,7 @@
                 scope.localInstrumentsTotal = 0;
                 scope.databaseInstrumentsTotal = 0;
                 scope.hoverInstrument = null;
+                scope.locateDetailsRight = false;
 
                 scope.inputText = '';
 
@@ -63,6 +64,11 @@
 
                 var stylePreset;
 
+                /**
+                 * IMPORTANT: when changing this value,
+                 * also change variable detailBlockWidth inside instrument-select.less
+                 */
+                var detailBlockWidth = 280;
                 var inputContainer = elem[0].querySelector('.instrumentSelectInputContainer');
                 var inputElem = elem[0].querySelector('.instrumentSelectInputElem');
 
@@ -312,27 +318,23 @@
 
                 };
 
-                scope.selectDatabaseInstrument = function (item) {
+                var importInstrument = function (item) {
 
-                    console.log('selectDatabaseInstrument.item', item);
                     var currentName = scope.itemName || '';
 
-                    closeDropdownMenu();
+                    /*var iTypeUc = null;
 
-                    // Download here?
+                    if (item.instrument_type_object) {
+                        iTypeUc = item.instrument_type_object.user_code;
 
-                    stylePreset = '';
-                    scope.error = '';
+                    } else if (item.instrument_type && typeof item.instrument_type === 'string') { // property instrument_type contains user_code
+                        // some instruments still have id as value for property instrument_type
+                        iTypeUc = item.instrument_type;
 
-                    /*var config = {
-                        instrument_code: item.referenceId,
-                        instrument_name: item.issueName,
-                        instrument_type_code: item.instrumentType,
-                        mode: 1
-                    };
-
-                    scope.itemName = item.issueName;
-                    scope.inputText = item.issueName;*/
+                    } else {
+                        console.log( "ERROR: instrument data", structuredClone(item) );
+                        throw new Error("Lacking user_code of instrument type");
+                    }*/
 
                     var config = {
                         user_code: item.reference,
@@ -340,13 +342,6 @@
                         instrument_type_user_code: item.instrument_type,
                         mode: 1,
                     };
-
-                    scope.itemName = item.name;
-                    scope.inputText = item.name;
-
-                    scope.processing = true;
-                    scope.loadingEntity = true;
-                    scope.isDisabled = true;
 
                     importInstrumentCbondsService.download(config)
                         .then(function (data) {
@@ -404,7 +399,40 @@
                             scope.inputText = currentName;
 
                             scope.$apply();
+
                         })
+
+                }
+
+                scope.selectDatabaseInstrument = function (item) {
+
+                    console.log('selectDatabaseInstrument.item', item);
+
+                    closeDropdownMenu();
+
+                    // Download here?
+
+                    stylePreset = '';
+                    scope.error = '';
+
+                    /*var config = {
+                        instrument_code: item.referenceId,
+                        instrument_name: item.issueName,
+                        instrument_type_code: item.instrumentType,
+                        mode: 1
+                    };
+
+                    scope.itemName = item.issueName;
+                    scope.inputText = item.issueName;*/
+
+                    scope.itemName = item.name;
+                    scope.inputText = item.name;
+
+                    scope.processing = true;
+                    scope.loadingEntity = true;
+                    scope.isDisabled = true;
+
+                    importInstrument(item);
 
                 };
 
@@ -485,7 +513,7 @@
 
                 scope.updateLocalInstrument = function (item) {
 
-                    var config = {
+                    /*var config = {
                         user_code: item.user_code,
                         name: item.name,
                         instrument_type_user_code: item.instrument_type_object.user_code,
@@ -510,7 +538,8 @@
                             toastNotificationService.success('Instrument ' + item.reference + ' was updated');
                         }
 
-                    })
+                    })*/
+                    importInstrument(item);
 
                 }
 
@@ -853,6 +882,12 @@
 
                     if (scope.customStyles) {
                         applyCustomStyles();
+                    }
+
+                    var rect = elem[0].getBoundingClientRect();
+
+                    if (rect['right'] + detailBlockWidth >= document.body.clientWidth + 18) { // 18px is width of the scroll
+                        scope.locateDetailsRight = true;
                     }
 
                 };
