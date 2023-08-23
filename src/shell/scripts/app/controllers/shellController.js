@@ -414,7 +414,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             realm: window.KEYCLOAK_REALM,
             clientId: window.KEYCLOAK_CLIENT_ID
         });
-        console.log("testing1090 window.keycloak", window.keycloak);
+
         window.keycloak.onReady = () => {
             if (window.keycloak.isTokenExpired(10)) refreshTokens()
         }
@@ -438,7 +438,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         });
 
         if (authenticated) {
-            console.log("testing1090.angularjs keycloak token", window.keycloak.token);
+
             cookieService.setCookie('access_token', window.keycloak.token);
             cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
             cookieService.setCookie('id_token', window.keycloak.idToken);

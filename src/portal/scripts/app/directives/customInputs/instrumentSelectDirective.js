@@ -103,7 +103,7 @@
                             scope.hoverInstrument.available_for_update = true;
 
                             // check whether user_code is a valid isin
-                            const regexp = /^([A-Z]{2})([A-Z0-9]{9})([0-9]{1})/g;
+                            const regexp = /^([A-Z]{2})([-]{0,1}[A-Z0-9]{9}[-]{0,1})([0-9]{1})$/g;
                             const invalidIsin = !scope.hoverInstrument.user_code.match(regexp);
 
                             if (invalidIsin) {
