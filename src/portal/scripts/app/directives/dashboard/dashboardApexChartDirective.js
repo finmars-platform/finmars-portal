@@ -111,19 +111,7 @@
 
                 scope.initEventListeners = function () {
 
-                    dashboardHelper.initEventListeners(scope);
-
-
-                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
-
-                        var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
-
-                        if (status === dashboardComponentStatuses.START) { // No actual calculation happens, so set to Active state
-                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                        }
-
-                    });
+                    // dashboardHelper.initEventListeners(scope);
 
                     console.log("Apex Event Listeners")
 
@@ -407,11 +395,11 @@
                 scope.init = function () {
 
                     console.log("Apex Chart vm", scope.vm);
-                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
-                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
 
                     scope.readyStatus.data = 'ready';
+
+                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                     setTimeout(function () {
 
@@ -422,11 +410,33 @@
                         scope.initChart({outputs: componentsOutputs});
 
                         scope.initEventListeners(); // init listeners after component init
+
                     }, 0)
 
                 };
 
-                scope.init()
+                scope.dashboardInit = function () {
+
+                    // Component put himself in INIT Status
+                    // so that dashboard manager can start processing it
+                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
+
+                        var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
+
+                        if (status === dashboardComponentStatuses.START) {
+                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.PROCESSING);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                            scope.init();
+                        }
+
+                    });
+
+                }
+
+                scope.dashboardInit();
 
             }
         }

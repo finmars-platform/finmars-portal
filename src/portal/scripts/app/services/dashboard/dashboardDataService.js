@@ -1,5 +1,8 @@
 (function () {
 
+    var dashboardComponentStatuses = require('./dashboardComponentStatuses');
+
+
     module.exports = function () {
 
         var layoutData = { // basically its dashboard layout that we store on backend
@@ -8,6 +11,8 @@
                 components_types: []
             }
         };
+
+        var initializingControls = new Set(); // to keep track of controls that haven't set their value yet
 
         var projection;
 
@@ -95,6 +100,7 @@
             }
 
             layoutData.data.components[componentId].output = output
+
         }
 
         function getComponentOutput(componentId) {
@@ -132,7 +138,13 @@
         }
 
         function setComponentStatus(componentId, status) {
+
+            var componentData = getComponentById(componentId)
+
+            console.log("Dashboard.setComponentStatus.component " + componentData.name + " changed status: " + status)
+
             tmpData.componentsStatuses[componentId] = status
+
         }
 
         function getComponentStatus(componentId) {
@@ -258,6 +270,37 @@
             return tmpData.layoutToOpen;
         }
 
+        function registerControl(componentId) {
+
+            initializingControls.add(componentId);
+
+        }
+
+        function isControlsReady() {
+
+            console.log('initializingControls', initializingControls);
+
+            var result = true;
+
+            if (initializingControls.size === 0) {
+                return false;
+            }
+
+            initializingControls.forEach(function (componentId) {
+
+                var status = getComponentStatus(componentId);
+
+                if (status !== dashboardComponentStatuses.ACTIVE) {
+                    result = false;
+                }
+
+            })
+
+
+            return result // either there is no controls, or they all have set their value
+        }
+
+
         return {
 
             setData: setData,
@@ -305,6 +348,11 @@
             // REFACTOR change layout from popup
             setLayoutToOpen: setLayoutToOpen,
             getLayoutToOpen: getLayoutToOpen,
+
+
+            // 2023-08-23
+            registerControl: registerControl,
+            isControlsReady: isControlsReady
 
         }
 

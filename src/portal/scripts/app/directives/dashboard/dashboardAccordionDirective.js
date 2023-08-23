@@ -32,29 +32,14 @@
 
                 scope.itemsList = [];
 
-                scope.initEventListeners = function () {
-
-                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
-
-                        var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
-
-                        if (status === dashboardComponentStatuses.START) { // No actual calculation happens, so set to Active state
-                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                        }
-
-                    });
-
-                };
-
                 scope.syncAccordionBackdrop = function () {
 
                     elem = document.querySelector('.dashboard-component-id-' + scope.item.data.id)
 
                     var container = elem.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
 
-                    console.log('accordion_elem', elem);
-                    console.log('accordion_elem container', container);
+                    // console.log('accordion_elem', elem);
+                    // console.log('accordion_elem container', container);
 
                     var backdrop = document.querySelector('.dashboard-accordion-backdrop-id' + scope.item.data.id)
 
@@ -101,7 +86,7 @@
                         if (nextAccordion) {
                             nextAccordionRowNumber = parseInt(nextAccordion.dataset.rowNumber, 10)
 
-                            console.log('nextAccordionRowNumber', nextAccordionRowNumber);
+                            // console.log('nextAccordionRowNumber', nextAccordionRowNumber);
 
                             currentAccordionHeightInRows = nextAccordionRowNumber - currentRowNumber;
 
@@ -123,10 +108,10 @@
 
                         }
 
-                        console.log('currentRowNumber', currentRowNumber);
-                        console.log('currentAccordionHeightInRows', currentAccordionHeightInRows);
+                        // console.log('currentRowNumber', currentRowNumber);
+                        // console.log('currentAccordionHeightInRows', currentAccordionHeightInRows);
 
-                        currentAccordionHeightInRows = currentAccordionHeightInRows -1;
+                        currentAccordionHeightInRows = currentAccordionHeightInRows - 1;
 
                         if (currentAccordionHeightInRows < 0) {
                             currentAccordionHeightInRows = 0;
@@ -163,10 +148,8 @@
 
                     console.log("Accordion data ", scope.componentData);
 
-                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                    scope.initEventListeners();
 
                     setTimeout(function () {
 
@@ -176,7 +159,28 @@
 
                 };
 
-                scope.init()
+                scope.dashboardInit = function () {
+
+                    // Component put himself in INIT Status
+                    // so that dashboard manager can start processing it
+                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
+
+                        var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
+
+                        if (status === dashboardComponentStatuses.START) {
+                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.PROCESSING);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                            scope.init();
+                        }
+
+                    });
+
+                }
+
+                scope.dashboardInit();
 
 
             }
