@@ -392,6 +392,7 @@
                     if (chartInstance) {
                         chartInstance.destroy();
                     }
+                    chartInstance.innerHTML = '';
 
                     setTimeout(function () {
                         console.warn("Evaluating Chart source code")
