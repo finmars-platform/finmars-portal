@@ -704,8 +704,10 @@
                             action: {callback: scope.setDateMinus},
                         });
 
-                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                        scope.settingUpDefaultValue(scope.componentData).then(function () {
+                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                        });
 
                     } else if (scope.componentData.settings.value_type === 10) {
 
