@@ -30,7 +30,7 @@
 
         item.subtotal = {};
 
-        console.log('calculateItemSubtotal.item', item)
+        // console.log('calculateItemSubtotal.item', item)
 
         if (item.___level === level) {
 
@@ -554,7 +554,7 @@
 
         var groupsIdsToFold = getGroupsIdsToFold(list, evDataService);
 
-        console.log('groupsIdsToFold', groupsIdsToFold);
+        // console.log('groupsIdsToFold', groupsIdsToFold);
 
         result = result.filter(function (item) {
 

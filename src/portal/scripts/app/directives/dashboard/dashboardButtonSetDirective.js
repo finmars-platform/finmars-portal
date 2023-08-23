@@ -16,7 +16,7 @@
 
     var toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
-	var rvHelper = require('../../helpers/rv.helper');
+    var rvHelper = require('../../helpers/rv.helper');
 
     module.exports = function dashboardButtonSetDirective($mdDialog, $state) {
         return {
@@ -34,66 +34,13 @@
 
                 scope.itemsList = [];
 
-                scope.initEventListeners = function () {
-
-                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
-
-                        var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
-
-                        if (status === dashboardComponentStatuses.START) { // No actual calculation happens, so set to Active state
-                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                        }
-
-                    });
-
-                };
-
-                scope.init = function () {
-
-                    scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
-
-                    scope.componentName = scope.componentData.custom_component_name
-
-                    scope.rows = scope.componentData.settings.rows;
-                    scope.columns = scope.componentData.settings.columns;
-                    scope.grid = scope.componentData.settings.grid;
-                    scope.showAsDropdown = scope.componentData.settings.showAsDropdown
-
-                    if (scope.grid.rows && scope.grid.rows.length) {
-
-                        scope.grid.rows.forEach(function (row) {
-
-                            row.items.forEach(function (item) {
-
-                                if (item.action) {
-                                    scope.itemsList.push(item);
-                                }
-
-                            })
-
-                        })
-                    }
-
-                    console.log('scope.grid', scope.grid);
-                    console.log('scope.grid', scope.columns);
-                    console.log('scope.itemsList', scope.itemsList);
-                    console.log('scope.grid', scope.rows);
-
-                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
-                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                    scope.initEventListeners();
-
-                };
-
                 scope.getSelectedText = function () {
                     return scope.componentName;
                 }
 
                 scope.handleAction = function ($event, item) {
 
-                    setTimeout(function (){
+                    setTimeout(function () {
                         scope.componentName = scope.componentData.custom_component_name; // important after click thing
                     }, 0)
 
@@ -101,38 +48,38 @@
 
                         var contextData = {};
 
-						if (item.options && item.options.get_context) {
+                        if (item.options && item.options.get_context) {
 
-							var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputs();
-							var componentsKeysList = Object.keys(componentsOutputs);
-							var lastChangedCompId;
-							var lastOutput;
+                            var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputs();
+                            var componentsKeysList = Object.keys(componentsOutputs);
+                            var lastChangedCompId;
+                            var lastOutput;
 
-							for (var i = 0; i < componentsKeysList.length; i++) {
+                            for (var i = 0; i < componentsKeysList.length; i++) {
 
-								var cKey = componentsKeysList[i];
-								var cOutput = componentsOutputs[cKey];
+                                var cKey = componentsKeysList[i];
+                                var cOutput = componentsOutputs[cKey];
 
-								if (cOutput.changedLast) {
+                                if (cOutput.changedLast) {
 
-									lastChangedCompId = cKey;
-									lastOutput = cOutput
-									break;
+                                    lastChangedCompId = cKey;
+                                    lastOutput = cOutput
+                                    break;
 
-								}
+                                }
 
-							}
+                            }
 
-							var lastChangedComp = scope.dashboardDataService.getComponentById(lastChangedCompId);
+                            var lastChangedComp = scope.dashboardDataService.getComponentById(lastChangedCompId);
 
-							if (lastChangedComp.type === 'report_viewer' && lastOutput && lastOutput.data && typeof lastOutput.data === 'object') {
+                            if (lastChangedComp.type === 'report_viewer' && lastOutput && lastOutput.data && typeof lastOutput.data === 'object') {
 
-								var reportOptions = lastOutput.data.reportOptions;
-								contextData = rvHelper.getContextDataForRowAction(reportOptions, lastOutput.data, lastChangedComp.settings.entityType);
+                                var reportOptions = lastOutput.data.reportOptions;
+                                contextData = rvHelper.getContextDataForRowAction(reportOptions, lastOutput.data, lastChangedComp.settings.entityType);
 
-							}
+                            }
 
-						}
+                        }
 
                         if (item.target) {
 
@@ -145,9 +92,9 @@
                                 if (data.results.length) {
 
                                     // var transactionType = data.results[0];
-									var transactionType = data.results.find(function (ttype) {
-										return ttype.user_code === item.target;
-									});
+                                    var transactionType = data.results.find(function (ttype) {
+                                        return ttype.user_code === item.target;
+                                    });
 
                                     $mdDialog.show({
                                         controller: 'ComplexTransactionAddDialogController as vm',
@@ -165,8 +112,7 @@
                                         }
                                     });
 
-                                }
-                                else {
+                                } else {
 
                                     toastNotificationService.error('Transaction Type is not found');
 
@@ -187,8 +133,7 @@
 
                             })
 
-                        }
-                        else {
+                        } else {
 
                             $mdDialog.show({
                                 controller: 'ComplexTransactionAddDialogController as vm',
@@ -205,8 +150,7 @@
 
                         }
 
-                    }
-                    else if (item.action === 'create_new_record') {
+                    } else if (item.action === 'create_new_record') {
 
                         $mdDialog.show({
                             controller: 'EntityViewerAddDialogController as vm',
@@ -216,12 +160,11 @@
                             locals: {
                                 entityType: item.target,
                                 entity: {},
-								data: {openedIn: 'dialog'}
+                                data: {openedIn: 'dialog'}
                             }
                         })
 
-                    }
-					else if (item.action === 'run_valuation_procedure') {
+                    } else if (item.action === 'run_valuation_procedure') {
 
                         pricingProcedureService.getList({
                             filters: {
@@ -262,8 +205,7 @@
 
                         })
 
-                    }
-					else if (item.action === 'import_data_from_file') {
+                    } else if (item.action === 'import_data_from_file') {
 
                         if (item.target) {
 
@@ -321,8 +263,7 @@
                         }
 
 
-                    }
-					else if (item.action === 'import_transactions_from_file') {
+                    } else if (item.action === 'import_transactions_from_file') {
 
                         if (item.target) {
 
@@ -335,8 +276,8 @@
                                 if (data.results.length) {
 
                                     var scheme = data.results.find(function (schemeData) {
-                                    	return schemeData.user_code === item.target;
-									});
+                                        return schemeData.user_code === item.target;
+                                    });
 
                                     $mdDialog.show({
                                         controller: 'TransactionImportDialogController as vm',
@@ -379,8 +320,7 @@
                             })
 
                         }
-                    }
-					else if (item.action === 'complex_import_from_file') {
+                    } else if (item.action === 'complex_import_from_file') {
 
                         if (item.target) {
 
@@ -439,25 +379,23 @@
 
                         }
 
-                    }
-					else if (item.action === 'open_dashboard') {
+                    } else if (item.action === 'open_dashboard') {
 
                         if (item.target) {
 
                             /*$state.go('app.portal.dashboard', {
                                 layoutUserCode: item.target
                             }, {reload: 'app'})*/
-							var dashboardUrl = $state.href('app.portal.dashboard');
-							dashboardUrl = dashboardUrl + '?layout=' + item.target;
+                            var dashboardUrl = $state.href('app.portal.dashboard');
+                            dashboardUrl = dashboardUrl + '?layout=' + item.target;
 
-							window.open(dashboardUrl, '_bland');
+                            window.open(dashboardUrl, '_bland');
 
                         } else {
                             toastNotificationService.error('Dashboard Layout is not set');
                         }
 
-                    }
-					else if (item.action === 'download_instrument') {
+                    } else if (item.action === 'download_instrument') {
 
                         if (item.target) {
 
@@ -516,8 +454,7 @@
                         }
 
 
-                    }
-					else if (item.action === 'go_to') {
+                    } else if (item.action === 'go_to') {
 
                         if (item.target) {
 
@@ -529,8 +466,7 @@
 
                         }
 
-                    }
-					else if (item.action === 'open_report') {
+                    } else if (item.action === 'open_report') {
 
                         var reportViewerRouteMap = {
                             'reports.balancereport': 'app.portal.reports.balance-report',
@@ -545,10 +481,10 @@
                                 /* $state.go(reportViewerRouteMap[item.target], {
                                     layoutUserCode: item.target_specific
                                 }, {reload: 'app'}) */
-								var reportUrl = $state.href(reportViewerRouteMap[item.target]);
-								reportUrl = reportUrl + '?layout=' + item.target_specific;
+                                var reportUrl = $state.href(reportViewerRouteMap[item.target]);
+                                reportUrl = reportUrl + '?layout=' + item.target_specific;
 
-								window.open(reportUrl, '_bland');
+                                window.open(reportUrl, '_bland');
 
                             } else {
                                 toastNotificationService.error('Report Viewer Layout is not set');
@@ -558,8 +494,7 @@
                             toastNotificationService.error('Entity is not set');
                         }
 
-                    }
-					else if (item.action === 'open_data_viewer') {
+                    } else if (item.action === 'open_data_viewer') {
 
                         var entityViewerRouteMap = {
                             'portfolios.portfolio': 'app.portal.data.portfolio',
@@ -587,10 +522,10 @@
                                 /* $state.go(entityViewerRouteMap[item.target], {
                                     layoutUserCode: item.target_specific
                                 }, {reload: 'app'}) */
-								var entityViewerUrl = $state.href(entityViewerRouteMap[item.target]);
-								entityViewerUrl = entityViewerUrl + '?layout=' + item.target_specific;
+                                var entityViewerUrl = $state.href(entityViewerRouteMap[item.target]);
+                                entityViewerUrl = entityViewerUrl + '?layout=' + item.target_specific;
 
-								window.open(entityViewerUrl, '_bland');
+                                window.open(entityViewerUrl, '_bland');
 
                             } else {
                                 toastNotificationService.error('Entity Viewer Layout is not set');
@@ -607,8 +542,59 @@
 
                 };
 
+                scope.init = function () {
 
-                scope.init()
+                    scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+
+                    scope.componentName = scope.componentData.custom_component_name
+
+                    scope.rows = scope.componentData.settings.rows;
+                    scope.columns = scope.componentData.settings.columns;
+                    scope.grid = scope.componentData.settings.grid;
+                    scope.showAsDropdown = scope.componentData.settings.showAsDropdown
+
+                    if (scope.grid.rows && scope.grid.rows.length) {
+
+                        scope.grid.rows.forEach(function (row) {
+
+                            row.items.forEach(function (item) {
+
+                                if (item.action) {
+                                    scope.itemsList.push(item);
+                                }
+
+                            })
+
+                        })
+                    }
+
+                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                    
+                };
+
+                scope.dashboardInit = function () {
+
+                    // Component put himself in INIT Status
+                    // so that dashboard manager can start processing it
+                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
+
+                        var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
+
+                        if (status === dashboardComponentStatuses.START) {
+                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.PROCESSING);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                            scope.init();
+                        }
+
+                    });
+
+                }
+
+                scope.dashboardInit();
 
 
             }

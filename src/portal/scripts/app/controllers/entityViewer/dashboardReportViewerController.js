@@ -340,9 +340,9 @@
 
             var flatList = rvDataHelper.getFlatStructure(vm.entityViewerDataService);
 
-            console.log('Grand Total Status: rootGroup', rootGroup);
-            console.log('Grand Total Status: flatList', flatList);
-            console.log('Grand Total Status: componentData', vm.componentData);
+            // console.log('Grand Total Status: rootGroup', rootGroup);
+            // console.log('Grand Total Status: flatList', flatList);
+            // console.log('Grand Total Status: componentData', vm.componentData);
 
             var root = flatList[0];
 

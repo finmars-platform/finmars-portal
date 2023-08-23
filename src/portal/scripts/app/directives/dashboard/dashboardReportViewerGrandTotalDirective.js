@@ -60,36 +60,36 @@
 
                 scope.initEventListeners = function () {
 
-                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
-
-                        var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
-
-                        if (status === dashboardComponentStatuses.START) { // Init calculation of a component
-
-                            scope.readyStatus.data = 'ready';
-
-                            setTimeout(function () {
-                                scope.$apply();
-                            },0)
-
-                        } else if (status === dashboardComponentStatuses.ERROR) {
-
-                            scope.compErrorMessage = 'error';
-                            var componentError = scope.dashboardDataService.getComponentError(scope.item.data.id);
-
-                            if (componentError) {
-                                scope.compErrorMessage = 'ERROR: ' + componentError.displayMessage;
-                            }
-
-                            scope.readyStatus.data = 'error';
-
-                            setTimeout(function () {
-                                scope.$apply();
-                            },0)
-
-                        }
-
-                    });
+                    // scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
+                    //
+                    //     var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
+                    //
+                    //     if (status === dashboardComponentStatuses.START) { // Init calculation of a component
+                    //
+                    //         scope.readyStatus.data = 'ready';
+                    //
+                    //         setTimeout(function () {
+                    //             scope.$apply();
+                    //         }, 0)
+                    //
+                    //     } else if (status === dashboardComponentStatuses.ERROR) {
+                    //
+                    //         scope.compErrorMessage = 'error';
+                    //         var componentError = scope.dashboardDataService.getComponentError(scope.item.data.id);
+                    //
+                    //         if (componentError) {
+                    //             scope.compErrorMessage = 'ERROR: ' + componentError.displayMessage;
+                    //         }
+                    //
+                    //         scope.readyStatus.data = 'error';
+                    //
+                    //         setTimeout(function () {
+                    //             scope.$apply();
+                    //         }, 0)
+                    //
+                    //     }
+                    //
+                    // });
 
                     scope.dashboardComponentEventService.addEventListener(dashboardEvents.REPORT_VIEWER_DATA_SERVICE_SET, function () {
 
@@ -108,7 +108,7 @@
 
                 };
 
-                scope.openMissingPricesDialog = function($event){
+                scope.openMissingPricesDialog = function ($event) {
 
                     $mdDialog.show({
                         controller: 'ReportPriceCheckerDialogController as vm',
@@ -133,12 +133,40 @@
 
                     scope.initEventListeners();
 
-                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                    scope.readyStatus.data = 'ready';
+
+                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    setTimeout(function () {
+                        scope.$apply();
+                    }, 0)
+
 
                 };
 
-                scope.init()
+                scope.dashboardInit = function () {
+
+                    // Component put himself in INIT Status
+                    // so that dashboard manager can start processing it
+                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
+
+                        var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
+
+                        if (status === dashboardComponentStatuses.START) {
+                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.PROCESSING);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                            scope.init();
+                        }
+
+                    });
+
+                }
+
+                scope.dashboardInit();
 
 
             }
