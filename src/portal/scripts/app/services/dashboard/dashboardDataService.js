@@ -282,10 +282,6 @@
 
             var result = true;
 
-            if (initializingControls.size === 0) {
-                return false;
-            }
-
             initializingControls.forEach(function (componentId) {
 
                 var status = getComponentStatus(componentId);
