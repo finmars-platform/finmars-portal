@@ -350,6 +350,26 @@
                         date.setDate(date.getDate() - days);
                         return date;
                     },
+                    getPreviousMonthDate: function (inputDate) {
+                        const dateParts = inputDate.split('-');
+                        const year = parseInt(dateParts[0], 10);
+                        const month = parseInt(dateParts[1], 10);
+                        const day = parseInt(dateParts[2], 10);
+
+                        let prevYear = year;
+                        let prevMonth = month - 1;
+
+                        if (prevMonth === 0) {
+                            prevMonth = 12;
+                            prevYear -= 1;
+                        }
+
+                        // Ensure day does not exceed the last day of the previous month
+                        const lastDayOfPrevMonth = new Date(prevYear, prevMonth, 0).getDate();
+                        const adjustedDay = Math.min(day, lastDayOfPrevMonth);
+
+                        return `${prevYear}-${String(prevMonth).padStart(2, '0')}-${String(adjustedDay).padStart(2, '0')}`;
+                    },
                     getLastBusinessDayOfPreviousMonth: function (dateInput) {
                         let date;
 
