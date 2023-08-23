@@ -1,0 +1,93 @@
+<md-dialog aria-label="dashboard report viewer charts constructor dialog"
+           class="draggable-dialog width-50 dialog-actions-bottom dcChartsElemToDrag"
+           drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+
+            <h2>Iframe Component</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+        <div>
+
+            <md-tabs md-dynamic-height>
+
+                <md-tab label="Main">
+                    <md-content class="p-16">
+
+                        <div layout="row">
+                            <md-input-container class="dashboard-constructor-field1">
+                                <label for="">Name</label>
+                                <input type="text" data-ng-model="vm.item.name">
+                            </md-input-container>
+                        </div>
+
+                        <div layout="row">
+                            <md-input-container class="dashboard-constructor-field1">
+                                <label for="">Label</label>
+                                <input type="text" data-ng-model="vm.item.chart_custom_name">
+                            </md-input-container>
+                        </div>
+
+                        <div>
+                            <md-input-container class="dashboard-constructor-field1">
+                                <label>Type</label>
+                                <md-select data-ng-model="vm.item.url_type">
+                                    <md-option value="relative_url">Relative URL</md-option>
+                                    <md-option value="absolute_url">Absolute URL</md-option>
+                                </md-select>
+                            </md-input-container>
+
+
+                            <div data-ng-if="vm.item.url_type == 'relative_url'">
+                                <p>If Relative URL selected you need to provide only path that after Space Code</p>
+
+                                <p>Example:</p>
+                                <p>
+                                    <code>
+                                        /api/storage/workflows/com/finmars/index.html
+                                    </code>
+                                </p>
+
+                            </div>
+                        </div>
+
+
+                        <md-input-container class="dashboard-constructor-field1" style="width: 600px; margin-top: 16px;">
+                            <label for="">URL</label>
+                            <input type="text" data-ng-model="vm.item.url">
+                        </md-input-container>
+
+                    </md-content>
+                </md-tab>
+
+
+            </md-tabs>
+
+        </div>
+    </md-dialog-content>
+
+    <!--    <md-dialog-actions layout="row" layout-align="space-between">-->
+    <md-dialog-actions layout="row">
+
+        <md-button ng-click="vm.exportToDashboards()" style="margin-right:20px;">
+            Export to dashboards
+        </md-button>
+
+        <md-button ng-click="vm.cancel()" style="margin-right:20px;">
+            Cancel
+        </md-button>
+        <md-button ng-click="vm.agree()"
+                   style="margin-right:20px;">
+            OK
+        </md-button>
+
+        <dialog-window-resizer data-ng-if="vm.dialogElemToResize"
+                               data-elem-to-resize="vm.dialogElemToResize"
+                               data-on-resize-callback="vm.rearrangeMdDialogActions()"
+                               class="dialog-window-resizer_type1"></dialog-window-resizer>
+    </md-dialog-actions>
+</md-dialog>

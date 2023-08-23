@@ -22,6 +22,10 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 // console.log('requestData.data', data);
 
+                // Checkout finmarsOngoingRequests
+                // need to ensure that each copy of report will modify own data;
+                data = JSON.parse(JSON.stringify(data))
+
                 if (!data.hasOwnProperty('non_field_errors')) {
 
                     var reportOptions = evDataService.getReportOptions();
@@ -48,7 +52,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 // console.log('here?');
 
             })
-        });
+        })
 
 
     };
@@ -131,8 +135,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         var entityType = entityViewerDataService.getEntityType();
         var reportOptions = entityViewerDataService.getReportOptions();
 
-		//# region Delete report options items">
-		/* delete reportOptions.items;
+        //# region Delete report options items">
+        /* delete reportOptions.items;
         delete reportOptions.custom_fields;
         delete reportOptions.custom_fields_object;
         delete reportOptions.item_complex_transactions;
@@ -148,7 +152,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         delete reportOptions.item_currency_fx_rates;
         delete reportOptions.item_currencies;
         delete reportOptions.item_accounts; */
-		reportOptions = reportHelper.cleanReportOptionsFromTmpProps(reportOptions);
+        reportOptions = reportHelper.cleanReportOptionsFromTmpProps(reportOptions);
         reportOptions.filters = entityViewerDataService.getFilters(); // for transaction report only
         //# endregion
 
@@ -181,7 +185,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 reportOptions.items = reportHelper.injectIntoItemsV2(reportOptions.items, reportOptions, entityType);
 
-				// reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions, entityType);
+                // reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions, entityType);
                 // reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
                 // reportOptions.items = reportHelper.convertItemsToFlat(reportOptions.items);
                 reportOptions.items = reportHelper.extendAttributes(reportOptions.items, attributeExtensions);
@@ -190,7 +194,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
 
                 entityViewerDataService.setUnfilteredFlatList(reportOptions.items);
-
 
 
             }
@@ -313,8 +316,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                         //         obj.results[page * step + i] = data.results[i];
                         //     }
                         // }
-                    }
-                    else {
+                    } else {
 
                         var parentGroup = entityViewerDataService.getData(event.parentGroupId);
 
@@ -372,7 +374,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                     try {
                         duplicateObj = entityViewerDataService.getObject(item.___id, item.___parentId);// returns an error if a matching object is not found
-                    } catch (e) {}
+                    } catch (e) {
+                    }
 
                     if (duplicateObj) {
                         console.log("Error: duplicate ___id was created for an object: ", item);
@@ -451,8 +454,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                     }
 
 
-                }
-                else {
+                } else {
 
                     var groupData = entityViewerDataService.getData(event.___id);
 
@@ -475,8 +477,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                         }
 
 
-                    }
-                    else {
+                    } else {
 
 
                         var parentGroup = entityViewerDataService.getData(event.parentGroupId);
@@ -485,8 +486,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                         obj.___group_name = event.groupName ? event.groupName : '-';
                         obj.___group_identifier = event.groupId ? event.groupId : '-';
                         obj.___is_open = true;
-
-
 
 
                         // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
@@ -576,7 +575,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     };
 
-    var createRequestParameters = function (item, level, evDataService, evEventService) {
+    var createRequestParameters = function (item, level, evDataService, evEventService, createdIdsList) {
 
         // console.log('createRequestParameters.item', item);
 
@@ -586,7 +585,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         var id = evRvCommonHelper.getId(item);
 
-        if ( createdIdsList.includes(id) ) {
+        if (createdIdsList.includes(id)) {
 
             console.log("Error: duplicated id was created for an item: ", item);
             var customError = new Error("Item with an ___id " + item.___id + " already exist");
@@ -624,8 +623,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 }
             };
 
-        }
-        else {
+        } else {
 
             requestParameters = {
                 requestType: 'objects',
@@ -670,7 +668,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
      * @param {Object} evEventService
      * @returns {Promise<[]>} - returns arrays of nested promises for called methods updateDataStructureByRequestParameters
      */
-    var recursiveRequest = function (parentId, items, level, evDataService, evEventService) {
+    var recursiveRequest = function (parentId, items, level, evDataService, evEventService, createdIdsList) {
 
         return new Promise(function RecursiveRequestPromise(resolve, reject) {
 
@@ -679,7 +677,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
             items.forEach(function (item) {
 
-                requestParameters = createRequestParameters(item, level, evDataService, evEventService);
+                requestParameters = createRequestParameters(item, level, evDataService, evEventService, createdIdsList);
                 promises.push(updateDataStructureByRequestParameters(requestParameters, evDataService, evEventService));
 
             });
@@ -705,7 +703,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                         // console.log('item!', item.___group_name);
 
-                        recursiveRequestPromises.push(recursiveRequest(item.___id, item.results, level, evDataService, evEventService));
+                        recursiveRequestPromises.push(recursiveRequest(item.___id, item.results, level, evDataService, evEventService, createdIdsList));
 
                     });
 
@@ -725,28 +723,28 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     };
 
-    var initRecursiveRequestParametersCreation = function (evDataService, evEventService) {
+    var initRecursiveRequestParametersCreation = function (evDataService, evEventService, createdIdsList) {
 
         console.time('Creating Data Structure');
 
         var rootGroup = evDataService.getRootGroupData();
         var level = 0;
 
-        return recursiveRequest(rootGroup.___id, rootGroup.results, level, evDataService, evEventService).then(function () {
+        return recursiveRequest(rootGroup.___id, rootGroup.results, level, evDataService, evEventService, createdIdsList).then(function () {
             console.timeEnd('Creating Data Structure');
         })
 
     };
 
-    var createdIdsList = [];
     var testObj = {};
+    var createdIdsList = []; // WTF VERY BAD PATTERN, never do it again
 
     var createDataStructure = function (evDataService, evEventService) {
         // console.log('createDataStructure')
 
         evDataService.resetData();
         evDataService.resetRequestParameters();
-        createdIdsList = [];
+        var createdIdsList = [];
         testObj = {};
 
         var defaultRootRequestParameters = evDataService.getActiveRequestParameters();
@@ -767,7 +765,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                  * that is inside recursiveRequest()
                  * that is inside initRecursiveRequestParametersCreation()
                  */
-                initRecursiveRequestParametersCreation(evDataService, evEventService).then(function () {
+                initRecursiveRequestParametersCreation(evDataService, evEventService, createdIdsList).then(function () {
                     console.log('createDataStructure 2', defaultRootRequestParameters)
 
                     // var activeGroupTypeSort = evDataService.getActiveGroupTypeSort();
@@ -999,7 +997,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         var promises = [];
 
         requestParametersForUnfoldedGroups.forEach(function (requestParameters) {
-            promises.push( getGroups(requestParameters, entityViewerDataService, entityViewerEventService) );
+            promises.push(getGroups(requestParameters, entityViewerDataService, entityViewerEventService));
         });
 
         return new Promise(function (resolve, reject) {
@@ -1012,7 +1010,9 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 resolve();
 
-            }).catch(function (error) { reject(error) })
+            }).catch(function (error) {
+                reject(error)
+            })
 
         })
 

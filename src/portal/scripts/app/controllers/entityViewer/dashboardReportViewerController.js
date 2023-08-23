@@ -1189,16 +1189,16 @@
 
             // if (componentsForLinking.indexOf(vm.componentData.type) !== -1) {
 
-            // szhitenev 2023-08-20
-            vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
-
-                var activeObject = vm.entityViewerDataService.getActiveObject();
-
-                vm.dashboardDataService.setComponentOutput(vm.componentData.id, activeObject);
-
-                vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_OUTPUT_CHANGE);
-
-            })
+            // // szhitenev 2023-08-20
+            // vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+            //
+            //     var activeObject = vm.entityViewerDataService.getActiveObject();
+            //
+            //     vm.dashboardDataService.setComponentOutput(vm.componentData.id, activeObject);
+            //
+            //     vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_OUTPUT_CHANGE);
+            //
+            // })
 
             // POSSIBLE DEPRECATED AND TOO HARD TO UNDERSTAND
             vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {

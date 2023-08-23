@@ -1,7 +1,10 @@
 @customInputsRightSpace: 8px;
 @onFocusShadow: 0 0 0 1px #7d7d7d;
 @ciColor: rgba(125,125,125,1);
-@ciColorLighten: rgba(125,125,125,.5);
+//@ciColorLighten: rgba(125,125,125,.5);
+// Dashboard szhitenev
+// 2023-08-22
+@ciColorLighten: 1px solid #e0e0e0;
 @indBtnMarginLeft: 6px;
 
 .entity-editor-fixed-fields-container {
@@ -133,7 +136,9 @@
   height: 40px;
   overflow: hidden;
   border-radius: 6px;
-  border: 2px solid rgba(125,125,125,1);
+  //border: 2px solid rgba(125,125,125,1);
+  // Dashboard szhitenev 2023-08-22
+  border: 1px solid #e0e0e0;
   box-sizing: border-box;
 }
 
@@ -302,7 +307,7 @@
 .custom-input-sel-menu-block {
   position: absolute;
   width: 100%;
-  min-height: 48px;
+  min-height: 100px;
   max-height: 256px;
   top: 2px;
   left: 0;
@@ -1036,3 +1041,15 @@
   }
 }
 //endregion Should always be at the bottom >
+
+
+.custom-input-main-container {
+  md-checkbox {
+    margin: 0;
+    font-size: 14px;
+    margin-left: 8px;
+    .md-label {
+      margin-top: 0;
+    }
+  }
+}

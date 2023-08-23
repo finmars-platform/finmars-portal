@@ -156,8 +156,11 @@
 
     overflow: auto;
 
-    padding-bottom: 8px;
-    padding-right: @dashboardCellPaddingRight;
+    // szhitenev dashboard update
+    // 2023-08-22
+    padding: 4px;
+    //padding-bottom: 8px;
+    //padding-right: @dashboardCellPaddingRight;
 
     &.bordered::after {
 
@@ -827,15 +830,15 @@ button.md-button.dashboard-button-set-button {
   height: 48px;
 }
 
-.dashboard-accordion-component::after {
-  display: block;
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 5px;
-  //background: white;
-  bottom: -3px;
-}
+//.dashboard-accordion-component::after {
+//  display: block;
+//  content: "";
+//  position: absolute;
+//  width: 100%;
+//  height: 5px;
+//  //background: white;
+//  bottom: -3px;
+//}
 
 .dashboard-accordion-component.dashboard-accordion-folded::after {
   display: none;
@@ -873,7 +876,9 @@ button.md-button.dashboard-button-set-button {
   //-webkit-box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.247058823529412);
   //box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.247058823529412);
   position: relative;
-  top: 12px;
+  //top: 12px;
+  box-shadow: 0 1px 22px -12px #607D8B;
+  background-color: #fff;
 
   .dashboard-accordion-name {
     font-family: Roboto, "Helvetica Neue", sans-serif;
