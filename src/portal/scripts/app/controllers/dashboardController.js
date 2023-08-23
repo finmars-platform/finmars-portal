@@ -560,12 +560,22 @@
 
         vm.initDashboardComponents = function () {
 
-            var LIMIT = 2;
+            // var LIMIT = 2;
+            // NEW DASHBOARD CHANGE
+            // szhitenev 2023-08-22
+            var LIMIT = 32;
             var waitingComponents = [];
+
+            var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
+
+            console.log('DashboardController.initDashboardComponents statusesObject', statusesObject)
 
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
-                var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
+                statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
+
+                console.log('DashboardController.COMPONENT_STATUS_CHANGE statusesObject', statusesObject)
+
                 var nextComponentToStart = null;
 
                 var keys = Object.keys(statusesObject);
@@ -625,7 +635,6 @@
                 }
 
             });
-
 
         };
 

@@ -6,7 +6,7 @@
 
     <md-menu-divider></md-menu-divider>
 
-    <div class="layouts-container" style="min-height: 100px;">
+    <div class="layouts-container" style="min-height: 160px;">
 
         <div data-ng-if="!processing">
             <div data-ng-repeat="layout in layouts" class="layout-menu-item">
@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <div data-ng-if="processing" class="p-t-16" layout="row" layout-sm="column" layout-align="space-around">
+        <div data-ng-if="processing" layout="row" layout-sm="column" layout-align="center center" style="min-height: 160px;">
             <progress-circular diameter="50"></progress-circular>
         </div>
 

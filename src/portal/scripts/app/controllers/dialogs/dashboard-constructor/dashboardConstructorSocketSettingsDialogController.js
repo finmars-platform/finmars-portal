@@ -78,6 +78,9 @@
                 case 'apex_chart':
                     verboseType = 'Apex Chart';
                     break;
+                case 'iframe':
+                    verboseType = 'Iframe';
+                    break;
             }
 
             return verboseType;
@@ -335,6 +338,10 @@
                 case 'apex_chart':
                     contrName = 'DashboardConstructorApexChartComponentDialogController as vm';
                     templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-apex-chart-component-dialog-view.html';
+                    break;
+                case 'iframe':
+                    contrName = 'DashboardConstructorIframeComponentDialogController as vm';
+                    templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-iframe-component-dialog-view.html';
                     break;
             }
 

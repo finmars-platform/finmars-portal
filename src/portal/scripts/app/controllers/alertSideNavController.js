@@ -155,7 +155,7 @@
 
             vm.init = function () {
 
-                vm.getTasks();
+                // vm.getTasks(); // poorly implemented
                 vm.getAlerts();
                 vm.member = globalDataService.getMember();
 
