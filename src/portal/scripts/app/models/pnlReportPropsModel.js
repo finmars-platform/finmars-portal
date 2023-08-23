@@ -170,11 +170,11 @@
                 "name": "YTM at cost",
                 "value_type": 20
             },
-            {
+            /*{
                 "key": "return_annually",
                 "name": "Return annually",
                 "value_type": 20
-            },
+            },*/
             {
                 "key": "modified_duration",
                 "name": "Modified duration",
@@ -265,7 +265,7 @@
             //    "value_type": "field"
             //},
 
-            {
+            /*{
                 "key": "principal_invested",
                 "name": "Principal invested",
                 "value_type": 20
@@ -284,7 +284,7 @@
                 "key": "amount_invested_loc",
                 "name": "Amount invested (Pricing Currency)",
                 "value_type": 20
-            },
+            },*/
 
             {
                 "key": "market_value",
