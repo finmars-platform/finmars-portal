@@ -89,6 +89,7 @@ export default function (metaContentTypesService, globalDataService) {
 				scope.editingOn = scope.editing === 'true';
 				const reqAttrs = metaService.getRequiredEntityAttrs(scope.entityType);
 				const contentType = metaContentTypesService.findContentTypeByEntity(scope.entityType);
+				const defConfigCode = globalDataService.getDefaultConfigurationCode();
 
 				const getErrorData = function (value) {
 
@@ -182,6 +183,13 @@ export default function (metaContentTypesService, globalDataService) {
 							set value(userCode) {
 
 								scope.entity.user_code = userCode;
+
+								if (scope.useUserCodeInput) {
+
+									const ucParts = splitUserCode(userCode);
+									scope.entity.configuration_code = ucParts.configuration_code || defConfigCode;
+
+								}
 
 								if ( reqAttrs.includes('user_code') ) {
 									this.errorData = getErrorData(scope.entity.user_code);
