@@ -383,7 +383,15 @@
                 scope.initChart = function (filters) {
 
                     var selector = '.dashboard-apex-chart-' + scope.vm.componentData.id;
-                    document.querySelector(selector).innerHTML = '';
+                    // document.querySelector(selector).innerHTML = '';
+                    var chartElement = document.querySelector(selector)
+                    // Retrieve the chart instance:
+                    var chartInstance = chartElement.__chart;
+
+                    // Now, you can destroy it:
+                    if (chartInstance) {
+                        chartInstance.destroy();
+                    }
 
                     setTimeout(function () {
                         console.warn("Evaluating Chart source code")
