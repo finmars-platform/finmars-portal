@@ -239,7 +239,8 @@ md-sidenav {
 
   ng-md-icon, span.material-icons {
     position: relative;
-    top: 5px; // adjust for svg viewbox
+    top: 3px; // adjust for svg viewbox
+    font-size: 20px;
   }
 }
 
@@ -331,7 +332,7 @@ md-sidenav {
     display: inline-block;
     position: absolute;
     left: 17px;
-    bottom: 3px;
+    //bottom: 3px;
     // bottom: 0;
   }
 
@@ -400,7 +401,8 @@ md-sidenav {
   height: 36px;
   /*min-height: 25px;
   height: 25px;*/
-  display: block;
+  //display: block;
+  display: flex;
   // padding-top: 11px;
   // padding-bottom: 2px;
   padding-top: 0;
@@ -408,7 +410,8 @@ md-sidenav {
   padding-left: 55px;
   margin-left: 0;
   text-align: left;
-  font-size: 11px;
+  //font-size: 11px;
+  font-size: 10px;
   line-height: 2;
 
   &.active {
@@ -432,7 +435,8 @@ md-sidenav {
 
 .side-menu-bottom-menu {
   position: absolute;
-  bottom: 75px;
+  //bottom: 75px;
+  bottom: 20px;
   width: 100%;
 }
 
@@ -3896,16 +3900,18 @@ a.finmars-site-link {
   color: #fff;
   margin-top: 2px;
   display: block;
+  color: rgba(255,255,255,.6);
+  padding-left: 24px;
 
   &:visited {
-    color: #fff;
+    color: rgba(255,255,255,.6);
   }
 
   &:active {
-    color: #fff;
+    color: rgba(255,255,255,.6);
   }
 
   &:hover {
-    opacity: .7;
+    color: rgba(255,255,255,1);
   }
 }
