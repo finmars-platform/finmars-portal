@@ -18,6 +18,23 @@
         </md-button>
 
         <div layout="row">
+
+            <div style="background: #fff;
+    border-radius: 6px;">
+                <md-input-container flex="40" style="margin-bottom: 0" class="ng-hide">
+                    <input type="file" id="importDataUploadInput" input-file-directive
+                           read-file="vm.file"
+                           read-file-change="vm.applyFile(vm.file, $event)">
+                </md-input-container>
+                <div class="input-upload-file-container">
+                    <p class="importDataUploadInput">File</p>
+                    <label for="importDataUploadInput" class="md-button md-raised outline-button IFUlabel"
+                           style="background: #f05a22; !important;">
+                        <span>BROWSE...</span></label>
+                </div>
+            </div>
+
+
             <md-button ng-click="vm.agree()">
                 Import
             </md-button>
