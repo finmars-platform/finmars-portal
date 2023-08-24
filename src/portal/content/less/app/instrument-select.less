@@ -66,19 +66,28 @@
   font-size: 12px;
 }
 
+/*
+ * IMPORTANT: when changing this value,
+ * also change variable detailBlockWidth inside customInputs/instrumentSelectDirective.js
+ */
+@selMenuWidth: 280px;
+
 instrument-select {
   .custom-input-sel-menu-block {
     max-height: 380px;
     min-height: 100px;
-    min-width: 280px;
-    max-width: 280px;
-    width: 280px;
+    min-width: @selMenuWidth;
+    max-width: @selMenuWidth;
+    width: @selMenuWidth;
   }
 }
 
+@detailBoxWidth: 220px;
+
 .instrument-select-option-detail-box {
-  width: 220px;
-  left: 280px;
+  width: @detailBoxWidth;
+
+  left: @selMenuWidth;
   top: 0;
   position: absolute;
   height: 380px;
@@ -87,7 +96,12 @@ instrument-select {
   box-shadow: 0 0 2px #000;
   padding: 11px 16px 2px 16px;
   box-sizing: border-box;
+
+  &.locate-left {
+    left: -@detailBoxWidth;
+  }
 }
+
 
 .instrument-select-options-group-title {
   font-size: 14px;
