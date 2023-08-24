@@ -776,10 +776,10 @@ export default function (cookieService, xhrService) {
 
     }
 
-    const updateFinmars = function (base_api_url, tag) {
+    const updateFinmars = function (id) {
 
-        return xhrService.fetch(authorizerUrl + '/master-user-download-update/?base_api_url=' + base_api_url + '&tag=' + tag, {
-            method: 'GET',
+        return xhrService.fetch(authorizerUrl + '/master-user/' + id + '/init-update/' , {
+            method: 'PUT',
             credentials: 'include',
             headers: {
                 'Authorization': 'Token ' + cookieService.getCookie('access_token'),
