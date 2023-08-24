@@ -42,6 +42,32 @@
         vm.init()
 
 
+        vm.applyFile = function (file) {
+
+            console.log('file, ', file);
+
+
+
+            var reader = new FileReader();
+
+            reader.readAsText(vm.file);
+
+            reader.onload = function (evt) {
+
+                console.log('evt.target', evt.target);
+
+                var fileContent = evt.target.result;
+
+                console.log('fileContent', fileContent);
+
+                vm.editor.setValue(fileContent);
+
+            }
+
+
+
+        }
+
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
