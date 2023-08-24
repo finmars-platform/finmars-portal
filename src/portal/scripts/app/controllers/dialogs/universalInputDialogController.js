@@ -5,11 +5,10 @@
 
     'use strict';
 
-    var utilsService = require('../../services/utilsService');
     const toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, utilsService, data) {
 
         var vm = this;
 
