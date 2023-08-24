@@ -15,18 +15,29 @@
 
                         <h3>Finmars Update Center</h3>
 
-                        <div data-ng-if="vm.currentMasterUser.version == vm.latestVersion.name">
+                        <div data-ng-if="!vm.currentMasterUser.is_update_available">
                             Your ecosystem is up to date
                         </div>
 
-                        <div data-ng-if="vm.currentMasterUser.version != vm.latestVersion.name">
+                        <div data-ng-if="vm.currentMasterUser.is_update_available">
 
-                            <h1>Latest Version: <b>{{vm.latestVersion.name}}</b></h1>
+                            <h2>Current Version</h2>
 
-                            <h2>Current Version: <b>{{vm.currentMasterUser.version}}</b></h2>
+                            <div>
+                                <div data-ng-repeat="version in vm.versions">
+
+
+                                    <div>{{version.app}}:{{version.version}}
+                                        <md-tooltip md-direction="top">
+                                            {{version.notes}}&nbsp;{{version.modified | date: 'yyyy-MM-dd HH:mm'}}
+                                        </md-tooltip>
+                                    </div>
+
+                                </div>
+                            </div>
 
                             <md-button class="md-raised primary-button" data-ng-click="vm.updateFinmars()">Update
-                                Finmars
+
                             </md-button>
 
                         </div>
@@ -100,7 +111,7 @@
                     <md-card-content>
 
                         <h3>Logs</h3>
-                        
+
                         <div data-ng-if="vm.readyStatus.logs">
 
                             <div data-ng-repeat="item in vm.logFiles">
