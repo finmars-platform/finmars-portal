@@ -32,9 +32,16 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
     let transitionFromState = '';
 
     $scope.initLoaderProcessing = true;
+    $scope.displayInitLoader = true;
 
     $scope.$on('initialLoadComplete', function () {
         $scope.initLoaderProcessing = false;
+
+        // Important for smooth loader dissapearing
+        setTimeout(function () {
+            $scope.displayInitLoader = false;
+            $scope.$apply();
+        }, 1000)
     });
 
     vm.showPageContent = function () {
