@@ -34,7 +34,7 @@
             </md-input-container>
 
 
-            <md-button class="md-raised md-warn" data-ng-click="vm.clearBin($event)">Clear Bin
+            <md-button class="outline-button" data-ng-click="vm.clearBin($event)">Clear Bin
             </md-button>
 
         </div>
@@ -91,6 +91,7 @@
                         <th>Code</th>
                         <th>Transaction Unique Code</th>
                         <th>Deleted Transaction Unique Code</th>
+                        <th style="width: 100px;">Date</th>
                         <th>Text</th>
                         <th>User Text 1</th>
                         <th>User Text 2</th>
@@ -117,6 +118,7 @@
                         <td>{{item.code}}</td>
                         <td>{{item.transaction_unique_code}}</td>
                         <td>{{item.deleted_transaction_unique_code}}</td>
+                        <td>{{item.date}}</td>
                         <td>{{item.text}}</td>
                         <td>{{item.user_text_1}}</td>
                         <td>{{item.user_text_2}}</td>
@@ -142,10 +144,10 @@
             </div>
 
             <div>
-                <md-button class="md-raised md-primary" data-ng-click="vm.restoreSelected($event)">Restore
+                <md-button class="outline-button md-primary" data-ng-click="vm.restoreSelected($event)">Restore
                     Selected
                 </md-button>
-                <md-button class="md-raised md-warn" data-ng-click="vm.destroySelected($event)">Delete
+                <md-button class="outline-button md-warn" data-ng-click="vm.destroySelected($event)">Delete
                     Selected
                 </md-button>
             </div>
