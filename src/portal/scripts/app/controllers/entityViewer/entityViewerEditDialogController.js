@@ -188,7 +188,13 @@
 
         vm.onPopupSaveCallback = vm.sharedLogic.onPopupSaveCallback;
         vm.onFixedAreaPopupCancel = vm.sharedLogic.onFixedAreaPopupCancel;*/
-        vm.useUserCodeInput = vm.entityType === 'account-type';
+        if (vm.entityType === 'account-type') {
+
+            vm.ucDisabled = true;
+            vm.useUserCodeInput = true;
+
+        }
+
         vm.onNameToShowChange = vm.sharedLogic.onNameToShowChange;
 
         vm.getFaField1Classes = vm.sharedLogic.getFaField1Classes;

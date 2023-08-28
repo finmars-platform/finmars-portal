@@ -61,6 +61,7 @@ export default function (metaContentTypesService, globalDataService) {
 			valueToShow: "=",*/
 			entity: "=",
 			useUserCodeInput: "=", // boolean
+			userCodeDisabled: "=", // boolean
 			valueToShow: "=",
 			eventService: "=",
 
@@ -203,7 +204,7 @@ export default function (metaContentTypesService, globalDataService) {
 							},
 
 							// configuration_code:
-							content_type: contentType,
+							isDisabled: !!scope.userCodeDisabled,
 
 							smallOptions: {notNull: reqAttrs.includes('user_code')},
 							event: {},

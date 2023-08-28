@@ -16,7 +16,20 @@
                         <h3>Finmars Update Center</h3>
 
                         <div data-ng-if="!vm.currentMasterUser.is_update_available">
-                            Your ecosystem is up to date
+                            <div class="m-b-16">Your ecosystem is up to date</div>
+
+                            <div>
+                                <div data-ng-repeat="version in vm.versions">
+
+
+                                    <div>{{version.app}}:{{version.version}}
+                                        <md-tooltip md-direction="top">
+                                            {{version.notes}}&nbsp;{{version.modified | date: 'yyyy-MM-dd HH:mm'}}
+                                        </md-tooltip>
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
 
                         <div data-ng-if="vm.currentMasterUser.is_update_available">

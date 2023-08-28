@@ -26,6 +26,7 @@
                 contentType: '<',
                 userCode: '=',
 
+                isDisabled: '=',
                 error: '=',
                 occupiedUserCodes: '<',
             },
