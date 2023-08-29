@@ -28,7 +28,7 @@ const getList = function (options) {
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
 
-	return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/group/', options),
+	return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'iam/group/', options),
 		{
 			method: 'GET',
 			credentials: 'include',
@@ -45,7 +45,7 @@ const getByKey = function (id) {
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
 
-	return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/group/' + id + '/',
+	return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'iam/group/' + id + '/',
 		{
 			method: 'GET',
 			credentials: 'include',
@@ -62,7 +62,7 @@ const create = function (group) {
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
 
-	return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/group/',
+	return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'iam/group/',
 		{
 			method: 'POST',
 			credentials: 'include',
@@ -81,7 +81,7 @@ const update = function (id, group) {
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
 
-	return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/group/' + id + '/',
+	return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'iam/group/' + id + '/',
 		{
 			method: 'PUT',
 			credentials: 'include',
@@ -100,7 +100,7 @@ const deleteByKey = function (id) {
 	var prefix = baseUrlService.getMasterUserPrefix();
 	var apiVersion = baseUrlService.getApiVersion();
 
-	return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'users/group/' + id + '/',
+	return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'iam/group/' + id + '/',
 		{
 			method: 'DELETE',
 			credentials: 'include',
