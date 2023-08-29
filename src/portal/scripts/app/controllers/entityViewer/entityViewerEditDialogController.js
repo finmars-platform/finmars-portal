@@ -1029,7 +1029,14 @@
                     } else {
 
                         var entityTypeVerbose = vm.entityType.split('-').join(' ').capitalizeFirstLetter();
-                        toastNotificationService.success(entityTypeVerbose + " " + vm.entity.name + ' was successfully saved');
+
+                        var name = ''
+
+                        if (vm.entity.name) {
+                            name = vm.entity.name
+                        }
+
+                        toastNotificationService.success(entityTypeVerbose + " " + name + ' was successfully saved');
 
                         if (isAutoExitAfterSave) {
 
