@@ -41,7 +41,7 @@
 
                 vm.readyStatus.processing = false;
 
-                toastNotificationService.success('Instrument ' + vm.config.instrument_code + ' was imported')
+                toastNotificationService.success('Instrument ' + vm.config.user_code + ' was imported')
 
                 $scope.$apply()
 
