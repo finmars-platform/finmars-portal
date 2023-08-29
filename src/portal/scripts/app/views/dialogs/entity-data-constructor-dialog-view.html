@@ -103,7 +103,9 @@
                                 <input aria-label="scheme user code" type="text" data-ng-model="vm.ui.user_code">
                             </md-input-container> -->
 
-                            <usercode-input data-item="vm.ui" style="width: 500px; margin-right: 16px;"></usercode-input>
+                            <usercode-input data-item="vm.ui"
+                                            data-is-disabled="!vm.formLayoutIsNew"
+                                            style="width: 500px; margin-right: 16px;"></usercode-input>
 
 <!--                            <text-input label="User Code"-->
 <!--                                        model="vm.ui.user_code"-->

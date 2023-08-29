@@ -1,6 +1,6 @@
 <div class="usercode-input" layout="column">
 
-    <div data-ng-if="!item.id">
+    <div data-ng-if="!isDisabled">
 
         <div class="flex-row flex-i-center">
 
@@ -69,12 +69,23 @@
 
     </div>
 
-    <div data-ng-if="item.id">
+    <div data-ng-if="isDisabled">
 
-        <md-input-container style="margin-top: 2px; width: 100%;">
+        <!--<md-input-container style="margin-top: 2px; width: 100%;">
             <label>User code</label>
             <input type="text" data-ng-model="item.user_code" class="disabled-btn">
-        </md-input-container>
+        </md-input-container>-->
+        <text-input data-ng-if="item"
+                    data-label="User code"
+                    data-model="item.user_code"
+                    data-small-options="uciSmallOpts"
+                    data-is-disabled="isDisabled"></text-input>
+
+        <text-input data-ng-if="!item"
+                    data-label="User code"
+                    data-model="userCode"
+                    data-small-options="uciSmallOpts"
+                    data-is-disabled="isDisabled"></text-input>
 
     </div>
 

@@ -330,17 +330,18 @@
 
         </md-tabs>
 
-        <div class="entity-tabs-menu entityTabsMenu"
+        <div data-ng-if="vm.entityTabs.length"
+             class="entity-tabs-menu entityTabsMenu"
              data-ng-class="{'active': vm.isEntityTabActive()}"
 
-             custom-popup
-             popup-template="{{vm.entityTabsMenuTplt}}"
-             popup-data="vm.entityTabsMenuPopupData"
-             position-relative-to="element"
-             relative-popup-x="left"
-             open-on="click"
-             close-on-click-outside="true"
-             popup-classes="{{vm.entityTablePopupClasses}}">
+             data-custom-popup
+             data-popup-template="{{vm.entityTabsMenuTplt}}"
+             data-popup-data="vm.entityTabsMenuPopupData"
+             data-position-relative-to="element"
+             data-relative-popup-x="left"
+             data-open-on="click"
+             data-close-on-click-outside="true"
+             data-popup-classes="{{vm.entityTablePopupClasses}}">
 
             <md-button ng-if="vm.entityType !== 'price-history'"
                        aria-label="open entity tabs"
