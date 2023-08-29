@@ -1,24 +1,38 @@
 <div layout="column"
      style="padding: 0 20px">
 
-    <h2 class="m-b-35">Instrument Import Finmars Database Manager</h2>
+    <h2 class="m-b-35">Finmars Database Manager</h2>
 
     <div layout="row">
         <div>
-            <md-input-container flex="40" class="m-b-0 m-l-0"   >
+            <md-input-container flex="40" class="m-b-0 m-l-0">
                 <label for="IIMISINInput">Query</label>
-                <input id="IIMISINInput" type="text" data-ng-model="vm.config.instrument_code" style="width: 300px">
+                <input id="IIMISINInput" type="text" data-ng-model="vm.config.user_code" style="width: 300px">
             </md-input-container>
+
+        </div>
+
+        <div>
+            <md-select data-ng-model="vm.config.instrument_type_user_code" style="margin: 2px 20px;">
+                <md-option value="bond">Bond</md-option>
+                <md-option value="stock">Stock</md-option>
+            </md-select>
         </div>
 
         <div layout="row">
+
             <md-button
-                    class="md-raised colored-btn instrument-load-btn m-r-8" data-ng-click="vm.load($event)">Download
+                    class="outline-button instrument-load-btn m-r-8" data-ng-click="vm.load($event)">Download
             </md-button>
-            <div data-ng-if="vm.readyStatus.processing">
+
+            <div data-ng-if="vm.readyStatus.processing" style="padding-top: 6px; padding-left: 8px;">
                 <progress-circular diameter="20"></progress-circular>
             </div>
         </div>
+    </div>
+
+    <div data-ng-if="vm.resultData.task">
+        <task-card task-id="vm.resultData.task"></task-card>
     </div>
 
 
