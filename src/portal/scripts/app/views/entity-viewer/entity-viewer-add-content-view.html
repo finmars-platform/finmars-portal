@@ -538,8 +538,10 @@
 
         </md-tabs>
 
-        <div class="entity-tabs-menu entityTabsMenu"
+        <div data-ng-if="vm.entityTabs.length"
+             class="entity-tabs-menu entityTabsMenu"
              ng-class="{'active': vm.isEntityTabActive()}"
+
              custom-popup
              popup-template="{{vm.entityTabsMenuTplt}}"
              popup-data="vm.entityTabsMenuPopupData"
