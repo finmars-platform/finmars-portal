@@ -210,7 +210,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
                 if (res.status === 'agree') {
                     // $state.go('app.profile', {}, {reload: 'app'})
-					window.open(redirectionService.getUrl('app.profile'), '_self');
+					window.open(redirectionService.getUrlByState('app.profile'), '_self');
                 }
 
             });
