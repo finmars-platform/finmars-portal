@@ -23,7 +23,7 @@
 
         if (PROJECT_ENV !== 'local') {
             console.log("redirection homeController redirection");
-            window.open(redirectionService.getUrl('app.portal.home'), '_self');
+            window.open(redirectionService.getUrlByState('app.portal.home'), '_self');
         } */
 
         vm.systemMessages = [];
