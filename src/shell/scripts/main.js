@@ -88,13 +88,38 @@ app.factory('$exceptionHandler', [function () {
 }]);
 
 //<editor-fold desc="Websocket initialization">
-app.run([function () {
+app.run(['$rootScope', function ($rootScope) {
 
     console.log('Project environment: ' + '__PROJECT_ENV__');
     console.log('Project build date: ' + '__BUILD_DATE__');
 
     let controllersCount = 0;
     let directivesCount = 0;
+
+    console.log('$rootScope', $rootScope);
+
+    let activeNoteTimeout = null;
+
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+
+        console.log("State changed")
+
+        if (window.activeNote) {
+
+            clearTimeout(activeNoteTimeout);
+
+            activeNoteTimeout = setTimeout(function () {
+                try {
+                    window.activeNote.getNotes();
+                } catch (e) {
+                    console.error("Could not fetch notes from ActiveNote", e)
+                }
+            }, 5000)
+        }
+
+        // called every time the state transition is attempted
+
+    });
 
     app._invokeQueue.forEach(function (item) {
 
