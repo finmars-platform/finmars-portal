@@ -121,6 +121,14 @@ app.run(['$rootScope', function ($rootScope) {
 
     });
 
+    setTimeout(function () {
+        try {
+            window.activeNote.getNotes();
+        } catch (e) {
+            console.error("Could not fetch notes from ActiveNote", e)
+        }
+    }, 5000)
+
     app._invokeQueue.forEach(function (item) {
 
         if (item[0] === '$controllerProvider') {
