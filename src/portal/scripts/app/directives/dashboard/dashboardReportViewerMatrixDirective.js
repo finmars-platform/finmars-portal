@@ -181,40 +181,46 @@
 
                     dashboardHelper.initEventListeners(scope);
 
-                    // if (!scope.fillInModeData) {
-                    //
-                    //     scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
-                    //
-                    //         var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
-                    //
-                    //         if (status === dashboardComponentStatuses.START) { // Init calculation of a component
-                    //
-                    //             scope.readyStatus.data = 'ready';
-                    //
-                    //             setTimeout(function () {
-                    //                 scope.$apply();
-                    //             },0)
-                    //
-                    //         } else if (status === dashboardComponentStatuses.ERROR) {
-                    //
-                    //             scope.compErrorMessage = 'error';
-                    //             var componentError = scope.dashboardDataService.getComponentError(scope.item.data.id);
-                    //
-                    //             if (componentError) {
-                    //                 scope.compErrorMessage = 'ERROR: ' + componentError.displayMessage;
-                    //             }
-                    //
-                    //             scope.readyStatus.data = 'error';
-                    //
-                    //             setTimeout(function () {
-                    //                 scope.$apply();
-                    //             },0)
-                    //
-                    //         }
-                    //
-                    //     });
-                    //
-                    // }
+                    if (!scope.fillInModeData) {
+
+                        scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
+
+                            var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
+
+                            if (status === dashboardComponentStatuses.START) { // Init calculation of a component
+
+                                scope.readyStatus.data = 'ready';
+
+                                setTimeout(function () {
+                                    scope.$apply();
+                                },0)
+
+                            } else if (status === dashboardComponentStatuses.ERROR) {
+
+                                scope.compErrorMessage = 'ERROR';
+                                var componentError = scope.dashboardDataService.getComponentError(scope.item.data.id);
+
+                                if (componentError) {
+                                    scope.compErrorMessage = 'ERROR: ' + componentError.displayMessage;
+                                }
+
+                                scope.readyStatus.data = 'error';
+
+                                setTimeout(function () {
+                                    scope.$apply();
+                                },0)
+
+                            }
+
+                        });
+
+                        /* May be needed for FN-1090
+                        scope.dashboardEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
+                            scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
+                        })
+                        */
+
+                    }
 
                     //<editor-fold desc="Dashboard component events">
                     scope.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {

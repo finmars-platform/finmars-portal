@@ -431,18 +431,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         window.keycloak.onAuthRefreshSuccess = setTokens
         window.keycloak.onTokenExpired = refreshTokens
 
-
         console.log("Keycloak init")
-        /* //# region IMPORTANT: Only for development purpose. E.g. development of components inside iframe locally.
-        let authenticated;
-
-        if (!vm.iframeMode) {
-            authenticated = await window.keycloak.init( { onLoad: 'login-required', } );
-
-        } else {
-            authenticated = window.keycloak.authenticated
-        }
-        //# endregion */
 
         const authenticated = await window.keycloak.init({
             onLoad: 'login-required',

@@ -257,7 +257,7 @@ export default (function () {
     portal.controller('DashboardLayoutListDialogController', ['$scope', '$mdDialog', 'metaContentTypesService', 'backendConfigurationImportService', 'data', require('./app/controllers/dialogs/dashboard/layoutListDialogController')]);
     portal.controller('DashboardLayoutExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/dashboard/dashboardLayoutExportDialogController')]);
 
-    portal.controller('Dashboard2RvMatrixController', ['$scope', '$uiRouterGlobals', dashboard2ReportViewerComponentMatrixController]);
+    portal.controller('Dashboard2RvMatrixController', ['$scope', '$uiRouterGlobals', 'metaContentTypesService', dashboard2ReportViewerComponentMatrixController]);
     //# endregion desc="Dashboard">
 
     // Common

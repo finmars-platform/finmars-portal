@@ -227,6 +227,22 @@
 
             var strategy3attrs = getAllAttributesAsFlatList('strategies.strategy3', 'strategy3', 'Strategy 3', {maxDepth: 1});
 
+            result = result.concat(balanceAttrs);
+            result = result.concat(balanceMismatchAttrs);
+            result = result.concat(balancePerformanceAttrs);
+            result = result.concat(allocationAttrs);
+            result = result.concat(instrumentAttrs);
+            result = result.concat(linkedInstrumentAttrs);
+            result = result.concat(accountAttrs);
+            result = result.concat(portfolioAttrs);
+            result = result.concat(strategy1attrs);
+            result = result.concat(strategy2attrs);
+            result = result.concat(strategy3attrs);
+
+            result = result.filter(function (attr) {
+                return attr.key.indexOf("return") < 0;
+            })
+
             var custom = getCustomFieldsByEntityType('pl-report').map(function (customItem) {
 
                 customItem.custom_field = Object.assign({}, customItem);
@@ -250,7 +266,7 @@
             var allocationDynamicAttrsFormatted = formatAttributeTypes(allocationDynamicAttrs, 'instruments.instrument', 'allocation', 'Allocation');
             var linkedInstrumentDynamicAttrsFormatted = formatAttributeTypes(linkedInstrumentDynamicAttrs, 'instruments.instrument', 'linked_instrument', 'Linked Instrument');
 
-            result = result.concat(balanceAttrs);
+            /*result = result.concat(balanceAttrs);
             result = result.concat(balanceMismatchAttrs);
             result = result.concat(balancePerformanceAttrs);
             result = result.concat(allocationAttrs);
@@ -260,7 +276,7 @@
             result = result.concat(portfolioAttrs);
             result = result.concat(strategy1attrs);
             result = result.concat(strategy2attrs);
-            result = result.concat(strategy3attrs);
+            result = result.concat(strategy3attrs);*/
 
             result = result.concat(custom);
 

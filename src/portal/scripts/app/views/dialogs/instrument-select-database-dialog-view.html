@@ -134,7 +134,7 @@
                     <div data-ng-if="vm.hoverInstrument">
 
                         <md-button data-ng-if="vm.hoverInstrument.available_for_update"
-                                   data-ng-disabled="vm.isUpdatingInstrument"
+                                   data-ng-disabled="vm.loadingEntity || vm.processing"
                                    class="instrument-select-update-instrument-button small-button-icon display-block"
                                    data-ng-click="vm.updateLocalInstrument(vm.hoverInstrument)">
                             <span class="material-icons">autorenew</span>
@@ -281,8 +281,9 @@
                     Cancel
                 </md-button>
 
-                <md-button class="link-button m-t-0 m-b-0 {{vm.isDisabled ? 'disabled-btn' : ''}}"
-                           ng-click="vm.agree()" style="margin-right:20px;">
+                <md-button class="link-button m-t-0 m-b-0"
+                           data-ng-disabled="vm.isDisabled"
+                           data-ng-click="vm.agree()" style="margin-right:20px;">
                     <span data-ng-if="vm.actionType == 'add_instrument_dialog'">Add</span>
                     <span data-ng-if="vm.actionType == 'default'">Select</span>
                 </md-button>
