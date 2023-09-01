@@ -6,6 +6,8 @@
 'use strict';
 
 
+var md5helper = require('./md5.helper');
+
 export default function (errorService, cookieService) {
 
     const getRequestParams = function (method, bodyData) {
@@ -69,7 +71,7 @@ export default function (errorService, cookieService) {
     }
 
 
-    const fetch = async function (url, params = {}, options = {}) {
+    const doFetch = async function (url, params = {}, options = {}) {
 
         const {notifyError = true} = options;
 
@@ -92,7 +94,7 @@ export default function (errorService, cookieService) {
                 response = await window.fetch(url, params);
             }
 
-            console.log('response', response);
+            // console.log('response', response);
 
             // Handle the refreshed response
             if (response.status === 204) return response;
@@ -114,8 +116,7 @@ export default function (errorService, cookieService) {
             }
 
             return params.method !== "DELETE" ? await response.json() : response;
-        }
-        catch (error) {
+        } catch (error) {
             console.log('xhrService.reason', error);
 
             if (notifyError) {
@@ -137,6 +138,35 @@ export default function (errorService, cookieService) {
         };
     }
 
+    const generateHash = function (url, params) {
+        const hashContent = `${url}_${JSON.stringify(params)}`;
+        return md5helper.md5(hashContent);  // Convert to base64 for simplicity
+    }
+
+
+    const fetch = async function (url, params = {}, options = {}) {
+
+        const hash = generateHash(url, params);
+
+        if (!window.finmarsOngoingRequests) {
+            window.finmarsOngoingRequests = {}
+        }
+
+        // If this request is ongoing, return its promise.
+        if (window.finmarsOngoingRequests[hash]) {
+            return window.finmarsOngoingRequests[hash];
+        }
+
+        const requestPromise = doFetch(url, params, options).then(data => {
+            // Remove from ongoing requests once completed.
+            delete window.finmarsOngoingRequests[hash];
+            return data // N.B. deep copy possible need, if one of components modify data it will changes in another one
+        });
+
+        window.finmarsOngoingRequests[hash] = requestPromise;
+        return requestPromise;
+
+    }
 
     return {
         fetch: fetch,

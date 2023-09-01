@@ -400,8 +400,8 @@
                 case 'app.portal.import.instrument':
                     name += 'Instrument';
                     break;
-                case 'app.portal.import.instrument-cbonds':
-                    name += 'Instrument (from CBONDS)';
+                case 'app.portal.import.finmars-database':
+                    name += 'Instrument (Finmars Database)';
                     break;
                 case 'app.portal.import.prices':
                     name += 'Prices/fx';

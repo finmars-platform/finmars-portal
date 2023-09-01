@@ -239,7 +239,8 @@ md-sidenav {
 
   ng-md-icon, span.material-icons {
     position: relative;
-    top: 5px; // adjust for svg viewbox
+    top: 3px; // adjust for svg viewbox
+    font-size: 20px;
   }
 }
 
@@ -268,7 +269,8 @@ md-sidenav {
     padding-left: 1em;
     margin-bottom: 6px;
     margin-left: 0;
-    font-size: 11px;
+    font-size: 12px;
+    text-transform: capitalize;
     line-height: 2;
     /*padding-top: 12px;
     padding-bottom: 10px;*/
@@ -331,7 +333,7 @@ md-sidenav {
     display: inline-block;
     position: absolute;
     left: 17px;
-    bottom: 3px;
+    //bottom: 3px;
     // bottom: 0;
   }
 
@@ -400,7 +402,8 @@ md-sidenav {
   height: 36px;
   /*min-height: 25px;
   height: 25px;*/
-  display: block;
+  //display: block;
+  display: flex;
   // padding-top: 11px;
   // padding-bottom: 2px;
   padding-top: 0;
@@ -408,7 +411,9 @@ md-sidenav {
   padding-left: 55px;
   margin-left: 0;
   text-align: left;
-  font-size: 11px;
+  //font-size: 11px;
+  font-size: 12px;
+  text-transform: capitalize;
   line-height: 2;
 
   &.active {
@@ -432,7 +437,8 @@ md-sidenav {
 
 .side-menu-bottom-menu {
   position: absolute;
-  bottom: 75px;
+  //bottom: 75px;
+  bottom: 20px;
   width: 100%;
 }
 
@@ -1297,7 +1303,8 @@ th {
 }
 
 .grey-tab {
-  background: #f5f5f5;
+  //background: #f5f5f5;
+  background: #eff4f7;
 }
 
 .table-misc-cell {
@@ -2042,6 +2049,7 @@ md-menu-content md-menu.md-menu {
 
 .side-nav-versions-block div {
   cursor: pointer;
+
   &:hover {
     color: #fff;
   }
@@ -2783,15 +2791,16 @@ md-dialog.two-rows-dialog-actions {
   }
 }
 
-.center-text-message {
+.center-text-message { // todo refactor to error speicifc class name
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 18px;
-  font-weight: bold;
-  color: #f00;
+  font-size: 14px;
+  font-weight: 400;
+  color: crimson;
+  text-transform: capitalize;
 }
 
 #toast-container > div {
@@ -2881,7 +2890,8 @@ md-dialog.two-rows-dialog-actions {
     height: 100%;
     float: right;
     animation-duration: .5s;
-    border-left: 2px solid #a2a2a2;
+    //border-left: 2px solid #a2a2a2;
+    border-left: 1px solid #e0e0e0;
     transition: width 0.5s linear;
 
     &.big-drawer-opens {
@@ -2920,10 +2930,10 @@ md-dialog.two-rows-dialog-actions {
     background-color: white;
     color: black;
     z-index: 50;
-    border-top: 2px solid #a2a2a2;
-    boorder-left: #2a2a2a;
-    border-bottom: 2px solid #a2a2a2;
-    border-left: 2px solid #a2a2a2;
+    border-top: 1px solid #e0e0e0;
+    //boorder-left: #2a2a2a;
+    border-bottom: 1px solid #e0e0e0;
+    border-left: 1px solid #e0e0e0;
     border-radius: 4px 0px 0px 4px;
 
     &:hover {
@@ -2951,7 +2961,8 @@ md-dialog.two-rows-dialog-actions {
     //height: 78px;
     flex: 0 0 @header-height;
     display: flex;
-    &>div {
+
+    & > div {
       display: flex;
       align-items: center;
     }
@@ -2967,7 +2978,6 @@ md-dialog.two-rows-dialog-actions {
       font-size: 16px;
       line-height: @header-height;
     }
-
 
 
     .big-drawer-header-processing {
@@ -3018,7 +3028,6 @@ md-tabs [role="tabpanel"] {
 //  left: 50%;
 //  margin-left: -150px;
 //}
-
 
 
 .error-record-card {
@@ -3470,7 +3479,7 @@ span.websocket-connection-status {
   margin-left: 0;
   width: 100%;
   border: none;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid #e0e0e0;
   padding-left: 5px;
   padding-bottom: 5px;
   margin-bottom: 5px;
@@ -3893,15 +3902,18 @@ a.finmars-site-link {
   color: #fff;
   margin-top: 2px;
   display: block;
+  color: rgba(255,255,255,.6);
+  padding-left: 24px;
 
   &:visited {
-    color: #fff;
+    color: rgba(255,255,255,.6);
   }
+
   &:active {
-    color: #fff;
+    color: rgba(255,255,255,.6);
   }
 
   &:hover {
-    opacity: .7;
+    color: rgba(255,255,255,1);
   }
 }

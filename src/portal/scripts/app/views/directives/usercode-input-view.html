@@ -1,6 +1,6 @@
 <div class="usercode-input" layout="column">
 
-    <div data-ng-if="!item.id">
+    <div data-ng-if="!isDisabled">
 
         <div class="flex-row flex-i-center">
 
@@ -15,11 +15,17 @@
                 </md-select>
             </md-input-container>-->
             <div style="flex: 0 0 200px; max-width: 200px;">
-                <dropdown-select data-label="Configuration"
+                <dropdown-select data-ng-if="readyStatus"
+                                 data-label="Configuration"
                                  data-model="configuration_code.value"
                                  data-menu-options="configuration_codes"
+                                 data-is-disabled="isDisabled"
                                  data-small-options="selSmallOpts"
                                  data-on-change-callback="updateUserCode(usercodeEnd.value, configuration_code.value)"></dropdown-select>
+
+                <div data-ng-if="!readyStatus">
+                    <progress-circular data-diameter="20"></progress-circular>
+                </div>
             </div>
 
             <!--<md-input-container style="margin-top: 2px; width: 100%;">
@@ -33,6 +39,7 @@
                 <text-input data-label="User code"
                             data-model="usercodeEnd.value"
                             data-small-options="uciSmallOpts"
+                            data-is-disabled="isDisabled"
                             data-on-change-callback="onUserCodeChange(usercodeEnd.value, configuration_code.value)"></text-input>
             </div>
 
@@ -62,12 +69,23 @@
 
     </div>
 
-    <div data-ng-if="item.id">
+    <div data-ng-if="isDisabled">
 
-        <md-input-container style="margin-top: 2px; width: 100%;">
+        <!--<md-input-container style="margin-top: 2px; width: 100%;">
             <label>User code</label>
             <input type="text" data-ng-model="item.user_code" class="disabled-btn">
-        </md-input-container>
+        </md-input-container>-->
+        <text-input data-ng-if="item"
+                    data-label="User code"
+                    data-model="item.user_code"
+                    data-small-options="uciSmallOpts"
+                    data-is-disabled="isDisabled"></text-input>
+
+        <text-input data-ng-if="!item"
+                    data-label="User code"
+                    data-model="userCode"
+                    data-small-options="uciSmallOpts"
+                    data-is-disabled="isDisabled"></text-input>
 
     </div>
 

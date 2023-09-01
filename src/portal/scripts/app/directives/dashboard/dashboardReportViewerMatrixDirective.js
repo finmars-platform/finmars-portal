@@ -11,7 +11,7 @@
 
     const localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
-	module.exports = function ($mdDialog, uiService, dashboardHelper, metaContentTypesService) {
+    module.exports = function ($mdDialog, uiService, dashboardHelper, metaContentTypesService) {
         return {
             restriction: 'E',
             templateUrl: 'views/directives/dashboard/dashboard-report-viewer-matrix-view.html',
@@ -35,11 +35,11 @@
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
 
                 var componentData;
-				var componentElem = elem[0].querySelector('.dashboardComponent');
+                var componentElem = elem[0].querySelector('.dashboardComponent');
 
                 if (scope.item && scope.item.data) {
 
-                	componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+                    componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
 
                     if (componentData.custom_component_name) {
                         scope.customName = componentData.custom_component_name;
@@ -66,7 +66,7 @@
                     componentData: componentData,
                     entityType: componentData.settings.entity_type,
                     contentType: contentType,
-					componentElement: componentElem,
+                    componentElement: componentElem,
                     dashboardDataService: scope.dashboardDataService,
                     dashboardEventService: scope.dashboardEventService,
                     dashboardComponentDataService: scope.dashboardComponentDataService,
@@ -119,7 +119,7 @@
                             }*/
 
                             if (res.action === 'save') {
-								dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData, true);
+                                dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData, true);
                             }
 
                             if (scope.fillInModeData) {
@@ -173,13 +173,13 @@
                     scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
                 };
 
-				scope.toggleFilterBlock = function () {
-				    dashboardHelper.toggleFilterBlock(scope);
+                scope.toggleFilterBlock = function () {
+                    dashboardHelper.toggleFilterBlock(scope);
                 };
 
                 scope.initEventListeners = function () {
 
-					dashboardHelper.initEventListeners(scope);
+                    dashboardHelper.initEventListeners(scope);
 
                     if (!scope.fillInModeData) {
 
@@ -222,7 +222,7 @@
 
                     }
 
-					//<editor-fold desc="Dashboard component events">
+                    //<editor-fold desc="Dashboard component events">
                     scope.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
 
                         if (scope.item && scope.item.data) {
@@ -256,10 +256,10 @@
 
                     });
 
-					/* scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_DATA_CHANGED_INSIDE, function () {
+                    /* scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_DATA_CHANGED_INSIDE, function () {
 
-					}); */
-					//</editor-fold>
+                    }); */
+                    //</editor-fold>
 
                     scope.dashboardComponentEventService.addEventListener(dashboardEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS, function () {
 
@@ -279,7 +279,7 @@
 
                 };
 
-                scope.openMissingPricesDialog = function($event){
+                scope.openMissingPricesDialog = function ($event) {
 
                     $mdDialog.show({
                         controller: 'ReportPriceCheckerDialogController as vm',
@@ -329,26 +329,25 @@
                     const userCode = componentData.settings.layout;
                     const cachedLayoutsData = scope.dashboardDataService.getCachedLayoutsData();
 
-                    if ( !cachedLayoutsData[contentType] ) {
+                    if (!cachedLayoutsData[contentType]) {
                         cachedLayoutsData[contentType] = {};
                     }
 
-                    if ( cachedLayoutsData[contentType].hasOwnProperty(userCode) ) {
+                    if (cachedLayoutsData[contentType].hasOwnProperty(userCode)) {
 
                         const layoutId = cachedLayoutsData[contentType][userCode];
 
                         return new Promise(function (resolve) {
-                            resolve( localStorageService.getCachedLayout(layoutId) );
+                            resolve(localStorageService.getCachedLayout(layoutId));
                         });
 
-                    }
-                    else {
+                    } else {
 
                         return new Promise(function (resolve, reject) {
 
                             uiService.getListLayoutByUserCode(scope.vm.entityType, userCode).then(function (resData) {
 
-                                if ( resData.results.length ) {
+                                if (resData.results.length) {
 
                                     var layoutData = resData.results[0];
 
@@ -358,7 +357,9 @@
 
                                 }
 
-                            }).catch(function (error) { reject(error); });
+                            }).catch(function (error) {
+                                reject(error);
+                            });
 
                         });
 
@@ -366,57 +367,100 @@
 
                 };
 
-                const getNumberFormatFromLayoutByValueKey = async () => {
+                const getNumberFormatFromLayoutByValueKey = () => {
 
-                    const defaultNumberFormat = {
-                        negative_color_format_id: 0,
-                        negative_format_id: 0,
-                        percentage_format_id: 0,
-                        round_format_id: 0,
-                        thousands_separator_format_id: 0,
-                        zero_format_id: 0,
-                    };
+                    return new Promise(function (resolve, reject) {
 
-                    // const layoutData = await getLayoutById(layoutId);
-                    const layoutData = await getLayoutByUserCode();
+                        const defaultNumberFormat = {
+                            negative_color_format_id: 0,
+                            negative_format_id: 0,
+                            percentage_format_id: 0,
+                            round_format_id: 0,
+                            thousands_separator_format_id: 0,
+                            zero_format_id: 0,
+                        };
 
-                    const columns = layoutData.data.columns;
+                        // const layoutData = await getLayoutById(layoutId);
+                        getLayoutByUserCode().then(function (layoutData) {
 
-                    const valueKey = componentData.settings.value_key;
-                    const matrixValue = columns.find(column => column.key === valueKey);
+                            const columns = layoutData.data.columns;
 
-                    return matrixValue ? matrixValue.report_settings : defaultNumberFormat;
+                            const valueKey = componentData.settings.value_key;
+                            const matrixValue = columns.find(column => column.key === valueKey);
+
+                            var result = matrixValue ? matrixValue.report_settings : defaultNumberFormat;
+
+                            resolve(result);
+
+                        })
+
+                    })
 
                 }
                 // <Victor 2021.05.27 #113 number format from report layout>
 
-                scope.init = async function () {
+                scope.init = function () {
+
+                    console.log("DASHBOARD.MATRIX.INIT")
 
                     // Victor 2021.05.27 #113 number format from report layout
                     /*const layoutUserCode = componentData.settings.layout;
                     const valueKey = componentData.settings.value_key;*/
 
-                    if ( !componentData.settings.number_format ) {
-                        componentData.settings.number_format = await getNumberFormatFromLayoutByValueKey();
-                    }
+                    // if (!componentData.settings.number_format) {
+                    //     componentData.settings.number_format = getNumberFormatFromLayoutByValueKey();
+                    //    TODO 2023-08-23 szhitenev maybe not needed?
+                    // }
                     // <Victor 2021.05.27 #113 number format from report layout>
 
                     scope.initEventListeners();
 
                     if (!scope.fillInModeData) {
 
+                        scope.readyStatus.data = 'ready';
+
                         scope.dashboardDataService.setComponentRefreshRestriction(scope.item.data.id, false);
 
-                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                     } else {
                         scope.readyStatus.data = 'ready';
+
+                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
                     }
+
+                    setTimeout(function () {
+                        scope.$apply();
+                    }, 0)
+
 
                 };
 
-                scope.init()
+                scope.dashboardInit = function () {
+
+                    // Component put himself in INIT Status
+                    // so that dashboard manager can start processing it
+                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
+
+                        var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
+
+                        if (status === dashboardComponentStatuses.START) {
+                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.PROCESSING);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                            scope.init();
+                        }
+
+                    });
+
+                }
+
+                scope.dashboardInit();
 
             }
         }

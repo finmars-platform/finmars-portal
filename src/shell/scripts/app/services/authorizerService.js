@@ -313,8 +313,8 @@ export default function (cookieService, globalDataService, xhrService) {
         return authorizerRepository.getVersions(is_latest)
     }
 
-    const updateFinmars = function (base_api_url, tag){
-        return authorizerRepository.updateFinmars(base_api_url, tag);
+    const updateFinmars = function (id){
+        return authorizerRepository.updateFinmars(id);
     }
 
     const kickMember = function (data) {

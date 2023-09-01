@@ -17,43 +17,31 @@
             processing: false
         };
         vm.dataIsImported = false;
+        vm.resultData = {}
 
         vm.config = {
-            instrument_code: "",
+            user_code: "",
+            instrument_type_user_code: "bond",
             mode: 1
         };
 
         vm.load = function ($event) {
 
             vm.readyStatus.processing = true;
+
+            vm.resultData = {};
+
+            vm.config.name = vm.config.user_code; // TODO need refactor on backend side
             //vm.config.task = 81;
             importInstrumentCbondsService.download(vm.config).then(function (data) {
 
+                console.log('importInstrumentCbondsService.data', data);
+
+                vm.resultData = data;
+
                 vm.readyStatus.processing = false;
 
-                if (data.errors.length){
-                    $mdDialog.show({
-                        controller: 'InfoDialogController as vm',
-                        templateUrl: 'views/dialogs/info-dialog-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        clickOutsideToClose: false,
-                        locals: {
-                            info: {
-                                title: 'Error',
-                                description: data.errors[0]
-                            }
-                        },
-                        preserveScope: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        multiple: true
-                    })
-                } else {
-
-                    toastNotificationService.success('Instrument ' + vm.config.instrument_code + ' was imported')
-
-                }
+                toastNotificationService.success('Instrument ' + vm.config.user_code + ' was imported')
 
                 $scope.$apply()
 
@@ -71,7 +59,7 @@
                     locals: {
                         warning: {
                             title: 'Unhandle Exception',
-                            description: reason
+                            description: JSON.stringify(reason, null, 4)
                         }
                     },
                     preserveScope: true,

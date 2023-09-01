@@ -35,11 +35,11 @@
                 scope.filterAreaHidden = false;
 
                 var componentData;
-				var componentElem = elem[0].querySelector('.dashboardComponent');
+                var componentElem = elem[0].querySelector('.dashboardComponent');
 
                 if (scope.item && scope.item.data) {
 
-                	componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+                    componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
 
                     if (componentData.type === 'report_viewer_split_panel') {
                         componentData.type = 'report_viewer';
@@ -68,7 +68,7 @@
                     componentData: componentData,
                     entityType: componentData.settings.entity_type,
                     contentType: metaContentTypesService.findContentTypeByEntity(componentData.settings.entity_type),
-					componentElement: componentElem,
+                    componentElement: componentElem,
                     dashboardDataService: scope.dashboardDataService,
                     dashboardEventService: scope.dashboardEventService,
                     dashboardComponentDataService: scope.dashboardComponentDataService,
@@ -111,7 +111,7 @@
                             }*/
 
                             if (res.action === 'save') {
-								dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData, true);
+                                dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData, true);
                             }
 
                             if (scope.fillInModeData) {
@@ -162,7 +162,7 @@
                     var tableComponents = scope.fillInModeData.entityViewerDataService.getComponents();
 
                     tableComponents.topPart = false;
-					tableComponents.sidebar = false;
+                    tableComponents.sidebar = false;
 
                     scope.fillInModeData.entityViewerDataService.setComponents(tableComponents);
 
@@ -181,7 +181,7 @@
 
                 scope.initEventListeners = function () {
 
-                	dashboardHelper.initEventListeners(scope);
+                    dashboardHelper.initEventListeners(scope);
 
                     if (scope.fillInModeData) { // if dashboard is in fillIn mode
 
@@ -232,39 +232,38 @@
 
                         });
 
-                    }
-                    else {
+                    } else {
 
-                        scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
-
-                            var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
-
-                            if (status === dashboardComponentStatuses.START) { // Init calculation of a component
-
-                                scope.readyStatus.data = 'ready';
-
-                                setTimeout(function () {
-                                    scope.$apply();
-                                }, 0)
-
-                            } else if (status === dashboardComponentStatuses.ERROR) {
-
-                                scope.compErrorMessage = 'ERROR';
-                                var componentError = scope.dashboardDataService.getComponentError(scope.item.data.id);
-
-                                if (componentError) {
-                                    scope.compErrorMessage = 'ERROR: ' + componentError.displayMessage;
-                                }
-
-                                scope.readyStatus.data = 'error';
-
-                                setTimeout(function () {
-                                    scope.$apply();
-                                }, 0)
-
-                            }
-
-                        });
+                        // scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
+                        //
+                        //     var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
+                        //
+                        //     if (status === dashboardComponentStatuses.START) { // Init calculation of a component
+                        //
+                        //         scope.readyStatus.data = 'ready';
+                        //
+                        //         setTimeout(function () {
+                        //             scope.$apply();
+                        //         }, 0)
+                        //
+                        //     } else if (status === dashboardComponentStatuses.ERROR) {
+                        //
+                        //         scope.compErrorMessage = 'error';
+                        //         var componentError = scope.dashboardDataService.getComponentError(scope.item.data.id);
+                        //
+                        //         if (componentError) {
+                        //             scope.compErrorMessage = 'ERROR: ' + componentError.displayMessage;
+                        //         }
+                        //
+                        //         scope.readyStatus.data = 'error';
+                        //
+                        //         setTimeout(function () {
+                        //             scope.$apply();
+                        //         }, 0)
+                        //
+                        //     }
+                        //
+                        // });
 
                     }
 
@@ -315,7 +314,7 @@
 
                 };
 
-                scope.openMissingPricesDialog = function($event){
+                scope.openMissingPricesDialog = function ($event) {
 
                     $mdDialog.show({
                         controller: 'ReportPriceCheckerDialogController as vm',
@@ -342,18 +341,48 @@
 
                     } else {
 
-                    	scope.vm.componentData.settings.components.topPart = false; // for already existing layouts
+                        scope.vm.componentData.settings.components.topPart = false; // for already existing layouts
 
                         scope.dashboardDataService.setComponentRefreshRestriction(scope.item.data.id, false);
 
-                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
-                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                        scope.readyStatus.data = 'ready';
 
                     }
 
+
+
+                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    setTimeout(function () {
+                        scope.$apply();
+                    }, 0)
+
                 };
 
-                scope.init()
+
+                scope.dashboardInit = function () {
+
+                    // Component put himself in INIT Status
+                    // so that dashboard manager can start processing it
+                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
+
+                        var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
+
+                        if (status === dashboardComponentStatuses.START) {
+                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.PROCESSING);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                            scope.init();
+                        }
+
+                    });
+
+                }
+
+                scope.dashboardInit();
 
             }
         }

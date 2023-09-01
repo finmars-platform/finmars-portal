@@ -1,6 +1,6 @@
 .journal-page {
 
-  font-family: "Roboto Light";
+  font-family: "Roboto";
   font-size: 14px;
   padding: 8px;
 
@@ -37,6 +37,7 @@
     font-size: 10px;
     margin-top: 5px;
     background: #F05A22;
+
     &:hover {
       background: #F05A22;
     }
@@ -58,11 +59,11 @@
     width: 400px;
   }
 
-  .error-history-table {
+  .journal-table {
 
     margin-top: 8px;
 
-    font-size: 12px;
+    font-size: 14px;
 
     .user-avatar-simple {
       line-height: 24px;
@@ -83,8 +84,8 @@
     }
 
     .history-record-date-td {
-      width: 70px;
-      min-width: 70px;
+      width: 80px;
+      min-width: 80px;
     }
 
     .history-record-username-td {
@@ -103,9 +104,9 @@
     }
 
     .history-record-action-td {
-      max-width: 40px;
-      width: 40px;
-      min-width: 40px;
+      max-width: 80px;
+      width: 80px;
+      min-width: 80px;
       text-transform: Capitalize;
       padding-top: 10px;
       text-overflow: ellipsis;
@@ -120,6 +121,8 @@
 
     .history-record-user-code-td {
       padding-top: 10px;
+      max-width: 200px;
+      overflow: auto;
     }
 
     .history-record-content-type-td {
@@ -138,13 +141,39 @@
       color: darkgreen;
     }
 
+
     .history-record-notes-td-wrap {
+
       padding: 4px;
       max-width: 400px;
       overflow: hidden;
       text-overflow: ellipsis;
 
-      max-height: 60px;
+      max-height: 35px;
+      overflow-y: auto;
+
+      pre {
+        width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding: 2px;
+        cursor: pointer;
+        font-size: 10px;
+        margin: 0;
+        &:hover {
+          opacity: .7;
+        }
+      }
+
+    }
+
+    .history-record-diff-td-wrap {
+      padding: 4px;
+      max-width: 400px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      max-height: 35px;
       overflow-y: auto;
 
       pre {

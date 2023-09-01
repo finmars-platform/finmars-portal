@@ -62,13 +62,15 @@
                     scope.dialogParent = scope.smallOptions.dialogParent
                 }
 
+                scope.locateDetailsLeft = false;
+
                 var stylePreset;
 
                 /**
                  * IMPORTANT: when changing this value,
-                 * also change variable detailBlockWidth inside instrument-select.less
+                 * also change variable selMenuWidth inside instrument-select.less
                  */
-                var detailBlockWidth = 280;
+                var selMenuWidth = 280;
                 var inputContainer = elem[0].querySelector('.instrumentSelectInputContainer');
                 var inputElem = elem[0].querySelector('.instrumentSelectInputElem');
 
@@ -886,8 +888,8 @@
 
                     var rect = elem[0].getBoundingClientRect();
 
-                    if (rect['right'] + detailBlockWidth >= document.body.clientWidth + 18) { // 18px is width of the scroll
-                        scope.locateDetailsRight = true;
+                    if (rect['right'] + selMenuWidth >= document.body.clientWidth + 18) { // 18px is width of the scroll
+                        scope.locateDetailsLeft = true;
                     }
 
                 };

@@ -2,7 +2,7 @@
 <!--Now I develop new design for: instruments, ... -->
 <!--When all entities will have new design, we can rename entity-viewer-universal-edit-content-view.html to entity-viewer-edit-content-view -->
 
-<div ng-if="vm.readyStatus.permissions && vm.readyStatus.entity">
+<div ng-if="vm.readyStatus.entity">
 
     <draft-button user-code="vm.draftUserCode"
                   on-export-to-draft-callback="vm.exportToDraft($event)"
@@ -46,14 +46,16 @@
             </div>-->
             <div class="fa-field1"
                  data-ng-class="vm.getFaField1Classes()">
-                <entity-names-field label="{{vm.entityTypeSlug()}}"
-                                    entity-type="{{vm.entityType}}"
-                                    entity="vm.entity"
-                                    value-to-show="vm.nameToShow"
-                                    event-service="vm.enfEventService"
-                                    is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"
-                                    editing="true"
-                                    on-value-to-show-change="vm.onNameToShowChange()"></entity-names-field>
+                <entity-names-field data-label="{{vm.entityTypeSlug()}}"
+                                    data-entity-type="{{vm.entityType}}"
+                                    data-entity="vm.entity"
+                                    data-use-user-code-input="vm.useUserCodeInput"
+                                    data-user-code-disabled="vm.ucDisabled"
+                                    data-value-to-show="vm.nameToShow"
+                                    data-event-service="vm.enfEventService"
+                                    data-is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"
+                                    data-editing="true"
+                                    data-on-value-to-show-change="vm.onNameToShowChange()"></entity-names-field>
             </div>
 
             <!--<div data-ng-if="vm.fixedAreaPopup.tabColumns > 2"
@@ -67,15 +69,16 @@
                  class="fa-field2"
                  data-ng-class="vm.getFaField2Classes()">
 
-                <dropdown-select data-ng-if="vm.entityType === 'instrument' || vm.entityType === 'account' || vm.entityType === 'instrument-type'"
-                                 label="{{vm.typeFieldLabel}}"
-                                 model="vm.entity[vm.typeFieldName]"
-                                 placeholder-text="{{vm.typeFieldLabel}}"
-                                 menu-options="vm.typeSelectorOptions"
-                                 small-options="{tooltipText: 'Type', indicatorBtnIcon: 'type1'}"
-                                 on-change-callback="vm.typeSelectorChange()"
-                                 is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"
-                                 class="ev-editor-field">
+                <dropdown-select
+                        data-ng-if="vm.entityType === 'instrument' || vm.entityType === 'account' || vm.entityType === 'instrument-type'"
+                        label="{{vm.typeFieldLabel}}"
+                        model="vm.entity[vm.typeFieldName]"
+                        placeholder-text="{{vm.typeFieldLabel}}"
+                        menu-options="vm.typeSelectorOptions"
+                        small-options="{tooltipText: 'Type', indicatorBtnIcon: 'type1'}"
+                        on-change-callback="vm.typeSelectorChange()"
+                        is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"
+                        class="ev-editor-field">
                 </dropdown-select>
 
                 <crud-select data-ng-if="vm.entityType === 'responsible' || vm.entityType === 'counterparty'"
@@ -88,15 +91,16 @@
                              is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"
                              class="ev-editor-field"></crud-select>
 
-                <crud-select data-ng-if="vm.entityType === 'strategy-1' || vm.entityType === 'strategy-2' || vm.entityType === 'strategy-3'"
-                             data-label="vm.groupSelectorLabel"
-                             data-item="vm.entity.subgroup"
-                             data-entity-type="vm.groupSelectorEntityType"
-                             data-options="vm.groupSelectorOptions"
-                             event-signal="vm.fixedAreaEventObj.event"
-                             small-options="{notNull: true}"
-                             is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"
-                             class="ev-editor-field"></crud-select>
+                <crud-select
+                        data-ng-if="vm.entityType === 'strategy-1' || vm.entityType === 'strategy-2' || vm.entityType === 'strategy-3'"
+                        data-label="vm.groupSelectorLabel"
+                        data-item="vm.entity.subgroup"
+                        data-entity-type="vm.groupSelectorEntityType"
+                        data-options="vm.groupSelectorOptions"
+                        event-signal="vm.fixedAreaEventObj.event"
+                        small-options="{notNull: true}"
+                        is-disabled="!vm.entity.is_enabled && vm.hasEnabledStatus"
+                        class="ev-editor-field"></crud-select>
 
                 <!--<div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type' &&
                                  vm.entityType !== 'counterparty' && vm.entityType !== 'responsible' && vm.entityType !== 'strategy-1' && vm.entityType !== 'strategy-2' && vm.entityType !== 'strategy-3'"
@@ -162,7 +166,8 @@
                 </md-tab-body>
             </md-tab>
 
-            <md-tab data-ng-repeat="tab in vm.entityTabs" data-ng-if="vm.checkViewState(tab)" md-active="vm.activeTab === tab">
+            <md-tab data-ng-repeat="tab in vm.entityTabs" data-ng-if="vm.checkViewState(tab)"
+                    md-active="vm.activeTab === tab">
                 <!-- Victor 2020.10.28 EntityTabs labels move to md-menu-->
                 <!--                         <md-tab-label>
                                             <div class="tab-name-elem" data-tab-name="{{tab.label | lowercase}}">
@@ -178,7 +183,8 @@
                 </md-tab-body>
             </md-tab>
 
-            <md-tab data-ng-if="vm.checkPermissions() && vm.canManagePermissions" md-active="vm.activeTab === 'permissions'">
+            <md-tab data-ng-if="vm.checkPermissions() && vm.canManagePermissions"
+                    md-active="vm.activeTab === 'permissions'">
 
                 <!--                        Victor 2020.10.28 Permission label move to md-menu-->
                 <!--                         <md-tab-label>
@@ -266,7 +272,9 @@
                                                 </div>
 
                                                 <div data-ng-if="vm.entityType === 'instrument-type'">
-                                                    <md-button ng-click="vm.saveAndApplyPermissionsToInstrumentsByGroup($event, group)" class="md-raised">
+                                                    <md-button
+                                                            ng-click="vm.saveAndApplyPermissionsToInstrumentsByGroup($event, group)"
+                                                            class="md-raised">
                                                         Save and Apply for All Instruments
                                                     </md-button>
                                                 </div>
@@ -285,7 +293,8 @@
                                             Save and Apply for All Accounts and Groups
                                         </md-button>
 
-                                        <md-button ng-click="vm.recalculateAccountWithTransactionPermissions()" class="md-raised">
+                                        <md-button ng-click="vm.recalculateAccountWithTransactionPermissions()"
+                                                   class="md-raised">
                                             Save and Apply for All Accounts,Transactions and Groups
                                         </md-button>
 
@@ -321,17 +330,18 @@
 
         </md-tabs>
 
-        <div class="entity-tabs-menu entityTabsMenu"
+        <div data-ng-if="vm.entityTabs.length"
+             class="entity-tabs-menu entityTabsMenu"
              data-ng-class="{'active': vm.isEntityTabActive()}"
 
-             custom-popup
-             popup-template="{{vm.entityTabsMenuTplt}}"
-             popup-data="vm.entityTabsMenuPopupData"
-             position-relative-to="element"
-             relative-popup-x="left"
-             open-on="click"
-             close-on-click-outside="true"
-             popup-classes="{{vm.entityTablePopupClasses}}">
+             data-custom-popup
+             data-popup-template="{{vm.entityTabsMenuTplt}}"
+             data-popup-data="vm.entityTabsMenuPopupData"
+             data-position-relative-to="element"
+             data-relative-popup-x="left"
+             data-open-on="click"
+             data-close-on-click-outside="true"
+             data-popup-classes="{{vm.entityTablePopupClasses}}">
 
             <md-button ng-if="vm.entityType !== 'price-history'"
                        aria-label="open entity tabs"
@@ -350,7 +360,7 @@
 
 </div>
 
-<div data-ng-if="!vm.checkReadyStatus()">
+<div data-ng-if="!vm.readyStatus.entity">
     <div class="flex-row fc-space-around m-large">
         <progress-circular diameter="100"></progress-circular>
     </div>

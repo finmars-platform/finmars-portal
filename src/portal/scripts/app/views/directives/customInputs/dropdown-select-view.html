@@ -15,6 +15,7 @@
          data-offset-y="2"
          data-open-on="click"
          data-close-on-click-outside="true"
+         data-is-disabled="isDisabled"
          data-popup-width="{{popupWidth}}"
          data-popup-min-width="{{popupMinWidth}}"
          data-popup-classes="custom-select-popup-container mh-100vh-popup"
@@ -30,7 +31,7 @@
                     <button data-ng-if="!noIndicatorBtn"
                                     class="custom-input-indicator-btn position-relative"
                                     data-ng-click="openSelectorDialog($event)"
-                                    ng-disabled="isDisabled">
+                                    data-ng-disabled="isDisabled">
                         <span class="material-icons">menu</span>
                     </button>
 

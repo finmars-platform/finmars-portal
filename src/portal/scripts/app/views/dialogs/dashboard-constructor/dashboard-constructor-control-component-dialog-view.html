@@ -3,7 +3,7 @@
            drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2>New Control Component</h2>
+            <h2>Control Component</h2>
             <span flex></span>
 
             <div data-ng-if="vm.processing" class="dialog-toolbar-loader">
@@ -25,6 +25,11 @@
                             <md-input-container style="width: 200px;">
                                 <label for="">Name</label>
                                 <input type="text" data-ng-model="vm.item.name">
+                            </md-input-container>
+
+                            <md-input-container style="width: 200px;">
+                                <label for="">User Code</label>
+                                <input type="text" data-ng-model="vm.item.user_code">
                             </md-input-container>
 
                             <div>

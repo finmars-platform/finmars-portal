@@ -20,7 +20,7 @@
 
     </div>
 
-    <initial-loader data-ng-if="initLoaderProcessing"></initial-loader>
+    <initial-loader data-ng-if="displayInitLoader" class="{{initLoaderProcessing ? '' : 'initial-loader-hidden'}}"></initial-loader>
 
 
     <div class="log-containers-wrap"></div>
