@@ -101,9 +101,10 @@
         };
 
         vm.sideNavStatus = 'expand';
-        vm.homepageUrl = redirectionService.getUrl('app.portal.home');
-        vm.performanceUrl = redirectionService.getUrl('app.portal.reports.performance-report');
-        vm.permissionsUrl = redirectionService.getUrl('app.portal.settings.users-groups');
+        vm.homepageUrl = redirectionService.getUrlByState('app.portal.home');
+        vm.performanceUrl = redirectionService.getUrlByState('app.portal.reports.performance-report');
+        vm.permissionsUrl = redirectionService.getUrlByState('app.portal.settings.users-groups');
+        vm.getVueUrl = redirectionService.getUrl;
 
         /* Old sidemenu */
         /*vm.resizeSideNav = function (status) {
@@ -502,8 +503,8 @@
                 vm.readyStatus.access = true;
 
                 // BASE_API_URL could not be set immediately, so refresh links after some xhr requests
-                vm.homepageUrl = redirectionService.getUrl('app.portal.home');
-                vm.performanceUrl = redirectionService.getUrl('app.portal.reports.performance-report');
+                vm.homepageUrl = redirectionService.getUrlByState('app.portal.home');
+                vm.performanceUrl = redirectionService.getUrlByState('app.portal.reports.performance-report');
 
                 $scope.$apply();
 
@@ -578,7 +579,7 @@
 
             var currentMasterUser = globalDataService.getMasterUser();
 
-            return currentMasterUser.version;
+            return currentMasterUser.versions;
         }
 
         vm.copyToBuffer = function (content) {
@@ -660,7 +661,7 @@
 
             vm.getSessionRemainingTime();
 
-            vm.currentVersion = vm.getCurrentVersion();
+            vm.versions = vm.getCurrentVersion();
 
             vm.sessionRemainingInterval = $interval(function () {
                 vm.getSessionRemainingTime();

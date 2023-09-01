@@ -136,7 +136,7 @@ export default function ($scope, $state, authorizerService, usersService, global
             console.log('PortalController.error', error);
             console.error(error);
 
-            // window.open(redirectionService.getUrl('app.profile'), '_self')
+            // window.open(redirectionService.getUrlByState('app.profile'), '_self')
 
         })
 

@@ -461,7 +461,7 @@ export default function (entityResolverService, reportHelper) {
 
     };
 
-    var recursiveRequest = function (items, level, evDataService, evEventService) {
+    var recursiveRequest = function (items, level, evDataService, evEventService, createdIdsList) {
 
         return new Promise(function RecursiveRequestPromise(resolve, reject) {
 
@@ -470,7 +470,7 @@ export default function (entityResolverService, reportHelper) {
 
             items.forEach(function (item) {
 
-                requestParameters = createRequestParameters(item, level, evDataService, evEventService);
+                requestParameters = createRequestParameters(item, level, evDataService, evEventService, createdIdsList);
                 promises.push(updateDataStructureByRequestParameters(requestParameters, evDataService, evEventService));
 
             });
@@ -496,7 +496,7 @@ export default function (entityResolverService, reportHelper) {
 
                         // console.log('item!', item.___group_name);
 
-                        recursiveRequestPromises.push(recursiveRequest(item.results, level, evDataService, evEventService));
+                        recursiveRequestPromises.push(recursiveRequest(item.results, level, evDataService, evEventService, createdIdsList));
 
                     });
 
@@ -516,14 +516,14 @@ export default function (entityResolverService, reportHelper) {
 
     };
 
-    var initRecursiveRequestParametersCreation = function (evDataService, evEventService) {
+    var initRecursiveRequestParametersCreation = function (evDataService, evEventService, createdIdsList) {
 
         console.time('Creating Data Structure');
 
         var rootGroup = evDataService.getRootGroupData();
         var level = 0;
 
-        return recursiveRequest(rootGroup.results, level, evDataService, evEventService).then(function (data) {
+        return recursiveRequest(rootGroup.results, level, evDataService, evEventService, createdIdsList).then(function (data) {
 
             console.timeEnd('Creating Data Structure');
 
@@ -538,6 +538,8 @@ export default function (entityResolverService, reportHelper) {
         evDataService.resetData();
         evDataService.resetRequestParameters();
 
+        var createdIdsList = [];
+
         var defaultRootRequestParameters = evDataService.getActiveRequestParameters();
         var groups = evDataService.getGroups();
 
@@ -545,7 +547,7 @@ export default function (entityResolverService, reportHelper) {
 
             getGroups(defaultRootRequestParameters, evDataService, evEventService).then(function () {
 
-                initRecursiveRequestParametersCreation(evDataService, evEventService).then(function () {
+                initRecursiveRequestParametersCreation(evDataService, evEventService, createdIdsList).then(function () {
 
                     evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
 

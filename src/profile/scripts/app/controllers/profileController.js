@@ -14,7 +14,7 @@ export default function ($scope, authorizerService, globalDataService, redirecti
 
 	let vm = this;
 	console.log("redirection profileController to app.profile")
-	window.open(redirectionService.getUrl('app.profile'), '_self')
+	window.open(redirectionService.getUrlByState('app.profile'), '_self')
 
 	vm.readyStatus = false;
 

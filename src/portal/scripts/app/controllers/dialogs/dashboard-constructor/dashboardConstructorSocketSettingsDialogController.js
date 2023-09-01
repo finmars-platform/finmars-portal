@@ -75,61 +75,19 @@
                 case 'finmars_widget':
                     verboseType = 'Finmars Widget';
                     break;
+                case 'apex_chart':
+                    verboseType = 'Apex Chart';
+                    break;
+                case 'iframe':
+                    verboseType = 'Iframe';
+                    break;
             }
 
             return verboseType;
 
         };
 
-        /*var calculateColspanList = function () {
 
-            var result = [vm.columnNumber];
-
-            var layout = vm.dashboardConstructorDataService.getData();
-            var tab;
-            var row;
-            var item;
-
-            if (vm.tabNumber === 'fixed_area') {
-                row = layout.data.fixed_area.layout.rows[vm.rowNumber];
-            } else {
-                tab = layout.data.tabs[vm.tabNumber];
-                row = tab.layout.rows[vm.rowNumber];
-            }
-
-            for (var c = vm.columnNumber + 1; c < row.columns.length; c = c + 1) {
-
-                item = row.columns[c];
-
-                if (item.cell_type === 'empty') {
-
-                    if (item.is_hidden) {
-
-                        if (item.hidden_by.row_number === vm.rowNumber &&
-                            item.hidden_by.column_number === vm.columnNumber) {
-
-                            result.push(item.column_number)
-
-                        } else {
-                            break;
-                        }
-
-                    } else {
-
-                        result.push(item.column_number)
-                    }
-
-                } else {
-                    break;
-                }
-
-            }
-
-            vm.colspanList = result.map(function (item, index) {
-                return index + 1
-            });
-
-        };*/
 
         var calculateColspanList = function () {
 
@@ -173,56 +131,7 @@
 
         };
 
-        /*var calculateRowspanList = function () {
 
-            var result = [vm.rowNumber];
-
-            var layout = vm.dashboardConstructorDataService.getData();
-            var tab;
-            var row;
-            var item;
-
-            if (vm.tabNumber === 'fixed_area') {
-                tab = layout.data.fixed_area;
-            } else {
-                tab = layout.data.tabs[vm.tabNumber];
-            }
-
-            for (var r = vm.rowNumber + 1; r < tab.layout.rows.length; r = r + 1) {
-
-                row = tab.layout.rows[r];
-                item = row.columns[vm.columnNumber];
-
-                if (item.cell_type === 'empty') {
-
-                    if (item.is_hidden) {
-
-                        if (item.hidden_by.row_number === vm.rowNumber &&
-                            item.hidden_by.column_number === vm.columnNumber) {
-
-                            result.push(item.row_number)
-
-                        } else {
-                            break;
-                        }
-
-                    } else {
-
-                        result.push(row.row_number)
-                    }
-
-                } else {
-                    break
-                }
-
-            }
-
-
-            vm.rowspanList = result.map(function (item, index) {
-                return index + 1
-            });
-
-        };*/
 
         var calculateRowspanList = function () {
 
@@ -294,30 +203,6 @@
             var colspan = vm.item.colspan;
             var rowspan = vm.item.rowspan;
 
-            /*for (var r = 0; r < tab.layout.rows.length; r = r + 1) {
-
-                row = tab.layout.rows[r];
-
-                for (var c = vm.columnNumber; c < row.columns.length; c = c + 1) {
-
-                    item = row.columns[c];
-
-                    if (item.is_hidden) {
-
-                        if (item.hidden_by.row_number === vm.rowNumber &&
-                            item.hidden_by.column_number === vm.columnNumber) {
-
-                            delete item.is_hidden;
-                            delete item.hidden_by;
-
-                        }
-
-
-                    }
-
-                }
-
-            }*/
 
             for (var r = vm.rowNumber; r < vm.rowNumber + rowspan; r++) {
 
@@ -450,6 +335,14 @@
                     contrName = 'DashboardConstructorFinmarsWidgetComponentDialogController as vm';
                     templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-finmars-widget-component-dialog-view.html';
                     break;
+                case 'apex_chart':
+                    contrName = 'DashboardConstructorApexChartComponentDialogController as vm';
+                    templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-apex-chart-component-dialog-view.html';
+                    break;
+                case 'iframe':
+                    contrName = 'DashboardConstructorIframeComponentDialogController as vm';
+                    templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-iframe-component-dialog-view.html';
+                    break;
             }
 
             if (contrName && templateUrl) {
@@ -474,10 +367,6 @@
             }
 
         };
-
-        /*vm.cancel = function () {
-            $mdDialog.hide({status: 'disagree'});
-        };*/
 
         var init = function () {
             calculateColspanList();

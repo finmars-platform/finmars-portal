@@ -6,7 +6,7 @@ export default function () {
 
 	const PROJECT_ENV = '__PROJECT_ENV__';
 
-	function getUrl (stateName) {
+	function getUrlByState (stateName) {
 
 		let urlBeginning = baseUrlService.resolve();
 		const base_api_url = baseUrlService.getMasterUserPrefix();
@@ -35,7 +35,21 @@ export default function () {
 
 	}
 
+	function getUrl (path) {
+
+		let urlBeginning = baseUrlService.resolve();
+		const base_api_url = baseUrlService.getMasterUserPrefix();
+
+		if (base_api_url) urlBeginning += '/' + base_api_url;
+
+		urlBeginning = urlBeginning + '/v';
+
+		return urlBeginning + path;
+
+	}
+
 	return {
-		getUrl: getUrl
+		getUrlByState: getUrlByState,
+		getUrl: getUrl,
 	}
 };
