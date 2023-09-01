@@ -166,56 +166,32 @@
 
             var date = new Date().toISOString().slice(0, 10); // yyyy-mm-dd
 
-            vm.getReportLayoutsFromDashboardLayout(vm.layout).then(function (data) {
+            var text = JSON.stringify(vm.layout);
 
-                var reportLayouts = data;
+            var file = new Blob([text], {type: 'text/plain'});
 
-                console.log('reportLayouts', reportLayouts);
+            link.href = URL.createObjectURL(file);
 
-                var configuration = {
-                    "head": {
-                        "date": date
-                    },
-                    "body": [
-                        {
-                            "section_name": "configuration",
-                            "items": [
-                                {
-                                    "entity": "ui.dashboardlayout",
-                                    "content": [
-                                        vm.layout
-                                    ],
-                                    "count": 1
-                                },
-                                {
-                                    "entity": "ui.reportlayout",
-                                    "content": reportLayouts,
-                                    "count": reportLayouts.length
-                                }
-                            ]
-                        }
-                    ]
-                };
+            link.addEventListener('click', function () {
 
+                if (vm.filename) {
+                    link.download = vm.filename + '.json';
+                } else {
+                    link.download = 'layout.json';
+                }
 
-                var text = JSON.stringify(configuration);
-
-                var file = new Blob([text], {type: 'text/plain'});
-
-                link.href = URL.createObjectURL(file);
-
-                link.addEventListener('click', function () {
-
-                    if (vm.filename) {
-                        link.download = vm.filename + '.fcfg';
-                    } else {
-                        link.download = 'layout.fcfg';
-                    }
-
-                    $mdDialog.hide();
-                })
-
+                $mdDialog.hide();
             })
+
+            // vm.getReportLayoutsFromDashboardLayout(vm.layout).then(function (data) {
+            //
+            //     var reportLayouts = data;
+            //
+            //     console.log('reportLayouts', reportLayouts);
+            //
+            //
+            //
+            // })
 
 
         };

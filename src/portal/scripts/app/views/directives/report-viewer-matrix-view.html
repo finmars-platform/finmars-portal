@@ -272,10 +272,10 @@
 
                         <div data-ng-if="matrixView !== 'fixed-totals'"
                              class="report-viewer-matrix-column-header-cell report-viewer-cell-border-left text-{{styles.cell.text_align}} rvMatrixCell"
-                             title="TOTAL"
+                             title="Total"
                              data-ng-class="{'active': activeItem == 'columns_total'}"
                              data-ng-click="columnsTotalClick($event)">
-                            TOTAL
+                            Total
                         </div>
 
                         <!-- Blank cell that serves as placeholder for position absolute column with totals -->
@@ -285,10 +285,10 @@
 
                 <div data-ng-if="matrixView === 'fixed-totals'"
                      class="rv-matrix-header-total-cell text-{{styles.cell.text_align}} rvMatrixCell"
-                     title="TOTAL"
+                     title="Total"
                      data-ng-class="{'active': activeItem == 'columns_total'}"
                      data-ng-click="columnsTotalClick($event)">
-                    TOTAL
+                    Total
                 </div>
 
             </div>

@@ -80,14 +80,22 @@
         </div>
 
         <div data-ng-if="vm.fieldType['display_name'] === 'Boolean' && hideIscanceledCheckbox(getName())">
-            <md-checkbox
-                    class="checkbox-bind-field"
-                    data-ng-model="vm.model"
-                    data-ng-change="vm.itemChange()"
-                    data-ng-disabled="vm.disabled"
-                    aria-label="checkbox">
-                <label data-ng-bind="getName()"></label>
-            </md-checkbox>
+            <div class="custom-input-container">
+                <div class="custom-input-main-container">
+                    <div class="custom-input-borders">
+                        <div class="custom-input-content">
+                            <md-checkbox
+                                    class="checkbox-bind-field"
+                                    data-ng-model="vm.model"
+                                    data-ng-change="vm.itemChange()"
+                                    data-ng-disabled="vm.disabled"
+                                    aria-label="checkbox">
+                                <label data-ng-bind="getName()"></label>
+                            </md-checkbox>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div data-ng-if="vm.fieldType['display_name'] === 'Classifier'">
@@ -169,7 +177,7 @@
 
         <div data-ng-if="vm.fieldType['display_name'] === 'Button'">
             <div class="custom-input-container">
-                <md-button class="md-raised md-primary" data-ng-click="recalculate()">
+                <md-button class="outline-button" data-ng-click="recalculate()">
                     {{getName()}}
                 </md-button>
             </div>

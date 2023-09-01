@@ -5,11 +5,10 @@
 
     'use strict';
 
-    var utilsService = require('../../services/utilsService');
     const toastNotificationService = require('../../../../../core/services/toastNotificationService');
 
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, utilsService, data) {
 
         var vm = this;
 
@@ -42,6 +41,32 @@
 
         vm.init()
 
+
+        vm.applyFile = function (file) {
+
+            console.log('file, ', file);
+
+
+
+            var reader = new FileReader();
+
+            reader.readAsText(vm.file);
+
+            reader.onload = function (evt) {
+
+                console.log('evt.target', evt.target);
+
+                var fileContent = evt.target.result;
+
+                console.log('fileContent', fileContent);
+
+                vm.editor.setValue(fileContent);
+
+            }
+
+
+
+        }
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});

@@ -15,7 +15,7 @@
 
         var vm = this;
 
-		vm.profileUrl = redirectionService.getUrl('app.profile');
+		vm.profileUrl = redirectionService.getUrlByState('app.profile');
 
         vm.readyStatus = {ecosystemConfigurations: false};
 

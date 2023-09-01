@@ -257,39 +257,6 @@
                 vm.editor.focus();
                 vm.editor.navigateFileStart();
 
-                var undoManager = vm.editor.session.getUndoManager();
-
-                var path = vm.currentPath.join('__')
-
-
-                undoManager.toJSON = function () {
-                    return {
-                        $redoStack: this.$redoStack,
-                        $undoStack: this.$undoStack
-                    };
-                }
-
-                undoManager.fromJSON = function (json) {
-                    this.reset();
-                    this.$undoStack = json.$undoStack;
-                    this.$redoStack = json.$redoStack;
-                }
-
-                vm.editor.session.on('change', function () {
-                    var history = undoManager.toJSON();
-                    // console.log('vm.editor.session history', history);
-                    localStorage.setItem('ace_editor_' + path, JSON.stringify(history));
-                });
-
-                var savedHistory = localStorage.getItem('ace_editor_' + path);
-                if (savedHistory) {
-                    undoManager.fromJSON(JSON.parse(savedHistory));
-
-                    // console.log('undoManager.$undoStack', undoManager.$undoStack)
-                    // console.log('undoManager.$redoStack', undoManager.$redoStack)
-                }
-
-
             }, 100)
 
         }

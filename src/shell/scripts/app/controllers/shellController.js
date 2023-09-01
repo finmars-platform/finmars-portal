@@ -32,9 +32,16 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
     let transitionFromState = '';
 
     $scope.initLoaderProcessing = true;
+    $scope.displayInitLoader = true;
 
     $scope.$on('initialLoadComplete', function () {
         $scope.initLoaderProcessing = false;
+
+        // Important for smooth loader dissapearing
+        setTimeout(function () {
+            $scope.displayInitLoader = false;
+            $scope.$apply();
+        }, 1000)
     });
 
     vm.showPageContent = function () {
@@ -406,8 +413,8 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
             console.error("ShellController: no base_api_url in the pathname", pathname);
         }
 
-        homepageUrl = redirectionService.getUrl('app.portal.home');
-        profileUrl = redirectionService.getUrl('app.profile');
+        homepageUrl = redirectionService.getUrlByState('app.portal.home');
+        profileUrl = redirectionService.getUrlByState('app.profile');
 
         window.keycloak = new Keycloak({
             url: window.KEYCLOAK_URL,

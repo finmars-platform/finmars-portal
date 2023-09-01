@@ -412,6 +412,7 @@
             'node_modules/@simonwep/pickr/dist/pickr.min.js',
             'node_modules/pdfjs-dist/build/pdf.min.js',
             'node_modules/pdfjs-dist/build/pdf.worker.min.js',
+            'node_modules/apexcharts/dist/apexcharts.min.js',
         ];
 
         return gulp.src(pathToMinJs)

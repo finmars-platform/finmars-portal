@@ -32,8 +32,8 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             scope.member = globalDataService.getMember();
 
-            scope.homepageUrl = redirectionService.getUrl('app.portal.home');
-            scope.profileUrl = redirectionService.getUrl('app.profile');
+            scope.homepageUrl = redirectionService.getUrlByState('app.portal.home');
+            scope.profileUrl = redirectionService.getUrlByState('app.profile');
 
             scope.alertsStatus = 'healthy'
 
@@ -288,7 +288,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                         // $state.go('app.portal.home')
                         // window.open(scope.homepageUrl, '_self');
                         // DEPRECATED, we need to go to new BASE_API_URL
-                        // window.open(redirectionService.getUrl('app.portal.home'), '_self');
+                        // window.open(redirectionService.getUrlByState('app.portal.home'), '_self');
                     }*/
 
 
@@ -319,7 +319,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                              } else {
                                  // $state.go('app.portal.home')
                                  // window.open(scope.homepageUrl, '_self');
-                                 window.open(redirectionService.getUrl('app.portal.home'), '_self');
+                                 window.open(redirectionService.getUrlByState('app.portal.home'), '_self');
                              }
 
                          } else {

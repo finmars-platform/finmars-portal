@@ -1,4 +1,4 @@
-<div ng-if="vm.readyStatus.permissions && vm.readyStatus.entity">
+<div ng-if="vm.readyStatus.entity">
 
     <draft-button user-code="vm.draftUserCode"
                   on-export-to-draft-callback="vm.exportToDraft($event)"
@@ -135,6 +135,7 @@
                 <entity-names-field label="{{vm.entityTypeSlug()}}"
                                     entity-type="{{vm.entityType}}"
                                     entity="vm.entity"
+                                    data-use-user-code-input="vm.useUserCodeInput"
                                     value-to-show="vm.nameToShow"
                                     event-service="vm.enfEventService"
                                     on-value-to-show-change="vm.onNameToShowChange()"></entity-names-field>
@@ -190,14 +191,15 @@
                              small-options="{notNull: true, dialogParent: '.dialog-containers-wrap'}"
                              class="ev-editor-field"></crud-select>
 
-                <crud-select data-ng-if="vm.entityType === 'strategy-1' || vm.entityType === 'strategy-2' || vm.entityType === 'strategy-3'"
-                             data-label="vm.groupSelectorLabel"
-                             data-item="vm.entity.subgroup"
-                             data-entity-type="vm.groupSelectorEntityType"
-                             data-options="vm.groupSelectorOptions"
-                             event-signal="vm.fixedAreaEventObj.event"
-                             small-options="{notNull: true, dialogParent: '.dialog-containers-wrap'}"
-                             class="ev-editor-field"></crud-select>
+                <crud-select
+                        data-ng-if="vm.entityType === 'strategy-1' || vm.entityType === 'strategy-2' || vm.entityType === 'strategy-3'"
+                        data-label="vm.groupSelectorLabel"
+                        data-item="vm.entity.subgroup"
+                        data-entity-type="vm.groupSelectorEntityType"
+                        data-options="vm.groupSelectorOptions"
+                        event-signal="vm.fixedAreaEventObj.event"
+                        small-options="{notNull: true, dialogParent: '.dialog-containers-wrap'}"
+                        class="ev-editor-field"></crud-select>
 
                 <!--<div data-ng-if="vm.entityType !== 'instrument' && vm.entityType !== 'account' && vm.entityType !== 'instrument-type' &&
                                  vm.entityType !== 'responsible' && vm.entityType !== 'counterparty' && vm.entityType !== 'strategy-1' && vm.entityType !== 'strategy-2' && vm.entityType !== 'strategy-3'"
@@ -536,8 +538,10 @@
 
         </md-tabs>
 
-        <div class="entity-tabs-menu entityTabsMenu"
+        <div data-ng-if="vm.entityTabs.length"
+             class="entity-tabs-menu entityTabsMenu"
              ng-class="{'active': vm.isEntityTabActive()}"
+
              custom-popup
              popup-template="{{vm.entityTabsMenuTplt}}"
              popup-data="vm.entityTabsMenuPopupData"
@@ -563,7 +567,7 @@
     </div>
 </div>
 
-<div data-ng-if="!vm.checkReadyStatus()">
+<div data-ng-if="!vm.readyStatus.entity">
     <div class="flex-row fc-space-around m-large">
         <!--<md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>-->
         <progress-circular diameter="100"></progress-circular>

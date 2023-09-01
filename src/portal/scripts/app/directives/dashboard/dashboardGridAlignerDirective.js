@@ -24,8 +24,8 @@
                 scope.cellWidth = 0;
                 scope.cellHeight = 0;
 
-                scope.tabPaddingLeft = 8;
-                scope.tabPaddingTop = 8;
+                // scope.tabPaddingLeft = 8; # probably deprecated
+                scope.tabPaddingTop = 4;
 
                 scope.calculateSingleCellWidth = function () {
 
@@ -168,7 +168,8 @@
                         domElem.style.position = 'absolute';
 
                         domElemOffsetTop = (rowNumber * scope.cellHeight + scope.tabPaddingTop - (offset * scope.cellHeight));
-                        domElemOffsetLeft = (columnNumber * scope.cellWidth + scope.tabPaddingLeft);
+                        // domElemOffsetLeft = (columnNumber * scope.cellWidth + scope.tabPaddingLeft);
+                        domElemOffsetLeft = (columnNumber * scope.cellWidth);
 
                         domElem.style.top = domElemOffsetTop + 'px';
                         domElem.style.left = domElemOffsetLeft + 'px';

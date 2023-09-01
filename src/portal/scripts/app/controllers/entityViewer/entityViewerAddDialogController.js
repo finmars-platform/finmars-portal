@@ -196,6 +196,7 @@
 		vm.entityTabsMenuPopupData = {viewModel: vm};
 		vm.entityTablePopupClasses = "border-radius-2";
 
+        vm.useUserCodeInput = vm.entityType === 'account-type';
 		vm.onNameToShowChange = vm.sharedLogic.onNameToShowChange;
 
 		vm.getFaField1Classes = vm.sharedLogic.getFaField1Classes;

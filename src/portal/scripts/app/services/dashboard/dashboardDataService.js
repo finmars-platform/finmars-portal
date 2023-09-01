@@ -1,5 +1,8 @@
 (function () {
 
+    var dashboardComponentStatuses = require('./dashboardComponentStatuses');
+
+
     module.exports = function () {
 
         var layoutData = { // basically its dashboard layout that we store on backend
@@ -8,6 +11,8 @@
                 components_types: []
             }
         };
+
+        var initializingControls = new Set(); // to keep track of controls that haven't set their value yet
 
         var projection;
 
@@ -20,7 +25,7 @@
             componentsRefreshRestriction: {},
             componentsErrors: {},
             actualRvLayouts: {}, // id of layouts stored in cache that are actual
-			componentsUIData: {}, // e.g. height, width of cell of component
+            componentsUIData: {}, // e.g. height, width of cell of component
         };
 
         function setData(data) {
@@ -57,16 +62,73 @@
             return layoutData.data.components;
         }
 
-        function setComponentOutput(componentId, data) {
+        function getAllComponentsOutputsByUserCodes() {
+            if (!layoutData.data.components) {
+                layoutData.data.components = {}
+            }
+
+            var result = {}
+
+            layoutData.data.components.forEach(function (component) {
+
+                if (component.user_code) {
+                    // result[component.user_code] = component // TODO WTF??????
+                    if (layoutData.data.components[component.id]) {
+                        if (layoutData.data.components[component.id].output) {
+
+                            result[component.user_code] = layoutData.data.components[component.id].output
+
+                        }
+                    }
+                }
+
+            })
+
+            return result;
+
+        }
+
+        function setComponentOutput(componentId, output) {
+
+            // Probably need refactor
+            if (!layoutData.data.components) {
+                layoutData.data.components = {}
+            }
+
+            if (!layoutData.data.components[componentId]) {
+                layoutData.data.components[componentId] = {};
+            }
+
+            layoutData.data.components[componentId].output = output
+
+        }
+
+        function getComponentOutput(componentId) {
+
+            // Probably need refactor
+            if (!layoutData.data.components) {
+                layoutData.data.components = {}
+            }
+
+            if (!layoutData.data.components[componentId]) {
+                layoutData.data.components[componentId] = {};
+            }
+
+            return layoutData.data.components[componentId].output
+        }
+
+        function setComponentOutputOld(componentId, data) {
 
             if (!layoutData.data.components) {
                 layoutData.data.components = {}
             }
 
+            console.log('layoutData.data.components[componentId]', layoutData.data.components[componentId]);
+
             layoutData.data.components[componentId] = data
         }
 
-        function getComponentOutput(componentId) {
+        function getComponentOutputOld(componentId) {
 
             if (!layoutData.data.components) {
                 layoutData.data.components = {}
@@ -76,22 +138,28 @@
         }
 
         function setComponentStatus(componentId, status) {
+
+            var componentData = getComponentById(componentId)
+
+            console.log("Dashboard.setComponentStatus.component " + componentData.name + " changed status: " + status)
+
             tmpData.componentsStatuses[componentId] = status
+
         }
 
         function getComponentStatus(componentId) {
             return tmpData.componentsStatuses[componentId]
         }
 
-        function setComponentError (componentId, error) {
+        function setComponentError(componentId, error) {
             tmpData.componentsErrors[componentId] = error;
         }
 
-        function getComponentError (componentId) {
+        function getComponentError(componentId) {
             return tmpData.componentsErrors[componentId];
         }
 
-        function setComponentRefreshRestriction (componentId, restrictionStatus) {
+        function setComponentRefreshRestriction(componentId, restrictionStatus) {
             tmpData.componentsRefreshRestriction[componentId] = restrictionStatus;
         }
 
@@ -105,31 +173,31 @@
             });
         }*/
 
-        function getAllComponentsRefreshRestriction () {
+        function getAllComponentsRefreshRestriction() {
             return tmpData.componentsRefreshRestriction;
         }
 
-		function setComponentUIData(componentId, uiData) {
-			tmpData.componentsUIData[componentId] = uiData;
-		}
+        function setComponentUIData(componentId, uiData) {
+            tmpData.componentsUIData[componentId] = uiData;
+        }
 
-		function getComponentUIData(componentId) {
-			return tmpData.componentsUIData[componentId];
-		}
+        function getComponentUIData(componentId) {
+            return tmpData.componentsUIData[componentId];
+        }
 
         function getComponentStatusesAll() {
             return tmpData.componentsStatuses
         }
 
-        function getComponents () {
+        function getComponents() {
             return layoutData.data.components_types;
         }
 
-        function setComponents (components) {
+        function setComponents(components) {
             layoutData.data.components_types = components;
         }
 
-        function getComponentById (componentId) {
+        function getComponentById(componentId) {
 
             for (var i = 0; i < layoutData.data.components_types.length; i++) {
                 if (layoutData.data.components_types[i].id === componentId) {
@@ -140,7 +208,7 @@
             return null;
         }
 
-        function updateComponent (componentData) {
+        function updateComponent(componentData) {
 
             for (var i = 0; i < layoutData.data.components_types.length; i++) {
                 if (layoutData.data.components_types[i].id === componentData.id) {
@@ -159,15 +227,15 @@
             return tmpData.activeTab
         }
 
-        function setListLayout (listLayout) {
+        function setListLayout(listLayout) {
             data.listLayout = listLayout;
         }
 
-        function getListLayout () {
+        function getListLayout() {
             return data.listLayout;
         }
 
-        function updateModifiedDate (modifiedDate) {
+        function updateModifiedDate(modifiedDate) {
             // updating listLayout prevents synchronization error when saving settings of component inside dashboard
             var listLayout = getListLayout();
             listLayout.modified = modifiedDate;
@@ -177,12 +245,12 @@
 
         }
 
-        function setCachedLayoutsData (contentType, userCode, id) {
+        function setCachedLayoutsData(contentType, userCode, id) {
 
             /*if (!tmpData.actualRvLayouts.includes(layoutId)) {
                 tmpData.actualRvLayouts.push(layoutId);
             }*/
-            if ( !tmpData.actualRvLayouts[contentType] ) {
+            if (!tmpData.actualRvLayouts[contentType]) {
                 tmpData.actualRvLayouts[contentType] = {};
             }
 
@@ -190,17 +258,44 @@
 
         }
 
-        function getCachedLayoutsData () {
+        function getCachedLayoutsData() {
             return tmpData.actualRvLayouts;
         }
 
-        function setLayoutToOpen (layoutToOpen) {
+        function setLayoutToOpen(layoutToOpen) {
             tmpData.layoutToOpen = layoutToOpen;
         }
 
-        function getLayoutToOpen () {
+        function getLayoutToOpen() {
             return tmpData.layoutToOpen;
         }
+
+        function registerControl(componentId) {
+
+            initializingControls.add(componentId);
+
+        }
+
+        function isControlsReady() {
+
+            console.log('initializingControls', initializingControls);
+
+            var result = true;
+
+            initializingControls.forEach(function (componentId) {
+
+                var status = getComponentStatus(componentId);
+
+                if (status !== dashboardComponentStatuses.ACTIVE) {
+                    result = false;
+                }
+
+            })
+
+
+            return result // either there is no controls, or they all have set their value
+        }
+
 
         return {
 
@@ -215,8 +310,13 @@
 
             setAllComponentsOutputs: setAllComponentsOutputs,
             getAllComponentsOutputs: getAllComponentsOutputs,
-            setComponentOutput: setComponentOutput,
+            getAllComponentsOutputsByUserCodes: getAllComponentsOutputsByUserCodes,
+
+            setComponentOutput: setComponentOutput, // szhitenev 2023-08-20
             getComponentOutput: getComponentOutput,
+
+            setComponentOutputOld: setComponentOutputOld,
+            getComponentOutputOld: getComponentOutputOld,
             setComponentStatus: setComponentStatus,
             getComponentStatus: getComponentStatus,
             setComponentError: setComponentError,
@@ -225,8 +325,8 @@
             /* getComponentRefreshRestriction: getComponentRefreshRestriction,
             setAllComponentsRefreshRestriction: setAllComponentsRefreshRestriction, */
             getAllComponentsRefreshRestriction: getAllComponentsRefreshRestriction,
-			setComponentUIData: setComponentUIData,
-			getComponentUIData: getComponentUIData,
+            setComponentUIData: setComponentUIData,
+            getComponentUIData: getComponentUIData,
             getComponents: getComponents,
             setComponents: setComponents,
             updateComponent: updateComponent,
@@ -244,6 +344,11 @@
             // REFACTOR change layout from popup
             setLayoutToOpen: setLayoutToOpen,
             getLayoutToOpen: getLayoutToOpen,
+
+
+            // 2023-08-23
+            registerControl: registerControl,
+            isControlsReady: isControlsReady
 
         }
 

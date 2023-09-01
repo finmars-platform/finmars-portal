@@ -158,7 +158,7 @@
 
         // console.timeEnd("convertToTree.firstLoop");
 
-        console.time("convertToTree.secondLoop");
+        // console.time("convertToTree.secondLoop");
 
         for (const item of rootGroup.results) {
             if (!data[item.___id]) {
@@ -169,9 +169,9 @@
             }
         }
 
-        console.timeEnd("convertToTree.secondLoop");
-
-        console.time("convertToTree.thirdLoop");
+        // console.timeEnd("convertToTree.secondLoop");
+        //
+        // console.time("convertToTree.thirdLoop");
 
         var originalKeys = Object.keys(data);
 

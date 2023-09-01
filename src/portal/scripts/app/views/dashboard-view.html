@@ -126,50 +126,6 @@
                         </ng-md-icon>
                     </md-button>
 
-                    <!--                    Deprecated -->
-                    <!--                    <md-menu class="full-width dashboard-control-menu" layout="row">-->
-                    <!--                        <md-button class="dashboard-control-button"-->
-                    <!--                                   ng-click="$mdOpenMenu($event)"-->
-                    <!--                                   type="button">-->
-                    <!--                            <ng-md-icon icon="list"-->
-                    <!--                                        size="20"-->
-                    <!--                                        style="fill: #777777">-->
-                    <!--                                <md-tooltip class="tooltip_1" md-direction="bottom">Layouts</md-tooltip>-->
-                    <!--                            </ng-md-icon>-->
-
-                    <!--                        </md-button>-->
-
-                    <!--                        <md-menu-content width="4">-->
-                    <!--                            <md-menu-item>-->
-                    <!--                                <md-button ng-click="vm.openLayoutList($event)" class="g-settings-option-btn">-->
-                    <!--                                    <span>Open Layout Manager</span>-->
-                    <!--                                </md-button>-->
-                    <!--                            </md-menu-item>-->
-                    <!--                            <md-menu-item>-->
-                    <!--                                <md-button ng-click="vm.saveDashboardLayout($event)" class="g-settings-option-btn" data-ng-class="{'disabled-btn': vm.layout.sourced_from_global_layout && !vm.layout.origin_for_global_layout}">-->
-                    <!--                                    <span>Save Dashboard Layout</span>-->
-                    <!--                                </md-button>-->
-                    <!--                            </md-menu-item>-->
-                    <!--                            <md-menu-item>-->
-                    <!--                                <md-button ng-click="vm.makeCopyDashboardLayout($event)" class="g-settings-option-btn">-->
-                    <!--                                    <span>Duplicate Layout</span>-->
-                    <!--                                </md-button>-->
-                    <!--                            </md-menu-item>-->
-                    <!--                            <md-menu-item>-->
-                    <!--                                <md-button data-ui-sref="app.portal.dashboard-constructor({id: vm.layout.id})"-->
-                    <!--                                           class="g-settings-option-btn">-->
-                    <!--                                    <span>Edit Layout</span>-->
-                    <!--                                </md-button>-->
-                    <!--                            </md-menu-item>-->
-                    <!--                            <md-menu-item>-->
-                    <!--                                <md-button data-ng-click="vm.exportDashboardLayout($event)"-->
-                    <!--                                           class="g-settings-option-btn">-->
-                    <!--                                    <span>Export Layout</span>-->
-                    <!--                                </md-button>-->
-                    <!--                            </md-menu-item>-->
-                    <!--                        </md-menu-content>-->
-                    <!--                    </md-menu>-->
-
                 </div>
             </div>
 
@@ -198,7 +154,7 @@
 
                             <div data-ng-if="item.cell_type == 'component'" class="height-100">
 
-                                <div data-ng-if="item.data.type == 'control'">
+                                <div data-ng-if="item.data.type == 'control'" class="height-100">
                                     <dashboard-control
                                             tab-number="'fixed_area'"
                                             row-number="row.row_number"
@@ -209,7 +165,7 @@
                                     ></dashboard-control>
                                 </div>
 
-                                <div data-ng-if="item.data.type == 'button_set'">
+                                <div data-ng-if="item.data.type == 'button_set'" class="height-100">
                                     <dashboard-button-set
                                             tab-number="'fixed_area'"
                                             row-number="row.row_number"
@@ -243,20 +199,6 @@
                                             fill-in-mode-data="vm.componentFillInModeData"
                                     ></dashboard-report-viewer>
                                 </div>
-
-                                <!--<div data-ng-if="item.data.type === 'report_viewer_split_panel'"
-                                     class="height-100">
-                                    <dashboard-report-viewer-split-panel
-                                            class="height-100 display-block"
-                                            tab-number="'fixed_area'"
-                                            row-number="row.row_number"
-                                            column-number="item.column_number"
-                                            item="item"
-                                            dashboard-data-service="vm.dashboardDataService"
-                                            dashboard-event-service="vm.dashboardEventService"
-                                            fill-in-mode-data="vm.componentFillInModeData"
-                                    ></dashboard-report-viewer-split-panel>
-                                </div>-->
 
                                 <div data-ng-if="item.data.type == 'report_viewer_grand_total'"
                                      class="height-100">
@@ -334,6 +276,34 @@
                                             dashboard-data-service="vm.dashboardDataService"
                                             dashboard-event-service="vm.dashboardEventService"
                                     ></dashboard-entity-viewer-split-panel>
+                                </div>
+
+                                <div data-ng-if="item.data.type === 'apex_chart'"
+                                     class="height-100">
+                                    <dashboard-apex-chart
+                                            class="height-100 display-block"
+                                            tab-number="'fixed_area'"
+                                            row-number="row.row_number"
+                                            column-number="item.column_number"
+                                            item="item"
+                                            dashboard-data-service="vm.dashboardDataService"
+                                            dashboard-event-service="vm.dashboardEventService"
+                                            fill-in-mode-data="vm.componentFillInModeData"
+                                    ></dashboard-apex-chart>
+                                </div>
+
+                                <div data-ng-if="item.data.type === 'iframe'"
+                                     class="height-100">
+                                    <dashboard-iframe
+                                            class="height-100 display-block"
+                                            tab-number="'fixed_area'"
+                                            row-number="row.row_number"
+                                            column-number="item.column_number"
+                                            item="item"
+                                            dashboard-data-service="vm.dashboardDataService"
+                                            dashboard-event-service="vm.dashboardEventService"
+                                            fill-in-mode-data="vm.componentFillInModeData"
+                                    ></dashboard-iframe>
                                 </div>
 
                             </div>
@@ -487,6 +457,34 @@
                                                         dashboard-event-service="vm.dashboardEventService"
                                                         fill-in-mode-data="vm.componentFillInModeData"
                                                 ></dashboard-report-viewer-charts>
+                                            </div>
+
+                                            <div data-ng-if="item.data.type === 'apex_chart'"
+                                                 class="height-100">
+                                                <dashboard-apex-chart
+                                                        class="height-100 display-block"
+                                                        tab-number="tab.tab_number"
+                                                        row-number="row.row_number"
+                                                        column-number="item.column_number"
+                                                        item="item"
+                                                        dashboard-data-service="vm.dashboardDataService"
+                                                        dashboard-event-service="vm.dashboardEventService"
+                                                        fill-in-mode-data="vm.componentFillInModeData"
+                                                ></dashboard-apex-chart>
+                                            </div>
+
+                                            <div data-ng-if="item.data.type === 'iframe'"
+                                                 class="height-100">
+                                                <dashboard-iframe
+                                                        class="height-100 display-block"
+                                                        tab-number="tab.tab_number"
+                                                        row-number="row.row_number"
+                                                        column-number="item.column_number"
+                                                        item="item"
+                                                        dashboard-data-service="vm.dashboardDataService"
+                                                        dashboard-event-service="vm.dashboardEventService"
+                                                        fill-in-mode-data="vm.componentFillInModeData"
+                                                ></dashboard-iframe>
                                             </div>
 
                                             <div data-ng-if="item.data.type == 'report_viewer_table_chart'"
