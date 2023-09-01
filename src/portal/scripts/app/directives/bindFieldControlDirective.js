@@ -13,6 +13,8 @@
 
 	var evHelperService = require('../services/entityViewerHelperService');
 
+    var utilsHelper = require('../helpers/utils.helper');
+
     module.exports = function () {
         return {
             restrict: "E",
@@ -145,15 +147,15 @@
 
 				vm.setValueInsideEntity = function () {
 
-					if (vm.fieldType.type === 'dynamicAttribute') {
+                    if (vm.fieldType.type === 'dynamicAttribute') {
 						$scope.entity.attributes = evHelperService.setDynamicAttrValueByUserCode(vm.fieldKey, $scope.entity.attributes, vm.model);
 
 					} else if (vm.entityType === 'complex-transaction' && vm.fieldType.type === 'userInput') { //
 						$scope.entity.values[vm.fieldKey] = vm.model;
 
 					} else {
-						$scope.entity[vm.fieldKey] = vm.model;
-					}
+                        $scope.entity[vm.fieldKey] = vm.model;
+                    }
 
 					return $scope.entity;
 
@@ -885,10 +887,21 @@
 
                 };
 
+                vm.itemChangeDeb = utilsHelper.debounce(function () {
+                    vm.itemChange();
+                }, 500);
+
+                /**
+                 * Assigns value inside entity.
+                 * Called on value change inside input.
+                 * Used inside template, entityViewerFieldResolverDirective
+                 */
                 vm.itemChange = function () {
 
 					$scope.entity = vm.setValueInsideEntity(vm.model);
-					vm.evEditorEventService.dispatchEvent(evEditorEvents.ENTITY_UPDATED); // update copies of field inside other tabs (e.g. maturity date)
+
+                    // update copies of field inside other tabs (e.g. maturity date)
+                    vm.evEditorEventService.dispatchEvent(evEditorEvents.ENTITY_UPDATED);
 
                     if ($scope.entityChange) {
 						$scope.entityChange({fieldKey: vm.fieldKey, fieldType: vm.fieldType.type});
