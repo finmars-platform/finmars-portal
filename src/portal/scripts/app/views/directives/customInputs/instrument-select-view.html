@@ -1,5 +1,5 @@
 <div class="custom-input-container instrument-input-container instrumentSelectInputContainer"
-         data-ng-class="getInputContainerClasses()">
+     data-ng-class="getInputContainerClasses()">
 
     <div data-ng-if="label" class="custom-input-top-row">
         <span class="custom-input-textarea-span-pan">{{label}}</span>
@@ -25,14 +25,14 @@
                     </div>
 
                     <input
-                        type="text"
-                        placeholder="{{label}}"
-                        data-ng-model="inputText"
-                        data-ng-model-options="{debounce: 1000}"
-                        data-ng-change="onInputTextChange()"
-                        data-ng-disabled="isDisabled"
-                        data-ng-keypress="selectFirst($event)"
-                        class="custom-input instrument-input instrumentSelectInputElem"
+                            type="text"
+                            placeholder="{{label}}"
+                            data-ng-model="inputText"
+                            data-ng-model-options="{debounce: 1000}"
+                            data-ng-change="onInputTextChange()"
+                            data-ng-disabled="isDisabled"
+                            data-ng-keypress="selectFirst($event)"
+                            class="custom-input instrument-input instrumentSelectInputElem"
                     />
 
                 </div>
@@ -41,8 +41,9 @@
 
                     <div class="custom-input-custom-btns-holder">
                         <div data-ng-if="customButtons && customButtons.length" class="height-100 flex-row">
-                            <button data-ng-repeat="button in customButtons" class="{{button.classes}} custom-input-custom-btn"
-                                            data-ng-click="callFnForCustomBtn(button.action)">
+                            <button data-ng-repeat="button in customButtons"
+                                    class="{{button.classes}} custom-input-custom-btn"
+                                    data-ng-click="callFnForCustomBtn(button.action)">
                                 {{button.caption}}
                                 <ng-md-icon data-ng-if="button.iconObj.type === 'angularjs-material'"
                                             size="24"
@@ -53,8 +54,8 @@
                                       class="material-icons ci-icon-color">{{button.iconObj.icon}}</span>
 
                                 <md-tooltip data-ng-if="button.tooltip"
-                                                        class="tooltip_1"
-                                                        md-direction="top">{{button.tooltip}}
+                                            class="tooltip_1"
+                                            md-direction="top">{{button.tooltip}}
                                 </md-tooltip>
                             </button>
                         </div>
@@ -77,13 +78,14 @@
     </div>
 
     <div ng-if="dropdownMenuShown"
-         class="custom-input-sel-menu-container custom-input-dropdown-div selectMenuContainer" >
+         class="custom-input-sel-menu-container custom-input-dropdown-div selectMenuContainer">
 
-        <div class="custom-input-sel-menu-block" >
+        <div class="custom-input-sel-menu-block">
 
             <div data-ng-if="!processing && !loadingEntity" style="height: 369px; overflow-y: auto">
 
-                <b data-ng-if="localInstruments.length" class="instrument-select-options-group-title">Local Instruments ({{localInstrumentsTotal}})</b>
+                <b data-ng-if="localInstruments.length" class="instrument-select-options-group-title">Local Instruments
+                    ({{localInstrumentsTotal}})</b>
 
                 <div data-ng-if="localInstruments.length">
 
@@ -98,7 +100,8 @@
                         <div class="instrument-select-instrument-name" data-ng-bind-html="getHighlighted(option.name)">
 
                         </div>
-                        <div class="instrument-select-instrument-isin" data-ng-bind-html="getHighlighted(option.user_code)">
+                        <div class="instrument-select-instrument-isin"
+                             data-ng-bind-html="getHighlighted(option.user_code)">
 
                         </div>
 
@@ -111,7 +114,8 @@
                 </div>
 
 
-                <b data-ng-if="databaseInstruments.length" style=" bottom: 0px;" class="instrument-select-options-group-title">Global Instruments ({{databaseInstrumentsTotal}})</b>
+                <b data-ng-if="databaseInstruments.length" style=" bottom: 0px;"
+                   class="instrument-select-options-group-title">Global Instruments ({{databaseInstrumentsTotal}})</b>
 
 
                 <div data-ng-if="databaseInstruments.length">
@@ -121,13 +125,14 @@
                             data-ng-click="selectDatabaseInstrument(option)"
                             class="instrument-select-input-sel-option"
                             ng-mouseover="setHoverInstrument(option)"
-                            >
+                    >
 
 
                         <div class="instrument-select-instrument-name" data-ng-bind-html="getHighlighted(option.name)">
 
                         </div>
-                        <div class="instrument-select-instrument-isin" data-ng-bind-html="getHighlighted(option.reference)">
+                        <div class="instrument-select-instrument-isin"
+                             data-ng-bind-html="getHighlighted(option.reference)">
 
                         </div>
 
@@ -144,16 +149,17 @@
                 </div>
 
 
-
             </div>
 
-            <div data-ng-if="processing || loadingEntity"  layout="row" layout-sm="column" layout-align="space-around" class="p-8">
+            <div data-ng-if="processing || loadingEntity" style="height: 369px;" layout="row" layout-sm="column"
+                 layout-align="center center">
                 <progress-circular diameter="50"></progress-circular>
             </div>
 
         </div>
 
-        <div class="instrument-select-option-detail-box" data-ng-if="inputText.length > 2">
+        <div class="instrument-select-option-detail-box"
+             data-ng-class="{'locate-left': locateDetailsLeft}">
 
             <div data-ng-if="hoverInstrument">
 

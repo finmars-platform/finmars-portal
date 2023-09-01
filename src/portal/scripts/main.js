@@ -76,14 +76,8 @@ import {Angular as AngularIntegration} from "@sentry/integrations";
 // noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
 
-    Sentry.init({
-        dsn: "https://c2822efa4c0c45ceb21c50a361bf05b2@sentry.finmars.com/5",
-        integrations: [new AngularIntegration()],
-    });
+    let modules = [
 
-
-    let portal = angular.module('finmars.portal', [
-        'ngSentry',
         'ngAria',
         'ngMaterial',
         'ngMessages',
@@ -99,10 +93,21 @@ export default (function () {
 
         angularDragula(angular), // Drag in Drop in Entity Viewer / Report Viewer/ View Constructor/ Form Editor
 
-
         /*'forum',
         'profile'*/
-    ]);
+    ]
+
+    if (window.location.href.indexOf('space00000') === -1) {
+
+        Sentry.init({
+            dsn: "https://c2822efa4c0c45ceb21c50a361bf05b2@sentry.finmars.com/5",
+            integrations: [new AngularIntegration()],
+        });
+
+        modules.push('ngSentry')
+    }
+
+    let portal = angular.module('finmars.portal', modules);
 
 
     portal.config(['$stateProvider', require('./app/router.js')]);
@@ -205,6 +210,8 @@ export default (function () {
     portal.controller('DashboardConstructorReportViewerGrandTotalComponentDialogController', ['$scope', '$mdDialog', 'uiService', 'dashboardConstructorMethodsService', 'dashboardHelper', 'item', 'dataService', 'eventService', 'attributeDataService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerGrandTotalComponentDialogController')]);
     portal.controller('DashboardConstructorReportViewerMatrixComponentDialogController', ['$scope', '$mdDialog', 'uiService', 'dashboardConstructorMethodsService', 'dashboardHelper', 'item', 'dataService', 'eventService', 'attributeDataService', 'multitypeFieldService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerMatrixComponentDialogController')]);
     portal.controller('DashboardConstructorReportViewerTableChartComponentDialogController', ['$scope', '$mdDialog', 'uiService', 'dashboardConstructorMethodsService', 'dashboardHelper', 'item', 'dataService', 'eventService', 'attributeDataService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerTableChartComponentDialogController')]);
+    portal.controller('DashboardConstructorApexChartComponentDialogController', ['$scope', '$mdDialog', 'uiService', 'dashboardConstructorMethodsService', 'dashboardHelper', 'item', 'dataService', 'eventService', 'attributeDataService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorApexChartComponentDialogController')]);
+    portal.controller('DashboardConstructorIframeComponentDialogController', ['$scope', '$mdDialog', 'uiService', 'dashboardConstructorMethodsService', 'dashboardHelper', 'item', 'dataService', 'eventService', 'attributeDataService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorIframeComponentDialogController')]);
     portal.controller('DashboardConstructorReportViewerChartsComponentDialogController', ['$scope', '$mdDialog', 'uiService', 'dashboardConstructorMethodsService', 'dashboardHelper', 'item', 'dataService', 'eventService', 'attributeDataService', 'multitypeFieldService', 'data', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorReportViewerChartsComponentDialogController')]);
 
     portal.controller('DashboardConstructorEntityViewerComponentDialogController', ['$scope', '$mdDialog', 'item', 'dataService', 'eventService', require('./app/controllers/dialogs/dashboard-constructor/dashboardConstructorEntityViewerComponentDialogController')]);
@@ -234,6 +241,8 @@ export default (function () {
     portal.directive('dashboardReportViewerMatrix', ['$mdDialog', 'uiService', 'dashboardHelper', 'metaContentTypesService', require('./app/directives/dashboard/dashboardReportViewerMatrixDirective')]);
     portal.directive('dashboardReportViewerTableChart', ['$mdDialog', 'uiService', 'dashboardHelper', require('./app/directives/dashboard/dashboardReportViewerTableChartDirective')]);
     portal.directive('dashboardReportViewerCharts', ['$mdDialog', 'dashboardHelper', require('./app/directives/dashboard/dashboardReportViewerChartsDirective')]);
+    portal.directive('dashboardApexChart', ['$mdDialog', 'dashboardHelper', 'entityResolverService', require('./app/directives/dashboard/dashboardApexChartDirective')]);
+    portal.directive('dashboardIframe', ['$mdDialog', 'dashboardHelper', 'globalDataService', require('./app/directives/dashboard/dashboardIframeDirective')]);
     portal.directive('dashboardSupersetDashboard', ['$mdDialog', '$state', require('./app/directives/dashboard/dashboardSupersetDashboardDirective')]);
     portal.directive('dashboardFinmarsWidget', ['$mdDialog', '$state', 'globalDataService', require('./app/directives/dashboard/dashboardFinmarsWidgetDirective')]);
 
@@ -314,7 +323,7 @@ export default (function () {
     portal.controller('ContextMenuOptionSettingsDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/contextMenuOptionSettingsDialogController')]);
     portal.directive('contextMenuConstructorOption', [require('./app/directives/contextMenuConstructorOptionDirective')]);
 
-    portal.controller('UniversalInputDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/universalInputDialogController')]);
+    portal.controller('UniversalInputDialogController', ['$scope', '$mdDialog', 'utilsService', 'data', require('./app/controllers/dialogs/universalInputDialogController')]);
     portal.controller('BulkJsonViewDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/bulkJsonViewDialogController')]);
 
     portal.controller('InstrumentSelectDatabaseDialogController', ['$scope', '$mdDialog', 'toastNotificationService', 'instrumentService', 'data', require('./app/controllers/dialogs/instrumentSelectDatabaseDialogController')]);
@@ -687,6 +696,7 @@ export default (function () {
     portal.directive('initialLoader', [require('./app/directives/initialLoaderDirective')]);
     portal.directive('progressCircular', ['$interval', require('./app/directives/progressCircularDirective')]);
     portal.directive('progressLinear', [require('./app/directives/progressLinearDirective')]);
+    portal.directive('userProfile', ['globalDataService', require('./app/directives/userProfileDirective')]);
 
     // Pages
 
@@ -915,6 +925,7 @@ export default (function () {
     portal.directive('crudSelect', ['$mdDialog', require('./app/directives/crudSelect')]);
     portal.directive('finmarsPlaybook', ['$mdDialog', require('./app/directives/finmarsPlaybookDirective')]);
     portal.directive('pythonEditor', ['$mdDialog', require('./app/directives/pythonEditorDirective')]);
+    portal.directive('javascriptEditor', ['$mdDialog', require('./app/directives/javascriptEditorDirective')]);
     portal.directive('jsonEditor', ['$mdDialog', require('./app/directives/jsonEditorDirective')]);
     portal.directive('taskCard', ['$mdDialog', 'systemMessageService', require('./app/directives/taskCardDirective')]);
     portal.directive('usercodeInput', ['configurationService', 'globalDataService', require('./app/directives/usercodeInputDirective')]);

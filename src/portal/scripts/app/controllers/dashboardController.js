@@ -2,9 +2,6 @@
  * Created by szhitenev on 05.05.2016.
  */
 
-// import {embedDashboard} from '../../../../core/superset/index'
-// import supersetService from "../services/supersetService";
-
 (function () {
 
     'use strict';
@@ -40,6 +37,181 @@
         }
 
         vm.processing = false;
+
+        // ======================================
+        //  LAYOUT SECTION START
+        // =====================================
+
+        vm.getLayout = function (layoutId) {
+
+            vm.readyStatus.data = false;
+
+            uiService.getDashboardLayoutByKey(layoutId).then(function (data) {
+
+                vm.dashboardDataService = new DashboardDataService();
+                vm.dashboardEventService = new DashboardEventService();
+
+                vm.popupData = {
+                    dashboardDataService: vm.dashboardDataService,
+                    dashboardEventService: vm.dashboardEventService
+                }
+
+                vm.layout = data;
+
+                console.log('vm.layout', vm.layout);
+                console.log('vm.popupData', vm.popupData);
+
+
+                vm.initEventListeners();
+
+                vm.dashboardDataService.setData(vm.layout);
+                vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(data)));
+
+                vm.readyStatus.data = true;
+
+                vm.projection = vm.generateProjection(vm.layout);
+
+                if (vm.projection && vm.projection.length) {
+                    vm.projection[0].active = true
+                }
+
+                vm.dashboardDataService.setProjection(vm.projection);
+
+
+                vm.initDashboardComponents();
+
+                $scope.$apply();
+
+            })
+
+        };
+
+        vm.getDefaultLayout = function () {
+
+            vm.readyStatus.data = false;
+
+            uiService.getDefaultDashboardLayout().then(function (data) {
+
+                if (data.results.length) {
+                    vm.layout = data.results[0];
+                }
+
+                if (vm.layout) {
+
+                    vm.generateTabsProjection();
+
+                    vm.dashboardDataService.setData(vm.layout);
+                    vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
+
+                    vm.readyStatus.data = true;
+
+                    vm.initDashboardComponents();
+
+                    $scope.$apply();
+
+                } else {
+
+                    vm.readyStatus.data = true;
+                    $scope.$apply();
+
+                }
+
+            })
+
+        };
+
+        vm.openDashboardLayout = function () {
+
+            vm.readyStatus.data = false;
+            var activeLayoutUserCode = $stateParams.layoutUserCode;
+
+            console.log('activeLayoutUserCode', activeLayoutUserCode);
+
+            if (activeLayoutUserCode) {
+
+                uiService.getDashboardLayoutList().then(function (data) {
+
+                    if (data.results.length) {
+                        var layouts = data.results;
+
+                        for (var i = 0; i < layouts.length; i++) {
+                            if (layouts[i].user_code === activeLayoutUserCode) {
+                                vm.layout = layouts[i];
+                                break;
+                            }
+                        }
+                    }
+
+                    console.log('vm.layout', vm.layout);
+
+                    vm.dashboardDataService.setData(vm.layout);
+                    vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
+
+                    vm.generateTabsProjection();
+
+                    vm.readyStatus.data = true;
+
+                    vm.initDashboardComponents();
+
+                    $scope.$apply();
+
+                }).catch(function (error) {
+                    vm.getDefaultLayout();
+                });
+
+            } else {
+
+                vm.getDefaultLayout();
+
+            }
+
+        };
+
+        vm.openLayoutList = function ($event) {
+
+            $mdDialog.show({
+                controller: 'DashboardLayoutListDialogController as vm',
+                templateUrl: 'views/dialogs/dashboard/layout-list-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                preserveScope: false,
+                locals: {
+                    data: {
+                        dashboardDataService: vm.dashboardDataService,
+                        dashboardEventService: vm.dashboardEventService
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === 'agree') {
+
+                    vm.getLayout(res.data.layout.id)
+
+                }
+
+            })
+
+        };
+
+        vm.saveDashboardLayout = function ($event) {
+
+            uiService.updateDashboardLayout(vm.layout.id, vm.layout).then(function (data) {
+
+                vm.layout = data;
+
+                vm.dashboardDataService.setListLayout(JSON.parse(JSON.stringify(data)));
+
+                toastNotificationService.success("Dashboard Layout is Saved")
+
+                $scope.$apply();
+
+            });
+
+        };
+
+        // ======================================
+        //  LAYOUT SECTION END
+        // =====================================
 
         vm.generateProjection = function (layout) {
 
@@ -153,226 +325,19 @@
 
         }
 
-        vm.getLayout = function (layoutId) {
-
-            vm.readyStatus.data = false;
-
-            uiService.getDashboardLayoutByKey(layoutId).then(function (data) {
-
-                vm.dashboardDataService = new DashboardDataService();
-                vm.dashboardEventService = new DashboardEventService();
-
-                vm.popupData = {
-                    dashboardDataService: vm.dashboardDataService,
-                    dashboardEventService: vm.dashboardEventService
-                }
-
-                vm.layout = data;
-
-                console.log('vm.layout', vm.layout);
-                console.log('vm.popupData', vm.popupData);
-
-
-                vm.initEventListeners();
-
-                vm.dashboardDataService.setData(vm.layout);
-                vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(data)));
-
-                vm.readyStatus.data = true;
-
-                vm.projection = vm.generateProjection(vm.layout);
-
-                if (vm.projection && vm.projection.length) {
-                    vm.projection[0].active = true
-                }
-
-                vm.dashboardDataService.setProjection(vm.projection);
-
-
-                vm.initDashboardComponents();
-
-                $scope.$apply();
-
-            })
-
-        };
-
-        const generateTabsProjection = function () {
+        vm.generateTabsProjection = function () {
 
             vm.projection = vm.generateProjection(vm.layout);
 
             if (vm.projection && vm.projection.length) {
                 vm.projection[0].active = true;
-                vm.dashboardDataService.setActiveTab( vm.projection[0] );
+                vm.dashboardDataService.setActiveTab(vm.projection[0]);
 
             }
 
             vm.dashboardDataService.setProjection(vm.projection);
 
         }
-
-        vm.getDefaultLayout = function () {
-
-            vm.readyStatus.data = false;
-
-            uiService.getDefaultDashboardLayout().then(function (data) {
-
-                if (data.results.length) {
-                    vm.layout = data.results[0];
-                }
-
-                if (vm.layout) {
-
-                    generateTabsProjection();
-
-                    vm.dashboardDataService.setData(vm.layout);
-                    vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
-
-                    vm.readyStatus.data = true;
-
-                    vm.initDashboardComponents();
-
-                    $scope.$apply();
-
-                } else {
-
-                    vm.readyStatus.data = true;
-                    $scope.$apply();
-
-                }
-
-            })
-
-        };
-
-        vm.openDashboardLayout = function () {
-
-            vm.readyStatus.data = false;
-            var activeLayoutUserCode = $stateParams.layoutUserCode;
-
-            console.log('activeLayoutUserCode', activeLayoutUserCode);
-
-            if (activeLayoutUserCode) {
-
-                uiService.getDashboardLayoutList().then(function (data) {
-
-                    if (data.results.length) {
-                        var layouts = data.results;
-
-                        for (var i = 0; i < layouts.length; i++) {
-                            if (layouts[i].user_code === activeLayoutUserCode) {
-                                vm.layout = layouts[i];
-                                break;
-                            }
-                        }
-                    }
-
-                    console.log('vm.layout', vm.layout);
-
-                    vm.dashboardDataService.setData(vm.layout);
-                    vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
-
-                    generateTabsProjection();
-
-                    vm.readyStatus.data = true;
-
-                    vm.initDashboardComponents();
-
-                    $scope.$apply();
-
-                }).catch(function (error) {
-                    vm.getDefaultLayout();
-                });
-
-            } else {
-
-                vm.getDefaultLayout();
-
-            }
-
-        };
-
-        // Deprecated
-        vm.openLayoutList = function ($event) {
-
-            $mdDialog.show({
-                controller: 'DashboardLayoutListDialogController as vm',
-                templateUrl: 'views/dialogs/dashboard/layout-list-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                preserveScope: false,
-                locals: {
-                    data: {
-                        dashboardDataService: vm.dashboardDataService,
-                        dashboardEventService: vm.dashboardEventService
-                    }
-                }
-            }).then(function (res) {
-
-                if (res.status === 'agree') {
-
-                    vm.getLayout(res.data.layout.id)
-
-                }
-
-            })
-
-        };
-
-        vm.saveDashboardLayout = function ($event) {
-
-            uiService.updateDashboardLayout(vm.layout.id, vm.layout).then(function (data) {
-
-                vm.layout = data;
-
-                vm.dashboardDataService.setListLayout(JSON.parse(JSON.stringify(data)));
-
-                toastNotificationService.success("Dashboard Layout is Saved")
-
-                $scope.$apply();
-
-            });
-
-        };
-
-        // Deprecated
-        vm.makeCopyDashboardLayout = function ($event) {
-
-            var layout = JSON.parse(JSON.stringify(vm.layout))
-
-            layout.name = layout.name + '_copy';
-            layout.user_code = layout.user_code + '_copy';
-
-            layout.is_default = false;
-            layout.origin_for_global_layout = null;
-            layout.sourced_from_global_layout = null;
-
-            uiService.createDashboardLayout(layout).then(function (data) {
-
-                vm.layout = data;
-
-                toastNotificationService.success("Dashboard Layout is Duplicated")
-
-                $scope.$apply();
-
-            });
-
-        }
-
-        // Deprecated
-        vm.exportDashboardLayout = function ($event) {
-
-            $mdDialog.show({
-                controller: 'DashboardLayoutExportDialogController as vm',
-                templateUrl: 'views/dialogs/dashboard/dashboard-layout-export-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                locals: {
-                    data: {layout: vm.layout}
-                }
-            })
-
-        };
 
         vm.clearActiveTabUfaFilters = function () {
             vm.dashboardEventService.dispatchEvent(dashboardEvents.CLEAR_ACTIVE_TAB_USE_FROM_ABOVE_FILTERS);
@@ -400,7 +365,6 @@
             return processing;
 
         };
-
 
         vm.refreshActiveTab = function () {
 
@@ -458,39 +422,76 @@
             }, 0)
         };
 
-        vm.updateLayoutOnComponentChange = function (tabNumber, rowNumber, socketData) {
+        vm.initDashboardComponents = function () {
 
-            var colNumber = socketData.column_number;
+            var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
+            var componentData;
+            var componentStatus;
+            console.log('DashboardController.initDashboardComponents statusesObject', statusesObject)
 
-            if (tabNumber === 'fixed_area') {
+            vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
-                vm.layout.data.fixed_area.layout.rows[rowNumber].columns[colNumber] = socketData;
+                statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
 
-            } else {
+                // console.log('DashboardController.COMPONENT_STATUS_CHANGE statusesObject', statusesObject)
 
-                vm.layout.data.tabs[tabNumber].layout.rows[rowNumber].columns[colNumber] = socketData;
+                // First loop to init only controls
+                // Do not move this loop
+                // we need to controls be registered then resolved,
+                // in first run isControlsReady() will return true
+                Object.keys(statusesObject).forEach(function (componentId) {
 
-            }
+                    componentData = vm.dashboardDataService.getComponentById(componentId);
+                    componentStatus = vm.dashboardDataService.getComponentStatus(componentId);
+
+                    if (componentData.type === 'control' && componentStatus === dashboardComponentStatuses.INIT) {
+
+                        console.log("DashboardController.starting_control... ", componentData.name)
+
+                        vm.dashboardDataService.registerControl(componentId);
+                        vm.dashboardDataService.setComponentStatus(componentId, dashboardComponentStatuses.START)
+                        vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    }
+
+                    // console.log('componentData', componentData);
+
+                })
+
+                if (vm.dashboardDataService.isControlsReady()) {
+
+                    console.log('DashboardController.COMPONENT_STATUS_CHANGE controls is ready, initing other components', statusesObject)
+                    // Second loop to init other components
+                    Object.keys(statusesObject).forEach(function (componentId) {
+
+                        componentData = vm.dashboardDataService.getComponentById(componentId);
+                        componentStatus = vm.dashboardDataService.getComponentStatus(componentId);
+
+                        console.log("DashboardController.trying_component...", componentData.name)
+
+                        if (componentData.type !== 'control' && componentStatus === dashboardComponentStatuses.INIT) {
+
+                            console.log("DashboardController.starting_component... ", componentData.name)
+
+                            vm.dashboardDataService.setComponentStatus(componentId, dashboardComponentStatuses.START)
+                            vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                        }
+
+                    })
+                } else {
+                    console.log('DashboardController.controls are not ready statusesObject', statusesObject)
+                }
+
+                // console.log('DashboardController.COMPONENT_STATUS_CHANGE statusesObject', statusesObject)
+
+            });
 
         };
 
         vm.initEventListeners = function () {
 
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
-
-                /* var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
-
-                var processed = false;
-
-                Object.keys(statusesObject).forEach(function (componentId) {
-
-                    if (statusesObject[componentId] !== dashboardComponentStatuses.ACTIVE &&
-                        statusesObject[componentId] !== dashboardComponentStatuses.ERROR) {
-
-                        processed = true;
-                    }
-
-                }); */
 
                 var processed = componentsFinishedLoading();
 
@@ -515,120 +516,6 @@
 
         };
 
-        var componentBuildingTimeTimeout = {};
-        var onComponentBuildingForTooLong = function (compId) {
-
-            componentBuildingTimeTimeout[compId] = setTimeout(function () {
-
-                var statusesObject = metaHelper.recursiveDeepCopy(vm.dashboardDataService.getComponentStatusesAll());
-
-                if (statusesObject[compId] === dashboardComponentStatuses.PROCESSING || statusesObject[compId] === dashboardComponentStatuses.START) {
-
-                    vm.dashboardDataService.setComponentStatus(compId, dashboardComponentStatuses.ERROR);
-                    vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                    // throw "id of defective dashboard component " + compId;
-
-                }
-
-            }, 60000);
-
-        };
-
-        var areAllDependenciesCompleted = function (compId, statusesObject, waitingComponents) {
-
-            var componentData = vm.dashboardDataService.getComponentById(compId);
-
-            if (!componentData || !componentData.settings || !componentData.settings.linked_components || !componentData.settings.linked_components.report_settings) {
-                return true;
-            }
-
-            var reportSettings = componentData.settings.linked_components.report_settings;
-
-            var dependencies = Object.values(reportSettings).filter(function (id) { // prevent loop
-                const isComponentExist = vm.dashboardDataService.getComponentById(id); // is component exist
-                const isComponentUsedInDashboard = !!statusesObject[id]; // is component used in dashboard
-
-                return isComponentExist && isComponentUsedInDashboard && !waitingComponents.includes(id);
-            });
-
-            return dependencies.every(function (id) {
-                return statusesObject[id] === dashboardComponentStatuses.ACTIVE || statusesObject[id] === dashboardComponentStatuses.ERROR;
-            });
-
-        };
-
-
-        vm.initDashboardComponents = function () {
-
-            var LIMIT = 2;
-            var waitingComponents = [];
-
-            vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
-
-                var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
-                var nextComponentToStart = null;
-
-                var keys = Object.keys(statusesObject);
-                var key;
-
-                var activeProcessingComponents = 0;
-
-                for (var i = 0; i < keys.length; i = i + 1) {
-
-                    key = keys[i];
-
-                    if (statusesObject[key] === dashboardComponentStatuses.ACTIVE || statusesObject[key] === dashboardComponentStatuses.ERROR) {
-                        if (componentBuildingTimeTimeout.hasOwnProperty(key)) {
-                            clearTimeout(componentBuildingTimeTimeout[key]);
-                            delete componentBuildingTimeTimeout[key];
-                        }
-                    }
-
-                    if (statusesObject[key] === dashboardComponentStatuses.PROCESSING || statusesObject[key] === dashboardComponentStatuses.START) {
-                        activeProcessingComponents = activeProcessingComponents + 1;
-                    }
-
-                }
-
-                if (activeProcessingComponents < LIMIT) {
-
-                    for (var i = 0; i < keys.length; i = i + 1) {
-
-                        key = keys[i];
-
-                        if (statusesObject[key] === dashboardComponentStatuses.INIT) {
-
-                            if (areAllDependenciesCompleted(key, statusesObject, waitingComponents)) {
-
-                                waitingComponents = waitingComponents.filter((id) => id !== key);
-
-                                vm.dashboardDataService.setComponentStatus(key, dashboardComponentStatuses.START);
-                                vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                                onComponentBuildingForTooLong(key);
-                                break;
-
-                            } else {
-
-                                if (!waitingComponents.includes(key)) {
-
-                                    waitingComponents.push(key);
-
-                                }
-
-                            }
-
-                        }
-
-                    }
-
-                }
-
-            });
-
-
-        };
-
         vm.init = function () {
 
             vm.dashboardDataService = new DashboardDataService();
@@ -641,9 +528,6 @@
 
             vm.openDashboardLayout();
             vm.initEventListeners();
-
-
-
 
         };
 

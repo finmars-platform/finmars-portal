@@ -175,8 +175,19 @@ progress-linear {
 }
 
 
+.initial-loader-hidden {
+
+  .initial-loader {
+    opacity: 0;
+    display: block;
+  }
+
+}
 
 .initial-loader {
+  opacity: 1;
+  display: block;
+  transition: opacity 1s ease-in-out;
   background: #000;
   color: #fff;
 
@@ -185,6 +196,7 @@ progress-linear {
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: 1000;
 
   .initial-loader-content {
     position: relative;

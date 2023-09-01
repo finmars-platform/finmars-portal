@@ -96,6 +96,12 @@
                         case 'finmars_widget':
                             verboseType = 'Superset Dashboard';
                             break;
+                        case 'apex_chart':
+                            verboseType = 'Apex Chart';
+                            break;
+                        case 'iframe':
+                            verboseType = 'Iframe';
+                            break;
                     }
 
                     return verboseType;

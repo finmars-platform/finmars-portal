@@ -243,7 +243,12 @@
                         item.created_pretty = moment(new Date(item.created)).format('DD-MM-YYYY HH:mm');
                         item.created_date_pretty = moment(new Date(item.created)).format('YYYY-MM-DD');
                         item.created_time_pretty = moment(new Date(item.created)).format('HH:mm');
+
                         item.content_type_pretty = metaContentTypesService.findEntityByContentType(item.content_type)
+
+                        if (!item.content_type_pretty) {
+                            item.content_type_pretty = item.content_type;
+                        }
 
                         try {
 
@@ -262,10 +267,10 @@
 
 
                         try {
-                            item.notes_pretty = JSON.stringify(JSON.parse(item.notes), null, 4)
+                            item.diff_pretty = JSON.stringify(JSON.parse(item.diff), null, 4)
 
                         } catch (e) {
-                            item.notes_pretty = item.notes
+                            item.diff_pretty = item.diff
                         }
                         return item;
 
@@ -283,16 +288,40 @@
 
         };
 
+        vm.viewNotes = function ($event, item) {
 
-        vm.previewNotes = function ($event, item) {
+            $mdDialog.show({
+                controller: 'FilePreviewDialogController as vm',
+                templateUrl: 'views/dialogs/file-preview-dialog-view.html',
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                clickOutsideToClose: false,
+                preserveScope: true,
+                autoWrap: true,
+                skipHide: true,
+                multiple: true,
+                locals: {
+                    data: {
+                        content: item.notes,
+                        file_descriptor: {
+                            name: item.user_code + '.txt'
+                        }
+                    }
+                }
+            })
 
-            var notes = {}
+        }
+
+
+        vm.previewDiff = function ($event, item) {
+
+            var diff = {}
 
             try {
 
-                notes = JSON.parse(item.notes)
+                diff = JSON.parse(item.diff)
             } catch (e) {
-                notes = {}
+                diff = {}
             }
 
             $mdDialog.show({
@@ -307,7 +336,7 @@
                 multiple: true,
                 locals: {
                     data: {
-                        content: notes,
+                        content: diff,
                         file_descriptor: {
                             name: item.user_code + '.json'
                         }

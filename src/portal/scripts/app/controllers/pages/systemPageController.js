@@ -148,41 +148,11 @@ export default function ($scope, $mdDialog, toastNotificationService, authorizer
 
     }
 
-    vm.getVersions = function () {
-
-        var is_latest = true;
-
-        authorizerService.getVersions(is_latest).then(function (data) {
-
-            vm.versions = data.results;
-
-            vm.readyStatus.data = true;
-
-            if (vm.versions.length) {
-
-                vm.latestVersion = vm.versions[0];
-
-                vm.versions.forEach(function (version) {
-
-                    if (version.is_latest) {
-                        vm.latestVersion = version;
-                    }
-
-                })
-
-            }
-
-            $scope.$apply();
-
-        })
-
-    }
-
     vm.updateFinmars = function () {
 
         vm.processing = true;
 
-        authorizerService.updateFinmars(vm.currentMasterUser.base_api_url, vm.latestVersion.name).then(function (data) {
+        authorizerService.updateFinmars(vm.currentMasterUser.id).then(function (data) {
 
             vm.processing = false;
 
@@ -194,13 +164,28 @@ export default function ($scope, $mdDialog, toastNotificationService, authorizer
 
     }
 
+    vm.getCurrentVersion = function () {
+
+        var currentMasterUser = globalDataService.getMasterUser();
+
+        return currentMasterUser.versions;
+    }
+
     vm.init = function () {
 
         vm.getStats();
         vm.getLogs()
-        vm.getVersions();
+        // vm.getVersions();
 
         vm.currentMasterUser = globalDataService.getMasterUser();
+
+        console.log('vm.currentMasterUser', vm.currentMasterUser);
+
+        vm.versions = vm.getCurrentVersion();
+
+        vm.readyStatus.data = true;
+
+
 
         vm.getTablesSize()
         vm.getMasterUser()

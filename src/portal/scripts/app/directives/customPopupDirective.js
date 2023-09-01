@@ -15,6 +15,7 @@
 				popupData: '=',
 				popupEventService: '=', // can be used to open popup
 				noBackdrop: '@',
+				isDisabled: '=',
 
 				openOn: '@', // [ 'click', 'right_click', 'mouse_over' ] - set event listener to open popup.
 				closeOnClickOutside: '@', // Default - 'true'
@@ -374,6 +375,10 @@
 						event.preventDefault();
 					}
 
+					if (scope.isDisabled) {
+						return;
+					}
+
 					if (scope.isPopupOpen) {
 						removePopUp();
 
@@ -389,7 +394,7 @@
 
 				const onTargetElementMouseEnter = function (event) {
 
-					if (scope.isPopupOpen) {
+					if (scope.isPopupOpen || scope.isDisabled) {
 						return;
 					}
 

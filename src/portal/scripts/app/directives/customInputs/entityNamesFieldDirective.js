@@ -60,6 +60,8 @@ export default function (metaContentTypesService, globalDataService) {
 			publicName: "=",
 			valueToShow: "=",*/
 			entity: "=",
+			useUserCodeInput: "=", // boolean
+			userCodeDisabled: "=", // boolean
 			valueToShow: "=",
 			eventService: "=",
 
@@ -88,6 +90,7 @@ export default function (metaContentTypesService, globalDataService) {
 				scope.editingOn = scope.editing === 'true';
 				const reqAttrs = metaService.getRequiredEntityAttrs(scope.entityType);
 				const contentType = metaContentTypesService.findContentTypeByEntity(scope.entityType);
+				const defConfigCode = globalDataService.getDefaultConfigurationCode();
 
 				const getErrorData = function (value) {
 
@@ -182,7 +185,14 @@ export default function (metaContentTypesService, globalDataService) {
 
 								scope.entity.user_code = userCode;
 
-								if (reqAttrs.includes('user_code')) {
+								if (scope.useUserCodeInput) {
+
+									const ucParts = splitUserCode(userCode);
+									scope.entity.configuration_code = ucParts.configuration_code || defConfigCode;
+
+								}
+
+								if ( reqAttrs.includes('user_code') ) {
 									this.errorData = getErrorData(scope.entity.user_code);
 								}
 
@@ -194,7 +204,7 @@ export default function (metaContentTypesService, globalDataService) {
 							},
 
 							// configuration_code:
-							content_type: contentType,
+							isDisabled: !!scope.userCodeDisabled,
 
 							smallOptions: {notNull: reqAttrs.includes('user_code')},
 							event: {},
@@ -229,7 +239,7 @@ export default function (metaContentTypesService, globalDataService) {
 							]
 						}
 					},
-
+					get useUserCodeInput() { return scope.useUserCodeInput; },
 				}
 
 				const placeholdersForNames = {
@@ -308,11 +318,6 @@ export default function (metaContentTypesService, globalDataService) {
 
 					newValue = metaHelper.replaceCharsForUserCode(newValue);
 
-					/*scope.popupData.fields.user_code.value = {
-						configuration_code: configCode,
-						content_type: contentType,
-						user_code: `${configCode}:${contentType}:${value}`,
-					}*/
 					scope.popupData.fields.user_code.value = `${configCode}:${contentType}:${newValue}`;
 
 				};
@@ -323,8 +328,14 @@ export default function (metaContentTypesService, globalDataService) {
 					updateName('short_name', newVal, prevVal);
 
 					if (!scope.editingOn) {
-						// updateName('user_code', newVal, prevVal);
-						updateUserCode(newVal, prevVal);
+
+						if (scope.useUserCodeInput) {
+							updateUserCode(newVal, prevVal);
+
+						} else {
+							updateName('user_code', newVal, prevVal);
+						}
+
 					}
 
 					updateName('public_name', newVal, prevVal);

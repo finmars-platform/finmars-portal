@@ -25,7 +25,7 @@
 
         vm.finishingSetup = false;
 
-		const homepageUrl = redirectionService.getUrl('app.portal.home');
+		const homepageUrl = redirectionService.getUrlByState('app.portal.home');
 
         vm.finishStep1 = function () {
 
