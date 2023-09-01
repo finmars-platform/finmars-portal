@@ -158,14 +158,22 @@
 
                         clearTimeout(onChangeIndex);
 
-                        onChangeIndex = setTimeout(() => {
+                        if (scope.onChangeCallback) {
+                            setTimeout(() => {
+                                // located in separate setTimeout to run as soon as possible
+
+                                scope.$apply(); // needed for pickmeup-change
+                                scope.onChangeCallback();
+
+                            }, 0);
+                        }
+
+                        setTimeout(() => {
 
                             scope.valueIsValid = valueIsValid;
                             scope.error = error;
 
                             scope.$apply();
-
-                            if (scope.onChangeCallback) scope.onChangeCallback();
 
                         }, onChangeDelay);
 
@@ -449,6 +457,7 @@
                     inputElem.addEventListener("pickmeup-change", function (event) {
 
                         scope.dateValue = event.detail.formatted_date;
+
                         scope.$apply();
 
                         /* clearTimeout(pickmeupChangeTimeout);

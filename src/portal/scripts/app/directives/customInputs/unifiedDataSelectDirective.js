@@ -25,10 +25,11 @@
                 eventSignal: '=',
                 smallOptions: '=',
                 sorted: '=',
-                onChangeCallback: '&?',
                 itemName: '=',
                 itemObject: '=',
-                entityType: '='
+                entityType: '=',
+
+                onChangeCallback: '&?',
             },
             templateUrl: 'views/directives/customInputs/unified-data-select-view.html',
             link: function (scope, elem, attr) {
@@ -167,13 +168,17 @@
                         itemName = item.name;
                         scope.inputText = item.name;
 
-                        setTimeout(function () {
+                        if (scope.onChangeCallback) {
 
-                            if (scope.onChangeCallback) scope.onChangeCallback();
+                            setTimeout(function () {
 
-                            scope.$apply();
+                                scope.onChangeCallback();
 
-                        }, 0);
+                                scope.$apply();
+
+                            }, 0);
+
+                        }
 
                     } else {
                         scope.model = item[modelValue];
