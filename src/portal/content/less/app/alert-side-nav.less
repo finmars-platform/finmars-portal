@@ -9,9 +9,11 @@
   z-index: 51;
   transition: right .3s linear;
   box-shadow: none;
+  display: none;
 
   &.alert-sidenav-visible {
     right: 0;
+    display: block;
     box-shadow: 0 8px 17px rgba(0, 0, 0, 0.2);
   }
 
@@ -21,6 +23,7 @@
     overflow-y: auto;
     height: 100%;
     box-sizing: border-box;
+
   }
 
   .alert-sidenav-wrapper-inner-alerts {

@@ -1359,8 +1359,12 @@
         var interfaceLayout = evDataService.getInterfaceLayout();
         var components = evDataService.getComponents();
 
+        evScrollManager.setContentWrapElemHeight(document.body.clientHeight - 53)
+
         var contentWrapElemHeight = evScrollManager.getContentWrapElemHeight();
         var contentWrapElemWidth = evScrollManager.getContentWrapElemWidth();
+
+
 
         //var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
         //var viewportWidth = document.body.clientWidth - interfaceLayout.sidebar.width - interfaceLayout.filterArea.width;
@@ -1392,12 +1396,17 @@
             viewportTop = viewportTop + interfaceLayout.filterArea.height
         }
 
+        console.log('contentWrapElemHeight', contentWrapElemHeight);
+        console.log('viewportTop', viewportTop);
+
         var leftPanelHeight = Math.floor(contentWrapElemHeight - viewportTop); // should be calculated before adding column area height to viewportTop
         evScrollManager.setLeftPanelElemHeight(leftPanelHeight);
 
         if (components.columnArea) {
             viewportTop = viewportTop + interfaceLayout.columnArea.height
         }
+
+
 
         /* if (components.groupingArea) {
             viewportTop = viewportTop + interfaceLayout.groupingArea.height;
