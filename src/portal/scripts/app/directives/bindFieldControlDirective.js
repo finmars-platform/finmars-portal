@@ -992,6 +992,12 @@
 
                 var init = function () {
 
+
+                    console.log('bindFieldControl.entity', $scope.entity);
+                    console.log('bindFieldControl.entityType', $scope.entityType);
+                    console.log('bindFieldControl.item', $scope.item);
+
+
                     vm.fieldKey = $scope.getModelKey();
 
                     $scope.options = {};
