@@ -17,7 +17,7 @@
                       tooltipText: tooltipText,
                       notNull: options.notNull,
                       dialogParent: '.dialog-containers-wrap'}"
-                    data-on-change-callback="vm.itemChange()">
+                    data-on-change-callback="vm.itemChangeDeb()">
             </number-input>
         </div>
 
@@ -32,7 +32,7 @@
                         data-is-disabled="vm.disabled"
                         data-small-options="{tooltipText: tooltipText, notNull: options.notNull, dialogParent: '.dialog-containers-wrap'}"
                         data-render-hyperlinks="item.options.isHyperlink"
-                        data-on-change-callback="vm.itemChange()"
+                        data-on-change-callback="vm.itemChangeDeb()"
                         data-on-blur-callback="inputBlur()"></text-input>
 
         </div>
@@ -166,10 +166,10 @@
         <div data-ng-if="vm.fieldType['display_name'] === 'Selector'">
 
             <div>
-                <ev-selector-resolver item="item"
-                                      options="options"
-                                      ev-editor-event-service="evEditorEventService"
-                                      item-change="vm.itemChange()">
+                <ev-selector-resolver data-item="item"
+                                      data-options="options"
+                                      data-ev-editor-event-service="evEditorEventService"
+                                      data-item-change="vm.itemChange()">
                 </ev-selector-resolver>
             </div>
 

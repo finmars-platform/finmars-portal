@@ -33,7 +33,7 @@ export default function () {
 
 					setTimeout(function () {
 						scope.onChange();
-					}, 100);
+					}, 0);
 
 				}
 			};

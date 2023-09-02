@@ -74,11 +74,11 @@
                     return classes;
                 };
 
-				var onChangeIndex;
+				// var onChangeIndex;
 
                 scope.onValueChange = function () {
 
-                	clearTimeout(onChangeIndex);
+                	// clearTimeout(onChangeIndex);
 
 					scope.setedFromOutside = false;
 					scope.valueIsValid = false;
@@ -141,12 +141,7 @@
 
 					scope.model = modelValue;
 
-					/* if (scope.onChangeCallback) {
-						setTimeout(function () {
-							scope.onChangeCallback();
-						}, 0);
-					} */
-					onChangeIndex = setTimeout(() => {
+					setTimeout(() => {
 
 						scope.error = error;
 
@@ -158,7 +153,7 @@
 
 						if (scope.onChangeCallback) scope.onChangeCallback();
 
-					}, 500);
+					}, 0);
 
                 };
 
