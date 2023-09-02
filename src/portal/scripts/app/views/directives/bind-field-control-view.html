@@ -1,6 +1,6 @@
-<div ng-class="{'disabled-field': !isEditableField()}">
+<div class="bind-field-content-holder" ng-class="{'disabled-field': !isEditableField()}" data-field-key="{{vm.fieldKey}}">
 
-    <div ng-class="{'display-none': !vm.readyStatus.content}">
+    <div ng-class="{'display-none': !vm.readyStatus.content}" class="bind-field-content">
 
         <div data-ng-if="vm.fieldType['display_name'] === 'Number'"
              class="bind-field-number-field-container">
