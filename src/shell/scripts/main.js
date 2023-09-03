@@ -147,6 +147,14 @@ app.run(['$rootScope', function ($rootScope) {
         }
     }, 5000)
 
+    setInterval(function () {
+
+        if (window.activeNote) {
+            window.activeNote.renderNotes();
+        }
+
+    }, 6000)
+
     app._invokeQueue.forEach(function (item) {
 
         if (item[0] === '$controllerProvider') {
