@@ -87,27 +87,23 @@ app.factory('$exceptionHandler', [function () {
     };
 }]);
 
-app.config(function($provide) {
-        $provide.decorator('$rootScope', function($delegate) {
-
-            // Save a reference to the original $apply
-            const originalApply = $delegate.constructor.prototype.$apply;
-
-            // Override $apply
-            $delegate.constructor.prototype.$apply = function(expr) {
-                console.log('Custom $apply logic here');
-
-                if (window.activeNote) {
-                    window.activeNote.renderNotes();
-                }
-
-                // Call the original $apply
-                return originalApply.apply(this, arguments);
-            };
-
-            return $delegate;
-        });
-    });
+// app.config(function($provide) {
+//     $provide.decorator('$rootScope', function($delegate) {
+//
+//         // Save a reference to the original $apply
+//         const originalApply = $delegate.constructor.prototype.$apply;
+//
+//         // Override $apply
+//         $delegate.constructor.prototype.$apply = function(expr) {
+//             // console.log('Custom $apply logic here');
+//
+//             // Call the original $apply
+//             return originalApply.apply(this, arguments);
+//         };
+//
+//         return $delegate;
+//     });
+// });
 
 //<editor-fold desc="Websocket initialization">
 app.run(['$rootScope', function ($rootScope) {
