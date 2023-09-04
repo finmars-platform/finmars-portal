@@ -1271,9 +1271,9 @@ export default function (toastNotificationService, transactionTypeService, price
             isRootTitle = 'isChild'
         }
 
-        if (!isRootEntityViewer) {
-            viewportHeight = viewportHeight - 16; // TODO To show horizontal scroll. Find why
-        }
+        // if (!isRootEntityViewer) {
+        //     viewportHeight = viewportHeight - 15; // TODO To show horizontal scroll. Find why
+        // }
 
         // console.log(isRootTitle +  ' calculateScroll.contentWrapElemHeight ' + contentWrapElemHeight);
         // console.log(isRootTitle +  ' calculateScroll.viewportTop ' + viewportTop);
