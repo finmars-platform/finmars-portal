@@ -106,6 +106,68 @@
 
             </div>
 
+            <div ng-if="vm.filesStatus.length" class="explorer-file-upload-status-holder">
+
+                <div data-ng-repeat="item in vm.filesStatus" class="explorer-file-upload-status-item">
+
+                    <div layout="row">
+                        <div class="explorer-file-upload-status-item-name">
+                            {{item.name}}
+                        </div>
+                        <div class="explorer-file-upload-status-size">
+                            &nbsp;{{item.size_pretty}}
+                        </div>
+                    </div>
+                    <div class="explorer-file-upload-status-item-status">
+
+                        <div class="task-status-badge status-init"
+                             data-ng-if="item.status == 'I' || item.status == 'init'">
+                            <div layout="row">
+                                <ng-md-icon size="14" icon="check_circle"></ng-md-icon>
+                                <div class="task-status-text">Init</div>
+                            </div>
+
+                        </div>
+
+                        <div class="task-status-badge status-progress"
+                             data-ng-if="item.status == 'P' || item.status == 'progress'">
+                            <div layout="row">
+                                <ng-md-icon size="14" icon="hourglass_full"></ng-md-icon>
+                                <div class="task-status-text">Running</div>
+                            </div>
+                        </div>
+
+                        <div class="task-status-badge status-success"
+                             data-ng-if="item.status == 'D' || item.status == 'success'">
+                            <div layout="row">
+                                <ng-md-icon size="14" icon="check_circle"></ng-md-icon>
+                                <div class="task-status-text">Success</div>
+                            </div>
+                        </div>
+
+                        <div class="task-status-badge status-error"
+                             data-ng-if="item.status == 'E' || item.status == 'error'">
+                            <div layout="row">
+                                <ng-md-icon size="14" icon="error"></ng-md-icon>
+                                <div class="task-status-text">Error</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div layout="row" layout-align="end center">
+
+                    <md-button class="outline-button " data-ng-if="vm.closeFileStatuses"
+                               data-ng-click="vm.filesStatus = []">
+                        Close
+                    </md-button>
+
+                </div>
+
+            </div>
+
             <div data-ng-if="!vm.processing" class="height-100">
 
                 <div style="overflow: auto; padding: 10px;" class="height-100"
