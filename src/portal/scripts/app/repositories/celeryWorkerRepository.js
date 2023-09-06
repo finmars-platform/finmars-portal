@@ -113,7 +113,7 @@
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
 
-        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'tasks/worker/' + id + '/create/',
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'tasks/worker/' + id + '/create-worker/',
             {
                 method: 'PUT',
                 credentials: 'include',
