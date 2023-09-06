@@ -33,7 +33,12 @@
                 </td>
 
                 <td>
-                    {{item.status}}
+                    <div>
+                        {{item.status.status}}
+                    </div>
+                    <div data-ng-if="item.status.error_message" style="color: red">
+                        {{item.status.error_message}}
+                    </div>
                 </td>
 
                 <td>
@@ -51,7 +56,9 @@
                                data-ng-click="vm.deleteItem($event, item, $index)">Delete
                     </md-button>
 
-                    <md-button class="outline-button" data-ng-click="vm.create($event, item)">Create</md-button>
+                    <div data-ng-if="item.status.status == 'not_found'">
+                        <md-button class="outline-button" data-ng-click="vm.create($event, item)">Create</md-button>
+                    </div>
 
                     <md-button class="outline-button" data-ng-click="vm.start($event, item)">Start</md-button>
                     <md-button class="outline-button" data-ng-click="vm.start($event, item)">Stop</md-button>
