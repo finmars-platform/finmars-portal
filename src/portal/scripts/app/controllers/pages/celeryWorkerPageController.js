@@ -87,6 +87,14 @@
 
         };
 
+        vm.create = function ($event, item) {
+
+            celeryWorkerService.createWorker(item.id, {}).then(function (value) {
+                vm.getList();
+            })
+
+        }
+
         vm.start = function ($event, item) {
 
             celeryWorkerService.start(item.id, {}).then(function (value) {

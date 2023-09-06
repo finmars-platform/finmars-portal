@@ -108,6 +108,25 @@
             })
     };
 
+    var createWorker = function (id, data) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'tasks/worker/' + id + '/create/',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+    };
+
 
     var start = function (id, data) {
 
@@ -191,6 +210,7 @@
         deleteByKey: deleteByKey,
 
 
+        createWorker: createWorker,
         start: start,
         stop: stop,
         restart: restart,

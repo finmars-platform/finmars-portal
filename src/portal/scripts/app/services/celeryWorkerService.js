@@ -24,6 +24,9 @@
         return celeryWorkerRepository.deleteByKey(id);
     };
 
+    var createWorker = function(id, data) {
+        return celeryWorkerRepository.createWorker(id, data);
+    };
 
     var start = function(id, data) {
         return celeryWorkerRepository.start(id, data);
@@ -50,6 +53,7 @@
         deleteByKey: deleteByKey,
 
 
+        createWorker: createWorker,
         start: start,
         stop: stop,
         restart: restart,
