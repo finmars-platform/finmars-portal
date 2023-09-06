@@ -1,0 +1,81 @@
+<div style="padding: 0 20px;" class="celery-worker-page">
+    <h2 class="m-b-35">Workers</h2>
+
+
+    <div data-ng-if="vm.readyStatus.content">
+
+        <table>
+
+            <thead>
+            <tr>
+                <th>
+                    Worker Name
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Queue
+                </th>
+                <th>
+                    Limit
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr data-ng-repeat="item in vm.items track by $index">
+
+                <td>
+                    {{item.worker_name}}
+                </td>
+
+                <td>
+                    {{item.status}}
+                </td>
+
+                <td>
+                    {{item.queue}}
+                </td>
+
+                <td>
+                    {{item.memory_limit}}
+                </td>
+
+
+                <td>
+                    <md-button class="outline-button" data-ng-click="vm.editItem($event, item)">Edit</md-button>
+                    <md-button class="outline-button" data-ng-if="item.user_code != '-'"
+                               data-ng-click="vm.deleteItem($event, item, $index)">Delete
+                    </md-button>
+
+                    <md-button class="outline-button" data-ng-click="vm.start($event, item)">Start</md-button>
+                    <md-button class="outline-button" data-ng-click="vm.start($event, item)">Stop</md-button>
+                    <md-button class="outline-button" data-ng-click="vm.restart($event, item)">Restart</md-button>
+                    <md-button class="outline-button" data-ng-click="vm.getStatus($event, item)">Get Status</md-button>
+
+                </td>
+
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+        <div>
+            <md-button class="outline-button" data-ng-click="vm.addItem($event)">Add New</md-button>
+        </div>
+
+    </div>
+
+    <div data-ng-if="!vm.readyStatus.content">
+        <div class="m-16" layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular diameter="100"></progress-circular>
+        </div>
+    </div>
+
+
+</div>
