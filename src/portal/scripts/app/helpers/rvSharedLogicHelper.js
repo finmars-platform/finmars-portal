@@ -163,7 +163,12 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
             const viewContext = viewModel.entityViewerDataService.getViewContext();
 
             if (viewContext !== 'split_panel' || entityType !== 'transaction-report') {
-                rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+
+                if (window.location.href.indexOf('v2=true') !== -1) {
+                    rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+                } else {
+                    rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+                }
             }
 
             $scope.$apply();

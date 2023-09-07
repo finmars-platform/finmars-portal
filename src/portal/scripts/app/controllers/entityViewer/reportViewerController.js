@@ -7,7 +7,6 @@
 
 import AutosaveLayoutService from "../../services/autosaveLayoutService";
 import evHelperService from "../../services/entityViewerHelperService";
-import uiService from "../../services/uiService";
 import evEvents from "../../services/entityViewerEvents";
 
 (function () {
@@ -42,7 +41,7 @@ import evEvents from "../../services/entityViewerEvents";
         // var doNotCheckLayoutChanges = false;
         var autosaveLayoutService;
         var autosaveLayoutOn = globalDataService.isAutosaveLayoutOn();
-		console.log("autosave77 autosaveLayoutOn", autosaveLayoutOn);
+        console.log("autosave77 autosaveLayoutOn", autosaveLayoutOn);
         // Functions for context menu
 
         var updateTableAfterEntityChanges = function (res) {
@@ -365,7 +364,13 @@ import evEvents from "../../services/entityViewerEvents";
 
             vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
-                rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                // rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                if (window.location.href.indexOf('v2=true') !== -1) {
+                    rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                } else {
+                    rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                }
+
 
             });
 
@@ -383,7 +388,14 @@ import evEvents from "../../services/entityViewerEvents";
 
             vm.entityViewerEventService.addEventListener(evEvents.REQUEST_REPORT, function () {
 
-                rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+                // rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+                // rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+
+                if (window.location.href.indexOf('v2=true') !== -1) {
+                    rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                } else {
+                    rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+                }
 
             });
 
@@ -828,9 +840,9 @@ import evEvents from "../../services/entityViewerEvents";
 
             return new Promise(async function (resolve, reject) {
 
-				if (typeof layout.data.reportLayoutOptions.useDateFromAbove !== 'boolean') {
-					layout.data.reportLayoutOptions.useDateFromAbove = true;
-				}
+                if (typeof layout.data.reportLayoutOptions.useDateFromAbove !== 'boolean') {
+                    layout.data.reportLayoutOptions.useDateFromAbove = true;
+                }
 
                 vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
                 vm.setFiltersValuesFromQueryParameters();
