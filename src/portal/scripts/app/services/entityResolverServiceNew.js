@@ -949,6 +949,40 @@ export default function (instrumentService, transactionTypeService, priceHistory
 
     }
 
+    var getListReportGroups =function (entityType, options) {
+
+        switch (entityType) {
+
+            case 'balance-report':
+                return reportService.getBackendBalanceReportGroups(options);
+                break;
+            case 'pl-report':
+                return reportService.getBackendPnlReportGroups(options);
+                break;
+            case 'transaction-report':
+                return reportService.getBackendTransactionReportGroups(options);
+                break;
+
+        }
+    }
+
+    var getListReportItems =function (entityType, options) {
+
+        switch (entityType) {
+
+            case 'balance-report':
+                return reportService.getBackendBalanceReportItems(options);
+                break;
+            case 'pl-report':
+                return reportService.getBackendPnlReportItems(options);
+                break;
+            case 'transaction-report':
+                return reportService.getBackendTransactionReportItems(options);
+                break;
+
+        }
+    }
+
     return {
         getList: getList,
         getListLight: getListLight,
@@ -958,6 +992,10 @@ export default function (instrumentService, transactionTypeService, priceHistory
         deleteByKey: deleteByKey,
         updateBulk: updateBulk,
         deleteBulk: deleteBulk,
+
+
+        getListReportGroups: getListReportGroups,
+        getListReportItems: getListReportItems,
 
 
         request: request

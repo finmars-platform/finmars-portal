@@ -3,10 +3,11 @@
  * @module ReportViewerDataProviderGroupsService
  */
 
-(function () {
+var filterService = require('./filter.service');
+var sortService = require('./sort.service');
 
-    var filterService = require('./filter.service');
-    var sortService = require('./sort.service');
+export default function (entityResolverService) {
+
 
     /**
      * Check if group already exists
@@ -92,27 +93,6 @@
                 resultGroup.___group_name = item_value.toString();
 
 
-
-                // if (groupType.key === 'complex_transaction.is_canceled') {
-                //
-                //     if (item_value) {
-                //         resultGroup.___group_name = 'Canceled'
-                //     } else {
-                //         resultGroup.___group_name = 'Not Canceled'
-                //     }
-                //
-                // }
-                //
-                // if (groupType.key === 'complex_transaction.is_locked') {
-                //
-                //     if (item_value) {
-                //         resultGroup.___group_name = 'Locked'
-                //     } else {
-                //         resultGroup.___group_name = 'Unlocked'
-                //     }
-                //
-                // }
-
                 if (groupType.key === 'complex_transaction.status') {
 
                     if (item_value === 1) {
@@ -148,15 +128,7 @@
     };
 
 
-    /**
-     * Get list of groups
-     * @param {string} entityType - string value of entity name (e.g. instrument-type)
-     * @param {object} options - set of specific options
-     * @param {object} entityViewerDataService - global data service
-     * @return {boolean} return list of groups
-     * @memberof module:ReportViewerDataProviderGroupsService
-     */
-    var getList = function (entityType, options, entityViewerDataService) {
+    var getFrontendList = function (entityType, options, entityViewerDataService) {
 
         return new Promise(function (resolve, reject) {
 
@@ -243,10 +215,56 @@
 
         });
 
-    };
-
-    module.exports = {
-        getList: getList
     }
 
-}());
+    var getBackendList = function (entityType, options, entityViewerDataService) {
+
+        console.log("getBackendList options!", options)
+
+        var entityType = entityViewerDataService.getEntityType();
+        var reportOptions = entityViewerDataService.getReportOptions();
+
+        console.log("getBackendList!", reportOptions)
+
+        reportOptions.frontend_request_options = options
+
+        return entityResolverService.getListReportGroups(entityType, reportOptions).then(function (data) {
+
+            console.log('getListReportGroups.data.items', data.items);
+
+            var result = {
+                next: null,
+                previous: null,
+                count: data.items.length,
+                results: data.items
+            };
+
+            return result
+
+        })
+
+    }
+
+    /**
+     * Get list of groups
+     * @param {string} entityType - string value of entity name (e.g. instrument-type)
+     * @param {object} options - set of specific options
+     * @param {object} entityViewerDataService - global data service
+     * @return {boolean} return list of groups
+     * @memberof module:ReportViewerDataProviderGroupsService
+     */
+    var getList = function (entityType, options, entityViewerDataService) {
+
+        if (window.location.href.indexOf('v2=true') !== -1) {
+            return getBackendList(entityType, options, entityViewerDataService)
+        } else {
+            return getFrontendList(entityType, options, entityViewerDataService)
+        }
+
+    };
+
+    return  {
+        getList: getList,
+    }
+
+}
