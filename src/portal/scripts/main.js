@@ -41,6 +41,7 @@ import evRvLayoutsHelper from "./app/helpers/evRvLayoutsHelper";
 import reportHelper from "./app/helpers/reportHelper";
 import rvDataProviderService from "./app/services/rv-data-provider/rv-data-provider.service";
 import groupsService from "./app/services/rv-data-provider/groups.service";
+import objectsService from "./app/services/rv-data-provider/objects.service";
 import reconDataProviderService from "./app/services/recon-data-provider/recon-data-provider.service";
 import configurationService from "./app/services/configurationService";
 
@@ -184,8 +185,9 @@ export default (function () {
     portal.service('dashboardHelper', ['toastNotificationService', 'uiService', 'evRvLayoutsHelper', dashboardHelper]);
     portal.service('reportHelper', ['expressionService', reportHelper]);
     portal.service('groupsService', ['entityResolverService', groupsService])
+    portal.service('objectsService', ['entityResolverService', objectsService])
 
-    portal.service('rvDataProviderService', ['entityResolverService', 'pricesCheckerService', 'reportHelper', 'groupsService', rvDataProviderService]);
+    portal.service('rvDataProviderService', ['entityResolverService', 'pricesCheckerService', 'reportHelper', 'groupsService', 'objectsService', rvDataProviderService]);
     portal.service('reconDataProviderService', ['entityResolverService', 'reportHelper', reconDataProviderService]);
     //# endregion Helpers
 

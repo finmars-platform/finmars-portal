@@ -1,12 +1,12 @@
 var evEvents = require('../entityViewerEvents');
 // var groupsService = require('./groups.service');
-var objectsService = require('./objects.service');
+// var objectsService = require('./objects.service');
 var evDataHelper = require('../../helpers/ev-data.helper');
 var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 var rvDataHelper = require('../../helpers/rv-data.helper');
 var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
-export default function (entityResolverService, pricesCheckerService, reportHelper, groupsService) {
+export default function (entityResolverService, pricesCheckerService, reportHelper, groupsService, objectsService) {
 
     var requestData = function (evDataService) {
 
