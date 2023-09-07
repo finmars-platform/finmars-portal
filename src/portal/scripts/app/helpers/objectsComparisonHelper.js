@@ -81,7 +81,7 @@
                             break;
                     }
                 }
-                console.log('object comparison objects are equals');
+                // console.log('object comparison objects are equals');
                 return true;
             }
 

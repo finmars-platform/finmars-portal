@@ -1,6 +1,4 @@
 var evEvents = require('../entityViewerEvents');
-// var groupsService = require('./groups.service');
-// var objectsService = require('./objects.service');
 var evDataHelper = require('../../helpers/ev-data.helper');
 var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 var rvDataHelper = require('../../helpers/rv-data.helper');
@@ -66,42 +64,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         var filters = entityViewerDataService.getFilters();
 
-        /* var isFilterValid = function (filterItem) {
-
-            if (filterItem.options && filterItem.options.enabled) { // if filter is enabled
-
-                var filterType = filterItem.options.filter_type;
-
-                if (filterType === 'empty' ||
-                    filterItem.options.exclude_empty_cells) { // if filter works for empty cells
-
-                    return true;
-
-                } else if (filterItem.options.filter_values) { // if filter values can be used for filtering (not empty)
-
-                    var filterValues = filterItem.options.filter_values;
-
-                    if (filterType === 'from_to' || filterType === 'out_of_range') {
-
-                        if ((filterValues.min_value || filterValues.min_value === 0) &&
-                            (filterValues.max_value || filterValues.max_value === 0)) {
-                            return true;
-                        }
-
-                    } else if (Array.isArray(filterValues)) {
-
-                        if (filterValues[0] || filterValues[0] === 0) {
-                            return true;
-                        }
-
-                    }
-                }
-
-            }
-
-            return false;
-        }; */
-
         filters.forEach(function (item) {
 
             if (evRvCommonHelper.isFilterValid(item)) {
@@ -135,26 +97,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         var entityType = entityViewerDataService.getEntityType();
         var reportOptions = entityViewerDataService.getReportOptions();
 
-        //# region Delete report options items">
-        /* delete reportOptions.items;
-        delete reportOptions.custom_fields;
-        delete reportOptions.custom_fields_object;
-        delete reportOptions.item_complex_transactions;
-        delete reportOptions.item_counterparties;
-        delete reportOptions.item_responsibles;
-        delete reportOptions.item_strategies3;
-        delete reportOptions.item_strategies2;
-        delete reportOptions.item_strategies1;
-        delete reportOptions.item_portfolios;
-        delete reportOptions.item_instruments;
-        delete reportOptions.item_instrument_pricings;
-        delete reportOptions.item_instrument_accruals;
-        delete reportOptions.item_currency_fx_rates;
-        delete reportOptions.item_currencies;
-        delete reportOptions.item_accounts; */
         reportOptions = reportHelper.cleanReportOptionsFromTmpProps(reportOptions);
         reportOptions.filters = entityViewerDataService.getFilters(); // for transaction report only
-        //# endregion
 
         reportOptions.task_id = null;
 
@@ -184,13 +128,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 var attributeExtensions = entityViewerDataService.getCrossEntityAttributeExtensions();
 
                 reportOptions.items = reportHelper.injectIntoItemsV2(reportOptions.items, reportOptions, entityType);
-
-                // reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions, entityType);
-                // reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
-                // reportOptions.items = reportHelper.convertItemsToFlat(reportOptions.items);
                 reportOptions.items = reportHelper.extendAttributes(reportOptions.items, attributeExtensions);
 
-                // Report options.items - origin table without filtering and grouping. Save to entityViewerDataService.
                 reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
 
                 entityViewerDataService.setUnfilteredFlatList(reportOptions.items);
@@ -539,11 +478,18 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                     if (groups.length >= parents.length) {
                         item.___type = 'group';
+
                     } else {
                         item.___type = 'object';
                     }
 
                     item.___id = evRvCommonHelper.getId(item);
+
+                    if (window.location.href.indexOf('v2=true') !== -1) {
+                        if (item.___type == 'group') { // 2023-09-08 update with backend window
+                            entityViewerDataService.setData(item);
+                        }
+                    }
 
                     return item
 
@@ -867,28 +813,29 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     var updateDataStructure = function (evDataService, evEventService) {
 
-        return new Promise(function (resolve, reject) {
+        var requestParameters = evDataService.getActiveRequestParameters();
 
-            var requestParameters = evDataService.getActiveRequestParameters();
+        injectRegularFilters(requestParameters, evDataService, evEventService);
 
-            injectRegularFilters(requestParameters, evDataService, evEventService);
+        if (requestParameters.requestType === 'objects') {
 
-            if (requestParameters.requestType === 'objects') {
+            getObjectsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
 
-                getObjectsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
-                    resolve(data)
-                })
+                // evEventService.dispatchEvent(evEvents.DATA_LOAD_END); // backend logic
 
-            }
+            })
 
-            if (requestParameters.requestType === 'groups') {
+        }
 
-                getGroupsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
-                    resolve(data)
-                })
-            }
+        if (requestParameters.requestType === 'groups') {
 
-        })
+            getGroupsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
+
+                // evEventService.dispatchEvent(evEvents.DATA_LOAD_END); // backend logic
+
+            })
+        }
+
 
     };
 

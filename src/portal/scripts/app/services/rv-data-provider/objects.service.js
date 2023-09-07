@@ -27,7 +27,7 @@ export default function (entityResolverService) {
                 next: null,
                 previous: null,
                 count: data.items.length,
-                results: data.items
+                results: JSON.parse(JSON.stringify(data.items))
             };
 
             return result
