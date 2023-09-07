@@ -102,6 +102,8 @@ import toastNotificationService from "../../../../../shell/scripts/app/services/
                         return item.___type !== 'group';
                     });
 
+                    console.log('renderReportViewer.flatList', flatList);
+
                     var index = 0;
                     flatList = flatList.map(function (item, i) {
                         item.___flat_list_index = i;

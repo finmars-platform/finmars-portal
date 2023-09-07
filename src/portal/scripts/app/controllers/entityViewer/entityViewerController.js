@@ -1273,7 +1273,7 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
 
                     // vm.currentMember = globalDataService.getMember();
                     autosaveLayoutOn = globalDataService.isAutosaveLayoutOn();
-                    console.log("autosave77 ev isAutosaveLayoutOn", autosaveLayoutOn);
+                    // console.log("autosave77 ev isAutosaveLayoutOn", autosaveLayoutOn);
                     if (autosaveLayoutOn) {
                         autosaveLayoutService.initListenersForAutosaveLayout(vm.entityViewerDataService, vm.entityViewerEventService, false);
                         removeTransitionListeners();
@@ -1387,7 +1387,7 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
         }; */
 
         var checkLayoutsForChanges = function (transition) { // called on attempt to change page
-            console.log("autosave77 ev checkLayoutsForChanges ", autosaveLayoutOn);
+            // console.log("autosave77 ev checkLayoutsForChanges ", autosaveLayoutOn);
             /* return new Promise(function (resolve, reject) {
 
                 if (!doNotCheckLayoutChanges) {
@@ -1543,7 +1543,7 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
             var spChangedLayout = evHelperService.checkSplitPanelForChanges(vm.entityViewerDataService, vm.splitPanelExchangeService);
 
             if (layoutHasChanges || spChangedLayout) {
-                console.log("autosave77 ev warnAboutLayoutChangesLoss ", autosaveLayoutOn);
+                // console.log("autosave77 ev warnAboutLayoutChangesLoss ", autosaveLayoutOn);
                 event.preventDefault();
                 (event || window.event).returnValue = 'All unsaved changes of layout will be lost.';
             }
@@ -1595,7 +1595,7 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
                 });
 
                 if (!autosaveLayoutOn) {
-                    console.log("autosave77 ev init initTransitionListeners", autosaveLayoutOn);
+                    // console.log("autosave77 ev init initTransitionListeners", autosaveLayoutOn);
                     initTransitionListeners();
                 }
 
