@@ -129,9 +129,6 @@
 
         var dataList = [];
         var groups = evDataService.getGroups();
-        /* var rootGroupOptions = evDataService.getRootGroupOptions();
-        var reportOptions = evDataService.getReportOptions();
-        var subtotalsOpts = reportOptions.subtotals_options; */
 
         Object.keys(data).forEach(function (key) {
             dataList.push(data[key])
@@ -156,36 +153,6 @@
             dataList[0].results.unshift(subtotalObj);
 
         }
-        // < insert Grand total >
-
-        /* if (subtotalsOpts) {
-
-			// subtotals are on
-        	if (subtotalsOpts.type) {
-
-        		var insertSubtotal = insertSubtotalFns[subtotalsOpts.type];
-
-        		dataList.forEach(function (item) {
-
-        			if (item.results.length && item.___group_name !== "root" && item.___level <= groups.length) { // insert subtotals for groups but not for root group
-
-        				subtotalObj = Object.assign({}, item.subtotal, {
-							___group_name: item.___group_name,
-							___type: 'subtotal',
-							___parentId: item.___id,
-							___level: item.___level + 1
-						});
-
-						insertSubtotal(subtotalObj, item);
-
-					}
-
-				});
-
-			}
-			// < subtotals are on >
-
-		} */
 
         dataList.forEach(function (item) {
 
@@ -214,113 +181,6 @@
             }
 
         });
-
-        /* dataList.forEach(function (item) {
-
-            if (item.results.length) {
-
-                 if (item.___level === 0 && rootGroupOptions.subtotal_type) { // Now Grand total always on top
-
-                    subtotalObj = Object.assign({}, item.subtotal, {
-                        ___group_name: item.___group_name,
-                        ___type: 'subtotal',
-                        ___parentId: item.___id,
-                        ___level: 0
-                    });
-
-                    switch (rootGroupOptions.subtotal_type) {
-                        case "line":
-                            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-                            subtotalObj.___subtotal_type = 'line';
-                            item.results.unshift(subtotalObj);
-                            break;
-                        case "area":
-                            subtotalObj.___subtotal_type = 'area';
-                            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-                            item.results.push(subtotalObj);
-                            break;
-                        case "arealine":
-                            subtotalObj.___subtotal_type = 'arealine';
-
-                            subtotalObj.___subtotal_subtype = 'line';
-                            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-                            item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
-
-                            subtotalObj.___subtotal_subtype = 'area';
-                            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-                            item.results.push(subtotalObj);
-                            break;
-                    }
-
-                }
-
-                else {
-
-                    groups.forEach(function (group, index) {
-
-                        if (item.___level === index + 1 && item.___level <= groups.length) {
-
-                            subtotalObj = Object.assign({}, item.subtotal, {
-                                ___group_name: item.___group_name,
-                                ___type: 'subtotal',
-                                ___parentId: item.___id,
-                                ___level: item.___level + 1
-                            });
-
-                            if (group.report_settings.subtotal_type === 'line') {
-
-                                subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-                                subtotalObj.___subtotal_type = 'line';
-
-                                item.results.unshift(subtotalObj);
-
-                            }
-
-                            if (group.report_settings.subtotal_type === 'area') {
-
-                                subtotalObj.___subtotal_type = 'proxyline';
-                                subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-
-                                item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
-
-
-                                subtotalObj.___subtotal_type = 'area';
-                                subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-
-
-                                item.results.push(subtotalObj);
-
-                            }
-
-                            if (group.report_settings.subtotal_type === 'arealine') {
-
-                                subtotalObj.___subtotal_type = 'arealine';
-
-
-                                subtotalObj.___subtotal_subtype = 'line';
-                                subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-
-                                item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
-
-
-                                subtotalObj.___subtotal_subtype = 'area';
-                                subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-
-                                item.results.push(subtotalObj);
-
-
-                            }
-
-
-                        }
-
-                    })
-
-                }
-
-            }
-
-        }); */
 
         return data;
 

@@ -815,9 +815,9 @@
                         id: id,
                         groups_level: 1, // 0 is for root
                         event: {
-                            ___id: null,
-                            groupName: null,
-                            groupId: null,
+                            ___id: id,
+                            groupName: 'root',  // seems its ___group_name
+                            groupId: 'root', // seems its ___group_identifier
                             parentGroupId: null
                         },
                         body: {
