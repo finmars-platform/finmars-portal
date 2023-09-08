@@ -199,6 +199,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     var getObjects = function (requestParameters, entityViewerDataService, entityViewerEventService) {
 
+        console.log('getObjects.requestParameters', requestParameters);
+
         requestParameters.status = 'loading';
 
         entityViewerDataService.setRequestParameters(requestParameters);
@@ -220,75 +222,54 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 var groupData = entityViewerDataService.getData(event.___id);
                 var obj; // group that contains objects
 
-                if (!event.___id) {
+                if (groupData) {
 
-                    var rootGroupData = entityViewerDataService.getRootGroupData();
+                    obj = Object.assign({}, groupData);
 
-                    obj = Object.assign({}, rootGroupData);
+                    obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
+                    obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
 
                     obj.count = data.count;
                     obj.next = data.next;
                     obj.previous = data.previous;
                     obj.results = data.results;
-
                     // for (i = 0; i < step; i = i + 1) {
                     //     if (page * step + i < obj.count) {
                     //         obj.results[page * step + i] = data.results[i];
                     //     }
                     // }
-
                 } else {
 
-                    if (groupData) {
+                    var parentGroup = entityViewerDataService.getData(event.parentGroupId);
 
-                        obj = Object.assign({}, groupData);
+                    obj = Object.assign({}, data);
 
-                        obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
-                        obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
+                    obj.___group_name = event.groupName ? event.groupName : '-';
+                    obj.___group_identifier = event.groupId ? event.groupId : '-';
 
-                        obj.count = data.count;
-                        obj.next = data.next;
-                        obj.previous = data.previous;
-                        obj.results = data.results;
-                        // for (i = 0; i < step; i = i + 1) {
-                        //     if (page * step + i < obj.count) {
-                        //         obj.results[page * step + i] = data.results[i];
-                        //     }
-                        // }
-                    } else {
+                    obj.___is_open = true;
+                    // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
-                        var parentGroup = entityViewerDataService.getData(event.parentGroupId);
+                    obj.___parentId = event.parentGroupId;
+                    obj.___type = 'group';
+                    obj.___id = event.___id;
+                    obj.___index = parentGroup.results.findIndex(group => group.___id === obj.___id);
+                    obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
 
-                        obj = Object.assign({}, data);
+                    var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
 
-                        obj.___group_name = event.groupName ? event.groupName : '-';
-                        obj.___group_identifier = event.groupId ? event.groupId : '-';
+                    console.log('groupSettings.getObjects', JSON.parse(JSON.stringify(groupSettings)));
 
-                        obj.___is_open = true;
-                        // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
+                    if (groupSettings.hasOwnProperty('is_open')) {
+                        obj.___is_open = groupSettings.is_open;
+                    }
 
-                        obj.___parentId = event.parentGroupId;
-                        obj.___type = 'group';
-                        obj.___id = event.___id;
-                        obj.___index = parentGroup.results.findIndex(group => group.___id === obj.___id);
-                        obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
+                    if (!parentGroup.___is_open) {
 
-                        var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
+                        obj.___is_open = false;
+                        groupSettings.is_open = false;
 
-                        console.log('groupSettings.getObjects', JSON.parse(JSON.stringify(groupSettings)));
-
-                        if (groupSettings.hasOwnProperty('is_open')) {
-                            obj.___is_open = groupSettings.is_open;
-                        }
-
-                        if (!parentGroup.___is_open) {
-
-                            obj.___is_open = false;
-                            groupSettings.is_open = false;
-
-                            rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
-
-                        }
+                        rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
 
                     }
 
@@ -345,6 +326,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     var getGroups = function (requestParameters, entityViewerDataService, entityViewerEventService) {
 
+        console.log('getGroups.requestParameters', requestParameters);
+
         requestParameters.status = 'loading';
 
         // var groupTypes = entityViewerDataService.getGroups();
@@ -376,16 +359,20 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 var obj = {};
 
+                var groupData = entityViewerDataService.getData(event.___id);
 
-                if (!event.___id) {
 
-                    var rootGroupData = entityViewerDataService.getRootGroupData();
+                if (groupData) {
 
-                    obj = Object.assign({}, rootGroupData);
+                    obj = Object.assign({}, groupData);
+
+                    obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
+                    obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
 
                     obj.count = data.count;
                     obj.next = data.next;
                     obj.previous = data.previous;
+
                     for (i = 0; i < step; i = i + 1) {
                         if (page * step + i < obj.count) {
                             obj.results[page * step + i] = data.results[i];
@@ -395,63 +382,38 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 } else {
 
-                    var groupData = entityViewerDataService.getData(event.___id);
+
+                    var parentGroup = entityViewerDataService.getData(event.parentGroupId);
+
+                    obj = Object.assign({}, data);
+                    obj.___group_name = event.groupName ? event.groupName : '-';
+                    obj.___group_identifier = event.groupId ? event.groupId : '-';
+                    obj.___is_open = true;
 
 
-                    if (groupData) {
+                    // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
-                        obj = Object.assign({}, groupData);
-
-                        obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
-                        obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
-
-                        obj.count = data.count;
-                        obj.next = data.next;
-                        obj.previous = data.previous;
-
-                        for (i = 0; i < step; i = i + 1) {
-                            if (page * step + i < obj.count) {
-                                obj.results[page * step + i] = data.results[i];
-                            }
-                        }
+                    obj.___parentId = event.parentGroupId;
+                    obj.___type = 'group';
+                    obj.___id = event.___id;
+                    obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
 
 
-                    } else {
+                    var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
 
+                    if (groupSettings.hasOwnProperty('is_open')) {
+                        obj.___is_open = groupSettings.is_open;
+                    }
 
-                        var parentGroup = entityViewerDataService.getData(event.parentGroupId);
+                    if (!parentGroup.___is_open) {
 
-                        obj = Object.assign({}, data);
-                        obj.___group_name = event.groupName ? event.groupName : '-';
-                        obj.___group_identifier = event.groupId ? event.groupId : '-';
-                        obj.___is_open = true;
+                        obj.___is_open = false;
+                        groupSettings.is_open = false;
 
-
-                        // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
-
-                        obj.___parentId = event.parentGroupId;
-                        obj.___type = 'group';
-                        obj.___id = event.___id;
-                        obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
-
-
-                        var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
-
-                        if (groupSettings.hasOwnProperty('is_open')) {
-                            obj.___is_open = groupSettings.is_open;
-                        }
-
-                        if (!parentGroup.___is_open) {
-
-                            obj.___is_open = false;
-                            groupSettings.is_open = false;
-
-                            rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
-
-                        }
-
+                        rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
 
                     }
+
 
                 }
 
@@ -523,7 +485,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     var createRequestParameters = function (item, level, evDataService, evEventService, createdIdsList) {
 
-        // console.log('createRequestParameters.item', item);
+        console.log('createRequestParameters.item', item);
 
         var groups = evDataService.getGroups();
 
