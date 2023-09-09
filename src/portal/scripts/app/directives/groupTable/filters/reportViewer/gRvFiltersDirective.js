@@ -60,6 +60,7 @@
                     scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
                 }; */
                 scope.refreshTable = function () {
+                    scope.processing = true;
                     scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
                 };
 
@@ -225,7 +226,7 @@
                             scope.evDataService.setFilters(filters);
                             scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
-							scope.$apply();
+                            scope.$apply();
 
                         }
 
@@ -492,13 +493,22 @@
                         scope.currentAdditions = scope.evDataService.getAdditions();
                     });
 
-                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function (){
+                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
+
+                        scope.processing = true;
+
+                    })
+
+                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+
+                        scope.processing = false;
 
                         scope.reportOptions = scope.evDataService.getReportOptions(); // for refresh tooltip -> auth time
 
                     })
 
-                    scope.evEventService.addEventListener(evEvents.FINISH_RENDER, function (){
+                    scope.evEventService.addEventListener(evEvents.FINISH_RENDER, function () {
 
                         scope.renderTime = scope.evDataService.getRenderTime(); // for refresh tooltip -> auth time
 

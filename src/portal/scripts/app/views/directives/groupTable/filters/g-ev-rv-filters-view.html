@@ -187,32 +187,35 @@
 
     <div class="icon-buttons gFiltersRightPart">
 
-        <md-button data-ng-click="refreshTable()"
-                   class="signed-button">
+        <div class="refresh-button-with-progress">
+            <progress-circular data-ng-if="processing" diameter="20"></progress-circular>
+            <md-button data-ng-click="refreshTable()"
+                       class="signed-button">
 
-            <div class="flex-column flex-i-center">
-                <span class="material-icons">refresh</span>
-                <span>Refresh</span>
-                <md-tooltip md-direction="bottom">
-                    <div data-ng-if="isReport">
-                        <div data-ng-if="reportOptions.auth_time">
-                            Auth Time: {{reportOptions.auth_time}}s</br>
-                            Execution Time: {{reportOptions.execution_time}}s</br>
-                            Relation Prefetch Time: {{reportOptions.relation_prefetch_time}}s</br>
-                            Serialization Time: {{reportOptions.serialization_time}}s </br>
-                            Render Time: {{renderTime}}s </br>
-                            Rows downloaded: {{reportOptions.items.length}} </br>
+                <div class="flex-column flex-i-center">
+                    <span class="material-icons">refresh</span>
+                    <span>Refresh</span>
+                    <md-tooltip md-direction="bottom">
+                        <div data-ng-if="isReport">
+                            <div data-ng-if="reportOptions.auth_time">
+                                Auth Time: {{reportOptions.auth_time}}s</br>
+                                Execution Time: {{reportOptions.execution_time}}s</br>
+                                Relation Prefetch Time: {{reportOptions.relation_prefetch_time}}s</br>
+                                Serialization Time: {{reportOptions.serialization_time}}s </br>
+                                Render Time: {{renderTime}}s </br>
+                                Rows downloaded: {{reportOptions.items.length}} </br>
+                            </div>
+                            Refresh Database Filters
                         </div>
-                        Refresh Database Filters
-                    </div>
-                    <div data-ng-if="!isReport">
-                        Refresh Database Filters
-                    </div>
+                        <div data-ng-if="!isReport">
+                            Refresh Database Filters
+                        </div>
 
-                </md-tooltip>
-            </div>
+                    </md-tooltip>
+                </div>
 
-        </md-button>
+            </md-button>
+        </div>
 
         <md-menu data-ng-if="isRootEntityViewer"
                  class="full-width">
@@ -384,12 +387,12 @@
                     </md-button>
                 </md-menu-item>
 
-<!--                <md-menu-item ng-if="isReport">-->
-<!--                    <md-button data-ng-click="toggleAutoRefresh()" class="g-settings-option-btn">-->
-<!--                        <span data-ng-if="rvAutoRefresh">Disable Auto Refresh</span>-->
-<!--                        <span data-ng-if="!rvAutoRefresh">Enable Auto Refresh</span>-->
-<!--                    </md-button>-->
-<!--                </md-menu-item>-->
+                <!--                <md-menu-item ng-if="isReport">-->
+                <!--                    <md-button data-ng-click="toggleAutoRefresh()" class="g-settings-option-btn">-->
+                <!--                        <span data-ng-if="rvAutoRefresh">Disable Auto Refresh</span>-->
+                <!--                        <span data-ng-if="!rvAutoRefresh">Enable Auto Refresh</span>-->
+                <!--                    </md-button>-->
+                <!--                </md-menu-item>-->
 
                 <md-menu-item data-ng-if="inputFormEditorBtn">
                     <md-button data-ng-click="openInputFormEditor($event)" class="g-settings-option-btn">
