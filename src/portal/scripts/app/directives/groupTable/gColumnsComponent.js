@@ -2051,14 +2051,11 @@
                 };
 
                 scope.unfoldLevel = function (key, $index) {
-                    // Optimized unfold logic
-                    // TODO probabaly still need a refactor, code looks too complicated
 
                     var layout = scope.evDataService.getListLayout();
                     var contentType = scope.evDataService.getContentType();
 
                     scope.groups = scope.evDataService.getGroups();
-                    var groups = scope.evDataService.getGroups(); // probably refactor
 
                     var item = scope.groups[$index];
 
@@ -2144,7 +2141,7 @@
 
                             reportData.groupsList = [];
 
-                            groups.forEach(group => {
+                            scope.groups.forEach(group => {
 
                                 var groupObj = {
                                     key: group.key,
