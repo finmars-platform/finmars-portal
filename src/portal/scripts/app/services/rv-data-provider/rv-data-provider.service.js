@@ -635,6 +635,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         // console.log('updateDataStructureByRequestParameters.requestParameters', requestParameters);
 
+        evEventService.dispatchEvent(evEvents.DATA_LOAD_START);
+
         return new Promise(function (resolve, reject) {
 
             injectRegularFilters(requestParameters, evDataService, evEventService);
@@ -645,6 +647,9 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 getObjectsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
                     resolve(data)
+
+                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+
                 })
 
             }
@@ -653,6 +658,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 getGroupsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
                     resolve(data)
+
+                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
                 })
             }
 
@@ -665,6 +672,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         var requestParameters = evDataService.getActiveRequestParameters();
 
         injectRegularFilters(requestParameters, evDataService, evEventService);
+
+        evEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
         if (requestParameters.requestType === 'objects') {
 
