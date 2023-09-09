@@ -366,7 +366,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         var requestParameters;
 
-        var id = evRvCommonHelper.getId(item);
+        // var id = evRvCommonHelper.getId(item);
+        var id = item.___id;
 
         if (createdIdsList.includes(id)) {
 

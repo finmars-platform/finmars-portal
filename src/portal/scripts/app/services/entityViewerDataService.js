@@ -798,6 +798,16 @@
 
         }
 
+        function isRequestParametersExist(id) {
+
+            if (data.requestParameters[id]) {
+                return true;
+            }
+
+            return false
+
+        }
+
         function getRequestParameters(id) {
 
             if (data.requestParameters[id]) {
@@ -1873,6 +1883,7 @@
             setLastClickInfo: setLastClickInfo,
             getLastClickInfo: getLastClickInfo,
 
+            isRequestParametersExist: isRequestParametersExist,
             setRequestParameters: setRequestParameters,
             getRequestParameters: getRequestParameters,
             getRequestParametersAsList: getRequestParametersAsList,

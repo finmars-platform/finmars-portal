@@ -281,32 +281,26 @@ export default function (toastNotificationService, transactionTypeService, price
 
                 foldChildGroups(group.___id, evDataService);
 
-            }
-            else {
+            } else {
 
                 group.___is_open = true;
 
                 groupSettings.is_open = group.___is_open;
-                /*rvDataHelper.setGroupSettings(evDataService, group, groupSettings);
 
-                evDataService.setData(group);
+                if (!evDataService.isRequestParametersExist(group.___id)) {
 
-                evDataService.setGroups(groups);
+                    var requestParameters = rvDataProviderService.createRequestParameters(group, group.___level - 1,  evDataService, evEventService,)
 
-                // evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);*/
+                    console.log('handleFoldButtonClick.group', group);
+                    console.log('handleFoldButtonClick.requestParameters', requestParameters);
 
-                // TODO probably we need to remember if user already requested data
+                    rvDataProviderService.updateDataStructureByRequestParameters(requestParameters, evDataService, evEventService).then(function () {
 
-                var requestParameters = rvDataProviderService.createRequestParameters(group, group.___level - 1,  evDataService, evEventService,)
+                        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                console.log('handleFoldButtonClick.group', group);
-                console.log('handleFoldButtonClick.requestParameters', requestParameters);
+                    })
 
-                rvDataProviderService.updateDataStructureByRequestParameters(requestParameters, evDataService, evEventService).then(function () {
-
-                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                })
+                }
 
             }
 
