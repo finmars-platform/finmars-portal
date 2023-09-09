@@ -2,7 +2,6 @@
  * Created by szhitenev on 05.05.2016.
  */
 import RvDomManager from "../../services/rv-dom-manager/rv-dom.manager";
-import toastNotificationService from "../../../../../shell/scripts/app/services/toastNotificationService";
 
 (function () {
 
@@ -21,7 +20,7 @@ import toastNotificationService from "../../../../../shell/scripts/app/services/
     var metaService = require('../../services/metaService');
     var EvScrollManager = require('../../services/ev-dom-manager/ev-scroll.manager');
 
-    module.exports = function (toastNotificationService, usersService, globalDataService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService) {
+    module.exports = function (toastNotificationService, usersService, globalDataService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService, rvDataProviderService) {
         return {
             restrict: 'AE',
             scope: {
@@ -63,7 +62,7 @@ import toastNotificationService from "../../../../../shell/scripts/app/services/
                 scope.isReport = metaService.isReport(entityType);
                 var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
-                var rvDomManager = new RvDomManager(toastNotificationService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService);
+                var rvDomManager = new RvDomManager(toastNotificationService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService, rvDataProviderService);
                 var activeLayoutConfigIsSet = false;
 
                 if (!scope.isReport) {
@@ -542,8 +541,7 @@ import toastNotificationService from "../../../../../shell/scripts/app/services/
                         scope.dataLoadStatus = true;
                         scope.firstRender = true;
 
-                    }
-                    else {
+                    } else {
 
                         setTimeout(function () {
 

@@ -846,7 +846,7 @@ export default (function () {
 
     //# region GROUP TABLE
     portal.directive('groupTable', ['globalDataService', require('./app/directives/groupTable/gTableComponent')]);
-    portal.directive('groupTableBody', ['toastNotificationService', 'usersService', 'globalDataService', 'transactionTypeService', 'priceHistoryService', 'uiService', 'evRvDomManagerService', require('./app/directives/groupTable/gTableBodyComponent')]);
+    portal.directive('groupTableBody', ['toastNotificationService', 'usersService', 'globalDataService', 'transactionTypeService', 'priceHistoryService', 'uiService', 'evRvDomManagerService', 'rvDataProviderService', require('./app/directives/groupTable/gTableBodyComponent')]);
     /* portal.directive('rvTextFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterDirective')]);
     portal.directive('rvNumberFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvNumberFilterDirective')]);
     portal.directive('rvDateFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvDateFilterDirective')]); */

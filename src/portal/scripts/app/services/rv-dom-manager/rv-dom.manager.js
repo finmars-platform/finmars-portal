@@ -7,7 +7,7 @@ const metaHelper = require('../../helpers/meta.helper');
 
 const RvScrollManager = require('./rv-scroll.manager');
 
-export default function (toastNotificationService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService) {
+export default function (toastNotificationService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService, rvDataProviderService) {
 
     const rvScrollManager = new RvScrollManager();
 
@@ -294,6 +294,19 @@ export default function (toastNotificationService, transactionTypeService, price
                 evDataService.setGroups(groups);
 
                 // evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);*/
+
+                // TODO probably we need to remember if user already requested data
+
+                var requestParameters = rvDataProviderService.createRequestParameters(group, group.___level - 1,  evDataService, evEventService,)
+
+                console.log('handleFoldButtonClick.group', group);
+                console.log('handleFoldButtonClick.requestParameters', requestParameters);
+
+                rvDataProviderService.updateDataStructureByRequestParameters(requestParameters, evDataService, evEventService).then(function () {
+
+                    evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                })
 
             }
 
