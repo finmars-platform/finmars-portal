@@ -111,18 +111,22 @@
 
     var _getChildrenGroups = function (parentGroupId, evDataService, results) {
 
-        var item = evDataService.getData(parentGroupId);
+        var parentGroup = evDataService.getData(parentGroupId);
+        var dataAsList = evDataService.getDataAsList();
 
-        if (item && item.___type === 'group' && item.results) {
+        if (parentGroup && parentGroup.___type === 'group') {
 
-            item.results.forEach(function (child) {
+            dataAsList.forEach(function (item) {
 
-                results.push(child);
+                if (item.___parentId === parentGroupId) {
+                    results.push(item);
 
-                _getChildrenGroups(child.___id, evDataService, results);
+                    _getChildrenGroups(item.___id, evDataService, results);
+                }
+
+
 
             })
-
         }
 
 
