@@ -136,29 +136,6 @@
         // var dataOrderReference = {}; // Only need for keep tracking on original item index
         var referenceItem;
 
-        // console.time("convertToTree.firstLoop");
-
-        // Object.keys(data).forEach(function (key) {
-        //
-        //     dataOrderReference[key] = {
-        //         results: []
-        //     };
-        //
-        //     if (data[key].results) {
-        //         data[key].results.forEach(function (item, index) {
-        //
-        //             referenceItem = {___id: item.___id, index: index};
-        //
-        //             dataOrderReference[key].results.push(referenceItem)
-        //         })
-        //     }
-        //
-        //
-        // });
-
-        // console.timeEnd("convertToTree.firstLoop");
-
-        // console.time("convertToTree.secondLoop");
 
         for (const item of rootGroup.results) {
             if (!data[item.___id]) {
@@ -168,10 +145,6 @@
                 }
             }
         }
-
-        // console.timeEnd("convertToTree.secondLoop");
-        //
-        // console.time("convertToTree.thirdLoop");
 
         var originalKeys = Object.keys(data);
 
@@ -205,27 +178,20 @@
 
         extendedKeys.forEach(function (key, index) {
 
-            if (optimize) {
-
-                // minimal amount of meta-fields (some issues will occur in Entity Viewer if remove them)
-                list.push({
-                    ___index: index,
-                    ___id: data[key].___id,
-                    ___parentId: data[key].___parentId,
-                    ___level: data[key].___level,
-                    ___type: data[key].___type,
-                    ___subtotal_type: data[key].___subtotal_type,
-                    ___items_count: data[key].___items_count,
-                    ___group_name: data[key].___group_name,
-                    ___is_open: data[key].___is_open,
-                    ___is_selected: data[key].___is_selected,
-                    ___has_selected_child: data[key].___has_selected_child,
-                    ___group_identifier: data[key].___group_identifier
-                });
-
-            } else {
-                list.push(data[key])
-            }
+            list.push({
+                ___index: index,
+                ___id: data[key].___id,
+                ___parentId: data[key].___parentId,
+                ___level: data[key].___level,
+                ___type: data[key].___type,
+                ___subtotal_type: data[key].___subtotal_type,
+                ___items_count: data[key].___items_count,
+                ___group_name: data[key].___group_name,
+                ___is_open: data[key].___is_open,
+                ___is_selected: data[key].___is_selected,
+                ___has_selected_child: data[key].___has_selected_child,
+                ___group_identifier: data[key].___group_identifier
+            });
 
 
         });

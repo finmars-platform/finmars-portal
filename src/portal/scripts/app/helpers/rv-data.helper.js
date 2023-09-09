@@ -34,7 +34,17 @@
 
         if (item.___level === level) {
 
-            item.subtotal = rvSubtotalHelper.calculate(item.results, columns);
+            var dataList = evDataService.getDataAsList();
+
+            var items = []
+
+            dataList.forEach(function (item) {
+              if (item.___parentId == item.___id) {
+                  items.push(item)
+              }
+            })
+
+            item.subtotal = rvSubtotalHelper.calculate(items, columns);
 
             evDataService.setData(item);
 
@@ -82,6 +92,25 @@
             });
 
         }
+
+    };
+
+    var calculateGrandTotal= function (evDataService) {
+
+        var dataList = evDataService.getDataAsList();
+
+        var groups = evDataService.getGroups();
+        var level = groups.length;
+
+        // console.log('calculateSubtotals.level', level);
+
+        dataList.forEach(function (item) {
+
+            if (item.___level === 0) {
+                calculateItemSubtotal(item, evDataService);
+            }
+
+        });
 
     };
 
@@ -156,29 +185,29 @@
 
         dataList.forEach(function (item) {
 
-            if (item.results.length) {
-
-                groups.forEach(function (group, index) {
-
-                    if (item.___level === index + 1 && item.___level <= groups.length &&
-                        group.report_settings.subtotal_type) {
-
-                        subtotalObj = Object.assign({}, item.subtotal, {
-                            ___group_identifier: item.___group_identifier,
-                            ___group_name: item.___group_name,
-                            ___type: 'subtotal',
-                            ___parentId: item.___id,
-                            ___level: item.___level + 1
-                        });
-
-                        var insertSubtotal = insertSubtotalFns[group.report_settings.subtotal_type];
-                        insertSubtotal(subtotalObj, item);
-
-                    }
-
-                });
-
+            if (!item.results) {
+                item.results = [];
             }
+
+            groups.forEach(function (group, index) {
+
+                if (item.___level === index + 1 && item.___level <= groups.length &&
+                    group.report_settings.subtotal_type) {
+
+                    subtotalObj = Object.assign({}, item.subtotal, {
+                        ___group_identifier: item.___group_identifier,
+                        ___group_name: item.___group_name,
+                        ___type: 'subtotal',
+                        ___parentId: item.___id,
+                        ___level: item.___level + 1
+                    });
+
+                    var insertSubtotal = insertSubtotalFns[group.report_settings.subtotal_type];
+                    insertSubtotal(subtotalObj, item);
+
+                }
+
+            });
 
         });
 
@@ -603,11 +632,13 @@
 
         if (groups.length || rootGroupOptions.subtotal_type) {
 
-            console.time("Calculating subtotals");
+            // console.time("Calculating subtotals");
+            //
+            // calculateSubtotals(evDataService);
+            //
+            // console.timeEnd("Calculating subtotals");
 
-            calculateSubtotals(evDataService);
-
-            console.timeEnd("Calculating subtotals");
+            calculateGrandTotal(evDataService);
 
             console.time("Copying data");
 
@@ -697,11 +728,11 @@
 
         if (groups.length || rootGroupOptions.subtotal_type) {
 
-            console.time("Calculating subtotals");
+            // console.time("Calculating subtotals");
 
-            calculateSubtotals(evDataService);
+            // calculateSubtotals(evDataService);
 
-            console.timeEnd("Calculating subtotals");
+            // console.timeEnd("Calculating subtotals");
 
             console.time("Copying data");
 
