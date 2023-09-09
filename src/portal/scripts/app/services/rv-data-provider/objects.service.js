@@ -14,11 +14,13 @@ export default function (entityResolverService) {
 
         var entityType = entityViewerDataService.getEntityType();
         var reportOptions = entityViewerDataService.getReportOptions();
+        var globalTableSearch = entityViewerDataService.getGlobalTableSearch();
 
         console.log("getBackendList!", reportOptions)
 
         reportOptions.frontend_request_options = options
         reportOptions.frontend_request_options['columns'] = entityViewerDataService.getColumns() // used for subtotals in groups, but not used for rows
+        reportOptions.frontend_request_options['globalTableSearch'] = globalTableSearch
 
         return entityResolverService.getListReportItems(entityType, reportOptions).then(function (data) {
 
