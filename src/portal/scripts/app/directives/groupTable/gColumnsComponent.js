@@ -2178,7 +2178,7 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     var unfoldPromises = []
 
-                    var currentLevelGroups = JSON.parse(JSON.stringify(evDataHelper.getGroupsByLevel($index, scope.evDataService)))
+                    var currentLevelGroups = JSON.parse(JSON.stringify(evDataHelper.getGroupsByLevel($index + 1, scope.evDataService)))
 
                     currentLevelGroups.forEach(function (group) {
 
@@ -2188,12 +2188,15 @@ const evEvents = require("../../services/entityViewerEvents");
 
                             if (!scope.evDataService.isRequestParametersExist(group.___id)) {
 
-                                var requestParameters = rvDataProviderService.createRequestParameters(group, group.___level - 1, scope.evDataService, scope.evEventService)
+                                unfoldPromises.push(function (){
 
-                                console.log('handleFoldButtonClick.group', group);
-                                console.log('handleFoldButtonClick.requestParameters', requestParameters);
+                                    var requestParameters = rvDataProviderService.createRequestParameters(group, group.___level - 1, scope.evDataService, scope.evEventService)
 
-                                unfoldPromises.push(rvDataProviderService.updateDataStructureByRequestParameters(requestParameters, scope.evDataService, scope.evEventService))
+                                    console.log('handleFoldButtonClick.group', group);
+                                    console.log('handleFoldButtonClick.requestParameters', requestParameters);
+
+                                    return rvDataProviderService.updateDataStructureByRequestParameters(requestParameters, scope.evDataService, scope.evEventService)
+                                })
 
                             }
 
@@ -2222,7 +2225,9 @@ const evEvents = require("../../services/entityViewerEvents");
 
                             if (res.status === 'agree') {
 
-                                Promise.all(unfoldPromises).then(function (data) {
+                                let promisesToExecute = unfoldPromises.map(func => func());
+
+                                Promise.all(promisesToExecute).then(function (data) {
                                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                                 })
 
@@ -2236,7 +2241,9 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     } else {
 
-                        Promise.all(unfoldPromises).then(function (data) {
+                        let promisesToExecute = unfoldPromises.map(func => func());
+
+                        Promise.all(promisesToExecute).then(function (data) {
                             scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
                         })
                     }
