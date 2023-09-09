@@ -428,10 +428,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         }
 
-        testObj[id] = {
-            requestParameters: requestParameters,
-            item: item,
-        };
 
         evDataService.setRequestParameters(requestParameters);
 
@@ -531,7 +527,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     };
 
-    var testObj = {};
     var createdIdsList = []; // WTF VERY BAD PATTERN, never do it again
 
     var createDataStructure = function (evDataService, evEventService) {
@@ -540,7 +535,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         evDataService.resetData();
         evDataService.resetRequestParameters();
         var createdIdsList = [];
-        testObj = {};
 
         var defaultRootRequestParameters = evDataService.getActiveRequestParameters();
         var groupTypes = evDataService.getGroups();
