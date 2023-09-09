@@ -358,7 +358,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     };
 
-    var createRequestParameters = function (item, level, evDataService, evEventService, createdIdsList) {
+    var createRequestParameters = function (item, level, evDataService, evEventService, createdIdsList = []) {
 
         console.log('createRequestParameters.item', item);
 
@@ -670,7 +670,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
             getObjectsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
 
-                // evEventService.dispatchEvent(evEvents.DATA_LOAD_END); // backend logic
+                evEventService.dispatchEvent(evEvents.DATA_LOAD_END); // backend logic
 
             })
 
@@ -680,7 +680,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
             getGroupsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
 
-                // evEventService.dispatchEvent(evEvents.DATA_LOAD_END); // backend logic
+                evEventService.dispatchEvent(evEvents.DATA_LOAD_END); // backend logic
 
             })
         }
@@ -818,8 +818,12 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         createDataStructure: createDataStructure,
         requestReport: requestReport,
         updateDataStructure: updateDataStructure,
+
         sortObjects: sortObjects,
-        sortGroupType: sortGroupType
+        sortGroupType: sortGroupType,
+
+        createRequestParameters: createRequestParameters,
+        updateDataStructureByRequestParameters: updateDataStructureByRequestParameters,
     }
 
 }

@@ -81,7 +81,7 @@
 
         }
 
-        console.log('getEntityAttributeValue', result);
+        // console.log('getEntityAttributeValue', result);
         
         return result;
 
