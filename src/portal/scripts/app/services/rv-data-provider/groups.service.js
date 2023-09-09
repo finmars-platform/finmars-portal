@@ -2,6 +2,7 @@
  * Report Viewer Data Provider Groups Service.
  * @module ReportViewerDataProviderGroupsService
  */
+import rvSubtotalHelper from "../../helpers/rv-subtotal.service";
 
 var filterService = require('./filter.service');
 var sortService = require('./sort.service');
@@ -121,12 +122,29 @@ export default function (entityResolverService) {
 
         });
 
-        console.log('result',result);
+        console.log('result', result);
 
         return result;
 
     };
 
+    var calculateSubtotals = function (groups, items, columns) {
+
+        groups.forEach(function (group) {
+
+            var groupItems = items.filter(function (item) {
+
+                return item[group.___group_type_key] === group.___group_identifier
+
+            })
+
+            group.subtotal = rvSubtotalHelper.calculate(groupItems, columns);
+
+        })
+
+        return groups
+
+    }
 
     var getFrontendList = function (entityType, options, entityViewerDataService) {
 
@@ -200,6 +218,10 @@ export default function (entityResolverService) {
                                     groups = sortService.sortItems(groups, '___group_name');
                                 }*/
 
+                var columns = entityViewerDataService.getColumns();
+
+                groups = calculateSubtotals(groups, items, columns)
+
                 result.count = groups.length;
                 result.results = groups;
 
@@ -209,7 +231,7 @@ export default function (entityResolverService) {
             }
 
 
-            // console.log('get groups', JSON.parse(JSON.stringify(result)));
+            // console.log('get_groups_with_subtotal', JSON.parse(JSON.stringify(result)));
 
             resolve(result)
 
@@ -263,7 +285,7 @@ export default function (entityResolverService) {
 
     };
 
-    return  {
+    return {
         getList: getList,
     }
 

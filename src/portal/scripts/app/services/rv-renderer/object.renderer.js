@@ -80,6 +80,8 @@
             result.raw_text_result = '[' + obj[column.key].length + ']';
 
         }
+
+        console.log('getEntityAttributeValue', result);
         
         return result;
 

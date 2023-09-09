@@ -219,73 +219,14 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
             objectsService.getList(entityType, options, entityViewerDataService).then(function (data) {
 
-                var groupData = entityViewerDataService.getData(event.___id);
-                var obj; // group that contains objects
+                var parentGroup = entityViewerDataService.getData(requestParameters.id);
 
-                if (groupData) {
+                data.results.map(function (item, index) {
 
-                    obj = Object.assign({}, groupData);
-
-                    obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
-                    obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
-
-                    obj.count = data.count;
-                    obj.next = data.next;
-                    obj.previous = data.previous;
-                    obj.results = data.results;
-                    // for (i = 0; i < step; i = i + 1) {
-                    //     if (page * step + i < obj.count) {
-                    //         obj.results[page * step + i] = data.results[i];
-                    //     }
-                    // }
-                } else {
-
-                    var parentGroup = entityViewerDataService.getData(event.parentGroupId);
-
-                    obj = Object.assign({}, data);
-
-                    obj.___group_name = event.groupName ? event.groupName : '-';
-                    obj.___group_identifier = event.groupId ? event.groupId : '-';
-
-                    obj.___is_open = true;
-                    // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
-
-                    obj.___parentId = event.parentGroupId;
-                    obj.___type = 'group';
-                    obj.___id = event.___id;
-                    obj.___index = parentGroup.results.findIndex(group => group.___id === obj.___id);
-                    obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
-
-                    var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
-
-                    console.log('groupSettings.getObjects', JSON.parse(JSON.stringify(groupSettings)));
-
-                    if (groupSettings.hasOwnProperty('is_open')) {
-                        obj.___is_open = groupSettings.is_open;
-                    }
-
-                    if (!parentGroup.___is_open) {
-
-                        obj.___is_open = false;
-                        groupSettings.is_open = false;
-
-                        rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
-
-                    }
-
-                }
-
-                obj.results = obj.results.map(function (item, index) {
-
-                    item.___group_name = item.___group_name ? item.___group_name : '-';
-                    item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
-
-                    // item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
-
-                    item.___parentId = obj.___id;
+                    item.___parentId = parentGroup.___id;
                     item.___type = 'object';
                     item.___index = index;
-                    item.___level = obj.___level + 1;
+                    item.___level = parentGroup.___level + 1;
 
                     //# region Create an ___id
                     item.___id = evRvCommonHelper.getId(item);
@@ -305,18 +246,17 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                         throw customError;
 
                     }
-                    //# endregion
 
-                    return item;
+                    entityViewerDataService.setData(item);
                 });
 
-                entityViewerDataService.setData(obj);
+
 
                 requestParameters.status = 'loaded';
 
                 entityViewerDataService.setRequestParameters(requestParameters);
 
-                resolve(obj);
+                resolve();
 
             })
 
@@ -357,113 +297,48 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
             groupsService.getList(entityType, options, entityViewerDataService).then(function (data) {
 
-                var obj = {};
+                // console.log('groupsService.getList.data', data)
 
-                var groupData = entityViewerDataService.getData(event.___id);
+                var parentGroup = entityViewerDataService.getData(requestParameters.id);
 
+                data.results.map(function (item, index) {
 
-                if (groupData) {
-
-                    obj = Object.assign({}, groupData);
-
-                    obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
-                    obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
-
-                    obj.count = data.count;
-                    obj.next = data.next;
-                    obj.previous = data.previous;
-
-                    for (i = 0; i < step; i = i + 1) {
-                        if (page * step + i < obj.count) {
-                            obj.results[page * step + i] = data.results[i];
-                        }
-                    }
+                    item.___parentId = requestParameters.id;
+                    item.___group_name = item.___group_name ? item.___group_name : '-';
+                    item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
 
 
-                } else {
+                    item.___level = parentGroup.___level + 1;
+                    item.___index = index;
 
+                    item.___type = 'group';
 
-                    var parentGroup = entityViewerDataService.getData(event.parentGroupId);
-
-                    obj = Object.assign({}, data);
-                    obj.___group_name = event.groupName ? event.groupName : '-';
-                    obj.___group_identifier = event.groupId ? event.groupId : '-';
-                    obj.___is_open = true;
-
-
-                    // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
-
-                    obj.___parentId = event.parentGroupId;
-                    obj.___type = 'group';
-                    obj.___id = event.___id;
-                    obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
-
-
-                    var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
+                    var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, item);
 
                     if (groupSettings.hasOwnProperty('is_open')) {
-                        obj.___is_open = groupSettings.is_open;
+                        item.___is_open = groupSettings.is_open;
                     }
 
                     if (!parentGroup.___is_open) {
 
-                        obj.___is_open = false;
+                        item.___is_open = false;
                         groupSettings.is_open = false;
 
-                        rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
+                        rvDataHelper.setGroupSettings(entityViewerDataService, item, groupSettings);
 
-                    }
-
-
-                }
-
-                var groups = entityViewerDataService.getGroups();
-                var parents = [];
-
-                if (obj.___parentId !== null) {
-                    parents = evRvCommonHelper.getParents(obj.___parentId, entityViewerDataService);
-                }
-
-                parents.push(obj);
-                // generate data for group's children
-                obj.results = obj.results.map(function (item, index) {
-
-                    item.___parentId = obj.___id;
-                    item.___group_name = item.___group_name ? item.___group_name : '-';
-                    item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
-
-                    // item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
-
-
-                    item.___level = obj.___level + 1;
-                    item.___index = index;
-
-                    if (groups.length >= parents.length) {
-                        item.___type = 'group';
-
-                    } else {
-                        item.___type = 'object';
                     }
 
                     item.___id = evRvCommonHelper.getId(item);
 
-                    if (window.location.href.indexOf('v2=true') !== -1) {
-                        if (item.___type == 'group') { // 2023-09-08 update with backend window
-                            entityViewerDataService.setData(item);
-                        }
-                    }
-
-                    return item
+                    entityViewerDataService.setData(item);
 
                 });
-
-                entityViewerDataService.setData(obj);
 
                 requestParameters.status = 'loaded';
 
                 entityViewerDataService.setRequestParameters(requestParameters);
 
-                resolve(obj);
+                resolve();
 
             })
 
@@ -576,12 +451,24 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
      * @param {Object} evEventService
      * @returns {Promise<[]>} - returns arrays of nested promises for called methods updateDataStructureByRequestParameters
      */
-    var recursiveRequest = function (parentId, items, level, evDataService, evEventService, createdIdsList) {
+    var recursiveRequest = function (parentId,  level, evDataService, evEventService, createdIdsList) {
 
         return new Promise(function RecursiveRequestPromise(resolve, reject) {
 
             var promises = [];
             var requestParameters;
+
+            var dataList = evDataService.getDataAsList();
+
+            var items = []
+
+            dataList.forEach(function (dataItem) {
+
+                if (dataItem.___parentId === parentId) {
+                    items.push(dataItem)
+                }
+
+            })
 
             items.forEach(function (item) {
 
@@ -611,7 +498,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                         // console.log('item!', item.___group_name);
 
-                        recursiveRequestPromises.push(recursiveRequest(item.___id, item.results, level, evDataService, evEventService, createdIdsList));
+                        recursiveRequestPromises.push(recursiveRequest(item.___id, level, evDataService, evEventService, createdIdsList));
 
                     });
 
@@ -638,7 +525,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         var rootGroup = evDataService.getRootGroupData();
         var level = 0;
 
-        return recursiveRequest(rootGroup.___id, rootGroup.results, level, evDataService, evEventService, createdIdsList).then(function () {
+        return recursiveRequest(rootGroup.___id, level, evDataService, evEventService, createdIdsList).then(function () {
             console.timeEnd('Creating Data Structure');
         })
 
