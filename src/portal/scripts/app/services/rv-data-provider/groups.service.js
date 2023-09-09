@@ -249,6 +249,7 @@ export default function (entityResolverService) {
         console.log("getBackendList!", reportOptions)
 
         reportOptions.frontend_request_options = options
+        reportOptions.frontend_request_options['columns'] = entityViewerDataService.getColumns()
 
         return entityResolverService.getListReportGroups(entityType, reportOptions).then(function (data) {
 
