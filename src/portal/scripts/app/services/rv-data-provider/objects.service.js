@@ -18,6 +18,7 @@ export default function (entityResolverService) {
         console.log("getBackendList!", reportOptions)
 
         reportOptions.frontend_request_options = options
+        reportOptions.frontend_request_options['columns'] = entityViewerDataService.getColumns() // used for subtotals in groups, but not used for rows
 
         return entityResolverService.getListReportItems(entityType, reportOptions).then(function (data) {
 
