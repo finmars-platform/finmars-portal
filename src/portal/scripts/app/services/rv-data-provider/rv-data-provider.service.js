@@ -251,7 +251,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 });
 
 
-
                 requestParameters.status = 'loaded';
 
                 entityViewerDataService.setRequestParameters(requestParameters);
@@ -313,6 +312,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                     item.___type = 'group';
 
+                    item.___id = evRvCommonHelper.getId(item); // order matters
+
                     var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, item);
 
                     if (groupSettings.hasOwnProperty('is_open')) {
@@ -328,9 +329,32 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                     }
 
-                    item.___id = evRvCommonHelper.getId(item);
-
                     entityViewerDataService.setData(item);
+
+                    if (item.___is_open) { // Request Data for group if open. TODO refactor it, I dont like it, probably will be issues on large data sets
+
+                        // TODO discuss
+                        // What I propose
+                        // We need to have ONE GENERAL queue list for all requests
+                        // E.G. if we know that user has 70k transactions
+                        // We need to prevent him to do more then 10 requests on level
+
+                        if (!entityViewerDataService.isRequestParametersExist(item.___id)) {
+
+                            var newRequestParameters = createRequestParameters(item, item.___level - 1, entityViewerDataService, entityViewerEventService,)
+
+                            console.log('rvDataProvider_cascade_download.item', item);
+                            console.log('rvDataProvider_cascade_download.requestParameters', newRequestParameters);
+
+                            updateDataStructureByRequestParameters(newRequestParameters, entityViewerDataService, entityViewerEventService).then(function () {
+
+                                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                            })
+
+                        }
+
+                    }
 
                 });
 
@@ -448,7 +472,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
      * @param {Object} evEventService
      * @returns {Promise<[]>} - returns arrays of nested promises for called methods updateDataStructureByRequestParameters
      */
-    var recursiveRequest = function (parentId,  level, evDataService, evEventService, createdIdsList) {
+    var recursiveRequest = function (parentId, level, evDataService, evEventService, createdIdsList) {
 
         return new Promise(function RecursiveRequestPromise(resolve, reject) {
 

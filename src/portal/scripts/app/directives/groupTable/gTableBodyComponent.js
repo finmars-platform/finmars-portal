@@ -354,7 +354,7 @@ import RvDomManager from "../../services/rv-dom-manager/rv-dom.manager";
                         scope.$apply();
                     }, 0)
 
-                    scope.firstRender = true; // IF SOMETHING WENT WRONG AND SOMEHOW REPORT IS NOT RENDERER, WE HAVE 1 min timeoout to render
+                    // scope.firstRender = true; // IF SOMETHING WENT WRONG AND SOMEHOW REPORT IS NOT RENDERER, WE HAVE 1 min timeoout to render
 
                     if (scope.isReport) {
                         renderReportViewer();
@@ -539,20 +539,21 @@ import RvDomManager from "../../services/rv-dom-manager/rv-dom.manager";
                     if (viewContext === 'split_panel' && entityType === 'transaction-report') {
 
                         scope.dataLoadStatus = true;
-                        scope.firstRender = true;
+                        // scope.firstRender = true;
 
                     } else {
 
-                        setTimeout(function () {
-
-                            if (!scope.firstRender) { // Force Table render if not rendered in first 60 second
-
-                                console.log("Special render trigger")
-
-                                updateTableContent();
-                            }
-
-                        }, 60 * 1000)
+                        // WTF is this shit code is?
+                        // setTimeout(function () {
+                        //
+                        //     if (!scope.firstRender) { // Force Table render if not rendered in first 60 second
+                        //
+                        //         console.log("Special render trigger")
+                        //
+                        //         updateTableContent();
+                        //     }
+                        //
+                        // }, 60 * 1000)
 
 
                     }

@@ -247,9 +247,11 @@ export default function (entityResolverService) {
         var reportOptions = entityViewerDataService.getReportOptions();
 
         console.log("getBackendList!", reportOptions)
+        var globalTableSearch = entityViewerDataService.getGlobalTableSearch();
 
         reportOptions.frontend_request_options = options
         reportOptions.frontend_request_options['columns'] = entityViewerDataService.getColumns()
+        reportOptions.frontend_request_options['globalTableSearch'] = globalTableSearch
 
         return entityResolverService.getListReportGroups(entityType, reportOptions).then(function (data) {
 

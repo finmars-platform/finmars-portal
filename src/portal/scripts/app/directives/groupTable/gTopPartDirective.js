@@ -54,9 +54,7 @@
 
                     scope.evDataService.setGlobalTableSearch(scope.globalTableSearch);
 
-                    if (!scope.isReport) {
-                        scope.evDataService.resetTableContent(false);
-                    }
+                    scope.evDataService.resetTableContent(false);
 
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                 }

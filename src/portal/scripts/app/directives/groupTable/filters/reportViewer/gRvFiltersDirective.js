@@ -20,6 +20,7 @@
 
                 scope.entityType = gFiltersVm.entityType;
                 scope.isReport = true;
+                scope.processing = false;
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.showUseFromAboveFilters = !scope.hideUseFromAboveFilters;
 
@@ -497,10 +498,13 @@
 
                         scope.processing = true;
 
+                        setTimeout(function () {
+                            scope.$apply();
+                        }, 0)
+
                     })
 
                     scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-
 
                         scope.processing = false;
 

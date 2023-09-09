@@ -1,6 +1,7 @@
 /**
  * Created by szhitenev on 05.05.2016.
  */
+const evEvents = require("../../services/entityViewerEvents");
 (function () {
 
     'use strict';
@@ -17,7 +18,7 @@
 
     var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
-    module.exports = function ($mdDialog, toastNotificationService, usersService, globalDataService, uiService, evRvDomManagerService) {
+    module.exports = function ($mdDialog, toastNotificationService, usersService, globalDataService, uiService, evRvDomManagerService, rvDataProviderService) {
         return {
             restrict: 'AE',
             scope: {
@@ -1796,7 +1797,6 @@
                 };*/
 
 
-
                 const updateGroupTypeIds = function () {
 
                     let groups = scope.evDataService.getGroups();
@@ -2173,6 +2173,74 @@
                     scope.evEventService.dispatchEvent(evEvents.GROUPS_LEVEL_UNFOLD);
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
+
+                    // New Backend Logic, Try To Request New Unrequested Open Groups
+
+                    var unfoldPromises = []
+
+                    var currentLevelGroups = JSON.parse(JSON.stringify(evDataHelper.getGroupsByLevel($index, scope.evDataService)))
+
+                    currentLevelGroups.forEach(function (group) {
+
+                        console.log('handleFoldButtonClick.group', group);
+
+                        if (group.___is_open) {
+
+                            if (!scope.evDataService.isRequestParametersExist(group.___id)) {
+
+                                var requestParameters = rvDataProviderService.createRequestParameters(group, group.___level - 1, scope.evDataService, scope.evEventService)
+
+                                console.log('handleFoldButtonClick.group', group);
+                                console.log('handleFoldButtonClick.requestParameters', requestParameters);
+
+                                unfoldPromises.push(rvDataProviderService.updateDataStructureByRequestParameters(requestParameters, scope.evDataService, scope.evEventService))
+
+                            }
+
+                        }
+
+                    })
+
+                    console.log('unfoldLevel.unfoldPromises', unfoldPromises);
+
+                    if (unfoldPromises.length > 10) {
+
+                        $mdDialog.show({
+                            controller: 'WarningDialogController as vm',
+                            templateUrl: 'views/dialogs/warning-dialog-view.html',
+                            parent: angular.element(document.body),
+                            // targetEvent: $event,
+                            multiple: true,
+                            locals: {
+                                warning: {
+                                    title: 'Warning',
+                                    description: "You are trying to unfold " + unfoldPromises.length + " groups. It may take a while. Do you want to continue?",
+                                }
+                            }
+
+                        }).then(function (res) {
+
+                            if (res.status === 'agree') {
+
+                                Promise.all(unfoldPromises).then(function (data) {
+                                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                                })
+
+                            } else {
+
+                                scope.foldLevel(key, $index); // then fold this level back
+
+                            }
+
+                        });
+
+                    } else {
+
+                        Promise.all(unfoldPromises).then(function (data) {
+                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                        })
+                    }
+
                 };
 
                 scope.groupLevelIsFolded = function ($index) {
@@ -2429,7 +2497,7 @@
                     });*/
 
                     const allAttrs = scope.attributeDataService.getForAttributesSelector(scope.entityType);
-                    const selectedAttrs = scope.columns.map( col => col.key );
+                    const selectedAttrs = scope.columns.map(col => col.key);
 
                     /*$mdDialog.show({
                         controller: "TableAttributeSelectorDialogController as vm",
@@ -2460,25 +2528,25 @@
                             }
                         }
                     })
-                    .then(function (res) {
+                        .then(function (res) {
 
-                        if (res && res.status === "agree") {
+                            if (res && res.status === "agree") {
 
-                            for (var i = 0; i < res.data.items.length; i = i + 1) {
+                                for (var i = 0; i < res.data.items.length; i = i + 1) {
 
-                                var colData = evHelperService.getTableAttrInFormOf( 'column', res.data.items[i] );
-                                scope.columns.push(colData);
+                                    var colData = evHelperService.getTableAttrInFormOf('column', res.data.items[i]);
+                                    scope.columns.push(colData);
+
+                                }
+
+                                scope.evDataService.setColumns(scope.columns);
+
+                                scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                                scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                             }
 
-                            scope.evDataService.setColumns(scope.columns);
-
-                            scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-                            scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                        }
-
-                    });
+                        });
 
                 };
 
@@ -2577,8 +2645,7 @@
 
                     }
 
-                }
-                else {
+                } else {
 
                     onGroupsChange = function () {
 
