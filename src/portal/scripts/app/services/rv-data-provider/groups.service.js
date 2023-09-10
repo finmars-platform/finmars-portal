@@ -3,6 +3,8 @@
  * @module ReportViewerDataProviderGroupsService
  */
 import rvSubtotalHelper from "../../helpers/rv-subtotal.service";
+import evRvCommonHelper from "../../helpers/ev-rv-common.helper";
+import queryParamsHelper from "../../helpers/queryParamsHelper";
 
 var filterService = require('./filter.service');
 var sortService = require('./sort.service');
@@ -252,6 +254,36 @@ export default function (entityResolverService) {
         reportOptions.frontend_request_options = options
         reportOptions.frontend_request_options['columns'] = entityViewerDataService.getColumns()
         reportOptions.frontend_request_options['globalTableSearch'] = globalTableSearch
+
+        if (!reportOptions.frontend_request_options['filter_settings']) {
+
+            var filters = entityViewerDataService.getFilters();
+
+            reportOptions.frontend_request_options['filter_settings'] = []
+
+                filters.forEach(function (item) {
+
+                if (evRvCommonHelper.isFilterValid(item)) {
+
+                    var key = queryParamsHelper.entityPluralToSingular(item.key);
+
+                    var filterSettings = {
+                        key: key,
+                        filter_type: item.options.filter_type,
+                        exclude_empty_cells: item.options.exclude_empty_cells,
+                        value_type: item.value_type,
+                        value: item.options.filter_values
+                    };
+
+                    reportOptions.frontend_request_options['filter_settings'].push(filterSettings);
+
+                }
+
+            });
+
+
+
+        }
 
         return entityResolverService.getListReportGroups(entityType, reportOptions).then(function (data) {
 
