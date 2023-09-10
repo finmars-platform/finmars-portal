@@ -26,6 +26,14 @@ export default function (entityResolverService) {
 
             console.log('getListReportGroups.data.items', data.items);
 
+            // Important, needs to optimize backend reports
+            // report_instance_id is saved report, so no need to recalcualte whole report
+            // just regroup or refilter
+            // to reset report_instance_id, just set it to null
+            reportOptions.report_instance_id = data.report_instance_id;
+            entityViewerDataService.setReportOptions(reportOptions);
+
+
             var result = {
                 next: null,
                 previous: null,
