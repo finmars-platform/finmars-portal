@@ -187,14 +187,17 @@
 
 				var entityType = evDataService.getEntityType()
 
-				if (entityType === 'transaction-report') {
-					// special logic, for heavy transaction report
-					// backend filters enabled
+				evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-					evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
-				} else {
-					evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-				}
+				// Deprecated, now everything is on backend
+				// if (entityType === 'transaction-report') {
+				// 	// special logic, for heavy transaction report
+				// 	// backend filters enabled
+				//
+				// 	evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+				// } else {
+				// 	evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+				// }
 
 			}
 
