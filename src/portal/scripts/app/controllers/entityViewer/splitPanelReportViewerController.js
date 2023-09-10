@@ -394,7 +394,9 @@ import evEvents from "../../services/entityViewerEvents";
 
             vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
-                rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                vm.entityViewerDataService.resetTableContent(true);
+                rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                // rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
 
             });
 
@@ -412,7 +414,9 @@ import evEvents from "../../services/entityViewerEvents";
 
             vm.entityViewerEventService.addEventListener(evEvents.REQUEST_REPORT, function () {
 
-                rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+                vm.entityViewerDataService.resetTableContent(true);
+                rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                // rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
 
             });
 
