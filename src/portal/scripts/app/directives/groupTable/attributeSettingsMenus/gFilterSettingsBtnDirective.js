@@ -42,7 +42,7 @@
 
 						scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
-						scope.evDataService.resetTableContent(true);
+						scope.evDataService.resetTableContent(true); // no need, only refresh button resets report
 
 						scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 

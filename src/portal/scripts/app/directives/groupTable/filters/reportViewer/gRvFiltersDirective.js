@@ -62,6 +62,16 @@
                 }; */
                 scope.refreshTable = function () {
                     scope.processing = true;
+                    scope.evDataService.resetTableContent(true);
+
+                    var reportOptions = scope.evDataService.getReportOptions()
+
+                    if (reportOptions) {
+                        reportOptions.report_instance_id = null // if clear report_instance_id then we request new Report Calculation
+                    }
+
+                    scope.evDataService.setReportOptions(reportOptions);
+
                     scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
                 };
 

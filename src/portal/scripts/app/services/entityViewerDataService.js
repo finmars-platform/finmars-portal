@@ -114,7 +114,6 @@
         }
 
 
-
     };
     /** @module entityViewerDataService */
     module.exports = function (reportHelper) {
@@ -465,6 +464,15 @@
         }
 
         function setReportOptions(options) {
+
+
+            // if (options.report_instance_id) {
+            //     console.log("setReportOptions.report_instance_id is set %", options.report_instance_id);
+            // } else {
+            //     console.log("setReportOptions.report_instance_id is cleared");
+            //     console.trace();
+            // }
+
             data.reportOptions = options;
         }
 
@@ -899,12 +907,16 @@
 
             resetData();
             resetRequestParameters();
+            data.flatList = [];
+            data.projection = [];
 
             var rootGroup = getRootGroupData();
 
             setActiveRequestParametersId(rootGroup.___id);
 
             if (!isReport) setSelectedGroups([]);
+
+            console.log('resetTableContent.data', data);
 
         }
 
