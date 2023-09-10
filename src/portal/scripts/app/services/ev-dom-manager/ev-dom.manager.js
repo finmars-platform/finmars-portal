@@ -1154,6 +1154,8 @@
         // var innerHTMLString = '';
         // var viewContext = evDataService.getViewContext();
 
+        console.log('createPopupMenu.obj', obj);
+
         if (obj) {
 
             popup.innerHTML = generateContextMenu(obj, objectId, parentGroupHashId, evDataService);
