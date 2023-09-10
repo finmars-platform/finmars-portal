@@ -658,21 +658,23 @@
 
             // console.log('setData.obj', obj);
 
-            if (data.data[obj.___parentId] && data.data[obj.___parentId].results && data.data[obj.___parentId].results.length) {
+            data.data[obj.___id] = obj;
 
-                data.data[obj.___parentId].results = data.data[obj.___parentId].results.map(function (item, index) {
-
-                    if (item.___id === obj.___id) {
-                        item = obj;
-                    }
-
-                    return item
-
-                })
-
-            } else {
-                throw Error('Trying to set not existing object')
-            }
+            // if (data.data[obj.___parentId] && data.data[obj.___parentId].results && data.data[obj.___parentId].results.length) {
+            //
+            //     data.data[obj.___parentId].results = data.data[obj.___parentId].results.map(function (item, index) {
+            //
+            //         if (item.___id === obj.___id) {
+            //             item = obj;
+            //         }
+            //
+            //         return item
+            //
+            //     })
+            //
+            // } else {
+            //     throw Error('Trying to set not existing object')
+            // }
 
         }
 
@@ -699,19 +701,27 @@
 
         function getObjects() {
 
-            var groups = getDataAsList();
+            var dataAtList = getDataAsList();
 
-            var result = [];
+            var result = []
 
-            groups.forEach(function (group) {
+            result = dataAtList.filter(function (item) {
+                return item.___type === 'object';
+            })
 
-                group.results.forEach(function (item) {
-
-                    result.push(item)
-
-                });
-
-            });
+            // var groups = getDataAsList();
+            //
+            // var result = [];
+            //
+            // groups.forEach(function (group) {
+            //
+            //     group.results.forEach(function (item) {
+            //
+            //         result.push(item)
+            //
+            //     });
+            //
+            // });
 
             return result;
 

@@ -144,20 +144,22 @@
 
     var getObject = function (objectId, parentGroupHashId, evDataService) {
 
-        var parent = evDataService.getData(parentGroupHashId);
-        var result = null;
+        var result = evDataService.getData(objectId);
 
-        if (parent) {
-
-            parent.results.forEach(function (item) {
-
-                if (item.___id === objectId) {
-                    result = item;
-                }
-
-            });
-
-        }
+        // var parent = evDataService.getData(parentGroupHashId);
+        // var result = null;
+        //
+        // if (parent) {
+        //
+        //     parent.results.forEach(function (item) {
+        //
+        //         if (item.___id === objectId) {
+        //             result = item;
+        //         }
+        //
+        //     });
+        //
+        // }
 
         return result
 
