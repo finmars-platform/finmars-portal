@@ -21,6 +21,8 @@ export default function (entityResolverService) {
 
         console.log("getBackendList!", reportOptions)
 
+        reportOptions.filters = entityViewerDataService.getFilters(); // for transaction report only
+
         reportOptions.frontend_request_options = options
         reportOptions.frontend_request_options['columns'] = entityViewerDataService.getColumns() // used for subtotals in groups, but not used for rows
         reportOptions.frontend_request_options['globalTableSearch'] = globalTableSearch
