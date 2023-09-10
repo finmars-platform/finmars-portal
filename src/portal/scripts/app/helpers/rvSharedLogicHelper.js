@@ -164,11 +164,13 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
             if (viewContext !== 'split_panel' || entityType !== 'transaction-report') {
 
-                if (window.location.href.indexOf('v2=true') !== -1) {
-                    rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
-                } else {
-                    rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
-                }
+                rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+                // Frontend is deprecated since 2023-09-10
+                // if (window.location.href.indexOf('v2=true') !== -1) {
+                //     rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+                // } else {
+                //     rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+                // }
             }
 
             $scope.$apply();

@@ -44,11 +44,13 @@ import evEvents from "../../services/entityViewerEvents";
             vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
                 // rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
-                if (window.location.href.indexOf('v2=true') !== -1) {
-                    rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
-                } else {
-                    rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
-                }
+                rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                // Frontend is deprecated since 2023-09-10
+                // if (window.location.href.indexOf('v2=true') !== -1) {
+                //     rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                // } else {
+                //     rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                // }
 
 
             });
@@ -70,11 +72,13 @@ import evEvents from "../../services/entityViewerEvents";
                 // rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
                 // rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
 
-                if (window.location.href.indexOf('v2=true') !== -1) {
-                    rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
-                } else {
-                    rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
-                }
+                rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                // Frontend is deprecated since 2023-09-10
+                // if (window.location.href.indexOf('v2=true') !== -1) {
+                //     rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                // } else {
+                //     rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+                // }
 
             });
 

@@ -287,11 +287,14 @@ export default function (entityResolverService) {
      */
     var getList = function (entityType, options, entityViewerDataService) {
 
-        if (window.location.href.indexOf('v2=true') !== -1) {
-            return getBackendList(entityType, options, entityViewerDataService)
-        } else {
-            return getFrontendList(entityType, options, entityViewerDataService)
-        }
+        return getBackendList(entityType, options, entityViewerDataService)
+
+        // Frontend is deprecated since 2023-09-10
+        // if (window.location.href.indexOf('v2=true') !== -1) {
+        //     return getBackendList(entityType, options, entityViewerDataService)
+        // } else {
+        //     return getFrontendList(entityType, options, entityViewerDataService)
+        // }
 
     };
 
