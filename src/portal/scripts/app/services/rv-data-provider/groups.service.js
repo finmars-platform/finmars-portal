@@ -251,6 +251,8 @@ export default function (entityResolverService) {
         console.log("getBackendList!", reportOptions)
         var globalTableSearch = entityViewerDataService.getGlobalTableSearch();
 
+        reportOptions.filters = entityViewerDataService.getFilters(); // for transaction report only
+
         reportOptions.frontend_request_options = options
         reportOptions.frontend_request_options['columns'] = entityViewerDataService.getColumns()
         reportOptions.frontend_request_options['globalTableSearch'] = globalTableSearch
