@@ -274,6 +274,8 @@
                 })
             }
 
+            entityViewerDataService.setData(item); // Important to set it object in data propr, consider refactor EV later
+
         })
 
         console.log('obj', obj);
