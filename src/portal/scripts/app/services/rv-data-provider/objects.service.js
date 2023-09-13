@@ -18,6 +18,7 @@ export default function (entityResolverService) {
         var entityType = entityViewerDataService.getEntityType();
         var reportOptions = entityViewerDataService.getReportOptions();
         var globalTableSearch = entityViewerDataService.getGlobalTableSearch();
+        var activeColumnSort = entityViewerDataService.getActiveColumnSort();
 
         console.log("getBackendList!", reportOptions)
 
@@ -26,6 +27,12 @@ export default function (entityResolverService) {
         reportOptions.frontend_request_options = options
         reportOptions.frontend_request_options['columns'] = entityViewerDataService.getColumns() // used for subtotals in groups, but not used for rows
         reportOptions.frontend_request_options['globalTableSearch'] = globalTableSearch
+
+        console.log('getBackendList.activeColumnSort', activeColumnSort);
+
+        if (activeColumnSort && activeColumnSort.options && activeColumnSort.options.sort) {
+            reportOptions.frontend_request_options['items_order'] = activeColumnSort.options.sort.toLowerCase()
+        }
 
         if (!reportOptions.frontend_request_options['filter_settings']) {
 

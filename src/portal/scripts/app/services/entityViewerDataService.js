@@ -764,6 +764,32 @@
 
         }
 
+        function  resetOnlyItems() {
+
+            var list = getDataAsList()
+
+            list.forEach(function (item) {
+                if (item.___type === 'object') {
+                    delete data.data[item.___id]
+                }
+            })
+
+        }
+
+        function resetOnlyGroups() {
+
+            var list = getDataAsList()
+
+            list.forEach(function (item) {
+                if (item.___type === 'group' && item.___parentId != null) { // except root group
+                    delete data.data[item.___id]
+                }
+            })
+
+        }
+
+
+
         function resetData() {
 
             data.data = {};
@@ -1891,6 +1917,8 @@
             getGroup: getGroup,
             setData: setData,
             setAllData: setAllData,
+            resetOnlyItems: resetOnlyItems,
+            resetOnlyGroups: resetOnlyGroups,
             resetData: resetData,
             getData: getData,
             getDataAsList: getDataAsList,
