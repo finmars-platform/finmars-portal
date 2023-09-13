@@ -718,6 +718,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     var sortObjects = function (entityViewerDataService, entityViewerEventService) {
 
+        entityViewerDataService.resetOnlyItems();
+
         var activeColumnSort = entityViewerDataService.getActiveColumnSort();
         var level = entityViewerDataService.getGroups().length;
 
@@ -733,12 +735,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                     //# region apply sorting settings
                     requestsParameters[key].body.page = 1;
-
-                    /*if (activeColumnSort.options.sort === 'ASC') {
-                        requestsParameters[key].body.ordering = activeColumnSort.key
-                    } else if (activeColumnSort.options.sort === 'DESC') {
-                        requestsParameters[key].body.ordering = '-' + activeColumnSort.key
-                    }*/
                     requestsParameters[key].body.ordering = activeColumnSort.key;
                     requestsParameters[key].body.ordering_mode = activeColumnSort.options.sort_settings.mode
 
@@ -750,14 +746,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 }
 
             });
-
-        });
-
-        levelGroups.forEach(function (group) { // delete current content of groups, before adding sorted one
-
-            group.results = [];
-
-            entityViewerDataService.setData(group)
 
         });
 
@@ -774,6 +762,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
     };
 
     var sortGroupType = function (entityViewerDataService, entityViewerEventService, signalDataLoadEnd) {
+
+        entityViewerDataService.resetOnlyGroups();
 
         var activeGroupTypeSort = entityViewerDataService.getActiveGroupTypeSort();
 
