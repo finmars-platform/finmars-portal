@@ -429,9 +429,9 @@ import RvDomManager from "../../services/rv-dom-manager/rv-dom.manager";
                     } */
                     contentElem.style.opacity = '0.7';
 
-                    scope.evDataService.setDataLoadStatus(false);
+                    // scope.evDataService.setDataLoadStatus(false);
 
-                    scope.dataLoadStatus = false;
+                    // scope.dataLoadStatus = false;
 
                     setTimeout(function () {
                         scope.$apply();
