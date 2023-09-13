@@ -41,6 +41,7 @@
     const KEYCLOAK_URL = process.env.KEYCLOAK_URL || 'https://dev-auth.finmars.com';
     const KEYCLOAK_REALM = process.env.KEYCLOAK_REALM || 'finmars';
     const KEYCLOAK_CLIENT_ID = process.env.KEYCLOAK_CLIENT_ID || 'finmars';
+    const USE_ACTIVENOTE = process.env.USE_ACTIVENOTE || false;
 
     function mainHtmlMin() {
         var pathToHTML = ['src/*.html'];
@@ -67,6 +68,7 @@
             .pipe(gulpif(PROJECT_ENV === 'local', replace(/__KEYCLOAK_URL__/g, KEYCLOAK_URL)))
             .pipe(gulpif(PROJECT_ENV === 'local', replace(/__KEYCLOAK_REALM__/g, KEYCLOAK_REALM)))
             .pipe(gulpif(PROJECT_ENV === 'local', replace(/__KEYCLOAK_CLIENT_ID__/g, KEYCLOAK_CLIENT_ID)))
+            .pipe(gulpif(PROJECT_ENV === 'local', replace(/__USE_ACTIVENOTE__/g, USE_ACTIVENOTE)))
             .pipe(gulp.dest('dist/'));
     }
 
