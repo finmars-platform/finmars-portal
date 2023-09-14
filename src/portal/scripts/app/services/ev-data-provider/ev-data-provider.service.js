@@ -410,6 +410,8 @@
 
                 item.___index = index;
 
+                entityViewerDataService.setData(item); // Important to set it object in data propr, consider refactor EV later
+
             }
 
             return item;
@@ -491,7 +493,7 @@
 
                     }
 
-                    evDataHelper.setDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
+                    // evDataHelper.setDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
 
                     requestParameters.pagination.page = pageToRequest;
                     entityViewerDataService.setRequestParameters(requestParameters);

@@ -70,11 +70,16 @@
 
         function clearDropdowns (eventListenerFn2Args, clearDropdownsAndRowsArgs, executeContextMenuActionFn, callClearDropdownsAndRowsFn) {
 
+
+
         	let popupsToClear = [];
 			const dropdowns = document.querySelectorAll('.evDropdown');
 			/* for (var i = 0; i < dropdowns.length; i = i + 1) {
 				dropdowns[i].remove();
 			} */
+
+			console.log('clearDropdowns.dropdowns', dropdowns)
+
 			dropdowns.forEach(dropdown => {
 				// remove popup after animation
 				if (!popupsToClear.includes(dropdown.id)) {
