@@ -69,6 +69,7 @@
   }
 
 }
+
 //endregion Inside dashboard
 
 .g-table-container {
@@ -279,14 +280,26 @@
 
       &.text-left {
         text-align: left;
+
+        .g-cell-content {
+          justify-content: start;
+        }
       }
 
       &.text-center {
         text-align: center;
+
+        .g-cell-content {
+          justify-content: center;
+        }
       }
 
       &.text-right {
         text-align: right;
+
+        .g-cell-content {
+          justify-content: flex-end;
+        }
       }
 
       &.negative-red {
@@ -1694,7 +1707,7 @@
 
         .sort span {
           opacity: 0;
-            visibility: hidden;
+          visibility: hidden;
         }
 
 
@@ -2616,7 +2629,6 @@ body.md-dialog-is-showing {
     margin: 0;
     box-sizing: border-box;
   }
-
 
 
   &.range-of-dates {
