@@ -872,6 +872,8 @@
 
     function executeContextMenuAction(event) {
 
+        console.log('executeContextMenuAction.event', event)
+
         var objectId = event.target.dataset.objectId;
         var parentGroupHashId = event.target.dataset.parentGroupHashId;
         var dropdownAction = event.target.dataset.evDropdownAction;
@@ -926,6 +928,7 @@
             }
 
             evDataService.setObject(obj);
+
 
             clearDropdownsAndRows(evDataService, evEventService, true);
 

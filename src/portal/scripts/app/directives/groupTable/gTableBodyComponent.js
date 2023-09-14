@@ -427,7 +427,7 @@ import RvDomManager from "../../services/rv-dom-manager/rv-dom.manager";
                     /* if (scope.isReport) {
                         contentElem.style.opacity = '0.7';
                     } */
-                    contentElem.style.opacity = '0.7';
+                    // contentElem.style.opacity = '0.7';
 
                     // scope.evDataService.setDataLoadStatus(false);
 
