@@ -10,10 +10,9 @@
 
                 <md-input-container ng-if="showAutosaveLayoutCheckbox"
                                     class="display-block p-0 m-0 layouts-autosave-toggle-container">
-                    <md-checkbox ng-model="member.data.autosave_layouts"
+                    <md-checkbox ng-model="memberLayout.data.autosave_layouts"
                                  ng-change="onAutosaveToggle()"
-                                 ng-model-options="{debounce: 300}"
-                                 class="">Autosave
+                                 ng-model-options="{debounce: 300}">Autosave
                     </md-checkbox>
                 </md-input-container>
             </div>
