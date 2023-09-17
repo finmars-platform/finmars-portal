@@ -161,7 +161,7 @@
 
                         if (scope.componentData.settings.multiple) {
 
-                            if (scope.item.data.store.user_codes.length) {
+                            if (scope.item.data.store.user_codes && scope.item.data.store.user_codes.length) {
 
                                 scope.item.data.store.value = getSelectedIds(scope.item.data.store.user_codes);
 
