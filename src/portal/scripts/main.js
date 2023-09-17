@@ -919,7 +919,7 @@ export default (function () {
 
     //# endregion GROUP TABLE
 
-    portal.directive('mainHeader', ['$mdDialog', '$state', '$transitions', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'usersService', 'globalDataService', 'systemMessageService', 'redirectionService', 'evRvLayoutsHelper', mainHeaderDirective]);
+    portal.directive('mainHeader', ['$mdDialog', '$state', '$transitions', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'usersService', 'uiService', 'globalDataService', 'systemMessageService', 'redirectionService', 'evRvLayoutsHelper', mainHeaderDirective]);
     portal.directive('evFieldResolver', ['metaContentTypesService', 'fieldResolverService', require('./app/directives/entityViewerFieldResolverDirective')]);
     portal.directive('evSelectorResolver', [require('./app/directives/entityViewerSelectorResolverDirective')]);
     portal.directive('ismFieldResolver', ['$mdDialog', 'fieldResolverService', require('./app/directives/instrumentSchemeManagerFieldResolverDirective')]);
