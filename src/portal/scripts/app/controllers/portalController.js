@@ -48,12 +48,19 @@ export default function ($scope, $state, authorizerService, usersService, global
                 uiService.getDefaultMemberLayout(),
             ]);
 
-            const member = res[0]
+            /*const member = res[0]
 
             // enable by default list layout autosave
             if (member.data && typeof member.data.autosave_layouts !== 'boolean') {
                 member.data.autosave_layouts = true;
                 globalDataService.setMember(member);
+            }*/
+            const memberLayout = res[1];
+
+            // enable by default list layout autosave
+            if ( typeof memberLayout.data.autosave_layouts !== 'boolean' ) {
+                memberLayout.data.autosave_layouts = true;
+                globalDataService.setMemberLayout(memberLayout);
             }
 
         } catch(error) {

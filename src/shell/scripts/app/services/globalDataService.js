@@ -54,9 +54,9 @@ export default function () {
 	const setMember = function (member) {
 		// console.trace("autosave77 setMember");
 		// console.log("autosave77 setMember", member);
-		if ( typeof member.data.autosave_layouts !== 'boolean' ) {
+		/*if ( typeof member.data.autosave_layouts !== 'boolean' ) {
 			member.data.autosave_layouts = true;
-		}
+		}*/
 
 		data.member = member;
 	};
@@ -124,19 +124,19 @@ export default function () {
 	const isAutosaveLayoutOn = function () {
 
 		const user = getUser();
-		const member = getMember();
+		const memberLayout = getMemberLayout();
 
-		if (!member) {
-			throw "Method should be called after getting member"
+		if (!memberLayout) {
+			throw "Method should be called after getting member layout"
 		}
 
-		if (!member.data) member.data = {};
+		if (!memberLayout.data) memberLayout.data = {};
 
-		const autosave77 = user.data.autosave_layouts && member.data.autosave_layouts;
+		const autosave77 = user.data.autosave_layouts && memberLayout.data.autosave_layouts;
 
-		// if (!autosave77) {
-		// 	console.log("autosave77 isAutosaveLayoutOn user, member", user, member);
-		// }
+		if (!autosave77) {
+			console.log("autosave77 isAutosaveLayoutOn user, memberLayout", user, memberLayout);
+		}
 
 		return autosave77;
 
