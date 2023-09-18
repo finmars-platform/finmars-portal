@@ -22,7 +22,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
     // vm.isIdentified = false; // check if has proper settings (e.g. has master users to work with)
     vm.PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
 
-    vm.keycloakAccountPage = window.KEYCLOAK_ACCOUNT_PAGE
+    // vm.keycloakAccountPage = window.KEYCLOAK_ACCOUNT_PAGE
 
     let homepageUrl;
     let profileUrl;
@@ -327,6 +327,10 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         cookieService.setCookie('access_token', window.keycloak.token);
         cookieService.setCookie('refresh_token', window.keycloak.refreshToken);
         cookieService.setCookie('id_token', window.keycloak.idToken);
+    }
+
+    vm.openAccManager = function () {
+        window.keycloak.accountManagement();
     }
 
     const init = async function () {
