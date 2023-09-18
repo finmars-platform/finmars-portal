@@ -34,6 +34,11 @@
         return explorerRepository.downloadZip(data)
     }
 
+    var downloadFile = function (data) {
+        return explorerRepository.downloadFile(data)
+    }
+
+
     module.exports = {
         listFiles: listFiles,
         viewFile: viewFile,
@@ -41,7 +46,8 @@
         createFolder: createFolder,
         deleteFolder: deleteFolder,
         uploadFiles: uploadFiles,
-        downloadZip: downloadZip
+        downloadZip: downloadZip,
+        downloadFile: downloadFile
     }
 
 
