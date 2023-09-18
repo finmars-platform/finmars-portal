@@ -463,15 +463,26 @@
 
         }
 
-        vm.downloadFile = function () {
+        vm.downloadFile = function ($event, item) {
+
+            console.log('downloadFile.item', item);
 
             var name = vm.currentPath[vm.currentPath.length - 1];
+            //
+            // var content = vm.editor.getValue();
+            //
+            // const blob = new Blob([content], {type: "plain/text"});
+            //
+            // downloadFileHelper.downloadFile(blob, "plain/text", name)
 
-            var content = vm.editor.getValue();
+            var path = vm.currentPath.join('/') + '/' + item.name;
 
-            const blob = new Blob([content], {type: "plain/text"});
+            explorerService.downloadFile({path: path}).then(function (blob) {
 
-            downloadFileHelper.downloadFile(blob, "plain/text", name)
+                downloadFileHelper.downloadFile(blob, "plain/text", item.name)
+
+            })
+
         }
 
         vm.formatJSON = function ($event) {
