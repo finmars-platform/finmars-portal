@@ -22,7 +22,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
             // let user;
             const user = globalDataService.getUser();
 
-            scope.keycloakAccountPage = window.KEYCLOAK_ACCOUNT_PAGE
+            // scope.keycloakAccountPage = window.KEYCLOAK_ACCOUNT_PAGE
 
             scope.currentLocation = '';
             scope.currentMasterUser = globalDataService.getMasterUser();
@@ -65,6 +65,10 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
             let deregisterOnSuccessTransitionHook;
 
             const mdContent = document.querySelector('md-content');
+
+            scope.openAccManager = function () {
+                window.keycloak.accountManagement();
+            }
 
             const updateCurrentMasterUser = function () {
 
