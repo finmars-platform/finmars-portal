@@ -502,7 +502,7 @@
 
                     objectsService.getFilteredList(entityType, options).then(function (data) {
 
-                        console.log('requestParameters', requestParameters);
+                        // console.log('requestParameters', requestParameters);
 
                         requestParameters.pagination.count = data.count;
                         requestParameters.processedPages.push(pageToRequest);
