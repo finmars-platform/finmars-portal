@@ -203,6 +203,10 @@
                             progress = '<span class="inline-progress-dots"></span>';
                         }
 
+                        if (requestParameters.status === 'error') {
+                            progress = '&nbsp;<span style="color: red">error</span>&nbsp;<span class="inline-retry-button" data-type="retryButton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">Retry</span>';
+                        }
+
 
                         result.html_result = foldButton + '<span class="">' + groupName + '</span>' + progress;
                         result.raw_text_result = currentGroup.___group_name;
@@ -251,6 +255,10 @@
 
                 if (requestParameters.status === 'loading') {
                     progress = '<span class="inline-progress-dots"></span>';
+                }
+
+                if (requestParameters.status === 'error') {
+                    progress = '&nbsp;<span style="color: red">Error</span>&nbsp;<span class="inline-retry-button" data-type="retryButton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">Retry</span>';
                 }
 
 

@@ -250,8 +250,17 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                     entityViewerDataService.setData(item);
                 });
 
-
                 requestParameters.status = 'loaded';
+
+                entityViewerDataService.setRequestParameters(requestParameters);
+
+                resolve();
+
+            }).catch(function (error) {
+
+                console.error('getObjects.error', error);
+
+                requestParameters.status = 'error';
 
                 entityViewerDataService.setRequestParameters(requestParameters);
 
@@ -359,6 +368,16 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 });
 
                 requestParameters.status = 'loaded';
+
+                entityViewerDataService.setRequestParameters(requestParameters);
+
+                resolve();
+
+            }).catch(function (error) {
+
+                console.error('getGroups.error', error);
+
+                requestParameters.status = 'error';
 
                 entityViewerDataService.setRequestParameters(requestParameters);
 
