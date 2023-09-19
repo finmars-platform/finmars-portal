@@ -1,6 +1,8 @@
 /**
  * Created by szhitenev on 05.05.2016.
  */
+import localStorageService from "../../../../../shell/scripts/app/services/localStorageService";
+
 (function () {
 
     'use strict';
@@ -1705,6 +1707,44 @@
             })
 
         };
+
+        vm.closeGroupsAndContinueReportGeneration = function () {
+
+            var localStorageReportData = localStorageService.getReportData();
+
+            var layout = vm.entityViewerDataService.getListLayout();
+            var contentType = vm.entityViewerDataService.getContentType();
+
+            delete localStorageReportData[contentType][layout.user_code]
+
+            var groups = vm.entityViewerDataService.getGroups();
+
+            groups.forEach(function (group) {
+
+                if (!group.report_settings) {
+                    group.report_settings = {}
+                }
+
+                group.report_settings.is_level_folded = true;
+
+            })
+
+            vm.entityViewerDataService.setGroups(groups);
+
+            localStorageService.cacheReportData(localStorageReportData);
+
+            vm.possibleToRequestReport = true;
+
+            rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+
+        }
+
+        vm.continueReportGeneration = function () {
+
+            vm.possibleToRequestReport = true;
+
+            rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+        }
 
         vm.initDashboardExchange = function () { // initialize only for components that are not in filled in mode
 

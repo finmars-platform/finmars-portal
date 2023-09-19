@@ -53,7 +53,7 @@
             processedPages: []
         };
 
-        console.log('requestParameters', requestParameters);
+        // console.log('requestParameters', requestParameters);
 
         evDataService.setRequestParameters(requestParameters);
         evDataService.setLastClickInfo(event);

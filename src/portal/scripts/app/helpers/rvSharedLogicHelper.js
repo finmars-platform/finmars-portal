@@ -1,6 +1,7 @@
 'use strict';
 
 import CommonDialogsService from "../../../../shell/scripts/app/services/commonDialogsService";
+import localStorageService from "../../../../shell/scripts/app/services/localStorageService";
 
 (function () {
 
@@ -162,30 +163,64 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
             const viewContext = viewModel.entityViewerDataService.getViewContext();
 
-            if (viewContext !== 'split_panel' || entityType !== 'transaction-report') {
 
-                if (viewContext === 'dashboard') {
+            var localStorageReportData = localStorageService.getReportData();
 
-                    // If we are in matrix, then we do not need request normal report,
-                    // matrix will handle on it own
-                    // TODO refactor, put matrix separately from Report
-                    if (!viewModel.matrixSettings) {
-                        rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+            console.log('onSetLayoutEnd.localStorageReportData', localStorageReportData);
+
+            var layout = viewModel.entityViewerDataService.getListLayout();
+            var contentType = viewModel.entityViewerDataService.getContentType();
+
+            viewModel.possibleToRequestReport = true // in case if user open too many groups, then we need to ask him if his ready
+
+            if (localStorageReportData) {
+
+                if (localStorageReportData[contentType]) {
+
+                    if (localStorageReportData[contentType][layout.user_code]) {
+
+                        if (localStorageReportData[contentType][layout.user_code].hasOwnProperty('groups')) {
+
+                            viewModel.openGroupsCount = Object.keys(localStorageReportData[contentType][layout.user_code].groups).length
+
+                            if (viewModel.openGroupsCount > 5) {
+                                viewModel.possibleToRequestReport = false;
+                            }
+
+                        }
+
                     }
-
-
-                } else {
-
-                    rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
-                    // Frontend is deprecated since 2023-09-10
-                    // if (window.location.href.indexOf('v2=true') !== -1) {
-                    //     rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
-                    // } else {
-                    //     rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
-                    // }
                 }
+
             }
 
+            if (viewModel.possibleToRequestReport) {
+
+                if (viewContext !== 'split_panel' || entityType !== 'transaction-report') {
+
+                    if (viewContext === 'dashboard') {
+
+                        // If we are in matrix, then we do not need request normal report,
+                        // matrix will handle on it own
+                        // TODO refactor, put matrix separately from Report
+                        if (!viewModel.matrixSettings) {
+                            rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+                        }
+
+
+                    } else {
+
+                        rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+                        // Frontend is deprecated since 2023-09-10
+                        // if (window.location.href.indexOf('v2=true') !== -1) {
+                        //     rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+                        // } else {
+                        //     rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+                        // }
+                    }
+                }
+
+            }
             $scope.$apply();
 
             return viewModel.readyStatus.layout;
