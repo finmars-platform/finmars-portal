@@ -183,9 +183,11 @@ import localStorageService from "../../../../shell/scripts/app/services/localSto
 
                             viewModel.openGroupsCount = 0;
 
-                            Object.keys(localStorageReportData[contentType][layout.user_code].groups).forEach(function (group) {
+                            Object.keys(localStorageReportData[contentType][layout.user_code].groups).forEach(function (key) {
 
-                                if (group.is_open) {
+                                var _group = localStorageReportData[contentType][layout.user_code].groups[key]
+
+                                if (_group.is_open) {
                                     viewModel.openGroupsCount = viewModel.openGroupsCount + 1;
                                 }
 
