@@ -197,7 +197,7 @@
 
                         var requestParameters = evDataService.getRequestParameters(currentGroup.___id);
 
-                        console.log('requestParameters', requestParameters);
+                        // console.log('requestParameters', requestParameters);
 
                         if (requestParameters.status === 'loading') {
                             progress = '<span class="inline-progress-dots"></span>';
@@ -251,7 +251,7 @@
 
                 var requestParameters = evDataService.getRequestParameters(group.___id);
 
-                console.log('requestParameters', requestParameters);
+                // console.log('requestParameters', requestParameters);
 
                 if (requestParameters.status === 'loading') {
                     progress = '<span class="inline-progress-dots"></span>';
