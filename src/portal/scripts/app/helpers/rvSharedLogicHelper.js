@@ -181,7 +181,15 @@ import localStorageService from "../../../../shell/scripts/app/services/localSto
 
                         if (localStorageReportData[contentType][layout.user_code].hasOwnProperty('groups')) {
 
-                            viewModel.openGroupsCount = Object.keys(localStorageReportData[contentType][layout.user_code].groups).length
+                            viewModel.openGroupsCount = 0;
+
+                            Object.keys(localStorageReportData[contentType][layout.user_code].groups).forEach(function (group) {
+
+                                if (group.is_open) {
+                                    viewModel.openGroupsCount = viewModel.openGroupsCount + 1;
+                                }
+
+                            })
 
                             if (viewModel.openGroupsCount > 10) {
                                 viewModel.possibleToRequestReport = false;
