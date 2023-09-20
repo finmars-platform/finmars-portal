@@ -32,7 +32,10 @@
                 scope.dropdownMenuShown = false;
                 scope.dropdownMenuFilter = '';
                 scope.processing = false;
+                /** For selection of database instrument */
                 scope.loadingEntity = false;
+                /** For updating local instrument from database */
+                scope.updatingEntities = false;
 
                 scope.localInstrumentsTotal = 0;
                 scope.databaseInstrumentsTotal = 0;
@@ -208,6 +211,8 @@
                     scope.loadingEntity = false;
                     scope.isDisabled = false;
 
+                    scope.updatingEntities = false;
+
                     setTimeout(function () {
 
                         if (scope.onChangeCallback) scope.onChangeCallback();
@@ -255,6 +260,7 @@
                                         scope.isDisabled = false;
                                         scope.loadingEntity = false;
                                         scope.processing = false;
+                                        scope.updatingEntities = false;
 
                                         applyInstrument(resultData);
 
@@ -312,6 +318,8 @@
                                 scope.loadingEntity = false;
                                 scope.isDisabled = false;
 
+                                scope.updatingEntities = false;
+
                                 throw error;
 
                             });
@@ -339,7 +347,7 @@
                     }*/
 
                     var config = {
-                        user_code: item.reference,
+                        user_code: item.reference || item.user_code, // reference for databaseInstrument user_code for local
                         name: item.name,
                         instrument_type_user_code: item.instrument_type,
                         mode: 1,
@@ -394,6 +402,8 @@
                             scope.processing = false;
                             scope.loadingEntity = false;
                             scope.isDisabled = false;
+
+                            scope.updatingEntities = false;
 
                             scope.model = null;
 
@@ -541,6 +551,8 @@
                         }
 
                     })*/
+                    scope.updatingEntities = true;
+
                     importInstrument(item);
 
                 }

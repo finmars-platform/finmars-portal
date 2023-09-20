@@ -165,7 +165,7 @@
             <div data-ng-show="hoverInstrument">
 
                 <div data-ng-if="hoverInstrument.available_for_update"
-                     data-ng-disabled="loadingEntity || processing"
+                     data-ng-disabled="loadingEntity || processing || updatingEntities"
                      class="instrument-select-update-instrument-button"
                      data-ng-click="updateLocalInstrument(hoverInstrument)">
                     <span class="material-icons">autorenew</span>
