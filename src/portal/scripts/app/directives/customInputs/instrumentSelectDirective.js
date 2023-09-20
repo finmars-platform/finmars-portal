@@ -339,7 +339,7 @@
                     }*/
 
                     var config = {
-                        user_code: item.reference,
+                        user_code: item.reference || item.user_code, // reference for databaseInstrument user_code for local
                         name: item.name,
                         instrument_type_user_code: item.instrument_type,
                         mode: 1,

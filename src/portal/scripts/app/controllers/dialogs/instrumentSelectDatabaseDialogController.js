@@ -370,7 +370,7 @@
             } */
 
             var config = {
-                user_code: item.reference,
+                user_code: item.user_code,
                 name: item.name,
                 instrument_type_user_code: item.instrument_type,
                 mode: 1
