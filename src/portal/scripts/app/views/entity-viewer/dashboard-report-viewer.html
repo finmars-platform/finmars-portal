@@ -4,14 +4,51 @@
 
             <div data-ng-if="vm.componentData.type === 'report_viewer' || vm.componentData.type === 'report_viewer_split_panel'"
                  class="height-100">
-                <group-table class="height-100 display-block"
-                             attribute-data-service="vm.attributeDataService"
-                             ev-data-service="vm.entityViewerDataService"
-                             ev-event-service="vm.entityViewerEventService"
-                             sp-exchange-service="vm.splitPanelExchangeService"
-                             hide-filters-block="!showFiltersArea"
-                             hide-use-from-above-filters="!showUseFromAboveFilters"
-                ></group-table>
+
+
+                <div data-ng-if="!vm.possibleToRequestReport">
+
+                    <h1 class="text-center">Warning</h1>
+                    <p class="text-center">
+
+                        We've noticed that you've opened <b>{{vm.openGroupsCount}}</b> groups since your last session.
+                        This
+                        might result in slower loading times. Do you wish to continue?
+
+                    </p>
+
+                    <div layout="row" layout-align="center center"
+                         data-ng-click="vm.closeGroupsAndContinueReportGeneration($event)">
+                        <md-button class="outline-button">
+                            <md-tooltip class="tooltip_2"
+                                        md-direction="bottom">
+                                Close all previously opened groups. All other settings will remain
+                            </md-tooltip>
+                            Start New
+                        </md-button>
+                        <md-button class="outline-button" data-ng-click="vm.continueReportGeneration($event)">
+                            <md-tooltip class="tooltip_2"
+                                        md-direction="bottom">
+                                Loading Report could take time.
+                            </md-tooltip>
+                            Restore Session
+                        </md-button>
+                    </div>
+
+                </div>
+
+                <div data-ng-if="vm.possibleToRequestReport" class="height-100 display-block">
+
+                    <group-table class="height-100 display-block"
+                                 attribute-data-service="vm.attributeDataService"
+                                 ev-data-service="vm.entityViewerDataService"
+                                 ev-event-service="vm.entityViewerEventService"
+                                 sp-exchange-service="vm.splitPanelExchangeService"
+                                 hide-filters-block="!showFiltersArea"
+                                 hide-use-from-above-filters="!showUseFromAboveFilters"
+                    ></group-table>
+
+                </div>
             </div>
 
             <!--<div data-ng-if="vm.componentData.type === 'report_viewer_split_panel'" class="height-100">
@@ -27,8 +64,9 @@
 
                 <!--<div class="grand-total-title">{{vm.componentData.name}}</div>-->
 
-                <div data-ng-if="vm.grandTotalProcessing"  class="dashboard-grand-total-component dashboard-grand-total-component-loading">
-                    <div  layout="row" layout-sm="column" layout-align="space-around">
+                <div data-ng-if="vm.grandTotalProcessing"
+                     class="dashboard-grand-total-component dashboard-grand-total-component-loading">
+                    <div layout="row" layout-sm="column" layout-align="space-around">
                         <!--<md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>-->
                         <progress-circular diameter="20"></progress-circular>
                     </div>
@@ -36,22 +74,22 @@
 
                 <div data-ng-if="!vm.grandTotalProcessing" class="dashboard-grand-total-component">
 
-<!--                    <div data-ng-if="vm.grandTotalError" class="text-center">-->
-<!--                        Something went wrong-->
-<!--                    </div>-->
+                    <!--                    <div data-ng-if="vm.grandTotalError" class="text-center">-->
+                    <!--                        Something went wrong-->
+                    <!--                    </div>-->
 
-<!--                    <div data-ng-if="!vm.grandTotalError">-->
+                    <!--                    <div data-ng-if="!vm.grandTotalError">-->
 
-                        <text-input
-                                label="{{vm.componentData.custom_component_name}}"
-                                model="vm.grandTotalValue"
-                                small-options="{noIndicatorBtn: true}"
-                                is-disabled="true"
-                        ></text-input>
+                    <text-input
+                            label="{{vm.componentData.custom_component_name}}"
+                            model="vm.grandTotalValue"
+                            small-options="{noIndicatorBtn: true}"
+                            is-disabled="true"
+                    ></text-input>
 
-<!--                    </div>-->
+                    <!--                    </div>-->
 
-<!--                    <div class="grand-total-value" ng-class="{'negative-red': vm.grandTotalNegative}">{{vm.grandTotalValue}}</div>-->
+                    <!--                    <div class="grand-total-value" ng-class="{'negative-red': vm.grandTotalNegative}">{{vm.grandTotalValue}}</div>-->
                 </div>
 
             </div>
@@ -130,7 +168,8 @@
 
         </div>
 
-        <div data-ng-if="vm.componentData.type != 'report_viewer_grand_total' && !readyStatus.disabled && (!vm.readyStatus.attributes || !vm.readyStatus.layout)" class="height-100">
+        <div data-ng-if="vm.componentData.type != 'report_viewer_grand_total' && !readyStatus.disabled && (!vm.readyStatus.attributes || !vm.readyStatus.layout)"
+             class="height-100">
             <div class="height-100" layout="row" layout-sm="column" layout-align="center center">
                 <!--<md-progress-circular md-diameter="100" md-mode="indeterminate"></md-progress-circular>-->
                 <progress-circular diameter="40"></progress-circular>

@@ -950,7 +950,7 @@
 
             groupSettings = {
                 full_path: full_path,
-                is_open: true
+                is_open: false // why open by default? should be closed
             }
 
             reportData[contentType][layout.user_code]['groups'][full_path_prop] = groupSettings;

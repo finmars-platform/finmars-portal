@@ -8,6 +8,7 @@
 import AutosaveLayoutService from "../../services/autosaveLayoutService";
 import evHelperService from "../../services/entityViewerHelperService";
 import evEvents from "../../services/entityViewerEvents";
+import localStorageService from "../../../../../shell/scripts/app/services/localStorageService";
 
 (function () {
 
@@ -142,6 +143,44 @@ import evEvents from "../../services/entityViewerEvents";
             }
 
         };
+
+        vm.closeGroupsAndContinueReportGeneration = function () {
+
+            var localStorageReportData = localStorageService.getReportData();
+
+            var layout = vm.entityViewerDataService.getListLayout();
+            var contentType = vm.entityViewerDataService.getContentType();
+
+            delete localStorageReportData[contentType][layout.user_code]
+
+            var groups = vm.entityViewerDataService.getGroups();
+
+            groups.forEach(function (group) {
+
+                if (!group.report_settings) {
+                    group.report_settings = {}
+                }
+
+                group.report_settings.is_level_folded = true;
+
+            })
+
+            vm.entityViewerDataService.setGroups(groups);
+
+            localStorageService.cacheReportData(localStorageReportData);
+
+            vm.possibleToRequestReport = true;
+
+            rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+
+        }
+
+        vm.continueReportGeneration = function () {
+
+            vm.possibleToRequestReport = true;
+
+            rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+        }
 
         vm.setFiltersValuesFromQueryParameters = function () {
 
@@ -430,6 +469,7 @@ import evEvents from "../../services/entityViewerEvents";
             }
 
             Promise.allSettled([downloadAttrsProm, setLayoutProm]).then(function (getViewData) {
+
 
                 metaService.logRejectedPromisesAfterAllSettled(getViewData, 'report viewer get view');
 

@@ -1,3 +1,5 @@
+import localStorageService from "../../../../../shell/scripts/app/services/localStorageService";
+
 var evEvents = require('../entityViewerEvents');
 var evDataHelper = require('../../helpers/ev-data.helper');
 var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
@@ -264,7 +266,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 entityViewerDataService.setRequestParameters(requestParameters);
 
-                resolve();
+                reject();
 
             })
 
@@ -338,6 +340,9 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                     }
 
+                    // console.log('parentGroup.___is_open', parentGroup.___is_open)
+                    // console.log('item.___is_open', item.___is_open)
+
                     entityViewerDataService.setData(item);
 
                     if (item.___is_open) { // Request Data for group if open. TODO refactor it, I dont like it, probably will be issues on large data sets
@@ -352,8 +357,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                             var newRequestParameters = createRequestParameters(item, item.___level - 1, entityViewerDataService, entityViewerEventService,)
 
-                            console.log('rvDataProvider_cascade_download.item', item);
-                            console.log('rvDataProvider_cascade_download.requestParameters', newRequestParameters);
+                            // console.log('rvDataProvider_cascade_download.item', item);
+                            // console.log('rvDataProvider_cascade_download.requestParameters', newRequestParameters);
 
                             updateDataStructureByRequestParameters(newRequestParameters, entityViewerDataService, entityViewerEventService).then(function () {
 
@@ -381,7 +386,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 entityViewerDataService.setRequestParameters(requestParameters);
 
-                resolve();
+                reject();
 
             })
 
