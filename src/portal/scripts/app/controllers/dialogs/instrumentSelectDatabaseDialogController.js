@@ -14,7 +14,8 @@
         var vm = this;
 
         vm.isDisabled = false;
-        vm.loadingEntity = false;
+        /** For updating local instrument from database */
+        vm.updatingEntities = false;
 
         vm.title = data.title || 'Select instrument';
         vm.localInstrumentsTotal = 0;
@@ -85,7 +86,7 @@
 
             vm.selectedItem = null;
             vm.isDisabled = false;
-            vm.loadingEntity = false;
+            vm.updatingEntities = false;
 
             toastNotificationService.error(error);
 
@@ -276,7 +277,7 @@
 
                                 vm.isDisabled = false;
                                 vm.processing = false;
-                                vm.loadingEntity = false;
+                                vm.updatingEntities = false;
 
                                 toastNotificationService.success("Instrument has been loaded");
 
@@ -310,7 +311,7 @@
 
                         vm.processing = false;
                         vm.isDisabled = false;
-                        vm.loadingEntity = false;
+                        vm.updatingEntities = false;
 
                         throw error;
 
@@ -376,7 +377,7 @@
                 mode: 1
             };
 
-            vm.loadingEntity = true;
+            vm.updatingEntities = true;
 
             importInstrumentCbondsService.download(config).then(function (data) {
 

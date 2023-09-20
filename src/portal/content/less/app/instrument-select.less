@@ -26,6 +26,29 @@
 
 }
 
+.updateInstrElems() {
+  position: absolute;
+  cursor: pointer;
+  right: 15px;
+  &:hover {
+    opacity: .7;
+  }
+}
+
+.instrument-select-update-instrument-button {
+  .updateInstrElems();
+  top: 15px;
+}
+
+.instrument-input-container {
+  .instr-update-loader {
+    .updateInstrElems();
+    margin: 0;
+    width: 15px;
+    top: 50px;
+  }
+}
+
 .instrument-select-input-sel-option {
   padding: 11px 16px 2px 16px;
   box-sizing: border-box;
@@ -309,16 +332,6 @@ instrument-select {
     cursor: pointer;
   }
 
-}
-
-.instrument-select-update-instrument-button {
-  position: absolute;
-  right: 15px;
-  top: 15px;
-  cursor: pointer;
-  &:hover {
-    opacity: .7;
-  }
 }
 
 .instrument-select-database-footer {
