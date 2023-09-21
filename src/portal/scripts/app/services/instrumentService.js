@@ -3,9 +3,12 @@
  */
 
 const evEditorEvents = require('./ev-editor/entityViewerEditorEvents');
+const importInstrumentCbondsService = require('./import/importInstrumentCbondsService');
+const taskService = require('./tasksService');
+
 import InstrumentRepository from "../repositories/instrumentRepository";
 
-export default function (cookieService, xhrService, uiService, gridTableHelperService, multitypeFieldService) {
+export default function (cookieService, toastNotificationService, xhrService, uiService, gridTableHelperService, multitypeFieldService) {
 
 	const instrumentRepository = new InstrumentRepository(cookieService, xhrService);
 
@@ -155,6 +158,79 @@ export default function (cookieService, xhrService, uiService, gridTableHelperSe
 		return uiService.getDefaultEditLayout('instrument');
 
 	};
+
+	/**
+	 * Return three types of data. All should be processed.
+	 *
+	 * @param {String} user_code - instrument.user_code
+	 * @param {String} name - instrument.name
+	 * @param {String} instrumentTypeUserCode
+	 * @param {Number} mode
+	 * @returns {{promise: Promise<Object>, stopInterval: Function}} - promise is either importInstrumentCbondsService.download() or taskService.awaitImportTask()
+	 */
+	const importFromCbonds = function (user_code, name, instrumentTypeUserCode, mode=1) {
+
+		let timeOutId;
+		let stopIntervalCalled = false;
+		let stopIntervalFn;
+		let stopInterval = function() {
+
+			if (stopIntervalFn) {
+				stopIntervalFn();
+			} else {
+				stopIntervalCalled = true;
+			}
+
+		};
+
+		let prom = new Promise(async (resolve, reject) => {
+
+			try {
+
+				const res = await importInstrumentCbondsService.download({
+					user_code,
+					name,
+					instrument_type_user_code: instrumentTypeUserCode,
+					mode,
+				});
+
+				if (res.errors) {
+
+					console.error(`importInstrumentCbondsService.download error: ${res.errors}`);
+					toastNotificationService.error( res.errors );
+					return resolve(res);
+
+				} else {
+
+					// stopInterval was called before running taskService.awaitImportTask()
+					if (stopIntervalCalled) {
+						return resolve( "Task status check stopped" );
+					}
+
+					timeOutId = setTimeout(() => {
+						console.error(`Importing instrument: ${user_code} takes over a minute`);
+					}, 60*1000)
+
+					let atData = taskService.awaitImportTask(res.task);
+
+					stopIntervalFn = atData.stopInterval;
+					clearTimeout(timeOutId);
+
+					return resolve( atData.promise );
+				}
+
+			} catch (e) {
+				reject(e);
+			}
+
+		})
+
+		return {
+			promise: prom,
+			stopInterval,
+		}
+
+	}
 
 	const getInstrumentAccrualsMultitypeFieldsData = () => {
 		return {
@@ -583,6 +659,8 @@ export default function (cookieService, xhrService, uiService, gridTableHelperSe
 		updateMultitypeFieldSelectorOptionsInsideGridTable: updateMultitypeFieldSelectorOptionsInsideGridTable,
 
 		getEditLayoutBasedOnUserCodes: getEditLayoutBasedOnUserCodes,
+
+		importFromCbonds: importFromCbonds,
 
 		exposureCalculationModelsList: exposureCalculationModelsList,
 		longUnderlyingExposureList: longUnderlyingExposureList,
