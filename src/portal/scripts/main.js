@@ -151,7 +151,7 @@ export default (function () {
     portal.service('attributeTypeService', ['cookieService', 'xhrService', 'metaRestrictionsService', attributeTypeService]);
 
     portal.service('transactionTypeService', ['cookieService', 'xhrService', transactionTypeService]);
-    portal.service('instrumentService', ['cookieService', 'xhrService', 'uiService', 'gridTableHelperService', 'multitypeFieldService', instrumentService]);
+    portal.service('instrumentService', ['cookieService', 'toastNotificationService', 'xhrService', 'uiService', 'gridTableHelperService', 'multitypeFieldService', instrumentService]);
     portal.service('reportService', ['cookieService', 'xhrService', reportService]);
     portal.service('priceHistoryService', ['cookieService', 'xhrService', priceHistoryService]);
     portal.service('currencyHistoryService', ['cookieService', 'xhrService', currencyHistoryService]);
