@@ -1,5 +1,3 @@
-import localStorageService from "../../../../../shell/scripts/app/services/localStorageService";
-
 var evEvents = require('../entityViewerEvents');
 var evDataHelper = require('../../helpers/ev-data.helper');
 var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
@@ -338,6 +336,13 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                         rvDataHelper.setGroupSettings(entityViewerDataService, item, groupSettings);
 
+                    }
+
+                    var entityType = entityViewerDataService.getEntityType();
+                    var viewContext = entityViewerDataService.getViewContext();
+
+                    if (entityType === 'transaction-report' && viewContext === 'split_panel') {
+                        item.___is_open = true;
                     }
 
                     // console.log('parentGroup.___is_open', parentGroup.___is_open)
