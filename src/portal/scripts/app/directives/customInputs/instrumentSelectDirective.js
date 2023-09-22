@@ -459,12 +459,6 @@
 
                 };
 
-                /*scope.onInputFocus = function () {
-
-                    inputElem.focus();
-                    scope.getList();
-                }*/
-
                 var closeDropdownMenu = function (updateScope) {
 
                     inputContainer.classList.remove('custom-input-focused');
