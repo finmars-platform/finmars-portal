@@ -163,7 +163,7 @@
                                 // located in separate setTimeout to run as soon as possible
 
                                 scope.$apply(); // needed for pickmeup-change
-                                scope.onChangeCallback();
+                                scope.onChangeCallback({changedValue: scope.model});
 
                             }, 0);
                         }
@@ -444,7 +444,7 @@
 							scope.model = output;
 							scope.$apply();
 
-							if (scope.onChangeCallback) scope.onChangeCallback();
+							if (scope.onChangeCallback) scope.onChangeCallback({changedValue: scope.model});
 
 						}
 
