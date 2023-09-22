@@ -77,7 +77,6 @@
 				// var onChangeIndex;
 
                 scope.onValueChange = function () {
-
                 	// clearTimeout(onChangeIndex);
 
 					scope.setedFromOutside = false;
@@ -151,7 +150,7 @@
 
 						scope.$apply();
 
-						if (scope.onChangeCallback) scope.onChangeCallback();
+						if (scope.onChangeCallback) scope.onChangeCallback({changedValue: scope.model});
 
 					}, 0);
 
@@ -215,7 +214,7 @@
 							if (scope.onChangeCallback) {
 
 								setTimeout(() => {
-									scope.onChangeCallback();
+									scope.onChangeCallback({changedValue: scope.model});
 								}, 0);
 
 							}

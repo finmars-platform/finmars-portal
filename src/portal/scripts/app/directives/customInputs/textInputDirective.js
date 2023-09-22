@@ -147,7 +147,7 @@
 						} */
 						scope.$apply();
 
-						if (scope.onChangeCallback) scope.onChangeCallback();
+						if (scope.onChangeCallback) scope.onChangeCallback({changedValue: scope.model});
 
 					}, 0);
 
@@ -223,7 +223,7 @@
 							if (scope.onChangeCallback) {
 
 								setTimeout(function () {
-									scope.onChangeCallback();
+									scope.onChangeCallback({changedValue: scope.model});
 								}, 0);
 
 							}

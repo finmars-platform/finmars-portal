@@ -17,7 +17,7 @@
                       tooltipText: tooltipText,
                       notNull: options.notNull,
                       dialogParent: '.dialog-containers-wrap'}"
-                    data-on-change-callback="vm.itemChangeDeb()">
+                    data-on-change-callback="vm.itemChangeDeb(changedValue)">
             </number-input>
         </div>
 
@@ -32,7 +32,7 @@
                         data-is-disabled="vm.disabled"
                         data-small-options="{tooltipText: tooltipText, notNull: options.notNull, dialogParent: '.dialog-containers-wrap'}"
                         data-render-hyperlinks="item.options.isHyperlink"
-                        data-on-change-callback="vm.itemChangeDeb()"
+                        data-on-change-callback="vm.itemChangeDeb(changedValue)"
                         data-on-blur-callback="inputBlur()"></text-input>
 
         </div>
@@ -43,10 +43,10 @@
                 <ev-field-resolver data-item="item"
                                    data-entity="entity"
                                    data-options="options"
-                                   ev-editor-data-service="evEditorDataService"
-                                   ev-editor-event-service="evEditorEventService"
+                                   data-ev-editor-data-service="evEditorDataService"
+                                   data-ev-editor-event-service="evEditorEventService"
                                    data-entity-type="vm.entityType"
-                                   fields-data-store="fieldsDataStore">
+                                   data-fields-data-store="fieldsDataStore">
                 </ev-field-resolver>
             </div>
 
@@ -62,7 +62,7 @@
                     data-is-disabled="vm.disabled"
                     data-small-options="{tooltipText: tooltipText, notNull: options.notNull, dialogParent: '.dialog-containers-wrap'}"
                     data-empty-input-button="{{showEmptyInputBtn}}"
-                    data-on-change-callback="onDateChange()">
+                    data-on-change-callback="onDateChange(changedValue)">
             </date-input>
         </div>
 
@@ -75,7 +75,7 @@
                     custom-styles="customStyles"
                     event-signal="ciEventObj.event"
                     small-options="{tooltipText: tooltipText, notNull: options.notNull, dialogParent: '.dialog-containers-wrap'}"
-                    on-change-callback="onDateChange()">
+                    on-change-callback="onDateChange(changedValue)">
             </datetime-input>
         </div>
 
