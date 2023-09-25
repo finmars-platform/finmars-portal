@@ -372,6 +372,11 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
 
         vm.getView = function () {
 
+            console.log('reportViewerController.getView')
+
+            vm.openGroupsCount = null;
+            vm.possibleToRequestReport = false // !important, do not remove, on change layout we should again ask user about groups
+
             // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
             vm.readyStatus.layout = false; // switched to true by sharedLogicHelper.onSetLayoutEnd()
