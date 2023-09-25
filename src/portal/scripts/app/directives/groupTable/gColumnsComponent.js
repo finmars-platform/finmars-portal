@@ -1952,7 +1952,7 @@ const evEvents = require("../../services/entityViewerEvents");
                     var maxLevel = 10
                     var groupsByLevel = evDataHelper.getAllGroupsByLevel(maxLevel, scope.evDataService);
 
-                    var reportData = localStorageService.getReportDataForLayout(contentType, layout.user_code);
+                    var reportData = localStorageService.getReportData();
 
                     for (i = $index; i < scope.groups.length; i++) {
 
@@ -2002,8 +2002,8 @@ const evEvents = require("../../services/entityViewerEvents");
                             groupItem.___is_open = false;
                             groupSettings.is_open = false;
 
-                            if (!reportData['groups']) {
-                                reportData['groups'] = {}
+                            if (!reportData[contentType][layout.user_code]['groups']) {
+                                reportData[contentType][layout.user_code]['groups'] = {}
                             }
 
                             var full_path_prop = groupSettings.full_path;
@@ -2012,9 +2012,9 @@ const evEvents = require("../../services/entityViewerEvents");
                                 full_path_prop = full_path_prop.join('___')
                             }
 
-                            reportData['groups'][full_path_prop] = groupSettings;
+                            reportData[contentType][layout.user_code]['groups'][full_path_prop] = groupSettings;
 
-                            reportData.groupsList = [];
+                            reportData[contentType][layout.user_code].groupsList = [];
 
                             groups.forEach(group => {
 
@@ -2030,7 +2030,7 @@ const evEvents = require("../../services/entityViewerEvents");
                                 }
 
 
-                                reportData.groupsList.push(groupObj);
+                                reportData[contentType][layout.user_code].groupsList.push(groupObj);
 
                             });
 
@@ -2041,7 +2041,7 @@ const evEvents = require("../../services/entityViewerEvents");
                     }
 
                     localStorageService.cacheReportData(reportData);
-                    localStorageService.cacheReportDataForLayout(contentType, layout.user_code, reportData);
+                    // localStorageService.cacheReportDataForLayout(contentType, layout.user_code, reportData);
 
                     // rvDataHelper.markHiddenColumnsBasedOnFoldedGroups(scope.evDataService);
 
@@ -2077,7 +2077,7 @@ const evEvents = require("../../services/entityViewerEvents");
                     console.log('maxLevel', $index);
                     //</editor-fold>
 
-                    var reportData = localStorageService.getReportDataForLayout(contentType, layout.user_code);
+                    var reportData = localStorageService.getReportData();
 
                     for (i = $index; i >= 0; i--) {
 
@@ -2127,8 +2127,8 @@ const evEvents = require("../../services/entityViewerEvents");
                             groupItem.___is_open = true;
                             groupSettings.is_open = true;
 
-                            if (!reportData['groups']) {
-                                reportData['groups'] = {}
+                            if (!reportData[contentType][layout.user_code]['groups']) {
+                                reportData[contentType][layout.user_code]['groups'] = {}
                             }
 
                             var full_path_prop = groupSettings.full_path;
@@ -2137,9 +2137,9 @@ const evEvents = require("../../services/entityViewerEvents");
                                 full_path_prop = full_path_prop.join('___')
                             }
 
-                            reportData['groups'][full_path_prop] = groupSettings;
+                            reportData[contentType][layout.user_code]['groups'][full_path_prop] = groupSettings;
 
-                            reportData.groupsList = [];
+                            reportData[contentType][layout.user_code].groupsList = [];
 
                             scope.groups.forEach(group => {
 
@@ -2155,7 +2155,7 @@ const evEvents = require("../../services/entityViewerEvents");
                                 }
 
 
-                                reportData.groupsList.push(groupObj);
+                                reportData[contentType][layout.user_code].groupsList.push(groupObj);
 
                             });
 
@@ -2166,7 +2166,7 @@ const evEvents = require("../../services/entityViewerEvents");
                     }
 
                     localStorageService.cacheReportData(reportData);
-                    localStorageService.cacheReportDataForLayout(contentType, layout.user_code, reportData);
+                    // localStorageService.cacheReportDataForLayout(contentType, layout.user_code, reportData);
 
                     rvDataHelper.markHiddenColumnsBasedOnFoldedGroups(scope.evDataService);
 
