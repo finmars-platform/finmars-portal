@@ -151,7 +151,8 @@
 						$scope.entity.attributes = evHelperService.setDynamicAttrValueByUserCode(vm.fieldKey, $scope.entity.attributes, vm.model);
 
 					} else if (vm.entityType === 'complex-transaction' && vm.fieldType.type === 'userInput') { //
-						$scope.entity.values[vm.fieldKey] = vm.model;
+
+                        $scope.entity.values[vm.fieldKey] = vm.model;
 
 					} else {
                         $scope.entity[vm.fieldKey] = vm.model;
@@ -887,8 +888,8 @@
 
                 };
 
-                vm.itemChangeDeb = utilsHelper.debounce(function () {
-                    vm.itemChange();
+                vm.itemChangeDeb = utilsHelper.debounce(function (changedValue) {
+                    vm.itemChange(changedValue);
                 }, 500);
 
                 /**
@@ -896,8 +897,9 @@
                  * Called on value change inside input.
                  * Used inside template, entityViewerFieldResolverDirective
                  */
-                vm.itemChange = function () {
+                vm.itemChange = function (changedValue) {
 
+                    vm.model = changedValue;
 					$scope.entity = vm.setValueInsideEntity(vm.model);
 
                     // update copies of field inside other tabs (e.g. maturity date)
@@ -925,7 +927,7 @@
 					if (vm.model !== todaysDate) {
 
 						vm.model = todaysDate;
-						vm.itemChange();
+						vm.itemChange(vm.model);
 
 					}
 
@@ -943,7 +945,7 @@
 						.add(1, "days")
 						.format("YYYY-MM-DD");
 
-					vm.itemChange();
+					vm.itemChange(vm.model);
 
 				};
 
@@ -959,17 +961,19 @@
 						.subtract(1, "days")
 						.format("YYYY-MM-DD");
 
-					vm.itemChange();
+					vm.itemChange(vm.model);
 
 				};
 
-                $scope.onDateChange = function () {
+                $scope.onDateChange = function (changedValue) {
+
+                    vm.model = changedValue;
 
                     if (vm.model === "") {
 						vm.model = null;
                     }
 
-                    vm.itemChange();
+                    vm.itemChange(vm.model);
                 };
 				//endregion Datepicker
 

@@ -1,4 +1,6 @@
-<md-dialog aria-label="" ng-cloak class="width-40 draggable-dialog" drag-dialog>
+<md-dialog aria-label="custom field edit dialog"
+           class="width-40 draggable-dialog"
+           drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools" style="height: 64px;">
             <is-draggable-sign></is-draggable-sign>
@@ -12,7 +14,7 @@
 
             <div class="a-m-tab-content p-t-24 p-l-16 p-r-16 width-80">
 
-                <md-input-container class="md-block" flex-gt-sm>
+                <!--<md-input-container class="md-block" flex-gt-sm>
                     <label>Custom Column Name</label>
                     <input data-ng-model="vm.customField.name">
                 </md-input-container>
@@ -20,7 +22,13 @@
                 <md-input-container class="md-block" flex-gt-sm>
                     <label>Custom Column Reference Code (use programming language naming rules)</label>
                     <input data-ng-model="vm.customField.user_code" data-ng-keyup="vm.validateUserCode()">
-                </md-input-container>
+                </md-input-container>-->
+                <text-input data-label="Custom Column Name"
+                            data-model="vm.customField.name"></text-input>
+
+                <usercode-input data-label="Custom Column Reference Code (use programming language naming rules)"
+                                data-user-code="vm.customField.user_code"
+                                data-configuration-code="vm.customField.configuration_code"></usercode-input>
 
                 <div class="color-danger m-l-16 m-b-24" data-ng-if="vm.userCodeError">Only alphabet, numbers and
                     underscores allowed
