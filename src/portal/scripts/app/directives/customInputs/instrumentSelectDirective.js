@@ -242,7 +242,7 @@
                 };
 
                 var taskIntervalId;
-                var intervalTime = 5000;
+                var intervalTime = 3000;
 
                 var awaitInstrumentImport = function (taskId, currentName) {
 
@@ -458,12 +458,6 @@
                     scope.getList();
 
                 };
-
-                /*scope.onInputFocus = function () {
-
-                    inputElem.focus();
-                    scope.getList();
-                }*/
 
                 var closeDropdownMenu = function (updateScope) {
 

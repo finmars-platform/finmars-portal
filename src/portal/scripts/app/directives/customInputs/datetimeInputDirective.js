@@ -98,7 +98,7 @@
 						if (scope.onChangeCallback) {
 							setTimeout(() => {
 								// in separate setTimeout to run as soon as possible
-								scope.onChangeCallback();
+								scope.onChangeCallback({changedValue: scope.model});
 							}, 0);
 						}
 

@@ -159,7 +159,6 @@
         </div>
 
         <div class="instrument-select-option-detail-box"
-             data-ng-if="inputText.length > 2"
              data-ng-class="{'locate-left': locateDetailsLeft}">
 
             <div data-ng-show="hoverInstrument">
@@ -169,6 +168,10 @@
                      class="instrument-select-update-instrument-button"
                      data-ng-click="updateLocalInstrument(hoverInstrument)">
                     <span class="material-icons">autorenew</span>
+
+                    <md-tooltip data-ng-if="updatingEntities"
+                                class="tooltip_1"
+                                data-md-direction="top">Updating local instrument</md-tooltip>
                 </div>
 
                 <div class="instrument-select-option-detail-field">

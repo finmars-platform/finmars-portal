@@ -261,7 +261,7 @@
         }
 
         var taskIntervalId;
-        var intervalTime = 5000;
+        var intervalTime = 3000;
 
         var awaitInstrumentImport = function (taskId) {
 

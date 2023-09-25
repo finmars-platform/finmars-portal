@@ -678,16 +678,21 @@
 
         }; */
 
-        vm.transformSourceEntityToFrontendLogic = function (resolve) {
+        vm.transformSourceEntityToFrontendLogic = async function () {
 
             vm.entity.$_isValid = true;
             var promises = [];
             // vm.readyStatus.entity = true;
             // vm.readyStatus.permissions = true;
 
-            if (['price-history', 'currency-history', 'price-history-error', 'currency-history-error'].indexOf(vm.entityType) === -1) {
+            if ( ![
+                    'price-history',
+                    'currency-history',
+                    'price-history-error',
+                    'currency-history-error'
+                ].includes(vm.entityType) ) {
 
-                promises.push(vm.loadPermissions());
+                promises.push( vm.loadPermissions() );
 
             } else {
 
@@ -697,66 +702,69 @@
             }
 
             // vm.getFormLayout();
-            promises.push(vm.sharedLogic.getFormLayout(formLayout));
+            promises.push( vm.sharedLogic.getFormLayout(formLayout) );
 
-            Promise.allSettled(promises).then(resData => {
+            const resData = await Promise.allSettled(promises);
 
-                var formLayoutDataRes = resData.pop();
+            const formLayoutDataRes = resData.pop();
 
-                if (formLayoutDataRes.status === 'fulfilled') {
+            if (formLayoutDataRes.status === 'fulfilled') {
 
-                    var formLayoutData = formLayoutDataRes.value;
+                const formLayoutData = formLayoutDataRes.value;
 
-                    vm.typeSelectorOptions = formLayoutData.typeSelectorOptions;
-                    vm.groupSelectorOptions = formLayoutData.groupSelectorOptions;
+                vm.typeSelectorOptions = formLayoutData.typeSelectorOptions;
+                vm.groupSelectorOptions = formLayoutData.groupSelectorOptions;
 
-                    // vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
-                    // vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
+                // vm.fixedAreaPopup.fields = formLayoutData.fixedAreaData;
+                // vm.originalFixedAreaPopupFields = JSON.parse(JSON.stringify(formLayoutData.fixedAreaData));
 
-                    vm.attributeTypes = formLayoutData.attributeTypes;
-                    vm.entity.attributes = formLayoutData.attributes;
+                vm.attributeTypes = formLayoutData.attributeTypes;
+                vm.entity.attributes = formLayoutData.attributes;
 
-                    vm.tabs = formLayoutData.tabs;
-                    vm.tabColumns = formLayoutData.tabColumns;
+                vm.tabs = formLayoutData.tabs;
+                vm.tabColumns = formLayoutData.tabColumns;
 
-                    vm.attributesLayout = formLayoutData.attributesLayout;
+                vm.attributesLayout = formLayoutData.attributesLayout;
 
-                    vm.footerPopupData = getFooterPopupData(); // have to be called after vm.loadPermissions()
+                vm.footerPopupData = getFooterPopupData(); // have to be called after vm.loadPermissions()
 
-                    vm.readyStatus.layout = true;
-                    vm.readyStatus.entity = true;
+                vm.readyStatus.layout = true;
+                vm.readyStatus.entity = true;
 
-                }
+            }
 
-
-                // Resolving promise to inform child about end of editor building
-                resolve();
-
-            });
+            /*
+             * DEPRECATED?
+             * Resolving promise to inform child about end of editor building
+             * resolve();
+            */
 
         }
 
-        vm.getItem = function () {
+        vm.getItem = async function () {
 
             vm.readyStatus.layout = false;
             vm.readyStatus.entity = false;
 
-            return new Promise(async function (resolve, reject) {
+            vm.entity = await entityResolverService.getByKey(vm.entityType, vm.entityId)
 
-                entityResolverService.getByKey(vm.entityType, vm.entityId).then(function (data) {
+            vm.draftUserCode = vm.generateUserCodeForDraft();
 
-                    vm.entity = data;
+            console.log('vm.entity', vm.entity)
 
-                    vm.draftUserCode = vm.generateUserCodeForDraft();
+            await vm.transformSourceEntityToFrontendLogic();
 
-                    console.log('vm.entity', vm.entity)
+            if (vm.entityType === 'instrument') {
 
-                    vm.transformSourceEntityToFrontendLogic(resolve);
+                vm.getDataForInstrumentTabs();
 
+                const tabData = await vm.sharedLogic.getDataForInstrumentExposureTab();
 
-                });
+                vm.instrumentsSelectorOptions = tabData[0];
+                vm.currenciesSelectorOptions = tabData[1];
+                vm.readyStatus.exposureTab = true;
 
-            });
+            }
 
         };
 
@@ -1067,9 +1075,9 @@
 
         };
 
-        vm.updateLocalInstrument = function () {
+        vm.updateLocalInstrument = async function () {
 
-            var config = {
+            /*var config = {
                 instrument_code: vm.entity.user_code,
                 mode: 1
             };
@@ -1099,7 +1107,31 @@
 
                 }
 
-            })
+            })*/
+
+            try {
+
+                const importData = instrumentService.importFromCbonds(
+                    vm.entity.user_code, vm.entity.name, vm.entity.instrument_type_object.user_code
+                );
+
+                const res = await importData.promise;
+
+                if (!res.errors) {
+
+                    toastNotificationService.success('Instrument ' + vm.entity.user_code + ' was updated')
+
+                    vm.getItem().then(function () {
+                        $scope.$apply();
+                    });
+
+                }
+
+            } catch (e) {
+                throw e;
+            }
+
+
         };
 
         vm.editAsJson = function (option, _$popup) {
@@ -1658,7 +1690,6 @@
 
         // Instrument tab Exposure start
 
-        // Why it was commented?
         vm.getDataForInstrumentTabs = function () {
 
             entityResolverService.getListLight('instrument', {pageSize: 1000}).then(function (data) {
@@ -1983,20 +2014,16 @@
 
         }
 
-        vm.applyDraft = function ($event, data) {
+        vm.applyDraft = async function ($event, data) {
 
             vm.readyStatus.layout = false;
             vm.readyStatus.entity = false;
 
-            return new Promise(function (resolve, reject) {
+            vm.entity = data;
 
-                vm.entity = data;
+            await vm.transformSourceEntityToFrontendLogic();
 
-                vm.transformSourceEntityToFrontendLogic(resolve);
-
-            }).then(function () {
-                $scope.$apply();
-            })
+            $scope.$apply();
 
         }
 
@@ -2101,21 +2128,7 @@
             getEntityAttrs();
             vm.getCurrencies();
 
-            vm.getItem().then(async function () {
-
-
-                if (vm.entityType === 'instrument') {
-                    vm.getDataForInstrumentTabs();
-
-                    vm.sharedLogic.getDataForInstrumentExposureTab().then(function (data) {
-
-                        vm.instrumentsSelectorOptions = data[0];
-                        vm.currenciesSelectorOptions = data[1];
-                        vm.readyStatus.exposureTab = true;
-
-                    });
-
-                }
+            vm.getItem().then(function () {
 
                 getEntityStatus();
 
