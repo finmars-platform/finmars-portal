@@ -8,16 +8,15 @@
             <div data-ng-if="valueEntity == 'instrument'">
 
                 <instrument-select
-                        label="{{getName()}}"
-                        model="modelObj.model"
-                        item-object="entity[fieldKey + '_object']"
-                        on-change-callback="changeHandler()"
-                        item-name="inputTextObj.value"
-                        custom-buttons="item.buttons"
-                        custom-styles="customStyles"
-                        event-signal="ciEventObj.event"
-                        small-options="{notNull: options.notNull, tooltipText: tooltipText, dialogParent: '.dialog-containers-wrap'}"
-                        on-change-callback="changeHandler()"
+                        data-label="{{getName()}}"
+                        data-model="modelObj.model"
+                        data-item-object="entity[fieldKey + '_object']"
+                        data-item-name="inputTextObj.value"
+                        data-custom-buttons="item.buttons"
+                        data-custom-styles="customStyles"
+                        data-event-signal="ciEventObj.event"
+                        data-small-options="{notNull: options.notNull, tooltipText: tooltipText, dialogParent: '.dialog-containers-wrap'}"
+                        data-on-change-callback="changeHandler()"
                 ></instrument-select>
 
             </div>
@@ -41,21 +40,20 @@
             </div>
 
             <div data-ng-if="valueEntity !== 'instrument' && valueEntity !== 'counterparty' && valueEntity !== 'currency'">
-                <entity-search-select item="modelObj.model"
-                                      label="getName()"
-                                      item-name="inputTextObj.value"
-                                      item-object="entity[fieldKey + '_object']"
-                                      on-change-callback="changeHandler()"
-                                      custom-buttons="item.buttons"
-                                      custom-styles="customStyles"
-                                      event-signal="ciEventObj.event"
-                                      small-options="{
+                <entity-search-select data-item="modelObj.model"
+                                      data-label="getName()"
+                                      data-item-name="inputTextObj.value"
+                                      data-item-object="entity[fieldKey + '_object']"
+                                      data-custom-buttons="item.buttons"
+                                      data-custom-styles="customStyles"
+                                      data-event-signal="ciEventObj.event"
+                                      data-small-options="{
                                         notNull: options.notNull,
                                         tooltipText: tooltipText,
                                         dialogParent: '.dialog-containers-wrap'
                                       }"
-                                      entity-type="valueEntity"
-                                      on-change-callback="changeHandler()"></entity-search-select>
+                                      data-entity-type="valueEntity"
+                                      data-on-change-callback="changeHandler()"></entity-search-select>
             </div>
         </div>
 
@@ -68,12 +66,12 @@
                     <label data-ng-bind="getName()"></label>
 
                     <md-select
-                            md-on-close="searchTerm = ''"
+                            data-md-on-close="searchTerm = ''"
                             data-ng-model="modelObj.model"
                             data-ng-change="changeHandler()"
-                            md-on-open="getDataApply()"
-                            md-selected-text="bindFormFields()"
-                            md-container-class="common-select-container"
+                            data-md-on-open="getDataApply()"
+                            data-md-selected-text="bindFormFields()"
+                            data-md-container-class="common-select-container"
                             style="{{inputBackgroundColor()}}">
                         <md-select-header>
                             <input
@@ -81,7 +79,7 @@
                                     type="search"
                                     placeholder="Search for a ..."
                                     class="md-text md-select-search-pattern select-input-filter"
-                                    ng-keydown="$event.stopPropagation()"
+                                    data-ng-keydown="$event.stopPropagation()"
                             />
                         </md-select-header>
 
@@ -89,7 +87,7 @@
                             <md-optgroup
                                     data-ng-repeat="group in groups | orderBy:'-'+group.name track by group.id"
                                     data-ng-if="group.fields.length"
-                                    label="{{group.name}}"
+                                    data-label="{{group.name}}"
                             >
                                 <md-option
                                         data-ng-repeat="field in group.fields | orderBy:resolveSort(field) | filter:{name: searchTerm} track by $index"
@@ -148,19 +146,19 @@
                                         </md-select>
                                       </md-input-container>-->
 
-                        <dropdown-select label="{{getName()}}"
-                                         model="modelObj.model"
-                                         placeholder-text="{{getName()}}"
-                                         event-signal="ciEventObj.event"
-                                         menu-options="selectorOptions"
-                                         small-options="{
+                        <dropdown-select data-label="{{getName()}}"
+                                         data-model="modelObj.model"
+                                         data-placeholder-text="{{getName()}}"
+                                         data-event-signal="ciEventObj.event"
+                                         data-menu-options="selectorOptions"
+                                         data-small-options="{
                                             notNull: options.notNull,
                                             tooltipText: '{{getName()}}',
                                             dialogParent: '.dialog-containers-wrap'
                                          }"
-                                         custom-styles="customStyles"
-                                         sorted="sorted"
-                                        on-change-callback="changeHandler()">
+                                         data-custom-styles="customStyles"
+                                         data-sorted="sorted"
+                                         data-on-change-callback="changeHandler()">
                         </dropdown-select>
 
                     </div>
@@ -212,15 +210,15 @@
                                             </div>
                                         </md-select>
                                     </md-input-container>-->
-                    <dropdown-select label="{{getName()}}"
-                                     model="modelObj.model"
-                                     placeholder-text="{{getName()}}"
-                                     event-signal="ciEventObj.event"
-                                     menu-options="schemeSortedFields"
-                                     small-options="{notNull: options.notNull, tooltipText: '{{getName()}}', dialogParent: '.dialog-containers-wrap'}"
-                                     custom-styles="customStyles"
-                                     sorted="sorted"
-                                     on-change-callback="changeHandler()">
+                    <dropdown-select data-label="{{getName()}}"
+                                     data-model="modelObj.model"
+                                     data-placeholder-text="{{getName()}}"
+                                     data-event-signal="ciEventObj.event"
+                                     data-menu-options="schemeSortedFields"
+                                     data-small-options="{notNull: options.notNull, tooltipText: '{{getName()}}', dialogParent: '.dialog-containers-wrap'}"
+                                     data-custom-styles="customStyles"
+                                     data-sorted="sorted"
+                                     data-on-change-callback="changeHandler()">
                     </dropdown-select>
 
                 </div>
@@ -233,14 +231,14 @@
 
         <div data-ng-if="checkComplexEntityType()">
 
-            <two-fields-multiselect ng-model="modelObj.model"
-                                    title="{{getName()}}"
-                                    model="modelObj.model"
-                                    items="selectorOptions"
-                                    name-property="bindFieldsName"
-                                    selected-items-indication="chips"
-                                    small-options="{dialogParent: '.dialog-containers-wrap'}"
-                                    on-change-callback="changeHandler()"></two-fields-multiselect>
+            <two-fields-multiselect data-ng-model="modelObj.model"
+                                    data-title="{{getName()}}"
+                                    data-model="modelObj.model"
+                                    data-items="selectorOptions"
+                                    data-name-property="bindFieldsName"
+                                    data-selected-items-indication="chips"
+                                    data-small-options="{dialogParent: '.dialog-containers-wrap'}"
+                                    data-on-change-callback="changeHandler()"></two-fields-multiselect>
 
         </div>
 
@@ -249,32 +247,32 @@
 
                 <!--TODO ask when to use 2020.10.21 -->
                 <!--Victor: I it got back because server need the array-->
-                <two-fields-multiselect ng-model="modelObj.model"
-                                        title="{{getName()}}"
-                                        model="modelObj.model"
-                                        name-property="bindFieldsName"
-                                        items="selectorOptions"
-                                        data-selected-items-indication="chips"
-                                        small-options="{dialogParent: '.dialog-containers-wrap'}"
-                                        on-change-callback="changeHandler()"></two-fields-multiselect>
+                <two-fields-multiselect data-ng-model="modelObj.model"
+                                        data-title="{{getName()}}"
+                                        data-model="modelObj.model"
+                                        data-name-property="bindFieldsName"
+                                        data-items="selectorOptions"
+                                        data-data-selected-items-indication="chips"
+                                        data-small-options="{dialogParent: '.dialog-containers-wrap'}"
+                                        data-on-change-callback="changeHandler()"></two-fields-multiselect>
 
             </div>
 
             <div data-ng-if="fieldKey === 'content_types'">
 
-                <dropdown-select label="{{getName()}}"
-                                 model="modelObj.model"
-                                 placeholder-text="{{getName()}}"
-                                 event-signal="ciEventObj.event"
-                                 menu-options="selectorOptions"
-                                 small-options="{
+                <dropdown-select data-label="{{getName()}}"
+                                 data-model="modelObj.model"
+                                 data-placeholder-text="{{getName()}}"
+                                 data-event-signal="ciEventObj.event"
+                                 data-menu-options="selectorOptions"
+                                 data-small-options="{
                                     notNull: options.notNull,
                                     tooltipText: '{{getName()}}',
                                     dialogParent: '.dialog-containers-wrap'
                                  }"
-                                 custom-styles="customStyles"
-                                 sorted="sorted"
-                                 on-change-callback="changeHandler()">
+                                 data-custom-styles="customStyles"
+                                 data-sorted="sorted"
+                                 data-on-change-callback="changeHandler()">
                 </dropdown-select>
 
             </div>
