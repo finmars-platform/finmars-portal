@@ -120,7 +120,9 @@
                     }
                     return scope.item.name
                 };
-
+                if (scope.getName() === 'Purpose') {
+                    console.log("testing2193.evSelectorResolver item", structuredClone(scope.item) );
+                }
                 var getData = function () {
 
                     console.log('scope,', scope);
@@ -174,6 +176,10 @@
                                 scope.readyStatus.content = true;
                                 fieldsDataIsLoaded = true;
 
+                                if (scope.getName() === 'Purpose') {
+                                    console.log("testing2193.evSelectorResolver getData fields", structuredClone(scope.fields) );
+                                }
+
                                 resolve();
                                 // scope.readyStatus.content = true;
 
@@ -207,7 +213,7 @@
                     bfcVm.model = scope.modelObj.model;
 
                     if (bfcVm.itemChange) {
-                        bfcVm.itemChange();
+                        bfcVm.itemChange(bfcVm.model);
                     }
 
                 };
