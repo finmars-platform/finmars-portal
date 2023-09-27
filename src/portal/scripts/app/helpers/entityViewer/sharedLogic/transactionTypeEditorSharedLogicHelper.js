@@ -639,12 +639,35 @@
 
             }
 
-            entity.inputs.forEach(function (input) {
+            entity.inputs.forEach(input => {
 
                 if (input.settings) {
 
                     if (input.settings.linked_inputs_names) {
+
+                        if (
+                            input.settings.linked_inputs_names.length &&
+                            typeof input.settings.linked_inputs_names[0] === 'object'
+                        ) {
+
+                            input.settings.linked_inputs_names =
+                                input.settings.linked_inputs_names.map(nameData => nameData.id)
+
+                        }
+
+                        //# region Testing for null, undefined, ''
+                        const invalidName = input.settings.linked_inputs_names.find(name => {
+                            return !name || typeof name !== 'string';
+                        });
+
+                        if (invalidName) {
+                            console.log("ERROR: invalid linked input name inside input.settings.linked_inputs_names", input, invalidName);
+                            throw new Error("Invalid linked input name inside input.settings.linked_inputs_names");
+                        }
+                        //# endregion
+
                         input.settings.linked_inputs_names = input.settings.linked_inputs_names.join(',')
+
                     }
 
                     if (input.settings.recalc_on_change_linked_inputs) {
@@ -1097,8 +1120,11 @@
         const onInputsGridTableCellChange = function (rowKey) {
 
             // updating whole row because 'value_type' change causes other cells to change
-            var gtRow = viewModel.inputsGridTableDataService.getRowByKey(rowKey);
-            var input = viewModel.entity.inputs[gtRow.order];
+            // Now user can't change 'value_type' of an existing input. Logic can be changed if needed.
+            const gtRow = viewModel.inputsGridTableDataService.getRowByKey(rowKey);
+            const valueTypeC = gridTableHelperService.getCellFromRowByKey(gtRow, 'value_type');
+
+            let input = viewModel.entity.inputs[gtRow.order];
 
             gtRow.columns.forEach(function (gtColumn) {
 
@@ -1110,15 +1136,22 @@
                         let recalculateOnChange = [];
                         let recalculateOnChangePath = ['settings', 'recalc_on_change_linked_inputs'];
 
-                        gtColumn.settings.value.forEach(function (multiselItem) {
+                        if (valueTypeC.settings.value === 120) { // Button
+                            linkedInputsNames = structuredClone(gtColumn.settings.value);
+                        }
+                        else {
 
-                            linkedInputsNames.push(multiselItem.id);
+                            gtColumn.settings.value.forEach(function (multiselItem) {
 
-                            if (multiselItem.isChecked) {
-                                recalculateOnChange.push(multiselItem.id);
-                            }
+                                linkedInputsNames.push(multiselItem.id);
 
-                        });
+                                if (multiselItem.isChecked) {
+                                    recalculateOnChange.push(multiselItem.id);
+                                }
+
+                            });
+
+                        }
 
                         metaHelper.setObjectNestedPropVal(input, gtColumn.objPath, linkedInputsNames);
                         metaHelper.setObjectNestedPropVal(input, recalculateOnChangePath, recalculateOnChange);
@@ -1468,11 +1501,12 @@
 
                         if (valueType.settings.value === 120) { // Button
 
-                            newRow.columns[8].settings.optionsCheckboxes.selectedOptions = false; // linked inputs for Button have no checkboxes
+                            newRow.columns[8].settings.optionsCheckboxes = null; // linked inputs for Button have no checkboxes
 
                         }
 
                         changeCellsBasedOnValueType(newRow);
+
                         viewModel.inputsGridTableData.body.unshift(newRow);
 
                         gtEventService.dispatchEvent(gridTableEvents.ROW_ADDED);
@@ -1735,43 +1769,57 @@
                 // input_calc_expr
                 rowObj.columns[7].settings.value = input.value_expr
                 rowObj.columns[7].settings.exprData = viewModel.expressionData;
-                // linked_inputs_names
-                rowObj.columns[8].settings.value = []
+
+                //# region linked_inputs_names
+                rowObj.columns[8].settings.value = [];
 
                 if (input.settings && input.settings.linked_inputs_names) {
 
-                    rowObj.columns[8].settings.value = input.settings.linked_inputs_names.map(function (linkedInputName) {
-
-                        var linkedInput = {
-                            id: linkedInputName,
-                            isChecked: false
-                        };
-
-                        if ( input.settings.recalc_on_change_linked_inputs.includes(linkedInputName) ) {
-
-                            linkedInput.isChecked = true;
-
-                        }
-
-                        return linkedInput;
-
+                    let invalidLinI = input.settings.linked_inputs_names.findIndex(name => {
+                        return !name || typeof name !== 'string';
                     });
+
+                    if (invalidLinI > -1 && viewModel.inputsWithError) {
+                        viewModel.inputsWithError.push(input.name);
+                    }
 
                     if (input.value_type === 120) { // Button
 
-                        rowObj.columns[8].settings.optionsCheckboxes.selectedOptions = false; // linked inputs for Button have not checkboxes
+                        rowObj.columns[8].settings.optionsCheckboxes = null; // linked inputs for Button have no checkboxes
+                        rowObj.columns[8].settings.value = structuredClone(input.settings.linked_inputs_names);
+
+                    }
+                    else {
+
+                        rowObj.columns[8].settings.value = input.settings.linked_inputs_names.map(function (linkedInputName) {
+
+                            var linkedInput = {
+                                id: linkedInputName,
+                                isChecked: false
+                            };
+
+                            if ( input.settings.recalc_on_change_linked_inputs.includes(linkedInputName) ) {
+
+                                linkedInput.isChecked = true;
+
+                            }
+
+                            return linkedInput;
+
+                        });
 
                     }
 
                 }
 
                 rowObj.columns[8].settings.selectorOptions = viewModel.inputsForMultiselector
-                // rowObj.columns[8].settings.getDataMethod = getInputsForLinking;
+                //# endregion linked_inputs_names
 
                 viewModel.inputsGridTableData.body.push(rowObj)
 
             });
             //endregion assemble body rows >
+
             viewModel.inputsGridTableDataService.setTableData(viewModel.inputsGridTableData);
 
         }

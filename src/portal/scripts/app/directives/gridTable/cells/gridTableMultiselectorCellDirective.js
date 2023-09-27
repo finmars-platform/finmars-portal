@@ -109,7 +109,7 @@
 								nameProperty: 'name',
 								orderOptions: scope.column.settings.orderOptions,
 								strictOrder: scope.column.settings.strictOrder,
-								optionsCheckboxes: scope.column.settings.optionsCheckboxes
+								optionsCheckboxes: scope.column.settings.optionsCheckboxes,
 							}
 						}
 
@@ -117,7 +117,7 @@
 
 						if (res.status === "agree") {
 
-							scope.column.settings.value = res.selectedItems
+							scope.column.settings.value = res.selectedItems;
 
 							formatDataForChips();
 							let chipsList = JSON.parse(JSON.stringify(scope.chipsList));
