@@ -38,7 +38,8 @@
     <!--    <div data-ng-repeat="row in gridTableData.body | orderBy: 'order' track by $index"-->
     <div data-ng-repeat="row in gridTableData.body | orderBy:sortRowsByCol:sortRowsReverse track by row.key"
          ng-click="onRowClick($event, row)"
-         class="grid-table-row"  data-ng-class="{'no-checkbox': gridTableData.components.rowCheckboxes === false}">
+         class="grid-table-row"
+         data-ng-class="{'no-checkbox': gridTableData.components.rowCheckboxes === false}">
 
         <div class="grid-table-row-actions-wrap">
             <div ng-if="gridTableData.components.rowCheckboxes !== false" class="grid-table-row-checkbox">

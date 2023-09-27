@@ -24,6 +24,12 @@
 
         vm.nameProperty = data.nameProperty;
         vm.strictOrder = data.strictOrder;
+        /**
+         * availableOptions - to show checkboxes for available options;
+         * selectedOptions = to show checkboxes for selected options
+         *
+         * @type { {availableOptions: Boolean, selectedOptions: Boolean}|null|undefined }
+         */
         vm.optionsCheckboxes = data.optionsCheckboxes;
         vm.readyStatus = false;
         vm.selectedItems = [];

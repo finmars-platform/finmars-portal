@@ -26,6 +26,12 @@
 				smallOptions: "=",
 				getDataMethod: "&?", // needed for downloading items on opening multiselector
 				strictOrder: "=",
+				isDisabled: "=",
+				/*
+				 * @type { {availableOptions: Boolean, selectedOptions: Boolean}|null|undefined }
+				 * availableOptions - to show checkboxes for available options
+				 * selectedOptions = to show checkboxes for selected options
+				 */
 				optionsCheckboxes: "=",
 
 				multiselectEventService: "=",
@@ -246,6 +252,8 @@
 					event.preventDefault();
 					event.stopPropagation();
 
+					if (scope.isDisabled) return;
+
 					let parent = angular.element(document.body);
 
 					if (dialogParent) {
@@ -276,7 +284,7 @@
 									nameProperty: scope.nameProperty,
 									orderOptions: scope.orderOptions,
 									strictOrder: scope.strictOrder,
-									optionsCheckboxes: scope.optionsCheckboxes
+									optionsCheckboxes: scope.optionsCheckboxes,
 								}
 							}
 

@@ -516,6 +516,15 @@
 
 .multiselector-input-container {
 
+  &.disabled {
+    .two-fields-multiselect-input {
+      label, input {
+        opacity: .5;
+      }
+
+    }
+  }
+
   .multiselector-input-chips-wrap {
     height: 100%;
     flex: 0 1 100%;
