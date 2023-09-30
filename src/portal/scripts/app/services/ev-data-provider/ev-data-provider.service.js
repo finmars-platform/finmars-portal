@@ -511,9 +511,6 @@
 
                         deserializeObjects(entityViewerDataService, entityViewerEventService, attributeDataService, data, requestParameters, pageToRequest);
 
-                        resolveLocal();
-
-
                         if (requestParameters.loadAll) {
 
                             if (requestParameters.pagination.page * requestParameters.pagination.page_size >= requestParameters.pagination.count) {
@@ -543,6 +540,8 @@
                             }
 
                         }
+
+                        resolveLocal();
 
                     })
 					.catch(function (data) {
@@ -757,36 +756,38 @@
     var sortObjects = function (entityViewerDataService, entityViewerEventService, attributeDataService) {
 
     	var level = entityViewerDataService.getGroups().length;
-
-        // var unfoldedGroups = evDataHelper.getUnfoldedGroupsByLevel(level, entityViewerDataService);
 		var lastGroups = evDataHelper.getGroupsByLevel(level, entityViewerDataService);
-        // var activeColumnSort = entityViewerDataService.getActiveColumnSort();
 
         var requestsParameters = entityViewerDataService.getAllRequestParameters();
-
-		// var requestParametersForUnfoldedGroups = [];
 		var requestParametersForLastGroups = [];
-		// Get request parameters for last groups
+
+        entityViewerDataService.setProjection([]);
+        entityViewerDataService.setFlatList([]);
+
 		Object.keys(requestsParameters).forEach(function (key) {
 
-			// unfoldedGroups.forEach(function (group) {
 			lastGroups.forEach(function (group) {
 
+                entityViewerDataService.resetObjectsOfGroup(group.___id);
+
 				if (group.___id === requestsParameters[key].id) {
-
-					// requestsParameters[key].event.___id = group.___id;
-					// requestsParameters[key].event.groupName = group.___group_name;
-					// requestsParameters[key].event.groupIdentifier = group.___group_identifier;
-					// requestsParameters[key].event.groupId = group.___group_id;
-					// requestsParameters[key].event.parentGroupId = group.___parentId;
-
 					requestParametersForLastGroups.push(requestsParameters[key]);
 				}
-
 
 			})
 
 		});
+        /*selectedGroups.forEach(function (group) {
+
+            var reqParamKey = requestparametersKeys.find(function (key) {
+                return group.___id === requestsParameters[key].id
+            })
+
+            if (reqParamKey) {
+                requestParametersForLastGroups.push( requestsParameters[reqParamKey] );
+            }
+
+        })*/
 
 		requestParametersForLastGroups.forEach(function (item) {
 
