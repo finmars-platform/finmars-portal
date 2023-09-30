@@ -9,7 +9,7 @@ var proxy = require('proxy-middleware');
 var app = express();
 
 var port = process.env.PORT || 8080;
-var proxyApiHost = process.env.API_HOST || 'https://dev.finmars.com';
+var proxyApiHost = process.env.API_HOST || 'https://stage.finmars.com';
 var proxyDatabaseId = process.env.DATABASE_ID || 'space00000';
 
 app.use(express.static(path.join(__dirname, 'dist')));

@@ -37,8 +37,8 @@
     const AUTHORIZER_URL = process.env.AUTHORIZER_URL || 'http://0.0.0.0:8083/authorizer';
     const WS_HOST = process.env.WS_HOST || 'ws://0.0.0.0:6969';
     const HEALTHCHECK_HOST = process.env.HEALTHCHECK_HOST || '';
-    const KEYCLOAK_ACCOUNT_PAGE = process.env.KEYCLOAK_ACCOUNT_PAGE || 'https://dev-auth.finmars.com/realms/finmars/account/';
-    const KEYCLOAK_URL = process.env.KEYCLOAK_URL || 'https://dev-auth.finmars.com';
+    const KEYCLOAK_ACCOUNT_PAGE = process.env.KEYCLOAK_ACCOUNT_PAGE || 'https://stage-auth.finmars.com/realms/finmars/account/';
+    const KEYCLOAK_URL = process.env.KEYCLOAK_URL || 'https://stage-auth.finmars.com';
     const KEYCLOAK_REALM = process.env.KEYCLOAK_REALM || 'finmars';
     const KEYCLOAK_CLIENT_ID = process.env.KEYCLOAK_CLIENT_ID || 'finmars';
     const USE_ACTIVENOTE = process.env.USE_ACTIVENOTE || false;
