@@ -655,7 +655,7 @@
 
                         }
 
-                        //# region Testing for null, undefined, ''
+                        //# region Checking for null, undefined, ''
                         const invalidName = input.settings.linked_inputs_names.find(name => {
                             return !name || typeof name !== 'string';
                         });

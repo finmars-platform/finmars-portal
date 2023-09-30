@@ -131,16 +131,16 @@
                          popup-event-service="evEventService"
 
                          class="g-column-sort-settings-opener"></div>-->
-                    <div custom-popup
-                         popup-id="{{column.key}}"
-                         popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"
-                         popup-data="{column: column, changeSortMode: changeSortMode}"
-                         position-relative-to="element"
-                         relative-popup-x="left"
-                         open-on="click"
-                         close-on-click-outside="true"
-                         popup-classes="column-sort-popup"
-                         popup-event-service="evEventService"
+                    <div data-custom-popup
+                         data-popup-id="{{column.key}}"
+                         data-popup-template-url="'views/popups/entity-viewer/g-report-viewer-column-sort-popup-menu.html'"
+                         data-popup-data="{column: column, changeSortMode: changeSortMode}"
+                         data-position-relative-to="element"
+                         data-relative-popup-x="left"
+                         data-open-on="click"
+                         data-close-on-click-outside="true"
+                         data-popup-classes="column-sort-popup"
+                         data-popup-event-service="evEventService"
 
                          class="g-column-sort-settings-opener"></div>
 
@@ -188,12 +188,14 @@
 
                             </div>
 
-                            <div class="sort" data-ng-click="changeSortDirection(column, column.options.sort === 'DESC' ? 'ASC' : 'DESC')">
+                            <button class="sort"
+                                    data-ng-disabled="dataIsLoading"
+                                    data-ng-click="changeSortDirection(column, column.options.sort === 'DESC' ? 'ASC' : 'DESC')">
 
                                 <span data-ng-show="column.options.sort === 'DESC' || !column.options.sort" class="material-icons gt-sorting-icon">arrow_upward</span>
                                 <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
 
-                            </div>
+                            </button>
 
                         </div>
 
@@ -293,11 +295,17 @@
 
                             </div>
 
-                            <div class="sort {{column.options.sort ? 'has-sort' : ''}}" data-ng-click="changeSortDirection(column, column.options.sort === 'DESC' ? 'ASC' : 'DESC')">
+                            <button class="sort"
+                                    data-ng-class="{'has-sort': column.options.sort}"
+                                    data-ng-disabled="dataIsLoading"
+                                    data-ng-click="changeSortDirection(
+                                        column,
+                                        column.options.sort === 'DESC' ? 'ASC' : 'DESC'
+                                    )">
 
                                 <span data-ng-show="column.options.sort === 'DESC' || !column.options.sort" class="material-icons gt-sorting-icon">arrow_upward</span>
                                 <span data-ng-show="column.options.sort === 'ASC'" class="material-icons gt-sorting-icon">arrow_downward</span>
-                            </div>
+                            </button>
 
                         </div>
 

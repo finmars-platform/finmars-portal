@@ -16,6 +16,8 @@ const evEvents = require("../../services/entityViewerEvents");
     var evHelperService = require('../../services/entityViewerHelperService');
     var rvDataHelper = require('../../helpers/rv-data.helper');
 
+    var utilsHelper = require('../../helpers/utils.helper');
+
     var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
     module.exports = function ($mdDialog, toastNotificationService, usersService, globalDataService, uiService, evRvDomManagerService, rvDataProviderService) {
@@ -39,6 +41,7 @@ const evEvents = require("../../services/entityViewerEvents");
                 scope.isReport = scope.evDataService.isEntityReport();
 
                 scope.entityType = scope.evDataService.getEntityType();
+                scope.dataIsLoading = false;
                 scope.rowStatusFilterIcon = `<span class="material-icons">star_outline</span>`;
 
                 let filters = scope.evDataService.getFilters();
@@ -551,13 +554,13 @@ const evEvents = require("../../services/entityViewerEvents");
                     if (!columnOrGroup.options) columnOrGroup.options = {};
 
                     columnOrGroup.options.sort = direction;
-                    sort(columnOrGroup);
+                    sortDeb(columnOrGroup);
 
                 };
 
                 const signalSortChange = function (columnOrGroup) {
 
-                    if (scope.columnHasCorrespondingGroup(columnOrGroup.key)) {
+                    if (scope.isReport && scope.columnHasCorrespondingGroup(columnOrGroup.key)) {
 
                         const placeholder1 = scope.groups.find(group => group.key === columnOrGroup.key);
                         placeholder1.options.sort = columnOrGroup.options.sort;
@@ -569,6 +572,17 @@ const evEvents = require("../../services/entityViewerEvents");
                         scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
 
                     } else {
+
+                        /* *
+                        * For some reason dispatch evEvents.DATA_LOAD_START from
+                        * ev-data-provider.service -> getObjects() do not register.
+                        * Whence scope.dataIsLoading = true;
+                        * */
+                        scope.dataIsLoading = true;
+                        // when calling inside debounce
+                        setTimeout(function () {
+                            scope.$apply();
+                        }, 0);
 
                         scope.evDataService.setActiveColumnSort(columnOrGroup);
                         scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
@@ -613,6 +627,10 @@ const evEvents = require("../../services/entityViewerEvents");
                     }
 
                 }
+
+                const sortDeb = utilsHelper.debounce(function (columnOrGroup) {
+                    sort(columnOrGroup);
+                }, 500);
 
                 // <Victor 2021.04.07 #90 sort setting for column>
 
@@ -2732,6 +2750,17 @@ const evEvents = require("../../services/entityViewerEvents");
                     }); */
                     scope.evEventService.addEventListener(evEvents.GROUPS_LEVEL_FOLD, onGroupLevelFoldingSwitch);
                     scope.evEventService.addEventListener(evEvents.GROUPS_LEVEL_UNFOLD, onGroupLevelFoldingSwitch);
+
+                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
+                        scope.dataIsLoading = true;
+                    });
+
+                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                        scope.dataIsLoading = false;
+                        setTimeout(() => {
+                            scope.$apply();
+                        }, 0);
+                    });
 
                     if (!scope.isReport) {
 
