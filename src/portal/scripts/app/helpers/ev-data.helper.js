@@ -975,8 +975,6 @@
 
         if (selectedGroups.length) {
 
-
-
             selectedGroups.forEach(function (group) {
 
                 dataAsList.forEach(function (dataItem) {
@@ -999,7 +997,8 @@
 
             })
 
-        } else {
+        }
+        else {
 
 
             var rootGroup = evDataService.getRootGroupData()
@@ -1024,6 +1023,8 @@
 
         }
 
+        result.sort( (a, b) => a.___index - b.___index );
+
         if (controlObj) {
             result.push(controlObj)
         }
@@ -1038,6 +1039,12 @@
 
     }
 
+    /**
+     * Returns nested object with groups without objects
+     *
+     * @param {Object} evDataService
+     * @returns {*}
+     */
     var getGroupsAsTree = function (evDataService) {
 
         var data = JSON.parse(JSON.stringify(evDataService.getData()));

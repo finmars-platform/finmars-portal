@@ -4,6 +4,10 @@
 // IMPORTANT: if you are changing @evGRowSettingsWidth, you should also change rowSettingsColumnWidth variable inside ev-renderer/ev.renderer.js
 @evGRowSettingsWidth: 124px;
 
+.control-loader-holder {
+  margin-left: 8px;
+}
+
 .entity-viewer-holder {
 
   .no-data-block {
@@ -240,6 +244,8 @@
 
         .control-content {
           position: absolute;
+          display: flex;
+          align-items: center;
           height: 100%;
           top: 0;
           left: @gRowSelectionWidth;
@@ -519,14 +525,10 @@
   }
 
   .control-button {
-    /* background-color: #3f51b5; */
     color: #f05a22;
-    //box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
     margin: 2px;
     height: 29px;
     border: 0;
-    /* border-right: 1px solid #000; */
-    /* border-bottom: 1px solid; */
     cursor: pointer;
     text-transform: uppercase;
     font-size: 13px;

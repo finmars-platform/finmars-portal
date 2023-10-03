@@ -192,7 +192,8 @@
             },
             warnAboutLayoutChangesLoss: true,
             isNewLayout: false, // does layout exist on server,
-            autoRefreshState: true
+            autoRefreshState: true,
+            ignoreLoadedDataMethods: {},
         };
 
         var dashboardData = {
@@ -219,7 +220,7 @@
 
         /**
          *
-         * @param {=Object} interfaceLayout
+         * @param {Object} [interfaceLayout]
          * @returns {Object} - interface layout with only properties that user changes
          * @memberOf module:entityViewerDataService
          */
@@ -788,7 +789,15 @@
 
         }
 
+        function resetObjectsOfGroup(groupId) {
+            var list = getDataAsList();
 
+            list.forEach(function (item) {
+                if (item.___type === 'object' && item.___parentId === groupId) { // except root group
+                    delete data.data[item.___id];
+                }
+            })
+        }
 
         function resetData() {
 
@@ -1918,6 +1927,7 @@
             setData: setData,
             setAllData: setAllData,
             resetOnlyItems: resetOnlyItems,
+            resetObjectsOfGroup: resetObjectsOfGroup,
             resetOnlyGroups: resetOnlyGroups,
             resetData: resetData,
             getData: getData,

@@ -551,10 +551,26 @@
 
                     }
 
+                    if (isLoadMoreButtonPressed || isLoadAllButtonPressed) {
+
+                        var controlRow = clickData.target.closest('.gControlRow');
+
+                        var controlBtns = controlRow.querySelectorAll('.controlBtn');
+
+                        controlBtns.forEach(function (elem) {
+                            elem.classList.add('display-none');
+                        })
+
+                        var controlLoader = controlRow.querySelector('.controlLoader');
+                        if (controlLoader) controlLoader.classList.remove('display-none');
+
+                    }
+
                 }
 
             })
-        } else {
+        }
+        else {
 
             var groupHashId = clickData.___parentId;
 
@@ -600,6 +616,7 @@
             }
 
         }
+
         evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
     };
