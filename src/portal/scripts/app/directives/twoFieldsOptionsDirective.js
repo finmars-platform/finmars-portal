@@ -16,7 +16,13 @@
 				classes: "=",
 				orderOptions: "=", // object with properties: options, selectedOptions
                 strictOrder: "=", // enable order change for selected items
-				optionsCheckboxes: "=" // contains object with properties optionsCheckbox, selectedOptions
+
+                /*
+				 * @type { {availableOptions: Boolean, selectedOptions: Boolean}|null|undefined }
+				 * availableOptions - to show checkboxes for available options
+				 * selectedOptions = to show checkboxes for selected options
+				 */
+				optionsCheckboxes: "=",
 			},
 			templateUrl: 'views/directives/two-fields-options-view.html',
 			link: function (scope, elem, attr) {

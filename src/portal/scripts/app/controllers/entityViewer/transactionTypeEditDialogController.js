@@ -83,6 +83,9 @@
 
         vm.openedIn = data.openedIn;
 
+        // TODO: ME 2023-09-27 delete later
+        vm.inputsWithError = [];
+
         // Deprecated
         vm.loadPermissions = function () {
 
@@ -1162,167 +1165,6 @@
         }
 
         // Transaction Type tab INPUTS
-        /* var onInputsGridTableRowAddition = function () {
-
-            var newRow = vm.inputsGridTableData.body[0];
-
-            var newInput = {
-                name: null,
-                verbose_name: null,
-                value_type: null,
-                content_type: null,
-                is_fill_from_context: false,
-                reference_table: null,
-                account: null,
-                instrument_type: null,
-                instrument: null,
-                currency: null,
-                counterparty: null,
-                responsible: null,
-                portfolio: null,
-                strategy1: null,
-                strategy2: null,
-                strategy3: null,
-                daily_pricing_model: null,
-                payment_size_detail: null,
-                price_download_scheme: null,
-                pricing_policy: null,
-                value: null,
-                value_expr: null,
-                settings: {}
-            }
-
-            newInput.name = newRow.key
-
-            // if there is is_fill_from_context, enable it
-            var fillFromContext = gridTableHelperService.getCellFromRowByKey(newRow, 'is_fill_from_context');
-            if (fillFromContext.settings.value) {
-                newInput.is_fill_from_context = true
-            }
-
-            vm.entity.inputs.unshift(newInput);
-
-            vm.entity.inputs.forEach(function (input, iIndex) {
-                vm.inputsGridTableData.body[iIndex].order = iIndex
-            })
-
-            onInputsGridTableCellChange(newRow.key);
-
-            vm.getInputsForLinking();
-            updateLinkedInputsOptionsInsideGridTable();
-
-        };
-
-        var onInputsGridTableCellChange = function (rowKey) {
-
-            // updating whole row because 'value_type' change causes other cells to change
-            var gtRow = vm.inputsGridTableDataService.getRowByKey(rowKey);
-            var input = vm.entity.inputs[gtRow.order];
-
-            gtRow.columns.forEach(function (gtColumn) {
-
-                if (gtColumn.objPath) {
-                    metaHelper.setObjectNestedPropVal(input, gtColumn.objPath, gtColumn.settings.value);
-
-                } else if (gtColumn.objPaths) {
-
-                    gtColumn.objPaths.forEach(function (objPath, index) {
-                        metaHelper.setObjectNestedPropVal(input, objPath, gtColumn.settings.value[index]);
-                    });
-
-                }
-
-                if (gtColumn.key === 'content_type' && gtColumn.cellType === 'empty') {
-
-                    input.content_type = null
-                    input.reference_table = null
-
-                }
-
-            });
-
-            /!* vm.entity.inputs.forEach(function (input, inputIndex) {
-
-                var row = vm.inputsGridTableData.body[inputIndex];
-
-                 row.columns.forEach(function (column) {
-
-                    if (column.objPath) {
-                        metaHelper.setObjectNestedPropVal(vm.entity.inputs, column.objPath, column.settings.value);
-
-                    } else {
-
-                        column.objPaths.forEach(function (objPath, index) {
-                            metaHelper.setObjectNestedPropVal(vm.entity.inputs, objPath, column.settings.value[index]);
-                        });
-
-                    }
-
-                });
-
-            }); *!/
-
-        } */
-
-        // TODO grid table delete
-        /*var onRelationFillFromContextChange = function (rowOrder, colOrder, gtDataService) {
-
-            var changedCell = gtDataService.getCell(rowOrder, colOrder);
-            var contentTypeCell = gtDataService.getCellByKey(rowOrder, 'content_type');
-            var defaultValueCell = gtDataService.getCellByKey(rowOrder, 'default_value');
-
-            if (changedCell.settings.value) {
-                defaultValueCell.settings.selectorOptions = vm.contextProperties[contentTypeCell.settings.value]
-
-            } else {
-
-                defaultValueCell.settings.selectorOptions = []
-
-            }
-
-        }*/
-
-        /* TODO delete. Does not needed after grid table implementation
-         vm.toggleQuery = function () {
-            vm.queryStatus = !vm.queryStatus;
-            vm.query = {};
-        };
-
-        vm.setSort = function (propertyName) {
-            vm.direction = (vm.sort === propertyName) ? !vm.direction : false;
-            vm.sort = propertyName;
-        };
-
-        vm.updateInputFunctions = function () {
-
-            vm.expressionData.groups[0] = {
-                "name": "<b>Inputs</b>",
-                "key": 'input'
-            }
-
-            if (vm.entity.inputs && vm.entity.inputs.length > 0) {
-
-                vm.expressionData.functions[0] = vm.entity.inputs.map(function (input) {
-
-                    return {
-                        "name": "Input: " + input.verbose_name + " (" + input.name + ")",
-                        "description": "Transaction Type Input: " + input.verbose_name + " (" + input.name + ") ",
-                        "groups": "input",
-                        "func": input.name,
-						"validation": {
-							"func": input.name
-						}
-                    }
-
-                });
-
-            } else {
-
-                vm.expressionData.functions = []
-
-            }
-
-        }; */
 
         vm.delete = function ($event) {
 
@@ -2137,47 +1979,6 @@
         vm.appendFromTemplate = sharedLogic.appendFromTemplate;
         vm.saveAsTemplate = sharedLogic.saveAsTemplate;
 
-        /* var updateLinkedInputsOptionsInsideGridTable = function () {
-
-            var linkedInputsNames = vm.inputsGridTableDataService.getCellByKey('templateRow', 'linked_inputs_names');
-            linkedInputsNames.settings.selectorOptions = inputsForMultiselector
-
-            for (var i = 0; i < vm.inputsGridTableData.body.length; i++) {
-
-                linkedInputsNames = vm.inputsGridTableDataService.getCellByKey(i, 'linked_inputs_names');
-
-                linkedInputsNames.settings.selectorOptions = inputsForMultiselector
-
-            }
-
-        };
-
-        vm.getInputsForLinking = function () {
-
-            vm.inputsForMultiselector = vm.entity.inputs.map(function (input) {
-
-                return {
-                    id: input.name,
-                    name: input.name
-                }
-
-            });
-
-        };
-
-        var initGridTableEvents = function () {
-
-            vm.inputsGridTableEventService.addEventListener(gridTableEvents.CELL_VALUE_CHANGED, function (argumentsObj) {
-                onInputsGridTableCellChange(argumentsObj.row.key);
-
-            });
-
-            vm.inputsGridTableEventService.addEventListener(gridTableEvents.ROW_ADDED, function () {
-                onInputsGridTableRowAddition();
-            });
-
-        }; */
-
         vm.recalculateUserFields = function ($event, key) {
 
             transactionTypeService.recalculateUserFields(vm.entity.id, {
@@ -2218,7 +2019,7 @@
         vm.addContextParameter = sharedLogic.addContextParameter;
         //endregion Context Parameters tab
 
-        // DRAFT STARTED
+        //# region DRAFT STARTED
 
         vm.generateUserCodeForDraft = function (){
 
@@ -2282,6 +2083,7 @@
 
             Promise.all([getAttrsPromise, getRefTablesPromise, getInputTemplPromise, getActionsTemplPromise]).then(function () {
 
+                // setups vm.inputsGridTableDataService
                 var iamdlResult = sharedLogic.initAfterMainDataLoaded();
                 vm.actionsMultitypeFieldsList = iamdlResult.actionsMultitypeFieldsList;
                 vm.eventPhantomsOpts = iamdlResult.eventPhantomsOpts;
@@ -2298,7 +2100,7 @@
 
         }
 
-        // DRAFT ENDED
+        //# endregion DRAFT ENDED
 
         vm.init = function () {
 
@@ -2332,6 +2134,7 @@
 
             Promise.all([getItemPromise, getAttrsPromise, getRefTablesPromise, getInputTemplPromise, getActionsTemplPromise]).then(function () {
 
+                // setups vm.inputsGridTableDataService
                 var iamdlResult = sharedLogic.initAfterMainDataLoaded();
                 vm.actionsMultitypeFieldsList = iamdlResult.actionsMultitypeFieldsList;
                 vm.eventPhantomsOpts = iamdlResult.eventPhantomsOpts;

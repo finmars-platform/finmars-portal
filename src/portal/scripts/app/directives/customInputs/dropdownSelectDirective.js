@@ -220,8 +220,7 @@
                     if (item.hasOwnProperty('onClick')) {
                         item.onClick();
                     }
-					// closeDropdownMenu();
-                    console.log("testing2193.dropdownSelect selectOption item", structuredClone(item), scope.model );
+
                     if (item.id !== scope.model) {
 
                         stylePreset = '';
@@ -232,7 +231,7 @@
 
 						itemName = item.name;
                         scope.menuOptionsPopupData.filterTerm = itemName;
-                        console.log("testing2193.dropdownSelect selectOption itemName", itemName );
+
 						if (scope.onChangeCallback) {
 
 							// because of timeout scope.onChangeCallback() will be called after linked to scope.model variable is updated

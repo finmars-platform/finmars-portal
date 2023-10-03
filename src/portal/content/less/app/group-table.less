@@ -1650,9 +1650,9 @@
         }
 
         .sort {
-          position: relative;
+          display: block;
+          padding: 0;
           width: 13px;
-          margin-top: -7px;
           margin-right: 10px;
           outline: none;
           z-index: 1;
@@ -1660,8 +1660,8 @@
         }
 
         .gt-sorting-icon {
-          position: relative;
-          top: 3px;
+          display: block;
+          width: inherit;
           color: #666666;
           font-size: 15px;
           font-weight: 700;
@@ -1689,9 +1689,13 @@
       &:hover {
         .column-name-wrapper {
 
-          .sort span {
+          .sort .gt-sorting-icon {
             opacity: 1;
             visibility: visible;
+          }
+
+          .sort[disabled] .gt-sorting-icon {
+            opacity: .5;
           }
         }
       }
@@ -1705,13 +1709,13 @@
         width: 100%;
 
 
-        .sort span {
+        .sort .gt-sorting-icon {
           opacity: 0;
           visibility: hidden;
         }
 
 
-        .sort.has-sort span {
+        .sort.has-sort .gt-sorting-icon {
 
           display: block;
 

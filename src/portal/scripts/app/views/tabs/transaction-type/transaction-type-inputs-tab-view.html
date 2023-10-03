@@ -1,4 +1,14 @@
 <div>
+
+    <!-- TODO: ME 2023-09-27 delete later -->
+    <div data-ng-if="vm.inputsWithError && vm.inputsWithError.length"
+         class="position-absolute" style="top: 5px; right: 20px;">
+        <span class="material-icons error error-color">info</span>
+        <md-tooltip class="tooltip_1"
+                    style="font-size: 18px;"
+                    data-md-direction="top">Recreate inputs: {{vm.inputsWithError.join(', ')}}</md-tooltip>
+    </div>
+
     <div class="tt-inputs-tab-view">
         <!--<table class="bordered">
             <thead>
