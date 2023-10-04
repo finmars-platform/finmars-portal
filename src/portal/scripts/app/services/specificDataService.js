@@ -1,17 +1,15 @@
-/**
- * Created by szhitenev on 22.12.2020.
- */
-(function () {
+import SpecificDataRepository from "../repositories/specificDataRepository";
 
-    var specificDataRepository = require('../repositories/specificDataRepository');
+export default function (cookieService, xhrService) {
+
+    const specificDataRepository = new SpecificDataRepository(cookieService, xhrService);
 
     var getValuesForSelect = function (contentType, key, valueType) {
         return specificDataRepository.getValuesForSelect(contentType, key, valueType);
     };
 
-    module.exports = {
+    return {
         getValuesForSelect: getValuesForSelect,
-    }
+    };
 
-
-}());
+}

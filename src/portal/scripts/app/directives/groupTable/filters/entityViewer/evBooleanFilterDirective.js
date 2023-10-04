@@ -2,7 +2,6 @@
 
 	'use strict';
 
-	const specificDataService = require('../../../../services/specificDataService');
 	const evEvents = require("../../../../services/entityViewerEvents");
 	const popupEvents = require("../../../../services/events/popupEvents");
 

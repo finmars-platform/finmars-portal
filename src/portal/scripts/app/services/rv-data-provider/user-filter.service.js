@@ -1,9 +1,6 @@
-(function () {
+const evHelperService = require('../entityViewerHelperService');
 
-    const evHelperService = require('../entityViewerHelperService');
-
-    'use strict';
-
+export default function () {
     const getCellValueByKey = function (entityViewerDataService, key) {
 
         var data = entityViewerDataService.getUnfilteredFlatList();
@@ -105,9 +102,9 @@
         }
     };
 
-    module.exports = {
+    return {
         getCellValueByKey: getCellValueByKey,
         mapColRowsContent: mapColRowsContent,
-    }
+    };
 
-}());
+};

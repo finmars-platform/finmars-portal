@@ -1650,13 +1650,15 @@
         }
 
         .sort {
-          display: block;
+          display: none;
+          /*opacity: 0;
+          visibility: hidden;*/
           padding: 0;
           width: 13px;
           margin-right: 10px;
           outline: none;
           z-index: 1;
-          transition: .3s;
+          // transition: .3s;
         }
 
         .gt-sorting-icon {
@@ -1689,9 +1691,12 @@
       &:hover {
         .column-name-wrapper {
 
-          .sort .gt-sorting-icon {
+          /*.sort .gt-sorting-icon {
             opacity: 1;
             visibility: visible;
+          }*/
+          .sort {
+            display: block;
           }
 
           .sort[disabled] .gt-sorting-icon {
@@ -1709,16 +1714,17 @@
         width: 100%;
 
 
-        .sort .gt-sorting-icon {
+        /*.sort .gt-sorting-icon {
           opacity: 0;
           visibility: hidden;
-        }
+        }*/
 
 
-        .sort.has-sort .gt-sorting-icon {
-
+        /*.sort.has-sort .gt-sorting-icon {
           display: block;
-
+        }*/
+        .sort.has-sort {
+          display: block;
         }
 
         div {

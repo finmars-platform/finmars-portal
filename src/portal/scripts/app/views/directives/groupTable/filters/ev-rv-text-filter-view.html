@@ -62,20 +62,20 @@
                     </div>
                 </md-select>
             </md-input-container> -->
-            <dropdown-select2 model="filter.options.filter_values[0]"
-                              menu-options="columnRowsContent"
-                              small-options="{popupWidth: 'content'}"></dropdown-select2>
+            <dropdown-select2 data-model="filter.options.filter_values[0]"
+                              data-menu-options="columnRowsContent"
+                              data-small-options="{popupWidth: 'content'}"></dropdown-select2>
 
         </div>
 
         <div ng-if="filter.options.filter_type === 'multiselector'"
              class="height-100 g-filter-multiselector">
-            <two-fields-multiselect dialog-title="{{getMultiselectorName()}}"
-                                    items="columnRowsContent"
-                                    model="filter.options.filter_values"
-                                    selected-items-indication="chips"
-                                    nothing-selected-text="Off"
-                                    small-options="{'dialogParent': '.dialog-containers-wrap'}"></two-fields-multiselect>
+            <two-fields-multiselect data-dialog-title="{{getMultiselectorName()}}"
+                                    data-items="columnRowsContent"
+                                    data-model="filter.options.filter_values"
+                                    data-selected-items-indication="chips"
+                                    data-nothing-selected-text="Off"
+                                    data-small-options="{'dialogParent': '.dialog-containers-wrap'}"></two-fields-multiselect>
         </div>
     </div>
 
