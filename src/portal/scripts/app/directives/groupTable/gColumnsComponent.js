@@ -201,6 +201,10 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     scope.selectSubtotalType(column, 1);
 
+                    scope.evDataService.resetTableContent(scope.isReport);
+                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE); // cause we need go to backend to recalculate subtotals
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
                 }
 
                 function onSubtotalWeightedClick(column) {
@@ -216,6 +220,10 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     }
 
+                    scope.evDataService.resetTableContent(scope.isReport);
+                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE); // cause we need go to backend to recalculate subtotals
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
                 }
 
                 function onSubtotalAvgWeightedClick(column) {
@@ -230,6 +238,10 @@ const evEvents = require("../../services/entityViewerEvents");
                         popupData.isSubtotalAvgWeighted = !popupData.isSubtotalAvgWeighted
 
                     }
+
+                    scope.evDataService.resetTableContent(scope.isReport);
+                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE); // cause we need go to backend to recalculate subtotals
+                    scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                 }
 
