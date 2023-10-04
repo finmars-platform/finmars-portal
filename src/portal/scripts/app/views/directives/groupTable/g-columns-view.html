@@ -81,32 +81,34 @@
             </md-button>
         </div>
 
-        <div ng-if="isReport" class="flex-row g-groups-holder gGroupsHolder gcAreaDnD">
+        <div data-ng-if="isReport"
+             class="flex-row g-groups-holder gGroupsHolder gcAreaDnD">
 
-            <div class="g-table-header-cell-wrapper gGroupElem gColumnElem gDraggableHead gcAreaDnD"
-                 ng-repeat="column in groups track by column.key"
-                 ng-hide="column.isHidden"
-                 ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged, 'error': column.error_data}"
-                 ng-style="column.style"
+            <div data-ng-hide="column.isHidden"
+                 class="g-table-header-cell-wrapper gGroupElem gColumnElem gDraggableHead gcAreaDnD"
+                 data-ng-repeat="column in groups track by column.key"
+                 data-ng-class="{'last-dragged': column.frontOptions && column.frontOptions.lastDragged, 'error': column.error_data}"
+                 data-ng-style="column.style"
+
                  data-column-id="{{column.___group_type_id}}"
                  data-attr-key="{{column.key}}"
                  draggable="{{groupsAreaDraggable}}"
 
-                 custom-popup
-                 popup-id="{{column.key}}"
-                 popup-template-url="{{getPopupMenuTemplate(column)}}"
-                 position-relative-to="mouse"
-                 open-on="right_click"
-                 close-on-click-outside="true"
-                 prevent-default="'true'"
-                 on-save-callback=""
-                 popup-data="columnsPopupsData[column.key]"
-                 offset-x="-10"
-                 offset-y="-10"
-                 popup-classes="{{getPopupMenuClasses(column)}}"
-                 backdrop-classes="'low-z-index-backdrop'"
-                 on-cancel="onSubtotalTypeSelectCancel()"
-                 popup-event-service="evEventService">
+                 data-custom-popup
+                 data-popup-id="{{column.key}}"
+                 data-popup-template-url="{{getPopupMenuTemplate(column)}}"
+                 data-position-relative-to="mouse"
+                 data-open-on="right_click"
+                 data-close-on-click-outside="true"
+                 data-prevent-default="'true'"
+                 data-on-save-callback=""
+                 data-popup-data="columnsPopupsData[column.key]"
+                 data-offset-x="-10"
+                 data-offset-y="-10"
+                 data-popup-classes="{{getPopupMenuClasses(column)}}"
+                 data-backdrop-classes="'low-z-index-backdrop'"
+                 data-on-cancel="onSubtotalTypeSelectCancel()"
+                 data-popup-event-service="evEventService">
 
                 <md-tooltip md-direction="top" data-ng-class="{'custom-field-error': column.error_data}">
                     <span ng-bind="column.name"></span>

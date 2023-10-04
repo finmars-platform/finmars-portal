@@ -2,12 +2,10 @@
 
 	'use strict';
 
-	const specificDataService = require('../../../../services/specificDataService');
-	const userFilterService = require('../../../../services/rv-data-provider/user-filter.service');
 	const evEvents = require("../../../../services/entityViewerEvents");
 	const popupEvents = require("../../../../services/events/popupEvents");
 
-	module.exports = function (gFiltersHelper) {
+	module.exports = function (specificDataService, gFiltersHelper) {
 		return {
 			require: '^^evFilter',
 			restrict: 'E',
