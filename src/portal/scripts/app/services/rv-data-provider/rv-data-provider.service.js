@@ -217,7 +217,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
             var i;
 
 
-            objectsService.getList(entityType, options, entityViewerDataService).then(function (data) {
+            objectsService.getList(options, entityViewerDataService).then(function (data) {
 
                 var parentGroup = entityViewerDataService.getData(requestParameters.id);
 
@@ -303,7 +303,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
             var step = 10000; // TODO fix pagination problem in future
             var i;
 
-            groupsService.getList(entityType, options, entityViewerDataService).then(function (data) {
+            groupsService.getList(options, entityViewerDataService).then(function (data) {
 
                 // console.log('groupsService.getList.data', data)
 
