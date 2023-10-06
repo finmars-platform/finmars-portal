@@ -35,11 +35,11 @@
                 "name": "Net Position Return Fixed",
                 "value_type": 20
             },
-            /*{
+            {
                 "key": "net_position_return_loc",
                 "name": "Net Position Return Fixed(Pricing Currency)",
                 "value_type": 20
-            },*/
+            },
             {
                 "key": "position_return_fixed",
                 "name": "Position Return Fixed",
