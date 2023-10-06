@@ -1928,7 +1928,7 @@
 
     var createFieldsTree = function (tabs) {
 
-        var tabsCopy = structuredClone(tabs);
+        var tabsCopy = JSON.parse(JSON.stringify(tabs));
         var fieldsTree = {};
 
         tabsCopy.forEach(function (tab) {
