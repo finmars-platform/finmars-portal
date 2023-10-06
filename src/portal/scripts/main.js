@@ -44,6 +44,8 @@ import groupsService from "./app/services/rv-data-provider/groups.service";
 import objectsService from "./app/services/rv-data-provider/objects.service";
 import reconDataProviderService from "./app/services/recon-data-provider/recon-data-provider.service";
 import configurationService from "./app/services/configurationService";
+import specificDataService from "./app/services/specificDataService";
+import userFilterService from "./app/services/rv-data-provider/user-filter.service";
 
 import utilsService from "./app/services/utilsService";
 //# endregion Services and helpers for them
@@ -162,6 +164,8 @@ export default (function () {
     portal.service('dashboardConstructorMethodsService', ['uiService', 'dashboardHelper', dashboardConstructorMethodsService]);
     portal.service('utilsService', ['cookieService', 'xhrService', utilsService]);
     portal.service('configurationService', ['cookieService', 'xhrService', configurationService]);
+    portal.service('specificDataService', ['cookieService', 'xhrService', specificDataService]);
+    portal.service('userFilterService', [userFilterService]);
     portal.service('finmarsDatabaseService', ['cookieService', 'xhrService', finmarsDatabaseService]);
 
     //# region Services for import and export
@@ -854,16 +858,16 @@ export default (function () {
     portal.directive('gFilters', ['$mdDialog', 'uiService', 'evRvLayoutsHelper', 'gFiltersHelper', require('./app/directives/groupTable/filters/gFiltersDirective')]);
     portal.directive('gEvFilters', ['$mdDialog', '$state', '$bigDrawer', require('./app/directives/groupTable/filters/entityViewer/gEvFiltersDirective')]);
     portal.directive('evFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evFilterDirective')]);
-    portal.directive('evTextFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evTextFilterDirective')]);
+    portal.directive('evTextFilter', ['specificDataService', 'userFilterService', 'gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evTextFilterDirective')]);
     portal.directive('evBooleanFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evBooleanFilterDirective')]);
     portal.directive('evNumberFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evNumberFilterDirective')]);
-    portal.directive('evDateFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evDateFilterDirective')]);
+    portal.directive('evDateFilter', ['specificDataService', 'gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evDateFilterDirective')]);
     portal.directive('gRvFilters', ['$mdDialog', 'gFiltersHelper', 'uiService', require('./app/directives/groupTable/filters/reportViewer/gRvFiltersDirective')]);
-    portal.directive('rvFilter', ['$mdDialog', 'gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvFilterDirective')]);
-    portal.directive('rvTextFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvTextFilterDirective')]);
+    portal.directive('rvFilter', ['$mdDialog', 'specificDataService', 'userFilterService', 'gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvFilterDirective')]);
+    portal.directive('rvTextFilter', ['userFilterService', 'gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvTextFilterDirective')]);
     portal.directive('rvBooleanFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvBooleanFilterDirective')]);
     portal.directive('rvNumberFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvNumberFilterDirective')]);
-    portal.directive('rvDateFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvDateFilterDirective')]);
+    portal.directive('rvDateFilter', ['specificDataService', 'gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvDateFilterDirective')]);
     /* portal.directive('evTextFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evOldTextFilterDirective')]);
     portal.directive('evNumberFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evOldNumberFilterDirective')]);
     portal.directive('evDateFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evOldDateFilterDirective')]); */

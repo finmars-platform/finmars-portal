@@ -1928,13 +1928,13 @@
 
     var createFieldsTree = function (tabs) {
 
-        var tabsCopy = JSON.parse(JSON.stringify(tabs));
-
+        var tabsCopy = structuredClone(tabs);
         var fieldsTree = {};
 
         tabsCopy.forEach(function (tab) {
 
             fieldsTree[tab.tabOrder] = {};
+
             var f;
             for (f = 0; f < tab.layout.fields.length; f++) {
 
@@ -2216,6 +2216,21 @@
 
         var dcLayoutHasBeenFixed = false;
 
+        var tabsOrderList = tabs.map( tab => tab.tabOrder );
+        var tabOrderIsBroken = tabsOrderList.find( (tabOrder, index) => tabOrder !== index );
+
+        if ( tabOrderIsBroken ) {
+
+            tabs = tabs.map( (tab, index) => {
+                tab.tabOrder = index;
+
+                return tab;
+            });
+
+            dcLayoutHasBeenFixed = true;
+
+        }
+
         var fixTab = function (tab, numberOfRows, numberOfCols, viewFieldsList, fieldsListToSave) {
 
             var i, c;
@@ -2248,9 +2263,11 @@
         var tabsFieldsTree = createFieldsTree(tabs);
 
         if (Object.keys(tabsFieldsTree).length) {
+
             Object.keys(tabsFieldsTree).forEach(function (tabNumber, tabIndex) {
 
                 var tab = tabsFieldsTree[tabIndex];
+
                 var numberOfRows = tabs[tabIndex].layout.rows;
                 var numberOfCols = tabs[tabIndex].layout.columns;
 
@@ -2262,6 +2279,7 @@
                 fixTab(tab, numberOfRows, numberOfCols, tabs[tabIndex].layout.fields, dataConstructorTabs[tabIndex].layout.fields);
 
             });
+
         }
 
         if (tabs.isActive) { // for fixed area
