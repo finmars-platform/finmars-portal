@@ -1393,7 +1393,8 @@
 
                 listLayout.data.filters = emptyUseFromAboveFilters(listLayout.data.filters);
 
-            } else {
+            }
+            else {
 
                 setPagination(listLayout.data.pagination);
 

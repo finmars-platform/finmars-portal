@@ -636,7 +636,7 @@
                         }
                         var entityType = scope.evDataService.getEntityType();
 
-                        groupsService.getList(entityType, options, scope.evDataService).then(function (data) {
+                        groupsService.getList(options, scope.evDataService).then(function (data) {
 
                             console.log("getValuesForMatrix.data", data);
 
@@ -675,7 +675,7 @@
                                     groups_values: [group.___group_identifier]
                                 }
 
-                                promises.push(groupsService.getList(entityType, options, scope.evDataService))
+                                promises.push(groupsService.getList(options, scope.evDataService))
 
                             })
 

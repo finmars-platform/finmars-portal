@@ -269,6 +269,7 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
                 }
 
                 vm.entityViewerDataService.setLayoutCurrentConfiguration(layout, uiService, true);
+
                 vm.setFiltersValuesFromQueryParameters();
 
                 // var reportOptions = vm.entityViewerDataService.getReportOptions();

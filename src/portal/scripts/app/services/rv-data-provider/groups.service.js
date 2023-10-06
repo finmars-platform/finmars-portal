@@ -241,7 +241,7 @@ export default function (entityResolverService) {
 
     }
 
-    var getBackendList = function (entityType, options, entityViewerDataService) {
+    var getBackendList = function (options, entityViewerDataService) {
 
         console.log("getBackendList options!", options)
 
@@ -287,27 +287,30 @@ export default function (entityResolverService) {
 
         }
 
-        return entityResolverService.getListReportGroups(entityType, reportOptions).then(function (data) {
+        return new Promise(function (resolve, reject) {
 
-            console.log('getListReportGroups.data.items', data.items);
+            entityResolverService.getListReportGroups(entityType, reportOptions).then(function (data) {
+                console.log('getListReportGroups.data.items', data.items);
 
-            // Important, needs to optimize backend reports
-            // report_instance_id is saved report, so no need to recalcualte whole report
-            // just regroup or refilter
-            // to reset report_instance_id, just set it to null
-            reportOptions.report_instance_id = data.report_instance_id;
-            entityViewerDataService.setReportOptions(reportOptions);
+                // Important, needs to optimize backend reports
+                // report_instance_id is saved report, so no need to recalcualte whole report
+                // just regroup or refilter
+                // to reset report_instance_id, just set it to null
+                reportOptions.report_instance_id = data.report_instance_id;
+                entityViewerDataService.setReportOptions(reportOptions);
 
-            var result = {
-                next: null,
-                previous: null,
-                count: data.items.length,
-                results: data.items
-            };
+                var result = {
+                    next: null,
+                    previous: null,
+                    count: data.items.length,
+                    results: data.items
+                };
 
-            return result
+                resolve(result);
 
-        })
+            })
+                .catch( function (error) { reject(error); } );
+        });
 
     }
 
@@ -319,9 +322,9 @@ export default function (entityResolverService) {
      * @return {boolean} return list of groups
      * @memberof module:ReportViewerDataProviderGroupsService
      */
-    var getList = function (entityType, options, entityViewerDataService) {
+    var getList = function (options, entityViewerDataService) {
 
-        return getBackendList(entityType, options, entityViewerDataService)
+        return getBackendList(options, entityViewerDataService)
 
         // Frontend is deprecated since 2023-09-10
         // if (window.location.href.indexOf('v2=true') !== -1) {
