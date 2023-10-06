@@ -814,8 +814,14 @@
                 }
             }
 
+            vm.tabs = vm.tabs.map(function (tab, index) {
+                tab.tabOrder = index;
+                return tab;
+            });
+
             vm.createFieldsTree();
             vm.syncItems();
+
         };
 
         vm.addTab = function () {

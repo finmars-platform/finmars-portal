@@ -37,7 +37,7 @@
 
         </div>
 
-        <div ng-if="filter.options.filter_type === 'from_to' || filter.options.filter_type === 'out_of_range'"
+        <div data-ng-if="filter.options.filter_type === 'from_to' || filter.options.filter_type === 'out_of_range'"
              class="height-100">
 
             <!--<md-input-container class="md-block">
@@ -57,30 +57,31 @@
                 <zh-date-picker data-date-value="filter.options.filter_values.max_value"
                                 data-position="left"></zh-date-picker>
             </md-input-container>-->
-            <date-input model="filter.options.filter_values.min_value"
-                        placeholder-text="From (incl)"
+            <date-input data-model="filter.options.filter_values.min_value"
+                        data-placeholder-text="From (incl)"
                         class="ci-placeholder2"></date-input>
 
-            <date-input model="filter.options.filter_values.max_value"
-                        placeholder-text="To (incl)"
+            <date-input data-model="filter.options.filter_values.max_value"
+                        data-placeholder-text="To (incl)"
                         class="ci-placeholder2 display-block m-t-10"></date-input>
 
         </div>
 
-        <div class="date-tree" ng-if="filter.options.filter_type === 'date_tree'"
-             class="height-100">
+        <div data-ng-if="filter.options.filter_type === 'date_tree'"
+             class="date-tree height-100">
 
-            <date-tree-input title=""
-                             dates-list="columnRowsContent"
-                             dates-tree="filter.options.dates_tree"
-                             nothing-selected-text="Off"
-                             callback-method="dateTreeChanged(filter.options.dates_tree)"></date-tree-input>
+            <date-tree-input data-title=""
+                             data-dates-list="columnRowsContent"
+                             data-dates-tree="filter.options.dates_tree"
+                             data-nothing-selected-text="Off"
+                             data-callback-method="dateTreeChanged(filter.options.dates_tree)"></date-tree-input>
 
         </div>
     </div>
 
 </div>
 
-<div ng-if="!readyStatus" class="g-filter-type-loader flex-row fc-space-around fi-center">
-    <progress-circular diameter="30"></progress-circular>
+<div data-ng-if="!readyStatus"
+     class="g-filter-type-loader flex-row fc-space-around fi-center">
+    <progress-circular data-diameter="30"></progress-circular>
 </div>
