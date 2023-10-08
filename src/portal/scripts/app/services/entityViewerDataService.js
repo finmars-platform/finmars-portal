@@ -1391,6 +1391,20 @@
                     }
                 }
 
+                listLayout.data.grouping = listLayout.data.grouping.map( groupType => {
+
+                    if (!groupType.report_settings) {
+                        groupType.report_settings = {};
+                    }
+
+                    if (typeof groupType.report_settings.is_level_folded !== 'boolean') {
+                        groupType.report_settings.is_level_folded = true;
+                    }
+
+                    return groupType;
+
+                })
+
                 listLayout.data.filters = emptyUseFromAboveFilters(listLayout.data.filters);
 
             }
