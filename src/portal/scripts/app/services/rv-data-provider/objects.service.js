@@ -11,15 +11,12 @@ export default function (entityResolverService) {
     var items = [];
     var itemsCache = [];
 
-    var getBackendList = function (entityType, options, entityViewerDataService) {
-
-        console.log("getBackendList options!", options)
+    var getBackendList = function (options, entityViewerDataService) {
 
         var entityType = entityViewerDataService.getEntityType();
         var reportOptions = entityViewerDataService.getReportOptions();
         var globalTableSearch = entityViewerDataService.getGlobalTableSearch();
         var activeColumnSort = entityViewerDataService.getActiveColumnSort();
-
         console.log("getBackendList!", reportOptions)
 
         reportOptions.filters = entityViewerDataService.getFilters(); // for transaction report only
@@ -31,7 +28,8 @@ export default function (entityResolverService) {
         console.log('getBackendList.activeColumnSort', activeColumnSort);
 
         if (activeColumnSort && activeColumnSort.options && activeColumnSort.options.sort) {
-            reportOptions.frontend_request_options['items_order'] = activeColumnSort.options.sort.toLowerCase()
+            reportOptions.frontend_request_options['items_order'] = activeColumnSort.options.sort.toLowerCase();
+            reportOptions.frontend_request_options['ordering'] = activeColumnSort.key;
         }
 
         if (!reportOptions.frontend_request_options['filter_settings']) {
@@ -198,9 +196,9 @@ export default function (entityResolverService) {
 
     }
 
-    var getList = function (entityType, options, entityViewerDataService) {
+    var getList = function (options, entityViewerDataService) {
 
-        return getBackendList(entityType, options, entityViewerDataService)
+        return getBackendList(options, entityViewerDataService)
         // Frontend is deprecated since 2023-09-10
         // if (window.location.href.indexOf('v2=true') !== -1) {
         //     return getBackendList(entityType, options, entityViewerDataService)

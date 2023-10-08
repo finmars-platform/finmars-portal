@@ -217,7 +217,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
             var i;
 
 
-            objectsService.getList(entityType, options, entityViewerDataService).then(function (data) {
+            objectsService.getList(options, entityViewerDataService).then(function (data) {
 
                 var parentGroup = entityViewerDataService.getData(requestParameters.id);
 
@@ -234,8 +234,10 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                     var duplicateObj;
 
                     try {
-                        duplicateObj = entityViewerDataService.getObject(item.___id, item.___parentId);// returns an error if a matching object is not found
+                        // returns an error if a matching object is not found
+                        duplicateObj = entityViewerDataService.getObject(item.___id, item.___parentId);
                     } catch (e) {
+                        console.error(e);
                     }
 
                     if (duplicateObj) {
@@ -303,7 +305,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
             var step = 10000; // TODO fix pagination problem in future
             var i;
 
-            groupsService.getList(entityType, options, entityViewerDataService).then(function (data) {
+            groupsService.getList(options, entityViewerDataService).then(function (data) {
 
                 // console.log('groupsService.getList.data', data)
 
@@ -792,8 +794,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     var sortGroupType = function (entityViewerDataService, entityViewerEventService, signalDataLoadEnd) {
 
-        entityViewerDataService.resetOnlyGroups();
-
         var activeGroupTypeSort = entityViewerDataService.getActiveGroupTypeSort();
 
         console.log('sortGroupType.activeGroupTypeSort', activeGroupTypeSort);
@@ -828,6 +828,9 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
             })
 
         });
+
+        // should be called after requestParametersForUnfoldedGroups assembled
+        entityViewerDataService.resetOnlyGroups();
 
         groups.forEach(function (group) {
 

@@ -572,29 +572,31 @@ const evEvents = require("../../services/entityViewerEvents");
 
                 const signalSortChange = function (columnOrGroup) {
 
+                    /* *
+                        * For some reason dispatch evEvents.DATA_LOAD_START from
+                        * ev-data-provider.service -> getObjects() do not register.
+                        * Whence scope.dataIsLoading = true;
+                        * */
+                    scope.dataIsLoading = true;
+
+                    // needed when calling inside debounce
+                    setTimeout(function () {
+                        scope.$apply();
+                    }, 0);
+
                     if (scope.isReport && scope.columnHasCorrespondingGroup(columnOrGroup.key)) {
 
-                        const placeholder1 = scope.groups.find(group => group.key === columnOrGroup.key);
-                        placeholder1.options.sort = columnOrGroup.options.sort;
-                        placeholder1.options.sort_settings = columnOrGroup.options.sort_settings;
+                        const group = scope.groups.find(group => group.key === columnOrGroup.key);
+                        group.options.sort = columnOrGroup.options.sort;
+                        group.options.sort_settings = columnOrGroup.options.sort_settings;
 
                         scope.evDataService.setGroups(scope.groups);
 
                         scope.evDataService.setActiveGroupTypeSort(columnOrGroup);
                         scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
 
-                    } else {
-
-                        /* *
-                        * For some reason dispatch evEvents.DATA_LOAD_START from
-                        * ev-data-provider.service -> getObjects() do not register.
-                        * Whence scope.dataIsLoading = true;
-                        * */
-                        scope.dataIsLoading = true;
-                        // when calling inside debounce
-                        setTimeout(function () {
-                            scope.$apply();
-                        }, 0);
+                    }
+                    else {
 
                         scope.evDataService.setActiveColumnSort(columnOrGroup);
                         scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
@@ -1891,6 +1893,14 @@ const evEvents = require("../../services/entityViewerEvents");
                     let parentGroupFullyFolded = false;
 
                     groups.forEach(group => {
+
+                        if (!group.report_settings) {
+                            group.report_settings = {}
+                        }
+
+                        if (typeof group.report_settings.is_level_folded !== 'boolean') {
+                            group.report_settings.is_level_folded = true;
+                        }
 
                         if (parentGroupFullyFolded) {
                             group.report_settings.is_level_folded = true;

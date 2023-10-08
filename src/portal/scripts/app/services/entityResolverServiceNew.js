@@ -949,7 +949,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
 
     }
 
-    var getListReportGroups =function (entityType, options) {
+    var getListReportGroups = function (entityType, options) {
 
         switch (entityType) {
 
