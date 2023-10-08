@@ -205,14 +205,14 @@
 		var attrIndex = attributesList.findIndex(attr => attr.attribute_type_object.user_code === attributeType.user_code);
 
 		if (attrIndex < 0) {
-			attributesList.push(appendAttribute(attributeType));
+			attributesList.push( appendAttribute(attributeType) );
 
 		} else if (attributesList[attrIndex].attribute_type_object.id !== attributeType.id) {
 			// properties user_code match but attribute types are different
 			const valueTypesAreDifferent = attributesList[attrIndex].attribute_type_object.value_type !== attributeType.value_type;
 
-			attributesList[attrIndex].attribute_type_object = attributeType;
-			attributesList[attrIndex].attribute_type = attributeType;
+			attributesList[attrIndex].attribute_type_object = structuredClone(attributeType);
+			attributesList[attrIndex].attribute_type = structuredClone(attributeType);
 
 			if (valueTypesAreDifferent) {
 

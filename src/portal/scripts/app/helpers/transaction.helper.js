@@ -180,7 +180,7 @@
             tab.layout.fields.forEach(function (field) {
                 if (field.attribute_class === 'userInput') {
 
-                    var res = field.attribute
+                    var res = structuredClone(field.attribute);
 
                     if (!res.frontOptions) {
                         res.frontOptions = {};
@@ -196,7 +196,7 @@
         if (fixedArea && fixedArea.isActive) {
             fixedArea.layout.fields.forEach(function (field) {
                 if (field.attribute_class === 'userInput') {
-                    userInputs.push(field.attribute);
+                    userInputs.push( structuredClone(field.attribute) );
                 }
             });
         }
