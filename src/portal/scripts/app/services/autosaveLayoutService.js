@@ -162,7 +162,7 @@ export default function (metaContentTypesService, uiService, reportHelper, globa
             let cachedLayout = localStorageService.getAutosaveLayout(layout.content_type);
 
             // unfortunately prefixed of user_code change
-            if (cachedLayout.user_code !== layout.user_code) {
+            if (cachedLayout && cachedLayout.user_code !== layout.user_code) {
                 // Remove from local storage autosave layout with invalid user_code
                 localStorageService.deleteLayoutFromCache(cachedLayout.id);
                 cachedLayout = null;
