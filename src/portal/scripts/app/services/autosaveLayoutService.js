@@ -155,11 +155,19 @@ export default function (metaContentTypesService, uiService, reportHelper, globa
             layout.user_code = getAutosaveLayoutUserCode(layout.content_type); // Important
             layout.configuration_code = globalDataService.getDefaultConfigurationCode(); // Important as well
 
-            // In case of auto saving default layout
+            // In case of auto saving layout that is default now
             layout.is_default = !!layout.is_systemic && layout.is_default;
-            layout.is_systemic = true;
+            // layout.is_systemic = true;
 
-            const cachedLayout = localStorageService.getAutosaveLayout(layout.content_type);
+            let cachedLayout = localStorageService.getAutosaveLayout(layout.content_type);
+
+            // unfortunately prefixed of user_code change
+            if (cachedLayout.user_code !== layout.user_code) {
+                // Remove from local storage autosave layout with invalid user_code
+                localStorageService.deleteLayoutFromCache(cachedLayout.id);
+                cachedLayout = null;
+
+            }
 
             const entityType = metaContentTypesService.findEntityByContentType(layout.content_type);
 
