@@ -290,7 +290,6 @@ export default function (entityResolverService) {
         return new Promise(function (resolve, reject) {
 
             entityResolverService.getListReportGroups(entityType, reportOptions).then(function (data) {
-                console.log('getListReportGroups.data.items', data.items);
 
                 // Important, needs to optimize backend reports
                 // report_instance_id is saved report, so no need to recalcualte whole report

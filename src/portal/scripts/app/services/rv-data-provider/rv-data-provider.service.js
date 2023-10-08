@@ -234,8 +234,10 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                     var duplicateObj;
 
                     try {
-                        duplicateObj = entityViewerDataService.getObject(item.___id, item.___parentId);// returns an error if a matching object is not found
+                        // returns an error if a matching object is not found
+                        duplicateObj = entityViewerDataService.getObject(item.___id, item.___parentId);
                     } catch (e) {
+                        console.error(e);
                     }
 
                     if (duplicateObj) {
@@ -792,8 +794,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     var sortGroupType = function (entityViewerDataService, entityViewerEventService, signalDataLoadEnd) {
 
-        entityViewerDataService.resetOnlyGroups();
-
         var activeGroupTypeSort = entityViewerDataService.getActiveGroupTypeSort();
 
         console.log('sortGroupType.activeGroupTypeSort', activeGroupTypeSort);
@@ -828,6 +828,9 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
             })
 
         });
+
+        // should be called after requestParametersForUnfoldedGroups assembled
+        entityViewerDataService.resetOnlyGroups();
 
         groups.forEach(function (group) {
 

@@ -210,6 +210,10 @@
 
             if (node.___parentId !== null) {
 
+                if ( !list[map[node.___parentId]] ) {
+                    console.error(`Parent ${node.___parentId} does not exist`)
+                }
+
                 if (node.___type === 'group' || node.___type === 'placeholder_group') {
                     // insertItemInNode(list, map, node, dataOrderReference)
                     list[map[node.___parentId]].results[node.___index] = node;
