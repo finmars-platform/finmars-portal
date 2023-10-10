@@ -9,6 +9,11 @@
         <div class="custom-input-borders">
             <div class="custom-input-content">
 
+                <md-tooltip data-ng-if="selectedItem && selectedItem.id"
+                            class="tooltip_1 f-s-15"
+                            data-md-direction="top"
+                            data-ng-bind="selectedItem.name"></md-tooltip>
+
                 <div class="flex-row flex-i-center">
 
                     <button data-ng-if="!noIndicatorBtn"
@@ -24,16 +29,14 @@
                         <md-tooltip class="tooltip_1" data-md-direction="top">Loading instrument</md-tooltip>
                     </div>
 
-                    <input
-                            type="text"
-                            placeholder="{{label}}"
-                            data-ng-model="inputText"
-                            data-ng-model-options="{debounce: 1000}"
-                            data-ng-change="onInputTextChange()"
-                            data-ng-disabled="isDisabled"
-                            data-ng-keypress="selectFirst($event)"
-                            class="custom-input unified-data-input unifiedDataSelectInputElem"
-                    />
+                    <input type="text"
+                           placeholder="{{label}}"
+                           data-ng-model="inputText"
+                           data-ng-model-options="{debounce: 1000}"
+                           data-ng-change="onInputTextChange(inputText)"
+                           data-ng-disabled="isDisabled"
+                           data-ng-keypress="selectFirst($event)"
+                           class="custom-input unified-data-input unifiedDataSelectInputElem" />
 
                 </div>
 

@@ -26,12 +26,17 @@
         <div class="custom-input-borders">
             <div class="custom-input-content">
 
+                <md-tooltip data-ng-if="selItemName"
+                            class="tooltip_1 f-s-15"
+                            data-md-direction="top"
+                            data-ng-bind="selItemName"></md-tooltip>
+
                 <div class="flex-row flex-i-center">
 
                     <button data-ng-if="!noIndicatorBtn"
-                                    class="custom-input-indicator-btn position-relative"
-                                    data-ng-click="openSelectorDialog($event)"
-                                    data-ng-disabled="isDisabled">
+                            class="custom-input-indicator-btn position-relative"
+                            data-ng-click="openSelectorDialog($event)"
+                            data-ng-disabled="isDisabled">
                         <span class="material-icons">menu</span>
                     </button>
 
@@ -46,8 +51,9 @@
                     /> -->
                     <input type="text"
                            placeholder="{{placeholderText}}"
-                           ng-model="menuOptionsPopupData.filterTerm"
-                           ng-disabled="isDisabled"
+                           data-ng-model="inputText"
+                           data-ng-disabled="isDisabled"
+                           data-ng-change="onInputTextChange(inputText)"
                            class="custom-input dropdown-select-input dropdownSelectInputElem" />
 
                 </div>
@@ -69,8 +75,8 @@
                                       class="material-icons ci-icon-color">{{button.iconObj.icon}}</span>
 
                                 <md-tooltip data-ng-if="button.tooltip"
-                                                        class="tooltip_1"
-                                                        md-direction="top">{{button.tooltip}}
+                                            class="tooltip_1"
+                                            md-direction="top">{{button.tooltip}}
                                 </md-tooltip>
                             </button>
                         </div>

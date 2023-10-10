@@ -22,7 +22,7 @@ import configureRepositoryUrlService from "../../../../../shell/scripts/app/serv
             options.filters = {}
         }
 
-        options.filters.query = searchString;
+        if (searchString) options.filters.query = searchString;
 
         if (options.page === null || options.page === undefined) {
             options.page = 1;
