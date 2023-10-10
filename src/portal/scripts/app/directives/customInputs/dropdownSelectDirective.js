@@ -36,7 +36,8 @@
                 scope.dropdownMenuFilter = '';
                 scope.popupWidth = 'element';
 
-                let itemName = scope.itemName || '';
+                scope.selItemName = scope.itemName || '';
+                scope.inputText = scope.selItemName;
                 let menuOptionsList = [];
 
                 /* TIPS
@@ -84,7 +85,8 @@
 
 						scope.menuOptionsPopupData.filterTerm = "";
 						inputContainer.classList.add('custom-input-focused');
-						inputElem.focus();
+                        inputElem.select();
+                        inputElem.focus();
 						// scope.dropdownMenuShown = true;
 
 						// window.addEventListener('click', closeDDMenuOnClick);
@@ -104,7 +106,7 @@
 				};
 
 				if (scope.itemName) { // itemName needed for resetting selected option name
-					scope.menuOptionsPopupData.filterTerm = itemName;
+					scope.inputText = scope.selItemName;
 				}
 
                 scope.popupEventService = new EventService();
@@ -161,6 +163,10 @@
                     return classes;
 
                 };
+
+                scope.onInputTextChange = function (newVal) {
+                    scope.menuOptionsPopupData.filterTerm = newVal || '';
+                }
 
                 scope.callFnForCustomBtn = function (actionData) {
 
@@ -229,8 +235,8 @@
                         scope.model = item.id;
                         scope.valueIsValid = true;
 
-						itemName = item.name;
-                        scope.menuOptionsPopupData.filterTerm = itemName;
+                        scope.selItemName = item.name;
+                        scope.inputText = scope.selItemName;
 
 						if (scope.onChangeCallback) {
 
@@ -261,7 +267,7 @@
 
                     // window.removeEventListener('click', closeDDMenuOnClick);
                     document.removeEventListener('keydown', closeByKeydownPress);
-					scope.menuOptionsPopupData.filterTerm = itemName;
+					scope.inputText = scope.selItemName;
 
                     if (updateScope) {
 
@@ -397,13 +403,13 @@
 					scope.$watch('itemName', function () {
 
 						if (scope.itemName) {
-							itemName = scope.itemName;
+                            scope.selItemName = scope.itemName;
 
 						} else {
-                            itemName = '';
+                            scope.selItemName = '';
 						}
 
-                        scope.menuOptionsPopupData.filterTerm = itemName;
+                        scope.inputText = scope.selItemName;
 
 					});
 
@@ -420,8 +426,8 @@
 
 									if (menuOptionsList[i].id === scope.model) {
 
-										itemName = menuOptionsList[i].name;
-										scope.menuOptionsPopupData.filterTerm = itemName;
+                                        scope.selItemName = menuOptionsList[i].name;
+										scope.inputText = scope.selItemName;
 										// scope.valueIsValid = true
 										break;
 
@@ -429,13 +435,13 @@
 
 								}
 
-							} else if (itemName) {
-								scope.menuOptionsPopupData.filterTerm = itemName;
+							} else if (scope.selItemName) {
+								scope.inputText = scope.selItemName;
 							}
 
                         } else {
-							itemName = "";
-                            scope.menuOptionsPopupData.filterTerm = itemName;
+                            scope.selItemName = "";
+                            scope.inputText = scope.selItemName;
                         }
 
                     });
@@ -546,8 +552,8 @@
                         for (var i = 0; i < menuOptionsList.length; i++) {
                             if (menuOptionsList[i].id === scope.model) {
 
-                                itemName = menuOptionsList[i].name;
-                                scope.menuOptionsPopupData.filterTerm = itemName;
+                                scope.selItemName = menuOptionsList[i].name;
+                                scope.inputText = scope.selItemName;
 
                                 break;
 

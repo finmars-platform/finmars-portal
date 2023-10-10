@@ -9,6 +9,11 @@
         <div class="custom-input-borders">
             <div class="custom-input-content">
 
+                <md-tooltip data-ng-if="inputText"
+                            class="tooltip_1 f-s-15"
+                            data-md-direction="top"
+                            data-ng-bind="inputText"></md-tooltip>
+
                 <div class="flex-row flex-i-center">
 
                     <button data-ng-if="!noIndicatorBtn"
@@ -153,7 +158,7 @@
 
             <div data-ng-if="processing || loadingEntity" style="height: 369px;" layout="row" layout-sm="column"
                  layout-align="center center">
-                <progress-circular diameter="50"></progress-circular>
+                <progress-circular data-diameter="50"></progress-circular>
             </div>
 
         </div>

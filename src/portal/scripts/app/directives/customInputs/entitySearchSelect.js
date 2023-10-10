@@ -15,9 +15,17 @@
             restrict: 'E',
             scope: {
                 label: '=',
+                /*
+                 * Should contain 'id' or 'user_code' of entity.
+                 * Based on scope.itemProperty.
+                 */
                 item: '=',
                 itemName: '=',
-				itemProperty: '@', // is 'id' by default
+                /*
+                 * Property whose value will be assigned to scope.item.
+                 * 'id' by default
+                 */
+				itemProperty: '@',
                 itemObject: '=',
                 entityType: '=',
                 customButtons: '=',
@@ -38,10 +46,13 @@
                 scope.placeholderText = 'Relation';
                 //scope.tooltipText = 'Tooltip text';
 				if (!scope.itemProperty) scope.itemProperty = 'id';
-				let itemName = scope.itemName || '';
+
+                /** Used to store name of selected entity and show it inside tooltip. */
+                scope.selItemName = scope.itemName || '';
 
                 if (scope.itemName) { // itemName and inputText needed for resetting selected option name
-                    scope.inputText = itemName;
+                    scope.selItemName = scope.itemName;
+                    scope.inputText = scope.selItemName;
                 }
 
                 // TIPS
@@ -63,115 +74,6 @@
 
                 const inputContainer = elem[0].querySelector('.smartSearchInputContainer');
                 const inputElem = elem[0].querySelector('.smartSearchInputElem');
-
-                /*var entityIndicatorIcons = {
-                    'account': {
-                        type: 'class',
-                        icon: 'fas fa-university'
-                    },
-                    'counterparty': {
-                        type: 'class',
-                        icon: 'far fa-id-badge'
-                    },
-                    'responsible': {
-                        type: 'class',
-                        icon: 'far fa-user'
-                    },
-                    'currency': {
-                        type: 'class',
-                        icon: 'far fa-money-bill-alt'
-                    },
-                    'instrument': {
-                        type: 'class',
-                        icon: 'fas fa-money-bill-alt'
-                    },
-                    'portfolio': {
-                        type: 'class',
-                        icon: 'fas fa-briefcase'
-                    },
-                    'strategy-1': {
-                        type: 'class',
-                        icon: 'fas fa-tag'
-                    },
-                    'strategy-2': {
-                        type: 'class',
-                        icon: 'fas fa-tag'
-                    },
-                    'strategy-3': {
-                        type: 'class',
-                        icon: 'fas fa-tag'
-                    }
-
-                }*/
-				/* scope.menuOptionsPopupData = {
-					options: [],
-					selectOption: function (item, _$popup, $event) {
-
-						_$popup.cancel();
-
-						if (item.id !== scope.item) {
-
-							stylePreset = '';
-							scope.error = '';
-							//scope.item.value = item.id;
-							scope.item = item.id;
-
-							if (scope.itemObject !== undefined) {
-								scope.itemObject = item;
-							}
-
-							scope.valueIsValid = true;
-
-							if (item.short_name) {
-								itemName = item.short_name;
-								scope.inputText = item.short_name;
-
-							} else {
-								itemName = item.name;
-								scope.inputText = item.name;
-							}
-
-							closeDropdownMenu();
-
-							setTimeout(function () {
-
-								scope.onChangeCallback();
-								scope.$apply();
-
-							}, 0);
-
-						}
-
-					},
-					focusInput: function () {
-						setTimeout(() => {
-							const filter = document.querySelector('input.popup-select-filter');
-							filter.focus();
-						}, 100);
-
-					},
-					onInit: async function () {
-
-						// scope.inputText = "";
-						inputContainer.classList.add('custom-input-focused');
-
-						// scope.dropdownMenuShown = true;
-
-						// window.addEventListener('click', closeDDMenuOnClick);
-						document.addEventListener('keydown', onTabKeyPress);
-
-						if (scope.loadMenuOptions) {
-							// scope.menuOptions = await scope.loadMenuOptions();
-							scope.menuOptionsPopupData.options = await scope.loadMenuOptions();
-
-							setTimeout(function () {
-								scope.$apply();
-							}, 100);
-
-						}
-
-					}
-				}; */
 
                 scope.getInputContainerClasses = function () {
                     var classes = '';
@@ -223,16 +125,13 @@
                         scope.valueIsValid = true;
 
                         if (item.short_name) {
-							itemName = item.short_name;
-                            scope.inputText = item.short_name;
+                            scope.selItemName = item.short_name;
 
                         } else {
-							itemName = item.name;
-                            scope.inputText = item.name;
+                            scope.selItemName = item.name;
                         }
 
-                        /* DROPDOWN MENU
-                        closeDropdownMenu();*/
+                        scope.inputText = scope.selItemName;
 
                         setTimeout(function () {
 
@@ -245,16 +144,24 @@
 
                 };
 
-                var getOptionsList = function () {
+                var getOptionsList = function (inputText) {
 
                     var options = {
                         page: 1,
                         pageSize: 1000,
                     };
 
-                    if (scope.inputText) {
+                    /*if (scope.inputText) {
 
                         var inputText = scope.inputText;
+
+                        options.filters = {
+                            'short_name': inputText
+                        }
+
+                    }*/
+
+                    if (inputText) {
 
                         options.filters = {
                             'short_name': inputText
@@ -270,8 +177,6 @@
 						scope.menuOptionsPopupData.selectorOptions = data.results;
                         scope.popupEventService.dispatchEvent(popupEvents.OPEN_POPUP);
 
-                        /* DROPDOWN MENU
-                        window.addEventListener('click', closeDDMenuOnClick);*/
                         document.addEventListener('keydown', onTabKeyPress);
 
                         scope.menuOptionsPopupData.loadingOptions = false;
@@ -283,32 +188,7 @@
                 }
 
                 scope.onInputTextChange = function () {
-                    getOptionsList();
-                };
-
-                var closeDropdownMenu = function (updateScope) {
-
-                    /*scope.menuOptionsPopupData.selectorOptions = null;
-
-                    window.removeEventListener('click', closeDDMenuOnClick);
-                    document.removeEventListener('keydown', onTabKeyPress);
-
-					if (scope.onMenuClose) {
-						scope.onMenuClose();
-					}
-
-                    if (updateScope) {
-                        scope.$apply();
-                    }*/
-
-                }
-
-                var closeDDMenuOnClick = function (event) {
-                    var targetElem = event.target;
-
-                    if (!inputContainer.contains(targetElem)) {
-                        closeDropdownMenu(true);
-                    }
+                    getOptionsList(scope.inputText);
                 };
 
                 scope.onMenuPopupClose = function () {
@@ -326,8 +206,6 @@
                     var pressedKey = event.key;
 
                     if (pressedKey === "Tab") {
-                        /* DROPDOWN MENU
-                        closeDropdownMenu(true);*/
                         scope.onMenuPopupClose();
                         scope.popupEventService.dispatchEvent(popupEvents.CLOSE_POPUP);
                     }
@@ -337,9 +215,6 @@
 
                     $event.preventDefault();
                     $event.stopPropagation();
-
-                    /* DROPDOWN MENU
-                    closeDropdownMenu();*/
 
                     if (!scope.isDisabled) {
 
@@ -383,8 +258,8 @@
                                     scope.itemObject = res.data.item;
                                 }
 
-								itemName = res.data.item.short_name;
-                                scope.inputText = res.data.item.short_name;
+								scope.selItemName = res.data.item.short_name;
+                                scope.inputText = scope.selItemName;
 
                                 scope.error = '';
                                 scope.valueIsValid = true;
@@ -436,9 +311,10 @@
 
                     inputElem.addEventListener('focus', function () {
 
-                        scope.inputText = "";
+                        // scope.inputText = "";
                         inputContainer.classList.add('custom-input-focused');
 
+                        inputElem.select();
                         getOptionsList();
 
 						if (scope.onMenuOpen) {
@@ -451,8 +327,8 @@
 
                         inputContainer.classList.remove('custom-input-focused');
 
-                        if (itemName) {
-                            scope.inputText = itemName;
+                        if (scope.selItemName) {
+                            scope.inputText = scope.selItemName;
                             scope.$apply();
                         }
 
@@ -510,12 +386,13 @@
                     scope.$watch('itemName', function () {
 
                         if (scope.itemName) {
-							scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+                            scope.selItemName = scope.itemName;
 
                         } else {
-                        	itemName = '';
-                            scope.inputText = '';
+                            scope.selItemName = '';
                         }
+
+                        scope.inputText = scope.selItemName;
 
                     });
 
@@ -553,11 +430,12 @@
                     }
 
                     initScopeWatchers();
+
                 };
 
                 // Victor 08.10.2020
                 scope.createEntity = function (_$popup, $event) {
-                    $event.stopPropagation(); // The closeDDMenuOnClick handler should not be called if pressed Create button
+                    $event.stopPropagation();
 
                     if (_$popup) _$popup.cancel();
 
@@ -622,7 +500,6 @@
                 init();
 
                 scope.$on("$destroy", function () {
-                    // window.removeEventListener('click', closeDDMenuOnClick);
                     document.removeEventListener('keydown', onTabKeyPress);
                 });
 

@@ -493,10 +493,9 @@
 
                 };
 
-                scope.onInputTextChange = function () {
+                scope.onInputTextChange = function (inputText) {
                     // scope.dropdownMenuFilter = scope.inputText;
-                    scope.getList();
-
+                    scope.getList(inputText);
                 };
 
                 /*scope.onInputFocus = function () {
@@ -733,6 +732,7 @@
                             return;
                         }
 
+                        inputElem.select();
                         scope.dropdownMenuShown = true;
 
                         window.addEventListener('click', closeDDMenuOnClick);
@@ -791,22 +791,27 @@
 
                 }
 
-                var getDatabaseItems = function (resolve) {
+                var getDatabaseItems = function (resolve, inputText) {
 
                     var getListProm;
 
                     if (scope.entityType === 'currency') {
-                        getListProm = currencyDatabaseSearchService.getList(scope.inputText, 0);
+                        getListProm = currencyDatabaseSearchService.getList(inputText, 0);
                     }
                     else if (scope.entityType === 'counterparty') {
 
-                        getListProm = finmarsDatabaseService.getCounterpartiesList({
-                            pageSize: 40,
+                        let options = {
+                            pageSize: 500,
                             filters: {
-                                query: scope.inputText,
                                 page: 1,
                             }
-                        });
+                        };
+
+                        if (inputText) {
+                            options.filters.query = inputText;
+                        }
+
+                        getListProm = finmarsDatabaseService.getCounterpartiesList(options);
 
                     }
 
@@ -834,38 +839,48 @@
 
                 };
 
-                scope.getList = function () {
+                scope.getList = function (inputText) {
 
                     scope.processing = true;
 
                     var promises = []
 
-                    console.log('scope.inputText.length', scope.inputText.length);
-
-                    promises.push(new Promise( getDatabaseItems ) );
+                    promises.push(
+                        new Promise( resolve => {
+                            getDatabaseItems(resolve, inputText);
+                        })
+                    );
 
                     promises.push( new Promise(function (resolve) {
 
-                        entityResolverService.getListLight(scope.entityType, {
+                        var options = {
                             pageSize: 500,
-                            filters: {
+                        };
+
+                        if (inputText) {
+
+                            options.filters = {
                                 query: scope.inputText
                             }
-                        }).then(function (data) {
 
-                            scope.localItemsTotal = data.count;
+                        }
 
-                            scope.localItems = data.results.map(function (item) {
+                        entityResolverService.getListLight(scope.entityType, options)
+                            .then(function (data) {
 
-                                item.frontOptions = {
-                                    type: 'local',
-                                }
+                                scope.localItemsTotal = data.count;
 
-                                return item;
+                                scope.localItems = data.results.map(function (item) {
 
-                            });
+                                    item.frontOptions = {
+                                        type: 'local',
+                                    }
 
-                            resolve();
+                                    return item;
+
+                                });
+
+                                resolve();
 
 
                         })

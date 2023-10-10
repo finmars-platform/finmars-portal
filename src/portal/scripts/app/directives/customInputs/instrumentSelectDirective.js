@@ -20,6 +20,7 @@
                 smallOptions: '=',
                 sorted: '=',
                 onChangeCallback: '&?',
+                // used to show selected entity, if its data is not loaded
                 itemName: '=',
                 itemObject: '=',
             },
@@ -42,10 +43,14 @@
                 scope.hoverInstrument = null;
                 scope.locateDetailsRight = false;
 
+                /** Used to store name of selected entity and show it inside tooltip. */
+                scope.selItemName = '';
                 scope.inputText = '';
 
+
                 if (scope.itemName) { // itemName and inputText needed for resetting selected option name
-                    scope.inputText = JSON.parse(JSON.stringify(scope.itemName));
+                    scope.selItemName = scope.itemName;
+                    scope.inputText = scope.selItemName;
                 }
 
                 /* TIPS
@@ -183,7 +188,8 @@
                         scope.valueIsValid = true;
 
                         scope.itemName = item.name;
-                        scope.inputText = item.name;
+                        scope.selItemName = item.name;
+                        scope.inputText = scope.selItemName;
 
                         setTimeout(function () {
 
@@ -235,7 +241,8 @@
                     };
 
                     scope.itemName = resultData.name;
-                    scope.inputText = resultData.name;
+                    scope.selItemName = resultData.name;
+                    scope.inputText = scope.selItemName;
 
                     scope.valueIsValid = true;
 
@@ -309,7 +316,8 @@
                                 scope.model = null;
 
                                 scope.itemName = currentName || '';
-                                scope.inputText = currentName || '';
+                                scope.selItemName = currentName || '';
+                                scope.inputText = scope.selItemName;
 
                                 clearInterval(taskIntervalId);
                                 toastNotificationService.error(error);
@@ -408,7 +416,8 @@
                             scope.model = null;
 
                             scope.itemName = currentName;
-                            scope.inputText = currentName;
+                            scope.selItemName = currentName;
+                            scope.inputText = scope.selItemName;
 
                             scope.$apply();
 
@@ -438,7 +447,8 @@
                     scope.inputText = item.issueName;*/
 
                     scope.itemName = item.name;
-                    scope.inputText = item.name;
+                    scope.selItemName = item.name;
+                    scope.inputText = scope.selItemName;
 
                     scope.processing = true;
                     scope.loadingEntity = true;
@@ -463,7 +473,10 @@
 
                     inputContainer.classList.remove('custom-input-focused');
 
-                    if (scope.itemName) scope.inputText = scope.itemName;
+                    if (scope.itemName) {
+                        scope.selItemName = scope.itemName;
+                        scope.inputText = scope.selItemName;
+                    }
 
                     scope.dropdownMenuShown = false;
 
@@ -589,7 +602,8 @@
                         var currentName = scope.itemName;
 
                         scope.itemName = res.data.item.name;
-                        scope.inputText = res.data.item.name;
+                        scope.selItemName = res.data.item.name;
+                        scope.inputText = scope.selItemName;
 
                         if ( res.data.hasOwnProperty('task') ) { // database item selected
 
@@ -673,14 +687,15 @@
                         console.log('scope.model', scope.model);
 
                         if (scope.itemName) {
-
-                            scope.inputText = scope.itemName;
-                            scope.selectedItem = { id: scope.model, name: scope.itemName, }
+                            scope.selItemName = scope.itemName;
+                            // scope.selectedItem = { id: scope.model, name: scope.itemName, }
 
                         } else {
                             // itemName = '';
-                            scope.inputText = '';
+                            scope.selItemName = '';
                         }
+
+                        scope.inputText = scope.selItemName;
 
                     });
 
@@ -694,6 +709,8 @@
                     if (scope.dropdownMenuShown) {
                         return;
                     }
+
+                    inputElem.select();
 
                     scope.dropdownMenuShown = true;
 
@@ -763,16 +780,16 @@
 
                 }
 
-                scope.getList = function () {
+                scope.getList = function (inputText) {
 
                     scope.processing = true;
 
                     var promises = []
 
-                    if (scope.inputText.length > 2) {
+                    if (inputText?.length > 2) {
                         promises.push(new Promise(function (resolve, reject) {
 
-                            instrumentDatabaseSearchService.getList(scope.inputText)
+                            instrumentDatabaseSearchService.getList(inputText)
                                 .then(function (data) {
 
                                     scope.databaseInstrumentsTotal = data.count;
@@ -807,31 +824,38 @@
 
                     promises.push( new Promise(function (resolve, reject) {
 
-                        instrumentService.getListForSelect({
+                        var options = {
                             pageSize: 500,
-                            filters: {
-                                query: scope.inputText
+                        };
+
+                        if (inputText) {
+
+                            options.filters = {
+                                query: inputText
                             }
 
-                        }).then(function (data) {
+                        }
 
-                            scope.localInstrumentsTotal = data.count;
+                        instrumentService.getListForSelect(options)
+                            .then(function (data) {
 
-                            scope.localInstruments = data.results;
+                                scope.localInstrumentsTotal = data.count;
 
-                            scope.localInstruments = scope.localInstruments.map(function (item) {
+                                scope.localInstruments = data.results;
 
-                                item.pretty_date = moment(item.modified).format("DD.MM.YYYY");
+                                scope.localInstruments = scope.localInstruments.map(function (item) {
 
-                                item.frontOptions = {
-                                    type: 'local',
-                                };
+                                    item.pretty_date = moment(item.modified).format("DD.MM.YYYY");
 
-                                return item;
+                                    item.frontOptions = {
+                                        type: 'local',
+                                    };
 
-                            })
+                                    return item;
 
-                            resolve()
+                                })
+
+                                resolve()
 
 
                         })
