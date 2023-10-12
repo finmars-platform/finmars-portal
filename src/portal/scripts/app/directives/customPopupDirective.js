@@ -63,7 +63,7 @@
 				let coords;
 				let popupBackdropElem;
 
-				if (scope.noBackdrop !== 'false') popupBackdropElem = document.createElement("div");
+				if (scope.noBackdrop !== 'true') popupBackdropElem = document.createElement("div");
 
 				if (popupBackdropElem) {
 
@@ -378,11 +378,17 @@
 					if (scope.isDisabled) {
 						return;
 					}
-
-					if (scope.isPopupOpen) {
+					/*if (scope.isPopupOpen) {
 						removePopUp();
 
 					} else {
+
+						createPopup();
+
+						setPopupPosition(event);
+
+					}*/
+					if (!scope.isPopupOpen) {
 
 						createPopup();
 

@@ -299,18 +299,43 @@
   right: 8px;
 }*/
 
+// also used by instrumentSelect
+@dropdownMenuHeight: 380px;
+
+.unified-data-select-menu {
+  display: flex;
+
+  .menu-container {
+    width: 280px;
+    height: @dropdownMenuHeight;
+
+    .menu {
+      height: @dropdownMenuHeight;
+      overflow-y: auto;
+    }
+  }
+}
+
+.unified-data-select-menu:not(.instrument) {
+  width: 280px;
+}
+
+.unified-data-select-menu.instrument {
+  width: 500px;
+}
+
 .custom-input-sel-menu-container {
   width: 100%;
   position: relative;
 }
 
 .custom-input-sel-menu-block {
-  position: absolute;
+  // position: absolute;
   width: 100%;
   min-height: 100px;
   max-height: 256px;
-  top: 2px;
-  left: 0;
+  // top: 2px;
+  // left: 0;
   background: #fff;
   padding: 5px 0;
   box-shadow: 0 0 10px rgba(0,0,0,.2);

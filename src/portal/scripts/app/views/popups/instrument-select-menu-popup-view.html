@@ -1,0 +1,192 @@
+<div class="unified-data-select-menu instrument instrumentSelectPopupMenu"
+     data-ng-init="popupData.onInit()">
+
+    <div class="menu-container">
+
+        <div data-ng-if="!popupData.processing && !popupData.loadingEntity"
+             class="menu">
+
+            <b data-ng-if="popupData.localInstruments.length"
+               class="instrument-select-options-group-title">
+                Local Instruments
+                ({{popupData.localInstrumentsTotal}})
+            </b>
+
+            <div data-ng-if="popupData.localInstruments.length">
+
+                <div
+                        data-ng-repeat="option in popupData.localInstruments"
+                        data-ng-click="popupData.selectLocalInstrument(option)"
+                        class="instrument-select-input-sel-option"
+                        ng-mouseover="popupData.setHoverInstrument(option)"
+
+                >
+
+                    <div class="instrument-select-instrument-name text-overflow-ellipsis"
+                         data-ng-bind-html="popupData.getHighlighted(option.name)">
+
+                    </div>
+                    <div class="instrument-select-instrument-isin text-overflow-ellipsis"
+                         data-ng-bind-html="popupData.getHighlighted(option.user_code)">
+
+                    </div>
+
+                    <div data-ng-if="option.reference_for_pricing"
+                         class="instrument-select-instrument-ticker text-overflow-ellipsis">
+                        {{ option.reference_for_pricing }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <b data-ng-if="popupData.databaseInstruments.length"
+               class="instrument-select-options-group-title"
+               style=" bottom: 0px;">Global Instruments ({{popupData.databaseInstrumentsTotal}})</b>
+
+
+            <div data-ng-if="popupData.databaseInstruments.length">
+
+                <div
+                        data-ng-repeat="option in popupData.databaseInstruments"
+                        data-ng-click="popupData.selectDatabaseInstrument(option)"
+                        class="instrument-select-input-sel-option"
+                        data-ng-mouseover="popupData.setHoverInstrument(option)"
+                >
+
+
+                    <div class="instrument-select-instrument-name text-overflow-ellipsis"
+                         data-ng-bind-html="popupData.getHighlighted(option.name)">
+
+                    </div>
+                    <div class="instrument-select-instrument-isin text-overflow-ellipsis"
+                         data-ng-bind-html="popupData.getHighlighted(option.reference)">
+
+                    </div>
+
+                    <div data-ng-if="option.ticker"
+                         class="instrument-select-instrument-ticker text-overflow-ellipsis">
+                        {{option.ticker}}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div data-ng-if="!popupData.localInstruments.length && !popupData.databaseInstruments.length">
+                <b class="instrument-select-options-group-title">Not instruments found</b>
+            </div>
+
+
+        </div>
+
+        <div data-ng-if="popupData.processing || popupData.loadingEntity"
+             class="height-100"
+             layout="row"
+             layout-sm="column"
+             layout-align="center center">
+            <progress-circular data-diameter="50"></progress-circular>
+        </div>
+
+    </div>
+
+    <div class="instrument-select-option-detail-box">
+
+        <div data-ng-show="popupData.hoverInstrument">
+
+            <div data-ng-if="popupData.hoverInstrument.available_for_update"
+                 data-ng-disabled="loadingEntity || processing || updatingEntities"
+                 class="instrument-select-update-instrument-button"
+                 data-ng-click="popupData.updateLocalInstrument(popupData.hoverInstrument)">
+                <span class="material-icons">autorenew</span>
+
+                <md-tooltip data-ng-if="popupData.updatingEntities"
+                            class="tooltip_1"
+                            data-md-direction="top">Updating local instrument</md-tooltip>
+            </div>
+
+            <div class="instrument-select-option-detail-field">
+
+                <div class="instrument-select-option-detail-label">
+                    Instrument
+                </div>
+                <div class="instrument-select-option-detail-value"
+                     style="width: 140px">
+
+                    <span>{{popupData.hoverInstrument.name}}</span>
+
+                </div>
+
+            </div>
+
+            <div class="instrument-select-option-detail-field">
+
+                <div class="instrument-select-option-detail-label">
+                    ISIN
+                </div>
+                <div class="instrument-select-option-detail-value">
+
+                    <span data-ng-if="popupData.hoverInstrument.frontOptions.type === 'local'">
+                        {{popupData.hoverInstrument.user_code}}
+                    </span>
+                    <span data-ng-if="popupData.hoverInstrument.frontOptions.type === 'database'">
+                        {{popupData.hoverInstrument.isin}}
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="instrument-select-option-detail-field">
+
+                <div class="instrument-select-option-detail-label">
+                    Ticker
+                </div>
+                <div class="instrument-select-option-detail-value">
+
+                    <span data-ng-if="popupData.hoverInstrument.frontOptions.type === 'local'">
+                        {{popupData.hoverInstrument.reference_for_pricing}}
+                    </span>
+                    <span data-ng-if="popupData.hoverInstrument.isin">{{popupData.hoverInstrument.ticker}}</span>
+
+                </div>
+
+            </div>
+
+            <div class="instrument-select-option-detail-field">
+
+                <div class="instrument-select-option-detail-label">
+                    Type
+                </div>
+                <div class="instrument-select-option-detail-value">
+
+                    <span data-ng-if="popupData.hoverInstrument.frontOptions.type === 'local'">
+                        {{popupData.hoverInstrument.instrument_type_object.name}}
+                    </span>
+                    <span data-ng-if="popupData.hoverInstrument.isin">{{popupData.hoverInstrument.instrument_type}}</span>
+
+                </div>
+
+            </div>
+
+            <div class="instrument-select-option-detail-field">
+
+                <div class="instrument-select-option-detail-label">
+                    Updating Date
+                </div>
+                <div class="instrument-select-option-detail-value">
+
+                    <span data-ng-if="popupData.hoverInstrument.id">{{popupData.hoverInstrument.pretty_date}}</span>
+                    <span data-ng-if="!popupData.hoverInstrument.id">{{popupData.hoverInstrument.pretty_date}}</span>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>

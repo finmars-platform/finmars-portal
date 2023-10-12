@@ -1,0 +1,74 @@
+<div class="unified-data-select-menu unifiedDataSelectMenuContainer"
+     data-ng-init="popupData.onInit()">
+
+    <div class="menu-container">
+
+        <div data-ng-if="!popupData.processing" class="menu">
+
+            <b data-ng-if="popupData.localItems.length" class="unified-data-select-options-group-title">Local Records
+                ({{localItemsTotal}})</b>
+
+            <div data-ng-if="popupData.localItems.length">
+
+                <div
+                        data-ng-repeat="option in popupData.localItems"
+                        data-ng-click="popupData.selectLocalItem(option)"
+                        class="unified-data-select-input-sel-option"
+                >
+
+                    <div class="unified-data-select-name text-overflow-ellipsis" data-ng-bind-html="popupData.getHighlighted(option.name)"></div>
+
+                    <div class="unified-data-select-user-code text-overflow-ellipsis"
+                         data-ng-bind-html="popupData.getHighlighted(option.user_code)"></div>
+
+                </div>
+
+            </div>
+
+
+            <b data-ng-if="popupData.databaseItems.length" style=" bottom: 0px;"
+               class="unified-data-select-options-group-title">Global Records ({{popupData.databaseItemsTotal}})</b>
+
+
+            <div data-ng-if="popupData.databaseItems.length">
+
+                <div
+                        data-ng-repeat="option in popupData.databaseItems"
+                        data-ng-click="popupData.selectDatabaseItem(option)"
+                        class="unified-data-select-input-sel-option"
+                >
+
+                    <div class="unified-data-select-name text-overflow-ellipsis" data-ng-bind-html="popupData.getHighlighted(option.name)"></div>
+
+                    <!--<div data-ng-if="entityType != 'currency'" class="unified-data-select-user-code" data-ng-bind-html="getHighlighted(option.user_code)">
+
+                    </div>
+                    <div data-ng-if="entityType == 'currency'" class="unified-data-select-user-code" data-ng-bind-html="getHighlighted(option.code)">
+
+                    </div>-->
+                    <div class="unified-data-select-user-code text-overflow-ellipsis"
+                         data-ng-bind-html="popupData.getHighlighted(option.user_code)"></div>
+
+
+                </div>
+
+            </div>
+
+            <div data-ng-if="!popupData.localItems.length && !popupData.databaseItems.length">
+                <b class="unified-data-select-options-group-title">Not records found</b>
+            </div>
+
+        </div>
+
+        <div data-ng-if="popupData.processing"
+             class="height-100"
+             layout="row"
+             layout-sm="column"
+             layout-align="center center"
+             style="padding-top: 25px;">
+            <progress-circular data-diameter="50"></progress-circular>
+        </div>
+
+    </div>
+
+</div>
