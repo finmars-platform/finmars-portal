@@ -5,7 +5,23 @@
         <span class="custom-input-textarea-span-pan">{{label}}</span>
     </div>
 
-    <div class="custom-input-main-container customInputBackgroundColor">
+    <div data-custom-popup
+         data-popup-template-url="'views/popups/unified-data-select-menu-popup-view.html'"
+         data-popup-data="menuPopupData"
+         data-popup-event-service="popupEventService"
+         data-no-backdrop="true"
+         data-position-relative-to="element"
+         data-relative-popup-x="left"
+         data-relative-popup-y="bottom"
+         data-offset-y="2"
+         data-open-on="click"
+         data-close-on-click-outside="false"
+         data-is-disabled="isDisabled"
+         data-popup-classes="unified-data-select-popup mh-100vh-popup"
+         data-on-cancel="onMenuClose()"
+
+         class="custom-input-main-container customInputBackgroundColor">
+
         <div class="custom-input-borders">
             <div class="custom-input-content">
 
@@ -35,7 +51,6 @@
                            data-ng-model-options="{debounce: 1000}"
                            data-ng-change="onInputTextChange(inputText)"
                            data-ng-disabled="isDisabled"
-                           data-ng-keypress="selectFirst($event)"
                            class="custom-input unified-data-input unifiedDataSelectInputElem" />
 
                 </div>
@@ -49,13 +64,13 @@
                                     data-ng-click="callFnForCustomBtn(button.action)">
                                 {{button.caption}}
                                 <ng-md-icon data-ng-if="button.iconObj.type === 'angularjs-material'"
-                                            size="24"
-                                            icon="{{button.iconObj.icon}}"
+                                            data-size="24"
+                                            data-icon="{{button.iconObj.icon}}"
                                             class="ci-custom-btn-icon"></ng-md-icon>
 
                                 <md-tooltip data-ng-if="button.tooltip"
                                             class="tooltip_1"
-                                            md-direction="top">{{button.tooltip}}
+                                            data-md-direction="top">{{button.tooltip}}
                                 </md-tooltip>
                             </button>
                         </div>
@@ -75,80 +90,6 @@
 
             </div>
         </div>
-    </div>
-
-    <div ng-if="dropdownMenuShown"
-         class="custom-input-sel-menu-container custom-input-dropdown-div selectMenuContainer">
-
-        <div class="custom-input-sel-menu-block">
-
-            <div data-ng-if="!processing" style="height: 369px; overflow-y: auto">
-
-                <b data-ng-if="localItems.length" class="unified-data-select-options-group-title">Local Records
-                    ({{localItemsTotal}})</b>
-
-                <div data-ng-if="localItems.length">
-
-                    <div
-                            data-ng-repeat="option in localItems"
-                            data-ng-click="selectLocalItem(option)"
-                            class="unified-data-select-input-sel-option"
-                    >
-
-                        <div class="unified-data-select-name" data-ng-bind-html="getHighlighted(option.name)"></div>
-                        <div class="unified-data-select-user-code"
-                             data-ng-bind-html="getHighlighted(option.user_code)"></div>
-
-                        <!--                        <div class="unified-data-select--ticker" data-ng-if="option.reference_for_pricing">-->
-                        <!--                            {{option.reference_for_pricing}}-->
-                        <!--                        </div>-->
-
-                    </div>
-
-                </div>
-
-
-                <b data-ng-if="databaseItems.length" style=" bottom: 0px;"
-                   class="unified-data-select-options-group-title">Global Records ({{databaseItemsTotal}})</b>
-
-
-                <div data-ng-if="databaseItems.length">
-
-                    <div
-                            data-ng-repeat="option in databaseItems"
-                            data-ng-click="selectDatabaseItem(option)"
-                            class="unified-data-select-input-sel-option"
-                    >
-
-                        <div class="unified-data-select-name" data-ng-bind-html="getHighlighted(option.name)"></div>
-
-                        <!--<div data-ng-if="entityType != 'currency'" class="unified-data-select-user-code" data-ng-bind-html="getHighlighted(option.user_code)">
-
-                        </div>
-                        <div data-ng-if="entityType == 'currency'" class="unified-data-select-user-code" data-ng-bind-html="getHighlighted(option.code)">
-
-                        </div>-->
-                        <div class="unified-data-select-user-code"
-                             data-ng-bind-html="getHighlighted(option.user_code)"></div>
-
-
-                    </div>
-
-                </div>
-
-                <div data-ng-if="!localItems.length && !databaseItems.length">
-                    <b class="unified-data-select-options-group-title">Not records found</b>
-                </div>
-
-            </div>
-
-            <div data-ng-if="processing" layout="row" layout-sm="column" layout-align="center center"
-                 style="padding-top: 25px;">
-                <progress-circular diameter="40"></progress-circular>
-            </div>
-
-        </div>
-
     </div>
 
     <div ng-if="error"
