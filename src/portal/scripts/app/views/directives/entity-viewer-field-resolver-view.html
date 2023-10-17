@@ -114,37 +114,6 @@
             <div data-ng-if="!checkComplexEntityType()">
                 <div data-ng-if="fieldKey !== 'price_download_scheme'">
                     <div data-ng-if="!checkForCrudSelects()">
-<!--                                      <md-input-container class="md-block no-error-spacer md-select-pan">
-                                        <label data-ng-bind="getName()"></label>
-                                        <md-select
-                                          md-on-close="searchTerm = ''"
-                                          data-ng-model="entity[fieldKey]"
-                                          data-ng-change="changeHandler()"
-                                          md-on-open="getDataApply()"
-                                          md-selected-text="bindFormFields()"
-                                          md-container-class="common-select-container"
-                                          style="{{inputBackgroundColor()}}"
-                                        >
-                                          <md-select-header>
-                                            <input
-                                              data-ng-model="searchTerm"
-                                              type="search"
-                                              placeholder="Search for a ..."
-                                              class="md-text md-select-search-pattern select-input-filter"
-                                              ng-keydown="$event.stopPropagation()"
-                                            />
-                                          </md-select-header>
-
-                                          <div class="select-options-holder">
-                                            <md-option
-                                              data-ng-repeat="field in fields | orderBy:resolveSort(field) | filter:{name: searchTerm} as results track by field.id "
-                                              ng-value="field.id">
-                                              {{bindListFields(field)}}
-                                            </md-option>
-                                          </div>
-
-                                        </md-select>
-                                      </md-input-container>-->
 
                         <dropdown-select data-label="{{getName()}}"
                                          data-model="modelObj.model"

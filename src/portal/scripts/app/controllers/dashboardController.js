@@ -193,13 +193,17 @@
 
         };
 
-        vm.saveDashboardLayout = function ($event) {
+        vm.saveDashboardLayout = function () {
 
-            uiService.updateDashboardLayout(vm.layout.id, vm.layout).then(function (data) {
+            uiService.updateDashboardLayout( vm.layout.id, JSON.parse(angular.toJson(vm.layout)) ).then(function (data) {
 
-                vm.layout = data;
-
-                vm.dashboardDataService.setListLayout(JSON.parse(JSON.stringify(data)));
+                /*
+                 * IMPORTANT: do not do `vm.layout = data;`.
+                 * It leads to rerender of components without fully reloading the dashboard.
+                 * Components are not made to do this.
+                 * Causes bugs at least with components-controls.
+                 * */
+                vm.dashboardDataService.setListLayout( structuredClone(data) );
 
                 toastNotificationService.success("Dashboard Layout is Saved")
 
@@ -424,21 +428,19 @@
 
         vm.initDashboardComponents = function () {
 
-            var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
+            var statusesObject = JSON.parse(JSON.stringify( vm.dashboardDataService.getComponentStatusesAll() ));
             var componentData;
             var componentStatus;
-            console.log('DashboardController.initDashboardComponents statusesObject', statusesObject)
 
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
-                statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
-
+                statusesObject = structuredClone( vm.dashboardDataService.getComponentStatusesAll() );
                 // console.log('DashboardController.COMPONENT_STATUS_CHANGE statusesObject', statusesObject)
 
-                // First loop to init only controls
-                // Do not move this loop
-                // we need to controls be registered then resolved,
-                // in first run isControlsReady() will return true
+                // First loop initiates only components-controls.
+                // Do not move this loop!
+                // We need controls to be registered then resolved,
+                // so that dashboardDataService.areControlsReady() will return true
                 Object.keys(statusesObject).forEach(function (componentId) {
 
                     componentData = vm.dashboardDataService.getComponentById(componentId);
@@ -458,7 +460,7 @@
 
                 })
 
-                if (vm.dashboardDataService.isControlsReady()) {
+                if ( vm.dashboardDataService.areControlsReady() ) {
 
                     console.log('DashboardController.COMPONENT_STATUS_CHANGE controls is ready, initing other components', statusesObject)
                     // Second loop to init other components

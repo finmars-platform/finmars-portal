@@ -86,7 +86,7 @@
 
                     </md-button>
 
-                    <md-button class="g-dashboard-top-button g-top-button" ng-click="vm.saveDashboardLayout($event)">
+                    <md-button class="g-dashboard-top-button g-top-button" data-ng-click="vm.saveDashboardLayout()">
                         <span class="material-icons">save</span>
                     </md-button>
 
@@ -156,12 +156,12 @@
 
                                 <div data-ng-if="item.data.type == 'control'" class="height-100">
                                     <dashboard-control
-                                            tab-number="'fixed_area'"
-                                            row-number="row.row_number"
-                                            column-number="item.column_number"
-                                            item="item"
-                                            dashboard-data-service="vm.dashboardDataService"
-                                            dashboard-event-service="vm.dashboardEventService"
+                                            data-tab-number="'fixed_area'"
+                                            data-row-number="row.row_number"
+                                            data-column-number="item.column_number"
+                                            data-item="item"
+                                            data-dashboard-data-service="vm.dashboardDataService"
+                                            data-dashboard-event-service="vm.dashboardEventService"
                                     ></dashboard-control>
                                 </div>
 
@@ -374,12 +374,12 @@
 
                                             <div data-ng-if="item.data.type == 'control'">
                                                 <dashboard-control
-                                                        tab-number="tab.tab_number"
-                                                        row-number="row.row_number"
-                                                        column-number="item.column_number"
-                                                        item="item"
-                                                        dashboard-data-service="vm.dashboardDataService"
-                                                        dashboard-event-service="vm.dashboardEventService"
+                                                        data-tab-number="tab.tab_number"
+                                                        data-row-number="row.row_number"
+                                                        data-column-number="item.column_number"
+                                                        data-item="item"
+                                                        data-dashboard-data-service="vm.dashboardDataService"
+                                                        data-dashboard-event-service="vm.dashboardEventService"
                                                 ></dashboard-control>
                                             </div>
 

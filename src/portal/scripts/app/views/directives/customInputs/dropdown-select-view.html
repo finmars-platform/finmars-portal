@@ -64,7 +64,7 @@
                         <div data-ng-if="customButtons && customButtons.length" class="height-100 flex-row">
                             <button data-ng-repeat="button in customButtons"
                                     class="{{button.classes}} custom-input-custom-btn"
-                                    data-ng-click="callFnForCustomBtn(button.action)">
+                                    data-ng-click="callFnForCustomBtn($event, button.action)">
                                 {{button.caption}}
                                 <ng-md-icon data-ng-if="button.iconObj.type === 'angularjs-material'"
                                                         size="24"

@@ -172,7 +172,10 @@
                         scope.menuOptionsPopupData.filterTerm = newVal || '';
                     }
 
-                    scope.callFnForCustomBtn = function (actionData) {
+                    scope.callFnForCustomBtn = function ($event, actionData) {
+
+                        $event.preventDefault();
+                        $event.stopPropagation();
 
                         if (actionData.parameters) {
                             actionData.callback(actionData.parameters);
@@ -247,7 +250,9 @@
                                 // because of timeout scope.onChangeCallback() will be called after linked to scope.model variable is updated
                                 setTimeout(function () {
 
-                                    scope.onChangeCallback();
+                                    scope.onChangeCallback({
+                                        changedValue: JSON.parse(angular.toJson(item))
+                                    });
                                     // scope.$apply();
 
                                 }, 0);
