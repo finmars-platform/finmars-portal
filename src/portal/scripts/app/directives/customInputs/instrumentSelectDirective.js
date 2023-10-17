@@ -17,6 +17,13 @@
                 label: '@',
                 placeholderText: '@',
                 model: '=',
+
+                /*
+                 * Name of property whose value should be assigned to scope.model.
+                 * Default - 'id'
+                 * */
+                modelValue: '@',
+
                 customButtons: '=',
                 customStyles: '=',
                 eventSignal: '=',
@@ -74,6 +81,22 @@
                     }
 
                     scope.locateDetailsLeft = false;
+
+                    var modelValue = scope.modelValue || 'id';
+
+                    const getChangedValue = function () {
+
+                        if (scope.itemObject) {
+
+                            return {
+                                changedValue: JSON.parse(angular.toJson( scope.itemObject ))
+                            };
+
+                        }
+
+                        return {changedValue: null};
+
+                    };
 
                     var stylePreset;
 
@@ -181,7 +204,7 @@
                             stylePreset = '';
                             scope.error = '';
 
-                            scope.model = item.id;
+                            scope.model = item[modelValue];
                             scope.itemObject = item;
                             scope.valueIsValid = true;
 
@@ -191,7 +214,11 @@
 
                             setTimeout(function () {
 
-                                if (scope.onChangeCallback) scope.onChangeCallback();
+                                if (scope.onChangeCallback) {
+
+                                    scope.onChangeCallback( getChangedValue() );
+
+                                }
 
                                 scope.$apply();
 
@@ -219,7 +246,11 @@
 
                         setTimeout(function () {
 
-                            if (scope.onChangeCallback) scope.onChangeCallback();
+                            if (scope.onChangeCallback) {
+                                // scope.itemObject updated by applyItem();
+                                scope.onChangeCallback( getChangedValue() );
+                            }
+
                             scope.$apply();
 
                         }, 100);
@@ -231,12 +262,14 @@
                         stylePreset = '';
                         scope.error = '';
 
-                        scope.model = resultData.result_id;
+                        // scope.model = resultData.result_id;
                         scope.itemObject = {
                             id: resultData.result_id,
                             name: resultData.name,
                             user_code: resultData.user_code
                         };
+
+                        scope.model = scope.itemObject[modelValue];
 
                         scope.itemName = resultData.name;
                         scope.selItemName = resultData.name;
@@ -276,8 +309,8 @@
                                             if (scope.onChangeCallback) {
 
                                                 setTimeout(function () {
-
-                                                    scope.onChangeCallback();
+                                                    // scope.itemObject updated by applyItem();
+                                                    scope.onChangeCallback( getChangedValue() );
 
                                                     scope.$apply();
 
@@ -615,12 +648,14 @@
                             }
                             else {
 
-                                scope.model = res.data.item.id;
+                                scope.model = res.data.item[modelValue];
                                 scope.itemObject = res.data.item;
 
                                 setTimeout(function () {
 
-                                    if (scope.onChangeCallback) scope.onChangeCallback();
+                                    if (scope.onChangeCallback) {
+                                        scope.onChangeCallback( getChangedValue() );
+                                    }
 
                                     scope.$apply();
 

@@ -21,7 +21,11 @@
                 label: '@',
                 placeholderText: '@',
                 model: '=',
+
+                // name of property whose value should be assigned to scope.model
+                // Default: 'id'
                 modelValue: '@',
+
                 customButtons: '=',
                 customStyles: '=',
                 eventSignal: '=',
@@ -93,6 +97,20 @@
                         }
                     }*/
 
+                    const getChangedValue = function () {
+
+                        if (scope.itemObject) {
+
+                            return {
+                                changedValue: JSON.parse(angular.toJson( scope.itemObject ))
+                            };
+
+                        }
+
+                        return {changedValue: null};
+
+                    };
+
                     scope.getInputContainerClasses = function () {
 
                         var classes = '';
@@ -145,7 +163,14 @@
                             scope.selectedItem = item;
 
                             scope.model = item[modelValue];
-                            scope.itemObject = item;
+
+                            scope.itemObject = {
+                                id: item.id,
+                                user_code: item.user_code,
+                                name: item.name,
+                                short_name: item.short_name,
+                            };
+
                             scope.valueIsValid = true;
 
                             itemName = item.name;
@@ -155,7 +180,7 @@
 
                                 setTimeout(function () {
 
-                                    scope.onChangeCallback();
+                                    scope.onChangeCallback( getChangedValue() );
 
                                     scope.$apply();
 
@@ -188,7 +213,11 @@
 
                         setTimeout(function () {
 
-                            if (scope.onChangeCallback) scope.onChangeCallback();
+                            if (scope.onChangeCallback) {
+                                // scope.itemObject updated by applyItem(resultData);
+                                scope.onChangeCallback( getChangedValue() );
+                            }
+
                             scope.$apply();
 
                         }, 100);
@@ -253,8 +282,8 @@
                                             if (scope.onChangeCallback) {
 
                                                 setTimeout(function () {
-
-                                                    scope.onChangeCallback();
+                                                    // scope.itemObject updated by applyItem(resultData);
+                                                    scope.onChangeCallback( getChangedValue() );
 
                                                     scope.$apply();
 
@@ -577,7 +606,9 @@
 
                                 setTimeout(function () {
 
-                                    if (scope.onChangeCallback) scope.onChangeCallback();
+                                    if (scope.onChangeCallback) {
+                                        scope.onChangeCallback( getChangedValue() );
+                                    }
 
                                     scope.$apply();
 

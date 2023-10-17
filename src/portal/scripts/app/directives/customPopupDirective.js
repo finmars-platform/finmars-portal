@@ -22,7 +22,7 @@
 				closeOnMouseLeave: '@',
 				preventDefault: '@',
 
-				positionRelativeTo: '@', // ('mouse', 'element').
+				positionRelativeTo: '@', // ['mouse', 'element'].
 				//region this properties work only if scope.positionRelativeTo === 'element'
 
 				/*

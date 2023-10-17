@@ -417,9 +417,11 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
 
                     reportOptions[property] = [componentOutput.data.value]
 
-                } else if (['report_currency', 'pricing_policy'].includes(property) &&
+                } else if (
+                    ['report_currency', 'pricing_policy'].includes(property) &&
                     Array.isArray((componentOutput.data.value)) &&
-                    componentOutput.data.value.length) {
+                    componentOutput.data.value.length
+                ) {
 
                     reportOptions[property] = componentOutput.data.value[0]
 
@@ -900,9 +902,7 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
                 Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (property) {
 
                     var componentId = vm.componentData.settings.linked_components.report_settings[property];
-
                     var componentOutput = vm.dashboardDataService.getComponentOutputOld(componentId);
-                    console.log('updateReportSettingsUsingDashboardData.componentOutput', property, componentOutput)
 
                     if (componentOutput && componentOutput.data) {
 
@@ -924,9 +924,7 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
                                 ['report_currency', 'pricing_policy'].includes(property) &&
                                 Array.isArray((componentOutput.data.value))
                             ) {
-                                if (vm.componentData.name === "BALANCE_TYPES") {
-                                    console.log("rv matrix report_currency", property, componentOutput.data.value[0]);
-                                }
+
                                 reportOptions[property] = componentOutput.data.value[0];
 
                             } else {
@@ -1799,7 +1797,7 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
 
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_CHANGE, function () {
 
-                // add linked to filter from dashboard component
+                //# region Add linked filters from dashboard component settings to report viewer
                 if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
 
                     vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
@@ -1809,7 +1807,7 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
                     });
 
                 }
-                // < add linked to filter from dashboard component >
+                //# endregion
 
                 if (vm.componentData.settings.auto_refresh) {
                     updateReportSettingsUsingDashboardData();
@@ -1935,6 +1933,7 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
             contentType = $scope.$parent.vm.contentType;
 
             vm.componentData = $scope.$parent.vm.componentData;
+
             vm.userSettings = vm.componentData.user_settings;
             vm.dashboardComponentElement = $scope.$parent.vm.componentElement;
 
@@ -1943,9 +1942,11 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
             vm.dashboardComponentDataService = $scope.$parent.vm.dashboardComponentDataService;
             vm.dashboardComponentEventService = $scope.$parent.vm.dashboardComponentEventService;
 
-            if ((vm.componentData.type === 'report_viewer' ||
-                    vm.componentData.type === 'report_viewer_split_panel') &&
-                vm.userSettings) {
+            if (
+                (vm.componentData.type === 'report_viewer' ||
+                 vm.componentData.type === 'report_viewer_split_panel') &&
+                 vm.userSettings
+            ) {
                 // Set attributes available for columns addition
                 if (vm.userSettings.manage_columns && vm.userSettings.manage_columns.length > 0) {
                     vm.attributeDataService.setAttributesAvailableForColumns(vm.userSettings.manage_columns);

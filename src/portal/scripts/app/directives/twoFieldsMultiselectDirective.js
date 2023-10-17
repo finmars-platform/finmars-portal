@@ -56,6 +56,7 @@
 
 				// let dialogTitle = scope.dialogTitle || scope.title;
 				let items;
+				/** For convenience */
 				let selOptionsIdsList = [];
 				let chipElem;
 				let customInputContent;
@@ -89,6 +90,20 @@
 				if (scope.strictOrder || !scope.orderOptions.selectedOptions) {
 					scope.chipsOrderSettings = ''
 				}
+
+				const inputContainer = elem[0].querySelector('.multiselectorInputContainer');
+
+				const initEventListeners = function () {
+
+					elem[0].addEventListener('mouseover', function () {
+						inputContainer.classList.add('custom-input-hovered');
+					});
+
+					elem[0].addEventListener('mouseleave', function () {
+						inputContainer.classList.remove('custom-input-hovered');
+					});
+
+				};
 
 				let getSelectedOptionsIds = function () {
 
@@ -292,7 +307,8 @@
 
 							if (res.status === "agree") {
 
-								scope.model = res.selectedItems
+								scope.model = res.selectedItems;
+
 								if (scope.model) {
 									getSelectedOptionsIds();
 								}
@@ -313,9 +329,11 @@
 
 									setTimeout(function () {
 
-										scope.onChangeCallback();
+										scope.onChangeCallback({
+											changedValue: structuredClone(scope.model),
+										});
 
-									}, 500);
+									}, 0);
 
 								} else if (ngModel) { // old method but still used in some places
 									ngModel.$setViewValue(res.selectedItems);
@@ -507,7 +525,13 @@
 
 							getAvailableOptions();
 
-							if (scope.onChangeCallback) scope.onChangeCallback();
+							if (scope.onChangeCallback) {
+
+								scope.onChangeCallback({
+									changedValue: structuredClone(scope.model),
+								});
+
+							}
 
 						};
 
@@ -535,7 +559,13 @@
 								{chipsList: scope.chipsList, updateScope: true}
 							);
 
-							if (scope.onChangeCallback) scope.onChangeCallback();
+							if (scope.onChangeCallback) {
+
+								scope.onChangeCallback({
+									changedValue: structuredClone(scope.model),
+								});
+
+							}
 
 						};
 
@@ -575,6 +605,8 @@
 						});
 
 					}
+
+					initEventListeners();
 
 					scope.$watch('model', function () {
 

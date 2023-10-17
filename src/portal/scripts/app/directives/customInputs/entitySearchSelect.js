@@ -135,7 +135,14 @@
 
                         setTimeout(function () {
 
-                            if (scope.onChangeCallback) scope.onChangeCallback();
+                            if (scope.onChangeCallback) {
+
+                                scope.onChangeCallback({
+                                    changedValue: JSON.parse(angular.toJson(item)),
+                                });
+
+                            }
+
                             scope.$apply();
 
                         }, 0);
@@ -266,7 +273,11 @@
 
                                 setTimeout(function () {
 
-                                    if (scope.onChangeCallback) scope.onChangeCallback();
+                                    if (scope.onChangeCallback) {
+                                        scope.onChangeCallback({
+                                            changedValue: structuredClone(res.data.item),
+                                        });
+                                    }
 
                                     scope.$apply();
 

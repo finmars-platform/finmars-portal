@@ -579,11 +579,11 @@
 	 * @param {function} dataRequest - asynchronous method that returns array of items
 	 * @param {array} argumentsList - array of arguments for dataRequest method. Must contain argument with options {pageSize: 1000, page: 1}
 	 * @param {array} [dataList] - array where requested data will be placed
-	 * @returns {Promise<unknown>}
+	 * @returns {Promise<[]>}
 	 */
     var loadDataFromAllPages = function (dataRequest, argumentsList, dataList) {
 
-		if (!Array.isArray(dataList)) dataList = [];
+		if ( !Array.isArray(dataList) ) dataList = [];
 
 		let optionsArg = argumentsList.find(arg => {
 			return typeof arg === 'object' && arg.hasOwnProperty('page');

@@ -1,5 +1,8 @@
-<div class="multiselector-input-container"
-     data-ng-class="{'disabled': isDisabled}">
+<div class="multiselector-input-container multiselectorInputContainer"
+     data-ng-class="{
+        'disabled': isDisabled,
+        'custom-input-focused': dropdownMenuShown
+     }">
 
     <div ng-if="selectedItemsIndication !== 'chips'">
         <md-input-container class="two-fields-multiselect-input"
