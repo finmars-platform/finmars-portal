@@ -9,20 +9,20 @@
 
         <div data-ng-if="componentData.settings.value_type == 10">
 
-            <text-input label="{{customName}}"
-                        model="item.data.store.value"
-                        small-options="{notNull: options.notNull}"
-                        on-change-callback="valueChanged()"
+            <text-input data-label="{{customName}}"
+                        data-model="item.data.store.value"
+                        data-small-options="{notNull: options.notNull}"
+                        data-on-change-callback="valueChanged(changedValue)"
             ></text-input>
 
         </div>
 
         <div data-ng-if="componentData.settings.value_type == 20">
 
-            <number-input label="{{customName}}"
-                          model="item.data.store.value"
-                          small-options="{notNull: options.notNull}"
-                          on-change-callback="valueChanged()"
+            <number-input data-label="{{customName}}"
+                          data-model="item.data.store.value"
+                          data-small-options="{notNull: options.notNull}"
+                          data-on-change-callback="valueChanged(changedValue)"
             ></number-input>
 
         </div>
@@ -30,12 +30,12 @@
         <div data-ng-if="componentData.settings.value_type == 40">
 
             <date-input
-                    label="{{customName}}"
-                    model="item.data.store.value"
-                    custom-buttons="buttons"
-                    custom-styles="customStyles"
-                    small-options="{notNull: options.notNull}"
-                    on-change-callback="valueChanged()"
+                    data-label="{{customName}}"
+                    data-model="item.data.store.value"
+                    data-custom-buttons="buttons"
+                    data-custom-styles="customStyles"
+                    data-small-options="{notNull: options.notNull}"
+                    data-on-change-callback="valueChanged(changedValue)"
             ></date-input>
 
             <!--        <md-input-container class="field-date-pick-holder no-error-spacer md-block">-->
@@ -45,39 +45,61 @@
 
         </div>
 
-        <div data-ng-if="componentData.settings.value_type == 100" class="position-relative">
+        <div data-ng-if="componentData.settings.value_type === 100" class="position-relative">
 
             <div class="width-100">
 
                 <div data-ng-if="!componentData.settings.multiple">
 
-                    <entity-search-select
-                            data-item="item.data.store.value"
-                            data-item-object="entityData.value"
-                            data-label="customName"
-                            data-input-text="item.data.store.name"
-                            data-item-name="item.data.store.name"
-                            data-entity-type="entityType"
-                            data-on-change-callback="valueChanged()"></entity-search-select>
+                    <entity-search-select data-ng-if="selectorType === 'entitySearchSelect'"
+                                          data-item="item.data.store.value"
+                                          data-item-object="entityData.value"
+                                          data-label="customName"
+                                          data-input-text="item.data.store.name"
+                                          data-item-name="item.data.store.name"
+                                          data-entity-type="entityType"
+                                          data-custom-buttons="buttons"
+                                          data-on-change-callback="valueChanged(changedValue)"></entity-search-select>
+
+                    <dropdown-select data-ng-if="selectorType === 'dropdownSelect'"
+                                     data-label="{{customName}}"
+                                     data-menu-options="selOptions"
+                                     data-model="item.data.store.user_codes"
+                                     data-item-name="item.data.store.name"
+                                     data-custom-buttons="buttons"
+                                     data-on-change-callback="valueChanged(changedValue)"></dropdown-select>
+
+                    <unified-data-select data-ng-if="selectorType === 'unifiedDataSelect'"
+                                         data-label="{{customName}}"
+                                         data-model="item.data.store.value"
+                                         data-item-object="entityData.value"
+                                         data-item-name="item.data.store.name"
+                                         data-custom-buttons="buttons"
+                                         data-entity-type="entityType"
+                                         data-on-change-callback="valueChanged(changedValue)"></unified-data-select>
+
+                    <instrument-select data-ng-if="entityType === 'instrument'"
+                                       data-label="{{customName}}"
+                                       data-model="item.data.store.value"
+                                       data-item-object="entityData.value"
+                                       data-item-name="item.data.store.name"
+                                       data-custom-buttons="buttons"
+                                       data-on-change-callback="valueChanged(changedValue)"></instrument-select>
                 </div>
 
                 <div data-ng-if="componentData.settings.multiple">
 
-                    <two-fields-multiselect title="{{customName}}"
-                                            items="fields"
-                                            model="item.data.store.user_codes"
-                                            selected-items-indication="chips"
-                                            get-data-method="getDataForMultiselect()"
-                                            multiselect-event-service="multiselectEventService"
-                                            on-change-callback="valueChanged()"
+                    <two-fields-multiselect data-title="{{customName}}"
+                                            data-items="selOptions"
+                                            data-model="item.data.store.user_codes"
+                                            data-selected-items-indication="chips"
+                                            data-multiselect-event-service="multiselectEventService"
+                                            data-custom-buttons="buttons"
+                                            data-on-change-callback="valueChanged(changedValue)"
                                             class="two-fields-multiselect no-error-spacer dashboard-control-multiselect"></two-fields-multiselect>
                 </div>
 
             </div>
-
-            <md-button class="control-clear-btn" data-ng-click="clearValue()">
-                <ng-md-icon icon="clear" size="12"></ng-md-icon>
-            </md-button>
 
         </div>
 
@@ -85,7 +107,7 @@
 
     <div ng-if="!readyStatus.componentWidthCalculated" style="padding-top: 12px;">
         <div layout="row" layout-sm="column" layout-align="space-around">
-            <progress-circular diameter="30"></progress-circular>
+            <progress-circular data-diameter="30"></progress-circular>
         </div>
     </div>
 

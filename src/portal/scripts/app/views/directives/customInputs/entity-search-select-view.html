@@ -4,29 +4,34 @@
         <span class="custom-input-textarea-span-pan">{{label}}</span>
     </div>
 
-  <div custom-popup
-       popup-template-url="'views/popups/smart-search-popup-view.html'"
-       popup-data="menuOptionsPopupData"
-       popup-event-service="popupEventService"
-       position-relative-to="element"
-       popup-width="element"
-       relative-popup-x="left"
-       relative-popup-y="bottom"
-       offset-y="2"
-       open-on="click"
-       close-on-click-outside="true"
-       on-cancel="onMenuPopupClose()"
+  <div data-custom-popup
+       data-popup-template-url="'views/popups/smart-search-popup-view.html'"
+       data-popup-data="menuOptionsPopupData"
+       data-popup-event-service="popupEventService"
+       data-position-relative-to="element"
+       data-popup-width="element"
+       data-relative-popup-x="left"
+       data-relative-popup-y="bottom"
+       data-offset-y="2"
+       data-open-on="click"
+       data-close-on-click-outside="true"
+       data-on-cancel="onMenuPopupClose()"
 
        class="custom-input-main-container customInputBackgroundColor">
 
     <div class="custom-input-borders">
       <div class="custom-input-content">
 
+        <md-tooltip data-ng-if="selItemName"
+                    class="tooltip_1 f-s-15"
+                    data-md-direction="top"
+                    data-ng-bind="selItemName"></md-tooltip>
+
         <div class="flex-row flex-i-center">
           <button data-ng-if="!noIndicatorBtn"
                   class="custom-input-indicator-btn position-relative"
                   data-ng-click="openSmartSearch($event)"
-                  ng-disabled="isDisabled">
+                  data-ng-disabled="isDisabled">
             <span class="material-icons">menu</span>
           </button>
 
@@ -66,12 +71,12 @@
 
           <div data-ng-if="error" class="custom-input-tooltip">
             <span class="material-icons">info</span>
-            <md-tooltip class="error-tooltip" md-direction="top">{{error}}</md-tooltip>
+            <md-tooltip class="error-tooltip" data-md-direction="top">{{error}}</md-tooltip>
           </div>
 
           <div data-ng-if="tooltipText" data-ng-show="!error" class="custom-input-tooltip">
             <span class="material-icons ci-icon-color">info_outline</span>
-            <md-tooltip class="tooltip_2" md-direction="top" data-ng-bind="tooltipText"></md-tooltip>
+            <md-tooltip class="tooltip_2" data-md-direction="top" data-ng-bind="tooltipText"></md-tooltip>
           </div>
 
         </div>

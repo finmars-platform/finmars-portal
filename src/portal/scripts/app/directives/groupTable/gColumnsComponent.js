@@ -1894,6 +1894,14 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     groups.forEach(group => {
 
+                        if (!group.report_settings) {
+                            group.report_settings = {}
+                        }
+
+                        if (typeof group.report_settings.is_level_folded !== 'boolean') {
+                            group.report_settings.is_level_folded = true;
+                        }
+
                         if (parentGroupFullyFolded) {
                             group.report_settings.is_level_folded = true;
 
