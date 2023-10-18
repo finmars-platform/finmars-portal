@@ -3,7 +3,8 @@
            drag-dialog>
 
     <md-toolbar>
-        <is-draggable-sign></is-draggable-sign>
+<!--        <is-draggable-sign></is-draggable-sign>-->
+        <dialog-header data-cancel-dialog="vm.cancel()"></dialog-header>
     </md-toolbar>
      <!--<md-toolbar>
         <div class="md-toolbar-tools">
@@ -15,14 +16,14 @@
 
     <md-dialog-content class="position-relative">
 
-        <div ng-if="vm.readyStatus"
-             style="padding:20px">
-            <two-fields-options all-options="vm.items"
-                                selected-options="vm.selectedItems"
-                                name-property="{{vm.nameProperty}}"
-                                order-options="vm.orderOptions"
-                                strict-order="vm.strictOrder"
-                                options-checkboxes="vm.optionsCheckboxes"></two-fields-options>
+        <div data-ng-if="vm.readyStatus"
+             class="p-16">
+            <two-fields-options data-all-options="vm.items"
+                                data-selected-options="vm.selectedItems"
+                                data-name-property="{{vm.nameProperty}}"
+                                data-order-options="vm.orderOptions"
+                                data-strict-order="vm.strictOrder"
+                                data-options-checkboxes="vm.optionsCheckboxes"></two-fields-options>
 
             <div ng-if="vm.optionsCheckboxes" class="flex-row">
                 <div class="two-fields-left-b-txt"></div>

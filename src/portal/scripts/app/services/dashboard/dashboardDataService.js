@@ -88,6 +88,14 @@
 
         }
 
+        /**
+         * For now unnecessary because getComponentOutput are not used.
+         *
+         * @param componentId
+         * @param {Object} output
+         * @returns {*}
+         * @memberof: module:dashboardDataService
+         */
         function setComponentOutput(componentId, output) {
 
             // Probably need refactor
@@ -103,6 +111,13 @@
 
         }
 
+        /**
+         * For now actually no used anywhere. getComponentOutputOld used.
+         *
+         * @param componentId
+         * @returns {*}
+         * @memberof: dashboardDataService
+         */
         function getComponentOutput(componentId) {
 
             // Probably need refactor
@@ -126,6 +141,7 @@
             console.log('layoutData.data.components[componentId]', layoutData.data.components[componentId]);
 
             layoutData.data.components[componentId] = data
+
         }
 
         function getComponentOutputOld(componentId) {
@@ -276,7 +292,7 @@
 
         }
 
-        function isControlsReady() {
+        function areControlsReady() {
 
             console.log('initializingControls', initializingControls);
 
@@ -296,7 +312,7 @@
             return result // either there is no controls, or they all have set their value
         }
 
-
+        /** @module: dashboardDataService */
         return {
 
             setData: setData,
@@ -348,7 +364,7 @@
 
             // 2023-08-23
             registerControl: registerControl,
-            isControlsReady: isControlsReady
+            areControlsReady: areControlsReady
 
         }
 
