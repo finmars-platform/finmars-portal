@@ -108,7 +108,7 @@ export default function () {
 
 			scope.onPopupClose = function () {
 
-				if (didFavoriteOptionsChange()) {
+				if ( didFavoriteOptionsChange() ) {
 
 					originalFavoriteOptsList = JSON.parse(angular.toJson(scope.favoriteOptions));
 					if (scope.onFavoriteOptionsChange) scope.onFavoriteOptionsChange();

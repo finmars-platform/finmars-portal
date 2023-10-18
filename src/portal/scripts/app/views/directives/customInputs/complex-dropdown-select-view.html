@@ -4,25 +4,31 @@
         <span class="custom-input-textarea-span-pan">{{label}}</span>
     </div>
 
-    <div custom-popup
-         popup-data="popupData"
-         popup-template-url="'views/popups/complex-dropdown-select-menu-popup-view.html'"
-         open-on="click"
-         position-relative-to="element"
-         relative-popup-y="top"
-         close-on-click-outside="true"
-         popup-width="element"
-         offset-y="-10"
-         on-cancel="onPopupClose()"
+    <div data-custom-popup
+         data-popup-data="popupData"
+         data-popup-template-url="'views/popups/complex-dropdown-select-menu-popup-view.html'"
+         data-open-on="click"
+         data-position-relative-to="element"
+         data-relative-popup-y="top"
+         data-close-on-click-outside="true"
+         data-popup-width="element"
+         data-offset-y="-10"
+         data-on-cancel="onPopupClose()"
 
          class="custom-input-main-container cursor-pointer">
 
         <div class="custom-input-borders">
+
             <div class="custom-input-content">
+
+                <md-tooltip data-ng-if="selectedOption.name"
+                            class="tooltip_1 f-s-15"
+                            data-md-direction="top"
+                            data-ng-bind="selectedOption.name"></md-tooltip>
 
                 <div class="cds-content-row">
 
-                    <div ng-bind="selectedOption.name" style="padding-left: 10px;"></div>
+                    <div data-ng-bind="selectedOption.name" style="padding-left: 10px;"></div>
 
                     <span class="cds-selector-icon material-icons">arrow_drop_down</span>
 

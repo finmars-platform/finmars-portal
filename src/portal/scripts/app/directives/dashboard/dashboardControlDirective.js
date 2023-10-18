@@ -2,14 +2,11 @@
 
     'use strict';
 
-    var entityResolverService = require('../../services/entityResolverService');
-    var metaContentTypeService = require('../../services/metaContentTypesService');
-    var expressionsService = require('../../services/expression.service');
+    const metaService = require('../../services/metaService');
 
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
     var directivesEvents = require('../../services/events/directivesEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
-    var reportHelper = require('../../helpers/reportHelper');
 
     var EventService = require('../../services/eventService');
 
@@ -20,6 +17,23 @@
                 tabNumber: '=',
                 rowNumber: '=',
                 columnNumber: '=',
+
+                /*
+                 * If control is a relation selector
+                 *
+                 * scope.item.data.store === {
+                 *  // used to show selected entity before they are loaded
+                 *  name: String,
+                 *
+                 *  // contains user code or an array of user codes for multi selector
+                 *  // needed to get ids of entities because of import / export
+                 *  user_codes: String|Array,
+                 *
+                 *  // contains id or an array of ids for multi selector
+                 *  // of selected entities
+                 *  value: Number,
+                 * }
+                 * */
                 item: '=',
                 dashboardDataService: '=',
                 dashboardEventService: '=',
@@ -27,7 +41,7 @@
             templateUrl: 'views/directives/dashboard/dashboard-control-view.html',
             link: function (scope, elem, attr) {
 
-                scope.fields = [];
+                scope.selOptions = [];
                 scope.entityType = null;
                 scope.readyStatus = {
                     componentWidthCalculated: false
@@ -41,12 +55,44 @@
                     value: null
                 }
 
+                scope.selectorType = null;
+
                 var dashboardControlElem = elem[0].querySelector(".dashboardControl");
                 var cellWidth;
-                var entitiesList = [];
+
+                /*let entitiesList = null;
+
+                scope.loadEntitiesForOptions = async function () {
+
+                    const mapEntitiesToOpts = (entity) => {
+                        return {
+                            id: entity.user_code,
+                            name: entity.short_name,
+                        }
+                    }
+
+                    if (entitiesList) {
+                        return entitiesList.map(mapEntitiesToOpts);
+                    }
+
+                    const args = [
+                        scope.entityType,
+                        {
+                            pageSize: 1000,
+                            page: 1,
+                        },
+                    ];
+
+                    entitiesList = await metaService.loadDataFromAllPages(
+                        entityResolverService.getListLight,
+                        args
+                    );
+
+                    return entitiesList.map(mapEntitiesToOpts);
+
+                };*/
 
                 scope.getEntityTypeByContentType = function (contentType) {
-
                     /*if (contentType === 'instruments.instrument') {
                         return 'instrument'
                     }
@@ -66,63 +112,46 @@
                     if (contentType === 'instruments.pricingpolicy') {
                         return 'pricing-policy'
                     }*/
-
                     return metaContentTypesService.findEntityByContentType(contentType);
-
                 };
 
-                scope.getData = function () {
+                let entitiesList = [];
 
-                    var options = {
-                        pageSize: 1000,
-                        page: 1
-                    }
+                scope.getOptionsForSelectors = async function () {
 
                     entitiesList = [];
+                    scope.selOptions = [];
 
-                    var getEntitiesMethod = function (resolve, reject) {
+                    const args = [
+                        scope.entityType,
+                        {
+                            pageSize: 1000,
+                            page: 1,
+                        },
+                    ];
 
-                        entityResolverService.getListLight(scope.entityType, options).then(function (data) {
+                    entitiesList = await metaService.loadDataFromAllPages(
+                        entityResolverService.getListLight,
+                        args
+                    );
 
-                            //scope.fields = data.results;
-                            entitiesList = entitiesList.concat(data.results);
-
-                            if (data.next) {
-
-                                options.page += 1;
-                                getEntitiesMethod(resolve, reject);
-
-                            } else {
-
-                                scope.fields = entitiesList.map(function (field) {
-                                    return {id: field.user_code, name: field.short_name}
-                                })
-
-                                scope.$apply(function () {
-
-                                    setTimeout(function () {
-                                        $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
-                                            ev.stopPropagation();
-                                        });
-                                    }, 100);
-
-                                });
-
-                                resolve();
-                            }
-
-                        }).catch(function (error) {
-                            reject(error);
-                        });
-
-                    }
-
-                    return new Promise(function (resolve, reject) {
-                        getEntitiesMethod(resolve, reject);
+                    scope.selOptions = entitiesList.map(entity => {
+                        return {id: entity.user_code, name: entity.short_name}
                     })
+
+                    scope.$apply(function () {
+
+                        setTimeout(function () {
+                            $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
+                                ev.stopPropagation();
+                            });
+                        }, 100);
+
+                    });
 
                 };
 
+                /** Load options for multi selector when it is opened */
                 scope.getDataForMultiselect = function () {
 
                     return new Promise(function (resolve, reject) {
@@ -152,30 +181,65 @@
 
                 }
 
-                scope.valueChanged = function () {
+                /**
+                 * Applies changed inside selector value
+                 *
+                 * @param {Object} store - scope.item.data.store
+                 * @param {Object} changedValue - new selected option
+                 * @return {Object} - store with new value
+                 * */
+                const applySelChangedValue = function (store, changedValue) {
+
+
+                    if (scope.componentData.settings.multiple) {
+
+                        if (scope.item.data.store.user_codes && scope.item.data.store.user_codes.length) {
+
+                            scope.item.data.store.value = getSelectedIds(scope.item.data.store.user_codes);
+
+                        } else {
+                            scope.item.data.store.value = [];
+                        }
+
+                    }
+                    else if (scope.selectorType === 'dropdownSelect') {
+
+                        if (changedValue) {
+
+                            scope.item.data.store.user_codes = changedValue.id;
+                            scope.item.data.store.name = changedValue.name;
+
+                            let selEntity = entitiesList.find(entity => {
+                                return entity.user_code === scope.item.data.store.user_codes;
+                            });
+
+                            scope.item.data.store.value = selEntity.id;
+
+                        }
+
+                    }
+                    else { // entitySearchSelect, unifiedDataSelect, instrumentSelect
+
+                        scope.item.data.store.user_codes = scope.entityData.value.user_code;
+                        scope.item.data.store.name = scope.entityData.value.name;
+                        /*
+                         * 'id' assigned to scope.item.data.store.value
+                         * inside dashboard-control-view.html by selectors themselves
+                         * */
+
+                    }
+
+                    return store;
+                }
+
+                scope.valueChanged = function (changedValue) {
 
                     console.log('valueChanged', scope.item.data.store);
                     console.log('valueChanged.value', scope.item.data.store.value);
 
-                    if (scope.componentData.settings.value_type === 100) {
-
-                        if (scope.componentData.settings.multiple) {
-
-                            if (scope.item.data.store.user_codes && scope.item.data.store.user_codes.length) {
-
-                                scope.item.data.store.value = getSelectedIds(scope.item.data.store.user_codes);
-
-                            } else {
-                                scope.item.data.store.value = [];
-                            }
-
-                        } else if (scope.entityData.value) { // for entity search select
-
-                            scope.item.data.store.user_codes = scope.entityData.value.user_code;
-                            scope.item.data.store.name = scope.entityData.value.name;
-
-                        }
-
+                    // changedValue equals to `null` or `undefined` if scope.clearValue() has been called
+                    if (scope.componentData.settings.value_type === 100 && changedValue) {
+                        scope.item.data.store = applySelChangedValue(scope.item.data.store, changedValue);
                     }
 
                     var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputs();
@@ -193,6 +257,9 @@
 
                     }
 
+                    //# region Assemble changed data from selector
+                    // and use it as component's output
+
                     var changedData = {
                         changedLast: true,
                         name: scope.componentData.name,
@@ -202,7 +269,7 @@
                     if (scope.item.data.store) {
 
                         // Date control could not store values list, only single value
-                        if (scope.componentData.settings.value_type === 40) {
+                        /*if (scope.componentData.settings.value_type === 40) {
 
                             if (Array.isArray(scope.item.data.store.value)) {
                                 scope.item.data.store.value = scope.item.data.store.value[0];
@@ -211,33 +278,49 @@
                             }
                         } else {
                             changedData.data = JSON.parse(JSON.stringify(scope.item.data.store));
-                        }
+                        }*/
+                        changedData.data = structuredClone(scope.item.data.store);
                     }
 
                     console.log('changedData', changedData);
                     console.log('scope.item.data.store.value', scope.item.data.store.value);
 
-                    scope.dashboardDataService.setComponentOutputOld(scope.item.data.id, changedData); // for backward compatibiliy, deprecated
+                    /*
+                     * SZ: 2023-08-20 for backward compatibiliy, deprecated
+                     *
+                     * ME: 2023-10-16 NOT DEPRECATED until dashboardReportViewerController
+                     * changed to work with dashboardDataService.setComponentOutput
+                     * */
+                    scope.dashboardDataService.setComponentOutputOld(scope.item.data.id, changedData);
+                    //# endregion
 
-                    // Probably need refactor
+                    /*
+                     * SZ 2023-08-20: Probably need refactor
+                     *
+                     * ME 2023-10-17: For now code in `if else` statement bellow is useless because
+                     * dashboardDataService.setComponentOutputOld, dashboardDataService.getComponentOutputOld
+                     * are used right now instead of getComponentOutput
+                     * */
                     if (scope.item.data.store.user_codes) {
+
                         if (scope.componentData.settings.multiple) {
                             scope.dashboardDataService.setComponentOutput(scope.item.data.id, scope.item.data.store.user_codes);
+
                         } else {
-                            if (Array.isArray(scope.dashboardDataService.setComponentOutput(scope.item.data.id, scope.item.data.store.user_codes))) {
+
+                            if ( Array.isArray(scope.item.data.store.user_codes) ) {
                                 scope.dashboardDataService.setComponentOutput(scope.item.data.id, scope.item.data.store.user_codes[0]);
                             } else {
                                 scope.dashboardDataService.setComponentOutput(scope.item.data.id, scope.item.data.store.user_codes);
                             }
+
                         }
+
                     } else {
                         scope.dashboardDataService.setComponentOutput(scope.item.data.id, scope.item.data.store.value);
                     }
-                    scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id);
 
-                    /*if (scope.componentData.settings.auto_refresh) {
-                        scope.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
-                    }*/
+                    scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_OUTPUT_CHANGE);
 
                 };
@@ -253,6 +336,7 @@
                     scope.item.data.store.name = '';
                     scope.item.data.store.user_codes = emptyVal;
 
+                    // TODO: delete later. Used to remove deprecated property in older layouts of dashboard.
                     delete scope.item.data.store.user_code;
 
                     scope.valueChanged()
@@ -358,7 +442,7 @@
 
                         value = Array.isArray(value) ? value[0] : value;
 
-                        var selectedRelation = scope.fields.find(function (field) {
+                        var selectedRelation = scope.selOptions.find(function (field) {
 
                             return field.id === value;
 
@@ -589,7 +673,9 @@
                         } else {
                             return promisify({value: value, name: name, label: label});
                         }
-                    } else if (mode === 0) { // Get default value from report
+
+                    }
+                    else if (mode === 0) { // Get default value from report
 
                         var user_code = componentData.settings.defaultValue.layout;
                         var entityType = componentData.settings.defaultValue.entity_type;
@@ -618,29 +704,19 @@
 
                 };
 
-                scope.settingUpDefaultValue = function (componentData) {
+                scope.settingUpDefaultValue = async function (componentData) {
 
-                    return new Promise(function (resolve, reject) {
+                    const store = await scope.getItemDataStore(componentData);
 
-                        scope.getItemDataStore(componentData).then(function (store) {
+                    if (!store.value) {
+                        return;
+                    }
 
-                            if (!store.value) {
-                                resolve();
-                                return;
-                            }
+                    console.log('settingUpDefaultValue.store', store);
 
-                            console.log('settingUpDefaultValue.store', store);
-
-                            scope.item.data.store = store;
-                            scope.$apply();
-                            scope.valueChanged();
-
-                            resolve();
-
-                        })
-
-                    })
-
+                    scope.item.data.store = store;
+                    scope.$apply();
+                    scope.valueChanged();
 
                 };
 
@@ -667,19 +743,26 @@
                 };
 
                 // This is component init itself
-                scope.init = function () {
+                const initComponent = async function () {
 
                     scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
                     scope.entityType = scope.getEntityTypeByContentType(scope.componentData.settings.content_type);
 
                     scope.buttons = [];
+
                     if (!scope.item.data.store) scope.item.data.store = {};
+
                     if (scope.componentData.settings.multiple) {
-                        if (!Array.isArray(scope.item.data.store.value)) scope.item.data.store.value = [];
-                        if (!Array.isArray(scope.item.data.store.user_codes)) scope.item.data.store.user_codes = [];
+                        if ( !Array.isArray(scope.item.data.store.value) ) scope.item.data.store.value = [];
+                        if ( !Array.isArray(scope.item.data.store.user_codes) ) scope.item.data.store.user_codes = [];
                     }
 
-                    // Settings Default value start
+                    //# region Settings based on value_type
+                    const clearBtn = {
+                        iconObj: {type: "angular-material", icon: "clear"},
+                        tooltip: "Reset selected option",
+                        action: {callback: scope.clearValue},
+                    };
 
                     if (scope.componentData.settings.value_type === 40) {
 
@@ -704,49 +787,30 @@
                             action: {callback: scope.setDateMinus},
                         });
 
-                        scope.settingUpDefaultValue(scope.componentData).then(function () {
-                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                        });
+                        scope.buttons.push(clearBtn);
 
-                    } else if (scope.componentData.settings.value_type === 10) {
-
-                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                    } else if (scope.componentData.settings.value_type === 20) {
-
-                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                    } else if (scope.entityType) {
-
-                        if (scope.componentData.settings.multiple) {
-
-                            scope.getData().then(function () {
-
-                                scope.settingUpDefaultValue(scope.componentData).then(function () {
-                                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                                });
-
-
-                            });
-
-                        } else {
-
-                            scope.settingUpDefaultValue(scope.componentData).then(function () {
-                                scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                                scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                            });
-
-                        }
+                        await scope.settingUpDefaultValue(scope.componentData);
 
                     }
+                    else if (scope.entityType) { // value_type === 100
 
-                    // Settings Default value end
+                        scope.buttons.push(clearBtn);
 
-                    // Something about calculating width
+                        scope.selectorType = entityResolverService.getSelectByEntityType(scope.entityType);
+
+                        if (scope.componentData.settings.multiple || scope.selectorType === 'dropdownSelect') {
+                            await scope.getOptionsForSelectors();
+                        }
+
+                        await scope.settingUpDefaultValue(scope.componentData);
+
+                    }
+                    //# endregion Settings based on value_type
+
+                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    //# region Something about calculating width
                     if (scope.componentData.settings.multiple) {
 
                         scope.multiselectEventService = new EventService();
@@ -762,6 +826,7 @@
                     } else {
                         scope.readyStatus.componentWidthCalculated = true;
                     }
+                    //# endregion
 
                     if (scope.componentData.custom_component_name) {
                         scope.customName = scope.componentData.custom_component_name;
@@ -771,30 +836,37 @@
 
                 };
 
+                var init = function () {
 
-                scope.dashboardInit = function () {
+                    /*
+                     * IMPORTANT: listeners should be added BEFORE
+                     * setting status INIT and dispatching event COMPONENT_STATUS_CHANGE.
+                     * Otherwise they will not be active when dashboardController dispatches
+                     * events in reaction to event COMPONENT_STATUS_CHANGE.
+                     * */
+                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
+
+                        var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
+
+                        if (status === dashboardComponentStatuses.START) {
+
+                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.PROCESSING);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                            initComponent();
+
+                        }
+
+                    });
 
                     // Component put himself in INIT Status
                     // so that dashboard manager can start processing it
                     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
-
-                        var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
-
-                        if (status === dashboardComponentStatuses.START) {
-                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.PROCESSING);
-                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                            scope.init();
-                        }
-
-                    });
-
                 }
 
-                scope.dashboardInit();
-
+                init();
 
             }
         }
