@@ -371,6 +371,11 @@ export default function (cookieService, xhrService) {
                 entity: 'country',
                 key: "instruments.country"
             },
+            {
+                name: "Complex Transaction Import Scheme",
+                entity: 'complex-transaction-import-scheme',
+                key: "integrations.complextransactionimportscheme"
+            },
         ]
     };
 
@@ -586,7 +591,12 @@ export default function (cookieService, xhrService) {
                 name: 'Audit instrument',
                 entity: 'audit-instrument',
                 key: 'audit.objecthistory4entry'
-            }
+            },
+            {
+                name: "Complex Transaction Import Scheme",
+                entity: 'complex-transaction-import-scheme',
+                key: "integrations.complextransactionimportscheme"
+            },
         ]
     };
 

@@ -27,8 +27,7 @@ import entityResolverService from "./app/services/entityResolverServiceNew";
 import fieldResolverService from "./app/services/fieldResolverService";
 import pricesCheckerService from "./app/services/reports/pricesCheckerService";
 import expressionService from "./app/services/expression.serviceNew";
-import dashboardConstructorMethodsService
-    from "./app/services/dashboard-constructor/dashboardConstructorMethodsService";
+import customInputsService from "./app/services/customInputsService";
 
 import finmarsDatabaseService from "./app/services/finmarsDatabaseService";
 import configurationImportGetService from "./app/services/configuration-import/configurationImportGetService";
@@ -46,6 +45,8 @@ import reconDataProviderService from "./app/services/recon-data-provider/recon-d
 import configurationService from "./app/services/configurationService";
 import specificDataService from "./app/services/specificDataService";
 import userFilterService from "./app/services/rv-data-provider/user-filter.service";
+import dashboardConstructorMethodsService
+    from "./app/services/dashboard-constructor/dashboardConstructorMethodsService";
 
 import utilsService from "./app/services/utilsService";
 //# endregion Services and helpers for them
@@ -167,6 +168,7 @@ export default (function () {
     portal.service('specificDataService', ['cookieService', 'xhrService', specificDataService]);
     portal.service('userFilterService', [userFilterService]);
     portal.service('finmarsDatabaseService', ['cookieService', 'xhrService', finmarsDatabaseService]);
+    portal.service('customInputsService', [customInputsService]);
 
     //# region Services for import and export
     portal.service('configurationImportGetService', ['entityResolverService', 'customFieldService', 'attributeTypeService', 'transactionTypeService', configurationImportGetService]);
@@ -973,9 +975,9 @@ export default (function () {
     portal.directive('dateInput', [require('./app/directives/customInputs/dateInputDirective.js')]);
     portal.directive('datetimeInput', [require('./app/directives/customInputs/datetimeInputDirective.js')]);
     portal.directive('expressionInput', ['$mdDialog', require('./app/directives/customInputs/expressionInputDirective')]);
-    portal.directive('dropdownSelect', ['$mdDialog', require('./app/directives/customInputs/dropdownSelectDirective')]);
-    portal.directive('instrumentSelect', ['$mdDialog', 'toastNotificationService', 'instrumentService', require('./app/directives/customInputs/instrumentSelectDirective')]);
-    portal.directive('unifiedDataSelect', ['$mdDialog', 'finmarsDatabaseService', require('./app/directives/customInputs/unifiedDataSelectDirective')]);
+    portal.directive('dropdownSelect', ['$mdDialog', 'customInputsService', require('./app/directives/customInputs/dropdownSelectDirective')]);
+    portal.directive('instrumentSelect', ['$mdDialog', 'toastNotificationService', 'instrumentService', 'customInputsService', require('./app/directives/customInputs/instrumentSelectDirective')]);
+    portal.directive('unifiedDataSelect', ['$mdDialog', 'finmarsDatabaseService', 'customInputsService', require('./app/directives/customInputs/unifiedDataSelectDirective')]);
     portal.directive('classifierSelect', ['$mdDialog', require('./app/directives/customInputs/classifierSelectDirective')]);
     portal.directive('multitypeField', [require('./app/directives/customInputs/multitypeFieldDirective')]);
     portal.directive('multiinputField', [multiinputFieldDirective]);

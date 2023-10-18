@@ -64,10 +64,12 @@
 }
 //endregion
 
-//region two-fields-multiselect-dialog-view
+//# region two-fields-multiselect-dialog-view
+@toolbarHeight: 25px;
+
 .two-fields-multiselector-dialog {
 
-  md-toolbar {
+  /*md-toolbar {
     position: absolute;
     height: 29px;
     min-height: 29px;
@@ -78,6 +80,19 @@
       top: 5px;
       left: 10px;
     }
+  }*/
+  md-toolbar:not(.md-menu-toolbar) {
+    min-height: @toolbarHeight;
+    height: @toolbarHeight;
+  }
+
+  dialog-header .md-toolbar-tools:not(.md-menu-toolbar) {
+    min-height: @toolbarHeight;
+    height: @toolbarHeight;
+  }
+
+  .two-fields-area-h {
+    margin-top: 0;
   }
 
 }

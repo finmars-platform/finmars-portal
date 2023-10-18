@@ -5,6 +5,7 @@
 'use strict';
 
 import AutosaveLayoutService from "../../services/autosaveLayoutService";
+import evEvents from "../../services/entityViewerEvents";
 
 (function () {
 
@@ -343,6 +344,52 @@ import AutosaveLayoutService from "../../services/autosaveLayoutService";
                         parent: angular.element(document.body),
                         locals: {
                             entityId: actionData.object.id
+                        }
+                    };
+
+                    if (actionData.event) dialogOptions.targetEvent = actionData.event;
+
+                    $mdDialog.show(dialogOptions).then(function (res) {
+
+                        /* vm.entityViewerDataService.setActiveObjectAction(null);
+                        vm.entityViewerDataService.setActiveObjectActionData(null); */
+                        vm.entityViewerDataService.setRowsActionData(null);
+
+                        if (res.status === 'agree') {
+
+                            var objects = vm.entityViewerDataService.getObjects();
+
+                            objects.forEach(function (obj) {
+
+                                if (res.data.ids.indexOf(obj.id) !== -1) {
+
+                                    var parent = vm.entityViewerDataService.getData(obj.___parentId)
+
+                                    parent.results = parent.results.filter(function (resultItem) {
+                                        return res.data.ids.indexOf(resultItem.id) === -1
+                                    });
+
+                                    vm.entityViewerDataService.setData(parent)
+
+                                }
+
+                            });
+
+                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                        }
+                    });
+
+                    break;
+
+                case 'complex-transaction-import-scheme':
+
+                    dialogOptions = {
+                        controller: 'TransactionImportSchemeV2EditDialogController as vm',
+                        templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-v2-dialog-view.html',
+                        parent: angular.element(document.body),
+                        locals: {
+                            schemeId: actionData.object.id
                         }
                     };
 
