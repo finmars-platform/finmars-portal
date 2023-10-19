@@ -430,6 +430,12 @@
                 }
             })
 
+            .state('app.portal.celery-worker-page', {
+                url: '/workers',
+                templateUrl: 'views/pages/celery-worker-page-view.html',
+                controller: 'CeleryWorkerPageController as vm',
+            })
+
             .state('app.portal.tasks-page', {
                 url: '/tasks?date_from&date_to&query&page',
                 templateUrl: 'views/pages/tasks-page-view.html',

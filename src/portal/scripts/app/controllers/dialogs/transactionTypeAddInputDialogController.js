@@ -8,28 +8,42 @@
 
         var vm = this;
 
-        vm.name = ''
-        vm.valueType = data.valueType
-        vm.contentType = data.contentType
-        vm.fillFromContext = data.fillFromContext
-        vm.defaultValue = data.defaultValue
-        vm.relationItems = data.relationItems
-        vm.valueTypeOptions = data.valueTypeOptions
-        vm.contentTypeOptions = []
-        vm.textEventSignal = {}
-        vm.valueTypeSignal = {}
-        vm.contentTypeSignal = {}
-        vm.contextProperties = []
-        vm.defaultValuesItems = []
-        vm.valueExpression = null
-        vm.linkedInputsNames = []
+        vm.name = '';
+        vm.valueType = data.valueType;
+        vm.contentType = data.contentType;
+        vm.fillFromContext = data.fillFromContext;
+        vm.defaultValue = data.defaultValue;
+        vm.relationItems = data.relationItems;
+        vm.valueTypeOptions = data.valueTypeOptions;
+        vm.contentTypeOptions = [];
+        vm.textEventSignal = {};
+        vm.valueTypeSignal = {};
+        vm.contentTypeSignal = {};
+        vm.contextProperties = [];
+        vm.defaultValuesItems = [];
+        vm.valueExpression = null;
+        vm.linkedInputsNames = [];
 
-        vm.inputsForMultiselector = data.inputsForMultiselector
+        vm.inputsForMultiselector = data.inputsForMultiselector;
 
-        /*vm.expressionData = {
-            groups: [],
-            functions: [null]
-        };*/
+        const getLiOptsCheckboxes = function () {
+
+            if (vm.valueType === 120) {
+                return null;
+
+            } else {
+
+                return {
+                    selectedOptions: true,
+                };
+
+            }
+
+        }
+
+        vm.liOptsStrictOrder = true;
+        vm.liOptsCheckboxes = getLiOptsCheckboxes();
+
         vm.expressionData = data.expressionData;
 
         vm.onValueTypeChange = function () {
@@ -37,6 +51,9 @@
             vm.contentType = null
             vm.contentTypeSignal = {}
             vm.contentTypeOptions = []
+
+            vm.liOptsCheckboxes = getLiOptsCheckboxes();
+            vm.liOptsStrictOrder = vm.valueType !== 120;
 
             if (vm.valueType === 110) {
                 vm.contentTypeOptions = data.contentTypeOptions.selector
@@ -220,8 +237,7 @@
                     context_property: vm.fillFromContext,
                     value: vm.defaultValue,
                     value_expr: vm.valueExpression,
-                    linked_inputs_names: vm.linkedInputsNames
-
+                    linked_inputs_names: vm.linkedInputsNames,
                 };
 
                 $mdDialog.hide({status: 'agree', data: responseData});

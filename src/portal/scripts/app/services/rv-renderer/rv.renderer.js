@@ -20,13 +20,15 @@
         const rvSettings = globalDataService.getMemberEntityViewersSettings(true, entityType);
         const markedReportRows = rvSettings.marked_rows;
 
+        // console.log('getHTML.items', JSON.parse(JSON.stringify(items)));
+
         for (var i = 0; i < items.length; i = i + 1) {
 
             item = items[i];
 
-            if (item.___type === 'placeholder_group' || item.___type === 'placeholder_object') {
-                rows.push('<div class="placeholder-row"></div>')
-            }
+            // if (item.___type === 'placeholder_group' || item.___type === 'placeholder_object') {
+            //     rows.push('<div class="placeholder-row"></div>')
+            // }
 
             if (item.___type === 'blankline') {
                 rows.push(blanlineRender.render(evDataService, item))

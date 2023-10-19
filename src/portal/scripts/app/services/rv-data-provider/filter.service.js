@@ -65,7 +65,7 @@
 
         var match;
 
-        console.log('filterTableRows.regularFilters', regularFilters)
+        // console.log('filterTableRows.regularFilters', regularFilters)
 
         return items.filter(function (item, tableRowIndex) {
 

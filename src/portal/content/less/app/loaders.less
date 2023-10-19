@@ -230,3 +230,34 @@ progress-linear {
   }
 
 }
+
+
+//.inline-progress-dots
+
+.inline-progress-dots,
+.inline-progress-dots::before,
+.inline-progress-dots::after {
+  position: relative;
+  width: 5px;
+  height: 5px;
+  background: transparent;
+  border-radius: 50%;
+  animation: bgChange 1.2s linear infinite;
+  animation-delay: .3s;
+}
+.inline-progress-dots::before,
+.inline-progress-dots::after {
+  content: "";
+  position: absolute;
+  left: -10px;
+  animation-delay: 0s;
+}
+.inline-progress-dots::after {
+  left: 10px;
+  animation-delay: .6s;
+}
+
+// Animation
+@keyframes bgChange {
+  0% { background: #363636;}
+}

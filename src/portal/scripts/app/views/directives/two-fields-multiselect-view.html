@@ -1,19 +1,24 @@
-<div class="multiselector-input-container">
+<div class="multiselector-input-container multiselectorInputContainer"
+     data-ng-class="{
+        'disabled': isDisabled,
+        'custom-input-focused': dropdownMenuShown
+     }">
 
     <div ng-if="selectedItemsIndication !== 'chips'">
         <md-input-container class="two-fields-multiselect-input"
                             data-ng-click="handleClick($event)">
             <label data-ng-bind="title"
-                   class="cursor-pointer"></label>
+                   data-ng-class="{'cursor-pointer': !isDisabled}"></label>
             <input type="text"
                    data-ng-model="inputText"
-                   class="cursor-pointer"
+                   data-ng-class="{'cursor-pointer': !isDisabled}"
+                   data-ng-disabled="isDisabled"
                    readonly>
         </md-input-container>
 
         <md-tooltip data-ng-if="model && model.length > 0 && tooltipText"
                     class="tooltip_1 f-s-15"
-                    md-direction="top"
+                    data-md-direction="top"
                     data-ng-bind="tooltipText"></md-tooltip>
     </div>
 
@@ -35,8 +40,7 @@
                                 <button data-ng-if="!noIndicatorBtn"
                                         class="custom-input-indicator-btn"
                                         data-ng-click="openMultiselectorDialog($event)"
-                                        data-ng-disabled="isReadonly"
-                                        ng-disabled="isDisabled">
+                                        data-ng-disabled="isDisabled">
                                     <span class="material-icons">menu</span>
                                 </button>
                             </div>
@@ -46,14 +50,15 @@
 
                                 <span ng-show="!chipsList.length" ng-bind="nothingSelectedText"></span>
 
-                                <chips-list ng-show="chipsList.length"
-                                            chips-list="chipsList"
-                                            event-service="chipsListEventService"
-                                            chips-deletion="true"
-                                            on-chips-deletion="onChipsDeletion(chipsData)"
-                                            order-chips="{{chipsOrderSettings}}"
-                                            dropdown-menu-options="dropdownMenuOptions"
-                                            chips-container-width="chipsContainerWidth"></chips-list>
+                                <chips-list data-ng-show="chipsList.length"
+                                            data-chips-list="chipsList"
+                                            data-event-service="chipsListEventService"
+                                            data-chips-deletion="true"
+                                            data-on-chips-deletion="onChipsDeletion(chipsData)"
+                                            data-order-chips="{{chipsOrderSettings}}"
+                                            data-is-disabled="isDisabled"
+                                            data-dropdown-menu-options="dropdownMenuOptions"
+                                            data-chips-container-width="chipsContainerWidth"></chips-list>
 
                             </div>
 

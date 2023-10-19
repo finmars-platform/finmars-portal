@@ -114,7 +114,6 @@
         }
 
 
-
     };
     /** @module entityViewerDataService */
     module.exports = function (reportHelper) {
@@ -193,7 +192,8 @@
             },
             warnAboutLayoutChangesLoss: true,
             isNewLayout: false, // does layout exist on server,
-            autoRefreshState: true
+            autoRefreshState: true,
+            ignoreLoadedDataMethods: {},
         };
 
         var dashboardData = {
@@ -220,7 +220,7 @@
 
         /**
          *
-         * @param {=Object} interfaceLayout
+         * @param {Object} [interfaceLayout]
          * @returns {Object} - interface layout with only properties that user changes
          * @memberOf module:entityViewerDataService
          */
@@ -465,6 +465,15 @@
         }
 
         function setReportOptions(options) {
+
+
+            // if (options.report_instance_id) {
+            //     console.log("setReportOptions.report_instance_id is set %", options.report_instance_id);
+            // } else {
+            //     console.log("setReportOptions.report_instance_id is cleared");
+            //     console.trace();
+            // }
+
             data.reportOptions = options;
         }
 
@@ -650,21 +659,23 @@
 
             // console.log('setData.obj', obj);
 
-            if (data.data[obj.___parentId] && data.data[obj.___parentId].results && data.data[obj.___parentId].results.length) {
+            data.data[obj.___id] = obj;
 
-                data.data[obj.___parentId].results = data.data[obj.___parentId].results.map(function (item, index) {
-
-                    if (item.___id === obj.___id) {
-                        item = obj;
-                    }
-
-                    return item
-
-                })
-
-            } else {
-                throw Error('Trying to set not existing object')
-            }
+            // if (data.data[obj.___parentId] && data.data[obj.___parentId].results && data.data[obj.___parentId].results.length) {
+            //
+            //     data.data[obj.___parentId].results = data.data[obj.___parentId].results.map(function (item, index) {
+            //
+            //         if (item.___id === obj.___id) {
+            //             item = obj;
+            //         }
+            //
+            //         return item
+            //
+            //     })
+            //
+            // } else {
+            //     throw Error('Trying to set not existing object')
+            // }
 
         }
 
@@ -691,19 +702,27 @@
 
         function getObjects() {
 
-            var groups = getDataAsList();
+            var dataAtList = getDataAsList();
 
-            var result = [];
+            var result = []
 
-            groups.forEach(function (group) {
+            result = dataAtList.filter(function (item) {
+                return item.___type === 'object';
+            })
 
-                group.results.forEach(function (item) {
-
-                    result.push(item)
-
-                });
-
-            });
+            // var groups = getDataAsList();
+            //
+            // var result = [];
+            //
+            // groups.forEach(function (group) {
+            //
+            //     group.results.forEach(function (item) {
+            //
+            //         result.push(item)
+            //
+            //     });
+            //
+            // });
 
             return result;
 
@@ -744,6 +763,40 @@
 
             return result;
 
+        }
+
+        function  resetOnlyItems() {
+
+            var list = getDataAsList()
+
+            list.forEach(function (item) {
+                if (item.___type === 'object') {
+                    delete data.data[item.___id]
+                }
+            })
+
+        }
+
+        function resetOnlyGroups() {
+
+            var list = getDataAsList()
+
+            list.forEach(function (item) {
+                if (item.___type === 'group' && item.___parentId != null) { // except root group
+                    delete data.data[item.___id]
+                }
+            })
+
+        }
+
+        function resetObjectsOfGroup(groupId) {
+            var list = getDataAsList();
+
+            list.forEach(function (item) {
+                if (item.___type === 'object' && item.___parentId === groupId) { // except root group
+                    delete data.data[item.___id];
+                }
+            })
         }
 
         function resetData() {
@@ -798,6 +851,16 @@
 
         }
 
+        function isRequestParametersExist(id) {
+
+            if (data.requestParameters[id]) {
+                return true;
+            }
+
+            return false
+
+        }
+
         function getRequestParameters(id) {
 
             if (data.requestParameters[id]) {
@@ -815,9 +878,9 @@
                         id: id,
                         groups_level: 1, // 0 is for root
                         event: {
-                            ___id: null,
-                            groupName: null,
-                            groupId: null,
+                            ___id: id,
+                            groupName: 'root',  // seems its ___group_name
+                            groupId: 'root', // seems its ___group_identifier
                             parentGroupId: null
                         },
                         body: {
@@ -889,12 +952,16 @@
 
             resetData();
             resetRequestParameters();
+            data.flatList = [];
+            data.projection = [];
 
             var rootGroup = getRootGroupData();
 
             setActiveRequestParametersId(rootGroup.___id);
 
             if (!isReport) setSelectedGroups([]);
+
+            console.log('resetTableContent.data', data);
 
         }
 
@@ -1324,9 +1391,24 @@
                     }
                 }
 
+                listLayout.data.grouping = listLayout.data.grouping.map( groupType => {
+
+                    if (!groupType.report_settings) {
+                        groupType.report_settings = {};
+                    }
+
+                    if (typeof groupType.report_settings.is_level_folded !== 'boolean') {
+                        groupType.report_settings.is_level_folded = true;
+                    }
+
+                    return groupType;
+
+                })
+
                 listLayout.data.filters = emptyUseFromAboveFilters(listLayout.data.filters);
 
-            } else {
+            }
+            else {
 
                 setPagination(listLayout.data.pagination);
 
@@ -1859,6 +1941,9 @@
             getGroup: getGroup,
             setData: setData,
             setAllData: setAllData,
+            resetOnlyItems: resetOnlyItems,
+            resetObjectsOfGroup: resetObjectsOfGroup,
+            resetOnlyGroups: resetOnlyGroups,
             resetData: resetData,
             getData: getData,
             getDataAsList: getDataAsList,
@@ -1873,6 +1958,7 @@
             setLastClickInfo: setLastClickInfo,
             getLastClickInfo: getLastClickInfo,
 
+            isRequestParametersExist: isRequestParametersExist,
             setRequestParameters: setRequestParameters,
             getRequestParameters: getRequestParameters,
             getRequestParametersAsList: getRequestParametersAsList,

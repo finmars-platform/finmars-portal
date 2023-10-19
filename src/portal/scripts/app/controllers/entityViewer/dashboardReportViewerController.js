@@ -1,6 +1,8 @@
 /**
  * Created by szhitenev on 05.05.2016.
  */
+import localStorageService from "../../../../../shell/scripts/app/services/localStorageService";
+
 (function () {
 
     'use strict';
@@ -415,9 +417,11 @@
 
                     reportOptions[property] = [componentOutput.data.value]
 
-                } else if (['report_currency', 'pricing_policy'].includes(property) &&
+                } else if (
+                    ['report_currency', 'pricing_policy'].includes(property) &&
                     Array.isArray((componentOutput.data.value)) &&
-                    componentOutput.data.value.length) {
+                    componentOutput.data.value.length
+                ) {
 
                     reportOptions[property] = componentOutput.data.value[0]
 
@@ -898,9 +902,7 @@
                 Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (property) {
 
                     var componentId = vm.componentData.settings.linked_components.report_settings[property];
-
                     var componentOutput = vm.dashboardDataService.getComponentOutputOld(componentId);
-                    console.log('updateReportSettingsUsingDashboardData.componentOutput', property, componentOutput)
 
                     if (componentOutput && componentOutput.data) {
 
@@ -922,9 +924,7 @@
                                 ['report_currency', 'pricing_policy'].includes(property) &&
                                 Array.isArray((componentOutput.data.value))
                             ) {
-                                if (vm.componentData.name === "BALANCE_TYPES") {
-                                    console.log("rv matrix report_currency", property, componentOutput.data.value[0]);
-                                }
+
                                 reportOptions[property] = componentOutput.data.value[0];
 
                             } else {
@@ -1706,6 +1706,44 @@
 
         };
 
+        vm.closeGroupsAndContinueReportGeneration = function () {
+
+            var localStorageReportData = localStorageService.getReportData();
+
+            var layout = vm.entityViewerDataService.getListLayout();
+            var contentType = vm.entityViewerDataService.getContentType();
+
+            delete localStorageReportData[contentType][layout.user_code]
+
+            var groups = vm.entityViewerDataService.getGroups();
+
+            groups.forEach(function (group) {
+
+                if (!group.report_settings) {
+                    group.report_settings = {}
+                }
+
+                group.report_settings.is_level_folded = true;
+
+            })
+
+            vm.entityViewerDataService.setGroups(groups);
+
+            localStorageService.cacheReportData(localStorageReportData);
+
+            vm.possibleToRequestReport = true;
+
+            rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+
+        }
+
+        vm.continueReportGeneration = function () {
+
+            vm.possibleToRequestReport = true;
+
+            rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+        }
+
         vm.initDashboardExchange = function () { // initialize only for components that are not in filled in mode
 
             // vm.oldEventExchanges()
@@ -1759,7 +1797,7 @@
 
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_CHANGE, function () {
 
-                // add linked to filter from dashboard component
+                //# region Add linked filters from dashboard component settings to report viewer
                 if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
 
                     vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
@@ -1769,7 +1807,7 @@
                     });
 
                 }
-                // < add linked to filter from dashboard component >
+                //# endregion
 
                 if (vm.componentData.settings.auto_refresh) {
                     updateReportSettingsUsingDashboardData();
@@ -1895,6 +1933,7 @@
             contentType = $scope.$parent.vm.contentType;
 
             vm.componentData = $scope.$parent.vm.componentData;
+
             vm.userSettings = vm.componentData.user_settings;
             vm.dashboardComponentElement = $scope.$parent.vm.componentElement;
 
@@ -1903,9 +1942,11 @@
             vm.dashboardComponentDataService = $scope.$parent.vm.dashboardComponentDataService;
             vm.dashboardComponentEventService = $scope.$parent.vm.dashboardComponentEventService;
 
-            if ((vm.componentData.type === 'report_viewer' ||
-                    vm.componentData.type === 'report_viewer_split_panel') &&
-                vm.userSettings) {
+            if (
+                (vm.componentData.type === 'report_viewer' ||
+                 vm.componentData.type === 'report_viewer_split_panel') &&
+                 vm.userSettings
+            ) {
                 // Set attributes available for columns addition
                 if (vm.userSettings.manage_columns && vm.userSettings.manage_columns.length > 0) {
                     vm.attributeDataService.setAttributesAvailableForColumns(vm.userSettings.manage_columns);

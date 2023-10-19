@@ -544,12 +544,29 @@ md-checkbox.g-filter-options-checkbox {
 .entity-viewer-holder {
 
   .g-filters .icon-buttons {
-    flex: 0 0 201px;
+    display: flex;
+    justify-content: flex-end;
+    flex: 0 0 252px;
     /* display: flex;
         justify-content: flex-end;
         flex: 0 0 191px; */
-    & > div {
-      width: 201px;
+    //& > div {
+    //  width: 252px;
+    //}
+
+    .refresh-button-with-progress {
+      display: flex;
+      justify-content: end;
+      width: 60px;
+      align-items: center;
+
+      .md-button {
+        min-width: 60px;
+      }
+
+      progress-circular {
+        margin-right: 8px;
+      }
     }
   }
 
@@ -578,13 +595,40 @@ md-checkbox.g-filter-options-checkbox {
   }
 
   .g-filters .icon-buttons {
+
+    display: flex;
+    justify-content: flex-end;
     flex: 0 0 252px;
     /* display: flex;
         justify-content: flex-end;
         flex: 0 0 191px; */
-    & > div {
-      width: 252px;
+    //& > div {
+    //  width: 252px;
+    //}
+
+    .refresh-button-with-progress {
+      display: flex;
+      justify-content: end;
+      width: 60px;
+
+      align-items: center;
+
+      .md-button {
+        min-width: 60px;
+      }
+
+      progress-circular {
+        margin-right: 8px;
+      }
     }
+
+    //flex: 0 0 252px;
+    ///* display: flex;
+    //    justify-content: flex-end;
+    //    flex: 0 0 191px; */
+    //& > div {
+    //  width: 252px;
+    //}
   }
 
 }

@@ -31,13 +31,50 @@ export default function (cookieService, xhrService) {
         return reportRepository.getPerformanceReport(options);
     };
 
+    var getBackendBalanceReportGroups = function (options) {
+        return reportRepository.getBackendBalanceReportGroups(options);
+    };
+
+    var getBackendBalanceReportItems = function (options) {
+        return reportRepository.getBackendBalanceReportItems(options);
+    };
+
+
+    var getBackendPnlReportGroups = function (options) {
+        return reportRepository.getBackendPnlReportGroups(options);
+    };
+
+    var getBackendPnlReportItems = function (options) {
+        return reportRepository.getBackendPnlReportItems(options);
+    };
+
+    var getBackendTransactionReportGroups = function (options) {
+        return reportRepository.getBackendTransactionReportGroups(options);
+    };
+
+    var getBackendTransactionReportItems = function (options) {
+        return reportRepository.getBackendTransactionReportItems(options);
+    };
+
     return {
         getList: getList,
         getBalanceReport: getBalanceReport,
         getPnlReport: getPnlReport,
         getCashFlowProjectionReport: getCashFlowProjectionReport,
         getTransactionReport: getTransactionReport,
-        getPerformanceReport: getPerformanceReport
+        getPerformanceReport: getPerformanceReport,
+
+
+
+        getBackendBalanceReportGroups: getBackendBalanceReportGroups,
+        getBackendBalanceReportItems: getBackendBalanceReportItems,
+
+        getBackendPnlReportGroups: getBackendPnlReportGroups,
+        getBackendPnlReportItems: getBackendPnlReportItems,
+
+        getBackendTransactionReportGroups: getBackendTransactionReportGroups,
+        getBackendTransactionReportItems: getBackendTransactionReportItems
+
     };
 
 };

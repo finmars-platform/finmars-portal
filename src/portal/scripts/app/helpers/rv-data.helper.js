@@ -34,7 +34,17 @@
 
         if (item.___level === level) {
 
-            item.subtotal = rvSubtotalHelper.calculate(item.results, columns);
+            var dataList = evDataService.getDataAsList();
+
+            var items = []
+
+            dataList.forEach(function (item) {
+              if (item.___parentId == item.___id) {
+                  items.push(item)
+              }
+            })
+
+            item.subtotal = rvSubtotalHelper.calculate(items, columns);
 
             evDataService.setData(item);
 
@@ -85,6 +95,25 @@
 
     };
 
+    var calculateGrandTotal= function (evDataService) {
+
+        var dataList = evDataService.getDataAsList();
+
+        var groups = evDataService.getGroups();
+        var level = groups.length;
+
+        // console.log('calculateSubtotals.level', level);
+
+        dataList.forEach(function (item) {
+
+            if (item.___level === 0) {
+                calculateItemSubtotal(item, evDataService);
+            }
+
+        });
+
+    };
+
     var insertSubtotalFns = {
         'line': function (subtotalObj, item) {
 
@@ -129,9 +158,6 @@
 
         var dataList = [];
         var groups = evDataService.getGroups();
-        /* var rootGroupOptions = evDataService.getRootGroupOptions();
-        var reportOptions = evDataService.getReportOptions();
-        var subtotalsOpts = reportOptions.subtotals_options; */
 
         Object.keys(data).forEach(function (key) {
             dataList.push(data[key])
@@ -156,171 +182,34 @@
             dataList[0].results.unshift(subtotalObj);
 
         }
-        // < insert Grand total >
-
-        /* if (subtotalsOpts) {
-
-			// subtotals are on
-        	if (subtotalsOpts.type) {
-
-        		var insertSubtotal = insertSubtotalFns[subtotalsOpts.type];
-
-        		dataList.forEach(function (item) {
-
-        			if (item.results.length && item.___group_name !== "root" && item.___level <= groups.length) { // insert subtotals for groups but not for root group
-
-        				subtotalObj = Object.assign({}, item.subtotal, {
-							___group_name: item.___group_name,
-							___type: 'subtotal',
-							___parentId: item.___id,
-							___level: item.___level + 1
-						});
-
-						insertSubtotal(subtotalObj, item);
-
-					}
-
-				});
-
-			}
-			// < subtotals are on >
-
-		} */
 
         dataList.forEach(function (item) {
 
-            if (item.results.length) {
-
-                groups.forEach(function (group, index) {
-
-                    if (item.___level === index + 1 && item.___level <= groups.length &&
-                        group.report_settings.subtotal_type) {
-
-                        subtotalObj = Object.assign({}, item.subtotal, {
-                            ___group_identifier: item.___group_identifier,
-                            ___group_name: item.___group_name,
-                            ___type: 'subtotal',
-                            ___parentId: item.___id,
-                            ___level: item.___level + 1
-                        });
-
-                        var insertSubtotal = insertSubtotalFns[group.report_settings.subtotal_type];
-                        insertSubtotal(subtotalObj, item);
-
-                    }
-
-                });
-
+            if (!item.results) {
+                item.results = [];
             }
 
-        });
+            groups.forEach(function (group, index) {
 
-        /* dataList.forEach(function (item) {
-
-            if (item.results.length) {
-
-                 if (item.___level === 0 && rootGroupOptions.subtotal_type) { // Now Grand total always on top
+                if (item.___level === index + 1 && item.___level <= groups.length &&
+                    group.report_settings.subtotal_type) {
 
                     subtotalObj = Object.assign({}, item.subtotal, {
+                        ___group_identifier: item.___group_identifier,
                         ___group_name: item.___group_name,
                         ___type: 'subtotal',
                         ___parentId: item.___id,
-                        ___level: 0
+                        ___level: item.___level + 1
                     });
 
-                    switch (rootGroupOptions.subtotal_type) {
-                        case "line":
-                            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-                            subtotalObj.___subtotal_type = 'line';
-                            item.results.unshift(subtotalObj);
-                            break;
-                        case "area":
-                            subtotalObj.___subtotal_type = 'area';
-                            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-                            item.results.push(subtotalObj);
-                            break;
-                        case "arealine":
-                            subtotalObj.___subtotal_type = 'arealine';
-
-                            subtotalObj.___subtotal_subtype = 'line';
-                            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-                            item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
-
-                            subtotalObj.___subtotal_subtype = 'area';
-                            subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-                            item.results.push(subtotalObj);
-                            break;
-                    }
+                    var insertSubtotal = insertSubtotalFns[group.report_settings.subtotal_type];
+                    insertSubtotal(subtotalObj, item);
 
                 }
 
-                else {
+            });
 
-                    groups.forEach(function (group, index) {
-
-                        if (item.___level === index + 1 && item.___level <= groups.length) {
-
-                            subtotalObj = Object.assign({}, item.subtotal, {
-                                ___group_name: item.___group_name,
-                                ___type: 'subtotal',
-                                ___parentId: item.___id,
-                                ___level: item.___level + 1
-                            });
-
-                            if (group.report_settings.subtotal_type === 'line') {
-
-                                subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-                                subtotalObj.___subtotal_type = 'line';
-
-                                item.results.unshift(subtotalObj);
-
-                            }
-
-                            if (group.report_settings.subtotal_type === 'area') {
-
-                                subtotalObj.___subtotal_type = 'proxyline';
-                                subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-
-                                item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
-
-
-                                subtotalObj.___subtotal_type = 'area';
-                                subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-
-
-                                item.results.push(subtotalObj);
-
-                            }
-
-                            if (group.report_settings.subtotal_type === 'arealine') {
-
-                                subtotalObj.___subtotal_type = 'arealine';
-
-
-                                subtotalObj.___subtotal_subtype = 'line';
-                                subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-
-                                item.results.unshift(JSON.parse(JSON.stringify(subtotalObj)));
-
-
-                                subtotalObj.___subtotal_subtype = 'area';
-                                subtotalObj.___id = evRvCommonHelper.getId(subtotalObj);
-
-                                item.results.push(subtotalObj);
-
-
-                            }
-
-
-                        }
-
-                    })
-
-                }
-
-            }
-
-        }); */
+        });
 
         return data;
 
@@ -743,11 +632,13 @@
 
         if (groups.length || rootGroupOptions.subtotal_type) {
 
-            console.time("Calculating subtotals");
+            // console.time("Calculating subtotals");
+            //
+            // calculateSubtotals(evDataService);
+            //
+            // console.timeEnd("Calculating subtotals");
 
-            calculateSubtotals(evDataService);
-
-            console.timeEnd("Calculating subtotals");
+            calculateGrandTotal(evDataService);
 
             console.time("Copying data");
 
@@ -837,11 +728,11 @@
 
         if (groups.length || rootGroupOptions.subtotal_type) {
 
-            console.time("Calculating subtotals");
+            // console.time("Calculating subtotals");
 
-            calculateSubtotals(evDataService);
+            // calculateSubtotals(evDataService);
 
-            console.timeEnd("Calculating subtotals");
+            // console.timeEnd("Calculating subtotals");
 
             console.time("Copying data");
 
@@ -1059,7 +950,7 @@
 
             groupSettings = {
                 full_path: full_path,
-                is_open: true
+                is_open: false // why open by default? should be closed
             }
 
             reportData[contentType][layout.user_code]['groups'][full_path_prop] = groupSettings;

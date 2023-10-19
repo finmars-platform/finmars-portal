@@ -84,6 +84,13 @@
 
 					clearTimeout(onChangeIndex);
 
+                    if (scope.onChangeCallback) {
+                        setTimeout(function () {
+                            // in separate setTimeout to run as soon as possible
+                            scope.onChangeCallback();
+                        }, 0);
+                    }
+
 					onChangeIndex = setTimeout(function () {
 
 						stylePreset = '';
@@ -102,15 +109,7 @@
 
 						scope.$apply();
 
-						if (scope.onChangeCallback) scope.onChangeCallback();
-
 					}, 500);
-
-                    /* if (scope.onChangeCallback) {
-                        setTimeout(function () {
-                            scope.onChangeCallback();
-                        }, 0);
-                    } */
 
                 };
 

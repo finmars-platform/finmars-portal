@@ -393,7 +393,7 @@
 
         var value = obj[column.key];
 
-        if (value === '#Error') {
+        if (value === 'No Data') {
             return value;
         }
 

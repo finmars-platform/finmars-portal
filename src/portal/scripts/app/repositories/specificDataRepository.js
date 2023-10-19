@@ -1,13 +1,10 @@
 /**
  * Created by szhitenev on 22.12.2020.
  */
-(function () {
 
-	'use strict';
+import baseUrlService from "../services/baseUrlService";
 
-	var cookieService = require('../../../../core/services/cookieService');
-	var xhrService = require('../../../../core/services/xhrService');
-	var baseUrlService = require('../services/baseUrlService');
+export default function (cookieService, xhrService) {
 
 	var baseUrl = baseUrlService.resolve();
 
@@ -29,10 +26,8 @@
 			})
 	};
 
-	module.exports = {
-
+	return {
 		getValuesForSelect: getValuesForSelect,
+	};
 
-	}
-
-}());
+};

@@ -2,11 +2,15 @@
  * Report Viewer Data Provider Groups Service.
  * @module ReportViewerDataProviderGroupsService
  */
+import rvSubtotalHelper from "../../helpers/rv-subtotal.service";
+import evRvCommonHelper from "../../helpers/ev-rv-common.helper";
+import queryParamsHelper from "../../helpers/queryParamsHelper";
 
-(function () {
+var filterService = require('./filter.service');
+var sortService = require('./sort.service');
 
-    var filterService = require('./filter.service');
-    var sortService = require('./sort.service');
+export default function (entityResolverService) {
+
 
     /**
      * Check if group already exists
@@ -92,27 +96,6 @@
                 resultGroup.___group_name = item_value.toString();
 
 
-
-                // if (groupType.key === 'complex_transaction.is_canceled') {
-                //
-                //     if (item_value) {
-                //         resultGroup.___group_name = 'Canceled'
-                //     } else {
-                //         resultGroup.___group_name = 'Not Canceled'
-                //     }
-                //
-                // }
-                //
-                // if (groupType.key === 'complex_transaction.is_locked') {
-                //
-                //     if (item_value) {
-                //         resultGroup.___group_name = 'Locked'
-                //     } else {
-                //         resultGroup.___group_name = 'Unlocked'
-                //     }
-                //
-                // }
-
                 if (groupType.key === 'complex_transaction.status') {
 
                     if (item_value === 1) {
@@ -141,22 +124,31 @@
 
         });
 
-        console.log('result',result);
+        console.log('result', result);
 
         return result;
 
     };
 
+    var calculateSubtotals = function (groups, items, columns) {
 
-    /**
-     * Get list of groups
-     * @param {string} entityType - string value of entity name (e.g. instrument-type)
-     * @param {object} options - set of specific options
-     * @param {object} entityViewerDataService - global data service
-     * @return {boolean} return list of groups
-     * @memberof module:ReportViewerDataProviderGroupsService
-     */
-    var getList = function (entityType, options, entityViewerDataService) {
+        groups.forEach(function (group) {
+
+            var groupItems = items.filter(function (item) {
+
+                return item[group.___group_type_key] === group.___group_identifier
+
+            })
+
+            group.subtotal = rvSubtotalHelper.calculate(groupItems, columns);
+
+        })
+
+        return groups
+
+    }
+
+    var getFrontendList = function (entityType, options, entityViewerDataService) {
 
         return new Promise(function (resolve, reject) {
 
@@ -228,6 +220,10 @@
                                     groups = sortService.sortItems(groups, '___group_name');
                                 }*/
 
+                var columns = entityViewerDataService.getColumns();
+
+                groups = calculateSubtotals(groups, items, columns)
+
                 result.count = groups.length;
                 result.results = groups;
 
@@ -237,16 +233,109 @@
             }
 
 
-            // console.log('get groups', JSON.parse(JSON.stringify(result)));
+            // console.log('get_groups_with_subtotal', JSON.parse(JSON.stringify(result)));
 
             resolve(result)
 
         });
 
-    };
-
-    module.exports = {
-        getList: getList
     }
 
-}());
+    var getBackendList = function (options, entityViewerDataService) {
+
+        console.log("getBackendList options!", options)
+
+        var entityType = entityViewerDataService.getEntityType();
+        var reportOptions = entityViewerDataService.getReportOptions();
+
+        console.log("getBackendList!", reportOptions)
+        var globalTableSearch = entityViewerDataService.getGlobalTableSearch();
+
+        reportOptions.filters = entityViewerDataService.getFilters(); // for transaction report only
+
+        reportOptions.frontend_request_options = options
+        reportOptions.frontend_request_options['columns'] = entityViewerDataService.getColumns()
+        reportOptions.frontend_request_options['globalTableSearch'] = globalTableSearch
+
+        if (!reportOptions.frontend_request_options['filter_settings']) {
+
+            var filters = entityViewerDataService.getFilters();
+
+            reportOptions.frontend_request_options['filter_settings'] = []
+
+                filters.forEach(function (item) {
+
+                if (evRvCommonHelper.isFilterValid(item)) {
+
+                    var key = queryParamsHelper.entityPluralToSingular(item.key);
+
+                    var filterSettings = {
+                        key: key,
+                        filter_type: item.options.filter_type,
+                        exclude_empty_cells: item.options.exclude_empty_cells,
+                        value_type: item.value_type,
+                        value: item.options.filter_values
+                    };
+
+                    reportOptions.frontend_request_options['filter_settings'].push(filterSettings);
+
+                }
+
+            });
+
+
+
+        }
+
+        return new Promise(function (resolve, reject) {
+
+            entityResolverService.getListReportGroups(entityType, reportOptions).then(function (data) {
+
+                // Important, needs to optimize backend reports
+                // report_instance_id is saved report, so no need to recalcualte whole report
+                // just regroup or refilter
+                // to reset report_instance_id, just set it to null
+                reportOptions.report_instance_id = data.report_instance_id;
+                entityViewerDataService.setReportOptions(reportOptions);
+
+                var result = {
+                    next: null,
+                    previous: null,
+                    count: data.items.length,
+                    results: data.items
+                };
+
+                resolve(result);
+
+            })
+                .catch( function (error) { reject(error); } );
+        });
+
+    }
+
+    /**
+     * Get list of groups
+     * @param {string} entityType - string value of entity name (e.g. instrument-type)
+     * @param {object} options - set of specific options
+     * @param {object} entityViewerDataService - global data service
+     * @return {boolean} return list of groups
+     * @memberof module:ReportViewerDataProviderGroupsService
+     */
+    var getList = function (options, entityViewerDataService) {
+
+        return getBackendList(options, entityViewerDataService)
+
+        // Frontend is deprecated since 2023-09-10
+        // if (window.location.href.indexOf('v2=true') !== -1) {
+        //     return getBackendList(entityType, options, entityViewerDataService)
+        // } else {
+        //     return getFrontendList(entityType, options, entityViewerDataService)
+        // }
+
+    };
+
+    return {
+        getList: getList,
+    }
+
+}

@@ -65,66 +65,96 @@
         // console.log('total_pages', total_pages);
         // console.log('page', page);
 
-        var classes = 'g-row g-control-row';
-
-        var rowSelection = '<div class="g-row-selection border-right-transparent border-bottom-transparent"></div>';
-        var rowSettings = '<div class="g-row-settings g-row-settings-table border-right-transparent border-bottom-transparent gRowSettings"></div>';
+        // var classes = 'g-row g-control-row';
 
         var offsetTop = obj.___flat_list_offset_top_index * rowHeight;
 
-        var result = '<div class="' + classes + '" style="top: '+ offsetTop + 'px"  data-type="control" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
-
-        result = result + rowSelection + rowSettings;
-
-		result = result + '<div class="control-placeholder" style="width: ' + contentWidth + 'px;"></div>';
-
-		var content = '<div class="control-content">';
+        //# region Content of a .g-row.g-control-row
 
 		var flatList = evDataService.getFlatList();
 		var parentGroup = evDataService.getGroup(obj.___parentId);
 
 		var visibleItemsCount = flatList.length - 1; // "-1" because control at the end does not count
-		// var itemsTotal = '';
 		// var resultText = '(' + visibleItemsCount + ' of ' + parentGroup.___items_count + ' / ' + itemsTotal + ' total)';
-		var resultText = '(' + visibleItemsCount + ' of ' + parentGroup.___items_count + ')';
+		// var resultText = `(${ visibleItemsCount } of ${ parentGroup.___items_count })`;
 
 		// result = result + '<span class="display-inline-block m-0" style="padding-top: 6px; padding-left: 15px; color: #868686;">' + resultText + '</span>';
-		content = content + '<span class="display-inline-block m-0" style="padding-top: 6px; padding-left: 15px; color: #868686;">' + resultText + '</span>';
+		var content = `<div class="control-content">
+                                <span class="display-inline-block m-0"
+                                      style="padding-left: 15px; color: #868686;">
+                                    
+                                    (${ visibleItemsCount } of ${ parentGroup.___items_count })
+                                    
+                                </span>`;
 
         if (canLoadMore) {
 
-            /* result = result + '<button class="control-button load-more" data-type="control" data-ev-control-action="load-more" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '" >Load more</button>';
-            result = result + '<button class="control-button load-all" data-type="control" data-ev-control-action="load-all" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '" > Load all</button>';
+			content = content +
+                `<div class="control-loader-holder
+                             progress-holder
+                             progress-size-20
+                             display-none
+                             controlLoader">
 
-            if (obj.___errorMessage ) {
-                result = result + '<div class="control-error-message">' + obj.___errorMessage + '</div>'
-            } */
-			content = content + '<button class="control-button load-more" data-type="control" data-ev-control-action="load-more" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '" >Load more</button>';
-			content = content + '<button class="control-button load-all" data-type="control" data-ev-control-action="load-all" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '" > Load all</button>';
+                    <img src="portal/content/img/sphere.png" alt="">
+                
+                    <div class="progress
+                                progress-circular
+                                front-line-default
+                                back-line-default"
+
+                         style="border-top-color: #F05A22; border-right-color: #F05A22"
+                    ></div>
+                
+                </div>
+                
+                <button class="control-button load-more controlBtn"
+                        data-type="control"
+                        data-ev-control-action="load-more"
+                        data-object-id="${obj.___id}"
+                        data-parent-group-hash-id="${obj.___parentId}">
+                           Load more
+                </button>
+
+                <button class="control-button load-all controlBtn"
+                        data-type="control"
+                        data-ev-control-action="load-all"
+                        data-object-id="${obj.___id}"
+                        data-parent-group-hash-id="${obj.___parentId}">
+                           Load all
+                </button>`;
 
 			if (obj.___errorMessage ) {
-				content = content + '<div class="control-error-message">' + obj.___errorMessage + '</div>'
+				content = content + `<div class="control-error-message">${obj.___errorMessage}</div>`
 			}
 
         }
-        /* else {
 
-            if (!prevObj || obj.___parentId === prevObj.___id) {
+		content = content + '</div>'; // closing <div class="control-content">
+        //# endregion
 
-                result = result + '<p class="m-0" style="padding-top: 7px; padding-left: 58px; color: #868686;">No items subject to the Filters</p>';
+        return `<div class="g-row g-control-row gControlRow"
+                     style="${ 'top:' + offsetTop + 'px' }"
+                     data-type="control"
+                     data-object-id="${obj.___id}"
+                     data-parent-group-hash-id="${obj.___parentId}">
+                        
+                        <div class="g-row-selection
+                                    border-right-transparent
+                                    border-bottom-transparent"></div>
+                        
+                        <div class="g-row-settings
+                                    g-row-settings-table
+                                    border-right-transparent
+                                    border-bottom-transparent
+                                    gRowSettings"></div>
+                        
+                        <div class="control-placeholder"
+                             style="${ 'width: ' + contentWidth + 'px;' }"></div>
+                   
+                    ${content}
 
-            } else {
-
-                result = result + '<p class="m-0" style="padding-top: 7px; padding-left: 58px; color: #868686;">Data fully loaded</p>';
-
-            }
-
-        } */
-		content = content + '</div>';
-
-        result = result + content + '</div>'; // closing div.g-row
-
-        return result;
+            </div>`;
 
     };
 

@@ -8,7 +8,7 @@ import crossTabEvents from "../../../../shell/scripts/app/services/events/crossT
 
 const metaService = require('../services/metaService'); // TODO inject into angular dependencies
 
-export default function ($mdDialog, $state, $transitions, cookieService, broadcastChannelService, middlewareService, authorizerService, usersService, globalDataService, systemMessageService, redirectionService, evRvLayoutsHelper) {
+export default function ($mdDialog, $state, $transitions, cookieService, broadcastChannelService, middlewareService, authorizerService, usersService, uiService, globalDataService, systemMessageService, redirectionService, evRvLayoutsHelper) {
 
     return {
         restrict: 'E',
@@ -22,7 +22,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
             // let user;
             const user = globalDataService.getUser();
 
-            scope.keycloakAccountPage = window.KEYCLOAK_ACCOUNT_PAGE
+            // scope.keycloakAccountPage = window.KEYCLOAK_ACCOUNT_PAGE
 
             scope.currentLocation = '';
             scope.currentMasterUser = globalDataService.getMasterUser();
@@ -31,6 +31,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
             scope.showAutosaveLayout = false;
 
             scope.member = globalDataService.getMember();
+            scope.memberLayout = globalDataService.getMemberLayout();
 
             scope.homepageUrl = redirectionService.getUrlByState('app.portal.home');
             scope.profileUrl = redirectionService.getUrlByState('app.profile');
@@ -64,6 +65,10 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
             let deregisterOnSuccessTransitionHook;
 
             const mdContent = document.querySelector('md-content');
+
+            scope.openAccManager = function () {
+                window.keycloak.accountManagement();
+            }
 
             const updateCurrentMasterUser = function () {
 
@@ -420,11 +425,12 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             scope.onAutosaveToggle = function () {
 
-                globalDataService.setMember(scope.member);
+                // globalDataService.setMember(scope.member);
+                globalDataService.setMemberLayout(scope.memberLayout);
                 middlewareService.autosaveLayoutToggle();
 
-                usersService.updateMember(scope.member.id, scope.member).then(function () {
-                    scope.member = globalDataService.getMember();
+                uiService.updateMemberLayout(scope.memberLayout.id, scope.memberLayout).then(function () {
+                    scope.memberLayout = globalDataService.getMemberLayout();
                 });
             };
 

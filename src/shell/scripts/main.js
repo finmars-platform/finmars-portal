@@ -87,6 +87,24 @@ app.factory('$exceptionHandler', [function () {
     };
 }]);
 
+// app.config(function($provide) {
+//     $provide.decorator('$rootScope', function($delegate) {
+//
+//         // Save a reference to the original $apply
+//         const originalApply = $delegate.constructor.prototype.$apply;
+//
+//         // Override $apply
+//         $delegate.constructor.prototype.$apply = function(expr) {
+//             // console.log('Custom $apply logic here');
+//
+//             // Call the original $apply
+//             return originalApply.apply(this, arguments);
+//         };
+//
+//         return $delegate;
+//     });
+// });
+
 //<editor-fold desc="Websocket initialization">
 app.run(['$rootScope', function ($rootScope) {
 
@@ -128,6 +146,14 @@ app.run(['$rootScope', function ($rootScope) {
             console.error("Could not fetch notes from ActiveNote", e)
         }
     }, 5000)
+
+    setInterval(function () {
+
+        if (window.activeNote) {
+            window.activeNote.renderNotes();
+        }
+
+    }, 6000)
 
     app._invokeQueue.forEach(function (item) {
 

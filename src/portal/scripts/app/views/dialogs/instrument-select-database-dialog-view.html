@@ -134,7 +134,7 @@
                     <div data-ng-if="vm.hoverInstrument">
 
                         <md-button data-ng-if="vm.hoverInstrument.available_for_update"
-                                   data-ng-disabled="vm.loadingEntity || vm.processing"
+                                   data-ng-disabled="vm.updatingEntities || vm.processing"
                                    class="instrument-select-update-instrument-button small-button-icon display-block"
                                    data-ng-click="vm.updateLocalInstrument(vm.hoverInstrument)">
                             <span class="material-icons">autorenew</span>

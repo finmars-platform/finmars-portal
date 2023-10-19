@@ -22,6 +22,7 @@
                  */
                 item: '=', // legacy
 
+                label: '@',
                 configurationCode: '=',
                 contentType: '<',
                 userCode: '=',
@@ -34,9 +35,10 @@
 
                 scope.readyStatus = false;
                 scope.configuration_code = {
-                    // value: 'com.finmars.local'
-                    value:  globalDataService.getDefaultConfigurationCode()
+                    value: null,
                 };
+
+                scope.userCodeLabel = scope.label || 'User code';
 
                 scope.configuration_codes = [
                     {
@@ -44,6 +46,8 @@
                         name: scope.configuration_code.value,
                     }
                 ];
+
+                scope.configSelEventSignal = {};
 
                 scope.usercodeEnd = {
                     value: ''
@@ -116,8 +120,8 @@
 
                         scope.userCode = assembleUserCode(convertedUserCode);
 
-                        if (typeof scope.configurationCod === 'string') {
-                            scope.configurationCod = scope.configuration_code.value;
+                        if (typeof scope.configurationCode === 'string') {
+                            scope.configurationCode = scope.configuration_code.value;
                         }
 
                     }
@@ -191,6 +195,12 @@
                 const init = function () {
 
                     parseUserCode();
+
+                    // show selector of config codes empty in case of deprecated or invalid configurationCode
+                    if (!scope.configuration_code.value) {
+                        scope.configSelEventSignal.key = 'error';
+                        scope.configSelEventSignal.error = "Invalid configuration code";
+                    }
 
                     configurationService.getList().then(function (data) {
 

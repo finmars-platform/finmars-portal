@@ -74,11 +74,10 @@
                     return classes;
                 };
 
-				var onChangeIndex;
+				// var onChangeIndex;
 
                 scope.onValueChange = function () {
-
-                	clearTimeout(onChangeIndex);
+                	// clearTimeout(onChangeIndex);
 
 					scope.setedFromOutside = false;
 					scope.valueIsValid = false;
@@ -141,12 +140,7 @@
 
 					scope.model = modelValue;
 
-					/* if (scope.onChangeCallback) {
-						setTimeout(function () {
-							scope.onChangeCallback();
-						}, 0);
-					} */
-					onChangeIndex = setTimeout(() => {
+					setTimeout(() => {
 
 						scope.error = error;
 
@@ -156,9 +150,9 @@
 
 						scope.$apply();
 
-						if (scope.onChangeCallback) scope.onChangeCallback();
+						if (scope.onChangeCallback) scope.onChangeCallback({changedValue: scope.model});
 
-					}, 500);
+					}, 0);
 
                 };
 
@@ -220,7 +214,7 @@
 							if (scope.onChangeCallback) {
 
 								setTimeout(() => {
-									scope.onChangeCallback();
+									scope.onChangeCallback({changedValue: scope.model});
 								}, 0);
 
 							}

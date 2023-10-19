@@ -13,6 +13,8 @@
 
 	var evHelperService = require('../services/entityViewerHelperService');
 
+    var utilsHelper = require('../helpers/utils.helper');
+
     module.exports = function () {
         return {
             restrict: "E",
@@ -145,15 +147,16 @@
 
 				vm.setValueInsideEntity = function () {
 
-					if (vm.fieldType.type === 'dynamicAttribute') {
+                    if (vm.fieldType.type === 'dynamicAttribute') {
 						$scope.entity.attributes = evHelperService.setDynamicAttrValueByUserCode(vm.fieldKey, $scope.entity.attributes, vm.model);
 
 					} else if (vm.entityType === 'complex-transaction' && vm.fieldType.type === 'userInput') { //
-						$scope.entity.values[vm.fieldKey] = vm.model;
+
+                        $scope.entity.values[vm.fieldKey] = vm.model;
 
 					} else {
-						$scope.entity[vm.fieldKey] = vm.model;
-					}
+                        $scope.entity[vm.fieldKey] = vm.model;
+                    }
 
 					return $scope.entity;
 
@@ -885,10 +888,22 @@
 
                 };
 
-                vm.itemChange = function () {
+                vm.itemChangeDeb = utilsHelper.debounce(function (changedValue) {
+                    vm.itemChange(changedValue);
+                }, 500);
 
+                /**
+                 * Assigns value inside entity.
+                 * Called on value change inside input.
+                 * Used inside template, entityViewerFieldResolverDirective
+                 */
+                vm.itemChange = function (changedValue) {
+
+                    vm.model = changedValue;
 					$scope.entity = vm.setValueInsideEntity(vm.model);
-					vm.evEditorEventService.dispatchEvent(evEditorEvents.ENTITY_UPDATED); // update copies of field inside other tabs (e.g. maturity date)
+
+                    // update copies of field inside other tabs (e.g. maturity date)
+                    vm.evEditorEventService.dispatchEvent(evEditorEvents.ENTITY_UPDATED);
 
                     if ($scope.entityChange) {
 						$scope.entityChange({fieldKey: vm.fieldKey, fieldType: vm.fieldType.type});
@@ -912,7 +927,7 @@
 					if (vm.model !== todaysDate) {
 
 						vm.model = todaysDate;
-						vm.itemChange();
+						vm.itemChange(vm.model);
 
 					}
 
@@ -930,7 +945,7 @@
 						.add(1, "days")
 						.format("YYYY-MM-DD");
 
-					vm.itemChange();
+					vm.itemChange(vm.model);
 
 				};
 
@@ -946,17 +961,19 @@
 						.subtract(1, "days")
 						.format("YYYY-MM-DD");
 
-					vm.itemChange();
+					vm.itemChange(vm.model);
 
 				};
 
-                $scope.onDateChange = function () {
+                $scope.onDateChange = function (changedValue) {
+
+                    vm.model = changedValue;
 
                     if (vm.model === "") {
 						vm.model = null;
                     }
 
-                    vm.itemChange();
+                    vm.itemChange(vm.model);
                 };
 				//endregion Datepicker
 
@@ -978,6 +995,12 @@
                 }
 
                 var init = function () {
+
+
+                    console.log('bindFieldControl.entity', $scope.entity);
+                    console.log('bindFieldControl.entityType', $scope.entityType);
+                    console.log('bindFieldControl.item', $scope.item);
+
 
                     vm.fieldKey = $scope.getModelKey();
 

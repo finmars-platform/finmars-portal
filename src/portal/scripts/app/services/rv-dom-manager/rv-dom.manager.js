@@ -7,7 +7,7 @@ const metaHelper = require('../../helpers/meta.helper');
 
 const RvScrollManager = require('./rv-scroll.manager');
 
-export default function (toastNotificationService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService) {
+export default function (toastNotificationService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService, rvDataProviderService) {
 
     const rvScrollManager = new RvScrollManager();
 
@@ -148,6 +148,9 @@ export default function (toastNotificationService, transactionTypeService, price
             } else if (targetElem.classList.contains('gTableActionBtn')) {
                 // clickData.actionElem = clickedActionBtn;
                 clickData.actionType = targetElem.dataset.clickActionType;
+            } else if (targetElem.classList.contains('inline-retry-button')) {
+                clickData.isRetryButtonPressed = true;
+                clickData.___parentId = targetElem.dataset.objectId;
             }
             /* else {
 
@@ -266,7 +269,7 @@ export default function (toastNotificationService, transactionTypeService, price
             groups[group.___level - 1].report_settings.is_level_folded = false;
 
             var groupSettings = rvDataHelper.getOrCreateGroupSettings(evDataService, group);
-            var foldingEvent = group.___is_open ? evEvents.GROUPS_LEVEL_FOLD: evEvents.GROUPS_LEVEL_UNFOLD;
+            var foldingEvent = group.___is_open ? evEvents.GROUPS_LEVEL_FOLD : evEvents.GROUPS_LEVEL_UNFOLD;
 
             if (group.___is_open) {
 
@@ -281,19 +284,26 @@ export default function (toastNotificationService, transactionTypeService, price
 
                 foldChildGroups(group.___id, evDataService);
 
-            }
-            else {
+            } else {
 
                 group.___is_open = true;
 
                 groupSettings.is_open = group.___is_open;
-                /*rvDataHelper.setGroupSettings(evDataService, group, groupSettings);
 
-                evDataService.setData(group);
+                if (!evDataService.isRequestParametersExist(group.___id)) {
 
-                evDataService.setGroups(groups);
+                    var requestParameters = rvDataProviderService.createRequestParameters(group, group.___level - 1, evDataService, evEventService,)
 
-                // evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);*/
+                    console.log('handleFoldButtonClick.group', group);
+                    console.log('handleFoldButtonClick.requestParameters', requestParameters);
+
+                    rvDataProviderService.updateDataStructureByRequestParameters(requestParameters, evDataService, evEventService).then(function () {
+
+                        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                    })
+
+                }
 
             }
 
@@ -314,6 +324,39 @@ export default function (toastNotificationService, transactionTypeService, price
 
             evEventService.dispatchEvent(foldingEvent, {updateScope: true});
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+        }
+
+        // console.log('group', group);
+
+    };
+
+    var handleRetryButtonClick = function (clickData, evDataService, evEventService) {
+
+        var group = evDataService.getData(clickData.___parentId);
+
+        console.log('handleRetryButtonClick.group', group);
+
+        if (group) { // initialized only first data request
+
+            var requestParameters;
+
+            if (!evDataService.isRequestParametersExist(group.___id)) {
+
+                requestParameters = rvDataProviderService.createRequestParameters(group, group.___level - 1, evDataService, evEventService,)
+
+            } else {
+                requestParameters = evDataService.getRequestParameters(group.___id)
+            }
+
+            console.log('handleRetryButtonClick.requestParameters', requestParameters);
+
+            rvDataProviderService.updateDataStructureByRequestParameters(requestParameters, evDataService, evEventService).then(function () {
+
+                evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+            })
+
 
         }
 
@@ -610,8 +653,7 @@ export default function (toastNotificationService, transactionTypeService, price
 
             handleShiftSelection(evDataService, evEventService, clickData);
 
-        }
-        else if (clickData.isCtrlPressed && !clickData.isShiftPressed) {
+        } else if (clickData.isCtrlPressed && !clickData.isShiftPressed) {
 
             if (clickData.___subtotal_subtype) {
                 subtotal_type = clickData.___subtotal_subtype;
@@ -621,8 +663,7 @@ export default function (toastNotificationService, transactionTypeService, price
 
             if (subtotal_type === 'area') {
                 parent.___is_area_subtotal_activated = !parent.___is_area_subtotal_activated;
-            }
-            else if (subtotal_type === 'line') {
+            } else if (subtotal_type === 'line') {
                 parent.___is_line_subtotal_activated = !parent.___is_line_subtotal_activated;
             }
 
@@ -639,8 +680,7 @@ export default function (toastNotificationService, transactionTypeService, price
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-        }
-        else if (!clickData.isCtrlPressed && !clickData.isShiftPressed) {
+        } else if (!clickData.isCtrlPressed && !clickData.isShiftPressed) {
 
             clearSubtotalActiveState(evDataService);
             evDataHelper.clearObjectActiveState(evDataService);
@@ -682,8 +722,7 @@ export default function (toastNotificationService, transactionTypeService, price
                 evDataService.setActiveObject(null);
                 evDataService.setActiveObjectRow(null);
 
-            }
-            else if (parent.___level > 0) {
+            } else if (parent.___level > 0) {
 
                 if (subtotal_type === 'area') {
                     parent.___is_area_subtotal_activated = true;
@@ -751,11 +790,9 @@ export default function (toastNotificationService, transactionTypeService, price
 
             evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-        }
-        else if (!clickData.isCtrlPressed && clickData.isShiftPressed) {
+        } else if (!clickData.isCtrlPressed && clickData.isShiftPressed) {
             handleShiftSelection(evDataService, evEventService, clickData);
-        }
-        else if (!clickData.isCtrlPressed && !clickData.isShiftPressed) {
+        } else if (!clickData.isCtrlPressed && !clickData.isShiftPressed) {
 
             clearSubtotalActiveState(evDataService);
             evDataHelper.clearObjectActiveState(evDataService);
@@ -993,12 +1030,14 @@ export default function (toastNotificationService, transactionTypeService, price
 
             var clickData = getClickData(event);
 
+            console.log('initEventDelegation.clickData', clickData);
+            console.log('initEventDelegation.event', event);
+
             if (clickData.___type === 'hyperlink') {
 
                 metaHelper.openLinkInNewTab(event);
 
-            }
-            else if (event.detail === 2) { // double click handler
+            } else if (event.detail === 2) { // double click handler
 
                 var cellElem;
 
@@ -1030,14 +1069,16 @@ export default function (toastNotificationService, transactionTypeService, price
 
                 }
 
-            }
-            else if (event.detail === 1) { // click
+            } else if (event.detail === 1) { // click
 
                 if (clickData.isFoldButtonPressed) {
                     handleFoldButtonClick(clickData, evDataService, evEventService);
 
-                }
-                else if (clickData.actionType) {
+                } else if (clickData.isRetryButtonPressed) {
+
+                    handleRetryButtonClick(clickData, evDataService, evEventService);
+
+                } else if (clickData.actionType) {
 
                     switch (clickData.actionType) {
 
@@ -1083,8 +1124,7 @@ export default function (toastNotificationService, transactionTypeService, price
 
                     }
 
-                }
-                else {
+                } else {
 
                     var selection = window.getSelection().toString();
 
@@ -1103,8 +1143,7 @@ export default function (toastNotificationService, transactionTypeService, price
                                 break;
                         }
 
-                    }
-                    else if (!selection.length) {
+                    } else if (!selection.length) {
 
                         switch (clickData.___type) {
 
@@ -1271,9 +1310,9 @@ export default function (toastNotificationService, transactionTypeService, price
             isRootTitle = 'isChild'
         }
 
-        if (!isRootEntityViewer) {
-            viewportHeight = viewportHeight - 16; // TODO To show horizontal scroll. Find why
-        }
+        // if (!isRootEntityViewer) {
+        //     viewportHeight = viewportHeight - 15; // TODO To show horizontal scroll. Find why
+        // }
 
         // console.log(isRootTitle +  ' calculateScroll.contentWrapElemHeight ' + contentWrapElemHeight);
         // console.log(isRootTitle +  ' calculateScroll.viewportTop ' + viewportTop);
@@ -1552,7 +1591,7 @@ export default function (toastNotificationService, transactionTypeService, price
             return true;
         }
 
-        if ((obj['complex_transaction.id'] || obj['complex_transaction'])  && option.action === 'rebook_transaction') {
+        if ((obj['complex_transaction.id'] || obj['complex_transaction']) && option.action === 'rebook_transaction') {
             return true;
         }
 
@@ -1679,12 +1718,10 @@ export default function (toastNotificationService, transactionTypeService, price
                     is_disabled = 'disabled-context-menu';
                 }
 
-            }
-            else if (item.action === 'mark_row') {
+            } else if (item.action === 'mark_row') {
                 ttype_specific_attr = ' data-ev-dropdown-action-data-color="' + item.action_data + '"'
 
-            }
-            else if (item.action === 'toggle_row') {
+            } else if (item.action === 'toggle_row') {
                 item.name = obj.___is_activated ? 'Unselect row' : 'Select row';
             }
 
@@ -1708,8 +1745,7 @@ export default function (toastNotificationService, transactionTypeService, price
 
                 result = result + '</div>';
 
-            }
-            else {
+            } else {
 
                 result = result + '<div class="ev-dropdown-option ' + is_disabled + (item.items ? ' ev-dropdown-menu-holder' : '') + '"' +
                     ' data-ev-dropdown-action="' + item.action + '"' +
@@ -1824,8 +1860,7 @@ export default function (toastNotificationService, transactionTypeService, price
 
             clearDropdownsAndRows(evDataService, evEventService, true);
 
-        }
-        else if (dropdownAction === 'toggle_row') {
+        } else if (dropdownAction === 'toggle_row') {
 
             var obj = evDataHelper.getObject(objectId, parentGroupHashId, evDataService);
             var activeObjChanged = false;
@@ -1866,8 +1901,7 @@ export default function (toastNotificationService, transactionTypeService, price
             evDataService.setSelectAllRowsState(allRowsAreActive);
             evEventService.dispatchEvent(evEvents.ROW_ACTIVATION_CHANGE);
 
-        }
-        else {
+        } else {
 
             if (objectId && dropdownAction && parentGroupHashId) {
 
@@ -2108,7 +2142,7 @@ export default function (toastNotificationService, transactionTypeService, price
         let contextMenu;
 
         const contextMenuData = await uiService.getContextMenuLayoutList({
-            filters:  {
+            filters: {
                 type: "report_context_menu"
             }
         });
@@ -2118,8 +2152,7 @@ export default function (toastNotificationService, transactionTypeService, price
             var contextMenuLayout = contextMenuData.results[0];
             contextMenu = contextMenuLayout.data.menu
 
-        }
-        else {
+        } else {
             contextMenu = {
                 root: {
                     items: [

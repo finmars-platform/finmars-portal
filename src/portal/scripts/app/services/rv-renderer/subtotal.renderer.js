@@ -3,7 +3,7 @@
     var renderHelper = require('../../helpers/render.helper');
     var rvHelper = require('../../helpers/rv.helper');
     var evDataHelper = require('../../helpers/ev-data.helper');
-	var stringHelper = require('../../helpers/stringHelper');
+    var stringHelper = require('../../helpers/stringHelper');
 
     var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
@@ -44,31 +44,31 @@
 
     var getBorderClasses = function (evDataService, obj, column, columnNumber) {
 
-		var columns = evDataService.getColumns();
-		var nextColumn = columns[columnNumber]; // columnNumber is columnIndex + 1
+        var columns = evDataService.getColumns();
+        var nextColumn = columns[columnNumber]; // columnNumber is columnIndex + 1
 
-		var notLastColumn = columnNumber !== columns.length;
+        var notLastColumn = columnNumber !== columns.length;
 
-		if (notLastColumn) {
+        if (notLastColumn) {
 
-			var isGrandTotalFirstColumn = obj.___level === 0 && columnNumber === 1;
+            var isGrandTotalFirstColumn = obj.___level === 0 && columnNumber === 1;
 
-			if (isGrandTotalFirstColumn) {
-				return 'border-right-transparent';
-			}
+            if (isGrandTotalFirstColumn) {
+                return 'border-right-transparent';
+            }
 
-			// var isSubtotalRow = obj.___subtotal_type || obj.___subtotal_subtype;
-			var colSubtotalOff = !column.report_settings || !column.report_settings.subtotal_formula_id;
-			var nextColSubtotalOff = !nextColumn || !nextColumn.report_settings || !nextColumn.report_settings.subtotal_formula_id;
-			var nextIsNotCellWithGroupName = columnNumber + 1 !== obj.___level - 1;
+            // var isSubtotalRow = obj.___subtotal_type || obj.___subtotal_subtype;
+            var colSubtotalOff = !column.report_settings || !column.report_settings.subtotal_formula_id;
+            var nextColSubtotalOff = !nextColumn || !nextColumn.report_settings || !nextColumn.report_settings.subtotal_formula_id;
+            var nextIsNotCellWithGroupName = columnNumber + 1 !== obj.___level - 1;
 
-			if (colSubtotalOff && notLastColumn && nextColSubtotalOff && nextIsNotCellWithGroupName) {
-				return 'border-right-transparent';
-			}
+            if (colSubtotalOff && notLastColumn && nextColSubtotalOff && nextIsNotCellWithGroupName) {
+                return 'border-right-transparent';
+            }
 
-		}
+        }
 
-	};
+    };
 
     var getDynamicAttributeValue = function (obj, column) {
 
@@ -171,7 +171,7 @@
                 }
 
                 if (proxyLineSubtotal && proxyLineSubtotal.___level < obj.___level && obj.___type === 'subtotal' && obj.___subtotal_type === 'area') {
-                	skip = true;
+                    skip = true;
                 }
 
                 if (skip === false) {
@@ -181,19 +181,34 @@
 
                     if (parentGroup.___is_open) {
 
-						var foldButtonSign = currentGroup.___is_open ? '-': '+';
+                        var foldButtonSign = currentGroup.___is_open ? '-' : '+';
 
-						var foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">' + foldButtonSign + '</div></div>';
+                        var foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + currentGroup.___id + '" data-parent-group-hash-id="' + currentGroup.___parentId + '">' + foldButtonSign + '</div></div>';
 
-						var groupName = currentGroup.___group_name;
+                        var groupName = currentGroup.___group_name;
 
-						if (groupName && typeof groupName === 'string') {
+                        if (groupName && typeof groupName === 'string') {
 
-							groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
+                            groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
 
-						}
+                        }
 
-                        result.html_result = foldButton + '<span class="">' + groupName + '</span>';
+                        var progress = ''
+
+                        var requestParameters = evDataService.getRequestParameters(currentGroup.___id);
+
+                        // console.log('requestParameters', requestParameters);
+
+                        if (requestParameters.status === 'loading') {
+                            progress = '<span class="inline-progress-dots"></span>';
+                        }
+
+                        if (requestParameters.status === 'error') {
+                            progress = '&nbsp;<span style="color: red">error</span>&nbsp;<span class="inline-retry-button" data-type="retryButton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">Retry</span>';
+                        }
+
+
+                        result.html_result = foldButton + '<span class="">' + groupName + '</span>' + progress;
                         result.raw_text_result = currentGroup.___group_name;
 
                     }
@@ -204,9 +219,7 @@
 
             return result;
 
-        }
-
-        else if (columnNumber === obj.___level - 1) {
+        } else if (columnNumber === obj.___level - 1) {
 
             var foldButton = '';
             var foldButtonStr = '';
@@ -216,9 +229,9 @@
 
             if (parentGroup.___is_open) {
 
-				var foldButtonSign = group.___is_open ? '-': '+';
+                var foldButtonSign = group.___is_open ? '-' : '+';
 
-				foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">' + foldButtonSign + '</div></div>';
+                foldButton = '<div class="g-group-fold-button"><div class="ev-fold-button" data-type="foldbutton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">' + foldButtonSign + '</div></div>';
 
                 if (obj.___level - 1 === columnNumber) {
                     foldButtonStr = foldButton
@@ -226,48 +239,61 @@
                     foldButtonStr = ''
                 }
 
-				var groupName = obj.___group_name;
+                var groupName = obj.___group_name;
 
-				if (groupName && typeof groupName === 'string') {
+                if (groupName && typeof groupName === 'string') {
 
-					groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
+                    groupName = stringHelper.parseAndInsertHyperlinks(groupName, "class='openLinkInNewTab'");
 
-				}
+                }
 
-                result.html_result = '<span class="g-cell-content">' + foldButtonStr + '<span class="">' + groupName + '</span></span>';
+                var progress = ''
+
+                var requestParameters = evDataService.getRequestParameters(group.___id);
+
+                // console.log('requestParameters', requestParameters);
+
+                if (requestParameters.status === 'loading') {
+                    progress = '<span class="inline-progress-dots"></span>';
+                }
+
+                if (requestParameters.status === 'error') {
+                    progress = '&nbsp;<span style="color: red">Error</span>&nbsp;<span class="inline-retry-button" data-type="retryButton" data-object-id="' + group.___id + '" data-parent-group-hash-id="' + group.___parentId + '">Retry</span>';
+                }
+
+
+                result.html_result = '<span class="g-cell-content">' + foldButtonStr + '<span class="">' + groupName + '</span></span>' + progress;
                 result.raw_text_result = obj.___group_name;
 
             }
 
-        }
+        } else if (columnNumber > obj.___level - 1) {
 
-        else if (columnNumber > obj.___level - 1) {
+            var showTotal;
+            var totalCalculationOn = column.report_settings && column.report_settings.subtotal_formula_id; // if subtotal_formula_id === 0, it means no formula has been chosen
+            var isNotGrandTotal = obj.___level !== 0;
 
-			var showTotal;
-			var totalCalculationOn = column.report_settings && column.report_settings.subtotal_formula_id; // if subtotal_formula_id === 0, it means no formula has been chosen
-			var isNotGrandTotal = obj.___level !== 0;
+            if (isNotGrandTotal) {
+                // showTotal = totalCalculationOn && !column.report_settings.hide_subtotal;
+                showTotal = totalCalculationOn;
 
-			if (isNotGrandTotal) {
-				// showTotal = totalCalculationOn && !column.report_settings.hide_subtotal;
-				showTotal = totalCalculationOn;
+            } else { // for grand total
+                showTotal = totalCalculationOn && !column.report_settings.hide_grandtotal;
+            }
 
-			} else { // for grand total
-				showTotal = totalCalculationOn && !column.report_settings.hide_grandtotal;
-			}
+            if (showTotal) { // for subtotals
 
-			if (showTotal) { // for subtotals
+                if (obj.hasOwnProperty(column.key)) {
 
-				if (obj.hasOwnProperty(column.key)) {
+                    result.html_result = '<span class="text-bold">' + renderHelper.formatValue(obj, column) + '</span>';
+                    result.numeric_result = obj[column.key];
+                    result.raw_text_result = renderHelper.formatValue(obj, column);
 
-					result.html_result = '<span class="text-bold">' + renderHelper.formatValue(obj, column) + '</span>';
-					result.numeric_result = obj[column.key];
-					result.raw_text_result = renderHelper.formatValue(obj, column);
+                } else {
+                    result = getDynamicAttributeValue(obj, column);
+                }
 
-				} else {
-					result = getDynamicAttributeValue(obj, column);
-				}
-
-			}
+            }
 
         }
 
@@ -276,9 +302,9 @@
         var grandTotalIsActive = rootGroupOptions.subtotal_type;
 
         if (obj.___level === 0 && grandTotalIsActive && columnNumber === 1) { */
-		// in new rv interface, there is always Grand total row
+        // in new rv interface, there is always Grand total row
 
-		/* if (obj.___level === 0 && columnNumber === 1) {
+        /* if (obj.___level === 0 && columnNumber === 1) {
             result.html_result = '<span class="text-bold">GRAND TOTAL</span> <span class="g-subtotals-settings-menu gTableActionBtn" data-click-action-type="open_subtotal_position_options"><span class="material-icons">more_vert</span></span>';
             result.raw_text_result = 'Grand Total';
         } */
@@ -394,56 +420,56 @@
 
     };
 
-	var getCellClasses = function (evDataService, obj, column, columnNumber, groups) {
+    var getCellClasses = function (evDataService, obj, column, columnNumber, groups) {
 
-		var result = [];
+        var result = [];
 
-		var textAlign = getCellTextAlign(evDataService, obj, column, columnNumber);
+        var textAlign = getCellTextAlign(evDataService, obj, column, columnNumber);
 
-		if (textAlign) {
-			result.push(textAlign);
-		}
+        if (textAlign) {
+            result.push(textAlign);
+        }
 
-		// var colorNegative = getColorNegativeNumber(obj, column);
+        // var colorNegative = getColorNegativeNumber(obj, column);
         var colorNegative = renderHelper.getColorNegativeNumber(obj[column.key], column);
 
-		if (colorNegative) {
-			result.push(colorNegative);
-		}
+        if (colorNegative) {
+            result.push(colorNegative);
+        }
 
-		var borderClasses = getBorderClasses(evDataService, obj, column, columnNumber);
-		// grand total row
-		if (borderClasses) {
-			result.push(borderClasses);
-		}
+        var borderClasses = getBorderClasses(evDataService, obj, column, columnNumber);
+        // grand total row
+        if (borderClasses) {
+            result.push(borderClasses);
+        }
 
-		if (column.isHidden) {
-			result.push('display-none');
-		}
+        if (column.isHidden) {
+            result.push('display-none');
+        }
 
-		return result;
+        return result;
 
-	}
+    }
 
-	var getRowGeneralClasses = function (obj, classList, isActivated, evDataService) {
+    var getRowGeneralClasses = function (obj, classList, isActivated, evDataService) {
 
-		if (obj.___subtotal_type === 'proxyline') {
-			classList.push('proxyline');
-		}
+        if (obj.___subtotal_type === 'proxyline') {
+            classList.push('proxyline');
+        }
 
-		if (isActivated) {
-			classList.push('selected');
-		}
+        if (isActivated) {
+            classList.push('selected');
+        }
 
-		var activeObjRow = evDataService.getActiveObjectRow();
+        var activeObjRow = evDataService.getActiveObjectRow();
 
-		if (activeObjRow && activeObjRow.___id === obj.___id && activeObjRow.___parentId === obj.___parentId) {
-			classList.push('is-active-object');
-		}
+        if (activeObjRow && activeObjRow.___id === obj.___id && activeObjRow.___parentId === obj.___parentId) {
+            classList.push('is-active-object');
+        }
 
-		return classList;
+        return classList;
 
-	}
+    }
 
     var getCellWrapWidth = function (column) {
 
@@ -480,52 +506,52 @@
             is_activated = parent.___is_area_subtotal_activated;
         }
 
-		if (subtotal_type === 'line') {
-			contextMenuIsOpened = parent.___line_subtotal_context_menu_is_opened;
+        if (subtotal_type === 'line') {
+            contextMenuIsOpened = parent.___line_subtotal_context_menu_is_opened;
 
-		} else if (subtotal_type === 'area') {
-			contextMenuIsOpened = parent.___area_subtotal_context_menu_is_opened;
-		}
+        } else if (subtotal_type === 'area') {
+            contextMenuIsOpened = parent.___area_subtotal_context_menu_is_opened;
+        }
 
-		rowClassList = getRowGeneralClasses(obj, rowClassList, is_activated, evDataService);
+        rowClassList = getRowGeneralClasses(obj, rowClassList, is_activated, evDataService);
 
-		var grandTotalCell = '';
+        var grandTotalCell = '';
         var rowSelection;
-		var rowSettings;
+        var rowSettings;
 
         if (obj.___level === 0) {
 
-        	rowClassList.push('g-grand-total-row');
+            rowClassList.push('g-grand-total-row');
 
-			/* grandTotalCell = '<div class="g-grand-total-first-cell">' +
-				'<span class="text-bold">GRAND TOTAL</span> <span class="g-subtotals-settings-menu gTableActionBtn" data-click-action-type="open_subtotal_position_options"><span class="material-icons">more_vert</span></span>' +
-			'</div>'; */
-			grandTotalCell = '<div class="g-grand-total-first-cell">' +
-					'<span class="text-bold">GRAND TOTAL</span>' +
-				'</div>';
+            /* grandTotalCell = '<div class="g-grand-total-first-cell">' +
+                '<span class="text-bold">GRAND TOTAL</span> <span class="g-subtotals-settings-menu gTableActionBtn" data-click-action-type="open_subtotal_position_options"><span class="material-icons">more_vert</span></span>' +
+            '</div>'; */
+            grandTotalCell = '<div class="g-grand-total-first-cell">' +
+                '<span class="text-bold">GRAND TOTAL</span>' +
+                '</div>';
 
-			rowSelection = '<div class="g-row-selection border-right-transparent"></div>';
+            rowSelection = '<div class="g-row-selection border-right-transparent"></div>';
 
-			rowSettings = '<div class="g-row-settings g-row-settings-table border-right-transparent gRowSettings"></div>';
+            rowSettings = '<div class="g-row-settings g-row-settings-table border-right-transparent gRowSettings"></div>';
 
-		} else {
+        } else {
 
-			if (is_activated) {
+            if (is_activated) {
 
-				rowClassList.push('selected');
-				rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button checked">' + checkIcon + '</div></div>';
+                rowClassList.push('selected');
+                rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button checked">' + checkIcon + '</div></div>';
 
-			} else {
-				rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button"></div></div>';
-			}
+            } else {
+                rowSelection = '<div class="g-row-selection"><div class="g-row-selection-button"></div></div>';
+            }
 
-			if (contextMenuIsOpened) {
-				rowClassList.push('context-menu-opened');
-			}
+            if (contextMenuIsOpened) {
+                rowClassList.push('context-menu-opened');
+            }
 
-			rowSettings = renderHelper.getRowSettings(obj.___type, obj.___backgrond_color);
+            rowSettings = renderHelper.getRowSettings(obj.___type, obj.___backgrond_color);
 
-		}
+        }
 
         var rowClasses = rowClassList.join(' ');
 
@@ -534,10 +560,10 @@
         var result;
 
         if (obj.___subtotal_subtype) {
-            result = '<div class="' + rowClasses + '" style="top: '+ offsetTop+'px" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-subtotal-subtype="' + obj.___subtotal_subtype + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+            result = '<div class="' + rowClasses + '" style="top: ' + offsetTop + 'px" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-subtotal-subtype="' + obj.___subtotal_subtype + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
 
         } else {
-            result = '<div class="' + rowClasses + '" style="top: '+ offsetTop+'px" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
+            result = '<div class="' + rowClasses + '" style="top: ' + offsetTop + 'px" data-type="subtotal" data-subtotal-type="' + obj.___subtotal_type + '" data-object-id="' + obj.___id + '" data-parent-group-hash-id="' + obj.___parentId + '">';
         }
 
         var cell;
@@ -566,7 +592,6 @@
             });
 
 
-
             var gCellTitle = '';
             var resultValue = '';
 
@@ -580,11 +605,11 @@
 
             cell = '<div data-column="' + columnNumber + '" class="g-cell-wrap ' + getBgColor(evDataService, obj, columnNumber) + '" style="width: ' + (column.isHidden ? '0;' : column.style.width) + '">' +
                 // '<div class="g-cell ' + textAlign + ' cell-status-' + column.status + ' ' + colorNegative + ' ' + borderBottomTransparent + '"' + gCellTitle + '>' +
-					'<div class="g-cell' + ' cell-status-' + column.status + ' ' + cellClasses + '"' + gCellTitle + '>' +
-						'<div class="g-cell-content-wrap">' +
-							resultValue +
-						'</div>' +
-					'</div>' +
+                '<div class="g-cell' + ' cell-status-' + column.status + ' ' + cellClasses + '"' + gCellTitle + '>' +
+                '<div class="g-cell-content-wrap">' +
+                resultValue +
+                '</div>' +
+                '</div>' +
                 '</div>';
 
             result = result + cell

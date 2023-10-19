@@ -43,6 +43,7 @@
                  data-ng-class="{'decoration-label-line': field.attribute['value_type'] === 'decoration'}"
                  flex="{{vm.bindFlex(vm.fixedArea, field)}}">
                 <bind-field-control
+                        data-transaction-type="{{vm.transactionType.user_code}}"
                         entity-type="vm.entityType"
                         entity="vm.entity"
                         ev-editor-event-service="vm.evEditorEventService"

@@ -53,7 +53,7 @@
             processedPages: []
         };
 
-        console.log('requestParameters', requestParameters);
+        // console.log('requestParameters', requestParameters);
 
         evDataService.setRequestParameters(requestParameters);
         evDataService.setLastClickInfo(event);
@@ -551,10 +551,26 @@
 
                     }
 
+                    if (isLoadMoreButtonPressed || isLoadAllButtonPressed) {
+
+                        var controlRow = clickData.target.closest('.gControlRow');
+
+                        var controlBtns = controlRow.querySelectorAll('.controlBtn');
+
+                        controlBtns.forEach(function (elem) {
+                            elem.classList.add('display-none');
+                        })
+
+                        var controlLoader = controlRow.querySelector('.controlLoader');
+                        if (controlLoader) controlLoader.classList.remove('display-none');
+
+                    }
+
                 }
 
             })
-        } else {
+        }
+        else {
 
             var groupHashId = clickData.___parentId;
 
@@ -600,6 +616,7 @@
             }
 
         }
+
         evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
     };
@@ -872,6 +889,8 @@
 
     function executeContextMenuAction(event) {
 
+        console.log('executeContextMenuAction.event', event)
+
         var objectId = event.target.dataset.objectId;
         var parentGroupHashId = event.target.dataset.parentGroupHashId;
         var dropdownAction = event.target.dataset.evDropdownAction;
@@ -926,6 +945,7 @@
             }
 
             evDataService.setObject(obj);
+
 
             clearDropdownsAndRows(evDataService, evEventService, true);
 
@@ -1154,6 +1174,8 @@
         // var innerHTMLString = '';
         // var viewContext = evDataService.getViewContext();
 
+        console.log('createPopupMenu.obj', obj);
+
         if (obj) {
 
             popup.innerHTML = generateContextMenu(obj, objectId, parentGroupHashId, evDataService);
@@ -1359,8 +1381,12 @@
         var interfaceLayout = evDataService.getInterfaceLayout();
         var components = evDataService.getComponents();
 
+        evScrollManager.setContentWrapElemHeight(document.body.clientHeight - 53)
+
         var contentWrapElemHeight = evScrollManager.getContentWrapElemHeight();
         var contentWrapElemWidth = evScrollManager.getContentWrapElemWidth();
+
+
 
         //var viewportTop = interfaceLayout.headerToolbar.height + interfaceLayout.groupingArea.height + interfaceLayout.columnArea.height + interfaceLayout.progressBar.height;
         //var viewportWidth = document.body.clientWidth - interfaceLayout.sidebar.width - interfaceLayout.filterArea.width;
@@ -1392,12 +1418,17 @@
             viewportTop = viewportTop + interfaceLayout.filterArea.height
         }
 
+        console.log('contentWrapElemHeight', contentWrapElemHeight);
+        console.log('viewportTop', viewportTop);
+
         var leftPanelHeight = Math.floor(contentWrapElemHeight - viewportTop); // should be calculated before adding column area height to viewportTop
         evScrollManager.setLeftPanelElemHeight(leftPanelHeight);
 
         if (components.columnArea) {
             viewportTop = viewportTop + interfaceLayout.columnArea.height
         }
+
+
 
         /* if (components.groupingArea) {
             viewportTop = viewportTop + interfaceLayout.groupingArea.height;

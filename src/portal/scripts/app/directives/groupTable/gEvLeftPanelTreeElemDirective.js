@@ -237,17 +237,21 @@
                 }
 
                 scope.getGroupType = function () {
-                    // console.log('tree elem, ', scope.item)
 
-                    var groups = scope.evDataService.getGroups();
+                    console.log('tree elem, ', scope.item)
 
-                    scope.groupType = groups[scope.item.___level - 1]
+                    if (scope.item) { // wtf research later
 
-                    if (scope.item.___level === groups.length) {
+                        var groups = scope.evDataService.getGroups();
 
-                        scope.isLastLevel = true;
+                        scope.groupType = groups[scope.item.___level - 1]
+
+                        if (scope.item.___level === groups.length) {
+
+                            scope.isLastLevel = true;
+                        }
+
                     }
-
                     // console.log('tree groups, ', groups)
                     // console.log('tree groupType, ', scope.groupType)
                 }
@@ -287,7 +291,9 @@
 
                 };
 
-                init();
+                if (scope.item) { // wtf/??
+                    init();
+                }
 
             },
         }

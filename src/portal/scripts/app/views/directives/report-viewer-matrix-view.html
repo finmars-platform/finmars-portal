@@ -308,6 +308,14 @@
 
     </div>
 
+    <div data-ng-if="processing">
+
+        <div layout="row" layout-sm="column" layout-align="space-around" class="dashboard-component-loader">
+            <progress-circular diameter="40"></progress-circular>
+        </div>
+
+    </div>
+
 <!--    <div data-ng-if="viewContext === 'dashboard' && !processing" class="g-dashboard-filter-holder">
 
         <md-button class="toggle-dashboard-filter-btn"

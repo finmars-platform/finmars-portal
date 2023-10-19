@@ -918,6 +918,28 @@ export default function (instrumentService, transactionTypeService, priceHistory
         }
     };
 
+    const selectsMap = {
+        'instrumentSelect': ['instrument'],
+        'unifiedDataSelect': ['counterparty', 'currency'],
+        'entitySearchSelect': ['portfolio', 'account', 'responsible', 'strategy-1', 'strategy-2', 'strategy-3'],
+        'dropdownSelect': ['pricing-policy'],
+    };
+
+    const getSelectByEntityType = function (entityType) {
+
+        const selectKey = Object.keys(selectsMap).find(select => {
+            return selectsMap[select].includes(entityType);
+        });
+
+        if (!selectKey) {
+            console.error(`There is no selector for entity type: ${entityType}`);
+            return;
+        }
+
+        return selectKey;
+
+    }
+
     var request = function (path, method, data) {
 
         var method = method || 'GET';
@@ -949,6 +971,40 @@ export default function (instrumentService, transactionTypeService, priceHistory
 
     }
 
+    var getListReportGroups = function (entityType, options) {
+
+        switch (entityType) {
+
+            case 'balance-report':
+                return reportService.getBackendBalanceReportGroups(options);
+                break;
+            case 'pl-report':
+                return reportService.getBackendPnlReportGroups(options);
+                break;
+            case 'transaction-report':
+                return reportService.getBackendTransactionReportGroups(options);
+                break;
+
+        }
+    }
+
+    var getListReportItems =function (entityType, options) {
+
+        switch (entityType) {
+
+            case 'balance-report':
+                return reportService.getBackendBalanceReportItems(options);
+                break;
+            case 'pl-report':
+                return reportService.getBackendPnlReportItems(options);
+                break;
+            case 'transaction-report':
+                return reportService.getBackendTransactionReportItems(options);
+                break;
+
+        }
+    }
+
     return {
         getList: getList,
         getListLight: getListLight,
@@ -958,6 +1014,12 @@ export default function (instrumentService, transactionTypeService, priceHistory
         deleteByKey: deleteByKey,
         updateBulk: updateBulk,
         deleteBulk: deleteBulk,
+
+        getSelectByEntityType: getSelectByEntityType,
+
+
+        getListReportGroups: getListReportGroups,
+        getListReportItems: getListReportItems,
 
 
         request: request

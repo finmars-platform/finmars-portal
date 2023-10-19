@@ -4,7 +4,7 @@
 
 	const popupEvents = require("../../../../services/events/popupEvents");
 
-	module.exports = function (gFiltersHelper) {
+	module.exports = function (specificDataService, gFiltersHelper) {
 		return {
 			require: '^^rvFilter',
 			restrict: 'E',
@@ -44,6 +44,22 @@
 					scope.filter.options.filter_values = gFiltersHelper.convertDatesTreeToFlatList(dateTree);
 				}
 
+				const getDataForSelects = async function () {
+
+					scope.readyStatus = false;
+
+					const res = await rvFilterVm.getDataForSelects();
+
+					scope.columnRowsContent = res.results.map(cRowsContent => {
+						return {value: cRowsContent};
+					});
+
+					scope.readyStatus = true;
+
+					scope.$apply();
+
+				};
+
 				scope.changeFilterType = async function (filterType) {
 
 					if (filterType !== 'use_from_above') {
@@ -54,6 +70,15 @@
 						scope.activeFilter.type = resultList[0];
 						scope.filter.options = resultList[1];
 
+						if (
+							scope.filter.options.filter_type === 'date_tree' &&
+							( !scope.columnRowsContent || !scope.columnRowsContent.length )
+						) {
+
+							getDataForSelects();
+
+						}
+
 					}
 
 				};
@@ -62,13 +87,21 @@
 
 					scope.activeFilter.type = rvFilterVm.getActiveFilterType(scope.filterTypes);
 
-					if (!rvFilterVm.columnRowsContent || !rvFilterVm.columnRowsContent.length) {
+					/*if (!rvFilterVm.columnRowsContent || !rvFilterVm.columnRowsContent.length) {
 
-						rvFilterVm.getDataForSelects();
+						getDataForSelects();
 
 					}
 
-					scope.columnRowsContent = rvFilterVm.columnRowsContent
+					scope.columnRowsContent = rvFilterVm.columnRowsContent*/
+					if (
+						scope.filter.options.filter_type === 'date_tree' &&
+						( !scope.columnRowsContent || !scope.columnRowsContent.length )
+					) {
+
+						getDataForSelects();
+
+					}
 
 				};
 

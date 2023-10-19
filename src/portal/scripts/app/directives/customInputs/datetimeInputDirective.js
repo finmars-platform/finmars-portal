@@ -95,14 +95,19 @@
 						// dateChangedFromOutside = false;
 						clearTimeout(onChangeIndex);
 
+						if (scope.onChangeCallback) {
+							setTimeout(() => {
+								// in separate setTimeout to run as soon as possible
+								scope.onChangeCallback({changedValue: scope.model});
+							}, 0);
+						}
+
 						onChangeIndex = setTimeout(() => {
 
 							scope.valueIsValid = valueIsValid;
 							scope.error = error;
 
 							scope.$apply();
-
-							if (scope.onChangeCallback) scope.onChangeCallback();
 
 						}, onChangeDelay);
 

@@ -113,7 +113,7 @@
 					return scope.isDisabled || scope.locked;
 				};
 
-				var onChangeIndex;
+				// var onChangeIndex;
 
 				scope.onInputChange = function (modelVal) {
 
@@ -121,9 +121,9 @@
 						scope.model = modelVal;
 					}
 
-					clearTimeout(onChangeIndex);
+					// clearTimeout(onChangeIndex);
 
-					onChangeIndex = setTimeout(() => {
+					setTimeout(() => {
 
 						scope.error = "";
 						stylePreset = "";
@@ -147,9 +147,9 @@
 						} */
 						scope.$apply();
 
-						if (scope.onChangeCallback) scope.onChangeCallback();
+						if (scope.onChangeCallback) scope.onChangeCallback({changedValue: scope.model});
 
-					}, 500);
+					}, 0);
 
 				};
 
@@ -223,7 +223,7 @@
 							if (scope.onChangeCallback) {
 
 								setTimeout(function () {
-									scope.onChangeCallback();
+									scope.onChangeCallback({changedValue: scope.model});
 								}, 0);
 
 							}

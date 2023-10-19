@@ -36,11 +36,20 @@
         </div>
 
         <div class="p-16" data-ng-if="vm.statsItems.length" style="padding-top: 0">
-            <h2 style="margin-top: 0">Stats</h2>
+
+            <div layout="row" layout-align="start center">
+
+                <h2 style="margin-top: 0">Stats</h2>
+
+                <md-button class="outline-button" ui-sref="app.portal.celery-worker-page">Configure</md-button>
+                
+            </div>
 
             <div data-ng-repeat="item in vm.statsItems" class="m-8">
 
-                <div><b>Worker</b>: {{item.name}}</div>
+                <div><b>Worker</b>: {{item.name}}
+
+                </div>
                 <div class="p-l-16">
                     <div>
                         <b>Uptime</b>: {{item.uptime}}

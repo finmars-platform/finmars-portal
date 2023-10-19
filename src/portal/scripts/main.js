@@ -27,8 +27,7 @@ import entityResolverService from "./app/services/entityResolverServiceNew";
 import fieldResolverService from "./app/services/fieldResolverService";
 import pricesCheckerService from "./app/services/reports/pricesCheckerService";
 import expressionService from "./app/services/expression.serviceNew";
-import dashboardConstructorMethodsService
-    from "./app/services/dashboard-constructor/dashboardConstructorMethodsService";
+import customInputsService from "./app/services/customInputsService";
 
 import finmarsDatabaseService from "./app/services/finmarsDatabaseService";
 import configurationImportGetService from "./app/services/configuration-import/configurationImportGetService";
@@ -40,8 +39,14 @@ import dashboardHelper from "./app/helpers/dashboard.helper.js";
 import evRvLayoutsHelper from "./app/helpers/evRvLayoutsHelper";
 import reportHelper from "./app/helpers/reportHelper";
 import rvDataProviderService from "./app/services/rv-data-provider/rv-data-provider.service";
+import groupsService from "./app/services/rv-data-provider/groups.service";
+import objectsService from "./app/services/rv-data-provider/objects.service";
 import reconDataProviderService from "./app/services/recon-data-provider/recon-data-provider.service";
 import configurationService from "./app/services/configurationService";
+import specificDataService from "./app/services/specificDataService";
+import userFilterService from "./app/services/rv-data-provider/user-filter.service";
+import dashboardConstructorMethodsService
+    from "./app/services/dashboard-constructor/dashboardConstructorMethodsService";
 
 import utilsService from "./app/services/utilsService";
 //# endregion Services and helpers for them
@@ -149,7 +154,7 @@ export default (function () {
     portal.service('attributeTypeService', ['cookieService', 'xhrService', 'metaRestrictionsService', attributeTypeService]);
 
     portal.service('transactionTypeService', ['cookieService', 'xhrService', transactionTypeService]);
-    portal.service('instrumentService', ['cookieService', 'xhrService', 'uiService', 'gridTableHelperService', 'multitypeFieldService', instrumentService]);
+    portal.service('instrumentService', ['cookieService', 'toastNotificationService', 'xhrService', 'uiService', 'gridTableHelperService', 'multitypeFieldService', instrumentService]);
     portal.service('reportService', ['cookieService', 'xhrService', reportService]);
     portal.service('priceHistoryService', ['cookieService', 'xhrService', priceHistoryService]);
     portal.service('currencyHistoryService', ['cookieService', 'xhrService', currencyHistoryService]);
@@ -160,7 +165,10 @@ export default (function () {
     portal.service('dashboardConstructorMethodsService', ['uiService', 'dashboardHelper', dashboardConstructorMethodsService]);
     portal.service('utilsService', ['cookieService', 'xhrService', utilsService]);
     portal.service('configurationService', ['cookieService', 'xhrService', configurationService]);
+    portal.service('specificDataService', ['cookieService', 'xhrService', specificDataService]);
+    portal.service('userFilterService', [userFilterService]);
     portal.service('finmarsDatabaseService', ['cookieService', 'xhrService', finmarsDatabaseService]);
+    portal.service('customInputsService', [customInputsService]);
 
     //# region Services for import and export
     portal.service('configurationImportGetService', ['entityResolverService', 'customFieldService', 'attributeTypeService', 'transactionTypeService', configurationImportGetService]);
@@ -182,7 +190,10 @@ export default (function () {
     portal.service('evRvLayoutsHelper', ['toastNotificationService', 'metaContentTypesService', 'uiService', evRvLayoutsHelper]);
     portal.service('dashboardHelper', ['toastNotificationService', 'uiService', 'evRvLayoutsHelper', dashboardHelper]);
     portal.service('reportHelper', ['expressionService', reportHelper]);
-    portal.service('rvDataProviderService', ['entityResolverService', 'pricesCheckerService', 'reportHelper', rvDataProviderService]);
+    portal.service('groupsService', ['entityResolverService', groupsService])
+    portal.service('objectsService', ['entityResolverService', objectsService])
+
+    portal.service('rvDataProviderService', ['entityResolverService', 'pricesCheckerService', 'reportHelper', 'groupsService', 'objectsService', rvDataProviderService]);
     portal.service('reconDataProviderService', ['entityResolverService', 'reportHelper', reconDataProviderService]);
     //# endregion Helpers
 
@@ -248,7 +259,7 @@ export default (function () {
 
     portal.controller('DashboardReportViewerController', ['$scope', '$mdDialog', 'toastNotificationService', 'usersService', 'globalDataService', 'priceHistoryService', 'currencyHistoryService', 'metaContentTypesService', 'customFieldService', 'attributeTypeService', 'uiService', 'pricesCheckerService', 'expressionService', 'rvDataProviderService', 'reportHelper', 'gFiltersHelper', 'dashboardHelper', require('./app/controllers/entityViewer/dashboardReportViewerController')]);
 
-    portal.directive('reportViewerMatrix', ['$mdDialog', require('./app/directives/reportViewerMatrixDirective')]);
+    portal.directive('reportViewerMatrix', ['$mdDialog', 'groupsService', require('./app/directives/reportViewerMatrixDirective')]);
     portal.directive('reportViewerTableChart', ['$mdDialog', require('./app/directives/reportViewerTableChartDirective')]);
     portal.directive('reportViewerBarsChart', ['d3Service', require('./app/directives/reportViewer/reportViewerBarsChart')]);
     portal.directive('reportViewerPieChart', ['d3Service', require('./app/directives/reportViewer/reportViewerPieChart')]);
@@ -711,6 +722,8 @@ export default (function () {
     portal.controller('FillPriceHistoryController', ['$scope', '$mdDialog', require('./app/controllers/pages/fillPriceHistoryController')]);
     portal.controller('MappingTablesController', ['$scope', '$mdDialog', require('./app/controllers/pages/mappingTablesController')]);
     portal.controller('MappingTablePageController', ['$scope', '$mdDialog', require('./app/controllers/pages/mappingTablePageController')]);
+    portal.controller('CeleryWorkerPageController', ['$scope', '$mdDialog', require('./app/controllers/pages/celeryWorkerPageController')]);
+    portal.controller('CeleryWorkerDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/celeryWorkerDialogController')]);
     portal.controller('MappingTableDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/mappingTableDialogController')]);
     portal.controller('ProcessesController', ['$scope', '$mdDialog', require('./app/controllers/pages/processesController')]);
     portal.controller('JournalPageController', ['$scope', '$state', '$stateParams', '$mdDialog', 'usersService', 'metaContentTypesService', require('./app/controllers/pages/journalPageController')]);
@@ -839,7 +852,7 @@ export default (function () {
 
     //# region GROUP TABLE
     portal.directive('groupTable', ['globalDataService', require('./app/directives/groupTable/gTableComponent')]);
-    portal.directive('groupTableBody', ['toastNotificationService', 'usersService', 'globalDataService', 'transactionTypeService', 'priceHistoryService', 'uiService', 'evRvDomManagerService', require('./app/directives/groupTable/gTableBodyComponent')]);
+    portal.directive('groupTableBody', ['toastNotificationService', 'usersService', 'globalDataService', 'transactionTypeService', 'priceHistoryService', 'uiService', 'evRvDomManagerService', 'rvDataProviderService', require('./app/directives/groupTable/gTableBodyComponent')]);
     /* portal.directive('rvTextFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvTextFilterDirective')]);
     portal.directive('rvNumberFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvNumberFilterDirective')]);
     portal.directive('rvDateFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvDateFilterDirective')]); */
@@ -847,16 +860,16 @@ export default (function () {
     portal.directive('gFilters', ['$mdDialog', 'uiService', 'evRvLayoutsHelper', 'gFiltersHelper', require('./app/directives/groupTable/filters/gFiltersDirective')]);
     portal.directive('gEvFilters', ['$mdDialog', '$state', '$bigDrawer', require('./app/directives/groupTable/filters/entityViewer/gEvFiltersDirective')]);
     portal.directive('evFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evFilterDirective')]);
-    portal.directive('evTextFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evTextFilterDirective')]);
+    portal.directive('evTextFilter', ['specificDataService', 'userFilterService', 'gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evTextFilterDirective')]);
     portal.directive('evBooleanFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evBooleanFilterDirective')]);
     portal.directive('evNumberFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evNumberFilterDirective')]);
-    portal.directive('evDateFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evDateFilterDirective')]);
+    portal.directive('evDateFilter', ['specificDataService', 'gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evDateFilterDirective')]);
     portal.directive('gRvFilters', ['$mdDialog', 'gFiltersHelper', 'uiService', require('./app/directives/groupTable/filters/reportViewer/gRvFiltersDirective')]);
-    portal.directive('rvFilter', ['$mdDialog', 'gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvFilterDirective')]);
-    portal.directive('rvTextFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvTextFilterDirective')]);
+    portal.directive('rvFilter', ['$mdDialog', 'specificDataService', 'userFilterService', 'gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvFilterDirective')]);
+    portal.directive('rvTextFilter', ['userFilterService', 'gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvTextFilterDirective')]);
     portal.directive('rvBooleanFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvBooleanFilterDirective')]);
     portal.directive('rvNumberFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvNumberFilterDirective')]);
-    portal.directive('rvDateFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvDateFilterDirective')]);
+    portal.directive('rvDateFilter', ['specificDataService', 'gFiltersHelper', require('./app/directives/groupTable/filters/reportViewer/rvDateFilterDirective')]);
     /* portal.directive('evTextFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evOldTextFilterDirective')]);
     portal.directive('evNumberFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evOldNumberFilterDirective')]);
     portal.directive('evDateFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evOldDateFilterDirective')]); */
@@ -865,7 +878,7 @@ export default (function () {
 
     portal.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
     portal.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]); //2021-12-17 DEPRECATED
-    portal.directive('groupColumns', ['$mdDialog', 'toastNotificationService', 'usersService', 'globalDataService', 'uiService', 'evRvDomManagerService', require('./app/directives/groupTable/gColumnsComponent')]);
+    portal.directive('groupColumns', ['$mdDialog', 'toastNotificationService', 'usersService', 'globalDataService', 'uiService', 'evRvDomManagerService', 'rvDataProviderService', require('./app/directives/groupTable/gColumnsComponent')]);
     // portal.directive('groupClipboardHandler', [require('./app/directives/groupTable/gClipboardHandlerComponent')]); // potentially deprecated
     portal.directive('groupColumnResizer', [require('./app/directives/groupTable/gColumnResizerComponent')]);
     portal.directive('groupLayoutResizer', [require('./app/directives/groupTable/gLayoutResizerComponent')]);
@@ -912,7 +925,7 @@ export default (function () {
 
     //# endregion GROUP TABLE
 
-    portal.directive('mainHeader', ['$mdDialog', '$state', '$transitions', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'usersService', 'globalDataService', 'systemMessageService', 'redirectionService', 'evRvLayoutsHelper', mainHeaderDirective]);
+    portal.directive('mainHeader', ['$mdDialog', '$state', '$transitions', 'cookieService', 'broadcastChannelService', 'middlewareService', 'authorizerService', 'usersService', 'uiService', 'globalDataService', 'systemMessageService', 'redirectionService', 'evRvLayoutsHelper', mainHeaderDirective]);
     portal.directive('evFieldResolver', ['metaContentTypesService', 'fieldResolverService', require('./app/directives/entityViewerFieldResolverDirective')]);
     portal.directive('evSelectorResolver', [require('./app/directives/entityViewerSelectorResolverDirective')]);
     portal.directive('ismFieldResolver', ['$mdDialog', 'fieldResolverService', require('./app/directives/instrumentSchemeManagerFieldResolverDirective')]);
@@ -962,9 +975,9 @@ export default (function () {
     portal.directive('dateInput', [require('./app/directives/customInputs/dateInputDirective.js')]);
     portal.directive('datetimeInput', [require('./app/directives/customInputs/datetimeInputDirective.js')]);
     portal.directive('expressionInput', ['$mdDialog', require('./app/directives/customInputs/expressionInputDirective')]);
-    portal.directive('dropdownSelect', ['$mdDialog', require('./app/directives/customInputs/dropdownSelectDirective')]);
-    portal.directive('instrumentSelect', ['$mdDialog', 'toastNotificationService', 'instrumentService', require('./app/directives/customInputs/instrumentSelectDirective')]);
-    portal.directive('unifiedDataSelect', ['$mdDialog', 'finmarsDatabaseService', require('./app/directives/customInputs/unifiedDataSelectDirective')]);
+    portal.directive('dropdownSelect', ['$mdDialog', 'customInputsService', require('./app/directives/customInputs/dropdownSelectDirective')]);
+    portal.directive('instrumentSelect', ['$mdDialog', 'toastNotificationService', 'instrumentService', 'customInputsService', require('./app/directives/customInputs/instrumentSelectDirective')]);
+    portal.directive('unifiedDataSelect', ['$mdDialog', 'finmarsDatabaseService', 'customInputsService', require('./app/directives/customInputs/unifiedDataSelectDirective')]);
     portal.directive('classifierSelect', ['$mdDialog', require('./app/directives/customInputs/classifierSelectDirective')]);
     portal.directive('multitypeField', [require('./app/directives/customInputs/multitypeFieldDirective')]);
     portal.directive('multiinputField', [multiinputFieldDirective]);

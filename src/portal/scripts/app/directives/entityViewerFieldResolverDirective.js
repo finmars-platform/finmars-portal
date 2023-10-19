@@ -605,7 +605,7 @@
                     bfcVm.model = scope.modelObj.model;
 
                     if (bfcVm.itemChange) {
-                        bfcVm.itemChange();
+                        bfcVm.itemChange(bfcVm.model);
                     }
 
                 };
