@@ -21,9 +21,10 @@
                                  data-menu-options="configuration_codes"
                                  data-is-disabled="isDisabled"
                                  data-small-options="selSmallOpts"
+                                 data-event-signal="configSelEventSignal"
                                  data-on-change-callback="updateUserCode(usercodeEnd.value, configuration_code.value)"></dropdown-select>
 
-                <div data-ng-if="!readyStatus">
+                <div data-ng-if="!readyStatus" class="flex-row flex-center">
                     <progress-circular data-diameter="20"></progress-circular>
                 </div>
             </div>
@@ -36,7 +37,7 @@
                        data-ng-keyup="updateUserCode(usercodeEnd.value, configuration_code.value)">
             </md-input-container>-->
             <div class="flex-1-1-100" style="min-width: 0;">
-                <text-input data-label="User code"
+                <text-input data-label="{{userCodeLabel}}"
                             data-model="usercodeEnd.value"
                             data-small-options="uciSmallOpts"
                             data-is-disabled="isDisabled"

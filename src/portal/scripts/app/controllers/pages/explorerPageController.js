@@ -36,6 +36,7 @@
 
         vm.allSelected = false;
         vm.selectedCount = 0;
+        vm.filesStatus = [];
 
         vm.searchTerm = '';
 
@@ -462,15 +463,26 @@
 
         }
 
-        vm.downloadFile = function () {
+        vm.downloadFile = function ($event, item) {
+
+            console.log('downloadFile.item', item);
 
             var name = vm.currentPath[vm.currentPath.length - 1];
+            //
+            // var content = vm.editor.getValue();
+            //
+            // const blob = new Blob([content], {type: "plain/text"});
+            //
+            // downloadFileHelper.downloadFile(blob, "plain/text", name)
 
-            var content = vm.editor.getValue();
+            var path = vm.currentPath.join('/') + '/' + item.name;
 
-            const blob = new Blob([content], {type: "plain/text"});
+            explorerService.downloadFile({path: path}).then(function (blob) {
 
-            downloadFileHelper.downloadFile(blob, "plain/text", name)
+                downloadFileHelper.downloadFile(blob, "plain/text", item.name)
+
+            })
+
         }
 
         vm.formatJSON = function ($event) {
@@ -791,33 +803,72 @@
 
         }
 
-        vm.uploadFileHandler = function ($event) {
+        vm.sizePretty = function (size) {
+            if (isNaN(size))
+                size = 0;
 
-            vm.processing = true;
+            if (size < 1024)
+                return size + ' Bytes';
 
-            console.log("uploadFileHandler.$event", $event)
+            size /= 1024;
+
+            if (size < 1024)
+                return size.toFixed(2) + ' KB';
+
+            size /= 1024;
+
+            if (size < 1024)
+                return size.toFixed(2) + ' MB';
+
+            size /= 1024;
+
+            return size.toFixed(2) + ' GB';
+        };
+
+        vm.uploadFileHandler = async function ($event) {
+
+            vm.closeFileStatuses = false;
 
             var fileInput = document.querySelector('#explorerFileUploadInput')
 
-            let formData = new FormData();
-            for (var i = 0; i < fileInput.files.length; i = i + 1) {
-                formData.append("file", fileInput.files[i]);
-            }
+            // Assuming vm.filesStatus is an array that you can access from your view to display status
+            vm.filesStatus = Array.from(fileInput.files).map(function (file) {
+                return {
+                    file: file,
+                    name: file.name,
+                    size: file.size,
+                    size_pretty: vm.sizePretty(file.size),
+                    status: 'init'  // initial status
+                };
+            });
 
             var path = vm.currentPath.join('/')
 
-            console.log(path)
+            for (let i = 0; i < vm.filesStatus.length; i++) {
+                let fileStatus = vm.filesStatus[i];
+                let formData = new FormData();
+                formData.append("file", fileStatus.file);
+                formData.append('path', path);
 
-            formData.append('path', path)
+                fileStatus.status = 'progress';
 
-            explorerService.uploadFiles(formData).then(function (data) {
+                try {
+                    await explorerService.uploadFiles(formData);
+                    fileStatus.status = 'success';
+                } catch (error) {
+                    fileStatus.status = 'error';
+                    console.error(`Failed to upload ${fileStatus.name}: ${error}`);
+                }
 
-                document.querySelector('#explorerFileUploadInput').value = "";
+                $scope.$apply();
 
-                vm.listFiles();
+            }
 
-            })
+            vm.closeFileStatuses = true;
 
+            // Clear the file input for the next set of uploads
+            document.querySelector('#explorerFileUploadInput').value = "";
+            vm.listFiles();
 
         }
 

@@ -1,12 +1,10 @@
 var evEvents = require('../entityViewerEvents');
-var groupsService = require('./groups.service');
-var objectsService = require('./objects.service');
 var evDataHelper = require('../../helpers/ev-data.helper');
 var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 var rvDataHelper = require('../../helpers/rv-data.helper');
 var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
-export default function (entityResolverService, pricesCheckerService, reportHelper) {
+export default function (entityResolverService, pricesCheckerService, reportHelper, groupsService, objectsService) {
 
     var requestData = function (evDataService) {
 
@@ -66,42 +64,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         var filters = entityViewerDataService.getFilters();
 
-        /* var isFilterValid = function (filterItem) {
-
-            if (filterItem.options && filterItem.options.enabled) { // if filter is enabled
-
-                var filterType = filterItem.options.filter_type;
-
-                if (filterType === 'empty' ||
-                    filterItem.options.exclude_empty_cells) { // if filter works for empty cells
-
-                    return true;
-
-                } else if (filterItem.options.filter_values) { // if filter values can be used for filtering (not empty)
-
-                    var filterValues = filterItem.options.filter_values;
-
-                    if (filterType === 'from_to' || filterType === 'out_of_range') {
-
-                        if ((filterValues.min_value || filterValues.min_value === 0) &&
-                            (filterValues.max_value || filterValues.max_value === 0)) {
-                            return true;
-                        }
-
-                    } else if (Array.isArray(filterValues)) {
-
-                        if (filterValues[0] || filterValues[0] === 0) {
-                            return true;
-                        }
-
-                    }
-                }
-
-            }
-
-            return false;
-        }; */
-
         filters.forEach(function (item) {
 
             if (evRvCommonHelper.isFilterValid(item)) {
@@ -135,26 +97,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         var entityType = entityViewerDataService.getEntityType();
         var reportOptions = entityViewerDataService.getReportOptions();
 
-        //# region Delete report options items">
-        /* delete reportOptions.items;
-        delete reportOptions.custom_fields;
-        delete reportOptions.custom_fields_object;
-        delete reportOptions.item_complex_transactions;
-        delete reportOptions.item_counterparties;
-        delete reportOptions.item_responsibles;
-        delete reportOptions.item_strategies3;
-        delete reportOptions.item_strategies2;
-        delete reportOptions.item_strategies1;
-        delete reportOptions.item_portfolios;
-        delete reportOptions.item_instruments;
-        delete reportOptions.item_instrument_pricings;
-        delete reportOptions.item_instrument_accruals;
-        delete reportOptions.item_currency_fx_rates;
-        delete reportOptions.item_currencies;
-        delete reportOptions.item_accounts; */
         reportOptions = reportHelper.cleanReportOptionsFromTmpProps(reportOptions);
         reportOptions.filters = entityViewerDataService.getFilters(); // for transaction report only
-        //# endregion
 
         reportOptions.task_id = null;
 
@@ -184,13 +128,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 var attributeExtensions = entityViewerDataService.getCrossEntityAttributeExtensions();
 
                 reportOptions.items = reportHelper.injectIntoItemsV2(reportOptions.items, reportOptions, entityType);
-
-                // reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions, entityType);
-                // reportOptions.items = reportHelper.injectIntoItems(reportOptions.items, reportOptions);
-                // reportOptions.items = reportHelper.convertItemsToFlat(reportOptions.items);
                 reportOptions.items = reportHelper.extendAttributes(reportOptions.items, attributeExtensions);
 
-                // Report options.items - origin table without filtering and grouping. Save to entityViewerDataService.
                 reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
 
                 entityViewerDataService.setUnfilteredFlatList(reportOptions.items);
@@ -260,6 +199,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     var getObjects = function (requestParameters, entityViewerDataService, entityViewerEventService) {
 
+        console.log('getObjects.requestParameters', requestParameters);
+
         requestParameters.status = 'loading';
 
         entityViewerDataService.setRequestParameters(requestParameters);
@@ -276,96 +217,16 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
             var i;
 
 
-            objectsService.getList(entityType, options, entityViewerDataService).then(function (data) {
+            objectsService.getList(options, entityViewerDataService).then(function (data) {
 
-                var groupData = entityViewerDataService.getData(event.___id);
-                var obj; // group that contains objects
+                var parentGroup = entityViewerDataService.getData(requestParameters.id);
 
-                if (!event.___id) {
+                data.results.map(function (item, index) {
 
-                    var rootGroupData = entityViewerDataService.getRootGroupData();
-
-                    obj = Object.assign({}, rootGroupData);
-
-                    obj.count = data.count;
-                    obj.next = data.next;
-                    obj.previous = data.previous;
-                    obj.results = data.results;
-
-                    // for (i = 0; i < step; i = i + 1) {
-                    //     if (page * step + i < obj.count) {
-                    //         obj.results[page * step + i] = data.results[i];
-                    //     }
-                    // }
-
-                } else {
-
-                    if (groupData) {
-
-                        obj = Object.assign({}, groupData);
-
-                        obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
-                        obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
-
-                        obj.count = data.count;
-                        obj.next = data.next;
-                        obj.previous = data.previous;
-                        obj.results = data.results;
-                        // for (i = 0; i < step; i = i + 1) {
-                        //     if (page * step + i < obj.count) {
-                        //         obj.results[page * step + i] = data.results[i];
-                        //     }
-                        // }
-                    } else {
-
-                        var parentGroup = entityViewerDataService.getData(event.parentGroupId);
-
-                        obj = Object.assign({}, data);
-
-                        obj.___group_name = event.groupName ? event.groupName : '-';
-                        obj.___group_identifier = event.groupId ? event.groupId : '-';
-
-                        obj.___is_open = true;
-                        // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
-
-                        obj.___parentId = event.parentGroupId;
-                        obj.___type = 'group';
-                        obj.___id = event.___id;
-                        obj.___index = parentGroup.results.findIndex(group => group.___id === obj.___id);
-                        obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
-
-                        var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
-
-                        console.log('groupSettings.getObjects', JSON.parse(JSON.stringify(groupSettings)));
-
-                        if (groupSettings.hasOwnProperty('is_open')) {
-                            obj.___is_open = groupSettings.is_open;
-                        }
-
-                        if (!parentGroup.___is_open) {
-
-                            obj.___is_open = false;
-                            groupSettings.is_open = false;
-
-                            rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
-
-                        }
-
-                    }
-
-                }
-
-                obj.results = obj.results.map(function (item, index) {
-
-                    item.___group_name = item.___group_name ? item.___group_name : '-';
-                    item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
-
-                    // item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
-
-                    item.___parentId = obj.___id;
+                    item.___parentId = parentGroup.___id;
                     item.___type = 'object';
                     item.___index = index;
-                    item.___level = obj.___level + 1;
+                    item.___level = parentGroup.___level + 1;
 
                     //# region Create an ___id
                     item.___id = evRvCommonHelper.getId(item);
@@ -373,8 +234,10 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                     var duplicateObj;
 
                     try {
-                        duplicateObj = entityViewerDataService.getObject(item.___id, item.___parentId);// returns an error if a matching object is not found
+                        // returns an error if a matching object is not found
+                        duplicateObj = entityViewerDataService.getObject(item.___id, item.___parentId);
                     } catch (e) {
+                        console.error(e);
                     }
 
                     if (duplicateObj) {
@@ -385,18 +248,25 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                         throw customError;
 
                     }
-                    //# endregion
 
-                    return item;
+                    entityViewerDataService.setData(item);
                 });
-
-                entityViewerDataService.setData(obj);
 
                 requestParameters.status = 'loaded';
 
                 entityViewerDataService.setRequestParameters(requestParameters);
 
-                resolve(obj);
+                resolve();
+
+            }).catch(function (error) {
+
+                console.error('getObjects.error', error);
+
+                requestParameters.status = 'error';
+
+                entityViewerDataService.setRequestParameters(requestParameters);
+
+                reject();
 
             })
 
@@ -405,6 +275,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
     };
 
     var getGroups = function (requestParameters, entityViewerDataService, entityViewerEventService) {
+
+        console.log('getGroups.requestParameters', requestParameters);
 
         requestParameters.status = 'loading';
 
@@ -433,129 +305,95 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
             var step = 10000; // TODO fix pagination problem in future
             var i;
 
-            groupsService.getList(entityType, options, entityViewerDataService).then(function (data) {
+            groupsService.getList(options, entityViewerDataService).then(function (data) {
 
-                var obj = {};
+                // console.log('groupsService.getList.data', data)
 
+                var parentGroup = entityViewerDataService.getData(requestParameters.id);
 
-                if (!event.___id) {
+                data.results.map(function (item, index) {
 
-                    var rootGroupData = entityViewerDataService.getRootGroupData();
-
-                    obj = Object.assign({}, rootGroupData);
-
-                    obj.count = data.count;
-                    obj.next = data.next;
-                    obj.previous = data.previous;
-                    for (i = 0; i < step; i = i + 1) {
-                        if (page * step + i < obj.count) {
-                            obj.results[page * step + i] = data.results[i];
-                        }
-                    }
-
-
-                } else {
-
-                    var groupData = entityViewerDataService.getData(event.___id);
-
-
-                    if (groupData) {
-
-                        obj = Object.assign({}, groupData);
-
-                        obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
-                        obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
-
-                        obj.count = data.count;
-                        obj.next = data.next;
-                        obj.previous = data.previous;
-
-                        for (i = 0; i < step; i = i + 1) {
-                            if (page * step + i < obj.count) {
-                                obj.results[page * step + i] = data.results[i];
-                            }
-                        }
-
-
-                    } else {
-
-
-                        var parentGroup = entityViewerDataService.getData(event.parentGroupId);
-
-                        obj = Object.assign({}, data);
-                        obj.___group_name = event.groupName ? event.groupName : '-';
-                        obj.___group_identifier = event.groupId ? event.groupId : '-';
-                        obj.___is_open = true;
-
-
-                        // obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
-
-                        obj.___parentId = event.parentGroupId;
-                        obj.___type = 'group';
-                        obj.___id = event.___id;
-                        obj.___level = evRvCommonHelper.getParents(event.parentGroupId, entityViewerDataService).length;
-
-
-                        var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, obj);
-
-                        if (groupSettings.hasOwnProperty('is_open')) {
-                            obj.___is_open = groupSettings.is_open;
-                        }
-
-                        if (!parentGroup.___is_open) {
-
-                            obj.___is_open = false;
-                            groupSettings.is_open = false;
-
-                            rvDataHelper.setGroupSettings(entityViewerDataService, obj, groupSettings);
-
-                        }
-
-
-                    }
-
-                }
-
-                var groups = entityViewerDataService.getGroups();
-                var parents = [];
-
-                if (obj.___parentId !== null) {
-                    parents = evRvCommonHelper.getParents(obj.___parentId, entityViewerDataService);
-                }
-
-                parents.push(obj);
-                // generate data for group's children
-                obj.results = obj.results.map(function (item, index) {
-
-                    item.___parentId = obj.___id;
+                    item.___parentId = requestParameters.id;
                     item.___group_name = item.___group_name ? item.___group_name : '-';
                     item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
 
-                    // item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
 
-
-                    item.___level = obj.___level + 1;
+                    item.___level = parentGroup.___level + 1;
                     item.___index = index;
 
-                    if (groups.length >= parents.length) {
-                        item.___type = 'group';
-                    } else {
-                        item.___type = 'object';
+                    item.___type = 'group';
+
+                    item.___id = evRvCommonHelper.getId(item); // order matters
+
+                    var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, item);
+
+                    if (groupSettings.hasOwnProperty('is_open')) {
+                        item.___is_open = groupSettings.is_open;
                     }
 
-                    item.___id = evRvCommonHelper.getId(item);
+                    if (!parentGroup.___is_open) {
 
-                    return item
+                        item.___is_open = false;
+                        groupSettings.is_open = false;
+
+                        rvDataHelper.setGroupSettings(entityViewerDataService, item, groupSettings);
+
+                    }
+
+                    var entityType = entityViewerDataService.getEntityType();
+                    var viewContext = entityViewerDataService.getViewContext();
+
+                    if (entityType === 'transaction-report' && viewContext === 'split_panel') {
+                        item.___is_open = true;
+                    }
+
+                    // console.log('parentGroup.___is_open', parentGroup.___is_open)
+                    // console.log('item.___is_open', item.___is_open)
+
+                    entityViewerDataService.setData(item);
+
+                    if (item.___is_open) { // Request Data for group if open. TODO refactor it, I dont like it, probably will be issues on large data sets
+
+                        // TODO discuss
+                        // What I propose
+                        // We need to have ONE GENERAL queue list for all requests
+                        // E.G. if we know that user has 70k transactions
+                        // We need to prevent him to do more then 10 requests on level
+
+                        if (!entityViewerDataService.isRequestParametersExist(item.___id)) {
+
+                            var newRequestParameters = createRequestParameters(item, item.___level - 1, entityViewerDataService, entityViewerEventService,)
+
+                            // console.log('rvDataProvider_cascade_download.item', item);
+                            // console.log('rvDataProvider_cascade_download.requestParameters', newRequestParameters);
+
+                            updateDataStructureByRequestParameters(newRequestParameters, entityViewerDataService, entityViewerEventService).then(function () {
+
+                                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                            })
+
+                        }
+
+                    }
 
                 });
-
-                entityViewerDataService.setData(obj);
 
                 requestParameters.status = 'loaded';
 
                 entityViewerDataService.setRequestParameters(requestParameters);
 
-                resolve(obj);
+                resolve();
+
+            }).catch(function (error) {
+
+                console.error('getGroups.error', error);
+
+                requestParameters.status = 'error';
+
+                entityViewerDataService.setRequestParameters(requestParameters);
+
+                reject();
 
             })
 
@@ -575,15 +413,16 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     };
 
-    var createRequestParameters = function (item, level, evDataService, evEventService, createdIdsList) {
+    var createRequestParameters = function (item, level, evDataService, evEventService, createdIdsList = []) {
 
-        // console.log('createRequestParameters.item', item);
+        console.log('createRequestParameters.item', item);
 
         var groups = evDataService.getGroups();
 
         var requestParameters;
 
-        var id = evRvCommonHelper.getId(item);
+        // var id = evRvCommonHelper.getId(item);
+        var id = item.___id;
 
         if (createdIdsList.includes(id)) {
 
@@ -645,10 +484,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         }
 
-        testObj[id] = {
-            requestParameters: requestParameters,
-            item: item,
-        };
 
         evDataService.setRequestParameters(requestParameters);
 
@@ -668,12 +503,24 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
      * @param {Object} evEventService
      * @returns {Promise<[]>} - returns arrays of nested promises for called methods updateDataStructureByRequestParameters
      */
-    var recursiveRequest = function (parentId, items, level, evDataService, evEventService, createdIdsList) {
+    var recursiveRequest = function (parentId, level, evDataService, evEventService, createdIdsList) {
 
         return new Promise(function RecursiveRequestPromise(resolve, reject) {
 
             var promises = [];
             var requestParameters;
+
+            var dataList = evDataService.getDataAsList();
+
+            var items = []
+
+            dataList.forEach(function (dataItem) {
+
+                if (dataItem.___parentId === parentId) {
+                    items.push(dataItem)
+                }
+
+            })
 
             items.forEach(function (item) {
 
@@ -703,7 +550,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                         // console.log('item!', item.___group_name);
 
-                        recursiveRequestPromises.push(recursiveRequest(item.___id, item.results, level, evDataService, evEventService, createdIdsList));
+                        recursiveRequestPromises.push(recursiveRequest(item.___id, level, evDataService, evEventService, createdIdsList));
 
                     });
 
@@ -730,13 +577,12 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         var rootGroup = evDataService.getRootGroupData();
         var level = 0;
 
-        return recursiveRequest(rootGroup.___id, rootGroup.results, level, evDataService, evEventService, createdIdsList).then(function () {
+        return recursiveRequest(rootGroup.___id, level, evDataService, evEventService, createdIdsList).then(function () {
             console.timeEnd('Creating Data Structure');
         })
 
     };
 
-    var testObj = {};
     var createdIdsList = []; // WTF VERY BAD PATTERN, never do it again
 
     var createDataStructure = function (evDataService, evEventService) {
@@ -745,7 +591,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         evDataService.resetData();
         evDataService.resetRequestParameters();
         var createdIdsList = [];
-        testObj = {};
 
         var defaultRootRequestParameters = evDataService.getActiveRequestParameters();
         var groupTypes = evDataService.getGroups();
@@ -840,6 +685,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         // console.log('updateDataStructureByRequestParameters.requestParameters', requestParameters);
 
+        evEventService.dispatchEvent(evEvents.DATA_LOAD_START);
+
         return new Promise(function (resolve, reject) {
 
             injectRegularFilters(requestParameters, evDataService, evEventService);
@@ -850,6 +697,9 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 getObjectsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
                     resolve(data)
+
+                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+
                 })
 
             }
@@ -858,6 +708,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 getGroupsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
                     resolve(data)
+
+                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
                 })
             }
 
@@ -867,32 +719,37 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     var updateDataStructure = function (evDataService, evEventService) {
 
-        return new Promise(function (resolve, reject) {
+        var requestParameters = evDataService.getActiveRequestParameters();
 
-            var requestParameters = evDataService.getActiveRequestParameters();
+        injectRegularFilters(requestParameters, evDataService, evEventService);
 
-            injectRegularFilters(requestParameters, evDataService, evEventService);
+        evEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
-            if (requestParameters.requestType === 'objects') {
+        if (requestParameters.requestType === 'objects') {
 
-                getObjectsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
-                    resolve(data)
-                })
+            getObjectsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
 
-            }
+                evEventService.dispatchEvent(evEvents.DATA_LOAD_END); // backend logic
 
-            if (requestParameters.requestType === 'groups') {
+            })
 
-                getGroupsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
-                    resolve(data)
-                })
-            }
+        }
 
-        })
+        if (requestParameters.requestType === 'groups') {
+
+            getGroupsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
+
+                evEventService.dispatchEvent(evEvents.DATA_LOAD_END); // backend logic
+
+            })
+        }
+
 
     };
 
     var sortObjects = function (entityViewerDataService, entityViewerEventService) {
+
+        entityViewerDataService.resetOnlyItems();
 
         var activeColumnSort = entityViewerDataService.getActiveColumnSort();
         var level = entityViewerDataService.getGroups().length;
@@ -909,12 +766,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                     //# region apply sorting settings
                     requestsParameters[key].body.page = 1;
-
-                    /*if (activeColumnSort.options.sort === 'ASC') {
-                        requestsParameters[key].body.ordering = activeColumnSort.key
-                    } else if (activeColumnSort.options.sort === 'DESC') {
-                        requestsParameters[key].body.ordering = '-' + activeColumnSort.key
-                    }*/
                     requestsParameters[key].body.ordering = activeColumnSort.key;
                     requestsParameters[key].body.ordering_mode = activeColumnSort.options.sort_settings.mode
 
@@ -926,14 +777,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 }
 
             });
-
-        });
-
-        levelGroups.forEach(function (group) { // delete current content of groups, before adding sorted one
-
-            group.results = [];
-
-            entityViewerDataService.setData(group)
 
         });
 
@@ -986,6 +829,9 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         });
 
+        // should be called after requestParametersForUnfoldedGroups assembled
+        entityViewerDataService.resetOnlyGroups();
+
         groups.forEach(function (group) {
 
             group.results = [];
@@ -1022,8 +868,12 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         createDataStructure: createDataStructure,
         requestReport: requestReport,
         updateDataStructure: updateDataStructure,
+
         sortObjects: sortObjects,
-        sortGroupType: sortGroupType
+        sortGroupType: sortGroupType,
+
+        createRequestParameters: createRequestParameters,
+        updateDataStructureByRequestParameters: updateDataStructureByRequestParameters,
     }
 
 }

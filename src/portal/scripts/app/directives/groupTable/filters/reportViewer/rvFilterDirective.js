@@ -4,11 +4,10 @@
 
 	const popupEvents = require("../../../../services/events/popupEvents");
 	const evEvents = require("../../../../services/entityViewerEvents");
-	const userFilterService = require('../../../../services/rv-data-provider/user-filter.service');
 
 	const metaHelper = require('../../../../helpers/meta.helper');
 
-	module.exports = function ($mdDialog, gFiltersHelper) {
+	module.exports = function ($mdDialog, specificDataService, userFilterService, gFiltersHelper) {
 		return {
 			restrict: 'E',
 			scope: {
@@ -32,13 +31,16 @@
 				vm.attributeDataService = $scope.attributeDataService;
 				vm.popupEventService = $scope.popupEventService;
 
-				vm.columnRowsContent = [];
+				// vm.columnRowsContent = [];
 				vm.showSelectMenu = false;
 
 				vm.isRootEntityViewer = vm.evDataService.isRootEntityViewer();
 				vm.useFromAbove = vm.evDataService.getUseFromAbove();
 
 				vm.filterNotFound = false;
+
+				const entityType = $scope.evDataService.getEntityType();
+				const attrsList = vm.attributeDataService.getAllAttributesByEntityType(entityType);
 
 				let filtersList;
 				let useFromAboveFilters;
@@ -47,7 +49,7 @@
 
 				const findFilter = function () {
 
-					let allFilters = JSON.parse(JSON.stringify(vm.evDataService.getFilters()));
+					let allFilters = structuredClone( vm.evDataService.getFilters() );
 					filtersList = [];
 					useFromAboveFilters = [];
 
@@ -55,7 +57,7 @@
 
 					allFilters.forEach((filter) => {
 
-						if (isUseFromAbove(filter)) {
+						if ( isUseFromAbove(filter) ) {
 
 							useFromAboveFilters.push(filter);
 
@@ -93,13 +95,35 @@
 
 				};
 
-				vm.getDataForSelects = function () {
+				const getFilterAttr = attrKey => {
+					return attrsList.find(attr => attr.key === attrKey);
+				};
 
-					var columnRowsContent  = userFilterService.getCellValueByKey(vm.evDataService, vm.filter.key);
+				vm.getDataForSelects = async function () {
 
-					vm.columnRowsContent = columnRowsContent.map(userFilterService.mapColRowsContent);
+					/* var columnRowsContent  = userFilterService.getCellValueByKey(vm.evDataService, vm.filter.key);
 
-					// $scope.$apply();
+					vm.columnRowsContent = columnRowsContent.map(userFilterService.mapColRowsContent); */
+
+					let filterAttr = getFilterAttr(vm.filter.key);
+					let key = vm.filter.key; // for dynamic attribute
+
+					if ( !key.includes('attributes.') ) { // not dynamic attribute
+
+						const keyParts = vm.filter.key.split(".");
+						key = keyParts.at(-1);
+
+					}
+
+					const res = await specificDataService.getValuesForSelect(filterAttr.content_type, key, vm.filter.value_type);
+
+					if (vm.filter.value_type === 40) {
+						// there is data processing inside rvDateFilterDirective
+						return res;
+
+					} else {
+						return res.results.map( userFilterService.mapColRowsContent );
+					}
 
 				};
 

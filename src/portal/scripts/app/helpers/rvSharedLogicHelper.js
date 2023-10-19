@@ -1,13 +1,14 @@
 'use strict';
 
 import CommonDialogsService from "../../../../shell/scripts/app/services/commonDialogsService";
+import localStorageService from "../../../../shell/scripts/app/services/localStorageService";
 
 (function () {
 
 
     const evEvents = require('../services/entityViewerEvents');
 
-	const rvHelper = require('../helpers/rv.helper')
+    const rvHelper = require('../helpers/rv.helper')
 
     module.exports = function (viewModel, $scope, $mdDialog, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper) {
 
@@ -97,7 +98,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
             viewModel.entityViewerDataService.setRowHeight(36);
 
             // var rowFilterColor = localStorageService.getRowTypeFilter(true, viewModel.entityType);
-			const rvSettings = globalDataService.getMemberEntityViewersSettings(true, viewModel.entityType);
+            const rvSettings = globalDataService.getMemberEntityViewersSettings(true, viewModel.entityType);
             let rowTypeFiltersData = viewModel.entityViewerDataService.getRowTypeFilters();
             rowTypeFiltersData.markedRowFilters = rvSettings.row_type_filter;
 
@@ -162,10 +163,74 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
             const viewContext = viewModel.entityViewerDataService.getViewContext();
 
-            if (viewContext !== 'split_panel' || entityType !== 'transaction-report') {
-                rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+
+            var localStorageReportData = localStorageService.getReportData();
+
+            console.log('onSetLayoutEnd.localStorageReportData', localStorageReportData);
+
+            var layout = viewModel.entityViewerDataService.getListLayout();
+            var contentType = viewModel.entityViewerDataService.getContentType();
+
+            viewModel.possibleToRequestReport = true // in case if user open too many groups, then we need to ask him if his ready
+
+            if (localStorageReportData) {
+
+                if (localStorageReportData[contentType]) {
+
+                    if (localStorageReportData[contentType][layout.user_code]) {
+
+                        if (localStorageReportData[contentType][layout.user_code].hasOwnProperty('groups')) {
+
+                            viewModel.openGroupsCount = 0;
+
+                            Object.keys(localStorageReportData[contentType][layout.user_code].groups).forEach(function (key) {
+
+                                var _group = localStorageReportData[contentType][layout.user_code].groups[key]
+
+                                if (_group.is_open) {
+                                    viewModel.openGroupsCount = viewModel.openGroupsCount + 1;
+                                }
+
+                            })
+
+                            if (viewModel.openGroupsCount > 10) {
+                                viewModel.possibleToRequestReport = false;
+                            }
+
+                        }
+
+                    }
+                }
+
             }
 
+            if (viewModel.possibleToRequestReport) {
+
+                if (viewContext !== 'split_panel' || entityType !== 'transaction-report') {
+
+                    if (viewContext === 'dashboard') {
+
+                        // If we are in matrix, then we do not need request normal report,
+                        // matrix will handle on it own
+                        // TODO refactor, put matrix separately from Report
+                        if (!viewModel.matrixSettings) {
+                            rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+                        }
+
+
+                    } else {
+
+                        rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+                        // Frontend is deprecated since 2023-09-10
+                        // if (window.location.href.indexOf('v2=true') !== -1) {
+                        //     rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+                        // } else {
+                        //     rvDataProviderService.requestReport(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+                        // }
+                    }
+                }
+
+            }
             $scope.$apply();
 
             return viewModel.readyStatus.layout;
@@ -368,7 +433,6 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                 }
 
 
-
             });
 
         };
@@ -415,8 +479,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     createEntity(locals);
 
-                }
-                else if (res.status !== 'disagree') {
+                } else if (res.status !== 'disagree') {
 
                     updateTableAfterEntityChanges(res);
 
@@ -509,8 +572,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                     };
 
                     editEntity(actionData.event, locals);
-                }
-                else if (action === 'edit_account') {
+                } else if (action === 'edit_account') {
 
                     var locals = {
                         entityType: 'account',
@@ -520,8 +582,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     editEntity(actionData.event, locals);
 
-                }
-                else if (action === 'edit_portfolio') {
+                } else if (action === 'edit_portfolio') {
 
                     var locals = {
                         entityType: 'portfolio',
@@ -531,8 +592,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     editEntity(actionData.event, locals);
 
-                }
-                else if (action === 'edit_currency') {
+                } else if (action === 'edit_currency') {
 
                     var locals = {
                         entityType: 'currency',
@@ -542,8 +602,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     editEntity(actionData.event, locals);
 
-                }
-                else if (action === 'edit_pricing_currency') {
+                } else if (action === 'edit_pricing_currency') {
 
                     var locals = {
                         entityType: 'currency',
@@ -553,8 +612,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     editEntity(actionData.event, locals);
 
-                }
-                else if (action === 'edit_accrued_currency') {
+                } else if (action === 'edit_accrued_currency') {
 
                     var locals = {
                         entityType: 'currency',
@@ -564,8 +622,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     editEntity(actionData.event, locals);
 
-                }
-                else if (action === 'edit_price') {
+                } else if (action === 'edit_price') {
 
                     var filters = {
                         instrument: actionData.object['instrument.id'],
@@ -616,8 +673,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                     })
 
 
-                }
-                else if (action === 'edit_fx_rate') {
+                } else if (action === 'edit_fx_rate') {
 
                     var filters = {
                         currency: actionData.object['currency.id'],
@@ -632,7 +688,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                             var item = data.results[0];
                             // let contextData = getContextDataForRowAction(reportOptions, actionData.object);
-							let contextData = rvHelper.getContextDataForRowAction(reportOptions, actionData.object, viewModel.entityType);
+                            let contextData = rvHelper.getContextDataForRowAction(reportOptions, actionData.object, viewModel.entityType);
                             contextData.date = reportOptions.report_date
 
                             var locals = {
@@ -670,8 +726,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     })
 
-                }
-                else if (action === 'edit_pricing_currency_price' && actionData.object.id) {
+                } else if (action === 'edit_pricing_currency_price' && actionData.object.id) {
 
                     var filters = {
                         currency: actionData.object['instrument.pricing_currency'],
@@ -718,8 +773,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     })
 
-                }
-                else if (action === 'edit_accrued_currency_fx_rate' && actionData.object.id) {
+                } else if (action === 'edit_accrued_currency_fx_rate' && actionData.object.id) {
 
                     var filters = {
                         currency: actionData.object['instrument.accrued_currency.id'],
@@ -767,8 +821,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     })
 
-                }
-                else if (action === 'edit_pricing_currency_fx_rate' && actionData.object.id) {
+                } else if (action === 'edit_pricing_currency_fx_rate' && actionData.object.id) {
 
                     var filters = {
                         currency: actionData.object['instrument.pricing_currency.id'],
@@ -816,8 +869,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     })
 
-                }
-                else if (action === 'book_transaction') {
+                } else if (action === 'book_transaction') {
 
                     var locals = {
                         entityType: 'complex-transaction',
@@ -832,17 +884,16 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
                     }
 
                     // const contextData = getContextDataForRowAction(reportOptions, actionData.object);
-					const contextData = rvHelper.getContextDataForRowAction(reportOptions, actionData.object, viewModel.entityType);
+                    const contextData = rvHelper.getContextDataForRowAction(reportOptions, actionData.object, viewModel.entityType);
                     locals.data.contextData = contextData;
 
 
                     createEntity(locals);
 
-                }
-                else if (action === 'book_transaction_specific') {
+                } else if (action === 'book_transaction_specific') {
 
                     // const contextData = getContextDataForRowAction(reportOptions, actionData.object);
-					const contextData = rvHelper.getContextDataForRowAction(reportOptions, actionData.object, viewModel.entityType);
+                    const contextData = rvHelper.getContextDataForRowAction(reportOptions, actionData.object, viewModel.entityType);
 
                     var locals = {
                         entityType: 'complex-transaction',
@@ -858,8 +909,7 @@ import CommonDialogsService from "../../../../shell/scripts/app/services/commonD
 
                     createEntity(locals);
 
-                }
-                else if (action === 'rebook_transaction') {
+                } else if (action === 'rebook_transaction') {
 
                     var complex_transaction_id = actionData.object['complex_transaction.id'] || actionData.object['complex_transaction']
 

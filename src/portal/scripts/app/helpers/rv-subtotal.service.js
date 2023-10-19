@@ -40,7 +40,7 @@
 
 			else {
 
-				result = '#Error';
+				result = 'No Data';
 				console.error(column.key + " with not a number", items[i], items[i][column.key]);
 				break;
 
@@ -127,7 +127,7 @@
 					result = result + parseFloat(itemVal) * average;
 
 				} else {
-					result = '#Error';
+					result = 'No Data';
 					break;
 				}
 
@@ -135,7 +135,7 @@
 
 		} else {
 			console.error(weightedAverageKey + " totals is", total, columnKey);
-			result = '#Error';
+			result = 'No Data';
 		}
 
 		return result;

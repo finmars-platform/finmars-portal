@@ -22,7 +22,7 @@
 
 </head>
 <body>
-<div data-ui-view="" class="min-height" id="root">
+<div data-ui-view="" id="root">
 </div>
 <div id="width-fallback">
     <ng-md-icon icon="phonelink_erase" size="86"></ng-md-icon>
@@ -65,11 +65,22 @@
 <script type="application/x-javascript" src="database/scripts/templates.min.js?v={hash}"></script>
 
 
-<script src="https://cdn.activenote.net/assets/activenote-kit.js" crossorigin="anonymous"></script>
 <script>
-    window.activeNote = ActiveNote.init({"key": "e9d080d3-bec8-4dc5-acbb-7d1c5a5a7ebe"});
-</script>
+    if (window.USE_ACTVENOTE != 'false') {
+        // Create a script tag
+        var scriptTag = document.createElement('script');
+        scriptTag.src = "https://cdn.activenote.net/assets/activenote-kit.js";
+        scriptTag.crossOrigin = "anonymous";
 
+        // Once the script is loaded, initialize ActiveNote
+        scriptTag.onload = function () {
+            window.activeNote = ActiveNote.init({"key": "e9d080d3-bec8-4dc5-acbb-7d1c5a5a7ebe"});
+        };
+
+        // Append the script tag to the head
+        document.head.appendChild(scriptTag);
+    }
+</script>
 <!-- Matomo -->
 <!--<script>-->
 <!--    var _paq = window._paq = window._paq || [];-->

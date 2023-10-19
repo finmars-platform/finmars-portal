@@ -166,6 +166,28 @@
         })
     };
 
+    var downloadFile = function (data) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return window.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/explorer/download/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(function (response) {
+            return response.blob()
+        })
+    };
+
+
+
 
     module.exports = {
         listFiles: listFiles,
@@ -174,7 +196,8 @@
         createFolder: createFolder,
         deleteFolder: deleteFolder,
         uploadFiles: uploadFiles,
-        downloadZip: downloadZip
+        downloadZip: downloadZip,
+        downloadFile: downloadFile
     }
 
 }());

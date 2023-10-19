@@ -14,7 +14,8 @@
         var vm = this;
 
         vm.isDisabled = false;
-        vm.loadingEntity = false;
+        /** For updating local instrument from database */
+        vm.updatingEntities = false;
 
         vm.title = data.title || 'Select instrument';
         vm.localInstrumentsTotal = 0;
@@ -85,7 +86,7 @@
 
             vm.selectedItem = null;
             vm.isDisabled = false;
-            vm.loadingEntity = false;
+            vm.updatingEntities = false;
 
             toastNotificationService.error(error);
 
@@ -260,7 +261,7 @@
         }
 
         var taskIntervalId;
-        var intervalTime = 5000;
+        var intervalTime = 3000;
 
         var awaitInstrumentImport = function (taskId) {
 
@@ -276,7 +277,7 @@
 
                                 vm.isDisabled = false;
                                 vm.processing = false;
-                                vm.loadingEntity = false;
+                                vm.updatingEntities = false;
 
                                 toastNotificationService.success("Instrument has been loaded");
 
@@ -310,7 +311,7 @@
 
                         vm.processing = false;
                         vm.isDisabled = false;
-                        vm.loadingEntity = false;
+                        vm.updatingEntities = false;
 
                         throw error;
 
@@ -370,13 +371,13 @@
             } */
 
             var config = {
-                user_code: item.reference,
+                user_code: item.user_code,
                 name: item.name,
                 instrument_type_user_code: item.instrument_type,
                 mode: 1
             };
 
-            vm.loadingEntity = true;
+            vm.updatingEntities = true;
 
             importInstrumentCbondsService.download(config).then(function (data) {
 

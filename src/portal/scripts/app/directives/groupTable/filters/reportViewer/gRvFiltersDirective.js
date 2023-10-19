@@ -20,6 +20,7 @@
 
                 scope.entityType = gFiltersVm.entityType;
                 scope.isReport = true;
+                scope.processing = false;
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
                 scope.showUseFromAboveFilters = !scope.hideUseFromAboveFilters;
 
@@ -60,6 +61,17 @@
                     scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
                 }; */
                 scope.refreshTable = function () {
+                    scope.processing = true;
+                    scope.evDataService.resetTableContent(true);
+
+                    var reportOptions = scope.evDataService.getReportOptions()
+
+                    if (reportOptions) {
+                        reportOptions.report_instance_id = null // if clear report_instance_id then we request new Report Calculation
+                    }
+
+                    scope.evDataService.setReportOptions(reportOptions);
+
                     scope.evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
                 };
 
@@ -225,7 +237,7 @@
                             scope.evDataService.setFilters(filters);
                             scope.evEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
 
-							scope.$apply();
+                            scope.$apply();
 
                         }
 
@@ -492,13 +504,25 @@
                         scope.currentAdditions = scope.evDataService.getAdditions();
                     });
 
-                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function (){
+                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
+
+                        scope.processing = true;
+
+                        setTimeout(function () {
+                            scope.$apply();
+                        }, 0)
+
+                    })
+
+                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                        scope.processing = false;
 
                         scope.reportOptions = scope.evDataService.getReportOptions(); // for refresh tooltip -> auth time
 
                     })
 
-                    scope.evEventService.addEventListener(evEvents.FINISH_RENDER, function (){
+                    scope.evEventService.addEventListener(evEvents.FINISH_RENDER, function () {
 
                         scope.renderTime = scope.evDataService.getRenderTime(); // for refresh tooltip -> auth time
 

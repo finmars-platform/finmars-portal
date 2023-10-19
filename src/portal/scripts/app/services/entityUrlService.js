@@ -75,6 +75,8 @@
                 return 'audit/history';
             case 'audit-transaction':
                 return 'audit/history';
+            case 'complex-transaction-import-scheme':
+                return 'import/complex-transaction-import-scheme';
 
         }
 

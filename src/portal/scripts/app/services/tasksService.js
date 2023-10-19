@@ -2,12 +2,13 @@
 
     'use strict';
 
-    var baseUrlService = require('../services/baseUrlService');
-    var cookieService = require('../../../../core/services/cookieService');
-    var xhrService = require('../../../../core/services/xhrService');
-    var baseUrl = baseUrlService.resolve();
+    const toastNotificationService = require('../../../../core/services/toastNotificationService');
+    const baseUrlService = require('../services/baseUrlService');
+    const cookieService = require('../../../../core/services/cookieService');
+    const xhrService = require('../../../../core/services/xhrService');
+    const baseUrl = baseUrlService.resolve();
 
-    var configureRepositoryUrlService = require('./configureRepositoryUrlService');
+    const configureRepositoryUrlService = require('./configureRepositoryUrlService');
 
     var getStats = function (options) {
 
@@ -102,7 +103,7 @@
             })
     };
 
-    var abortTransactionImport = function (id) {
+    const abortTransactionImport = function (id) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
         var apiVersion = baseUrlService.getApiVersion();
@@ -123,6 +124,60 @@
             })
     };
 
+    /**
+     * Check for status of task until it is ended.
+     *
+     * @param {Number} id - task id
+     * @param {Number} [intervalTime]
+     * @returns {{promise: Promise<Object>, stopInterval: Function}} - Promise that is resolved when the task ends and a Function to force clear interval
+     */
+    const awaitImportTask = function (id, intervalTime=3000) {
+
+        let taskInterval;
+        let stopInterval = () => {
+            clearInterval(taskInterval);
+        };
+
+        const prom = new Promise(async function(resolve, reject) {
+
+            taskInterval = setInterval(async function () {
+
+                try {
+                    const res = await getByKey(id);
+
+                    switch (res.status) {
+                        case 'C':
+                            toastNotificationService.error("Task has been canceled");
+                        case 'T':
+                            toastNotificationService.error("Task has been timed out");
+                            break;
+                        case 'E':
+                            console.error(`Task error: ${res.error}`);
+                            toastNotificationService.error(res.error)
+                            break;
+                    }
+
+                    if ( 'DCTE'.includes(res.status) ) {
+
+                        resolve(res);
+                        clearInterval(taskInterval);
+
+                    }
+
+                } catch (e) {
+
+                    reject(e);
+                    clearInterval(taskInterval);
+
+                }
+
+            }, intervalTime);
+
+        });
+
+        return {promise: prom, stopInterval};
+
+    }
 
     module.exports = {
         getStats: getStats,
@@ -131,7 +186,9 @@
         getByKey: getByKey,
         cancel: cancel,
 
-        abortTransactionImport: abortTransactionImport
+        abortTransactionImport: abortTransactionImport,
+
+        awaitImportTask: awaitImportTask,
     }
 
 }());

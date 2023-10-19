@@ -5,21 +5,43 @@
         <span class="custom-input-textarea-span-pan">{{label}}</span>
     </div>
 
-    <div class="custom-input-main-container customInputBackgroundColor">
+    <div data-custom-popup
+         data-popup-template-url="'views/popups/instrument-select-menu-popup-view.html'"
+         data-popup-data="menuPopupData"
+         data-popup-event-service="popupEventService"
+         data-no-backdrop="true"
+         data-position-relative-to="element"
+         data-relative-popup-x="left"
+         data-relative-popup-y="bottom"
+         data-offset-y="2"
+         data-open-on="click"
+         data-close-on-click-outside="false"
+         data-is-disabled="isDisabled"
+         data-popup-classes="unified-data-select-popup mh-100vh-popup"
+         data-on-cancel="onMenuClose()"
+
+         class="custom-input-main-container customInputBackgroundColor">
+
+
         <div class="custom-input-borders">
             <div class="custom-input-content">
+
+                <md-tooltip data-ng-if="inputText"
+                            class="tooltip_1 f-s-15"
+                            data-md-direction="top"
+                            data-ng-bind="inputText"></md-tooltip>
 
                 <div class="flex-row flex-i-center">
 
                     <button data-ng-if="!noIndicatorBtn"
-                            data-ng-hide="loadingEntity"
+                            data-ng-hide="menuPopupData.loadingEntity"
                             class="custom-input-indicator-btn"
                             data-ng-click="openSelectorDialog($event)"
                             data-ng-disabled="isDisabled">
                         <span class="material-icons">menu</span>
                     </button>
 
-                    <div data-ng-if="loadingEntity" class="loader">
+                    <div data-ng-if="menuPopupData.loadingEntity" class="loader">
                         <progress-circular data-diameter="20"></progress-circular>
                         <md-tooltip class="tooltip_1" data-md-direction="top">Loading instrument</md-tooltip>
                     </div>
@@ -29,7 +51,7 @@
                             placeholder="{{label}}"
                             data-ng-model="inputText"
                             data-ng-model-options="{debounce: 1000}"
-                            data-ng-change="onInputTextChange()"
+                            data-ng-change="onInputTextChange(inputText)"
                             data-ng-disabled="isDisabled"
                             data-ng-keypress="selectFirst($event)"
                             class="custom-input instrument-input instrumentSelectInputElem"
@@ -63,240 +85,18 @@
 
                     <div data-ng-if="error" class="custom-input-tooltip">
                         <span class="material-icons">info</span>
-                        <md-tooltip class="error-tooltip" md-direction="top">{{error}}</md-tooltip>
+                        <md-tooltip class="error-tooltip" data-md-direction="top">{{error}}</md-tooltip>
                     </div>
 
                     <div data-ng-if="tooltipText" data-ng-show="!error" class="custom-input-tooltip">
                         <span class="material-icons ci-icon-color">info_outline</span>
-                        <md-tooltip class="tooltip_2" md-direction="top" data-ng-bind="tooltipText"></md-tooltip>
+                        <md-tooltip class="tooltip_2" data-md-direction="top" data-ng-bind="tooltipText"></md-tooltip>
                     </div>
 
                 </div>
 
             </div>
         </div>
-    </div>
-
-    <div ng-if="dropdownMenuShown"
-         class="custom-input-sel-menu-container custom-input-dropdown-div selectMenuContainer">
-
-        <div class="custom-input-sel-menu-block">
-
-            <div data-ng-if="!processing && !loadingEntity" style="height: 369px; overflow-y: auto">
-
-                <b data-ng-if="localInstruments.length" class="instrument-select-options-group-title">Local Instruments
-                    ({{localInstrumentsTotal}})</b>
-
-                <div data-ng-if="localInstruments.length">
-
-                    <div
-                            data-ng-repeat="option in localInstruments"
-                            data-ng-click="selectLocalInstrument(option)"
-                            class="instrument-select-input-sel-option"
-                            ng-mouseover="setHoverInstrument(option)"
-
-                    >
-
-                        <div class="instrument-select-instrument-name" data-ng-bind-html="getHighlighted(option.name)">
-
-                        </div>
-                        <div class="instrument-select-instrument-isin"
-                             data-ng-bind-html="getHighlighted(option.user_code)">
-
-                        </div>
-
-                        <div class="instrument-select-instrument-ticker" data-ng-if="option.reference_for_pricing">
-                            {{option.reference_for_pricing}}
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <b data-ng-if="databaseInstruments.length" style=" bottom: 0px;"
-                   class="instrument-select-options-group-title">Global Instruments ({{databaseInstrumentsTotal}})</b>
-
-
-                <div data-ng-if="databaseInstruments.length">
-
-                    <div
-                            data-ng-repeat="option in databaseInstruments"
-                            data-ng-click="selectDatabaseInstrument(option)"
-                            class="instrument-select-input-sel-option"
-                            ng-mouseover="setHoverInstrument(option)"
-                    >
-
-
-                        <div class="instrument-select-instrument-name" data-ng-bind-html="getHighlighted(option.name)">
-
-                        </div>
-                        <div class="instrument-select-instrument-isin"
-                             data-ng-bind-html="getHighlighted(option.reference)">
-
-                        </div>
-
-                        <div class="instrument-select-instrument-ticker" data-ng-if="option.ticker">
-                            {{option.ticker}}
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div data-ng-if="!localInstruments.length && !databaseInstruments.length">
-                    <b class="instrument-select-options-group-title">Not instruments found</b>
-                </div>
-
-
-            </div>
-
-            <div data-ng-if="processing || loadingEntity" style="height: 369px;" layout="row" layout-sm="column"
-                 layout-align="center center">
-                <progress-circular diameter="50"></progress-circular>
-            </div>
-
-        </div>
-
-        <div class="instrument-select-option-detail-box"
-             data-ng-if="inputText.length > 2"
-             data-ng-class="{'locate-left': locateDetailsLeft}">
-
-            <div data-ng-show="hoverInstrument">
-
-                <div data-ng-if="hoverInstrument.available_for_update"
-                     data-ng-disabled="loadingEntity || processing"
-                     class="instrument-select-update-instrument-button"
-                     data-ng-click="updateLocalInstrument(hoverInstrument)">
-                    <span class="material-icons">autorenew</span>
-                </div>
-
-                <div class="instrument-select-option-detail-field">
-
-                    <div class="instrument-select-option-detail-label">
-                        Instrument
-                    </div>
-                    <div class="instrument-select-option-detail-value" style="width: 140px">
-
-                        <!--<span data-ng-if="hoverInstrument.id">{{hoverInstrument.name}}</span>
-                        <span data-ng-if="!hoverInstrument.id">{{hoverInstrument.issueName}}</span>-->
-                        <span>{{hoverInstrument.name}}</span>
-
-                    </div>
-
-                </div>
-
-                <div class="instrument-select-option-detail-field">
-
-                    <div class="instrument-select-option-detail-label">
-                        ISIN
-                    </div>
-                    <div class="instrument-select-option-detail-value">
-
-                        <span data-ng-if="hoverInstrument.frontOptions.type === 'local'">
-                            {{hoverInstrument.user_code}}
-                        </span>
-                        <span data-ng-if="hoverInstrument.frontOptions.type === 'database'">
-                            {{hoverInstrument.isin}}
-                        </span>
-
-                    </div>
-
-                </div>
-
-                <div class="instrument-select-option-detail-field">
-
-                    <div class="instrument-select-option-detail-label">
-                        Ticker
-                    </div>
-                    <div class="instrument-select-option-detail-value">
-
-                        <span data-ng-if="hoverInstrument.frontOptions.type === 'local'">
-                            {{hoverInstrument.reference_for_pricing}}
-                        </span>
-                        <span data-ng-if="hoverInstrument.isin">{{hoverInstrument.ticker}}</span>
-
-                    </div>
-
-                </div>
-
-                <div class="instrument-select-option-detail-field">
-
-                    <div class="instrument-select-option-detail-label">
-                        Type
-                    </div>
-                    <div class="instrument-select-option-detail-value">
-
-                        <span data-ng-if="hoverInstrument.frontOptions.type === 'local'">
-                            {{hoverInstrument.instrument_type_object.name}}
-                        </span>
-                        <span data-ng-if="hoverInstrument.isin">{{hoverInstrument.instrument_type}}</span>
-
-                    </div>
-
-                </div>
-
-                <!--<div class="instrument-select-option-detail-field">
-
-                    <div class="instrument-select-option-detail-label">
-                        FIGI / FIGI RegS
-                    </div>
-                    <div class="instrument-select-option-detail-value">
-
-                        <span data-ng-if="!hoverInstrument.isin">-</span>
-                        <span data-ng-if="hoverInstrument.isin">{{hoverInstrument.figi}}</span>
-
-                    </div>
-
-                </div>-->
-
-                <!--<div class="instrument-select-option-detail-field">
-
-                    <div class="instrument-select-option-detail-label">
-                        Common Code
-                    </div>
-                    <div class="instrument-select-option-detail-value">
-
-                        <span data-ng-if="hoverInstrument.id">-</span>
-                        <span data-ng-if="!hoverInstrument.id">{{hoverInstrument.commonCode}}</span>
-
-                    </div>
-
-                </div>-->
-
-                <div class="instrument-select-option-detail-field">
-
-                    <div class="instrument-select-option-detail-label">
-                        Updating Date
-                    </div>
-                    <div class="instrument-select-option-detail-value">
-
-                        <span data-ng-if="hoverInstrument.id">{{hoverInstrument.pretty_date}}</span>
-                        <span data-ng-if="!hoverInstrument.id">{{hoverInstrument.pretty_date}}</span>
-
-                    </div>
-
-                </div>
-
-                <!--<div class="instrument-select-option-detail-field">
-
-                    <div class="instrument-select-option-detail-label">
-                        WKN Code
-                    </div>
-                    <div class="instrument-select-option-detail-value">
-
-                        <span data-ng-if="hoverInstrument.id">-</span>
-                        <span data-ng-if="!hoverInstrument.id">{{hoverInstrument.wkn}}</span>
-
-                    </div>
-
-                </div>-->
-
-
-            </div>
-
-        </div>
-
     </div>
 
     <div ng-if="error"

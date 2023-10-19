@@ -804,6 +804,10 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
 
             if (!data.data) data.data = {};
 
+            if (typeof data.data.autosave_layouts !== 'boolean') {
+                data.data.autosave_layouts = true;
+            }
+
             if (!data.data.favorites) {
                 data.data.favorites = {};
             }

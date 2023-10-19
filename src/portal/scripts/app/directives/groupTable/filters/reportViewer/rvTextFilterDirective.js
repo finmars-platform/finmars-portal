@@ -4,7 +4,7 @@
 
 	const popupEvents = require("../../../../services/events/popupEvents");
 
-	module.exports = function (gFiltersHelper) {
+	module.exports = function (userFilterService, gFiltersHelper) {
 		return {
 			require: '^^rvFilter',
 			restrict: 'E',
@@ -13,6 +13,7 @@
 			link: function (scope, elem, attrs, rvFilterVm) {
 
 				scope.filter = rvFilterVm.filter;
+
 				scope.isReport = true;
 				scope.activeFilter = {
 					type: null
@@ -37,6 +38,18 @@
 
 				scope.readyStatus = true;
 
+				const getDataForSelects = async function () {
+
+					scope.readyStatus = false;
+
+					scope.columnRowsContent = await rvFilterVm.getDataForSelects();
+
+					scope.readyStatus = true;
+
+					scope.$apply();
+
+				};
+
 				scope.changeFilterType = function (filterType) {
 
 					if (filterType !== 'use_from_above') {
@@ -56,6 +69,13 @@
 						scope.activeFilter.type = resultList[0];
 						scope.filter.options = resultList[1];
 
+						if ( ['selector', 'multiselector']
+								.includes(scope.filter.options.filter_type ) ) {
+
+							getDataForSelects();
+
+						}
+
 					}
 
 				};
@@ -68,13 +88,20 @@
 
 					scope.activeFilter.type = rvFilterVm.getActiveFilterType(scope.filterTypes);
 
-					if (!rvFilterVm.columnRowsContent || !rvFilterVm.columnRowsContent.length) {
+					/*if (!rvFilterVm.columnRowsContent || !rvFilterVm.columnRowsContent.length) {
 
 						rvFilterVm.getDataForSelects();
 
 					}
 
-					scope.columnRowsContent = rvFilterVm.columnRowsContent
+					scope.columnRowsContent = rvFilterVm.columnRowsContent*/
+
+					if ( ['selector', 'multiselector']
+						.includes(scope.filter.options.filter_type ) ) {
+
+						getDataForSelects();
+
+					}
 
 				};
 

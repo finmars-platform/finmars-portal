@@ -2,7 +2,6 @@
  * Created by szhitenev on 05.05.2016.
  */
 import RvDomManager from "../../services/rv-dom-manager/rv-dom.manager";
-import toastNotificationService from "../../../../../shell/scripts/app/services/toastNotificationService";
 
 (function () {
 
@@ -21,7 +20,7 @@ import toastNotificationService from "../../../../../shell/scripts/app/services/
     var metaService = require('../../services/metaService');
     var EvScrollManager = require('../../services/ev-dom-manager/ev-scroll.manager');
 
-    module.exports = function (toastNotificationService, usersService, globalDataService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService) {
+    module.exports = function (toastNotificationService, usersService, globalDataService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService, rvDataProviderService) {
         return {
             restrict: 'AE',
             scope: {
@@ -63,7 +62,7 @@ import toastNotificationService from "../../../../../shell/scripts/app/services/
                 scope.isReport = metaService.isReport(entityType);
                 var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
-                var rvDomManager = new RvDomManager(toastNotificationService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService);
+                var rvDomManager = new RvDomManager(toastNotificationService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService, rvDataProviderService);
                 var activeLayoutConfigIsSet = false;
 
                 if (!scope.isReport) {
@@ -101,6 +100,8 @@ import toastNotificationService from "../../../../../shell/scripts/app/services/
                     flatList = flatList.filter(function (item) {
                         return item.___type !== 'group';
                     });
+
+                    console.log('renderReportViewer.flatList', flatList);
 
                     var index = 0;
                     flatList = flatList.map(function (item, i) {
@@ -353,7 +354,7 @@ import toastNotificationService from "../../../../../shell/scripts/app/services/
                         scope.$apply();
                     }, 0)
 
-                    scope.firstRender = true; // IF SOMETHING WENT WRONG AND SOMEHOW REPORT IS NOT RENDERER, WE HAVE 1 min timeoout to render
+                    // scope.firstRender = true; // IF SOMETHING WENT WRONG AND SOMEHOW REPORT IS NOT RENDERER, WE HAVE 1 min timeoout to render
 
                     if (scope.isReport) {
                         renderReportViewer();
@@ -426,11 +427,11 @@ import toastNotificationService from "../../../../../shell/scripts/app/services/
                     /* if (scope.isReport) {
                         contentElem.style.opacity = '0.7';
                     } */
-                    contentElem.style.opacity = '0.7';
+                    // contentElem.style.opacity = '0.7';
 
-                    scope.evDataService.setDataLoadStatus(false);
+                    // scope.evDataService.setDataLoadStatus(false);
 
-                    scope.dataLoadStatus = false;
+                    // scope.dataLoadStatus = false;
 
                     setTimeout(function () {
                         scope.$apply();
@@ -538,21 +539,21 @@ import toastNotificationService from "../../../../../shell/scripts/app/services/
                     if (viewContext === 'split_panel' && entityType === 'transaction-report') {
 
                         scope.dataLoadStatus = true;
-                        scope.firstRender = true;
+                        // scope.firstRender = true;
 
-                    }
-                    else {
+                    } else {
 
-                        setTimeout(function () {
-
-                            if (!scope.firstRender) { // Force Table render if not rendered in first 60 second
-
-                                console.log("Special render trigger")
-
-                                updateTableContent();
-                            }
-
-                        }, 60 * 1000)
+                        // WTF is this shit code is?
+                        // setTimeout(function () {
+                        //
+                        //     if (!scope.firstRender) { // Force Table render if not rendered in first 60 second
+                        //
+                        //         console.log("Special render trigger")
+                        //
+                        //         updateTableContent();
+                        //     }
+                        //
+                        // }, 60 * 1000)
 
 
                     }

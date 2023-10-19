@@ -9,7 +9,7 @@
 
     var evEvents = require('../services/entityViewerEvents');
 
-    module.exports = function ($mdDialog) {
+    module.exports = function ($mdDialog, groupsService) {
         return {
             restriction: 'E',
             scope: {
@@ -622,40 +622,205 @@
 
                 var getValuesForMatrix = function () {
 
-                    // Deprecated wtf why do we even need groped result here? get just raw items from server response
-                    // var flatList = rvDataHelper.getPureFlatStructure(scope.evDataService);
-                    //
-                    // console.log('getValuesForMatrix.flatList', flatList);
-                    //
-                    // itemList = flatList.filter(item => item.___type === 'object');
+                    return new Promise(function (resolve, reject) {
 
-                    itemList = scope.evDataService.getUnfilteredFlatList();
 
-                    scope.columns = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.abscissa, scope.matrixSettings.value_key);
-                    scope.rows = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.ordinate, scope.matrixSettings.value_key);
+                        var options = {
 
-                };
+                            groups_types: [{
+                                "key": scope.matrixSettings.abscissa, // columns
+                                "name": scope.matrixSettings.abscissa,
+                                "value_type": 10
+                            }]
 
-                var buildMatrix = function () {
+                        }
+                        var entityType = scope.evDataService.getEntityType();
 
-                    scope.matrix = reportViewerMatrixHelper.getMatrix(itemList,
-                        scope.rows,
-                        scope.columns,
-                        scope.matrixSettings.ordinate,
-                        scope.matrixSettings.abscissa,
-                        scope.matrixSettings.value_key,
-                        scope.matrixSettings.subtotal_formula_id);
+                        groupsService.getList(options, scope.evDataService).then(function (data) {
 
-                    /*scope.totals = reportViewerMatrixHelper.getMatrixTotals(scope.matrix, itemList);*/
-                    scope.grandtotal = 0;
+                            console.log("getValuesForMatrix.data", data);
 
-                    scope.columns.forEach(function (column) {
-                        scope.grandtotal += column.total;
+                            var firstLevelGroups = data.results;
+
+
+                            scope.columns = firstLevelGroups.map(function (item, index) {
+                                return {
+                                    index: index,
+                                    key: item.___group_identifier,
+                                    total: item.subtotal[scope.matrixSettings.value_key]
+                                }
+                            })
+
+                            console.log('getValuesForMatrix.columns', scope.columns);
+                            console.log('getValuesForMatrix.firstLevelGroups', firstLevelGroups);
+                            console.log('scope.matrixSettings', scope.matrixSettings);
+
+                            var promises = []
+
+                            firstLevelGroups.forEach(function (group) {
+
+                                options = {
+                                    groups_types: [
+                                        {
+                                            "key": scope.matrixSettings.abscissa,
+                                            "name": scope.matrixSettings.abscissa,
+                                            "value_type": 10
+                                        },
+                                        {
+                                            "key": scope.matrixSettings.ordinate,
+                                            "name": scope.matrixSettings.ordinate,
+                                            "value_type": 10
+                                        },
+                                    ],
+                                    groups_values: [group.___group_identifier]
+                                }
+
+                                promises.push(groupsService.getList(options, scope.evDataService))
+
+                            })
+
+
+                            scope.rows = []
+
+                            var secondLevelGroups = []
+
+                            Promise.all(promises).then(function (data) {
+
+                                console.log('getValuesForMatrix.promises.data', data);
+
+                                // Generate one list of all secondLevelGroups
+                                firstLevelGroups.forEach(function (group, rowIndex) {
+
+                                    data[rowIndex].results.forEach(function (secondGroup) {
+
+                                        var item = Object.assign({}, secondGroup)
+
+                                        item.column = group.___group_identifier
+
+                                        secondLevelGroups.push(item)
+
+                                    })
+
+                                })
+
+                                console.log('getValuesForMatrix.firstLevelGroups', firstLevelGroups);
+                                console.log('getValuesForMatrix.secondLevelGroups', secondLevelGroups);
+
+                                // Creating structure to fill scope.rows
+                                var rowsObject = {}
+
+                                secondLevelGroups.forEach(function (group) {
+
+                                    if (!rowsObject.hasOwnProperty(group.___group_identifier)) {
+                                        rowsObject[group.___group_identifier] = {
+                                            key: group.___group_identifier,
+                                            total: 0
+                                        }
+                                    }
+
+                                    rowsObject[group.___group_identifier].total = rowsObject[group.___group_identifier].total + group.subtotal[scope.matrixSettings.value_key]
+
+                                })
+
+                                Object.keys(rowsObject).forEach(function (key, index) {
+
+                                    var item = rowsObject[key]
+                                    item.index = index;
+
+                                    scope.rows.push(item)
+
+                                })
+
+                                // creating matrix, when we have scope.columns and scope.rows
+                                scope.matrix = []
+
+                                scope.rows.forEach(function (row, rowIndex) {
+
+                                    var resultItem = {
+                                        row_name: row.key,
+                                        index: rowIndex,
+                                        items: []
+                                    }
+
+                                    scope.columns.forEach(function (column, columnIndex) {
+
+                                        var columnItem = {
+                                            index: columnIndex,
+                                            data: {
+                                                value: 0
+                                            }
+                                        }
+
+                                        secondLevelGroups.forEach(function (secondLevelGroup) {
+
+                                            if (secondLevelGroup.column === column.key) {
+
+                                                if (secondLevelGroup.___group_identifier === row.key) {
+
+                                                    columnItem.data.value = secondLevelGroup.subtotal[scope.matrixSettings.value_key];
+
+                                                }
+
+
+                                            }
+
+                                        })
+
+                                        resultItem.items.push(columnItem)
+
+                                    })
+
+                                    scope.matrix.push(resultItem)
+
+                                })
+
+                                console.log('getValuesForMatrix.rows', scope.columns);
+                                console.log('getValuesForMatrix.rows', scope.rows);
+
+                                console.log('getValuesForMatrix.matrix', scope.matrix);
+
+                                // itemList = scope.evDataService.getUnfilteredFlatList();
+                                //
+                                // scope.columns = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.abscissa, scope.matrixSettings.value_key);
+                                // scope.rows = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.ordinate, scope.matrixSettings.value_key);
+
+                                resolve()
+
+                            })
+
+
+                        })
+
+
                     })
 
                 };
 
+                // var buildMatrix = function () {
+                //
+                //
+                //
+                //     // scope.matrix = reportViewerMatrixHelper.getMatrix(itemList,
+                //     //     scope.rows,
+                //     //     scope.columns,
+                //     //     scope.matrixSettings.ordinate,
+                //     //     scope.matrixSettings.abscissa,
+                //     //     scope.matrixSettings.value_key,
+                //     //     scope.matrixSettings.subtotal_formula_id);
+                //
+                //     /*scope.totals = reportViewerMatrixHelper.getMatrixTotals(scope.matrix, itemList);*/
+                //     scope.grandtotal = 0;
+                //
+                //     scope.columns.forEach(function (column) {
+                //         scope.grandtotal += column.total;
+                //     })
+                //
+                // };
+
                 scope.createMatrix = function () {
+
+                    scope.processing = true;
+
                     /*var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
                     var itemList = flatList.filter(function (item) {
                         return item.___type === 'object'
@@ -695,51 +860,55 @@
                     scope.matrixCreationInProgress = true;
                     window.removeEventListener('resize', scope.alignGrid);
 
-                    getValuesForMatrix();
+                    getValuesForMatrix().then(function () {
 
-                    if (scope.emptyLinesHidingType) {
+                        // if (scope.emptyLinesHidingType) {
+                        //
+                        //     switch (scope.emptyLinesHidingType) {
+                        //         case 'columns':
+                        //             scope.columns = scope.columns.filter(function (column) {
+                        //                 return column.total;
+                        //             });
+                        //
+                        //             break;
+                        //
+                        //         case 'rows':
+                        //             scope.rows = scope.rows.filter(function (row) {
+                        //                 return row.total;
+                        //             });
+                        //
+                        //             break;
+                        //
+                        //         case 'columns_rows':
+                        //             scope.columns = scope.columns.filter(function (column) {
+                        //                 return column.total;
+                        //             });
+                        //
+                        //             scope.rows = scope.rows.filter(function (row) {
+                        //                 return row.total;
+                        //             });
+                        //
+                        //             break;
+                        //     }
+                        //
+                        // }
 
-                        switch (scope.emptyLinesHidingType) {
-                            case 'columns':
-                                scope.columns = scope.columns.filter(function (column) {
-                                    return column.total;
-                                });
+                        // buildMatrix();
 
-                                break;
+                        setTimeout(function () {
 
-                            case 'rows':
-                                scope.rows = scope.rows.filter(function (row) {
-                                    return row.total;
-                                });
+                            scope.processing = false;
 
-                                break;
+                            scope.$apply();
 
-                            case 'columns_rows':
-                                scope.columns = scope.columns.filter(function (column) {
-                                    return column.total;
-                                });
+                            initMatrixMethods();
 
-                                scope.rows = scope.rows.filter(function (row) {
-                                    return row.total;
-                                });
+                            scope.matrixCreationInProgress = false;
+                            window.addEventListener('resize', scope.alignGrid);
 
-                                break;
-                        }
+                        }, 100)
 
-                    }
-
-                    buildMatrix();
-
-                    setTimeout(function () {
-
-                        scope.$apply();
-
-                        initMatrixMethods();
-
-                        scope.matrixCreationInProgress = false;
-                        window.addEventListener('resize', scope.alignGrid);
-
-                    }, 100)
+                    })
 
                 };
 
@@ -952,15 +1121,18 @@
 
                     initAxisAttrsSelectors();
 
-                    scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
-                        scope.processing = false;
-                        scope.createMatrix();
-                        /*scope.$apply();
+                    scope.createMatrix();
 
-                        initMatrixMethods();*/
-
-                    });
+                    // scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                    //
+                    //     scope.processing = false;
+                    //     scope.createMatrix();
+                    //     /*scope.$apply();
+                    //
+                    //     initMatrixMethods();*/
+                    //
+                    // });
 
                     clearUseFromAboveFilterId = scope.evEventService.addEventListener(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS, function () {
                         scope.alignGrid();

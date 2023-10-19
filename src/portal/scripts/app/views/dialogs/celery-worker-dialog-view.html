@@ -1,0 +1,54 @@
+<md-dialog aria-label="" ng-cloak class="draggable-dialog width-50" drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <is-draggable-sign></is-draggable-sign>
+
+            <h2>Celery Worker Manager</h2>
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="p-24">
+        <div layout="column">
+
+            <md-input-container>
+                <label>Worker Name (only alpha letter allowed, single word)</label>
+                <input type="text" data-ng-model="vm.item.worker_name">
+            </md-input-container>
+
+            <md-input-container style="margin-bottom: 32px;">
+                <label>Worker Type</label>
+                <md-select data-ng-model="vm.item.worker_type">
+                    <md-option value="worker">Worker</md-option>
+                    <md-option value="scheduler">Scheduler (must be only one)</md-option>
+                </md-select>
+            </md-input-container>
+
+            <md-input-container>
+                <label>Memory Limit</label>
+                <input type="text" data-ng-model="vm.item.memory_limit" placeholder="2Gi">
+            </md-input-container>
+
+            <md-input-container>
+                <label>Queue</label>
+                <input type="text" data-ng-model="vm.item.queue" placeholder="backend-general-queue,backend-background-queue">
+            </md-input-container>
+
+            <div class="m-t-16">
+
+                <div><label for="">Notes</label></div>
+                <textarea name="" data-ng-model="vm.item.notes" cols="60" rows="5"></textarea>
+
+            </div>
+
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="vm.cancel()">
+            Close
+        </md-button>
+        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+            <span data-ng-if="vm.item.id">Save</span>
+            <span data-ng-if="!vm.item.id">Create</span>
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

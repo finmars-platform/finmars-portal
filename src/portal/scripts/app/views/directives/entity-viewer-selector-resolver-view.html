@@ -24,21 +24,21 @@
             </div>
         </md-select>
     </md-input-container>-->
-    <dropdown-select label="{{getName()}}"
-                     model="modelObj.model"
-                     placeholder-text="{{getName()}}"
-                     event-signal="ciEventObj.event"
-                     item-name="inputTextObj.value"
-                     menu-options="fields"
-                     small-options="{
+    <dropdown-select data-label="{{getName()}}"
+                     data-model="modelObj.model"
+                     data-placeholder-text="{{getName()}}"
+                     data-event-signal="ciEventObj.event"
+                     data-item-name="inputTextObj.value"
+                     data-menu-options="fields"
+                     data-small-options="{
                         notNull: options.notNull,
                         tooltipText: '{{getName()}}',
                         dialogParent: '.dialog-containers-wrap'
                      }"
-                     custom-buttons="item.buttons"
-                     custom-styles="customStyles"
-                     sorted="sorted"
-                     on-change-callback="changeHandler()">
+                     data-custom-buttons="item.buttons"
+                     data-custom-styles="customStyles"
+                     data-sorted="sorted"
+                     data-on-change-callback="changeHandler()">
     </dropdown-select>
 
 </div>

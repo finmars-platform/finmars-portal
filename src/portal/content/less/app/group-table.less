@@ -69,6 +69,7 @@
   }
 
 }
+
 //endregion Inside dashboard
 
 .g-table-container {
@@ -189,7 +190,7 @@
     width: 100%;
     //width: calc(100% - border-right);
     //border-right: 6px solid #4C334D;
-    background: #4C334D;
+    //background: #4C334D;
     overflow: auto;
     position: relative;
 
@@ -279,14 +280,26 @@
 
       &.text-left {
         text-align: left;
+
+        .g-cell-content {
+          justify-content: start;
+        }
       }
 
       &.text-center {
         text-align: center;
+
+        .g-cell-content {
+          justify-content: center;
+        }
       }
 
       &.text-right {
         text-align: right;
+
+        .g-cell-content {
+          justify-content: flex-end;
+        }
       }
 
       &.negative-red {
@@ -334,6 +347,15 @@
   .g-cell-content-wrap {
     text-overflow: ellipsis;
     overflow: hidden;
+
+    span.g-cell-content {
+      display: flex;
+      align-items: center;
+
+      span.inline-progress-dots {
+        margin-left: 20px;
+      }
+    }
   }
 
   .ev-content {
@@ -480,7 +502,7 @@
 
   .g-table-section {
     background-color: #fff;
-    overflow: hidden;
+    //overflow: hidden;
   }
 
   .g-cell:last-child {
@@ -1628,18 +1650,20 @@
         }
 
         .sort {
-          position: relative;
+          display: none;
+          /*opacity: 0;
+          visibility: hidden;*/
+          padding: 0;
           width: 13px;
-          margin-top: -7px;
           margin-right: 10px;
           outline: none;
           z-index: 1;
-          transition: .3s;
+          // transition: .3s;
         }
 
         .gt-sorting-icon {
-          position: relative;
-          top: 3px;
+          display: block;
+          width: inherit;
           color: #666666;
           font-size: 15px;
           font-weight: 700;
@@ -1667,9 +1691,16 @@
       &:hover {
         .column-name-wrapper {
 
-          .sort span {
+          /*.sort .gt-sorting-icon {
             opacity: 1;
             visibility: visible;
+          }*/
+          .sort {
+            display: block;
+          }
+
+          .sort[disabled] .gt-sorting-icon {
+            opacity: .5;
           }
         }
       }
@@ -1683,16 +1714,17 @@
         width: 100%;
 
 
-        .sort span {
+        /*.sort .gt-sorting-icon {
           opacity: 0;
-            visibility: hidden;
-        }
+          visibility: hidden;
+        }*/
 
 
-        .sort.has-sort span {
-
+        /*.sort.has-sort .gt-sorting-icon {
           display: block;
-
+        }*/
+        .sort.has-sort {
+          display: block;
         }
 
         div {
@@ -2609,7 +2641,6 @@ body.md-dialog-is-showing {
   }
 
 
-
   &.range-of-dates {
     .complex-datepicker-popup-btn {
       min-width: 156px;
@@ -2652,7 +2683,7 @@ body.md-dialog-is-showing {
 
 .g-group-table-holder {
   overflow: hidden;
-  max-width: 100%;
+  //max-width: 100%;
   height: 100%;
 }
 
@@ -3530,4 +3561,15 @@ button.md-button.toggle-dashboard-filter-btn {
 .popup-container.preset-options {
   width: 280px;
   border-radius: 3px;
+}
+
+
+.inline-retry-button {
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover {
+    text-decoration: none;
+    opacity: .7;
+  }
 }

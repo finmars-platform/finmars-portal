@@ -386,7 +386,6 @@
 
                         var negChartWrapingG = svg.append('g')
                             .attr('class', 'pie-chart-negative-nums-circle')
-                            // .attr('transform', 'translate(' + (negNumsRadius + negNumsSpaces) + ',' + (negNumsRadius + negNumsSpaces) + ')'); // TODO can delete after testing on negative numbers pie
                             .attr('transform', 'translate(' + (svgSize / 2) + ',' + (svgSize / 2) + ')');
 
                         negChartWrapingG.selectAll('g')

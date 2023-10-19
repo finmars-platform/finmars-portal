@@ -274,6 +274,8 @@
                 })
             }
 
+            entityViewerDataService.setData(item); // Important to set it object in data propr, consider refactor EV later
+
         })
 
         console.log('obj', obj);
@@ -408,6 +410,8 @@
 
                 item.___index = index;
 
+                entityViewerDataService.setData(item); // Important to set it object in data propr, consider refactor EV later
+
             }
 
             return item;
@@ -489,7 +493,7 @@
 
                     }
 
-                    evDataHelper.setDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
+                    // evDataHelper.setDefaultObjects(entityViewerDataService, entityViewerEventService, requestParameters, pageToRequest);
 
                     requestParameters.pagination.page = pageToRequest;
                     entityViewerDataService.setRequestParameters(requestParameters);
@@ -498,7 +502,7 @@
 
                     objectsService.getFilteredList(entityType, options).then(function (data) {
 
-                        console.log('requestParameters', requestParameters);
+                        // console.log('requestParameters', requestParameters);
 
                         requestParameters.pagination.count = data.count;
                         requestParameters.processedPages.push(pageToRequest);
@@ -506,9 +510,6 @@
                         entityViewerDataService.setRequestParameters(requestParameters);
 
                         deserializeObjects(entityViewerDataService, entityViewerEventService, attributeDataService, data, requestParameters, pageToRequest);
-
-                        resolveLocal();
-
 
                         if (requestParameters.loadAll) {
 
@@ -539,6 +540,8 @@
                             }
 
                         }
+
+                        resolveLocal();
 
                     })
 					.catch(function (data) {
@@ -753,36 +756,38 @@
     var sortObjects = function (entityViewerDataService, entityViewerEventService, attributeDataService) {
 
     	var level = entityViewerDataService.getGroups().length;
-
-        // var unfoldedGroups = evDataHelper.getUnfoldedGroupsByLevel(level, entityViewerDataService);
 		var lastGroups = evDataHelper.getGroupsByLevel(level, entityViewerDataService);
-        // var activeColumnSort = entityViewerDataService.getActiveColumnSort();
 
         var requestsParameters = entityViewerDataService.getAllRequestParameters();
-
-		// var requestParametersForUnfoldedGroups = [];
 		var requestParametersForLastGroups = [];
-		// Get request parameters for last groups
+
+        entityViewerDataService.setProjection([]);
+        entityViewerDataService.setFlatList([]);
+
 		Object.keys(requestsParameters).forEach(function (key) {
 
-			// unfoldedGroups.forEach(function (group) {
 			lastGroups.forEach(function (group) {
 
+                entityViewerDataService.resetObjectsOfGroup(group.___id);
+
 				if (group.___id === requestsParameters[key].id) {
-
-					// requestsParameters[key].event.___id = group.___id;
-					// requestsParameters[key].event.groupName = group.___group_name;
-					// requestsParameters[key].event.groupIdentifier = group.___group_identifier;
-					// requestsParameters[key].event.groupId = group.___group_id;
-					// requestsParameters[key].event.parentGroupId = group.___parentId;
-
 					requestParametersForLastGroups.push(requestsParameters[key]);
 				}
-
 
 			})
 
 		});
+        /*selectedGroups.forEach(function (group) {
+
+            var reqParamKey = requestparametersKeys.find(function (key) {
+                return group.___id === requestsParameters[key].id
+            })
+
+            if (reqParamKey) {
+                requestParametersForLastGroups.push( requestsParameters[reqParamKey] );
+            }
+
+        })*/
 
 		requestParametersForLastGroups.forEach(function (item) {
 

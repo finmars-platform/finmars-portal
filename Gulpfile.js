@@ -24,6 +24,7 @@
     var KEYCLOAK_URL = process.env.KEYCLOAK_URL || 'https://dev-auth.finmars.com';
     var KEYCLOAK_REALM = process.env.KEYCLOAK_REALM || 'finmars';
     var KEYCLOAK_CLIENT_ID = process.env.KEYCLOAK_CLIENT_ID || 'finmars';
+    var USE_ACTIVENOTE = process.env.USE_ACTIVENOTE || false;
 
     // gulp.task('default', gulp.parallel('core-min-All', 'profile-HTML-to-JS', 'portal-min-All', 'shell-min-All'));
 	gulp.task('default', gulp.parallel('core-min-All', 'profile-min-All', 'database-min-All', 'portal-min-All', 'shell-min-All'));
@@ -68,6 +69,7 @@
             .pipe(string_replace('__KEYCLOAK_URL__', KEYCLOAK_URL))
             .pipe(string_replace('__KEYCLOAK_REALM__', KEYCLOAK_REALM))
             .pipe(string_replace('__KEYCLOAK_CLIENT_ID__', KEYCLOAK_CLIENT_ID))
+            .pipe(string_replace('__USE_ACTIVENOTE__', USE_ACTIVENOTE))
             .pipe(gulp.dest('dist/'))
 
     });

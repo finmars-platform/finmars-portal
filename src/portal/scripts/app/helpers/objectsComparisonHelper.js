@@ -13,7 +13,7 @@
      */
     function areObjectsTheSame (obj1, obj2) {
 
-            console.log('object comparison objects', obj1, obj2);
+            // console.log('object comparison objects', obj1, obj2);
             var firstObject, secondObject;
 
             function areTwoObjectsTheSame(x, y) {
@@ -81,7 +81,7 @@
                             break;
                     }
                 }
-                console.log('object comparison objects are equals');
+                // console.log('object comparison objects are equals');
                 return true;
             }
 
