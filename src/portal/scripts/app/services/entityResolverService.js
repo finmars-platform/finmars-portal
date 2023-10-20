@@ -29,7 +29,8 @@ const transactionTypeService = require("./transactionTypeService");
 
     const gridTableHelperService = new GridTableHelperService(multitypeFieldService);
 
-    const instrumentService = new InstrumentService(cookieService, xhrService, uiService, gridTableHelperService, multitypeFieldService);
+    // const instrumentService = new InstrumentService(cookieService, xhrService, uiService, gridTableHelperService, multitypeFieldService);
+    const instrumentService = new InstrumentService(cookieService, toastNotificationService, xhrService, uiService, gridTableHelperService, multitypeFieldService);
     const priceHistoryService = new PriceHistoryService(cookieService, xhrService);
     const currencyHistoryService = new CurrencyHistoryService(cookieService, xhrService);
     const reportService = new ReportService(cookieService, xhrService);
