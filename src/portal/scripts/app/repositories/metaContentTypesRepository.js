@@ -376,6 +376,11 @@ export default function (cookieService, xhrService) {
                 entity: 'complex-transaction-import-scheme',
                 key: "integrations.complextransactionimportscheme"
             },
+            {
+                name: "Simple Import Scheme",
+                entity: 'csv-import-scheme',
+                key: "csv_import.csvimportscheme"
+            },
         ]
     };
 
@@ -596,6 +601,11 @@ export default function (cookieService, xhrService) {
                 name: "Complex Transaction Import Scheme",
                 entity: 'complex-transaction-import-scheme',
                 key: "integrations.complextransactionimportscheme"
+            },
+            {
+                name: "Simple Import Scheme",
+                entity: 'csv-import-scheme',
+                key: "csv_import.csvimportscheme"
             },
         ]
     };
