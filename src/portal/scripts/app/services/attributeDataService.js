@@ -60,6 +60,7 @@
             "complex-transaction-status": require('../models/complextransactionStatusPropsModel').getAttributes(),
             "country": require('../models/countryPropsModel').getAttributes(),
             "complex-transaction-import-scheme": require('../models/complexTransactionImportSchemePropsModel').getAttributes(),
+            "csv-import-scheme": require('../models/CsvImportSchemePropsModel').getAttributes(),
 
         };
 
