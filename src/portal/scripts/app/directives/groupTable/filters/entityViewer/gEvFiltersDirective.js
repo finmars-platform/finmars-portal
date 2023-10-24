@@ -121,6 +121,7 @@
                 scope.evAddEntity = async function () {
 
                     let editLayout, entity = {};
+                    let dialogOptions;
 
                     switch (scope.entityType) {
 
@@ -164,6 +165,37 @@
                                 scope.entityType,
                                 entity
                             );
+
+                            break;
+
+                        case 'csv-import-scheme':
+
+                            dialogOptions = {
+                                controller: 'SimpleEntityImportSchemeV2EditDialogController as vm',
+                                templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-v2-dialog-view.html',
+                                parent: angular.element(document.body),
+                                locals: {
+                                    data: {
+
+                                    }
+                                }
+                            };
+
+                            $mdDialog.show(dialogOptions)
+
+                            break;
+
+                        case 'transaction-import-scheme':
+
+                            dialogOptions = {
+                                controller: 'TransactionImportSchemeV2EditDialogController as vm',
+                                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-v2-dialog-view.html',
+                                parent: angular.element(document.body),
+                                locals: {
+                                }
+                            };
+
+                            $mdDialog.show(dialogOptions)
 
                             break;
 
