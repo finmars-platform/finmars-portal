@@ -656,6 +656,16 @@ export default function (cookieService, xhrService) {
                 key: "instruments.instrument"
             },
             {
+                name: "Instrument Factor Schedule",
+                entity: 'instrument-factor-schedule',
+                key: "instruments.instrumentfactorschedule"
+            },
+            {
+                name: "Instrument Accrual Schedule",
+                entity: 'instrument-accrual-calculation-schedule',
+                key: "instruments.accrualcalculationschedule"
+            },
+            {
                 name: "Portfolio",
                 entity: 'portfolio',
                 key: "portfolios.portfolio"
