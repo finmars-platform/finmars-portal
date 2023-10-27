@@ -267,58 +267,14 @@
                     };
 
                     if (scope.item.data.store) {
-
-                        // Date control could not store values list, only single value
-                        /*if (scope.componentData.settings.value_type === 40) {
-
-                            if (Array.isArray(scope.item.data.store.value)) {
-                                scope.item.data.store.value = scope.item.data.store.value[0];
-                            } else {
-                                changedData.data = JSON.parse(JSON.stringify(scope.item.data.store));
-                            }
-                        } else {
-                            changedData.data = JSON.parse(JSON.stringify(scope.item.data.store));
-                        }*/
                         changedData.data = structuredClone(scope.item.data.store);
                     }
 
                     console.log('changedData', changedData);
                     console.log('scope.item.data.store.value', scope.item.data.store.value);
 
-                    /*
-                     * SZ: 2023-08-20 for backward compatibiliy, deprecated
-                     *
-                     * ME: 2023-10-16 NOT DEPRECATED until dashboardReportViewerController
-                     * changed to work with dashboardDataService.setComponentOutput
-                     * */
                     scope.dashboardDataService.setComponentOutputOld(scope.item.data.id, changedData);
                     //# endregion
-
-                    /*
-                     * SZ 2023-08-20: Probably need refactor
-                     *
-                     * ME 2023-10-17: For now code in `if else` statement bellow is useless because
-                     * dashboardDataService.setComponentOutputOld, dashboardDataService.getComponentOutputOld
-                     * are used right now instead of getComponentOutput
-                     * */
-                    if (scope.item.data.store.user_codes) {
-
-                        if (scope.componentData.settings.multiple) {
-                            scope.dashboardDataService.setComponentOutput(scope.item.data.id, scope.item.data.store.user_codes);
-
-                        } else {
-
-                            if ( Array.isArray(scope.item.data.store.user_codes) ) {
-                                scope.dashboardDataService.setComponentOutput(scope.item.data.id, scope.item.data.store.user_codes[0]);
-                            } else {
-                                scope.dashboardDataService.setComponentOutput(scope.item.data.id, scope.item.data.store.user_codes);
-                            }
-
-                        }
-
-                    } else {
-                        scope.dashboardDataService.setComponentOutput(scope.item.data.id, scope.item.data.store.value);
-                    }
 
                     scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_OUTPUT_CHANGE);
