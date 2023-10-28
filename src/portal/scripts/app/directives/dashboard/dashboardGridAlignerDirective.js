@@ -84,7 +84,7 @@
                     var totalRowsCount = tab.layout.rows_count
 
                     var tabHeight = tabsHolderElem.clientHeight;
-                    console.log("testing2272 tabHeight", tabHeight);
+
                     var accordions = elem.querySelectorAll('.dashboard-accordion-component')
 
                     console.log('accordions', accordions);
@@ -176,7 +176,6 @@
 
                         if (fillTabHeight) {
                             domElemHeight = tabHeight - 8;
-                            console.log("testing2272 domElemHeight", domElemHeight, tabHeight);
 
                         } else {
                             domElemHeight = layoutElem.rowspan * scope.cellHeight;

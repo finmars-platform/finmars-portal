@@ -22,26 +22,32 @@
 				$scope.selectedRowsCount = 0;
 				const selectedRowsActionBlockElement = $scope.contentWrapElement.querySelector('.activeRowsActions');
 
-				const countSelectedRows = tree => {
+				const countSelectedRows = rowsList => {
 
 					let count = 0;
 
-					tree.forEach(subtotal => {
+					rowsList.forEach(rowData => {
 
-						const isSubtotalSelected = subtotal.___level !== 0 && (subtotal.___is_area_subtotal_activated || subtotal.___is_line_subtotal_activated);
+						//# regions For report viewer
+						const isSubtotalSelected = rowData.___level !== 0 && (rowData.___is_area_subtotal_activated || rowData.___is_line_subtotal_activated);
 
 						if (isSubtotalSelected) {
 							count++;
 						}
+						//# endregions
 
-						if (subtotal.results) {
-							subtotal.results.forEach(obj => {
-								const isObjSelected = obj.id && obj.___is_activated
-								if (isObjSelected) {
-									count++;
-								}
-							})
+						/*if (rowData.results) {
+                            rowData.results.forEach(obj => {
+                                const isObjSelected = obj.id && obj.___is_activated
+                                if (isObjSelected) {
+                                    count++;
+                                }
+                            })
+                        }*/
+						if (rowData.___type === 'object' && rowData.___is_activated) {
+							count++;
 						}
+
 					});
 
 					return count;
@@ -98,15 +104,14 @@
 							setTimeout(() => $scope.$apply());
 
 						} else {
-							selectedRowsActionBlockElement.classList.add('display-none');
+							$scope.closeSelectedRowsActions();
 						}
 
 					});
 
-					$scope.evEventService.addEventListener(evEvents.HIDE_BULK_ACTIONS_AREA, function () {
-						selectedRowsActionBlockElement.classList.add('display-none');
-					});
+					$scope.evEventService.addEventListener(evEvents.HIDE_BULK_ACTIONS_AREA, $scope.closeSelectedRowsActions);
 
+					$scope.evEventService.addEventListener(evEvents.DATA_LOAD_START, $scope.closeSelectedRowsActions);
 				};
 
 				init();
