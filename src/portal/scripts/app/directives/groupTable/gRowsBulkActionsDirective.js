@@ -28,7 +28,7 @@
 
 					rowsList.forEach(rowData => {
 
-						//# regions For report viewer
+						//# region For report viewer
 						const isSubtotalSelected = rowData.___level !== 0 && (rowData.___is_area_subtotal_activated || rowData.___is_line_subtotal_activated);
 
 						if (isSubtotalSelected) {
