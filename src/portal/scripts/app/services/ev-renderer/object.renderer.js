@@ -492,7 +492,6 @@
         var rowHeight = evDataService.getRowHeight();
 
         getRowGeneralClasses(obj, classList);
-
         // rowSelection = '<div class="g-row-selection">' + getIcon(obj, currentMember, classList) + '</div>';
         rowSelection = renderHelper.getRowSelectionElem(obj);
 
