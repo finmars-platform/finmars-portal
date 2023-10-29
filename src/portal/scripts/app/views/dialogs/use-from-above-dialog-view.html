@@ -21,20 +21,21 @@
                     <md-option value="transaction-report">Transaction Report</md-option>
                 </md-select>
             </md-input-container>-->
-            <dropdown-select label="Report Type"
-                             model="vm.attrsEntityType"
-                             menu-options="vm.reportTypesOpts"
-                             on-change-callback="vm.onAttrsTypeChange()"></dropdown-select>
+            <dropdown-select data-label="Report Type"
+                             data-model="vm.attrsEntityType"
+                             data-menu-options="vm.reportTypesOpts"
+                             data-on-change-callback="vm.onAttrsTypeChange()"></dropdown-select>
         </div>
 
         <div layout="row">
 
-            <table-attribute-selector title="Select field"
-                                      dialog-title="Select field"
-                                      available-attrs="vm.attributes"
-                                      item="vm.item"
-                                      is-report="true"
-                                      is-disabled="!vm.attrsEntityType"
+            <table-attribute-selector data-title="Select field"
+                                      data-dialog-title="Select field"
+                                      data-available-attrs="vm.attributes"
+                                      data-item="vm.item"
+                                      data-value-type="vm.attrsValueType"
+                                      data-content-type="vm.contentType"
+                                      data-is-disabled="!vm.attrsEntityType"
                                       class="dashboard-constructor-field1 m-r-10"
                                       style="width: 400px;"></table-attribute-selector>
 

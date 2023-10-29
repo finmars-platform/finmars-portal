@@ -129,56 +129,47 @@
 
 				var dialogParent = document.querySelector('.dialog-containers-wrap');
 
-				vm.openUseFromAboveSettings = function () {
+				vm.openUseFromAboveSettings = async function () {
 
-					return new Promise(function (resolve) {
-
-						$mdDialog.show({
-							controller: 'UseFromAboveDialogController as vm',
-							templateUrl: 'views/dialogs/use-from-above-dialog-view.html',
-							parent: dialogParent,
-							multiple: true,
-							locals: {
-								data: {
-									item: vm.filter.options.use_from_above.key,
-									data: { value_type: vm.filter.value_type },
-									entityType: vm.filter.options.use_from_above.attrs_entity_type,
-									filterType: vm.filter.options.filter_type
-								},
-								attributeDataService: vm.attributeDataService
-							}
-
-						}).then(function (res) {
-
-							console.log('openUseFromAboveSettings.res', res)
-							console.log('openUseFromAboveSettings.vm.filter', vm.filter)
-
-							if (res.status === 'agree') {
-
-
-								if (vm.filter.options.use_from_above.key !== res.data.item ||
-									vm.filter.options.filter_type !== res.data.filterType) {
-
-									vm.filter.options.use_from_above = {}
-
-									vm.filter.options.use_from_above.key = res.data.item
-									vm.filter.options.filter_type = res.data.filterType
-									vm.filter.options.use_from_above.attrs_entity_type = res.data.attrsEntityType
-
-									// resolve('use_from_above');
-									resolve(vm.filter);
-
-								}
-
-							} else {
-
-								// resolve(vm.filter.options.filter_type);
-								resolve(vm.filter);
-							}
-
-						});
+					const res = await $mdDialog.show({
+						controller: 'UseFromAboveDialogController as vm',
+						templateUrl: 'views/dialogs/use-from-above-dialog-view.html',
+						parent: dialogParent,
+						multiple: true,
+						locals: {
+							data: {
+								item: vm.filter.options.use_from_above.key,
+								data: { value_type: vm.filter.value_type },
+								entityType: vm.filter.options.use_from_above.attrs_entity_type,
+								filterType: vm.filter.options.filter_type
+							},
+							attributeDataService: vm.attributeDataService
+						}
 
 					});
+
+					console.log('openUseFromAboveSettings.res', res)
+					console.log('openUseFromAboveSettings.vm.filter', vm.filter)
+
+					if (res.status === 'agree') {
+
+
+						if (vm.filter.options.use_from_above.key !== res.data.item ||
+							vm.filter.options.filter_type !== res.data.filterType) {
+
+							vm.filter.options.use_from_above = {}
+
+							vm.filter.options.use_from_above.key = res.data.item
+							vm.filter.options.filter_type = res.data.filterType
+							vm.filter.options.use_from_above.attrs_entity_type = res.data.attrsEntityType
+
+							return vm.filter;
+
+						}
+
+					} else {
+						return vm.filter;
+					}
 
 				}
 

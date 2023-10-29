@@ -5,11 +5,14 @@
 
     'use strict';
 
-    module.exports = function ($scope, $mdDialog, data, attributeDataService) {
+    module.exports = function ($scope, $mdDialog, metaContentTypesService, data, attributeDataService) {
 
         var vm = this;
 
         vm.attrsEntityType = data.entityType;
+        vm.contentType = metaContentTypesService.findContentTypeByEntity(vm.attrsEntityType);
+        vm.attrsValueType;
+
         vm.item = data.item;
         vm.data = data.data;
         vm.filterType = data.filterType;
@@ -36,31 +39,37 @@
                     name: 'EQUAL'
                 }];
 
+                vm.attrsValueType = [10, 30];
+
                 break;
 
             case 20:
             case 40:
 
-            	vm.filterTypes = [{
-                    id: 'equal',
-                    name: 'EQUAL',
-                },
-                {
-                    id: 'greater',
-                    name: 'GREATER THAN'
-                },
-                {
-                    id: 'greater_equal',
-                    name: 'GREATER OR EQUAL TO'
-                },
-                {
-                    id: 'less',
-                    name: 'LESS THAN'
-                },
-                {
-                    id: 'less_equal',
-                    name: 'LESS OR EQUAL TO'
-                }];
+                vm.attrsValueType = vm.data.value_type;
+
+                vm.filterTypes = [
+                    {
+                        id: 'equal',
+                        name: 'EQUAL',
+                    },
+                    {
+                        id: 'greater',
+                        name: 'GREATER THAN'
+                    },
+                    {
+                        id: 'greater_equal',
+                        name: 'GREATER OR EQUAL TO'
+                    },
+                    {
+                        id: 'less',
+                        name: 'LESS THAN'
+                    },
+                    {
+                        id: 'less_equal',
+                        name: 'LESS OR EQUAL TO'
+                    }
+                ];
 
                 break;
         }
@@ -72,8 +81,7 @@
         }
 
         vm.getAttributes = function () {
-
-            switch (vm.data.value_type) {
+            /*switch (vm.data.value_type) {
                 case 10:
                 case 30:
                     vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.attrsEntityType).filter(function (attr) {
@@ -93,13 +101,15 @@
                         return attr.value_type === 40;
                     });
                     break;
-            }
+            }*/
+            vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.attrsEntityType);
 
         };
 
         vm.onAttrsTypeChange = function () {
+            vm.contentType = metaContentTypesService.findContentTypeByEntity(vm.attrsEntityType);
+            vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.attrsEntityType);
             vm.item = null;
-            vm.getAttributes();
         };
 
         vm.cancel = function () {
@@ -111,7 +121,7 @@
         };
 
         if (vm.attrsEntityType) {
-            vm.getAttributes();
+            vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.attrsEntityType);
         }
 
     }

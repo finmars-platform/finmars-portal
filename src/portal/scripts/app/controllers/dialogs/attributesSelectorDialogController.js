@@ -5,6 +5,18 @@ const metaHelper = require('../../helpers/meta.helper');
 /** @module attributesSelectorDialogController **/
 export default function ($scope, $mdDialog, toastNotificationService, uiService, globalDataService, data) {
 
+    /*
+     * TIPS:
+     *
+     * data === {
+     *  contentType: String,
+     *  valueType?: Number|Array<Number>
+     *  attributes: Array<Object>|null,
+     *  layoutNames?: Object, - keys are attributes' keys, values are names inside layout (e.g. listLayout)
+     *  selectedAttributes: Array<Object>,
+     * }
+     * */
+
     const vm = this;
 
     vm.readyStatus = false;
@@ -13,11 +25,11 @@ export default function ($scope, $mdDialog, toastNotificationService, uiService,
     const urlBeginning = baseUrlService.resolve();
     const base_api_url = baseUrlService.getMasterUserPrefix();
 
-    vm.iframeSrc = `${urlBeginning}/${base_api_url}/v/external/components/modal_add_columns?iframeId=${vm.iframeId}`;
-    // vm.iframeSrc = `http://localhost:3000/space0ni5k/v/external/components/modal_add_columns?iframeId=${vm.iframeId}`; // for development
+    // vm.iframeSrc = `${urlBeginning}/${base_api_url}/v/external/components/modal_add_columns?iframeId=${vm.iframeId}`;
+    vm.iframeSrc = `http://localhost:3000/space0fxf3/v/external/components/modal_add_columns?iframeId=${vm.iframeId}`; // for development
 
-    const windowOrigin = window.origin;
-    // const windowOrigin = 'http://localhost:3000'; // for development
+    // const windowOrigin = window.origin;
+    const windowOrigin = 'http://localhost:3000'; // for development
     const foldersSeparatorRE = /\.\s(?=\S)/g; // equals to ". " which have symbol after it
     let iframeElem;
     let iframeWindow; // iframeElem.contentWindow;
@@ -27,12 +39,59 @@ export default function ($scope, $mdDialog, toastNotificationService, uiService,
     const contentType = data.contentType;
     if (!data.contentType) throw new Error("Content type not specified.");
 
-    const attributesList = data.attributes;
+    /**
+     * Value types to filter attributes by
+     * @type {Number|Array<Number>}
+     */
+    let valueTypes = data.valueType;
+
+    if (valueTypes) {
+
+        if ( !Array.isArray(valueTypes) ) {
+            valueTypes = [valueTypes]
+        }
+
+        const invalid = valueTypes.find(
+            vType => ![10, 20, 30, 40].includes(vType)
+        );
+
+        if (invalid) {
+            throw new Error(`attributesSelectDialogController: invalid value types passed ${valueTypes}`);
+        }
+
+    }
+
+    let attributesList = data.attributes;
+
+    if (valueTypes && valueTypes.length) {
+
+        attributesList = attributesList.filter(
+            attr => valueTypes.includes(attr.value_type)
+        );
+
+    }
+
     const layoutNames = data.layoutNames || {};
+
+    const getFavAttrs = function () {
+
+        let fAttrs = memberLayout.data.favorites.attributes[contentType] || [];
+
+        if (valueTypes && valueTypes.length) {
+
+            fAttrs = fAttrs.filter(
+                attr => valueTypes.includes(attr.value_type)
+            );
+
+        }
+
+        return fAttrs;
+
+    }
 
     const initSettings = {
         selectedAttributes: data.selectedAttributes || [],
-        favoriteAttributes: memberLayout.data.favorites.attributes[contentType] || [],
+        favoriteAttributes: getFavAttrs(),
     };
 
     if (data.title) initSettings.title = data.title;
@@ -99,7 +158,7 @@ export default function ($scope, $mdDialog, toastNotificationService, uiService,
 
         const memberLayout = globalDataService.getMemberLayout();
         memberLayout.data.favorites.attributes[contentType] = favAttrsData;
-        initSettings.favoriteAttributes = memberLayout.data.favorites.attributes[contentType];
+        initSettings.favoriteAttributes = getFavAttrs();
 
         /*usersService.updateMember(member.id, member).then(() => {
             toastNotificationService.success('Favorite attributes updated.');
@@ -118,7 +177,7 @@ export default function ($scope, $mdDialog, toastNotificationService, uiService,
         });
 
         if (alreadySelAttrKey) {
-            throw new Error(`Attribute '${alreadySelAttrKey}' already selected.`);
+            console.warn(`Attribute '${alreadySelAttrKey}' already selected.`);
         }
 
         let resItems = [];
