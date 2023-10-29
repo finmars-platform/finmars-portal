@@ -34,6 +34,7 @@
                 name: '',
                 settings: {
                     entity_type: 'balance-report',
+                    assume_tab_height: false,
                     auto_refresh: false,
                     linked_components: {
                         report_settings: {}

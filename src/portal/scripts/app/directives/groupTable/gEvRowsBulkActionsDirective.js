@@ -90,6 +90,7 @@
 					scope.evDataService.setRowsActionData(actionData);
 
 					scope.evEventService.dispatchEvent(evEvents.ROWS_ACTION_FIRED);
+					scope.evEventService.dispatchEvent(evEvents.HIDE_BULK_ACTIONS_AREA);
 
 				};
 
