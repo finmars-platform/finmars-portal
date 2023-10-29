@@ -77,7 +77,8 @@
                 return 'audit/history';
             case 'complex-transaction-import-scheme':
                 return 'import/complex-transaction-import-scheme';
-
+            case 'csv-import-scheme':
+                return 'import/csv/scheme'
         }
 
         /*switch (entityType) {

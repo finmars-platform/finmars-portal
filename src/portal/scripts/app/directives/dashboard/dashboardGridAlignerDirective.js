@@ -27,6 +27,8 @@
                 // scope.tabPaddingLeft = 8; # probably deprecated
                 scope.tabPaddingTop = 4;
 
+                var tabsHolderElem = document.querySelector(".dashboardTabsHolder");
+
                 scope.calculateSingleCellWidth = function () {
 
                     var tabWidth = elem.parent().parent().parent().width();
@@ -81,6 +83,7 @@
 
                     var totalRowsCount = tab.layout.rows_count
 
+                    var tabHeight = tabsHolderElem.clientHeight;
 
                     var accordions = elem.querySelectorAll('.dashboard-accordion-component')
 
@@ -159,11 +162,27 @@
 
                         }
 
-                        var domElemWidth = layoutElem.colspan * scope.cellWidth;
-						var domElemHeight = layoutElem.rowspan * scope.cellHeight;
+                        var fillTabHeight = false;
 
+                        if (layoutElem.cell_type === 'component') {
+                            var compData = scope.dashboardDataService.getComponentById(layoutElem.data.id);
+                            fillTabHeight = compData.settings.assume_tab_height;
+                        }
+
+                        var domElemWidth = layoutElem.colspan * scope.cellWidth;
                         domElem.style.width = domElemWidth + 'px';
+
+                        var domElemHeight;
+
+                        if (fillTabHeight) {
+                            domElemHeight = tabHeight - 8;
+
+                        } else {
+                            domElemHeight = layoutElem.rowspan * scope.cellHeight;
+                        }
+
                         domElem.style.height = domElemHeight + 'px';
+
 
                         domElem.style.position = 'absolute';
 
