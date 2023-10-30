@@ -1117,11 +1117,14 @@
                                 </a>
                             </li>
                             <li data-ng-if="vm.accessTable.settings_ecosystem_default">
-                                <md-button class="sidemenu-btn"
+                                <!--<md-button class="sidemenu-btn"
                                            ui-sref="app.portal.settings.ecosystem-default-settings">
                                     <span class="side-nav-title">Default Settings</span>
-                                    <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
-                                </md-button>
+                                </md-button>-->
+                                <a href="{{ vm.getVueUrl('/settings/default-settings') }}"
+                                   class="md-button sidemenu-btn">
+                                    <span class="side-nav-title">Default Settings</span>
+                                </a>
                             </li>
                             <!--<li>
                                 <md-button class="sidemenu-btn"
