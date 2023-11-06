@@ -323,227 +323,33 @@
 
         };
 
-        /* TODO grid table delete 2020-9-24
-        var checkFieldExprForDeletedInput = function (actionFieldValue, actionItemKey, actionNotes) {
+        const processValidationErrors = async function (actionsErrors, entityErrors) {
 
-            for (var a = 0; a < inputsToDelete.length; a++) {
-                var dInputName = inputsToDelete[a];
+            const opts = sharedLogic.validationErrorsDialogOpts(
+                actionsErrors, entityErrors, false
+            );
 
-                var middleOfExpr = '[^A-Za-z_.]' + dInputName + '(?![A-Za-z1-9_])';
-                var beginningOfExpr = '^' + dInputName + '(?![A-Za-z1-9_])';
+            const data = await $mdDialog.show(opts);
 
-                var dInputRegExpObj = new RegExp(beginningOfExpr + '|' + middleOfExpr, 'g');
-
-                if (actionFieldValue.match(dInputRegExpObj)) {
-
-                    var actionFieldLocation = {
-                        action_notes: actionNotes,
-                        key: actionItemKey, // for actions errors
-                        name: actionItemKey, // for entity errors
-                        message: "The deleted input is used in the Expression."
-                    };
-
-                    return actionFieldLocation;
-
-                }
+            if (data.status !== 'agree') {
+                // Usage example: cancel saving transaction type
+                throw '';
             }
 
-        };
+        }
 
-        vm.checkActionsForEmptyFields = function (actions) {
+        vm.validateUserFields = function () {
 
-            var result = [];
+            const entityToSave = vm.updateEntityBeforeSave( JSON.parse(angular.toJson(vm.entity)) );
 
-            actions.forEach(function (action) {
+            const errorsList = sharedLogic.validateUserFields(entityToSave, vm.inputsToDelete);
 
-                var actionKeys = Object.keys(action);
-
-                actionKeys.forEach(function (actionKey) {
-
-                    if (typeof action[actionKey] === 'object' && action[actionKey]) {
-
-                        var actionItem = action[actionKey];
-                        var actionItemKeys = Object.keys(actionItem);
-
-                        actionItemKeys = actionItemKeys.filter(function (key) {
-
-                            return key.indexOf('_object') === -1 && key.indexOf('_input') === -1 && key.indexOf('_phantom') === -1
-
-                        });
-
-                        console.log('actionItemKeys', actionItemKeys);
-
-                        actionItemKeys.forEach(function (actionItemKey) {
-
-                            if (actionItemKey === 'notes') {
-
-                                if (actionItem[actionItemKey]) {
-
-                                    var fieldWithInvalidExpr = checkFieldExprForDeletedInput(actionItem[actionItemKey], actionItemKey, action.action_notes);
-
-                                    if (fieldWithInvalidExpr) {
-                                        result.push(fieldWithInvalidExpr);
-                                    }
-
-                                }
-
-                            } else {
-
-                                if (actionItem.hasOwnProperty(actionItemKey + '_input')) {
-
-                                    var inputValue = actionItem[actionItemKey + '_input'];
-                                    var relationValue = actionItem[actionItemKey];
-
-                                    var valueIsEmpty = false;
-
-                                    console.log('actionItemKey', actionItemKey);
-                                    console.log('inputValue', inputValue);
-                                    console.log('relationValue', relationValue);
-
-                                    if (actionItem.hasOwnProperty(actionItemKey + '_phantom')) {
-
-                                        var phantomValue = actionItem[actionItemKey + '_phantom'];
-
-                                        console.log('phantomValue', phantomValue);
-
-                                        if (!inputValue && !relationValue && (phantomValue === null || phantomValue === undefined)) {
-                                            valueIsEmpty = true;
-                                        }
-
-                                    } else {
-
-                                        if (!inputValue && !relationValue) {
-                                            valueIsEmpty = true;
-                                        }
-
-                                    }
-
-                                    if (valueIsEmpty) {
-
-                                        result.push({
-                                            action_notes: action.action_notes,
-                                            key: actionItemKey,
-                                            value: actionItem[actionItemKey]
-                                        })
-
-                                    }
-
-
-                                } else {
-
-                                    if (actionItem[actionItemKey] === null ||
-                                        actionItem[actionItemKey] === undefined ||
-                                        actionItem[actionItemKey] === "") {
-
-                                        result.push({
-                                            action_notes: action.action_notes,
-                                            key: actionItemKey,
-                                            value: actionItem[actionItemKey]
-                                        })
-
-                                    } else if (actionItem[actionItemKey] && typeof actionItem[actionItemKey] === 'string') {
-
-                                        var fieldWithInvalidExpr = checkFieldExprForDeletedInput(actionItem[actionItemKey], actionItemKey, action.action_notes);
-
-                                        if (fieldWithInvalidExpr) {
-                                            result.push(fieldWithInvalidExpr);
-                                        }
-
-                                    }
-
-                                }
-
-                            }
-
-                        })
-
-                    }
-
-
-                })
-
-
-            });
-
-
-            return result;
-        };
-
-        var validateUserFields = function (entity, result) {
-
-            var entityKeys = Object.keys(entity);
-
-            entityKeys.forEach(function (entityKey) {
-
-                if (entityKey.indexOf('user_text_') === 0 ||
-                    entityKey.indexOf('user_number_') === 0 ||
-                    entityKey.indexOf('user_date_') === 0) {
-
-                    var fieldWithInvalidExpr = checkFieldExprForDeletedInput(entity[entityKey], entityKey, 'FIELDS');
-
-                    if (fieldWithInvalidExpr) {
-                        result.push(fieldWithInvalidExpr);
-                    }
-
-                }
-
-            });
-        };
-
-        vm.checkEntityForEmptyFields = function (entity) {
-
-            var result = [];
-
-            if (entity.name === null || entity.name === undefined || entity.name === '') {
-                result.push({
-                    action_notes: 'General',
-                    key: 'name',
-                    name: 'Name',
-                    value: entity.name
-                })
+            if (errorsList.length) {
+                processValidationErrors([], errorsList);
             }
 
-            if (entity.user_code === null || entity.user_code === undefined || entity.user_code === '') {
-                result.push({
-                    action_notes: 'General',
-                    key: 'user_code',
-                    name: 'User code',
-                    value: entity.user_code
-                })
-            }
+        }
 
-            if (entity.display_expr === null || entity.display_expr === undefined || entity.display_expr === '') {
-                result.push({
-                    action_notes: 'General',
-                    key: 'display_expr',
-                    name: 'Display Expression',
-                    value: entity.display_expr
-                })
-            }
-
-            if (entity.date_expr === null || entity.date_expr === undefined || entity.date_expr === '') {
-                result.push({
-                    action_notes: 'General',
-                    key: 'date_expr',
-                    name: 'Complex Transaction Date',
-                    value: entity.date_expr
-                })
-            }
-
-            if (entity.group === null || entity.group === undefined) {
-                result.push({
-                    action_notes: 'General',
-                    key: 'group',
-                    name: 'Group',
-                    value: entity.group
-                })
-            }
-
-            validateUserFields(entity, result);
-
-            return result;
-
-        };*/
 
         var getUserInputs = function (inputs) {
 

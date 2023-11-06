@@ -85,6 +85,9 @@
 
         // TODO: ME 2023-09-27 delete later
         vm.inputsWithError = [];
+        vm.exprInputEventObj = {
+            event: {},
+        }
 
         // Deprecated
         vm.loadPermissions = function () {
@@ -477,251 +480,33 @@
 
         };
 
-        /* vm.updateItem = function () {
+        vm.validateUserFields = function () {
 
-            // TMP save method for instrument
+            const entityToSave = vm.updateEntityBeforeSave( JSON.parse(angular.toJson(vm.entity)) );
 
-            return new Promise(function (resolve) {
+            const errorsList = sharedLogic.validateUserFields(entityToSave, vm.inputsToDelete);
 
-                var entityToSave = vm.updateEntityBeforeSave(vm.entity);
-
-                var isValid = entityEditorHelper.checkForNotNullRestriction(entityToSave, vm.entityAttrs, vm.attrs);
-
-                if (isValid) {
-
-                    entityToSave = entityEditorHelper.removeNullFields(entityToSave, vm.entityType);
-
-                    transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
-
-                        resolve(data);
-
-                    });
-
-                }
-
-            })
-
-        }; */
-
-        /* var checkFieldExprForDeletedInput = function (actionFieldValue, actionItemKey, actionNotes) {
-
-            for (var a = 0; a < vm.inputsToDelete.length; a++) {
-
-                var dInputName = vm.inputsToDelete[a];
-
-                var beginningOfExpr = '^' + dInputName + '(?![A-Za-z1-9_])';
-                var middleOfExpr = '[^A-Za-z_.]' + dInputName + '(?![A-Za-z1-9_])';
-
-                var dInputRegExpObj = new RegExp(beginningOfExpr + '|' + middleOfExpr, 'g');
-
-                if (actionFieldValue.match(dInputRegExpObj)) {
-
-                    var actionFieldLocation = {
-                        action_notes: actionNotes,
-                        key: actionItemKey, // for actions errors
-                        name: actionItemKey, // for entity errors
-                        message: "The deleted input is used in the Expression."
-                    };
-
-                    return actionFieldLocation;
-
-                }
-
+            if (errorsList.length) {
+                processValidationErrors([], errorsList);
             }
 
-        };
+        }
 
-        var validateActionsFields = function (actions) {
+        const processValidationErrors = async function (actionsErrors, entityErrors) {
 
-            var result = [];
+            const opts = sharedLogic.validationErrorsDialogOpts(
+                actionsErrors, entityErrors, false
+            );
 
-            actions.forEach(function (action) {
+            const data = await $mdDialog.show(opts);
 
-                var actionKeys = Object.keys(action);
-
-                actionKeys.forEach(function (actionKey) {
-
-                    if (typeof action[actionKey] === 'object' && action[actionKey]) { // check if it is property that contains actions field data
-
-                        var actionItem = action[actionKey];
-                        var actionItemKeys = Object.keys(actionItem);
-
-                        actionItemKeys = actionItemKeys.filter(function (key) {
-
-                            return key.indexOf('_object') === -1 && key.indexOf('_input') === -1 && key.indexOf('_phantom') === -1 && key !== 'action_notes';
-
-                        });
-
-                        actionItemKeys.forEach(function (actionItemKey) {
-
-                            if (actionItemKey === 'notes') {
-
-                                if (actionItem[actionItemKey]) {
-                                    var fieldWithInvalidExpr = checkFieldExprForDeletedInput(actionItem[actionItemKey], actionItemKey, action.action_notes);
-
-                                    if (fieldWithInvalidExpr) {
-                                        result.push(fieldWithInvalidExpr);
-                                    }
-                                }
-
-                            } else {
-
-                                if (actionItem.hasOwnProperty(actionItemKey + '_input')) {
-
-                                    var inputValue = actionItem[actionItemKey + '_input'];
-                                    var relationValue = actionItem[actionItemKey];
-
-                                    var valueIsEmpty = false;
-
-                                    if (actionItem.hasOwnProperty(actionItemKey + '_phantom')) {
-
-                                        var phantomValue = actionItem[actionItemKey + '_phantom'];
-
-                                        if (!inputValue && !relationValue && (phantomValue === null || phantomValue === undefined)) {
-                                            valueIsEmpty = true;
-                                        }
-
-                                    } else {
-
-                                        if (!inputValue && !relationValue) {
-                                            valueIsEmpty = true;
-                                        }
-
-                                    }
-
-                                    if (valueIsEmpty) {
-
-                                        result.push({
-                                            action_notes: action.action_notes,
-                                            key: actionItemKey,
-                                            value: actionItem[actionItemKey]
-                                        })
-
-                                    }
-
-
-                                } else {
-
-                                    if (actionItem[actionItemKey] === null ||
-                                        actionItem[actionItemKey] === undefined ||
-                                        actionItem[actionItemKey] === "") {
-
-                                        result.push({
-                                            action_notes: action.action_notes,
-                                            key: actionItemKey,
-                                            value: actionItem[actionItemKey]
-                                        })
-
-                                    } else if (actionItem[actionItemKey] && typeof actionItem[actionItemKey] === 'string') { // deleted inputs use
-
-                                        var fieldWithInvalidExpr = checkFieldExprForDeletedInput(actionItem[actionItemKey], actionItemKey, action.action_notes);
-
-                                        if (fieldWithInvalidExpr) {
-                                            result.push(fieldWithInvalidExpr);
-                                        }
-
-                                    }
-
-                                }
-
-                            }
-
-                        })
-
-                    }
-
-                });
-
-
-                if (!action.action_notes) {
-                    result.push({
-                        action_notes: action.action_notes,
-                        key: 'action_notes',
-                        value: ''
-                    })
-                }
-
-            });
-
-
-            return result;
-        };
-
-        var validateUserFields = function (entity, result) {
-
-            var entityKeys = Object.keys(entity);
-
-            entityKeys.forEach(function (entityKey) {
-
-                if (entityKey.indexOf('user_text_') === 0 ||
-                    entityKey.indexOf('user_number_') === 0 ||
-                    entityKey.indexOf('user_date_') === 0) {
-
-                    var fieldWithInvalidExpr = checkFieldExprForDeletedInput(entity[entityKey], entityKey, 'FIELDS');
-
-                    if (fieldWithInvalidExpr) {
-                        result.push(fieldWithInvalidExpr);
-                    }
-
-                }
-
-            });
-        };
-
-        var checkEntityForEmptyFields = function (entity) {
-
-            var result = [];
-
-            if (entity.name === null || entity.name === undefined || entity.name === '') {
-                result.push({
-                    action_notes: 'GENERAL',
-                    key: 'name',
-                    name: 'Name',
-                    value: entity.name
-                })
+            if (data.status !== 'agree') {
+                // Usage example: cancel saving transaction type
+                throw '';
             }
 
-            if (entity.user_code === null || entity.user_code === undefined || entity.user_code === '') {
-                result.push({
-                    action_notes: 'GENERAL',
-                    key: 'user_code',
-                    name: 'User code',
-                    value: entity.user_code
-                })
-            }
+        }
 
-            if (entity.display_expr === null || entity.display_expr === undefined || entity.display_expr === '') {
-                result.push({
-                    action_notes: 'GENERAL',
-                    key: 'display_expr',
-                    name: 'Display Expression',
-                    value: entity.display_expr
-                })
-            }
-
-            if (entity.date_expr === null || entity.date_expr === undefined || entity.date_expr === '') {
-                result.push({
-                    action_notes: 'GENERAL',
-                    key: 'date_expr',
-                    name: 'Complex Transaction Date',
-                    value: entity.date_expr
-                })
-            }
-
-            if (entity.group === null || entity.group === undefined) {
-                result.push({
-                    action_notes: 'GENERAL',
-                    key: 'group',
-                    name: 'Group',
-                    value: entity.group
-                })
-            }
-
-            validateUserFields(entity, result);
-
-            return result;
-
-        };*/
 
         vm.save = function () {
 
@@ -1992,6 +1777,7 @@
 
         }
 
+        //# region User fields
         vm.userTextFields = [];
         vm.userNumberFields = [];
         vm.userDateFields = [];
@@ -2013,6 +1799,7 @@
                 key: 'user_date_' + i
             })
         }
+        //# endregion User fields
 
         //region Context Parameters tab
         vm.deleteContextParameter = sharedLogic.deleteContextParameter
@@ -2119,6 +1906,8 @@
                 ecosystemDefaultData = data.results[0];
             }); */
             sharedLogic.loadEcosystemDefaults();
+
+            vm.exprInputEventObj = sharedLogic.createEventsDataForInputs();
 
             var getItemPromise = vm.getItem();
             var getAttrsPromise = vm.getAttrs();
