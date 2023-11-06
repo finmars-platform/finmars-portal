@@ -487,7 +487,18 @@
             const errorsList = sharedLogic.validateUserFields(entityToSave, vm.inputsToDelete);
 
             if (errorsList.length) {
+
+                errorsList.forEach(ufError => {
+
+                    vm.exprInputEventObj.userFields[ufError.key] = {
+                        key: 'error',
+                        error: ufError.message,
+                    }
+
+                })
+
                 processValidationErrors([], errorsList);
+
             }
 
         }

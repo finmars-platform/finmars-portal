@@ -32,7 +32,7 @@
                                                   data-item="vm.entity.user_text_1"></expression-editor-button>-->
                         <expression-input data-label="{{vm.transactionUserFields[item.key]}}"
                                           data-model="vm.entity[item.key]"
-                                          data-event-signal="vm.exprInputEventObj[item.key]"
+                                          data-event-signal="vm.exprInputEventObj.userFields[item.key]"
                                           data-data="vm.expressionData"
                                           class="custom-input-bottom-space"></expression-input>
 
@@ -80,7 +80,7 @@
                         <expression-input data-label="{{vm.transactionUserFields[item.key]}}"
                                           data-model="vm.entity[item.key]"
                                           data-data="vm.expressionData"
-                                          data-event-signal="vm.exprInputEventObj[item.key]"
+                                          data-event-signal="vm.exprInputEventObj.userFields[item.key]"
                                           class="custom-input-bottom-space"></expression-input>
 
                         <ng-md-icon class="tooltip-inline-block"
@@ -125,7 +125,7 @@
 
                         <expression-input data-label="{{vm.transactionUserFields[item.key]}}"
                                           data-model="vm.entity[item.key]"
-                                          data-event-signal="vm.exprInputEventObj[item.key]"
+                                          data-event-signal="vm.exprInputEventObj.userFields[item.key]"
                                           data-data="vm.expressionData"
                                           class="custom-input-bottom-space"></expression-input>
 
