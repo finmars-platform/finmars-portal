@@ -917,16 +917,16 @@
             return result;
         };
 
-        const validateUserFields = function (entity, inputsToDelete, result) {
+        const validateUserFields = function (entity, inputsToDelete, result=[]) {
 
-            var entityKeys = Object.keys(entity);
+            Object.keys(entity).forEach(function (entityKey) {
 
-            entityKeys.forEach(function (entityKey) {
+                const isUserFieldKey =
+                    entityKey.indexOf('user_text_') === 0 ||
+                    entityKey.indexOf('user_number_') === 0 ||
+                    entityKey.indexOf('user_date_') === 0;
 
-                if ((entityKey.indexOf('user_text_') === 0 ||
-                        entityKey.indexOf('user_number_') === 0 ||
-                        entityKey.indexOf('user_date_') === 0) &&
-                    entity[entityKey]) {
+                if ( isUserFieldKey && entity[entityKey] ) {
 
                     const userFieldName = viewModel.transactionUserFields[entityKey];
 
@@ -944,6 +944,9 @@
                 }
 
             });
+
+            return result;
+
         };
 
         const checkEntityForEmptyFields = function (entity) {
@@ -995,9 +998,7 @@
                 })
             }
 
-            validateUserFields(entity, viewModel.inputsToDelete, result);
-
-            return result;
+            return validateUserFields(entity, viewModel.inputsToDelete, result);
 
         };
 
@@ -1056,6 +1057,54 @@
             return errors;
 
         };
+
+        const validationErrorsDialogOpts = function (actionsErrors, entityErrors, proceedButton=true) {
+
+            return {
+                controller: 'TransactionTypeValidationErrorsDialogController as vm',
+                templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
+                clickOutsideToClose: false,
+                multiple: true,
+                locals: {
+                    data: {
+                        actionErrors: actionsErrors,
+                        entityErrors: entityErrors,
+                        proceedButton: proceedButton,
+                    }
+                }
+            }
+
+        }
+
+        /**
+         * Create object that is used to turn on error mode for custom inputs (not only ttype inputs)
+         *
+         * @return {{userFields: {}, inputs: {}, actions: {}}}
+         */
+        const createEventsDataForInputs = function () {
+
+            const result = {
+                inputs: {},
+                userFields: {},
+                actions: {},
+            }
+
+            const ufList = viewModel.userTextFields.concat(
+                viewModel.userNumberFields, viewModel.userDateFields
+            )
+
+            ufList.forEach(userField => {
+                result.userFields[userField.key] = {}
+            })
+
+            viewModel.entity.inputs.forEach(input => {
+                result.inputs[input.key] = {}
+            })
+
+            // TODO: event object for actions
+            return result;
+
+        }
         //endregion
 
         //region desc="INPUTS GRID TABLE"
@@ -4295,6 +4344,9 @@
             checkActionsForEmptyFields: checkActionsForEmptyFields,
             checkEntityForEmptyFields: checkEntityForEmptyFields,
             validateInputs: validateInputs,
+            validationErrorsDialogOpts: validationErrorsDialogOpts,
+            validateUserFields: validateUserFields,
+            createEventsDataForInputs: createEventsDataForInputs,
 
             initGridTableEvents: initGridTableEvents,
 

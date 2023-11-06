@@ -76,7 +76,9 @@
         <md-button class="md-raised" ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button class="md-raised md-warn" ng-click="vm.agree()">
+        <md-button data-ng-if="vm.proceedButton"
+                   class="md-raised md-warn"
+                   ng-click="vm.agree()">
             Proceed anyway
         </md-button>
     </md-dialog-actions>
