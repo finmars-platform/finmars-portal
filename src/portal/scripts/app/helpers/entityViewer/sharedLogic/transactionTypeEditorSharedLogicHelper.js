@@ -718,12 +718,12 @@
 
         };
 
-        const checkFieldExpr = function (inputsToDelete, fieldValue, itemKey, location) {
+        const checkFieldExpr = function (inputsToDelete, fieldValue, itemKey, itemName, location) {
 
             var actionFieldLocation = {
                 action_notes: location,
-                key: itemKey, // for actions errors
-                name: itemKey // for entity errors
+                key: itemKey, // name of property or input.name
+                name: itemName // for entity errors
             };
 
             var validationResult = helpExpressionsService.validateExpressionOnFrontend(
@@ -815,10 +815,12 @@
                             if (actionItemKey === 'notes') {
 
                                 if (actionItem[actionItemKey]) {
+
                                     fieldWithInvalidExpr = checkFieldExpr(
                                         viewModel.inputsToDelete,
                                         actionItem[actionItemKey],
                                         actionItemKey,
+                                        'Notes',
                                         action.action_notes
                                     );
 
@@ -882,6 +884,7 @@
                                             fieldWithInvalidExpr = checkFieldExpr(viewModel.inputsToDelete,
                                                 actionItem[actionItemKey],
                                                 actionItemKey,
+                                                actionItemKey,
                                                 action.action_notes);
 
                                         }
@@ -933,6 +936,7 @@
                     var fieldWithInvalidExpr = checkFieldExpr(
                         inputsToDelete,
                         entity[entityKey],
+                        entityKey,
                         userFieldName,
                         'FIELDS'
                     );
@@ -1031,7 +1035,13 @@
                     } else {
 
                         location = 'INPUTS: ' + input.name;
-                        defaultExprError = checkFieldExpr(viewModel.inputsToDelete, input.value, 'Default value', location);
+                        defaultExprError = checkFieldExpr(
+                            viewModel.inputsToDelete,
+                            input.value,
+                            input.name,
+                            'Default value',
+                            location
+                        );
 
                     }
 
@@ -1044,7 +1054,12 @@
                 if (input.value_expr) {
 
                     location = 'INPUTS: ' + input.name;
-                    var inputExprError = checkFieldExpr(viewModel.inputsToDelete, input.value_expr, 'Input expr', location);
+                    var inputExprError = checkFieldExpr(
+                        viewModel.inputsToDelete,
+                        input.value_expr,
+                        input.name,
+                        'Input expr',
+                        location);
 
                     if (inputExprError) {
                         errors.push(inputExprError);

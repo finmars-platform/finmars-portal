@@ -91,6 +91,9 @@
         vm.openedIn = data.openedIn;
         vm.updateContextParameters = sharedLogic.updateContextParametersFunctions;
 
+        vm.exprInputEventObj = {
+            event: {},
+        }
         // var ecosystemDefaultData = {};
 
         vm.loadPermissions = function () {
@@ -345,7 +348,18 @@
             const errorsList = sharedLogic.validateUserFields(entityToSave, vm.inputsToDelete);
 
             if (errorsList.length) {
+
+                errorsList.forEach(ufError => {
+
+                    vm.exprInputEventObj.userFields[ufError.key] = {
+                        key: 'error',
+                        error: ufError.message,
+                    }
+
+                })
+
                 processValidationErrors([], errorsList);
+
             }
 
         }
@@ -1998,6 +2012,8 @@
                 ecosystemDefaultData = data.results[0];
             }); */
             sharedLogic.loadEcosystemDefaults();
+
+            vm.exprInputEventObj = sharedLogic.createEventsDataForInputs();
 
             var attrsProm = vm.getAttributeTypes(); // this
             var userFieldsProm = vm.getTransactionUserFields();
