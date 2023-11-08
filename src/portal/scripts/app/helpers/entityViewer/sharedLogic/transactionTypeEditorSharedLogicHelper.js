@@ -720,10 +720,10 @@
 
         const checkFieldExpr = function (inputsToDelete, fieldValue, itemKey, itemName, location) {
 
-            var actionFieldLocation = {
+            var errorData = {
                 action_notes: location,
                 key: itemKey, // name of property or input.name
-                name: itemName // for entity errors
+                name: itemName
             };
 
             var validationResult = helpExpressionsService.validateExpressionOnFrontend(
@@ -731,46 +731,58 @@
                 viewModel.expressionData
             );
 
-            if (validationResult.status) {
+            if (!validationResult.status) {
+                return;
+            }
 
-                var dInputsNames = hasInputInExprs(inputsToDelete, fieldValue, true);
+            var dInputsNames = hasInputInExprs(inputsToDelete, fieldValue, true);
 
-                if (dInputsNames) {
+            if (dInputsNames) {
 
-                    var dInputsNames = dInputsNames.join(", ");
-                    var stringStart = "The deleted input";
+                var dInputsNames = dInputsNames.join(", ");
+                var stringStart = "The deleted input";
+                var stringEnd = "used in the Expression.";
+                var msg;
 
-                    if (dInputsNames.length > 1) {
-                        stringStart += "s";
-                    }
+                if (dInputsNames.length > 1) {
 
-                    actionFieldLocation.message = stringStart + " " + dInputsNames + " is used in the Expression."
+                    msg = `${stringStart}s ${dInputsNames} are ${stringEnd}`;
 
                 } else {
-
-                    switch (validationResult.status) {
-                        case 'error':
-                            actionFieldLocation.message = 'Invalid expression.\n Expression: ' + validationResult.result;
-                            break;
-
-                        case 'functions-error':
-                            actionFieldLocation.message = 'Not all variables are identified expression.\n Expression: ' + validationResult.result;
-                            break;
-
-                        case 'inputs-error':
-                            actionFieldLocation.message = 'Not all variables are identified inputs.\n Expression: ' + validationResult.result;
-                            break;
-
-                        case 'bracket-error':
-                            actionFieldLocation.message = 'Mismatch in the opening and closing braces.\n Expression: ' + validationResult.result;
-                            break;
-                    }
-
+                    msg = `${stringStart} ${dInputsNames} is ${stringEnd}`;
                 }
 
-                return actionFieldLocation;
+                errorData.message = msg;
+                errorData.shortMessage = msg;
+
+            } else {
+
+                /*switch (validationResult.status) {
+                    case 'error':
+                        errorData.message = 'Invalid expression.\n Expression: ' + validationResult.result;
+                        break;
+
+                    case 'functions-error':
+                        errorData.message = 'Not all variables are identified expression.\n Expression: ' + validationResult.result;
+                        break;
+
+                    case 'inputs-error':
+                        errorData.message = 'Not all variables are identified inputs.\n Expression: ' + validationResult.result;
+                        break;
+
+                    case 'bracket-error':
+                        errorData.message = 'Mismatch in the opening and closing braces.\n Expression: ' + validationResult.result;
+                        break;
+                }*/
+                errorData.shortMessage = helpExpressionsService.getErrorMsgBasedOnStatus(validationResult.status);
+
+                errorData.message =
+                    `${errorData.shortMessage}.\n Expression: ${validationResult.result}`;
 
             }
+
+            return errorData;
+
 
         };
 
@@ -856,6 +868,7 @@
                                         result.push({
                                             action_notes: action.action_notes,
                                             key: actionItemKey,
+                                            name: actionItemKey,
                                             value: actionItem[actionItemKey]
                                         })
 
@@ -871,6 +884,7 @@
                                         result.push({
                                             action_notes: action.action_notes,
                                             key: actionItemKey,
+                                            name: actionItemKey,
                                             value: actionItem[actionItemKey]
                                         })
 
@@ -1002,7 +1016,8 @@
                 })
             }
 
-            return validateUserFields(entity, viewModel.inputsToDelete, result);
+            return result;
+            // return validateUserFields(entity, viewModel.inputsToDelete, result);
 
         };
 
@@ -1073,21 +1088,71 @@
 
         };
 
-        const validationErrorsDialogOpts = function (actionsErrors, entityErrors, proceedButton=true) {
+        /**
+         * Calls $mdDialog.show({})
+         *
+         * @param { Array<Object> } errorsList - list of errors to show inside dialog
+         * @param {Boolean} proceedButton
+         * @return {Promise<{}>}
+         */
+        const openErrorsDialog = async function (errorsList, proceedButton) {
 
-            return {
+            const data = await $mdDialog.show({
                 controller: 'TransactionTypeValidationErrorsDialogController as vm',
                 templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
                 clickOutsideToClose: false,
                 multiple: true,
                 locals: {
                     data: {
-                        actionErrors: actionsErrors,
-                        entityErrors: entityErrors,
+                        errorsList: errorsList,
                         proceedButton: proceedButton,
                     }
                 }
+            });
+
+            if (data.status !== 'agree') {
+                // Usage example: cancel saving transaction type because of errors
+                throw '';
             }
+
+            return data;
+
+        }
+
+        const validateTType = function (entity, inputsToDelete, exprInputEventObj) {
+
+            const markInputs = function (errorsList, property) {
+
+                errorsList.forEach(errorData => {
+
+                    // turn on error mode for matching input
+                    exprInputEventObj[property][errorData.key] = {
+                        key: 'error',
+                        error: errorData.shortMessage,
+                    }
+
+                })
+
+            }
+
+            let errorsList = [];
+
+            const systemAttrsErrors = checkEntityForEmptyFields(entity);
+            markInputs(systemAttrsErrors, 'system');
+
+            const userFieldsErrors = validateUserFields(entity, viewModel.inputsToDelete);
+
+            markInputs(userFieldsErrors, 'userFields');
+
+            const actionsErrors = checkActionsForEmptyFields(entity.actions);
+            const ttypeInputsErrors = validateInputs(entity.inputs);
+
+            errorsList = errorsList.concat(systemAttrsErrors, userFieldsErrors, actionsErrors, ttypeInputsErrors);
+
+            return {
+                exprInputEventObj: exprInputEventObj,
+                errorsList,
+            };
 
         }
 
@@ -1099,7 +1164,12 @@
         const createEventsDataForInputs = function () {
 
             const result = {
-                inputs: {},
+                system: {
+                    'name': {},
+                    'display_expr': {},
+                    'date_expr': {},
+                    'group': {},
+                },
                 userFields: {},
                 actions: {},
             }
@@ -4359,8 +4429,9 @@
             checkActionsForEmptyFields: checkActionsForEmptyFields,
             checkEntityForEmptyFields: checkEntityForEmptyFields,
             validateInputs: validateInputs,
-            validationErrorsDialogOpts: validationErrorsDialogOpts,
+            openErrorsDialog: openErrorsDialog,
             validateUserFields: validateUserFields,
+            validateTType: validateTType,
             createEventsDataForInputs: createEventsDataForInputs,
 
             initGridTableEvents: initGridTableEvents,

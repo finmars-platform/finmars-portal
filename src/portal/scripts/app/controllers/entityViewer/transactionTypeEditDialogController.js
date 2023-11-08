@@ -86,7 +86,9 @@
         // TODO: ME 2023-09-27 delete later
         vm.inputsWithError = [];
         vm.exprInputEventObj = {
-            event: {},
+            system: [],
+            userFields: [],
+            actions: {},
         }
 
         // Deprecated
@@ -480,53 +482,35 @@
 
         };
 
-        vm.validateUserFields = function () {
+        const validateTType = async function (entityBeforeSave, proceedButton) {
 
-            const entityToSave = vm.updateEntityBeforeSave( JSON.parse(angular.toJson(vm.entity)) );
+            const result = sharedLogic.validateTType(entityBeforeSave, vm.inputsToDelete, vm.exprInputEventObj);
+            vm.exprInputEventObj = result.exprInputEventObj;
 
-            const errorsList = sharedLogic.validateUserFields(entityToSave, vm.inputsToDelete);
-
-            if (errorsList.length) {
-
-                errorsList.forEach(ufError => {
-
-                    vm.exprInputEventObj.userFields[ufError.key] = {
-                        key: 'error',
-                        error: ufError.message,
-                    }
-
-                })
-
-                processValidationErrors([], errorsList);
-
+            if (!result.errorsList.length) {
+                return;
             }
+
+            // calls $mdDialog.show({});
+            return sharedLogic.openErrorsDialog(result.errorsList, proceedButton);
 
         }
 
-        const processValidationErrors = async function (actionsErrors, entityErrors) {
+        vm.validateTTypeView = function () {
 
-            const opts = sharedLogic.validationErrorsDialogOpts(
-                actionsErrors, entityErrors, false
-            );
+            let entityBeforeSave = JSON.parse(angular.toJson(vm.entity));
+            entityBeforeSave = vm.updateEntityBeforeSave(entityBeforeSave);
 
-            const data = await $mdDialog.show(opts);
-
-            if (data.status !== 'agree') {
-                // Usage example: cancel saving transaction type
-                throw '';
-            }
+            validateTType(entityBeforeSave, false);
 
         }
-
 
         vm.save = function () {
 
             var saveTTypePromise = new Promise(function (resolve, reject) {
 
-                var entityToSave = JSON.parse(JSON.stringify(vm.entity));
+                /*var entityToSave = JSON.parse(JSON.stringify(vm.entity));
                 entityToSave = vm.updateEntityBeforeSave(entityToSave);
-                // var actionsErrors = vm.checkActionsForEmptyFields(vm.entity.actions);
-                // var entityErrors = vm.checkEntityForEmptyFields(vm.entity);
 
                 var actionsErrors = sharedLogic.checkActionsForEmptyFields(entityToSave.actions);
                 var inputsErrors = sharedLogic.validateInputs(entityToSave.inputs);
@@ -566,42 +550,46 @@
                     }
 
 
-                })
-                .then(function () {
+                })*/
+                var entityToSave = JSON.parse(JSON.stringify(vm.entity));
+                entityToSave = vm.updateEntityBeforeSave(entityToSave);
 
-                    vm.processing = true;
+                validateTType(entityToSave, true)
+                    .then(function () {
+                        // validation passed
+                        vm.processing = true;
 
-                    transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
+                        transactionTypeService.update(entityToSave.id, entityToSave).then(function (data) {
 
-                        originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
-                        vm.entity.object_permissions = data.object_permissions;
+                            originalEntityInputs = JSON.parse(angular.toJson(vm.entity.inputs));
+                            vm.entity.object_permissions = data.object_permissions;
 
-                        vm.processing = false;
-                        $scope.$apply();
+                            vm.processing = false;
+                            $scope.$apply();
 
-                        if (data.status !== 400) {
+                            if (data.status !== 400) {
 
-                            toastNotificationService.success("Transaction Type " + vm.entity.name + ' was successfully saved');
+                                toastNotificationService.success("Transaction Type " + vm.entity.name + ' was successfully saved');
 
-                            resolve(data)
+                                resolve(data)
 
-                        }
+                            }
+
+                        })
+                        .catch(function (error) {
+
+                            console.log('error', error);
+
+                            vm.processing = false;
+
+                            $scope.$apply();
+
+                            reject()
+
+                        });
+
 
                     })
-                    .catch(function (error) {
-
-                        console.log('error', error);
-
-                        vm.processing = false;
-
-                        $scope.$apply();
-
-                        reject()
-
-                    });
-
-
-                })
 
             });
 
