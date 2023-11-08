@@ -24,7 +24,7 @@
                         </thead>
                         <tbody>
 
-                        <tr data-ng-repeat="item in vm.entityErrors track by $index">
+                        <tr data-ng-repeat="item in vm.errorsList">
                             <td>
                                 {{item.action_notes}}
                             </td>
@@ -37,7 +37,7 @@
                             </td>
                         </tr>
 
-                        <tr data-ng-repeat="item in vm.actionErrors track by $index">
+                        <!--<tr data-ng-repeat="item in vm.actionErrors track by $index">
                             <td>
                                 {{item.action_notes}}
                             </td>
@@ -48,7 +48,7 @@
                                 <span data-ng-if="!item.message">Value must be not null.</span>
                                 <div ng-if="item.message" ng-bind-html="item.message"></div>
                             </td>
-                        </tr>
+                        </tr>-->
 
                         <!--<tr data-ng-repeat="item in vm.inputsErrors">
                             <td>
@@ -74,7 +74,7 @@
 
     <md-dialog-actions layout="row">
         <md-button class="md-raised" ng-click="vm.cancel()">
-            Cancel
+            {{ vm.proceedButton ? 'CANCEL' : 'CLOSE' }}
         </md-button>
         <md-button data-ng-if="vm.proceedButton"
                    class="md-raised md-warn"

@@ -326,44 +326,28 @@
 
         };
 
-        const processValidationErrors = async function (actionsErrors, entityErrors) {
+        const validateTType = async function (entityBeforeSave, proceedButton) {
 
-            const opts = sharedLogic.validationErrorsDialogOpts(
-                actionsErrors, entityErrors, false
-            );
+            const result = sharedLogic.validateTType(entityBeforeSave, vm.inputsToDelete, vm.exprInputEventObj);
+            vm.exprInputEventObj = result.exprInputEventObj;
 
-            const data = await $mdDialog.show(opts);
-
-            if (data.status !== 'agree') {
-                // Usage example: cancel saving transaction type
-                throw '';
+            if (!result.errorsList.length) {
+                return;
             }
+
+            // calls $mdDialog.show({});
+            return sharedLogic.openErrorsDialog(result.errorsList, proceedButton);
 
         }
 
-        vm.validateUserFields = function () {
+        vm.validateTTypeView = function () {
 
-            const entityToSave = vm.updateEntityBeforeSave( JSON.parse(angular.toJson(vm.entity)) );
+            let entityBeforeSave = JSON.parse(angular.toJson(vm.entity));
+            entityBeforeSave = vm.updateEntityBeforeSave(entityBeforeSave);
 
-            const errorsList = sharedLogic.validateUserFields(entityToSave, vm.inputsToDelete);
-
-            if (errorsList.length) {
-
-                errorsList.forEach(ufError => {
-
-                    vm.exprInputEventObj.userFields[ufError.key] = {
-                        key: 'error',
-                        error: ufError.message,
-                    }
-
-                })
-
-                processValidationErrors([], errorsList);
-
-            }
+            validateTType(entityBeforeSave, false);
 
         }
-
 
         var getUserInputs = function (inputs) {
 
@@ -537,7 +521,7 @@
 
             return new Promise(function (resolve, reject) {
 
-                let entityToSave = JSON.parse(JSON.stringify(vm.entity));
+                /*let entityToSave = JSON.parse(JSON.stringify(vm.entity));
                 entityToSave = vm.updateEntityBeforeSave(entityToSave);
 
                 var actionsErrors = sharedLogic.checkActionsForEmptyFields(entityToSave.actions);
@@ -547,29 +531,6 @@
                 var entityErrors = sharedLogic.checkEntityForEmptyFields(entityToSave);
 
                 console.log('vm.entity before save', entityToSave);
-
-                /*if (actionsErrors.length || entityErrors.length) {
-
-                    $mdDialog.show({
-                        controller: 'TransactionTypeValidationErrorsDialogController as vm',
-                        templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        clickOutsideToClose: false,
-                        multiple: true,
-                        locals: {
-                            data: {
-                                actionErrors: actionsErrors,
-                                entityErrors: entityErrors
-                            }
-                        }
-                    });
-
-                    vm.processing = false;
-
-                    reject();
-
-                }*/
 
                 new Promise(function (resolve, reject) {
 
@@ -601,57 +562,62 @@
                         resolve()
                     }
 
-                }).then(function () {
+                })*/
+                var entityToSave = JSON.parse(JSON.stringify(vm.entity));
+                entityToSave = vm.updateEntityBeforeSave(entityToSave);
 
-                    vm.processing = true;
+                validateTType(entityToSave, true)
+                    .then(function () {
 
-                    transactionTypeService.create(entityToSave).then(function (responseData) {
+                        vm.processing = true;
 
-                        toastNotificationService.success("Transaction Type " + " " + entityToSave.name + ' was successfully created');
+                        transactionTypeService.create(entityToSave).then(function (responseData) {
 
-                        /* if (vm.entity.inputs) {
-                            vm.entity.inputs.forEach(function (input) {
+                            toastNotificationService.success("Transaction Type " + " " + entityToSave.name + ' was successfully created');
 
-                                if (input.settings && input.settings.linked_inputs_names) {
-                                    input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
-                                }
+                            /* if (vm.entity.inputs) {
+                                vm.entity.inputs.forEach(function (input) {
 
-                            });
+                                    if (input.settings && input.settings.linked_inputs_names) {
+                                        input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
+                                    }
 
-                        } */
+                                });
 
-                        vm.entity.object_permissions = responseData.object_permissions;
+                            } */
 
-                        console.log("Creating: book_transaction_layout", vm.entity.book_transaction_layout);
+                            vm.entity.object_permissions = responseData.object_permissions;
 
-                        if (vm.entity.book_transaction_layout) { // if book_transaction_layout was copied from another TType
+                            console.log("Creating: book_transaction_layout", vm.entity.book_transaction_layout);
 
-                            vm.processing = false;
+                            if (vm.entity.book_transaction_layout) { // if book_transaction_layout was copied from another TType
 
-                            $scope.$apply();
-
-                            // resolve(resolve(responseData));
-                            resolve(responseData);
-
-                        } else {
-
-                            createDefaultEditLayout(responseData).then(function () {
                                 vm.processing = false;
 
                                 $scope.$apply();
 
+                                // resolve(resolve(responseData));
                                 resolve(responseData);
-                            });
 
-                        }
+                            } else {
+
+                                createDefaultEditLayout(responseData).then(function () {
+                                    vm.processing = false;
+
+                                    $scope.$apply();
+
+                                    resolve(responseData);
+                                });
+
+                            }
+
+                        })
+                            .catch(function (data) {
+                                vm.processing = false;
+                                reject();
+                            })
 
                     })
-                        .catch(function (data) {
-                            vm.processing = false;
-                            reject();
-                        })
-
-                })
 
             });
 
