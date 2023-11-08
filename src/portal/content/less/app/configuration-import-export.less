@@ -178,8 +178,17 @@
   box-sizing: border-box;
 }
 
-.import-configuration-page-complete-icon, .import-configuration-page-error-icon {
-  color: #f05a22;
+.import-end-mixin() {
   font-size: 45px;
   margin-right: 16px;
+}
+
+.import-configuration-page-complete-icon {
+  .import-end-mixin();
+  color: @green;
+}
+
+.import-configuration-page-error-icon {
+  .import-end-mixin();
+  color: @orange;
 }

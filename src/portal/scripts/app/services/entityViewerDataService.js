@@ -679,9 +679,9 @@
 
         }
 
-        function getObject(objectId, parentId) {
+        function getObject(objectId) {
 
-            if (data.data[parentId] && data.data[parentId].results && data.data[parentId].results.length) {
+            /*if (data.data[parentId] && data.data[parentId].results && data.data[parentId].results.length) {
 
                 var result;
 
@@ -697,7 +697,8 @@
 
             } else {
                 throw Error('Object does not exist')
-            }
+            }*/
+            return data.data[objectId];
         }
 
         function getObjects() {
@@ -758,7 +759,7 @@
             var keysLen = keys.length;
 
             for (i = 0; i < keysLen; i = i + 1) {
-                result.push(data.data[keys[i]]);
+                result.push( data.data[keys[i]] );
             }
 
             return result;
@@ -989,7 +990,7 @@
             return data.activeObjectFromAbove;
         }
 
-        function clearActiveObject() {
+        /* function clearActiveObject() {
 
             var activeObject = getActiveObject();
 
@@ -998,7 +999,7 @@
                 setObject(activeObject);
             }
 
-        }
+        } */
 
         /* function setActiveObjectAction(action) {
             data.activeObjectAction = action;
@@ -1976,7 +1977,7 @@
 
             setActiveObject: setActiveObject,
             getActiveObject: getActiveObject,
-            clearActiveObject: clearActiveObject,
+            // clearActiveObject: clearActiveObject,
             /* setActiveObjectAction: setActiveObjectAction,
             getActiveObjectAction: getActiveObjectAction,
 

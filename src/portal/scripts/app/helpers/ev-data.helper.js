@@ -7,7 +7,7 @@
     var utilsHelper = require('./utils.helper');
     var evRvCommonHelper = require('./ev-rv-common.helper');
 
-    var getNextPage = function (options, event, entityViewerDataService) {
+    /*var getNextPage = function (options, event, entityViewerDataService) {
 
         var _options = Object.assign({}, options);
 
@@ -43,7 +43,7 @@
 
         return _options.page;
 
-    };
+    };*/
 
     var ifFirstRequestForRootGroup = function (event, evDataService) {
 
@@ -83,13 +83,14 @@
 
     var getGroupNameFromParent = function (id, parentId, evDataService) {
 
-        var parent = evDataService.getData(parentId);
+        /*var parent = evDataService.getData(parentId);
 
         var result = parent.results.find(function (item) {
 
             return item.___id === id;
 
-        });
+        });*/
+        var result = evDataService.getData(id);
 
         return result.___group_name
 
@@ -97,13 +98,14 @@
 
     var getGroupIdentifierFromParent = function (id, parentId, evDataService) {
 
-        var parent = evDataService.getData(parentId);
+        /*var parent = evDataService.getData(parentId);
 
         var result = parent.results.find(function (item) {
 
             return item.___id === id;
 
-        });
+        });*/
+        var result = evDataService.getData(id);
 
         return result.___group_identifier
 
@@ -437,11 +439,11 @@
 
     var isGroupSelected = function (groupId, parentGroupId, evDataService) {
 
-        if (isSelected(evDataService)) {
+        if ( isSelected(evDataService) ) { // select all rows is active
             return true
         }
 
-        var parentGroup = evDataService.getData(parentGroupId);
+        /*var parentGroup = evDataService.getData(parentGroupId);
 
         var selected = false;
 
@@ -451,9 +453,10 @@
                 selected = item.___is_activated;
             }
 
-        });
+        });*/
+        const group = evDataService.getData(groupId);
 
-        return selected;
+        return group.___is_activated;
 
     };
 
@@ -964,46 +967,23 @@
         var result = [];
 
         var selectedGroups = evDataService.getSelectedGroups();
-        var multiselectState = evDataService.getSelectedGroupsMultiselectState();
+        // var multiselectState = evDataService.getSelectedGroupsMultiselectState();
 
-        console.log('getObjectsFromSelectedGroups.selectedGroups', selectedGroups);
+        let controlObj = null;
 
-        var controlObj = null;
+        const dataAsList = evDataService.getDataAsList()
 
-
-        var dataAsList = evDataService.getDataAsList()
+        let groupsList;
 
         if (selectedGroups.length) {
-
-            selectedGroups.forEach(function (group) {
-
-                dataAsList.forEach(function (dataItem) {
-
-                    if (dataItem.___parentId === group.___id) {
-
-                        var item = JSON.parse(JSON.stringify(dataItem));
-
-                        if (item.___type === 'object') {
-                            result.push(item);
-                        } else if (item.___type === 'placeholder_object') {
-                            result.push(item);
-                        } else if (item.___type === 'control') {
-                            controlObj = item
-                        }
-
-                    }
-
-                })
-
-            })
+            groupsList = selectedGroups;
 
         }
-        else {
+        else { // for entity viewer without groups
 
+            groupsList = [evDataService.getRootGroupData()]
 
-            var rootGroup = evDataService.getRootGroupData()
-
-            dataAsList.forEach(function (dataItem) {
+            /*dataAsList.forEach(function (dataItem) {
 
                 if (dataItem.___parentId === rootGroup.___id) {
 
@@ -1019,9 +999,55 @@
 
                 }
 
-            })
+            })*/
 
         }
+
+        groupsList.forEach(function (group) {
+
+            /*dataAsList.forEach(function (dataItem) {
+
+                if (dataItem.___parentId === group.___id) {
+
+                    var item = JSON.parse(JSON.stringify(dataItem));
+
+                    if (item.___type === 'object') {
+                        result.push(item);
+                    } else if (item.___type === 'placeholder_object') {
+                        result.push(item);
+                    } else if (item.___type === 'control') {
+                        controlObj = item
+                    }
+
+                }
+
+            })*/
+            const dataItems = dataAsList.filter(
+                item => item.___parentId === group.___id
+            );
+
+            if (!dataItems.length) {
+                return;
+            }
+
+            dataItems.forEach(dataItem => {
+
+                const item = JSON.parse(JSON.stringify(dataItem));
+
+                if (
+                    item.___type === 'object' ||
+                    item.___type === 'placeholder_object'
+                ) {
+
+                    result.push(item);
+
+                } else if (item.___type === 'control') {
+                    controlObj = item
+                }
+
+            })
+
+        })
 
         result.sort( (a, b) => a.___index - b.___index );
 
@@ -1047,8 +1073,8 @@
      */
     var getGroupsAsTree = function (evDataService) {
 
-        var data = JSON.parse(JSON.stringify(evDataService.getData()));
-        var rootGroup = JSON.parse(JSON.stringify(evDataService.getRootGroupData()));
+        var data = structuredClone( evDataService.getData() );
+        var rootGroup = structuredClone( evDataService.getRootGroupData() );
 
         var tree = utilsHelper.convertToTree(data, rootGroup);
 
@@ -1079,7 +1105,7 @@
 
         getObject: getObject,
 
-        getNextPage: getNextPage,
+        // getNextPage: getNextPage,
 
         getGroupTypeId: getGroupTypeId,
         getColumnId: getColumnId,

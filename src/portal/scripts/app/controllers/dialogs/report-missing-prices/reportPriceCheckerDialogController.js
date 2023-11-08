@@ -238,7 +238,8 @@
 
                 item.date = vm.data.missingPricesData.report_date;
                 item.pricing_policy_user_code = vm.data.missingPricesData.pricing_policy_object.user_code;
-                item.user_code = item.currency_object.user_code; // important replace
+
+                if (item.currency_object) item.user_code = item.currency_object.user_code; // important replace
 
                 return item
 

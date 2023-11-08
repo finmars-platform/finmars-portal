@@ -809,23 +809,21 @@ const evEvents = require("../../services/entityViewerEvents");
                             dataListItem.___is_activated = scope.isAllSelected;
                         }
 
-                        if (dataListItem.results && dataListItem.results.length) {
+                        /*if (dataListItem.results && dataListItem.results.length) {
 
                             dataListItem.results.forEach(function (child) {
 
                                 if (child.___type === 'object') {
                                     child.___is_activated = scope.isAllSelected;
+                                    scope.evDataService.setData(child);
                                 }
 
                             });
 
-                        }
-
+                        }*/
                         scope.evDataService.setData(dataListItem);
 
                     });
-
-                    var data = scope.evDataService.getData();
 
                 };
 
@@ -902,20 +900,35 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     } else {
 
-                        var selGroups = scope.evDataService.getSelectedGroups();
+                        /*var selGroups = scope.evDataService.getSelectedGroups();
 
-                        if (selGroups.length) {
+                        if (selGroups.length) { // multiple groups selected
+
                             selGroups.forEach(function (sGroup) {
                                 var rawData = scope.evDataService.getData(sGroup.___id);
                                 dataList.push(rawData);
                             });
-                        } else {
 
+                        } else { // for entity viewer without groups
 
                             var rawData = scope.evDataService.getRootGroupData()
 
                             dataList.push(rawData);
+                        }*/
+
+                        let groupsIds = scope.evDataService.getSelectedGroups();
+
+                        if (!groupsIds.length) {
+                            groupsIds = [ scope.evDataService.getRootGroupData() ];
                         }
+
+                        groupsIds = groupsIds.map(group => group.___id);
+
+                        dataList = scope.evDataService.getDataAsList();
+
+                        dataList = dataList.filter(item => {
+                            return groupsIds.includes(item.___parentId);
+                        })
 
                     }
 
