@@ -1,29 +1,10 @@
-<div class="dashboard-component height-100 dashboardComponent"
+<div class="dashboard-component iframe-component height-100 dashboardComponent"
      ng-class="{'dashboard-component-filled-in': fillInModeData}">
 
     <div ng-if="readyStatus.data === 'ready'"
          class="flex-column height-100">
-<!--        <div class="dashboard-component-header" flex="noshrink">-->
 
-<!--            <div class="dashboard-component-header-left">-->
-
-<!--                <div ng-if="customName || (item && item.data.name)" class="dashboard-component-name">-->
-<!--                    <span class data-ng-if="customName" title="{{customName}}" data-ng-bind="customName"></span>-->
-<!--                    <span data-ng-if="!customName && item" title="{{item.data.name}}"-->
-<!--                          data-ng-bind="item.data.name"></span>-->
-<!--                </div>-->
-
-
-<!--            </div>-->
-
-
-<!--            <div class="dashboard-component-header-right">-->
-
-<!--            </div>-->
-<!--        </div>-->
-
-        <div class="dashboard-component-body" flex="grow">
-
+        <div class="dashboard-component-body flex-0-1-100">
 
             <iframe ng-src="{{vm.url | trustAsUrl}}" data-ng-if="vm.url"
                     style="width: 100%; height: 100%"></iframe>

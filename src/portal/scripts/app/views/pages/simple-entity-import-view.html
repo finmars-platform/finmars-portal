@@ -123,9 +123,16 @@
     <div class="result-section" data-ng-if="vm.importIsFinished">
 
         <div class="text-center width-100">
-            <span class="material-icons import-configuration-page-complete-icon" style="font-size: 80px; margin: 0;">check_circle</span>
+            <span class="material-icons"
+                  data-ng-class="{
+                    'import-configuration-page-complete-icon': vm.task.status === 'D',
+                    'import-configuration-page-error-icon': vm.task.status !== 'D'
+                  }"
+                  style="font-size: 80px; margin: 0;">
+                {{vm.task.status === 'D' ? 'check_circle' : 'error'}}
+            </span>
         </div>
-        <h2 class="text-center">Success</h2>
+        <h2 class="text-center">{{vm.task.status === 'D' ? 'Success' : 'Failure' }}</h2>
 
         <div data-ng-if="vm.task.attachments.length">
 

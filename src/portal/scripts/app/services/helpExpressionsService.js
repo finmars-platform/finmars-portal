@@ -740,6 +740,21 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 		return getHtmlExpression(exprItem.expression, data, expressionsList);
 
 	};
+
+    var _errorStatusToMsgMap = {
+        'error': 'Invalid expression',
+        'functions-error': 'Not all variables are identified expression',
+        'inputs-error': 'Not all variables are identified inputs',
+        'bracket-error': 'Mismatch in the opening and closing braces',
+    }
+
+    var getErrorMsgBasedOnStatus = function (status) {
+        if ( !_errorStatusToMsgMap.hasOwnProperty(status) ) {
+            console.error(`helpExpressionsService.getErrorMsgBasedOnStatus: no message for status: ${status}`);
+        }
+
+        return _errorStatusToMsgMap[status];
+    }
     
     module.exports = {
         getFunctionsItems: getFunctionsItems,
@@ -747,7 +762,8 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
         filterExpressions: filterExpressions,
         validateExpression: validateExpression,
-		validateExpressionOnFrontend: validateExpressionOnFrontend
+		validateExpressionOnFrontend: validateExpressionOnFrontend,
+        getErrorMsgBasedOnStatus: getErrorMsgBasedOnStatus,
     }
 
 }());
