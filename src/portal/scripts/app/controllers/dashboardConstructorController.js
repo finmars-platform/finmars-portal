@@ -1673,6 +1673,30 @@
 
         }
 
+        vm.editAsJson = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityAsJsonEditorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        item: vm.layout,
+                        entityType: 'dashboard-layout'
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.getLayout();
+
+                }
+            })
+
+        }
+
         vm.init = function () {
 
             vm.dashboardConstructorDataService = new DashboardConstructorDataService();

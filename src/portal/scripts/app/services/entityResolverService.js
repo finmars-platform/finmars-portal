@@ -35,6 +35,6 @@ const transactionTypeService = require("./transactionTypeService");
     const currencyHistoryService = new CurrencyHistoryService(cookieService, xhrService);
     const reportService = new ReportService(cookieService, xhrService);
 
-    module.exports = new EntityResolverService(instrumentService, transactionTypeService, priceHistoryService, currencyHistoryService, reportService);
+    module.exports = new EntityResolverService(instrumentService, transactionTypeService, priceHistoryService, currencyHistoryService, reportService, uiService);
 
 }());
