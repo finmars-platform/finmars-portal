@@ -52,6 +52,7 @@ var pricingProcedureService = require('./procedures/pricingProcedureService');
 
 var scheduleService = require('./scheduleService');
 const auditService = require('./auditService');
+const uiService = require('./uiService');
 
 var cookieService = require('../../../../core/services/cookieService');
 var xhrService = require('../../../../core/services/xhrService');
@@ -644,6 +645,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 break;
             case 'configuration':
                 return configurationService.update(id, entity);
+                break;
+            case 'dashboard-layout':
+                return uiService.updateDashboardLayout(id, entity);
                 break;
         }
     };
