@@ -118,48 +118,95 @@ export default function (toastNotificationService) {
 
         let error_object = reason.hasOwnProperty('error') ? reason.error : reason.response.data.error;
 
-        let message = ''
+        let message = '';
+        let title = '';
 
-        message = message + '<span class="toast-error-field">Title</span>: ' + error_object.message + '<br/>'
-        message = message + '<span class="toast-error-field">Code</span>: ' + error_object.status_code + '<br/>'
-        message = message + '<span class="toast-error-field">URL</span>: ' + error_object.url + '<br/>'
-        message = message + '<span class="toast-error-field">Username</span>: ' + error_object.username + '<br/>'
-        message = message + '<span class="toast-error-field">Date & Time</span>: ' + error_object.datetime + '<br/>'
-        message = message + '<span class="toast-error-field">Details</span>: <div><pre>' + JSON.stringify(error_object.details, null, 4) + '</pre></div>'
+        if (error_object.status_code === 403) {
 
-        let raw_title = '<span class="glitch" data-text="Client Error">Client Error</span>'
+            message = message + '<span class="toast-shield-icon" style="text-align: center; display: block">' +
+                '<span class="material-icons" style="font-size: 64px; margin: 0; color: deepskyblue;">security</span>' +
+                '</span>'
 
-        if (error_object.status_code === 500) {
-            raw_title = '<span class="glitch" data-text="Server Error">Server Error</span>'
+            // Strange that we need to get .error level, may cause error in future (2023-11-09 szhitenev)
+            message = message + '<span class="toast-error-field">URL</span>: ' + error_object.url + '<br/>'
+            message = message + '<span class="toast-error-field">Username</span>: ' + error_object.error.username + '<br/>'
+            message = message + '<span class="toast-error-field">Date & Time</span>: ' + error_object.error.datetime + '<br/>'
+
+            let raw_title = '<span  data-text="Access Denied">Access Denied</span>'
+            title = raw_title + '<span class="toast-click-to-copy" style="left: 140px;">click to copy</span>'
+
+            toastNotificationService.info(message, title, {
+                progressBar: true,
+                closeButton: true,
+                tapToDismiss: false,
+                onclick: function (event) {
+
+                    var listener = function (e) {
+
+                        e.clipboardData.setData('text/plain', JSON.stringify(error_object, null, 4));
+
+                        e.preventDefault();
+                    };
+
+                    document.addEventListener('copy', listener, false);
+
+                    document.execCommand("copy");
+
+                    document.removeEventListener('copy', listener, false);
+
+                },
+                // timeOut: '10000',
+                // extendedTimeOut: '10000'
+                timeOut: 0,
+                extendedTimeOut: 0
+            });
+
+        } else {
+
+            message = message + '<span class="toast-error-field">Title</span>: ' + error_object.message + '<br/>'
+            message = message + '<span class="toast-error-field">Code</span>: ' + error_object.status_code + '<br/>'
+            message = message + '<span class="toast-error-field">URL</span>: ' + error_object.url + '<br/>'
+            message = message + '<span class="toast-error-field">Username</span>: ' + error_object.username + '<br/>'
+            message = message + '<span class="toast-error-field">Date & Time</span>: ' + error_object.datetime + '<br/>'
+            message = message + '<span class="toast-error-field">Details</span>: <div><pre>' + JSON.stringify(error_object.details, null, 4) + '</pre></div>'
+
+            let raw_title = '<span class="glitch" data-text="Client Error">Client Error</span>'
+
+            if (error_object.status_code === 500) {
+                raw_title = '<span class="glitch" data-text="Server Error">Server Error</span>'
+            }
+
+            title = raw_title + '<span class="toast-click-to-copy">click to copy</span>'
+
+            toastNotificationService.error(message, title, {
+                progressBar: true,
+                closeButton: true,
+                tapToDismiss: false,
+                onclick: function (event) {
+
+                    var listener = function (e) {
+
+                        e.clipboardData.setData('text/plain', JSON.stringify(error_object, null, 4));
+
+                        e.preventDefault();
+                    };
+
+                    document.addEventListener('copy', listener, false);
+
+                    document.execCommand("copy");
+
+                    document.removeEventListener('copy', listener, false);
+
+                },
+                timeOut: '10000',
+                extendedTimeOut: '10000'
+                // timeOut: 0,
+                // extendedTimeOut: 0
+            });
+
         }
 
-        let title = raw_title + '<span class="toast-click-to-copy">click to copy</span>'
 
-        toastNotificationService.error(message, title, {
-            progressBar: true,
-            closeButton: true,
-            tapToDismiss: false,
-            onclick: function (event) {
-
-                var listener = function (e) {
-
-                    e.clipboardData.setData('text/plain', JSON.stringify(error_object, null, 4));
-
-                    e.preventDefault();
-                };
-
-                document.addEventListener('copy', listener, false);
-
-                document.execCommand("copy");
-
-                document.removeEventListener('copy', listener, false);
-
-            },
-            timeOut: '10000',
-            extendedTimeOut: '10000'
-            // timeOut: 0,
-            // extendedTimeOut: 0
-        });
 
         // DEPRECATED
         // if (reason.statusText) {
