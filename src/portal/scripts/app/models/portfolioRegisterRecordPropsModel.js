@@ -75,6 +75,11 @@
                 "value_type": "field"
             },
             {
+                "key": "nav_valuation_currency",
+                "name": "Nav  Valuation Currency",
+                "value_type": 20
+            },
+            {
                 "key": "nav_previous_day_valuation_currency",
                 "name": "Nav Previous day Valuation Currency",
                 "value_type": 20
