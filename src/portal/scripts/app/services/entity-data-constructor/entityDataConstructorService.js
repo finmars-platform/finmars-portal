@@ -167,6 +167,12 @@
 			}
 		};
 
+		/**
+		 * Format option for grid table inside bindFieldTableDirective
+		 *
+		 * @param {Object} item - data to use as option. E.g. event class, periodicity etc.
+		 * @return {{override_name: string, user_code, name, id, to_show: boolean}}
+		 */
 		const mapOptions = function (item) {
 			return {
 				user_code: item.user_code,
@@ -260,6 +266,7 @@
 
 			dataOfAttributes: dataOfAttributes,
 
+			mapOptions: mapOptions,
 			loadOptionsForAccrualsTable: loadOptionsForAccrualsTable,
 			loadOptionsForEventsTable: loadOptionsForEventsTable
 		}
