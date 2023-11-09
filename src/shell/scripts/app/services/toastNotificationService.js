@@ -28,8 +28,8 @@ export default function () {
         toastr.warning(message)
     };
 
-    const info = function (message) {
-        toastr.info(message);
+    const info = function (message, title, options) {
+        toastr.info(message, title, options);
     };
 
     return {
