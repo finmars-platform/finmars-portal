@@ -8,43 +8,58 @@
                  data-row="{{rowNumber}}"
                  data-column="{{columnNumber}}">
 
-            <div layout="row">
+            <div layout="column">
 
-                <div class="dc-extend-btns-holder" layout="row" style="margin-right: 5px" data-ng-if="componentData.type != 'accordion'">
-                    <button class="md-button md-raised" ng-click="decreaseRowspan()">
-                        <ng-md-icon icon="expand_less" size="16"></ng-md-icon>
-                    </button>
+                <div layout="row" layout-align="space-between">
 
-                    <button class="md-button md-raised" ng-click="increaseRowspan()">
-                        <ng-md-icon icon="expand_more" size="16"></ng-md-icon>
-                    </button>
+                    <div layout="row">
+
+                        <div class="dc-extend-btns-holder" layout="row" style="margin-right: 5px"
+                             data-ng-if="componentData.type != 'accordion'">
+                            <button class="md-button md-raised" ng-click="decreaseRowspan()">
+                                <ng-md-icon icon="expand_less" size="16"></ng-md-icon>
+                            </button>
+
+                            <button class="md-button md-raised" ng-click="increaseRowspan()">
+                                <ng-md-icon icon="expand_more" size="16"></ng-md-icon>
+                            </button>
+                        </div>
+
+                        <div class="dc-extend-btns-holder" layout="row" data-ng-if="componentData.type != 'accordion'">
+                        <button class="md-button md-raised" ng-click="decreaseColspan()">
+                            <ng-md-icon icon="chevron_left" size="16"></ng-md-icon>
+                        </button>
+
+                        <button class="md-button md-raised" ng-click="increaseColspan()">
+                            <ng-md-icon icon="chevron_right" size="16"></ng-md-icon>
+                        </button>
+                    </div>
+
+                    </div>
+
+                    <div class="dashboard-field-card-options">
+                        <md-button aria-label="delete attribute" class=""
+                                   data-ng-click="deleteField()">
+                            <ng-md-icon icon="delete" size="14"></ng-md-icon>
+                        </md-button>
+                        <md-button aria-label="edit attribute" class=""
+                                   data-ng-if="componentData.type != 'accordion'"
+                                   data-ng-click="toggleFieldEditMode()">
+                            <ng-md-icon icon="mode_edit" size="14"></ng-md-icon>
+                        </md-button>
+                    </div>
+
                 </div>
 
-                <div class="dc-extend-btns-holder" layout="row" data-ng-if="componentData.type != 'accordion'">
-                    <button class="md-button md-raised" ng-click="decreaseColspan()">
-                        <ng-md-icon icon="chevron_left" size="16"></ng-md-icon>
-                    </button>
+                <div layout="row">
 
-                    <button class="md-button md-raised" ng-click="increaseColspan()">
-                        <ng-md-icon icon="chevron_right" size="16"></ng-md-icon>
-                    </button>
+                    <p class="name-holder" style="font-size: 14px; margin-top: 10px;">
+                        <b><span data-ng-bind="componentData.name"></span></b> (<span
+                            data-ng-bind="getVerboseType()"></span>)
+                    </p>
+
                 </div>
 
-                <p class="name-holder">
-                    <b><span data-ng-bind="componentData.name"></span></b> (<span
-                        data-ng-bind="getVerboseType()"></span>)
-                </p>
-                <div class="dashboard-field-card-options">
-                    <md-button aria-label="delete attribute" class=""
-                               data-ng-click="deleteField()">
-                        <ng-md-icon icon="delete"  size="14"></ng-md-icon>
-                    </md-button>
-                    <md-button aria-label="edit attribute" class=""
-                               data-ng-if="componentData.type != 'accordion'"
-                               data-ng-click="toggleFieldEditMode()">
-                        <ng-md-icon icon="mode_edit" size="14"></ng-md-icon>
-                    </md-button>
-                </div>
             </div>
 
         </md-card>
@@ -106,8 +121,8 @@
         <div layout="row" layout-align="space-between center"
              class="constructor-card-actions">
             <!--<md-button aria-label="cancel"-->
-                       <!--data-ng-click="cancelFieldEdit()">-->
-                <!--Cancel-->
+            <!--data-ng-click="cancelFieldEdit()">-->
+            <!--Cancel-->
             <!--</md-button>-->
             <md-button class="ec-field-btn"
                        aria-label="save layout"

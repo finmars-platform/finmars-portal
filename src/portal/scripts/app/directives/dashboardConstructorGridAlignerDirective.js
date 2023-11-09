@@ -23,7 +23,8 @@
                 scope.cellWidth = 0;
                 scope.cellHeight = 0;
 
-                scope.cellMinWidth = 100;
+                // scope.cellMinWidth = 100;
+                scope.cellMinWidth = 75;
 
                 scope.rowControlsHolderElem;
                 scope.dashboardLayoutElem;
@@ -51,7 +52,8 @@
                     //
                     // scope.cellHeight = Math.floor(tabHeight / scope.rowsTotal)
 
-                    scope.cellHeight = 50; // var it be fixed value
+                    // scope.cellHeight = 50; // var it be fixed value
+                    scope.cellHeight = 75; // var it be fixed value
 
                 };
 
@@ -60,7 +62,8 @@
                     var rowControlsWidth = 110;
                     var accordionGuideWidth = 110;
 
-                    scope.dashboardLayoutElem.style.width = (scope.columnsTotal * scope.cellWidth + rowControlsWidth - accordionGuideWidth) + 'px'
+                    // scope.dashboardLayoutElem.style.width = (scope.columnsTotal * scope.cellWidth + rowControlsWidth - accordionGuideWidth) + 'px'
+                    scope.dashboardLayoutElem.style.width = '100%';
 
                 };
 
