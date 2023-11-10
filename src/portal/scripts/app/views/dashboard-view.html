@@ -66,6 +66,7 @@
 
         <div data-ng-if="vm.layout" class="dashboard-main-area">
 
+
             <div class="dashboard-top-row">
                 <div class="dashboard-title">
 
@@ -94,35 +95,14 @@
 
                 <div class="dashboard-tabs-control-panel">
 
-                    <md-button class="dashboard-control-button"
-                               data-ng-click="vm.clearActiveTabUfaFilters()"
-                               ng-disabled="vm.processing">
-                        <ng-md-icon icon="leak_remove"
-                                    size="20"
-                                    style="fill: #777777">
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Clear Link to Selection filters for
-                                Active Tab
-                            </md-tooltip>
-                        </ng-md-icon>
-                    </md-button>
 
                     <md-button class="dashboard-control-button"
-                               data-ng-click="vm.refreshActiveTab()"
-                               ng-disabled="vm.processing">
-                        <ng-md-icon icon="refresh"
-                                    size="20"
-                                    style="fill: #777777">
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Refresh Active Tab</md-tooltip>
-                        </ng-md-icon>
-                    </md-button>
-
-                    <md-button class="dashboard-control-button"
-                               data-ng-click="vm.refreshAll()"
+                               data-ng-click="vm.refresh()"
                                ng-disabled="vm.processing">
                         <ng-md-icon icon="loop"
                                     size="20"
                                     style="fill: #777777">
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Refresh All Tabs</md-tooltip>
+                            <md-tooltip class="tooltip_1" md-direction="bottom">Refresh</md-tooltip>
                         </ng-md-icon>
                     </md-button>
 
@@ -321,9 +301,9 @@
                 <div class="tab-header {{tab.active ? 'active' : ''}} "
                      data-ng-repeat="tab in vm.projection | orderBy: 'tab_number' track by tab.tab_number"
                      data-ng-click="vm.setActiveTab(tab)">
-                   <span>
-                                {{tab.name}}
-                            </span>
+               <span>
+                            {{tab.name}}
+                        </span>
 
                 </div>
 
@@ -539,7 +519,8 @@
                                                 ></dashboard-entity-viewer-split-panel>
                                             </div>
 
-                                            <div data-ng-if="item.data.type == 'superset_dashboard'" class="height-100">
+                                            <div data-ng-if="item.data.type == 'superset_dashboard'"
+                                                 class="height-100">
                                                 <dashboard-superset-dashboard
                                                         class="height-100 display-block"
                                                         tab-number="tab.tab_number"
@@ -578,6 +559,26 @@
                         </div>
 
                     </div>
+                </div>
+
+            </div>
+
+            <div class="dashboard-main-loader" data-ng-if="vm.processing" layout="column">
+
+                <div class="dashboard-main-loader-close" data-ng-click="vm.processing = false">
+                    <span class="material-icons">close</span>
+                </div>
+
+                <progress-circular diameter="100"></progress-circular>
+
+                <div layout="column" style="text-align: center; padding-top: 16px;">
+
+<!--                    {{vm.componentsReadyCount}} / {{vm.totalComponents}}-->
+
+                    {{vm.componentReadyPercent}}%
+
+                    <p data-ng-bind-html="vm.processingMessage"></p>
+
                 </div>
 
             </div>

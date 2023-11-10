@@ -1122,10 +1122,10 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
 
                 vm.entityViewerDataService.setDataLoadStatus(true);
 
-                if (!fillInModeEnabled) {
-                    vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ACTIVE);
-                    vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                }
+                // if (!fillInModeEnabled) {
+                vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ACTIVE);
+                vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                // }
 
                 vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_OFF);
 
@@ -1760,7 +1760,8 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
             };
 
             //<editor-fold desc="Dashboard events">
-            vm.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
+            // DEPRECATED SINCE FN-2320 2023-11-10 szhitenev
+            /*vm.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
                 //vm.applyDashboardChanges();
                 updateReportSettingsUsingDashboardData();
                 cleanComponentsOutputsToDelete();
@@ -1783,7 +1784,7 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
                 }
 
             });
-
+*/
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE, function () {
                 // update report filters from dashboard component
 

@@ -249,7 +249,7 @@ export default (function () {
     portal.directive('dashboardReportViewer', ['$mdDialog', 'dashboardHelper', 'metaContentTypesService', require('./app/directives/dashboard/dashboardReportViewerDirective')]);
     portal.directive('dashboardReportViewerSplitPanel', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerSplitPanelDirective')]);
     portal.directive('dashboardReportViewerGrandTotal', ['$mdDialog', require('./app/directives/dashboard/dashboardReportViewerGrandTotalDirective')]);
-    portal.directive('dashboardReportViewerMatrix', ['$mdDialog', 'uiService', 'dashboardHelper', 'metaContentTypesService', require('./app/directives/dashboard/dashboardReportViewerMatrixDirective')]);
+    portal.directive('dashboardReportViewerMatrix', ['$mdDialog', 'uiService', 'dashboardHelper', 'metaContentTypesService', 'reportHelper', require('./app/directives/dashboard/dashboardReportViewerMatrixDirective')]);
     portal.directive('dashboardReportViewerTableChart', ['$mdDialog', 'uiService', 'dashboardHelper', require('./app/directives/dashboard/dashboardReportViewerTableChartDirective')]);
     portal.directive('dashboardReportViewerCharts', ['$mdDialog', 'dashboardHelper', require('./app/directives/dashboard/dashboardReportViewerChartsDirective')]);
     portal.directive('dashboardApexChart', ['$mdDialog', 'dashboardHelper', 'entityResolverService', require('./app/directives/dashboard/dashboardApexChartDirective')]);

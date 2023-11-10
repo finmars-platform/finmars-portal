@@ -38,6 +38,9 @@
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
 
+                scope.retryCount = 0;
+                scope.maxRetries = 10;
+
                 var componentData;
                 var componentElem = elem[0].querySelector('.dashboardComponent');
 
@@ -403,10 +406,32 @@
                 scope.initChart = function (filters) {
 
                     var selector = '.dashboard-apex-chart-' + scope.vm.componentData.id;
-                    // document.querySelector(selector).innerHTML = '';
-                    var chartElement = document.querySelector(selector)
-                    // Retrieve the chart instance:
-                    var chartInstance = chartElement.__chart;
+                    var chartElement;
+                    var chartInstance;
+
+
+
+                    try {
+
+                        // document.querySelector(selector).innerHTML = '';
+                        chartElement = document.querySelector(selector)
+                        chartInstance = chartElement.__chart;
+
+                    } catch (error) {
+
+                        scope.retryCount = scope.retryCount + 1;
+
+                        if (scope.retryCount < scope.maxRetries) {
+                            setTimeout(function () {
+                                scope.initChart(filters);
+                            }, 100)
+                        } else {
+                            console.error("Could not start apex component", error);
+                        }
+
+                        return
+
+                    }
 
                     // Now, you can destroy it:
                     if (chartInstance) {
@@ -430,17 +455,13 @@
                     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-                    setTimeout(function () {
+                    var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputsByUserCodes();
 
-                        var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputsByUserCodes();
+                    scope.lastSavedOutput = componentsOutputs;
 
-                        scope.lastSavedOutput = componentsOutputs;
+                    scope.initChart({outputs: componentsOutputs});
 
-                        scope.initChart({outputs: componentsOutputs});
-
-                        scope.initEventListeners(); // init listeners after component init
-
-                    }, 0)
+                    scope.initEventListeners(); // init listeners after component init
 
                 };
 
@@ -450,6 +471,16 @@
                     // so that dashboard manager can start processing it
                     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
+
+                        scope.retryCount = 0;
+
+                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.PROCESSING);
+                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                        scope.init();
+
+                    })
 
                     scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
