@@ -177,6 +177,7 @@
                     dashboardHelper.toggleFilterBlock(scope);
                 };
 
+                // TODO refactor
                 scope.initEventListeners = function () {
 
                     dashboardHelper.initEventListeners(scope);
@@ -403,6 +404,8 @@
 
                     console.log("DASHBOARD.MATRIX.INIT")
 
+                    scope.readyStatus.data = 'processing'
+
                     // Victor 2021.05.27 #113 number format from report layout
                     /*const layoutUserCode = componentData.settings.layout;
                     const valueKey = componentData.settings.value_key;*/
@@ -413,28 +416,29 @@
                     // }
                     // <Victor 2021.05.27 #113 number format from report layout>
 
-                    scope.initEventListeners();
+                    // scope.initEventListeners();
 
-                    if (!scope.fillInModeData) {
-
-                        scope.readyStatus.data = 'ready';
-
-                        scope.dashboardDataService.setComponentRefreshRestriction(scope.item.data.id, false);
-
-                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                    } else {
-                        scope.readyStatus.data = 'ready';
-
-                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                    }
+                    // if (!scope.fillInModeData) {
+                    //
+                    //     scope.readyStatus.data = 'ready';
+                    //
+                    //     scope.dashboardDataService.setComponentRefreshRestriction(scope.item.data.id, false);
+                    //
+                    //     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                    //     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                    //
+                    // } else {
+                    //     scope.readyStatus.data = 'ready';
+                    //
+                    //     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                    //     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                    //
+                    // }
 
                     setTimeout(function () {
+                        scope.readyStatus.data = 'ready';
                         scope.$apply();
-                    }, 0)
+                    }, 1000)
 
 
                 };
@@ -445,6 +449,7 @@
                     // so that dashboard manager can start processing it
                     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
 
                     scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
@@ -457,6 +462,14 @@
                         }
 
                     });
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
+
+                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.PROCESSING);
+                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                        scope.init();
+
+                    })
 
                 }
 

@@ -784,6 +784,8 @@
                                 // scope.columns = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.abscissa, scope.matrixSettings.value_key);
                                 // scope.rows = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.ordinate, scope.matrixSettings.value_key);
 
+
+                                scope.evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
                                 resolve()
 
                             })

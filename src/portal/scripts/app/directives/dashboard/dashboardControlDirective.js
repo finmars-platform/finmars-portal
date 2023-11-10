@@ -794,6 +794,7 @@
 
                 var init = function () {
 
+
                     /*
                      * IMPORTANT: listeners should be added BEFORE
                      * setting status INIT and dispatching event COMPONENT_STATUS_CHANGE.
@@ -814,6 +815,15 @@
                         }
 
                     });
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
+
+                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.PROCESSING);
+                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                        initComponent();
+
+                    })
 
                     // Component put himself in INIT Status
                     // so that dashboard manager can start processing it
