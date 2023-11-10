@@ -10,6 +10,10 @@
 
     var EventService = require('../../services/eventService');
 
+    // Control picker for date is deprecated here
+    // moved to dashboardControlDateDirective to reduce complexity of this code
+    // FN-2320 2023-11-10 szhitenev
+
     module.exports = function (metaContentTypesService, entityResolverService, uiService, reportHelper) {
         return {
             restriction: 'E',

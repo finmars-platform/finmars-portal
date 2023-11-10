@@ -433,7 +433,7 @@
                     // console.log('DashboardController.componentData.name', componentData.name);
                     // console.log('DashboardController.componentStatus', componentStatus);
 
-                    if (componentData.type === 'control' && componentStatus === dashboardComponentStatuses.INIT) {
+                    if ((componentData.type === 'control') && componentStatus === dashboardComponentStatuses.INIT) {
 
                         // console.log("DashboardController.starting_control... ", componentData.name)
 
