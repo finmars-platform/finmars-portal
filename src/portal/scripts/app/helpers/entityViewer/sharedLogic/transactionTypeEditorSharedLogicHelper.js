@@ -1182,9 +1182,10 @@
                 result.userFields[userField.key] = {}
             })
 
-            viewModel.entity.inputs.forEach(input => {
+            // TODO: event object for inputs, highlighting inputs with errors
+            /*viewModel.entity.inputs.forEach(input => {
                 result.inputs[input.key] = {}
-            })
+            })*/
 
             // TODO: event object for actions
             return result;
