@@ -385,6 +385,22 @@
             }, 0)
         };
 
+        vm.showState = function ($event) {
+
+            $mdDialog.show({
+                controller: 'DashboardShowStateDialogController as vm',
+                templateUrl: 'views/dialogs/dashboard-show-state-dialog-view.html',
+                clickOutsideToClose: false,
+                locals: {
+                    data: {
+                        dashboardDataService: vm.dashboardDataService,
+                        dashboardEventService: vm.dashboardEventService
+                    }
+                }
+            });
+
+        }
+
         vm.initDashboardComponents = function () {
 
             var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));

@@ -1,0 +1,28 @@
+<md-dialog class="dashboard-show-state-dialog width-80 draggable-dialog dialog-actions-bottom"
+           aria-label="dashboard show state dialog"
+           drag-dialog>
+    <md-toolbar>
+        <dialog-header title="Dashboard State Manager"
+                       cancel-dialog="vm.cancel()"></dialog-header>
+    </md-toolbar>
+    <md-dialog-content>
+
+        <div>
+            <json-editor data-source="vm.state" data-index="1"></json-editor>
+        </div>
+
+
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+        <div>
+            <md-button ng-click="vm.cancel()">
+                Close
+            </md-button>
+            <md-button ng-click="vm.agree()" style="margin-right:20px;">
+                OK
+            </md-button>
+        </div>
+
+    </md-dialog-actions>
+</md-dialog>

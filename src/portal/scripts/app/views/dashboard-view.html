@@ -89,11 +89,33 @@
 
                     <md-button class="g-dashboard-top-button g-top-button" data-ng-click="vm.saveDashboardLayout()">
                         <span class="material-icons">save</span>
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Save</md-tooltip>
                     </md-button>
 
                 </div>
 
                 <div class="dashboard-tabs-control-panel">
+
+                    <md-menu>
+                        <md-button class="dashboard-control-button"
+                                   ng-click="$mdOpenMenu($event)">
+                            <ng-md-icon icon="settings"
+                                        size="20"
+                                        style="fill: #777777">
+                                <md-tooltip class="tooltip_1" md-direction="bottom">Settings</md-tooltip>
+                            </ng-md-icon>
+                        </md-button>
+
+                        <md-menu-content width="3">
+                            <md-menu-item>
+                                <md-button ng-click="vm.showState($event)"
+                                           class="g-settings-option-btn">
+                                    <span>Show State</span>
+                                </md-button>
+                            </md-menu-item>
+
+                        </md-menu-content>
+                    </md-menu>
 
 
                     <md-button class="dashboard-control-button"
@@ -573,7 +595,7 @@
 
                 <div layout="column" style="text-align: center; padding-top: 16px;">
 
-<!--                    {{vm.componentsReadyCount}} / {{vm.totalComponents}}-->
+                    <!--                    {{vm.componentsReadyCount}} / {{vm.totalComponents}}-->
 
                     {{vm.componentReadyPercent}}%
 
