@@ -660,6 +660,8 @@
                             var row_number = parseInt(data_source.dataset.row, 10);
                             var column_number = parseInt(data_source.dataset.column, 10);
 
+                            var component = vm.dashboardConstructorDataService.getComponentById(component_id)
+
 
                             if (elem.classList.contains('dashboard-socket-card')) { // when dragged from socket
 
@@ -700,6 +702,10 @@
                                 targetRow.columns[column_number].data.type = newColComponentType;
                                 targetRow.columns[column_number].data.id = newColComponentId;
 
+                                if (component.settings.value_type) {
+                                    targetRow.columns[column_number].data.value_type = component.settings.value_type;
+                                }
+
                                 var dcRowspan = dcCol.rowspan;
                                 var dcColspan = dcCol.colspan;
 
@@ -730,6 +736,10 @@
                                 targetRow.columns[column_number].cell_type = 'component';
                                 targetRow.columns[column_number].data.type = JSON.parse(JSON.stringify(component.type));
                                 targetRow.columns[column_number].data.id = component_id;
+
+                                if (component.settings.value_type) {
+                                    targetRow.columns[column_number].data.value_type = component.settings.value_type;
+                                }
 
                             }
 
@@ -1208,6 +1218,10 @@
             control: {
                 editorController: 'DashboardConstructorControlComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-control-component-dialog-view.html'
+            },
+            control_date: {
+                editorController: 'DashboardConstructorControlDateComponentDialogController as vm',
+                editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-control-date-component-dialog-view.html'
             },
             accordion: {
                 editorController: 'DashboardConstructorAccordionComponentDialogController as vm',

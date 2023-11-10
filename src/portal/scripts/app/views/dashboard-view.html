@@ -156,7 +156,7 @@
 
                             <div data-ng-if="item.cell_type == 'component'" class="height-100">
 
-                                <div data-ng-if="item.data.type == 'control'" class="height-100">
+                                <div data-ng-if="item.data.type == 'control' && item.data.value_type != 40" class="height-100">
                                     <dashboard-control
                                             data-tab-number="'fixed_area'"
                                             data-row-number="row.row_number"
@@ -165,6 +165,17 @@
                                             data-dashboard-data-service="vm.dashboardDataService"
                                             data-dashboard-event-service="vm.dashboardEventService"
                                     ></dashboard-control>
+                                </div>
+
+                                <div data-ng-if="item.data.type == 'control' && item.data.value_type == 40" class="height-100">
+                                    <dashboard-control-date
+                                            data-tab-number="'fixed_area'"
+                                            data-row-number="row.row_number"
+                                            data-column-number="item.column_number"
+                                            data-item="item"
+                                            data-dashboard-data-service="vm.dashboardDataService"
+                                            data-dashboard-event-service="vm.dashboardEventService"
+                                    ></dashboard-control-date>
                                 </div>
 
                                 <div data-ng-if="item.data.type == 'button_set'" class="height-100">
