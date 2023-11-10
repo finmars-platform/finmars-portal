@@ -257,6 +257,9 @@ export default (function () {
     portal.directive('dashboardSupersetDashboard', ['$mdDialog', '$state', require('./app/directives/dashboard/dashboardSupersetDashboardDirective')]);
     portal.directive('dashboardFinmarsWidget', ['$mdDialog', '$state', 'globalDataService', require('./app/directives/dashboard/dashboardFinmarsWidgetDirective')]);
 
+    portal.controller('DashboardShowStateDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/dashboardShowStateDialogController')]);
+
+
     portal.controller('DashboardReportViewerController', ['$scope', '$mdDialog', 'toastNotificationService', 'usersService', 'globalDataService', 'priceHistoryService', 'currencyHistoryService', 'metaContentTypesService', 'customFieldService', 'attributeTypeService', 'uiService', 'pricesCheckerService', 'expressionService', 'rvDataProviderService', 'reportHelper', 'gFiltersHelper', 'dashboardHelper', require('./app/controllers/entityViewer/dashboardReportViewerController')]);
 
     portal.directive('reportViewerMatrix', ['$mdDialog', 'groupsService', require('./app/directives/reportViewerMatrixDirective')]);
