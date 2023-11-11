@@ -33,6 +33,16 @@
                             </md-select>
                         </md-input-container>
 
+                        <div layout="row">
+                            <two-fields-multiselect ng-model="vm.item.settings.components_to_listen"
+                                                    title="Components to Listen"
+                                                    items="vm.componentsTypesToListen"
+                                                    model="vm.item.settings.components_to_listen"
+                                                    name-property="name"
+                                                    data-selected-items-indication="array"
+                                                    class="dashboard-constructor-selector-directive"></two-fields-multiselect>
+                        </div>
+
                         <div class="m-t-16 m-b-16">
 
                             <table-attribute-selector title="Axis X Columns"

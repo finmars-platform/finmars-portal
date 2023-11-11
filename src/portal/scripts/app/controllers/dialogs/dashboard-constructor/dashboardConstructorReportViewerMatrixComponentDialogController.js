@@ -29,6 +29,7 @@
                 id: null, // should be generated before create
                 name: '',
                 settings: {
+                    components_to_listen: [],
                     matrix_type: 'balance',
                     // entity_type: 'balance-report',
                     abscissa: '',
@@ -388,6 +389,10 @@
             }, 100);
 
             vm.componentsTypes = dataService.getComponents();
+
+            vm.componentsTypesToListen = vm.componentsTypes.filter(function (item) {
+                return item.user_code // should not be empty
+            })
 
             dashboardConstructorMethodsService.getDataForComponentsSelector(vm, componentsForLinking, vm.item.user_code);
 

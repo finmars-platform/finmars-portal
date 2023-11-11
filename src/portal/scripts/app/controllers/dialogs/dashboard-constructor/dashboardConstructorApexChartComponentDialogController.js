@@ -18,6 +18,7 @@
                 id: null, // should be generated before create
                 name: '',
                 settings: {
+                    components_to_listen: []
                 },
                 source: '',
                 user_settings: {}
@@ -62,6 +63,10 @@
 
 
             vm.componentsTypes = dataService.getComponents();
+
+            vm.componentsTypesToListen = vm.componentsTypes.filter(function (item) {
+                return item.user_code // should not be empty
+            })
 
 
 

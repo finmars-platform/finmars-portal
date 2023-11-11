@@ -119,7 +119,11 @@
         }
 
         function getLayoutState() {
-            return layoutData.data.state
+            // since state object is not big, there is not much trouble to return new copy each time
+            // needs because each component in dashboard has lastSavedOutput
+            // components are using it to find out should they refresh if output changes
+
+            return JSON.parse(JSON.stringify(layoutData.data.state))
         }
 
         function setLayoutState(data) {

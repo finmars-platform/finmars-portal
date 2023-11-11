@@ -32,6 +32,16 @@
                             </md-input-container>
                         </div>
 
+                        <div layout="row">
+                            <two-fields-multiselect ng-model="vm.item.settings.components_to_listen"
+                                                    title="Components to Listen"
+                                                    items="vm.componentsTypesToListen"
+                                                    model="vm.item.settings.components_to_listen"
+                                                    name-property="name"
+                                                    data-selected-items-indication="array"
+                                                    class="dashboard-constructor-selector-directive"></two-fields-multiselect>
+                        </div>
+
                         <javascript-editor source="vm.item.source" index="0"></javascript-editor>
 
                     </md-content>
