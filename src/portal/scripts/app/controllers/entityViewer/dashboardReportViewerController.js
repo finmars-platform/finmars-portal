@@ -36,6 +36,8 @@
             layout: false
         };
 
+        vm.processing = false;
+
         vm.componentData = null;
         vm.dashboardDataService = null;
         vm.dashboardEventService = null;
@@ -425,6 +427,7 @@
 
                     var layoutState = vm.dashboardDataService.getLayoutState();
 
+
                     if (vm.componentData.settings.linked_components.report_settings) {
 
                         var reportOptions = vm.entityViewerDataService.getReportOptions();
@@ -439,6 +442,8 @@
                         })
 
                         console.log('DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.detect_report_settings_change.RESET_TABLE');
+
+                        vm.processing = true;
 
                         vm.entityViewerDataService.resetTableContent(true);
 
@@ -535,6 +540,8 @@
             vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                 vm.entityViewerDataService.setDataLoadStatus(true);
+
+                vm.processing = false;
 
                 // if (!fillInModeEnabled) {
                 vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ACTIVE);
@@ -816,6 +823,8 @@
             // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
             vm.readyStatus.layout = false;
+
+            vm.processing = true;
 
             vm.entityViewerDataService = new EntityViewerDataService(reportHelper);
             vm.entityViewerEventService = new EntityViewerEventService();
