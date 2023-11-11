@@ -122,7 +122,7 @@
                 };
 
                 // Constants
-                const MIN_CELL_HEIGHT = 32;
+                const MIN_CELL_HEIGHT = 14;
                 const MAX_CELL_HEIGHT = 48;
                 const SCROLL_WIDTH = 17;
                 const SCROLL_HEIGHT = 14;
