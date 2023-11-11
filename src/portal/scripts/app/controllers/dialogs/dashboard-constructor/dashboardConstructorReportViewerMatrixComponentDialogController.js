@@ -392,6 +392,13 @@
 
             vm.componentsTypesToListen = vm.componentsTypes.filter(function (item) {
                 return item.user_code // should not be empty
+            }).map(function (item) {
+
+                return {
+                    id: item.user_code,
+                    name: item.name
+                }
+
             })
 
             dashboardConstructorMethodsService.getDataForComponentsSelector(vm, componentsForLinking, vm.item.user_code);

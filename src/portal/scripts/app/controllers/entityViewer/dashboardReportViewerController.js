@@ -1,7 +1,6 @@
 /**
  * Created by szhitenev on 05.05.2016.
  */
-import localStorageService from "../../../../../shell/scripts/app/services/localStorageService";
 
 (function () {
 
@@ -62,334 +61,8 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
             fillInModeEnabled = true;
         }
 
-        //region Functions for context menu
-        var updateTableAfterEntityChanges = function (res) {
-
-            /*vm.entityViewerDataService.setActiveObjectAction(null);
-            vm.entityViewerDataService.setActiveObjectActionData(null);*/
-            vm.entityViewerDataService.setRowsActionData(null);
-
-            if (res && res.status === 'agree') {
-
-                vm.entityViewerDataService.resetData();
-                vm.entityViewerDataService.resetRequestParameters();
-
-                var rootGroup = vm.entityViewerDataService.getRootGroupData();
-
-                vm.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id);
-
-                vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-            }
-
-        };
-
-        /*var getContextData = function (reportOptions, activeObject) {
-
-            var report_date = null;
-            var report_start_date = null;
-
-            if (vm.entityType === 'balance-report') {
-                report_date = reportOptions.report_date;
-            }
-
-            if (vm.entityType === 'pl-report') {
-                report_date = reportOptions.report_date;
-                report_start_date = reportOptions.pl_first_date;
-            }
-
-            if (vm.entityType === 'transaction-report') {
-                report_date = reportOptions.end_date;
-                report_start_date = reportOptions.begin_date;
-            }
-
-            var contextData = {
-                effective_date: reportOptions.report_date,
-                position_size: null,
-                pricing_currency: null,
-                accrued_currency: null,
-                instrument: null,
-                portfolio: null,
-                account: null,
-                strategy1: null,
-                strategy2: null,
-                strategy3: null,
-
-
-                currency: null,
-                report_date: report_date,
-                report_start_date: report_start_date,
-                pricing_policy: null,
-                allocation_balance: null,
-                allocation_pl: null
-
-            };
-
-            if (activeObject.item_type === 2) { // currency
-
-                contextData.currency = activeObject['currency.id'];
-                contextData.currency_object = {
-                    id: activeObject['currency_object.id'],
-                    name: activeObject['currency_object.name'],
-                    user_code: activeObject['currency_object.user_code'],
-                    content_type: "currencies.currency"
-                };
-
-            }
-
-            if (activeObject['position_size']) {
-                contextData.position_size = activeObject['position_size'];
-            }
-
-            if (reportOptions['pricing_policy']) {
-                contextData.pricing_policy = reportOptions.pricing_policy;
-                contextData.pricing_policy_object = Object.assign({}, reportOptions.pricing_policy_object)
-            }
-
-            if (activeObject['instrument.pricing_currency.id']) {
-                contextData.pricing_currency = activeObject['instrument.pricing_currency.id'];
-                contextData.pricing_currency_object = {
-                    id: activeObject['instrument.pricing_currency.id'],
-                    name: activeObject['instrument.pricing_currency.name'],
-                    user_code: activeObject['instrument.pricing_currency.user_code'],
-                    content_type: "currencies.currency"
-                };
-            }
-
-            if (activeObject['instrument.accrued_currency.id']) {
-                contextData.accrued_currency = activeObject['instrument.accrued_currency.id'];
-                contextData.accrued_currency_object = {
-                    id: activeObject['instrument.accrued_currency.id'],
-                    name: activeObject['instrument.accrued_currency.name'],
-                    user_code: activeObject['instrument.accrued_currency.user_code'],
-                    content_type: "currencies.currency"
-                };
-            }
-
-            if (activeObject['instrument.id']) {
-                contextData.instrument = activeObject['instrument.id'];
-                contextData.instrument_object = {
-                    id: activeObject['instrument.id'],
-                    name: activeObject['instrument.name'],
-                    user_code: activeObject['instrument.user_code'],
-                    content_type: "instruments.instrument"
-                };
-            }
-
-            if (activeObject['allocation_balance.id']) {
-                contextData.allocation_balance = activeObject['allocation_balance.id'];
-                contextData.allocation_balance_object = {
-                    id: activeObject['allocation_balance.id'],
-                    name: activeObject['allocation_balance.name'],
-                    user_code: activeObject['allocation_balance.user_code'],
-                    content_type: "instruments.instrument"
-                };
-            }
-
-            if (activeObject['allocation_pl.id']) {
-                contextData.allocation_pl = activeObject['allocation_pl.id'];
-                contextData.allocation_pl_object = {
-                    id: activeObject['allocation_pl.id'],
-                    name: activeObject['allocation_pl.name'],
-                    user_code: activeObject['allocation_pl.user_code'],
-                    content_type: "instruments.instrument"
-                };
-            }
-
-            if (activeObject['portfolio.id']) {
-                contextData.portfolio = activeObject['portfolio.id'];
-                contextData.portfolio_object = {
-                    id: activeObject['portfolio.id'],
-                    name: activeObject['portfolio.name'],
-                    user_code: activeObject['portfolio.user_code'],
-                    content_type: "portfolios.portfolio"
-                };
-            }
-
-            if (activeObject['account.id']) {
-                contextData.account = activeObject['account.id'];
-                contextData.account_object = {
-                    id: activeObject['account.id'],
-                    name: activeObject['account.name'],
-                    user_code: activeObject['account.user_code'],
-                    content_type: "accounts.account"
-                };
-            }
-
-            if (activeObject['strategy1.id']) {
-                contextData.strategy1 = activeObject['strategy1.id'];
-                contextData.strategy1_object = {
-                    id: activeObject['strategy1.id'],
-                    name: activeObject['strategy1.name'],
-                    user_code: activeObject['strategy1.user_code'],
-                    content_type: "strategies.strategy1"
-                };
-            }
-
-            if (activeObject['strategy2.id']) {
-                contextData.strategy2 = activeObject['strategy2.id'];
-                contextData.strategy2_object = {
-                    id: activeObject['strategy2.id'],
-                    name: activeObject['strategy2.name'],
-                    user_code: activeObject['strategy2.user_code'],
-                    content_type: "strategies.strategy2"
-                };
-            }
-
-            if (activeObject['strategy3.id']) {
-                contextData.strategy3 = activeObject['strategy3.id'];
-                contextData.strategy3_object = {
-                    id: activeObject['strategy3.id'],
-                    name: activeObject['strategy3.name'],
-                    user_code: activeObject['strategy3.user_code'],
-                    content_type: "strategies.strategy3"
-                };
-            }
-
-            return contextData;
-        };*/
-
-        var createEntity = function (activeObject, locals) {
-
-            var dialogController = 'EntityViewerAddDialogController as vm';
-            var dialogTemplateUrl = 'views/entity-viewer/entity-viewer-add-dialog-view.html';
-
-            if (locals.entityType && locals.entityType === 'complex-transaction') {
-                dialogController = 'ComplexTransactionAddDialogController as vm';
-                dialogTemplateUrl = 'views/entity-viewer/complex-transaction-add-dialog-view.html';
-            }
-
-            $mdDialog.show({
-                controller: dialogController,
-                templateUrl: dialogTemplateUrl,
-                parent: angular.element(document.body),
-                targetEvent: activeObject.event,
-                locals: locals
-            }).then(function (res) {
-
-                updateTableAfterEntityChanges(res);
-
-            });
-
-        };
-
-        var editEntity = function (activeObject, locals) {
-
-            var dialogController = 'EntityViewerEditDialogController as vm';
-            var dialogTemplateUrl = 'views/entity-viewer/entity-viewer-edit-dialog-view.html';
-
-            if (locals.entityType && locals.entityType === 'complex-transaction') {
-                dialogController = 'ComplexTransactionEditDialogController as vm';
-                dialogTemplateUrl = 'views/entity-viewer/complex-transaction-edit-dialog-view.html';
-            }
-
-            $mdDialog.show({
-                controller: dialogController,
-                templateUrl: dialogTemplateUrl,
-                parent: angular.element(document.body),
-                targetEvent: activeObject.event,
-                locals: locals
-
-            }).then(function (res) {
-
-                updateTableAfterEntityChanges(res);
-
-            });
-
-        };
-
-        var offerToCreateEntity = function (activeObject, warningDescription, createEntityLocals) {
-
-            $mdDialog.show({
-                controller: 'WarningDialogController as vm',
-                templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: activeObject.event,
-                preserveScope: true,
-                autoWrap: true,
-                multiple: true,
-                skipHide: true,
-                locals: {
-                    warning: {
-                        title: 'Warning',
-                        description: warningDescription
-                    }
-                }
-
-            }).then(function (res) {
-                if (res.status === 'agree') {
-
-                    createEntity(activeObject, createEntityLocals);
-
-                }
-            });
-
-        };
-        //endregion
-
         vm.hasFiltersArea = function () {
             return ['report_viewer_bars_chart', 'report_viewer_pie_chart', 'report_viewer_matrix', 'report_viewer_table_chart'].includes(vm.componentData.type);
-        };
-
-        vm.updateGrandTotalComponent = function () {
-
-            // vm.grandTotalError = false;
-
-            rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
-
-            vm.grandTotalProcessing = false;
-
-            var rootGroup = vm.entityViewerDataService.getRootGroup();
-
-            var flatList = rvDataHelper.getFlatStructure(vm.entityViewerDataService);
-
-            // console.log('Grand Total Status: rootGroup', rootGroup);
-            // console.log('Grand Total Status: flatList', flatList);
-            // console.log('Grand Total Status: componentData', vm.componentData);
-
-            var root = flatList[0];
-
-            var column_key = vm.componentData.settings.grand_total_column;
-
-            var val = root.subtotal[column_key];
-
-            console.log('val', val);
-
-            vm.grandTotalNegative = false;
-
-            if (vm.componentData.settings.number_format) {
-
-                if (vm.componentData.settings.number_format.negative_color_format_id === 1) {
-
-                    if (val % 1 === 0) { // check whether number is float or integer
-                        if (parseInt(val) < 0) {
-                            vm.grandTotalNegative = true
-                        }
-                    } else {
-                        if (parseFloat(val) < 0) {
-                            vm.grandTotalNegative = true
-                        }
-                    }
-                }
-
-                vm.grandTotalValue = renderHelper.formatValue({
-                    value: val
-                }, {
-                    key: 'value',
-                    report_settings: vm.componentData.settings.number_format
-                });
-
-            } else {
-                vm.grandTotalValue = val;
-            }
-
-            // if (vm.grandTotalValue == null || isNaN(vm.grandTotalValue)) {
-            //     vm.grandTotalError = true
-            // }
-
-            console.log('vm.grandTotalValue', vm.grandTotalValue);
-
-            // $scope.$apply();
-
         };
 
         vm.getOptionsFromDependencies = function () {
@@ -443,18 +116,6 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
             'pl-report': ['pl_first_date', 'report_date'],
             'transaction-report': ['begin_date', 'end_date']
         };
-
-        /* var calculateReportDateExpr = function (dateExpr, reportOptions, reportDateIndex, dateExprsProms) {
-
-            var dateProp = reportDateProperties[vm.entityType][reportDateIndex];
-
-            var result = expressionService.getResultOfExpression({"expression": dateExpr}).then(function (data) {
-                reportOptions[dateProp] = data.result
-            });
-
-            dateExprsProms.push(result);
-
-        }; */
 
         var reportDateIsFromDashboard = function (dashboardReportOptions, dateIndex) {
 
@@ -701,371 +362,6 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
 
         };
 
-        /* vm.applyDashboardChanges = function () {
-
-            if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
-
-                vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
-                    vm.handleDashboardFilterLink(filter_link);
-                });
-
-            }
-
-            if (vm.componentData.settings.linked_components.hasOwnProperty('report_settings')) {
-
-                Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (property) {
-
-                    var componentId = vm.componentData.settings.linked_components.report_settings[property];
-
-                    var componentOutput = vm.dashboardDataService.getComponentOutputOld(componentId);
-
-                    if (componentOutput && componentOutput.data) {
-
-                        var reportOptions = vm.entityViewerDataService.getReportOptions();
-
-                        // console.log('reportOptions', reportOptions);
-                        // console.log('componentOutput', componentOutput);
-                        //
-                        // console.log('reportOptions[property]', reportOptions[property]);
-                        // console.log('componentOutput.data.value', componentOutput.data.value);
-
-                        if (reportOptions[property] !== componentOutput.data.value) {
-
-                            reportOptions[property] = componentOutput.data.value;
-
-                            vm.entityViewerDataService.setReportOptions(reportOptions);
-                            vm.entityViewerDataService.dashboard.setReportDateFromDashboardProp(true);
-
-                            vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
-                            vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
-
-                        }
-
-                    }
-
-                })
-
-            }
-
-            if (vm.componentData.settings.linked_components.hasOwnProperty('active_object')) { // mark if last active object changed
-
-                if (Array.isArray(vm.componentData.settings.linked_components.active_object)) {
-
-                    var lastActiveCompChanged = false;
-
-                    for (var i = 0; i < vm.componentData.settings.linked_components.active_object.length; i++) {
-
-                        var componentId = JSON.parse(JSON.stringify(vm.componentData.settings.linked_components.active_object[i]));
-
-                        var componentOutput = vm.dashboardDataService.getComponentOutputOld(componentId);
-
-                        /!*if (componentOutput && !componentOutput.recalculatedComponents) {
-                            componentOutput.recalculatedComponents = [];
-                        }
-
-                        if (componentOutput && componentOutput.changedLast &&
-                            componentOutput.recalculatedComponents.indexOf(vm.componentData.id) < 0) {*!/
-                        if (componentOutput && componentOutput.changedLast) {
-
-                            var compOutputData = componentOutput.data;
-
-                            if (lastActiveComponentId !== componentId) {
-
-                                lastActiveComponentId = componentId;
-                                lastActiveCompChanged = true;
-
-                            } else {
-
-                                if (compOutputData && typeof compOutputData === 'object' &&
-                                    vm.linkedActiveObjects[lastActiveComponentId] &&
-                                    typeof vm.linkedActiveObjects[lastActiveComponentId] === 'object') {
-
-                                    if (!objectComparison.areObjectsTheSame(compOutputData, vm.linkedActiveObjects[lastActiveComponentId])) {
-                                        lastActiveCompChanged = true;
-                                    }
-
-                                } else if (vm.linkedActiveObjects[lastActiveComponentId] !== compOutputData) {
-                                    lastActiveCompChanged = true;
-                                }
-
-                            }
-
-                            if (compOutputData !== undefined && compOutputData !== null) {
-                                vm.linkedActiveObjects[lastActiveComponentId] = JSON.parse(JSON.stringify(compOutputData));
-                            } else {
-                                delete vm.linkedActiveObjects[lastActiveComponentId];
-                            }
-
-                            /!*if (lastActiveCompChanged) {
-                                componentOutput.recalculatedComponents.push(vm.componentData.id);
-                            }*!/
-
-                            break;
-
-                        }
-                    }
-
-                    if (lastActiveCompChanged) {
-                        vm.handleDashboardActiveObject(lastActiveComponentId);
-                    }
-
-                } else {
-
-                    var componentId = vm.componentData.settings.linked_components.active_object;
-
-                    vm.handleDashboardActiveObject(componentId);
-                }
-
-            }
-
-        };*/
-
-        var updateActiveObjectUsingDashboardData = function () {
-
-            if (vm.componentData.settings.linked_components.hasOwnProperty('active_object')) { // mark if last active object changed
-
-                // Now only last changed active object stored in component output
-
-                // check which one of components (that this component is listening) changed
-                if (Array.isArray(vm.componentData.settings.linked_components.active_object)) {
-
-                    var lastActiveCompChanged = false;
-
-                    for (var i = 0; i < vm.componentData.settings.linked_components.active_object.length; i++) {
-
-                        var componentId = JSON.parse(JSON.stringify(vm.componentData.settings.linked_components.active_object[i]));
-
-                        var componentOutput = vm.dashboardDataService.getComponentOutputOld(componentId);
-
-                        // if (componentOutput && componentOutput.changedLast) {
-                        if (componentOutput && componentOutput.changedLast) {
-
-                            var compOutputData = componentOutput.data;
-
-                            // check if active objects holds new data
-                            if (lastActiveComponentId !== componentId) {
-
-                                lastActiveComponentId = componentId;
-                                lastActiveCompChanged = true;
-
-                            } else {
-
-                                if (compOutputData && typeof compOutputData === 'object' &&
-                                    vm.linkedActiveObjects[lastActiveComponentId] &&
-                                    typeof vm.linkedActiveObjects[lastActiveComponentId] === 'object') {
-
-                                    if (!objectComparison.areObjectsTheSame(compOutputData, vm.linkedActiveObjects[lastActiveComponentId])) {
-                                        lastActiveCompChanged = true;
-                                    }
-
-                                } else if (vm.linkedActiveObjects[lastActiveComponentId] !== compOutputData) {
-                                    lastActiveCompChanged = true;
-                                }
-
-                            }
-
-                            if (compOutputData !== undefined && compOutputData !== null) {
-
-                                vm.linkedActiveObjects[lastActiveComponentId] = JSON.parse(JSON.stringify(compOutputData));
-
-                            } else {
-                                delete vm.linkedActiveObjects[lastActiveComponentId];
-                            }
-                            // < check if active objects holds new data >
-                            break;
-
-                        }
-                    }
-
-                    if (lastActiveCompChanged) {
-                        vm.handleDashboardActiveObject(lastActiveComponentId);
-                    }
-
-                } else {
-
-                    var componentId = vm.componentData.settings.linked_components.active_object;
-                    vm.handleDashboardActiveObject(componentId);
-
-                }
-
-            }
-
-        }
-
-        var updateReportSettingsUsingDashboardData = function () {
-
-            if (vm.componentData.settings.linked_components.hasOwnProperty('report_settings')) {
-
-                var reportOptionsChanged = false;
-                var reportOptions = vm.entityViewerDataService.getReportOptions();
-
-                Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (property) {
-
-                    var componentId = vm.componentData.settings.linked_components.report_settings[property];
-                    var componentOutput = vm.dashboardDataService.getComponentOutputOld(componentId);
-
-                    if (componentOutput && componentOutput.data) {
-
-                        if (reportOptions[property] !== componentOutput.data.value) {
-
-                            if (['accounts', 'portfolios', 'strategies1', 'strategies2', 'strategies3'].includes(property) &&
-                                !Array.isArray(componentOutput.data.value)) {
-
-                                if (componentOutput.data.value) {
-                                    reportOptions[property] = [componentOutput.data.value];
-
-                                } else {
-
-                                    reportOptions[property] = [];
-
-                                }
-
-                            } else if (
-                                ['report_currency', 'pricing_policy'].includes(property) &&
-                                Array.isArray((componentOutput.data.value))
-                            ) {
-
-                                reportOptions[property] = componentOutput.data.value[0];
-
-                            } else {
-
-                                reportOptions[property] = componentOutput.data.value;
-
-                            }
-
-                            reportOptionsChanged = true;
-
-                        }
-
-                    }
-
-                })
-
-                console.log('updateReportSettingsUsingDashboardData', reportOptions);
-
-                if (reportOptionsChanged) {
-
-                    vm.entityViewerDataService.setReportOptions(reportOptions);
-                    vm.entityViewerEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
-
-                    vm.entityViewerDataService.dashboard.setReportDateFromDashboardProp(true);
-
-                    vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
-
-                }
-
-            }
-
-        }
-
-        var cleanComponentsOutputsToDelete = function (activeTabOnly) {
-
-            var componentsOutputs = vm.dashboardDataService.getAllComponentsOutputs();
-
-            Object.keys(componentsOutputs).forEach(function (compKey) {
-
-                if (componentsOutputs[compKey] && typeof componentsOutputs[compKey] === 'object'
-                    && componentsOutputs[compKey].deleteOnChange) {
-
-                    /* if (activeTabOnly) {
-
-
-                    } else {
-                        vm.dashboardDataService.setComponentOutputOld(compKey, null);
-                    } */
-                    vm.dashboardDataService.setComponentOutputOld(compKey, null);
-
-                }
-
-            });
-
-        };
-
-        // TODO DEPRECATED, delete soon as dashboard will be discussed
-        /* vm.oldEventExchanges = function () {
-
-            if (vm.componentData.settings.linked_components) {
-
-                console.log('vm.componentData.settings.linked_components', vm.componentData.settings.linked_components);
-
-                if (vm.componentData.settings.linked_components.hasOwnProperty('active_object')) {
-
-                    var componentId = vm.componentData.settings.linked_components.active_object;
-
-                    vm.dashboardEventService.addEventListener('COMPONENT_VALUE_CHANGED_' + componentId, function () {
-
-                        vm.handleDashboardActiveObject(componentId)
-
-                    })
-
-                }
-
-                if (vm.componentData.settings.linked_components.hasOwnProperty('report_settings')) {
-
-                    Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (property) {
-
-                        var componentId = vm.componentData.settings.linked_components.report_settings[property];
-
-                        vm.dashboardEventService.addEventListener('COMPONENT_VALUE_CHANGED_' + componentId, function () {
-
-                            var componentOutput = vm.dashboardDataService.getComponentOutputOld(componentId);
-
-                            var reportOptions = vm.entityViewerDataService.getReportOptions();
-
-                            console.log('componentOutput', componentOutput);
-
-                            reportOptions[property] = componentOutput.value;
-
-                            vm.entityViewerDataService.setReportOptions(reportOptions);
-
-                            vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT)
-
-                        })
-
-                    })
-
-                }
-
-                if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
-
-                    vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
-
-                        vm.dashboardEventService.addEventListener('COMPONENT_VALUE_CHANGED_' + filter_link.component_id, function () {
-
-                            vm.handleDashboardFilterLink(filter_link)
-
-                        })
-                    })
-
-                }
-
-
-            }
-
-            if (vm.componentData.type === 'report_viewer' || vm.componentData.type === 'report_viewer_matrix') {
-
-                vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
-
-                    var activeObject = vm.entityViewerDataService.getActiveObject();
-
-                    console.log('click report viewer active object', activeObject);
-
-                    vm.dashboardDataService.setComponentOutputOld(vm.componentData.id, activeObject);
-
-                    vm.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + vm.componentData.id)
-
-                    if(vm.componentData.settings.auto_refresh) {
-
-                        vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
-
-                    }
-
-                });
-
-            }
-
-        }; */
-
         vm.getCurrentMember = function () {
 
             return usersService.getMyCurrentMember().then(function (data) {
@@ -1076,6 +372,124 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
 
             });
         };
+
+        // TODO move to utils file
+        function isEqual(value1, value2) {
+            if (typeof value1 !== typeof value2) return false;
+            if (typeof value1 === 'object' && value1 !== null && value2 !== null) {
+                if (Array.isArray(value1)) {
+                    if (!Array.isArray(value2) || value1.length !== value2.length) return false;
+                    for (let i = 0; i < value1.length; i++) {
+                        if (!isEqual(value1[i], value2[i])) return false;
+                    }
+                    return true;
+                } else {
+                    const keys1 = Object.keys(value1);
+                    const keys2 = Object.keys(value2);
+                    if (keys1.length !== keys2.length) return false;
+                    for (const key of keys1) {
+                        if (!keys2.includes(key) || !isEqual(value1[key], value2[key])) return false;
+                    }
+                    return true;
+                }
+            }
+            return value1 === value2;
+        }
+
+        function hasStateChanged(oldState, newState, fieldsToCompare) {
+            for (const field of fieldsToCompare) {
+                if (!isEqual(oldState[field], newState[field])) {
+                    return true; // Change detected
+                }
+            }
+            return false; // No changes detected
+        }
+
+        vm.applyDashboardLayoutState = function (){
+
+            var componentsOutputs = vm.dashboardDataService.getLayoutState();
+
+            console.log("DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.componentsOutputs", componentsOutputs);
+
+            var changed = hasStateChanged(vm.lastSavedOutput, componentsOutputs, vm.componentData.settings.components_to_listen)
+
+            console.log("DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.linked_components", vm.componentData.settings.linked_components);
+
+            if (changed) {
+
+                console.log("DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.changed!")
+
+                // TODO some shady logic here, consider refactor
+                // settings from controls to reportSettings
+                if (vm.componentData.settings.linked_components) {
+
+                    var layoutState = vm.dashboardDataService.getLayoutState();
+
+                    if (vm.componentData.settings.linked_components.report_settings) {
+
+                        var reportOptions = vm.entityViewerDataService.getReportOptions();
+
+
+                        Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (key) {
+
+                            var mapValue = vm.componentData.settings.linked_components.report_settings[key]
+
+                            reportOptions[key] = layoutState[mapValue];
+
+                        })
+
+                        console.log('DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.detect_report_settings_change.RESET_TABLE');
+
+                        vm.entityViewerDataService.resetTableContent(true);
+
+                        var reportOptions = vm.entityViewerDataService.getReportOptions()
+
+                        if (reportOptions) {
+                            reportOptions.report_instance_id = null // if clear report_instance_id then we request new Report Calculation
+                        }
+                        vm.entityViewerDataService.setReportOptions(reportOptions);
+                        vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+
+                    }
+
+                    // Set data to linked filters
+
+                    if (vm.componentData.settings.linked_components.active_object && vm.componentData.settings.linked_components.active_object.length) {
+
+                        var key = vm.componentData.settings.linked_components.active_object[0];
+
+                        var activeObjectData = layoutState[key]
+
+                        console.log('DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.activeObjectData', activeObjectData);
+
+                        vm.entityViewerDataService.setActiveObject(activeObjectData);
+                        vm.entityViewerDataService.setActiveObjectFromAbove(activeObjectData);
+
+                        vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+                        vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
+
+                        var filters = vm.entityViewerDataService.getFilters();
+                        var useFromAboveFilterIndex = filters.findIndex(function (filter) {
+
+                            return filter.options.use_from_above && Object.keys(filter.options.use_from_above).length && // is use from above filter
+                                activeObjectData && typeof activeObjectData === 'object' && // active object is an object
+                                activeObjectData.hasOwnProperty(filter.key); // active object contains data for filter
+
+                        });
+
+                        if (useFromAboveFilterIndex > -1) { // use from above filters will change from active object
+                            vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
+                        }
+
+                    }
+
+                }
+
+            }
+
+            vm.lastSavedOutput = componentsOutputs
+
+        }
 
         vm.setEventListeners = function () {
 
@@ -1145,60 +559,8 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
                     vm.entityViewerEventService.addEventListener(evEvents.ROWS_ACTION_FIRED, sharedLogicHelper.executeRowAction);
                     break;
 
-                case 'report_viewer_grand_total':
-
-                    vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-                        vm.updateGrandTotalComponent();
-                    })
-
-                    break;
-
-                case 'report_viewer_matrix':
-
-                    vm.entityViewerEventService.addEventListener(evEvents.DASHBOARD_COMPONENT_DATA_CHANGED, function () {
-                        vm.componentData.settings.abscissa = vm.matrixSettings.abscissa;
-                        vm.componentData.settings.ordinate = vm.matrixSettings.ordinate;
-                        vm.componentData.settings.value_key = vm.matrixSettings.value_key;
-                    });
-
-                    break;
-
-                case 'report_viewer_table_chart':
-
-                    vm.entityViewerEventService.addEventListener(evEvents.DASHBOARD_COMPONENT_DATA_CHANGED, function () {
-
-                        vm.componentData.settings.title_column = vm.tableChartSettings.title_column;
-                        vm.componentData.settings.value_column = vm.tableChartSettings.value_column;
-
-                    });
-
-                    vm.entityViewerEventService.addEventListener(evEvents.TABLE_CHART_COLUMN_RESIZE_END, function () {
-
-                        vm.componentData.settings.column_1_width = vm.tableChartSettings.column_1_width;
-                        vm.componentData.settings.column_2_width = vm.tableChartSettings.column_2_width;
-                        vm.componentData.settings.column_3_width = vm.tableChartSettings.column_3_width;
-
-                        var showNotification = false
-                        dashboardHelper.saveComponentSettingsFromDashboard(vm.dashboardDataService, vm.componentData, showNotification);
-                    });
-
-
-                    break;
-
             }
 
-            // if (componentsForLinking.indexOf(vm.componentData.type) !== -1) {
-
-            // // szhitenev 2023-08-20
-            // vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
-            //
-            //     var activeObject = vm.entityViewerDataService.getActiveObject();
-            //
-            //     vm.dashboardDataService.setComponentOutput(vm.componentData.id, activeObject);
-            //
-            //     vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_OUTPUT_CHANGE);
-            //
-            // })
 
             // POSSIBLE DEPRECATED AND TOO HARD TO UNDERSTAND
             vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
@@ -1319,513 +681,22 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
                 });
             }
 
-            /* vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
-
-                var activeObject = vm.entityViewerDataService.getActiveObject();
-                var action = vm.entityViewerDataService.getActiveObjectAction();
-                var actionData = vm.entityViewerDataService.getActiveObjectActionData();
-                var reportOptions = vm.entityViewerDataService.getReportOptions();
-
-                var currencies = reportOptions.item_currencies;
-
-                var getCurrencyObject = function (currencyKey) {
-                    var currencyObj = {};
-
-                    currencies.forEach(function (item) {
-
-                        if (item.id === activeObject[currencyKey]) {
-
-                            currencyObj.id = item.id;
-                            currencyObj.name = item.name;
-                            currencyObj.short_name = item.short_name;
-                            currencyObj.user_code = item.user_code;
-
-                        }
-
-                    });
-
-                    return currencyObj;
-                };
-
-                console.log('activeObject', activeObject);
-                console.log('actionData', actionData);
-                console.log('action', action);
-
-                var contextData = getContextData(reportOptions, activeObject);
-
-                if (activeObject) {
-
-                    if (action === 'edit_instrument') {
-
-                        var locals = {
-                            entityType: 'instrument',
-                            entityId: activeObject['instrument.id'],
-                            data: {
-                                contextData: contextData
-                            }
-                        };
-
-                        editEntity(activeObject, locals);
-
-                    }
-
-                    if (action === 'edit_account') {
-
-                        var locals = {
-                            entityType: 'account',
-                            entityId: activeObject['account.id'],
-                            data: {
-                                contextData: contextData
-                            }
-                        };
-
-                        editEntity(activeObject, locals);
-
-                    }
-
-                    if (action === 'edit_portfolio') {
-
-                        var locals = {
-                            entityType: 'portfolio',
-                            entityId: activeObject['portfolio.id'],
-                            data: {
-                                contextData: contextData
-                            }
-                        };
-
-                        editEntity(activeObject, locals);
-
-                    }
-
-                    if (action === 'edit_currency') {
-
-                        var locals = {
-                            entityType: 'currency',
-                            entityId: activeObject['currency.id'],
-                            data: {
-                                contextData: contextData
-                            }
-                        };
-
-                        editEntity(activeObject, locals);
-
-                    }
-
-                    if (action === 'edit_pricing_currency') {
-
-                        var locals = {
-                            entityType: 'currency',
-                            entityId: activeObject['instrument.pricing_currency.id'],
-                            data: {
-                                contextData: contextData
-                            }
-                        };
-
-                        editEntity(activeObject, locals);
-
-                    }
-
-                    if (action === 'edit_accrued_currency') {
-
-                        var locals = {
-                            entityType: 'currency',
-                            entityId: activeObject['instrument.accrued_currency.id'],
-                            data: {
-                                contextData: contextData
-                            }
-                        };
-
-                        editEntity(activeObject, locals);
-
-                    }
-
-                    if (action === 'edit_price') {
-
-                        var filters = {
-                            instrument: activeObject['instrument.id'],
-                            pricing_policy: reportOptions.pricing_policy,
-                            date_after: reportOptions.report_date,
-                            date_before: reportOptions.report_date
-                        };
-
-                        priceHistoryService.getList({filters: filters}).then(function (data) {
-
-                            if (data.results.length) {
-
-                                var item = data.results[0];
-
-                                var locals = {
-                                    entityType: 'price-history',
-                                    entityId: item.id,
-                                    data: {
-                                        contextData: contextData
-                                    }
-                                };
-
-                                editEntity(activeObject, locals);
-
-                            } else {
-
-                                var warningDescription = 'No corresponding record in Price History. Do you want to add the record?';
-                                var createEntityLocals = {
-                                    entityType: 'price-history',
-                                    entity: {
-                                        instrument: activeObject['instrument.id'],
-                                        instrument_object: {
-                                            id: activeObject['instrument.id'],
-                                            name: activeObject['instrument.name'],
-                                            user_code: activeObject['instrument.user_code'],
-                                            short_name: activeObject['instrument.short_name']
-                                        },
-                                        pricing_policy: reportOptions.pricing_policy,
-                                        pricing_policy_object: reportOptions.pricing_policy_object,
-                                        date: reportOptions.report_date
-                                    },
-                                    data: {}
-                                };
-
-                                offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
-
-                            }
-
-                        })
-
-
-                    }
-
-                    if (action === 'edit_fx_rate') {
-
-                        var filters = {
-                            instrument: activeObject['instrument.id'],
-                            pricing_policy: reportOptions.pricing_policy,
-                            date_0: reportOptions.report_date,
-                            date_1: reportOptions.report_date
-                        };
-
-                        currencyHistoryService.getList({filters: filters}).then(function (data) {
-
-                            if (data.results.length) {
-
-                                var item = data.results[0];
-
-                                var locals = {
-                                    entityType: 'currency-history',
-                                    entityId: item.id,
-                                    data: {
-                                        contextData: contextData
-                                    }
-                                };
-
-                                editEntity(activeObject, locals);
-
-                            } else {
-
-                                var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
-                                var createEntityLocals = {
-                                    entityType: 'currency-history',
-                                    entity: {
-                                        currency: activeObject['currency.id'],
-                                        currency_object: {
-                                            id: activeObject['currency.id']
-                                        },
-                                        pricing_policy: reportOptions.pricing_policy,
-                                        pricing_policy_object: reportOptions.pricing_policy_object,
-                                        date: reportOptions.report_date
-                                    },
-                                    data: {}
-                                };
-
-                                offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
-
-                            }
-
-                        })
-
-                    }
-
-                    if (action === 'edit_pricing_currency_price' && activeObject.id) {
-
-                        console.log('activeObject', activeObject);
-
-                        var filters = {
-                            currency: activeObject['instrument.pricing_currency'],
-                            instrument: activeObject['instrument.id'],
-                            pricing_policy: reportOptions.pricing_policy,
-                            date_0: reportOptions.report_date,
-                            date_1: reportOptions.report_date
-                        };
-
-                        currencyHistoryService.getList({filters: filters}).then(function (data) {
-
-                            if (data.results.length) {
-
-                                var item = data.results[0];
-
-                                var locals = {
-                                    entityType: 'currency-history',
-                                    entityId: item.id,
-                                    data: {
-                                        contextData: contextData
-                                    }
-                                };
-
-                                editEntity(activeObject, locals);
-
-                            } else {
-
-                                var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
-
-                                var currency_object = getCurrencyObject('instrument.pricing_currency');
-                                var createEntityLocals = {
-                                    entityType: 'currency-history',
-                                    entity: {
-                                        currency: activeObject['instrument.pricing_currency'],
-                                        currency_object: currency_object,
-                                        pricing_policy: reportOptions.pricing_policy,
-                                        pricing_policy_object: reportOptions.pricing_policy_object,
-                                        date: reportOptions.report_date
-                                    },
-                                    data: {}
-                                };
-
-                                offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
-
-                            }
-
-                        })
-
-                    }
-
-                    if (action === 'edit_accrued_currency_fx_rate' && activeObject.id) {
-
-                        var filters = {
-                            currency: activeObject['instrument.accrued_currency'],
-                            instrument: activeObject['instrument.id'],
-                            pricing_policy: reportOptions.pricing_policy,
-                            date_0: reportOptions.report_date,
-                            date_1: reportOptions.report_date
-                        };
-
-                        currencyHistoryService.getList({filters: filters}).then(function (data) {
-
-                            if (data.results.length) {
-
-                                var item = data.results[0];
-
-                                var locals = {
-                                    entityType: 'currency-history',
-                                    entityId: item.id,
-                                    data: {
-                                        contextData: contextData
-                                    }
-                                };
-
-                                editEntity(activeObject, locals);
-
-                            } else {
-
-                                var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
-
-                                var currency_object = getCurrencyObject('instrument.accrued_currency');
-                                var createEntityLocals = {
-                                    entityType: 'currency-history',
-                                    entity: {
-                                        currency: activeObject['instrument.accrued_currency'],
-                                        currency_object: currency_object,
-                                        pricing_policy: reportOptions.pricing_policy,
-                                        pricing_policy_object: reportOptions.pricing_policy_object,
-                                        date: reportOptions.report_date
-                                    },
-                                    data: {}
-                                };
-
-                                offerToCreateEntity(activeObject, warningDescription, createEntityLocals);
-
-
-                            }
-
-                        })
-
-                    }
-
-                    if (action === 'book_transaction') {
-
-                        var locals = {
-                            entityType: 'complex-transaction',
-                            entity: {},
-                            data: {}
-                        };
-
-                        if (vm.entityType === 'transaction-report') {
-
-                            locals.entity.transaction_type = activeObject['complex_transaction.transaction_type.id'];
-                            locals.data.contextData = contextData;
-
-                        }
-
-                        createEntity(activeObject, locals);
-
-                    }
-
-                    if (action === 'book_transaction_specific') {
-
-                        var locals = {
-                            entityType: 'complex-transaction',
-                            entity: {},
-                            data: {
-                                contextData: contextData
-                            }
-                        };
-
-                        if (actionData && actionData.id) {
-                            locals.entity.transaction_type = actionData.id
-                        }
-
-                        createEntity(activeObject, locals);
-
-                    }
-
-                    if (action === 'rebook_transaction') {
-
-                        var locals = {
-                            entityType: 'complex-transaction',
-                            entityId: activeObject['complex_transaction.id'],
-                            data: {}
-                        };
-
-                        editEntity(activeObject, locals);
-
-                    }
-                }
-
-            }); */
-
             vm.entityViewerEventService.addEventListener(evEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS, function () {
                 vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS);
             })
 
         };
 
-        vm.closeGroupsAndContinueReportGeneration = function () {
-
-            var localStorageReportData = localStorageService.getReportData();
-
-            var layout = vm.entityViewerDataService.getListLayout();
-            var contentType = vm.entityViewerDataService.getContentType();
-
-            delete localStorageReportData[contentType][layout.user_code]
-
-            var groups = vm.entityViewerDataService.getGroups();
-
-            groups.forEach(function (group) {
-
-                if (!group.report_settings) {
-                    group.report_settings = {}
-                }
-
-                group.report_settings.is_level_folded = true;
-
-            })
-
-            vm.entityViewerDataService.setGroups(groups);
-
-            localStorageService.cacheReportData(localStorageReportData);
-
-            vm.possibleToRequestReport = true;
-
-            rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
-
-        }
-
-        vm.continueReportGeneration = function () {
-
-            vm.possibleToRequestReport = true;
-
-            rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
-        }
-
         vm.initDashboardExchange = function () { // initialize only for components that are not in filled in mode
 
-            // vm.oldEventExchanges()
-            var clearUseFromAboveFilters = function () {
-
-                vm.entityViewerDataService.setActiveObject(null);
-                vm.entityViewerDataService.setActiveObjectFromAbove(null);
-
-                console.log('CLEARED ACTIVE OBJECT ', vm.entityViewerDataService.getActiveObject());
-                console.log('CLEARED ACTIVE OBJECT FROM ABOVE ', vm.entityViewerDataService.getActiveObjectFromAbove());
-
-                vm.entityViewerEventService.dispatchEvent(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
-
-            };
-
-            //<editor-fold desc="Dashboard events">
-            // DEPRECATED SINCE FN-2320 2023-11-10 szhitenev
-            /*vm.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
-                //vm.applyDashboardChanges();
-                updateReportSettingsUsingDashboardData();
-                cleanComponentsOutputsToDelete();
-                clearUseFromAboveFilters();
-
-            });
-
-            vm.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ACTIVE_TAB, function () {
-
-                var activeTab = vm.dashboardDataService.getActiveTab();
-
-                console.log('activeTab', activeTab.tab_number);
-                console.log('$scope.$parent.vm.tabNumber', $scope.$parent.vm.tabNumber);
-
-                if (activeTab.tab_number === $scope.$parent.vm.tabNumber) {
-                    //vm.applyDashboardChanges();
-                    updateReportSettingsUsingDashboardData();
-                    cleanComponentsOutputsToDelete();
-                    clearUseFromAboveFilters();
-                }
-
-            });
-*/
-            vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE, function () {
-                // update report filters from dashboard component
-
-                /*if (vm.componentData.settings.auto_refresh) {
-                    updateReportSettingsUsingDashboardData();
-                }*/
-
-                updateActiveObjectUsingDashboardData();
-
-            });
+            // 2023-11-11 szhitenev FN-2320
 
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_CHANGE, function () {
 
-                //# region Add linked filters from dashboard component settings to report viewer
-                if (vm.componentData.settings.linked_components.hasOwnProperty('filter_links')) {
+                vm.applyDashboardLayoutState();
 
-                    vm.componentData.settings.linked_components.filter_links.forEach(function (filter_link) {
-
-                        vm.handleDashboardFilterLink(filter_link);
-
-                    });
-
-                }
-                //# endregion
-
-                if (vm.componentData.settings.auto_refresh) {
-                    updateReportSettingsUsingDashboardData();
-                }
 
             });
-
-            vm.dashboardEventService.addEventListener(dashboardEvents.CLEAR_ACTIVE_TAB_USE_FROM_ABOVE_FILTERS, function () {
-
-                var activeTab = vm.dashboardDataService.getActiveTab();
-
-                if (activeTab.tab_number === $scope.$parent.vm.tabNumber) {
-                    clearUseFromAboveFilters();
-                }
-
-            });
-            //</editor-fold>
 
             //<editor-fold desc="Dashboard component events">
             vm.dashboardComponentEventService.addEventListener(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS, function () {
@@ -1867,8 +738,6 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
 
             });
 
-            vm.dashboardComponentEventService.addEventListener(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS, clearUseFromAboveFilters);
-
             vm.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
                 vm.getView()
             });
@@ -1879,54 +748,6 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
             //</editor-fold>
 
         };
-
-        /* vm.downloadAttributes = function () {
-
-            return new Promise(function (resolve, reject) {
-
-                var promises = [];
-
-                promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('balance-report'));
-                promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('pl-report'));
-                promises.push(vm.attributeDataService.downloadCustomFieldsByEntityType('transaction-report'));
-
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('portfolio'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('account'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('instrument'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('responsible'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('counterparty'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('transaction-type'));
-                promises.push(vm.attributeDataService.downloadDynamicAttributesByEntityType('complex-transaction'));
-
-                if (vm.entityType === 'balance-report') {
-                    promises.push(vm.attributeDataService.downloadInstrumentUserFields());
-                }
-
-                if (vm.entityType === 'pl-report') {
-                    promises.push(vm.attributeDataService.downloadInstrumentUserFields());
-                }
-
-                if (vm.entityType === 'transaction-report') {
-                    promises.push(vm.attributeDataService.downloadInstrumentUserFields());
-                    promises.push(vm.attributeDataService.downloadComplexTransactionUserFields());
-                }
-
-                Promise.all(promises).then(function (data) {
-
-                    vm.readyStatus.attributes = true;
-                    // $scope.$apply();
-
-                    resolve();
-
-                }).catch(function (error) {
-
-                    resolve({errorObj: error, errorCause: 'dynamicAttributes'});
-
-                })
-
-            })
-
-        }; */
 
         var setDataFromDashboard = function () {
 
@@ -1943,140 +764,8 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
             vm.dashboardComponentDataService = $scope.$parent.vm.dashboardComponentDataService;
             vm.dashboardComponentEventService = $scope.$parent.vm.dashboardComponentEventService;
 
-            if (
-                (vm.componentData.type === 'report_viewer' ||
-                 vm.componentData.type === 'report_viewer_split_panel') &&
-                 vm.userSettings
-            ) {
-                // Set attributes available for columns addition
-                if (vm.userSettings.manage_columns && vm.userSettings.manage_columns.length > 0) {
-                    vm.attributeDataService.setAttributesAvailableForColumns(vm.userSettings.manage_columns);
-                }
-
-                if (vm.componentData.settings.styles && vm.componentData.settings.styles.cell.text_align) {
-                    vm.entityViewerDataService.dashboard.setColumnsTextAlign(vm.componentData.settings.styles.cell.text_align);
-                }
-
-            }
-
-            if (vm.componentData.type === 'report_viewer_matrix') {
-                vm.matrixSettings = {
-
-                    top_left_title: vm.componentData.settings.top_left_title,
-
-                    abscissa: vm.componentData.settings.abscissa,
-                    ordinate: vm.componentData.settings.ordinate,
-                    value_key: vm.componentData.settings.value_key,
-                    available_abscissa_keys: vm.componentData.user_settings.available_abscissa_keys,
-                    available_ordinate_keys: vm.componentData.user_settings.available_ordinate_keys,
-                    available_value_keys: vm.componentData.user_settings.available_value_keys,
-
-                    number_format: vm.componentData.settings.number_format,
-                    subtotal_formula_id: vm.componentData.settings.subtotal_formula_id,
-
-                    matrix_view: vm.componentData.settings.matrix_view, // DEPRECATED possibly
-
-                    styles: vm.componentData.settings.styles,
-                    auto_scaling: vm.componentData.settings.auto_scaling,
-                    calculate_name_column_width: vm.componentData.settings.calculate_name_column_width,
-                    hide_empty_lines: vm.componentData.settings.hide_empty_lines
-
-                };
-            }
-
-            if (vm.componentData.type === 'report_viewer_table_chart') {
-
-                console.log('DasboardReportViewer.report_viewer_table_chart.vm.componentData', vm.componentData)
-
-                vm.tableChartSettings = {
-                    title_column: vm.componentData.settings.title_column,
-                    value_column: vm.componentData.settings.value_column,
-
-                    column_1_width: vm.componentData.settings.column_1_width,
-                    column_2_width: vm.componentData.settings.column_2_width,
-                    column_3_width: vm.componentData.settings.column_3_width,
-
-                    title_column_name: vm.componentData.settings.title_column_name,
-                    value_column_name: vm.componentData.settings.value_column_name,
-
-                    available_title_column_keys: vm.componentData.user_settings.available_title_column_keys,
-                    available_value_column_keys: vm.componentData.user_settings.available_value_column_keys,
-
-                    number_format: vm.componentData.settings.number_format
-                };
-            }
-
-            if (vm.componentData.type === 'report_viewer_bars_chart') {
-                vm.rvChartsSettings = {
-                    bar_name_key: vm.componentData.settings.bar_name_key,
-                    bar_number_key: vm.componentData.settings.bar_number_key,
-                    bars_direction: vm.componentData.settings.bars_direction,
-                    group_number_calc_formula: vm.componentData.settings.group_number_calc_formula,
-                    min_bar_width: vm.componentData.settings.min_bar_width,
-                    max_bar_width: vm.componentData.settings.max_bar_width,
-                    sorting_value_type: vm.componentData.settings.sorting_value_type,
-                    sorting_type: vm.componentData.settings.sorting_type,
-                    autocalc_ticks_number: vm.componentData.settings.autocalc_ticks_number,
-                    ticks_number: vm.componentData.settings.ticks_number,
-                    crop_tick_text: vm.componentData.settings.crop_tick_text,
-                    tooltip_font_size: vm.componentData.settings.tooltip_font_size,
-                    number_format: vm.componentData.settings.number_format,
-                    abscissa_position: vm.componentData.settings.abscissa_position,
-                    ordinate_position: vm.componentData.settings.ordinate_position,
-                };
-
-                if (vm.componentData.settings.abscissa || vm.componentData.settings.ordinate) {
-                    vm.rvChartsSettings.bar_name_key = vm.componentData.settings.abscissa;
-                    vm.rvChartsSettings.bar_number_key = vm.componentData.settings.ordinate;
-                }
-
-            }
-
-            if (vm.componentData.type === 'report_viewer_pie_chart') {
-                vm.rvChartsSettings = {
-                    group_attr: vm.componentData.settings.group_attr,
-                    number_attr: vm.componentData.settings.number_attr,
-                    group_number_calc_formula: vm.componentData.settings.group_number_calc_formula,
-                    show_legends: vm.componentData.settings.show_legends,
-                    legends_font_size: vm.componentData.settings.legends_font_size,
-                    legends_position: vm.componentData.settings.legends_position,
-                    legends_columns_number: vm.componentData.settings.legends_columns_number,
-                    number_format: vm.componentData.settings.number_format,
-                    tooltip_font_size: vm.componentData.settings.tooltip_font_size,
-                    chart_form: vm.componentData.settings.chart_form,
-                    pie_size_percent: vm.componentData.settings.pie_size_percent
-                };
-            }
 
         };
-
-        /*let getLayoutById = function (layoutId) {
-
-            return new Promise(function (resolve, reject) {
-
-                let actualLayoutsIds = vm.dashboardDataService.getCachedLayoutsData();
-
-                if (actualLayoutsIds.includes(layoutId)) {
-
-                    let cachedLayout = localStorageService.getCachedLayout(layoutId);
-                    resolve(cachedLayout);
-
-                } else {
-
-                    uiService.getListLayoutByKey(layoutId).then(function (layoutData) {
-
-                        vm.dashboardDataService.setCachedLayoutsData();
-                        resolve(layoutData);
-
-                    }).catch(function (error) {
-                        reject(error);
-                    });
-
-                }
-
-            });
-
-        };*/
 
         let getLayoutByUserCode = function (userCode) {
 
@@ -2134,6 +823,8 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
 
             //console.log('$scope.$parent.vm.componentData', $scope.$parent.vm.componentData);
 
+
+
             setDataFromDashboard();
 
             vm.entityViewerDataService.setViewContext('dashboard');
@@ -2141,18 +832,6 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
             var downloadAttrsPromise = sharedLogicHelper.downloadAttributes();
             vm.setEventListeners();
 
-            console.log('$scope.$parent.vm.contentType', $scope.$parent.vm.contentType)
-
-            /* vm.entityViewerDataService.setEntityType(vm.entityType);
-            vm.entityViewerDataService.setContentType($scope.$parent.vm.contentType);
-            vm.entityViewerDataService.setRootEntityViewer(true);
-            vm.entityViewerDataService.setRowHeight(36);
-            vm.entityViewerDataService.setVirtualScrollStep(500);
-            vm.entityViewerDataService.setCurrentMember(vm.currentMember);
-
-            if (vm.componentData.type === 'report_viewer_split_panel') {
-                vm.entityViewerDataService.setUseFromAbove(true);
-            } */
             sharedLogicHelper.setLayoutDataForView();
             vm.entityViewerDataService.setRootEntityViewer(true);
             vm.entityViewerDataService.setUseFromAbove(true);
@@ -2242,6 +921,11 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
 
                         }
 
+                        // FN-2320 2023-11-11 szhitenev update
+                        vm.lastSavedOutput = {};
+                        console.log('setDataFromDashboard.vm', vm)
+                        vm.applyDashboardLayoutState();
+
                         vm.initDashboardExchange();
 
                         vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
@@ -2260,21 +944,6 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
                 });
 
             });
-
-            // var crossEntityAttributeExtensionProm = new Promise(function (resolve, reject){
-            //
-            // 	uiService.getCrossEntityAttributeExtensionList({
-            // 		filters: {
-            // 			context_content_type: $scope.$parent.vm.contentType
-            // 		}
-            // 	}).then(function (data){
-            //
-            // 		vm.entityViewerDataService.setCrossEntityAttributeExtensions(data.results);
-            // 		resolve();
-            //
-            // 	}).catch(error => reject(error));
-            //
-            // })
 
             Promise.all([downloadAttrsPromise, setLayoutPromise]).then(function () {
 
@@ -2304,52 +973,11 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
 
         };
 
-        var applySettingsForFilledInMode = function () {
-
-            var listLayout = vm.entityViewerDataService.getListLayout();
-            var columns = listLayout.data.columns;
-            vm.entityViewerDataService.setColumns(columns);
-
-            var components = vm.entityViewerDataService.getComponents();
-            components.sidebar = true;
-            components.topPart = true;
-
-        };
-
-        var getViewInsideFilledInComponent = function () {
-
-            vm.entityViewerDataService = $scope.$parent.vm.entityViewerDataService;
-            vm.entityViewerEventService = new EntityViewerEventService();
-            vm.attributeDataService = $scope.$parent.vm.attributeDataService;
-
-            setDataFromDashboard();
-            vm.setEventListeners();
-
-            applySettingsForFilledInMode();
-
-            vm.readyStatus.layout = true;
-            vm.readyStatus.attributes = true;
-
-            vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
-            vm.entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-
-            vm.dashboardComponentDataService.setAttributeDataService(vm.attributeDataService);
-            vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.ATTRIBUTE_DATA_SERVICE_INITIALIZED);
-
-        };
-
         vm.init = function () {
 
-            if (fillInModeEnabled) {
-
-                getViewInsideFilledInComponent();
-
-            } else {
-
-                vm.getCurrentMember().then(function () {
-                    vm.getView();
-                })
-            }
+            vm.getCurrentMember().then(function () {
+                vm.getView();
+            })
 
         };
 

@@ -20,7 +20,7 @@
                                           data-on-change-callback="valueChanged(changedValue)"></entity-search-select>
 
                     <dropdown-select data-ng-if="selectorType === 'dropdownSelect'"
-                                     data-label="{{customName}}"
+                                     data-label="{{componentData.name}}"
                                      data-menu-options="selOptions"
                                      data-model="item.data.store.value"
                                      data-item-name="item.data.store.name"
@@ -28,7 +28,7 @@
                                      data-on-change-callback="valueChanged(changedValue)"></dropdown-select>
 
                     <unified-data-select data-ng-if="selectorType === 'unifiedDataSelect'"
-                                         data-label="{{customName}}"
+                                         data-label="{{componentData.name}}"
                                          data-model="item.data.store.value"
                                          data-item-object="entityData.value"
                                          data-item-name="item.data.store.name"
@@ -37,7 +37,7 @@
                                          data-on-change-callback="valueChanged(changedValue)"></unified-data-select>
 
                     <instrument-select data-ng-if="entityType === 'instrument'"
-                                       data-label="{{customName}}"
+                                       data-label="{{componentData.name}}"
                                        data-model="item.data.store.value"
                                        data-item-object="entityData.value"
                                        data-item-name="item.data.store.name"
@@ -47,7 +47,7 @@
 
                 <div data-ng-if="componentData.settings.multiple">
 
-                    <two-fields-multiselect data-title="{{customName}}"
+                    <two-fields-multiselect data-title="{{componentData.name}}"
                                             data-items="selOptions"
                                             data-model="item.data.store.value"
                                             data-selected-items-indication="chips"
