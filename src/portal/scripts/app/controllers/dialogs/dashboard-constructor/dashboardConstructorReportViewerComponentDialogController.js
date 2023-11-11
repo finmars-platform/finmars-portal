@@ -16,8 +16,8 @@
 
         vm.launchedFromDashboard = data.openedFromDashboard;
         vm.readyStatus = {
-        	layouts: false
-		};
+            layouts: false
+        };
 
         vm.componentsForMultiselector = [];
         var componentsForLinking = dashboardHelper.getComponentsForLinking();
@@ -39,9 +39,10 @@
                 name: '',
                 custom_component_name: '',
                 settings: {
-                	entity_type: 'balance-report',
+                    components_to_listen: [],
+                    entity_type: 'balance-report',
                     components: {
-                    	topPart: false,
+                        topPart: false,
                         addEntityBtn: false,
                         autoReportRequest: false,
                         columnAreaHeader: true,
@@ -58,7 +59,7 @@
                     linked_components: {
                         report_settings: {},
                         filter_links: [],
-						active_object: null
+                        active_object: null
                     },
                     filters: {
                         show_filters_area: false,
@@ -70,11 +71,11 @@
 
         }
 
-		vm.layoutsByEntityType = {
-			'balance-report': [],
-			'pl-report': [],
-			'transaction-report': [],
-		};
+        vm.layoutsByEntityType = {
+            'balance-report': [],
+            'pl-report': [],
+            'transaction-report': [],
+        };
 
         vm.deleteFilterLink = function (item, $index) {
 
@@ -127,53 +128,53 @@
 
         }; */
 
-		vm.layoutsSelectorsList = multitypeFieldService.getReportLayoutsSelectorData().map(function (type) {
-			type.custom = {
-				menuOptionsNotLoaded: true
-			}
-			return type;
-		});
+        vm.layoutsSelectorsList = multitypeFieldService.getReportLayoutsSelectorData().map(function (type) {
+            type.custom = {
+                menuOptionsNotLoaded: true
+            }
+            return type;
+        });
 
-        vm.getAttributes = function() {
+        vm.getAttributes = function () {
             vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type);
             /*vm.multiselectorAttrs = vm.attributes.map(function (attribute) {
                 return {id: attribute.key, name: attribute.name};
             });*/
         };
 
-		vm.onLayoutEntityTypeChange = function (activeType) {
+        vm.onLayoutEntityTypeChange = function (activeType) {
 
-			dashboardConstructorMethodsService.onReportTypeChange(activeType, vm.item, vm.getLayouts, $scope).then(function (item) {
+            dashboardConstructorMethodsService.onReportTypeChange(activeType, vm.item, vm.getLayouts, $scope).then(function (item) {
 
-				vm.layouts = vm.layoutsByEntityType[vm.item.settings.entity_type];
-				vm.item = item;
+                vm.layouts = vm.layoutsByEntityType[vm.item.settings.entity_type];
+                vm.item = item;
 
-				vm.item.settings.linked_components = {};
+                vm.item.settings.linked_components = {};
 
-				/*vm.item.settings.abscissa = null;
-				vm.item.settings.ordinate = null;
-				vm.item.settings.value_key = null;*/
+                /*vm.item.settings.abscissa = null;
+                vm.item.settings.ordinate = null;
+                vm.item.settings.value_key = null;*/
 
-				vm.item.user_settings = {};
+                vm.item.user_settings = {};
 
-				vm.getAttributes();
+                vm.getAttributes();
 
-				vm.item.user_settings.columns = JSON.parse(JSON.stringify(vm.tableColumns));
-				vm.smallRvColumnsChanged();
+                vm.item.user_settings.columns = JSON.parse(JSON.stringify(vm.tableColumns));
+                vm.smallRvColumnsChanged();
 
-			});
+            });
 
-		};
+        };
 
-		vm.onLayoutChange = function () {
+        vm.onLayoutChange = function () {
 
-			var activeType = vm.layoutsSelectorsList.find(function (type) {
-				return type.isActive;
-			});
+            var activeType = vm.layoutsSelectorsList.find(function (type) {
+                return type.isActive;
+            });
 
-			vm.item.settings.layout = activeType.model;
+            vm.item.settings.layout = activeType.model;
 
-		};
+        };
 
         vm.getLayouts = function () {
 
@@ -183,7 +184,7 @@
 
                 uiService.getListLayout(vm.item.settings.entity_type, {pageSize: 1000}).then(function (data) {
 
-					vm.layoutsByEntityType[vm.item.settings.entity_type] = data.results;
+                    vm.layoutsByEntityType[vm.item.settings.entity_type] = data.results;
                     vm.layouts = data.results;
 
                     var layoutsWithLinkToFilters = dashboardHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
@@ -211,9 +212,9 @@
                     resolve(layoutsWithLinkToFilters);
 
                 }).catch(function (error) {
-					console.error(error);
-					resolve([]);
-				});
+                    console.error(error);
+                    resolve([]);
+                });
 
             });
 
@@ -314,9 +315,9 @@
             }
 
         }; */
-		vm.clearSelect = function (item, propToDelete) {
-			delete item[propToDelete];
-		}
+        vm.clearSelect = function (item, propToDelete) {
+            delete item[propToDelete];
+        }
 
         vm.smallRvColumnsChanged = function () {
 
@@ -457,7 +458,7 @@
 
         vm.init = function () {
 
-        	setTimeout(function () {
+            setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.dcReportViewerElemToDrag');
             }, 100);
 
@@ -467,66 +468,19 @@
 
             vm.componentsTypes = dataService.getComponents();
 
-            /*vm.controlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control';
-            });
+            vm.componentsTypesToListen = vm.componentsTypes.filter(function (item) {
+                return item.user_code // should not be empty
+            }).map(function (item) {
 
-            vm.dateControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control' && componentType.settings.value_type === 40
-            });
-
-            vm.currencyControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control' &&
-                       componentType.settings.value_type === 100 &&
-                       componentType.settings.content_type === 'currencies.currency'
-            });
-
-            vm.pricingPolicyControlComponentsTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control' &&
-                       componentType.settings.value_type === 100 &&
-                       componentType.settings.content_type === 'instruments.pricingpolicy'
-            });
-
-            vm.portfoliosComponentTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control' &&
-                    componentType.settings.value_type === 100 &&
-                    componentType.settings.content_type === 'portfolios.portfolio'
-            });
-
-            vm.strategies1ComponentTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control' &&
-                    componentType.settings.value_type === 100 &&
-                    componentType.settings.content_type === 'strategies.strategy1'
-            });
-
-            vm.strategies2ComponentTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control' &&
-                    componentType.settings.value_type === 100 &&
-                    componentType.settings.content_type === 'strategies.strategy2'
-            });
-
-            vm.strategies3ComponentTypes = vm.componentsTypes.filter(function (componentType) {
-                return componentType.type === 'control' &&
-                    componentType.settings.value_type === 100 &&
-                    componentType.settings.content_type === 'strategies.strategy3'
-            });
-
-            vm.componentsTypes.forEach(function (comp) {
-
-                if (componentsForLinking.indexOf(comp.type) !== -1 &&
-                    comp.id !== vm.item.id) {
-
-                    vm.componentsForMultiselector.push(
-                        {
-                            id: comp.id,
-                            name: comp.name
-                        });
-
+                return {
+                    id: item.user_code,
+                    name: item.name
                 }
 
-            });*/
+            })
 
-            dashboardConstructorMethodsService.getDataForComponentsSelector(vm, componentsForLinking, vm.item.id);
+
+            dashboardConstructorMethodsService.getDataForComponentsSelector(vm, componentsForLinking, vm.item.user_code);
 
             console.log('vm', vm);
 
@@ -536,16 +490,16 @@
 
             } */
 
-			vm.getAttributes();
+            vm.getAttributes();
 
-			dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts(), true).then(function (layoutsSelectorsList) {
+            dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts(), true).then(function (layoutsSelectorsList) {
 
                 vm.layoutsSelectorsList = layoutsSelectorsList;
 
-				vm.readyStatus.layouts = true;
-				$scope.$apply();
+                vm.readyStatus.layouts = true;
+                $scope.$apply();
 
-			});
+            });
 
         };
 

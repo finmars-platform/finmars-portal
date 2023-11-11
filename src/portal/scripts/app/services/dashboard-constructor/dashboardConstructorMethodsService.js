@@ -43,9 +43,17 @@ export default function (uiService, dashboardHelper) {
             if (componentsForLinking.indexOf(comp.type) !== -1 &&
                 comp.user_code !== user_code) {
 
+                var user_code = comp.user_code;
+
+                // for old dashboards, where user_code is not defined
+                // remove later
+                if (!user_code) {
+                    user_code = comp.id
+                }
+
                 viewModel.componentsForMultiselector.push(
                     {
-                        id: comp.user_code,
+                        id: user_code,
                         name: comp.name
                     });
 

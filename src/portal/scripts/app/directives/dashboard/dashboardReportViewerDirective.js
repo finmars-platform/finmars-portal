@@ -1,3 +1,5 @@
+const dashboardEvents = require("../../services/dashboard/dashboardEvents");
+const dashboardComponentStatuses = require("../../services/dashboard/dashboardComponentStatuses");
 (function () {
 
     'use strict';
@@ -179,7 +181,7 @@
                     dashboardHelper.toggleFilterBlock(scope);
                 };
 
-                scope.initEventListeners = function () {
+                /*scope.initEventListeners = function () {
 
                     dashboardHelper.initEventListeners(scope);
 
@@ -267,19 +269,6 @@
 
                     }
 
-                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
-
-                        componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
-
-                        scope.vm.componentData = componentData;
-
-                        if (componentData.custom_component_name) {
-                            scope.customName = componentData.custom_component_name;
-                        } else {
-                            scope.customName = null;
-                        }
-
-                    });
 
                     scope.dashboardComponentEventService.addEventListener(dashboardEvents.REPORT_VIEWER_DATA_SERVICE_SET, function () {
 
@@ -313,7 +302,7 @@
                     })
 
                 };
-
+*/
                 scope.openMissingPricesDialog = function ($event) {
 
                     $mdDialog.show({
@@ -333,30 +322,24 @@
 
                 scope.init = function () {
 
-                    scope.initEventListeners();
+                    console.log("DASHBOARD.REPORT.INIT")
 
-                    if (scope.fillInModeData) {
+                    scope.readyStatus.data = 'processing'
 
-                        scope.readyStatus.data = 'ready';
+                    // scope.initEventListeners();
 
-                    } else {
+                    scope.vm.componentData.settings.components.topPart = false; // for already existing layouts
 
-                        scope.vm.componentData.settings.components.topPart = false; // for already existing layouts
+                    scope.dashboardDataService.setComponentRefreshRestriction(scope.item.data.id, false);
 
-                        scope.dashboardDataService.setComponentRefreshRestriction(scope.item.data.id, false);
-
-                        scope.readyStatus.data = 'ready';
-
-                    }
-
-
-
-                    scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                    scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                    // Will be set to active inside DashboardReportViewerController
+                    // scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                    // scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                     setTimeout(function () {
+                        scope.readyStatus.data = 'ready';
                         scope.$apply();
-                    }, 0)
+                    }, 1000)
 
                 };
 
@@ -379,6 +362,14 @@
                         }
 
                     });
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
+
+                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.PROCESSING);
+                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                        scope.init();
+
+                    })
 
                 }
 
