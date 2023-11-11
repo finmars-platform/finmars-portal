@@ -127,6 +127,8 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     }
 
+                    scope.entityViewerDataService.setViewContext('dashboard');
+
                     // Settings columns, because API returns only requested columns
                     scope.entityViewerDataService.setColumns([
                         {
