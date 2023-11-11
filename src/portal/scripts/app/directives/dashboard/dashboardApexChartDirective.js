@@ -167,6 +167,8 @@
                             })
                         }
 
+                        scope.lastSavedOutput = componentsOutputs;
+
                     });
 
                     scope.clearLastSavedOutput = function () {
