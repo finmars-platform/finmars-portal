@@ -123,8 +123,17 @@
 
                     switch (scope.componentData.type) {
                         case 'control':
-                            contrName = 'DashboardConstructorControlComponentDialogController as vm';
-                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-control-component-dialog-view.html';
+
+                            if (scope.componentData.settings.value_type == 40) {
+
+                                contrName = 'DashboardConstructorControlDateComponentDialogController as vm';
+                                templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-control-date-component-dialog-view.html';
+
+                            } else {
+
+                                contrName = 'DashboardConstructorControlComponentDialogController as vm';
+                                templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-control-component-dialog-view.html';
+                            }
                             break;
                         case 'report_viewer':
                         case 'report_viewer_split_panel':
