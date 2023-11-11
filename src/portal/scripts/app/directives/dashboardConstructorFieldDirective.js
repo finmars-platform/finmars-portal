@@ -124,10 +124,15 @@
                     switch (scope.componentData.type) {
                         case 'control':
 
-                            if (scope.componentData.settings.value_type == 40) {
+                            if (scope.componentData.settings.value_type === 40) {
 
                                 contrName = 'DashboardConstructorControlDateComponentDialogController as vm';
                                 templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-control-date-component-dialog-view.html';
+
+                            } else if (scope.componentData.settings.value_type === 100) {
+
+                                contrName = 'DashboardConstructorControlRelationComponentDialogController as vm';
+                                templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-control-relation-component-dialog-view.html';
 
                             } else {
 

@@ -278,6 +278,7 @@
                     console.log('scope.item.data.store.value', scope.item.data.store.value);
 
                     scope.dashboardDataService.setComponentOutputOld(scope.item.data.id, changedData);
+                    scope.dashboardDataService.setComponentOutput(scope.componentData.user_code, scope.item.data.store.value);
                     //# endregion
 
                     scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id);
@@ -826,6 +827,14 @@
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                         initComponent();
+
+                    })
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.DASHBOARD_STATE_CHANGE, function () {
+
+                        var value = scope.dashboardDataService.getComponentOutput(scope.componentData.user_code)
+
+                        scope.item.data.store.value = value;
 
                     })
 

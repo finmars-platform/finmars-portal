@@ -120,7 +120,8 @@
 
                     scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_CHANGE, function () {
 
-                        var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputsByUserCodes();
+                        // var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputsByUserCodes();
+                        var componentsOutputs = scope.dashboardDataService.getLayoutState();
 
                         console.log('apexChart.COMPONENT_OUTPUT_CHANGE', JSON.stringify(componentsOutputs, null, 4));
 
@@ -410,7 +411,6 @@
                     var chartInstance;
 
 
-
                     try {
 
                         // document.querySelector(selector).innerHTML = '';
@@ -455,7 +455,8 @@
                     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-                    var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputsByUserCodes();
+                    // var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputsByUserCodes();
+                    var componentsOutputs = scope.dashboardDataService.getLayoutState();
 
                     scope.lastSavedOutput = componentsOutputs;
 

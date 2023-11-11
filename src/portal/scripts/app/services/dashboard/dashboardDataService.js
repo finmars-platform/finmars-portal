@@ -96,40 +96,34 @@
          * @returns {*}
          * @memberof: module:dashboardDataService
          */
-        function setComponentOutput(componentId, output) {
+        function setComponentOutput(user_code, output) {
 
             // Probably need refactor
-            if (!layoutData.data.components) {
-                layoutData.data.components = {}
+            if (!layoutData.data.state) {
+                layoutData.data.state = {}
             }
 
-            if (!layoutData.data.components[componentId]) {
-                layoutData.data.components[componentId] = {};
-            }
-
-            layoutData.data.components[componentId].output = output
+            layoutData.data.state[user_code] = output
 
         }
 
         /**
          * For now actually no used anywhere. getComponentOutputOld used.
          *
-         * @param componentId
+         * @param user_code
          * @returns {*}
          * @memberof: dashboardDataService
          */
-        function getComponentOutput(componentId) {
+        function getComponentOutput(user_code) {
+            return layoutData.data.state[user_code]
+        }
 
-            // Probably need refactor
-            if (!layoutData.data.components) {
-                layoutData.data.components = {}
-            }
+        function getLayoutState() {
+            return layoutData.data.state
+        }
 
-            if (!layoutData.data.components[componentId]) {
-                layoutData.data.components[componentId] = {};
-            }
-
-            return layoutData.data.components[componentId].output
+        function setLayoutState(data) {
+            return layoutData.data.state = data
         }
 
         function setComponentOutputOld(componentId, data) {
@@ -364,7 +358,12 @@
 
             // 2023-08-23
             registerControl: registerControl,
-            areControlsReady: areControlsReady
+            areControlsReady: areControlsReady,
+
+
+            // 2023-11-11
+            getLayoutState: getLayoutState,
+            setLayoutState: setLayoutState
 
         }
 

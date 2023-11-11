@@ -27,8 +27,8 @@
 
                         <div layout="row">
                             <md-input-container class="dashboard-constructor-field1">
-                                <label for="">Chart label</label>
-                                <input type="text" data-ng-model="vm.item.chart_custom_name">
+                                <label for="">User Code</label>
+                                <input type="text" data-ng-model="vm.item.user_code">
                             </md-input-container>
                         </div>
 
@@ -82,12 +82,9 @@
         </div>
     </md-dialog-content>
 
-<!--    <md-dialog-actions layout="row" layout-align="space-between">-->
+    <!--    <md-dialog-actions layout="row" layout-align="space-between">-->
     <md-dialog-actions layout="row">
 
-        <md-button ng-click="vm.exportToDashboards()" style="margin-right:20px;">
-            Export to dashboards
-        </md-button>
 
         <md-button ng-click="vm.cancel()" style="margin-right:20px;">
             Cancel

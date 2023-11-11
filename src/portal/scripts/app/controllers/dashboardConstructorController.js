@@ -1223,6 +1223,10 @@
                 editorController: 'DashboardConstructorControlDateComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-control-date-component-dialog-view.html'
             },
+            control_relation: {
+                editorController: 'DashboardConstructorControlRelationComponentDialogController as vm',
+                editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-control-relation-component-dialog-view.html'
+            },
             accordion: {
                 editorController: 'DashboardConstructorAccordionComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-accordion-component-dialog-view.html'
@@ -1473,6 +1477,9 @@
 
             if (item.type == 'control' && item.settings.value_type == 40) {
                 itemType = 'control_date';
+            }
+            if (item.type == 'control' && item.settings.value_type == 100) {
+                itemType = 'control_relation';
             }
 
 
