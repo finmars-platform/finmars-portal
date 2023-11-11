@@ -2,7 +2,7 @@ const metaHelper = require('../../helpers/meta.helper');
 
 export default function (uiService, dashboardHelper) {
 
-    var getDataForComponentsSelector = function (viewModel, componentsForLinking, itemId) {
+    var getDataForComponentsSelector = function (viewModel, componentsForLinking, user_code) {
 
         var getComponentsTypesByContentType = function (contentType) {
 
@@ -41,11 +41,11 @@ export default function (uiService, dashboardHelper) {
         viewModel.componentsTypes.forEach(function (comp) {
 
             if (componentsForLinking.indexOf(comp.type) !== -1 &&
-                comp.id !== itemId) {
+                comp.user_code !== user_code) {
 
                 viewModel.componentsForMultiselector.push(
                     {
-                        id: comp.id,
+                        id: comp.user_code,
                         name: comp.name
                     });
 
