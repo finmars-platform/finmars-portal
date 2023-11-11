@@ -1469,9 +1469,16 @@
 
         vm.editComponentType = function ($event, item) {
 
+            var itemType = item.type
+
+            if (item.type == 'control' && item.settings.value_type == 40) {
+                itemType = 'control_date';
+            }
+
+
             $mdDialog.show({
-                controller: dashboardComponentsTypesData[item.type].editorController,
-                templateUrl: dashboardComponentsTypesData[item.type].editorTemplateUrl,
+                controller: dashboardComponentsTypesData[itemType].editorController,
+                templateUrl: dashboardComponentsTypesData[itemType].editorTemplateUrl,
                 targetEvent: $event,
                 multiple: true,
                 autoWrap: true,
