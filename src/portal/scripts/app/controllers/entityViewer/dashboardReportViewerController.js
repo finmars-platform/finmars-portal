@@ -407,7 +407,7 @@
             return false; // No changes detected
         }
 
-        vm.applyDashboardLayoutState = function (){
+        vm.applyDashboardLayoutState = function () {
 
             var componentsOutputs = vm.dashboardDataService.getLayoutState();
 
@@ -427,33 +427,47 @@
 
                     var layoutState = vm.dashboardDataService.getLayoutState();
 
-
                     if (vm.componentData.settings.linked_components.report_settings) {
 
                         var reportOptions = vm.entityViewerDataService.getReportOptions();
 
+                        // Because report could listen both to matrix and controls
+                        // when user click on matrix it trigger change,
+                        // but here we handle both changes, so we need extra check for ReportSettings change
+                        // to ensure that we need to reset Report
+
+                        var reportOptionsChange = false
 
                         Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (key) {
 
                             var mapValue = vm.componentData.settings.linked_components.report_settings[key]
 
-                            reportOptions[key] = layoutState[mapValue];
+                            if (!isEqual(reportOptions[key], layoutState[mapValue])) {
+                                reportOptions[key] = layoutState[mapValue];
+                                reportOptionsChange = true
+                            }
 
                         })
 
-                        console.log('DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.detect_report_settings_change.RESET_TABLE');
+                        if (reportOptionsChange) {
 
-                        vm.processing = true;
+                            console.log('DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.detect_report_settings_change.RESET_TABLE');
 
-                        vm.entityViewerDataService.resetTableContent(true);
+                            vm.processing = true;
 
-                        var reportOptions = vm.entityViewerDataService.getReportOptions()
+                            vm.entityViewerDataService.resetTableContent(true);
 
-                        if (reportOptions) {
-                            reportOptions.report_instance_id = null // if clear report_instance_id then we request new Report Calculation
+                            var reportOptions = vm.entityViewerDataService.getReportOptions()
+
+                            if (reportOptions) {
+                                reportOptions.report_instance_id = null // if clear report_instance_id then we request new Report Calculation
+                            }
+
+                            vm.entityViewerDataService.setReportOptions(reportOptions);
+                            vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+
                         }
-                        vm.entityViewerDataService.setReportOptions(reportOptions);
-                        vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+
 
                     }
 
@@ -519,21 +533,6 @@
             vm.entityViewerEventService.addEventListener(evEvents.REQUEST_REPORT, function () {
 
                 rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
-
-            });
-
-            vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_START, function () {
-
-                vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
-
-                vm.entityViewerDataService.setDataLoadStatus(false);
-
-                if (!fillInModeEnabled) {
-
-                    vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.PROCESSING);
-                    vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                }
 
             });
 
@@ -831,7 +830,6 @@
             vm.attributeDataService = new AttributeDataService(metaContentTypesService, customFieldService, attributeTypeService, uiService);
 
             //console.log('$scope.$parent.vm.componentData', $scope.$parent.vm.componentData);
-
 
 
             setDataFromDashboard();
