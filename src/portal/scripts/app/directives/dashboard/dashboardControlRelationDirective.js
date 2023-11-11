@@ -7,9 +7,13 @@
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
     var directivesEvents = require('../../services/events/directivesEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
-    var expressionService = require('../../services/expression.service');
 
     var EventService = require('../../services/eventService');
+    var expressionService = require('../../services/expression.service');
+
+    // Control picker for date is deprecated here
+    // moved to dashboardControlDateDirective to reduce complexity of this code
+    // FN-2320 2023-11-10 szhitenev
 
     module.exports = function (metaContentTypesService, entityResolverService, uiService, reportHelper) {
         return {
@@ -22,10 +26,77 @@
                 dashboardDataService: '=',
                 dashboardEventService: '=',
             },
-            templateUrl: 'views/directives/dashboard/dashboard-control-date-view.html',
+            templateUrl: 'views/directives/dashboard/dashboard-control-relation-view.html',
             link: function (scope, elem, attr) {
 
-                scope.processing = false;
+                scope.selOptions = [];
+                scope.entityType = null;
+
+                scope.entityData = {
+                    value: null
+                }
+
+                scope.selectorType = null;
+
+
+                scope.getEntityTypeByContentType = function (contentType) {
+                    return metaContentTypesService.findEntityByContentType(contentType);
+                };
+
+                let entitiesList = [];
+
+                scope.getOptionsForSelectors = async function () {
+
+                    entitiesList = [];
+                    scope.selOptions = [];
+
+                    const args = [
+                        scope.entityType,
+                        {
+                            pageSize: 1000,
+                            page: 1,
+                        },
+                    ];
+
+                    entitiesList = await metaService.loadDataFromAllPages(
+                        entityResolverService.getListLight,
+                        args
+                    );
+
+                    scope.selOptions = entitiesList.map(entity => {
+                        return {id: entity.user_code, name: entity.short_name}
+                    })
+
+                    scope.$apply(function () {
+
+                        setTimeout(function () {
+                            $(elem).find('.md-select-search-pattern').on('keydown', function (ev) {
+                                ev.stopPropagation();
+                            });
+                        }, 100);
+
+                    });
+
+                };
+
+                /** Load options for multi selector when it is opened */
+                scope.getDataForMultiselect = function () {
+
+                    return new Promise(function (resolve, reject) {
+
+                        entityResolverService.getList(scope.entityType, {pageSize: 1000}).then(function (data) {
+
+                            var options = data.results.map(function (item) {
+                                return {id: item.user_code, name: item.short_name};
+                            });
+
+                            resolve(options);
+
+                        }).catch(function (e) {
+                            reject(e);
+                        });
+                    })
+                };
 
                 scope.valueChanged = function (changedValue) {
 
@@ -39,24 +110,27 @@
 
                 };
 
-                function getTodaysDate() {
-                    const today = new Date();
-                    const year = today.getFullYear();
-                    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-                    const day = String(today.getDate()).padStart(2, '0');
-
-                    return `${year}-${month}-${day}`;
-                }
-
+                // This is component init itself
                 const initComponent = async function () {
 
                     scope.processing = true;
 
                     scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+                    scope.entityType = scope.getEntityTypeByContentType(scope.componentData.settings.content_type);
+
+                    scope.selectorType = entityResolverService.getSelectByEntityType(scope.entityType);
+
+                    // TODO WTF for currency special select? Need discussion
+                    if (scope.entityType === 'currency') {
+                        scope.selectorType = 'dropdownSelect';
+                    }
+
+                    await scope.getOptionsForSelectors();
 
                     scope.buttons = [];
 
                     if (!scope.item.data.store) scope.item.data.store = {};
+
 
 
                     if (!scope.item.data.store.value) {
@@ -84,9 +158,9 @@
 
                             }).catch(function (error) {
 
-                                console.log("dashboard.control.date.invalid_expression", error)
+                                console.log("dashboard.control.relation.invalid_expression", error)
 
-                                scope.item.data.store.value = getTodaysDate();
+                                scope.item.data.store.value = null;
 
                                 scope.dashboardDataService.setComponentOutput(scope.componentData.user_code, scope.item.data.store.value);
 
@@ -99,7 +173,11 @@
 
                         } else {
 
-                            scope.item.data.store.value = getTodaysDate();
+                            if (scope.componentData.settings.multiple) {
+                                scope.item.data.store.value = [];
+                            } else {
+                                scope.item.data.store.value = null;
+                            }
                             scope.dashboardDataService.setComponentOutput(scope.componentData.user_code, scope.item.data.store.value);
 
                             scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
@@ -118,7 +196,6 @@
 
                         scope.processing = false;
                     }
-
 
                 };
 
@@ -146,20 +223,20 @@
 
                     });
 
-                    scope.dashboardEventService.addEventListener(dashboardEvents.DASHBOARD_STATE_CHANGE, function () {
-
-                        var value = scope.dashboardDataService.getComponentOutput(scope.componentData.user_code)
-
-                        scope.item.data.store.value = value;
-
-                    })
-
                     scope.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
 
                         scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.PROCESSING);
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                         initComponent();
+
+                    })
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.DASHBOARD_STATE_CHANGE, function () {
+
+                        var value = scope.dashboardDataService.getComponentOutput(scope.componentData.user_code)
+
+                        scope.item.data.store.value = value;
 
                     })
 

@@ -5,6 +5,8 @@
 
     'use strict';
 
+    var dashboardEvents = require('../../services/dashboard/dashboardEvents');
+
     module.exports = function ($scope, $mdDialog, data) {
 
         var vm = this;
@@ -12,13 +14,18 @@
         vm.dashboardDataService = data.dashboardDataService;
         vm.dashboardEventService = data.dashboardEventService;
 
-        vm.state = JSON.stringify(vm.dashboardDataService.getAllComponentsOutputs(), null, 4);
+        vm.state = JSON.stringify(vm.dashboardDataService.getLayoutState(), null, 4);
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
 
         vm.agree = function (responseData) {
+
+            vm.dashboardDataService.setLayoutState(JSON.parse(vm.state))
+
+            vm.dashboardEventService.dispatchEvent(dashboardEvents.DASHBOARD_STATE_CHANGE);
+            vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL);
 
             $mdDialog.hide({status: 'agree', data: {}});
 
