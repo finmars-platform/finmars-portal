@@ -3,6 +3,7 @@ const EntityViewerEventService = require("../../services/eventService");
 const AttributeDataService = require("../../services/attributeDataService");
 const dashboardEvents = require("../../services/dashboard/dashboardEvents");
 const dashboardComponentStatuses = require("../../services/dashboard/dashboardComponentStatuses");
+const evEvents = require("../../services/entityViewerEvents");
 (function () {
 
     'use strict';
@@ -198,13 +199,24 @@ const dashboardComponentStatuses = require("../../services/dashboard/dashboardCo
 
                     };
 
-
                     scope.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
 
                         scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
                         scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                     })
+
+                    scope.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
+
+                        var activeObject = scope.entityViewerDataService.getActiveObject();
+
+                        scope.dashboardDataService.setComponentOutput(scope.componentData.user_code, activeObject);
+
+                        scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id);
+                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_OUTPUT_CHANGE);
+
+                    })
+
 
                     setTimeout(function () {
                         scope.readyStatus.data = 'ready';
@@ -213,12 +225,25 @@ const dashboardComponentStatuses = require("../../services/dashboard/dashboardCo
 
                 };
 
+                // TODO move that func somwhere to utils
+                function hasStateChanged(oldState, newState, fieldsToCompare) {
+                    for (let i = 0; i < fieldsToCompare.length; i++) {
+                        const field = fieldsToCompare[i];
+                        if (oldState[field] !== newState[field]) {
+                            return true; // Change detected
+                        }
+                    }
+                    return false; // No changes detected
+                }
+
                 scope.dashboardInit = function () {
 
                     // Component put himself in INIT Status
                     // so that dashboard manager can start processing it
                     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    scope.lastSavedOutput = scope.dashboardDataService.getLayoutState();
 
 
                     scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
@@ -243,7 +268,15 @@ const dashboardComponentStatuses = require("../../services/dashboard/dashboardCo
 
                     scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_CHANGE, function () {
 
-                        scope.init();
+                        var componentsOutputs = scope.dashboardDataService.getLayoutState();
+
+                        var changed = hasStateChanged(scope.lastSavedOutput, componentsOutputs, scope.componentData.settings.components_to_listen)
+
+                        if (changed) {
+                            scope.init();
+                        }
+
+                        scope.lastSavedOutput = componentsOutputs
 
                     });
 

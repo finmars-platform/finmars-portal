@@ -41,6 +41,17 @@
                 scope.retryCount = 0;
                 scope.maxRetries = 10;
 
+                // TODO move that func somwhere to utils
+                function hasStateChanged(oldState, newState, fieldsToCompare) {
+                    for (let i = 0; i < fieldsToCompare.length; i++) {
+                        const field = fieldsToCompare[i];
+                        if (oldState[field] !== newState[field]) {
+                            return true; // Change detected
+                        }
+                    }
+                    return false; // No changes detected
+                }
+
                 var componentData;
                 var componentElem = elem[0].querySelector('.dashboardComponent');
 
@@ -125,9 +136,13 @@
 
                         console.log('apexChart.COMPONENT_OUTPUT_CHANGE', JSON.stringify(componentsOutputs, null, 4));
 
-                        scope.initChart({
-                            outputs: componentsOutputs
-                        })
+                        var changed = hasStateChanged(scope.lastSavedOutput, componentsOutputs, scope.componentData.settings.components_to_listen)
+
+                        if (changed) {
+                            scope.initChart({
+                                outputs: componentsOutputs
+                            })
+                        }
 
                     });
 
