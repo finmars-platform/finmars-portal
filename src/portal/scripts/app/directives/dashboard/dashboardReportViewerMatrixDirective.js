@@ -1,3 +1,8 @@
+const EntityViewerDataService = require("../../services/entityViewerDataService");
+const EntityViewerEventService = require("../../services/eventService");
+const AttributeDataService = require("../../services/attributeDataService");
+const dashboardEvents = require("../../services/dashboard/dashboardEvents");
+const dashboardComponentStatuses = require("../../services/dashboard/dashboardComponentStatuses");
 (function () {
 
     'use strict';
@@ -11,7 +16,7 @@
 
     const localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
-    module.exports = function ($mdDialog, uiService, dashboardHelper, metaContentTypesService) {
+    module.exports = function ($mdDialog, uiService, dashboardHelper, metaContentTypesService, reportHelper) {
         return {
             restriction: 'E',
             templateUrl: 'views/directives/dashboard/dashboard-report-viewer-matrix-view.html',
@@ -34,50 +39,6 @@
                 scope.dashboardComponentDataService = new DashboardComponentDataService;
                 scope.dashboardComponentEventService = new DashboardComponentEventService;
 
-                var componentData;
-                var componentElem = elem[0].querySelector('.dashboardComponent');
-
-                if (scope.item && scope.item.data) {
-
-                    componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
-
-                    if (componentData.custom_component_name) {
-                        scope.customName = componentData.custom_component_name;
-                    }
-
-                }
-
-                if (componentData && !componentData.settings.filters) {
-                    componentData.settings.filters = {
-                        show_filters_area: false,
-                        show_use_from_above_filters: false,
-                    }
-                }
-
-                scope.showFiltersArea = componentData.settings.filters.show_filters_area;
-                scope.showUseFromAboveFilters = componentData.settings.filters.show_use_from_above_filters;
-
-                let contentType = metaContentTypesService.findContentTypeByEntity(componentData.settings.entity_type);
-
-                scope.vm = {
-                    tabNumber: scope.tabNumber,
-                    rowNumber: scope.rowNumber,
-                    columnNumber: scope.columnNumber,
-                    componentData: componentData,
-                    entityType: componentData.settings.entity_type,
-                    contentType: contentType,
-                    componentElement: componentElem,
-                    dashboardDataService: scope.dashboardDataService,
-                    dashboardEventService: scope.dashboardEventService,
-                    dashboardComponentDataService: scope.dashboardComponentDataService,
-                    dashboardComponentEventService: scope.dashboardComponentEventService
-                };
-
-                if (scope.fillInModeData) {
-                    scope.vm.entityViewerDataService = scope.fillInModeData.entityViewerDataService;
-                    scope.vm.attributeDataService = scope.fillInModeData.attributeDataService;
-                }
-
                 scope.openComponentSettingsDialog = function ($event) {
 
                     //var attributeDataService = scope.dashboardComponentDataService.getAttributeDataService();
@@ -91,7 +52,7 @@
                         autoWrap: true,
                         multiple: true,
                         locals: {
-                            item: scope.vm.componentData,
+                            item: scope.componentData,
                             data: {
                                 dashboardComponents: dashboardComponents
                             }
@@ -100,181 +61,19 @@
 
                         if (res.status === 'agree') {
 
-                            componentData = res.data.item;
+                            scope.componentData = res.data.item;
 
-                            scope.vm.componentData = componentData;
-                            scope.vm.entityType = componentData.settings.entity_type;
-                            contentType = metaContentTypesService.findContentTypeByEntity(componentData.settings.entity_type);
-
-                            if (componentData.custom_component_name) {
-                                scope.customName = componentData.custom_component_name;
-                            } else {
-                                scope.customName = null;
-                            }
-
-                            scope.dashboardDataService.updateComponent(componentData);
-
-                            /*if (scope.fillInModeData) { // Reloading corresponding component inside tabs from it's filled in copy
-                                scope.fillInModeData.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
-                            }*/
+                            scope.dashboardDataService.updateComponent(scope.componentData);
 
                             if (res.action === 'save') {
-                                dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData, true);
+                                dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, scope.componentData, true);
                             }
 
-                            if (scope.fillInModeData) {
-
-                                scope.fillInModeData.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
-                                scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                                scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                            } else {
-
-                                scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
-                                scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                                scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                            }
-
-                            scope.disableFillInMode();
-
-                            /*scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
-                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);*/
-
-                        }
-
-                    })
-
-                };
-
-                scope.enableFillInMode = function () {
-
-                    var entityViewerDataService = scope.vm.dashboardComponentDataService.getEntityViewerDataService();
-                    var attributeDataService = scope.vm.dashboardComponentDataService.getAttributeDataService();
-
-                    scope.fillInModeData = {
-                        tab_number: scope.tabNumber,
-                        row_number: scope.rowNumber,
-                        column_number: scope.columnNumber,
-                        item: scope.item,
-                        entityViewerDataService: entityViewerDataService,
-                        attributeDataService: attributeDataService,
-                        dashboardComponentEventService: scope.dashboardComponentEventService // needed to update component inside tabs
-                    }
-
-                };
-
-                scope.disableFillInMode = function () {
-                    scope.fillInModeData = null;
-                };
-
-                scope.clearUseFromAboveFilters = function () {
-                    scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
-                };
-
-                scope.toggleFilterBlock = function () {
-                    dashboardHelper.toggleFilterBlock(scope);
-                };
-
-                // TODO refactor
-                scope.initEventListeners = function () {
-
-                    dashboardHelper.initEventListeners(scope);
-
-                    if (!scope.fillInModeData) {
-
-                        scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
-
-                            var status = scope.dashboardDataService.getComponentStatus(scope.item.data.id);
-
-                            if (status === dashboardComponentStatuses.START) { // Init calculation of a component
-
-                                scope.readyStatus.data = 'ready';
-
-                                setTimeout(function () {
-                                    scope.$apply();
-                                },0)
-
-                            } else if (status === dashboardComponentStatuses.ERROR) {
-
-                                scope.compErrorMessage = 'ERROR';
-                                var componentError = scope.dashboardDataService.getComponentError(scope.item.data.id);
-
-                                if (componentError) {
-                                    scope.compErrorMessage = 'ERROR: ' + componentError.displayMessage;
-                                }
-
-                                scope.readyStatus.data = 'error';
-
-                                setTimeout(function () {
-                                    scope.$apply();
-                                },0)
-
-                            }
-
-                        });
-
-                        /* May be needed for FN-1090
-                        scope.dashboardEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
                             scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
-                        })
-                        */
+                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-                    }
-
-                    //<editor-fold desc="Dashboard component events">
-                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
-
-                        if (scope.item && scope.item.data) {
-                            componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
-
-                            if (componentData.custom_component_name) {
-                                scope.customName = componentData.custom_component_name;
-                            }
                         }
-
-                        scope.vm.componentData = componentData;
-                        scope.vm.entityType = componentData.settings.entity_type;
-                        contentType = metaContentTypesService.findContentTypeByEntity(componentData.settings.entity_type);
-
-                        scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_CONTENT_OF_COMPONENT);
-
-                    });
-
-                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.REPORT_VIEWER_DATA_SERVICE_SET, function () {
-
-                        var entityViewerDataService = scope.dashboardComponentDataService.getEntityViewerDataService();
-                        var entityViewerEventService = scope.dashboardComponentDataService.getEntityViewerEventService();
-
-                        scope.missingPricesData = entityViewerDataService.getMissingPrices();
-
-                        entityViewerEventService.addEventListener(evEvents.MISSING_PRICES_LOAD_END, function () {
-
-                            scope.missingPricesData = entityViewerDataService.getMissingPrices()
-
-                        });
-
-                    });
-
-                    /* scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_DATA_CHANGED_INSIDE, function () {
-
-                    }); */
-                    //</editor-fold>
-
-                    scope.dashboardComponentEventService.addEventListener(dashboardEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS, function () {
-
-                        scope.showUseFromAboveFilters = !scope.showUseFromAboveFilters;
-
-                        const id = scope.vm.componentData.id;
-                        const components = scope.dashboardDataService.getComponents();
-                        const currentComponent = components.find(component => component.id === id);
-
-                        if (currentComponent) {
-                            currentComponent.settings.filters.show_use_from_above_filters = scope.showUseFromAboveFilters;
-                        }
-
-                        scope.dashboardDataService.setComponents(components);
 
                     })
 
@@ -297,149 +96,120 @@
 
                 };
 
-                // Victor 2021.05.27 #113 number format from report layout
-                /* const getLayoutById = async function (layoutId) {
-
-                    return new Promise(function (resolve, reject) {
-
-                        let actualLayoutsIds = scope.dashboardDataService.getCachedLayoutsData();
-
-                        if (actualLayoutsIds.includes(layoutId)) {
-
-                            let cachedLayout = localStorageService.getCachedLayout(layoutId);
-                            resolve(cachedLayout);
-
-                        } else {
-
-                            uiService.getListLayoutByKey(layoutId).then(function (layoutData) {
-
-                                scope.dashboardDataService.setCachedLayoutsData();
-                                resolve(layoutData);
-
-                            }).catch(function (error) {
-                                reject(error);
-                            });
-
-                        }
-
-                    });
-
-                }; */
-                const getLayoutByUserCode = function () {
-
-                    const userCode = componentData.settings.layout;
-                    const cachedLayoutsData = scope.dashboardDataService.getCachedLayoutsData();
-
-                    if (!cachedLayoutsData[contentType]) {
-                        cachedLayoutsData[contentType] = {};
-                    }
-
-                    if (cachedLayoutsData[contentType].hasOwnProperty(userCode)) {
-
-                        const layoutId = cachedLayoutsData[contentType][userCode];
-
-                        return new Promise(function (resolve) {
-                            resolve(localStorageService.getCachedLayout(layoutId));
-                        });
-
-                    } else {
-
-                        return new Promise(function (resolve, reject) {
-
-                            uiService.getListLayoutByUserCode(scope.vm.entityType, userCode).then(function (resData) {
-
-                                if (resData.results.length) {
-
-                                    var layoutData = resData.results[0];
-
-                                    scope.dashboardDataService.setCachedLayoutsData(contentType, userCode, layoutData.id);
-
-                                    resolve(layoutData);
-
-                                }
-
-                            }).catch(function (error) {
-                                reject(error);
-                            });
-
-                        });
-
-                    }
-
-                };
-
-                const getNumberFormatFromLayoutByValueKey = () => {
-
-                    return new Promise(function (resolve, reject) {
-
-                        const defaultNumberFormat = {
-                            negative_color_format_id: 0,
-                            negative_format_id: 0,
-                            percentage_format_id: 0,
-                            round_format_id: 0,
-                            thousands_separator_format_id: 0,
-                            zero_format_id: 0,
-                        };
-
-                        // const layoutData = await getLayoutById(layoutId);
-                        getLayoutByUserCode().then(function (layoutData) {
-
-                            const columns = layoutData.data.columns;
-
-                            const valueKey = componentData.settings.value_key;
-                            const matrixValue = columns.find(column => column.key === valueKey);
-
-                            var result = matrixValue ? matrixValue.report_settings : defaultNumberFormat;
-
-                            resolve(result);
-
-                        })
-
-                    })
-
-                }
-                // <Victor 2021.05.27 #113 number format from report layout>
-
                 scope.init = function () {
 
                     console.log("DASHBOARD.MATRIX.INIT")
 
                     scope.readyStatus.data = 'processing'
 
-                    // Victor 2021.05.27 #113 number format from report layout
-                    /*const layoutUserCode = componentData.settings.layout;
-                    const valueKey = componentData.settings.value_key;*/
+                    scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
 
-                    // if (!componentData.settings.number_format) {
-                    //     componentData.settings.number_format = getNumberFormatFromLayoutByValueKey();
-                    //    TODO 2023-08-23 szhitenev maybe not needed?
-                    // }
-                    // <Victor 2021.05.27 #113 number format from report layout>
+                    scope.showFiltersArea = scope.componentData.settings.filters.show_filters_area;
+                    scope.showUseFromAboveFilters = scope.componentData.settings.filters.show_use_from_above_filters;
 
-                    // scope.initEventListeners();
+                    if (scope.componentData && !scope.componentData.settings.filters) {
+                        scope.componentData.settings.filters = {
+                            show_filters_area: false,
+                            show_use_from_above_filters: false,
+                        }
+                    }
 
-                    // if (!scope.fillInModeData) {
-                    //
-                    //     scope.readyStatus.data = 'ready';
-                    //
-                    //     scope.dashboardDataService.setComponentRefreshRestriction(scope.item.data.id, false);
-                    //
-                    //     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                    //     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                    //
-                    // } else {
-                    //     scope.readyStatus.data = 'ready';
-                    //
-                    //     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                    //     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                    //
-                    // }
+                    scope.entityViewerDataService = new EntityViewerDataService(reportHelper);
+                    scope.entityViewerEventService = new EntityViewerEventService();
+
+                    if (scope.componentData.settings.matrix_type == 'balance') {
+                        scope.entityViewerDataService.setEntityType('balance-report')
+                    }
+
+                    if (scope.componentData.settings.matrix_type == 'pl') {
+                        scope.entityViewerDataService.setEntityType('pl-report')
+
+                    }
+
+                    // Settings columns, because API returns only requested columns
+                    scope.entityViewerDataService.setColumns([
+                        {
+                            name: scope.componentData.settings.abscissa,
+                            key: scope.componentData.settings.abscissa,
+                            value_type: 10 // maybe bad idea
+                        },
+                        {
+                            name: scope.componentData.settings.ordinate,
+                            key: scope.componentData.settings.ordinate,
+                            value_type: 10
+                        },
+                        {
+                            name: scope.componentData.settings.value_key,
+                            key: scope.componentData.settings.value_key,
+                            value_type: 20,
+                            report_settings: { // do not remove, very important, TODO refactor later
+                                "subtotal_formula_id": 1
+                            }
+                        }
+                    ])
+
+                    scope.reportOptions = scope.componentData.settings.default_report_options || {}
+
+                    // TODO some shady logic here, consider refactor
+                    if (scope.componentData.settings.linked_components) {
+
+                        if (scope.componentData.settings.linked_components.report_settings) {
+
+                            var layoutState = scope.dashboardDataService.getLayoutState();
+
+                            Object.keys(scope.componentData.settings.linked_components.report_settings).forEach(function (key) {
+
+                                var mapValue = scope.componentData.settings.linked_components.report_settings[key]
+
+                                scope.reportOptions[key] = layoutState[mapValue];
+
+                            })
+
+                        }
+
+                    }
+
+                    delete scope.reportOptions.report_instance_id
+
+                    console.log('dashboard.matrix.scope.reportOptions', scope.reportOptions);
+
+                    scope.entityViewerDataService.setReportOptions(scope.reportOptions); // settings empty object
+
+                    scope.matrixSettings = {
+
+                        top_left_title: scope.componentData.settings.top_left_title,
+
+                        abscissa: scope.componentData.settings.abscissa,
+                        ordinate: scope.componentData.settings.ordinate,
+                        value_key: scope.componentData.settings.value_key,
+                        available_abscissa_keys: scope.componentData.user_settings.available_abscissa_keys,
+                        available_ordinate_keys: scope.componentData.user_settings.available_ordinate_keys,
+                        available_value_keys: scope.componentData.user_settings.available_value_keys,
+
+                        number_format: scope.componentData.settings.number_format,
+                        subtotal_formula_id: scope.componentData.settings.subtotal_formula_id,
+
+                        matrix_view: scope.componentData.settings.matrix_view, // DEPRECATED possibly
+
+                        styles: scope.componentData.settings.styles,
+                        auto_scaling: scope.componentData.settings.auto_scaling,
+                        calculate_name_column_width: scope.componentData.settings.calculate_name_column_width,
+                        hide_empty_lines: scope.componentData.settings.hide_empty_lines
+
+                    };
+
+
+                    scope.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+
+                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    })
 
                     setTimeout(function () {
                         scope.readyStatus.data = 'ready';
                         scope.$apply();
                     }, 1000)
-
 
                 };
 
@@ -470,6 +240,12 @@
                         scope.init();
 
                     })
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_CHANGE, function () {
+
+                        scope.init();
+
+                    });
 
                 }
 
