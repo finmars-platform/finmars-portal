@@ -580,7 +580,7 @@
 
         };
 
-        vm.getView = function () {
+        vm.getView = async function () {
 
             // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
 
@@ -602,7 +602,10 @@
 
             vm.entityViewerDataService.setViewContext('dashboard');
 
-            var downloadAttrsPromise = sharedLogicHelper.downloadAttributes();
+            await sharedLogicHelper.downloadAttributes();
+
+            console.log("dashboard.report_viewer.attributes_downloaded")
+
             vm.setEventListeners();
 
             sharedLogicHelper.setLayoutDataForView();
@@ -612,7 +615,7 @@
             // var layoutId = vm.componentData.settings.layout;
             var layoutUc = vm.componentData.settings.layout;
 
-            var setLayoutPromise = new Promise(function (resolve, reject) {
+            await new Promise(function (resolve, reject) {
 
                 getLayoutByUserCode(layoutUc).then(function (data) {
                     // vm.layout = data;
@@ -718,7 +721,19 @@
 
             });
 
-            Promise.all([downloadAttrsPromise, setLayoutPromise]).then(function () {
+            vm.dashboardComponentDataService.setEntityViewerDataService(vm.entityViewerDataService);
+            vm.dashboardComponentDataService.setEntityViewerEventService(vm.entityViewerEventService);
+
+            vm.dashboardComponentDataService.setAttributeDataService(vm.attributeDataService);
+            vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.ATTRIBUTE_DATA_SERVICE_INITIALIZED);
+            vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.REPORT_VIEWER_DATA_SERVICE_SET);
+
+            var columns = vm.entityViewerDataService.getColumns();
+            vm.dashboardComponentDataService.setViewerTableColumns(columns);
+
+            $scope.$apply();
+
+            /*Promise.all([downloadAttrsPromise, setLayoutPromise]).then(function () {
 
                 vm.dashboardComponentDataService.setEntityViewerDataService(vm.entityViewerDataService);
                 vm.dashboardComponentDataService.setEntityViewerEventService(vm.entityViewerEventService);
@@ -742,7 +757,7 @@
                 vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ERROR);
                 vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
                 console.error("Dashboard component that uses report viewer error", error);
-            });
+            });*/
 
         };
 
