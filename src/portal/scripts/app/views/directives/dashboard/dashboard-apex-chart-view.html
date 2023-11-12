@@ -7,31 +7,13 @@
 
             <div class="dashboard-component-header-left">
 
-                <div ng-if="customName || (item && item.data.name)" class="dashboard-component-name">
-                    <span class data-ng-if="customName" title="{{customName}}" data-ng-bind="customName"></span>
-                    <span data-ng-if="!customName && item" title="{{item.data.name}}"
-                          data-ng-bind="item.data.name"></span>
+                <div class="dashboard-component-name">
+                    <span title="{{item.data.name}}" data-ng-bind="item.data.name"></span>
                 </div>
 
 
             </div>
 
-
-<!--            <div class="dashboard-component-header-right">-->
-
-<!--                <md-button data-ng-click="initChart({outputs: lastSavedOutput})"-->
-<!--                           class="dashboard-comp-h-btn">-->
-<!--                    <ng-md-icon size="20" icon="refresh"></ng-md-icon>-->
-<!--                    <md-tooltip data-md-direction="top">Refresh</md-tooltip>-->
-<!--                </md-button>-->
-
-<!--                <md-button data-ng-click="clearLastSavedOutput()"-->
-<!--                           class="dashboard-comp-h-btn">-->
-<!--                    <ng-md-icon size="20" icon="pie_chart_outline"></ng-md-icon>-->
-<!--                    <md-tooltip data-md-direction="top">Clear Modifiers</md-tooltip>-->
-<!--                </md-button>-->
-
-<!--            </div>-->
         </div>
 
         <div class="dashboard-component-body" flex="grow">
