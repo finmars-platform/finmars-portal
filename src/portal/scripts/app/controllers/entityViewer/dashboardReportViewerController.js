@@ -217,15 +217,6 @@
 
         function hasStateChanged(oldState, newState, fieldsToCompare) {
 
-            if (!fieldsToCompare) {
-                return false
-            }
-
-            // if (!Array.isArray(fieldsToCompare)) {
-            //     console.error('fieldsToCompare is not an array:', fieldsToCompare);
-            //     return false;
-            // }
-
             for (const field of fieldsToCompare) {
                 if (!isEqual(oldState[field], newState[field])) {
                     return true; // Change detected
