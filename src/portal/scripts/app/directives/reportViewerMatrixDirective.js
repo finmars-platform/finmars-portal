@@ -384,7 +384,13 @@
 
                 var scrollHeaderAndColumn = function () {
                     rvmHeaderScrollableRow.style.left = -bodyScrollElem.scrollLeft + 'px';
+                    const columnsCount = scope.columns.length + 2;
+
+                    const {cellWidth, nameColWidth} = getCellWidth(columnsCount);
+
+
                     if (rvmBottomRowScrollableElem) {
+
                         rvmBottomRowScrollableElem.style.left = (nameColWidth - bodyScrollElem.scrollLeft) + 'px';
                     }
 
@@ -589,6 +595,8 @@
 
                             var promises = []
 
+                            scope.grandtotal = 0
+
                             firstLevelGroups.forEach(function (group) {
 
                                 options = {
@@ -608,6 +616,9 @@
                                 }
 
                                 promises.push(groupsService.getList(options, scope.evDataService))
+
+
+                                scope.grandtotal = scope.grandtotal + group.subtotal[scope.matrixSettings.value_key]
 
                             })
 
@@ -729,27 +740,6 @@
                     })
 
                 };
-
-                // var buildMatrix = function () {
-                //
-                //
-                //
-                //     // scope.matrix = reportViewerMatrixHelper.getMatrix(itemList,
-                //     //     scope.rows,
-                //     //     scope.columns,
-                //     //     scope.matrixSettings.ordinate,
-                //     //     scope.matrixSettings.abscissa,
-                //     //     scope.matrixSettings.value_key,
-                //     //     scope.matrixSettings.subtotal_formula_id);
-                //
-                //     /*scope.totals = reportViewerMatrixHelper.getMatrixTotals(scope.matrix, itemList);*/
-                //     scope.grandtotal = 0;
-                //
-                //     scope.columns.forEach(function (column) {
-                //         scope.grandtotal += column.total;
-                //     })
-                //
-                // };
 
                 scope.createMatrix = function () {
 
