@@ -217,10 +217,14 @@
 
         function hasStateChanged(oldState, newState, fieldsToCompare) {
 
-            if (!Array.isArray(fieldsToCompare)) {
-                console.error('fieldsToCompare is not an array:', fieldsToCompare);
-                return false;
+            if (!fieldsToCompare) {
+                return false
             }
+
+            // if (!Array.isArray(fieldsToCompare)) {
+            //     console.error('fieldsToCompare is not an array:', fieldsToCompare);
+            //     return false;
+            // }
 
             for (const field of fieldsToCompare) {
                 if (!isEqual(oldState[field], newState[field])) {
@@ -228,6 +232,11 @@
                 }
             }
             return false; // No changes detected
+        }
+
+        vm.setDashboardComponentToActive = function () {
+            vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ACTIVE);
+            vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
         }
 
         vm.applyDashboardLayoutState = function () {
@@ -267,10 +276,12 @@
 
                         // In case of transaction report we must have active object from above
                         if (!vm.componentData.settings.linked_components.active_object) {
+                            vm.setDashboardComponentToActive();
                             return
                         }
 
                         if (!vm.componentData.settings.linked_components.active_object.length) {
+                            vm.setDashboardComponentToActive();
                             return
                         }
 
@@ -278,6 +289,7 @@
                         var activeObjectData = layoutState[key]
 
                         if (!activeObjectData) {
+                            vm.setDashboardComponentToActive();
                             return
                         }
 
@@ -745,11 +757,10 @@
 
         };
 
-        vm.init = function () {
+        vm.init = async function () {
 
-            vm.getCurrentMember().then(function () {
-                vm.getView();
-            })
+            await vm.getCurrentMember()
+            await vm.getView();
 
         };
 
