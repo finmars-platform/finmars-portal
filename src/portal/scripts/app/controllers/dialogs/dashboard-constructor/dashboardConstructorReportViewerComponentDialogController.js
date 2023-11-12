@@ -497,7 +497,12 @@
             if (vm.item.settings.entity_type) {
                 vm.getLayouts().then(function (data) {
 
-                    vm.layoutsWithLinkToFilters = data;
+                    vm.layoutsWithLinkToFilters = data.map(function (item) {
+
+                        item.id = item.user_code
+
+                        return item
+                    });
 
                     vm.item.user_settings.columns = JSON.parse(JSON.stringify(vm.tableColumns));
                     vm.smallRvColumnsChanged();
