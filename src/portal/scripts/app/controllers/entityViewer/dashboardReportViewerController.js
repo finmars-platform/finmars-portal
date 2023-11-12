@@ -538,45 +538,29 @@
 
         let getLayoutByUserCode = function (userCode) {
 
-            const cachedLayoutsData = vm.dashboardDataService.getCachedLayoutsData();
+            // No cache here
 
-            if (!cachedLayoutsData[contentType]) {
-                cachedLayoutsData[contentType] = {};
-            }
+            return new Promise(function (resolve, reject) {
 
-            if (cachedLayoutsData[contentType].hasOwnProperty(userCode)) {
+                uiService.getListLayoutByUserCode(vm.entityType, userCode).then(function (resData) {
 
-                const layoutId = cachedLayoutsData[contentType][userCode];
+                    if (resData.results.length) {
 
-                return new Promise(function (resolve) {
-                    resolve(localStorageService.getCachedLayout(layoutId));
+                        var layoutData = resData.results[0];
+
+                        // vm.dashboardDataService.setCachedLayoutsData(contentType, userCode, layoutData.id);
+
+                        resolve(layoutData);
+
+                    } else {
+                        reject(`No layout with user code: ${userCode} found.`);
+                    }
+
+                }).catch(function (error) {
+                    reject(error);
                 });
 
-            } else {
-
-                return new Promise(function (resolve, reject) {
-
-                    uiService.getListLayoutByUserCode(vm.entityType, userCode).then(function (resData) {
-
-                        if (resData.results.length) {
-
-                            var layoutData = resData.results[0];
-
-                            vm.dashboardDataService.setCachedLayoutsData(contentType, userCode, layoutData.id);
-
-                            resolve(layoutData);
-
-                        } else {
-                            reject(`No layout with user code: ${userCode} found.`);
-                        }
-
-                    }).catch(function (error) {
-                        reject(error);
-                    });
-
-                });
-
-            }
+            });
 
         };
 
