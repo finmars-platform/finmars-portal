@@ -19,6 +19,7 @@
             link: function (scope, elem, attrs, gFiltersVm) {
 
                 scope.entityType = gFiltersVm.entityType;
+                scope.viewContext = scope.evDataService.getViewContext();
                 scope.isReport = true;
                 scope.processing = false;
                 scope.isRootEntityViewer = scope.evDataService.isRootEntityViewer();
@@ -529,6 +530,67 @@
                     })
 
                 };
+
+                var openReportSettings = function ($event) {
+
+                    // var reportOptions = scope.evDataService.getReportOptions();
+
+                    $mdDialog.show({
+                        controller: 'GReportSettingsDialogController as vm',
+                        templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        multiple: true,
+                        locals: {
+                            /*reportOptions: reportOptions,
+                            options: {
+                                entityType: scope.entityType
+                            }*/
+                            data: {
+                                evDataService: scope.evDataService,
+                                evEventService: scope.evEventService,
+                                attributeDataService: scope.attributeDataService
+                            }
+                        }
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+
+                            scope.evDataService.setReportLayoutOptions(res.data.reportLayoutOptions);
+                            scope.evDataService.setReportOptions(res.data.reportOptions);
+
+                            scope.evEventService.dispatchEvent(evEvents.REPORT_OPTIONS_CHANGE);
+
+                        }
+
+                    })
+
+                };
+
+                var openEntityViewerSettings = function ($event) {
+
+                    $mdDialog.show({
+                        controller: 'GEntityViewerSettingsDialogController as vm',
+                        templateUrl: 'views/dialogs/g-entity-viewer-settings-dialog-view.html',
+                        parent: angular.element(document.body),
+                        targetEvent: $event,
+                        locals: {
+                            entityViewerDataService: scope.evDataService,
+                            entityViewerEventService: scope.evEventService
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === 'agree') {
+                            scope.evEventService.dispatchEvent(evEvents.ENTITY_VIEWER_SETTINGS_CHANGED);
+                        }
+
+                    });
+
+                };
+
+
+                scope.onSettingsClick = scope.isReport ? openReportSettings : openEntityViewerSettings;
 
                 const init = function () {
 
