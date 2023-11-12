@@ -8,9 +8,6 @@ const dashboardComponentStatuses = require("../../services/dashboard/dashboardCo
     var evEvents = require('../../services/entityViewerEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-    var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
-    var DashboardComponentEventService = require('../../services/eventService');
-
     module.exports = function ($mdDialog, dashboardHelper, metaContentTypesService) {
         return {
             restriction: 'E',
@@ -30,9 +27,6 @@ const dashboardComponentStatuses = require("../../services/dashboard/dashboardCo
                     data: 'processing',
                     disabled: false
                 };
-
-                scope.dashboardComponentDataService = new DashboardComponentDataService;
-                scope.dashboardComponentEventService = new DashboardComponentEventService;
 
                 scope.filterAreaHidden = false;
 
@@ -72,9 +66,7 @@ const dashboardComponentStatuses = require("../../services/dashboard/dashboardCo
                     contentType: metaContentTypesService.findContentTypeByEntity(componentData.settings.entity_type),
                     componentElement: componentElem,
                     dashboardDataService: scope.dashboardDataService,
-                    dashboardEventService: scope.dashboardEventService,
-                    dashboardComponentDataService: scope.dashboardComponentDataService,
-                    dashboardComponentEventService: scope.dashboardComponentEventService
+                    dashboardEventService: scope.dashboardEventService
                 };
 
                 if (scope.fillInModeData) {
@@ -108,73 +100,20 @@ const dashboardComponentStatuses = require("../../services/dashboard/dashboardCo
 
                             scope.dashboardDataService.updateComponent(componentData);
 
-                            /*if (scope.fillInModeData) { // Reloading corresponding component inside tabs from it's filled in copy
-                                scope.fillInModeData.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
-                            }*/
 
                             if (res.action === 'save') {
                                 dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, componentData, true);
                             }
 
-                            if (scope.fillInModeData) {
-
-                                scope.fillInModeData.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
-                                scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                                scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                            } else {
-
-                                scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
-                                scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                                scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-
-                            }
+                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
+                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
                             scope.disableFillInMode();
-
-                            /*scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
-                            scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
-                            scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);*/
 
                         }
 
                     })
 
-                };
-
-                scope.enableFillInMode = function () {
-
-                    var entityViewerDataService = scope.vm.dashboardComponentDataService.getEntityViewerDataService();
-                    var attributeDataService = scope.vm.dashboardComponentDataService.getAttributeDataService();
-
-                    scope.fillInModeData = {
-                        tab_number: scope.vm.tabNumber,
-                        row_number: scope.vm.rowNumber,
-                        column_number: scope.vm.columnNumber,
-                        item: scope.item,
-                        entityViewerDataService: entityViewerDataService,
-                        attributeDataService: attributeDataService,
-                        dashboardComponentEventService: scope.dashboardComponentEventService // needed to update component inside tabs
-                    };
-
-                };
-
-                scope.disableFillInMode = function () {
-
-                    var tableComponents = scope.fillInModeData.entityViewerDataService.getComponents();
-
-                    tableComponents.topPart = false;
-                    tableComponents.sidebar = false;
-
-                    scope.fillInModeData.entityViewerDataService.setComponents(tableComponents);
-
-                    scope.fillInModeData.dashboardComponentEventService.dispatchEvent(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS);
-                    scope.fillInModeData = null;
-
-                };
-
-                scope.clearUseFromAboveFilters = function () {
-                    scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
                 };
 
                 scope.toggleFilterBlock = function () {

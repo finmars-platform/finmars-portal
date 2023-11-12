@@ -10,9 +10,6 @@
     var evEvents = require('../../services/entityViewerEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-    var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
-    var DashboardComponentEventService = require('../../services/eventService');
-
     module.exports = function ($mdDialog, dashboardHelper, globalDataService) {
         return {
             restriction: 'E',
@@ -34,9 +31,6 @@
                 };
 
                 scope.lastSavedOutput = {};
-
-                scope.dashboardComponentDataService = new DashboardComponentDataService;
-                scope.dashboardComponentEventService = new DashboardComponentEventService;
 
                 var componentData;
                 var componentElem = elem[0].querySelector('.dashboardComponent');
@@ -70,39 +64,7 @@
                     componentElement: componentElem,
                     entityType: componentData.settings.entity_type,
                     dashboardDataService: scope.dashboardDataService,
-                    dashboardEventService: scope.dashboardEventService,
-                    dashboardComponentDataService: scope.dashboardComponentDataService,
-                    dashboardComponentEventService: scope.dashboardComponentEventService
-                };
-
-                if (scope.fillInModeData) {
-                    scope.vm.entityViewerDataService = scope.fillInModeData.entityViewerDataService;
-                    scope.vm.attributeDataService = scope.fillInModeData.attributeDataService;
-                }
-
-                scope.enableFillInMode = function () {
-
-                    var entityViewerDataService = scope.vm.dashboardComponentDataService.getEntityViewerDataService();
-                    var attributeDataService = scope.vm.dashboardComponentDataService.getAttributeDataService();
-
-                    scope.fillInModeData = {
-                        tab_number: scope.tabNumber,
-                        row_number: scope.rowNumber,
-                        column_number: scope.columnNumber,
-                        item: scope.item,
-                        entityViewerDataService: entityViewerDataService,
-                        attributeDataService: attributeDataService,
-                        dashboardComponentEventService: scope.dashboardComponentEventService // needed to update component inside tabs
-                    }
-
-                };
-
-                scope.disableFillInMode = function () {
-                    scope.fillInModeData = null;
-                };
-
-                scope.clearUseFromAboveFilters = function () {
-                    scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
+                    dashboardEventService: scope.dashboardEventService
                 };
 
                 scope.toggleFilterBlock = function () {

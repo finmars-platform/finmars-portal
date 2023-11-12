@@ -12,9 +12,6 @@ const evEvents = require("../../services/entityViewerEvents");
     var evEvents = require('../../services/entityViewerEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-    var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
-    var DashboardComponentEventService = require('../../services/eventService');
-
     const localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
     module.exports = function ($mdDialog, uiService, dashboardHelper, metaContentTypesService, reportHelper) {
@@ -37,12 +34,8 @@ const evEvents = require("../../services/entityViewerEvents");
                     disabled: false
                 };
 
-                scope.dashboardComponentDataService = new DashboardComponentDataService;
-                scope.dashboardComponentEventService = new DashboardComponentEventService;
-
                 scope.openComponentSettingsDialog = function ($event) {
 
-                    //var attributeDataService = scope.dashboardComponentDataService.getAttributeDataService();
                     var dashboardComponents = scope.dashboardDataService.getComponents();
 
                     $mdDialog.show({
@@ -70,7 +63,6 @@ const evEvents = require("../../services/entityViewerEvents");
                                 dashboardHelper.saveComponentSettingsFromDashboard(scope.dashboardDataService, scope.componentData, true);
                             }
 
-                            scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.RELOAD_COMPONENT);
                             scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
                             scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 

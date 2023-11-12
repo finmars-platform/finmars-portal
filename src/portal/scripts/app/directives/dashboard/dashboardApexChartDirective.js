@@ -10,8 +10,7 @@
     var evEvents = require('../../services/entityViewerEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-    var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
-    var DashboardComponentEventService = require('../../services/eventService');
+    var utilsHelper = require('../../helpers/utils.helper');
 
     module.exports = function ($mdDialog, dashboardHelper, entityResolverService) {
         return {
@@ -35,43 +34,8 @@
 
                 scope.lastSavedOutput = {};
 
-                scope.dashboardComponentDataService = new DashboardComponentDataService;
-                scope.dashboardComponentEventService = new DashboardComponentEventService;
-
                 scope.retryCount = 0;
                 scope.maxRetries = 10;
-
-                // TODO move that func somwhere to utils
-                function isEqual(value1, value2) {
-                    if (typeof value1 !== typeof value2) return false;
-                    if (typeof value1 === 'object' && value1 !== null && value2 !== null) {
-                        if (Array.isArray(value1)) {
-                            if (!Array.isArray(value2) || value1.length !== value2.length) return false;
-                            for (let i = 0; i < value1.length; i++) {
-                                if (!isEqual(value1[i], value2[i])) return false;
-                            }
-                            return true;
-                        } else {
-                            const keys1 = Object.keys(value1);
-                            const keys2 = Object.keys(value2);
-                            if (keys1.length !== keys2.length) return false;
-                            for (const key of keys1) {
-                                if (!keys2.includes(key) || !isEqual(value1[key], value2[key])) return false;
-                            }
-                            return true;
-                        }
-                    }
-                    return value1 === value2;
-                }
-
-                function hasStateChanged(oldState, newState, fieldsToCompare) {
-                    for (const field of fieldsToCompare) {
-                        if (!isEqual(oldState[field], newState[field])) {
-                            return true; // Change detected
-                        }
-                    }
-                    return false; // No changes detected
-                }
 
                 var componentData;
                 var componentElem = elem[0].querySelector('.dashboardComponent');
@@ -105,9 +69,7 @@
                     componentElement: componentElem,
                     entityType: componentData.settings.entity_type,
                     dashboardDataService: scope.dashboardDataService,
-                    dashboardEventService: scope.dashboardEventService,
-                    dashboardComponentDataService: scope.dashboardComponentDataService,
-                    dashboardComponentEventService: scope.dashboardComponentEventService
+                    dashboardEventService: scope.dashboardEventService
                 };
 
                 if (scope.fillInModeData) {
@@ -117,8 +79,6 @@
 
                 scope.enableFillInMode = function () {
 
-                    var entityViewerDataService = scope.vm.dashboardComponentDataService.getEntityViewerDataService();
-                    var attributeDataService = scope.vm.dashboardComponentDataService.getAttributeDataService();
 
                     scope.fillInModeData = {
                         tab_number: scope.tabNumber,
@@ -126,18 +86,13 @@
                         column_number: scope.columnNumber,
                         item: scope.item,
                         entityViewerDataService: entityViewerDataService,
-                        attributeDataService: attributeDataService,
-                        dashboardComponentEventService: scope.dashboardComponentEventService // needed to update component inside tabs
+                        attributeDataService: attributeDataService
                     }
 
                 };
 
                 scope.disableFillInMode = function () {
                     scope.fillInModeData = null;
-                };
-
-                scope.clearUseFromAboveFilters = function () {
-                    scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
                 };
 
                 scope.toggleFilterBlock = function () {
@@ -159,7 +114,7 @@
 
                         // console.log('apexChart.COMPONENT_OUTPUT_CHANGE', JSON.stringify(componentsOutputs, null, 4));
 
-                        var changed = hasStateChanged(scope.lastSavedOutput, componentsOutputs, scope.componentData.settings.components_to_listen)
+                        var changed = utilsHelper.hasStateChanged(scope.lastSavedOutput, componentsOutputs, scope.componentData.settings.components_to_listen)
 
                         if (changed) {
                             scope.initChart({
