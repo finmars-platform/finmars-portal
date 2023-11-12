@@ -28,8 +28,6 @@ const dashboardComponentStatuses = require("../../services/dashboard/dashboardCo
                     disabled: false
                 };
 
-                scope.filterAreaHidden = false;
-
                 var componentData;
                 var componentElem = elem[0].querySelector('.dashboardComponent');
 

@@ -34,6 +34,8 @@
             layout: false
         };
 
+        vm.showFiltersArea = true; // important
+
         vm.processing = false;
 
         vm.componentData = null;
