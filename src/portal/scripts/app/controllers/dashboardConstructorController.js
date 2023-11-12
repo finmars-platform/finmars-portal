@@ -660,8 +660,6 @@
                             var row_number = parseInt(data_source.dataset.row, 10);
                             var column_number = parseInt(data_source.dataset.column, 10);
 
-                            var component = vm.dashboardConstructorDataService.getComponentById(component_id)
-
 
                             if (elem.classList.contains('dashboard-socket-card')) { // when dragged from socket
 
@@ -685,6 +683,8 @@
 
                                 var newColComponentType = dcCol.data.type;
                                 var newColComponentId = dcCol.data.id;
+
+                                var component = vm.dashboardConstructorDataService.getComponentById(newColComponentId)
 
                                 if (tab_number === 'fixed_area') {
 
