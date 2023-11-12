@@ -50,7 +50,7 @@
                                                     class="dashboard-constructor-selector-directive"></two-fields-multiselect>
                         </div>
 
-                        <!-- <md-input-container class="dashboard-constructor-field1" style="height: 58px">
+                        <md-input-container class="dashboard-constructor-field1" style="height: 58px">
                             <label for="">Report Type</label>
                             <md-select data-ng-model="vm.item.settings.entity_type"
                                        data-ng-change="vm.reportTypeChange()">
@@ -66,21 +66,21 @@
                                                    data-items="vm.layoutsWithLinkToFilters"
                                                    data-is-disabled="!vm.item.settings.entity_type"
                                                    data-on-change-callback="vm.onRvLayoutChange()"
-                                                   class="dashboard-constructor-selector-directive"></expandable-items-selector> -->
+                                                   class="dashboard-constructor-selector-directive"></expandable-items-selector>
 
-                        <div style="width: 400px;" class="m-l-10">
-                            <div ng-if="vm.readyStatus.layouts">
-                                <multitype-field label="Select layout"
-                                                 field-types-data="vm.layoutsSelectorsList"
-                                                 type-switch="selector"
-                                                 on-value-change="vm.onLayoutChange()"
-                                                 on-type-change="vm.onLayoutEntityTypeChange(activeType)"></multitype-field>
-                            </div>
+<!--                        <div style="width: 400px;" class="m-l-10">-->
+<!--                            <div ng-if="vm.readyStatus.layouts">-->
+<!--                                <multitype-field label="Select layout"-->
+<!--                                                 field-types-data="vm.layoutsSelectorsList"-->
+<!--                                                 type-switch="selector"-->
+<!--                                                 on-value-change="vm.onLayoutChange()"-->
+<!--                                                 on-type-change="vm.onLayoutEntityTypeChange(activeType)"></multitype-field>-->
+<!--                            </div>-->
 
-                            <div ng-if="!vm.readyStatus.layouts" class="flex-row fc-space-around" style="height: 40px;">
-                                <progress-circular diameter="30"></progress-circular>
-                            </div>
-                        </div>
+<!--                            <div ng-if="!vm.readyStatus.layouts" class="flex-row fc-space-around" style="height: 40px;">-->
+<!--                                <progress-circular diameter="30"></progress-circular>-->
+<!--                            </div>-->
+<!--                        </div>-->
 
 <!--                        <h4>Linked Filters (As when row is selected)</h4>-->
 
