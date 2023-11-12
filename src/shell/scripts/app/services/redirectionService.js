@@ -13,7 +13,7 @@ export default function () {
 
 		if (base_api_url) urlBeginning += '/' + base_api_url;
 
-		let profileUrl = urlBeginning + '/v/profile'
+		let profileUrl = baseUrlService.resolve() + '/v/profile' // no base_api_url for profile needed
 
 		if (PROJECT_ENV === 'local') {
 			profileUrl = urlBeginning + '/a/#!/profile'
