@@ -938,17 +938,30 @@ button.md-button.dashboard-button-set-button {
 
 //endregion Accordion
 
+.dashboard-main-loader-blur-bg {
+  position: fixed;
+  //filter: blur(8px);
+  //-webkit-filter: blur(8px);
+  top: 0;
+  width: calc(100vw - 160px);
+  height: 100vh;
+  //background: rgba(255,255,255, .95);
+  position: absolute;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
 
 .dashboard-main-loader {
   position: fixed;
   top: 0;
+  display: flex;
   width: calc(100vw - 160px);
   height: 100vh;
-  background: rgba(255,255,255, .95);
-  display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 100;
+  z-index: 101;
+
+
 
   &:after {
     content: "";
