@@ -2,6 +2,8 @@
  * Created by szhitenev on 05.05.2016.
  */
 
+const dashboardEvents = require("../../services/dashboard/dashboardEvents");
+const localStorageService = require("../../../../../shell/scripts/app/services/localStorageService");
 (function () {
 
     'use strict';
@@ -61,6 +63,44 @@
 
         if ($scope.$parent.vm.entityViewerDataService) {
             fillInModeEnabled = true;
+        }
+
+        vm.closeGroupsAndContinueReportGeneration = function () {
+
+            var localStorageReportData = localStorageService.getReportData();
+
+            var layout = vm.entityViewerDataService.getListLayout();
+            var contentType = vm.entityViewerDataService.getContentType();
+
+            delete localStorageReportData[contentType][layout.user_code]
+
+            var groups = vm.entityViewerDataService.getGroups();
+
+            groups.forEach(function (group) {
+
+                if (!group.report_settings) {
+                    group.report_settings = {}
+                }
+
+                group.report_settings.is_level_folded = true;
+
+            })
+
+            vm.entityViewerDataService.setGroups(groups);
+
+            localStorageService.cacheReportData(localStorageReportData);
+
+            vm.possibleToRequestReport = true;
+
+            rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+
+        }
+
+        vm.continueReportGeneration = function () {
+
+            vm.possibleToRequestReport = true;
+
+            rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
         }
 
         vm.hasFiltersArea = function () {
@@ -331,39 +371,6 @@
 
         };
 
-        vm.handleDashboardActiveObject = function (componentId) {
-
-            gotActiveObjectFromLinkedDashboardComp = true;
-            var componentOutput = vm.dashboardDataService.getComponentOutputOld(componentId);
-
-            console.log('COMPONENT_VALUE_CHANGED_' + componentId, componentOutput);
-
-            //if (vm.componentData.type === 'report_viewer_split_panel' && componentOutput) {
-            if (componentOutput) {
-
-                vm.entityViewerDataService.setActiveObject(componentOutput.data);
-                vm.entityViewerDataService.setActiveObjectFromAbove(componentOutput.data);
-
-                vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-                vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
-
-                var filters = vm.entityViewerDataService.getFilters();
-                var useFromAboveFilterIndex = filters.findIndex(function (filter) {
-
-                    return filter.options.use_from_above && Object.keys(filter.options.use_from_above).length && // is use from above filter
-                        componentOutput.data && typeof componentOutput.data === 'object' && // active object is an object
-                        componentOutput.data.hasOwnProperty(filter.key); // active object contains data for filter
-
-                });
-
-                if (useFromAboveFilterIndex > -1) { // use from above filters will change from active object
-                    vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
-                }
-
-            }
-
-        };
-
         vm.getCurrentMember = function () {
 
             return usersService.getMyCurrentMember().then(function (data) {
@@ -412,6 +419,7 @@
             var componentsOutputs = vm.dashboardDataService.getLayoutState();
 
             console.log("DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.componentsOutputs", componentsOutputs);
+            console.log("DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.components_to_listen", vm.componentData.settings.components_to_listen);
 
             var changed = hasStateChanged(vm.lastSavedOutput, componentsOutputs, vm.componentData.settings.components_to_listen)
 
@@ -482,7 +490,7 @@
                         vm.entityViewerDataService.setActiveObject(activeObjectData);
                         vm.entityViewerDataService.setActiveObjectFromAbove(activeObjectData);
 
-                        vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+                        // vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
                         vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
 
                         var filters = vm.entityViewerDataService.getFilters();
@@ -566,7 +574,6 @@
             }
 
 
-            // POSSIBLE DEPRECATED AND TOO HARD TO UNDERSTAND
             vm.entityViewerEventService.addEventListener(evEvents.ACTIVE_OBJECT_CHANGE, function () {
 
                 console.log('ACTIVE_OBJECT_CHANGE vm.componentData.type', vm.componentData.type);
@@ -574,79 +581,12 @@
 
                 var activeObject = vm.entityViewerDataService.getActiveObject();
 
-                if (!gotActiveObjectFromLinkedDashboardComp) {
+                vm.dashboardDataService.setComponentOutput(vm.componentData.user_code, activeObject);
 
-                    var componentsOutputs = vm.dashboardDataService.getAllComponentsOutputs();
-                    var compsKeys = Object.keys(componentsOutputs);
-
-                    if (compsKeys.length > 0) {
-
-                        compsKeys.forEach(function (compKey) {
-
-                            if (componentsOutputs[compKey]) {
-
-                                componentsOutputs[compKey].changedLast = false;
-
-                            }
-
-                        });
-
-                        vm.dashboardDataService.setAllComponentsOutputs(componentsOutputs);
-
-                    }
-
-                    if (activeObject) {
-
-                        activeObject = JSON.parse(JSON.stringify(activeObject));
-                        var reportOptions = vm.entityViewerDataService.getReportOptions();
-
-                        // used by dashboardButtonsSetDirective
-                        activeObject.reportOptions = {
-                            pricing_policy: reportOptions.pricing_policy,
-                            pricing_policy_object: reportOptions.pricing_policy_object,
-                        }
-
-                        if (vm.entityType === 'balance-report') {
-                            activeObject.reportOptions.report_date = reportOptions.report_date;
-                        } else if (vm.entityType === 'pl-report') {
-                            activeObject.reportOptions.pl_first_date = reportOptions.pl_first_date;
-                            activeObject.reportOptions.report_date = reportOptions.report_date;
-                        } else if (vm.entityType === 'transaction-report') {
-                            activeObject.reportOptions.end_date = reportOptions.end_date;
-                            activeObject.reportOptions.begin_date = reportOptions.begin_date;
-                        }
-
-                    }
-
-                    var compOutputData = {
-                        changedLast: true,
-                        deleteOnChange: true,
-                        data: activeObject
-                    };
-
-                    vm.dashboardDataService.setComponentOutputOld(vm.componentData.id, compOutputData);
-
-                    vm.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + vm.componentData.id);
-
-                    /*if (vm.componentData.settings.auto_refresh) {
-                        vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL)
-                    }*/
-                    vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_OUTPUT_ACTIVE_OBJECT_CHANGE);
-
-                } else {
-                    gotActiveObjectFromLinkedDashboardComp = false; // reset variable indicator
-                }
-
-                if (vm.componentData.type === 'report_viewer_grand_total') {
-
-                    gFiltersHelper.insertActiveObjectDataIntoFilters(vm.entityViewerDataService, vm.entityViewerEventService);
-                    vm.updateGrandTotalComponent();
-
-                }
+                vm.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + vm.componentData.id);
+                vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_OUTPUT_CHANGE);
 
             });
-
-            // }
 
             if (fillInModeEnabled) {
 
@@ -818,6 +758,9 @@
         vm.getView = function () {
 
             // middlewareService.setNewSplitPanelLayoutName(false); // reset split panel layout name
+
+            vm.openGroupsCount = null;
+            vm.possibleToRequestReport = false // !important, do not remove, on change layout we should again ask user about groups
 
             vm.readyStatus.layout = false;
 

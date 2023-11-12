@@ -157,7 +157,7 @@
                         // var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputsByUserCodes();
                         var componentsOutputs = scope.dashboardDataService.getLayoutState();
 
-                        console.log('apexChart.COMPONENT_OUTPUT_CHANGE', JSON.stringify(componentsOutputs, null, 4));
+                        // console.log('apexChart.COMPONENT_OUTPUT_CHANGE', JSON.stringify(componentsOutputs, null, 4));
 
                         var changed = hasStateChanged(scope.lastSavedOutput, componentsOutputs, scope.componentData.settings.components_to_listen)
 
