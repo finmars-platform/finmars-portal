@@ -18,6 +18,7 @@
                 id: null, // should be generated before create
                 name: '',
                 settings: {
+                    show_header: true,
                     components_to_listen: []
                 },
                 source: '',

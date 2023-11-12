@@ -3,12 +3,12 @@
 
     <div ng-if="readyStatus.data === 'ready'"
          class="flex-column height-100">
-        <div class="dashboard-component-header" flex="noshrink">
+        <div class="dashboard-component-header" flex="noshrink" data-ng-if="vm.componentData.settings.show_header">
 
             <div class="dashboard-component-header-left">
 
                 <div class="dashboard-component-name">
-                    <span title="{{item.data.name}}" data-ng-bind="item.data.name"></span>
+                    <span title="{{vm.componentData.name}}" data-ng-bind="vm.componentData.name"></span>
                 </div>
 
 
