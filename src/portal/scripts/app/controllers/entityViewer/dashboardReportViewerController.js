@@ -4,6 +4,8 @@
 
 const dashboardEvents = require("../../services/dashboard/dashboardEvents");
 const localStorageService = require("../../../../../shell/scripts/app/services/localStorageService");
+const dashboardComponentStatuses = require("../../services/dashboard/dashboardComponentStatuses");
+const evEvents = require("../../services/entityViewerEvents");
 (function () {
 
     'use strict';
@@ -107,67 +109,6 @@ const localStorageService = require("../../../../../shell/scripts/app/services/l
             return ['report_viewer_bars_chart', 'report_viewer_pie_chart', 'report_viewer_matrix', 'report_viewer_table_chart'].includes(vm.componentData.type);
         };
 
-        vm.getOptionsFromDependencies = function () {
-
-            var reportOptions = {};
-
-            console.log('vm.componentData', vm.componentData)
-            if (!vm.componentData || !vm.componentData.settings || !vm.componentData.settings.linked_components || !vm.componentData.settings.linked_components.report_settings) {
-                return reportOptions;
-            }
-
-            Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (property) {
-
-
-                var componentId = vm.componentData.settings.linked_components.report_settings[property];
-
-                var componentOutput = vm.dashboardDataService.getComponentOutputOld(componentId);
-
-                if (!componentOutput || !componentOutput.data || !componentOutput.data.value) {
-                    return reportOptions;
-                }
-
-                if (['accounts', 'portfolios', 'strategies1', 'strategies2', 'strategies3'].includes(property) &&
-                    !Array.isArray(componentOutput.data.value)) {
-
-                    reportOptions[property] = [componentOutput.data.value]
-
-                } else if (
-                    ['report_currency', 'pricing_policy'].includes(property) &&
-                    Array.isArray((componentOutput.data.value)) &&
-                    componentOutput.data.value.length
-                ) {
-
-                    reportOptions[property] = componentOutput.data.value[0]
-
-                } else if (componentOutput.data.value !== null ||
-                    componentOutput.data.value !== undefined) {
-
-                    reportOptions[property] = componentOutput.data.value
-
-                }
-
-            });
-
-            return reportOptions;
-
-        }
-
-        var reportDateProperties = {
-            'balance-report': [null, 'report_date'],
-            'pl-report': ['pl_first_date', 'report_date'],
-            'transaction-report': ['begin_date', 'end_date']
-        };
-
-        var reportDateIsFromDashboard = function (dashboardReportOptions, dateIndex) {
-
-            var dateProp = reportDateProperties[vm.entityType][dateIndex];
-            var roProps = Object.keys(dashboardReportOptions);
-
-            return roProps.includes(dateProp);
-
-        }
-
         vm.setLayout = function (layout) {
 
             return new Promise(async function (resolve, reject) {
@@ -184,44 +125,11 @@ const localStorageService = require("../../../../../shell/scripts/app/services/l
                 console.log('setLayout.vm.componentData', vm.componentData);
                 console.log('setLayout.layout', layout);
                 console.log('setLayout.reportOptions', reportOptions);
-                var reportOptionsFromDependenciesComponents = vm.getOptionsFromDependencies()
-                console.log('setLayout.reportOptionsFromDependenciesComponents', reportOptionsFromDependenciesComponents);
 
-                Object.assign(reportOptions, reportOptionsFromDependenciesComponents);
 
                 // Check are there report datepicker expressions to solve
                 if (reportLayoutOptions && reportLayoutOptions.datepickerOptions) {
 
-                    /* var firstDateExpr = reportLayoutOptions.datepickerOptions.reportFirstDatepicker.expression; // for pl_first_date, begin_date
-                    var secondDateExpr = reportLayoutOptions.datepickerOptions.reportLastDatepicker.expression; // for report_date, end_date
-
-                    var dateExprsProms = [];
-
-                    if (firstDateExpr && !reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 0)) {
-
-                        calculateReportDateExpr(firstDateExpr, reportOptions, 0, dateExprsProms);
-
-                    }
-
-                    if (secondDateExpr && !reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 1)) {
-
-                        calculateReportDateExpr(secondDateExpr, reportOptions, 1, dateExprsProms);
-
-                    }
-
-                    Promise.all(dateExprsProms).then(function () {
-                        resolve();
-
-                    }).catch(function () {
-                        resolve();
-                    }); */
-
-                    var calcReportDateOptions = {
-                        noDateFromExpr: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 0),
-                        noDateToExpr: reportDateIsFromDashboard(reportOptionsFromDependenciesComponents, 1)
-                    }
-
-                    await sharedLogicHelper.calculateReportDatesExprs(calcReportDateOptions);
 
                     var activeColumnSortProm = new Promise(function (resolve, reject) {
 
@@ -278,96 +186,6 @@ const localStorageService = require("../../../../../shell/scripts/app/services/l
 
 
             })
-
-        };
-
-        vm.handleDashboardFilterLink = function (filter_link) {
-
-            var filters = vm.entityViewerDataService.getFilters();
-            var componentOutput = vm.dashboardDataService.getComponentOutputOld(filter_link.component_id);
-
-            console.log('filters', filters);
-            console.log('componentOutput', componentOutput);
-
-            if (componentOutput && componentOutput.data) {
-
-                var linkedFilterIndex;
-                var linkedFilter = filters.find(function (item, index) {
-
-                    if (item.type === 'filter_link' && item.component_id === filter_link.component_id) {
-
-                        linkedFilterIndex = index;
-                        return item;
-
-                    }
-
-                });
-
-                if (linkedFilter) {
-
-                    linkedFilter.options.filter_values = [componentOutput.data.value];
-
-                    if ((linkedFilter.value_type === 100 || linkedFilter.value_type !== 'empty') &&
-                        Array.isArray(componentOutput.data.value)) {
-
-                        linkedFilter.options.filter_values = componentOutput.data.value;
-
-                    }
-
-                    filters[linkedFilterIndex] = linkedFilter;
-
-                } else {
-
-                    linkedFilter = {
-                        type: 'filter_link',
-                        component_id: filter_link.component_id,
-                        key: filter_link.key,
-                        name: filter_link.key,
-                        value_type: filter_link.value_type,
-                        options: {
-                            enabled: true,
-                            exclude_empty_cells: true,
-                            filter_values: [componentOutput.data.value]
-                        }
-                    };
-
-                    switch (filter_link.value_type) {
-
-                        case 10:
-                        case 30:
-                            linkedFilter.options.filter_type = 'contains';
-                            break;
-
-                        case 20:
-                        case 40:
-                            linkedFilter.options.filter_type = 'equal';
-                            break;
-
-                        case 100:
-                        case 'field':
-
-                            // even if component is single selector, multiselector filter will work
-                            // console.log('componentOutput.value', componentOutput.data.value)
-                            linkedFilter.value_type = 'field';
-                            linkedFilter.options.filter_type = 'multiselector';
-
-                            if (Array.isArray(componentOutput.data.value)) {
-                                linkedFilter.options.filter_values = componentOutput.data.value;
-                            }
-
-                            break;
-                    }
-
-                    filters.push(linkedFilter);
-
-                }
-
-                vm.entityViewerDataService.setFilters(filters);
-
-                vm.entityViewerEventService.dispatchEvent(evEvents.FILTERS_CHANGE);
-                vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-
-            }
 
         };
 
@@ -429,11 +247,40 @@ const localStorageService = require("../../../../../shell/scripts/app/services/l
 
                 console.log("DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.changed!")
 
+                var triggerReportRequest = false;
+
                 // TODO some shady logic here, consider refactor
                 // settings from controls to reportSettings
                 if (vm.componentData.settings.linked_components) {
 
+                    var hasLinkedActiveObjectSource = false;
+
                     var layoutState = vm.dashboardDataService.getLayoutState();
+
+                    if (vm.componentData.settings.linked_components.active_object && vm.componentData.settings.linked_components.active_object.length) {
+
+                        var key = vm.componentData.settings.linked_components.active_object[0];
+
+                        hasLinkedActiveObjectSource = true;
+
+                    }
+
+                    if (hasLinkedActiveObjectSource) {
+                        var activeObjectData = layoutState[key]
+
+                        console.log("DashboardReportViewerController.hasLinkedActiveObjectSource.activeObjectData found", activeObjectData);
+
+                        // In case if report awaits some active object from linked component, then we wait until data is available
+                        // if user not clicked on anything yet then we skip processing
+                        if (!activeObjectData) {
+
+                            vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ACTIVE);
+                            vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                            return
+                        }
+                    }
+
 
                     if (vm.componentData.settings.linked_components.report_settings) {
 
@@ -445,6 +292,24 @@ const localStorageService = require("../../../../../shell/scripts/app/services/l
                         // to ensure that we need to reset Report
 
                         var reportOptionsChange = false
+
+                        // Set data to linked filters
+
+                        if (vm.componentData.settings.linked_components.active_object && vm.componentData.settings.linked_components.active_object.length) {
+
+                            var key = vm.componentData.settings.linked_components.active_object[0];
+
+                            var activeObjectData = layoutState[key]
+
+                            console.log('DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.activeObjectData', activeObjectData);
+
+                            // vm.entityViewerDataService.setActiveObject(activeObjectData);
+                            vm.entityViewerDataService.setActiveObjectFromAbove(activeObjectData);
+
+                            // vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+                            gFiltersHelper.insertActiveObjectDataIntoFilters(vm.entityViewerDataService, vm.entityViewerEventService);
+
+                        }
 
                         Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (key) {
 
@@ -477,36 +342,9 @@ const localStorageService = require("../../../../../shell/scripts/app/services/l
 
                     }
 
-                    // Set data to linked filters
 
-                    if (vm.componentData.settings.linked_components.active_object && vm.componentData.settings.linked_components.active_object.length) {
 
-                        var key = vm.componentData.settings.linked_components.active_object[0];
 
-                        var activeObjectData = layoutState[key]
-
-                        console.log('DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.activeObjectData', activeObjectData);
-
-                        vm.entityViewerDataService.setActiveObject(activeObjectData);
-                        vm.entityViewerDataService.setActiveObjectFromAbove(activeObjectData);
-
-                        // vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-                        vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE);
-
-                        var filters = vm.entityViewerDataService.getFilters();
-                        var useFromAboveFilterIndex = filters.findIndex(function (filter) {
-
-                            return filter.options.use_from_above && Object.keys(filter.options.use_from_above).length && // is use from above filter
-                                activeObjectData && typeof activeObjectData === 'object' && // active object is an object
-                                activeObjectData.hasOwnProperty(filter.key); // active object contains data for filter
-
-                        });
-
-                        if (useFromAboveFilterIndex > -1) { // use from above filters will change from active object
-                            vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_ON);
-                        }
-
-                    }
 
                 }
 

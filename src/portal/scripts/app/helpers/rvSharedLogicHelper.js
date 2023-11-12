@@ -210,12 +210,17 @@ import localStorageService from "../../../../shell/scripts/app/services/localSto
 
                     if (viewContext === 'dashboard') {
 
+                        // in that context we control in dashboard report viewer controller via applyDashboardLayoutState
+                        //
+
                         // If we are in matrix, then we do not need request normal report,
                         // matrix will handle on it own
                         // TODO refactor, put matrix separately from Report
-                        if (!viewModel.matrixSettings) {
-                            rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
-                        }
+                        // if (!viewModel.matrixSettings) {
+                        //     rvDataProviderService.updateDataStructure(viewModel.entityViewerDataService, viewModel.entityViewerEventService);
+                        // }
+
+
 
 
                     } else {
