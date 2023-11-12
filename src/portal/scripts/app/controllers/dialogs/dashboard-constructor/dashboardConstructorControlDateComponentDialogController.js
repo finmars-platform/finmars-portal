@@ -23,7 +23,7 @@
                 name: '',
                 settings: {
                     value_type: 40,
-                    default_value_expression: 'now()'
+                    default_value_expression: 'now() - timedelta(days=1)'
                 }
             }
         }
