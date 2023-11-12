@@ -151,7 +151,7 @@ const evEvents = require("../../services/entityViewerEvents");
                         }
                     ])
 
-                    scope.reportOptions = scope.componentData.settings.default_report_options || {}
+                    scope.reportOptions = JSON.parse(JSON.stringify(scope.componentData.settings.default_report_options)) || {}
 
                     // TODO some shady logic here, consider refactor
                     if (scope.componentData.settings.linked_components) {
