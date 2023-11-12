@@ -1317,6 +1317,8 @@
 
                 vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
 
+                vm.updateAvailableComponentsTypes();
+
             })
 
         };
