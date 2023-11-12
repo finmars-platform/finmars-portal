@@ -21,6 +21,8 @@
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
+    var utilsHelper = require('../../helpers/utils.helper');
+
     module.exports = function ($scope, $mdDialog, toastNotificationService, usersService, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, customFieldService, attributeTypeService, uiService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper, gFiltersHelper, dashboardHelper) {
 
         var vm = this;
@@ -37,8 +39,6 @@
         vm.componentData = null;
         vm.dashboardDataService = null;
         vm.dashboardEventService = null;
-        vm.dashboardComponentDataService = null;
-        vm.dashboardComponentEventService = null;
         vm.matrixSettings = null;
 
         vm.grandTotalProcessing = true;
@@ -192,39 +192,6 @@
             });
         };
 
-        // TODO move to utils file
-        function isEqual(value1, value2) {
-            if (typeof value1 !== typeof value2) return false;
-            if (typeof value1 === 'object' && value1 !== null && value2 !== null) {
-                if (Array.isArray(value1)) {
-                    if (!Array.isArray(value2) || value1.length !== value2.length) return false;
-                    for (let i = 0; i < value1.length; i++) {
-                        if (!isEqual(value1[i], value2[i])) return false;
-                    }
-                    return true;
-                } else {
-                    const keys1 = Object.keys(value1);
-                    const keys2 = Object.keys(value2);
-                    if (keys1.length !== keys2.length) return false;
-                    for (const key of keys1) {
-                        if (!keys2.includes(key) || !isEqual(value1[key], value2[key])) return false;
-                    }
-                    return true;
-                }
-            }
-            return value1 === value2;
-        }
-
-        function hasStateChanged(oldState, newState, fieldsToCompare) {
-
-            for (const field of fieldsToCompare) {
-                if (!isEqual(oldState[field], newState[field])) {
-                    return true; // Change detected
-                }
-            }
-            return false; // No changes detected
-        }
-
         vm.setDashboardComponentToActive = function () {
             vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ACTIVE);
             vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
@@ -237,7 +204,7 @@
             console.log("DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.layoutState", layoutState);
             console.log("DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.components_to_listen", vm.componentData.settings.components_to_listen);
 
-            var changed = hasStateChanged(vm.lastSavedOutput, layoutState, vm.componentData.settings.components_to_listen)
+            var changed = utilsHelper.hasStateChanged(vm.lastSavedOutput, layoutState, vm.componentData.settings.components_to_listen)
 
             console.log("DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.linked_components", vm.componentData.settings.linked_components);
 
@@ -303,7 +270,7 @@
 
                             var mapValue = vm.componentData.settings.linked_components.report_settings[key]
 
-                            if (!isEqual(reportOptions[key], layoutState[mapValue])) {
+                            if (!utilsHelper.isEqual(reportOptions[key], layoutState[mapValue])) {
                                 reportOptions[key] = layoutState[mapValue];
                                 reportOptionsChange = true
                             }
@@ -325,6 +292,10 @@
                             vm.entityViewerDataService.setReportOptions(reportOptions);
                             vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
 
+                        } else {
+
+                            console.log('DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.detect_report_settings_change.table_is_not_going_to_reset');
+
                         }
 
 
@@ -345,6 +316,13 @@
         }
 
         vm.setEventListeners = function () {
+
+            vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_CHANGE, function () {
+
+                vm.applyDashboardLayoutState();
+
+
+            });
 
             vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
 
@@ -376,20 +354,9 @@
 
                 vm.processing = false;
 
-                // if (!fillInModeEnabled) {
                 vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ACTIVE);
                 vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                // }
 
-                vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.COMPONENT_BLOCKAGE_OFF);
-
-            });
-
-            vm.entityViewerEventService.addEventListener(evEvents.COLUMNS_CHANGE, function () {
-
-                var columns = vm.entityViewerDataService.getColumns();
-                vm.dashboardComponentDataService.setViewerTableColumns(columns);
-                //vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED);
 
             });
 
@@ -421,9 +388,9 @@
                 if (vm.componentData.type === 'report_viewer' ||
                     vm.componentData.type === 'report_viewer_split_panel') {
 
-                    vm.entityViewerEventService.addEventListener(evEvents.OPEN_DASHBOARD_COMPONENT_EDITOR, function () {
-                        vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.OPEN_COMPONENT_EDITOR);
-                    });
+                    // vm.entityViewerEventService.addEventListener(evEvents.OPEN_DASHBOARD_COMPONENT_EDITOR, function () {
+                    //
+                    // });
 
                 }
 
@@ -453,71 +420,9 @@
                 });
             }
 
-            vm.entityViewerEventService.addEventListener(evEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS, function () {
-                vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS);
-            })
-
-        };
-
-        vm.initDashboardExchange = function () { // initialize only for components that are not in filled in mode
-
-            // 2023-11-11 szhitenev FN-2320
-
-            vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_CHANGE, function () {
-
-                vm.applyDashboardLayoutState();
-
-
-            });
-
-            //<editor-fold desc="Dashboard component events">
-            vm.dashboardComponentEventService.addEventListener(dashboardEvents.UPDATE_VIEWER_TABLE_COLUMNS, function () {
-
-                var columns = vm.dashboardComponentDataService.getViewerTableColumns();
-                vm.entityViewerDataService.setColumns(columns);
-
-                vm.entityViewerEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
-                vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-            });
-
-            vm.dashboardComponentEventService.addEventListener(dashboardEvents.SAVE_VIEWER_TABLE_CONFIGURATION, function () {
-
-                var currentLayoutConfig = vm.entityViewerDataService.getLayoutCurrentConfiguration(true);
-                // revert options that were change because of dashboard
-                currentLayoutConfig.data.interfaceLayout = savedInterfaceLayout;
-                currentLayoutConfig.data.additions = savedAddtions;
-
-                if (currentLayoutConfig.hasOwnProperty('id')) {
-
-                    uiService.updateListLayout(currentLayoutConfig.id, currentLayoutConfig).then(function (layoutData) {
-
-                        var listLayout = vm.entityViewerDataService.getListLayout();
-
-                        listLayout.modified = layoutData.modified
-                        currentLayoutConfig.modified = layoutData.modified
-                        vm.entityViewerDataService.setActiveLayoutConfiguration({layoutConfig: currentLayoutConfig});
-
-                    });
-
-                }
-
-                $mdDialog.show({
-                    controller: 'SaveLayoutDialogController as vm',
-                    templateUrl: 'views/save-layout-dialog-view.html',
-                    clickOutsideToClose: false
-                });
-
-            });
-
-            vm.dashboardComponentEventService.addEventListener(dashboardEvents.RELOAD_COMPONENT, function () {
-                vm.getView()
-            });
-
-            vm.dashboardComponentEventService.addEventListener(dashboardEvents.TOGGLE_FILTER_BLOCK, function () {
-                vm.entityViewerEventService.dispatchEvent(dashboardEvents.TOGGLE_FILTER_BLOCK);
-            });
-            //</editor-fold>
+            // vm.entityViewerEventService.addEventListener(evEvents.TOGGLE_SHOW_FROM_ABOVE_FILTERS, function () {
+            //
+            // })
 
         };
 
@@ -533,8 +438,6 @@
 
             vm.dashboardDataService = $scope.$parent.vm.dashboardDataService;
             vm.dashboardEventService = $scope.$parent.vm.dashboardEventService;
-            vm.dashboardComponentDataService = $scope.$parent.vm.dashboardComponentDataService;
-            vm.dashboardComponentEventService = $scope.$parent.vm.dashboardComponentEventService;
 
 
         };
@@ -689,8 +592,6 @@
                         console.log('setDataFromDashboard.vm', vm)
                         vm.applyDashboardLayoutState();
 
-                        vm.initDashboardExchange();
-
                         vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
                         /* vm.readyStatus.layout = true;
@@ -708,43 +609,11 @@
 
             });
 
-            vm.dashboardComponentDataService.setEntityViewerDataService(vm.entityViewerDataService);
-            vm.dashboardComponentDataService.setEntityViewerEventService(vm.entityViewerEventService);
-
-            vm.dashboardComponentDataService.setAttributeDataService(vm.attributeDataService);
-            vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.ATTRIBUTE_DATA_SERVICE_INITIALIZED);
-            vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.REPORT_VIEWER_DATA_SERVICE_SET);
-
             var columns = vm.entityViewerDataService.getColumns();
-            vm.dashboardComponentDataService.setViewerTableColumns(columns);
+
 
             $scope.$apply();
 
-            /*Promise.all([downloadAttrsPromise, setLayoutPromise]).then(function () {
-
-                vm.dashboardComponentDataService.setEntityViewerDataService(vm.entityViewerDataService);
-                vm.dashboardComponentDataService.setEntityViewerEventService(vm.entityViewerEventService);
-
-                vm.dashboardComponentDataService.setAttributeDataService(vm.attributeDataService);
-                vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.ATTRIBUTE_DATA_SERVICE_INITIALIZED);
-                vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.REPORT_VIEWER_DATA_SERVICE_SET);
-
-                var columns = vm.entityViewerDataService.getColumns();
-                vm.dashboardComponentDataService.setViewerTableColumns(columns);
-
-                $scope.$apply();
-                //vm.dashboardComponentEventService.dispatchEvent(dashboardEvents.VIEWER_TABLE_COLUMNS_CHANGED);
-
-            }).catch(function (error) {
-
-                if (error.errorCause === 'layout') {
-                    vm.dashboardDataService.setComponentError(vm.componentData.id, {displayMessage: 'failed to load report layout'});
-                }
-
-                vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ERROR);
-                vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                console.error("Dashboard component that uses report viewer error", error);
-            });*/
 
         };
 
