@@ -364,7 +364,7 @@
                 vm.processing = false;
                 $scope.$apply();
 
-            }, 1000 * 30)
+            }, 1000 * 20)
 
         };
 
@@ -500,6 +500,16 @@
         vm.initEventListeners = function () {
 
             vm.initDashboardComponents();
+
+            // Set hard limit for initial loading
+            vm.processingTimeout = setTimeout(function () {
+
+                console.log("Dashboard Loading too long. hide progress bar")
+
+                vm.processing = false;
+                $scope.$apply();
+
+            }, 1000 * 20)
 
             vm.dashboardEventService.addEventListener(dashboardEvents.DASHBOARD_LAYOUT_CHANGE, function () {
 
