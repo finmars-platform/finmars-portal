@@ -334,6 +334,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                         item.___is_open = groupSettings.is_open;
                     }
 
+
+
                     if (!parentGroup.___is_open) {
 
                         item.___is_open = false;
@@ -345,6 +347,10 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                     var entityType = entityViewerDataService.getEntityType();
                     var viewContext = entityViewerDataService.getViewContext();
+
+                    if (viewContext === 'dashboard') {
+                        item.___is_open = true;
+                    }
 
                     if (entityType === 'transaction-report' && viewContext === 'split_panel') {
                         item.___is_open = true;
