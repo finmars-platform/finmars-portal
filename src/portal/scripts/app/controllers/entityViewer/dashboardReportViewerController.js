@@ -232,12 +232,12 @@
 
         vm.applyDashboardLayoutState = function () {
 
-            var componentsOutputs = vm.dashboardDataService.getLayoutState();
+            var layoutState = vm.dashboardDataService.getLayoutState();
 
-            console.log("DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.componentsOutputs", componentsOutputs);
+            console.log("DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.layoutState", layoutState);
             console.log("DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.components_to_listen", vm.componentData.settings.components_to_listen);
 
-            var changed = hasStateChanged(vm.lastSavedOutput, componentsOutputs, vm.componentData.settings.components_to_listen)
+            var changed = hasStateChanged(vm.lastSavedOutput, layoutState, vm.componentData.settings.components_to_listen)
 
             console.log("DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.linked_components", vm.componentData.settings.linked_components);
 
@@ -247,35 +247,41 @@
 
                 if (vm.componentData.settings.linked_components) {
 
-                    var hasLinkedActiveObjectSource = false;
-
-                    var layoutState = vm.dashboardDataService.getLayoutState();
-
                     if (vm.componentData.settings.linked_components.active_object && vm.componentData.settings.linked_components.active_object.length) {
 
                         var key = vm.componentData.settings.linked_components.active_object[0];
 
-                        hasLinkedActiveObjectSource = true;
-
-                    }
-
-                    if (hasLinkedActiveObjectSource) {
                         var activeObjectData = layoutState[key]
 
-                        console.log("DashboardReportViewerController.hasLinkedActiveObjectSource.activeObjectData found", activeObjectData);
+                        console.log('DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.activeObjectData', activeObjectData);
 
-                        // In case if report awaits some active object from linked component, then we wait until data is available
-                        // if user not clicked on anything yet then we skip processing
-                        if (!activeObjectData && vm.entityType === 'transaction-report') {
+                        // vm.entityViewerDataService.setActiveObject(activeObjectData);
+                        vm.entityViewerDataService.setActiveObjectFromAbove(activeObjectData);
 
-                            vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ACTIVE);
-                            vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
-                            vm.processing = false;
+                        // vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
+                        gFiltersHelper.insertActiveObjectDataIntoFilters(vm.entityViewerDataService, vm.entityViewerEventService);
 
-                            return
-                        }
                     }
 
+                    if (vm.entityType === 'transaction-report') {
+
+                        // In case of transaction report we must have active object from above
+                        if (!vm.componentData.settings.linked_components.active_object) {
+                            return
+                        }
+
+                        if (!vm.componentData.settings.linked_components.active_object.length) {
+                            return
+                        }
+
+                        var key = vm.componentData.settings.linked_components.active_object[0];
+                        var activeObjectData = layoutState[key]
+
+                        if (!activeObjectData) {
+                            return
+                        }
+
+                    }
 
                     if (vm.componentData.settings.linked_components.report_settings) {
 
@@ -289,22 +295,6 @@
                         var reportOptionsChange = false
 
                         // Set data to linked filters
-
-                        if (vm.componentData.settings.linked_components.active_object && vm.componentData.settings.linked_components.active_object.length) {
-
-                            var key = vm.componentData.settings.linked_components.active_object[0];
-
-                            var activeObjectData = layoutState[key]
-
-                            console.log('DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.activeObjectData', activeObjectData);
-
-                            // vm.entityViewerDataService.setActiveObject(activeObjectData);
-                            vm.entityViewerDataService.setActiveObjectFromAbove(activeObjectData);
-
-                            // vm.entityViewerEventService.dispatchEvent(evEvents.ACTIVE_OBJECT_CHANGE);
-                            gFiltersHelper.insertActiveObjectDataIntoFilters(vm.entityViewerDataService, vm.entityViewerEventService);
-
-                        }
 
                         Object.keys(vm.componentData.settings.linked_components.report_settings).forEach(function (key) {
 
@@ -347,7 +337,7 @@
 
             }
 
-            vm.lastSavedOutput = componentsOutputs
+            vm.lastSavedOutput = layoutState
 
         }
 
