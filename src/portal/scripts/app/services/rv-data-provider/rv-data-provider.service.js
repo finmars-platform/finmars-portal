@@ -231,7 +231,10 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                     //# region Create an ___id
                     item.___id = evRvCommonHelper.getId(item);
 
-                    var duplicateObj;
+                    // Some depricated logic,
+                    // right now new object will overwrite old one
+                    // FN-2320 2023-11-12 szhitenev
+                    /*var duplicateObj;
 
                     try {
                         // returns an error if a matching object is not found
@@ -247,7 +250,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                         throw customError;
 
-                    }
+                    }*/
 
                     entityViewerDataService.setData(item);
                 });
