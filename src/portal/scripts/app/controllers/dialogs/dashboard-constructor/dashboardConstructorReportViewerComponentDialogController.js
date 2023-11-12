@@ -111,7 +111,7 @@
 
         vm.layouts = [];
 
-        /* vm.reportTypeChange = function() {
+        vm.reportTypeChange = function () {
 
             vm.item.settings.layout = null;
             vm.item.settings.linked_components = {};
@@ -119,14 +119,16 @@
             vm.item.user_settings = {};
 
             vm.getAttributes();
-            vm.getLayouts().then(function () {
+            vm.getLayouts().then(function (data) {
+
+                vm.layoutsWithLinkToFilters = data;
 
                 vm.item.user_settings.columns = JSON.parse(JSON.stringify(vm.tableColumns));
                 vm.smallRvColumnsChanged();
 
             });
 
-        }; */
+        };
 
         vm.layoutsSelectorsList = multitypeFieldService.getReportLayoutsSelectorData().map(function (type) {
             type.custom = {
@@ -492,14 +494,25 @@
 
             vm.getAttributes();
 
-            dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts(), true).then(function (layoutsSelectorsList) {
+            if (vm.item.settings.entity_type) {
+                vm.getLayouts().then(function (data) {
+
+                    vm.layoutsWithLinkToFilters = data;
+
+                    vm.item.user_settings.columns = JSON.parse(JSON.stringify(vm.tableColumns));
+                    vm.smallRvColumnsChanged();
+
+                });
+            }
+
+            /*dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts(), true).then(function (layoutsSelectorsList) {
 
                 vm.layoutsSelectorsList = layoutsSelectorsList;
 
                 vm.readyStatus.layouts = true;
                 $scope.$apply();
 
-            });
+            });*/
 
         };
 
