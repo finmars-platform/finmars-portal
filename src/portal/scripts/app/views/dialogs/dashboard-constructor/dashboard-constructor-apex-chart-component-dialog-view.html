@@ -59,46 +59,6 @@
                     </md-content>
                 </md-tab>
 
-                <md-tab label="LINKING">
-                    <md-content class="p-16">
-
-                        <div data-ng-if="vm.linkingToFilters && vm.linkingToFilters.length">
-                            <h4 class="m-t-0 m-b-16">Link to Selection filters of layout</h4>
-                            <div class="dashboard-constructor-linked-filters-container">
-                                <ui>
-                                    <li data-ng-repeat="lFilter in vm.linkingToFilters">
-                                        <span data-ng-bind="lFilter.name"></span>
-                                    </li>
-                                </ui>
-                            </div>
-                            <!--<div class="dashboard-constructor-linked-filters-ui">
-                                <div data-ng-repeat="lFilter in vm.linkingToFilters"
-                                    data-ng-bind="lFilter.name"
-                                    class="m-b-8 test-class"></div>
-                            </div>-->
-                        </div>
-
-                        <div layout="row">
-                            <div flex="50">
-                                <two-fields-multiselect ng-model="vm.item.settings.linked_components.active_object"
-                                                        title="Select Link to Component"
-                                                        items="vm.componentsForMultiselector"
-                                                        model="vm.item.settings.linked_components.active_object"
-                                                        name-property="name"
-                                                        data-selected-items-indication="array"
-                                                        class="dashboard-constructor-selector-directive"></two-fields-multiselect>
-                            </div>
-                        </div>
-
-                    </md-content>
-                </md-tab>
-
-                <md-tab label="CALCULATION">
-                    <md-content class="p-16"
-                                data-ng-include="'views/dialogs/dashboard-constructor/dashboard-component-settings-calculation-tab-view.html'">
-                    </md-content>
-                </md-tab>
-
             </md-tabs>
 
         </div>
