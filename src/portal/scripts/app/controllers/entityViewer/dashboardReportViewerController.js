@@ -2,10 +2,6 @@
  * Created by szhitenev on 05.05.2016.
  */
 
-const dashboardEvents = require("../../services/dashboard/dashboardEvents");
-const localStorageService = require("../../../../../shell/scripts/app/services/localStorageService");
-const dashboardComponentStatuses = require("../../services/dashboard/dashboardComponentStatuses");
-const evEvents = require("../../services/entityViewerEvents");
 (function () {
 
     'use strict';
@@ -21,10 +17,6 @@ const evEvents = require("../../services/entityViewerEvents");
     var AttributeDataService = require('../../services/attributeDataService');
 
     // var middlewareService = require('../../services/middlewareService');
-
-    var rvDataHelper = require('../../helpers/rv-data.helper');
-
-    var renderHelper = require('../../helpers/render.helper');
 
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
@@ -253,10 +245,6 @@ const evEvents = require("../../services/entityViewerEvents");
 
                 console.log("DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.changed!")
 
-                var triggerReportRequest = false;
-
-                // TODO some shady logic here, consider refactor
-                // settings from controls to reportSettings
                 if (vm.componentData.settings.linked_components) {
 
                     var hasLinkedActiveObjectSource = false;
@@ -278,10 +266,11 @@ const evEvents = require("../../services/entityViewerEvents");
 
                         // In case if report awaits some active object from linked component, then we wait until data is available
                         // if user not clicked on anything yet then we skip processing
-                        if (!activeObjectData) {
+                        if (!activeObjectData && vm.entityType === 'transaction-report') {
 
                             vm.dashboardDataService.setComponentStatus(vm.componentData.id, dashboardComponentStatuses.ACTIVE);
                             vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                            vm.processing = false;
 
                             return
                         }
@@ -348,9 +337,11 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     }
 
+                } else {
 
-
-
+                    // Nothing is linked to report
+                    // just render then
+                    vm.entityViewerEventService.dispatchEvent(evEvents.REQUEST_REPORT);
 
                 }
 
