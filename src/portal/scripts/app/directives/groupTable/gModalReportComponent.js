@@ -108,7 +108,11 @@
             'instrument.accrued_multiplier',
             'instrument.user_text_1',
             'instrument.user_text_2',
-            'instrument.user_text_3'
+            'instrument.user_text_3',
+
+            'instrument.country.name',
+            'instrument.country.short_name',
+            'instrument.country.user_code',
         ];
 
         var instrumentTypeAttrsComp = [
