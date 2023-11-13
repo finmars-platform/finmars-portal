@@ -121,6 +121,13 @@ export default function (toastNotificationService) {
         let message = '';
         let title = '';
 
+        if (error_object.status_code === 400) {
+
+            if (reason.error.error) {
+                error_object = reason.error.error;
+            }
+        }
+
         if (error_object.status_code === 403) {
 
             message = message + '<span class="toast-shield-icon" style="text-align: center; display: block">' +
@@ -205,7 +212,6 @@ export default function (toastNotificationService) {
             });
 
         }
-
 
 
         // DEPRECATED
