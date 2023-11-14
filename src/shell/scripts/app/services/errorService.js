@@ -121,11 +121,9 @@ export default function (toastNotificationService) {
         let message = '';
         let title = '';
 
-        if (error_object.status_code === 400) {
-
-            if (reason.error.error) {
-                error_object = reason.error.error;
-            }
+        // WTF?
+        if (reason.error.error) {
+            error_object = reason.error.error;
         }
 
         if (error_object.status_code === 403) {
