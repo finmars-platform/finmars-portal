@@ -147,10 +147,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
             var options = requestParameters.body;
             var event = requestParameters.event;
 
-            var page = Number(options.page) - 1;
-            // var pagination = entityViewerDataService.getPagination();
-            var step = 10000; // TODO fix pagination problem in future
-            var i;
 
             groupsService.getList(options, entityViewerDataService).then(function (data) {
 
@@ -228,18 +224,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     };
 
-    var getObjectsByRequestParameters = function (requestParameters, entityViewerDataService, entityViewerEventService) {
-
-        return getObjects(requestParameters, entityViewerDataService, entityViewerEventService)
-
-    };
-
-    var getGroupsByRequestParameters = function (requestParameters, entityViewerDataService, entityViewerEventService) {
-
-        return getGroups(requestParameters, entityViewerDataService, entityViewerEventService)
-
-    };
-
     var createRequestParameters = function (evDataService, evEventService, item, parentRequestParameters) {
 
         console.log('rv.createRequestParameters.item', item);
@@ -273,12 +257,20 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                     groupId: item.___group_identifier ? item.___group_identifier : '-',
                     parentGroupId: item.___parentId
                 },
+                pagination: {
+                    page: 1,
+                    count: 0,
+                    page_size: 40,
+                    downloaded: 0
+                },
                 body: {
                     groups_types: groups_types,
                     page: 1,
                     groups_values: groups_values,
                     groups_order: 'asc'
-                }
+                },
+                requestedPages: [1],
+                processedPages: []
             };
 
         } else {
@@ -293,12 +285,20 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                     groupId: item.___group_identifier ? item.___group_identifier : '-',
                     parentGroupId: item.___parentId
                 },
+                pagination: {
+                    page: 1,
+                    count: 0,
+                    page_size: 40,
+                    downloaded: 0
+                },
                 body: {
                     groups_types: groups_types,
                     page: 1,
                     groups_values: groups_values,
                     groups_order: 'asc'
-                }
+                },
+                requestedPages: [1],
+                processedPages: []
             };
 
         }
@@ -338,6 +338,10 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
             getGroups(requestParameters, evDataService, evEventService).then(function (data) {
 
+                requestParameters.pagination.count = data.count;
+                requestParameters.pagination.downloaded = requestParameters.pagination.downloaded + data.results.length;
+                evDataService.setRequestParameters(requestParameters)
+
                 enqueueNewRequests(evDataService, evEventService, data, requestParameters);
 
                 processQueue(evDataService, evEventService)
@@ -347,6 +351,11 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         } else {
 
             getObjects(requestParameters, evDataService, evEventService).then(function (data) {
+
+                requestParameters.pagination.count = data.count;
+                requestParameters.pagination.downloaded = requestParameters.pagination.downloaded + data.results.length;
+                evDataService.setRequestParameters(requestParameters)
+
                 // enqueueNewRequests(evDataService, evEventService, data, requestParameters);
                 processQueue(evDataService, evEventService)
 

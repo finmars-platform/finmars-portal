@@ -1019,6 +1019,46 @@ export default function (toastNotificationService, transactionTypeService, price
 
     }
 
+    var handleControlClick = function (clickData, evDataService, evEventService) {
+
+        var groupHashId = clickData.___parentId;
+
+        var requestParameters = evDataService.getRequestParameters(groupHashId);
+
+
+        var total_pages = Math.ceil(requestParameters.pagination.count / requestParameters.pagination.page_size);
+
+        if (requestParameters.body.page < total_pages) {
+
+            if (!requestParameters.body.page) {
+                requestParameters.body.page = 1;
+                requestParameters.requestedPages = [1]
+            }
+
+            var isLoadMoreButtonPressed = clickData.target.classList.contains('load-more');
+            var isLoadAllButtonPressed = clickData.target.classList.contains('load-all');
+
+            if (isLoadMoreButtonPressed) {
+
+                requestParameters.body.page = requestParameters.body.page + 1;
+                requestParameters.pagination.page = requestParameters.pagination.page + 1;
+                requestParameters.requestedPages.push(requestParameters.body.page);
+
+                evDataService.setRequestParameters(requestParameters);
+                evDataService.setActiveRequestParametersId(requestParameters.id);
+
+                console.log('rv.handleControlClick', requestParameters);
+
+                rvDataProviderService.updateDataStructureByRequestParameters(evDataService, evEventService, requestParameters)
+
+            }
+
+
+        }
+
+    };
+
+
     var initEventDelegation = async function (elem, evDataService, evEventService, usersService, globalDataService) {
 
         const ttypes = await getAllTTypes();
@@ -1031,7 +1071,9 @@ export default function (toastNotificationService, transactionTypeService, price
             console.log('initEventDelegation.clickData', clickData);
             console.log('initEventDelegation.event', event);
 
-            if (clickData.___type === 'hyperlink') {
+            if (clickData.___type === 'control') {
+                handleControlClick(clickData, evDataService, evEventService);
+            }  else if (clickData.___type === 'hyperlink') {
 
                 metaHelper.openLinkInNewTab(event);
 
