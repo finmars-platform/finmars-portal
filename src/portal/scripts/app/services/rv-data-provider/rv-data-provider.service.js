@@ -239,7 +239,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         var parentLevel = parentRequestParameters.groups_level;
 
 
-        var groups_types = evDataHelper.getGroupsTypesToLevel(parentLevel + 1, evDataService);
+        var groups_types = evDataHelper.getGroupsTypesToLevel(parentLevel, evDataService);
         var groups_values = evDataHelper.getGroupsValuesByItem(item, evDataService);
 
 
