@@ -48,7 +48,7 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
                 rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
                 // Frontend is deprecated since 2023-09-10
                 // if (window.location.href.indexOf('v2=true') !== -1) {
-                //     rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                //     rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
                 // } else {
                 //     rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
                 // }
@@ -71,12 +71,13 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
             vm.entityViewerEventService.addEventListener(evEvents.REQUEST_REPORT, function () {
 
                 // rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
-                // rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                // rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
 
-                rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                // rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
                 // Frontend is deprecated since 2023-09-10
                 // if (window.location.href.indexOf('v2=true') !== -1) {
-                //     rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+                //     rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
                 // } else {
                 //     rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
                 // }
@@ -171,7 +172,7 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
 
             vm.possibleToRequestReport = true;
 
-            rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+            rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
 
         }
 
@@ -179,7 +180,7 @@ import localStorageService from "../../../../../shell/scripts/app/services/local
 
             vm.possibleToRequestReport = true;
 
-            rvDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+            rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
         }
 
         vm.setFiltersValuesFromQueryParameters = function () {

@@ -6,55 +6,6 @@ var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
 export default function (entityResolverService, pricesCheckerService, reportHelper, groupsService, objectsService) {
 
-    var requestData = function (evDataService) {
-
-        return new Promise(function (resolve, reject) {
-
-            var entityType = evDataService.getEntityType();
-            var reportOptions = evDataService.getReportOptions();
-
-            // console.log('requestData.entityType', entityType);
-            // console.log('requestData.reportOptions', reportOptions);
-
-            entityResolverService.getList(entityType, reportOptions).then(function (data) {
-
-                // console.log('requestData.data', data);
-
-                // Checkout finmarsOngoingRequests
-                // need to ensure that each copy of report will modify own data;
-                data = JSON.parse(JSON.stringify(data))
-
-                if (!data.hasOwnProperty('non_field_errors')) {
-
-                    var reportOptions = evDataService.getReportOptions();
-
-                    reportOptions = Object.assign({}, reportOptions, data);
-
-                    evDataService.setReportOptions(reportOptions);
-
-                    if (data.hasOwnProperty('task_status') && data.task_status !== 'SUCCESS') {
-
-                        setTimeout(function () {
-                            resolve(requestData(evDataService));
-                        }, 500)
-
-                    } else {
-
-                        resolve(data);
-
-                    }
-                }
-
-            }).catch(function (reason) {
-
-                // console.log('here?');
-
-            })
-        })
-
-
-    };
-
     var injectRegularFilters = function (requestParameters, entityViewerDataService, entityViewerEventService) {
 
         // console.log('injectRegularFilters.requestParameters', requestParameters);
@@ -89,113 +40,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         entityViewerDataService.setRequestParameters(requestParameters);
 
     };
-
-    var requestReport = function (entityViewerDataService, entityViewerEventService) {
-
-        entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
-
-        var entityType = entityViewerDataService.getEntityType();
-        var reportOptions = entityViewerDataService.getReportOptions();
-
-        reportOptions = reportHelper.cleanReportOptionsFromTmpProps(reportOptions);
-        reportOptions.filters = entityViewerDataService.getFilters(); // for transaction report only
-
-        reportOptions.task_id = null;
-
-        if (entityType === 'pl-report') {
-            reportOptions.date_field = 'accounting_date';
-        }
-
-        entityViewerDataService.setReportOptions(reportOptions);
-
-        // console.log('requestReport started');
-
-        entityViewerDataService.setStatusData('loading');
-
-        requestData(entityViewerDataService, entityViewerEventService).then(function (data) {
-
-            var reportOptions = entityViewerDataService.getReportOptions();
-            var entityType = entityViewerDataService.getEntityType();
-
-            reportOptions = Object.assign({}, reportOptions);
-
-            reportOptions.recieved_at = new Date().getTime();
-
-            console.log('reportOptions', reportOptions);
-
-            if (reportOptions.items && reportOptions.items.length) {
-
-                var attributeExtensions = entityViewerDataService.getCrossEntityAttributeExtensions();
-
-                reportOptions.items = reportHelper.injectIntoItemsV2(reportOptions.items, reportOptions, entityType);
-                reportOptions.items = reportHelper.extendAttributes(reportOptions.items, attributeExtensions);
-
-                reportOptions.items = reportHelper.calculateMarketValueAndExposurePercents(reportOptions.items, reportOptions);
-
-                entityViewerDataService.setUnfilteredFlatList(reportOptions.items);
-
-
-            }
-
-            entityViewerDataService.setReportOptions(reportOptions);
-
-            entityViewerDataService.setStatusData('loaded');
-
-            createDataStructure(entityViewerDataService, entityViewerEventService)
-
-        });
-
-
-        // Price checker below
-
-        if (entityType !== 'transaction-report') {
-
-            pricesCheckerService.check(reportOptions).then(function (data) {
-
-                data.items = data.items.map(function (item) {
-
-                    if (item.type === 'missing_principal_pricing_history' || item.type === 'missing_accrued_pricing_history') {
-
-                        data.item_instruments.forEach(function (instrument) {
-
-                            if (item.id === instrument.id) {
-                                item.instrument_object = instrument;
-                            }
-
-                        })
-
-                    }
-
-
-                    if (item.type === 'fixed_calc' || item.type === 'stl_cur_fx' || item.type === 'missing_instrument_currency_fx_rate') {
-
-                        data.item_currencies.forEach(function (currency) {
-
-                            if (item.transaction_currency_id === currency.id) {
-                                item.currency_object = currency;
-                            }
-
-                            if (item.id === currency.id) {
-                                item.currency_object = currency;
-                            }
-
-                        })
-
-                    }
-
-                    return item
-
-                });
-
-                entityViewerDataService.setMissingPrices(data);
-
-                entityViewerEventService.dispatchEvent(evEvents.MISSING_PRICES_LOAD_END)
-
-            });
-
-        }
-    };
-
 
     var getObjects = function (requestParameters, entityViewerDataService, entityViewerEventService) {
 
@@ -259,7 +103,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 entityViewerDataService.setRequestParameters(requestParameters);
 
-                resolve();
+                resolve(data);
 
             }).catch(function (error) {
 
@@ -335,7 +179,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                     }
 
 
-
                     if (!parentGroup.___is_open) {
 
                         item.___is_open = false;
@@ -361,38 +204,13 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                     entityViewerDataService.setData(item);
 
-                    if (item.___is_open) { // Request Data for group if open. TODO refactor it, I dont like it, probably will be issues on large data sets
-
-                        // TODO discuss
-                        // What I propose
-                        // We need to have ONE GENERAL queue list for all requests
-                        // E.G. if we know that user has 70k transactions
-                        // We need to prevent him to do more then 10 requests on level
-
-                        if (!entityViewerDataService.isRequestParametersExist(item.___id)) {
-
-                            var newRequestParameters = createRequestParameters(item, item.___level - 1, entityViewerDataService, entityViewerEventService,)
-
-                            // console.log('rvDataProvider_cascade_download.item', item);
-                            // console.log('rvDataProvider_cascade_download.requestParameters', newRequestParameters);
-
-                            updateDataStructureByRequestParameters(newRequestParameters, entityViewerDataService, entityViewerEventService).then(function () {
-
-                                entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                            })
-
-                        }
-
-                    }
-
                 });
 
                 requestParameters.status = 'loaded';
 
                 entityViewerDataService.setRequestParameters(requestParameters);
 
-                resolve();
+                resolve(data);
 
             }).catch(function (error) {
 
@@ -422,9 +240,10 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     };
 
-    var createRequestParameters = function (item, level, evDataService, evEventService, createdIdsList = []) {
+    var createRequestParameters = function (evDataService, evEventService, item, parentRequestParameters) {
 
-        console.log('createRequestParameters.item', item);
+        console.log('rv.createRequestParameters.item', item);
+        console.log('rv.createRequestParameters.parentRequestParameters', parentRequestParameters);
 
         var groups = evDataService.getGroups();
 
@@ -433,30 +252,21 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         // var id = evRvCommonHelper.getId(item);
         var id = item.___id;
 
-        if (createdIdsList.includes(id)) {
+        var parentLevel = parentRequestParameters.groups_level;
 
-            console.log("Error: duplicated id was created for an item: ", item);
-            var customError = new Error("Item with an ___id " + item.___id + " already exist");
-            customError.___item_data = item;
 
-            throw customError;
-
-        }
-
-        createdIdsList.push(id);
-
-        var groups_types = evDataHelper.getGroupsTypesToLevel(level + 1, evDataService);
+        var groups_types = evDataHelper.getGroupsTypesToLevel(parentLevel + 1, evDataService);
         var groups_values = evDataHelper.getGroupsValuesByItem(item, evDataService);
 
 
         groups_values.push(item.___group_identifier);
 
-        if (groups.length && level + 1 < groups.length) {
+        if (groups.length && parentLevel < groups.length) {
 
             requestParameters = {
                 requestType: 'groups',
                 id: id,
-                groups_level: level + 1, // 0 is for root
+                groups_level: parentLevel + 1, // 0 is for root
                 event: {
                     ___id: id,
                     groupName: item.___group_name,
@@ -476,7 +286,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
             requestParameters = {
                 requestType: 'objects',
                 id: id,
-                groups_level: level + 1, // 0 is for root
+                groups_level: parentLevel + 1, // 0 is for root
                 event: {
                     ___id: id,
                     groupName: item.___group_name,
@@ -500,184 +310,75 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     };
 
-    /**
-     * @function
-     * Calls method updateDataStructureByRequestParameters for groups, its children and objects
-     * @see updateDataStructureByRequestParameters
-     *
-     * @param {string} parentId - if of parent of items
-     * @param { [Object] } items - groups or objects to format and add inside data
-     * @param {number} level - group level of items
-     * @param {Object} evDataService
-     * @param {Object} evEventService
-     * @returns {Promise<[]>} - returns arrays of nested promises for called methods updateDataStructureByRequestParameters
-     */
-    var recursiveRequest = function (parentId, level, evDataService, evEventService, createdIdsList) {
+    function processQueue(evDataService, evEventService) {
 
-        return new Promise(function RecursiveRequestPromise(resolve, reject) {
+        if (evDataService.isRequestsQueueEmpty()) {
+            evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+            return;
+        }
 
-            var promises = [];
-            var requestParameters;
-
-            var dataList = evDataService.getDataAsList();
-
-            var items = []
-
-            dataList.forEach(function (dataItem) {
-
-                if (dataItem.___parentId === parentId) {
-                    items.push(dataItem)
-                }
-
-            })
-
-            items.forEach(function (item) {
-
-                requestParameters = createRequestParameters(item, level, evDataService, evEventService, createdIdsList);
-                promises.push(updateDataStructureByRequestParameters(requestParameters, evDataService, evEventService));
-
-            });
+        var requestParameters = evDataService.dequeueDataRequest();
+        executeRequest(evDataService, evEventService, requestParameters);
+    }
 
 
-            Promise.all(promises).then(function (data) {
+    function enqueueNewRequests(evDataService, evEventService, data, parentRequestParameters,) {
+        // Based on the response 'data', decide what new requests to enqueue
+        // Example: If 'data' contains groups, enqueue a request for each group
+        data.results.forEach(item => {
+            if (item.___is_open) {
+                var newRequestParameters = createRequestParameters(evDataService, evEventService, item, parentRequestParameters);
+                evDataService.enqueueDataRequest(newRequestParameters);
+            }
+        });
+    }
 
-                var groups = evDataService.getGroups();
+    function executeRequest(evDataService, evEventService, requestParameters) {
+        if (requestParameters.requestType === 'groups') {
 
-                level = level + 1;
+            getGroups(requestParameters, evDataService, evEventService).then(function (data) {
 
-                if (level < groups.length) {
+                enqueueNewRequests(evDataService, evEventService, data, requestParameters);
 
-                    // console.log('to next level!', level);
-
-                    items = evDataHelper.getGroupsByLevel(level, evDataService)
-                        .filter(item => item.___parentId === parentId);
-                    // console.log('recursiveRequest.items', items);
-
-                    var recursiveRequestPromises = [];
-
-                    items.forEach(function (item) {
-
-                        // console.log('item!', item.___group_name);
-
-                        recursiveRequestPromises.push(recursiveRequest(item.___id, level, evDataService, evEventService, createdIdsList));
-
-                    });
-
-                    Promise.all(recursiveRequestPromises).then(function (data) {
-                        resolve(data);
-                    })
-
-
-                } else { //
-
-                    resolve([])
-                }
-
-            });
-
-        })
-
-    };
-
-    var initRecursiveRequestParametersCreation = function (evDataService, evEventService, createdIdsList) {
-
-        console.time('Creating Data Structure');
-
-        var rootGroup = evDataService.getRootGroupData();
-        var level = 0;
-
-        return recursiveRequest(rootGroup.___id, level, evDataService, evEventService, createdIdsList).then(function () {
-            console.timeEnd('Creating Data Structure');
-        })
-
-    };
-
-    var createdIdsList = []; // WTF VERY BAD PATTERN, never do it again
-
-    var createDataStructure = function (evDataService, evEventService) {
-        // console.log('createDataStructure')
-
-        evDataService.resetData();
-        evDataService.resetRequestParameters();
-        var createdIdsList = [];
-
-        var defaultRootRequestParameters = evDataService.getActiveRequestParameters();
-        var groupTypes = evDataService.getGroups();
-        var activeColumnSort = evDataService.getActiveColumnSort();
-
-        evEventService.dispatchEvent(evEvents.DATA_LOAD_START);
-
-        if (groupTypes.length) {
-            console.log('createDataStructure 1', defaultRootRequestParameters)
-
-            // get children groups for the rootGroup
-            getGroups(defaultRootRequestParameters, evDataService, evEventService).then(function () {
-                /*
-                 * Get children groups for every group level
-                 *
-                 * injectRegularFilters() will be called inside updateDataStructureByRequestParameters()
-                 * that is inside recursiveRequest()
-                 * that is inside initRecursiveRequestParametersCreation()
-                 */
-                initRecursiveRequestParametersCreation(evDataService, evEventService, createdIdsList).then(function () {
-                    console.log('createDataStructure 2', defaultRootRequestParameters)
-
-                    // var activeGroupTypeSort = evDataService.getActiveGroupTypeSort();
-
-                    /*
-                    if (sortByGroupType) {
-
-                        sortGroupType(evDataService, evEventService, false).then(function () {
-
-                            if (activeColumnSort) {
-                                sortObjects(evDataService, evEventService);
-
-                            } else {
-                                evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-                            }
-
-                        });
-
-                    }
-
-                    if (activeColumnSort) {
-                        sortObjects(evDataService, evEventService);
-                    }
-
-                    if (!sortByGroupType && !activeColumnSort) {
-                        evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-                    }
-                    */
-                    if (activeColumnSort) {
-                        sortObjects(evDataService, evEventService);
-                    } else {
-                        evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-                    }
-
-
-                })
+                processQueue(evDataService, evEventService)
 
             });
 
         } else {
 
-            console.log('createDataStructure 3', defaultRootRequestParameters)
+            getObjects(requestParameters, evDataService, evEventService).then(function (data) {
+                // enqueueNewRequests(evDataService, evEventService, data, requestParameters);
+                processQueue(evDataService, evEventService)
 
-            injectRegularFilters(defaultRootRequestParameters, evDataService);
-
-            getObjects(defaultRootRequestParameters, evDataService, evEventService).then(function () {
-                console.log('createDataStructure 4', defaultRootRequestParameters)
-
-                if (activeColumnSort) {
-                    sortObjects(evDataService, evEventService);
-
-                } else {
-                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-                }
-
-            })
+            });
 
         }
+    }
+
+    var createDataStructure = function (evDataService, evEventService) {
+        console.log('rv.createDataStructure')
+
+        evDataService.resetData();
+        evDataService.resetRequestParameters();
+
+        var reportOptions = evDataService.getReportOptions();
+
+        if (reportOptions) {
+            reportOptions.report_instance_id = null // if clear report_instance_id then we request new Report Calculation
+        }
+
+        evDataService.setReportOptions(reportOptions);
+
+        var defaultRootRequestParameters = evDataService.getActiveRequestParameters();
+
+        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+        evEventService.dispatchEvent(evEvents.DATA_LOAD_START);
+
+        // Start the process by enqueuing the first request
+        evDataService.enqueueDataRequest(defaultRootRequestParameters);
+
+        // Begin processing the queue
+        processQueue(evDataService, evEventService);
 
 
     };
@@ -690,39 +391,18 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
      * @param evEventService
      * @returns {Promise<unknown>}
      */
-    var updateDataStructureByRequestParameters = function (requestParameters, evDataService, evEventService) {
+    var updateDataStructureByRequestParameters = function (evDataService, evEventService, requestParameters) {
 
         // console.log('updateDataStructureByRequestParameters.requestParameters', requestParameters);
 
+        injectRegularFilters(requestParameters, evDataService, evEventService);
+
         evEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
-        return new Promise(function (resolve, reject) {
+        evDataService.enqueueDataRequest(requestParameters);
 
-            injectRegularFilters(requestParameters, evDataService, evEventService);
-
-            // console.log('requestParameters.requestType', requestParameters.requestType);
-
-            if (requestParameters.requestType === 'objects') {
-
-                getObjectsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
-                    resolve(data)
-
-                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-
-                })
-
-            }
-
-            if (requestParameters.requestType === 'groups') {
-
-                getGroupsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
-                    resolve(data)
-
-                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
-                })
-            }
-
-        })
+        // Begin processing the queue
+        processQueue(evDataService, evEventService);
 
     };
 
@@ -734,25 +414,10 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         evEventService.dispatchEvent(evEvents.DATA_LOAD_START);
 
-        if (requestParameters.requestType === 'objects') {
+        evDataService.enqueueDataRequest(requestParameters);
 
-            getObjectsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
-
-                evEventService.dispatchEvent(evEvents.DATA_LOAD_END); // backend logic
-
-            })
-
-        }
-
-        if (requestParameters.requestType === 'groups') {
-
-            getGroupsByRequestParameters(requestParameters, evDataService, evEventService).then(function (data) {
-
-                evEventService.dispatchEvent(evEvents.DATA_LOAD_END); // backend logic
-
-            })
-        }
-
+        // Begin processing the queue
+        processQueue(evDataService, evEventService);
 
     };
 
@@ -875,7 +540,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     return {
         createDataStructure: createDataStructure,
-        requestReport: requestReport,
         updateDataStructure: updateDataStructure,
 
         sortObjects: sortObjects,
