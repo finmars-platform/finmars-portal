@@ -119,6 +119,9 @@
     module.exports = function (reportHelper) {
 
         var data = {
+
+            requestsQueue: [],
+
             columns: [],
             groups: [],
             rootGroupOptions: {
@@ -759,14 +762,14 @@
             var keysLen = keys.length;
 
             for (i = 0; i < keysLen; i = i + 1) {
-                result.push( data.data[keys[i]] );
+                result.push(data.data[keys[i]]);
             }
 
             return result;
 
         }
 
-        function  resetOnlyItems() {
+        function resetOnlyItems() {
 
             var list = getDataAsList()
 
@@ -810,6 +813,8 @@
             console.log('defaultRootGroup', defaultRootGroup);
 
             setData(defaultRootGroup);
+            setFlatList([])
+            setProjection([])
 
         }
 
@@ -1392,7 +1397,7 @@
                     }
                 }
 
-                listLayout.data.grouping = listLayout.data.grouping.map( groupType => {
+                listLayout.data.grouping = listLayout.data.grouping.map(groupType => {
 
                     if (!groupType.report_settings) {
                         groupType.report_settings = {};
@@ -1408,8 +1413,7 @@
 
                 listLayout.data.filters = emptyUseFromAboveFilters(listLayout.data.filters);
 
-            }
-            else {
+            } else {
 
                 setPagination(listLayout.data.pagination);
 
@@ -1868,6 +1872,29 @@
         }
 
 
+        function enqueueDataRequest(request) {
+
+            console.log("rv.queue.enqueueDataRequest", request)
+
+            data.requestsQueue.push(request);
+        }
+
+        function dequeueDataRequest() {
+
+            console.log("rv.queue.dequeueDataRequest", data.requestsQueue[0])
+
+            return data.requestsQueue.shift();
+
+        }
+
+        function getRequestsQueue() {
+            return data.requestsQueue
+        }
+
+        function isRequestsQueueEmpty() {
+            return data.requestsQueue.length === 0;
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -2143,7 +2170,13 @@
             getGlobalTableSearch: getGlobalTableSearch,
 
             setRenderTime: setRenderTime,
-            getRenderTime: getRenderTime
+            getRenderTime: getRenderTime,
+
+
+            enqueueDataRequest: enqueueDataRequest,
+            dequeueDataRequest: dequeueDataRequest,
+            getRequestsQueue: getRequestsQueue,
+            isRequestsQueueEmpty: isRequestsQueueEmpty
 
         }
     }

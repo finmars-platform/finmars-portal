@@ -595,8 +595,7 @@ const evEvents = require("../../services/entityViewerEvents");
                         scope.evDataService.setActiveGroupTypeSort(columnOrGroup);
                         scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
 
-                    }
-                    else {
+                    } else {
 
                         scope.evDataService.setActiveColumnSort(columnOrGroup);
                         scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
@@ -919,7 +918,7 @@ const evEvents = require("../../services/entityViewerEvents");
                         let groupsIds = scope.evDataService.getSelectedGroups();
 
                         if (!groupsIds.length) {
-                            groupsIds = [ scope.evDataService.getRootGroupData() ];
+                            groupsIds = [scope.evDataService.getRootGroupData()];
                         }
 
                         groupsIds = groupsIds.map(group => group.___id);
@@ -2241,14 +2240,16 @@ const evEvents = require("../../services/entityViewerEvents");
 
                             if (!scope.evDataService.isRequestParametersExist(group.___id)) {
 
-                                unfoldPromises.push(function (){
+                                unfoldPromises.push(function () {
 
-                                    var requestParameters = rvDataProviderService.createRequestParameters(group, group.___level - 1, scope.evDataService, scope.evEventService)
+                                    var parentRequestParameters = scope.evDataService.getRequestParameters(group.___parentId);
+
+                                    var requestParameters = rvDataProviderService.createRequestParameters(scope.evDataService, scope.evEventService, group, parentRequestParameters)
 
                                     console.log('handleFoldButtonClick.group', group);
                                     console.log('handleFoldButtonClick.requestParameters', requestParameters);
 
-                                    return rvDataProviderService.updateDataStructureByRequestParameters(requestParameters, scope.evDataService, scope.evEventService)
+                                    return rvDataProviderService.updateDataStructureByRequestParameters(scope.evDataService, scope.evEventService, requestParameters)
                                 })
 
                             }

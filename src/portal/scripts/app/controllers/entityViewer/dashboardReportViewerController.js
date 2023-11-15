@@ -346,7 +346,8 @@
 
             vm.entityViewerEventService.addEventListener(evEvents.REQUEST_REPORT, function () {
 
-                rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+                // rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
+                rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
 
             });
 

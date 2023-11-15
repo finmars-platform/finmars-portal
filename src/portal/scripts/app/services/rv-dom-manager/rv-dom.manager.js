@@ -292,16 +292,14 @@ export default function (toastNotificationService, transactionTypeService, price
 
                 if (!evDataService.isRequestParametersExist(group.___id)) {
 
-                    var requestParameters = rvDataProviderService.createRequestParameters(group, group.___level - 1, evDataService, evEventService,)
+                    var parentRequestParameters = evDataService.getRequestParameters(group.___parentId);
+
+                    var requestParameters = rvDataProviderService.createRequestParameters(evDataService, evEventService, group, parentRequestParameters)
 
                     console.log('handleFoldButtonClick.group', group);
                     console.log('handleFoldButtonClick.requestParameters', requestParameters);
 
-                    rvDataProviderService.updateDataStructureByRequestParameters(requestParameters, evDataService, evEventService).then(function () {
-
-                        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
-
-                    })
+                    rvDataProviderService.updateDataStructureByRequestParameters(evDataService, evEventService, requestParameters)
 
                 }
 
