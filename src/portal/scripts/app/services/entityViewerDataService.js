@@ -133,7 +133,7 @@
             },
             useFromAboveFilters: [],
             pagination: {
-                page_size: 60
+                page_size: 40
             },
             status: {
                 data: null
@@ -894,12 +894,13 @@
                             page: 1,
                             groups_values: [],
                             groups_order: 'asc',
-                            page_size: 60
+                            page_size: data.pagination.page_size,
                         },
                         pagination: {
                             page: 1,
                             page_size: data.pagination.page_size,
-                            count: 1
+                            count: 1,
+                            downloaded: 0
                         },
                         requestedPages: [1],
                         processedPages: []
@@ -921,12 +922,13 @@
                             page: 1,
                             groups_values: [],
                             groups_order: 'asc',
-                            page_size: 60
+                            page_size: data.pagination.page_size,
                         },
                         pagination: {
                             page: 1,
                             page_size: data.pagination.page_size,
-                            count: 1
+                            count: 1,
+                            downloaded: 0
                         },
                         requestedPages: [1],
                         processedPages: []

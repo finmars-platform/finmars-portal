@@ -207,6 +207,16 @@
 
                 }
 
+                item.results.push({
+                    ___id:  item.___id + '_control',
+                    ___group_identifier: item.___group_identifier,
+                    ___group_name: item.___group_name,
+                    ___type: 'control',
+                    ___parentId: item.___id,
+                    ___level: item.___level + 1
+                });
+
+
             });
 
         });

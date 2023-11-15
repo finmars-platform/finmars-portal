@@ -238,6 +238,11 @@
                     }
 
                 }
+                else if (node.___type === 'control') {
+
+                    list[map[node.___parentId]].results.push(node)
+
+                }
 
             } else {
 
