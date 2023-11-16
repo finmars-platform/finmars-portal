@@ -224,6 +224,7 @@
 
                         console.log('DashboardReportViewerController.COMPONENT_OUTPUT_CHANGE.activeObjectData', activeObjectData);
 
+                        vm.entityViewerDataService.resetData();
                         // vm.entityViewerDataService.setActiveObject(activeObjectData);
                         vm.entityViewerDataService.setActiveObjectFromAbove(activeObjectData);
 

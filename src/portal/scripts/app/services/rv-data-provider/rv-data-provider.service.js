@@ -6,14 +6,14 @@ var queryParamsHelper = require('../../helpers/queryParamsHelper');
 
 export default function (entityResolverService, pricesCheckerService, reportHelper, groupsService, objectsService) {
 
-    var injectRegularFilters = function (requestParameters, entityViewerDataService, entityViewerEventService) {
+    var injectRegularFilters = function (requestParameters, evDataService, evEventService) {
 
         // console.log('injectRegularFilters.requestParameters', requestParameters);
 
         var newRequestParametersBody = Object.assign({}, requestParameters.body);
         newRequestParametersBody['filter_settings'] = [];
 
-        var filters = entityViewerDataService.getFilters();
+        var filters = evDataService.getFilters();
 
         filters.forEach(function (item) {
 
@@ -37,21 +37,21 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         requestParameters.body = newRequestParametersBody;
 
-        entityViewerDataService.setRequestParameters(requestParameters);
+        evDataService.setRequestParameters(requestParameters);
 
     };
 
-    var getObjects = function (requestParameters, entityViewerDataService, entityViewerEventService) {
+    var getObjects = function (requestParameters, evDataService, evEventService) {
 
         console.log('getObjects.requestParameters', requestParameters);
 
         requestParameters.status = 'loading';
 
-        entityViewerDataService.setRequestParameters(requestParameters);
+        evDataService.setRequestParameters(requestParameters);
 
         return new Promise(function (resolve, reject) {
 
-            var entityType = entityViewerDataService.getEntityType();
+            var entityType = evDataService.getEntityType();
 
             var options = requestParameters.body;
             var event = requestParameters.event;
@@ -60,10 +60,19 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
             var step = 10000; // TODO fix pagination problem in future
             var i;
 
+            var requestId = evDataService.getCurrentRequestId();
 
-            objectsService.getList(options, entityViewerDataService).then(function (data) {
+            objectsService.getList(options, evDataService).then(function (data) {
 
-                var parentGroup = entityViewerDataService.getData(requestParameters.id);
+                if (requestId !== evDataService.getCurrentRequestId()) {
+                    // do not remove
+                    // Seems that this response is too old, just ignore it
+                    // szhitenev 2023-11-16
+                    return
+                }
+
+                var parentGroup = evDataService.getData(requestParameters.id);
+                var reportOptions = evDataService.getReportOptions();
 
                 data.results.map(function (item, index) {
 
@@ -82,7 +91,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                     try {
                         // returns an error if a matching object is not found
-                        duplicateObj = entityViewerDataService.getObject(item.___id, item.___parentId);
+                        duplicateObj = evDataService.getObject(item.___id, item.___parentId);
                     } catch (e) {
                         console.error(e);
                     }
@@ -96,12 +105,12 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                     }*/
 
-                    entityViewerDataService.setData(item);
+                    evDataService.setData(item);
                 });
 
                 requestParameters.status = 'loaded';
 
-                entityViewerDataService.setRequestParameters(requestParameters);
+                evDataService.setRequestParameters(requestParameters);
 
                 resolve(data);
 
@@ -111,7 +120,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 requestParameters.status = 'error';
 
-                entityViewerDataService.setRequestParameters(requestParameters);
+                evDataService.setRequestParameters(requestParameters);
 
                 reject();
 
@@ -121,13 +130,13 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     };
 
-    var getGroups = function (requestParameters, entityViewerDataService, entityViewerEventService) {
+    var getGroups = function (requestParameters, evDataService, evEventService) {
 
         console.log('getGroups.requestParameters', requestParameters);
 
         requestParameters.status = 'loading';
 
-        // var groupTypes = entityViewerDataService.getGroups();
+        // var groupTypes = evDataService.getGroups();
         var matchingGTypeIndex = requestParameters.body.groups_types.length - 1;
         var groupType = requestParameters.body.groups_types[matchingGTypeIndex];
 
@@ -138,21 +147,32 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         }
 
-        entityViewerDataService.setRequestParameters(requestParameters);
+        evDataService.setRequestParameters(requestParameters);
+
+        var requestId = evDataService.getCurrentRequestId();
 
         return new Promise(function (resolve, reject) {
 
-            var entityType = entityViewerDataService.getEntityType();
+            var entityType = evDataService.getEntityType();
 
             var options = requestParameters.body;
             var event = requestParameters.event;
 
 
-            groupsService.getList(options, entityViewerDataService).then(function (data) {
+            groupsService.getList(options, evDataService).then(function (data) {
+
+                if (requestId !== evDataService.getCurrentRequestId()) {
+                    // do not remove
+                    // Seems that this response is too old, just ignore it
+                    // szhitenev 2023-11-16
+                    return
+                }
+
+                var reportOptions = evDataService.getReportOptions();
 
                 // console.log('groupsService.getList.data', data)
 
-                var parentGroup = entityViewerDataService.getData(requestParameters.id);
+                var parentGroup = evDataService.getData(requestParameters.id);
 
                 data.results.map(function (item, index) {
 
@@ -168,7 +188,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                     item.___id = evRvCommonHelper.getId(item); // order matters
 
-                    var groupSettings = rvDataHelper.getOrCreateGroupSettings(entityViewerDataService, item);
+                    var groupSettings = rvDataHelper.getOrCreateGroupSettings(evDataService, item);
 
                     if (groupSettings.hasOwnProperty('is_open')) {
                         item.___is_open = groupSettings.is_open;
@@ -180,12 +200,12 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                         item.___is_open = false;
                         groupSettings.is_open = false;
 
-                        rvDataHelper.setGroupSettings(entityViewerDataService, item, groupSettings);
+                        rvDataHelper.setGroupSettings(evDataService, item, groupSettings);
 
                     }
 
-                    var entityType = entityViewerDataService.getEntityType();
-                    var viewContext = entityViewerDataService.getViewContext();
+                    var entityType = evDataService.getEntityType();
+                    var viewContext = evDataService.getViewContext();
 
                     if (viewContext === 'dashboard') {
                         item.___is_open = true;
@@ -198,13 +218,13 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                     // console.log('parentGroup.___is_open', parentGroup.___is_open)
                     // console.log('item.___is_open', item.___is_open)
 
-                    entityViewerDataService.setData(item);
+                    evDataService.setData(item);
 
                 });
 
                 requestParameters.status = 'loaded';
 
-                entityViewerDataService.setRequestParameters(requestParameters);
+                evDataService.setRequestParameters(requestParameters);
 
                 resolve(data);
 
@@ -214,7 +234,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 requestParameters.status = 'error';
 
-                entityViewerDataService.setRequestParameters(requestParameters);
+                evDataService.setRequestParameters(requestParameters);
 
                 reject();
 
@@ -370,6 +390,9 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         evDataService.resetData();
         evDataService.resetRequestParameters();
 
+
+        evDataService.incrementCurrentRequestId();
+
         var reportOptions = evDataService.getReportOptions();
 
         if (reportOptions) {
@@ -430,15 +453,15 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     };
 
-    var sortObjects = function (entityViewerDataService, entityViewerEventService) {
+    var sortObjects = function (evDataService, evEventService) {
 
-        entityViewerDataService.resetOnlyItems();
+        evDataService.resetOnlyItems();
 
-        var activeColumnSort = entityViewerDataService.getActiveColumnSort();
-        var level = entityViewerDataService.getGroups().length;
+        var activeColumnSort = evDataService.getActiveColumnSort();
+        var level = evDataService.getGroups().length;
 
-        var levelGroups = evDataHelper.getGroupsByLevel(level, entityViewerDataService);
-        var requestsParameters = entityViewerDataService.getAllRequestParameters();
+        var levelGroups = evDataHelper.getGroupsByLevel(level, evDataService);
+        var requestsParameters = evDataService.getAllRequestParameters();
         var levelRequestParameters = [];
 
         Object.keys(requestsParameters).forEach(function (key) {
@@ -452,7 +475,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                     requestsParameters[key].body.ordering = activeColumnSort.key;
                     requestsParameters[key].body.ordering_mode = activeColumnSort.options.sort_settings.mode
 
-                    entityViewerDataService.setRequestParameters(requestsParameters[key]);
+                    evDataService.setRequestParameters(requestsParameters[key]);
                     //# endregion Apply sorting settings
 
                     levelRequestParameters.push(requestsParameters[key]);
@@ -466,22 +489,22 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         var promises = [];
 
         levelRequestParameters.forEach(function (requestParameters) { // get sorted content
-            promises.push(getObjects(requestParameters, entityViewerDataService, entityViewerEventService));
+            promises.push(getObjects(requestParameters, evDataService, evEventService));
         });
 
         Promise.all(promises).then(function () {
-            entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+            evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
         })
 
     };
 
-    var sortGroupType = function (entityViewerDataService, entityViewerEventService, signalDataLoadEnd) {
+    var sortGroupType = function (evDataService, evEventService, signalDataLoadEnd) {
 
-        var activeGroupTypeSort = entityViewerDataService.getActiveGroupTypeSort();
+        var activeGroupTypeSort = evDataService.getActiveGroupTypeSort();
 
         console.log('sortGroupType.activeGroupTypeSort', activeGroupTypeSort);
 
-        var groupsTypes = entityViewerDataService.getGroups();
+        var groupsTypes = evDataService.getGroups();
 
         // level of a parent used, because sorting applies to an array inside 'result' property of a parent
         var parentLevel = groupsTypes.findIndex(function (item) {
@@ -495,9 +518,9 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         console.log('sortGroupType.parentLevel', parentLevel);
 
-        var groups = evDataHelper.getGroupsByLevel(parentLevel, entityViewerDataService);
+        var groups = evDataHelper.getGroupsByLevel(parentLevel, evDataService);
 
-        var requestsParameters = entityViewerDataService.getAllRequestParameters();
+        var requestsParameters = evDataService.getAllRequestParameters();
         var requestParametersForUnfoldedGroups = [];
 
         Object.keys(requestsParameters).forEach(function (key) {
@@ -513,20 +536,20 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
         });
 
         // should be called after requestParametersForUnfoldedGroups assembled
-        entityViewerDataService.resetOnlyGroups();
+        evDataService.resetOnlyGroups();
 
         groups.forEach(function (group) {
 
             group.results = [];
 
-            entityViewerDataService.setData(group)
+            evDataService.setData(group)
 
         });
 
         var promises = [];
 
         requestParametersForUnfoldedGroups.forEach(function (requestParameters) {
-            promises.push(getGroups(requestParameters, entityViewerDataService, entityViewerEventService));
+            promises.push(getGroups(requestParameters, evDataService, evEventService));
         });
 
         return new Promise(function (resolve, reject) {
@@ -534,7 +557,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
             Promise.all(promises).then(function (data) {
 
                 if (signalDataLoadEnd !== false) {
-                    entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+                    evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
                 }
 
                 resolve();

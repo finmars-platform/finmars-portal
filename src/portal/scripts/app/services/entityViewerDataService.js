@@ -121,6 +121,9 @@
         var data = {
 
             requestsQueue: [],
+            // needs in dashboard when user can quicly change active Objects
+            // we just ignore old response data that not equal to currentRequestId
+            currentRequestId: 0,
 
             columns: [],
             groups: [],
@@ -1897,6 +1900,17 @@
             return data.requestsQueue.length === 0;
         }
 
+        function incrementCurrentRequestId() {
+
+            data.currentRequestId = data.currentRequestId + 1;
+        }
+
+        function getCurrentRequestId() {
+
+            return data.currentRequestId
+
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -2178,7 +2192,11 @@
             enqueueDataRequest: enqueueDataRequest,
             dequeueDataRequest: dequeueDataRequest,
             getRequestsQueue: getRequestsQueue,
-            isRequestsQueueEmpty: isRequestsQueueEmpty
+            isRequestsQueueEmpty: isRequestsQueueEmpty,
+
+
+            incrementCurrentRequestId: incrementCurrentRequestId,
+            getCurrentRequestId: getCurrentRequestId,
 
         }
     }
