@@ -583,6 +583,7 @@ export default (function () {
     portal.controller('DataTransactionTypeController', ['$scope', '$stateParams', require('./app/controllers/data/dataTransactionTypeController')]);
     portal.controller('DataTransactionTypeGroupController', ['$scope', '$stateParams', require('./app/controllers/data/dataTransactionTypeGroupController')]);
     portal.controller('DataPriceHistoryController', ['$scope', '$stateParams', 'priceHistoryService', require('./app/controllers/data/dataPriceHistoryController')]);
+    portal.controller('DataPortfolioHistoryController', ['$scope', '$stateParams', 'priceHistoryService', require('./app/controllers/data/dataPortfolioHistoryController')]);
     portal.controller('DataCurrencyHistoryController', ['$scope', '$stateParams', 'currencyHistoryService', require('./app/controllers/data/dataCurrencyHistoryController')]);
     portal.controller('DataCurrencyController', ['$scope', '$stateParams', require('./app/controllers/data/dataCurrencyController')]);
     portal.controller('DataStrategyController', ['$scope', '$stateParams', require('./app/controllers/data/dataStrategyController')]);

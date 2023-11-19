@@ -167,6 +167,11 @@ export default function (cookieService, xhrService) {
                 key: "portfolios.portfolioregisterrecord"
             },
             {
+                name: "Portfolio History",
+                entity: 'portfolio-history',
+                key: "portfolios.portfoliohistory"
+            },
+            {
                 name: "Instrument Type",
                 entity: 'instrument-type',
                 key: "instruments.instrumenttype"
@@ -455,6 +460,11 @@ export default function (cookieService, xhrService) {
                 name: "Portfolio Register Record",
                 entity: 'portfolio-register-record',
                 key: "portfolios.portfolioregisterrecord"
+            },
+            {
+                name: "Portfolio History",
+                entity: 'portfolio-history',
+                key: "portfolios.portfoliohistory"
             },
             {
                 name: "Instrument Type",

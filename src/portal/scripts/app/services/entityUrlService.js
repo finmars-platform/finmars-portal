@@ -35,6 +35,8 @@
                 return 'instruments/instrument-type';
             case 'price-history':
                 return 'instruments/price-history';
+            case 'portfolio-history':
+                return 'portfolios/portfolio-history';
             case 'transaction':
                 return 'transactions/transaction';
             case 'transaction-type':

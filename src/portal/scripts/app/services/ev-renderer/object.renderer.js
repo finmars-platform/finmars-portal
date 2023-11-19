@@ -178,6 +178,8 @@
         'C': 'Created',
         'Overwritten': 'Created',
         'R': 'Requested',
+        'ok': 'Ok',
+        'error': 'Error',
 
         1: 'Booked',
         2: 'Pending',
