@@ -24,6 +24,7 @@ var getEntitiesWithoutDynamicAttrsList = function () {
         'counterparty-group', 'responsible-group', 'tag', 'transaction-type-group',
         'strategy-1-subgroup', 'strategy-2-subgroup', 'strategy-3-subgroup',
         'audit-transaction', 'audit-instrument', 'portfolio-register-record',
+        'portfolio-history',
         'complex-transaction-import-scheme', 'csv-import-scheme',
         'generated-event']
 };

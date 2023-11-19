@@ -297,6 +297,14 @@
                     layoutUserCode: null
                 }
             })
+            .state('app.portal.data.portfolio-history', {
+                url: '/portfolio-history',
+                templateUrl: 'views/data/data-portfolio-history-view.html',
+                controller: 'DataPortfolioHistoryController as vm',
+                params: {
+                    layoutUserCode: null
+                }
+            })
             //.state('app.portal.data.pricing', {
             //    url: '/pricing',
             //    templateUrl: 'views/data/data-pricing-view.html',

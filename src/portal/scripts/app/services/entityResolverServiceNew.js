@@ -3,6 +3,7 @@
  */
 
 var portfolioService = require('./portfolioService');
+var portfolioHistoryService = require('./portfolioHistoryService');
 var portfolioRegisterService = require('./portfolioRegisterService');
 var portfolioRegisterRecordService = require('./portfolioRegisterRecordService');
 var accountService = require('./accountService');
@@ -13,6 +14,7 @@ var responsibleGroupService = require('./responsibleGroupService');
 var counterpartyService = require('./counterpartyService');
 var counterpartyGroupService = require('./counterpartyGroupService');
 var currencyService = require('./currencyService');
+
 var transactionService = require('./transactionService');
 // var transactionTypeService = require('./transactionTypeService');
 var transactionClassService = require('./transaction/transactionClassService');
@@ -179,6 +181,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'price-history':
                 return priceHistoryService.getList(options);
                 break;
+            case 'portfolio-history':
+                return portfolioHistoryService.getList(options);
+                break;
             case 'pricing-policy':
                 return pricingPolicyService.getList(options);
                 break;
@@ -314,6 +319,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'price-history':
                 return priceHistoryService.getByKey(id);
                 break;
+            case 'portfolio-history':
+                return portfolioHistoryService.getByKey(id);
+                break;
             case 'currency-history':
                 return currencyHistoryService.getByKey(id);
                 break;
@@ -439,6 +447,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 break;
             case 'price-history':
                 return priceHistoryService.create(entity);
+                break;
+            case 'portfolio-history':
+                return portfolioHistoryService.create(entity);
                 break;
             case 'currency-history':
                 return currencyHistoryService.create(entity);
@@ -591,6 +602,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 break;
             case 'price-history':
                 return priceHistoryService.update(id, entity);
+                break;
+            case 'portfolio-history':
+                return portfolioHistoryService.update(id, entity);
                 break;
             case 'pricing-policy':
                 return pricingPolicyService.update(id, entity);
@@ -786,6 +800,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 break;
             case 'price-history':
                 return priceHistoryService.deleteByKey(id);
+                break;
+            case 'portfolio-history':
+                return portfolioHistoryService.deleteByKey(id);
                 break;
             case 'pricing-policy':
                 return pricingPolicyService.deleteByKey(id);
