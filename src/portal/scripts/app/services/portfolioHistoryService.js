@@ -25,6 +25,9 @@
     var deleteByKey = function (id) {
         return portfolioHistoryRepository.deleteByKey(id);
     };
+    var deleteBulk = function (data) {
+        return portfolioHistoryRepository.deleteBulk(data);
+    };
 
     module.exports = {
         getList: getList,
@@ -32,6 +35,7 @@
         create: create,
         update: update,
         deleteByKey: deleteByKey,
+        deleteBulk: deleteBulk
 
     }
 

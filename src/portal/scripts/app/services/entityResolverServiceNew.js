@@ -903,6 +903,8 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return transactionTypeGroupService.deleteBulk(data);
             case 'price-history':
                 return priceHistoryService.deleteBulk(data);
+            case 'portfolio-history':
+                return portfolioHistoryService.deleteBulk(data);
             case 'pricing-policy':
                 return pricingPolicyService.deleteBulk(data);
             case 'currency-history':
