@@ -39,9 +39,9 @@
             var items = []
 
             dataList.forEach(function (item) {
-              if (item.___parentId == item.___id) {
-                  items.push(item)
-              }
+                if (item.___parentId == item.___id) {
+                    items.push(item)
+                }
             })
 
             item.subtotal = rvSubtotalHelper.calculate(items, columns);
@@ -84,7 +84,6 @@
             dataList.forEach(function (item) {
 
 
-
                 if (item.___level === i) {
                     calculateItemSubtotal(item, evDataService);
                 }
@@ -95,7 +94,7 @@
 
     };
 
-    var calculateGrandTotal= function (evDataService) {
+    var calculateGrandTotal = function (evDataService) {
 
         var dataList = evDataService.getDataAsList();
 
@@ -207,14 +206,21 @@
 
                 }
 
-                item.results.push({
-                    ___id:  item.___id + '_control',
-                    ___group_identifier: item.___group_identifier,
-                    ___group_name: item.___group_name,
-                    ___type: 'control',
-                    ___parentId: item.___id,
-                    ___level: item.___level + 1
-                });
+                var requestParameters = evDataService.getRequestParameters(item.___id);
+
+                if (requestParameters) {
+                    if (requestParameters.pagination.count > requestParameters.pagination.page_size) {
+
+                        item.results.push({
+                            ___id: item.___id + '_control',
+                            ___group_identifier: item.___group_identifier,
+                            ___group_name: item.___group_name,
+                            ___type: 'control',
+                            ___parentId: item.___id,
+                            ___level: item.___level + 1
+                        });
+                    }
+                }
 
 
             });
@@ -906,7 +912,7 @@
 
         evDataService.setProjectionLastFrom(from);
 
-        var to = from + step * 3/2;
+        var to = from + step * 3 / 2;
 
         // console.timeEnd('Creating projection');
 
