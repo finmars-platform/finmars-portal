@@ -87,7 +87,10 @@
         ];
 
         var portfolioAttrsComp = ['portfolio.name', 'portfolio.short_name', 'portfolio.notes', 'portfolio.user_code', 'portfolio.public_name'];
-        var currencyAttrsComp = ['currency.name', 'currency.short_name', 'currency.notes', 'currency.user_code', 'currency.public_name', 'currency.pricing_condition'];
+        var currencyAttrsComp = ['currency.name', 'currency.short_name', 'currency.notes', 'currency.user_code', 'currency.public_name', 'currency.pricing_condition',
+            'currency.country.name',
+            'currency.country.short_name',
+            'currency.country.user_code',];
 
         var instrumentAttrsComp = [
             'instrument.name',
