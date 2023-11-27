@@ -1,5 +1,5 @@
 <md-dialog aria-label="dashboard matrix constructor dialog"
-           class="draggable-dialog width-50 dialog-actions-bottom dcMatrixElemToDrag"
+           class="draggable-dialog width-90 dialog-actions-bottom dcMatrixElemToDrag dashboard-constructor-dialog"
            drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
@@ -12,7 +12,7 @@
         <md-tabs>
 
             <md-tab label="Main">
-                <md-content class="p-16">
+                <md-content class="p-16" style="padding-top: 32px;">
 
                     <div>
                         <md-input-container style="width: 200px;">
@@ -25,93 +25,32 @@
                             <input type="text" data-ng-model="vm.item.user_code">
                         </md-input-container>
 
-                        <div>
-                            <md-input-container style="width: 200px;">
-                                <label for="">Matrix label</label>
-                                <input type="text" data-ng-model="vm.item.custom_component_name">
-                            </md-input-container>
+                        <md-input-container style="width: 200px; height: 58px;">
+                            <label for="">Matrix Type</label>
+                            <md-select data-ng-model="vm.item.settings.matrix_type" data-ng-change="vm.getAttributes()">
+                                <md-option value="balance">Balance</md-option>
+                                <md-option value="pl">P&L</md-option>
+                            </md-select>
+                        </md-input-container>
+
+                        <div layout="row">
+                            <two-fields-multiselect ng-model="vm.item.settings.components_to_listen"
+                                                    title="Components to Listen"
+                                                    items="vm.componentsTypesToListen"
+                                                    model="vm.item.settings.components_to_listen"
+                                                    name-property="name"
+                                                    data-selected-items-indication="array"
+                                                    class="dashboard-constructor-selector-directive"></two-fields-multiselect>
                         </div>
-
-                        <!-- <div class="m-t-16 m-b-16">
-
-                            <md-input-container style="width: 200px;">
-                                <label for="">Report Type</label>
-                                <md-select data-ng-model="vm.item.settings.entity_type"
-                                           data-ng-change="vm.reportTypeChange()">
-                                    <md-option value="balance-report">Balance Report</md-option>
-                                    <md-option value="pl-report">P&L Report</md-option>
-                                    <md-option value="transaction-report">Transaction Report</md-option>
-                                </md-select>
-                            </md-input-container>
-
-                        </div>
-
 
                         <div class="m-t-16 m-b-16">
 
-                            &lt;!&ndash;<md-input-container class="dashboard-constructor-field1">
-                                <label for="">Layout</label>
-                                <md-select ng-model="vm.item.settings.layout"
-                                           md-container-class="common-select-container"
-                                           md-on-open="vm.getLayouts()"
-                                           md-on-close="layoutSearchTerm = ''"
-                                           ng-class="{'disabled-btn': !vm.item.settings.entity_type}">
-                                    <div>
-                                        <md-select-header>
-                                            <input data-ng-model="layoutSearchTerm"
-                                                   type="search"
-                                                   placeholder="Search for a ..."
-                                                   class="md-text md-select-search-pattern select-input-filter"
-                                                   ng-keydown="$event.stopPropagation()">
-                                        </md-select-header>
-
-                                        <div class="select-options-holder">
-
-                                            <md-option
-                                                    data-ng-repeat="layout in vm.layouts | orderBy:'-name' | filter: {name: layoutSearchTerm} as results track by layout.id"
-                                                    ng-value="layout.id"
-                                                    ng-bind="layout.name">
-                                            </md-option>
-
-                                        </div>
-                                    </div>
-                                </md-select>
-                            </md-input-container>&ndash;&gt;
-                            <expandable-items-selector data-model="vm.item.settings.layout"
-                                                       data-title="Layout"
-                                                       data-dialog-title="Choose layout"
-                                                       data-items="vm.layoutsWithLinkToFilters"
-                                                       data-is-disabled="!vm.item.settings.entity_type"
-                                                       data-on-change-callback="vm.showLinkingToFilters()"
-                                                       class="dashboard-constructor-selector-directive"></expandable-items-selector>
-
-                        </div> -->
-                        <div style="width: 400px;" class="m-l-10">
-                            <div ng-if="vm.readyStatus.layouts">
-                                <multitype-field label="Select layout"
-                                                 field-types-data="vm.layoutsSelectorsList"
-                                                 type-switch="selector"
-                                                 on-value-change="vm.onLayoutChange()"
-                                                 on-type-change="vm.onLayoutEntityTypeChange(activeType)"></multitype-field>
-                            </div>
-
-                            <div ng-if="!vm.readyStatus.layouts" class="flex-row fc-space-around" style="height: 40px;">
-                                <progress-circular diameter="30"></progress-circular>
-                            </div>
-                        </div>
-
-                        <div layout="row">
-
-                            <div class="m-t-16 m-b-16">
-
-                                <table-attribute-selector title="Axis X Columns"
-                                                          dialog-title="Axis X Columns"
-                                                          available-attrs="vm.attributes"
-                                                          item="vm.item.settings.abscissa"
-                                                          is-report="true"
-                                                          class="dashboard-constructor-field1"></table-attribute-selector>
-
-                            </div>
+                            <table-attribute-selector title="Axis X Columns"
+                                                      dialog-title="Axis X Columns"
+                                                      available-attrs="vm.attributes"
+                                                      item="vm.item.settings.abscissa"
+                                                      is-report="true"
+                                                      class="dashboard-constructor-field1"></table-attribute-selector>
 
                         </div>
 
@@ -126,7 +65,7 @@
 
                         </div>
 
-                        <div layout="row">
+                        <div layout="row" layout-align="start center">
 
                             <div class="m-t-16 m-b-16">
 
@@ -159,7 +98,8 @@
 
                             </div>
 
-                            <md-button class="md-raised md-primary" ng-click="vm.openNumberFormatSettings($event)" style="margin-right:20px;">
+                            <md-button class=" outline-button" ng-click="vm.openNumberFormatSettings($event)"
+                                       style="margin-right:20px;">
                                 Format Settings
                             </md-button>
 
@@ -215,7 +155,9 @@
             <md-tab label="ADVANCE SETTINGS">
                 <md-content class="p-16">
 
-                    <div>
+                    <json-editor data-source="vm.reportOptions" data-index="1"></json-editor>
+
+                    <div style="margin-top: 24px;">
                         <md-input-container style="width: 200px;">
                             <label for="">Hide empty columns or / and rows</label>
                             <md-select data-ng-model="vm.item.settings.hide_empty_lines">
@@ -225,7 +167,8 @@
                             </md-select>
                         </md-input-container>
 
-                        <md-button data-ng-click="vm.item.settings.hide_empty_lines = ''" class="md-raised">clear</md-button>
+                        <md-button data-ng-click="vm.item.settings.hide_empty_lines = ''" class="md-raised">clear
+                        </md-button>
                     </div>
 
                     <div>
@@ -346,10 +289,6 @@
 
     </md-dialog-content>
     <md-dialog-actions layout="row">
-
-        <md-button ng-click="vm.exportToDashboards()" style="margin-right:20px;">
-            Export to dashboards
-        </md-button>
 
         <md-button ng-click="vm.cancel()" style="margin-right:20px;">
             Cancel

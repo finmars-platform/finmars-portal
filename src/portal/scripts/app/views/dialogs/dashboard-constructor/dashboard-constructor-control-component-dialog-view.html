@@ -1,5 +1,5 @@
 <md-dialog aria-label="dashboard constructor control component"
-           class="draggable-dialog width-50"
+           class="draggable-dialog width-90 dashboard-constructor-dialog"
            drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
@@ -40,10 +40,17 @@
                             </div>
 
 
+                            <p>
+                                Please, do not use Value Type: <b>Date</b> (Deprecated). Consider using Control Date Component instead.
+                            </p>
+
                             <md-input-container class="md-block" style="height: 58px">
                                 <label>Value Type</label>
-                                <md-select data-ng-model="vm.item.settings.value_type" ng-change="vm.valueTypeChanged()">
-                                    <md-option ng-repeat="valueType in vm.valueTypes" ng-value="valueType.code">{{valueType.name}}</md-option>
+                                <md-select data-ng-model="vm.item.settings.value_type"
+                                           ng-change="vm.valueTypeChanged()">
+                                    <md-option ng-repeat="valueType in vm.valueTypes" ng-value="valueType.code">
+                                        {{valueType.name}}
+                                    </md-option>
                                 </md-select>
                             </md-input-container>
 
@@ -84,7 +91,9 @@
 
                                     <md-input-container style="height: 58px">
 
-                                        <md-checkbox data-ng-model="vm.item.settings.multiple" data-ng-change="vm.onMultipleChange()">Multiple Select</md-checkbox>
+                                        <md-checkbox data-ng-model="vm.item.settings.multiple"
+                                                     data-ng-change="vm.onMultipleChange()">Multiple Select
+                                        </md-checkbox>
 
                                     </md-input-container>
 
@@ -95,7 +104,9 @@
 
                             <md-input-container style="height: 58px">
 
-                                <md-checkbox data-ng-model="vm.item.settings.auto_refresh">Trigger Refresh on Value Change</md-checkbox>
+                                <md-checkbox data-ng-model="vm.item.settings.auto_refresh">Trigger Refresh on Value
+                                    Change
+                                </md-checkbox>
 
                             </md-input-container>
 
@@ -151,14 +162,16 @@
                                                              on-type-change="vm.onLayoutEntityTypeChange(activeType)"></multitype-field>
                                         </div>
 
-                                        <div ng-if="!vm.readyStatus.layouts" class="flex-row fc-space-around" style="height: 40px;">
+                                        <div ng-if="!vm.readyStatus.layouts" class="flex-row fc-space-around"
+                                             style="height: 40px;">
                                             <progress-circular diameter="30"></progress-circular>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <md-input-container ng-if="vm.item.settings.value_type == 40 && vm.defaultValue.entity_type !== 'balance-report'"
-                                                            class="dashboard-constructor-field1" style="height: 58px">
+                                        <md-input-container
+                                                ng-if="vm.item.settings.value_type == 40 && vm.defaultValue.entity_type !== 'balance-report'"
+                                                class="dashboard-constructor-field1" style="height: 58px">
 
                                             <label for="">Report Field</label>
                                             <md-select data-ng-model="vm.defaultValue.report_field"
@@ -174,7 +187,8 @@
                                     </div>
 
                                     <div data-ng-if="vm.item.settings.value_type === 40 && vm.defaultValue.report_field.value"
-                                         class="p-t-10" ng-class="{'m-l-8': vm.defaultValue.entity_type === 'balance-report'}">
+                                         class="p-t-10"
+                                         ng-class="{'m-l-8': vm.defaultValue.entity_type === 'balance-report'}">
                                         Current default value: {{vm.defaultValue.report_field.value}}
                                     </div>
 
@@ -186,7 +200,8 @@
 
                                 <div class="p-b-24">Value type: {{vm.getCurrentValueTypeName()}}</div>
 
-                                <md-input-container data-ng-if="vm.item.settings.value_type === 40" class="field-date-pick-holder no-error-spacer">
+                                <md-input-container data-ng-if="vm.item.settings.value_type === 40"
+                                                    class="field-date-pick-holder no-error-spacer">
                                     <label data-ng-bind="vm.item.custom_component_name || vm.item.name"></label>
                                     <zh-date-picker data-date-value="vm.defaultValue.setValue"></zh-date-picker>
                                 </md-input-container>

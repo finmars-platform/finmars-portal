@@ -42,6 +42,64 @@
     min-width: 100%;
   }
 
+  .g-row {
+    height: @gRowHeight;
+    overflow: hidden;
+
+  }
+
+  .g-row.g-control-row {
+    background: transparent;
+
+    .g-row-selection {
+      pointer-events: none;
+    }
+    .g-row-settings-table {
+      pointer-events: none;
+    }
+
+    .control-placeholder {
+      float: left;
+      height: @gRowHeight;
+      // border-right: 1px solid @gCellBorderColor;
+      // border-bottom: 1px solid @gCellBorderColor;
+      box-sizing: border-box;
+    }
+
+    .control-content {
+      font-size: 14px;
+      //position: absolute;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      //top: 0;
+      //left: @gRowSelectionWidth;
+    }
+
+    .control-button {
+      color: #f05a22;
+      margin: 2px;
+      height: 29px;
+      border: 0;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-size: 13px;
+      font-weight: bold;
+
+      &:hover {
+        //opacity: 0.7;
+        background-color: rgba(240,90,34,.1);
+      }
+    }
+
+    .control-button.load-more {
+      margin-right: 8px;
+    }
+
+  }
+
+
+
   /* .g-wrapper .g-row {
     border-bottom: 1px solid #ddd;
     overflow: hidden;
@@ -289,27 +347,27 @@
     opacity: .4;
   }
 
-  .control-button {
-    //background: #ddd;
-    background-color: rgb(63, 81, 181);
-    color: #fff;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
-    margin: 2px;
-    height: 20px;
-    border: 0;
-    border-right: 1px solid #000;
-    border-bottom: 1px solid;
-    cursor: pointer;
+  //.control-button {
+  //  //background: #ddd;
+  //  background-color: rgb(63, 81, 181);
+  //  color: #fff;
+  //  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
+  //  margin: 2px;
+  //  height: 20px;
+  //  border: 0;
+  //  border-right: 1px solid #000;
+  //  border-bottom: 1px solid;
+  //  cursor: pointer;
+  //
+  //  &:hover {
+  //    //opacity: 0.7;
+  //    background-color: #2f3e9b;
+  //  }
+  //}
 
-    &:hover {
-      //opacity: 0.7;
-      background-color: #2f3e9b;
-    }
-  }
-
-  .control-button.load-more {
-    margin-right: 8px;
-  }
+  //.control-button.load-more {
+  //  margin-right: 8px;
+  //}
 
   /*.report-bg-level-1 {
     background: #F1D6D6;

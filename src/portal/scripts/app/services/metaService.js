@@ -373,6 +373,9 @@
                 case 'app.portal.data.portfolio-register-record':
                     name = "Transactions: Register Records";
                     break;
+                case 'app.portal.data.portfolio-history':
+                    name = "Valuations: Portfolio History";
+                    break;
 
                 case 'app.portal.data.price-history':
                     name = "Valuations: Prices";

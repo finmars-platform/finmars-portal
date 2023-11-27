@@ -8,7 +8,7 @@
     var evEvents = require('../../services/entityViewerEvents');
 
     var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
-
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
 
     module.exports = function ($mdDialog, $state) {
         return {
@@ -56,9 +56,9 @@
                     scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE)
                 }
 
-                var deselectChildrenObjs = function (item) {
+                var deselectChildrenObjs = function (itemId) {
 
-                    item.results.forEach(function (child) { // deactivate objects from previously selected group
+                    /*item.results.forEach(function (child) { // deactivate objects from previously selected group
 
                         if (child.___type === 'object') {
                             child.___is_activated = false;
@@ -66,7 +66,19 @@
 
                     });
 
-                    return item;
+                    return item;*/
+                    const children = evRvCommonHelper.getDirectChildren(itemId, scope.evDataService);
+
+                    children.forEach(child => {
+
+                        if (child.___type === 'object') {
+
+                            child.___is_activated = false;
+                            scope.evDataService.setData(child);
+
+                        }
+
+                    })
 
                 };
 
@@ -160,7 +172,7 @@
                             item.___is_selected = false;
 
                             if (item.results && item.results.length) {
-                                item = deselectChildrenObjs(item);
+                                deselectChildrenObjs(item.___id);
                             }
 
                             scope.evDataService.setData(item);
@@ -180,9 +192,9 @@
                         if (scope.item.results && scope.item.results.length) {
 
                             var item = scope.evDataService.getData(scope.item.___id);
-                            item = deselectChildrenObjs(item);
+                            deselectChildrenObjs(item);
 
-                            scope.evDataService.setData(item);
+                            // scope.evDataService.setData(item);
 
                         }
 

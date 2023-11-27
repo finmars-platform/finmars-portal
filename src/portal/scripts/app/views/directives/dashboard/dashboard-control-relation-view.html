@@ -1,0 +1,73 @@
+<div class="dashboard-control height-100 dashboardControl">
+
+    <div ng-if="!processing">
+
+
+        <div class="position-relative">
+
+            <div class="width-100">
+
+                <div data-ng-if="!componentData.settings.multiple">
+
+                    <entity-search-select data-ng-if="selectorType === 'entitySearchSelect'"
+                                          data-item="item.data.store.value"
+                                          data-item-object="entityData.value"
+                                          data-label="customName"
+                                          data-input-text="item.data.store.name"
+                                          data-item-name="item.data.store.name"
+                                          data-entity-type="entityType"
+                                          data-custom-buttons="buttons"
+                                          data-on-change-callback="valueChanged(changedValue)"></entity-search-select>
+
+                    <dropdown-select data-ng-if="selectorType === 'dropdownSelect'"
+                                     data-label="{{componentData.name}}"
+                                     data-menu-options="selOptions"
+                                     data-model="item.data.store.value"
+                                     data-item-name="item.data.store.name"
+                                     data-custom-buttons="buttons"
+                                     data-on-change-callback="valueChanged(changedValue)"></dropdown-select>
+
+                    <unified-data-select data-ng-if="selectorType === 'unifiedDataSelect'"
+                                         data-label="{{componentData.name}}"
+                                         data-model="item.data.store.value"
+                                         data-item-object="entityData.value"
+                                         data-item-name="item.data.store.name"
+                                         data-custom-buttons="buttons"
+                                         data-entity-type="entityType"
+                                         data-on-change-callback="valueChanged(changedValue)"></unified-data-select>
+
+                    <instrument-select data-ng-if="entityType === 'instrument'"
+                                       data-label="{{componentData.name}}"
+                                       data-model="item.data.store.value"
+                                       data-item-object="entityData.value"
+                                       data-item-name="item.data.store.name"
+                                       data-custom-buttons="buttons"
+                                       data-on-change-callback="valueChanged(changedValue)"></instrument-select>
+                </div>
+
+                <div data-ng-if="componentData.settings.multiple">
+
+                    <two-fields-multiselect data-title="{{componentData.name}}"
+                                            data-items="selOptions"
+                                            data-model="item.data.store.value"
+                                            data-selected-items-indication="chips"
+                                            data-multiselect-event-service="multiselectEventService"
+                                            data-custom-buttons="buttons"
+                                            data-on-change-callback="valueChanged(changedValue)"
+                                            class="two-fields-multiselect no-error-spacer dashboard-control-multiselect"></two-fields-multiselect>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div ng-if="processing" style="padding-top: 12px;">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular data-diameter="30"></progress-circular>
+        </div>
+    </div>
+
+
+</div>

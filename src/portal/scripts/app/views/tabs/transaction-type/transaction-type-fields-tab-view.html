@@ -6,7 +6,9 @@
          layout="column">
 
         <div>
-            <md-button class="md-raised md-primary" style="margin-top: 2px;"  data-ng-click="vm.recalculateUserFields($event, null)">Recalculate</md-button>
+            <md-button class="md-raised md-primary"
+                       style="margin-top: 2px;"
+                       data-ng-click="vm.recalculateUserFields($event, null)">Recalculate</md-button>
 
         </div>
 
@@ -28,14 +30,15 @@
 
                         <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
                                                   data-item="vm.entity.user_text_1"></expression-editor-button>-->
-                        <expression-input label="{{vm.transactionUserFields[item.key]}}"
-                                          model="vm.entity[item.key]"
+                        <expression-input data-label="{{vm.transactionUserFields[item.key]}}"
+                                          data-model="vm.entity[item.key]"
+                                          data-event-signal="vm.exprInputEventObj.userFields[item.key]"
                                           data-data="vm.expressionData"
                                           class="custom-input-bottom-space"></expression-input>
 
                         <ng-md-icon class="tooltip-inline-block"
-                                    icon="info"
-                                    size="20"
+                                    data-icon="info"
+                                    data-size="20"
                                     style="fill: #777777">
                             <md-tooltip class="tooltip_2"
                                         md-direction="top">
@@ -74,9 +77,10 @@
                         <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
                                                   data-item="vm.entity.user_number_1"></expression-editor-button>-->
 
-                        <expression-input label="{{vm.transactionUserFields[item.key]}}"
-                                          model="vm.entity[item.key]"
+                        <expression-input data-label="{{vm.transactionUserFields[item.key]}}"
+                                          data-model="vm.entity[item.key]"
                                           data-data="vm.expressionData"
+                                          data-event-signal="vm.exprInputEventObj.userFields[item.key]"
                                           class="custom-input-bottom-space"></expression-input>
 
                         <ng-md-icon class="tooltip-inline-block"
@@ -119,8 +123,9 @@
                         <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}"
                                                   data-item="vm.entity.user_date_1"></expression-editor-button>-->
 
-                        <expression-input label="{{vm.transactionUserFields[item.key]}}"
-                                          model="vm.entity[item.key]"
+                        <expression-input data-label="{{vm.transactionUserFields[item.key]}}"
+                                          data-model="vm.entity[item.key]"
+                                          data-event-signal="vm.exprInputEventObj.userFields[item.key]"
                                           data-data="vm.expressionData"
                                           class="custom-input-bottom-space"></expression-input>
 
@@ -174,7 +179,10 @@
             </md-menu-content>
         </md-menu>
 
-        <md-button class="md-raised" data-ng-click="vm.saveAsTemplate($event, 'field_template')">Save as a Template</md-button>
+        <md-button class="md-raised"
+                   data-ng-click="vm.saveAsTemplate($event, 'field_template')">
+            Save as a Template
+        </md-button>
 
     </div>
 

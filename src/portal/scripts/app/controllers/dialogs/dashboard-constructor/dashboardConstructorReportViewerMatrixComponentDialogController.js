@@ -12,9 +12,9 @@
         vm.newFilter = {};
 
         vm.filterLinks = [];
-		vm.readyStatus = {
-			layouts: false
-		};
+        vm.readyStatus = {
+            layouts: false
+        };
 
         vm.componentsForMultiselector = [];
         var componentsForLinking = dashboardHelper.getComponentsForLinking();
@@ -29,7 +29,9 @@
                 id: null, // should be generated before create
                 name: '',
                 settings: {
-					entity_type: 'balance-report',
+                    components_to_listen: [],
+                    matrix_type: 'balance',
+                    // entity_type: 'balance-report',
                     abscissa: '',
                     ordinate: '',
                     value_key: '',
@@ -42,12 +44,18 @@
                     },
                     auto_refresh: false,
                     auto_scaling: false,
-					calculate_name_column_width: false,
+                    calculate_name_column_width: false,
                     linked_components: {},
                     hide_empty_lines: '',
                     filters: {
                         show_filters_area: false,
                         show_use_from_above_filters: false,
+                    },
+                    default_report_options: {
+                        cost_method: 1,
+                        account_mode: 1,
+                        portfolio_mode: 1,
+                        custom_fields_to_calculate: ""
                     }
                 },
 
@@ -56,23 +64,29 @@
 
         }
 
+        if (!vm.item.settings.default_report_options) {
+            vm.item.settings.default_report_options = {};
+        }
+
+        vm.reportOptions = JSON.stringify(vm.item.settings.default_report_options, null, 4);
+
         vm.componentsTypes = [];
 
         vm.componentType = dataService.getComponentById(vm.item.id);
 
-        vm.layoutsByEntityType = {
-			'balance-report': [],
-			'pl-report': [],
-			'transaction-report': [],
-		};
-
-        vm.layouts = [];
+        // vm.layoutsByEntityType = {
+        // 	'balance-report': [],
+        // 	'pl-report': [],
+        // 	'transaction-report': [],
+        // };
+        //
+        // vm.layouts = [];
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
 
-        vm.getContentTypeByEntityType = function () {
+        /*vm.getContentTypeByEntityType = function () {
 
             if (vm.item.settings.entity_type === 'balance-report') {
                 return 'reports.balancereport'
@@ -86,9 +100,9 @@
                 return 'reports.transactionreport'
             }
 
-        };
+        };*/
 
-        vm.openNumberFormatSettings = function($event) {
+        vm.openNumberFormatSettings = function ($event) {
 
             $mdDialog.show({
                 controller: 'NumberFormatSettingsDialogController as vm',
@@ -113,85 +127,87 @@
 
         };
 
-		/* vm.reportTypeChange = function() {
+        /* vm.reportTypeChange = function() {
 
-			vm.item.settings.layout = null;
-			vm.item.settings.linked_components= {};
+            vm.item.settings.layout = null;
+            vm.item.settings.linked_components= {};
 
-			vm.item.settings.abscissa = null;
-			vm.item.settings.ordinate = null;
-			vm.item.settings.value_key = null;
+            vm.item.settings.abscissa = null;
+            vm.item.settings.ordinate = null;
+            vm.item.settings.value_key = null;
 
-			vm.item.user_settings = {};
+            vm.item.user_settings = {};
 
-			vm.getAttributes();
-			vm.getLayouts();
+            vm.getAttributes();
+            vm.getLayouts();
 
-		};
+        };
 
-		vm.layoutsSelectorsList = [
-			{
-				'key': 'balance-report',
-				'model': "",
-				'fieldType': 'dropdownSelect',
-				'isDefault': true,
-				'isActive': false,
-				'sign': '<div class="multitype-field-type-letter">B</div>',
-				'name': 'Balance',
-				'value_type': 100,
-				'custom': {
-					'menuOptionsNotLoaded': true,
-				},
-				'fieldData': {
-					'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-					'menuOptions': []
-				}
-			},
-			{
-				'key': 'pl-report',
-				'model': '',
-				'fieldType': 'dropdownSelect',
-				'isDefault': false,
-				'isActive': false,
-				'sign': '<div class="multitype-field-type-letter">P</div>',
-				'name': 'Profit & Loss',
-				'value_type': 100,
-				'custom': {
-					'menuOptionsNotLoaded': true,
-				},
-				'fieldData': {
-					'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-					'menuOptions': []
-				}
-			},
-			{
-				'key': 'transaction-report',
-				'model': '',
-				'fieldType': 'dropdownSelect',
-				'isDefault': false,
-				'isActive': false,
-				'sign': '<div class="multitype-field-type-letter">T</div>',
-				'name': 'Transactions',
-				'value_type': 100,
-				'custom': {
-					'menuOptionsNotLoaded': true,
-				},
-				'fieldData': {
-					'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
-					'menuOptions': []
-				}
-			}
-		]; */
+        vm.layoutsSelectorsList = [
+            {
+                'key': 'balance-report',
+                'model': "",
+                'fieldType': 'dropdownSelect',
+                'isDefault': true,
+                'isActive': false,
+                'sign': '<div class="multitype-field-type-letter">B</div>',
+                'name': 'Balance',
+                'value_type': 100,
+                'custom': {
+                    'menuOptionsNotLoaded': true,
+                },
+                'fieldData': {
+                    'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+                    'menuOptions': []
+                }
+            },
+            {
+                'key': 'pl-report',
+                'model': '',
+                'fieldType': 'dropdownSelect',
+                'isDefault': false,
+                'isActive': false,
+                'sign': '<div class="multitype-field-type-letter">P</div>',
+                'name': 'Profit & Loss',
+                'value_type': 100,
+                'custom': {
+                    'menuOptionsNotLoaded': true,
+                },
+                'fieldData': {
+                    'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+                    'menuOptions': []
+                }
+            },
+            {
+                'key': 'transaction-report',
+                'model': '',
+                'fieldType': 'dropdownSelect',
+                'isDefault': false,
+                'isActive': false,
+                'sign': '<div class="multitype-field-type-letter">T</div>',
+                'name': 'Transactions',
+                'value_type': 100,
+                'custom': {
+                    'menuOptionsNotLoaded': true,
+                },
+                'fieldData': {
+                    'smallOptions': {'dialogParent': '.dialog-containers-wrap'},
+                    'menuOptions': []
+                }
+            }
+        ]; */
 
-		vm.layoutsSelectorsList = multitypeFieldService.getReportLayoutsSelectorData().map(function (type) {
-			type.custom = {
-				menuOptionsNotLoaded: true,
-			}
-			return type;
-		});
+        // Deprecate since FN-2320 2023-11-11 szhitenev
+        /*vm.layoutsSelectorsList = multitypeFieldService.getReportLayoutsSelectorData().map(function (type) {
+            type.custom = {
+                menuOptionsNotLoaded: true,
+            }
+            return type;
+        });*/
 
-        vm.onLayoutEntityTypeChange = function (activeType) {
-			/*vm.item.settings.entity_type = activeType.key;
+        // Deprecate since FN-2320 2023-11-11 szhitenev
+        /*vm.onLayoutEntityTypeChange = function (activeType) {
+			/!*vm.item.settings.entity_type = activeType.key;
 
 			if (activeType.custom.menuOptionsNotLoaded) {
 
@@ -200,7 +216,7 @@
 
 				$scope.$apply();
 
-			}*/
+			}*!/
 			dashboardConstructorMethodsService.onReportTypeChange(activeType, vm.item, vm.getLayouts, $scope).then(function (item) {
 
 				vm.layouts = vm.layoutsByEntityType[vm.item.settings.entity_type];
@@ -218,15 +234,16 @@
 
 			});
 
-		};
+		};*/
 
-        vm.onLayoutChange = function () {
+        // Deprecate since FN-2320 2023-11-11 szhitenev
+        /*vm.onLayoutChange = function () {
         	var activeType = vm.layoutsSelectorsList.find(function (type) {
 				return type.isActive;
 			});
 
         	vm.item.settings.layout = activeType.model;
-		};
+		};*/
 
         /*vm.getLayouts = function () {
 
@@ -243,31 +260,32 @@
             });
 
         };*/
-		vm.getLayouts = function () {
+        // Deprecate since FN-2320 2023-11-11 szhitenev
+        /*vm.getLayouts = function () {
 
-			return new Promise(function (resolve) {
+            return new Promise(function (resolve) {
 
-				uiService.getListLayout(vm.item.settings.entity_type, {pageSize: 1000}).then(function (data) {
+                uiService.getListLayout(vm.item.settings.entity_type, {pageSize: 1000}).then(function (data) {
 
-					vm.layoutsByEntityType[vm.item.settings.entity_type] = data.results;
-					vm.layouts = data.results;
+                    vm.layoutsByEntityType[vm.item.settings.entity_type] = data.results;
+                    vm.layouts = data.results;
 
-					var layoutsForMultitypeSelector = dashboardHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
+                    var layoutsForMultitypeSelector = dashboardHelper.getDataForLayoutSelectorWithFilters(vm.layouts);
 
-					vm.showLinkingToFilters();
+                    vm.showLinkingToFilters();
 
-					$scope.$apply();
+                    $scope.$apply();
 
-					resolve(layoutsForMultitypeSelector);
+                    resolve(layoutsForMultitypeSelector);
 
-				}).catch(function (error) {
-					console.error(error);
-					resolve([]);
-				});
+                }).catch(function (error) {
+                    console.error(error);
+                    resolve([]);
+                });
 
-			});
+            });
 
-		};
+        };*/
 
         vm.showLinkingToFilters = function () {
 
@@ -288,18 +306,18 @@
 
         };
 
-        vm.clearSelect = function (item, propToDelete) {
-            delete item[propToDelete];
-        };
+        vm.getAttributes = function () {
 
-        // Victor 2020.10.26 Issue #47
-        vm.exportToDashboards = function () {
-            dashboardConstructorMethodsService.exportComponentToDashboards(vm, $mdDialog, dataService);
-        };
+            var entityType;
 
-        vm.getAttributes = function(){
+            if (vm.item.settings.matrix_type === 'balance') {
+                entityType = 'balance-report'
+            }
+            if (vm.item.settings.matrix_type === 'pl') {
+                entityType = 'pl-report'
+            }
 
-            vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type);
+            vm.attributes = attributeDataService.getAllAttributesByEntityType(entityType);
 
             vm.numericAttributes = vm.attributes.filter(function (item) {
                 return item.value_type === 20;
@@ -309,21 +327,27 @@
 
         vm.agree = function () {
 
-            var layoutName;
+            // Deprecate since FN-2320 2023-11-11 szhitenev
+            /*var layoutName;
 
-            /*vm.layouts.forEach(function (layout) {
+            /!*vm.layouts.forEach(function (layout) {
 
                 if (layout.id === vm.item.settings.layout) {
                     layoutName = layout.name
                 }
 
-            });*/
+            });*!/
             var selLayout = vm.layouts.find(layout => layout.user_code === vm.item.settings.layout);
 
             if (selLayout) layoutName = selLayout.name;
 
-            vm.item.settings.layout_name = layoutName;
-            vm.item.settings.content_type = vm.getContentTypeByEntityType();
+            vm.item.settings.layout_name = layoutName;*/
+
+
+            // vm.item.settings.content_type = vm.getContentTypeByEntityType();
+
+
+            vm.item.settings.default_report_options = JSON.parse(vm.reportOptions);
 
 
             if (vm.item.settings.subtotal_formula_id) {
@@ -366,7 +390,18 @@
 
             vm.componentsTypes = dataService.getComponents();
 
-            dashboardConstructorMethodsService.getDataForComponentsSelector(vm, componentsForLinking, vm.item.id);
+            vm.componentsTypesToListen = vm.componentsTypes.filter(function (item) {
+                return item.user_code // should not be empty
+            }).map(function (item) {
+
+                return {
+                    id: item.user_code,
+                    name: item.name
+                }
+
+            })
+
+            dashboardConstructorMethodsService.getDataForComponentsSelector(vm, componentsForLinking, vm.item.user_code);
 
             /* if (vm.item.id) {
 
@@ -374,16 +409,19 @@
                 vm.getLayouts();
 
             } */
-			vm.getAttributes();
+            vm.getAttributes();
 
-			dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts(), true)
+            vm.readyStatus.layouts = true;
+
+            // Deprecate since FN-2320 2023-11-11 szhitenev
+            /*dashboardConstructorMethodsService.prepareDataForReportLayoutSelector(vm.layoutsSelectorsList, vm.item.settings.entity_type, vm.item.settings.layout, vm.getLayouts(), true)
                 .then(function (layoutsSelectorsList) {
 
                     vm.layoutsSelectorsList = layoutsSelectorsList;
                     vm.readyStatus.layouts = true;
                     $scope.$apply();
 
-			    });
+                });*/
 
         };
 

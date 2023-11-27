@@ -1,0 +1,23 @@
+<div class="dashboard-control height-100 dashboardControl">
+
+    <div ng-if="!processing">
+
+        <date-input
+                data-label="{{componentData.name}}"
+                data-model="item.data.store.value"
+                data-custom-buttons="buttons"
+                data-custom-styles="customStyles"
+                data-small-options="{notNull: options.notNull}"
+                data-on-change-callback="valueChanged(changedValue)"
+        ></date-input>
+
+    </div>
+
+    <div ng-if="processing" style="padding-top: 12px;">
+        <div layout="row" layout-sm="column" layout-align="space-around">
+            <progress-circular data-diameter="30"></progress-circular>
+        </div>
+    </div>
+
+
+</div>

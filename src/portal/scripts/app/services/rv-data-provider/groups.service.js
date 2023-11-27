@@ -253,6 +253,9 @@ export default function (entityResolverService) {
 
         reportOptions.filters = entityViewerDataService.getFilters(); // for transaction report only
 
+        reportOptions.page = options.page
+        reportOptions.page_size = options.page_size
+
         reportOptions.frontend_request_options = options
         reportOptions.frontend_request_options['columns'] = entityViewerDataService.getColumns()
         reportOptions.frontend_request_options['globalTableSearch'] = globalTableSearch
@@ -301,7 +304,7 @@ export default function (entityResolverService) {
                 var result = {
                     next: null,
                     previous: null,
-                    count: data.items.length,
+                    count: data.count,
                     results: data.items
                 };
 

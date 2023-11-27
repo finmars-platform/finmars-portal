@@ -49,6 +49,14 @@
                 "value_entity": "pricing-condition",
                 "code": "user_code",
                 "value_type": "field"
+            },
+            {
+                "key": "country",
+                "name": "Country",
+                "value_content_type": "instruments.country",
+                "value_entity": "country",
+                "code": "user_code",
+                "value_type": "field"
             }
         ]
     };
