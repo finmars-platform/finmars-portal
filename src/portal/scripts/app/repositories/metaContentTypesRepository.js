@@ -167,6 +167,11 @@ export default function (cookieService, xhrService) {
                 key: "portfolios.portfolioregisterrecord"
             },
             {
+                name: "Portfolio History",
+                entity: 'portfolio-history',
+                key: "portfolios.portfoliohistory"
+            },
+            {
                 name: "Instrument Type",
                 entity: 'instrument-type',
                 key: "instruments.instrumenttype"
@@ -376,6 +381,11 @@ export default function (cookieService, xhrService) {
                 entity: 'complex-transaction-import-scheme',
                 key: "integrations.complextransactionimportscheme"
             },
+            {
+                name: "Simple Import Scheme",
+                entity: 'csv-import-scheme',
+                key: "csv_import.csvimportscheme"
+            },
         ]
     };
 
@@ -450,6 +460,11 @@ export default function (cookieService, xhrService) {
                 name: "Portfolio Register Record",
                 entity: 'portfolio-register-record',
                 key: "portfolios.portfolioregisterrecord"
+            },
+            {
+                name: "Portfolio History",
+                entity: 'portfolio-history',
+                key: "portfolios.portfoliohistory"
             },
             {
                 name: "Instrument Type",
@@ -597,6 +612,11 @@ export default function (cookieService, xhrService) {
                 entity: 'complex-transaction-import-scheme',
                 key: "integrations.complextransactionimportscheme"
             },
+            {
+                name: "Simple Import Scheme",
+                entity: 'csv-import-scheme',
+                key: "csv_import.csvimportscheme"
+            },
         ]
     };
 
@@ -644,6 +664,16 @@ export default function (cookieService, xhrService) {
                 name: "Instrument",
                 entity: 'instrument',
                 key: "instruments.instrument"
+            },
+            {
+                name: "Instrument Factor Schedule",
+                entity: 'instrument-factor-schedule',
+                key: "instruments.instrumentfactorschedule"
+            },
+            {
+                name: "Instrument Accrual Schedule",
+                entity: 'instrument-accrual-calculation-schedule',
+                key: "instruments.accrualcalculationschedule"
             },
             {
                 name: "Portfolio",

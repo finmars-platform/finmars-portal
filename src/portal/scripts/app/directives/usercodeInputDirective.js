@@ -120,9 +120,10 @@
 
                         scope.userCode = assembleUserCode(convertedUserCode);
 
-                        if (typeof scope.configurationCode === 'string') {
-                            scope.configurationCode = scope.configuration_code.value;
-                        }
+                        scope.configurationCode = scope.configuration_code.value;
+                        // if (typeof scope.configurationCode === 'string') {
+                        //     scope.configurationCode = scope.configuration_code.value;
+                        // }
 
                     }
 

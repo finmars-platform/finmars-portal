@@ -5,15 +5,14 @@
 'use strict';
 
 import AutosaveLayoutService from "../../services/autosaveLayoutService";
-import evEvents from "../../services/entityViewerEvents";
 
 (function () {
 
-	// var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
-	var evEvents = require('../../services/entityViewerEvents');
-	var evHelperService = require('../../services/entityViewerHelperService');
-	// var usersService = require('../../services/usersService');
-	var complexTransactionService = require('../../services/transaction/complexTransactionService');
+    // var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
+    var evEvents = require('../../services/entityViewerEvents');
+    var evHelperService = require('../../services/entityViewerHelperService');
+    // var usersService = require('../../services/usersService');
+    var complexTransactionService = require('../../services/transaction/complexTransactionService');
 
     var EntityViewerDataService = require('../../services/entityViewerDataService');
     var EntityViewerEventService = require('../../services/eventService');
@@ -390,6 +389,54 @@ import evEvents from "../../services/entityViewerEvents";
                         parent: angular.element(document.body),
                         locals: {
                             schemeId: actionData.object.id
+                        }
+                    };
+
+                    if (actionData.event) dialogOptions.targetEvent = actionData.event;
+
+                    $mdDialog.show(dialogOptions).then(function (res) {
+
+                        /* vm.entityViewerDataService.setActiveObjectAction(null);
+                        vm.entityViewerDataService.setActiveObjectActionData(null); */
+                        vm.entityViewerDataService.setRowsActionData(null);
+
+                        if (res.status === 'agree') {
+
+                            var objects = vm.entityViewerDataService.getObjects();
+
+                            objects.forEach(function (obj) {
+
+                                if (res.data.ids.indexOf(obj.id) !== -1) {
+
+                                    var parent = vm.entityViewerDataService.getData(obj.___parentId)
+
+                                    parent.results = parent.results.filter(function (resultItem) {
+                                        return res.data.ids.indexOf(resultItem.id) === -1
+                                    });
+
+                                    vm.entityViewerDataService.setData(parent)
+
+                                }
+
+                            });
+
+                            vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+
+                        }
+                    });
+
+                    break;
+
+                case 'csv-import-scheme':
+
+                    dialogOptions = {
+                        controller: 'SimpleEntityImportSchemeV2EditDialogController as vm',
+                        templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-v2-dialog-view.html',
+                        parent: angular.element(document.body),
+                        locals: {
+                            data: {
+                                schemeId: actionData.object.id
+                            }
                         }
                     };
 
@@ -941,7 +988,7 @@ import evEvents from "../../services/entityViewerEvents";
                                 })
                                 Promise.allSettled(promises).then(function (data) {
 
-                                    data = data.map(function (item){
+                                    data = data.map(function (item) {
                                         return item.value;
                                     })
 
@@ -1347,7 +1394,7 @@ import evEvents from "../../services/entityViewerEvents";
             var getLayoutProm;
             var stateParams = $state.params;
 
-            if ( vm.isLayoutFromUrl() ) {
+            if (vm.isLayoutFromUrl()) {
 
                 var queryParams = window.location.href.split('?')[1];
                 var params = queryParams.split('&');

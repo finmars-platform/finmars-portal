@@ -684,6 +684,8 @@
                                 var newColComponentType = dcCol.data.type;
                                 var newColComponentId = dcCol.data.id;
 
+                                var component = vm.dashboardConstructorDataService.getComponentById(newColComponentId)
+
                                 if (tab_number === 'fixed_area') {
 
                                     var targetRow = layout.data.fixed_area.layout.rows[row_number];
@@ -699,6 +701,10 @@
                                 targetRow.columns[column_number].cell_type = 'component';
                                 targetRow.columns[column_number].data.type = newColComponentType;
                                 targetRow.columns[column_number].data.id = newColComponentId;
+
+                                if (component.settings.value_type) {
+                                    targetRow.columns[column_number].data.value_type = component.settings.value_type;
+                                }
 
                                 var dcRowspan = dcCol.rowspan;
                                 var dcColspan = dcCol.colspan;
@@ -730,6 +736,10 @@
                                 targetRow.columns[column_number].cell_type = 'component';
                                 targetRow.columns[column_number].data.type = JSON.parse(JSON.stringify(component.type));
                                 targetRow.columns[column_number].data.id = component_id;
+
+                                if (component.settings.value_type) {
+                                    targetRow.columns[column_number].data.value_type = component.settings.value_type;
+                                }
 
                             }
 
@@ -1209,6 +1219,14 @@
                 editorController: 'DashboardConstructorControlComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-control-component-dialog-view.html'
             },
+            control_date: {
+                editorController: 'DashboardConstructorControlDateComponentDialogController as vm',
+                editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-control-date-component-dialog-view.html'
+            },
+            control_relation: {
+                editorController: 'DashboardConstructorControlRelationComponentDialogController as vm',
+                editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-control-relation-component-dialog-view.html'
+            },
             accordion: {
                 editorController: 'DashboardConstructorAccordionComponentDialogController as vm',
                 editorTemplateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-accordion-component-dialog-view.html'
@@ -1298,6 +1316,8 @@
             }).then(function (res) {
 
                 vm.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
+
+                vm.updateAvailableComponentsTypes();
 
             })
 
@@ -1455,9 +1475,19 @@
 
         vm.editComponentType = function ($event, item) {
 
+            var itemType = item.type
+
+            if (item.type == 'control' && item.settings.value_type == 40) {
+                itemType = 'control_date';
+            }
+            if (item.type == 'control' && item.settings.value_type == 100) {
+                itemType = 'control_relation';
+            }
+
+
             $mdDialog.show({
-                controller: dashboardComponentsTypesData[item.type].editorController,
-                templateUrl: dashboardComponentsTypesData[item.type].editorTemplateUrl,
+                controller: dashboardComponentsTypesData[itemType].editorController,
+                templateUrl: dashboardComponentsTypesData[itemType].editorTemplateUrl,
                 targetEvent: $event,
                 multiple: true,
                 autoWrap: true,
@@ -1495,14 +1525,6 @@
             }).then(function (res) {
 
                 if (res.status === 'agree') {
-
-                    /*var componentTypes = vm.dashboardConstructorDataService.getComponents();
-
-                    componentTypes = componentTypes.filter(function (componentType) {
-                        return componentType.id !== item.id;
-                    });
-
-                    vm.dashboardConstructorDataService.setComponents(componentTypes);*/
 
                     vm.dashboardConstructorDataService.deleteComponentById(item.id);
 
@@ -1670,6 +1692,30 @@
 
             return false
 
+
+        }
+
+        vm.editAsJson = function (ev) {
+
+            $mdDialog.show({
+                controller: 'EntityAsJsonEditorDialogController as vm',
+                templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                targetEvent: ev,
+                multiple: true,
+                locals: {
+                    data: {
+                        item: vm.layout,
+                        entityType: 'dashboard-layout'
+                    }
+                }
+            }).then(function (res) {
+
+                if (res.status === "agree") {
+
+                    vm.getLayout();
+
+                }
+            })
 
         }
 

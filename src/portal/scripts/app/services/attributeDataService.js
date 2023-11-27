@@ -12,6 +12,7 @@
             "portfolio": require('../models/portfolioPropsModel').getAttributes(),
             "portfolio-register": require('../models/portfolioRegisterPropsModel').getAttributes(),
             "portfolio-register-record": require('../models/portfolioRegisterRecordPropsModel').getAttributes(),
+            "portfolio-history": require('../models/portfolioHistoryPropsModel').getAttributes(),
             "audit-transaction": require('../models/auditTransactionPropsModel').getAttributes(),
             "audit-instrument": require('../models/auditInstrumentPropsModel').getAttributes(),
             "account": require('../models/accountPropsModel').getAttributes(),
@@ -60,6 +61,7 @@
             "complex-transaction-status": require('../models/complextransactionStatusPropsModel').getAttributes(),
             "country": require('../models/countryPropsModel').getAttributes(),
             "complex-transaction-import-scheme": require('../models/complexTransactionImportSchemePropsModel').getAttributes(),
+            "csv-import-scheme": require('../models/CsvImportSchemePropsModel').getAttributes(),
 
         };
 

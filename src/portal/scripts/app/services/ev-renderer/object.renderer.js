@@ -104,7 +104,8 @@
         var hasManage = false;
         var partVisible = false;
 
-        if (obj.object_permissions) {
+        // Deprecated
+        /*if (obj.object_permissions) {
 
             result = 'lockIcon'; // lock
 
@@ -138,7 +139,7 @@
             }
 
         }
-
+*/
         /* if (obj.___is_activated) {
             result = 'checkIcon';
 
@@ -161,9 +162,10 @@
         } else if (obj.hasOwnProperty('is_active') && !obj.is_active) {
             result = 'inactiveIcon';
 
-        } else if (currentMember && currentMember.is_admin) {
+        //     Probably deprecated, discussion needed
+        // } else if (currentMember && currentMember.is_admin) {
+        } else if (currentMember) {
             result = 'starIcon';
-
         }
 
         return renderHelper.getIconByKey(result);
@@ -176,6 +178,8 @@
         'C': 'Created',
         'Overwritten': 'Created',
         'R': 'Requested',
+        'ok': 'Ok',
+        'error': 'Error',
 
         1: 'Booked',
         2: 'Pending',
@@ -492,7 +496,6 @@
         var rowHeight = evDataService.getRowHeight();
 
         getRowGeneralClasses(obj, classList);
-
         // rowSelection = '<div class="g-row-selection">' + getIcon(obj, currentMember, classList) + '</div>';
         rowSelection = renderHelper.getRowSelectionElem(obj);
 

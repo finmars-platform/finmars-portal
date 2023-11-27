@@ -52,7 +52,6 @@
                     if (tree.results.length) {
                         tree.results.forEach(function (branch) {
                             scope.recursiveMarkHasSelected(branch, selectedGroups)
-
                         })
                     }
 

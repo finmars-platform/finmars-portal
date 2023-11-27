@@ -10,8 +10,7 @@
     var evEvents = require('../../services/entityViewerEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-    var DashboardComponentDataService = require('../../services/dashboard/dashboardComponentDataService');
-    var DashboardComponentEventService = require('../../services/eventService');
+    var utilsHelper = require('../../helpers/utils.helper');
 
     module.exports = function ($mdDialog, dashboardHelper, entityResolverService) {
         return {
@@ -35,8 +34,8 @@
 
                 scope.lastSavedOutput = {};
 
-                scope.dashboardComponentDataService = new DashboardComponentDataService;
-                scope.dashboardComponentEventService = new DashboardComponentEventService;
+                scope.retryCount = 0;
+                scope.maxRetries = 10;
 
                 var componentData;
                 var componentElem = elem[0].querySelector('.dashboardComponent');
@@ -70,9 +69,7 @@
                     componentElement: componentElem,
                     entityType: componentData.settings.entity_type,
                     dashboardDataService: scope.dashboardDataService,
-                    dashboardEventService: scope.dashboardEventService,
-                    dashboardComponentDataService: scope.dashboardComponentDataService,
-                    dashboardComponentEventService: scope.dashboardComponentEventService
+                    dashboardEventService: scope.dashboardEventService
                 };
 
                 if (scope.fillInModeData) {
@@ -82,8 +79,6 @@
 
                 scope.enableFillInMode = function () {
 
-                    var entityViewerDataService = scope.vm.dashboardComponentDataService.getEntityViewerDataService();
-                    var attributeDataService = scope.vm.dashboardComponentDataService.getAttributeDataService();
 
                     scope.fillInModeData = {
                         tab_number: scope.tabNumber,
@@ -91,18 +86,13 @@
                         column_number: scope.columnNumber,
                         item: scope.item,
                         entityViewerDataService: entityViewerDataService,
-                        attributeDataService: attributeDataService,
-                        dashboardComponentEventService: scope.dashboardComponentEventService // needed to update component inside tabs
+                        attributeDataService: attributeDataService
                     }
 
                 };
 
                 scope.disableFillInMode = function () {
                     scope.fillInModeData = null;
-                };
-
-                scope.clearUseFromAboveFilters = function () {
-                    scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.CLEAR_USE_FROM_ABOVE_FILTERS);
                 };
 
                 scope.toggleFilterBlock = function () {
@@ -115,15 +105,24 @@
 
                     console.log("Apex Event Listeners")
 
+                    scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
+
                     scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_CHANGE, function () {
 
-                        var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputsByUserCodes();
+                        // var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputsByUserCodes();
+                        var componentsOutputs = scope.dashboardDataService.getLayoutState();
 
-                        console.log('apexChart.COMPONENT_OUTPUT_CHANGE', JSON.stringify(componentsOutputs, null, 4));
+                        // console.log('apexChart.COMPONENT_OUTPUT_CHANGE', JSON.stringify(componentsOutputs, null, 4));
 
-                        scope.initChart({
-                            outputs: componentsOutputs
-                        })
+                        var changed = utilsHelper.hasStateChanged(scope.lastSavedOutput, componentsOutputs, scope.componentData.settings.components_to_listen)
+
+                        if (changed) {
+                            scope.initChart({
+                                outputs: componentsOutputs
+                            })
+                        }
+
+                        scope.lastSavedOutput = componentsOutputs;
 
                     });
 
@@ -396,17 +395,36 @@
                         // Format date to yyyy-mm-dd
                         return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
                     }
-
-
                 }
 
                 scope.initChart = function (filters) {
 
                     var selector = '.dashboard-apex-chart-' + scope.vm.componentData.id;
-                    // document.querySelector(selector).innerHTML = '';
-                    var chartElement = document.querySelector(selector)
-                    // Retrieve the chart instance:
-                    var chartInstance = chartElement.__chart;
+                    var chartElement;
+                    var chartInstance;
+
+
+                    try {
+
+                        // document.querySelector(selector).innerHTML = '';
+                        chartElement = document.querySelector(selector)
+                        chartInstance = chartElement.__chart;
+
+                    } catch (error) {
+
+                        scope.retryCount = scope.retryCount + 1;
+
+                        if (scope.retryCount < scope.maxRetries) {
+                            setTimeout(function () {
+                                scope.initChart(filters);
+                            }, 100)
+                        } else {
+                            console.error("Could not start apex component", error);
+                        }
+
+                        return
+
+                    }
 
                     // Now, you can destroy it:
                     if (chartInstance) {
@@ -430,17 +448,14 @@
                     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.ACTIVE);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
 
-                    setTimeout(function () {
+                    // var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputsByUserCodes();
+                    var componentsOutputs = scope.dashboardDataService.getLayoutState();
 
-                        var componentsOutputs = scope.dashboardDataService.getAllComponentsOutputsByUserCodes();
+                    scope.lastSavedOutput = componentsOutputs;
 
-                        scope.lastSavedOutput = componentsOutputs;
+                    scope.initChart({outputs: componentsOutputs});
 
-                        scope.initChart({outputs: componentsOutputs});
-
-                        scope.initEventListeners(); // init listeners after component init
-
-                    }, 0)
+                    scope.initEventListeners(); // init listeners after component init
 
                 };
 
@@ -450,6 +465,16 @@
                     // so that dashboard manager can start processing it
                     scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.INIT);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+
+                    scope.dashboardEventService.addEventListener(dashboardEvents.REFRESH_ALL, function () {
+
+                        scope.retryCount = 0;
+
+                        scope.dashboardDataService.setComponentStatus(scope.item.data.id, dashboardComponentStatuses.PROCESSING);
+                        scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                        scope.init();
+
+                    })
 
                     scope.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 

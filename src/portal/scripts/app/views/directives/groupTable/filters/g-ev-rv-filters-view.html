@@ -217,7 +217,7 @@
             </md-button>
         </div>
 
-        <md-menu data-ng-if="isRootEntityViewer"
+        <md-menu data-ng-if="isRootEntityViewer && viewContext != 'dashboard'"
                  class="full-width">
 
             <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
@@ -302,7 +302,7 @@
 
         </md-menu>
 
-        <md-menu class="full-width" data-ng-if="isRootEntityViewer && isReport">
+        <md-menu class="full-width" data-ng-if="isRootEntityViewer && isReport && viewContext != 'dashboard'">
             <md-button class="signed-button" data-ng-click="$mdOpenMenu($event)">
                 <div class="flex-column flex-i-center">
                     <span class="material-icons">view_module</span>
@@ -402,6 +402,14 @@
 
             </md-menu-content>
         </md-menu>
+
+        <md-button class="signed-button" data-ng-if="viewContext == 'dashboard'" ng-click="onSettingsClick()">
+            <div class="flex-column flex-i-center">
+                <span class="material-icons">settings</span>
+                <span>Settings</span>
+            </div>
+
+        </md-button>
 
     </div>
 

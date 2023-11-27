@@ -1,5 +1,9 @@
 .dashboard-constructor {
   //overflow: hidden;
+  padding-bottom: 64px;
+  overflow: hidden;
+  height: 100%;
+  box-sizing: border-box;
 
   .dashboard-constructor-main {
     padding: 8px;
@@ -16,6 +20,7 @@
       display: flex;
       flex-direction: row;
       flex: 0 0 auto;
+      align-items: center;
     }
 
     .layout-areas-and-components-row {
@@ -38,7 +43,8 @@
   }
 
   .fixed-area-holder {
-    height: 200px;
+    //height: 200px;
+    height: 150px;
     overflow: auto;
     //margin-right: 320px;
 
@@ -48,7 +54,8 @@
     }
 
     .dashboard-layout-holder {
-      height: 200px;
+      //height: 200px;
+      height: 20vh;
     }
 
   }
@@ -70,6 +77,8 @@
     margin-top: 12px;
     padding-left: 4px;
     font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 8px;
   }
 
   .dashboard-constructor-comp-cards-container {
@@ -87,7 +96,7 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    padding: 10px;
+    padding: 4px;
 
     .dashboard-constructor-cell-container {
       width: 100%;
@@ -111,8 +120,10 @@
     color: #f4af8b;
     //background-color: #f4af8b;
     background-color: transparent;
-    border: 2px solid #F4AF8B;
+    border: 2px solid #898989;
     transition: all 0.2s linear;
+
+    opacity: .7;
 
     /*&:hover {
       //opacity: 0.5;
@@ -162,6 +173,9 @@
 
     position: relative;
 
+    opacity: .7;
+    border-radius: 12px;
+
     ng-md-icon {
       top: 50%;
       position: absolute;
@@ -191,13 +205,17 @@
     height: 50px;
     width: 100px;
 
-    background: #ddd;
+    //background: #ddd;
+    background: #eff4f7;
+    margin-top: 14px;
 
   }
 
   .dashboard-layout-holder {
-    max-height: 480px;
-    height: 480px;
+    //max-height: 480px;
+    //height: 480px;
+    height: 40vh;
+    max-height: 40vh;;
     overflow: auto;
   }
 
@@ -248,6 +266,9 @@
   margin: 0;
   padding: 8px;
   fill: #898989;
+  font-size: 14px;
+
+  box-shadow: 0 1px 22px -12px #607D8B;
 
   .dc-extend-btns-holder {
     margin-right: 14px;
@@ -447,4 +468,14 @@
 .accordion-constructor-row .ec-tab-btn {
   position: relative;
   top: -7px;
+}
+
+.dashboard-constructor-bottom-row {
+  position: fixed;
+  bottom: 0;
+  width: calc(100% - 181px);
+  background: #fff;
+  border-top: 1px solid #ddd;
+  margin-left: -10px;
+  padding-left: 8px;
 }

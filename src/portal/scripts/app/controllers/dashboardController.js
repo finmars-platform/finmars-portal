@@ -37,6 +37,11 @@
         }
 
         vm.processing = false;
+        vm.componentsReadyCount = 0;
+        vm.componentReadyPercent = 0;
+        vm.totalComponents = 0;
+        vm.processingMessage = 'Dashboard is in progress...'
+        vm.processingTimeout = null;
 
         // ======================================
         //  LAYOUT SECTION START
@@ -62,8 +67,6 @@
                 console.log('vm.popupData', vm.popupData);
 
 
-                vm.initEventListeners();
-
                 vm.dashboardDataService.setData(vm.layout);
                 vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(data)));
 
@@ -77,8 +80,7 @@
 
                 vm.dashboardDataService.setProjection(vm.projection);
 
-
-                vm.initDashboardComponents();
+                vm.initEventListeners();
 
                 $scope.$apply();
 
@@ -105,7 +107,7 @@
 
                     vm.readyStatus.data = true;
 
-                    vm.initDashboardComponents();
+                    vm.initEventListeners();
 
                     $scope.$apply();
 
@@ -127,6 +129,8 @@
 
             console.log('activeLayoutUserCode', activeLayoutUserCode);
 
+            vm.processing = true;
+
             if (activeLayoutUserCode) {
 
                 uiService.getDashboardLayoutList().then(function (data) {
@@ -147,11 +151,11 @@
                     vm.dashboardDataService.setData(vm.layout);
                     vm.dashboardDataService.setListLayout(JSON.parse(angular.toJson(vm.layout)));
 
+
                     vm.generateTabsProjection();
 
                     vm.readyStatus.data = true;
 
-                    vm.initDashboardComponents();
 
                     $scope.$apply();
 
@@ -195,7 +199,7 @@
 
         vm.saveDashboardLayout = function () {
 
-            uiService.updateDashboardLayout( vm.layout.id, JSON.parse(angular.toJson(vm.layout)) ).then(function (data) {
+            uiService.updateDashboardLayout(vm.layout.id, JSON.parse(angular.toJson(vm.layout))).then(function (data) {
 
                 /*
                  * IMPORTANT: do not do `vm.layout = data;`.
@@ -203,7 +207,7 @@
                  * Components are not made to do this.
                  * Causes bugs at least with components-controls.
                  * */
-                vm.dashboardDataService.setListLayout( structuredClone(data) );
+                vm.dashboardDataService.setListLayout(structuredClone(data));
 
                 toastNotificationService.success("Dashboard Layout is Saved")
 
@@ -343,69 +347,24 @@
 
         }
 
-        vm.clearActiveTabUfaFilters = function () {
-            vm.dashboardEventService.dispatchEvent(dashboardEvents.CLEAR_ACTIVE_TAB_USE_FROM_ABOVE_FILTERS);
-        };
+        vm.refresh = function () {
 
-        var componentsFinishedLoading = function () {
-
-            var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
-            var componentsIds = Object.keys(statusesObject);
-
-            var processing = false;
-
-            for (var i = 0; i < componentsIds.length; i++) {
-
-                if (statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ACTIVE &&
-                    statusesObject[componentsIds[i]] !== dashboardComponentStatuses.ERROR) {
-
-                    processing = true;
-                    break;
-
-                }
-
-            }
-
-            return processing;
-
-        };
-
-        vm.refreshActiveTab = function () {
-
-            vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ACTIVE_TAB);
-
-            var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
-
-            if (!Object.keys(statusesObject).length) {
-
-                vm.processing = false;
-
-            } else {
-
-                setTimeout(function () { // enable refresh buttons if no components uses active object
-                    vm.processing = componentsFinishedLoading();
-                }, 100);
-
-            }
-
-        };
-
-        vm.refreshAll = function () {
+            clearTimeout(vm.processingTimeout);
 
             vm.dashboardEventService.dispatchEvent(dashboardEvents.REFRESH_ALL);
 
-            var statusesObject = vm.dashboardDataService.getComponentStatusesAll();
+            vm.processing = true;
 
-            if (!Object.keys(statusesObject).length) {
+            vm.componentsReadyCount = 0;
+            vm.componentReadyPercent = 0;
+            vm.processingMessage = "Dashboard is refreshing..."
+
+            vm.processingTimeout = setTimeout(function () {
+
                 vm.processing = false;
+                $scope.$apply();
 
-            } else {
-
-                setTimeout(function () { // enable refresh buttons if no components uses active object
-                    vm.processing = componentsFinishedLoading();
-                }, 100);
-
-            }
+            }, 1000 * 20)
 
         };
 
@@ -426,29 +385,58 @@
             }, 0)
         };
 
+        vm.showState = function ($event) {
+
+            $mdDialog.show({
+                controller: 'DashboardShowStateDialogController as vm',
+                templateUrl: 'views/dialogs/dashboard-show-state-dialog-view.html',
+                clickOutsideToClose: false,
+                locals: {
+                    data: {
+                        dashboardDataService: vm.dashboardDataService,
+                        dashboardEventService: vm.dashboardEventService
+                    }
+                }
+            });
+
+        }
+
         vm.initDashboardComponents = function () {
 
-            var statusesObject = JSON.parse(JSON.stringify( vm.dashboardDataService.getComponentStatusesAll() ));
+            var statusesObject = JSON.parse(JSON.stringify(vm.dashboardDataService.getComponentStatusesAll()));
             var componentData;
             var componentStatus;
 
+            vm.totalComponents = Object.keys(statusesObject).length;
+
             vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
 
-                statusesObject = structuredClone( vm.dashboardDataService.getComponentStatusesAll() );
+                statusesObject = structuredClone(vm.dashboardDataService.getComponentStatusesAll());
+                vm.totalComponents = Object.keys(statusesObject).length;
                 // console.log('DashboardController.COMPONENT_STATUS_CHANGE statusesObject', statusesObject)
+
 
                 // First loop initiates only components-controls.
                 // Do not move this loop!
                 // We need controls to be registered then resolved,
                 // so that dashboardDataService.areControlsReady() will return true
+
+                vm.componentsReadyCount = 0;
+                vm.componentReadyPercent = 0;
+                vm.processingMessage = '';
+
                 Object.keys(statusesObject).forEach(function (componentId) {
 
                     componentData = vm.dashboardDataService.getComponentById(componentId);
                     componentStatus = vm.dashboardDataService.getComponentStatus(componentId);
 
-                    if (componentData.type === 'control' && componentStatus === dashboardComponentStatuses.INIT) {
+                    // console.log('DashboardController.componentData.name', componentData.name);
+                    // console.log('DashboardController.componentStatus', componentStatus);
 
-                        console.log("DashboardController.starting_control... ", componentData.name)
+
+                    if ((componentData.type === 'control') && componentStatus === dashboardComponentStatuses.INIT) {
+
+                        // console.log("DashboardController.starting_control... ", componentData.name)
 
                         vm.dashboardDataService.registerControl(componentId);
                         vm.dashboardDataService.setComponentStatus(componentId, dashboardComponentStatuses.START)
@@ -456,11 +444,23 @@
 
                     }
 
+                    if (componentStatus === 'ACTIVE') {
+
+                        vm.componentsReadyCount = vm.componentsReadyCount + 1;
+
+                        vm.componentReadyPercent = Math.floor(vm.componentsReadyCount / (vm.totalComponents / 100))
+
+                    }
+
+                    if (!vm.processingMessage && componentStatus === 'PROCESSING') {
+                        vm.processingMessage = 'Component <b>' + componentData.name + '</b> initializing...'
+                    }
+
                     // console.log('componentData', componentData);
 
                 })
 
-                if ( vm.dashboardDataService.areControlsReady() ) {
+                if (vm.dashboardDataService.areControlsReady()) {
 
                     console.log('DashboardController.COMPONENT_STATUS_CHANGE controls is ready, initing other components', statusesObject)
                     // Second loop to init other components
@@ -476,7 +476,12 @@
                             console.log("DashboardController.starting_component... ", componentData.name)
 
                             vm.dashboardDataService.setComponentStatus(componentId, dashboardComponentStatuses.START)
-                            vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                            // Really strange thing
+                            // Do not remove
+                            // Problem exist in case when you have only 2 iframes components
+                            setTimeout(() => {
+                                vm.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_STATUS_CHANGE);
+                            })
 
                         }
 
@@ -485,28 +490,32 @@
                     console.log('DashboardController.controls are not ready statusesObject', statusesObject)
                 }
 
+                if (vm.totalComponents !== 0) {
+                    if (vm.totalComponents === vm.componentsReadyCount) {
+                        vm.processing = false;
+                    }
+                }
+
                 // console.log('DashboardController.COMPONENT_STATUS_CHANGE statusesObject', statusesObject)
 
             });
+
 
         };
 
         vm.initEventListeners = function () {
 
-            vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_STATUS_CHANGE, function () {
+            vm.initDashboardComponents();
 
-                var processed = componentsFinishedLoading();
+            // Set hard limit for initial loading
+            vm.processingTimeout = setTimeout(function () {
 
-                if (processed) {
+                console.log("Dashboard Loading too long. hide progress bar")
 
-                    vm.processing = true;
+                vm.processing = false;
+                $scope.$apply();
 
-                } else if (vm.processing) {
-                    vm.processing = false;
-                    $scope.$apply();
-                }
-
-            })
+            }, 1000 * 20)
 
             vm.dashboardEventService.addEventListener(dashboardEvents.DASHBOARD_LAYOUT_CHANGE, function () {
 
@@ -529,7 +538,6 @@
             }
 
             vm.openDashboardLayout();
-            vm.initEventListeners();
 
         };
 

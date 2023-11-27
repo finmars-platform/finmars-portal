@@ -11,7 +11,7 @@
                     <span ng-if="!customName && item" ng-bind="item.data.name" title="{{item.data.name}}"></span>
                 </div>
 
-                <div class="flex-row fi-start">
+                <!--<div class="flex-row fi-start">
                     <md-button class="small-button-icon dashboard-comp-h-btn g-filter-area-toggle"
                                data-ng-class="{'active': showFiltersArea}"
                                ng-click="toggleFilterBlock($event)">
@@ -20,7 +20,7 @@
                         <md-tooltip data-md-direction="top">Toggle filter area</md-tooltip>
 
                     </md-button>
-                </div>
+                </div>-->
 
             </div>
 
@@ -33,24 +33,24 @@
                     <md-tooltip data-md-direction="top"> Warning ({{missingPricesData.items.length}})</md-tooltip>
                 </md-button>
 
-                <md-button data-ng-if="fillInModeData"
-                           data-ng-click="disableFillInMode()"
-                           class="dashboard-comp-h-btn">
-                    <ng-md-icon size="20" icon="close"></ng-md-icon>
-                    <md-tooltip data-md-direction="top">Collapse Component</md-tooltip>
-                </md-button>
+<!--                <md-button data-ng-if="fillInModeData"-->
+<!--                           data-ng-click="disableFillInMode()"-->
+<!--                           class="dashboard-comp-h-btn">-->
+<!--                    <ng-md-icon size="20" icon="close"></ng-md-icon>-->
+<!--                    <md-tooltip data-md-direction="top">Collapse Component</md-tooltip>-->
+<!--                </md-button>-->
 
-                <md-button data-ng-click="clearUseFromAboveFilters()" class="dashboard-comp-h-btn">
-                    <ng-md-icon size="20" icon="leak_remove"></ng-md-icon>
-                    <md-tooltip data-md-direction="top">Clear Link to Selection filters</md-tooltip>
-                </md-button>
+<!--                <md-button data-ng-click="clearUseFromAboveFilters()" class="dashboard-comp-h-btn">-->
+<!--                    <ng-md-icon size="20" icon="leak_remove"></ng-md-icon>-->
+<!--                    <md-tooltip data-md-direction="top">Clear Link to Selection filters</md-tooltip>-->
+<!--                </md-button>-->
 
-                <md-button data-ng-if="!fillInModeData"
-                           data-ng-click="enableFillInMode()"
-                           class="dashboard-comp-h-btn">
-                    <ng-md-icon size="20" icon="zoom_out_map"></ng-md-icon>
-                    <md-tooltip data-md-direction="top">Expand component</md-tooltip>
-                </md-button>
+<!--                <md-button data-ng-if="!fillInModeData"-->
+<!--                           data-ng-click="enableFillInMode()"-->
+<!--                           class="dashboard-comp-h-btn">-->
+<!--                    <ng-md-icon size="20" icon="zoom_out_map"></ng-md-icon>-->
+<!--                    <md-tooltip data-md-direction="top">Expand component</md-tooltip>-->
+<!--                </md-button>-->
 
                 <md-button class="md-button dashboard-component-settings-btn dashboard-comp-h-btn"
                            aria-label="dashboard component settings btn"
@@ -96,7 +96,6 @@
             </div>
         </div>
     </div>
-
 
     <div data-ng-if="readyStatus.data === 'error'" class="center-text-message">
         <span data-ng-bind="compErrorMessage"></span>

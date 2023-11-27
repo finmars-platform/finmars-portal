@@ -238,6 +238,11 @@
                     }
 
                 }
+                else if (node.___type === 'control') {
+
+                    list[map[node.___parentId]].results.push(node)
+
+                }
 
             } else {
 
@@ -358,6 +363,39 @@
         return v1.value.toLowerCase() < v2.value.toLowerCase() ? -1 : 1;
     };
 
+
+    function isEqual(value1, value2) {
+        if (typeof value1 !== typeof value2) return false;
+        if (typeof value1 === 'object' && value1 !== null && value2 !== null) {
+            if (Array.isArray(value1)) {
+                if (!Array.isArray(value2) || value1.length !== value2.length) return false;
+                for (let i = 0; i < value1.length; i++) {
+                    if (!isEqual(value1[i], value2[i])) return false;
+                }
+                return true;
+            } else {
+                const keys1 = Object.keys(value1);
+                const keys2 = Object.keys(value2);
+                if (keys1.length !== keys2.length) return false;
+                for (const key of keys1) {
+                    if (!keys2.includes(key) || !isEqual(value1[key], value2[key])) return false;
+                }
+                return true;
+            }
+        }
+        return value1 === value2;
+    }
+
+    function hasStateChanged(oldState, newState, fieldsToCompare) {
+
+        for (const field of fieldsToCompare) {
+            if (!isEqual(oldState[field], newState[field])) {
+                return true; // Change detected
+            }
+        }
+        return false; // No changes detected
+    }
+
     module.exports = {
         floor10: floor10,
         debounce: debounce,
@@ -368,7 +406,9 @@
         convertTreeToTreeList: convertTreeToTreeList,
 
         sortItems: sortItems,
-        emptyLastComparator: emptyLastComparator
+        emptyLastComparator: emptyLastComparator,
+        isEqual: isEqual,
+        hasStateChanged: hasStateChanged
     }
 
 

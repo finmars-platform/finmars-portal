@@ -66,6 +66,16 @@
 
             }
 
+            for (var i = 0; i < layoutData.data.components_types.length; i++) {
+
+                if (layoutData.data.components_types[i].id === componentId) {
+                    layoutData.data.components_types.splice(i, 1);
+                }
+
+            }
+
+
+
         }
 
         // non data store related methods, mostly helpers
