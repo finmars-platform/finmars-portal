@@ -56,7 +56,8 @@ import importTransactionService from "../../services/import/importTransactionSer
 
             if (file) {
 
-                var ext = file.name.split('.')[1]
+                // var ext = file.name.split('.')[1]
+                var ext = file.name.split('.').at(-1);
 
                 if (ext !== 'csv' && ext !== 'xlsx' && ext !== 'json') {
 

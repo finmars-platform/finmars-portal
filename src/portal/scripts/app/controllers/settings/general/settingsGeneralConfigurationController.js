@@ -26,7 +26,7 @@
 
 
 
-                var ext = file.name.split('.')[1];
+                var ext = file.name.split('.').at(-1);
 
                 console.log('file ext', ext);
                 console.log('extension', extension);
