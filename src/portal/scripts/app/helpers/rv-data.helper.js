@@ -180,6 +180,22 @@
 
             dataList[0].results.unshift(subtotalObj);
 
+            var requestParameters = evDataService.getRequestParameters(dataList[0].___id);
+
+            if (requestParameters) {
+                if (requestParameters.pagination.count > requestParameters.pagination.page_size) {
+
+                    dataList[0].results.push({
+                        ___id: dataList[0].___id + '_control',
+                        ___group_identifier: dataList[0].___group_identifier,
+                        ___group_name: dataList[0].___group_name,
+                        ___type: 'control',
+                        ___parentId: dataList[0].___id,
+                        ___level: dataList[0].___level + 1
+                    });
+                }
+            }
+
         }
 
         dataList.forEach(function (item) {
@@ -646,47 +662,47 @@
 
         var data;
 
-        if (groups.length || rootGroupOptions.subtotal_type) {
+        // if (groups.length || rootGroupOptions.subtotal_type) {
 
-            // console.time("Calculating subtotals");
-            //
-            // calculateSubtotals(evDataService);
-            //
-            // console.timeEnd("Calculating subtotals");
+        // console.time("Calculating subtotals");
+        //
+        // calculateSubtotals(evDataService);
+        //
+        // console.timeEnd("Calculating subtotals");
 
-            calculateGrandTotal(evDataService);
+        calculateGrandTotal(evDataService);
 
-            console.time("Copying data");
+        console.time("Copying data");
 
-            data = getNewDataInstance(evDataService);
+        data = getNewDataInstance(evDataService);
 
-            console.log('getFlatStructure.data', data);
-            console.log('getFlatStructure.data length', Object.keys(data).length);
+        console.log('getFlatStructure.data', data);
+        console.log('getFlatStructure.data length', Object.keys(data).length);
 
-            console.timeEnd("Copying data");
-
-
-            console.time("Inserting subtotals");
-
-            data = insertSubtotalsToResults(data, evDataService);
-            console.timeEnd("Inserting subtotals");
+        console.timeEnd("Copying data");
 
 
-            console.time("Calculating blankline");
+        console.time("Inserting subtotals");
 
-            data = insertBlankLinesToResults(data, evDataService);
+        data = insertSubtotalsToResults(data, evDataService);
+        console.timeEnd("Inserting subtotals");
 
-            localStorage.setItem('flags', [
-                '2,2,1,1,1,1', '2,2,1,1,1,1'
-            ])
 
-            console.timeEnd("Calculating blankline");
+        console.time("Calculating blankline");
+
+        data = insertBlankLinesToResults(data, evDataService);
+
+        localStorage.setItem('flags', [
+            '2,2,1,1,1,1', '2,2,1,1,1,1'
+        ])
+
+        console.timeEnd("Calculating blankline");
 
             // console.log('data', data);
 
-        } else {
-            data = getNewDataInstance(evDataService)
-        }
+        // } else {
+        //     data = getNewDataInstance(evDataService)
+        // }
 
 
         // var rootGroup = simpleObjectCopy(evDataService.getRootGroupData()); # poor performance
