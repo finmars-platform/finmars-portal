@@ -115,74 +115,6 @@
 
                     result.nameColWidth = cellWidth;
 
-                    // if (scope.matrixSettings.calculate_name_column_width) {
-                    //
-                    //     /* const rowNamesList = scope.matrix.map(function (row) {return row.row_name});
-                    //
-                    //     measuringCanvas = measuringCanvas || document.createElement("canvas");
-                    //     var context = measuringCanvas.getContext("2d");
-                    //     var nameColWidth = 0;
-                    //     context.font = "14px 'Roboto'";
-                    //
-                    //     rowNamesList.forEach(function (rowName) {
-                    //         var metrics = context.measureText(rowName);
-                    //         nameColWidth = Math.max(nameColWidth, metrics.width);
-                    //     });
-                    //
-                    //     nameColWidth = Math.floor(nameColWidth) + cellHorPaddings; */
-                    //     var nameColWidth = 0;
-                    //     var rowNamesList = scope.matrix.map(function (row) {
-                    //         return row.row_name;
-                    //     });
-                    //     rowNamesList.push('TOTAL'); // TOTAL cell at the bottom
-                    //
-                    //     var dummyCellElem = document.createElement("div");
-                    //     dummyCellElem.classList.add('position-absolute', 'visibility-hidden');
-                    //
-                    //     var textHolderElem = document.createElement("div");
-                    //     textHolderElem.classList.add('report-viewer-matrix-cell');
-                    //
-                    //     dummyCellElem.appendChild(textHolderElem);
-                    //     matrixElem.appendChild(dummyCellElem);
-                    //
-                    //     var valueAttr = scope.valueSelectorData.options.find(valOption => valOption.isActive);
-                    //
-                    //     var getNameColWidth = function (name) {
-                    //         textHolderElem.innerText = name;
-                    //         var dummyCellWidth = Math.ceil(dummyCellElem.clientWidth);
-                    //
-                    //         nameColWidth = Math.max(nameColWidth, dummyCellWidth);
-                    //     };
-                    //
-                    //     if (valueAttr) {
-                    //
-                    //         textHolderElem.innerText = valueAttr.name;
-                    //         var valueSelectorBtnPadding = 24; // if changing this also change left-padding for .selector-button-popup-btn inside main.less
-                    //
-                    //         nameColWidth = Math.ceil(dummyCellElem.clientWidth) + valueSelectorBtnPadding;
-                    //
-                    //     }
-                    //
-                    //     rowNamesList.forEach(getNameColWidth);
-                    //
-                    //     matrixElem.removeChild(dummyCellElem);
-                    //
-                    //     nameColWidth = Math.min(nameColWidth, maxWidth);
-                    //
-                    //     if (cellWidth < nameColWidth) { // column with names will be stretched
-                    //
-                    //         var availableSpace = elemWidth - nameColWidth;
-                    //
-                    //         calcCellWidth(availableSpace);
-                    //
-                    //     } else {
-                    //         nameColWidth = cellWidth;
-                    //     }
-                    //
-                    //     result.nameColWidth = nameColWidth;
-                    //
-                    // }
-
                     result.cellWidth = cellWidth;
 
                     return result;
@@ -452,7 +384,13 @@
 
                 var scrollHeaderAndColumn = function () {
                     rvmHeaderScrollableRow.style.left = -bodyScrollElem.scrollLeft + 'px';
+                    const columnsCount = scope.columns.length + 2;
+
+                    const {cellWidth, nameColWidth} = getCellWidth(columnsCount);
+
+
                     if (rvmBottomRowScrollableElem) {
+
                         rvmBottomRowScrollableElem.style.left = (nameColWidth - bodyScrollElem.scrollLeft) + 'px';
                     }
 
@@ -657,6 +595,8 @@
 
                             var promises = []
 
+                            scope.grandtotal = 0
+
                             firstLevelGroups.forEach(function (group) {
 
                                 options = {
@@ -676,6 +616,9 @@
                                 }
 
                                 promises.push(groupsService.getList(options, scope.evDataService))
+
+
+                                scope.grandtotal = scope.grandtotal + group.subtotal[scope.matrixSettings.value_key]
 
                             })
 
@@ -784,6 +727,8 @@
                                 // scope.columns = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.abscissa, scope.matrixSettings.value_key);
                                 // scope.rows = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.ordinate, scope.matrixSettings.value_key);
 
+
+                                scope.evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
                                 resolve()
 
                             })
@@ -796,104 +741,14 @@
 
                 };
 
-                // var buildMatrix = function () {
-                //
-                //
-                //
-                //     // scope.matrix = reportViewerMatrixHelper.getMatrix(itemList,
-                //     //     scope.rows,
-                //     //     scope.columns,
-                //     //     scope.matrixSettings.ordinate,
-                //     //     scope.matrixSettings.abscissa,
-                //     //     scope.matrixSettings.value_key,
-                //     //     scope.matrixSettings.subtotal_formula_id);
-                //
-                //     /*scope.totals = reportViewerMatrixHelper.getMatrixTotals(scope.matrix, itemList);*/
-                //     scope.grandtotal = 0;
-                //
-                //     scope.columns.forEach(function (column) {
-                //         scope.grandtotal += column.total;
-                //     })
-                //
-                // };
-
                 scope.createMatrix = function () {
 
                     scope.processing = true;
 
-                    /*var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
-                    var itemList = flatList.filter(function (item) {
-                        return item.___type === 'object'
-                    });
-
-                    scope.columns = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.abscissa);
-                    scope.rows = reportViewerMatrixHelper.getMatrixUniqueValues(itemList, scope.matrixSettings.ordinate);
-
-                    scope.matrix = reportViewerMatrixHelper.getMatrix(itemList,
-                        scope.rows,
-                        scope.columns,
-                        scope.matrixSettings.ordinate,
-                        scope.matrixSettings.abscissa,
-                        scope.matrixSettings.value_key,
-                        scope.matrixSettings.subtotal_formula_id);
-
-                    if (scope.emptyLinesHidingType) {
-
-                        switch (scope.emptyLinesHidingType) {
-                            case 1:
-                                reportViewerMatrixHelper.hideEmptyCols(scope.matrix, scope.columns);
-                                break;
-
-                            case 2:
-                                reportViewerMatrixHelper.hideEmptyRows(scope.matrix);
-                                break;
-
-                            case 3:
-                                reportViewerMatrixHelper.hideEmptyRows(scope.matrix);
-                                reportViewerMatrixHelper.hideEmptyCols(scope.matrix, scope.columns);
-                                break;
-                        }
-
-                    }
-
-                    scope.totals = reportViewerMatrixHelper.getMatrixTotals(scope.matrix, itemList);*/
                     scope.matrixCreationInProgress = true;
                     window.removeEventListener('resize', scope.alignGrid);
 
                     getValuesForMatrix().then(function () {
-
-                        // if (scope.emptyLinesHidingType) {
-                        //
-                        //     switch (scope.emptyLinesHidingType) {
-                        //         case 'columns':
-                        //             scope.columns = scope.columns.filter(function (column) {
-                        //                 return column.total;
-                        //             });
-                        //
-                        //             break;
-                        //
-                        //         case 'rows':
-                        //             scope.rows = scope.rows.filter(function (row) {
-                        //                 return row.total;
-                        //             });
-                        //
-                        //             break;
-                        //
-                        //         case 'columns_rows':
-                        //             scope.columns = scope.columns.filter(function (column) {
-                        //                 return column.total;
-                        //             });
-                        //
-                        //             scope.rows = scope.rows.filter(function (row) {
-                        //                 return row.total;
-                        //             });
-                        //
-                        //             break;
-                        //     }
-                        //
-                        // }
-
-                        // buildMatrix();
 
                         setTimeout(function () {
 
@@ -1121,52 +976,15 @@
 
                     initAxisAttrsSelectors();
 
-
                     scope.createMatrix();
-
-                    // scope.evEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-                    //
-                    //     scope.processing = false;
-                    //     scope.createMatrix();
-                    //     /*scope.$apply();
-                    //
-                    //     initMatrixMethods();*/
-                    //
-                    // });
 
                     clearUseFromAboveFilterId = scope.evEventService.addEventListener(evEvents.CLEAR_USE_FROM_ABOVE_FILTERS, function () {
                         scope.alignGrid();
                     });
 
-                    //<editor-fold desc="If we already have data (e.g. viewType changed) start">
-                    var dataLoadEnded = scope.evDataService.didDataLoadEnd();
-
-                    if (dataLoadEnded) {
-
-                        var flatList = rvDataHelper.getFlatStructure(scope.evDataService);
-
-                        if (flatList.length > 1) {
-                            scope.processing = false;
-                            scope.createMatrix();
-                        }
-
-                    }
-                    //</editor-fold>
-
-                    /* if (scope.availableAbscissaAttrs.length) {
-
-                        if (scope.availableAbscissaAttrs.length === 1 &&
-                            scope.availableAbscissaAttrs[0].attribute_data.key !== scope.matrixSettings.abscissa) {
-
-                            scope.canChangeAbscissaAttr = true
-
-                        }
-
-                    } */
                     scope.canChangeAbscissaAttr = canChangeAxisAttr(scope.availableAbscissaAttrs, scope.matrixSettings.abscissa);
                     scope.canChangeOrdinateAttr = canChangeAxisAttr(scope.availableOrdinateAttrs, scope.matrixSettings.ordinate);
                     scope.canChangeValueAttr = canChangeAxisAttr(scope.availableValueAttrs, scope.matrixSettings.value_key);
-                    // window.addEventListener('resize', scope.alignGrid);
 
                 };
 

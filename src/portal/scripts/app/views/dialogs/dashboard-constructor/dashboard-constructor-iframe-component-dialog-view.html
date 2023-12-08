@@ -1,5 +1,5 @@
 <md-dialog aria-label="dashboard report viewer charts constructor dialog"
-           class="draggable-dialog width-50 dialog-actions-bottom dcChartsElemToDrag"
+           class="draggable-dialog width-90 dialog-actions-bottom dcChartsElemToDrag dashboard-constructor-dialog"
            drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
@@ -27,8 +27,8 @@
 
                         <div layout="row">
                             <md-input-container class="dashboard-constructor-field1">
-                                <label for="">Label</label>
-                                <input type="text" data-ng-model="vm.item.chart_custom_name">
+                                <label for="">User Code</label>
+                                <input type="text" data-ng-model="vm.item.user_code">
                             </md-input-container>
                         </div>
 
@@ -64,7 +64,14 @@
                     </md-content>
                 </md-tab>
 
+                <md-tab label="Advance Settings">
+                    <md-content class="p-16">
 
+                        <md-checkbox data-ng-model="vm.item.settings.assume_tab_height"
+                                     style="margin-left: 10px;">Assume height of tab</md-checkbox>
+
+                    </md-content>
+                </md-tab>
             </md-tabs>
 
         </div>

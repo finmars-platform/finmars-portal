@@ -18,7 +18,8 @@
 
 	const evEditorEvents = require("../services/ev-editor/entityViewerEditorEvents");
 
-	module.exports = function ($mdDialog, instrumentService, gridTableHelperService, multitypeFieldService) {
+	/** @module bindFieldTableDirective */
+	module.exports = function ($mdDialog, instrumentService, gridTableHelperService, multitypeFieldService, entityDataConstructorService) {
 		return {
 			require: "^^bindFieldControl",
 			restrict: "E",
@@ -53,7 +54,12 @@
 				const maxTableColWidth = 400;
 				let columnsNumber = 0;
 				const generalCellTypes = [];
-				const useIdForOptions = ['periodicity', 'accrual_calculation_model', 'event_class', 'notification_class'];
+				const useIdForOptions = [
+					'periodicity',
+					'accrual_calculation_model',
+					'event_class',
+					'notification_class'
+				];
 				/** Helps to determine which of multiple tables changed */
 				let thisTableChanged = false;
 				// let thisTableChanged = {value: false}
@@ -99,7 +105,10 @@
 
 							res();
 
-						}).catch(error => rej(error));
+						}).catch(error => {
+							console.error(error);
+							rej(error)
+						});
 
 					});
 
@@ -204,15 +213,36 @@
 
 						accrualCalculationModelService.getList().then(data => {
 
+							const tdColumn = scope.item.options.tableData.find(
+								column => column.key === 'accrual_calculation_model'
+							);
+
+							tdColumn.options = [];
+
 							entitySpecificData.selectorOptions.accrual_calculation_model = data.map(cModel => {
+
+								//# region Update options inside input form layout
+
+								/*
+								 * Needed because models accrualCalculationModel
+								 * changed completely
+								 * */
+
+								tdColumn.options.push( entityDataConstructorService.mapOptions(cModel) )
+								//# endregion
+
 								return {
 									id: cModel.id,
-									name: cModel.name
+									name: cModel.name,
 								}
 							});
+
 							res();
 
-						}).catch(error => rej(error));
+						}).catch(error => {
+							console.error(error);
+							rej(error)
+						});
 
 					});
 
@@ -234,7 +264,10 @@
 
 							res();
 
-						}).catch(error => rej(error));
+						}).catch(error => {
+							console.error(error);
+							rej(error)
+						});
 
 						/* if (scope.entity.instrument_type || scope.entity.instrument_type === 0) {
 
@@ -464,7 +497,7 @@
 
 						const optionIndex = column.settings.selectorOptions.findIndex(option => option.id === column.settings.value);
 
-						if (optionIndex < 0) { // if selected option hidden, add it until another selected
+						if (optionIndex < 0) { // if inside form selected option that is hidden, add it until another selected
 
 							const optionData = entitySpecificData.selectorOptions[column.key].find(option => {
 								return option[idProp] === column.settings.value;
@@ -603,6 +636,7 @@
 				assembleGridTable = function () {
 
 					const tableData = scope.item.options.tableData;
+
 					if (scope.item.options.label) gridTableData.name = scope.item.options.label;
 
 					let shownColIndex = 0;

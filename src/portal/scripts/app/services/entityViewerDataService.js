@@ -119,6 +119,12 @@
     module.exports = function (reportHelper) {
 
         var data = {
+
+            requestsQueue: [],
+            // needs in dashboard when user can quicly change active Objects
+            // we just ignore old response data that not equal to currentRequestId
+            currentRequestId: 0,
+
             columns: [],
             groups: [],
             rootGroupOptions: {
@@ -130,7 +136,7 @@
             },
             useFromAboveFilters: [],
             pagination: {
-                page_size: 60
+                page_size: 40
             },
             status: {
                 data: null
@@ -679,9 +685,9 @@
 
         }
 
-        function getObject(objectId, parentId) {
+        function getObject(objectId) {
 
-            if (data.data[parentId] && data.data[parentId].results && data.data[parentId].results.length) {
+            /*if (data.data[parentId] && data.data[parentId].results && data.data[parentId].results.length) {
 
                 var result;
 
@@ -697,7 +703,8 @@
 
             } else {
                 throw Error('Object does not exist')
-            }
+            }*/
+            return data.data[objectId];
         }
 
         function getObjects() {
@@ -765,7 +772,7 @@
 
         }
 
-        function  resetOnlyItems() {
+        function resetOnlyItems() {
 
             var list = getDataAsList()
 
@@ -809,6 +816,8 @@
             console.log('defaultRootGroup', defaultRootGroup);
 
             setData(defaultRootGroup);
+            setFlatList([])
+            setProjection([])
 
         }
 
@@ -888,12 +897,13 @@
                             page: 1,
                             groups_values: [],
                             groups_order: 'asc',
-                            page_size: 60
+                            page_size: data.pagination.page_size,
                         },
                         pagination: {
                             page: 1,
                             page_size: data.pagination.page_size,
-                            count: 1
+                            count: 1,
+                            downloaded: 0
                         },
                         requestedPages: [1],
                         processedPages: []
@@ -915,12 +925,13 @@
                             page: 1,
                             groups_values: [],
                             groups_order: 'asc',
-                            page_size: 60
+                            page_size: data.pagination.page_size,
                         },
                         pagination: {
                             page: 1,
                             page_size: data.pagination.page_size,
-                            count: 1
+                            count: 1,
+                            downloaded: 0
                         },
                         requestedPages: [1],
                         processedPages: []
@@ -989,7 +1000,7 @@
             return data.activeObjectFromAbove;
         }
 
-        function clearActiveObject() {
+        /* function clearActiveObject() {
 
             var activeObject = getActiveObject();
 
@@ -998,7 +1009,7 @@
                 setObject(activeObject);
             }
 
-        }
+        } */
 
         /* function setActiveObjectAction(action) {
             data.activeObjectAction = action;
@@ -1391,7 +1402,7 @@
                     }
                 }
 
-                listLayout.data.grouping = listLayout.data.grouping.map( groupType => {
+                listLayout.data.grouping = listLayout.data.grouping.map(groupType => {
 
                     if (!groupType.report_settings) {
                         groupType.report_settings = {};
@@ -1407,8 +1418,7 @@
 
                 listLayout.data.filters = emptyUseFromAboveFilters(listLayout.data.filters);
 
-            }
-            else {
+            } else {
 
                 setPagination(listLayout.data.pagination);
 
@@ -1867,6 +1877,40 @@
         }
 
 
+        function enqueueDataRequest(request) {
+
+            console.log("rv.queue.enqueueDataRequest", request)
+
+            data.requestsQueue.push(request);
+        }
+
+        function dequeueDataRequest() {
+
+            console.log("rv.queue.dequeueDataRequest", data.requestsQueue[0])
+
+            return data.requestsQueue.shift();
+
+        }
+
+        function getRequestsQueue() {
+            return data.requestsQueue
+        }
+
+        function isRequestsQueueEmpty() {
+            return data.requestsQueue.length === 0;
+        }
+
+        function incrementCurrentRequestId() {
+
+            data.currentRequestId = data.currentRequestId + 1;
+        }
+
+        function getCurrentRequestId() {
+
+            return data.currentRequestId
+
+        }
+
         return {
 
             setRootEntityViewer: setRootEntityViewer,
@@ -1976,7 +2020,7 @@
 
             setActiveObject: setActiveObject,
             getActiveObject: getActiveObject,
-            clearActiveObject: clearActiveObject,
+            // clearActiveObject: clearActiveObject,
             /* setActiveObjectAction: setActiveObjectAction,
             getActiveObjectAction: getActiveObjectAction,
 
@@ -2142,7 +2186,17 @@
             getGlobalTableSearch: getGlobalTableSearch,
 
             setRenderTime: setRenderTime,
-            getRenderTime: getRenderTime
+            getRenderTime: getRenderTime,
+
+
+            enqueueDataRequest: enqueueDataRequest,
+            dequeueDataRequest: dequeueDataRequest,
+            getRequestsQueue: getRequestsQueue,
+            isRequestsQueueEmpty: isRequestsQueueEmpty,
+
+
+            incrementCurrentRequestId: incrementCurrentRequestId,
+            getCurrentRequestId: getCurrentRequestId,
 
         }
     }

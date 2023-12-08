@@ -174,25 +174,7 @@
                 };
 
                 var setErrorBasedOnStatus = function (errorStatus) {
-
-                    switch (errorStatus) {
-                        case 'error':
-                            scope.error = 'Invalid expression';
-                            break;
-
-                        case 'functions-error':
-                            scope.error = 'Not all variables are identified expression';
-                            break;
-
-						case 'inputs-error':
-							scope.error = 'Not all variables are identified inputs';
-							break;
-
-                        case 'bracket-error':
-                            scope.error = 'Mismatch in the opening and closing braces';
-                            break;
-                    }
-
+                    scope.error = helpExpressionsService.getErrorMsgBasedOnStatus(errorStatus);
                 }
 
                 var validateExpressionSyntax = function () {

@@ -595,8 +595,7 @@ const evEvents = require("../../services/entityViewerEvents");
                         scope.evDataService.setActiveGroupTypeSort(columnOrGroup);
                         scope.evEventService.dispatchEvent(evEvents.GROUP_TYPE_SORT_CHANGE);
 
-                    }
-                    else {
+                    } else {
 
                         scope.evDataService.setActiveColumnSort(columnOrGroup);
                         scope.evEventService.dispatchEvent(evEvents.COLUMN_SORT_CHANGE);
@@ -809,23 +808,21 @@ const evEvents = require("../../services/entityViewerEvents");
                             dataListItem.___is_activated = scope.isAllSelected;
                         }
 
-                        if (dataListItem.results && dataListItem.results.length) {
+                        /*if (dataListItem.results && dataListItem.results.length) {
 
                             dataListItem.results.forEach(function (child) {
 
                                 if (child.___type === 'object') {
                                     child.___is_activated = scope.isAllSelected;
+                                    scope.evDataService.setData(child);
                                 }
 
                             });
 
-                        }
-
+                        }*/
                         scope.evDataService.setData(dataListItem);
 
                     });
-
-                    var data = scope.evDataService.getData();
 
                 };
 
@@ -902,20 +899,35 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     } else {
 
-                        var selGroups = scope.evDataService.getSelectedGroups();
+                        /*var selGroups = scope.evDataService.getSelectedGroups();
 
-                        if (selGroups.length) {
+                        if (selGroups.length) { // multiple groups selected
+
                             selGroups.forEach(function (sGroup) {
                                 var rawData = scope.evDataService.getData(sGroup.___id);
                                 dataList.push(rawData);
                             });
-                        } else {
 
+                        } else { // for entity viewer without groups
 
                             var rawData = scope.evDataService.getRootGroupData()
 
                             dataList.push(rawData);
+                        }*/
+
+                        let groupsIds = scope.evDataService.getSelectedGroups();
+
+                        if (!groupsIds.length) {
+                            groupsIds = [scope.evDataService.getRootGroupData()];
                         }
+
+                        groupsIds = groupsIds.map(group => group.___id);
+
+                        dataList = scope.evDataService.getDataAsList();
+
+                        dataList = dataList.filter(item => {
+                            return groupsIds.includes(item.___parentId);
+                        })
 
                     }
 
@@ -2228,14 +2240,16 @@ const evEvents = require("../../services/entityViewerEvents");
 
                             if (!scope.evDataService.isRequestParametersExist(group.___id)) {
 
-                                unfoldPromises.push(function (){
+                                unfoldPromises.push(function () {
 
-                                    var requestParameters = rvDataProviderService.createRequestParameters(group, group.___level - 1, scope.evDataService, scope.evEventService)
+                                    var parentRequestParameters = scope.evDataService.getRequestParameters(group.___parentId);
+
+                                    var requestParameters = rvDataProviderService.createRequestParameters(scope.evDataService, scope.evEventService, group, parentRequestParameters)
 
                                     console.log('handleFoldButtonClick.group', group);
                                     console.log('handleFoldButtonClick.requestParameters', requestParameters);
 
-                                    return rvDataProviderService.updateDataStructureByRequestParameters(requestParameters, scope.evDataService, scope.evEventService)
+                                    return rvDataProviderService.updateDataStructureByRequestParameters(scope.evDataService, scope.evEventService, requestParameters)
                                 })
 
                             }

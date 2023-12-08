@@ -2,7 +2,7 @@
 
     <div layout="column">
 
-        <div data-ng-if="vm.item.settings.entity_type == 'balance-report'">
+        <div data-ng-if="vm.item.settings.entity_type == 'balance-report' || vm.item.type == 'report_viewer_matrix'">
 
             <div class="m-t-16 m-b-16">
 
@@ -10,35 +10,39 @@
                     <label for="">Date</label>
                     <md-select data-ng-model="vm.item.settings.linked_components.report_settings.report_date">
                         <md-option
-                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                                ng-value="componentType.id">{{componentType.name}}
+                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.user_code "
+                                ng-value="componentType.user_code">{{componentType.name}}
                         </md-option>
                     </md-select>
                 </md-input-container>
 
-                <md-button data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'report_date');"
-                           class="md-raised">clear</md-button>
+                <md-button
+                        data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'report_date');"
+                        class="md-raised">clear
+                </md-button>
 
             </div>
 
         </div>
 
-        <div data-ng-if="vm.item.settings.entity_type == 'pl-report'">
+        <div data-ng-if="vm.item.settings.entity_type == 'pl-report' || vm.item.type == 'report_viewer_matrix'">
 
             <div class="m-t-16" style="margin-bottom: 32px;">
 
                 <md-input-container class="dashboard-constructor-field1">
-                    <label for="">Date From</label>
+                    <label for="">Date From (PL First Date)</label>
                     <md-select data-ng-model="vm.item.settings.linked_components.report_settings.pl_first_date">
                         <md-option
-                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                                ng-value="componentType.id">{{componentType.name}}
+                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.user_code "
+                                ng-value="componentType.user_code">{{componentType.name}}
                         </md-option>
                     </md-select>
                 </md-input-container>
 
-                <md-button data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'pl_first_date');"
-                           class="md-raised">clear</md-button>
+                <md-button
+                        data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'pl_first_date');"
+                        class="md-raised">clear
+                </md-button>
 
             </div>
 
@@ -48,14 +52,16 @@
                     <label for="">Date To</label>
                     <md-select data-ng-model="vm.item.settings.linked_components.report_settings.report_date">
                         <md-option
-                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                                ng-value="componentType.id">{{componentType.name}}
+                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.user_code "
+                                ng-value="componentType.user_code">{{componentType.name}}
                         </md-option>
                     </md-select>
                 </md-input-container>
 
-                <md-button data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'report_date');"
-                           class="md-raised">clear</md-button>
+                <md-button
+                        data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'report_date');"
+                        class="md-raised">clear
+                </md-button>
 
             </div>
 
@@ -69,14 +75,16 @@
                     <label for="">Date From</label>
                     <md-select data-ng-model="vm.item.settings.linked_components.report_settings.begin_date">
                         <md-option
-                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                                ng-value="componentType.id">{{componentType.name}}
+                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.user_code "
+                                ng-value="componentType.user_code">{{componentType.name}}
                         </md-option>
                     </md-select>
                 </md-input-container>
 
-                <md-button data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'begin_date');"
-                           class="md-raised">clear</md-button>
+                <md-button
+                        data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'begin_date');"
+                        class="md-raised">clear
+                </md-button>
 
             </div>
 
@@ -86,14 +94,16 @@
                     <label for="">Date To</label>
                     <md-select data-ng-model="vm.item.settings.linked_components.report_settings.end_date">
                         <md-option
-                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                                ng-value="componentType.id">{{componentType.name}}
+                                data-ng-repeat="componentType in vm.dateControlComponentsTypes | orderBy:'-name' track by componentType.user_code "
+                                ng-value="componentType.user_code">{{componentType.name}}
                         </md-option>
                     </md-select>
                 </md-input-container>
 
-                <md-button data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'end_date');"
-                           class="md-raised">clear</md-button>
+                <md-button
+                        data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'end_date');"
+                        class="md-raised">clear
+                </md-button>
 
             </div>
 
@@ -105,14 +115,16 @@
                 <label for="">Currency</label>
                 <md-select data-ng-model="vm.item.settings.linked_components.report_settings.report_currency">
                     <md-option
-                            data-ng-repeat="componentType in vm.currencyControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                            ng-value="componentType.id">{{componentType.name}}
+                            data-ng-repeat="componentType in vm.currencyControlComponentsTypes | orderBy:'-name' track by componentType.user_code "
+                            ng-value="componentType.user_code">{{componentType.name}}
                     </md-option>
                 </md-select>
             </md-input-container>
 
-            <md-button data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'report_currency');"
-                       class="md-raised">clear</md-button>
+            <md-button
+                    data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'report_currency');"
+                    class="md-raised">clear
+            </md-button>
 
         </div>
 
@@ -122,14 +134,16 @@
                 <label for="">Pricing Policy</label>
                 <md-select data-ng-model="vm.item.settings.linked_components.report_settings.pricing_policy">
                     <md-option
-                            data-ng-repeat="componentType in vm.pricingPolicyControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                            ng-value="componentType.id">{{componentType.name}}
+                            data-ng-repeat="componentType in vm.pricingPolicyControlComponentsTypes | orderBy:'-name' track by componentType.user_code"
+                            ng-value="componentType.user_code">{{componentType.name}}
                     </md-option>
                 </md-select>
             </md-input-container>
 
-            <md-button data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'pricing_policy');"
-                       class="md-raised">clear</md-button>
+            <md-button
+                    data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'pricing_policy');"
+                    class="md-raised">clear
+            </md-button>
 
         </div>
 
@@ -145,14 +159,15 @@
                 <label for="">Portfolios</label>
                 <md-select data-ng-model="vm.item.settings.linked_components.report_settings.portfolios">
                     <md-option
-                            data-ng-repeat="componentType in vm.portfoliosComponentTypes | orderBy:'-name' track by componentType.id "
-                            ng-value="componentType.id">{{componentType.name}}
+                            data-ng-repeat="componentType in vm.portfoliosComponentTypes | orderBy:'-name' track by componentType.user_code "
+                            ng-value="componentType.user_code">{{componentType.name}}
                     </md-option>
                 </md-select>
             </md-input-container>
 
             <md-button data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'portfolios');"
-                       class="md-raised">clear</md-button>
+                       class="md-raised">clear
+            </md-button>
 
         </div>
 
@@ -172,14 +187,15 @@
                 <label for="">Accounts</label>
                 <md-select data-ng-model="vm.item.settings.linked_components.report_settings.accounts">
                     <md-option
-                            data-ng-repeat="componentType in vm.accountsComponentTypes | orderBy:'-name' track by componentType.id "
-                            ng-value="componentType.id">{{componentType.name}}
+                            data-ng-repeat="componentType in vm.accountsComponentTypes | orderBy:'-name' track by componentType.user_code "
+                            ng-value="componentType.user_code">{{componentType.name}}
                     </md-option>
                 </md-select>
             </md-input-container>
 
             <md-button data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'accounts');"
-                       class="md-raised">clear</md-button>
+                       class="md-raised">clear
+            </md-button>
 
         </div>
 
@@ -195,14 +211,16 @@
                 <label for="">Strategies 1</label>
                 <md-select data-ng-model="vm.item.settings.linked_components.report_settings.strategies1">
                     <md-option
-                            data-ng-repeat="componentType in vm.strategies1ComponentTypes | orderBy:'-name' track by componentType.id "
-                            ng-value="componentType.id">{{componentType.name}}
+                            data-ng-repeat="componentType in vm.strategies1ComponentTypes | orderBy:'-name' track by componentType.user_code "
+                            ng-value="componentType.user_code">{{componentType.name}}
                     </md-option>
                 </md-select>
             </md-input-container>
 
-            <md-button data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'strategies1');"
-                       class="md-raised">clear</md-button>
+            <md-button
+                    data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'strategies1');"
+                    class="md-raised">clear
+            </md-button>
         </div>
 
         <div class="m-t-16 m-b-16">
@@ -217,14 +235,16 @@
                 <label for="">Strategies 2</label>
                 <md-select data-ng-model="vm.item.settings.linked_components.report_settings.strategies2">
                     <md-option
-                            data-ng-repeat="componentType in vm.strategies2ComponentTypes | orderBy:'-name' track by componentType.id "
-                            ng-value="componentType.id">{{componentType.name}}
+                            data-ng-repeat="componentType in vm.strategies2ComponentTypes | orderBy:'-name' track by componentType.user_code "
+                            ng-value="componentType.user_code">{{componentType.name}}
                     </md-option>
                 </md-select>
             </md-input-container>
 
-            <md-button data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'strategies2');"
-                       class="md-raised">clear</md-button>
+            <md-button
+                    data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'strategies2');"
+                    class="md-raised">clear
+            </md-button>
         </div>
 
         <div class="m-t-16 m-b-16">
@@ -239,27 +259,20 @@
                 <label for="">Strategies 3</label>
                 <md-select data-ng-model="vm.item.settings.linked_components.report_settings.strategies3">
                     <md-option
-                            data-ng-repeat="componentType in vm.strategies3ComponentTypes | orderBy:'-name' track by componentType.id "
-                            ng-value="componentType.id">{{componentType.name}}
+                            data-ng-repeat="componentType in vm.strategies3ComponentTypes | orderBy:'-name' track by componentType.user_code "
+                            ng-value="componentType.user_code">{{componentType.name}}
                     </md-option>
                 </md-select>
             </md-input-container>
 
-            <md-button data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'strategies3');"
-                       class="md-raised">clear</md-button>
+            <md-button
+                    data-ng-click="vm.clearSelect(vm.item.settings.linked_components.report_settings, 'strategies3');"
+                    class="md-raised">clear
+            </md-button>
         </div>
 
     </div>
 
-    <!--<md-input-container class="dashboard-constructor-field1">
-        <label for="">Portfolios</label>
-        <md-select data-ng-model="vm.item.settings.linked_components.report_settings.portfolios">
-            <md-option
-                    data-ng-repeat="componentType in vm.pricingPolicyControlComponentsTypes | orderBy:'-name' track by componentType.id "
-                    ng-value="componentType.id">{{componentType.name}}
-            </md-option>
-        </md-select>
-    </md-input-container>-->
 </div>
 
 <md-input-container style="height: 58px">

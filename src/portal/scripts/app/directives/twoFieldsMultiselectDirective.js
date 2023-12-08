@@ -103,6 +103,13 @@
 						inputContainer.classList.remove('custom-input-hovered');
 					});
 
+					document.addEventListener('click', function(event) {
+						if (!elem[0].contains(event.target)) {
+							scope.dropdownMenuShown = false;
+							scope.$apply();
+						}
+					});
+
 				};
 
 				let getSelectedOptionsIds = function () {

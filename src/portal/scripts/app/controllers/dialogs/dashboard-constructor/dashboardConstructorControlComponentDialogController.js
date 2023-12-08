@@ -127,7 +127,7 @@
         vm.valueTypes = [
             {code: 10, name: 'Text' },
             {code: 20, name: 'Number' },
-            {code: 40, name: 'Date' },
+            {code: 40, name: 'Date (Deprecated)' },
             {code: 100, name: 'Relation' },
         ];
 

@@ -9,9 +9,13 @@
 
         var vm = this;
 
-        vm.actionErrors = data.actionErrors;
+        /*vm.actionErrors = data.actionErrors;
         vm.entityErrors = data.entityErrors;
-        //vm.inputsErrors = data.inputsErrors;
+        vm.inputsErrors = data.inputsErrors;*/
+        vm.errorsList = data.errorsList || [];
+
+        vm.proceedButton =
+            typeof data.proceedButton === 'boolean' ? data.proceedButton : true;
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});

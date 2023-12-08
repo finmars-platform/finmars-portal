@@ -22,7 +22,7 @@
 
             if (vm.item && vm.item.p12cert) {
 
-                var extension = vm.item.p12cert.name.split('.')[1];
+                var extension = vm.item.p12cert.name.split('.').at(-1);
                 var allowedExtensions = ['pem', 'p12'];
 
                 if (allowedExtensions.indexOf(extension) === -1) {

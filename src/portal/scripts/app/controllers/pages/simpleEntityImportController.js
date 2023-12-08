@@ -74,7 +74,7 @@ import importEntityService from "../../services/import/importEntityService";
 
             if (file) {
 
-                var ext = file.name.split('.')[1]
+                var ext = file.name.split('.').at(-1);
 
                 if (ext !== 'csv' && ext !== 'xlsx' && ext !== 'json') {
 
@@ -601,8 +601,7 @@ import importEntityService from "../../services/import/importEntityService";
                 vm.task = data;
                 console.log('vm.task', vm.task);
 
-
-                if (vm.task.status === 'D' || vm.task.status === 'E') {
+                if ( 'DCTE'.includes(vm.task.status) ) {
                     clearInterval(vm.poolingInterval)
                     vm.poolingInterval = null;
                     // vm.processing = false;
@@ -615,9 +614,9 @@ import importEntityService from "../../services/import/importEntityService";
             })
         }
 
-        vm.startImport = function ($event) {
+        vm.startImport = async function ($event) {
 
-            new Promise(function (resolve, reject) {
+            /*new Promise(function (resolve, reject) {
 
                 delete vm.config.task_id;
                 delete vm.config.task_status;
@@ -712,12 +711,19 @@ import importEntityService from "../../services/import/importEntityService";
                 // vm.processing = false;
                 vm.readyStatus.processing = false;
 
-            });
+            });*/
 
+
+            delete vm.config.task_id;
+            delete vm.config.task_status;
+
+            vm.readyStatus.processing = true;
+
+            importEntities();
 
         };
 
-        vm.import = function (resolve, $event) {
+        const importEntities = async function () {
             // vm.processing = true;
             vm.readyStatus.processing = true;
 
@@ -725,10 +731,9 @@ import importEntityService from "../../services/import/importEntityService";
             vm.poolingInterval = null;
             vm.importIsFinished = false;
 
+            let formData = new FormData();
 
-            var formData = new FormData();
-
-            if (vm.config.json_data) {
+            /*if (vm.config.json_data) {
 
                 console.log('vm.config.json_data', vm.config.json_data);
 
@@ -757,9 +762,25 @@ import importEntityService from "../../services/import/importEntityService";
                     vm.fileLocal = vm.config.local;
 
                 }
+            }*/
+            if (vm.config.task_id) {
+                formData.append('task_id', vm.config.task_id);
+
+            } else {
+                formData.append('scheme', vm.config.scheme);
+                vm.fileLocal = vm.config.local;
             }
 
-            importEntityService.startImport(formData).then(function (data) {
+            if (vm.config.json_data) {
+
+                const blob = new Blob([JSON.stringify(JSON.parse(vm.config.json_data))], {type: 'application/json;'});
+                formData.append('file', blob, 'input.json');
+
+            } else {
+                formData.append('file', vm.config.file);
+            }
+
+            /*importEntityService.startImport(formData).then(function (data) {
 
                 vm.config = data;
                 vm.subTasksInfo = {}
@@ -795,8 +816,27 @@ import importEntityService from "../../services/import/importEntityService";
                 vm.readyStatus.processing = false;
                 $scope.$apply();
 
-            })
+            })*/
+            const data = await importEntityService.startImport(formData);
 
+            /**
+             *
+             * @type { {task_id: Number, task_status: String} }
+             */
+            vm.config = data;
+            vm.subTasksInfo = {}
+
+            vm.currentTaskId = data.task_id
+
+            $scope.$apply();
+
+            vm.getTask()
+
+            vm.poolingInterval = setInterval(function (){
+
+                vm.getTask();
+
+            }, 1000);
 
         };
 

@@ -81,25 +81,7 @@ export default function (toastNotificationService, uiService, evRvLayoutsHelper)
 
     const initEventListeners = function (scope) {
 
-        scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_ON, function () {
 
-            scope.readyStatus.disabled = true;
-
-            setTimeout(function () {
-                scope.$apply();
-            }, 100);
-
-        });
-
-        scope.dashboardComponentEventService.addEventListener(dashboardEvents.COMPONENT_BLOCKAGE_OFF, function () {
-
-            scope.readyStatus.disabled = false;
-
-            setTimeout(function () {
-                scope.$apply();
-            }, 100);
-
-        });
 
     };
 
@@ -116,7 +98,6 @@ export default function (toastNotificationService, uiService, evRvLayoutsHelper)
         }
 
         scope.dashboardDataService.setComponents(components);
-        scope.dashboardComponentEventService.dispatchEvent(dashboardEvents.TOGGLE_FILTER_BLOCK);
     };
 
     return {

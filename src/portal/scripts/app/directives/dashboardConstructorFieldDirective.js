@@ -108,37 +108,158 @@
 
                 };
 
+                scope.editComponentType = function ($event) {
+
+                    var contrName = '';
+                    var templateUrl = '';
+
+                    var locals = {
+                        item: JSON.parse(JSON.stringify(scope.componentData)),
+                        dataService: scope.dashboardConstructorDataService,
+                        eventService: scope.dashboardConstructorEventService,
+                        attributeDataService: scope.attributeDataService,
+                        data: {}
+                    };
+
+                    switch (scope.componentData.type) {
+                        case 'control':
+
+                            if (scope.componentData.settings.value_type === 40) {
+
+                                contrName = 'DashboardConstructorControlDateComponentDialogController as vm';
+                                templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-control-date-component-dialog-view.html';
+
+                            } else if (scope.componentData.settings.value_type === 100) {
+
+                                contrName = 'DashboardConstructorControlRelationComponentDialogController as vm';
+                                templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-control-relation-component-dialog-view.html';
+
+                            } else {
+
+                                contrName = 'DashboardConstructorControlComponentDialogController as vm';
+                                templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-control-component-dialog-view.html';
+                            }
+                            break;
+                        case 'report_viewer':
+                        case 'report_viewer_split_panel':
+                            contrName = 'DashboardConstructorReportViewerComponentDialogController as vm';
+                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-component-dialog-view.html';
+                            break;
+                        /*case 'report_viewer_split_panel':
+                            contrName = 'DashboardConstructorReportViewerSplitPanelComponentDialogController as vm';
+                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-split-panel-component-dialog-view.html';
+                            break;*/
+                        case 'report_viewer_grand_total':
+                            contrName = 'DashboardConstructorReportViewerGrandTotalComponentDialogController as vm';
+                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-grand-total-component-dialog-view.html';
+                            break;
+                        case 'report_viewer_bars_chart':
+                        case 'report_viewer_pie_chart':
+                            contrName = 'DashboardConstructorReportViewerChartsComponentDialogController as vm';
+                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-charts-component-dialog-view.html';
+                            break;
+                        case 'report_viewer_matrix':
+                            contrName = 'DashboardConstructorReportViewerMatrixComponentDialogController as vm';
+                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-matrix-component-dialog-view.html';
+                            break;
+                        case 'report_viewer_table_chart':
+                            contrName = 'DashboardConstructorReportViewerTableChartComponentDialogController as vm';
+                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-table-chart-component-dialog-view.html';
+                            break;
+                        case 'entity_viewer':
+                            contrName = 'DashboardConstructorEntityViewerComponentDialogController as vm';
+                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-entity-viewer-component-dialog-view.html';
+                            break;
+                        case 'entity_viewer_split_panel':
+                            contrName = 'DashboardConstructorEntityViewerSplitPanelComponentDialogController as vm';
+                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-entity-viewer-split-panel-component-dialog-view.html';
+                            break;
+                        case 'button_set':
+                            contrName = 'DashboardConstructorButtonSetComponentDialogController as vm';
+                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-button-set-component-dialog-view.html';
+                            break;
+                        case 'input_form':
+                            contrName = 'DashboardConstructorInputFormComponentDialogController as vm';
+                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-input-form-component-dialog-view.html';
+                            break;
+                        case 'superset_dashboard':
+                            contrName = 'DashboardConstructorSupersetDashboardComponentDialogController as vm';
+                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-superset-dashboard-component-dialog-view.html';
+                            break;
+                        case 'finmars_widget':
+                            contrName = 'DashboardConstructorFinmarsWidgetComponentDialogController as vm';
+                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-finmars-widget-component-dialog-view.html';
+                            break;
+                        case 'apex_chart':
+                            contrName = 'DashboardConstructorApexChartComponentDialogController as vm';
+                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-apex-chart-component-dialog-view.html';
+                            break;
+                        case 'iframe':
+                            contrName = 'DashboardConstructorIframeComponentDialogController as vm';
+                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-iframe-component-dialog-view.html';
+                            break;
+                    }
+
+                    if (contrName && templateUrl) {
+                        $mdDialog.show({
+                            controller: contrName,
+                            templateUrl: templateUrl,
+                            targetEvent: $event,
+                            multiple: true,
+                            preserveScope: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: locals
+
+                        }).then(function (res) {
+
+                            if (res && res.status === 'agree') {
+                                //scope.syncWithComponentType();
+                                scope.componentData = scope.dashboardConstructorDataService.getComponentById(scope.item.data.id);
+
+                                scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
+                            }
+
+                        });
+                    }
+
+                };
+
                 scope.toggleFieldEditMode = function ($event) {
 
-                    $mdDialog.show({
-                        controller: "DashboardConstructorSocketSettingsDialogController as vm",
-                        templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-socket-settings-dialog-view.html',
-                        targetEvent: $event,
-                        autoWrap: true,
-                        locals: {
-                            dashboardConstructorDataService: scope.dashboardConstructorDataService,
-                            dashboardConstructorEventService: scope.dashboardConstructorEventService,
-                            attributeDataService: scope.attributeDataService,
-                            data: {
-                                item: scope.item,
-                                tabNumber: scope.tabNumber,
-                                rowNumber: scope.rowNumber,
-                                columnNumber: scope.columnNumber,
-                            }
-                        }
+                    scope.editComponentType($event);
 
-                    }).then(function (res) {
 
-                        if (res.status === 'agree') {
-                            //scope.syncWithComponentType();
-                            scope.componentData = scope.dashboardConstructorDataService.getComponentById(scope.item.data.id);
-
-                            scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
-
-                            scope.saveField();
-                        }
-
-                    });
+                    // Deprecated 2023-11-09
+                    // $mdDialog.show({
+                    //     controller: "DashboardConstructorSocketSettingsDialogController as vm",
+                    //     templateUrl: 'views/dialogs/dashboard-constructor/dashboard-constructor-socket-settings-dialog-view.html',
+                    //     targetEvent: $event,
+                    //     autoWrap: true,
+                    //     locals: {
+                    //         dashboardConstructorDataService: scope.dashboardConstructorDataService,
+                    //         dashboardConstructorEventService: scope.dashboardConstructorEventService,
+                    //         attributeDataService: scope.attributeDataService,
+                    //         data: {
+                    //             item: scope.item,
+                    //             tabNumber: scope.tabNumber,
+                    //             rowNumber: scope.rowNumber,
+                    //             columnNumber: scope.columnNumber,
+                    //         }
+                    //     }
+                    //
+                    // }).then(function (res) {
+                    //
+                    //     if (res.status === 'agree') {
+                    //         //scope.syncWithComponentType();
+                    //         scope.componentData = scope.dashboardConstructorDataService.getComponentById(scope.item.data.id);
+                    //
+                    //         scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR);
+                    //
+                    //         scope.saveField();
+                    //     }
+                    //
+                    // });
 
                     /*var layout = scope.dashboardConstructorDataService.getData();
 
@@ -657,97 +778,6 @@
                     });
 
                 };*/
-
-                scope.editComponentType = function ($event) {
-
-                    var contrName = '';
-                    var templateUrl = '';
-
-                    var locals = {
-                        item: JSON.parse(JSON.stringify(scope.componentData)),
-                        dataService: scope.dashboardConstructorDataService,
-                        eventService: scope.dashboardConstructorEventService,
-                        attributeDataService: scope.attributeDataService,
-                        data: {}
-                    };
-
-                    switch (scope.componentData.type) {
-                        case 'control':
-                            contrName = 'DashboardConstructorControlComponentDialogController as vm';
-                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-control-component-dialog-view.html';
-                            break;
-                        case 'report_viewer':
-                        case 'report_viewer_split_panel':
-                            contrName = 'DashboardConstructorReportViewerComponentDialogController as vm';
-                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-component-dialog-view.html';
-                            break;
-                        /*case 'report_viewer_split_panel':
-                            contrName = 'DashboardConstructorReportViewerSplitPanelComponentDialogController as vm';
-                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-split-panel-component-dialog-view.html';
-                            break;*/
-                        case 'report_viewer_grand_total':
-                            contrName = 'DashboardConstructorReportViewerGrandTotalComponentDialogController as vm';
-                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-grand-total-component-dialog-view.html';
-                            break;
-                        case 'report_viewer_bars_chart':
-                        case 'report_viewer_pie_chart':
-                            contrName = 'DashboardConstructorReportViewerChartsComponentDialogController as vm';
-                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-charts-component-dialog-view.html';
-                            break;
-                        case 'report_viewer_matrix':
-                            contrName = 'DashboardConstructorReportViewerMatrixComponentDialogController as vm';
-                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-report-viewer-matrix-component-dialog-view.html';
-                            break;
-                        case 'entity_viewer':
-                            contrName = 'DashboardConstructorEntityViewerComponentDialogController as vm';
-                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-entity-viewer-component-dialog-view.html';
-                            break;
-                        case 'entity_viewer_split_panel':
-                            contrName = 'DashboardConstructorEntityViewerSplitPanelComponentDialogController as vm';
-                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-entity-viewer-split-panel-component-dialog-view.html';
-                            break;
-                        case 'button_set':
-                            contrName = 'DashboardConstructorButtonSetComponentDialogController as vm';
-                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-button-set-component-dialog-view.html';
-                            break;
-                        case 'input_form':
-                            contrName = 'DashboardConstructorInputFormComponentDialogController as vm';
-                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-input-form-component-dialog-view.html';
-                            break;
-                        case 'superset_dashboard':
-                            contrName = 'DashboardConstructorSupersetDashboardComponentDialogController as vm';
-                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-superset-dashboard-component-dialog-view.html';
-                            break;
-                        case 'finmars_widget':
-                            contrName = 'DashboardConstructorFinmarsWidgetComponentDialogController as vm';
-                            templateUrl = 'views/dialogs/dashboard-constructor/dashboard-constructor-finmars-widget-component-dialog-view.html';
-                            break;
-                    }
-
-                    if (contrName && templateUrl) {
-                        $mdDialog.show({
-                            controller: contrName,
-                            templateUrl: templateUrl,
-                            targetEvent: $event,
-                            multiple: true,
-                            preserveScope: true,
-                            autoWrap: true,
-                            skipHide: true,
-                            locals: locals
-
-                        }).then(function (res) {
-
-                            if (res && res.status === 'agree') {
-                                //scope.syncWithComponentType();
-                                scope.componentData = scope.dashboardConstructorDataService.getComponentById(scope.item.data.id);
-
-                                scope.dashboardConstructorEventService.dispatchEvent(dashboardConstructorEvents.UPDATE_DASHBOARD_CONSTRUCTOR)
-                            }
-
-                        });
-                    }
-
-                };
 
                 var init = function () {
                     scope.calculateColspanList();
