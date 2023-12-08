@@ -91,6 +91,9 @@
         vm.openedIn = data.openedIn;
         vm.updateContextParameters = sharedLogic.updateContextParametersFunctions;
 
+        vm.exprInputEventObj = {
+            event: {},
+        }
         // var ecosystemDefaultData = {};
 
         vm.loadPermissions = function () {
@@ -323,227 +326,28 @@
 
         };
 
-        /* TODO grid table delete 2020-9-24
-        var checkFieldExprForDeletedInput = function (actionFieldValue, actionItemKey, actionNotes) {
+        const validateTType = async function (entityBeforeSave, proceedButton) {
 
-            for (var a = 0; a < inputsToDelete.length; a++) {
-                var dInputName = inputsToDelete[a];
+            const result = sharedLogic.validateTType(entityBeforeSave, vm.inputsToDelete, vm.exprInputEventObj);
+            vm.exprInputEventObj = result.exprInputEventObj;
 
-                var middleOfExpr = '[^A-Za-z_.]' + dInputName + '(?![A-Za-z1-9_])';
-                var beginningOfExpr = '^' + dInputName + '(?![A-Za-z1-9_])';
-
-                var dInputRegExpObj = new RegExp(beginningOfExpr + '|' + middleOfExpr, 'g');
-
-                if (actionFieldValue.match(dInputRegExpObj)) {
-
-                    var actionFieldLocation = {
-                        action_notes: actionNotes,
-                        key: actionItemKey, // for actions errors
-                        name: actionItemKey, // for entity errors
-                        message: "The deleted input is used in the Expression."
-                    };
-
-                    return actionFieldLocation;
-
-                }
+            if (!result.errorsList.length) {
+                return;
             }
 
-        };
+            // calls $mdDialog.show({});
+            return sharedLogic.openErrorsDialog(result.errorsList, proceedButton);
 
-        vm.checkActionsForEmptyFields = function (actions) {
+        }
 
-            var result = [];
+        vm.validateTTypeView = function () {
 
-            actions.forEach(function (action) {
+            let entityBeforeSave = JSON.parse(angular.toJson(vm.entity));
+            entityBeforeSave = vm.updateEntityBeforeSave(entityBeforeSave);
 
-                var actionKeys = Object.keys(action);
+            validateTType(entityBeforeSave, false);
 
-                actionKeys.forEach(function (actionKey) {
-
-                    if (typeof action[actionKey] === 'object' && action[actionKey]) {
-
-                        var actionItem = action[actionKey];
-                        var actionItemKeys = Object.keys(actionItem);
-
-                        actionItemKeys = actionItemKeys.filter(function (key) {
-
-                            return key.indexOf('_object') === -1 && key.indexOf('_input') === -1 && key.indexOf('_phantom') === -1
-
-                        });
-
-                        console.log('actionItemKeys', actionItemKeys);
-
-                        actionItemKeys.forEach(function (actionItemKey) {
-
-                            if (actionItemKey === 'notes') {
-
-                                if (actionItem[actionItemKey]) {
-
-                                    var fieldWithInvalidExpr = checkFieldExprForDeletedInput(actionItem[actionItemKey], actionItemKey, action.action_notes);
-
-                                    if (fieldWithInvalidExpr) {
-                                        result.push(fieldWithInvalidExpr);
-                                    }
-
-                                }
-
-                            } else {
-
-                                if (actionItem.hasOwnProperty(actionItemKey + '_input')) {
-
-                                    var inputValue = actionItem[actionItemKey + '_input'];
-                                    var relationValue = actionItem[actionItemKey];
-
-                                    var valueIsEmpty = false;
-
-                                    console.log('actionItemKey', actionItemKey);
-                                    console.log('inputValue', inputValue);
-                                    console.log('relationValue', relationValue);
-
-                                    if (actionItem.hasOwnProperty(actionItemKey + '_phantom')) {
-
-                                        var phantomValue = actionItem[actionItemKey + '_phantom'];
-
-                                        console.log('phantomValue', phantomValue);
-
-                                        if (!inputValue && !relationValue && (phantomValue === null || phantomValue === undefined)) {
-                                            valueIsEmpty = true;
-                                        }
-
-                                    } else {
-
-                                        if (!inputValue && !relationValue) {
-                                            valueIsEmpty = true;
-                                        }
-
-                                    }
-
-                                    if (valueIsEmpty) {
-
-                                        result.push({
-                                            action_notes: action.action_notes,
-                                            key: actionItemKey,
-                                            value: actionItem[actionItemKey]
-                                        })
-
-                                    }
-
-
-                                } else {
-
-                                    if (actionItem[actionItemKey] === null ||
-                                        actionItem[actionItemKey] === undefined ||
-                                        actionItem[actionItemKey] === "") {
-
-                                        result.push({
-                                            action_notes: action.action_notes,
-                                            key: actionItemKey,
-                                            value: actionItem[actionItemKey]
-                                        })
-
-                                    } else if (actionItem[actionItemKey] && typeof actionItem[actionItemKey] === 'string') {
-
-                                        var fieldWithInvalidExpr = checkFieldExprForDeletedInput(actionItem[actionItemKey], actionItemKey, action.action_notes);
-
-                                        if (fieldWithInvalidExpr) {
-                                            result.push(fieldWithInvalidExpr);
-                                        }
-
-                                    }
-
-                                }
-
-                            }
-
-                        })
-
-                    }
-
-
-                })
-
-
-            });
-
-
-            return result;
-        };
-
-        var validateUserFields = function (entity, result) {
-
-            var entityKeys = Object.keys(entity);
-
-            entityKeys.forEach(function (entityKey) {
-
-                if (entityKey.indexOf('user_text_') === 0 ||
-                    entityKey.indexOf('user_number_') === 0 ||
-                    entityKey.indexOf('user_date_') === 0) {
-
-                    var fieldWithInvalidExpr = checkFieldExprForDeletedInput(entity[entityKey], entityKey, 'FIELDS');
-
-                    if (fieldWithInvalidExpr) {
-                        result.push(fieldWithInvalidExpr);
-                    }
-
-                }
-
-            });
-        };
-
-        vm.checkEntityForEmptyFields = function (entity) {
-
-            var result = [];
-
-            if (entity.name === null || entity.name === undefined || entity.name === '') {
-                result.push({
-                    action_notes: 'General',
-                    key: 'name',
-                    name: 'Name',
-                    value: entity.name
-                })
-            }
-
-            if (entity.user_code === null || entity.user_code === undefined || entity.user_code === '') {
-                result.push({
-                    action_notes: 'General',
-                    key: 'user_code',
-                    name: 'User code',
-                    value: entity.user_code
-                })
-            }
-
-            if (entity.display_expr === null || entity.display_expr === undefined || entity.display_expr === '') {
-                result.push({
-                    action_notes: 'General',
-                    key: 'display_expr',
-                    name: 'Display Expression',
-                    value: entity.display_expr
-                })
-            }
-
-            if (entity.date_expr === null || entity.date_expr === undefined || entity.date_expr === '') {
-                result.push({
-                    action_notes: 'General',
-                    key: 'date_expr',
-                    name: 'Complex Transaction Date',
-                    value: entity.date_expr
-                })
-            }
-
-            if (entity.group === null || entity.group === undefined) {
-                result.push({
-                    action_notes: 'General',
-                    key: 'group',
-                    name: 'Group',
-                    value: entity.group
-                })
-            }
-
-            validateUserFields(entity, result);
-
-            return result;
-
-        };*/
+        }
 
         var getUserInputs = function (inputs) {
 
@@ -717,7 +521,7 @@
 
             return new Promise(function (resolve, reject) {
 
-                let entityToSave = JSON.parse(JSON.stringify(vm.entity));
+                /*let entityToSave = JSON.parse(JSON.stringify(vm.entity));
                 entityToSave = vm.updateEntityBeforeSave(entityToSave);
 
                 var actionsErrors = sharedLogic.checkActionsForEmptyFields(entityToSave.actions);
@@ -727,29 +531,6 @@
                 var entityErrors = sharedLogic.checkEntityForEmptyFields(entityToSave);
 
                 console.log('vm.entity before save', entityToSave);
-
-                /*if (actionsErrors.length || entityErrors.length) {
-
-                    $mdDialog.show({
-                        controller: 'TransactionTypeValidationErrorsDialogController as vm',
-                        templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
-                        parent: angular.element(document.body),
-                        targetEvent: $event,
-                        clickOutsideToClose: false,
-                        multiple: true,
-                        locals: {
-                            data: {
-                                actionErrors: actionsErrors,
-                                entityErrors: entityErrors
-                            }
-                        }
-                    });
-
-                    vm.processing = false;
-
-                    reject();
-
-                }*/
 
                 new Promise(function (resolve, reject) {
 
@@ -781,57 +562,62 @@
                         resolve()
                     }
 
-                }).then(function () {
+                })*/
+                var entityToSave = JSON.parse(JSON.stringify(vm.entity));
+                entityToSave = vm.updateEntityBeforeSave(entityToSave);
 
-                    vm.processing = true;
+                validateTType(entityToSave, true)
+                    .then(function () {
 
-                    transactionTypeService.create(entityToSave).then(function (responseData) {
+                        vm.processing = true;
 
-                        toastNotificationService.success("Transaction Type " + " " + entityToSave.name + ' was successfully created');
+                        transactionTypeService.create(entityToSave).then(function (responseData) {
 
-                        /* if (vm.entity.inputs) {
-                            vm.entity.inputs.forEach(function (input) {
+                            toastNotificationService.success("Transaction Type " + " " + entityToSave.name + ' was successfully created');
 
-                                if (input.settings && input.settings.linked_inputs_names) {
-                                    input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
-                                }
+                            /* if (vm.entity.inputs) {
+                                vm.entity.inputs.forEach(function (input) {
 
-                            });
+                                    if (input.settings && input.settings.linked_inputs_names) {
+                                        input.settings.linked_inputs_names = input.settings.linked_inputs_names.split(',')
+                                    }
 
-                        } */
+                                });
 
-                        vm.entity.object_permissions = responseData.object_permissions;
+                            } */
 
-                        console.log("Creating: book_transaction_layout", vm.entity.book_transaction_layout);
+                            vm.entity.object_permissions = responseData.object_permissions;
 
-                        if (vm.entity.book_transaction_layout) { // if book_transaction_layout was copied from another TType
+                            console.log("Creating: book_transaction_layout", vm.entity.book_transaction_layout);
 
-                            vm.processing = false;
+                            if (vm.entity.book_transaction_layout) { // if book_transaction_layout was copied from another TType
 
-                            $scope.$apply();
-
-                            // resolve(resolve(responseData));
-                            resolve(responseData);
-
-                        } else {
-
-                            createDefaultEditLayout(responseData).then(function () {
                                 vm.processing = false;
 
                                 $scope.$apply();
 
+                                // resolve(resolve(responseData));
                                 resolve(responseData);
-                            });
 
-                        }
+                            } else {
+
+                                createDefaultEditLayout(responseData).then(function () {
+                                    vm.processing = false;
+
+                                    $scope.$apply();
+
+                                    resolve(responseData);
+                                });
+
+                            }
+
+                        })
+                            .catch(function (data) {
+                                vm.processing = false;
+                                reject();
+                            })
 
                     })
-                        .catch(function (data) {
-                            vm.processing = false;
-                            reject();
-                        })
-
-                })
 
             });
 
@@ -2192,6 +1978,8 @@
                 ecosystemDefaultData = data.results[0];
             }); */
             sharedLogic.loadEcosystemDefaults();
+
+            vm.exprInputEventObj = sharedLogic.createEventsDataForInputs();
 
             var attrsProm = vm.getAttributeTypes(); // this
             var userFieldsProm = vm.getTransactionUserFields();

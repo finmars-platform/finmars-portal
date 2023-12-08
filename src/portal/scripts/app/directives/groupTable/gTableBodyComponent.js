@@ -108,6 +108,7 @@ import RvDomManager from "../../services/rv-dom-manager/rv-dom.manager";
                         item.___flat_list_index = i;
 
                         if (item.___type === 'object' ||
+                            item.___type === 'control' ||
                             item.___type === 'blankline') {
                             item.___flat_list_offset_top_index = index;
                             index = index + 1;

@@ -64,7 +64,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
             if (file) {
 
-                var ext = file.name.split('.')[1]
+                var ext = file.name.split('.').at(-1);
 
                 if (ext !== extension) {
 

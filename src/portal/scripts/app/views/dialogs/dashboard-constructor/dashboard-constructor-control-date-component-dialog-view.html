@@ -1,0 +1,81 @@
+<md-dialog aria-label="dashboard constructor control component"
+           class="draggable-dialog width-90 dashboard-constructor-dialog"
+           drag-dialog>
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Control Date Component</h2>
+            <span flex></span>
+
+            <div data-ng-if="vm.processing" class="dialog-toolbar-loader">
+                <progress-circular diameter="20"></progress-circular>
+            </div>
+
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <md-tabs md-border-bottom md-dynamic-height>
+
+            <md-tab>
+                <md-tab-label>Main</md-tab-label>
+
+                <md-tab-body>
+                    <md-content>
+                        <div class="p-24">
+
+                            <md-input-container style="width: 200px;">
+                                <label for="">Name</label>
+                                <input type="text" data-ng-model="vm.item.name">
+                            </md-input-container>
+
+                            <md-input-container style="width: 200px;">
+                                <label for="">User Code</label>
+                                <input type="text" data-ng-model="vm.item.user_code">
+                            </md-input-container>
+
+                            <md-input-container style="height: 58px">
+
+                                <md-checkbox data-ng-model="vm.item.settings.auto_refresh">Trigger Refresh on Value Change</md-checkbox>
+
+                            </md-input-container>
+
+                        </div>
+                    </md-content>
+                </md-tab-body>
+            </md-tab>
+
+            <md-tab>
+                <md-tab-label>Default value</md-tab-label>
+
+                <md-tab-body>
+                    <md-content>
+                        <div class="p-24" layout="row">
+
+                            <md-input-container class="md-block" style="width: 80%">
+                                <label>Expression</label>
+                                <input data-ng-model="vm.item.settings.default_value_expression">
+                            </md-input-container>
+
+                            <expression-editor-button
+                                    data-item="vm.item.settings.default_value_expression"></expression-editor-button>
+
+                        </div>
+                    </md-content>
+                </md-tab-body>
+            </md-tab>
+
+        </md-tabs>
+
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+
+        <md-button ng-click="vm.cancel()" style="margin-right:20px;">
+            Cancel
+        </md-button>
+
+        <md-button ng-click="vm.agree()" style="margin-right:20px;">
+            OK
+        </md-button>
+
+    </md-dialog-actions>
+</md-dialog>

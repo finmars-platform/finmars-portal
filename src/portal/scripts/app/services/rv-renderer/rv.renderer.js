@@ -5,6 +5,7 @@
     var objectRender = require('./object.renderer');
     var subtotalRender = require('./subtotal.renderer');
     var blanlineRender = require('./blankline.renderer');
+    var controlRender = require('./control.renderer');
 
     // var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
@@ -40,6 +41,10 @@
 
             if (item.___type === 'subtotal' && item.___subtotal_type !== 'proxyline') {
                 rows.push(subtotalRender.render(evDataService, item));
+            }
+
+            if (item.___type === 'control') {
+                rows.push(controlRender.render(evDataService, item));
             }
 
         }

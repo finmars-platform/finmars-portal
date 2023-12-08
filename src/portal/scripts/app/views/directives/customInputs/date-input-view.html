@@ -28,9 +28,10 @@
             <span class="material-icons">event</span>
           </button>
 
+<!--          Changed ng-change to ng-blur 2023-11-10 szhitenev-->
           <input type="text"
                  ng-model="dateValue"
-                 ng-change="onDateChange(dateValue)"
+                 ng-blur="onDateChange(dateValue)"
                  placeholder="{{placeholder}}"
                  ng-disabled="isDisabled"
                  class="custom-input date-input pick-me-up dateInputElem" />

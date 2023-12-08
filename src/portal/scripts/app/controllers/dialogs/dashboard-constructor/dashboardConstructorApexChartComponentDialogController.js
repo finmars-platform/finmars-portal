@@ -10,21 +10,6 @@
 
         var vm = this;
 
-        vm.newFilter = {};
-
-        vm.filterLinks = [];
-        vm.readyStatus = {
-            layouts: false
-        };
-
-        vm.barsNamesAttrSelectorTitle = '';
-        vm.barsNumbersAttrSelectorTitle = '';
-
-        vm.multiselectModalName = 'Fields multiselector';
-
-        vm.componentsForMultiselector = [];
-        var componentsForLinking = dashboardHelper.getComponentsForLinking();
-
         if (item) {
             vm.item = item;
         } else {
@@ -33,11 +18,8 @@
                 id: null, // should be generated before create
                 name: '',
                 settings: {
-                    entity_type: 'balance-report',
-                    auto_refresh: false,
-                    linked_components: {
-                        report_settings: {}
-                    }
+                    show_header: true,
+                    components_to_listen: []
                 },
                 source: '',
                 user_settings: {}
@@ -45,25 +27,6 @@
         }
 
         vm.componentsTypes = [];
-
-        vm.getAttributes = function () {
-
-            vm.attributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type);
-            vm.numericAttributes = attributeDataService.getAllAttributesByEntityType(vm.item.settings.entity_type).filter(function (item) {
-                return item.value_type === 20;
-            });
-
-        };
-
-        vm.showLinkingToFilters = function () {
-
-            vm.linkingToFilters = dashboardConstructorMethodsService.showLinkingToFilters(vm.layouts, vm.item.settings.layout);
-
-        };
-
-        vm.clearSelect = function (item, propToDelete) {
-            delete item[propToDelete];
-        }
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
@@ -93,10 +56,6 @@
         };
 
 
-        vm.exportToDashboards = function () {
-            dashboardConstructorMethodsService.exportComponentToDashboards(vm, $mdDialog, dataService);
-        };
-
         vm.init = function () {
 
             setTimeout(function () {
@@ -106,9 +65,17 @@
 
             vm.componentsTypes = dataService.getComponents();
 
-            dashboardConstructorMethodsService.getDataForComponentsSelector(vm, componentsForLinking, vm.item.id);
+            vm.componentsTypesToListen = vm.componentsTypes.filter(function (item) {
+                return item.user_code // should not be empty
+            }).map(function (item) {
 
-            vm.getAttributes();
+                return {
+                    id: item.user_code,
+                    name: item.name
+                }
+
+            })
+
 
 
         };

@@ -320,10 +320,19 @@
 		let cache = getCache();
 		let layoutToDelete = getCachePropVal(layoutPath, cache);
 
-		// clear content_type default layout
+
 		if (layoutToDelete && layoutToDelete.is_default) {
+			// clear default layout for content_type
+
 			let defLayoutPath = ['layouts', 'defaultLayouts', layoutToDelete.content_type];
 			cache = removeFromCache(defLayoutPath, cache);
+
+		}
+
+		if ( layoutToDelete && layoutToDelete.user_code.endsWith(':autosave') ) {
+			// clear autosave layout for content_type
+			let asLayoutPath = ['layouts', 'autosaveLayouts', layoutToDelete.content_type];
+			cache = removeFromCache(asLayoutPath, cache);
 		}
 
 		cache = removeFromCache(layoutPath, cache);

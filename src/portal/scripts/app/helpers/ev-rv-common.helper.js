@@ -28,6 +28,14 @@
 
     };
 
+    var getDirectChildren = function (id, evDataService) {
+
+        const list = evDataService.getDataAsList();
+
+        return list.filter(item => item.___parentId === id);
+
+    }
+
     var getId = function (item) {
 
         var pattern;
@@ -111,6 +119,7 @@
     module.exports = {
         getId: getId,
         getParents: getParents,
+        getDirectChildren: getDirectChildren,
 
 		isFilterValid: isFilterValid
     }

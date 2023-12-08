@@ -274,6 +274,12 @@
                 </md-menu-content>
             </md-menu>
 
+            <md-button class="link-button"
+                       data-ng-disabled="!vm.checkMainDataReadyStatus() || vm.processing || !vm.entity.type"
+                       ng-click="vm.validateTTypeView()">
+                Validate
+            </md-button>
+
             <md-button class="outline-button"
                        data-ng-disabled="!vm.checkMainDataReadyStatus() || vm.processing || !vm.entity.type"
                        data-ng-click="vm.saveAndExit('edit')">
