@@ -393,6 +393,8 @@
 
         vm.deleteItem = function (item, index) {
 
+            vm.itemsCount = vm.itemsCount - 1;
+
             vm.items.splice(index, 1);
 
             delete vm.actionsPopupsData[item.user_code];
