@@ -30,7 +30,11 @@
                                 <md-card flex="100" class="inm-card-special">
                                     <md-card-content layout="column">
 
-                                        <usercode-input data-item="vm.scheme"></usercode-input>
+                                        <!--<usercode-input data-item="vm.scheme"></usercode-input>-->
+                                        <usercode-input data-configuration-code="vm.scheme.configuration_code"
+                                                        data-user-code="vm.scheme.user_code"
+                                                        data-is-disabled="vm.editingScheme"
+                                        ></usercode-input>
 
                                         <md-input-container class="md-block">
                                             <label for="">Name</label>
