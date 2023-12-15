@@ -1049,6 +1049,7 @@ export default (function () {
     	_paq.push(['FormAnalytics::scanForForms', content]);
     	_paq.push(['trackContentImpressionsWithinNode', content]);
     	_paq.push(['enableLinkTracking']);
+        _paq.push(['enableHeartBeatTimer']);
     });
 
 
