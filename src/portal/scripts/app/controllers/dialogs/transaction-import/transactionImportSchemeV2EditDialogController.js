@@ -40,6 +40,7 @@ const importTransactionService = require("../../../services/import/importTransac
 
         vm.inputsFunctions = [];
         vm.selector_values_projection = [];
+        vm.editingScheme = false;
 
         vm.getFunctions = function () {
 
@@ -829,6 +830,10 @@ const importTransactionService = require("../../../services/import/importTransac
             setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.transactionSchemeManagerDialogElemToResize');
             }, 100);
+
+            if (schemeId) {
+                vm.editingScheme = true;
+            }
 
             vm.getItem();
             vm.getTransactionTypes();

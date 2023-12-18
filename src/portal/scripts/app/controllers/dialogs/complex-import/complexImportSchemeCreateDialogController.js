@@ -19,7 +19,8 @@
         vm.processing = false;
 
         vm.scheme = {
-            user_code: [],
+            configuration_code: '',
+            user_code: '',
             actions: []
         };
 
