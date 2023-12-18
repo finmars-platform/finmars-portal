@@ -71,6 +71,11 @@
                 "code": "user_code",
                 "value_type": "field"
             },
+            {
+                "key": "default_price",
+                "name": "Default Price",
+                "value_type": 20
+            },
         ]
     };
 
