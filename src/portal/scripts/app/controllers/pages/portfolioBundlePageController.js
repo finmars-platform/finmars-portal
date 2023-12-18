@@ -16,7 +16,9 @@
 
         vm.getList = function () {
 
-            portfolioBundleService.getList().then(function (data) {
+            portfolioBundleService.getList({
+                pageSize: 1000
+            }).then(function (data) {
 
                 vm.items = data.results;
 
