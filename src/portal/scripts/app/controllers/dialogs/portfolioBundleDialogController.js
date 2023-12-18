@@ -50,6 +50,13 @@
         };
 
         vm.getRegisters = function (options) {
+
+            if (!options) {
+                options = {
+                    pageSize: 1000
+                };
+            }
+
             return portfolioRegisterService.getList(options);
         };
 
