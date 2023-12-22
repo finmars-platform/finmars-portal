@@ -515,7 +515,9 @@
 
             };
 
-            data.options.push(duplicateOpt);
+            if (vm.entityType !== 'portfolio-register') {
+                data.options.push(duplicateOpt);
+            }
 
             data.options.push({
                 icon: "edit",
@@ -685,14 +687,14 @@
             // vm.readyStatus.entity = true;
             // vm.readyStatus.permissions = true;
 
-            if ( ![
-                    'price-history',
-                    'currency-history',
-                    'price-history-error',
-                    'currency-history-error'
-                ].includes(vm.entityType) ) {
+            if (![
+                'price-history',
+                'currency-history',
+                'price-history-error',
+                'currency-history-error'
+            ].includes(vm.entityType)) {
 
-                promises.push( vm.loadPermissions() );
+                promises.push(vm.loadPermissions());
 
             } else {
 
@@ -702,7 +704,7 @@
             }
 
             // vm.getFormLayout();
-            promises.push( vm.sharedLogic.getFormLayout(formLayout) );
+            promises.push(vm.sharedLogic.getFormLayout(formLayout));
 
             const resData = await Promise.allSettled(promises);
 

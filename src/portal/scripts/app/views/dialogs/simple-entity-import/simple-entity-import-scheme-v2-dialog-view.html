@@ -1,4 +1,5 @@
-<md-dialog class="simple-entity-import-scheme-v2 dialog-actions-bottom">
+<md-dialog class="simple-entity-import-scheme-v2 dialog-actions-bottom"
+           aria-label="simple entity import scheme v2 dialog">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Simple Entity Import Scheme Manager (v2)</h2>
@@ -70,7 +71,10 @@
                                             </md-select>
                                         </md-input-container>
 
-                                        <usercode-input data-item="vm.scheme"></usercode-input>
+                                        <usercode-input data-configuration-code="vm.scheme.configuration_code"
+                                                        data-user-code="vm.scheme.user_code"
+                                                        data-is-disabled="vm.editingScheme"
+                                        ></usercode-input>
 
                                         <md-input-container class="md-block">
                                             <label>Name</label>

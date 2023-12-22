@@ -31,6 +31,7 @@
         vm.scheme = {};
         vm.readyStatus = {scheme: false, entitySchemeAttributes: false};
         vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport();
+        vm.editingScheme = false;
 
         vm.dynamicAttributes = [];
 
@@ -659,6 +660,8 @@
             vm.schemeId = data.schemeId
 
             if (vm.schemeId) {
+                vm.editingScheme = true;
+
                 vm.getItem();
             } else {
                 vm.scheme = {

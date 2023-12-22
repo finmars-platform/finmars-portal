@@ -80,8 +80,13 @@
                 "value_type": 20
             },
             {
-                "key": "nav_previous_day_valuation_currency",
-                "name": "Nav Previous day Valuation Currency",
+                "key": "nav_previous_register_record_day_valuation_currency",
+                "name": "Nav Previous Register Record Day Valuation Currency",
+                "value_type": 20
+            },
+            {
+                "key": "nav_previous_business_day_valuation_currency",
+                "name": "Nav Previous Business Day Valuation Currency",
                 "value_type": 20
             },
             {
