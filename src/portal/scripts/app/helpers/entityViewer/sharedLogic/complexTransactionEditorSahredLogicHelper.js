@@ -80,6 +80,8 @@
 
         const preRecalculationActions = (inputs, updateScope) => {
 
+            viewModel.processing = true;
+
             let book = {
                 transaction_type: viewModel.entity.transaction_type,
                 recalculate_inputs: inputs,
@@ -129,6 +131,7 @@
                 });
 
                 viewModel.evEditorEventService.dispatchEvent(evEditorEvents.FIELDS_RECALCULATION_END);
+                viewModel.processing = false;
 
                 $scope.$apply();
 

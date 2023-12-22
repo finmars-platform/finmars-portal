@@ -26,7 +26,9 @@
 <!--                                <input aria-label="scheme user code" type="text" data-ng-model="vm.scheme.user_code">-->
 <!--                            </md-input-container>-->
 
-                            <usercode-input data-item="vm.scheme"></usercode-input>
+                            <usercode-input data-configuration-code="vm.scheme.configuration_code"
+                                            data-user-code="vm.scheme.user_code"
+                            ></usercode-input>
                             <md-input-container class="md-block">
                                 <label>Name</label>
                                 <input aria-label="scheme name" type="text" data-ng-model="vm.scheme.name">

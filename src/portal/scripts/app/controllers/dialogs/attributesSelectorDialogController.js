@@ -14,7 +14,7 @@ export default function ($scope, $mdDialog, toastNotificationService, uiService,
     const base_api_url = baseUrlService.getMasterUserPrefix();
 
     vm.iframeSrc = `${urlBeginning}/${base_api_url}/v/external/components/modal_add_columns?iframeId=${vm.iframeId}`;
-    // vm.iframeSrc = `http://localhost:3000/space0ni5k/v/external/components/modal_add_columns?iframeId=${vm.iframeId}`; // for development
+    // vm.iframeSrc = `http://localhost:3000/space0fxf3/v/external/components/modal_add_columns?iframeId=${vm.iframeId}`; // for development
 
     const windowOrigin = window.origin;
     // const windowOrigin = 'http://localhost:3000'; // for development
@@ -112,9 +112,16 @@ export default function ($scope, $mdDialog, toastNotificationService, uiService,
     }
 
     const saveDialog = function (payload) {
+        /*const alreadySelAttrKey = payload.selectedAttributes.find(attrKey => {
+            return initSettings.selectedAttributes.find( selAttr => selAttr.key === attrKey )
+        });
+
+        if (alreadySelAttrKey) {
+            throw new Error(`Attribute '${alreadySelAttrKey}' already selected.`);
+        }*/
 
         const alreadySelAttrKey = payload.selectedAttributes.find(attrKey => {
-            return initSettings.selectedAttributes.find( selAttr => selAttr.key === attrKey )
+            return initSettings.selectedAttributes.find( selAttr => selAttr === attrKey )
         });
 
         if (alreadySelAttrKey) {

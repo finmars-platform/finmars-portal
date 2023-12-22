@@ -22,6 +22,7 @@
         var pageSize = 40;
 		var getEntitiesProm;
         // var lastPageReached = false;
+        var dialogParent = document.querySelector('.dialog-containers-wrap');
 
         vm.search = {
             instrument: {
@@ -223,6 +224,49 @@
         vm.recentlyCreatedItems = []
         vm.selectedItem = {};
 
+        vm.actionsPopupDataList = [];
+
+        var createActionsPopupsData = function (itemsList) {
+
+            var result = {}
+
+            itemsList.forEach(function (item) {
+
+                result[item.user_code] = {
+                    options: [
+                        {
+                            name: 'Edit',
+                            icon: 'edit',
+                            onClick: (option, _$popup) => {
+                                _$popup.cancel();
+
+                                vm.editItem(item.id);
+                            }
+                        },
+                        {
+                            name: 'Delete',
+                            icon: 'delete',
+                            onClick: (option, _$popup) => {
+                                _$popup.cancel();
+
+                                // searchin index again, because it changes after deletion of a preceding item
+                                var index = vm.items.findIndex(function (eItem) {
+                                   return eItem.user_code === item.user_code;
+                                });
+
+                                vm.deleteItem(item, index);
+
+                            }
+                        },
+                    ],
+                };
+
+            })
+
+            return result;
+
+        }
+
         vm.agree = function () {
             if (itemsToDelete.length > 0) {
                 itemsToDelete.forEach(function (itemId) {
@@ -323,17 +367,15 @@
             vm.getEntityItems("reloadTable");
         };
 
-        vm.editItem = function (itemId, $event) {
+        vm.editItem = function (itemId) {
+
             $mdDialog
                 .show({
                     controller: "EntityViewerEditDialogController as vm",
                     templateUrl:
                         "views/entity-viewer/entity-viewer-edit-dialog-view.html",
-                    parent: $(""),
-                    targetEvent: $event,
+                    parent: dialogParent,
                     multiple: true,
-                    autoWrap: true,
-                    skipHide: true,
                     locals: {
                         entityType: vm.entityType,
                         entityId: itemId,
@@ -350,8 +392,15 @@
         var itemsToDelete = [];
 
         vm.deleteItem = function (item, index) {
+
+            vm.itemsCount = vm.itemsCount - 1;
+
             vm.items.splice(index, 1);
+
+            delete vm.actionsPopupsData[item.user_code];
+
             itemsToDelete.push(item.id);
+
         };
 
         vm.loadOnScroll = function () {
@@ -431,6 +480,8 @@
                             vm.items = vm.items.concat(data.results);
                         }
 
+                        vm.actionsPopupsData = createActionsPopupsData(vm.items);
+
                         setTimeout(function () {
                             vm.processing = false;
 
@@ -475,6 +526,8 @@
                         });
                     }
 
+                    vm.actionsPopupsData = createActionsPopupsData(vm.items);
+
                     $scope.$apply();
                     vm.loadOnScroll();
                 });
@@ -489,7 +542,7 @@
                 .show({
                     controller: "EntityViewerAddDialogController as vm",
                     templateUrl: "views/entity-viewer/entity-viewer-add-dialog-view.html",
-                    parent: angular.element(document.body),
+                    parent: dialogParent,
                     targetEvent: $event,
                     multiple: true,
                     locals: {
@@ -517,6 +570,7 @@
             $mdDialog.show({
                 controller: 'InstrumentDownloadDialogController as vm',
                 templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+                parent: dialogParent,
                 targetEvent: $event,
                 multiple: true,
                 locals: {

@@ -172,6 +172,10 @@
                         return;
                     }
 
+                    if (typeof uc !== 'string') {
+                        throw new Error(`Expected 'string' as user_code, got: ${typeof uc}`)
+                    }
+
                     const parts = uc.split(':');
 
                     switch (parts.length) {
