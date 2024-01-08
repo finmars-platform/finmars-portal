@@ -176,7 +176,8 @@
                 }
 
             } */
-			var errorText = metaHelper.validateTextForUserCode(vm.name, data.inputs, "Input name");
+            var occupiedInputNames = data.inputs.map(input => input.name);
+			var errorText = metaHelper.validateTextForUserCode(vm.name, occupiedInputNames, "Input name");
 
             if (errorText) {
 
