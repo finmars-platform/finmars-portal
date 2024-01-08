@@ -15,12 +15,12 @@
 
 <!--        <div class="flex-column flex-i-start">-->
         <div layout="row">
-            <text-input label="Name"
-                        placeholder-text="Enter input name here"
-                        model="vm.name"
-                        small-options="{tooltipText: 'Input name'}"
-                        event-signal="vm.textEventSignal"
-                        on-blur-callback="vm.validateInputName()"
+            <text-input data-label="Name"
+                        data-placeholder-text="Enter input name here"
+                        data-model="vm.name"
+                        data-small-options="{tooltipText: 'Input name'}"
+                        data-event-signal="vm.textEventSignal"
+                        data-on-blur-callback="vm.validateInputName()"
                         class="custom-input-bottom-space width-100"></text-input>
         </div>
 
