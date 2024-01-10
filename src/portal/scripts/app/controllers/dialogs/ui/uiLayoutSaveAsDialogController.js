@@ -15,7 +15,7 @@
         // vm.complexSaveAsLayoutDialog = false;
         vm.userCodeError = false;
         vm.label = data.label || '';
-        vm.error = null;
+        // vm.ucEventSignalObj = {};
 
         vm.layout = {
             name: '',

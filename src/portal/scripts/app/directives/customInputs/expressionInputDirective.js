@@ -229,7 +229,7 @@
                                         break;
 
                                     case 'error':
-                                        scope.error = JSON.parse(JSON.stringify(scope.eventSignal.error));
+                                        scope.error = scope.eventSignal.error;
                                         break;
 
                                     case 'set_style_preset1':

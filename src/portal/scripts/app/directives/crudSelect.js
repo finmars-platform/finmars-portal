@@ -18,7 +18,7 @@
                 entityType: '=',
 				eventSignal: '=',
 				smallOptions: '=',
-				isDisabled: '='
+				isDisabled: '=',
             },
             link: function (scope, elem, attrs, ngModelCtrl) {
 

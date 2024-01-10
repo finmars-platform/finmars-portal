@@ -11,7 +11,9 @@
 
         <div layout="row" style="width: 600px;">
 
-            <usercode-input data-item="vm.entity" style="width: 100%;"></usercode-input>
+            <usercode-input data-item="vm.entity"
+                            data-event-signal="vm.inputsEventsObj.system.user_code"
+                            class="width-100"></usercode-input>
 
             <!--            <md-input-container style="width: 300px" data-ng-if="vm.entity.id">-->
             <!--                <label for="">User code</label>-->
@@ -21,33 +23,39 @@
 
         </div>
 
-        <div layout="row" class="m-b-16">
+        <div class="flex-row m-b-24">
 
-            <crud-select label="'Group'" item="vm.entity.group" entity-type="'transaction-type-group'"
-                         options="vm.transactionTypeGroups"></crud-select>
+            <crud-select data-label="'Group'"
+                         data-item="vm.entity.group"
+                         data-entity-type="'transaction-type-group'"
+                         data-options="vm.transactionTypeGroups"
+                         data-event-signal="vm.inputsEventsObj.system.group"></crud-select>
 
         </div>
 
-        <div layout="row">
-            <md-input-container style="width: 300px">
-                <label for="">Name</label>
-                <input type="text" data-ng-model="vm.entity.name">
-            </md-input-container>
+        <div class="flex-row m-b-24">
+            <text-input data-label="Name"
+                        data-model="vm.entity.name"
+                        data-event-signal="vm.inputsEventsObj.system.name"></text-input>
         </div>
 
-        <div layout="row">
-            <md-input-container style="width: 300px">
+        <div class="flex-row m-b-24">
+            <!--<md-input-container style="width: 300px">
                 <label for="">Short name</label>
                 <input type="text" data-ng-model="vm.entity.short_name">
-            </md-input-container>
+            </md-input-container>-->
+            <text-input data-label="Short name"
+                        data-model="vm.entity.short_name"></text-input>
         </div>
 
-        <div layout="row">
-            <md-input-container style="width: 300px">
+        <div class="flex-row m-b-24">
+            <!--<md-input-container style="width: 300px">
                 <label for="">Notes</label>
-                <!--                <textarea data-ng-model="vm.entity.notes" cols="30" rows="10"></textarea>-->
+                &lt;!&ndash;                <textarea data-ng-model="vm.entity.notes" cols="30" rows="10"></textarea>&ndash;&gt;
                 <input type="text" data-ng-model="vm.entity.notes">
-            </md-input-container>
+            </md-input-container>-->
+            <text-input data-label="Notes"
+                        data-model="vm.entity.notes"></text-input>
         </div>
 
         <div layout="row">
@@ -68,11 +76,11 @@
         <div layout="row">
 
             <two-fields-multiselect data-ng-model="vm.entity.instrument_types"
-                                    title="Instrument types"
-                                    items="vm.instrumentTypes"
-                                    model="vm.entity.instrument_types"
-                                    name-property="name"
-                                    on-change-callback="vm.notValidForAll('instruments')"
+                                    data-title="Instrument types"
+                                    data-items="vm.instrumentTypes"
+                                    data-model="vm.entity.instrument_types"
+                                    data-name-property="name"
+                                    data-on-change-callback="vm.notValidForAll('instruments')"
                                     class="ttype-general-multiselectors"></two-fields-multiselect>
 
             <!--<md-input-container style="min-width: 200px">
@@ -86,11 +94,11 @@
                 </md-select>
             </md-input-container>-->
             <two-fields-multiselect ng-model="vm.entity.portfolios"
-                                    title="Portfolios"
-                                    items="vm.portfolios"
-                                    model="vm.entity.portfolios"
-                                    name-property="name"
-                                    on-change-callback="vm.notValidForAll('portfolios')"
+                                    data-title="Portfolios"
+                                    data-items="vm.portfolios"
+                                    data-model="vm.entity.portfolios"
+                                    data-name-property="name"
+                                    data-on-change-callback="vm.notValidForAll('portfolios')"
                                     class="ttype-general-multiselectors"></two-fields-multiselect>
         </div>
 
@@ -102,9 +110,10 @@
             </md-input-container>
 
             <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}" data-item="vm.entity.date_expr"></expression-editor-button>-->
-            <expression-input label="Complex Transaction Date"
-                              model="vm.entity.date_expr"
+            <expression-input data-label="Complex Transaction Date"
+                              data-model="vm.entity.date_expr"
                               data-data="vm.expressionData"
+                              data-event-signal="vm.inputsEventsObj.system.date_expr"
                               class="custom-input-bottom-space"
                               style="margin-left: 12px;"></expression-input>
         </div>
@@ -117,9 +126,10 @@
             </md-input-container>
 
             <expression-editor-button data-data="{groups: [vm.inputsGroup], functions: [vm.inputsFunctions]}" data-item="vm.entity.display_expr"></expression-editor-button>-->
-            <expression-input label="Display Expression"
-                              model="vm.entity.display_expr"
+            <expression-input data-label="Display Expression"
+                              data-model="vm.entity.display_expr"
                               data-data="vm.expressionData"
+                              data-event-signal="vm.inputsEventsObj.system.display_expr"
                               class="custom-input-bottom-space"
                               style="margin-left: 12px;"></expression-input>
         </div>

@@ -91,9 +91,8 @@
         vm.openedIn = data.openedIn;
         vm.updateContextParameters = sharedLogic.updateContextParametersFunctions;
 
-        vm.exprInputEventObj = {
-            event: {},
-        }
+        /** Turns on error mode for custom inputs after validation */
+        vm.inputsEventsObj;
         // var ecosystemDefaultData = {};
 
         vm.loadPermissions = function () {
@@ -328,8 +327,8 @@
 
         const validateTType = async function (entityBeforeSave, proceedButton) {
 
-            const result = sharedLogic.validateTType(entityBeforeSave, vm.inputsToDelete, vm.exprInputEventObj);
-            vm.exprInputEventObj = result.exprInputEventObj;
+            const result = sharedLogic.validateTType(entityBeforeSave, vm.inputsToDelete, vm.inputsEventsObj);
+            vm.inputsEventsObj = result.inputsEventsObj;
 
             if (!result.errorsList.length) {
                 return;
@@ -1979,7 +1978,7 @@
             }); */
             sharedLogic.loadEcosystemDefaults();
 
-            vm.exprInputEventObj = sharedLogic.createEventsDataForInputs();
+            vm.inputsEventsObj = sharedLogic.createEventsDataForInputs();
 
             var attrsProm = vm.getAttributeTypes(); // this
             var userFieldsProm = vm.getTransactionUserFields();

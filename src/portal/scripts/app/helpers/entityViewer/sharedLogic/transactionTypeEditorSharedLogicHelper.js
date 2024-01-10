@@ -686,7 +686,20 @@
 
         };
 
-        //region desc="TRANSACTION VALIDATION"
+        //# region TRANSACTION VALIDATION
+        const getInputsEventSignalsObj = function () {
+            return {
+                system: {
+                    user_code: {},
+                    name: {},
+                    display_expr: {},
+                    date_expr: {},
+                },
+                userFields: {},
+                actions: {},
+            }
+        }
+
         const hasInputInExprs = function (inputs, expr, namesOnly) {
 
             var inputsList = [];
@@ -967,53 +980,114 @@
 
         };
 
-        const checkEntityForEmptyFields = function (entity) {
+        const validateSystemFields = function (entity) {
 
             var result = [];
+            var commonMsg = 'Field should not be empty.';
+
+            var validateExpr = function (key, name, expression, result) {
+
+                var errorObj = {
+                    action_notes: 'General',
+                    key: key,
+                    name: name,
+                    value: expression,
+                }
+
+                if (expression === null || expression === undefined || expression === '') {
+
+                    errorObj.shortMessage = commonMsg;
+                    errorObj.message = commonMsg;
+
+                    result.push(errorObj);
+
+                }
+                else {
+
+                    var validationResult =
+                        helpExpressionsService.validateExpressionOnFrontend(
+                            {expression: expression},
+                            viewModel.expressionData
+                        )
+
+                    if (validationResult.status) {
+
+                        var shortMsg = helpExpressionsService.getErrorMsgBasedOnStatus(
+                            validationResult.status
+                        )
+
+                        errorObj.shortMessage = shortMsg;
+                        errorObj.message = `${shortMsg}.\n Expression: ${validationResult.result}`;
+
+                        result.push(errorObj);
+
+                    }
+
+                }
+
+                return result;
+
+            }
 
             if (entity.name === null || entity.name === undefined || entity.name === '') {
+
                 result.push({
                     action_notes: 'General',
                     key: 'name',
                     name: 'Name',
-                    value: entity.name
+                    value: entity.name,
+                    shortMessage: commonMsg,
+                    message: commonMsg,
                 })
+
             }
 
             if (entity.user_code === null || entity.user_code === undefined || entity.user_code === '') {
+
                 result.push({
                     action_notes: 'General',
                     key: 'user_code',
                     name: 'User code',
-                    value: entity.user_code
+                    value: entity.user_code,
+                    shortMessage: commonMsg,
+                    message: commonMsg,
                 })
+
             }
 
-            if (entity.display_expr === null || entity.display_expr === undefined || entity.display_expr === '') {
+            /*if (entity.date_expr === null || entity.date_expr === undefined || entity.date_expr === '') {
+                            result.push({
+                                action_notes: 'General',
+                                key: 'date_expr',
+                                name: 'Complex Transaction Date',
+                                value: entity.date_expr
+                            })
+                        }*/
+            result = validateExpr('date_expr', 'Complex Transaction Date', entity.date_expr, result);
+
+            /*if (entity.display_expr === null || entity.display_expr === undefined || entity.display_expr === '') {
+
                 result.push({
                     action_notes: 'General',
                     key: 'display_expr',
                     name: 'Display Expression',
                     value: entity.display_expr
                 })
-            }
 
-            if (entity.date_expr === null || entity.date_expr === undefined || entity.date_expr === '') {
-                result.push({
-                    action_notes: 'General',
-                    key: 'date_expr',
-                    name: 'Complex Transaction Date',
-                    value: entity.date_expr
-                })
-            }
+            }*/
+            result = validateExpr('display_expr', 'Display Expression', entity.display_expr, result);
 
             if (entity.group === null || entity.group === undefined) {
+
                 result.push({
                     action_notes: 'General',
                     key: 'group',
                     name: 'Group',
-                    value: entity.group
+                    value: entity.group,
+                    shortMessage: commonMsg,
+                    message: commonMsg,
                 })
+
             }
 
             return result;
@@ -1119,30 +1193,33 @@
 
         }
 
-        const validateTType = function (entity, inputsToDelete, exprInputEventObj) {
+        const validateTType = function (entity, inputsToDelete, inputsEventsObj) {
 
+            // An input as a UI element. Not a ttype input.
             const markInputs = function (errorsList, property) {
 
                 errorsList.forEach(errorData => {
 
                     // turn on error mode for matching input
-                    exprInputEventObj[property][errorData.key] = {
+                    inputsEventsObj[property][errorData.key] = {
                         key: 'error',
                         error: errorData.shortMessage,
                     }
 
                 })
 
+                return inputsEventsObj;
+
             }
 
             let errorsList = [];
 
-            const systemAttrsErrors = checkEntityForEmptyFields(entity);
-            markInputs(systemAttrsErrors, 'system');
+            const systemAttrsErrors = validateSystemFields(entity);
 
+            inputsEventsObj = markInputs(systemAttrsErrors, 'system');
             const userFieldsErrors = validateUserFields(entity, viewModel.inputsToDelete);
 
-            markInputs(userFieldsErrors, 'userFields');
+            inputsEventsObj = markInputs(userFieldsErrors, 'userFields');
 
             const actionsErrors = checkActionsForEmptyFields(entity.actions);
             const ttypeInputsErrors = validateInputs(entity.inputs);
@@ -1150,7 +1227,7 @@
             errorsList = errorsList.concat(systemAttrsErrors, userFieldsErrors, actionsErrors, ttypeInputsErrors);
 
             return {
-                exprInputEventObj: exprInputEventObj,
+                inputsEventsObj: inputsEventsObj,
                 errorsList,
             };
 
@@ -1163,8 +1240,9 @@
          */
         const createEventsDataForInputs = function () {
 
-            const result = {
+            let result = {
                 system: {
+                    'user_code': {},
                     'name': {},
                     'display_expr': {},
                     'date_expr': {},
@@ -1191,7 +1269,7 @@
             return result;
 
         }
-        //endregion
+        //# endregion TRANSACTION VALIDATION
 
         //region desc="INPUTS GRID TABLE"
         const onInputsGridTableRowAddition = function () {
@@ -4427,13 +4505,15 @@
             loadedRelationsList: loadedRelationsList,
             loadRelation: loadRelation,
             resolveRelation: resolveRelation,
+
+            //# region TType validation
             checkActionsForEmptyFields: checkActionsForEmptyFields,
-            checkEntityForEmptyFields: checkEntityForEmptyFields,
             validateInputs: validateInputs,
             openErrorsDialog: openErrorsDialog,
             validateUserFields: validateUserFields,
             validateTType: validateTType,
             createEventsDataForInputs: createEventsDataForInputs,
+            //# endregion
 
             initGridTableEvents: initGridTableEvents,
 

@@ -28,7 +28,7 @@
                 userCode: '=',
 
                 isDisabled: '=',
-                error: '=',
+                eventSignal: '=',
                 occupiedUserCodes: '<',
             },
             link: function (scope, elem, attrs) {
@@ -64,9 +64,9 @@
                     set value(errorString) {
                         errorText = errorString
 
-                        if (scope.error !== undefined) {
+                        /*if (scope.error !== undefined) {
                             scope.error = errorString
-                        }
+                        }*/
                     }
 
                 }
@@ -196,6 +196,37 @@
                     }
 
                 }
+
+                //# region Watchers
+
+                if (scope.eventSignal) {
+                    // this if prevents watcher below from running without need
+
+                    scope.$watch("eventSignal", function () {
+
+                        if (!scope.eventSignal || typeof scope.eventSignal !== 'object') {
+                            throw new Error(`Expected an object for scope.eventSignal inside usercodeInput, got: ${!scope.eventSignal ? !scope.eventSignal : typeof scope.eventSignal}` );
+                        }
+
+                        if (scope.eventSignal.key) {
+
+                            switch (scope.eventSignal.key) {
+
+                                case "error":
+                                    scope.errorData.value = scope.eventSignal.error;
+                                    scope.errorDescription = scope.errorData.value;
+                                    break;
+
+                            }
+
+                            scope.eventSignal = {};
+                        }
+
+                    })
+
+                }
+
+                //# endregion
 
                 const init = function () {
 

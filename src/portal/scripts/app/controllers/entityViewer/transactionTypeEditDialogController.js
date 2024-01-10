@@ -85,11 +85,8 @@
 
         // TODO: ME 2023-09-27 delete later
         vm.inputsWithError = [];
-        vm.exprInputEventObj = {
-            system: [],
-            userFields: [],
-            actions: {},
-        }
+        /** Turns on error mode for custom inputs after validation */
+        vm.inputsEventSignalsObj;
 
         // Deprecated
         vm.loadPermissions = function () {
@@ -484,8 +481,8 @@
 
         const validateTType = async function (entityBeforeSave, proceedButton) {
 
-            const result = sharedLogic.validateTType(entityBeforeSave, vm.inputsToDelete, vm.exprInputEventObj);
-            vm.exprInputEventObj = result.exprInputEventObj;
+            const result = sharedLogic.validateTType(entityBeforeSave, vm.inputsToDelete, vm.inputsEventsObj);
+            vm.inputsEventsObj = result.inputsEventsObj;
 
             if (!result.errorsList.length) {
                 return;
@@ -1906,7 +1903,7 @@
             }); */
             sharedLogic.loadEcosystemDefaults();
 
-            vm.exprInputEventObj = sharedLogic.createEventsDataForInputs();
+            vm.inputsEventsObj = sharedLogic.createEventsDataForInputs();
 
             var getItemPromise = vm.getItem();
             var getAttrsPromise = vm.getAttrs();
