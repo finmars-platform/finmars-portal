@@ -503,7 +503,38 @@
 
         };
 
+        vm.broadcastToChildren = function (data) {
+
+            console.log("Dashboard.broadcastToChildren", data);
+
+            document.querySelectorAll('iframe').forEach(iframe => {
+                iframe.contentWindow.postMessage(data, '*'); // In practice, use a more specific target origin
+            });
+
+        }
+
         vm.initEventListeners = function () {
+
+            window.addEventListener('message', function (event) {
+                // Security checks and message handling here...
+                // Update the dashboard state and broadcast if necessary
+                console.log("setEventListeners.event from child iframes", event);
+
+                vm.dashboardDataService.setLayoutState(event.data);
+
+                vm.broadcastToChildren(event.data);
+
+            });
+
+            vm.dashboardEventService.addEventListener(dashboardEvents.COMPONENT_OUTPUT_CHANGE, function () {
+
+                console.log('COMPONENT_STATUS_CHANGE');
+
+                var state = JSON.parse(JSON.stringify(vm.dashboardDataService.getLayoutState()));
+
+                vm.broadcastToChildren(state)
+
+            });
 
             vm.initDashboardComponents();
 
