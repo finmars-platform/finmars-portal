@@ -5,11 +5,11 @@
 
     'use strict';
 
-    var pricingProcedureService = require('../../../services/procedures/pricingProcedureService');
+    var pricingProcedureService = require('../../../services/procedures/pricingProcedureService').default;
 
-    /*var portfolioService = require('../../../services/portfolioService');
-    var instrumentTypeService = require('../../../services/instrumentTypeService');
-    var pricingPolicyService = require('../../../services/pricingPolicyService');
+    /*var portfolioService = require('../../../services/portfolioService').default;
+    var instrumentTypeService = require('../../../services/instrumentTypeService').default;
+    var pricingPolicyService = require('../../../services/pricingPolicyService').default;;
 
     var instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
     var currencyPricingSchemeService = require('../../../services/pricing/currencyPricingSchemeService');*/

@@ -14,7 +14,7 @@
 
 	const gtEvents = require('../services/gridTableEvents');
 	const popupEvents = require('../services/events/popupEvents');
-	const instrumentTypeService = require('../services/instrumentTypeService');
+	const instrumentTypeService = require('../services/instrumentTypeService').default;
 
 	const evEditorEvents = require("../services/ev-editor/entityViewerEditorEvents");
 

@@ -6,7 +6,7 @@
     'use strict'
 
     var entitySchemesAttributesRepository = require('../../repositories/import/entitySchemesAttributesRepository');
-    var metaService = require('../metaService');
+    var metaService = require('../metaService').default;
     var attributeTypeService = require('../attributeTypeService');
     var baseUrlService = require('../baseUrlService');
 

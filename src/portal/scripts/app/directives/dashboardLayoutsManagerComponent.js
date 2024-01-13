@@ -5,11 +5,11 @@
     const popupEvents = require('../services/events/popupEvents');
     const dashboardEvents = require('../services/dashboard/dashboardEvents');
 
-    const uiService = require('../services/uiService');
+    const uiService = require('../services/uiService').default;
     const shareConfigurationFileService = require('../services/shareConfigurationFileService');
     // const backendConfigurationImportService = require('../services/backendConfigurationImportService');
 
-    const toastNotificationService = require('../../../../core/services/toastNotificationService');
+    const toastNotificationService = require('../../../../core/services/toastNotificationService').default;
 
 
     module.exports = function ($mdDialog, $state, toastNotificationService, uiService, backendConfigurationImportService, evRvLayoutsHelper) {

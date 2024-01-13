@@ -2,7 +2,7 @@
 
     var stringHelper = require('./stringHelper');
     var utilsHelper = require('./utils.helper');
-    var metaService = require('../services/metaService');
+    var metaService = require('../services/metaService').default;
 
     var isDataLoading = function (evDataService) {
 

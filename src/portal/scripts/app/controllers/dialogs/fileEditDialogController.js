@@ -8,7 +8,7 @@
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
     var metaHelper = require('../../helpers/meta.helper');
     var explorerService = require('../../services/explorerService');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
 
 

@@ -7,11 +7,11 @@
 
     var logService = require('../../../../../core/services/logService');
 
-    var evDataHelper = require('../../helpers/ev-data.helper');
+    var evDataHelper = require('../../helpers/ev-data.helper').default;
     var evEvents = require('../../services/entityViewerEvents');
     var ScrollHelper = require('../../helpers/scrollHelper');
 
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
     var GModalSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
     var evHelperService = require('../../services/entityViewerHelperService');
 

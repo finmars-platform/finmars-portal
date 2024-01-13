@@ -1,14 +1,17 @@
+// import baseUrlService from "../services/baseUrlService";
+
 (function () {
 
     'use strict';
 
-    const toastNotificationService = require('../../../../core/services/toastNotificationService');
-    const baseUrlService = require('../services/baseUrlService');
-    const cookieService = require('../../../../core/services/cookieService');
-    const xhrService = require('../../../../core/services/xhrService');
+    var baseUrlService = require("../services/baseUrlService").default;
+    const toastNotificationService = require('../../../../core/services/toastNotificationService').default;
+
+    const cookieService = require('../../../../core/services/cookieService').default;
+    const xhrService = require('../../../../core/services/xhrService').default;
     const baseUrl = baseUrlService.resolve();
 
-    const configureRepositoryUrlService = require('./configureRepositoryUrlService');
+    const configureRepositoryUrlService = require('./configureRepositoryUrlService').default;
 
     var getStats = function (options) {
 

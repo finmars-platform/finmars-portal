@@ -6,14 +6,14 @@
     'use strict';
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
     var evEditorEvents = require('../../services/ev-editor/entityViewerEditorEvents');
 
     var gridHelperService = require('../../services/gridHelperService');
 
     var transactionTypeService = require('../../services/transactionTypeService');
-    var portfolioService = require('../../services/portfolioService');
-    var instrumentTypeService = require('../../services/instrumentTypeService');
+    var portfolioService = require('../../services/portfolioService').default;
+    var instrumentTypeService = require('../../services/instrumentTypeService').default;
 	var tooltipsService = require('../../services/tooltipsService');
 	var colorPalettesService = require('../../services/colorPalettesService');
 

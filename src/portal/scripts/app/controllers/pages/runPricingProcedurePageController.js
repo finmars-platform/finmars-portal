@@ -3,9 +3,9 @@
  */
 (function () {
 
-    var pricingProcedureService = require('../../services/procedures/pricingProcedureService');
+    var pricingProcedureService = require('../../services/procedures/pricingProcedureService').default;
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
     var healthcheckService = require('../../services/healthcheckService');
 
 

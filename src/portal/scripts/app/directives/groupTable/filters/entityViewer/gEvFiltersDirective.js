@@ -2,7 +2,7 @@
 
     'use strict';
 
-    const uiService = require('../../../../services/uiService');
+    const uiService = require('../../../../services/uiService').default;
     const evEvents = require('../../../../services/entityViewerEvents');
 
     const evHelperService = require('../../../../services/entityViewerHelperService');

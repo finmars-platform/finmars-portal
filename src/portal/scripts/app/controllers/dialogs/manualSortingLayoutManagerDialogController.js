@@ -2,7 +2,7 @@
 
     'use strict';
 
-    const uiService = require('../../services/uiService');
+    const uiService = require('../../services/uiService').default;
     const objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
 
     module.exports = function ($scope, $mdDialog, toastNotificationService, data, entityViewerDataService) {

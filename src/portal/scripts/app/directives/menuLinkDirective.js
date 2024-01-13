@@ -12,7 +12,7 @@
             },
             templateUrl: 'views/directives/menu-link-view.html',
             link: function(scope, elem){
-                var controller = elem.parent().controller();
+                var controller = $(elem).parent().controller();
 
                 scope.focusSection = function(){
                     $('.side-nav-dropdown').remove();

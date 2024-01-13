@@ -16,7 +16,7 @@ const cookieService = new CookieService();
 import XhrService from '../services/xhrService';
 const xhrService = new XhrService(errorService);
 
-// const configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+// const configureRepositoryUrlService = require('../services/configureRepositoryUrlService').default;
 import configureRepositoryUrlService from "../services/configureRepositoryUrlService";
 // const baseUrlService = require('../services/baseUrlService');
 import baseUrlService from "../services/baseUrlService";

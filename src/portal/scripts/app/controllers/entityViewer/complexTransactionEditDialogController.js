@@ -9,11 +9,11 @@
     // var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
     var evEditorEvents = require('../../services/ev-editor/entityViewerEditorEvents');
 
     var gridHelperService = require('../../services/gridHelperService');
-    var complexTransactionService = require('../../services/transaction/complexTransactionService');
+    var complexTransactionService = require('../../services/transaction/complexTransactionService').default;
 
     var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
     var EntityViewerEditorEventService = require('../../services/eventService');
@@ -27,7 +27,7 @@
     var transactionHelper = require('../../helpers/transaction.helper');
     var transactionTypeService = require('../../services/transactionTypeService');
 
-    const uiService = require('../../services/uiService');
+    const uiService = require('../../services/uiService').default;
 
     module.exports = function complexTransactionEditDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, usersService, usersGroupService, globalDataService, metaContentTypesService, attributeTypeService, entityType, entityId, data) {
 

@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var metaService = require('../services/metaService');
+    var metaService = require('../services/metaService').default;
     var layoutService = require('../services/entity-data-constructor/layoutService');
 
     module.exports = function ($mdDialog) {

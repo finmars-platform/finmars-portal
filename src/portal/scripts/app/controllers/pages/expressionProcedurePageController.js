@@ -5,8 +5,8 @@
 
     'use strict';
 
-    var expressionProcedureService = require('../../services/procedures/expressionProcedureService');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var expressionProcedureService = require('../../services/procedures/expressionProcedureService').default;
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
     var expressionProcedureInstanceService = require('../../services/procedures/expressionProcedureInstanceService');
     var tasksService = require('../../services/tasksService');
 

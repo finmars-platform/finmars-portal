@@ -9,7 +9,7 @@
     var configurationService = require('../../services/configurationService');
     var marketplaceService = require('../../services/marketplaceService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
 
     module.exports = function marketplacePageController($scope, $state, $stateParams, $mdDialog, configurationService) {

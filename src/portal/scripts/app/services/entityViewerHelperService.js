@@ -1,8 +1,10 @@
 /**
  * Created by szhitenev on 06.05.2016.
  */
-import uiService from "./uiService";
-import ReportHelper from "../helpers/reportHelper";
+// import uiService from "./uiService";
+var uiService = require("./uiService").default;
+// import ReportHelper from "../helpers/reportHelper";
+var ReportHelper = require("../helpers/reportHelper").default;
 const reportHelper = new ReportHelper();
 
 /**
@@ -12,14 +14,14 @@ const reportHelper = new ReportHelper();
 (function () {
 
     const objectComparisonHelper = require('../helpers/objectsComparisonHelper');
-    // const uiService = require('../services/uiService');
+    // const uiService = require('../services/uiService').default;
 
     const entityResolverService = require('../services/entityResolverService');
 
     // const middlewareService = require('../services/middlewareService');
     const evEvents = require('../services/entityViewerEvents');
-    const evDataHelper = require('../helpers/ev-data.helper');
-    const evRvCommonHelper = require('../helpers/ev-rv-common.helper');
+    const evDataHelper = require('../helpers/ev-data.helper').default;
+    const evRvCommonHelper = require('../helpers/ev-rv-common.helper').default;
     const metaHelper = require('../helpers/meta.helper');
 
     'use strict';

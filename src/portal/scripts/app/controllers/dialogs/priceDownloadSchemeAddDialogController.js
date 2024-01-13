@@ -7,7 +7,7 @@
 
     var logService = require('../../../../../core/services/logService');
 
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
     var importPriceDownloadSchemeService = require('../../services/import/importPriceDownloadSchemeService');
     var dataProvidersService = require('../../services/import/dataProvidersService');
 

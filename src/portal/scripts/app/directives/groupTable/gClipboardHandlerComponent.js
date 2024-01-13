@@ -6,9 +6,9 @@
     'use strict';
 
     var logService = require('../../../../../core/services/logService');
-    var evDataHelper = require('../../helpers/ev-data.helper');
+    var evDataHelper = require('../../helpers/ev-data.helper').default;
 
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
 
     module.exports = function () {
         return {

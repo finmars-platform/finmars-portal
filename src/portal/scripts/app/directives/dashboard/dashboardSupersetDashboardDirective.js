@@ -15,10 +15,10 @@
 
     var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
 
-    var pricingProcedureService = require('../../services/procedures/pricingProcedureService');
+    var pricingProcedureService = require('../../services/procedures/pricingProcedureService').default;
     var supersetService = require("../../services/supersetService");
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
     var embeddedsdk = require("@superset-ui/embedded-sdk");
 
 

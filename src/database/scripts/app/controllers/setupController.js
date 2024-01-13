@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var uiService = require('../../../../portal/scripts/app/services/uiService');
+    var uiService = require('../../../../portal/scripts/app/services/uiService').default;
     // var usersService = require('../services/usersService');
     // var usersGroupService = require('../services/usersGroupService');
 

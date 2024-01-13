@@ -6,11 +6,15 @@
 
 'use strict';
 // import * as authorizerService from '../services/authorizerService';
-// const cookieService = require('../../../../core/services/cookieService');
+// const cookieService = require('../../../../core/services/cookieService').default;
 import baseUrlService from "../services/baseUrlService.js";
 import crossTabEvents from "../services/events/crossTabEvents";
 
+import Keycloak from '../../../../core/keycloak/keycloak.js'
+
 export default function ($scope, $state, $transitions, $urlService, $uiRouterGlobals, $mdDialog, toastNotificationService, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService, redirectionService) {
+
+    console.log("shellController init()")
 
     let vm = this;
 

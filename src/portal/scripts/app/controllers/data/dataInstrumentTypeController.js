@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var instrumentTypeService = require('../../services/instrumentTypeService');
+    var instrumentTypeService = require('../../services/instrumentTypeService').default;
 
     module.exports = function ($scope) {
 

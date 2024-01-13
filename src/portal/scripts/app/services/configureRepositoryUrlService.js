@@ -2,11 +2,13 @@
  * Created by szhitenev on 24.06.2016.
  */
 'use strict';
-import configureRepositoryUrlService from "../../../../shell/scripts/app/services/configureRepositoryUrlService";
+// import configureRepositoryUrlService from "../../../../shell/scripts/app/services/configureRepositoryUrlService";
 
 (function () {
 
-    /*function entityPluralToSingular(key) {
+	var configureRepositoryUrlService = require("../../../../shell/scripts/app/services/configureRepositoryUrlService").default;
+
+	/*function entityPluralToSingular(key) {
         switch (key) {
             case 'instruments':
                 return 'instrument';

@@ -6,10 +6,10 @@
 
     'use strict';
 
-    var metaService = require('../services/metaService');
+    var metaService = require('../services/metaService').default;
     // var usersService = require('../services/usersService');
     var metaHelper = require('../helpers/meta.helper');
-    var cookieService = require('../../../../core/services/cookieService');
+    var cookieService = require('../../../../core/services/cookieService').default;
 
     module.exports = function ($scope, $interval, $mdDialog, $transition, usersService, globalDataService, redirectionService, uiService) {
 

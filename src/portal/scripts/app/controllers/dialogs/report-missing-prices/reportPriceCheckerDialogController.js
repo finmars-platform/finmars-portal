@@ -7,7 +7,7 @@
 
     var convertReportHelper = require('../../../helpers/converters/convertReportHelper');
     var downloadFileHelper = require('../../../helpers/downloadFileHelper');
-    var scheduleService = require('../../../services/scheduleService');
+    var scheduleService = require('../../../services/scheduleService').default;
 
     module.exports = function ($scope, $mdDialog, data) {
 

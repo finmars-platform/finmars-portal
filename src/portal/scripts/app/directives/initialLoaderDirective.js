@@ -140,15 +140,16 @@
 
                 scope.init = function () {
 
-                    setTimeout(function () {
-
-                        loadStarsPreset(tsParticles).then(function () {
-
-                            window.tsParticles.load("tsparticles", {preset: "stars"});
-
-                        })
-
-                    }, 100);
+                    // FIX LATER
+                    // setTimeout(function () {
+                    //
+                    //     loadStarsPreset(tsParticles).then(function () {
+                    //
+                    //         window.tsParticles.load("tsparticles", {preset: "stars"});
+                    //
+                    //     })
+                    //
+                    // }, 100);
 
 
                 }

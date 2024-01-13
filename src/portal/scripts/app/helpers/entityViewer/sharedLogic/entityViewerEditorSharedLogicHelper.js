@@ -1,9 +1,9 @@
 (function () {
 
-	const metaService = require('../../../services/metaService');
+	const metaService = require('../../../services/metaService').default;
     const evHelperService = require('../../../services/entityViewerHelperService');
 
-    const instrumentTypeService = require('../../../services/instrumentTypeService');
+    const instrumentTypeService = require('../../../services/instrumentTypeService').default;
 
     const entityEditorHelper = require('../../../helpers/entity-editor.helper');
 

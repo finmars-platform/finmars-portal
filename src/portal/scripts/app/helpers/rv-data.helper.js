@@ -3,9 +3,9 @@
     var localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
 
     var utilsHelper = require('./utils.helper');
-    var evRvCommonHelper = require('./ev-rv-common.helper');
+    var evRvCommonHelper = require('./ev-rv-common.helper').default;
     var rvSubtotalHelper = require('./rv-subtotal.service');
-    var evDataHelper = require('./ev-data.helper');
+    var evDataHelper = require('./ev-data.helper').default;
     // var metaHelper = require('./meta.helper');
 
     var getGroupsByParent = function (parentId, evDataService) {

@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var metaService = require('../services/metaService');
+    var metaService = require('../services/metaService').default;
 
     var entityEditorHelper = require('./entity-editor.helper');
 

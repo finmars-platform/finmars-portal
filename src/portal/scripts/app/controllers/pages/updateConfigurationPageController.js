@@ -5,14 +5,14 @@
 
     'use strict';
 
-    var uiService = require('../../services/uiService');
+    var uiService = require('../../services/uiService').default;
     var newMemberSetupConfigurationService = require('../../services/newMemberSetupConfigurationService');
     // var usersService = require('../services/usersService');
     // var usersGroupService = require('../services/usersGroupService');
 
     // var backendConfigurationImportService = require('../services/backendConfigurationImportService');
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
     module.exports = function ($scope, $state, $mdDialog, usersService, usersGroupService, backendConfigurationImportService, authorizerService) {
 

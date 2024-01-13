@@ -1,18 +1,20 @@
 /**
  * Created by mevstratov on 11.08.2021.
  */
-import websocketService from '../../../../../shell/scripts/app/services/websocketService.js';
+// import websocketService from '../../../../../shell/scripts/app/services/websocketService.js';
 
 (function () {
 
     'use strict';
+
+    var baseUrlService = require("../../services/baseUrlService").default;
 
     var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
 
     var unifiedEntityImportService = require('../../services/import/unifiedEntityImportService');
 
 
-    var baseUrlService = require('../../services/baseUrlService');
+    // var baseUrlService = require('../../services/baseUrlService');
     // var usersService = require('../../services/usersService');
 
     // var websocketService = require('../../services/websocketService');
@@ -99,7 +101,7 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
             var prefix = baseUrlService.getMasterUserPrefix();
             var apiVersion = baseUrlService.getApiVersion();
 
-            return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
+            return baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
         };
 
         vm.import = function (resolve, reject, $event) {
@@ -132,7 +134,20 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
                 $scope.$apply();
 
-                if (websocketService.isOnline()) {
+                if (vm.config.task_status === 'SUCCESS') {
+
+                    console.log('resolve?');
+
+                    resolve(data)
+
+                } else {
+
+                    setTimeout(function () {
+                        vm.import(resolve, reject, $event);
+                    }, 1000)
+
+                }
+                /*if (websocketService.isOnline()) {
 
                     websocketService.addEventListener('simple_import_status', function (data) {
 
@@ -177,13 +192,13 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
 
                     }
 
-                }
+                }*/
 
 
             })
-            .catch(function (e) {
-                reject(e);
-            });
+                .catch(function (e) {
+                    reject(e);
+                });
 
         };
 
@@ -207,50 +222,50 @@ import websocketService from '../../../../../shell/scripts/app/services/websocke
                 vm.import(resolve, reject, $event)
 
             })
-            .then(function (data) {
+                .then(function (data) {
 
-                vm.config = {};
+                    vm.config = {};
 
-                // vm.processing = false;
-                vm.readyStatus.processing = false;
+                    // vm.processing = false;
+                    vm.readyStatus.processing = false;
 
-                console.log('import.data', data);
+                    console.log('import.data', data);
 
-                vm.readyStatus.processing = false;
-                vm.dataIsImported = true;
+                    vm.readyStatus.processing = false;
+                    vm.dataIsImported = true;
 
-                $scope.$apply();
+                    $scope.$apply();
 
 
-                var description = '';
+                    var description = '';
 
-                description = description + '<div> You have successfully imported csv file </div>';
+                    description = description + '<div> You have successfully imported csv file </div>';
 
-                description = description + '<div><a href="' + vm.getFileUrl(data.stats_file_report) + '" download>Download Report File</a></div>';
+                    description = description + '<div><a href="' + vm.getFileUrl(data.stats_file_report) + '" download>Download Report File</a></div>';
 
-                $mdDialog.show({
-                    controller: 'SuccessDialogController as vm',
-                    templateUrl: 'views/dialogs/success-dialog-view.html',
-                    targetEvent: $event,
-                    preserveScope: true,
-                    multiple: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    locals: {
-                        success: {
-                            title: "Success",
-                            description: description
+                    $mdDialog.show({
+                        controller: 'SuccessDialogController as vm',
+                        templateUrl: 'views/dialogs/success-dialog-view.html',
+                        targetEvent: $event,
+                        preserveScope: true,
+                        multiple: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        locals: {
+                            success: {
+                                title: "Success",
+                                description: description
+                            }
                         }
-                    }
 
+                    });
+
+
+                })
+                .catch(function (e) {
+                    vm.readyStatus.processing = false;
+                    $scope.$apply();
                 });
-
-
-            })
-            .catch(function (e) {
-                vm.readyStatus.processing = false;
-                $scope.$apply();
-            });
 
         };
 

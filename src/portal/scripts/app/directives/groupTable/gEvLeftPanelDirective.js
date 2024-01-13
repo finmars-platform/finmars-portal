@@ -6,8 +6,8 @@
     'use strict';
 
     var evEvents = require('../../services/entityViewerEvents');
-    var evDataHelper = require('../../helpers/ev-data.helper');
-    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+    var evDataHelper = require('../../helpers/ev-data.helper').default;
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
     var evFilterService = require('../../services/ev-data-provider/filter.service');
     var evHelperService = require('../../services/entityViewerHelperService');
 

@@ -2,12 +2,14 @@
  * Created by szhitenev on 18.08.2022.
  *  DEPRECATED PAGE
  */
+// import baseUrlService from "../../services/baseUrlService";
 (function () {
 
     'use strict';
 
-    var baseUrlService = require('../../services/baseUrlService');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var baseUrlService = require("../../services/baseUrlService").default;
+    // var baseUrlService = require('../../services/baseUrlService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
     var baseUrl = baseUrlService.resolve();
 

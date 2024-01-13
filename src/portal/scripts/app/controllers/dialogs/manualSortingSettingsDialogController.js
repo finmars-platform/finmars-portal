@@ -2,9 +2,9 @@
 
     'use strict';
 
-    var uiService = require('../../services/uiService');
+    var uiService = require('../../services/uiService').default;
 
-    var rvDataHelper = require('../../helpers/rv-data.helper');
+    var rvDataHelper = require('../../helpers/rv-data.helper').default;
 
     module.exports = function ($scope, $mdDialog, data, entityViewerDataService) {
 

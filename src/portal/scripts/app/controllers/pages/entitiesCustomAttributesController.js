@@ -7,7 +7,7 @@
 
     var attributeTypeService = require('../../services/attributeTypeService');
 
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
 
     module.exports = function ($scope, $mdDialog) {
 

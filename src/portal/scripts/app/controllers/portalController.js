@@ -6,6 +6,7 @@
 
 const localStorageService = require('../../../../shell/scripts/app/services/localStorageService'); // TODO inject localStorageService into angular dependencies
 
+
 export default function ($scope, $state, authorizerService, usersService, globalDataService, redirectionService, middlewareService, uiService) {
 
     let vm = this;

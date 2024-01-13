@@ -9,7 +9,7 @@
     var configurationService = require('../../services/configurationService');
     var vaultService = require('../../services/vaultService');
     var metaContentTypesService = require('../../services/metaContentTypesService');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
 
     module.exports = function vaultPageController($scope, $state, $stateParams, $mdDialog, globalDataService) {

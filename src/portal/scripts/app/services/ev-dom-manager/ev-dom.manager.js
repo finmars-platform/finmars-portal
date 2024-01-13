@@ -2,16 +2,16 @@
 
     'use strict';
 
-    var evDataHelper = require('../../helpers/ev-data.helper');
+    var evDataHelper = require('../../helpers/ev-data.helper').default;
     var utilsHelper = require('../../helpers/utils.helper');
-    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
     var metaHelper = require('../../helpers/meta.helper');
     var evEvents = require('../../services/entityViewerEvents');
 
     var EvRvDomManagerService = require('../evRvDomManagerService');
     var evRvDomManagerService = new EvRvDomManagerService();
 
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
 
     var requestGroups = function (groupHashId, parentGroupHashId, evDataService, evEventService) {
 

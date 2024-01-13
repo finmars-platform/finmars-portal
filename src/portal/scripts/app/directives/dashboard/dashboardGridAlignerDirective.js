@@ -31,7 +31,7 @@
 
                 scope.calculateSingleCellWidth = function () {
 
-                    var tabWidth = elem.parent().parent().parent().width();
+                    var tabWidth = $(elem).parent().parent().parent().width();
 
                     console.log('tabWidth', tabWidth);
 

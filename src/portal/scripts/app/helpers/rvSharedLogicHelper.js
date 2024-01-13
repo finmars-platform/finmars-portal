@@ -1,10 +1,13 @@
 'use strict';
 
-import CommonDialogsService from "../../../../shell/scripts/app/services/commonDialogsService";
-import localStorageService from "../../../../shell/scripts/app/services/localStorageService";
+// import CommonDialogsService from "../../../../shell/scripts/app/services/commonDialogsService";
+// import localStorageService from "../../../../shell/scripts/app/services/localStorageService";
+
 
 (function () {
 
+    var CommonDialogsService = require("../../../../shell/scripts/app/services/commonDialogsService").default;
+    var localStorageService = require("../../../../shell/scripts/app/services/localStorageService");
 
     const evEvents = require('../services/entityViewerEvents');
 

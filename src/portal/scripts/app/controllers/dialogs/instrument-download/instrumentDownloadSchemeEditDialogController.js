@@ -5,10 +5,10 @@
 
     'use strict';
 
-    var metaService = require('../../../services/metaService');
+    var metaService = require('../../../services/metaService').default;
     var dataProvidersService = require('../../../services/import/dataProvidersService');
     var instrumentDownloadSchemeService = require('../../../services/import/instrumentDownloadSchemeService');
-    var scheduleService = require('../../../services/import/scheduleService');
+    var scheduleService = require('../../../services/import/scheduleService').default;
     var attributeTypeService = require('../../../services/attributeTypeService');
 
     module.exports = function ($scope, $mdDialog, schemeId, importSchemesMethodsService) {
