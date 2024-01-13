@@ -507,6 +507,7 @@
                     monthGroup.items.forEach(function (date) {
 
                         delete date.available;
+                        date.value = moment(date.value).format('YYYY-MM-DD');
 
                     });
 
