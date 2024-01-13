@@ -10,7 +10,7 @@
     var accrualCalculationModelService = require('../../../services/accrualCalculationModelService');
     var instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');
 
-    var instrumentEventScheduleService = require('../../../services/instrument/instrumentEventscheduleService').default;
+    var instrumentEventScheduleService = require('../../../services/instrument/instrumentEventScheduleService').default;
 
     var GridTableDataService = require('../../../services/gridTableDataService');
     var EventService = require('../../../services/eventService');
