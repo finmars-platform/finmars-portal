@@ -4,8 +4,8 @@ export default function (cookieService, xhrService) {
 
     const specificDataRepository = new SpecificDataRepository(cookieService, xhrService);
 
-    var getValuesForSelect = function (contentType, key, valueType) {
-        return specificDataRepository.getValuesForSelect(contentType, key, valueType);
+    const getValuesForSelect = function (contentType, key, valueType, options) {
+        return specificDataRepository.getValuesForSelect(contentType, key, valueType, options);
     };
 
     return {
