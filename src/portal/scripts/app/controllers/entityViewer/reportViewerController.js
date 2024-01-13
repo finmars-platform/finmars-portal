@@ -5,14 +5,21 @@
 
 'use strict';
 
-import AutosaveLayoutService from "../../services/autosaveLayoutService";
-import evHelperService from "../../services/entityViewerHelperService";
-import evEvents from "../../services/entityViewerEvents";
-import localStorageService from "../../../../../shell/scripts/app/services/localStorageService";
+// import AutosaveLayoutService from "../../services/autosaveLayoutService";
+// import evHelperService from "../../services/entityViewerHelperService";
+// 2024-01-12 szhitenev vite migration
+
+
+
 
 (function () {
 
-    var metaService = require('../../services/metaService');
+    var AutosaveLayoutService = require("../../services/autosaveLayoutService").default;
+    var evHelperService = require("../../services/entityViewerHelperService");
+    var metaService = require('../../services/metaService').default;
+
+    var evEvents = require("../../services/entityViewerEvents");
+    var localStorageService = require("../../../../../shell/scripts/app/services/localStorageService");
 
     var RvSharedLogicHelper = require('../../helpers/rvSharedLogicHelper');
     var EntityViewerDataService = require('../../services/entityViewerDataService');

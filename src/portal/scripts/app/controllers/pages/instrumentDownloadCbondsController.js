@@ -7,7 +7,7 @@
 
 
     var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
     module.exports = function instrumentDownloadCbondsController($scope, $mdDialog) {
 

@@ -3,22 +3,35 @@
  *
  * This service needed for modules that import entityResolverService by require()
  */
-import EntityResolverService from "./entityResolverServiceNew";
-import CookieService from "../../../../shell/scripts/app/services/cookieService";
-import ToastNotificationService from "../../../../shell/scripts/app/services/toastNotificationService";
-import ErrorService from "../../../../shell/scripts/app/services/errorService";
-import XhrService from "../../../../shell/scripts/app/services/xhrService";
-import InstrumentService from "./instrumentService";
-import PriceHistoryService from "./priceHistoryService";
-import CurrencyHistoryService from "./currencyHistoryService";
-import ReportService from "./reportService";
-import GridTableHelperService from "../helpers/gridTableHelperService";
+// import EntityResolverService from "./entityResolverServiceNew";
+// import CookieService from "../../../../shell/scripts/app/services/cookieService";
+// import ToastNotificationService from "../../../../shell/scripts/app/services/toastNotificationService";
+// import ErrorService from "../../../../shell/scripts/app/services/errorService";
+// import XhrService from "../../../../shell/scripts/app/services/xhrService";
+// import InstrumentService from "./instrumentService";
+// import PriceHistoryService from "./priceHistoryService";
+// import CurrencyHistoryService from "./currencyHistoryService";
+// import ReportService from "./reportService";
+// import GridTableHelperService from "../helpers/gridTableHelperService";
 
-const MultitypeFieldService = require('./multitypeFieldService');
-const uiService = require('./uiService');
-const transactionTypeService = require("./transactionTypeService");
 
 (function () {
+
+    var EntityResolverService = require("./entityResolverServiceNew").default;
+    var CookieService = require("../../../../shell/scripts/app/services/cookieService").default;
+    var ToastNotificationService = require("../../../../shell/scripts/app/services/toastNotificationService").default;
+    var ErrorService = require("../../../../shell/scripts/app/services/errorService").default;
+    var XhrService = require("../../../../shell/scripts/app/services/xhrService").default;
+    var InstrumentService = require("./instrumentService").default;
+    var PriceHistoryService = require("./priceHistoryService").default;
+    var CurrencyHistoryService = require("./currencyHistoryService").default;
+    var ReportService = require("./reportService").default;
+
+    var GridTableHelperService = require("../helpers/gridTableHelperService");
+
+    const MultitypeFieldService = require('./multitypeFieldService');
+    const uiService = require('./uiService').default;
+    const transactionTypeService = require("./transactionTypeService");
 
     'use strict';
     const cookieService = new CookieService();

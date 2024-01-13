@@ -9,7 +9,7 @@
     'use strict';
 
     var logService = require('../../../../../../core/services/logService');
-    var pricingPolicyService = require('../../../services/pricingPolicyService');
+    var pricingPolicyService = require('../../../services/pricingPolicyService').default;;
 
     module.exports = function ($scope, fieldResolverService) {
 

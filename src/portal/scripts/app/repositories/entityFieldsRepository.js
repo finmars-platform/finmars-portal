@@ -1,13 +1,15 @@
 /**
  * Created by szhitenev on 17.06.2016.
  */
+// import baseUrlService from "../services/baseUrlService";
 (function () {
 
 	'use strict';
 
-	var baseUrlService = require('../services/baseUrlService');
-	var cookieService = require('../../../../core/services/cookieService');
-	var xhrService = require('../../../../core/services/xhrService');
+	var baseUrlService = require("../services/baseUrlService").default;
+	// var baseUrlService = require('../services/baseUrlService');
+	var cookieService = require('../../../../core/services/cookieService').default;
+	var xhrService = require('../../../../core/services/xhrService').default;
 	var baseUrl = baseUrlService.resolve();
 
 	var getPricingConditionChoices = function () {

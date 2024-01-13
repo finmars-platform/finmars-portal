@@ -8,7 +8,7 @@
     var entityResolverService = require('../../services/entityResolverService');
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
     var metaHelper = require('../../helpers/meta.helper');
-    const toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    const toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
 
     module.exports = function ($scope, $mdDialog, data) {

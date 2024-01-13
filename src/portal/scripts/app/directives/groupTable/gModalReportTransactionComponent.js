@@ -9,9 +9,9 @@
 
     var evEvents = require('../../services/entityViewerEvents');
 
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
 
-    var evDataHelper = require('../../helpers/ev-data.helper');
+    var evDataHelper = require('../../helpers/ev-data.helper').default;
 
     var GModalSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
 

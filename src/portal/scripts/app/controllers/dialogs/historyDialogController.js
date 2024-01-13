@@ -5,7 +5,7 @@
 
     var historyService = require('../../services/historyService');
     var entityResolverService = require('../../services/entityResolverService');
-    var complexTransactionService = require('../../services/transaction/complexTransactionService');
+    var complexTransactionService = require('../../services/transaction/complexTransactionService').default;
 
     'use strict';
 

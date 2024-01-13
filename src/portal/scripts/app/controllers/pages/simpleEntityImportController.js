@@ -1,21 +1,26 @@
 /**
  * Created by mevstratov on 24.06.2019.
  */
-import websocketService from '../../../../../shell/scripts/app/services/websocketService.js';
-import processesService from "../../services/processesService";
-import importTransactionService from "../../services/import/importTransactionService";
-import importEntityService from "../../services/import/importEntityService";
+// import websocketService from '../../../../../shell/scripts/app/services/websocketService.js';
+// import processesService from "../../services/processesService";
+// import importTransactionService from "../../services/import/importTransactionService";
+// import importEntityService from "../../services/import/importEntityService";
 
 (function () {
 
     'use strict';
+
+    // import websocketService from '../../../../../shell/scripts/app/services/websocketService.js';
+    var processesService = require("../../services/processesService");
+
+    var baseUrlService = require("../../services/baseUrlService").default;
 
     var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
 
     var importEntityService = require('../../services/import/importEntityService');
 
 
-    var baseUrlService = require('../../services/baseUrlService');
+    // var baseUrlService = require('../../services/baseUrlService');
     // var usersService = require('../../services/usersService');
 
     // var websocketService = require('../../services/websocketService');
@@ -49,7 +54,7 @@ import importEntityService from "../../services/import/importEntityService";
             return !vm.readyStatus.processing && vm.config.scheme;
         };
 
-        vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport().map(function (item){
+        vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport().map(function (item) {
 
             item.id = item.key;
 
@@ -113,7 +118,7 @@ import importEntityService from "../../services/import/importEntityService";
             var prefix = baseUrlService.getMasterUserPrefix();
             var apiVersion = baseUrlService.getApiVersion();
 
-            return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
+            return baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
         };
 
         vm.createScheme = function ($event) {
@@ -207,52 +212,19 @@ import importEntityService from "../../services/import/importEntityService";
             }
 
             importEntityService.validateImport(formData)
-            .then(function (data) {
+                .then(function (data) {
 
-                vm.validateConfig = data;
+                    vm.validateConfig = data;
 
-                vm.loaderData = {
-                    current: vm.validateConfig.processed_rows,
-                    total: vm.validateConfig.total_rows,
-                    text: 'Validation Progress:',
-                    status: vm.validateConfig.task_status
-                };
+                    vm.loaderData = {
+                        current: vm.validateConfig.processed_rows,
+                        total: vm.validateConfig.total_rows,
+                        text: 'Validation Progress:',
+                        status: vm.validateConfig.task_status
+                    };
 
 
-                $scope.$apply();
-
-                if (websocketService.isOnline()) {
-
-                    websocketService.addEventListener('simple_import_status', function (data) {
-
-                        console.log('simple_import_status.data', data);
-
-                        if (vm.validateConfig.task_id === data.task_id) {
-
-                            vm.loaderData = {
-                                current: data.processed_rows,
-                                total: data.total_rows,
-                                text: 'Validation Progress:',
-                                status: data.state
-                            };
-
-                            $scope.$apply();
-
-                            if (data.state === 'D') {
-                                websocketService.removeEventListener('simple_import_status');
-                                resolve(data)
-                            } else {
-                                if (data.state !== 'D' && data.state !== 'P') {
-                                    websocketService.removeEventListener('simple_import_status');
-                                    resolve(data);
-                                }
-                            }
-
-                        }
-
-                    })
-
-                } else {
+                    $scope.$apply();
 
                     if (vm.validateConfig.task_status === 'SUCCESS') {
                         resolve(data)
@@ -265,13 +237,57 @@ import importEntityService from "../../services/import/importEntityService";
 
                     }
 
-                }
+                    /*if (websocketService.isOnline()) {
+
+                        websocketService.addEventListener('simple_import_status', function (data) {
+
+                            console.log('simple_import_status.data', data);
+
+                            if (vm.validateConfig.task_id === data.task_id) {
+
+                                vm.loaderData = {
+                                    current: data.processed_rows,
+                                    total: data.total_rows,
+                                    text: 'Validation Progress:',
+                                    status: data.state
+                                };
+
+                                $scope.$apply();
+
+                                if (data.state === 'D') {
+                                    websocketService.removeEventListener('simple_import_status');
+                                    resolve(data)
+                                } else {
+                                    if (data.state !== 'D' && data.state !== 'P') {
+                                        websocketService.removeEventListener('simple_import_status');
+                                        resolve(data);
+                                    }
+                                }
+
+                            }
+
+                        })
+
+                    } else {
+
+                        if (vm.validateConfig.task_status === 'SUCCESS') {
+                            resolve(data)
+
+                        } else {
+
+                            setTimeout(function () {
+                                vm.validate(resolve, reject, $event);
+                            }, 1000)
+
+                        }
+
+                    }*/
 
 
-            })
-            .catch(function (e) {
-                reject(e)
-            })
+                })
+                .catch(function (e) {
+                    reject(e)
+                })
 
         };
 
@@ -294,88 +310,88 @@ import importEntityService from "../../services/import/importEntityService";
                 vm.validate(resolve, reject, $event)
 
             })
-            .then(function (data) {
+                .then(function (data) {
 
-                // vm.processing = false;
-                vm.readyStatus.processing = false;
+                    // vm.processing = false;
+                    vm.readyStatus.processing = false;
 
-                console.log('validateImport.data', data);
+                    console.log('validateImport.data', data);
 
-                var hasErrors = false;
+                    var hasErrors = false;
 
-                vm.readyStatus.processing = false;
-                vm.dataIsImported = true;
+                    vm.readyStatus.processing = false;
+                    vm.dataIsImported = true;
 
-                $scope.$apply();
+                    $scope.$apply();
 
 
-                data.stats.forEach(function (item) {
+                    data.stats.forEach(function (item) {
 
-                    if (item.level === 'error') {
-                        hasErrors = true;
+                        if (item.level === 'error') {
+                            hasErrors = true;
+                        }
+
+                    });
+
+                    console.log('hasErrors', hasErrors);
+
+                    if (!hasErrors) {
+
+                        $mdDialog.show({
+                            controller: 'SuccessDialogController as vm',
+                            templateUrl: 'views/dialogs/success-dialog-view.html',
+                            targetEvent: $event,
+                            preserveScope: true,
+                            multiple: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                success: {
+                                    title: "Success",
+                                    description: "File is Valid"
+                                }
+                            }
+
+                        });
+
+                    } else {
+
+                        var schemeObject;
+
+                        vm.entitySchemes.forEach(function (scheme) {
+
+                            if (scheme.id == vm.config.scheme) {
+                                schemeObject = scheme;
+                            }
+
+                        });
+
+                        console.log('data', data);
+
+                        $mdDialog.show({
+                            controller: 'SimpleEntityImportErrorsDialogController as vm',
+                            templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-errors-dialog-view.html',
+                            targetEvent: $event,
+                            preserveScope: true,
+                            multiple: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                data: {
+                                    validationResult: data,
+                                    scheme: schemeObject,
+                                    config: vm.config
+                                }
+                            }
+                        })
+
                     }
 
-                });
-
-                console.log('hasErrors', hasErrors);
-
-                if (!hasErrors) {
-
-                    $mdDialog.show({
-                        controller: 'SuccessDialogController as vm',
-                        templateUrl: 'views/dialogs/success-dialog-view.html',
-                        targetEvent: $event,
-                        preserveScope: true,
-                        multiple: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        locals: {
-                            success: {
-                                title: "Success",
-                                description: "File is Valid"
-                            }
-                        }
-
-                    });
-
-                } else {
-
-                    var schemeObject;
-
-                    vm.entitySchemes.forEach(function (scheme) {
-
-                        if (scheme.id == vm.config.scheme) {
-                            schemeObject = scheme;
-                        }
-
-                    });
-
-                    console.log('data', data);
-
-                    $mdDialog.show({
-                        controller: 'SimpleEntityImportErrorsDialogController as vm',
-                        templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-errors-dialog-view.html',
-                        targetEvent: $event,
-                        preserveScope: true,
-                        multiple: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        locals: {
-                            data: {
-                                validationResult: data,
-                                scheme: schemeObject,
-                                config: vm.config
-                            }
-                        }
-                    })
-
-                }
-
-            })
-            .catch(function (e) {
-                vm.readyStatus.processing = false;
-                $scope.$apply();
-            })
+                })
+                .catch(function (e) {
+                    vm.readyStatus.processing = false;
+                    $scope.$apply();
+                })
 
         };
 
@@ -409,7 +425,21 @@ import importEntityService from "../../services/import/importEntityService";
 
                 $scope.$apply();
 
-                if (websocketService.isOnline()) {
+                if (vm.config.task_status === 'SUCCESS') {
+
+                    console.log('resolve?');
+
+                    resolve(data)
+
+                } else {
+
+                    setTimeout(function () {
+                        importData(resolve, reject, $event);
+                    }, 1000)
+
+                }
+
+                /*if (websocketService.isOnline()) {
 
                     websocketService.addEventListener('simple_import_status', function (data) {
 
@@ -454,7 +484,7 @@ import importEntityService from "../../services/import/importEntityService";
 
                     }
 
-                }
+                }*/
 
 
             }).catch(function (e) {
@@ -482,81 +512,81 @@ import importEntityService from "../../services/import/importEntityService";
                 vm.validate(resolve, reject, $event)
 
             })
-            .then(function (data) {
+                .then(function (data) {
 
-                vm.validateConfig = {};
+                    vm.validateConfig = {};
 
-                // vm.processing = false;
-                vm.readyStatus.processing = false;
+                    // vm.processing = false;
+                    vm.readyStatus.processing = false;
 
-                console.log('validateImport.data', data);
+                    console.log('validateImport.data', data);
 
-                var hasErrors = false;
+                    var hasErrors = false;
 
-                vm.readyStatus.processing = false;
-                vm.dataIsImported = true;
+                    vm.readyStatus.processing = false;
+                    vm.dataIsImported = true;
 
-                $scope.$apply();
+                    $scope.$apply();
 
-                data.stats.forEach(function (item) {
+                    data.stats.forEach(function (item) {
 
-                    if (item.level === 'error') {
-                        hasErrors = true;
-                    }
-
-                });
-
-                console.log('hasErrors', hasErrors);
-
-                if (!hasErrors) {
-
-                    vm.startImport($event);
-
-                } else {
-
-                    var schemeObject;
-
-                    vm.entitySchemes.forEach(function (scheme) {
-
-                        if (scheme.id == vm.config.scheme) {
-                            schemeObject = scheme;
+                        if (item.level === 'error') {
+                            hasErrors = true;
                         }
 
                     });
 
-                    console.log('data', data);
+                    console.log('hasErrors', hasErrors);
 
-                    $mdDialog.show({
-                        controller: 'SimpleEntityImportErrorsDialogController as vm',
-                        templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-errors-dialog-view.html',
-                        targetEvent: $event,
-                        preserveScope: true,
-                        multiple: true,
-                        autoWrap: true,
-                        skipHide: true,
-                        locals: {
-                            data: {
-                                validationResult: data,
-                                config: vm.config
+                    if (!hasErrors) {
+
+                        vm.startImport($event);
+
+                    } else {
+
+                        var schemeObject;
+
+                        vm.entitySchemes.forEach(function (scheme) {
+
+                            if (scheme.id == vm.config.scheme) {
+                                schemeObject = scheme;
                             }
-                        }
-                    }).then(function (res) {
 
-                        if (res && res.status === 'agree') {
+                        });
 
-                            vm.startImport($event);
-                        }
+                        console.log('data', data);
 
-                    })
+                        $mdDialog.show({
+                            controller: 'SimpleEntityImportErrorsDialogController as vm',
+                            templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-errors-dialog-view.html',
+                            targetEvent: $event,
+                            preserveScope: true,
+                            multiple: true,
+                            autoWrap: true,
+                            skipHide: true,
+                            locals: {
+                                data: {
+                                    validationResult: data,
+                                    config: vm.config
+                                }
+                            }
+                        }).then(function (res) {
 
-                }
+                            if (res && res.status === 'agree') {
+
+                                vm.startImport($event);
+                            }
+
+                        })
+
+                    }
 
 
-            })
-            .catch(function (e) {
-                vm.readyStatus.processing = false;
-                $scope.$apply();
-            })
+                })
+                .catch(function (e) {
+                    vm.readyStatus.processing = false;
+                    $scope.$apply();
+                })
 
         }
 
@@ -594,14 +624,14 @@ import importEntityService from "../../services/import/importEntityService";
 
         };
 
-        vm.getTask = function (){
+        vm.getTask = function () {
 
-            processesService.getByKey(vm.currentTaskId).then(function (data){
+            processesService.getByKey(vm.currentTaskId).then(function (data) {
 
                 vm.task = data;
                 console.log('vm.task', vm.task);
 
-                if ( 'DCTE'.includes(vm.task.status) ) {
+                if ('DCTE'.includes(vm.task.status)) {
                     clearInterval(vm.poolingInterval)
                     vm.poolingInterval = null;
                     // vm.processing = false;
@@ -832,7 +862,7 @@ import importEntityService from "../../services/import/importEntityService";
 
             vm.getTask()
 
-            vm.poolingInterval = setInterval(function (){
+            vm.poolingInterval = setInterval(function () {
 
                 vm.getTask();
 

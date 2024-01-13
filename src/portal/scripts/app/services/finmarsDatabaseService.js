@@ -1,4 +1,4 @@
-import baseUrlService from "..//services/baseUrlService";
+import baseUrlService from "../services/baseUrlService";
 import configureRepositoryUrlService from "../../../../shell/scripts/app/services/configureRepositoryUrlService";
 
 export default function (cookieService, xhrService) {

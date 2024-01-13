@@ -18,7 +18,7 @@
 
     var modelService = require('../../../services/modelService');
 
-    var toastNotificationService = require('../../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../../core/services/toastNotificationService').default;
 
     module.exports = function simpleEntityImportSchemeEditDialogController($scope, $mdDialog, toastNotificationService, metaContentTypesService, attributeTypeService, importSchemesMethodsService, data) {
 

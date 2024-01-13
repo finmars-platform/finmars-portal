@@ -6,7 +6,7 @@
 
     'use strict';
 
-    var uiService = require('../services/uiService');
+    var uiService = require('../services/uiService').default;
 
     var DashboardDataService = require('../services/dashboard/dashboardDataService');
     var DashboardEventService = require('../services/eventService');
@@ -16,7 +16,7 @@
     var dashboardComponentStatuses = require('../services/dashboard/dashboardComponentStatuses');
     var metaHelper = require('../helpers/meta.helper');
 
-    var toastNotificationService = require('../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../core/services/toastNotificationService').default;
 
 
     module.exports = function ($scope, $stateParams, $mdDialog) {

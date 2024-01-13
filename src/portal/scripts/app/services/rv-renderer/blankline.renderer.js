@@ -2,7 +2,7 @@
 
     var renderHelper = require('../../helpers/render.helper');
 
-    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
 
 
     var checkIcon = renderHelper.getIconByKey('checkIcon');

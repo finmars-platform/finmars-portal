@@ -7,8 +7,8 @@
 
     var evEvents = require('../../services/entityViewerEvents');
 
-    var metaService = require('../../services/metaService');
-    var rvDataHelper = require('../../helpers/rv-data.helper');
+    var metaService = require('../../services/metaService').default;
+    var rvDataHelper = require('../../helpers/rv-data.helper').default;
     var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
     module.exports = function (globalDataService) {

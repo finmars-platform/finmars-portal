@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var cookieService = require('../../../../core/services/cookieService');
+    var cookieService = require('../../../../core/services/cookieService').default;
 
 
     var generatePdf = function (data) {

@@ -6,7 +6,7 @@
     'use strict';
 
     var twoFactorService = require('../../../../../profile/scripts/app/services/twoFactorServce');
-    var cookieService = require('../../../../../core/services/cookieService');
+    var cookieService = require('../../../../../core/services/cookieService').default;
 
     module.exports = function ($scope, $mdDialog, username, password) {
 

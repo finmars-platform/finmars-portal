@@ -5,13 +5,20 @@
 
 'use strict';
 
-import AutosaveLayoutService from "../../services/autosaveLayoutService";
-import evHelperService from "../../services/entityViewerHelperService";
-import evEvents from "../../services/entityViewerEvents";
+// import AutosaveLayoutService from "../../services/autosaveLayoutService";
+// import evHelperService from "../../services/entityViewerHelperService";
+// 2024-01-12 szhitenev vite migration
+
+// import evEvents from "../../services/entityViewerEvents";
 
 (function () {
 
-    /* var uiService = require('../../services/uiService');
+    var evHelperService = require( "../../services/entityViewerHelperService");
+
+    var AutosaveLayoutService = require("../../services/autosaveLayoutService").default;
+    var evEvents = require("../../services/entityViewerEvents");
+
+    /* var uiService = require('../../services/uiService').default;
     var evEvents = require('../../services/entityViewerEvents');
     var evHelperService = require('../../services/entityViewerHelperService'); */
 

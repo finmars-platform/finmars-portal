@@ -6,7 +6,7 @@
     'use strict';
 
     var evEvents = require('../../../services/entityViewerEvents');
-    var metaService = require('../../../services/metaService');
+    var metaService = require('../../../services/metaService').default;
 
     module.exports = function ($mdDialog) {
         return {

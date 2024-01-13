@@ -2,12 +2,14 @@
  * Created by szhitenev on 04.05.2016.
  */
 
+// import baseUrlService from '../../../../shell/scripts/app/services/baseUrlService.js';
+
 (function () {
 
     'use strict';
 
-    var cookieService = require('../../../../core/services/cookieService');
-    var baseUrlService = require('./baseUrlService');
+    var cookieService = require('../../../../core/services/cookieService').default;
+    var baseUrlService = require('../../../../shell/scripts/app/services/baseUrlService.js').default;
 
     var baseUrl = baseUrlService.resolve();
 

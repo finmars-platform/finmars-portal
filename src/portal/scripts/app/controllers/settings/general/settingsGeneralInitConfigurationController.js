@@ -3,7 +3,7 @@
  */
 (function () {
 
-    var uiService = require('../../../services/uiService');
+    var uiService = require('../../../services/uiService').default;
     var newMemberSetupConfigurationService = require('../../../services/newMemberSetupConfigurationService');
 
     module.exports = function ($scope, $mdDialog) {

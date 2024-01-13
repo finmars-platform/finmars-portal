@@ -5,9 +5,9 @@
 
     'use strict';
 
-    var uiService = require('../../services/uiService');
+    var uiService = require('../../services/uiService').default;
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
     module.exports = function ($scope, $mdDialog, $state) {
 

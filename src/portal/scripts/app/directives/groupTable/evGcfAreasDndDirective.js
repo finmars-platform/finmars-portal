@@ -4,7 +4,7 @@
 
 	const evEvents = require('../../services/entityViewerEvents');
 
-	const metaService = require('../../services/metaService');
+	const metaService = require('../../services/metaService').default;
 	const evHelperService = require('../../services/entityViewerHelperService');
 
 	const GcfAreasDndSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/gcfAreasDndSharedLogicHelper');

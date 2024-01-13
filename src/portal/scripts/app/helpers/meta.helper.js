@@ -1,7 +1,7 @@
 (function () {
 
 	const md5Helper = require('../helpers/md5.helper');
-    const toastNotificationService = require('../../../../core/services/toastNotificationService');
+    const toastNotificationService = require('../../../../core/services/toastNotificationService').default;
 
     function recursiveDeepCopy(o, saveFunctions) {
         var newO,

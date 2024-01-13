@@ -6,7 +6,7 @@ const processesService = require("../../../services/processesService");
 
     'use strict';
 
-    var metaService = require('../../../services/metaService');
+    var metaService = require('../../../services/metaService').default;
     // var usersService = require('../../../services/usersService');
     // var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');
     // var usersGroupService = require('../../../services/usersGroupService');

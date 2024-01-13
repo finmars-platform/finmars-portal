@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
     // var configurationService = require('../../services/configurationService');
     // var usersService = require('../../services/usersService');
 

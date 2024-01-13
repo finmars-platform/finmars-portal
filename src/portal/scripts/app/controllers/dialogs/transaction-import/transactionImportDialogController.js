@@ -1,4 +1,4 @@
-import websocketService from "../../../../../../shell/scripts/app/services/websocketService";
+// import websocketService from "../../../../../../shell/scripts/app/services/websocketService";
 
 /**
  * Created by szhitenev on 17.08.2016.
@@ -7,10 +7,11 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
     'use strict';
 
+    var baseUrlService = require("../../../services/baseUrlService").default;
     var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
     var importTransactionService = require('../../../services/import/importTransactionService');
 
-    var baseUrlService = require('../../../services/baseUrlService');
+    // var baseUrlService = require('../../../services/baseUrlService');
     // var usersService = require('../../../services/usersService');
 
     var baseUrl = baseUrlService.resolve();
@@ -47,7 +48,7 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
                 var ext = file.name.split('.').at(-1);
 
-                if (ext !== 'csv' && ext !== 'xlsx' ) {
+                if (ext !== 'csv' && ext !== 'xlsx') {
 
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
@@ -237,7 +238,6 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
                         }
 
 
-
                     }
 
                     if (data.scheme_object.error_handler === 'continue') {
@@ -252,7 +252,7 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
                     description = description + '<div> You have successfully imported transactions file </div>';
 
-                    description = description + '<div><a href="'+ vm.getFileUrl(data.stats_file_report) +'" download>Download Report File</a></div>';
+                    description = description + '<div><a href="' + vm.getFileUrl(data.stats_file_report) + '" download>Download Report File</a></div>';
 
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
@@ -273,7 +273,7 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
                 }
 
-                vm.processing  = false;
+                vm.processing = false;
                 vm.dataIsImported = true;
 
             }).catch(function (error) {
@@ -414,7 +414,19 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
                 $scope.$apply();
 
-                if (websocketService.isOnline()) {
+                console.log('Websocket is Offline. Falling back to polling')
+
+                if (vm.validateConfig.task_status === 'SUCCESS') {
+                    resolve(data)
+
+                } else {
+
+                    setTimeout(function () {
+                        vm.validate(resolve, $event);
+                    }, 1000)
+
+                }
+                /*if (websocketService.isOnline()) {
 
                     console.log('Websocket Online. Fetching status')
 
@@ -485,7 +497,7 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
                     }
 
-                }
+                }*/
 
 
             })
@@ -532,7 +544,18 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
                 $scope.$apply();
 
-                if (websocketService.isOnline()) {
+                if (vm.config.task_status === 'SUCCESS') {
+
+                    resolve(data)
+
+                } else {
+
+                    setTimeout(function () {
+                        vm.import(resolve, $event);
+                    }, 1000)
+
+                }
+                /*if (websocketService.isOnline()) {
 
                     websocketService.addEventListener('transaction_import_status', function (data) {
 
@@ -597,7 +620,7 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
                     }
 
-                }
+                }*/
 
 
             }).catch(function (reason) {
@@ -615,19 +638,19 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
                     skipHide: true,
                 });
 
-                vm.processing  = false;
+                vm.processing = false;
 
             })
 
 
         };
 
-        vm.getFileUrl = function(id) {
+        vm.getFileUrl = function (id) {
 
             var prefix = baseUrlService.getMasterUserPrefix();
             var apiVersion = baseUrlService.getApiVersion();
 
-            return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
+            return baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
 
         };
 
@@ -672,17 +695,17 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
                 vm.currentMember = data;
 
-                if(vm.currentMember.is_admin) {
+                if (vm.currentMember.is_admin) {
                     vm.hasSchemeEditPermission = true
                 }
 
                 vm.currentMember.groups_object.forEach(function (group) {
 
-                    if(group.permission_table) {
+                    if (group.permission_table) {
 
                         group.permission_table.configuration.forEach(function (item) {
 
-                            if(item.content_type === 'integrations.complextransactionimportscheme') {
+                            if (item.content_type === 'integrations.complextransactionimportscheme') {
                                 if (item.data.creator_change) {
                                     vm.hasSchemeEditPermission = true
                                 }
@@ -702,7 +725,7 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
         };
 
-        vm.getSchemeList = function(){
+        vm.getSchemeList = function () {
 
             transactionImportSchemeService.getListLight().then(function (data) {
 
@@ -723,9 +746,9 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
             if (data.scheme) {
                 vm.config.scheme = data.scheme.id
-                
+
             }
-            
+
             console.log('vm.config', vm.config)
 
         };

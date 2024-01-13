@@ -1,0 +1,129 @@
+<div class="shell-view-container min-height position-relative"
+     data-ng-class="{'inside-iframe': vm.iframeMode}">
+
+    <div data-ng-if="vm.isAuthenticated" class="height-100">
+
+        <div class="height-100 shellViewDnDDiv">
+
+            <div data-ng-if="vm.isIdentified && vm.readyStatus.masterUsers" class="min-height">
+
+                <div data-ng-if="vm.currentGlobalState == 'profile'" class="min-height">
+
+                    <md-toolbar class="header">
+
+                        <div layout="columns" class="toolbar-wrapper">
+                            <div class="md-toolbar-tools" flex="60" layout="start center">
+                                <h2 data-ng-if="vm.currentLocation().length > 0"
+                                    class="current-location-title"
+                                    data-ng-bind="vm.currentLocation()"></h2>
+                            </div>
+
+                            <div class="md-toolbar-tools" flex="40" layout-align="end center">
+
+                                <div class="header-misc" layout="row">
+
+                                    <md-button class="md-button header-help-btn"
+                                               data-ng-click="vm.goToHomepage()"
+                                               aria-label="Homepage">
+                                        <ng-md-icon icon="home" size="24">
+                                            <md-tooltip class="tooltip_1" md-direction="bottom">Homepage
+                                            </md-tooltip>
+                                        </ng-md-icon>
+                                    </md-button>
+
+                                    <div class="header-masteruser">
+                                        <md-menu data-ng-if="vm.readyStatus.masterUsers">
+                                            <md-button class="md-button header-account-btn" aria-label="Account button"
+                                                       ng-click="$mdOpenMenu($event)">
+                                                <span class="header-masteruser-name"
+                                                      data-ng-bind="vm.currentMasterUser.name"></span>
+                                            </md-button>
+                                            <md-menu-content>
+                                                <md-menu-item data-ng-repeat="item in vm.masterUsers">
+                                                    <md-button data-ng-click="vm.selectMaster(item)"
+                                                               aria-label="Select master">
+                                                        <span data-ng-if="item.is_current"><b>{{item.name}}</b></span>
+                                                        <span data-ng-if="!item.is_current">{{item.name}}</span>
+                                                    </md-button>
+                                                </md-menu-item>
+                                            </md-menu-content>
+                                        </md-menu>
+
+                                        <div data-ng-if="!vm.readyStatus.masterUsers">
+                                            <div class="m-16" layout="row" layout-sm="column"
+                                                 layout-align="space-around">
+                                                <!--<md-progress-circular class="progress-circular-white" md-diameter="16"-->
+                                                <!--md-mode="indeterminate"></md-progress-circular>-->
+                                                <progress-circular diameter="20"></progress-circular>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="header-profile">
+                                        <md-menu>
+                                            <md-button class="md-button header-account-btn" aria-label="Account button"
+                                                       ng-click="$mdOpenMenu($event)">
+
+                                                <user-profile></user-profile>
+
+                                            </md-button>
+                                            <md-menu-content>
+                                                <md-menu-item style="border-bottom: 1px solid #ddd;">
+                                                    <md-button data-ui-sref="app.portal.profile">
+                                                        <b>Profile</b>
+                                                    </md-button>
+                                                </md-menu-item>
+                                                <md-menu-item style="border-bottom: 1px solid #ddd;">
+                                                    <a class="md-button" data-ng-click="vm.openAccManager()">Account
+                                                        Security</a>
+                                                </md-menu-item>
+                                                <md-menu-item>
+                                                    <md-button href="/logout">Log Out</md-button>
+                                                </md-menu-item>
+                                            </md-menu-content>
+                                        </md-menu>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </md-toolbar>
+
+                    <md-content flex class="app-md-content min-height">
+                        <div data-ui-view class="shell-view min-height"></div>
+                    </md-content>
+
+                </div>
+
+                <div data-ng-if="vm.currentGlobalState == 'setup'" class="min-height">
+
+                    <div data-ui-view class="shell-view min-height"></div>
+
+                </div>
+
+                <div data-ng-if="vm.currentGlobalState == 'new-database'" class="min-height">
+
+                    <div data-ui-view class="shell-view min-height"></div>
+
+                </div>
+
+                <div class="dialog-containers-wrap"></div>
+
+                <!-- Needed to solve problem with selects and mdDialog nesting -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+<!--    <initial-loader></initial-loader>-->
+
+</div>
+
+<div id="width-fallback"
+     data-ng-class="{'inside-iframe': vm.iframeMode}">
+    <ng-md-icon icon="phonelink_erase" size="86"></ng-md-icon>
+    <h3>Sorry, web application is not suitable for small mobile devices</h3>
+</div>

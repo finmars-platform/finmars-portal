@@ -6,13 +6,13 @@
     'use strict';
 
     var evEvents = require('../../services/entityViewerEvents');
-    var evDataHelper = require('../../helpers/ev-data.helper');
+    var evDataHelper = require('../../helpers/ev-data.helper').default;
     var evLoaderHelper = require('../../helpers/ev-loader.helper');
-    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
 
     var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
 
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
     var evHelperService = require('../../services/entityViewerHelperService');
 
     module.exports = function ($mdDialog) {

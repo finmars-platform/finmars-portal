@@ -5,14 +5,14 @@
 
     'use strict';
 
-    var metaService = require('../../services/metaService');
-    var pricingPolicyService = require('../../services/pricingPolicyService');
-    var currencyService = require('../../services/currencyService');
+    var metaService = require('../../services/metaService').default;
+    var pricingPolicyService = require('../../services/pricingPolicyService').default;;
+    var currencyService = require('../../services/currencyService').default;
 
-    var portfolioService = require('../../services/portfolioService');
-    var accountService = require('../../services/accountService');
+    var portfolioService = require('../../services/portfolioService').default;
+    var accountService = require('../../services/accountService').default;
     var strategyService = require('../../services/strategyService');
-    var transactionClassService = require('../../services/transaction/transactionClassService');
+    var transactionClassService = require('../../services/transaction/transactionClassService').default;
 
 
     module.exports = function ($scope, $mdDialog, customFieldService, ecosystemDefaultService, uiService, data) {
@@ -42,6 +42,8 @@
         if (!vm.reportOptions.depth_level) {
             vm.reportOptions.depth_level = 'base_transaction'
         }
+
+        vm.pricingPolicies = [];
 
         /* vm.selectOptions = [
             {
@@ -483,7 +485,10 @@
 
         vm.init = async function () {
 
-            await Promise.allSettled([vm.getPricingPolicies(), vm.getCurrencies()]);
+            await vm.getPricingPolicies();
+            await vm.getCurrencies();
+
+            // await Promise.allSettled([vm.getPricingPolicies(), vm.getCurrencies()]);
 
             if (vm.entityType === 'transaction-report') {
 

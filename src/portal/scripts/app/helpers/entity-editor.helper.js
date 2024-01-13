@@ -1,6 +1,6 @@
 (function () {
 
-    var metaService = require('../services/metaService');
+    var metaService = require('../services/metaService').default;
     var evHelperService = require('../services/entityViewerHelperService');
     var evEditorEvents = require('../services/ev-editor/entityViewerEditorEvents');
 	var directivesEvents = require('../services/events/directivesEvents');

@@ -1,7 +1,7 @@
 'use strict';
 
-const metaService = require('../../../services/metaService');
-const portfolioRegisterService = require('../../../services/portfolioRegisterService');
+const metaService = require('../../../services/metaService').default;
+const portfolioRegisterService = require('../../../services/portfolioRegisterService').default;
 
 const GridTableDataService = require('../../../services/gridTableDataService');
 const EventService = require('../../../services/eventService');

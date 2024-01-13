@@ -7,7 +7,7 @@
 
     var logService = require('../../../../../core/services/logService');
 
-    var uiService = require('../../services/uiService');
+    var uiService = require('../../services/uiService').default;
 
     module.exports = function ($scope, $mdDialog, data) {
 

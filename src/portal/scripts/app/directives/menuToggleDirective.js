@@ -14,7 +14,7 @@
             templateUrl: 'views/directives/menu-toggle-view.html',
             link: function(scope, elem) {
 
-                var controller = elem.parent().controller();
+                var controller = $(elem).parent().controller();
                 scope.isOpen = function(){
                     return controller.isOpen(scope.section);
                 };

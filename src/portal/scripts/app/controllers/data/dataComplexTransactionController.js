@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var complexTransactionService = require('../../services/transaction/complexTransactionService');
+    var complexTransactionService = require('../../services/transaction/complexTransactionService').default;
 
     module.exports = function($scope){
 

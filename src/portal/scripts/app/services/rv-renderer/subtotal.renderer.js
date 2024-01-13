@@ -2,10 +2,10 @@
 
     var renderHelper = require('../../helpers/render.helper');
     var rvHelper = require('../../helpers/rv.helper');
-    var evDataHelper = require('../../helpers/ev-data.helper');
+    var evDataHelper = require('../../helpers/ev-data.helper').default;
     var stringHelper = require('../../helpers/stringHelper');
 
-    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
 
     var checkIcon = renderHelper.getIconByKey('checkIcon');
 

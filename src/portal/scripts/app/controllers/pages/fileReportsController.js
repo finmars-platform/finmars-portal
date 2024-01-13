@@ -1,13 +1,15 @@
 /**
  * Created by szhitenev on 30.12.2019.
  */
+// import baseUrlService from "../../services/baseUrlService";
 (function () {
 
     'use strict';
 
+    var baseUrlService = require("../../services/baseUrlService").default;
     var fileReportsService = require('../../services/fileReportsService');
 
-    var baseUrlService = require('../../services/baseUrlService');
+    // var baseUrlService = require('../../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 

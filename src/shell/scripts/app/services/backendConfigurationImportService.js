@@ -6,9 +6,9 @@
 
     'use strict';
 
-    var cookieService = require('../../../../core/services/cookieService');
-    var xhrService = require('../../../../core/services/xhrService');
-    var baseUrlService = require('./baseUrlService');
+    var cookieService = require('../../../../core/services/cookieService').default;
+    var xhrService = require('../../../../core/services/xhrService').default;
+    var baseUrlService = require('./baseUrlService').default;
 
 
     var baseUrl = baseUrlService.resolve();

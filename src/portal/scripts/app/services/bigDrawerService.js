@@ -2,7 +2,7 @@
 
     let lastId = 1;
 
-    function BigDrawerService($rootScope, $templateCache, $compile, $controller) {
+    function BigDrawerService($rootScope, $templateCache, $compile, $controller, templateLoader) {
 
         this.rootElement = document.body;
 
@@ -70,7 +70,7 @@
 
         this.show = function (options) {
 
-            return new Promise(function (resolve, reject) {
+            return new Promise(async function (resolve, reject) {
 
                 let tpl;
                 // let templateScope;
@@ -87,7 +87,8 @@
 
 
 
-                tpl = $templateCache.get(drawerOptions.templateUrl);
+                // tpl = $templateCache.get(drawerOptions.templateUrl);
+                tpl = await templateLoader.loadTemplate(drawerOptions.templateUrl)
 
                 templateScope = $rootScope.$new();
 
@@ -241,9 +242,9 @@
 
     }
 
-    module.exports = function ($rootScope, $templateCache, $compile, $controller) {
+    module.exports = function ($rootScope, $templateCache, $compile, $controller, templateLoader) {
 
-        let service = new BigDrawerService($rootScope, $templateCache, $compile, $controller);
+        let service = new BigDrawerService($rootScope, $templateCache, $compile, $controller, templateLoader);
 
         return {
             show: service.show,

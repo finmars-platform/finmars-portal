@@ -7,7 +7,7 @@
 
     var evEvents = require('../services/entityViewerEvents');
 
-    var evDataHelper = require('../helpers/ev-data.helper');
+    var evDataHelper = require('../helpers/ev-data.helper').default;
     var ScrollHelper = require('../helpers/scrollHelper');
 
     var scrollHelper = new ScrollHelper();

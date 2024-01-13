@@ -1,11 +1,13 @@
 /**
  * Created by szhitenev on 08.06.2016.
  */
+// import baseUrlService from "../../../services/baseUrlService";
 (function () {
 
     'use strict';
 
-    var baseUrlService = require('../../../services/baseUrlService');
+    var baseUrlService = require("../../../services/baseUrlService").default;
+    // var baseUrlService = require('../../../services/baseUrlService');
     var baseUrl = baseUrlService.resolve();
 
     module.exports = function ($scope, $mdDialog, data) {
