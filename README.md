@@ -12,17 +12,20 @@
 
 2) Build project
 
-`gulp`
+#### Important Disclaimer GULP is Deprecated, since 2024-01-14 it Migrated to Vite
+https://vitejs.dev/
+
+`npm run build-local`
 
 2.1) Build project for local development using server-proxy.js
 
-`PROJECT_ENV=local API_HOST=http://0.0.0.0:8080 AUTHORIZER_URL=http://0.0.0.0:8080/authorizer gulp` - for MAC and Linux
+`PROJECT_ENV=local API_HOST=http://0.0.0.0:8080 AUTHORIZER_URL=http://0.0.0.0:8080/authorizer npm run build-local` - for MAC and Linux
 
 `set PROJECT_ENV=local set API_HOST=http://localhost:8080 set AUTHORIZER_URL=http://0.0.0.0:8080/authorizer` - for windows
 
 or if you deployed backend locally and using server.js
 
-`PROJECT_ENV=local API_HOST=http://0.0.0.0:8000 AUTHORIZER_URL=http://0.0.0.0:8083/authorizer gulp` - for MAC and Linux
+`PROJECT_ENV=local API_HOST=http://0.0.0.0:8000 AUTHORIZER_URL=http://0.0.0.0:8083/authorizer npm run build-local` - for MAC and Linux
 
 3) Run local Web Server
 
