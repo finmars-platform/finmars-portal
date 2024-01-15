@@ -93,7 +93,7 @@
 							return false;
 					}
 
-					// var fieldOptions = elem.find('.active-option' + optionsType);
+					// var fieldOptions = $(elem).find('.active-option' + optionsType);
 					var fieldOptions = elem[0].querySelectorAll(optionsType + '.active-option');
 
 					if (fieldOptions && fieldOptions.length > 0) {
@@ -344,7 +344,7 @@
 
                         drake.on('drop', function (elem, target, source, nextSibling) {
 
-                            let selItemId = elem.dataset.optionId;
+                            let selItemId = $(elem).dataset.optionId;
                             let siblingId = null;
 
                             if (nextSibling) {

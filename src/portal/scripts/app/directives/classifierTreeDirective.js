@@ -328,7 +328,7 @@
 
 				const getShadowClass = (elem) => {
 
-					const noScroll = (elem.scrollHeight - elem.clientHeight) <= 0;
+					const noScroll = (elem.scrollHeight - $(elem).clientHeight) <= 0;
 
 					if (noScroll) {
 						return '';
@@ -338,7 +338,7 @@
 						return 'bottom-shadow';
 					}
 
-					const scrollBottom = elem.scrollHeight - elem.clientHeight - elem.scrollTop;
+					const scrollBottom = $(elem).scrollHeight - $(elem).clientHeight - $(elem).scrollTop;
 
 					if (scrollBottom <= 0) {
 						return 'top-shadow';

@@ -11,7 +11,7 @@
 
 			logService.component('viewSectionResizer', 'initialized');
 
-			var workAreaElem = elem.parents('.g-workarea');
+			var workAreaElem = $(elem).parents('.g-workarea');
 			var filterSidebarWidth = 246;
 
 			workAreaElem.width($(window).width() - filterSidebarWidth - $('md-sidenav').width());

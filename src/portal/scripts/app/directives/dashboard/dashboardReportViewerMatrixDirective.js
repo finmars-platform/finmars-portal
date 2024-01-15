@@ -116,7 +116,6 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     if (scope.componentData.settings.matrix_type == 'pl') {
                         scope.entityViewerDataService.setEntityType('pl-report')
-
                     }
 
                     scope.entityViewerDataService.setViewContext('dashboard');
@@ -143,7 +142,11 @@ const evEvents = require("../../services/entityViewerEvents");
                         }
                     ])
 
-                    scope.reportOptions = JSON.parse(JSON.stringify(scope.componentData.settings.default_report_options)) || {}
+                    if (scope.componentData.settings.default_report_options) { // in case if default_report_options undefined
+                        scope.reportOptions = JSON.parse(JSON.stringify(scope.componentData.settings.default_report_options))
+                    } else {
+                        scope.reportOptions = {}
+                    }
 
                     // TODO some shady logic here, consider refactor
                     if (scope.componentData.settings.linked_components) {
@@ -243,11 +246,15 @@ const evEvents = require("../../services/entityViewerEvents");
                 }
 
                 function hasStateChanged(oldState, newState, fieldsToCompare) {
-                    for (const field of fieldsToCompare) {
-                        if (!isEqual(oldState[field], newState[field])) {
-                            return true; // Change detected
+
+                    if (fieldsToCompare) {
+                        for (const field of fieldsToCompare) {
+                            if (!isEqual(oldState[field], newState[field])) {
+                                return true; // Change detected
+                            }
                         }
                     }
+
                     return false; // No changes detected
                 }
 

@@ -56,6 +56,9 @@ import './src/core/ace/mode-html.js';
 import './src/core/ace/mode-javascript.js';
 import './src/core/ace/theme-monokai.js';
 
+
+import 'jstree/dist/jstree.js'
+import 'jstree/dist/themes/default/style.css'
 // import './src/core/tsparticles/tsparticles.engine.min.js';
 // import './src/core/tsparticles/tsparticles.move.base.min.js';
 // import './src/core/tsparticles/tsparticles.preset.stars.min.js';

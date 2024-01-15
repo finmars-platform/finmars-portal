@@ -315,7 +315,7 @@
 
                             	sourceContainer = source;
 
-                                elem.classList.add('vc-shadow-elem');
+                                $(elem).classList.add('vc-shadow-elem');
 
                                 if (containerWithShadow) {
                                     containerWithShadow.classList.remove('remove-card-space');
@@ -349,8 +349,8 @@
 
                             var attributeChanged = false; // needed to call view constructor data reload
 
-                            var attributeKey = elem.dataset.attributeKey;
-                            var attrsVmKey = elem.dataset.vmKey;
+                            var attributeKey = $(elem).dataset.attributeKey;
+                            var attrsVmKey = $(elem).dataset.vmKey;
 
 							/* var changeSelectedGroup = function (draggedTo) {
 
@@ -773,7 +773,7 @@
 
                             }
 
-                            elem.classList.remove('vc-shadow-elem');
+                            $(elem).classList.remove('vc-shadow-elem');
 
                         });
 

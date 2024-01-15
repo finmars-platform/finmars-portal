@@ -51,20 +51,20 @@
                     return clean;
                 });
 
-                elem.bind('keyup', function (event) {
+                $(elem).bind('keyup', function (event) {
                     if (event.keyCode === 32) {
                         event.preventDefault();
                     }
                 });
 
-                elem.bind('blur', function () {
+                $(elem).bind('blur', function () {
 
                     function addSpaces(nStr) {
                         var remainder = nStr.length % 3;
                         return (nStr.substr(0, remainder) + nStr.substr(remainder).replace(/(\d{3})/g, ' $1')).trim();
                     }
 
-                    var val = elem.val();
+                    var val = $(elem).val();
                     var first, second;
 
 
@@ -73,9 +73,9 @@
                         second = val.split(',')[1];
                         first = addSpaces(first);
                         second = addSpaces(second);
-                        elem.val(first + ',' + second);
+                        $(elem).val(first + ',' + second);
                     } else {
-                        elem.val(addSpaces(val));
+                        $(elem).val(addSpaces(val));
                     }
                 })
             }

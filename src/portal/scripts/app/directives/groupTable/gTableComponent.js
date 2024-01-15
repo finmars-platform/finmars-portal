@@ -95,7 +95,7 @@
                 }
 
                 if (!scope.isRootEntityViewer) { // if this component inside split panel, set .g-content-wrap height
-                    var splitPanelHeight = elem.parents(".g-additions").height();
+                    var splitPanelHeight = $(elem).parents(".g-additions").height();
                     scope.contentWrapElem.style.height = splitPanelHeight + 'px';
                 }
 
