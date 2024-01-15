@@ -34,7 +34,7 @@
 
                     var rowControlsWidth = 110;
 
-                    var tabWidth = elem.width() - rowControlsWidth;
+                    var tabWidth = $(elem).width() - rowControlsWidth;
 
                     scope.cellWidth = Math.floor(tabWidth / scope.columnsTotal);
 
@@ -46,7 +46,7 @@
 
                 scope.calculateSingleCellHeight = function () {
 
-                    // var tabHeight = elem.height();
+                    // var tabHeight = $(elem).height();
                     //
                     // console.log('tabHeight', tabHeight);
                     //
@@ -81,12 +81,14 @@
                     scope.rowsTotal = tab.layout.rows_count;
                     scope.columnsTotal = tab.layout.columns_count;
 
-                    var elements = elem.find('.dashboard-constructor-cell');
+                    var elements = $(elem).find('.dashboard-constructor-cell');
                     var domElem;
                     var layoutElem;
 
                     var rowNumber;
                     var columnNumber;
+
+                    console.log('elements', elements);
 
 
                     for (var i = 0; i < elements.length; i = i + 1) {
@@ -126,7 +128,7 @@
 
                 scope.resizeRowControls = function () {
 
-                    var elements = elem.find('.dashboard-constructor-row-controls');
+                    var elements = $(elem).find('.dashboard-constructor-row-controls');
                     var domElem;
                     var rowNumber;
 
@@ -160,7 +162,7 @@
 
                     var columnWidth = 121;
 
-                    console.log('scope.cellWidth',scope.cellWidth);
+                    console.log('scope.cellWidth', scope.cellWidth);
 
                     scope.rowControlsHolderElem.style.left = (scope.columnsTotal * scope.cellWidth) + 'px'
 
@@ -198,8 +200,8 @@
 
                     setTimeout(function () {
 
-                        scope.rowControlsHolderElem = elem.querySelectorAll('.row-controls-holder')[0];
-                        scope.dashboardLayoutElem = elem.querySelectorAll('.dashboard-layout')[0];
+                        scope.rowControlsHolderElem = $(elem).find('.row-controls-holder')[0];
+                        scope.dashboardLayoutElem = $(elem).find('.dashboard-layout')[0];
 
 
                         scope.resize();

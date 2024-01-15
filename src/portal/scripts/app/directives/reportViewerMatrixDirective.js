@@ -93,7 +93,7 @@
 
                 var getCellWidth = function (columnsCount) {
 
-                    var elemWidth = elem.width();
+                    var elemWidth = $(elem).width();
                     var cellWidth = 0;
                     var minWidth = 120;
                     var maxWidth = 300;
@@ -173,7 +173,7 @@
                 function adjustLayout(scope, elem) {
                     const rowsCount = scope.rows.length + 2;
                     const columnsCount = scope.columns.length + 2;
-                    const elemHeight = elem.height()
+                    const elemHeight = $(elem).height()
 
                     const {cellWidth, nameColWidth} = getCellWidth(columnsCount);
                     // let cellHeight = MAX_CELL_HEIGHT;
@@ -218,7 +218,7 @@
                     });
 
                     for (let elem of bodyScrollableElem) {
-                        elem.style.height = matrixVCContainerHeight + 'px';
+                        $(elem).style.height = matrixVCContainerHeight + 'px';
                     }
 
                     rvmHeaderScrollableRow.style.width = matrixMaxWidth + 'px';
@@ -243,8 +243,8 @@
                 // Probably deprecated
                 scope.alignGridOld = function () {
 
-                    /*var elemWidth = elem.width();
-                    var elemHeight = elem.height();*/
+                    /*var elemWidth = $(elem).width();
+                    var elemHeight = $(elem).height();*/
 
                     var rowsCount = scope.rows.length + 2; // add header and footer rows
                     var columnsCount = scope.columns.length + 2; // add left and right fixed columns
@@ -268,7 +268,7 @@
 
                         minWidth = 46;
 
-                        var elemHeight = elem.height();
+                        var elemHeight = $(elem).height();
                         var cellHeight = Math.floor(elemHeight / rowsCount);
 
                         cellHeight = Math.max(cellHeight, 14);
@@ -277,7 +277,7 @@
                     } */
                     if (scope.matrixSettings.auto_scaling) {
 
-                        var elemHeight = elem.height();
+                        var elemHeight = $(elem).height();
                         var cellHeight = Math.floor(elemHeight / rowsCount);
 
                         cellHeight = Math.max(cellHeight, 14);

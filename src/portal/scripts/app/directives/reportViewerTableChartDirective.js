@@ -405,7 +405,7 @@
                                 col.style.width = result + 'px';
 
                                 elems.forEach(function (elem) {
-                                    elem.style.width = result + 'px';
+                                    $(elem).style.width = result + 'px';
                                 })
 
 
