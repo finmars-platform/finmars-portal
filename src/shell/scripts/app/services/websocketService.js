@@ -7,7 +7,7 @@
 let callbacks = {}
 
 const toastNotificationService = require('../../../../core/services/toastNotificationService');
-const cookieService = require('../../../../core/services/cookieService');
+const cookieService = require('../../../../core/services/cookieService').default;
 
 const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
 

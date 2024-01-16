@@ -7,7 +7,7 @@
 
     var evEvents = require('../../../services/entityViewerEvents');
 
-    var uiService = require('../../../services/uiService');
+    var uiService = require('../../../services/uiService').default;
 
     var inviteToSharedConfigurationFileService = require('../../../services/inviteToSharedConfigurationFileService');
     var shareConfigurationFileService = require('../../../services/shareConfigurationFileService');

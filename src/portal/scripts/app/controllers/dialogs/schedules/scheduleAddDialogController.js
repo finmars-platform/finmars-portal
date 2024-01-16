@@ -5,10 +5,10 @@
 
     'use strict';
 
-    var scheduleService = require('../../../services/scheduleService');
-    var pricingProcedureService = require('../../../services/procedures/pricingProcedureService');
-    var dataProcedureService = require('../../../services/procedures/dataProcedureService');
-    var expressionProcedureService = require('../../../services/procedures/expressionProcedureService');
+    var scheduleService = require('../../../services/scheduleService').default;
+    var pricingProcedureService = require('../../../services/procedures/pricingProcedureService').default;
+    var dataProcedureService = require('../../../services/procedures/dataProcedureService').default;
+    var expressionProcedureService = require('../../../services/procedures/expressionProcedureService').default;
 
     const schedulesHelper = require('../../../helpers/schedules.helper');
 

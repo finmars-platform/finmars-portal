@@ -6,7 +6,7 @@ const processesService = require("../../services/processesService");
 
     'use strict';
 
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
     var mappingsImportService = require('../../services/mappings-import/mappingsImportService');
 
 

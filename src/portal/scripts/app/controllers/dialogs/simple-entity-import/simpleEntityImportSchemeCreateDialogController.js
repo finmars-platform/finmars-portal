@@ -6,7 +6,7 @@
     'use strict';
 
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
-    var metaService = require('../../../services/metaService');
+    var metaService = require('../../../services/metaService').default;
 
     var modelService = require('../../../services/modelService');
 

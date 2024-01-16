@@ -4,12 +4,12 @@
 
 'use strict';
 
-const baseUrlService = require('./baseUrlService');
-const xhrService = require('../../../../core/services/xhrService');
+const baseUrlService = require('./baseUrlService').default;
+const xhrService = require('../../../../core/services/xhrService').default;
 
 export default function (cookieService) {
 
-	// var cookieService = require('../../../../core/services/cookieService');
+	// var cookieService = require('../../../../core/services/cookieService').default;
 	var baseUrl = baseUrlService.resolve();
 
 	const importConfigurationAsJson = function (data) {

@@ -388,11 +388,14 @@
 
     function hasStateChanged(oldState, newState, fieldsToCompare) {
 
-        for (const field of fieldsToCompare) {
-            if (!isEqual(oldState[field], newState[field])) {
-                return true; // Change detected
+        if (fieldsToCompare) {
+            for (const field of fieldsToCompare) {
+                if (!isEqual(oldState[field], newState[field])) {
+                    return true; // Change detected
+                }
             }
         }
+
         return false; // No changes detected
     }
 

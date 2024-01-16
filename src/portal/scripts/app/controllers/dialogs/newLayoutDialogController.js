@@ -1,13 +1,13 @@
 /**
  * Created by szhitenev on 08.06.2016.
  */
-import metaContentTypesService from "../../services/metaContentTypesService";
+// import metaContentTypesService from "../../services/metaContentTypesService";
 
 (function () {
 
     'use strict';
 
-	const uiService = require('../../services/uiService');
+	const uiService = require('../../services/uiService').default;
 
     module.exports = function ($scope, $mdDialog, commonDialogsService, metaContentTypesService, data) {
 

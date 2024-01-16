@@ -7,9 +7,9 @@
 
     var pricingProcedureRepository = require('../../repositories/procedures/pricingProcedureRepository');
 
-    var portfolioService = require('../portfolioService');
-    var instrumentTypeService = require('../instrumentTypeService');
-    var pricingPolicyService = require('../pricingPolicyService');
+    var portfolioService = require('../portfolioService').default;
+    var instrumentTypeService = require('../instrumentTypeService').default;
+    var pricingPolicyService = require('../pricingPolicyService').default;;
 
     var instrumentPricingSchemeService = require('../pricing/instrumentPricingSchemeService');
     var currencyPricingSchemeService = require('../pricing/currencyPricingSchemeService');

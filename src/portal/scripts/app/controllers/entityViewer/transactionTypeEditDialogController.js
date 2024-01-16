@@ -9,17 +9,17 @@
     // var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
 
     var gridHelperService = require('../../services/gridHelperService');
 
     // var ecosystemDefaultService = require('../../services/ecosystemDefaultService');
-    var transactionTypeGroupService = require('../../services/transaction/transactionTypeGroupService');
+    var transactionTypeGroupService = require('../../services/transaction/transactionTypeGroupService').default;
 
-    var portfolioService = require('../../services/portfolioService');
-    var instrumentTypeService = require('../../services/instrumentTypeService');
+    var portfolioService = require('../../services/portfolioService').default;
+    var instrumentTypeService = require('../../services/instrumentTypeService').default;
     var referenceTableService = require('../../services/referenceTablesService');
-    var complexTransactionService = require('../../services/transaction/complexTransactionService');
+    var complexTransactionService = require('../../services/transaction/complexTransactionService').default;
 
     var EventService = require("../../services/eventService");
 

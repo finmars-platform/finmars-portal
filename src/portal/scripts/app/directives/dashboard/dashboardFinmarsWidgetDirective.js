@@ -2,10 +2,12 @@
  * Created by mevstratov on 07.10.2022.
  */
 
+// import baseUrlService from "../../services/baseUrlService";
 (function () {
 
     'use strict';
-    var cookieService = require('../../../../../core/services/cookieService');
+    var baseUrlService = require("../../services/baseUrlService").default;
+    var cookieService = require('../../../../../core/services/cookieService').default;
 
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
@@ -17,12 +19,12 @@
 
     var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
 
-    var pricingProcedureService = require('../../services/procedures/pricingProcedureService');
+    var pricingProcedureService = require('../../services/procedures/pricingProcedureService').default;
     var supersetService = require("../../services/supersetService");
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
     // var embeddedsdk = require("@superset-ui/embedded-sdk");
-    var baseUrlService = require('../../services/baseUrlService');
+    // var baseUrlService = require('../../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 

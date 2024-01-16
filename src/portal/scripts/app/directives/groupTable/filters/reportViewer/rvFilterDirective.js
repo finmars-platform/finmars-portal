@@ -40,6 +40,7 @@
 				vm.filterNotFound = false;
 
 				const entityType = $scope.evDataService.getEntityType();
+				const contentType = $scope.evDataService.getContentType();
 				const attrsList = vm.attributeDataService.getAllAttributesByEntityType(entityType);
 
 				let filtersList;
@@ -106,16 +107,34 @@
 					vm.columnRowsContent = columnRowsContent.map(userFilterService.mapColRowsContent); */
 
 					let filterAttr = getFilterAttr(vm.filter.key);
-					let key = vm.filter.key; // for dynamic attribute
 
-					if ( !key.includes('attributes.') ) { // not dynamic attribute
+					let key = vm.filter.key; // for dynamic attribute
+					let content_type = filterAttr.content_type;
+
+					const reportOptions = vm.evDataService.getReportOptions();
+
+					// `report_instance_id` needed for custom fields and system attributes of report
+					let options = {
+						filters: {
+							report_instance_id: reportOptions.report_instance_id
+						}
+					};
+
+					if ( key.startsWith('custom_fields.') ) {
+
+						content_type = contentType;
+
+					}
+					else if ( !key.includes('attributes.') ) { // not dynamic attribute
 
 						const keyParts = vm.filter.key.split(".");
 						key = keyParts.at(-1);
 
 					}
 
-					const res = await specificDataService.getValuesForSelect(filterAttr.content_type, key, vm.filter.value_type);
+					const res = await specificDataService.getValuesForSelect(
+						content_type, key, vm.filter.value_type, options
+					);
 
 					if (vm.filter.value_type === 40) {
 						// there is data processing inside rvDateFilterDirective

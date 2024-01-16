@@ -5,7 +5,7 @@
 
     'use strict';
 
-    const toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    const toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
 
     module.exports = function ($scope, $mdDialog, utilsService, data) {

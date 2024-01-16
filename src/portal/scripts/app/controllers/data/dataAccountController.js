@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var accountService = require('../../services/accountService');
+    var accountService = require('../../services/accountService').default;
 
     module.exports = function ($scope) {
 

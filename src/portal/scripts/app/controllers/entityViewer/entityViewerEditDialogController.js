@@ -11,7 +11,7 @@
     // var usersService = require('../../services/usersService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
     var evEditorEvents = require('../../services/ev-editor/entityViewerEditorEvents')
 
     var gridHelperService = require('../../services/gridHelperService');
@@ -30,12 +30,12 @@
     var entityEditorHelper = require('../../helpers/entity-editor.helper');
     var EntityViewerEditorSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/entityViewerEditorSharedLogicHelper');
 
-    var complexTransactionService = require('../../services/transaction/complexTransactionService');
+    var complexTransactionService = require('../../services/transaction/complexTransactionService').default;
 
     var currencyPricingSchemeService = require('../../services/pricing/currencyPricingSchemeService');
     var instrumentPricingSchemeService = require('../../services/pricing/instrumentPricingSchemeService');
 
-    var instrumentTypeService = require('../../services/instrumentTypeService');
+    var instrumentTypeService = require('../../services/instrumentTypeService').default;
 
     module.exports = function entityViewerEditDialogController($scope, $mdDialog, $bigDrawer, $state, toastNotificationService, authorizerService, usersService, usersGroupService, metaContentTypesService, instrumentService, entityResolverService, fieldResolverService, attributeTypeService, uiService, entityType, entityId, data) {
 

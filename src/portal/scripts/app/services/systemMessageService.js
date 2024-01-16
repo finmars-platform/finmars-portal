@@ -2,7 +2,7 @@
  * Created by szhitenev on 30.10.2020.
  */
 'use strict';
-const systemMessageRepository = require('../repositories/systemMessageRepository');
+const systemMessageRepository = require('../repositories/systemMessageRepository').default;
 export default function systemMessageService() {
 
     const getList = function (options) {

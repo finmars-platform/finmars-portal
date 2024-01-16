@@ -9,9 +9,9 @@
 
     var evEvents = require('../../services/entityViewerEvents');
 
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
 
-    var evDataHelper = require('../../helpers/ev-data.helper');
+    var evDataHelper = require('../../helpers/ev-data.helper').default;
 
     module.exports = function ($scope, $mdDialog, customFieldService, entityViewerDataService, entityViewerEventService, attributeDataService) {
 

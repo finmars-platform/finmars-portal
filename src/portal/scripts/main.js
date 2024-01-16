@@ -9,6 +9,16 @@ require('../../profile/scripts/main.js'); */
 /*import middlewareService from "../../shell/scripts/app/services/middlewareService";
 import authorizerService from '../../shell/scripts/app/services/authorizerService.js';*/
 //# region Services and helpers for them
+
+import angularDragula from 'angular-dragula';
+import 'mdPickers/dist/mdPickers.min.js';
+import 'mdPickers/dist/mdPickers.min.css';
+import 'v-accordion/dist/v-accordion.min.js';
+import 'v-accordion/dist/v-accordion.min.css';
+import 'angular-paging'
+import 'ui-select/dist/select.min.js'
+import 'ui-select/dist/select.min.css'
+
 import masterUserService from "./app/services/masterUserService";
 
 import uiService from "./app/services/uiServiceNew";
@@ -140,8 +150,34 @@ export default (function () {
         }
     }]);
 
+    portal.factory('templateLoader', ['$templateCache', '$http', function($templateCache, $http) {
+        return {
+            loadTemplate: function(templateUrl) {
+                // Check if the template is in $templateCache
+                let template = $templateCache.get(templateUrl);
+
+                if (template) {
+                    // Return a promise resolved with the template
+                    return Promise.resolve(template);
+                } else {
+                    // Fetch the template from the URL
+                    return $http.get(templateUrl, { cache: true })
+                        .then(response => {
+                            // Put the fetched template in $templateCache
+                            $templateCache.put(templateUrl, response.data);
+                            return response.data;
+                        })
+                        .catch(error => {
+                            console.error('Error loading template:', error);
+                            throw error;
+                        });
+                }
+            }
+        };
+    }]);
+
     portal.service('$customDialog', ['$rootScope', '$templateCache', '$compile', '$controller', require('./app/services/customDialogService')]);
-    portal.service('$bigDrawer', ['$rootScope', '$templateCache', '$compile', '$controller', require('./app/services/bigDrawerService')]);
+    portal.service('$bigDrawer', ['$rootScope', '$templateCache', '$compile', '$controller', 'templateLoader', require('./app/services/bigDrawerService')]);
 
     /* portal.service('authorizerService', [authorizerService]);
     portal.service('middlewareService', [middlewareService]); */

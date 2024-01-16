@@ -1,24 +1,26 @@
 /**
  * Created by szhitenev on 05.05.2016.
  */
-import RvDomManager from "../../services/rv-dom-manager/rv-dom.manager";
+
 
 (function () {
 
     'use strict';
 
-    var evEvents = require('../../services/entityViewerEvents');
-    var evRenderer = require('../../services/ev-renderer/ev.renderer');
-    var rvRenderer = require('../../services/rv-renderer/rv.renderer');
-    var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
-    var evDataHelper = require('../../helpers/ev-data.helper');
-    var rvDataHelper = require('../../helpers/rv-data.helper');
-    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+    var RvDomManager = require("../../services/rv-dom-manager/rv-dom.manager").default;
 
-    var evFilterService = require('../../services/ev-data-provider/filter.service');
+    var evEvents = require('../../services/entityViewerEvents').default;
+    var evRenderer = require('../../services/ev-renderer/ev.renderer').default;
+    var rvRenderer = require('../../services/rv-renderer/rv.renderer').default;
+    var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager').default;
+    var evDataHelper = require('../../helpers/ev-data.helper').default;
+    var rvDataHelper = require('../../helpers/rv-data.helper').default;
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
 
-    var metaService = require('../../services/metaService');
-    var EvScrollManager = require('../../services/ev-dom-manager/ev-scroll.manager');
+    var evFilterService = require('../../services/ev-data-provider/filter.service').default;
+
+    var metaService = require('../../services/metaService').default;
+    var EvScrollManager = require('../../services/ev-dom-manager/ev-scroll.manager').default;
 
     module.exports = function (toastNotificationService, usersService, globalDataService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService, rvDataProviderService) {
         return {

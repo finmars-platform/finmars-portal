@@ -1,8 +1,8 @@
 'use strict';
 
-const instrumentTypeService = require('../../services/instrumentTypeService');
-const metaService = require("../../services/metaService");
-const portfolioRegisterService = require("../../services/portfolioRegisterService");
+const instrumentTypeService = require('../../services/instrumentTypeService').default;
+const metaService = require("../../services/metaService").default;
+const portfolioRegisterService = require("../../services/portfolioRegisterService").default;
 const pricingPolicyService = require("../../services/pricingPolicyService");
 
 export default function PortfolioRegisterDialogController ($scope, $mdDialog, data) {

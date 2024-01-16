@@ -2,16 +2,18 @@
  * Created by szhitenev on 15.06.2016.
  */
 
+// import baseUrlService from "../services/baseUrlService";
 (function () {
 
     'use strict';
 
-    var cookieService = require('../../../../core/services/cookieService');
-    var xhrService = require('../../../../core/services/xhrService');
-    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+    var baseUrlService = require("../services/baseUrlService").default;
+    var cookieService = require('../../../../core/services/cookieService').default;
+    var xhrService = require('../../../../core/services/xhrService').default;
+    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService').default;
 
     var metaRestrictionsService = require('../services/metaRestrictionsService');
-    var baseUrlService = require('../services/baseUrlService');
+    // var baseUrlService = require('../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 

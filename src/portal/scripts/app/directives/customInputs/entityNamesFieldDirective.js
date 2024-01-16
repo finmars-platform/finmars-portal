@@ -42,7 +42,7 @@ const metaHelper = require("../../helpers/meta.helper");
 export default function (metaContentTypesService, globalDataService) {
 
 	const EventService = require("../../services/eventService");
-	const metaService = require("../../services/metaService")
+	const metaService = require("../../services/metaService").default;
 	const directivesEvent = require("../../services/events/directivesEvents");
 
 	const utilsHelper = require("../../helpers/utils.helper");

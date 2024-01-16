@@ -9,7 +9,7 @@
     const gridTableEvents = require('../../../services/gridTableEvents');
 
     const metaHelper = require('../../../helpers/meta.helper');
-    const metaService = require('../../../services/metaService');
+    const metaService = require('../../../services/metaService').default;
 
     const instrumentAttributeTypeService = require('../../../services/instrument/instrumentAttributeTypeService');
 

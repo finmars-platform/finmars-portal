@@ -7,8 +7,8 @@
 
     var evEvents = require('../../services/entityViewerEvents');
 
-    var metaService = require('../../services/metaService');
-    var rvDataHelper = require('../../helpers/rv-data.helper');
+    var metaService = require('../../services/metaService').default;
+    var rvDataHelper = require('../../helpers/rv-data.helper').default;
     var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
 
     module.exports = function (globalDataService) {
@@ -95,7 +95,7 @@
                 }
 
                 if (!scope.isRootEntityViewer) { // if this component inside split panel, set .g-content-wrap height
-                    var splitPanelHeight = elem.parents(".g-additions").height();
+                    var splitPanelHeight = $(elem).parents(".g-additions").height();
                     scope.contentWrapElem.style.height = splitPanelHeight + 'px';
                 }
 

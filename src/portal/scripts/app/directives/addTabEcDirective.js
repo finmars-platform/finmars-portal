@@ -19,7 +19,7 @@
 
                 var btn = $compile(btnString)(scope.$parent);
 
-                var wrapper  = elem.find('md-pagination-wrapper');
+                var wrapper  = $(elem).find('md-pagination-wrapper');
 
                 wrapper.append(btn);
 

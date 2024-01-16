@@ -6,10 +6,14 @@
 
 /** fixes angular module import error */
 // require('../../forum/scripts/main.js');
+
+import angular from 'angular';
+
 import profile from '../../profile/scripts/main.js';
 import database from '../../database/scripts/main.js';
 import portal from '../../portal/scripts/main.js';
 
+// 2024-01-12 szhitenev update end
 
 import router from "./app/router.js";
 
@@ -40,6 +44,8 @@ import dndFilesOnPageDirective from "./app/directives/dndFilesOnPageDirective.js
 
 const PROJECT_ENV = '__PROJECT_ENV__'; // changed when building project by minAllScripts()
 
+console.log("Shell Module inited")
+
 const app = angular.module('finmars', [
     'ngAria',
     'ngMaterial',
@@ -47,6 +53,7 @@ const app = angular.module('finmars', [
     'ngMdIcons',
     'ngResource',
     'ngSanitize',
+    'ngAnimate',
     'ui.router',
 
     'finmars.profile',
@@ -235,3 +242,6 @@ app.controller('WarningDialogController', ['$scope', '$mdDialog', 'warning', war
 app.controller('InputsDialogController', ['$scope', '$mdDialog', 'data', inputsDialogController]);
 
 app.directive('dndFilesOnPage', ['$state', 'commonDialogsService', dndFilesOnPageDirective]);
+
+
+export default app;

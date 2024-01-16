@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var portfolioRegisterService = require('../../services/portfolioRegisterService');
+    var portfolioRegisterService = require('../../services/portfolioRegisterService').default;
 
     module.exports = function ($scope) {
 

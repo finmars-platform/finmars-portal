@@ -6,8 +6,8 @@
     'use strict';
 
     var evEvents = require('../../services/entityViewerEvents');
-    var evDataHelper = require('../../helpers/ev-data.helper');
-    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+    var evDataHelper = require('../../helpers/ev-data.helper').default;
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
     var evFilterService = require('../../services/ev-data-provider/filter.service');
     var evHelperService = require('../../services/entityViewerHelperService');
 
@@ -258,7 +258,7 @@
                         drake.on('drop', function (elem, target, source, nextSibling) {
                             console.log('scope.elem', elem);
 
-                            var elemKey = elem.dataset.key;
+                            var elemKey = $(elem).dataset.key;
                             var nextSiblingKey;
 
                             if (nextSibling) {

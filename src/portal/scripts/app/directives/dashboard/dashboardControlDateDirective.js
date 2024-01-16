@@ -2,7 +2,7 @@
 
     'use strict';
 
-    const metaService = require('../../services/metaService');
+    const metaService = require('../../services/metaService').default;
 
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
     var directivesEvents = require('../../services/events/directivesEvents');

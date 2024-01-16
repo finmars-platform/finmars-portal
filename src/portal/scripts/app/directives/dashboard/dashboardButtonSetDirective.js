@@ -12,9 +12,9 @@
 
     var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
 
-    var pricingProcedureService = require('../../services/procedures/pricingProcedureService');
+    var pricingProcedureService = require('../../services/procedures/pricingProcedureService').default;
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
     var rvHelper = require('../../helpers/rv.helper');
 

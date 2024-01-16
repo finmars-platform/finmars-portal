@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var rvDataHelper = require('../helpers/rv-data.helper');
+    var rvDataHelper = require('../helpers/rv-data.helper').default;
     var renderHelper = require('../helpers/render.helper');
 
     var utilsHelper = require('../helpers/utils.helper');
@@ -405,7 +405,7 @@
                                 col.style.width = result + 'px';
 
                                 elems.forEach(function (elem) {
-                                    elem.style.width = result + 'px';
+                                    $(elem).style.width = result + 'px';
                                 })
 
 

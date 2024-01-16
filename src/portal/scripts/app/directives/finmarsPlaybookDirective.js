@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var toastNotificationService = require('../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../core/services/toastNotificationService').default;
     var explorerService = require('../services/explorerService')
     var workflowService = require('../services/workflowService')
     var md5Helper = require('../helpers/md5.helper')

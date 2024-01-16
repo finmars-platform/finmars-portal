@@ -8,7 +8,7 @@
     var entityTypeMappingResolveService = require('../../services/entityTypeMappingResolveService');
     var entityResolverService = require('../../services/entityResolverService');
     var instrumentAttributeTypeService = require('../../services/instrument/instrumentAttributeTypeService');
-    var metaHelper = require('../../services/metaService');
+    var metaHelper = require('../../services/metaService').default;
 
     module.exports = function entityTypeMappingDialogController($scope, $mdDialog, mapItem) {
 

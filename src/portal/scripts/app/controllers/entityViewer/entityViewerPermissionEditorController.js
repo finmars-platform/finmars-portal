@@ -7,7 +7,7 @@
 
     // var usersGroupService = require('../../services/usersGroupService');
     var entityResolverService = require('../../services/entityResolverService');
-    var complexTransactionService = require('../../services/transaction/complexTransactionService');
+    var complexTransactionService = require('../../services/transaction/complexTransactionService').default;
     var evEvents = require('../../services/entityViewerEvents');
     // var usersService = require('../../services/usersService');
 

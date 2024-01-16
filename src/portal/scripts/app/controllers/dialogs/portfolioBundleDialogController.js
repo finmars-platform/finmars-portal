@@ -6,8 +6,8 @@
     'use strict';
 
     var portfolioBundleService = require('../../services/portfolioBundleService');
-    var portfolioRegisterService = require('../../services/portfolioRegisterService');
-    var portfolioService = require('../../services/portfolioService');
+    var portfolioRegisterService = require('../../services/portfolioRegisterService').default;
+    var portfolioService = require('../../services/portfolioService').default;
 
     module.exports = function ($scope, $mdDialog, data) {
 

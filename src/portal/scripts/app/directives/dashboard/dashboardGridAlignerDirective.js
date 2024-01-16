@@ -31,7 +31,7 @@
 
                 scope.calculateSingleCellWidth = function () {
 
-                    var tabWidth = elem.parent().parent().parent().width();
+                    var tabWidth = $(elem).parent().parent().parent().width();
 
                     console.log('tabWidth', tabWidth);
 
@@ -40,7 +40,7 @@
                 };
 
                 scope.calculateSingleCellHeight = function () {
-                    // var tabHeight = elem.height();
+                    // var tabHeight = $(elem).height();
                     // scope.cellHeight = Math.floor(tabHeight / scope.columnsTotal)
 
                     scope.cellHeight = 64; // var it be fixed value
@@ -62,8 +62,8 @@
                         tab = layout.data.tabs[scope.tabNumber];
                     }
 
-                    var elements = elem.find('.dashboardCell');
-                    // var emptySpace = elem.find('.dashboardEmptySpace')[0];
+                    var elements = $(elem).find('.dashboardCell');
+                    // var emptySpace = $(elem).find('.dashboardEmptySpace')[0];
                     var domElem;
                     var layoutElem;
 
@@ -85,7 +85,7 @@
 
                     var tabHeight = tabsHolderElem.clientHeight;
 
-                    var accordions = elem.querySelectorAll('.dashboard-accordion-component')
+                    var accordions = $(elem).find('.dashboard-accordion-component')
 
                     console.log('accordions', accordions);
 

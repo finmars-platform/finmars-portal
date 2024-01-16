@@ -1,11 +1,13 @@
+// import baseUrlService from "../services/baseUrlService";
 (function () {
     'use strict';
 
-    var cookieService = require('../../../../core/services/cookieService');
-    var xhrService = require('../../../../core/services/xhrService');
-    var baseUrlService = require('../services/baseUrlService');
+    var baseUrlService = require("../services/baseUrlService").default;
+    var cookieService = require('../../../../core/services/cookieService').default;
+    var xhrService = require('../../../../core/services/xhrService').default;
+    // var baseUrlService = require('../services/baseUrlService');
     var baseUrl = baseUrlService.resolve();
-    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService').default;
 
     var getList = function (options) {
 

@@ -10,12 +10,12 @@
     var evEvents = require('../../services/entityViewerEvents');
     var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
 
-    var pricingPolicyService = require('../../services/pricingPolicyService');
-    var currencyService = require('../../services/currencyService');
+    var pricingPolicyService = require('../../services/pricingPolicyService').default;;
+    var currencyService = require('../../services/currencyService').default;
 
     // var middlewareService = require('../../services/middlewareService');
 
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
 
     module.exports = function ($mdDialog, $state, fieldResolverService, evRvLayoutsHelper) {
         return {

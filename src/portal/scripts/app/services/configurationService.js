@@ -2,8 +2,9 @@
  * Created by szhitenev on 04.05.2016.
  */
 
+// import baseUrlService from "./baseUrlService";
 import baseUrlService from "./baseUrlService";
-const configureRepositoryUrlService = require('./configureRepositoryUrlService');
+const configureRepositoryUrlService = require('./configureRepositoryUrlService').default;
 
 export default function (cookieService, xhrService) {
 

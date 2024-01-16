@@ -9,7 +9,7 @@
     'use strict';
 
     // var authorizerService = require('../../services/authorizerService');
-    var cookieService = require('../../../../../core/services/cookieService');
+    var cookieService = require('../../../../../core/services/cookieService').default;
 
 
     module.exports = function LoginDialogController($scope, $mdDialog, data, authorizerService){
