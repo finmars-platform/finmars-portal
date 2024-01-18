@@ -374,6 +374,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 requestParameters.pagination.count = data.count;
                 requestParameters.pagination.downloaded = requestParameters.pagination.downloaded + data.results.length;
+
                 evDataService.setRequestParameters(requestParameters)
 
                 // enqueueNewRequests(evDataService, evEventService, data, requestParameters);
