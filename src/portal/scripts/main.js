@@ -998,7 +998,7 @@ export default (function () {
     portal.directive('closeDialogButton', [closeDialogButtonDirective]);
 
     // portal.directive('popUp', [require('./app/directives/dialogWindowResizerDirective.js')]);
-    portal.directive('customPopup', ['$rootScope', '$compile', require('./app/directives/customPopupDirective')]);
+    portal.directive('customPopup', ['$rootScope', '$compile', '$timeout', require('./app/directives/customPopupDirective')]);
     portal.directive('chipsList', ['$filter', require('./app/directives/chipsListDirective')]);
     portal.directive('onRepeatElemInit', [require('./app/directives/onRepeatElemInit')]);
 
