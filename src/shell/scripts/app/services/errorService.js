@@ -248,9 +248,9 @@ export default function (toastNotificationService) {
 
             message = message + '<span class="toast-error-field">Title</span>: Please double-check your input and try again.<br/>'
             // message = message + '<span class="toast-error-field">Code</span>: ' + error_object.status_code + '<br/>'
-            message = message + '<span class="toast-error-field">URL</span>: ' + error_object.url + '<br/>'
-            message = message + '<span class="toast-error-field">Username</span>: ' + error_object.username + '<br/>'
-            message = message + '<span class="toast-error-field">Date & Time</span>: ' + error_object.datetime + '<br/>'
+            // message = message + '<span class="toast-error-field">URL</span>: ' + error_object.url + '<br/>'
+            // message = message + '<span class="toast-error-field">Username</span>: ' + error_object.username + '<br/>'
+            // message = message + '<span class="toast-error-field">Date & Time</span>: ' + error_object.datetime + '<br/>'
             if (context) {
                 message = message + '<span class="toast-error-field">Context</span>: ' + context + '<br/>'
             }
@@ -258,7 +258,8 @@ export default function (toastNotificationService) {
 
             let raw_title = '<span data-text="Client Error">Warning</span>'
 
-            title = raw_title + '<span class="toast-click-to-copy">click to copy</span>'
+            title = raw_title;
+            // title = raw_title + '<span class="toast-click-to-copy">click to copy</span>'
 
             toastNotificationService.warning(message, title, {
                 progressBar: true,
