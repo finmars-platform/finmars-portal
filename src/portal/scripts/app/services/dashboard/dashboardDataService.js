@@ -123,7 +123,10 @@
             // needs because each component in dashboard has lastSavedOutput
             // components are using it to find out should they refresh if output changes
 
-            return JSON.parse(JSON.stringify(layoutData.data.state))
+            if (layoutData.data.state) {
+                return JSON.parse(JSON.stringify(layoutData.data.state))
+            }
+            return {}
         }
 
         function setLayoutState(data) {

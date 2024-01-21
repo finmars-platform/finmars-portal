@@ -4,7 +4,7 @@
 
 	const popupEvents = require('../services/events/popupEvents');
 
-    module.exports = function ($rootScope, $compile) {
+    module.exports = function ($rootScope, $compile, $timeout) {
         return {
             restrict: 'A',
             scope: {
@@ -233,7 +233,10 @@
 				};
 
 				const resizeHandler = function (event) {
-					setPopupPosition();
+					// wait for width calculation for popupElement
+					$timeout(function() {
+						setPopupPosition();
+					}, 100);
 				}
 
 				const bodyClickHandler = function (event) {
@@ -392,7 +395,10 @@
 
 						createPopup();
 
-						setPopupPosition(event);
+						// wait for width calculation for popupElement
+						$timeout(function() {
+							setPopupPosition(event);
+						}, 100);
 
 					}
 
@@ -405,7 +411,11 @@
 					}
 
 					createPopup();
-					setPopupPosition(event);
+
+					// wait for width calculation for popupElement
+					$timeout(function() {
+						setPopupPosition(event);
+					}, 100);
 
 				};
 
@@ -506,7 +516,11 @@
 								let doNotUpdateScope = (argumentObj && argumentObj.doNotUpdateScope);
 
 								createPopup(doNotUpdateScope);
-								setPopupPosition();
+
+								// wait for width calculation for popupElement
+								$timeout(function() {
+									setPopupPosition();
+								}, 100);
 
 							}
 

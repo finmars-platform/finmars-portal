@@ -153,6 +153,35 @@
         }
     }
 
+    /**
+     * Returns control if more items can be loaded form backend
+     *
+     * @param {Object} evDataService
+     * @param {Object} item - parent group for which more items can be loaded
+     * @return {Object|null} - data of control for button "LOADER MORE", "LOAD ALL"
+     */
+    var getLoadControl = function (evDataService, item) {
+
+        var requestParameters = evDataService.getRequestParameters(item.___id);
+
+        if (requestParameters) {
+            if (requestParameters.pagination.count > requestParameters.pagination.page_size) {
+
+                return {
+                    ___id: item.___id + '_control',
+                    ___group_identifier: item.___group_identifier,
+                    ___group_name: item.___group_name,
+                    ___type: 'control',
+                    ___parentId: item.___id,
+                    ___level: item.___level + 1
+                };
+            }
+        }
+
+        return null;
+
+    }
+
     var insertSubtotalsToResults = function (data, evDataService) {
 
         var dataList = [];
@@ -206,7 +235,7 @@
 
                 }
 
-                var requestParameters = evDataService.getRequestParameters(item.___id);
+                /*var requestParameters = evDataService.getRequestParameters(item.___id);
 
                 if (requestParameters) {
                     if (requestParameters.pagination.count > requestParameters.pagination.page_size) {
@@ -220,7 +249,11 @@
                             ___level: item.___level + 1
                         });
                     }
-                }
+                }*/
+                // item = insertLoadControl(evDataService, item);
+                var control = getLoadControl(evDataService, item);
+
+                if (control) item.results.push(control);
 
 
             });
@@ -685,7 +718,16 @@
             // console.log('data', data);
 
         } else {
+
             data = getNewDataInstance(evDataService)
+
+            var rootId = Object.keys(data).find(
+                id => data[id].___level === 0
+            );
+
+            var control = getLoadControl( evDataService, data[rootId] );
+            if (control) data[rootId].results.push(control);
+            // data = insertLoadControl(data)
         }
 
 
