@@ -43,7 +43,7 @@
                     scope.layoutData.name = listLayout.name;
                 }
 
-                scope.cDatepickerPosX = 0;
+                scope.cDatepickerPosX = {value: 0};
 
                 scope.popupData = {
                     entityType: scope.entityType,
