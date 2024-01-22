@@ -182,7 +182,14 @@
 
     }
 
-    var insertSubtotalsToResults = function (data, evDataService) {
+    /**
+     * Also setups property 'results' for items-groups inside data
+     *
+     * @param {Object} data
+     * @param {Object} evDataService
+     * @return {Object} - data with subtotals and controls
+     */
+    var insertSubtotalsAndControlsToResults = function (data, evDataService) {
 
         var dataList = [];
         var groups = evDataService.getGroups();
@@ -216,6 +223,23 @@
             if (!item.results) {
                 item.results = [];
             }
+
+        })
+
+        if (!groups.length) { // subtotal or subtotals are active but there are no groups
+
+            var rootId = Object.keys(data).find(
+                id => data[id].___level === 0
+            );
+
+            var control = getLoadControl( evDataService, data[rootId] );
+
+            if (control) data[rootId].results.push(control);
+
+            return data;
+        }
+
+        dataList.forEach(function (item) {
 
             groups.forEach(function (group, index) {
 
@@ -258,12 +282,20 @@
 
             });
 
-        });
+        })
 
         return data;
 
     };
 
+    /**
+     * Have to be called after insertSubtotalsAndControlsToResults set
+     * properties 'results' inside data
+     *
+     * @param data
+     * @param evDataService
+     * @return {*}
+     */
     var insertBlankLinesToResults = function (data, evDataService) {
 
         var dataList = [];
@@ -701,7 +733,7 @@
 
             console.time("Inserting subtotals");
 
-            data = insertSubtotalsToResults(data, evDataService);
+            data = insertSubtotalsAndControlsToResults(data, evDataService);
             console.timeEnd("Inserting subtotals");
 
 
@@ -726,6 +758,7 @@
             );
 
             var control = getLoadControl( evDataService, data[rootId] );
+
             if (control) data[rootId].results.push(control);
             // data = insertLoadControl(data)
         }
@@ -803,7 +836,7 @@
 
             console.time("Inserting subtotals");
 
-            data = insertSubtotalsToResults(data, evDataService);
+            data = insertSubtotalsAndControlsToResults(data, evDataService);
 
             console.timeEnd("Inserting subtotals");
 
