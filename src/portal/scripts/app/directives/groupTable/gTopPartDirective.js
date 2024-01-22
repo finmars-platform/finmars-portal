@@ -43,6 +43,8 @@
                     scope.layoutData.name = listLayout.name;
                 }
 
+                scope.cDatepickerPosX = 0;
+
                 scope.popupData = {
                     entityType: scope.entityType,
                     evDataService: scope.evDataService,
@@ -174,7 +176,7 @@
 
                     scope.reportLayoutOptions = scope.evDataService.getReportLayoutOptions();
 
-                    // preparing data for complexZhDatePickerDirective
+                    //# region preparing data for complexZhDatePickerDirective
                     if (!scope.reportLayoutOptions.hasOwnProperty('datepickerOptions')) {
                         scope.reportLayoutOptions.datepickerOptions = {};
                     }
@@ -186,6 +188,7 @@
                     if (!scope.reportLayoutOptions.datepickerOptions.hasOwnProperty('reportLastDatepicker')) {
                         scope.reportLayoutOptions.datepickerOptions.reportLastDatepicker = {};
                     }
+
 
                     /*scope.reportLayoutOptions.datepickerOptions.reportFirstDatepicker.dateKey = datesKeysData[0][scope.entityType];
                     scope.reportLayoutOptions.datepickerOptions.reportLastDatepicker.dateKey = datesKeysData[1][scope.entityType];*/
@@ -207,7 +210,7 @@
                             }
                         }
                     } */
-                    /* < preparing data for complexZhDatePickerDirective > */
+                    //# endregion
 
 					if (typeof scope.reportLayoutOptions.useDateFromAbove !== 'boolean') {
 						scope.reportLayoutOptions.useDateFromAbove = true;

@@ -62,6 +62,8 @@
 
 				let coords;
 				let popupBackdropElem;
+				/** Wait for width of popupElem to recalculate. When opening popup while page is still rendering. */
+				let setPosTimeout = 150;
 
 				if (scope.noBackdrop !== 'true') popupBackdropElem = document.createElement("div");
 
@@ -234,9 +236,7 @@
 
 				const resizeHandler = function (event) {
 					// wait for width calculation for popupElement
-					$timeout(function() {
-						setPopupPosition();
-					}, 100);
+					setPopupPosition();
 				}
 
 				const bodyClickHandler = function (event) {
@@ -398,7 +398,7 @@
 						// wait for width calculation for popupElement
 						$timeout(function() {
 							setPopupPosition(event);
-						}, 100);
+						}, setPosTimeout);
 
 					}
 
@@ -415,7 +415,7 @@
 					// wait for width calculation for popupElement
 					$timeout(function() {
 						setPopupPosition(event);
-					}, 100);
+					}, setPosTimeout);
 
 				};
 
@@ -520,7 +520,7 @@
 								// wait for width calculation for popupElement
 								$timeout(function() {
 									setPopupPosition();
-								}, 100);
+								}, setPosTimeout);
 
 							}
 
