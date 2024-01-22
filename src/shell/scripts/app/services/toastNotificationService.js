@@ -24,8 +24,8 @@ export default function () {
 
     };
 
-    const warning = function (message) {
-        toastr.warning(message)
+    const warning = function (message, title, options) {
+        toastr.warning(message, title, options)
     };
 
     const info = function (message, title, options) {
