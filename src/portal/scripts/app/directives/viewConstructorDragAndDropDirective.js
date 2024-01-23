@@ -349,8 +349,8 @@
 
                             var attributeChanged = false; // needed to call view constructor data reload
 
-                            var attributeKey = $(elem).dataset.attributeKey;
-                            var attrsVmKey = $(elem).dataset.vmKey;
+                            var attributeKey = elem.dataset.attributeKey;
+                            var attrsVmKey = elem.dataset.vmKey;
 
 							/* var changeSelectedGroup = function (draggedTo) {
 
