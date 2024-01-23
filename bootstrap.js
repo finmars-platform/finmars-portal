@@ -20,6 +20,9 @@ import 'angular-resource';
 import 'angular-ui-router/release/angular-ui-router.js';
 import 'angular-animate';
 
+// needed for rollup to resolve import of angular-dragula
+import 'angular-dragula/dist/angular-dragula';
+
 import 'dragula/dist/dragula.css';
 import dragula from 'dragula/dist/dragula.js';
 window.dragula = dragula;
