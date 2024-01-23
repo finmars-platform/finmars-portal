@@ -432,8 +432,11 @@
                     }
                     chartElement.innerHTML = '';
 
+                    utils['_finmars_prevent_from_builder_remove'] = true; // it needed to prevent build remove of utils (of unused variable) it need to be use inside eval
+
                     setTimeout(function () {
                         console.warn("Evaluating Chart source code")
+                        console.log('utils', utils);
                         eval(scope.vm.componentData.source) // TODO dangerous operation, consider refactor
                     }, 100);
 
