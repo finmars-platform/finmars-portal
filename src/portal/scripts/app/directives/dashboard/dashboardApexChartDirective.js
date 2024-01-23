@@ -10,7 +10,7 @@
     var evEvents = require('../../services/entityViewerEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-    var utilsHelper = require('../../helpers/utils.helper');
+    var utilsHelper = require('../../helpers/utils.helper').default;
 
     module.exports = function ($mdDialog, dashboardHelper, entityResolverService) {
         return {
