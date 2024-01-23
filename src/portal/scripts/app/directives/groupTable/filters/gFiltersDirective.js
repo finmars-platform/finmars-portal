@@ -10,12 +10,12 @@
     const popupEvents = require('../../../services/events/popupEvents');
 
     const evHelperService = require('../../../services/entityViewerHelperService');
-    const downloadFileHelper = require('../../../helpers/downloadFileHelper');
+    const downloadFileHelper = require('../../../helpers/downloadFileHelper').default;
 
     const convertReportHelper = require('../../../helpers/converters/convertReportHelper');
     const reportCopyHelper = require('../../../helpers/reportCopyHelper');
 
-    const exportExcelService = require('../../../services/exportExcelService');
+    const exportExcelService = require('../../../services/exportExcelService').default;
 
     const EventService = require('../../../services/eventService');
 
