@@ -2,13 +2,13 @@
 
     'use strict';
 
-    var exportPdfService = require('../../services/exportPdfService');
+    var exportPdfService = require('../../services/exportPdfService').default;
     var rvRenderer = require('../../services/rv-renderer/rv.renderer');
     var evEvents = require('../../services/entityViewerEvents');
-    const rvDataHelper = require("../../helpers/rv-data.helper");
+    const rvDataHelper = require("../../helpers/rv-data.helper").default;
     var renderHelper = require('../../helpers/render.helper');
 
-    var downloadFileHelper = require('../../helpers/downloadFileHelper');
+    var downloadFileHelper = require('../../helpers/downloadFileHelper').default;
 
     module.exports = function ($scope, $mdDialog, globalDataService, uiService, reportHelper, evDataService, evEventService, data) {
 
