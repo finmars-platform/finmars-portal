@@ -19,12 +19,10 @@ import 'angular-resource';
 // import 'angular-ui-router';
 import 'angular-ui-router/release/angular-ui-router.js';
 import 'angular-animate';
-import angularDragula from 'angular-dragula';
 
+import 'dragula/dist/dragula.css';
 import dragula from 'dragula/dist/dragula.js';
 window.dragula = dragula;
-
-// window.dragula = angularDragula;
 
 import './src/core/keycloak/keycloak.js';
 
