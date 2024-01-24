@@ -218,7 +218,7 @@
                     });
 
                     for (let elem of bodyScrollableElem) {
-                        $(elem).style.height = matrixVCContainerHeight + 'px';
+                        $(elem)[0].style.height = matrixVCContainerHeight + 'px';
                     }
 
                     rvmHeaderScrollableRow.style.width = matrixMaxWidth + 'px';
@@ -230,7 +230,7 @@
                         });
                     }
 
-                    const items = elem[0].querySelectorAll('.rvMatrixCell');
+                    const items = $(elem)[0].querySelectorAll('.rvMatrixCell');
                     adjustItemStyles(items, cellHeight, cellWidth, nameColWidth);
                 }
 
