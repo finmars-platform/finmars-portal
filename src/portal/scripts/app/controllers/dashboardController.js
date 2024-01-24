@@ -520,9 +520,19 @@
                 // Update the dashboard state and broadcast if necessary
                 console.log("setEventListeners.event from child iframes", event);
 
-                vm.dashboardDataService.setLayoutState(event.data);
+                // Check if event.data is a valid JSON object
+                try {
+                    // Attempt to parse event.data as JSON
+                    var data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
 
-                vm.broadcastToChildren(event.data);
+                    // Update the dashboard state and broadcast if necessary
+                    console.log("setEventListeners.event from child iframes", data);
+                    vm.dashboardDataService.setLayoutState(data);
+                    vm.broadcastToChildren(data);
+                } catch (e) {
+                    // Log an error if event.data is not valid JSON
+                    console.error("Received data is not a valid JSON object:", event.data);
+                }
 
             });
 
