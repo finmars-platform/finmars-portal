@@ -163,7 +163,7 @@
 
                 // Needs for user chart logic
                 // TODO probably need to move to separate service
-                const utils = {
+                var utils = {
                     getMonthsList: function (date_from, date_to) {
                         let startDate = new Date(date_from);
                         let endDate = new Date(date_to);
@@ -434,7 +434,7 @@
 
                     utils['_finmars_prevent_from_builder_remove'] = true; // it needed to prevent build remove of utils (of unused variable) it need to be use inside eval
 
-                    setTimeout(function () {
+                    setTimeout( () => {
                         console.warn("Evaluating Chart source code")
                         console.log('utils', utils);
                         eval(scope.vm.componentData.source) // TODO dangerous operation, consider refactor
