@@ -33,6 +33,11 @@ import './src/core/keycloak/keycloak.js';
 
 import pickmeup from './src/core/datepicker/pickmeup.js'
 window.pickmeup = pickmeup;
+
+
+import ApexCharts from 'apexcharts';
+window.ApexCharts = ApexCharts;
+
 import 'pickmeup/css/pickmeup.css'
 
 import toastr from 'toastr/build/toastr.min.js';
