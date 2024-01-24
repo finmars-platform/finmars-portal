@@ -515,6 +515,9 @@
 
         vm.initEventListeners = function () {
 
+            // THATS CRAZY
+            // seems Keycloak uses also small iframe and it sends some data to it, but it not JSON
+            // So we need to check if data is JSON or not
             window.addEventListener('message', function (event) {
                 // Security checks and message handling here...
                 // Update the dashboard state and broadcast if necessary
