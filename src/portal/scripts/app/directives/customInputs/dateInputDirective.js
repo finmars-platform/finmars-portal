@@ -1,7 +1,7 @@
 (function () {
     "use strict";
 
-    module.exports = function () {
+    module.exports = function ($timeout) {
         return {
             restrict: "E",
             scope: {
@@ -17,6 +17,8 @@
                 isReadonly: '=',
                 emptyInputButton: '@',
                 onChangeCallback: "&?",
+                onChangeCallbackSecond: "&?",
+                onChangeCallbackThird: "&?",
             },
             templateUrl: "views/directives/customInputs/date-input-view.html",
             link: function (scope, elem, attr) {
@@ -112,7 +114,7 @@
 				 * Change date to YYYY-MM-DD format
 				 * @param dateText {string}
 				 */
-				var formatDateValue = function (dateText) {
+				/*var formatDateValue = function (dateText) {
 
 					if (/\D\/$/.test(dateText)) dateText = dateText.substr(0, dateText.length - 3);
 
@@ -140,9 +142,30 @@
 
 					return scope.dateValue;
 
-				};
+				};*/
 
-                var onChangeIndex;
+                var formatDateValue = function (dateText) {
+
+                    var formatted = dateText.replace(/[^0-9-]/g, '');
+
+                    /* *
+                     * 'd' for digit
+                     * ^\d{4}$ - matches 'dddd'
+                     * ^\d{4}-d{2}$ - matches 'dddd-dd'
+                     * */
+                    var monthOrYear = /^\d{4}$|^\d{4}-\d{2}$/g;
+
+                    if ( formatted.match(monthOrYear) ) {
+                        formatted = formatted + '-';
+                    }
+
+                    scope.dateValue = formatted;
+
+                    return scope.dateValue;
+
+                };
+
+                var validateTOProm;
                 var prevDateValue = '';
 				/** @param dateValue {string} - entered by user */
                 scope.onDateChange = function (dateValue) {
@@ -156,19 +179,20 @@
 
                         // dateChangedFromOutside = false;
 
-                        clearTimeout(onChangeIndex);
+                        // clearTimeout(validateToIndex);
+                        $timeout.cancel(validateTOProm);
 
                         if (scope.onChangeCallback) {
-                            setTimeout(() => {
+                            $timeout(() => {
                                 // located in separate setTimeout to run as soon as possible
 
-                                scope.$apply(); // needed for pickmeup-change
+                                // scope.$apply(); // needed for pickmeup-change
                                 scope.onChangeCallback({changedValue: scope.model});
 
                             }, 0);
                         }
 
-                        setTimeout(() => {
+                        validateTOProm = $timeout(() => {
 
                             scope.valueIsValid = valueIsValid;
                             scope.error = error;
@@ -181,7 +205,7 @@
 
                     if (dateValue) {
 
-						var characterAdded = !!!prevDateValue || dateValue.length > prevDateValue.length;
+						var characterAdded = !prevDateValue || dateValue.length > prevDateValue.length;
 
 						if (characterAdded) dateValue = formatDateValue(dateValue);
 
@@ -397,22 +421,15 @@
                         this.value = output.join('').substr(0, 14);
                     }); */
 
-                    inputElem.addEventListener("blur", function () {
+                    /*inputElem.addEventListener("blur", function () {
 
                         inputContainer.classList.remove("custom-input-focused");
 
                         setTimeout(function () {
                             // without timeout changes will be discarded on fast blur
-                            // onDateBlur();
                             scope.$apply();
 
                         }, 250);
-
-                        /*this.type = 'text';
-                        var input = this.value;
-                        var values = input.split('-').map(function (v, i) { // parse
-                            return v.replace(/\D/g, '')
-                        });*/
 
 
 						var values = scope.dateValue.split('-').map(function (v, i) { // parse
@@ -428,7 +445,7 @@
                             var dateVal = new Date(year, month, day);
 
                             if (!isNaN(dateVal)) {
-                                // var dates = [dateVal.getMonth() + 1, dateVal.getDate(), dateVal.getFullYear()];
+
 								var dates = [dateVal.getFullYear(), dateVal.getMonth() + 1, dateVal.getDate()];
 
                                 output = dates.map(function (v) {
@@ -448,7 +465,7 @@
 
 						}
 
-                    });
+                    });*/
 
                     inputElem.addEventListener("pickmeup-show", function (event) {
                         if (doNotShowDatepicker) event.preventDefault();

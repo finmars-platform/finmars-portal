@@ -17,53 +17,53 @@
                         <div ng-if="activeType.fieldType === 'textInput'">
                             <text-input model="activeType.model"
                                         small-options="activeType.fieldData.smallOptions"
-                                        on-change-callback="onChangeCallback()"></text-input>
+                                        on-change-callback="onChangeCallback(changedValue)"></text-input>
                         </div>
 
                         <div ng-if="activeType.fieldType === 'numberInput'">
                             <number-input model="activeType.model"
                                           small-options="activeType.fieldData.smallOptions"
-                                          on-change-callback="onChangeCallback()"></number-input>
+                                          on-change-callback="onChangeCallback(changedValue)"></number-input>
                         </div>
 
                         <div ng-if="activeType.fieldType === 'dateInput'">
-                            <date-input model="activeType.model"
-                                        small-options="activeType.fieldData.smallOptions"
-                                        on-change-callback="onChangeCallback()"></date-input>
+                            <date-input data-model="activeType.model"
+                                        data-small-options="activeType.fieldData.smallOptions"
+                                        data-on-change-callback="onChangeCallback(changedValue)"></date-input>
                         </div>
 
                         <div ng-if="activeType.fieldType === 'dropdownSelect' && !activeType.fieldData.loadMenuOptions">
-                            <dropdown-select model="activeType.model"
-                                             small-options="activeType.fieldData.smallOptions"
-                                             menu-options="activeType.fieldData.menuOptions"
-                                             group-options="{{activeType.fieldData.groupOptions}}"
-                                             is-disabled="activeType.fieldData.isDisabled"
-                                             item-name="activeType.fieldData.itemName"
-                                             sorted="activeType.fieldData.sorted"
-                                             on-change-callback="onChangeCallback()"></dropdown-select>
+                            <dropdown-select data-model="activeType.model"
+                                             data-small-options="activeType.fieldData.smallOptions"
+                                             data-menu-options="activeType.fieldData.menuOptions"
+                                             data-group-options="{{activeType.fieldData.groupOptions}}"
+                                             data-is-disabled="activeType.fieldData.isDisabled"
+                                             data-item-name="activeType.fieldData.itemName"
+                                             data-sorted="activeType.fieldData.sorted"
+                                             data-on-change-callback="onSelectChange(changedValue)"></dropdown-select>
                         </div>
 
                         <div ng-if="activeType.fieldType === 'dropdownSelect' && activeType.fieldData.loadMenuOptions">
-                            <dropdown-select model="activeType.model"
-                                             small-options="activeType.fieldData.smallOptions"
-                                             menu-options="activeType.fieldData.menuOptions"
-                                             group-options="{{activeType.fieldData.groupOptions}}"
-                                             is-disabled="activeType.fieldData.isDisabled"
-                                             item-name="activeType.fieldData.itemName"
-                                             sorted="activeType.fieldData.sorted"
-                                             load-menu-options="activeType.fieldData.loadMenuOptions()"
-                                             on-change-callback="onChangeCallback()"></dropdown-select>
+                            <dropdown-select data-model="activeType.model"
+                                             data-small-options="activeType.fieldData.smallOptions"
+                                             data-menu-options="activeType.fieldData.menuOptions"
+                                             data-group-options="{{activeType.fieldData.groupOptions}}"
+                                             data-is-disabled="activeType.fieldData.isDisabled"
+                                             data-item-name="activeType.fieldData.itemName"
+                                             data-sorted="activeType.fieldData.sorted"
+                                             data-load-menu-options="activeType.fieldData.loadMenuOptions()"
+                                             data-on-change-callback="onSelectChange(changedValue)"></dropdown-select>
                         </div>
 
                         <div ng-if="activeType.fieldType === 'entitySearchSelect'">
-                            <entity-search-select item="activeType.model"
-                                                  entity-type="activeType.fieldData.entityType"
-                                                  is-disabled="isDisabled"
-                                                  item-name="activeType.fieldData.itemName"
-                                                  item-property="{{activeType.fieldData.itemProperty}}"
-                                                  on-menu-open="activeType.fieldData.onMenuOpen()"
-                                                  on-menu-close="activeType.fieldData.onMenuClose()"
-                                                  on-change-callback="onChangeCallback()"></entity-search-select>
+                            <entity-search-select data-item="activeType.model"
+                                                  data-entity-type="activeType.fieldData.entityType"
+                                                  data-is-disabled="isDisabled"
+                                                  data-item-name="activeType.fieldData.itemName"
+                                                  data-item-property="{{activeType.fieldData.itemProperty}}"
+                                                  data-on-menu-open="activeType.fieldData.onMenuOpen()"
+                                                  data-on-menu-close="activeType.fieldData.onMenuClose()"
+                                                  data-on-change-callback="onSelectChange(changedValue)"></entity-search-select>
                         </div>
 
                     </div>

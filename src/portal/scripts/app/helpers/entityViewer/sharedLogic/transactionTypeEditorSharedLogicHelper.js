@@ -3748,7 +3748,7 @@
          * @param actionIndex {number}
          * @param actionType {string} - can be 'transaction', 'instrument', 'instrument_event_schedule' ...
          */
-        const onMultitypeFieldValChange = function (fieldKey, action, actionIndex, actionType) {
+        const onMultitypeFieldValChange = function (changedValue, fieldKey, action, actionIndex, actionType) {
 
             let fieldProp = fieldKey;
             const multitypeFieldData = viewModel.actionsMultitypeFieldsList[actionIndex][fieldKey];
