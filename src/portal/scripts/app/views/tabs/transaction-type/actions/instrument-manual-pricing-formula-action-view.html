@@ -67,7 +67,7 @@
                                      field-types-data="vm.actionsMultitypeFieldsList[$index].instrument"
                                      is-disabled="vm.isRelationInputFieldDisabled()"
                                      event-service="vm.actionsMFEventService"
-                                     on-value-change="vm.onMultitypeFieldValChange('instrument', item, $index, 'instrument_manual_pricing_formula')"
+                                     on-value-change="vm.onMultitypeFieldValChange(changedValue, 'instrument', item, $index, 'instrument_manual_pricing_formula')"
                                      on-type-change="vm.onActionMultitypeFieldToggle('instrument', item, $index, 'instrument_manual_pricing_formula')"
 
                                      class="ttype-action-input p-l-0"></multitype-field>
@@ -139,7 +139,7 @@
                                  field-types-data="vm.actionsMultitypeFieldsList[$index].pricing_policy"
                                  is-disabled="vm.isRelationInputFieldDisabled()"
                                  event-service="vm.actionsMFEventService"
-                                 on-value-change="vm.onMultitypeFieldValChange('pricing_policy', item, $index, 'instrument_manual_pricing_formula')"
+                                 on-value-change="vm.onMultitypeFieldValChange(changedValue, 'pricing_policy', item, $index, 'instrument_manual_pricing_formula')"
                                  on-type-change="vm.onActionMultitypeFieldToggle('pricing_policy', item, $index, 'instrument_manual_pricing_formula')"
 
                                  class="ttype-action-input width-100 p-r-0"></multitype-field>

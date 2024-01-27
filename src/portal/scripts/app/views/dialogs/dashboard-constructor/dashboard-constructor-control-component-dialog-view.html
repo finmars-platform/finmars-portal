@@ -155,11 +155,11 @@
 
                                     <div style="width: 400px;">
                                         <div ng-if="vm.readyStatus.layouts">
-                                            <multitype-field label="Select layout"
-                                                             field-types-data="vm.layoutsSelectorsList"
-                                                             type-switch="selector"
-                                                             on-value-change="vm.onLayoutChange()"
-                                                             on-type-change="vm.onLayoutEntityTypeChange(activeType)"></multitype-field>
+                                            <multitype-field data-label="Select layout"
+                                                             data-field-types-data="vm.layoutsSelectorsList"
+                                                             data-type-switch="selector"
+                                                             data-on-value-change="vm.onLayoutChange()"
+                                                             data-on-type-change="vm.onLayoutEntityTypeChange(activeType)"></multitype-field>
                                         </div>
 
                                         <div ng-if="!vm.readyStatus.layouts" class="flex-row fc-space-around"

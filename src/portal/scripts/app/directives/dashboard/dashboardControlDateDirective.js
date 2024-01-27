@@ -10,6 +10,7 @@
     var expressionService = require('../../services/expression.service');
 
     var EventService = require('../../services/eventService');
+    var utilsHelper = require('../../helpers/utils.helper').default;
 
     module.exports = function (metaContentTypesService, entityResolverService, uiService, reportHelper) {
         return {
@@ -27,17 +28,18 @@
 
                 scope.processing = false;
 
-                scope.valueChanged = function (changedValue) {
+                scope.valueChanged = utilsHelper.debounce(function (changedValue) {
 
                     console.log('valueChanged', scope.item.data.store);
                     console.log('valueChanged.value', scope.item.data.store.value);
+                    scope.item.data.store.value = changedValue;
 
                     scope.dashboardDataService.setComponentOutput(scope.componentData.user_code, scope.item.data.store.value);
 
                     scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_OUTPUT_CHANGE);
 
-                };
+                }, 800);
 
                 function getTodaysDate() {
                     const today = new Date();
