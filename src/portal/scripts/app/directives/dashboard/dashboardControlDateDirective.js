@@ -28,18 +28,23 @@
 
                 scope.processing = false;
 
-                scope.valueChanged = utilsHelper.debounce(function (changedValue) {
+                /* *
+                 * Actually called on onBlurCallback of <date-input>
+                 * to prevent invoking recalculation of subscribed components
+                 * multiple times while changing value
+                 * */
+                scope.valueChanged = function (inputVal) {
 
                     console.log('valueChanged', scope.item.data.store);
                     console.log('valueChanged.value', scope.item.data.store.value);
-                    scope.item.data.store.value = changedValue;
+                    scope.item.data.store.value = inputVal;
 
                     scope.dashboardDataService.setComponentOutput(scope.componentData.user_code, scope.item.data.store.value);
 
                     scope.dashboardEventService.dispatchEvent('COMPONENT_VALUE_CHANGED_' + scope.item.data.id);
                     scope.dashboardEventService.dispatchEvent(dashboardEvents.COMPONENT_OUTPUT_CHANGE);
 
-                }, 800);
+                };
 
                 function getTodaysDate() {
                     const today = new Date();
