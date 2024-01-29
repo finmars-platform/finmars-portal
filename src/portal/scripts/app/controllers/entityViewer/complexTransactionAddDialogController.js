@@ -35,7 +35,16 @@
         vm.readyStatus = {content: false, entity: true, permissions: true, transactionTypes: false, layout: false};
         vm.entityType = entityType;
 
+        /**
+         * Data that is displayed on the form and changed by user.
+         */
         vm.entity = {$_isValid: true};
+        /**
+         * Whole data of complex transaction before changes.
+         * Contains all data, even one that is not displayed on the form
+         * unlike vm.entity.
+         */
+        vm.originalComplexTransaction;
         var dataConstructorLayout = [];
         var dcLayoutHasBeenFixed = false;
         vm.transactionType = null;
@@ -1496,7 +1505,7 @@
 
             if (Object.keys(data).length) {
 
-                if (data.hasOwnProperty('contextData')) {
+                if ( data.hasOwnProperty('contextData') ) {
 
                     vm.contextData = Object.assign({}, data.contextData);
                     //delete entity.contextData;
