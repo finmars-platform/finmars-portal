@@ -112,11 +112,13 @@
 
     .ev-left-panel-grouping-menu-button {
       position: absolute;
-      right: 18px;
+      right: 20px;
       top: 10px;
+      padding: 0 4px;
       color: #747474;
       cursor: pointer;
       outline: none;
+      background-color: @mainBackgroundColor;
     }
 
     .ev-left-panel-grouping-section {
@@ -168,6 +170,8 @@
         width: 100%;
         cursor: pointer;
         outline: none;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
         &:hover {
           color: #F05A22;

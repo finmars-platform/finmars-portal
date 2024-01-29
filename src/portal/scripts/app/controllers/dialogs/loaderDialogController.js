@@ -11,10 +11,10 @@
 
         var vm = this;
 
-        vm.text = 'Processing';
+        vm.title = 'Processing';
 
-        if (data.text) {
-            vm.text = data.text;
+        if (data.title) {
+            vm.title = data.title;
         }
 
         vm.cancel = function () {
