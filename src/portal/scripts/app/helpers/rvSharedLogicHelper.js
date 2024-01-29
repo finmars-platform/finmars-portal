@@ -917,7 +917,8 @@
 
                     createEntity(locals);
 
-                } else if (action === 'rebook_transaction') {
+                }
+                else if (action === 'rebook_transaction') {
 
                     var complex_transaction_id = actionData.object['complex_transaction.id'] || actionData.object['complex_transaction']
 
@@ -930,6 +931,22 @@
                     editEntity(actionData.event, locals);
 
                 }
+                else if ( action === 'copy_transaction' ) {
+
+                    var complex_transaction_id = actionData.object['complex_transaction.id'] || actionData.object['complex_transaction']
+
+                    var locals = {
+                        entityType: 'complex-transaction',
+                        entityId: complex_transaction_id,
+                        data: {
+                            copy: true,
+                        }
+                    };
+
+                    editEntity(actionData.event, locals);
+
+                }
+
             }
 
         };

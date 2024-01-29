@@ -1631,8 +1631,12 @@ export default function (toastNotificationService, transactionTypeService, price
             return true;
         }
 
-        if ((obj['complex_transaction.id'] || obj['complex_transaction']) && option.action === 'rebook_transaction') {
-            return true;
+        if ( obj['complex_transaction.id'] || obj['complex_transaction'] ) {
+
+            if ( ['rebook_transaction', 'copy_transaction'].includes(option.action) ) {
+                return true;
+            }
+
         }
 
         if (option.action === 'open_layout') {
