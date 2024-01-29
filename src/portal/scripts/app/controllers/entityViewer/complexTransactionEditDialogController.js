@@ -39,7 +39,16 @@
         vm.entityType = entityType;
         vm.entityId = entityId;
 
+        /**
+         * Data that is displayed on the form and changed by user.
+         */
         vm.entity = {$_isValid: true};
+        /**
+         * Whole data of complex transaction before changes.
+         * Contains all data, even one that is not displayed on the form
+         * unlike vm.entity.
+         */
+        vm.originalComplexTransaction;
         var dataConstructorLayout = [];
         var dcLayoutHasBeenFixed = false;
         var notCopiedTransaction = true;
@@ -587,27 +596,33 @@
             });
         };
 
+        /**
+         * Send data to a parent controller or directive
+         * to open in ComplexTransactionAddDialogController
+         *
+         * @param windowType - values: 'big-drawer', 'modal'
+         */
         vm.copy = function (windowType) {
 
             var entity = JSON.parse(JSON.stringify(vm.entity));
 
-            if (windowType === 'big-drawer') {
+            const responseObj = {
+                status: 'copy',
+                data: {
+                    entity: entity,
+                    entityType: vm.entityType,
+                    isCopy: true,
+                    originalComplexTransaction: vm.originalComplexTransaction
+                }
+            };
 
-                const responseObj = {
-                    status: 'copy',
-                    data: {
-                        entity: entity,
-                        entityType: vm.entityType,
-                        isCopy: true,
-                        originalComplexTransaction: vm.originalComplexTransaction
-                    }
-                };
+            /* if (windowType === 'big-drawer') {
 
                 return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
             } else {
 
-                $mdDialog.show({
+                 $mdDialog.show({
                     controller: 'ComplexTransactionAddDialogController as vm',
                     templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
                     parent: angular.element(document.body),
@@ -623,7 +638,9 @@
 
                 metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'copy'});
 
-            }
+            } */
+
+            return metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, responseObj);
 
             //$mdDialog.hide({status: 'disagree'});
 
@@ -1972,7 +1989,15 @@
             });
 
             vm.getAttributeTypes().then(function () {
-                vm.getItem();
+
+                vm.getItem().then(function () {
+
+                    if (data.copy) {
+                        vm.copy();
+                    }
+
+                });
+
             });
 
             if (!vm.previewMode) vm.loadTransactionTypes();

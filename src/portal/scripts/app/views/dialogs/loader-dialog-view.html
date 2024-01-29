@@ -1,12 +1,7 @@
 <md-dialog aria-label="" ng-cloak class="loader-dialog draggable-dialog" drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <md-button data-ng-click="vm.cancel()">
-                <ng-md-icon icon="close" style="fill:#000000;" size="20"></ng-md-icon>
-            </md-button>
-
-            <p>{{text}}</p>
-        </div>
+        <dialog-header data-title="{{vm.title}}"
+                       data-cancel-dialog="vm.cancel()"></dialog-header>
     </md-toolbar>
     <md-dialog-content class="p-24">
 
