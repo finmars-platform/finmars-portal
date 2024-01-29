@@ -17,8 +17,7 @@
                 isReadonly: '=',
                 emptyInputButton: '@',
                 onChangeCallback: "&?",
-                onChangeCallbackSecond: "&?",
-                onChangeCallbackThird: "&?",
+                onBlurCallback: "&",
             },
             templateUrl: "views/directives/customInputs/date-input-view.html",
             link: function (scope, elem, attr) {
@@ -466,6 +465,29 @@
 						}
 
                     });*/
+
+                    inputElem.addEventListener("keydown", function (event) {
+
+                        const pressedKey = event.key;
+
+                        if (pressedKey === "Enter") {
+
+                            if (scope.onChangeCallback) {
+                                scope.onChangeCallback({changedValue: scope.model});
+                            }
+
+                            inputElem.blur();
+                        }
+
+                    });
+
+                    inputElem.addEventListener("blur", function () {
+                        inputContainer.classList.remove("custom-input-focused");
+
+                        if ( scope.onBlurCallback) {
+                            scope.onBlurCallback({value: scope.model});
+                        }
+                    })
 
                     inputElem.addEventListener("pickmeup-show", function (event) {
                         if (doNotShowDatepicker) event.preventDefault();

@@ -1,14 +1,18 @@
 <div class="dashboard-control height-100 dashboardControl">
 
     <div ng-if="!processing">
-
+        <!--
+            Using on-blur-callback instead of on-change-callback
+            to prevent invoking recalculation of subscribed components
+            multiple times while changing value.
+        -->
         <date-input
                 data-label="{{componentData.name}}"
                 data-model="item.data.store.value"
                 data-custom-buttons="buttons"
                 data-custom-styles="customStyles"
                 data-small-options="{notNull: options.notNull}"
-                data-on-change-callback="valueChanged(changedValue)"
+                data-on-blur-callback="valueChanged(value)"
         ></date-input>
 
     </div>
