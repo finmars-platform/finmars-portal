@@ -1422,7 +1422,9 @@
 
             result.values = {};
 
-            result.values = sharedLogicHelper.mapUserInputsOnEntityValues(result.values);
+            if (result.transactionType) {
+                result.values = sharedLogicHelper.mapUserInputsOnEntityValues(result.values);
+            }
 
             return JSON.parse(JSON.stringify(result))
 

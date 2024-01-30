@@ -920,7 +920,7 @@ export default (function () {
     portal.directive('gHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
     portal.directive('groupWidthAligner', [require('./app/directives/groupTable/gWidthAlignerComponent')]);
     portal.directive('groupEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', require('./app/directives/groupTable/groupEditorBinderComponent')]);
-    portal.directive('groupSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', 'metaContentTypesService', require('./app/directives/groupTable/gSplitPanelReportBinderComponent')]);
+    portal.directive('groupSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', 'metaContentTypesService', 'templateLoader', require('./app/directives/groupTable/gSplitPanelReportBinderComponent')]);
     portal.directive('gVerticalSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gVerticalSplitPanelReportBinderComponent')]);
     portal.directive('groupPermissionEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gPermissionEditorBinderComponent')]);
     portal.directive('groupReconciliationMatchEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gReconciliationMatchEditorBinderComponent')]);
@@ -998,7 +998,7 @@ export default (function () {
     portal.directive('closeDialogButton', [closeDialogButtonDirective]);
 
     // portal.directive('popUp', [require('./app/directives/dialogWindowResizerDirective.js')]);
-    portal.directive('customPopup', ['$rootScope', '$compile', require('./app/directives/customPopupDirective')]);
+    portal.directive('customPopup', ['$rootScope', '$compile', '$timeout', require('./app/directives/customPopupDirective')]);
     portal.directive('chipsList', ['$filter', require('./app/directives/chipsListDirective')]);
     portal.directive('onRepeatElemInit', [require('./app/directives/onRepeatElemInit')]);
 

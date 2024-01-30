@@ -4,7 +4,7 @@
 
 	const popupEvents = require('../services/events/popupEvents');
 
-    module.exports = function ($rootScope, $compile) {
+    module.exports = function ($rootScope, $compile, $timeout) {
         return {
             restrict: 'A',
             scope: {
@@ -62,6 +62,8 @@
 
 				let coords;
 				let popupBackdropElem;
+				/** Wait for width of popupElem to recalculate. When opening popup while page is still rendering. */
+				let setPosTimeout = 150;
 
 				if (scope.noBackdrop !== 'true') popupBackdropElem = document.createElement("div");
 
@@ -233,6 +235,7 @@
 				};
 
 				const resizeHandler = function (event) {
+					// wait for width calculation for popupElement
 					setPopupPosition();
 				}
 
@@ -392,7 +395,10 @@
 
 						createPopup();
 
-						setPopupPosition(event);
+						// wait for width calculation for popupElement
+						$timeout(function() {
+							setPopupPosition(event);
+						}, setPosTimeout);
 
 					}
 
@@ -405,7 +411,11 @@
 					}
 
 					createPopup();
-					setPopupPosition(event);
+
+					// wait for width calculation for popupElement
+					$timeout(function() {
+						setPopupPosition(event);
+					}, setPosTimeout);
 
 				};
 
@@ -506,7 +516,11 @@
 								let doNotUpdateScope = (argumentObj && argumentObj.doNotUpdateScope);
 
 								createPopup(doNotUpdateScope);
-								setPopupPosition();
+
+								// wait for width calculation for popupElement
+								$timeout(function() {
+									setPopupPosition();
+								}, setPosTimeout);
 
 							}
 

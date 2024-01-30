@@ -136,27 +136,30 @@
 
             <div ng-if="entityType === 'balance-report'" class="flex-row">
                 <div>
-                    <complex-zh-datepicker date="datesData.to"
-                                            datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
-                                            callback-method="onReportDateChange()"
-                                            ev-data-service="evDataService"
-                                            ev-event-service="evEventService"
-                                            attribute-data-service="attributeDataService"
-                                            is-disabled="viewContext === 'split_panel' && reportLayoutOptions.useDateFromAbove"></complex-zh-datepicker>
+                    <complex-zh-datepicker data-date="datesData.to"
+                                           data-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
+                                           data-callback-method="onReportDateChange()"
+                                           data-ev-data-service="evDataService"
+                                           data-ev-event-service="evEventService"
+                                           data-attribute-data-service="attributeDataService"
+                                           data-is-disabled="viewContext === 'split_panel' && reportLayoutOptions.useDateFromAbove"
+                                           data-popup-x="cDatepickerPosX"
+                    ></complex-zh-datepicker>
                 </div>
             </div>
 
             <div ng-if="entityType === 'pl-report' || entityType === 'transaction-report'" class="flex-row">
                 <div>
-                    <complex-zh-datepicker date="datesData.from"
-                                            datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
-                                            second-date="datesData.to"
-                                            second-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
-                                            callback-method="onReportDateChange()"
-                                            ev-data-service="evDataService"
-                                            ev-event-service="evEventService"
-                                            attribute-data-service="attributeDataService"
-                                            is-disabled="viewContext === 'split_panel' && reportLayoutOptions.useDateFromAbove">
+                    <complex-zh-datepicker data-date="datesData.from"
+                                           data-datepicker-options="reportLayoutOptions.datepickerOptions.reportFirstDatepicker"
+                                           data-second-date="datesData.to"
+                                           data-second-datepicker-options="reportLayoutOptions.datepickerOptions.reportLastDatepicker"
+                                           data-callback-method="onReportDateChange()"
+                                           data-ev-data-service="evDataService"
+                                           data-ev-event-service="evEventService"
+                                           data-attribute-data-service="attributeDataService"
+                                           data-is-disabled="viewContext === 'split_panel' && reportLayoutOptions.useDateFromAbove"
+                                           data-popup-x="cDatepickerPosX">
                     </complex-zh-datepicker>
                 </div>
             </div>
