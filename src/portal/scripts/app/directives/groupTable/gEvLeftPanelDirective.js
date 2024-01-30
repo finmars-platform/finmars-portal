@@ -255,10 +255,10 @@
 
                         var drake = this.dragula;
 
-                        drake.on('drop', function (elem, target, source, nextSibling) {
+                         drake.on('drop', function (elem, target, source, nextSibling) {
                             console.log('scope.elem', elem);
 
-                            var elemKey = $(elem).dataset.key;
+                            var elemKey = elem.dataset.key;
                             var nextSiblingKey;
 
                             if (nextSibling) {

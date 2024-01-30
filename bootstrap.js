@@ -19,12 +19,11 @@ import 'angular-resource';
 // import 'angular-ui-router';
 import 'angular-ui-router/release/angular-ui-router.js';
 import 'angular-animate';
-import angularDragula from 'angular-dragula';
 
+import 'angular-dragula/dist/angular';
+import 'dragula/dist/dragula.css';
 import dragula from 'dragula/dist/dragula.js';
 window.dragula = dragula;
-
-// window.dragula = angularDragula;
 
 import './src/core/keycloak/keycloak.js';
 
@@ -34,6 +33,11 @@ import './src/core/keycloak/keycloak.js';
 
 import pickmeup from './src/core/datepicker/pickmeup.js'
 window.pickmeup = pickmeup;
+
+
+import ApexCharts from 'apexcharts';
+window.ApexCharts = ApexCharts;
+
 import 'pickmeup/css/pickmeup.css'
 
 import toastr from 'toastr/build/toastr.min.js';
