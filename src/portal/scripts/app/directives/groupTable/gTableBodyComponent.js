@@ -452,7 +452,7 @@
                     contentElem.style.opacity = '1';
 
                     updateTableContent();
-
+                    console.log("testing328.gTableBodyComponent DATA_LOAD_END updateTableContent called");
                     if (!activeLayoutConfigIsSet && viewContext !== 'reconciliation_viewer') {
                         activeLayoutConfigIsSet = true;
                         scope.evDataService.setActiveLayoutConfiguration({isReport: scope.isReport}); // saving layout for checking for changes
@@ -599,8 +599,9 @@
                                 if (scope.isReport) {
                                     contentElem.style.opacity = '1';
                                 }
-
-                                if (scope.evDataService.didDataLoadEnd()) {
+                                console.log("testing328.gTableBodyComponent init didDataLoadEnd ", scope.evDataService.didDataLoadEnd() );
+                                if ( scope.evDataService.didDataLoadEnd() ) {
+                                    console.log("testing328.gTableBodyComponent init updateTableContent called");
                                     updateTableContent();
                                 }
 
