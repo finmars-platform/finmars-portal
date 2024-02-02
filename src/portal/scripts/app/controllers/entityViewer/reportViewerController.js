@@ -46,6 +46,7 @@
         // console.log("autosave77 autosaveLayoutOn", autosaveLayoutOn);
         // Functions for context menu
 
+        var firstDleIndex;
 
         vm.setEventListeners = function () {
 
@@ -60,6 +61,18 @@
                 //     rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
                 // }
 
+
+            });
+
+            firstDleIndex = vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                /* *
+                 * Fixes scenario when DATA_LOAD_END
+                 * called inside evDataProviderService.updateDataStructure()
+                 * before gTableBodyComponent initialized
+                 * */
+                vm.entityViewerDataService.setDataLoadStatus(true);
+
+                vm.entityViewerEventService.removeEventListener(evEvents.DATA_LOAD_END, firstDleIndex);
 
             });
 
