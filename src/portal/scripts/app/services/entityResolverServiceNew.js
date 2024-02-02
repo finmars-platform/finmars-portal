@@ -3,6 +3,8 @@
  */
 
 var portfolioService = require('./portfolioService').default;
+var portfolioTypeService = require('./portfolioTypeService').default;
+var portfolioClassService = require('./portfolioClassService').default;
 var portfolioHistoryService = require('./portfolioHistoryService').default;
 var portfolioRegisterService = require('./portfolioRegisterService').default;
 var portfolioRegisterRecordService = require('./portfolioRegisterRecordService').default;
@@ -24,7 +26,8 @@ var complexTransactionService = require('./transaction/complexTransactionService
 
 var metaEventClassService = require('./metaEventClassService').default;
 var metaNotificationClassService = require('./metaNotificationClassService').default;
-var pricingPolicyService = require('./pricingPolicyService').default;;
+var pricingPolicyService = require('./pricingPolicyService').default;
+;
 var instrumentTypeService = require('./instrumentTypeService').default;
 var accrualCalculationModelService = require('./accrualCalculationModelService').default;
 var instrumentPeriodicityService = require('./instrumentPeriodicityService').default;
@@ -102,6 +105,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'instrument':
                 return instrumentService.getList(options);
                 break;
+            case 'portfolio-type':
+                return portfolioTypeService.getList(options);
+                break;
             case 'instrument-type':
                 return instrumentTypeService.getList(options);
                 break;
@@ -178,6 +184,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'instrument-class':
                 return instrumentClassService.getList(options);
                 break;
+            case 'portfolio-class':
+                return portfolioClassService.getList(options);
+                break;
             case 'price-history':
                 return priceHistoryService.getList(options);
                 break;
@@ -228,6 +237,8 @@ export default function (instrumentService, transactionTypeService, priceHistory
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.getListLight(options);
+            case 'portfolio-type':
+                return portfolioTypeService.getListLight(options);
             case 'portfolio-register':
                 return portfolioRegisterService.getListLight(options);
             case 'account':
@@ -246,6 +257,8 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return instrumentTypeService.getListLight(options);
             case 'instrument-class':
                 return instrumentClassService.getList(options);
+            case 'portfolio-class':
+                return portfolioClassService.getList(options);
             case 'transaction-type':
                 return transactionTypeService.getListLight(options);
             case 'strategy-1':
@@ -263,6 +276,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.getByKey(id);
+                break;
+            case 'portfolio-type':
+                return portfolioTypeService.getByKey(id);
                 break;
             case 'portfolio-register':
                 return portfolioRegisterService.getByKey(id);
@@ -402,6 +418,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 entity.transaction_types = entity.transaction_types || [];
                 return portfolioService.create(entity);
                 break;
+            case 'portfolio-type':
+                return portfolioTypeService.create(entity);
+                break;
             case 'portfolio-register':
                 return portfolioRegisterService.create(entity);
                 break;
@@ -527,6 +546,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 break;
             case 'portfolio':
                 return portfolioService.update(id, entity);
+                break;
+            case 'portfolio-type':
+                return portfolioTypeService.update(id, entity);
                 break;
             case 'portfolio-register':
                 return portfolioRegisterService.update(id, entity);
@@ -671,6 +693,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'portfolio':
                 return portfolioService.updateBulk(entities);
                 break;
+            case 'portfolio-type':
+                return portfolioTypeService.updateBulk(entities);
+                break;
             case 'portfolio-register':
                 return portfolioRegisterService.updateBulk(entities);
                 break;
@@ -755,6 +780,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.deleteByKey(id);
+                break;
+            case 'portfolio-type':
+                return portfolioTypeService.deleteByKey(id);
                 break;
             case 'portfolio-register':
                 return portfolioRegisterService.deleteByKey(id);
@@ -871,6 +899,8 @@ export default function (instrumentService, transactionTypeService, priceHistory
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.deleteBulk(data);
+            case 'portfolio-type':
+                return portfolioTypeService.deleteBulk(data);
             case 'portfolio-register':
                 return portfolioRegisterService.deleteBulk(data);
             case 'portfolio-register-record':
@@ -1011,7 +1041,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
         }
     }
 
-    var getListReportItems =function (entityType, options) {
+    var getListReportItems = function (entityType, options) {
 
         switch (entityType) {
 

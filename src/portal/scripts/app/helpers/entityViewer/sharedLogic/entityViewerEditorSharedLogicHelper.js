@@ -22,9 +22,11 @@
 		if (viewModel.entityType === 'instrument') readyStatusObj.exposureTab = false;
 
         const typeSelectorValueEntities = {
+        	'portfolio': 'portfolio-type',
         	'instrument': 'instrument-type',
 			'account': 'account-type',
 			'instrument-type': 'instrument-class',
+			'portfolio-type': 'portfolio-class',
         };
 
 		const groupSelectorValueEntities = {
@@ -79,7 +81,7 @@
 
             if (viewModel.fixedAreaPopup.tabColumns > 2) {
 
-                if (viewModel.entityType === 'instrument' || viewModel.entityType === 'account' || viewModel.entityType === 'instrument-type') {
+                if (viewModel.entityType === 'instrument' || viewModel.entityType === 'account' || viewModel.entityType === 'instrument-type' || viewModel.entityType === 'portfolio-type') {
 
                     fieldsInFixedArea.push(viewModel.typeFieldName);
 
@@ -127,7 +129,7 @@
 
             if (viewModel.fixedAreaPopup.tabColumns > 5) {
 
-                if (viewModel.entityType === 'instrument' || viewModel.entityType === 'account' || viewModel.entityType === 'instrument-type') {
+                if (viewModel.entityType === 'instrument' || viewModel.entityType === 'account' || viewModel.entityType === 'instrument-type' || viewModel.entityType === 'portfolio-type') {
 
                     fieldsInFixedArea.push('short_name');
 
@@ -610,13 +612,13 @@
 
             let result = viewModel.showByDefaultOptions;
 
-            if (columns > 2 && entityType !== 'instrument' && entityType !== 'account' && entityType !== 'instrument-type') {
+            if (columns > 2 && entityType !== 'instrument' && entityType !== 'account' && entityType !== 'instrument-type' && entityType !== 'portfolio-type') {
                 result = result.filter(option => option.id !== 'short_name');
             }
 
             if (columns > 5) {
 
-                if (viewModel.entityType === 'instrument' || viewModel.entityType === 'account' || viewModel.entityType === 'instrument-type') {
+                if (viewModel.entityType === 'instrument' || viewModel.entityType === 'account' || viewModel.entityType === 'instrument-type' || viewModel.entityType === 'portfolio-type') {
                     // result = result.filter(option => option.id !== 'short_name');
                     result = result
                 } else {

@@ -7,8 +7,10 @@ var accountRepository = require('../repositories/accountRepository');
 var accountTypeRepository = require('../repositories/accountTypeRepository');
 var instrumentService = require('../services/instrumentService');
 var instrumentTypeRepository = require('../repositories/instrumentTypeRepository');
+var portfolioTypeRepository = require('../repositories/portfolioTypeRepository');
 var importPriceDownloadSchemeRepository = require('../repositories/import/importPriceDownloadSchemeRepository');
 var instrumentClassRepository = require('../repositories/instrument/instrumentClassRepository');
+var portfolioClassRepository = require('../repositories/portfolioClassRepository');
 var pricingPolicyRepository = require('../repositories/pricingPolicyRepository');
 var currencyRepository = require('../repositories/currencyRepository');
 var portfolioRepository = require('../repositories/portfolioRepository');
@@ -68,24 +70,20 @@ export default function (instrumentService, transactionTypeService, metaContentT
                 if (entity === 'transaction' && fieldKey === 'group') {
                     promise = transactionTypeGroupRepository.getList();
 
-                }
-                else if (entity === 'strategy') {
+                } else if (entity === 'strategy') {
 
                     var strategyNumber = entityTypePieces[1];
 
                     if (fieldKey === 'group') {
                         promise = strategyGroupRepository.getList(strategyNumber);
-                    }
-                    else if (fieldKey === 'subgroup') {
+                    } else if (fieldKey === 'subgroup') {
                         promise = strategySubgroupRepository.getList(strategyNumber);
                     }
 
-                }
-                else if (entity === 'counterparty' && fieldKey === 'group') {
-                   promise = counterpartyGroupRepository.getList();
+                } else if (entity === 'counterparty' && fieldKey === 'group') {
+                    promise = counterpartyGroupRepository.getList();
 
-                }
-                else if (entity === 'responsible' && fieldKey === 'group') {
+                } else if (entity === 'responsible' && fieldKey === 'group') {
                     promise = responsibleGroupRepository.getList();
 
                 }
@@ -95,9 +93,11 @@ export default function (instrumentService, transactionTypeService, metaContentT
                     try {
                         const resData = await promise;
                         // fieldKey === 'group' or in case of strategies 'group' || 'subgroup'
-                        return resolve( {type: 'id', key: fieldKey, data: resData.results} );
+                        return resolve({type: 'id', key: fieldKey, data: resData.results});
 
-                    } catch (error) { return reject(error); }
+                    } catch (error) {
+                        return reject(error);
+                    }
 
                 }
 
@@ -199,6 +199,11 @@ export default function (instrumentService, transactionTypeService, metaContentT
                         return resolve({type: 'id', key: 'price_download_scheme', data: data.results});
                     });
                     break;
+                case 'portfolio_type':
+                    portfolioTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
+                        return resolve({type: 'id', key: 'portfolio_type', data: data.results});
+                    });
+                    break;
                 case 'instrument_type':
                     instrumentTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
                         return resolve({type: 'id', key: 'instrument_type', data: data.results});
@@ -207,6 +212,11 @@ export default function (instrumentService, transactionTypeService, metaContentT
                 case 'instrument_class':
                     instrumentClassRepository.getList({pageSize: 1000}).then(function (data) {
                         return resolve({type: 'id', key: 'instrument_class', data: data}); // system-wide list
+                    });
+                    break;
+                case 'portfolio_class':
+                    portfolioClassRepository.getList({pageSize: 1000}).then(function (data) {
+                        return resolve({type: 'id', key: 'portfolio_class', data: data}); // system-wide list
                     });
                     break;
                 case 'accrued_currency':
