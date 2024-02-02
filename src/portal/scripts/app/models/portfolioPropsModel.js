@@ -70,6 +70,18 @@
                 "key": "object_permissions",
                 "name": "Object permissions",
                 "value_type": "mc_field"
+            },
+            {
+                "key": "first_transaction_date",
+                "name": "First Transaction Date",
+                "value_type": 40,
+                "allow_null": true
+            },
+            {
+                "key": "first_cash_flow_date",
+                "name": "First Cash Flow Date",
+                "value_type": 40,
+                "allow_null": true
             }
         ]
     };
