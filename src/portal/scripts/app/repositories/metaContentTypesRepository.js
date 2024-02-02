@@ -37,6 +37,11 @@ export default function (cookieService, xhrService) {
                 key: "portfolios.portfolio"
             },
             {
+                name: "Portfolio Type",
+                entity: 'portfolio-type',
+                key: "portfolios.portfoliotype"
+            },
+            {
                 name: "Instrument Type",
                 entity: 'instrument-type',
                 key: "instruments.instrumenttype"
@@ -155,6 +160,11 @@ export default function (cookieService, xhrService) {
                 name: "Portfolio",
                 entity: 'portfolio',
                 key: "portfolios.portfolio"
+            },
+            {
+                name: "Portfolio Type",
+                entity: 'portfolio-type',
+                key: "portfolios.portfoliotype"
             },
             {
                 name: "Portfolio Register",
@@ -450,6 +460,11 @@ export default function (cookieService, xhrService) {
                 name: "Portfolio",
                 entity: 'portfolio',
                 key: "portfolios.portfolio"
+            },
+            {
+                name: "Portfolio Type",
+                entity: 'portfolio-type',
+                key: "portfolios.portfoliotype"
             },
             {
                 name: "Portfolio Register",

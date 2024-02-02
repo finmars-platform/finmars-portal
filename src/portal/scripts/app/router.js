@@ -241,6 +241,14 @@
                     layoutUserCode: null
                 }
             })
+            .state('app.portal.data.portfolio-type', {
+                url: '/portfolio-types',
+                templateUrl: 'views/data/data-portfolio-type-view.html',
+                controller: 'DataPortfolioTypeController as vm',
+                params: {
+                    layoutUserCode: null
+                }
+            })
             /* .state('app.portal.data.pricing-policy', {
                 url: '/pricing-policy',
                 templateUrl: 'views/data/data-pricing-policy-view.html',

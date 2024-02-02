@@ -313,12 +313,14 @@ export default function (toastNotificationService, metaContentTypesService, uiSe
 		'app.portal.reports.transaction-report',
 
 		'app.portal.data.portfolio',
+		'app.portal.data.portfolio-type',
 		'app.portal.data.account',
 		'app.portal.data.account-type',
 		'app.portal.data.counterparty',
 		'app.portal.data.responsible',
 		'app.portal.data.instrument',
 		'app.portal.data.instrument-type',
+
 		'app.portal.data.complex-transaction',
 		'app.portal.data.transaction',
 		'app.portal.data.transaction-type',

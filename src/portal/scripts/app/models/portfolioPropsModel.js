@@ -82,7 +82,15 @@
                 "name": "First Cash Flow Date",
                 "value_type": 40,
                 "allow_null": true
-            }
+            },
+            {
+                "key": "portfolio_type",
+                "name": "Portfolio type",
+                "value_type": "field",
+                "value_content_type": "portfolios.portfoliotype",
+                "value_entity": "portfolio-type",
+                "code": "user_code"
+            },
         ]
     };
 

@@ -10,6 +10,7 @@
 
         var entityAttributesData = {
             "portfolio": require('../models/portfolioPropsModel').getAttributes(),
+            "portfolio-type": require('../models/portfolioTypePropsModel').getAttributes(),
             "portfolio-register": require('../models/portfolioRegisterPropsModel').getAttributes(),
             "portfolio-register-record": require('../models/portfolioRegisterRecordPropsModel').getAttributes(),
             "portfolio-history": require('../models/portfolioHistoryPropsModel').getAttributes(),

@@ -335,6 +335,9 @@
 				//</editor-fold>
 
 				//<editor-fold desc="Data: ">
+                case 'app.portal.data.portfolio-type':
+                    name += "Data types: Portfolios Types";
+                    break;
 				case 'app.portal.data.portfolio':
                     name += "Portfolios";
                     break;
