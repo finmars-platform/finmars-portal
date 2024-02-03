@@ -205,6 +205,11 @@ export default function (instrumentService, transactionTypeService, metaContentT
                         return resolve({type: 'id', key: 'portfolio_type', data: data.results});
                     });
                     break;
+                case 'portfolio_reconcile_group':
+                    portfolioReconcileGroupRepository.getList({pageSize: 1000}).then(function (data) {
+                        return resolve({type: 'id', key: 'portfolio_reconcile_group', data: data.results});
+                    });
+                    break;
                 case 'instrument_type':
                     instrumentTypeRepository.getListLight({pageSize: 1000}).then(function (data) {
                         return resolve({type: 'id', key: 'instrument_type', data: data.results});

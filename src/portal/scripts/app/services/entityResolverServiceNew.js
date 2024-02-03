@@ -5,6 +5,7 @@
 var portfolioService = require('./portfolioService').default;
 var portfolioTypeService = require('./portfolioTypeService').default;
 var portfolioReconcileGroupService = require('./portfolioReconcileGroupService').default;
+var portfolioReconcileHistoryService = require('./portfolioReconcileHistoryService').default;
 var portfolioClassService = require('./portfolioClassService').default;
 var portfolioHistoryService = require('./portfolioHistoryService').default;
 var portfolioRegisterService = require('./portfolioRegisterService').default;
@@ -197,6 +198,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'portfolio-history':
                 return portfolioHistoryService.getList(options);
                 break;
+            case 'portfolio-reconcile-history':
+                return portfolioReconcileHistoryService.getList(options);
+                break;
             case 'pricing-policy':
                 return pricingPolicyService.getList(options);
                 break;
@@ -347,6 +351,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'portfolio-history':
                 return portfolioHistoryService.getByKey(id);
                 break;
+            case 'portfolio-reconcile-history':
+                return portfolioReconcileHistoryService.getByKey(id);
+                break;
             case 'currency-history':
                 return currencyHistoryService.getByKey(id);
                 break;
@@ -481,6 +488,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 break;
             case 'portfolio-history':
                 return portfolioHistoryService.create(entity);
+                break;
+            case 'portfolio-reconcile-history':
+                return portfolioReconcileHistoryService.create(entity);
                 break;
             case 'currency-history':
                 return currencyHistoryService.create(entity);
@@ -642,6 +652,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 break;
             case 'portfolio-history':
                 return portfolioHistoryService.update(id, entity);
+                break;
+            case 'portfolio-reconcile-history':
+                return portfolioReconcileHistoryService.update(id, entity);
                 break;
             case 'pricing-policy':
                 return pricingPolicyService.update(id, entity);
@@ -853,6 +866,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'portfolio-history':
                 return portfolioHistoryService.deleteByKey(id);
                 break;
+            case 'portfolio-reconcile-history':
+                return portfolioReconcileHistoryService.deleteByKey(id);
+                break;
             case 'pricing-policy':
                 return pricingPolicyService.deleteByKey(id);
                 break;
@@ -958,6 +974,8 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return priceHistoryService.deleteBulk(data);
             case 'portfolio-history':
                 return portfolioHistoryService.deleteBulk(data);
+            case 'portfolio-reconcile-history':
+                return portfolioReconcileHistoryService.deleteBulk(data);
             case 'pricing-policy':
                 return pricingPolicyService.deleteBulk(data);
             case 'currency-history':

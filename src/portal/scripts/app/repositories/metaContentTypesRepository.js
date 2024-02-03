@@ -187,6 +187,11 @@ export default function (cookieService, xhrService) {
                 key: "portfolios.portfoliohistory"
             },
             {
+                name: "Portfolio Reconcile History",
+                entity: 'portfolio-reconcile-history',
+                key: "portfolios.portfolioreconcilehistory"
+            },
+            {
                 name: "Instrument Type",
                 entity: 'instrument-type',
                 key: "instruments.instrumenttype"
@@ -490,6 +495,11 @@ export default function (cookieService, xhrService) {
                 name: "Portfolio History",
                 entity: 'portfolio-history',
                 key: "portfolios.portfoliohistory"
+            },
+            {
+                name: "Portfolio Reconcile History",
+                entity: 'portfolio-reconcile-history',
+                key: "portfolios.portfolioreconcilehistory"
             },
             {
                 name: "Instrument Type",

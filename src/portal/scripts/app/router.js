@@ -257,6 +257,14 @@
                     layoutUserCode: null
                 }
             })
+            .state('app.portal.data.portfolio-reconcile-history', {
+                url: '/portfolio-reconcile-history',
+                templateUrl: 'views/data/data-portfolio-reconcile-history-view.html',
+                controller: 'DataPortfolioReconcileHistoryController as vm',
+                params: {
+                    layoutUserCode: null
+                }
+            })
 
             /* .state('app.portal.data.pricing-policy', {
                 url: '/pricing-policy',
