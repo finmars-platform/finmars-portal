@@ -167,6 +167,11 @@ export default function (cookieService, xhrService) {
                 key: "portfolios.portfoliotype"
             },
             {
+                name: "Portfolio Reconcile Group",
+                entity: 'portfolio-reconcile-group',
+                key: "portfolios.portfolioreconcilegroup"
+            },
+            {
                 name: "Portfolio Register",
                 entity: 'portfolio-register',
                 key: "portfolios.portfolioregister"
@@ -465,6 +470,11 @@ export default function (cookieService, xhrService) {
                 name: "Portfolio Type",
                 entity: 'portfolio-type',
                 key: "portfolios.portfoliotype"
+            },
+            {
+                name: "Portfolio Reconcile Group",
+                entity: 'portfolio-reconcile-group',
+                key: "portfolios.portfolioreconcilegroup"
             },
             {
                 name: "Portfolio Register",

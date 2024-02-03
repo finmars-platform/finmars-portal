@@ -8,6 +8,7 @@ var accountTypeRepository = require('../repositories/accountTypeRepository');
 var instrumentService = require('../services/instrumentService');
 var instrumentTypeRepository = require('../repositories/instrumentTypeRepository');
 var portfolioTypeRepository = require('../repositories/portfolioTypeRepository');
+var portfolioReconcileGroupRepository = require('../repositories/portfolioReconcileGroupRepository');
 var importPriceDownloadSchemeRepository = require('../repositories/import/importPriceDownloadSchemeRepository');
 var instrumentClassRepository = require('../repositories/instrument/instrumentClassRepository');
 var portfolioClassRepository = require('../repositories/portfolioClassRepository');
