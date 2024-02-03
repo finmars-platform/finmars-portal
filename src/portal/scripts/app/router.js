@@ -249,6 +249,15 @@
                     layoutUserCode: null
                 }
             })
+            .state('app.portal.data.portfolio-reconcile-group', {
+                url: '/portfolio-reconcile-groups',
+                templateUrl: 'views/data/data-portfolio-reconcile-group-view.html',
+                controller: 'DataPortfolioReconcileGroupController as vm',
+                params: {
+                    layoutUserCode: null
+                }
+            })
+
             /* .state('app.portal.data.pricing-policy', {
                 url: '/pricing-policy',
                 templateUrl: 'views/data/data-pricing-policy-view.html',

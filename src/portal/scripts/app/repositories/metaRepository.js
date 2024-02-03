@@ -57,6 +57,7 @@
         var entityAttrs = {
             "portfolio": require('../models/portfolioPropsModel').getAttributes(),
             "portfolio-type": require('../models/portfolioTypePropsModel').getAttributes(),
+            "portfolio-reconcile-group": require('../models/portfolioReconcileGroupPropsModel').getAttributes(),
             "portfolio-register": require('../models/portfolioRegisterPropsModel').getAttributes(),
             "portfolio-register-record": require('../models/portfolioRegisterRecordPropsModel').getAttributes(),
             "portfolio-history": require('../models/portfolioHistoryPropsModel').getAttributes(),

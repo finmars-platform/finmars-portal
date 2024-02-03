@@ -26,6 +26,7 @@ var getEntitiesWithoutDynamicAttrsList = function () {
         'audit-transaction', 'audit-instrument', 'portfolio-register-record',
         'portfolio-history',
         'complex-transaction-import-scheme', 'csv-import-scheme',
+        'portfolio-reconcile-group', 'portfolio-reconcile-history',
         'generated-event']
 };
 

@@ -4,6 +4,7 @@
 
 var portfolioService = require('./portfolioService').default;
 var portfolioTypeService = require('./portfolioTypeService').default;
+var portfolioReconcileGroupService = require('./portfolioReconcileGroupService').default;
 var portfolioClassService = require('./portfolioClassService').default;
 var portfolioHistoryService = require('./portfolioHistoryService').default;
 var portfolioRegisterService = require('./portfolioRegisterService').default;
@@ -107,6 +108,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 break;
             case 'portfolio-type':
                 return portfolioTypeService.getList(options);
+                break;
+            case 'portfolio-reconcile-group':
+                return portfolioReconcileGroupService.getList(options);
                 break;
             case 'instrument-type':
                 return instrumentTypeService.getList(options);
@@ -239,6 +243,8 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return portfolioService.getListLight(options);
             case 'portfolio-type':
                 return portfolioTypeService.getListLight(options);
+            case 'portfolio-reconcile-group':
+                return portfolioReconcileGroupService.getList(options);
             case 'portfolio-register':
                 return portfolioRegisterService.getListLight(options);
             case 'account':
@@ -279,6 +285,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 break;
             case 'portfolio-type':
                 return portfolioTypeService.getByKey(id);
+                break;
+            case 'portfolio-reconcile-group':
+                return portfolioReconcileGroupService.getByKey(id);
                 break;
             case 'portfolio-register':
                 return portfolioRegisterService.getByKey(id);
@@ -421,6 +430,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'portfolio-type':
                 return portfolioTypeService.create(entity);
                 break;
+            case 'portfolio-reconcile-group':
+                return portfolioReconcileGroupService.create(entity);
+                break;
             case 'portfolio-register':
                 return portfolioRegisterService.create(entity);
                 break;
@@ -549,6 +561,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 break;
             case 'portfolio-type':
                 return portfolioTypeService.update(id, entity);
+                break;
+            case 'portfolio-reconcile-group':
+                return portfolioReconcileGroupService.update(id, entity);
                 break;
             case 'portfolio-register':
                 return portfolioRegisterService.update(id, entity);
@@ -696,6 +711,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'portfolio-type':
                 return portfolioTypeService.updateBulk(entities);
                 break;
+            case 'portfolio-reconcile-group':
+                return portfolioReconcileGroupService.updateBulk(entities);
+                break;
             case 'portfolio-register':
                 return portfolioRegisterService.updateBulk(entities);
                 break;
@@ -783,6 +801,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 break;
             case 'portfolio-type':
                 return portfolioTypeService.deleteByKey(id);
+                break;
+            case 'portfolio-reconcile-group':
+                return portfolioReconcileGroupService.deleteByKey(id);
                 break;
             case 'portfolio-register':
                 return portfolioRegisterService.deleteByKey(id);
@@ -901,6 +922,8 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return portfolioService.deleteBulk(data);
             case 'portfolio-type':
                 return portfolioTypeService.deleteBulk(data);
+            case 'portfolio-reconcile-group':
+                return portfolioReconcileGroupService.deleteBulk(data);
             case 'portfolio-register':
                 return portfolioRegisterService.deleteBulk(data);
             case 'portfolio-register-record':
