@@ -604,6 +604,7 @@ export default (function () {
     portal.controller('DataPortfolioController', ['$scope', require('./app/controllers/data/dataPortfolioController')]);
     portal.controller('DataPortfolioTypeController', ['$scope', require('./app/controllers/data/dataPortfolioTypeController')]);
     portal.controller('DataPortfolioReconcileGroupController', ['$scope', require('./app/controllers/data/dataPortfolioReconcileGroupController')]);
+    portal.controller('DataPortfolioReconcileHistoryController', ['$scope', require('./app/controllers/data/dataPortfolioReconcileHistoryController')]);
     portal.controller('DataPortfolioRegisterController', ['$scope', require('./app/controllers/data/dataPortfolioRegisterController')]);
     portal.controller('DataPortfolioRegisterRecordController', ['$scope', require('./app/controllers/data/dataPortfolioRegisterRecordController')]);
     portal.controller('DataAccountController', ['$scope', '$stateParams', require('./app/controllers/data/dataAccountController')]);

@@ -338,6 +338,9 @@
                 case 'app.portal.data.portfolio-reconcile-group':
                     name += "Reconciliation: Portfolios Reconcile Groups";
                     break;
+                case 'app.portal.data.portfolio-reconcile-history':
+                    name = "Reconciliation: Portfolio Reconcile History";
+                    break;
                 case 'app.portal.data.portfolio':
                     name += "Portfolios";
                     break;
