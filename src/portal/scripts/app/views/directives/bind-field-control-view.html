@@ -187,6 +187,10 @@
             <bind-field-table item="item" entity="entity"></bind-field-table>
         </div>
 
+        <div ng-if="vm.fieldType['display_name'] === 'Attachment'" style="padding: 0 10px;">
+            <bind-field-attachment item="item" entity="entity"></bind-field-attachment>
+        </div>
+
     </div>
 
     <div ng-if="!vm.readyStatus.content" class="bind-field-loader" style="height: 42px; margin-bottom: 13px;">

@@ -39,7 +39,12 @@
                 "key": "date",
                 "name": "Date",
                 "value_type": 40
-            }
+            },
+            {
+                "key": "file_report",
+                "name": "File Report",
+                "value_type": "attachment"
+            },
         ]
     };
 

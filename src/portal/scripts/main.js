@@ -734,6 +734,7 @@ export default (function () {
 
     portal.directive('bindFieldControl', ['$mdDialog', require('./app/directives/bindFieldControlDirective')]);
     portal.directive('bindFieldTable', ['$mdDialog', 'instrumentService', 'gridTableHelperService', 'multitypeFieldService', 'entityDataConstructorService', require('./app/directives/bindFieldTableDirective')]);
+    portal.directive('bindFieldAttachment', ['$mdDialog',  require('./app/directives/bindFieldAttachmentDirective')]);
     portal.directive('layoutConstructorField', ['$mdDialog', require('./app/directives/layoutConstructorFieldDirective')]);
     // portal.directive('newLayoutConstructorField', ['$mdDialog', require('./app/directives/newLayoutConstructorFieldDirective')]);
     portal.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirective')]);
