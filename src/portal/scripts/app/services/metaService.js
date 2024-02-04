@@ -73,6 +73,9 @@
                 case 'Table':
                     item['caption_name'] = 'Table';
                     break;
+                case 'Attachment':
+                    item['caption_name'] = 'Attachment';
+                    break;
                 default:
                     item['caption_name'] = item['display_name'];
                     break;
