@@ -5,7 +5,7 @@
 
     'use strict';
 
-    const metaService = require('../../../services/metaService');
+    const metaService = require('../../../services/metaService').default;
 	const metaNotificationClassService = require('../../../services/metaNotificationClassService');
 	const metaEventClassService = require('../../../services/metaEventClassService');
 	const instrumentPeriodicityService = require('../../../services/instrumentPeriodicityService');

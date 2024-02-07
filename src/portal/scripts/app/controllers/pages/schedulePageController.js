@@ -5,8 +5,8 @@
 
     'use strict';
 
-    var scheduleService = require('../../services/scheduleService');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var scheduleService = require('../../services/scheduleService').default;
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
     module.exports = function ($scope, $mdDialog) {
 

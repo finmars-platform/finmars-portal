@@ -3,8 +3,8 @@
     var evEvents = require('../entityViewerEvents');
     var groupsService = require('../ev-data-provider/groups.service');
     var objectsService = require('../ev-data-provider/objects.service');
-    var evDataHelper = require('../../helpers/ev-data.helper');
-    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+    var evDataHelper = require('../../helpers/ev-data.helper').default;
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
 
     var injectEntityViewerOptions = function (entityViewerDataService) {
         var requestParameters = entityViewerDataService.getActiveRequestParameters();

@@ -6,7 +6,7 @@
 
     var evEditorEvents = require("../services/ev-editor/entityViewerEditorEvents");
 
-    var metaService = require("../services/metaService");
+    var metaService = require("../services/metaService").default;
     var layoutService = require("../services/entity-data-constructor/layoutService");
     var attributeTypeService = require("../services/attributeTypeService");
     var expressionService = require('../services/expression.service');

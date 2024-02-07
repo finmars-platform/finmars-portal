@@ -1,18 +1,21 @@
-import websocketService from "../../../../../../shell/scripts/app/services/websocketService";
+// import websocketService from "../../../../../../shell/scripts/app/services/websocketService";
 
 /**
  * Created by szhitenev on 14.03.2018.
  */
+
+
+// var baseUrlService = require('../../../services/baseUrlService');
 (function () {
 
     'use strict';
 
+    var baseUrlService = require("../../../services/baseUrlService").default;
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
 
     var importEntityService = require('../../../services/import/importEntityService');
 
 
-    var baseUrlService = require('../../../services/baseUrlService');
     // var usersService = require('../../../services/usersService');
 
     var baseUrl = baseUrlService.resolve();
@@ -46,7 +49,7 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
             return false;
         };
 
-        vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport().map(function (item){
+        vm.contentTypes = metaContentTypesService.getListForSimpleEntityImport().map(function (item) {
 
             item.id = item.key;
 
@@ -73,7 +76,7 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
                 var ext = file.name.split('.').at(-1);
 
-                if (ext !== 'csv' && ext !== 'xlsx' ) {
+                if (ext !== 'csv' && ext !== 'xlsx') {
 
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
@@ -110,7 +113,7 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
             var prefix = baseUrlService.getMasterUserPrefix();
             var apiVersion = baseUrlService.getApiVersion();
 
-            return baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
+            return baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'file-reports/file-report/' + id + '/view/';
         };
 
         vm.createScheme = function ($event) {
@@ -190,7 +193,18 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
                 $scope.$apply();
 
-                if (websocketService.isOnline()) {
+                if (vm.validateConfig.task_status === 'SUCCESS') {
+                    resolve(data)
+
+                } else {
+
+                    setTimeout(function () {
+                        vm.validate(resolve, $event);
+                    }, 1000)
+
+                }
+
+                /*if (websocketService.isOnline()) {
 
                     websocketService.addEventListener('simple_import_status', function (data) {
 
@@ -234,7 +248,7 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
                     }
 
-                }
+                }*/
 
 
             })
@@ -369,7 +383,20 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
                 $scope.$apply();
 
-                if (websocketService.isOnline()) {
+                if (vm.config.task_status === 'SUCCESS') {
+
+                    console.log('resolve?');
+
+                    resolve(data)
+
+                } else {
+
+                    setTimeout(function () {
+                        vm.import(resolve, $event);
+                    }, 1000)
+
+                }
+                /*if (websocketService.isOnline()) {
 
                     websocketService.addEventListener('simple_import_status', function (data) {
 
@@ -414,7 +441,7 @@ import websocketService from "../../../../../../shell/scripts/app/services/webso
 
                     }
 
-                }
+                }*/
 
 
             })

@@ -1,10 +1,13 @@
 'use strict';
 
-import CommonDialogsService from "../../../../shell/scripts/app/services/commonDialogsService";
-import localStorageService from "../../../../shell/scripts/app/services/localStorageService";
+// import CommonDialogsService from "../../../../shell/scripts/app/services/commonDialogsService";
+// import localStorageService from "../../../../shell/scripts/app/services/localStorageService";
+
 
 (function () {
 
+    var CommonDialogsService = require("../../../../shell/scripts/app/services/commonDialogsService").default;
+    var localStorageService = require("../../../../shell/scripts/app/services/localStorageService");
 
     const evEvents = require('../services/entityViewerEvents');
 
@@ -914,7 +917,8 @@ import localStorageService from "../../../../shell/scripts/app/services/localSto
 
                     createEntity(locals);
 
-                } else if (action === 'rebook_transaction') {
+                }
+                else if (action === 'rebook_transaction') {
 
                     var complex_transaction_id = actionData.object['complex_transaction.id'] || actionData.object['complex_transaction']
 
@@ -927,6 +931,22 @@ import localStorageService from "../../../../shell/scripts/app/services/localSto
                     editEntity(actionData.event, locals);
 
                 }
+                else if ( action === 'copy_transaction' ) {
+
+                    var complex_transaction_id = actionData.object['complex_transaction.id'] || actionData.object['complex_transaction']
+
+                    var locals = {
+                        entityType: 'complex-transaction',
+                        entityId: complex_transaction_id,
+                        data: {
+                            copy: true,
+                        }
+                    };
+
+                    editEntity(actionData.event, locals);
+
+                }
+
             }
 
         };

@@ -1,4 +1,6 @@
-<md-dialog aria-label="" ng-cloak class="draggable-dialog width-50" drag-dialog>
+<md-dialog aria-label="pricing multiple parameter dialog"
+           class="draggable-dialog width-50"
+           drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools">
             <is-draggable-sign></is-draggable-sign>
@@ -65,7 +67,9 @@
 
                             </div>-->
 
-                            <multitype-field class="width-50 custom-input-bottom-space" field-types-data="item.___fieldTypesData" on-value-change="vm.onValueChange(item)"></multitype-field>
+                            <multitype-field class="width-50 custom-input-bottom-space"
+                                             data-field-types-data="item.___fieldTypesData"
+                                             data-on-value-change="vm.onValueChange(changedValue, item)"></multitype-field>
 
                         </th>
 

@@ -2,7 +2,7 @@
 
     'use strict';
 
-    const metaService = require('../../services/metaService');
+    const metaService = require('../../services/metaService').default;
 
     var dashboardEvents = require('../../services/dashboard/dashboardEvents');
     var directivesEvents = require('../../services/events/directivesEvents');
@@ -10,6 +10,7 @@
     var expressionService = require('../../services/expression.service');
 
     var EventService = require('../../services/eventService');
+    var utilsHelper = require('../../helpers/utils.helper').default;
 
     module.exports = function (metaContentTypesService, entityResolverService, uiService, reportHelper) {
         return {
@@ -27,10 +28,16 @@
 
                 scope.processing = false;
 
-                scope.valueChanged = function (changedValue) {
+                /* *
+                 * Actually called on onBlurCallback of <date-input>
+                 * to prevent invoking recalculation of subscribed components
+                 * multiple times while changing value
+                 * */
+                scope.valueChanged = function (inputVal) {
 
                     console.log('valueChanged', scope.item.data.store);
                     console.log('valueChanged.value', scope.item.data.store.value);
+                    scope.item.data.store.value = inputVal;
 
                     scope.dashboardDataService.setComponentOutput(scope.componentData.user_code, scope.item.data.store.value);
 

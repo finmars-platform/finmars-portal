@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	const evDataHelper = require('../../helpers/ev-data.helper');
+	const evDataHelper = require('../../helpers/ev-data.helper').default;
 
 	const evEvents = require('../../services/entityViewerEvents');
 

@@ -15,7 +15,7 @@
 
     const metaHelper = require('../../../helpers/meta.helper');
 
-	const pricingPolicyService = require('../../../services/pricingPolicyService');
+	const pricingPolicyService = require('../../../services/pricingPolicyService').default;;
 
     module.exports = function InstrmentPricingTabController($scope, $mdDialog, gridTableHelperService) {
 

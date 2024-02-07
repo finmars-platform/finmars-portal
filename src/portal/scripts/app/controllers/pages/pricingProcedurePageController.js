@@ -5,8 +5,8 @@
 
     'use strict';
 
-    var pricingProcedureService = require('../../services/procedures/pricingProcedureService');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var pricingProcedureService = require('../../services/procedures/pricingProcedureService').default;
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
     module.exports = function ($scope, $mdDialog) {
 

@@ -1,5 +1,6 @@
-import baseUrlService from "./baseUrlService";
+// import baseUrlService from "./baseUrlService";
 
+import baseUrlService from "./baseUrlService";
 export default function (cookieService, xhrService) {
 
     const baseUrl = baseUrlService.resolve();

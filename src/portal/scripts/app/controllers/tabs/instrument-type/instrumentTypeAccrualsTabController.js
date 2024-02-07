@@ -4,7 +4,7 @@
 (function (){
     'use strict';
 
-    const metaService = require('../../../services/metaService');
+    const metaService = require('../../../services/metaService').default;
 	const GridTableDataService = require('../../../services/gridTableDataService');
 	const GridTableEventService = require('../../../services/gridTableEventService');
 

@@ -1,11 +1,13 @@
 /**
  * Created by szhitenev on 19.10.2022.
  */
+// import baseUrlService from "../../services/baseUrlService";
 (function () {
 
     'use strict';
 
-    var baseUrlService = require('../../services/baseUrlService');
+    var baseUrlService = require("../../services/baseUrlService").default;
+    // var baseUrlService = require('../../services/baseUrlService');
     var calendarEventsService = require('../../services/calendarEventsService');
     var processesService = require('../../services/processesService');
     var workflowService = require('../../services/workflowService');
@@ -13,7 +15,7 @@
     var dataProcedureInstanceService = require('../../services/procedures/dataProcedureInstanceService');
     var expressionProcedureInstanceService = require('../../services/procedures/expressionProcedureInstanceService');
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
     var baseUrl = baseUrlService.resolve();
 
 

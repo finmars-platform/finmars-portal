@@ -6,8 +6,8 @@
     'use strict';
 
     var logService = require('../../../../../core/services/logService');
-    var pricingPolicyService = require('../../services/pricingPolicyService');
-    var currencyService = require('../../services/currencyService');
+    var pricingPolicyService = require('../../services/pricingPolicyService').default;;
+    var currencyService = require('../../services/currencyService').default;
 
     module.exports = function ($scope, $mdDialog, instrumentService, priceHistoryService, currencyHistoryService, data) {
 

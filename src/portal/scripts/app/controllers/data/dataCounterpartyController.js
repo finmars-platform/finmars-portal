@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var counterpartyService = require('../../services/counterpartyService');
+    var counterpartyService = require('../../services/counterpartyService').default;
 
     module.exports = function($scope){
 

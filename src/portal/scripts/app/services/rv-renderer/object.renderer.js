@@ -9,7 +9,7 @@
     var rvHelper = require('../../helpers/rv.helper');
     var stringHelper = require('../../helpers/stringHelper');
 
-    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
 
     // var checkIcon = renderHelper.getIconByKey('checkIcon');
     var REPORT_BG_CSS_SELECTOR = 'report-bg-level';

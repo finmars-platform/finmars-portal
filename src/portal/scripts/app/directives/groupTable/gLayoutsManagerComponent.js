@@ -1,11 +1,13 @@
-import AutosaveLayoutService from "../../services/autosaveLayoutService";
-import evEvents from "../../services/entityViewerEvents";
+// import AutosaveLayoutService from "../../services/autosaveLayoutService";
+// import evEvents from "../../services/entityViewerEvents";
 
 'use strict';
 
 (function () {
 
-    const metaService = require('../../services/metaService');
+    var AutosaveLayoutService = require("../../services/autosaveLayoutService").default;
+
+    const metaService = require('../../services/metaService').default;
     // const middlewareService = require('../../services/middlewareService');
     const evEvents = require("../../services/entityViewerEvents");
     const popupEvents = require('../../services/events/popupEvents');

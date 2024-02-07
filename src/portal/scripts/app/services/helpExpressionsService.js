@@ -1,7 +1,8 @@
 /**
  * Created by szhitenev on 13.01.2017.
  */
-import { contextVariablesWords } from "../../../content/services/expressionsData";
+// import { contextVariablesWords } from "../../../content/services/expressionsData";
+var contextVariablesWords = require("../../../content/services/expressionsData").contextVariablesWords;
 
 (function () {
 
@@ -131,13 +132,13 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
         return expressionsList
             .filter(function (item) {
                 // return item.func.includes('(') || (item.validation_data && item.validation_data.type === "function");
-				return item.validation.func.includes('(');
+                return item.validation.func.includes('(');
             })
             .map(function (item) {
 
-            	/* if (item.validation_data) {
-					return item.validation_data.key_words[0];
-				} */
+                /* if (item.validation_data) {
+                    return item.validation_data.key_words[0];
+                } */
 
                 return item.validation.func.split('(')[0];
 
@@ -203,7 +204,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
                 funcGroup.forEach(function (item) {
 
-                	var itemFunc = item.hasOwnProperty('validation') ? item.validation.func : item.func;
+                    var itemFunc = item.hasOwnProperty('validation') ? item.validation.func : item.func;
 
                     if (itemFunc.indexOf('[') !== -1) {
 
@@ -273,7 +274,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
             if (expression[i].match(new RegExp(/^[a-zA-Z0-9_]*$/))) {
 
-				functionName += expression[i];
+                functionName += expression[i];
                 count = count + 1;
 
             } else {
@@ -302,18 +303,18 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
             if (/^\d+$/.test(expression[index])) {
 
-            	token.value = token.value + expression[index]
+                token.value = token.value + expression[index]
 
             } else if ( // check for dot in float number
-            	expression[index] === '.' &&
-				/^\d+$/.test(expression[index + 1]) &&
-				token.type === 'number'
-			) {
+                expression[index] === '.' &&
+                /^\d+$/.test(expression[index + 1]) &&
+                token.type === 'number'
+            ) {
 
-            	token.type = 'float_number'
-            	token.value = token.value + expression[index]
+                token.type = 'float_number'
+                token.value = token.value + expression[index]
 
-			} else {
+            } else {
                 break;
             }
 
@@ -543,8 +544,8 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
                 token = eatFunction(expression, currentIndex);
                 currentIndex = currentIndex + token.value.length + 1; // for bracket
             } else if (expression[currentIndex] === '.') {
-				token = eatProperty(expression, currentIndex);
-				currentIndex = currentIndex + token.value.length + 1; // for dot
+                token = eatProperty(expression, currentIndex);
+                currentIndex = currentIndex + token.value.length + 1; // for dot
             } else if (expression[currentIndex] === ')') {
                 token = {
                     type: 'close_bracket',
@@ -552,12 +553,12 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
                 };
                 currentIndex = currentIndex + token.value.length;
             } else if (expression[currentIndex] === '(') {
-				token = {
-					type: 'open_bracket',
-					value: '('
-				};
-				currentIndex = currentIndex + token.value.length;
-			} else if (expression[currentIndex] === ']') {
+                token = {
+                    type: 'open_bracket',
+                    value: '('
+                };
+                currentIndex = currentIndex + token.value.length;
+            } else if (expression[currentIndex] === ']') {
                 token = {
                     type: 'close_square_bracket',
                     value: ']'
@@ -592,7 +593,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
                         result = result + '.' + '<span class="eb-highlight-error">' + token.value + '</span>';
                         status = 'error';
-						faultyParts.push(token.value);
+                        faultyParts.push(token.value);
 
                     }
 
@@ -605,11 +606,11 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
                     } else {
 
                         if (!reservedWords.includes(token.value) &&
-							!contextVariablesWords.includes(token.value)) {
+                            !contextVariablesWords.includes(token.value)) {
 
                             result = result + '<span class="eb-highlight-error">' + token.value + '</span>';
                             status = 'inputs-error';
-							faultyParts.push(token.value);
+                            faultyParts.push(token.value);
 
                         } else {
                             result = result + token.value
@@ -625,9 +626,9 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
                     } else {
 
-                    	result = result + '<span class="eb-highlight-error">' + token.value + '</span>' + '(';
+                        result = result + '<span class="eb-highlight-error">' + token.value + '</span>' + '(';
                         status = 'functions-error';
-						faultyParts.push(token.value);
+                        faultyParts.push(token.value);
 
                     }
 
@@ -666,8 +667,8 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
             result = insert(result, parenthesisStatus.errorIndex, '<span class="eb-error-bracket">')
 
             status = 'bracket-error';
-			var faultyPart = expression.substr(squareBracketsStatus.errorIndex, 1);
-			faultyParts.push(faultyPart);
+            var faultyPart = expression.substr(squareBracketsStatus.errorIndex, 1);
+            faultyParts.push(faultyPart);
 
         } else {
 
@@ -678,7 +679,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
                 status = 'bracket-error';
                 var faultyPart = expression.substr(squareBracketsStatus.errorIndex, 1);
-				faultyParts.push(faultyPart);
+                faultyParts.push(faultyPart);
 
             }
         }
@@ -696,8 +697,8 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
         }
 
         if (faultyParts.length) {
-			resultObj.faultyPart = faultyParts.pop();
-		}
+            resultObj.faultyPart = faultyParts.pop();
+        }
 
         return resultObj;
 
@@ -708,7 +709,7 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
         return new Promise(function (resolve, reject) {
 
             var expressionsList = getFunctionsItems();
-			expressionsList = filterExpressions(expressionsList, data);
+            expressionsList = filterExpressions(expressionsList, data);
 
             var htmlExpressionData = null;
 
@@ -734,12 +735,12 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
 
     var validateExpressionOnFrontend = function (exprItem, data) {
 
-    	var expressionsList = getFunctionsItems();
-		expressionsList = filterExpressions(expressionsList, data);
+        var expressionsList = getFunctionsItems();
+        expressionsList = filterExpressions(expressionsList, data);
 
-		return getHtmlExpression(exprItem.expression, data, expressionsList);
+        return getHtmlExpression(exprItem.expression, data, expressionsList);
 
-	};
+    };
 
     var _errorStatusToMsgMap = {
         'error': 'Invalid expression',
@@ -749,20 +750,20 @@ return window.fetch('portal/content/json/functions_groups.json').then(function (
     }
 
     var getErrorMsgBasedOnStatus = function (status) {
-        if ( !_errorStatusToMsgMap.hasOwnProperty(status) ) {
+        if (!_errorStatusToMsgMap.hasOwnProperty(status)) {
             console.error(`helpExpressionsService.getErrorMsgBasedOnStatus: no message for status: ${status}`);
         }
 
         return _errorStatusToMsgMap[status];
     }
-    
+
     module.exports = {
         getFunctionsItems: getFunctionsItems,
         getFunctionsGroups: getFunctionsGroups,
 
         filterExpressions: filterExpressions,
         validateExpression: validateExpression,
-		validateExpressionOnFrontend: validateExpressionOnFrontend,
+        validateExpressionOnFrontend: validateExpressionOnFrontend,
         getErrorMsgBasedOnStatus: getErrorMsgBasedOnStatus,
     }
 

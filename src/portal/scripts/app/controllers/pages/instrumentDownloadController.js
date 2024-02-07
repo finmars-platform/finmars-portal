@@ -6,9 +6,9 @@
     'use strict';
 
     var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
-    var currencyService = require('../../services/currencyService');
+    var currencyService = require('../../services/currencyService').default;
 
-    var instrumentTypeService = require('../../services/instrumentTypeService');
+    var instrumentTypeService = require('../../services/instrumentTypeService').default;
     var instrumentDailyPricingModelService = require('../../services/instrument/instrumentDailyPricingModelService');
     // var importPriceDownloadSchemeService = require('../../services/import/importPriceDownloadSchemeService');
 

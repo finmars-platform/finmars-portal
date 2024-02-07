@@ -20,8 +20,8 @@ const xhrService = new XhrService(errorService);*/
 
 import baseUrlService from '../services/baseUrlService';
 
-	// var cookieService = require('../../../../core/services/cookieService');
-	// var xhrService = require('../../../../core/services/xhrService');
+	// var cookieService = require('../../../../core/services/cookieService').default;
+	// var xhrService = require('../../../../core/services/xhrService').default;
 	// var baseUrlService = require('../services/baseUrlService');
 
 const baseUrl = baseUrlService.resolve();

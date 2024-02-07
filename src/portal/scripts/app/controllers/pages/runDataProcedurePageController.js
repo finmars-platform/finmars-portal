@@ -3,9 +3,9 @@
  */
 (function () {
 
-    var dataProcedureService = require('../../services/procedures/dataProcedureService');
+    var dataProcedureService = require('../../services/procedures/dataProcedureService').default;
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
 
     module.exports = function ($scope, $mdDialog) {

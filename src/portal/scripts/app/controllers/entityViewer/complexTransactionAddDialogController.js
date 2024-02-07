@@ -8,7 +8,7 @@
     // var usersGroupService = require('../../services/usersGroupService');
 
     var layoutService = require('../../services/entity-data-constructor/layoutService');
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
     var evEditorEvents = require('../../services/ev-editor/entityViewerEditorEvents');
 
     var gridHelperService = require('../../services/gridHelperService');
@@ -17,8 +17,8 @@
     var EntityViewerEditorDataService = require('../../services/ev-editor/entityViewerEditorDataService');
 
     var transactionTypeService = require('../../services/transactionTypeService');
-    var portfolioService = require('../../services/portfolioService');
-    var instrumentTypeService = require('../../services/instrumentTypeService');
+    var portfolioService = require('../../services/portfolioService').default;
+    var instrumentTypeService = require('../../services/instrumentTypeService').default;
     var tooltipsService = require('../../services/tooltipsService');
     var colorPalettesService = require('../../services/colorPalettesService');
 
@@ -35,7 +35,16 @@
         vm.readyStatus = {content: false, entity: true, permissions: true, transactionTypes: false, layout: false};
         vm.entityType = entityType;
 
+        /**
+         * Data that is displayed on the form and changed by user.
+         */
         vm.entity = {$_isValid: true};
+        /**
+         * Whole data of complex transaction before changes.
+         * Contains all data, even one that is not displayed on the form
+         * unlike vm.entity.
+         */
+        vm.originalComplexTransaction;
         var dataConstructorLayout = [];
         var dcLayoutHasBeenFixed = false;
         vm.transactionType = null;
@@ -1496,7 +1505,7 @@
 
             if (Object.keys(data).length) {
 
-                if (data.hasOwnProperty('contextData')) {
+                if ( data.hasOwnProperty('contextData') ) {
 
                     vm.contextData = Object.assign({}, data.contextData);
                     //delete entity.contextData;

@@ -141,7 +141,7 @@
             }
         }
 
-        vm.onValueChange = (item) => {
+        vm.onValueChange = (changedValue, item) => {
             const activeFieldType = item.___fieldTypesData.find(field => field.isActive);
 
             if (activeFieldType.value_type === 70) {

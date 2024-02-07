@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var expressionProcedureService = require('../../../services/procedures/expressionProcedureService');
+    var expressionProcedureService = require('../../../services/procedures/expressionProcedureService').default;
 
     module.exports = function ($scope, $mdDialog, data) {
 

@@ -5,7 +5,7 @@
     module.exports = function ($mdDialog) {
         return {
             restriction: 'AE',
-            templateUrl: 'controls/use-from-above-button/use-from-above-button.html',
+            templateUrl: 'views/controls/use-from-above-button/use-from-above-button.html',
             scope: {
                 item: '=',
                 data: '<',

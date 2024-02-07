@@ -6,7 +6,7 @@
     'use strict';
 
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
     var entityResolverService = require('../../services/entityResolverService');
 
     var importCurrencyCbondsService = require('../../services/import/importCurrencyCbondsService');

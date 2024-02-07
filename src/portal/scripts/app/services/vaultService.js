@@ -1,12 +1,14 @@
+// import baseUrlService from "../services/baseUrlService";
 (function () {
 
     'use strict';
 
-    var baseUrlService = require('../services/baseUrlService');
-    var cookieService = require('../../../../core/services/cookieService');
-    var xhrService = require('../../../../core/services/xhrService');
+    var baseUrlService = require("../services/baseUrlService").default;
+    // var baseUrlService = require('../services/baseUrlService');
+    var cookieService = require('../../../../core/services/cookieService').default;
+    var xhrService = require('../../../../core/services/xhrService').default;
 
-    var configureRepositoryUrlService = require('./configureRepositoryUrlService');
+    var configureRepositoryUrlService = require('./configureRepositoryUrlService').default;
     var baseUrl = baseUrlService.resolve();
 
     var initVault = function () {

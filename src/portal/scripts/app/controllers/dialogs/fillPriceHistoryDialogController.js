@@ -7,9 +7,9 @@
 
     var logService = require('../../../../../core/services/logService');
 
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
     var dataProvidersService = require('../../services/import/dataProvidersService');
-    var scheduleService = require('../../services/import/scheduleService');
+    var scheduleService = require('../../services/import/scheduleService').default;
     var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
 
     var importInstrumentService = require('../../services/import/importInstrumentService');

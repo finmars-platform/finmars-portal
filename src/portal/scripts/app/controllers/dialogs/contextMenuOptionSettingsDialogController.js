@@ -38,6 +38,10 @@
                 action: 'rebook_transaction'
             },
             {
+                name: 'Duplicate Transaction',
+                action: 'copy_transaction'
+            },
+            {
                 name: 'Edit Instrument',
                 action: 'edit_instrument'
             },

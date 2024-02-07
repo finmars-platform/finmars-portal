@@ -1,11 +1,11 @@
 (function () {
 
-    var metaService = require('../services/metaService');
+    var metaService = require('../services/metaService').default;
     var localStorageService = require('../../../../shell/scripts/app/services/localStorageService');
 
     var stringHelper = require('./stringHelper');
     var utilsHelper = require('./utils.helper');
-    var evRvCommonHelper = require('./ev-rv-common.helper');
+    var evRvCommonHelper = require('./ev-rv-common.helper').default;
 
     /*var getNextPage = function (options, event, entityViewerDataService) {
 

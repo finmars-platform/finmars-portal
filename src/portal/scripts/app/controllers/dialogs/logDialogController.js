@@ -1,12 +1,14 @@
 /**
  * Created by szhitenev on 25.09.2022.
  */
+// import baseUrlService from "../../services/baseUrlService";
 (function () {
 
     'use strict';
 
-    var cookieService = require('../../../../../core/services/cookieService');
-    var baseUrlService = require('../../services/baseUrlService');
+    var baseUrlService = require("../../services/baseUrlService").default;
+    var cookieService = require('../../../../../core/services/cookieService').default;
+    // var baseUrlService = require('../../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
     var apiVersion = baseUrlService.getApiVersion();

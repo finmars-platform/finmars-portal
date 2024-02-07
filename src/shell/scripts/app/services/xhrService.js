@@ -6,7 +6,7 @@
 'use strict';
 
 
-var md5helper = require('./md5.helper');
+var md5helper = require('./md5.helper').default;
 
 export default function (errorService, cookieService) {
 

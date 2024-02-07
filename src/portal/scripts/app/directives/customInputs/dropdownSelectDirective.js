@@ -5,7 +5,7 @@
     const EventService = require("../../services/eventService");
 	const popupEvents = require("../../services/events/popupEvents");
 
-    const metaService = require("../../services/metaService");
+    const metaService = require("../../services/metaService").default;
 
     module.exports = function ($mdDialog, customInputsService) {
 

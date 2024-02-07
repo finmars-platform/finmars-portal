@@ -5,8 +5,8 @@
 
     'use strict';
 
-	// const toastNotificationService = require('../../../../core/services/toastNotificationService');
-	const uiService = require('../services/uiService');
+	// const toastNotificationService = require('../../../../core/services/toastNotificationService').default;
+	const uiService = require('../services/uiService').default;
 
 	const bookmarkService = require('../services/bookmarkService');
 

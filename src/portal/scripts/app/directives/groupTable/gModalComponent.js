@@ -7,11 +7,11 @@
 
     var logService = require('../../../../../core/services/logService');
 
-    var evDataHelper = require('../../helpers/ev-data.helper');
+    var evDataHelper = require('../../helpers/ev-data.helper').default;
     var evEvents = require('../../services/entityViewerEvents');
     var ScrollHelper = require('../../helpers/scrollHelper');
 
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
     var GModalSharedLogicHelper = require('../../helpers/entityViewer/sharedLogic/gModalSharedLogicHelper');
     var evHelperService = require('../../services/entityViewerHelperService');
 
@@ -900,8 +900,8 @@
                 drake.on('drop', function (elem, target, source, nextSibling) {
 
                     var attributeChanged = false; // needed to call view constructor data reload
-                    var attributeKey = elem.dataset.attributeKey;
-                    var attrsVmKey = elem.dataset.vmKey;
+                    var attributeKey = $(elem).dataset.attributeKey;
+                    var attrsVmKey = $(elem).dataset.vmKey;
 
                     /* var changeSelectedGroup = function (draggedTo) {
 
@@ -1245,25 +1245,25 @@
 
                 drake.on('shadow', function (elem, container, source) {
 
-                    var attrKey = elem.dataset.attributeKey;
+                    var attrKey = $(elem).dataset.attributeKey;
 
                     if (container.classList.contains('vcSelectedGroups')) {
                         if (attrsWithoutGroups.indexOf(attrKey) !== -1) {
-                            elem.remove();
+                            $(elem).remove();
                         }
                     }
 
                     if (container.classList.contains('vcSelectedFilters')) {
                         if (attrsWithoutFilters.indexOf(attrKey) !== -1) {
-                            elem.remove();
+                            $(elem).remove();
                         }
                     }
                 });
 
                 drake.on('drop', function (elem, target, source, nextSibling) {
 
-                    var attributeKey = elem.dataset.attributeKey;
-                    var attrsVmKey = elem.dataset.vmKey;
+                    var attributeKey = $(elem).dataset.attributeKey;
+                    var attrsVmKey = $(elem).dataset.vmKey;
 
                     // dragging from groups
                     if (source.classList.contains('vcSelectedGroups')) {

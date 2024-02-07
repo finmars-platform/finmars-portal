@@ -1,13 +1,15 @@
 /**
  * Created by szhitenev on 04.11.16.
  */
-import AutosaveLayoutService from "../../../services/autosaveLayoutService";
-import evEvents from "../../../services/entityViewerEvents";
-import uiService from "../../../services/uiService";
+
+// import evEvents from "../../../services/entityViewerEvents";
+// import uiService from "../../../services/uiService";
 
 (function () {
 
     'use strict';
+
+    var AutosaveLayoutService = require("../../../services/autosaveLayoutService").default;
 
     var evEvents = require('../../../services/entityViewerEvents');
 
