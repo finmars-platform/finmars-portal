@@ -4,15 +4,17 @@
  */
 'use strict';
 
-import AutosaveLayoutService from "../../services/autosaveLayoutService";
+// import AutosaveLayoutService from "../../services/autosaveLayoutService";
 
 (function () {
+
+    var AutosaveLayoutService = require("../../services/autosaveLayoutService").default;
 
     // var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
     var evEvents = require('../../services/entityViewerEvents');
     var evHelperService = require('../../services/entityViewerHelperService');
     // var usersService = require('../../services/usersService');
-    var complexTransactionService = require('../../services/transaction/complexTransactionService');
+    var complexTransactionService = require('../../services/transaction/complexTransactionService').default;
 
     var EntityViewerDataService = require('../../services/entityViewerDataService');
     var EntityViewerEventService = require('../../services/eventService');

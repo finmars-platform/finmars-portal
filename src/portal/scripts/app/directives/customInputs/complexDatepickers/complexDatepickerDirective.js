@@ -5,7 +5,7 @@
 
 	'use strict';
 
-	const metaService = require('../../../services/metaService');
+	const metaService = require('../../../services/metaService').default;
 	const expressionService = require('../../../services/expression.service');
 
 	const popupEvents = require('../../../services/events/popupEvents');

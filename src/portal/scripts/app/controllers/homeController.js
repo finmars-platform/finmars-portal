@@ -1,16 +1,17 @@
 /**
  * Created by szhitenev on 05.05.2016.
  */
+// import baseUrlService from "../services/baseUrlService";
 (function () {
 
     'use strict';
 
+    var baseUrlService = require("../services/baseUrlService").default;
     var afterLoginEventsService = require('../services/afterLoginEventsService');
     // var usersService = require('../services/usersService');
-    var uiService = require('../services/uiService');
+    var uiService = require('../services/uiService').default;
 
     // var systemMessageService = require('../services/systemMessageService');
-    var baseUrlService = require('../services/baseUrlService');
     var baseUrl = baseUrlService.resolve();
 
     module.exports = function ($scope, $state, $mdDialog, authorizerService, usersService, globalDataService, systemMessageService, redirectionService) {

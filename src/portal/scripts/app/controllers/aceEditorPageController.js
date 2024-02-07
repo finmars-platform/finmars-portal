@@ -7,7 +7,7 @@
 
     var afterLoginEventsService = require('../services/afterLoginEventsService');
     // var usersService = require('../services/usersService');
-    var uiService = require('../services/uiService');
+    var uiService = require('../services/uiService').default;
 
     var expressionService = require('../services/expression.service');
 

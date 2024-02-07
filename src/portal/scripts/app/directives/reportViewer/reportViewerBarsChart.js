@@ -2,7 +2,7 @@
 
     'use strict';
 
-    var rvDataHelper = require('../../helpers/rv-data.helper');
+    var rvDataHelper = require('../../helpers/rv-data.helper').default;
     var rvChartsHelper = require('../../helpers/rv-charts.helper');
     var renderHelper = require('../../helpers/render.helper');
 

@@ -1,4 +1,4 @@
-import crossTabEvents from "../../../../shell/scripts/app/services/events/crossTabEvents";
+// import crossTabEvents from "../../../../shell/scripts/app/services/events/crossTabEvents";
 
 /**
  * Created by sergey on 30.07.16.

@@ -1,11 +1,13 @@
 /**
  * Created by szhitenev on 10.12.2019.
  */
+// import baseUrlService from "../../services/baseUrlService";
 (function () {
 
-    var cookieService = require('../../../../../core/services/cookieService');
-    var xhrService = require('../../../../../core/services/xhrService');
-    var baseUrlService = require('../../services/baseUrlService');
+    var baseUrlService = require("../../services/baseUrlService").default;
+    var cookieService = require('../../../../../core/services/cookieService').default;
+    var xhrService = require('../../../../../core/services/xhrService').default;
+    // var baseUrlService = require('../../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();
 

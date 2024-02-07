@@ -6,8 +6,8 @@
 
 	'use strict';
 
-	var cookieService = require('../../../../core/services/cookieService');
-	var baseUrlService = require('./baseUrlService');
+	var cookieService = require('../../../../core/services/cookieService').default;
+	var baseUrlService = require('./baseUrlService').default;
 
 	var getMasterUserBackupsList = function (base_api_url) {
 		// TODO pagination

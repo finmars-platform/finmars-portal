@@ -71,10 +71,35 @@
 
 				};
 
-				scope.onChangeCallback = function () {
-					if (scope.onValueChange) {
-						scope.onValueChange();
+				scope.onSelectChange = function (changedValue) {
+
+					var newVal = null;
+					var prop = 'id';
+
+					if (changedValue && typeof changedValue === 'object') {
+
+						if (scope.activeType.fieldType === 'entitySearchSelect' &&
+							scope.activeType.fieldData.itemProperty) {
+
+							prop = scope.activeType.fieldData.itemProperty;
+
+						}
+
+						newVal = changedValue[prop];
+
 					}
+
+					scope.onChangeCallback(newVal);
+				}
+
+				scope.onChangeCallback = function (changedValue) {
+
+					scope.activeType.model = changedValue;
+
+					if (scope.onValueChange) {
+						scope.onValueChange({changedValue: scope.activeType.model});
+					}
+
 				};
 
 				const activateType = function (type) {

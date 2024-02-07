@@ -8,13 +8,13 @@ const evEvents = require("../../services/entityViewerEvents");
 
     var evEvents = require('../../services/entityViewerEvents');
     var popupEvents = require('../../services/events/popupEvents');
-    var evDataHelper = require('../../helpers/ev-data.helper');
-    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+    var evDataHelper = require('../../helpers/ev-data.helper').default;
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
 
 
-    // var metaService = require('../../services/metaService');
+    // var metaService = require('../../services/metaService').default;
     var evHelperService = require('../../services/entityViewerHelperService');
-    var rvDataHelper = require('../../helpers/rv-data.helper');
+    var rvDataHelper = require('../../helpers/rv-data.helper').default;
 
     var utilsHelper = require('../../helpers/utils.helper');
 

@@ -2,7 +2,7 @@
  * Created by szhitenev on 17.06.2016.
  */
 
-var entityFieldsRepository = require('../repositories/entityFieldsRepository');
+var entityFieldsRepository = require('../repositories/entityFieldsRepository').default;
 var accountRepository = require('../repositories/accountRepository');
 var accountTypeRepository = require('../repositories/accountTypeRepository');
 var instrumentService = require('../services/instrumentService');

@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var currencyService = require('../../services/currencyService');
+    var currencyService = require('../../services/currencyService').default;
 
     module.exports = function ($scope) {
 

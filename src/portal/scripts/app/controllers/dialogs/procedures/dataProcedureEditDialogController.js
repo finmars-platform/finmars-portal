@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var dataProcedureService = require('../../../services/procedures/dataProcedureService');
+    var dataProcedureService = require('../../../services/procedures/dataProcedureService').default;
     var dataProvidersService = require('../../../services/import/dataProvidersService');
 
     var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService')

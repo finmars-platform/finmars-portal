@@ -1,9 +1,11 @@
 /**
  * Created by szhitenev on 07.12.2016.
  */
-import shellBaseUrlService from '../../../../shell/scripts/app/services/baseUrlService.js';
+var shellBaseUrlService = require('../../../../shell/scripts/app/services/baseUrlService.js').default;
 
 (function () {
+
+    console.log("am i executed rn?", shellBaseUrlService);
 
     'use strict';
 

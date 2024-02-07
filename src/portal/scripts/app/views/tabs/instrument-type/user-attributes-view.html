@@ -50,9 +50,9 @@
                                        ng-click="vm.clearSelector(attr)">X</md-button>
                         </div>
                         <div data-ng-if="attr.value_type === 40">
-                            <date-input model="attr.value"
-                                        is-disabled="attr.___isDisabled"
-                                        on-change-callback="vm.attrChange()"></date-input>
+                            <date-input data-model="attr.value"
+                                        data-is-disabled="attr.___isDisabled"
+                                        data-on-change-callback="vm.attrChange()"></date-input>
 
                         </div>
 

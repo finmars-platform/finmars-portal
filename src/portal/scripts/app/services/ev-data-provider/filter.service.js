@@ -1,5 +1,5 @@
 (function () {
-    const evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+    const evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
     /**
      *
      * @param groupItem {Object} - data of group from table

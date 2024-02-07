@@ -5,7 +5,7 @@
 
     'use strict';
 
-    const metaService = require('../../../services/metaService');
+    const metaService = require('../../../services/metaService').default;
     const evEvents = require('../../../services/entityViewerEvents');
     const popupEvents = require('../../../services/events/popupEvents');
 

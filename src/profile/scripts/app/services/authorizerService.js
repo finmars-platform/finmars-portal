@@ -8,16 +8,17 @@
 
 'use strict';
 
-/*var cookieService = require('../../../../core/services/cookieService');
-var baseUrlService = require('./baseUrlService');
+/*var cookieService = require('../../../../core/services/cookieService').default;
+var baseUrlService = require('./baseUrlService').default;
 
 var authorizerUrl = baseUrlService.getAuthorizerUrl();*/
 
-import baseUrlService from '../services/baseUrlService';
+// import baseUrlService from '../services/baseUrlService';
+import shellBaseUrlService from '../../../../shell/scripts/app/services/baseUrlService.js';
 
 export default function (xhrService, cookieService) {
 
-    const authorizerUrl = baseUrlService.getAuthorizerUrl();
+    const authorizerUrl = shellBaseUrlService.getAuthorizerUrl();
 
     const getByKey = function (id) {
 

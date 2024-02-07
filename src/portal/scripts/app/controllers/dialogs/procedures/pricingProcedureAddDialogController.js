@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var pricingProcedureService = require('../../../services/procedures/pricingProcedureService');
+    var pricingProcedureService = require('../../../services/procedures/pricingProcedureService').default;
 
     module.exports = function ($scope, $mdDialog, data) {
 

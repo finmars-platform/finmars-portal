@@ -6,7 +6,7 @@
     'use strict';
 
     var entityResolverService = require('../../services/entityResolverService');
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
 
     var gridHelperService = require('../../services/gridHelperService');
     var ScrollHelper = require('../../helpers/scrollHelper');

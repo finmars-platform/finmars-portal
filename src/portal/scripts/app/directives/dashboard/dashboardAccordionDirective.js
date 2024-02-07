@@ -12,9 +12,9 @@
 
     var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
 
-    var pricingProcedureService = require('../../services/procedures/pricingProcedureService');
+    var pricingProcedureService = require('../../services/procedures/pricingProcedureService').default;
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
     module.exports = function dashboardAccordionDirective($mdDialog, $state) {
         return {
@@ -36,7 +36,7 @@
 
                     elem = document.querySelector('.dashboard-component-id-' + scope.item.data.id)
 
-                    var container = elem.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
+                    var container = $(elem).parent().parent().parent().parent().parent().parent()[0] // wtf? todo refactor
 
                     // console.log('accordion_elem', elem);
                     // console.log('accordion_elem container', container);
@@ -117,7 +117,7 @@
                             currentAccordionHeightInRows = 0;
                         }
 
-                        var parentRow = elem.parentElement.parentElement.parentElement.parentElement;
+                        var parentRow = $(elem).parentElement.parentElement.parentElement.parentElement;
 
                         backdrop.style.top = parentRow.offsetTop + 60 + 'px';
                         backdrop.style.height = currentAccordionHeightInRows * 64 + 'px';

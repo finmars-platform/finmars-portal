@@ -26,17 +26,17 @@
 
                     if (scope.components) {
 
-                        // var workAreaElem = elem.parents('.g-wrapper').find('.g-workarea-wrap').first();
-                        // var workAreaElem = elem.parents('.g-wrapper').find('.g-workarea-wrap');
+                        // var workAreaElem = $(elem).parents('.g-wrapper').find('.g-workarea-wrap').first();
+                        // var workAreaElem = $(elem).parents('.g-wrapper').find('.g-workarea-wrap');
                         // var workAreaElem = scope.rootWrapElement
 
                         var interfaceLayout = scope.evDataService.getInterfaceLayout();
 
                         var width;
-                        /*var viewerHolder = elem.parents(".entity-viewer-holder");
+                        /*var viewerHolder = $(elem).parents(".entity-viewer-holder");
 
                         if (viewerHolder.length === 0) {
-                            viewerHolder = elem.parents(".report-viewer-holder");
+                            viewerHolder = $(elem).parents(".report-viewer-holder");
                         }
 
 
@@ -58,9 +58,9 @@
 
                         // console.log('width', width);
                         $(scope.workareaWrapElement).width(width);
-                        var wrapperWidth = elem.find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();
-                        elem.find('.g-scroll-wrapper').width(wrapperWidth);
-                        elem.find('.g-scrollable-area').width(wrapperWidth);
+                        var wrapperWidth = $(elem).find('.g-columns-component.g-thead').width() - $(elem).find('.g-cell-select.all').width();
+                        $(elem).find('.g-scroll-wrapper').width(wrapperWidth);
+                        $(elem).find('.g-scrollable-area').width(wrapperWidth);
                     }
 
                 }

@@ -2,64 +2,64 @@
  * Created by szhitenev on 16.06.2016.
  */
 
-var portfolioService = require('./portfolioService');
-var portfolioHistoryService = require('./portfolioHistoryService');
-var portfolioRegisterService = require('./portfolioRegisterService');
-var portfolioRegisterRecordService = require('./portfolioRegisterRecordService');
-var accountService = require('./accountService');
-var accountTypeService = require('./accountTypeService');
-var responsibleService = require('./responsibleService');
-var configurationService = require('./configurationService');
-var responsibleGroupService = require('./responsibleGroupService');
-var counterpartyService = require('./counterpartyService');
-var counterpartyGroupService = require('./counterpartyGroupService');
-var currencyService = require('./currencyService');
+var portfolioService = require('./portfolioService').default;
+var portfolioHistoryService = require('./portfolioHistoryService').default;
+var portfolioRegisterService = require('./portfolioRegisterService').default;
+var portfolioRegisterRecordService = require('./portfolioRegisterRecordService').default;
+var accountService = require('./accountService').default;
+var accountTypeService = require('./accountTypeService').default;
+var responsibleService = require('./responsibleService').default;
+var configurationService = require('./configurationService').default;
+var responsibleGroupService = require('./responsibleGroupService').default;
+var counterpartyService = require('./counterpartyService').default;
+var counterpartyGroupService = require('./counterpartyGroupService').default;
+var currencyService = require('./currencyService').default;
 
-var transactionService = require('./transactionService');
-// var transactionTypeService = require('./transactionTypeService');
-var transactionClassService = require('./transaction/transactionClassService');
-var transactionTypeGroupService = require('./transaction/transactionTypeGroupService');
+var transactionService = require('./transactionService').default;
+// var transactionTypeService = require('./transactionTypeService').default;
+var transactionClassService = require('./transaction/transactionClassService').default;
+var transactionTypeGroupService = require('./transaction/transactionTypeGroupService').default;
 
-var complexTransactionService = require('./transaction/complexTransactionService');
+var complexTransactionService = require('./transaction/complexTransactionService').default;
 
-var metaEventClassService = require('./metaEventClassService');
-var metaNotificationClassService = require('./metaNotificationClassService');
-var pricingPolicyService = require('./pricingPolicyService');
-var instrumentTypeService = require('./instrumentTypeService');
-var accrualCalculationModelService = require('./accrualCalculationModelService');
-var instrumentPeriodicityService = require('./instrumentPeriodicityService');
+var metaEventClassService = require('./metaEventClassService').default;
+var metaNotificationClassService = require('./metaNotificationClassService').default;
+var pricingPolicyService = require('./pricingPolicyService').default;;
+var instrumentTypeService = require('./instrumentTypeService').default;
+var accrualCalculationModelService = require('./accrualCalculationModelService').default;
+var instrumentPeriodicityService = require('./instrumentPeriodicityService').default;
 
-var strategyService = require('./strategyService');
-var strategyGroupService = require('./strategyGroupService');
-var strategySubgroupService = require('./strategySubgroupService');
+var strategyService = require('./strategyService').default;
+var strategyGroupService = require('./strategyGroupService').default;
+var strategySubgroupService = require('./strategySubgroupService').default;
 
-var instrumentDailyPricingModelService = require('./instrument/instrumentDailyPricingModelService');
-var instrumentPricingConditionService = require('./instrument/instrumentPricingConditionService');
-var instrumentCountryService = require('./instrument/instrumentCountryService');
-var instrumentPaymentSizeDetailService = require('./instrument/instrumentPaymentSizeDetailService');
-var instrumentClassService = require('./instrument/instrumentClassService');
-var priceDownloadSchemeService = require('./import/priceDownloadSchemeService');
-var csvImportSchemeService = require('./import/csvImportSchemeService');
-var complexImportSchemeService = require('./import/complexImportSchemeService');
-var complexTransactionImportSchemeService = require('./import/transactionImportSchemeService');
+var instrumentDailyPricingModelService = require('./instrument/instrumentDailyPricingModelService').default;
+var instrumentPricingConditionService = require('./instrument/instrumentPricingConditionService').default;
+var instrumentCountryService = require('./instrument/instrumentCountryService').default;
+var instrumentPaymentSizeDetailService = require('./instrument/instrumentPaymentSizeDetailService').default;
+var instrumentClassService = require('./instrument/instrumentClassService').default;
+var priceDownloadSchemeService = require('./import/priceDownloadSchemeService').default;
+var csvImportSchemeService = require('./import/csvImportSchemeService').default;
+var complexImportSchemeService = require('./import/complexImportSchemeService').default;
+var complexTransactionImportSchemeService = require('./import/transactionImportSchemeService').default;
 
-var costMethodService = require('./instrument/instrumentCostMethodService');
+var costMethodService = require('./instrument/instrumentCostMethodService').default;
 
-var priceHistoryErrorService = require('./pricing/priceHistoryErrorService');
-var currencyHistoryErrorService = require('./pricing/currencyHistoryErrorService');
+var priceHistoryErrorService = require('./pricing/priceHistoryErrorService').default;
+var currencyHistoryErrorService = require('./pricing/currencyHistoryErrorService').default;
 
-var expressionProcedureService = require('./procedures/expressionProcedureService');
-var dataProcedureService = require('./procedures/dataProcedureService');
-var pricingProcedureService = require('./procedures/pricingProcedureService');
+var expressionProcedureService = require('./procedures/expressionProcedureService').default;
+var dataProcedureService = require('./procedures/dataProcedureService').default;
+var pricingProcedureService = require('./procedures/pricingProcedureService').default;
 
-var scheduleService = require('./scheduleService');
-const auditService = require('./auditService');
-const uiService = require('./uiService');
+var scheduleService = require('./scheduleService').default;
+const auditService = require('./auditService').default;
+const uiService = require('./uiService').default;
 
-var cookieService = require('../../../../core/services/cookieService');
-var xhrService = require('../../../../core/services/xhrService');
-var configureRepositoryUrlService = require('./configureRepositoryUrlService');
-var baseUrlService = require('./baseUrlService');
+var cookieService = require('../../../../core/services/cookieService').default;
+var xhrService = require('../../../../core/services/xhrService').default;
+var configureRepositoryUrlService = require('./configureRepositoryUrlService').default;
+var baseUrlService = require('./baseUrlService').default;
 
 export default function (instrumentService, transactionTypeService, priceHistoryService, currencyHistoryService, configurationService, reportService) {
 

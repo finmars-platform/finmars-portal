@@ -3,7 +3,7 @@ import baseUrlService from "../../shell/scripts/app/services/baseUrlService";
 
 (function () {
 
-    var cookieService = require('./cookieService');
+    var cookieService = require('./cookieService').default;
 
     const authorizerUrl = baseUrlService.getAuthorizerUrl();
 

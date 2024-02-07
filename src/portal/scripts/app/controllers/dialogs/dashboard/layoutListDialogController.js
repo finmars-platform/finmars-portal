@@ -1,13 +1,13 @@
 /**
  * Created by sergey on 04.11.16.
  */
-import metaContentTypesService from "../../../services/metaContentTypesService";
+// import metaContentTypesService from "../../../services/metaContentTypesService";
 
 (function () {
 
     'use strict';
 
-    var uiService = require('../../../services/uiService');
+    var uiService = require('../../../services/uiService').default;
 
     var shareConfigurationFileService = require('../../../services/shareConfigurationFileService');
     // var backendConfigurationImportService = require('../../../services/backendConfigurationImportService');

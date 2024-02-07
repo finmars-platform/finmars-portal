@@ -5,8 +5,8 @@
 
     'use strict';
 
-    var cookieService = require('../../../../core/services/cookieService');
-    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService');
+    var cookieService = require('../../../../core/services/cookieService').default;
+    var configureRepositoryUrlService = require('../services/configureRepositoryUrlService').default;
     var baseUrlService = require('../services/baseUrlService');
 
     var baseUrl = baseUrlService.resolve();

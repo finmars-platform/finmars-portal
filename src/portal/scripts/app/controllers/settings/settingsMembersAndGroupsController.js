@@ -7,7 +7,7 @@
     // var authorizerService = require('../../services/authorizerService');
     // var usersService = require('../../services/usersService');
 
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
     module.exports = function settingsMembersAndGroupsController($scope, $mdDialog, $uiRouterGlobals, authorizerService, globalDataService) {
 

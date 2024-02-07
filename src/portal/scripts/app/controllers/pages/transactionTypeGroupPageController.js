@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var transactionTypeGroupService = require('../../services/transaction/transactionTypeGroupService');
+    var transactionTypeGroupService = require('../../services/transaction/transactionTypeGroupService').default;
 
     module.exports = function ($scope, $mdDialog) {
 

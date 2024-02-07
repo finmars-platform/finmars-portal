@@ -5,7 +5,7 @@
     module.exports = function ($mdDialog) {
         return {
             restriction: 'AE',
-            templateUrl: 'controls/ace-editor-button/ace-editor-button.html',
+            templateUrl: 'views/controls/ace-editor-button/ace-editor-button.html',
             scope: {
                 item: '=',
                 data: '=',

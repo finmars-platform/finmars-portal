@@ -1,14 +1,16 @@
 /**
  * Created by szhitenev on 24.01.2023.
  */
+// import baseUrlService from "../../services/baseUrlService";
 (function () {
 
     'use strict';
 
-    var baseUrlService = require('../../services/baseUrlService');
+    var baseUrlService = require("../../services/baseUrlService").default;
+    // var baseUrlService = require('../../services/baseUrlService');
     var explorerService = require('../../services/explorerService');
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
     var baseUrl = baseUrlService.resolve();
 

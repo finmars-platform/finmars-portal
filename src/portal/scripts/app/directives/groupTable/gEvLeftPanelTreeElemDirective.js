@@ -8,7 +8,7 @@
     var evEvents = require('../../services/entityViewerEvents');
 
     var evDomManager = require('../../services/ev-dom-manager/ev-dom.manager');
-    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper');
+    var evRvCommonHelper = require('../../helpers/ev-rv-common.helper').default;
 
     module.exports = function ($mdDialog, $state) {
         return {

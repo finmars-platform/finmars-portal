@@ -5,10 +5,10 @@
 
     'use strict';
 
-    var metaService = require('../../services/metaService');
+    var metaService = require('../../services/metaService').default;
     var evEvents = require('../../services/entityViewerEvents');
 
-    var currencyService = require('../../services/currencyService');
+    var currencyService = require('../../services/currencyService').default;
 
     module.exports = function ($mdDialog, $state, usersService, ecosystemDefaultService, globalDataService, evRvLayoutsHelper, reportHelper) {
         return {
@@ -92,7 +92,7 @@
                 scope.toggleFilterBlock = function ($event) {
 
                     const elem = $event.currentTarget;
-                    elem.classList.contains('active') ? elem.classList.remove('active') : elem.classList.add('active');
+                    $(elem).classList.contains('active') ? $(elem).classList.remove('active') : $(elem).classList.add('active');
 
                     scope.evEventService.dispatchEvent(evEvents.TOGGLE_FILTER_BLOCK);
 

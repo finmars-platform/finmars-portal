@@ -2,7 +2,7 @@
 
 	var objectComparisonHelper = require('../../helpers/objectsComparisonHelper');
     var colorPalettesService = require('../../services/colorPalettesService');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService');
+    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
     module.exports = function ($scope, $mdDialog, data) {
 

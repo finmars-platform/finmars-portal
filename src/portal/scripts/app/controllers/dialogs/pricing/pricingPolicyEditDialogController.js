@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var pricingPolicyService = require('../../../services/pricingPolicyService');
+    var pricingPolicyService = require('../../../services/pricingPolicyService').default;;
 
     var currencyPricingSchemeService = require('../../../services/pricing/currencyPricingSchemeService');
     var instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');

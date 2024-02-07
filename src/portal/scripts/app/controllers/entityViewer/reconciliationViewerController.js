@@ -2,10 +2,12 @@
  /**
  * Created by szhitenev on 05.05.2016.
  */
+// import baseUrlService from "../../services/baseUrlService";
 (function () {
 
         'use strict';
 
+        var baseUrlService = require("../../services/baseUrlService").default;
         var evEvents = require('../../services/entityViewerEvents');
         var evHelperService = require('../../services/entityViewerHelperService');
 
@@ -15,7 +17,7 @@
 
         var importTransactionService = require('../../services/import/importTransactionService');
 
-        var baseUrlService = require('../../services/baseUrlService');
+        // var baseUrlService = require('../../services/baseUrlService');
 
         var baseUrl = baseUrlService.resolve();
 

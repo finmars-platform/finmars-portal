@@ -1,6 +1,6 @@
 (function () {
 
-    const evRvCommonHelper = require('./ev-rv-common.helper');
+    const evRvCommonHelper = require('./ev-rv-common.helper').default;
 
 	const noLineGroups = function (evDataService) {
 

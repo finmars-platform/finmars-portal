@@ -4,7 +4,7 @@
 
 'use strict';
 
-const pricingPolicyService = require('../../../services/pricingPolicyService');
+const pricingPolicyService = require('../../../services/pricingPolicyService').default;;
 const instrumentTypeService = require('../../../services/instrumentTypeService')
 const instrumentPricingSchemeService = require('../../../services/pricing/instrumentPricingSchemeService');
 const attributeTypeService = require('../../../services/attributeTypeService');
