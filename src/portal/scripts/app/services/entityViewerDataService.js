@@ -189,7 +189,7 @@
             projection: [],
             activeObject: null,
             activeObjectsCount: 0,
-            dataLoadEnded: false,
+            dataLoadEnded: false, // set to `false` by creating new instance of entityViewerDataService
             markedSubtotals: {},
             rowSettings: {},
             missingCustomFields: {
@@ -1691,6 +1691,7 @@
         }
 
         function setDataLoadStatus(isEnded) {
+            // data.dataLoadEnded set to `false` by creating new instance of entityViewerDataService
             data.dataLoadEnded = isEnded;
         }
 

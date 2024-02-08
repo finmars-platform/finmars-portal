@@ -35,6 +35,9 @@ export default function (cookieService, xhrService, metaRestrictionsService) {
             case 'account-type':
                 return 'accounts/' + entity + '-attribute-type/';
                 break;
+            case 'portfolio-type':
+                return 'portfolios/' + entity + '-attribute-type/';
+                break;
             case 'strategy-1':
                 return 'strategies/1/strategy-attribute-type/';
                 break;

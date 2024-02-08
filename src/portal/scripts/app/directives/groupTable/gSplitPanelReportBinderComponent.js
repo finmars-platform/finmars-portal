@@ -7,7 +7,7 @@
 
     var evEvents = require('../../services/entityViewerEvents');
 
-    module.exports = function ($templateCache, $compile, $controller, $mdDialog, $state, $transitions, metaContentTypesService) {
+    module.exports = function ($templateCache, $compile, $controller, $mdDialog, $state, $transitions, metaContentTypesService, templateLoader) {
         return {
             scope: {
                 evDataService: '=',
@@ -20,7 +20,7 @@
 
                 var container = $(elem).find('.split-panel-controller-container');
 
-                function createController() {
+                async function createController() {
 
                     var additions = scope.evDataService.getAdditions();
 
@@ -34,7 +34,8 @@
                     $(container).html('');
 
                     editorTemplateUrl = 'views/entity-viewer/split-panel-report-viewer-view.html';
-                    tpl = $templateCache.get(editorTemplateUrl);
+                    // tpl = $templateCache.get(editorTemplateUrl);
+                    tpl = await templateLoader.loadTemplate(editorTemplateUrl)
 
                     templateScope = scope.$new();
 

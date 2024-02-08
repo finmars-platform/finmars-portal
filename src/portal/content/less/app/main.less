@@ -3100,8 +3100,12 @@ md-checkbox.md-indeterminate .md-icon:after {
     background-color: #FDECE5
   }
 
+  span.material-icons {
+    color: @text-lighten;
+  }
+
   ng-md-icon svg {
-    fill: #7d7d7d;
+    fill: @text-lighten;
   }
 }
 
@@ -3730,9 +3734,9 @@ md-dialog.ace-editor-dialog {
     padding: 16px;
   }
 
-  .file-preview-content {
-    white-space: pre;
-  }
+  //.file-preview-content {
+  //  white-space: pre;
+  //}
 }
 
 .rollback-backup-card.selected {

@@ -87,7 +87,7 @@
                             <md-checkbox
                                     class="checkbox-bind-field"
                                     data-ng-model="vm.model"
-                                    data-ng-change="vm.itemChange()"
+                                    data-ng-change="vm.itemChange(vm.model)"
                                     data-ng-disabled="vm.disabled"
                                     aria-label="checkbox">
                                 <label data-ng-bind="getName()"></label>
@@ -185,6 +185,10 @@
 
         <div ng-if="vm.fieldType['display_name'] === 'Table'" style="padding: 0 10px;">
             <bind-field-table item="item" entity="entity"></bind-field-table>
+        </div>
+
+        <div ng-if="vm.fieldType['display_name'] === 'Attachment'" style="padding: 0 10px;">
+            <bind-field-attachment item="item" entity="entity"></bind-field-attachment>
         </div>
 
     </div>

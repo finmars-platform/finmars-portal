@@ -259,6 +259,18 @@
                             })
 
                         }
+                        else if (scope.entityType === 'portfolio-type') {
+
+                            items = items.map(function (item) {
+
+                                item.id = item.user_code;
+                                item.name = item[nameField];
+
+                                return item;
+
+                            })
+
+                        }
 
                     }
 

@@ -75,6 +75,7 @@
 
         vm.fieldsDataStore = {}
 
+        var dialogsContainerElem = document.querySelector('.dialog-containers-wrap')
         var notCopiedTransaction = true;
         var contentType = metaContentTypesService.findContentTypeByEntity('complex-transaction', 'ui');
         var ttypesList;
@@ -383,12 +384,12 @@
             metaHelper.closeComponent(vm.openedIn, $mdDialog, $bigDrawer, {status: 'disagree'});
         };
 
-        vm.editLayout = function (ev) {
+        vm.editLayout = function () {
 
             $mdDialog.show({
                 controller: 'EntityDataConstructorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
-                targetEvent: ev,
+                parent: dialogsContainerElem,
                 multiple: true,
                 locals: {
                     data: vm.dataConstructorData
@@ -423,12 +424,12 @@
             $mdDialog.hide();*/
         };
 
-        vm.manageAttrs = function (ev) {
+        vm.manageAttrs = function () {
 
             $mdDialog.show({
                 controller: 'AttributesManagerDialogController as vm',
                 templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
-                targetEvent: ev,
+                parent: dialogsContainerElem,
                 multiple: true,
                 locals: {
                     data: {
@@ -436,6 +437,31 @@
                     }
                 }
             });
+        };
+
+        vm.footerPopupData = {
+            options: [
+                {
+                    icon: "list",
+                    name: "Edit Form",
+                    get isDisabled() {
+                        return !vm.entity.transaction_type;
+                    },
+
+                    onClick: function (option, _$popup) {
+                        _$popup.cancel();
+                        vm.editLayout();
+                    },
+                },
+                {
+                    icon: "edit",
+                    name: "Edit as JSON",
+                    onClick: function (option, _$popup) {
+                        _$popup.cancel();
+                        vm.editAsJson();
+                    },
+                },
+            ]
         };
 
         vm.getAttributeTypes = function () {
@@ -607,7 +633,7 @@
                                         controller: 'BookUniquenessWarningDialogController as vm',
                                         templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
                                         targetEvent: $event,
-                                        parent: angular.element(document.body),
+                                        parent: dialogsContainerElem,
                                         multiple: true,
                                         locals: {
                                             data: {
@@ -678,7 +704,7 @@
                                         controller: 'ValidationDialogController as vm',
                                         templateUrl: 'views/dialogs/validation-dialog-view.html',
                                         targetEvent: $event,
-                                        parent: angular.element(document.body),
+                                        parent: dialogsContainerElem,
                                         multiple: true,
                                         locals: {
                                             validationData: {
@@ -935,7 +961,7 @@
                                         controller: 'ValidationDialogController as vm',
                                         templateUrl: 'views/dialogs/validation-dialog-view.html',
                                         targetEvent: $event,
-                                        parent: angular.element(document.body),
+                                        parent: dialogsContainerElem,
                                         multiple: true,
                                         locals: {
                                             validationData: {
@@ -1422,7 +1448,9 @@
 
             result.values = {};
 
-            result.values = sharedLogicHelper.mapUserInputsOnEntityValues(result.values);
+            if (result.transactionType) {
+                result.values = sharedLogicHelper.mapUserInputsOnEntityValues(result.values);
+            }
 
             return JSON.parse(JSON.stringify(result))
 

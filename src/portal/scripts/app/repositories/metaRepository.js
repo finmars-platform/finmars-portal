@@ -56,9 +56,12 @@
     var getEntityAttrs = function (entity) {
         var entityAttrs = {
             "portfolio": require('../models/portfolioPropsModel').getAttributes(),
+            "portfolio-type": require('../models/portfolioTypePropsModel').getAttributes(),
+            "portfolio-reconcile-group": require('../models/portfolioReconcileGroupPropsModel').getAttributes(),
             "portfolio-register": require('../models/portfolioRegisterPropsModel').getAttributes(),
             "portfolio-register-record": require('../models/portfolioRegisterRecordPropsModel').getAttributes(),
             "portfolio-history": require('../models/portfolioHistoryPropsModel').getAttributes(),
+            "portfolio-reconcile-history": require('../models/portfolioReconcileHistoryPropsModel').getAttributes(),
             "audit-transaction": require('../models/auditTransactionPropsModel').getAttributes(),
             "audit-instrument": require('../models/auditInstrumentPropsModel').getAttributes(),
             "account": require('../models/accountPropsModel').getAttributes(),
@@ -116,10 +119,10 @@
             case 'responsible':
                 return evRequiredAttrs.requiredAttrs2;
 
-			case 'strategy-1':
-			case 'strategy-2':
-			case 'strategy-3':
-				return evRequiredAttrs.strategiesAttrs;
+            case 'strategy-1':
+            case 'strategy-2':
+            case 'strategy-3':
+                return evRequiredAttrs.strategiesAttrs;
 
             case 'instrument':
                 return evRequiredAttrs.instrumentAttrs;
@@ -142,58 +145,62 @@
 
     var getEntityViewerFormComponentsValueTypes = function () {
         return [
-        	{
-				"value": 20,
-				"display_name": "Number"
-        	},
-			{
-				"value": 10,
-				"display_name": "String"
-        	},
-			{
-				"value": 40,
-				"display_name": "Date"
-        	},
-			{
-				"value": 30,
-				"display_name": "Classifier"
-        	},
-			{
-				"value": 110,
-				"display_name": "Selector"
-        	},
+            {
+                "value": 20,
+                "display_name": "Number"
+            },
+            {
+                "value": 10,
+                "display_name": "String"
+            },
+            {
+                "value": 40,
+                "display_name": "Date"
+            },
+            {
+                "value": 30,
+                "display_name": "Classifier"
+            },
+            {
+                "value": 110,
+                "display_name": "Selector"
+            },
             {
                 "value": 80,
                 "display_name": "Datetime"
             },
-			{
-				"value": 120,
-				"display_name": "Button"
-        	},
-			{
-				"value": "decoration",
-				"display_name": "Decoration"
-        	},
-			{
-				"value": "field",
-				"display_name": "Field"
-        	},
-			{
-				"value": "mc_field",
-				"display_name": "Multiple choice field"
-        	},
-			{
-				"value": 50,
-				"display_name": "Boolean"
-        	},
-			{
-				"value": "float",
-				"display_name": "Float"
-        	},
-			{
-				"value": "table",
-				"display_name": "Table"
-			}
+            {
+                "value": 120,
+                "display_name": "Button"
+            },
+            {
+                "value": "decoration",
+                "display_name": "Decoration"
+            },
+            {
+                "value": "field",
+                "display_name": "Field"
+            },
+            {
+                "value": "mc_field",
+                "display_name": "Multiple choice field"
+            },
+            {
+                "value": 50,
+                "display_name": "Boolean"
+            },
+            {
+                "value": "float",
+                "display_name": "Float"
+            },
+            {
+                "value": "table",
+                "display_name": "Table"
+            },
+            {
+                "value": "attachment",
+                "display_name": "Attachment"
+            },
         ];
     };
 
@@ -221,19 +228,19 @@
 
     var getEntityTabs = function (entityType) {
         switch (entityType) {
-			case 'portfolio':
-				return [
-					{
-						label: 'Performance',
-						type: 'system_tab',
-						templateUrl: 'views/tabs/portfolio/performance-tab-view.html'
-					}
-				];
+            case 'portfolio':
+                return [
+                    {
+                        label: 'Performance',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/portfolio/performance-tab-view.html'
+                    }
+                ];
             case 'currency':
                 return [
                     {
                         label: 'Pricing',
-						type: 'system_tab',
+                        type: 'system_tab',
                         templateUrl: 'views/tabs/currency/pricing-view.html'
                     }
                     // {
@@ -245,12 +252,12 @@
                 return [
                     {
                         label: 'Accruals',
-						type: 'system_tab',
+                        type: 'system_tab',
                         templateUrl: 'views/tabs/instrument/accrual-calculation-schedules-view.html'
                     },
                     {
                         label: 'Events',
-						type: 'system_tab',
+                        type: 'system_tab',
                         templateUrl: 'views/tabs/instrument/events-schedules-tab-view.html'
                     },
                     {
@@ -264,12 +271,12 @@
                     // },
                     {
                         label: 'Factors',
-						type: 'system_tab',
+                        type: 'system_tab',
                         templateUrl: 'views/tabs/instrument/factor-schedule-view.html'
                     },
                     {
                         label: 'Pricing',
-						type: 'system_tab',
+                        type: 'system_tab',
                         templateUrl: 'views/tabs/instrument/pricing-view.html'
                     }
                 ];
@@ -277,37 +284,37 @@
                 return [
                     {
                         label: 'Pricing',
-						type: 'system_tab',
+                        type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/pricing-view.html'
                     },
                     {
                         label: 'Accruals',
-						type: 'system_tab',
+                        type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/accruals-view.html'
                     },
                     {
                         label: 'Events',
-						type: 'system_tab',
+                        type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/events-view.html'
                     },
-					{
-						label: 'Factors',
-						type: 'system_tab',
-						templateUrl: 'views/tabs/instrument-type/factors-view.html'
-					},
+                    {
+                        label: 'Factors',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/instrument-type/factors-view.html'
+                    },
                     {
                         label: 'Exposure',
                         type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/exposure-view.html'
                     },
-					{
-						label: 'User attributes',
-						type: 'system_tab',
-						templateUrl: 'views/tabs/instrument-type/user-attributes-view.html'
-					},
+                    {
+                        label: 'User attributes',
+                        type: 'system_tab',
+                        templateUrl: 'views/tabs/instrument-type/user-attributes-view.html'
+                    },
                     {
                         label: 'Layout Settings',
-						type: 'system_tab',
+                        type: 'system_tab',
                         templateUrl: 'views/tabs/instrument-type/layout-settings-view.html'
                     }
                 ];
@@ -315,17 +322,17 @@
                 return [
                     {
                         label: 'General',
-						type: 'system_tab',
+                        type: 'system_tab',
                         templateUrl: 'views/tabs/transaction-type/transaction-type-general-tab-view.html'
                     },
                     {
                         label: 'Inputs',
-						type: 'system_tab',
+                        type: 'system_tab',
                         templateUrl: 'views/tabs/transaction-type/transaction-type-inputs-tab-view.html'
                     },
                     {
                         label: 'Actions',
-						type: 'system_tab',
+                        type: 'system_tab',
                         templateUrl: 'views/tabs/transaction-type/transaction-type-actions-tab-view.html'
                     }
                 ];
@@ -405,7 +412,7 @@
         getBaseAttrs: getBaseAttrs,
         getEntityAttrs: getEntityAttrs,
         getRequiredEntityAttrs: getRequiredEntityAttrs,
-		getEntityViewerFormComponentsValueTypes: getEntityViewerFormComponentsValueTypes,
+        getEntityViewerFormComponentsValueTypes: getEntityViewerFormComponentsValueTypes,
         getDynamicAttrsValueTypes: getDynamicAttrsValueTypes,
         getEntitiesWithoutDynAttrsList: getEntitiesWithoutDynAttrsList,
         getEntityTabs: getEntityTabs,
