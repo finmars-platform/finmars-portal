@@ -530,6 +530,41 @@
                         </div>
                     </li>
 
+                    <li>
+                        <div class="sidenav-dropdown-menu-wrapper" sidenav-dropdown-menu menu-type="history">
+                            <md-button class="sidemenu-btn history-sidenav-menu-btn">
+                            <span class="side-nav-icon">
+<!--                                <ng-md-icon icon="currency_exchange" size="20"></ng-md-icon>-->
+                                <span class="material-icons">currency_exchange</span>
+                            </span>
+                                <span class="side-nav-title">Reconciliation</span>
+                                <!--<span class="md-visually-hidden" data-ng-if="isSelected()">current page</span>-->
+                            </md-button>
+
+                            <ul class="sidenav-dropdown-menu history-dropdown-menu-element ng-hide">
+                                <li>
+                                    <md-button ui-sref-active="active"
+                                               class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.portal.data.portfolio-reconcile-group">
+                                        <span class="side-nav-title">Portfolio Reconcile Groups</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
+                                <li>
+                                    <md-button ui-sref-active="active"
+                                               class="sidenav-dropdown-menu-btn"
+                                               ui-sref="app.portal.data.portfolio-reconcile-history">
+                                        <span class="side-nav-title">Reconciliation History</span>
+                                        <span class="md-visually-hidden"
+                                              data-ng-if="isSelected()">current page</span>
+                                    </md-button>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+
                 </ul>
             </div>
 
@@ -720,6 +755,15 @@
                                     </md-button>
 
                                     <ul class="sidenav-dropdown-menu dataTypes-dropdown-menu-element ng-hide">
+
+                                        <li>
+                                            <md-button class="sidenav-dropdown-menu-btn"
+                                                       ui-sref="app.portal.data.portfolio-type">
+                                                <span class="side-nav-title">Portfolio Types</span>
+                                                <span class="md-visually-hidden"
+                                                      data-ng-if="isSelected()">current page</span>
+                                            </md-button>
+                                        </li>
 
                                         <li data-ng-if="vm.accessTable.configuration_account_type">
                                             <md-button class="sidenav-dropdown-menu-btn"

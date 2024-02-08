@@ -70,23 +70,23 @@
 
                 var getElemsForScripts = function () {
 
-                    matrixElem = elem[0].querySelector('.rvMatrix');
-                    matrixWrap = elem[0].querySelector('.rvMatrixWrap');
-                    matrixHolder = elem[0].querySelector('.rvMatrixHolder');
+                    matrixElem = $(elem)[0].querySelector('.rvMatrix');
+                    matrixWrap = $(elem)[0].querySelector('.rvMatrixWrap');
+                    matrixHolder = $(elem)[0].querySelector('.rvMatrixHolder');
 
-                    bodyScrollElem = elem[0].querySelector('.rvMatrixBodyScrolls');
-                    rvmHeaderScrollableRow = elem[0].querySelector('.rvmHeaderScrollableRow');
-                    rvmBottomRowScrollableElem = elem[0].querySelector('.rvmBottomRowScrollableElem');
-                    bodyScrollableElem = elem[0].querySelectorAll('.scrollableMatrixBodyColumn');
+                    bodyScrollElem = $(elem)[0].querySelector('.rvMatrixBodyScrolls');
+                    rvmHeaderScrollableRow = $(elem)[0].querySelector('.rvmHeaderScrollableRow');
+                    rvmBottomRowScrollableElem = $(elem)[0].querySelector('.rvmBottomRowScrollableElem');
+                    bodyScrollableElem = $(elem)[0].querySelectorAll('.scrollableMatrixBodyColumn');
 
-                    rvMatrixValueRowsHolder = elem[0].querySelector('.rvMatrixValueRowsHolder');
-                    rvMatrixFixedBottomRow = elem[0].querySelector('.rvMatrixFixedBottomRow');
+                    rvMatrixValueRowsHolder = $(elem)[0].querySelector('.rvMatrixValueRowsHolder');
+                    rvMatrixFixedBottomRow = $(elem)[0].querySelector('.rvMatrixFixedBottomRow');
 
-                    rvMatrixLeftCol = elem[0].querySelector('.rvMatrixLeftCol');
-                    rvMatrixRightCol = elem[0].querySelector('.rvMatrixRightCol');
+                    rvMatrixLeftCol = $(elem)[0].querySelector('.rvMatrixLeftCol');
+                    rvMatrixRightCol = $(elem)[0].querySelector('.rvMatrixRightCol');
 
                     if (scope.viewContext === 'dashboard') {
-                        axisAttrsSelectorHolder = elem[0].querySelector('.axisAttrSelectorBtnsHolder');
+                        axisAttrsSelectorHolder = $(elem)[0].querySelector('.axisAttrSelectorBtnsHolder');
                     }
 
                 };
@@ -218,7 +218,7 @@
                     });
 
                     for (let elem of bodyScrollableElem) {
-                        $(elem).style.height = matrixVCContainerHeight + 'px';
+                        $(elem)[0].style.height = matrixVCContainerHeight + 'px';
                     }
 
                     rvmHeaderScrollableRow.style.width = matrixMaxWidth + 'px';
@@ -230,7 +230,7 @@
                         });
                     }
 
-                    const items = elem[0].querySelectorAll('.rvMatrixCell');
+                    const items = $(elem)[0].querySelectorAll('.rvMatrixCell');
                     adjustItemStyles(items, cellHeight, cellWidth, nameColWidth);
                 }
 
@@ -750,18 +750,18 @@
 
                     getValuesForMatrix().then(function () {
 
+                        scope.processing = false;
+
+                        scope.$apply();
+
                         setTimeout(function () {
-
-                            scope.processing = false;
-
-                            scope.$apply();
 
                             initMatrixMethods();
 
                             scope.matrixCreationInProgress = false;
                             window.addEventListener('resize', scope.alignGrid);
 
-                        }, 100)
+                        }, 200)
 
                     })
 

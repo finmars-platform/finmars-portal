@@ -452,7 +452,7 @@
                     contentElem.style.opacity = '1';
 
                     updateTableContent();
-
+                    console.log("testing328.gTableBodyComponent DATA_LOAD_END updateTableContent called");
                     if (!activeLayoutConfigIsSet && viewContext !== 'reconciliation_viewer') {
                         activeLayoutConfigIsSet = true;
                         scope.evDataService.setActiveLayoutConfiguration({isReport: scope.isReport}); // saving layout for checking for changes
@@ -589,7 +589,7 @@
                             });
 
 
-                            // If we already have data (e.g. viewType changed)
+                            // If we already have data (e.g. viewType changed. 'report_viewer' to 'matrix' etc.)
                             var flatList = rvDataHelper.getFlatStructure(scope.evDataService, globalDataService);
 
                             if (flatList.length > 1) {
@@ -599,8 +599,9 @@
                                 if (scope.isReport) {
                                     contentElem.style.opacity = '1';
                                 }
-
-                                if (scope.evDataService.didDataLoadEnd()) {
+                                console.log("testing328.gTableBodyComponent init rv didDataLoadEnd ", scope.evDataService.didDataLoadEnd() );
+                                if ( scope.evDataService.didDataLoadEnd() ) {
+                                    console.log("testing328.gTableBodyComponent init rv updateTableContent called");
                                     updateTableContent();
                                 }
 
@@ -620,6 +621,12 @@
                             evDomManager.initContextMenuEventDelegation(contentElem, scope.evDataService, scope.evEventService);
 
                             evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService, scope.scrollManager);
+
+                            console.log("testing328.gTableBodyComponent init ev didDataLoadEnd ", scope.evDataService.didDataLoadEnd() );
+                            if ( scope.evDataService.didDataLoadEnd() ) {
+                                console.log("testing328.gTableBodyComponent init ev updateTableContent called");
+                                updateTableContent();
+                            }
 
                         }
 

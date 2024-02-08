@@ -241,6 +241,31 @@
                     layoutUserCode: null
                 }
             })
+            .state('app.portal.data.portfolio-type', {
+                url: '/portfolio-types',
+                templateUrl: 'views/data/data-portfolio-type-view.html',
+                controller: 'DataPortfolioTypeController as vm',
+                params: {
+                    layoutUserCode: null
+                }
+            })
+            .state('app.portal.data.portfolio-reconcile-group', {
+                url: '/portfolio-reconcile-groups',
+                templateUrl: 'views/data/data-portfolio-reconcile-group-view.html',
+                controller: 'DataPortfolioReconcileGroupController as vm',
+                params: {
+                    layoutUserCode: null
+                }
+            })
+            .state('app.portal.data.portfolio-reconcile-history', {
+                url: '/portfolio-reconcile-history',
+                templateUrl: 'views/data/data-portfolio-reconcile-history-view.html',
+                controller: 'DataPortfolioReconcileHistoryController as vm',
+                params: {
+                    layoutUserCode: null
+                }
+            })
+
             /* .state('app.portal.data.pricing-policy', {
                 url: '/pricing-policy',
                 templateUrl: 'views/data/data-pricing-policy-view.html',

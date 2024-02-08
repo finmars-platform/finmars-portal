@@ -70,9 +70,12 @@
                 case 'Button':
                     item['caption_name'] = 'Button';
                     break;
-				case 'Table':
-					item['caption_name'] = 'Table';
-					break;
+                case 'Table':
+                    item['caption_name'] = 'Table';
+                    break;
+                case 'Attachment':
+                    item['caption_name'] = 'Attachment';
+                    break;
                 default:
                     item['caption_name'] = item['display_name'];
                     break;
@@ -296,17 +299,14 @@
         var name = '';
 
         if ($state.current.name.startsWith('app.portal.data.')) {
-        	name = 'Data: ';
-		}
-        else if ($state.current.name.startsWith('app.portal.settings.')) {
-			name = 'Settings: ';
-		}
-		else if ($state.current.name.startsWith('app.portal.reports.')) {
-			name = 'Report: ';
-		}
-		else if ($state.current.name.startsWith('app.portal.import.')) {
-			name = 'Import: '
-		}
+            name = 'Data: ';
+        } else if ($state.current.name.startsWith('app.portal.settings.')) {
+            name = 'Settings: ';
+        } else if ($state.current.name.startsWith('app.portal.reports.')) {
+            name = 'Report: ';
+        } else if ($state.current.name.startsWith('app.portal.import.')) {
+            name = 'Import: '
+        }
 
         if ($state.current.name.indexOf('app.forum') !== -1) {
 
@@ -319,8 +319,8 @@
                     name = 'Home page';
                     break;
 
-				//<editor-fold desc="Report: ">
-				case 'app.portal.reports.balance-report':
+                //<editor-fold desc="Report: ">
+                case 'app.portal.reports.balance-report':
                     name += 'Balance';
                     break;
                 case 'app.portal.reports.pl-report':
@@ -332,10 +332,19 @@
                 case 'app.portal.reports.check-for-events':
                     name += 'Events';
                     break;
-				//</editor-fold>
+                //</editor-fold>
 
-				//<editor-fold desc="Data: ">
-				case 'app.portal.data.portfolio':
+                //<editor-fold desc="Data: ">
+                case 'app.portal.data.portfolio-type':
+                    name += "Data types: Portfolios Types";
+                    break;
+                case 'app.portal.data.portfolio-reconcile-group':
+                    name += "Reconciliation: Portfolios Reconcile Groups";
+                    break;
+                case 'app.portal.data.portfolio-reconcile-history':
+                    name = "Reconciliation: Portfolio Reconcile History";
+                    break;
+                case 'app.portal.data.portfolio':
                     name += "Portfolios";
                     break;
                 case 'app.portal.data.portfolio-register':
@@ -362,7 +371,7 @@
                 case 'app.portal.data.generated-event':
                     name += "Events";
                     break;
-				//</editor-fold>
+                //</editor-fold>
 
                 case 'app.portal.data.complex-transaction':
                     name = "Transactions: Transactions";
@@ -390,8 +399,8 @@
                     name = "Valuations: FX Rates Journal";
                     break;
 
-				//<editor-fold desc="Import: ">
-				case 'app.portal.import.simple-entity':
+                //<editor-fold desc="Import: ">
+                case 'app.portal.import.simple-entity':
                     name += 'Data';
                     break;
                 case 'app.portal.import.transaction':
@@ -412,7 +421,7 @@
                 case 'app.portal.import.mapping-tables':
                     name += 'Mapping tables';
                     break;
-				//</editor-fold>
+                //</editor-fold>
 
                 case 'app.portal.system.instruments':
                     name = 'Journal: Instruments audit';
@@ -432,10 +441,10 @@
                     break;
 
 
-				case 'app.portal.dashboard-layout-manager':
+                case 'app.portal.dashboard-layout-manager':
                     name = 'Settings: Dashboard layouts';
                     break;
-				//<editor-fold desc="Settings: ">
+                //<editor-fold desc="Settings: ">
                 case 'app.portal.settings.forms':
                     name += 'Forms';
                     break;
@@ -448,7 +457,7 @@
                 case 'app.portal.settings.interface-access':
                     name += 'Interface complexity';
                     break;
-				//</editor-fold>
+                //</editor-fold>
 
                 case 'app.portal.data.account-type':
                     name = 'Data types: ACCOUNT TYPES';
@@ -463,8 +472,8 @@
                     name = 'Data types: PRICING TYPES';
                     break; */
 
-				//<editor-fold desc="Settings: ">
-				case 'app.portal.settings.user-attributes':
+                //<editor-fold desc="Settings: ">
+                case 'app.portal.settings.user-attributes':
                     name += 'Data Types: User attributes';
                     break;
                 case 'app.portal.import.reference-tables':
@@ -500,7 +509,7 @@
                     name += 'Configuration: Export';
                     break;
                 case 'app.portal.settings.data-providers':
-				case 'app.portal.settings.data-providers-config':
+                case 'app.portal.settings.data-providers-config':
                     name += 'Data providers';
                     break;
                 case 'app.portal.settings.init-configuration':
@@ -512,7 +521,7 @@
                 case 'app.portal.settings.ecosystem-default-settings':
                     name += 'DEFAULT SETTINGS';
                     break;
-				//</editor-fold>
+                //</editor-fold>
                 case 'app.portal.processes':
                     name = 'Settings: Active processes';
                     break;
@@ -549,14 +558,14 @@
 
             case 'counterparty':
             case 'responsible':
-				return ['name', 'short_name', 'user_code', 'group', 'public_name'];
-				break;
+                return ['name', 'short_name', 'user_code', 'group', 'public_name'];
+                break;
 
             case 'strategy-1':
             case 'strategy-2':
             case 'strategy-3':
                 // return ['name', 'short_name', 'user_code', null, 'public_name'];
-				return ['name', 'short_name', 'user_code', 'subgroup', 'public_name'];
+                return ['name', 'short_name', 'user_code', 'subgroup', 'public_name'];
                 break;
 
             case 'currency':
@@ -577,72 +586,72 @@
 
     };
 
-	/**
-	 *
-	 * @param {function} dataRequest - asynchronous method that returns array of items
-	 * @param {array} argumentsList - array of arguments for dataRequest method. Must contain argument with options {pageSize: 1000, page: 1}
-	 * @param {array} [dataList] - array where requested data will be placed
-	 * @returns {Promise<[]>}
-	 */
+    /**
+     *
+     * @param {function} dataRequest - asynchronous method that returns array of items
+     * @param {array} argumentsList - array of arguments for dataRequest method. Must contain argument with options {pageSize: 1000, page: 1}
+     * @param {array} [dataList] - array where requested data will be placed
+     * @returns {Promise<[]>}
+     */
     var loadDataFromAllPages = function (dataRequest, argumentsList, dataList) {
 
-		if ( !Array.isArray(dataList) ) dataList = [];
+        if (!Array.isArray(dataList)) dataList = [];
 
-		let optionsArg = argumentsList.find(arg => {
-			return typeof arg === 'object' && arg.hasOwnProperty('page');
-		});
+        let optionsArg = argumentsList.find(arg => {
+            return typeof arg === 'object' && arg.hasOwnProperty('page');
+        });
 
-		if (!optionsArg) throw new Error('No options with page number were specified in argumentsList');
+        if (!optionsArg) throw new Error('No options with page number were specified in argumentsList');
 
-		var loadAllPages = (resolve, reject) => {
+        var loadAllPages = (resolve, reject) => {
 
-			dataRequest(...argumentsList).then(function (data) {
+            dataRequest(...argumentsList).then(function (data) {
 
-				dataList = dataList.concat(data.results);
+                dataList = dataList.concat(data.results);
 
-				if (data.next) {
+                if (data.next) {
 
-					optionsArg.page = optionsArg.page + 1; // number of page to request
-					loadAllPages(resolve, reject);
+                    optionsArg.page = optionsArg.page + 1; // number of page to request
+                    loadAllPages(resolve, reject);
 
-				} else {
-					resolve(dataList);
-				}
+                } else {
+                    resolve(dataList);
+                }
 
-			}).catch(error => reject(error));
+            }).catch(error => reject(error));
 
-		};
+        };
 
-		return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
-			loadAllPages(resolve, reject);
+            loadAllPages(resolve, reject);
 
-		});
+        });
 
-	};
+    };
 
-	/**
-	 *
-	 * @param promisesResultList {Array}
-	 * @param errorPremise {string=} - string to go before data from promise rejection
-	 */
-	var logRejectedPromisesAfterAllSettled = function (promisesResultList, errorPremise) {
+    /**
+     *
+     * @param promisesResultList {Array}
+     * @param errorPremise {string=} - string to go before data from promise rejection
+     */
+    var logRejectedPromisesAfterAllSettled = function (promisesResultList, errorPremise) {
 
-		promisesResultList.forEach(result => {
-			if (result.status === "rejected") {
+        promisesResultList.forEach(result => {
+            if (result.status === "rejected") {
 
-				var errorArgs = [];
+                var errorArgs = [];
 
-				if (errorPremise) errorArgs.push(errorPremise);
+                if (errorPremise) errorArgs.push(errorPremise);
 
-				errorArgs.push(result.reason);
+                errorArgs.push(result.reason);
 
-				console.error(...errorArgs);
+                console.error(...errorArgs);
 
-			}
-		});
+            }
+        });
 
-	};
+    };
 
     module.exports = {
         isReport: isReport,
@@ -650,7 +659,7 @@
         getBaseAttrs: getBaseAttrs,
         getEntityAttrs: getEntityAttrs,
         getRequiredEntityAttrs: getRequiredEntityAttrs,
-		getEntityViewerFormComponentsValueTypes: getEntityViewerFormComponentsValueTypes,
+        getEntityViewerFormComponentsValueTypes: getEntityViewerFormComponentsValueTypes,
         getDynamicAttrsValueTypes: getDynamicAttrsValueTypes,
         getDynamicAttrsValueTypesCaptions: getDynamicAttrsValueTypesCaptions,
         getEntitiesWithoutBaseAttrsList: getEntitiesWithoutBaseAttrsList,
@@ -667,9 +676,9 @@
         getContentGroups: getContentGroups,
         getEntityViewerFixedFieldsAttributes: getEntityViewerFixedFieldsAttributes,
 
-		logRejectedPromisesAfterAllSettled: logRejectedPromisesAfterAllSettled,
+        logRejectedPromisesAfterAllSettled: logRejectedPromisesAfterAllSettled,
 
-		loadDataFromAllPages: loadDataFromAllPages
+        loadDataFromAllPages: loadDataFromAllPages
     }
 
 }());

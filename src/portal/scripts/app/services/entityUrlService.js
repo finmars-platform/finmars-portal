@@ -11,6 +11,12 @@
 
             case 'portfolio':
                 return 'portfolios/portfolio';
+            case 'portfolio-type':
+                return 'portfolios/portfolio-type';
+            case 'portfolio-reconcile-history':
+                return 'portfolios/portfolio-reconcile-history';
+            case 'portfolio-reconcile-group':
+                return 'portfolios/portfolio-reconcile-group';
             case 'portfolio-register':
                 return 'portfolios/portfolio-register';
             case 'portfolio-register-record':

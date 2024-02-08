@@ -744,12 +744,27 @@
 
         };
 
+        var firstDleIndex;
+
         var setEventListeners = function () {
 
             vm.entityViewerEventService.addEventListener(evEvents.UPDATE_TABLE, function () {
                 // difference from reportViewerController
                 // here updateDataStructure called because method entityViewerDataService.resetData() not needed (loading only next pages)
                 evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService, vm.attributeDataService);
+
+            });
+
+            firstDleIndex = vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                console.log("testing328.entityViewerController first DATA_LOAD_END");
+                /* *
+                 * Fixes scenario when DATA_LOAD_END
+                 * called inside evDataProviderService.updateDataStructure()
+                 * before gTableBodyComponent initialized
+                 * */
+                vm.entityViewerDataService.setDataLoadStatus(true);
+
+                vm.entityViewerEventService.removeEventListener(evEvents.DATA_LOAD_END, firstDleIndex);
 
             });
 

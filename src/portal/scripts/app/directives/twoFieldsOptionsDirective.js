@@ -344,7 +344,7 @@
 
                         drake.on('drop', function (elem, target, source, nextSibling) {
 
-                            let selItemId = $(elem).dataset.optionId;
+                            let selItemId = elem.dataset.optionId;
                             let siblingId = null;
 
                             if (nextSibling) {

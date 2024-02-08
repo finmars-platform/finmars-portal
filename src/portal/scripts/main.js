@@ -150,9 +150,9 @@ export default (function () {
         }
     }]);
 
-    portal.factory('templateLoader', ['$templateCache', '$http', function($templateCache, $http) {
+    portal.factory('templateLoader', ['$templateCache', '$http', function ($templateCache, $http) {
         return {
-            loadTemplate: function(templateUrl) {
+            loadTemplate: function (templateUrl) {
                 // Check if the template is in $templateCache
                 let template = $templateCache.get(templateUrl);
 
@@ -161,7 +161,7 @@ export default (function () {
                     return Promise.resolve(template);
                 } else {
                     // Fetch the template from the URL
-                    return $http.get(templateUrl, { cache: true })
+                    return $http.get(templateUrl, {cache: true})
                         .then(response => {
                             // Put the fetched template in $templateCache
                             $templateCache.put(templateUrl, response.data);
@@ -195,7 +195,7 @@ export default (function () {
     portal.service('priceHistoryService', ['cookieService', 'xhrService', priceHistoryService]);
     portal.service('currencyHistoryService', ['cookieService', 'xhrService', currencyHistoryService]);
     portal.service('pricesCheckerService', ['cookieService', 'xhrService', pricesCheckerService]);
-    portal.service('entityResolverService', ['instrumentService', 'transactionTypeService', 'priceHistoryService', 'currencyHistoryService', 'configurationService', 'reportService',  entityResolverService]);
+    portal.service('entityResolverService', ['instrumentService', 'transactionTypeService', 'priceHistoryService', 'currencyHistoryService', 'configurationService', 'reportService', entityResolverService]);
     portal.service('fieldResolverService', ['instrumentService', 'transactionTypeService', 'metaContentTypesService', fieldResolverService]);
     portal.service('expressionService', ['cookieService', 'xhrService', expressionService]);
     portal.service('dashboardConstructorMethodsService', ['uiService', 'dashboardHelper', dashboardConstructorMethodsService]);
@@ -602,6 +602,9 @@ export default (function () {
     // Data
 
     portal.controller('DataPortfolioController', ['$scope', require('./app/controllers/data/dataPortfolioController')]);
+    portal.controller('DataPortfolioTypeController', ['$scope', require('./app/controllers/data/dataPortfolioTypeController')]);
+    portal.controller('DataPortfolioReconcileGroupController', ['$scope', require('./app/controllers/data/dataPortfolioReconcileGroupController')]);
+    portal.controller('DataPortfolioReconcileHistoryController', ['$scope', require('./app/controllers/data/dataPortfolioReconcileHistoryController')]);
     portal.controller('DataPortfolioRegisterController', ['$scope', require('./app/controllers/data/dataPortfolioRegisterController')]);
     portal.controller('DataPortfolioRegisterRecordController', ['$scope', require('./app/controllers/data/dataPortfolioRegisterRecordController')]);
     portal.controller('DataAccountController', ['$scope', '$stateParams', require('./app/controllers/data/dataAccountController')]);
@@ -731,6 +734,7 @@ export default (function () {
 
     portal.directive('bindFieldControl', ['$mdDialog', require('./app/directives/bindFieldControlDirective')]);
     portal.directive('bindFieldTable', ['$mdDialog', 'instrumentService', 'gridTableHelperService', 'multitypeFieldService', 'entityDataConstructorService', require('./app/directives/bindFieldTableDirective')]);
+    portal.directive('bindFieldAttachment', ['$mdDialog',  require('./app/directives/bindFieldAttachmentDirective')]);
     portal.directive('layoutConstructorField', ['$mdDialog', require('./app/directives/layoutConstructorFieldDirective')]);
     // portal.directive('newLayoutConstructorField', ['$mdDialog', require('./app/directives/newLayoutConstructorFieldDirective')]);
     portal.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirective')]);
@@ -920,7 +924,7 @@ export default (function () {
     portal.directive('gHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
     portal.directive('groupWidthAligner', [require('./app/directives/groupTable/gWidthAlignerComponent')]);
     portal.directive('groupEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', require('./app/directives/groupTable/groupEditorBinderComponent')]);
-    portal.directive('groupSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', 'metaContentTypesService', require('./app/directives/groupTable/gSplitPanelReportBinderComponent')]);
+    portal.directive('groupSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', 'metaContentTypesService', 'templateLoader', require('./app/directives/groupTable/gSplitPanelReportBinderComponent')]);
     portal.directive('gVerticalSplitPanelReportBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gVerticalSplitPanelReportBinderComponent')]);
     portal.directive('groupPermissionEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gPermissionEditorBinderComponent')]);
     portal.directive('groupReconciliationMatchEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', '$transitions', require('./app/directives/groupTable/gReconciliationMatchEditorBinderComponent')]);
@@ -998,7 +1002,7 @@ export default (function () {
     portal.directive('closeDialogButton', [closeDialogButtonDirective]);
 
     // portal.directive('popUp', [require('./app/directives/dialogWindowResizerDirective.js')]);
-    portal.directive('customPopup', ['$rootScope', '$compile', require('./app/directives/customPopupDirective')]);
+    portal.directive('customPopup', ['$rootScope', '$compile', '$timeout', require('./app/directives/customPopupDirective')]);
     portal.directive('chipsList', ['$filter', require('./app/directives/chipsListDirective')]);
     portal.directive('onRepeatElemInit', [require('./app/directives/onRepeatElemInit')]);
 
@@ -1069,22 +1073,22 @@ export default (function () {
     }
 
     var currentUrl = location.href;
-    window.addEventListener('hashchange', function() {
-    	_paq.push(['setReferrerUrl', currentUrl]);
-    	currentUrl = '/' + window.location.hash.substr(1);
-    	_paq.push(['setCustomUrl', currentUrl]);
-    	_paq.push(['setDocumentTitle', document.title]);
+    window.addEventListener('hashchange', function () {
+        _paq.push(['setReferrerUrl', currentUrl]);
+        currentUrl = '/' + window.location.hash.substr(1);
+        _paq.push(['setCustomUrl', currentUrl]);
+        _paq.push(['setDocumentTitle', document.title]);
 
-    	// remove all previously assigned custom variables, requires Matomo (formerly Piwik) 3.0.2
-    	_paq.push(['deleteCustomVariables', 'page']);
-    	_paq.push(['trackPageView']);
+        // remove all previously assigned custom variables, requires Matomo (formerly Piwik) 3.0.2
+        _paq.push(['deleteCustomVariables', 'page']);
+        _paq.push(['trackPageView']);
 
-    	// make Matomo aware of newly added content
-    	var content = document.body;
-    	_paq.push(['MediaAnalytics::scanForMedia', content]);
-    	_paq.push(['FormAnalytics::scanForForms', content]);
-    	_paq.push(['trackContentImpressionsWithinNode', content]);
-    	_paq.push(['enableLinkTracking']);
+        // make Matomo aware of newly added content
+        var content = document.body;
+        _paq.push(['MediaAnalytics::scanForMedia', content]);
+        _paq.push(['FormAnalytics::scanForForms', content]);
+        _paq.push(['trackContentImpressionsWithinNode', content]);
+        _paq.push(['enableLinkTracking']);
         _paq.push(['enableHeartBeatTimer']);
     });
 
