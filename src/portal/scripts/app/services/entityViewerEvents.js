@@ -25,8 +25,9 @@ module.exports = {
     'START_CELLS_OVERFLOW': 'START_CELLS_OVERFLOW',
 
     'REQUEST_REPORT': 'REQUEST_REPORT',
-    'DATA_LOAD_END': 'DATA_LOAD_END',
+    'DATA_LOAD_END': 'DATA_LOAD_END', // Data loaded. Server did not respond with an error.
     'DATA_LOAD_START': 'DATA_LOAD_START',
+    'DATA_LOAD_ERROR': 'DATA_LOAD_ERROR',
 
     'ACTIVE_OBJECT_CHANGE': 'ACTIVE_OBJECT_CHANGE', // right click on object info
     'USER_REQUEST_AN_ACTION': 'USER_REQUEST_AN_ACTION', // user used a Add menu and want to Add Entity (portfolio, account,  etc)
