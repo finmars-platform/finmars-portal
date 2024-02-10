@@ -183,11 +183,12 @@
 
                     data = vm.mapValuesOnTransactionTypeChange(data);
 
-                    var keys = Object.keys(data.values);
+                    /*var keys = Object.keys(data.values);
 
                     keys.forEach(function (item) {
                         vm.entity[item] = data.values[item];
-                    });
+                    });*/
+                    vm.entity.values = data.values;
 
                     if (data.book_transaction_layout) {
 
