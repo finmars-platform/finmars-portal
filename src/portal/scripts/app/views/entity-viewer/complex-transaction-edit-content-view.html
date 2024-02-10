@@ -17,12 +17,12 @@
                 </div>
 
                 <div ng-if="!vm.previewMode">
-                    <complex-dropdown-select label="Transaction type"
-                                             model="vm.transactionTypeId"
-                                             menu-options="vm.transactionGroups"
-                                             favorite-options="vm.favTTypeOpts"
-                                             on-favorite-options-change="vm.saveFavoriteTTypeOptions()"
-                                             on-selected-option-change="vm.transactionTypeChange()"></complex-dropdown-select>
+                    <complex-dropdown-select data-label="Transaction type"
+                                             data-model="vm.transactionTypeId"
+                                             data-menu-options="vm.transactionGroups"
+                                             data-favorite-options="vm.favTTypeOpts"
+                                             data-on-favorite-options-change="vm.saveFavoriteTTypeOptions()"
+                                             data-on-selected-option-change="vm.transactionTypeChange()"></complex-dropdown-select>
                 </div>
 
             </div>
