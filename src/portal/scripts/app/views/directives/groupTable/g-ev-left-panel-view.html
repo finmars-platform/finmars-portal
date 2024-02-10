@@ -3,15 +3,17 @@
     <div class="ev-left-panel-inner-container state-{{sliderButtonState}}">
 
         <div class="header-row">
-            <h4>Groups</h4>
+            <div class="flex-row flex-c-space-between flex-i-center p-b-8">
+                <h4>Groups</h4>
 
-            <div class="ev-left-panel-grouping-menu-button"
-                 data-ng-click="groupSectionState = !groupSectionState">
-                <span class="material-icons">menu</span>
+                <div class="ev-left-panel-grouping-menu-button"
+                     data-ng-click="groupSectionState = !groupSectionState">
+                    <span class="material-icons">menu</span>
+                </div>
             </div>
         </div>
 
-        <div class="flex-column height-100">
+        <div class="tree-wrap">
 
             <div class="flex-1-1-auto overflow-auto">
 
