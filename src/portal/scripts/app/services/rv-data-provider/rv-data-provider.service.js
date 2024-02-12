@@ -495,6 +495,9 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         Promise.all(promises).then(function () {
             evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+
+        }).catch(function() {
+            evEventService.dispatchEvent(evEvents.DATA_LOAD_ERROR);
         })
 
     };
@@ -564,6 +567,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 resolve();
 
             }).catch(function (error) {
+                evEventService.dispatchEvent(evEvents.DATA_LOAD_ERROR);
                 reject(error)
             })
 

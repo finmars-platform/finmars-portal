@@ -64,6 +64,8 @@
                 scope.isReport = metaService.isReport(entityType);
                 var isRootEntityViewer = scope.evDataService.isRootEntityViewer();
 
+                scope.error = false;
+
                 var rvDomManager = new RvDomManager(toastNotificationService, transactionTypeService, priceHistoryService, uiService, evRvDomManagerService, rvDataProviderService);
                 var activeLayoutConfigIsSet = false;
 
@@ -460,12 +462,29 @@
                     }
 
                     scope.evDataService.setDataLoadStatus(true);
+                    const requestParamsList = scope.evDataService.getRequestParametersAsList();
 
                     scope.dataLoadStatus = true;
+                    scope.error = false;
 
                     setTimeout(function () {
                         scope.$apply();
                     }, 0)
+
+                });
+
+                scope.evEventService.addEventListener(evEvents.DATA_LOAD_ERROR, function () {
+
+                    // TODO: integrate event DATA_LOAD_ERROR into ev-data-provider/ev-data-provider.service.js
+                    if ( errorWhileLoadingData() ) {
+
+                        scope.error = true;
+
+                        setTimeout(function () {
+                            scope.$apply();
+                        }, 0)
+
+                    }
 
                 });
 
@@ -537,7 +556,27 @@
 
                 }
 
+                /**
+                 * Check whether error occurred while trying to load root group
+                 *
+                 * @return {boolean} - true if error occurred
+                 */
+                const errorWhileLoadingData = function () {
+
+                    const requestParamsList = scope.evDataService.getRequestParametersAsList();
+
+                    const rootRequestParam = requestParamsList.find(rp => rp.groups_level === 1);
+
+                    return rootRequestParam.status === 'error';
+
+                }
+
                 var init = function () {
+
+                    if ( errorWhileLoadingData() ) {
+                        // When data was loaded before gTableBodyComponent initialized
+                        scope.error = true;
+                    }
 
                     if (viewContext === 'split_panel' && entityType === 'transaction-report') {
 
@@ -670,17 +709,6 @@
                 };
 
                 init();
-
-                /* $(window).on('resize', function () { // TODO what?
-
-                    if (scope.isReport) {
-                        rvDomManager.calculateScroll(elements, scope.evDataService);
-                    } else {
-                        evDomManager.calculateScroll(elements, scope.evDataService, scope.scrollManager);
-                        evDomManager.calculateVirtualStep(elements, scope.evDataService);
-                    }
-
-                }); */
 
                 scope.$on('$destroy', function () {
                     window.removeEventListener('resize', onWindowResize);

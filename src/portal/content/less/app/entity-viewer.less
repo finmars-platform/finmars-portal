@@ -8,12 +8,16 @@
   margin-left: 8px;
 }
 
+.ev-big-center-msg() {
+  font-size: 24px;
+  padding: 120px;
+  margin-left: 26vw;
+}
+
 .entity-viewer-holder {
 
   .no-data-block {
-    font-size: 24px;
-    padding: 120px;
-    margin-left: 26vw;
+    .ev-big-center-msg();
   }
 
   .ev-content {
@@ -54,6 +58,19 @@
       border-right: 1px solid @borderPale;
       overflow: hidden;
       box-sizing: border-box;
+
+      .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 48px; // align with name of groups
+        padding-bottom: 8px;
+
+        h4 {
+          margin: 0;
+          color: @text-lighten;
+        }
+      }
     }
 
     .ev-left-panel-drag-msg {
@@ -111,10 +128,11 @@
     }
 
     .ev-left-panel-grouping-menu-button {
-      position: absolute;
+      /*position: absolute;
       right: 20px;
-      top: 10px;
+      top: 10px;*/
       padding: 0 4px;
+      margin-top: 1px;
       color: #747474;
       cursor: pointer;
       outline: none;
