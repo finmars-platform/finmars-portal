@@ -1012,6 +1012,103 @@ export default function (instrumentService, transactionTypeService, priceHistory
         }
     };
 
+    var restoreBulk = function (entityType, data) {
+        switch (entityType) {
+            case 'portfolio':
+                break;
+                // return portfolioService.restoreBulk(data);
+            case 'portfolio-register':
+                break;
+                // return portfolioRegisterService.restoreBulk(data);
+            case 'portfolio-register-record':
+                break;
+                // return portfolioRegisterRecordService.restoreBulk(data);
+            case 'currency':
+                break;
+                // return currencyService.restoreBulk(data);
+            case 'account':
+                break;
+                // return accountService.restoreBulk(data);
+            case 'account-type':
+                break;
+                // return accountTypeService.restoreBulk(data);
+            case 'responsible':
+                break;
+                // return responsibleService.restoreBulk(data);
+            case 'responsible-group':
+                break;
+                // return responsibleGroupService.restoreBulk(data);
+            case 'counterparty':
+                break;
+                // return counterpartyService.restoreBulk(data);
+            case 'counterparty-group':
+                break;
+                // return counterpartyGroupService.restoreBulk(data);
+            case 'instrument':
+                break;
+                // return instrumentService.restoreBulk(data);
+            case 'instrument-type':
+                break;
+                // return instrumentTypeService.restoreBulk(data);
+            case 'transaction':
+                break;
+                // return transactionService.restoreBulk(data);
+            case 'complex-transaction':
+                break;
+                // return complexTransactionService.restoreBulk(data);
+            case 'transaction-type':
+                return transactionTypeService.restoreBulk(data);
+            case 'transaction-type-group':
+                break;
+                // return transactionTypeGroupService.restoreBulk(data);
+            case 'price-history':
+                break;
+                // return priceHistoryService.restoreBulk(data);
+            case 'portfolio-history':
+                break;
+                // return portfolioHistoryService.restoreBulk(data);
+            case 'pricing-policy':
+                break;
+                // return pricingPolicyService.restoreBulk(data);
+            case 'currency-history':
+                break;
+                // return currencyHistoryService.restoreBulk(data);
+            case 'strategy-1':
+                break;
+                // return strategyService.restoreBulk(1, data);
+            case 'strategy-2':
+                break;
+                // return strategyService.restoreBulk(2, data);
+            case 'strategy-3':
+                break;
+                // return strategyService.restoreBulk(3, data);
+            case 'strategy-1-group':
+                //return strategyGroupService.restoreBulk(data);
+                break;
+            case 'strategy-2-group':
+                //return strategyGroupService.restoreBulk(data);
+                break;
+            case 'strategy-3-group':
+                //return strategyGroupService.restoreBulk(data);
+                break;
+            case 'strategy-1-subgroup':
+                //return strategySubgroupService.restoreBulk(data);
+                break;
+            case 'strategy-2-subgroup':
+                //return strategySubgroupService.restoreBulk(data);
+                break;
+            case 'strategy-3-subgroup':
+                //return strategySubgroupService.restoreBulk(data);
+                break;
+            case 'price-history-error':
+                break;
+                // return priceHistoryErrorService.restoreBulk(data);
+            case 'currency-history-error':
+                break;
+                // return currencyHistoryErrorService.restoreBulk(data);
+        }
+    };
+
     const selectsMap = {
         'instrumentSelect': ['instrument'],
         'unifiedDataSelect': ['counterparty', 'currency'],
@@ -1108,6 +1205,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
         deleteByKey: deleteByKey,
         updateBulk: updateBulk,
         deleteBulk: deleteBulk,
+        restoreBulk: restoreBulk,
 
         getSelectByEntityType: getSelectByEntityType,
 

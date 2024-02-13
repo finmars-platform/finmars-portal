@@ -76,6 +76,10 @@ export default function (cookieService, xhrService) {
         return transactionTypeRepository.deleteBulk(data);
     };
 
+    var restoreBulk = function(data){
+        return transactionTypeRepository.restoreBulk(data);
+    };
+
     var recalculateUserFields = function (id, data){
         return transactionTypeRepository.recalculateUserFields(id, data);
     }
@@ -101,6 +105,7 @@ export default function (cookieService, xhrService) {
         updateBulkLight: updateBulkLight,
         updateBulk: updateBulk,
         deleteBulk: deleteBulk,
+        restoreBulk: restoreBulk,
 
         recalculateUserFields: recalculateUserFields
 
