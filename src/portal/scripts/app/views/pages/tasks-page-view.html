@@ -76,6 +76,7 @@
                             <thead>
                             <tr>
                                 <th>Status</th>
+                                <th>Result</th>
                                 <th>Date</th>
                                 <th>Task</th>
                                 <th>User</th>
@@ -140,6 +141,14 @@
                                             </md-tooltip>
                                         </div>
                                     </div>
+
+                                </td>
+                                <td>
+                                    Errors: {{item.result_stats.error_count}} <br />
+                                    Skip: {{item.result_stats.skip_count}} <br />
+                                    Success: {{item.result_stats.success_count}} <br />
+                                </td>
+                                <td>
 
                                 </td>
                                 <td>
@@ -280,6 +289,17 @@
                             {{vm.activeTask.status}}
                             </span>
                         </div>
+
+                        <div class="task-detail-field" data-ng-if="vm.activeTask.result_stats">
+                            <span class="task-detail-field-definition">Result:</span><br/>
+                                <span> Total:{{vm.activeTask.result_stats.total_count}}</span><br/>
+                                <span> Error:{{vm.activeTask.result_stats.error_count}}</span><br/>
+                                <span> Skip:{{vm.activeTask.result_stats.success_count}}</span><br/>
+                                <span>Success:{{vm.activeTask.result_stats.skip_count}}</span><br/>
+                        </div>
+                        
+                        
+                        
 
                         <div class="task-detail-field" data-ng-if="vm.activeTask.member_object">
                             <span class="task-detail-field-definition">Member</span>:
