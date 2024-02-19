@@ -17,7 +17,7 @@
             link: function (scope, elem, attr) {
 
                 var scrollableArea;
-                var evContent;
+                var contentElem; // .ev-content
                 var minWidth = 65;
 
                 function findColumnById(columnId) {
@@ -73,13 +73,13 @@
 
                 function updateCellsWidth(column, index) {
 
-                    if (!evContent) {
-                        evContent = $(elem).parents('.g-table-section')[0].querySelector('.ev-content');
+                    if (!contentElem) {
+                        contentElem = $(elem).parents('.g-table-section')[0].querySelector('.ev-content');
                     }
 
                     var columnNumber = index + 1;
 
-                    var cells = evContent.querySelectorAll(".g-cell-wrap[data-column='" + columnNumber + "']");
+                    var cells = contentElem.querySelectorAll(".g-cell-wrap[data-column='" + columnNumber + "']");
 
                     for (var i = 0; i < cells.length; i = i + 1) {
 
@@ -104,39 +104,43 @@
 
                     var i;
                     var areaWidth = 0;
-                    var columnMargins = 16;
+                    // var columnMargins = 16;
                     var dropNewFieldWidth = 400;
                     if (viewContext === 'dashboard') {
                         dropNewFieldWidth = 105;
                     }
 
-                    var buttonSelectAllWidth = 24;
+                    var buttonSelectAllWidth = 50;
 
                     if (!scrollableArea) {
                         scrollableArea = $(elem).parents('.g-table-section')[0].querySelector('.g-scrollable-area');
                     }
-                    if (!evContent) {
-                        evContent = $(elem).parents('.g-table-section')[0].querySelector('.ev-content');
+                    if (!contentElem) {
+                        contentElem = $(elem).parents('.g-table-section')[0].querySelector('.ev-content');
                     }
 
                     for (i = 0; i < columns.length; i = i + 1) {
 
                         var columnWidth = parseInt(columns[i].style.width.split('px')[0], 10);
 
-                        areaWidth = areaWidth + columnWidth + columnMargins;
+                        // areaWidth = areaWidth + columnWidth + columnMargins;
+                        areaWidth = areaWidth + columnWidth
                     }
 
                     var resultWidth = areaWidth + dropNewFieldWidth;
 
-                    var wrapperWidth = $('.ev-viewport').width();
+                    var viewportWidth = $('.ev-viewport').width();
+                    console.log(
+                        "testing346.gColumnResizerComponent wrapperWidth ",
+                        resultWidth, viewportWidth
+                    );
+                    if (resultWidth < viewportWidth) {
 
-                    if (resultWidth < wrapperWidth) {
-
-                        resultWidth = wrapperWidth;
-                        evContent.style.width = 'auto';
+                        resultWidth = viewportWidth;
+                        contentElem.style.width = 'auto';
 
                     } else {
-                        $(evContent).width(resultWidth + buttonSelectAllWidth);
+                        $(contentElem).width(resultWidth + buttonSelectAllWidth);
                     }
 
                     $(scrollableArea).width(resultWidth);
