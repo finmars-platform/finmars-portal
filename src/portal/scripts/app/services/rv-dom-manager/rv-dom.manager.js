@@ -1376,7 +1376,7 @@ export default function (toastNotificationService, transactionTypeService, price
         // There is another method that calculates contentElemWidth. That is resizeScrollableArea() form gColumnResizerComponent.js
         var areaWidth = 0;
         var i;
-        var columnMargins = 16;
+        var columnMargins = 0;
         var dropNewFieldWidth = 400;
         if (viewContext === 'dashboard') {
             dropNewFieldWidth = 105;
@@ -1391,7 +1391,7 @@ export default function (toastNotificationService, transactionTypeService, price
             areaWidth = areaWidth + columnWidth + columnMargins;
         }
 
-        var resultWidth = areaWidth + dropNewFieldWidth;
+        var resultWidth = areaWidth + dropNewFieldWidth + 50 + 50;
 
         if (resultWidth > contentWrapElemWidth) {
             rvScrollManager.setContentElemWidth(resultWidth);

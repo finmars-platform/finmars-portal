@@ -1366,8 +1366,43 @@
         }
 
     };*/
+    /**
+     * Calculates width of content of table. Sets width for element .ev-content.
+     *
+     * @param {Object} evDataService
+     * @param {Object} evScrollManager
+     * @return {Number} - width of table's content
+     */
+    const calculateContentWidth = function(evDataService, evScrollManager) {
 
-    var calculateScroll = function (elements, evDataService, evScrollManager) {
+        // Sum of widths of elements:
+        // select all rows checkbox, columns, drop new column area, add column button
+        let contentWidth = evRvDomManagerService.calculateCommonElemsWidth(evDataService);
+
+        const rowSettings = evDataService.getRowSettings();
+        const rowSettingsWidth = rowSettings.folded ? 0 : 124;
+
+        contentWidth = contentWidth + rowSettingsWidth;
+
+        // width of .ev-viewport
+        const viewportElemWidth = evScrollManager.getViewportWidth();
+
+        if (contentWidth < viewportElemWidth) {
+            // table occupies all available width
+            contentWidth = viewportElemWidth;
+
+            evScrollManager.setContentElemWidth('auto');
+
+        } else {
+            // table needs more width than available
+            evScrollManager.setContentElemWidth(contentWidth);
+        }
+
+        return contentWidth;
+
+    }
+
+    const calculateScroll = function (elements, evDataService, evScrollManager) {
 
         evScrollManager.setViewportElem(elements.viewportElem); // .ev-viewport
         evScrollManager.setContentElem(elements.contentElem); // .ev-content
@@ -1461,11 +1496,11 @@
             evScrollManager.setViewportWidth(viewportWidth);
         }
 
-        var paddingTop = calculatePaddingTop(evDataService);
         var totalHeight = calculateTotalHeight(evDataService);
 
         evScrollManager.setContentElemHeight(totalHeight);
-        // evScrollManager.setContentElemPaddingTop(paddingTop);
+
+        calculateContentWidth(evDataService, evScrollManager);
 
     };
 

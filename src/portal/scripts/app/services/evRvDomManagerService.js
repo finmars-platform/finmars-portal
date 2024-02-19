@@ -68,6 +68,47 @@
 
         }
 
+
+		/**
+		 * Calculate width of elements common between entity and report viewers
+		 *
+		 * @param {Object} evDataService
+		 * @return { {contentElem: HTMLDivElement, width: Number|null} } - .ev-content with auto or fixed width
+		 */
+		function calculateCommonElemsWidth (evDataService) {
+
+			let areaWidth = 0;
+			let dropNewFieldWidth = 400;
+
+			const viewContext = evDataService.getViewContext();
+
+			if (viewContext === 'dashboard') {
+				/* *
+				 * Right now this actually used only by report viewer.
+				 * but entity viewer can be placed inside dashboard in the future.
+				 * And it makes code cleaner to place this if here.
+				 * */
+				dropNewFieldWidth = 105;
+			}
+
+			const buttonSelectAllWidth = 50;
+
+			const addColBtnWidth = 50;
+
+			const columns = evDataService.getColumns();
+			let i;
+
+			for (i = 0; i < columns.length; i = i + 1) {
+
+				var columnWidth = parseInt(columns[i].style.width.split('px')[0], 10);
+
+				areaWidth = areaWidth + columnWidth;
+			}
+
+			return areaWidth + buttonSelectAllWidth + addColBtnWidth + dropNewFieldWidth;
+
+		}
+
         function clearDropdowns (eventListenerFn2Args, clearDropdownsAndRowsArgs, executeContextMenuActionFn, callClearDropdownsAndRowsFn) {
 
 
@@ -459,6 +500,7 @@
             calculateContentWrapWidth: calculateContentWrapWidth,
 
             calculateWorkareaWrapWidth: calculateWorkareaWrapWidth,
+			calculateCommonElemsWidth: calculateCommonElemsWidth,
 			//region ev rv tables menus
 			clearDropdowns: clearDropdowns,
 			prepareRowAndGetPopupMenu: prepareRowAndGetPopupMenu,
