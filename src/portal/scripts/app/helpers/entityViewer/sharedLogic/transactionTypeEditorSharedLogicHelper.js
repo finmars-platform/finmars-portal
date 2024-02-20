@@ -4,8 +4,8 @@
 
     const metaHelper = require('../../meta.helper');
 
-	const gridTableEvents = require('../../../services/gridTableEvents');
-	const directiveEvents = require('../../../services/events/directivesEvents');
+    const gridTableEvents = require('../../../services/gridTableEvents');
+    const directiveEvents = require('../../../services/events/directivesEvents');
 
     const helpExpressionsService = require('../../../services/helpExpressionsService');
 
@@ -934,7 +934,7 @@
             return result;
         };
 
-        const validateUserFields = function (entity, inputsToDelete, result=[]) {
+        const validateUserFields = function (entity, inputsToDelete, result = []) {
 
             Object.keys(entity).forEach(function (entityKey) {
 
@@ -943,7 +943,7 @@
                     entityKey.indexOf('user_number_') === 0 ||
                     entityKey.indexOf('user_date_') === 0;
 
-                if ( isUserFieldKey && entity[entityKey] ) {
+                if (isUserFieldKey && entity[entityKey]) {
 
                     const userFieldName = viewModel.transactionUserFields[entityKey];
 
@@ -1273,8 +1273,7 @@
 
                         if (valueTypeC.settings.value === 120) { // Button
                             linkedInputsNames = structuredClone(gtColumn.settings.value);
-                        }
-                        else {
+                        } else {
 
                             gtColumn.settings.value.forEach(function (multiselItem) {
 
@@ -1356,7 +1355,7 @@
             let fieldKey = resolveRelation(contentTypeCell.settings.value);
             fieldKey = fieldKey.replace(/-/g, "_");
 
-            if ( loadedRelationsList.includes(fieldKey) ) {
+            if (loadedRelationsList.includes(fieldKey)) {
                 changedCell.settings.selectorOptions = viewModel.relationItems[fieldKey];
 
             } else {
@@ -1611,6 +1610,7 @@
 
                         var name = gridTableHelperService.getCellFromRowByKey(newRow, 'name'),
                             verboseName = gridTableHelperService.getCellFromRowByKey(newRow, 'verbose_name'),
+                            expression_iterations_count = gridTableHelperService.getCellFromRowByKey(newRow, 'expression_iterations_count'),
                             tooltip = gridTableHelperService.getCellFromRowByKey(newRow, 'tooltip'),
                             valueType = gridTableHelperService.getCellFromRowByKey(newRow, 'value_type'),
                             contentType = gridTableHelperService.getCellFromRowByKey(newRow, 'content_type'),
@@ -1622,6 +1622,7 @@
                         name.settings.value = res.data.name;
                         verboseName.settings.value = res.data.verbose_name;
                         tooltip.settings.value = res.data.tooltip;
+                        expression_iterations_count.settings.value = res.data.expression_iterations_count;
                         valueType.settings.value = res.data.valueType;
                         contentType.settings.value = res.data.contentType;
                         fillFromContext.settings.value = res.data.context_property;
@@ -1824,7 +1825,22 @@
                         styles: {
                             'grid-table-cell': {'width': '140px'}
                         }
-                    }
+                    },
+                    {
+                        key: 'expression_iterations_count',
+                        objPath: ['expression_iterations_count'],
+                        columnName: 'Expression Iterations Count',
+                        order: 10,
+                        cellType: 'text',
+                        settings: {
+                            value: "",
+                            exprData: null,
+                            closeOnMouseOut: false
+                        },
+                        styles: {
+                            'grid-table-cell': {'width': '240px'}
+                        }
+                    },
                 ]
             },
             tableMethods: {
@@ -1923,8 +1939,7 @@
                         rowObj.columns[8].settings.optionsCheckboxes = null; // linked inputs for Button have no checkboxes
                         rowObj.columns[8].settings.value = structuredClone(input.settings.linked_inputs_names);
 
-                    }
-                    else {
+                    } else {
 
                         rowObj.columns[8].settings.value = input.settings.linked_inputs_names.map(function (linkedInputName) {
 
@@ -1933,7 +1948,7 @@
                                 isChecked: false
                             };
 
-                            if ( input.settings.recalc_on_change_linked_inputs.includes(linkedInputName) ) {
+                            if (input.settings.recalc_on_change_linked_inputs.includes(linkedInputName)) {
 
                                 linkedInput.isChecked = true;
 
