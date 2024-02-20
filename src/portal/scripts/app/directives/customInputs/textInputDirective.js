@@ -15,7 +15,7 @@
 				customButtons: '=',
 				customStyles: "=",
 				eventSignal: "=",
-				smallOptions: "=",
+				smallOptions: "<",
 
 				isDisabled: "=",
 				isLocked: "@",

@@ -6,7 +6,8 @@ const importTransactionService = require("../../../services/import/importTransac
 
     'use strict';
 
-    var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
+    const metaService = require('../../../services/metaService').default;
+    var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService').default;
     var transactionTypeService = require('../../../services/transactionTypeService');
 
     module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, toastNotificationService, transactionTypeService, importSchemesMethodsService, schemeId) {
@@ -26,6 +27,11 @@ const importTransactionService = require("../../../services/import/importTransac
         vm.dryRunData = JSON.stringify([{"user_code": "example"}], null, 4)
         vm.activeDryRunResultItem = null;
 
+        vm.ruleScenarioInputsOpts = {
+            noIndicatorBtn: true,
+            readonly: true,
+        }
+
         vm.defaultRuleScenario = {
             name: '-',
             is_default_rule_scenario: true,
@@ -41,6 +47,10 @@ const importTransactionService = require("../../../services/import/importTransac
         vm.inputsFunctions = [];
         vm.selector_values_projection = [];
         vm.editingScheme = false;
+
+        vm.inputsOpts = {
+            noIndicatorBtn: true,
+        }
 
         vm.getFunctions = function () {
 
@@ -292,13 +302,23 @@ const importTransactionService = require("../../../services/import/importTransac
 
         vm.getTransactionTypes = function () {
 
-            transactionTypeService.getListLight({
-                pageSize: 1000
-            }).then(function (data) {
-                vm.transactionTypes = data.results;
-                vm.readyStatus.transactionTypes = true;
-                $scope.$apply();
-            });
+            metaService.loadDataFromAllPages(
+                transactionTypeService.getListLight,
+                [{pageSize: 1000, page: 1}]
+            )
+                .then(function (data) {
+
+                    vm.transactionTypesOpts = data.map(ttype => {
+                        return {
+                            id: ttype.user_code,
+                            name: `${ttype.name} (${ttype.user_code})`
+                        }
+                    });
+
+                    vm.readyStatus.transactionTypes = true;
+                    $scope.$apply();
+
+                });
 
         };
 
@@ -358,6 +378,10 @@ const importTransactionService = require("../../../services/import/importTransac
                 fields: []
             })
         };
+
+        vm.exprInputOpts = {
+            readonly: true
+        }
 
         vm.setProviderFieldExpression = function (item) {
             importSchemesMethodsService.setProviderFieldExpression(vm, item);
@@ -740,6 +764,13 @@ const importTransactionService = require("../../../services/import/importTransac
 
         }
 
+        //# region Scenarios
+
+        vm.schenarioStatusOpts = [
+            { id: 'active', name: 'Active' },
+            { id: 'skip', name: 'Skip' },
+        ];
+
         vm.onTransactionTypeChange = function ($event, item) {
 
             item.inputs = []
@@ -792,6 +823,8 @@ const importTransactionService = require("../../../services/import/importTransac
                 }
             });
         };
+
+        //# endregion
 
         // DRAFT STARTED
 
