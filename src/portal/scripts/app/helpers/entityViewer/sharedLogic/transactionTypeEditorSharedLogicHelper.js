@@ -1220,6 +1220,7 @@
                 pricing_policy: null,
                 value: null,
                 value_expr: null,
+                expression_iterations_count: 1,
                 settings: {}
             }
 
@@ -1830,8 +1831,8 @@
                         key: 'expression_iterations_count',
                         objPath: ['expression_iterations_count'],
                         columnName: 'Expression Iterations Count',
-                        order: 10,
-                        cellType: 'text',
+                        order: 9,
+                        cellType: 'expression', // should number type input
                         settings: {
                             value: "",
                             exprData: null,
@@ -1923,6 +1924,8 @@
 
                 //# region linked_inputs_names
                 rowObj.columns[8].settings.value = [];
+
+                rowObj.columns[9].settings.value = input.expression_iterations_count
 
                 if (input.settings && input.settings.linked_inputs_names) {
 
