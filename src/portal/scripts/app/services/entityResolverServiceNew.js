@@ -1018,8 +1018,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 break;
                 // return portfolioService.restoreBulk(data);
             case 'portfolio-register':
-                break;
-                // return portfolioRegisterService.restoreBulk(data);
+                return portfolioRegisterService.restoreBulk(data);
             case 'portfolio-register-record':
                 break;
                 // return portfolioRegisterRecordService.restoreBulk(data);
