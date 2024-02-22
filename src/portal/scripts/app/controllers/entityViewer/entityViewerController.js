@@ -756,7 +756,6 @@
             });
 
             firstDleIndex = vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-                console.log("testing328.entityViewerController first DATA_LOAD_END");
                 /* *
                  * Fixes scenario when DATA_LOAD_END
                  * called inside evDataProviderService.updateDataStructure()
