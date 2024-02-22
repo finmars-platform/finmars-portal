@@ -454,7 +454,7 @@
                     contentElem.style.opacity = '1';
 
                     updateTableContent();
-                    console.log("testing328.gTableBodyComponent DATA_LOAD_END updateTableContent called");
+
                     if (!activeLayoutConfigIsSet && viewContext !== 'reconciliation_viewer') {
                         activeLayoutConfigIsSet = true;
                         scope.evDataService.setActiveLayoutConfiguration({isReport: scope.isReport}); // saving layout for checking for changes
@@ -638,9 +638,8 @@
                                 if (scope.isReport) {
                                     contentElem.style.opacity = '1';
                                 }
-                                console.log("testing328.gTableBodyComponent init rv didDataLoadEnd ", scope.evDataService.didDataLoadEnd() );
+
                                 if ( scope.evDataService.didDataLoadEnd() ) {
-                                    console.log("testing328.gTableBodyComponent init rv updateTableContent called");
                                     updateTableContent();
                                 }
 
@@ -661,9 +660,7 @@
 
                             evDomManager.addScrollListener(elements, scope.evDataService, scope.evEventService, scope.scrollManager);
 
-                            console.log("testing328.gTableBodyComponent init ev didDataLoadEnd ", scope.evDataService.didDataLoadEnd() );
                             if ( scope.evDataService.didDataLoadEnd() ) {
-                                console.log("testing328.gTableBodyComponent init ev updateTableContent called");
                                 updateTableContent();
                             }
 
