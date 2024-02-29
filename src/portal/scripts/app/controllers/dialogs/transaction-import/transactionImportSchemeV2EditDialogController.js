@@ -7,10 +7,8 @@ const importTransactionService = require("../../../services/import/importTransac
     'use strict';
 
     const metaService = require('../../../services/metaService').default;
-    var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService').default;
-    var transactionTypeService = require('../../../services/transactionTypeService');
 
-    module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, toastNotificationService, transactionTypeService, importSchemesMethodsService, schemeId) {
+    module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, toastNotificationService, transactionTypeService, transactionImportSchemeService, importSchemesMethodsService, schemeId) {
 
         var vm = this;
 
