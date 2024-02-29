@@ -402,7 +402,7 @@
                         vm.entityViewerDataService.setActiveObjectActionData(null); */
                         vm.entityViewerDataService.setRowsActionData(null);
 
-                        if (res.status === 'agree') {
+                        /*if (res.status === 'agree') {
 
                             var objects = vm.entityViewerDataService.getObjects();
 
@@ -424,7 +424,7 @@
 
                             vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                        }
+                        }*/
                     });
 
                     break;
