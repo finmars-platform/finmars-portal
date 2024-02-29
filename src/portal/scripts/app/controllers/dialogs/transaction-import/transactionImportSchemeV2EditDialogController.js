@@ -35,13 +35,15 @@ const importTransactionService = require("../../../services/import/importTransac
         vm.defaultRuleScenario = {
             name: '-',
             is_default_rule_scenario: true,
-            is_error_rule_scenario: false
+            is_error_rule_scenario: false,
+            inputs: [],
         };
 
         vm.errorRuleScenario = {
             name: '-',
             is_error_rule_scenario: true,
-            is_default_rule_scenario: false
+            is_default_rule_scenario: false,
+            inputs: [],
         }
 
         vm.inputsFunctions = [];
@@ -196,7 +198,10 @@ const importTransactionService = require("../../../services/import/importTransac
                 vm.inputsFunctions = vm.getFunctions();
 
             }
-
+            console.log(
+                "testing462 transformSourceSchemeToFrontendLogic vm.scheme",
+                vm.scheme
+            );
             if (vm.scheme.rule_scenarios.length) {
 
                 vm.scenarios = [];
@@ -261,7 +266,12 @@ const importTransactionService = require("../../../services/import/importTransac
 
                 })
 
+
             }
+            console.log(
+                "testing462 transformSourceSchemeToFrontendLogic vm.scenarios",
+                vm.scenarios
+            );
 
             if (vm.scheme.recon_scenarios.length) {
                 vm.reconFields = [];
@@ -424,7 +434,8 @@ const importTransactionService = require("../../../services/import/importTransac
         };
 
         function mapInput (scenario) {
-
+            console.trace("testing462 mapInput ");
+            console.log("testing462 mapInput scenario", scenario);
             scenario.inputs = scenario.inputs.filter(function (input) {
                 return input.value_type !== 120;
             })
