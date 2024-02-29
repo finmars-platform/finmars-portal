@@ -173,7 +173,8 @@
 
                         <md-tab-body>
 
-                            <div class="scheme-tab-content">
+                            <div class="scheme-tab-content"
+                                 data-ng-class="{'show-dry-run': vm.showDryRun}">
                                 <div>
                                     <md-button class="md-raised dry-run-button"
                                                data-ng-click="vm.showDryRun = !vm.showDryRun">

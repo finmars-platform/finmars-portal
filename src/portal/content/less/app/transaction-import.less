@@ -93,8 +93,11 @@ md-dialog.transaction-scheme-manager-dialog-view-v2 {
 
   .scheme-tab-content {
     height: 100%;
-    display: grid;
-    grid-template-rows: 36px 1fr;
+
+    &:not(.show-dry-run) {
+      display: grid;
+      grid-template-rows: 36px 1fr;
+    }
   }
 
   .transaction-import-scheme-v2-card-header {
