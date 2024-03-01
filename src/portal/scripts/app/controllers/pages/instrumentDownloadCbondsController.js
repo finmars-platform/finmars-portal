@@ -6,7 +6,7 @@
     'use strict';
 
 
-    var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
+    var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService').default;
     var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
     module.exports = function instrumentDownloadCbondsController($scope, $mdDialog) {

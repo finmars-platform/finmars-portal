@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
+    var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService').default;
 
     // var usersGroupService = require('../../services/usersGroupService');
     // var usersService = require('../../services/usersService');
