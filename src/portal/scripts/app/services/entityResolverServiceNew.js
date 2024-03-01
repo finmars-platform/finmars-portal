@@ -928,6 +928,15 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'pricing-procedure':
                 return pricingProcedureService.deleteByKey(id);
                 break;
+            default:
+                return new Promise((resolve, reject) => {
+                    reject(
+                        {
+                            error_key: "invalid_arguments",
+                            description: `No delete function inside entityResolverServiceNew for entityType: ${entityType}`,
+                        }
+                    )
+                })
         }
     };
 
@@ -1008,6 +1017,15 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return priceHistoryErrorService.deleteBulk(data);
             case 'currency-history-error':
                 return currencyHistoryErrorService.deleteBulk(data);
+            default:
+                return new Promise((resolve, reject) => {
+                    reject(
+                        {
+                            error_key: "invalid_arguments",
+                            description: `No deleteBulk function inside entityResolverServiceNew for entityType: ${entityType}`,
+                        }
+                    )
+                })
         }
     };
 
