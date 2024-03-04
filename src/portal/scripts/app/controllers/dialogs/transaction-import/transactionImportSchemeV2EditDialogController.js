@@ -376,7 +376,8 @@ const importTransactionService = require("../../../services/import/importTransac
                 value: '',
                 transaction_type: null,
                 is_default_rule_scenario: false,
-                fields: []
+                fields: [],
+                selector_values: [],
             })
         };
 
@@ -462,7 +463,6 @@ const importTransactionService = require("../../../services/import/importTransac
         vm.transformSchemeToBackendLogic = function () {
 
             var result = JSON.parse(JSON.stringify(vm.scheme));
-
 
             result.calculated_inputs = vm.calculatedFields;
             result.inputs = vm.providerFields;
