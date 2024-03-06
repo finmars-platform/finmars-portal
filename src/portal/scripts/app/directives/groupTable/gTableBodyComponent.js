@@ -567,6 +567,10 @@
 
                     const rootRequestParam = requestParamsList.find(rp => rp.groups_level === 1);
 
+                    if (!rootRequestParam) {
+                        return false;
+                    }
+
                     return rootRequestParam.status === 'error';
 
                 }
