@@ -7,7 +7,6 @@ var csvImportSchemeService = require('../../services/import/csvImportSchemeServi
 var complexImportSchemeService = require('../../services/import/complexImportSchemeService');
 var priceDownloadSchemeService = require('../../services/import/priceDownloadSchemeService');
 var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
-var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
 
 var bookmarkRepository = require('../../repositories/bookmarkRepository');
 
@@ -15,7 +14,7 @@ var configurationImportCompatibilityService = require('./configurationImportComp
 
 var referenceTablesService = require('../../services/referenceTablesService');
 
-export default function (metaContentTypesService, attributeTypeService, customFieldService, entityResolverService, uiService, configurationImportGetService, configurationImportMapService, configurationImportSyncService) {
+export default function (metaContentTypesService, attributeTypeService, customFieldService, entityResolverService, uiService, transactionImportSchemeService, configurationImportGetService, configurationImportMapService, configurationImportSyncService) {
 
     var assignPermissions = function (contentType, item, settings) {
 

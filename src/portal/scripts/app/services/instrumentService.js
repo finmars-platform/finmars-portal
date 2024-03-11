@@ -3,7 +3,7 @@
  */
 
 const evEditorEvents = require('./ev-editor/entityViewerEditorEvents');
-const importInstrumentCbondsService = require('./import/importInstrumentCbondsService');
+const importInstrumentCbondsService = require('./import/importInstrumentCbondsService').default;
 const taskService = require('./tasksService');
 
 import InstrumentRepository from "../repositories/instrumentRepository";
