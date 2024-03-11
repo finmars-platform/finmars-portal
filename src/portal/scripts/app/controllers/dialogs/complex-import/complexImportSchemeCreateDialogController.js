@@ -7,12 +7,11 @@
 
     var complexImportSchemeService = require('../../../services/import/complexImportSchemeService');
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
-    var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
 
     var toastNotificationService = require('../../../../../../core/services/toastNotificationService').default;
 
 
-    module.exports = function complexImportSchemeCreateDialogController($scope, $mdDialog, data) {
+    module.exports = function complexImportSchemeCreateDialogController($scope, $mdDialog, transactionImportSchemeService, data) {
 
         var vm = this;
 

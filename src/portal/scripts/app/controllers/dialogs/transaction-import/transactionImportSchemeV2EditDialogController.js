@@ -6,10 +6,9 @@ const importTransactionService = require("../../../services/import/importTransac
 
     'use strict';
 
-    var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
-    var transactionTypeService = require('../../../services/transactionTypeService');
+    const metaService = require('../../../services/metaService').default;
 
-    module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, toastNotificationService, transactionTypeService, importSchemesMethodsService, schemeId) {
+    module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, toastNotificationService, transactionTypeService, transactionImportSchemeService, importSchemesMethodsService, schemeId) {
 
         var vm = this;
 
@@ -26,21 +25,32 @@ const importTransactionService = require("../../../services/import/importTransac
         vm.dryRunData = JSON.stringify([{"user_code": "example"}], null, 4)
         vm.activeDryRunResultItem = null;
 
+        vm.ruleScenarioInputsOpts = {
+            noIndicatorBtn: true,
+            readonly: true,
+        }
+
         vm.defaultRuleScenario = {
             name: '-',
             is_default_rule_scenario: true,
-            is_error_rule_scenario: false
+            is_error_rule_scenario: false,
+            inputs: [],
         };
 
         vm.errorRuleScenario = {
             name: '-',
             is_error_rule_scenario: true,
-            is_default_rule_scenario: false
+            is_default_rule_scenario: false,
+            inputs: [],
         }
 
         vm.inputsFunctions = [];
         vm.selector_values_projection = [];
         vm.editingScheme = false;
+
+        vm.inputsOpts = {
+            noIndicatorBtn: true,
+        }
 
         vm.getFunctions = function () {
 
@@ -251,6 +261,7 @@ const importTransactionService = require("../../../services/import/importTransac
 
                 })
 
+
             }
 
             if (vm.scheme.recon_scenarios.length) {
@@ -292,13 +303,23 @@ const importTransactionService = require("../../../services/import/importTransac
 
         vm.getTransactionTypes = function () {
 
-            transactionTypeService.getListLight({
-                pageSize: 1000
-            }).then(function (data) {
-                vm.transactionTypes = data.results;
-                vm.readyStatus.transactionTypes = true;
-                $scope.$apply();
-            });
+            metaService.loadDataFromAllPages(
+                transactionTypeService.getListLight,
+                [{pageSize: 1000, page: 1}]
+            )
+                .then(function (data) {
+
+                    vm.transactionTypesOpts = data.map(ttype => {
+                        return {
+                            id: ttype.user_code,
+                            name: `${ttype.name} (${ttype.user_code})`
+                        }
+                    });
+
+                    vm.readyStatus.transactionTypes = true;
+                    $scope.$apply();
+
+                });
 
         };
 
@@ -355,9 +376,14 @@ const importTransactionService = require("../../../services/import/importTransac
                 value: '',
                 transaction_type: null,
                 is_default_rule_scenario: false,
-                fields: []
+                fields: [],
+                selector_values: [],
             })
         };
+
+        vm.exprInputOpts = {
+            readonly: true
+        }
 
         vm.setProviderFieldExpression = function (item) {
             importSchemesMethodsService.setProviderFieldExpression(vm, item);
@@ -437,7 +463,6 @@ const importTransactionService = require("../../../services/import/importTransac
         vm.transformSchemeToBackendLogic = function () {
 
             var result = JSON.parse(JSON.stringify(vm.scheme));
-
 
             result.calculated_inputs = vm.calculatedFields;
             result.inputs = vm.providerFields;
@@ -740,6 +765,13 @@ const importTransactionService = require("../../../services/import/importTransac
 
         }
 
+        //# region Scenarios
+
+        vm.schenarioStatusOpts = [
+            { id: 'active', name: 'Active' },
+            { id: 'skip', name: 'Skip' },
+        ];
+
         vm.onTransactionTypeChange = function ($event, item) {
 
             item.inputs = []
@@ -792,6 +824,8 @@ const importTransactionService = require("../../../services/import/importTransac
                 }
             });
         };
+
+        //# endregion
 
         // DRAFT STARTED
 
