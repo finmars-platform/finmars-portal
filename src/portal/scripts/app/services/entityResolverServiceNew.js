@@ -46,7 +46,6 @@ var instrumentClassService = require('./instrument/instrumentClassService').defa
 var priceDownloadSchemeService = require('./import/priceDownloadSchemeService').default;
 var csvImportSchemeService = require('./import/csvImportSchemeService').default;
 var complexImportSchemeService = require('./import/complexImportSchemeService').default;
-var complexTransactionImportSchemeService = require('./import/transactionImportSchemeService').default;
 
 var costMethodService = require('./instrument/instrumentCostMethodService').default;
 
@@ -66,7 +65,7 @@ var xhrService = require('../../../../core/services/xhrService').default;
 var configureRepositoryUrlService = require('./configureRepositoryUrlService').default;
 var baseUrlService = require('./baseUrlService').default;
 
-export default function (instrumentService, transactionTypeService, priceHistoryService, currencyHistoryService, configurationService, reportService) {
+export default function (instrumentService, transactionTypeService, priceHistoryService, currencyHistoryService, configurationService, reportService, transactionImportSchemeService) {
 
     var getList = function (entityType, options) {
 
@@ -163,7 +162,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return complexImportSchemeService.getList(options);
                 break;
             case 'complex-transaction-import-scheme':
-                return complexTransactionImportSchemeService.getList(options);
+                return transactionImportSchemeService.getList(options);
                 break;
             case 'transaction-type-group':
                 return transactionTypeGroupService.getList(options);
@@ -397,7 +396,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return complexImportSchemeService.getByKey(id);
                 break;
             case 'complex-transaction-import-scheme':
-                return complexTransactionImportSchemeService.getByKey(id);
+                return transactionImportSchemeService.getByKey(id);
                 break;
             case 'expression-procedure':
                 return expressionProcedureService.getByKey(id);
@@ -425,7 +424,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return complexImportSchemeService.create(entity);
                 break;
             case 'complex-transaction-import-scheme':
-                return complexTransactionImportSchemeService.create(entity);
+                return transactionImportSchemeService.create(entity);
                 break;
             case 'portfolio':
                 entity.counterparties = entity.counterparties || [];
@@ -564,7 +563,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return complexImportSchemeService.update(id, entity);
                 break;
             case 'complex-transaction-import-scheme':
-                return complexTransactionImportSchemeService.update(id, entity);
+                return transactionImportSchemeService.update(id, entity);
                 break;
             case 'portfolio':
                 return portfolioService.update(id, entity);
@@ -918,7 +917,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return complexImportSchemeService.deleteByKey(id);
                 break;
             case 'complex-transaction-import-scheme':
-                return complexTransactionImportSchemeService.deleteByKey(id);
+                return transactionImportSchemeService.deleteByKey(id);
                 break;
             case 'expression-procedure':
                 return expressionProcedureService.deleteByKey(id);
@@ -929,6 +928,15 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'pricing-procedure':
                 return pricingProcedureService.deleteByKey(id);
                 break;
+            default:
+                return new Promise((resolve, reject) => {
+                    reject(
+                        {
+                            error_key: "invalid_arguments",
+                            description: `No delete function inside entityResolverServiceNew for entityType: ${entityType}`,
+                        }
+                    )
+                })
         }
     };
 
@@ -1009,6 +1017,15 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return priceHistoryErrorService.deleteBulk(data);
             case 'currency-history-error':
                 return currencyHistoryErrorService.deleteBulk(data);
+            default:
+                return new Promise((resolve, reject) => {
+                    reject(
+                        {
+                            error_key: "invalid_arguments",
+                            description: `No deleteBulk function inside entityResolverServiceNew for entityType: ${entityType}`,
+                        }
+                    )
+                })
         }
     };
 

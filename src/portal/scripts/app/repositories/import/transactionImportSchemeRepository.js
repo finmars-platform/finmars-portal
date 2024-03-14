@@ -1,25 +1,19 @@
 /**
  * Created by szhitenev on 17.08.2016.
  */
-// import baseUrlService from "../../services/baseUrlService";
-(function () {
+import baseUrlService from "../../../../../shell/scripts/app/services/baseUrlService";
+import configureRepositoryUrlService from "../../../../../shell/scripts/app/services/configureRepositoryUrlService";
 
-    'use strict';
+export default function (cookieService, xhrService) {
 
-    var baseUrlService = require("../../services/baseUrlService").default;
-    var cookieService = require('../../../../../core/services/cookieService').default;
-    var xhrService = require('../../../../../core/services/xhrService').default;
-    var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService').default;
-    // var baseUrlService = require('../../services/baseUrlService');
-
-    var baseUrl = baseUrlService.resolve();
+    const baseUrl = baseUrlService.resolve();
 
     var getList = function (options) {
 
-var prefix = baseUrlService.getMasterUserPrefix();
-var apiVersion = baseUrlService.getApiVersion();
+    var prefix = baseUrlService.getMasterUserPrefix();
+    var apiVersion = baseUrlService.getApiVersion();
 
-return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/complex-transaction-import-scheme/', options),
+    return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'import/complex-transaction-import-scheme/', options),
             {
                 method: 'GET',
                 credentials: 'include',
@@ -127,13 +121,13 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'im
         })
     };
 
-    module.exports = {
+     return {
         getList: getList,
         getListLight: getListLight,
         create: create,
         getByKey: getByKey,
         update: update,
         deleteByKey: deleteByKey
-    }
+     };
 
-}());
+}

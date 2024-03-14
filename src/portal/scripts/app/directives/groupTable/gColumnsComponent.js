@@ -2560,20 +2560,6 @@ const evEvents = require("../../services/entityViewerEvents");
                     const allAttrs = scope.attributeDataService.getForAttributesSelector(scope.entityType);
                     const selectedAttrs = scope.columns.map(col => col.key);
 
-                    /*$mdDialog.show({
-                        controller: "TableAttributeSelectorDialogController as vm",
-                        templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
-                        targetEvent: $event,
-                        multiple: true,
-                        locals: {
-                            data: {
-                                availableAttrs: availableAttrs,
-                                title: 'Choose column to add',
-                                isReport: scope.isReport,
-                                multiselector: true
-                            }
-                        }
-                    })*/
                     $mdDialog.show({
                         controller: "AttributesSelectorDialogController as vm",
                         templateUrl: "views/dialogs/attributes-selector-dialog-view.html",

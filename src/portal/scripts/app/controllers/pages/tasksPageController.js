@@ -6,21 +6,16 @@
 
     'use strict';
 
-    var baseUrlService = require("../../services/baseUrlService").default;
     var tasksService = require('../../services/tasksService');
     var explorerService = require('../../services/explorerService');
 
-    // var baseUrlService = require('../../services/baseUrlService');
-    var utilsService = require('../../services/utilsService');
     var complexTransactionService = require('../../services/transaction/complexTransactionService').default;
     var masterUserService = require('../../services/masterUserService');
     var downloadFileHelper = require('../../helpers/downloadFileHelper');
-    var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
-    var baseUrl = baseUrlService.resolve();
+    const utilsHelper = require('../../helpers/utils.helper');
 
-
-    module.exports = function tasksPageController($scope, $state, $stateParams, $mdDialog, globalDataService, systemMessageService) {
+    module.exports = function tasksPageController($scope, $state, $mdDialog, toastNotificationService) {
 
         var vm = this;
 
@@ -39,9 +34,329 @@
 
         var priorDate = new Date(new Date().setDate(new Date().getDate() - 30));
 
+        vm.statusesOpts = [
+            {
+                id: "I",
+                name: "Initializing"
+            },
+            {
+                id: "P",
+                name: "Running"
+            },
+            {
+                id: "D",
+                name: "Success"
+            },
+            {
+                id: "E",
+                name: "Error"
+            },
+            {
+                id: "T",
+                name: "Timed out"
+            },
+            {
+                id: "C",
+                name: "Canceled"
+            },
+            {
+                id: "X",
+                name: "Transaction import aborted"
+            },
+            {
+                id: "S",
+                name: "Request sent"
+            },
+            {
+                id: "W",
+                name: "Awaiting response"
+            },
+        ]
+
+        /*vm.typeOpts = [
+            {
+                // Install Configuration From Marketplace
+                id: 'install_configuration_from_marketplace',
+                name: 'install_configuration_from_marketplace',
+            },
+            {
+
+                id: 'push_configuration_to_marketplace',
+                name: 'push_configuration_to_marketplace',
+            },
+            {
+                // Export Journal To Storage
+                id: 'export_journal_to_storage',
+                name: 'export_journal_to_storage',
+            },
+            {
+                id: 'install_initial_configuration',
+                name: 'install_initial_configuration',
+            },
+            {
+                id: 'universal_input',
+                name: 'universal_input',
+            },
+            {
+                // Bulk Delete
+                id: 'bulk_delete',
+                name: 'bulk_delete',
+            },
+
+            {
+                // Configuration Import
+                id: 'configuration_import',
+                name: 'configuration_import',
+            },
+            {
+                id: 'export_configuration',
+                name: 'export_configuration',
+            },
+            {
+                // Simple Import Final updates for bulk insert
+                id: 'csv_import.simple_import_bulk_insert_final_updates_procedure',
+                name: 'csv_import.simple_import_bulk_insert_final_updates_procedure',
+            },
+            {
+                // Simple Import
+                id: 'simple_import',
+                name: 'simple_import',
+            },
+            {
+                // Transaction Import
+                id: 'transaction_import',
+                name: 'transaction_import',
+            },
+
+            {
+                // Transaction Import Validation
+                id: 'validate_transaction_import',
+                name: 'validate_transaction_import',
+            },
+            {
+                id: 'user_task',
+                name: 'user_task',
+            },
+            {
+                // Import From Finmars Database
+                id: 'import_from_database',
+                name: 'import_from_database',
+            },
+            {
+                // Download From Finmars Database
+                id: 'download_instrument_from_finmars_database',
+                name: 'download_instrument_from_finmars_database',
+            },
+            {
+                // Process Events
+                id: 'process_events',
+                name: 'process_events',
+            },
+
+            {
+                // Generate Events
+                id: 'generate_events',
+                name: 'generate_events',
+            },
+            {
+                // User Attributes Recalculation
+                id: 'attribute_recalculation',
+                name: 'attribute_recalculation',
+            },
+            {
+                // Calculate Portfolio Register Records
+                id: 'calculate_portfolio_register_record',
+                name: 'calculate_portfolio_register_record',
+            },
+            {
+                // Calculate Portfolio History
+                id: 'calculate_portfolio_history',
+                name: 'calculate_portfolio_history',
+            },
+            {
+                // Calculate Portfolio Reconcile History
+                id: 'calculate_portfolio_reconcile_history',
+                name: 'calculate_portfolio_reconcile_history',
+            },
+
+            {
+                // Calculate Portfolio Register Prices
+                id: 'calculate_portfolio_register_price_history',
+                name: 'calculate_portfolio_register_price_history',
+            },
+            {
+                id: 'execute_expression_procedure',
+                name: 'execute_expression_procedure',
+            },
+            {
+                id: 'process_bank_file_for_reconcile',
+                name: 'process_bank_file_for_reconcile',
+            },
+            {
+                // Balance Report
+                id: 'calculate_balance_report',
+                name: 'calculate_balance_report',
+            },
+            {
+                // PL Report
+                id: 'calculate_pl_report',
+                name: 'calculate_pl_report',
+            },
+
+            {
+                id: 'complex_transaction_user_field_recalculation',
+                name: 'complex_transaction_user_field_recalculation',
+            },
+            {
+                // Collect History
+                id: 'collect_history',
+                name: 'collect_history',
+            },
+        ];*/
+
+        // options for filters.type in alphabetic order
+        vm.typesOpts = [
+            {
+                "id": "attribute_recalculation",
+                "name": "attribute_recalculation"
+            },
+            {
+                "id": "bulk_delete",
+                "name": "bulk_delete"
+            },
+            {
+                "id": "calculate_balance_report",
+                "name": "calculate_balance_report"
+            },
+            {
+                "id": "calculate_pl_report",
+                "name": "calculate_pl_report"
+            },
+            {
+                "id": "calculate_portfolio_history",
+                "name": "calculate_portfolio_history"
+            },
+            {
+                "id": "calculate_portfolio_reconcile_history",
+                "name": "calculate_portfolio_reconcile_history"
+            },
+            {
+                "id": "calculate_portfolio_register_price_history",
+                "name": "calculate_portfolio_register_price_history"
+            },
+            {
+                "id": "calculate_portfolio_register_record",
+                "name": "calculate_portfolio_register_record"
+            },
+            {
+                "id": "collect_history",
+                "name": "collect_history"
+            },
+            {
+                "id": "complex_transaction_user_field_recalculation",
+                "name": "complex_transaction_user_field_recalculation"
+            },
+            {
+                "id": "configuration_import",
+                "name": "configuration_import"
+            },
+            {
+                "id": "csv_import.simple_import_bulk_insert_final_updates_procedure",
+                "name": "csv_import.simple_import_bulk_insert_final_updates_procedure"
+            },
+            {
+                "id": "download_instrument_from_finmars_database",
+                "name": "download_instrument_from_finmars_database"
+            },
+            {
+                "id": "execute_expression_procedure",
+                "name": "execute_expression_procedure"
+            },
+            {
+                "id": "export_configuration",
+                "name": "export_configuration"
+            },
+            {
+                "id": "export_journal_to_storage",
+                "name": "export_journal_to_storage"
+            },
+            {
+                "id": "generate_events",
+                "name": "generate_events"
+            },
+            {
+                "id": "import_from_database",
+                "name": "import_from_database"
+            },
+            {
+                "id": "install_configuration_from_marketplace",
+                "name": "install_configuration_from_marketplace"
+            },
+            {
+                "id": "install_initial_configuration",
+                "name": "install_initial_configuration"
+            },
+            {
+                "id": "process_bank_file_for_reconcile",
+                "name": "process_bank_file_for_reconcile"
+            },
+            {
+                "id": "process_events",
+                "name": "process_events"
+            },
+            {
+                "id": "push_configuration_to_marketplace",
+                "name": "push_configuration_to_marketplace"
+            },
+            {
+                "id": "simple_import",
+                "name": "simple_import"
+            },
+            {
+                "id": "transaction_import",
+                "name": "transaction_import"
+            },
+            {
+                "id": "universal_input",
+                "name": "universal_input"
+            },
+            {
+                "id": "user_task",
+                "name": "user_task"
+            },
+            {
+                "id": "validate_transaction_import",
+                "name": "validate_transaction_import"
+            }
+        ]
+
+        vm.resultsOpts = [
+            {
+                id: 'error',
+                name: 'Error',
+            },
+            {
+                id: 'skip',
+                name: 'Skip',
+            },
+            {
+                id: 'success',
+                name: 'Success',
+            }
+        ];
+
         vm.filters = {
             date_from: priorDate.toISOString().split('T')[0],
-            date_to: new Date().toISOString().split('T')[0]
+            date_to: new Date().toISOString().split('T')[0],
+            statuses: [],
+            types: [],
+            result: [],
+        }
+
+        vm.formatResultCounter = function (counter) {
+            if (counter > 999) return '999+';
+
+            return counter;
         }
 
         vm.activeTask = null;
@@ -135,16 +450,89 @@
 
         }
 
+        /**
+         *
+         * @param filters {Object}
+         * @return {
+         *  {
+         *      date_from: String,
+         *      date_to: String,
+         *      query: String,
+         *      types: String,
+         *      statuses: String
+         *      result: String,
+         *  }
+         * }
+         */
+        const getFiltersData = function(filters) {
+
+            let filtersData = {};
+
+            // format filters to use as query parameters in request
+            Object.keys(filters).forEach(key => {
+
+                if ( Array.isArray(filters[key]) ) {
+
+                    if (filters[key].length) {
+                        filtersData[key] = filters[key].join(',');
+
+                    } else {
+                        /* *
+                         * Have to return a property with an empty value
+                         * to apply it to query parameters inside page's url.
+                         * See vm.updateFilters() for an example.
+                         * */
+                        filtersData[key] = "";
+                    }
+
+                } else if (filters[key]) {
+                    filtersData[key] = filters[key];
+                }
+
+            });
+
+            return filtersData;
+
+        };
+
+        /**
+         *
+         * @param page {Number}
+         * @param filters {Object}
+         * @return {{page: Number, date_from: String, date_to: String, query: String, types: String, statuses: String, result: String}}
+         */
+        const getDataForParams = function(page, filters) {
+
+            let params = getFiltersData(filters);
+
+            params.page = page;
+
+            /* *
+                {
+                    page: Number,
+                    date_from: String,
+                    date_to: String,
+                    query: String,
+                    types: String,
+                    statuses: String
+                    result: String,
+                }
+             */
+            return params;
+
+        };
+
         vm.openPreviousPage = function () {
 
             vm.currentPage = vm.currentPage - 1;
 
-            $state.go('app.portal.tasks-page', {
-                page: vm.currentPage,
-                date_from: vm.filters.date_from,
-                date_to: vm.filters.date_to,
-                query: vm.filters.query
-            }, {notify: false});
+            const params = getDataForParams(vm.currentPage, vm.filters);
+
+            $state.go(
+                'app.portal.tasks-page',
+                params,
+                {notify: false}
+            );
 
             vm.getData()
 
@@ -154,12 +542,13 @@
 
             vm.currentPage = vm.currentPage + 1;
 
-            $state.go('app.portal.tasks-page', {
-                page: vm.currentPage,
-                date_from: vm.filters.date_from,
-                date_to: vm.filters.date_to,
-                query: vm.filters.query
-            }, {notify: false});
+            const params = getDataForParams(vm.currentPage, vm.filters);
+
+            $state.go(
+                'app.portal.tasks-page',
+                params,
+                {notify: false}
+            );
 
             vm.getData()
 
@@ -171,12 +560,13 @@
 
                 vm.currentPage = page.number;
 
-                $state.go('app.portal.tasks-page', {
-                    page: vm.currentPage,
-                    date_from: vm.filters.date_from,
-                    date_to: vm.filters.date_to,
-                    query: vm.filters.query
-                }, {notify: false});
+                const params = getDataForParams(vm.currentPage, vm.filters);
+
+                $state.go(
+                    'app.portal.tasks-page',
+                    params,
+                    {notify: false}
+                );
 
                 vm.getData();
             }
@@ -257,21 +647,25 @@
 
         }
 
-
         vm.updateFilters = function () {
 
             vm.currentPage = 1;
 
-            $state.go('app.portal.tasks-page', {
-                page: vm.currentPage,
-                date_from: vm.filters.date_from,
-                date_to: vm.filters.date_to,
-                query: vm.filters.query
-            }, {notify: false});
+            const params = getDataForParams(vm.currentPage, vm.filters);
+
+            $state.go(
+                'app.portal.tasks-page',
+                params,
+                {notify: false}
+            );
 
             vm.getData();
 
         }
+
+        vm.updateFiltersD = utilsHelper.debounce(function () {
+            vm.updateFilters();
+        }, 1000)
 
         vm.toPrettyTime = function (sec) {
 
@@ -401,12 +795,20 @@
 
         }
 
+        let notLoadingData = true;
+        /** Prevents display of data from older request
+         * that finished after newer requests. */
+        let lastDataRequestTime = new Date();
+
         vm.getData = function () {
+
+            const requestTime = new Date();
+            notLoadingData = false;
 
             tasksService.getListLight({
                 pageSize: vm.pageSize,
                 page: vm.currentPage,
-                filters: vm.filters,
+                filters: getFiltersData(vm.filters),
                 sort: {
                     direction: "DESC",
                     key: "created"
@@ -414,6 +816,14 @@
             }).then(function (data) {
 
                 console.log('vm.getData.data', data);
+
+                if (requestTime < lastDataRequestTime) {
+                    /* Newer request has been sent
+                     Do not apply data from this old request.*/
+                    return;
+                }
+
+                lastDataRequestTime = requestTime;
 
                 vm.generatePages(data)
 
@@ -436,10 +846,20 @@
                 // vm.items[0].status = 'P'
 
                 vm.readyStatus.data = true;
+                notLoadingData = true;
                 $scope.$apply();
+
             }).catch(function (error) {
+
+                if (requestTime < lastDataRequestTime) {
+                    /* Newer request has been sent
+                     Do not apply data from this old request.*/
+                    return;
+                }
+
                 vm.readyStatus.data = true;
                 $scope.$apply();
+
             })
 
         }
@@ -529,23 +949,34 @@
         }
 
         vm.init = function () {
-
             // vm.readyStatus.data = false;
 
-            if ($stateParams.page) {
-                vm.currentPage = $stateParams.page
+            if ($state.params.page) {
+                vm.currentPage = $state.params.page
             }
 
-            if ($stateParams.date_from) {
-                vm.filters.date_from = $stateParams.date_from
+            if ($state.params.date_from) {
+                vm.filters.date_from = $state.params.date_from
             }
 
-            if ($stateParams.date_to) {
-                vm.filters.date_to = $stateParams.date_to
+            if ($state.params.date_to) {
+                vm.filters.date_to = $state.params.date_to
             }
 
-            if ($stateParams.query) {
-                vm.filters.query = $stateParams.query
+            if ($state.params.query) {
+                vm.filters.query = $state.params.query
+            }
+
+            if ($state.params.statuses) {
+                vm.filters.statuses = $state.params.statuses.split(",");
+            }
+
+            if ($state.params.types) {
+                vm.filters.types = $state.params.types.split(",");
+            }
+
+            if ($state.params.result) {
+                vm.filters.result = $state.params.result.split(",");
             }
 
             vm.getData();
@@ -553,7 +984,17 @@
 
             setInterval(function () {
 
-                vm.getData();
+                /* * IMPORTANT
+                 *
+                 * Without this `if` endless loading can occur.
+                 * Cause: before already sent request complete and update
+                 * variable `lastDataRequestTime`
+                 * new requests can be sent by this interval.
+                 * */
+                if (notLoadingData) {
+                    vm.getData();
+                }
+
                 vm.getStats();
                 vm.getActiveTask();
 
