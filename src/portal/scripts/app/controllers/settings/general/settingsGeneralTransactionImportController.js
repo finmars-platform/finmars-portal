@@ -5,9 +5,7 @@
 
     'use strict';
 
-    var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
-
-    module.exports = function ($scope) {
+    module.exports = function (transactionImportSchemeService) {
 
         var vm = this;
 

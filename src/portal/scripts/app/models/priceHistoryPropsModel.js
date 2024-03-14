@@ -86,6 +86,12 @@
                 "name": "Modified Duration",
                 "value_type": 20,
             },
+            {
+                "key": "error_message",
+                "name": "Error Message",
+                "value_type": 10,
+            },
+
             //{
             //    "key": "factor",
             //    "name": "Factor",

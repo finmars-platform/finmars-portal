@@ -1,43 +1,42 @@
 /**
  * Created by szhitenev on 17.08.2016.
  */
-(function () {
+import TransactionImportSchemeRepository from "../../repositories/import/transactionImportSchemeRepository";
 
-    'use strict';
+export default function (cookieService, xhrService) {
 
-    var transactionImportSchemeRepository = require('../../repositories/import/transactionImportSchemeRepository');
+    const transactionImportSchemeRepository = new TransactionImportSchemeRepository(cookieService, xhrService);
 
-    var getList = function (options) {
+    const getList = function (options) {
         return transactionImportSchemeRepository.getList(options);
     };
 
-    var getListLight = function (options) {
+    const getListLight = function (options) {
         return transactionImportSchemeRepository.getListLight(options);
     };
 
-    var create = function (data) {
+    const create = function (data) {
         return transactionImportSchemeRepository.create(data);
     };
 
-    var getByKey = function(id) {
+    const getByKey = function(id) {
         return transactionImportSchemeRepository.getByKey(id);
     };
 
-    var update = function(id, data) {
+    const update = function(id, data) {
         return transactionImportSchemeRepository.update(id, data);
     };
 
-    var deleteByKey = function(id) {
+    const deleteByKey = function(id) {
         return transactionImportSchemeRepository.deleteByKey(id)
     };
 
-    module.exports = {
+    return {
         getList: getList,
         getListLight: getListLight,
         create: create,
         getByKey: getByKey,
         update: update,
         deleteByKey: deleteByKey
-    }
-
-}());
+    };
+}
