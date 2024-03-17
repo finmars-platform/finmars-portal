@@ -7,7 +7,6 @@
 
     var transactionTypeService = require('../../services/transactionTypeService');
     var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
-    var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
     var complexImportSchemeService = require('../../services/import/complexImportSchemeService');
 
     var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');

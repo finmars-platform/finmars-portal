@@ -5,10 +5,9 @@
 
     'use strict';
 
-    var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
     var reconciliationProcessFileService = require('../../../services/reconciliation/reconciliationProcessFileService');
 
-    module.exports = function reconProcessBankFileDialogController($scope, $mdDialog, data) {
+    module.exports = function reconProcessBankFileDialogController($scope, $mdDialog, transactionImportSchemeService, data) {
 
         var vm = this;
 

@@ -5,7 +5,13 @@
 
     <div class="ev-viewport">
         <div class="ev-content" data-ng-show="dataLoadStatus"></div>
-        <div ng-if="!dataLoadStatus" class="ev-content-loader">
+
+        <div data-ng-if="error"
+             class="big-error-text">
+            Server failed to complete request. Try again later.
+        </div>
+
+        <div ng-if="!dataLoadStatus && !error" class="ev-content-loader">
             <div class="e-data-loader" layout="row" layout-sm="column" layout-align="center center">
                 <progress-circular diameter="100"></progress-circular>
             </div>
