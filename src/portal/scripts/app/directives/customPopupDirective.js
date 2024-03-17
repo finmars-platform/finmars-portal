@@ -84,6 +84,46 @@
 				let popupElem = document.createElement("div");
 				popupElem.classList.add("popup-container");
 
+
+				let openPopupEvent;
+				let resizeObserverTo;
+
+				/**
+				 * Wait until popup width calculated by browser
+				 * on slower devices.
+				 *
+				 * @type {ResizeObserver}
+				 */
+				const popupElemObserver = new ResizeObserver(entries => {
+
+					let popupElemEntry = entries[0];
+
+					if (popupElemEntry.contentRect.width > 0) {
+
+						if (!resizeObserverTo) {
+							// calculate position right after showing popup
+							setPopupPosition(openPopupEvent);
+						}
+
+						$timeout.cancel(resizeObserverTo);
+
+						resizeObserverTo = $timeout(function () {
+							/* *
+							 * call again because sizes of popup
+							 * can change at the end of its rendering
+							 * */
+							setPopupPosition(openPopupEvent);
+							openPopupEvent = null;
+
+							popupElemObserver.unobserve(popupElem);
+							resizeObserverTo = undefined;
+
+						}, 300);
+
+					}
+
+				})
+
 				// let originalPopupData;
 				let popupContentScope;
 
@@ -103,8 +143,7 @@
 				if (!scope.positionRelativeTo) scope.positionRelativeTo = 'mouse';
 				//endregion
 
-
-				let setPopupPosition = function (event) {
+				const setPopupPosition = function (event) {
 					// const coords = targetElement.getBoundingClientRect();
 					let positionX;
 					if (scope.popupX) positionX = scope.popupX.value;
@@ -115,7 +154,6 @@
 					let popupHeight = popupElem.clientHeight;
 					let popupMinWidth = 0;
 					let popupWidth = popupElem.clientWidth;
-
 
 					if (scope.popupMinWidth === 'element') {
 
@@ -161,11 +199,17 @@
 						}
 
 					}
-					else if (scope.positionRelativeTo === 'mouse' && event) {
+					else if (scope.positionRelativeTo === 'mouse') {
 
-						if (!positionX) positionX = event.clientX;
+						if (event) {
 
-						if (!positionY) positionY = positionY = event.clientY;
+							if (!positionX) positionX = event.clientX;
+
+							if (!positionY) positionY = positionY = event.clientY;
+
+						} else {
+							console.error("event object for mouse action is not defined")
+						}
 
 					}
 
@@ -393,12 +437,15 @@
 					}*/
 					if (!scope.isPopupOpen) {
 
+						openPopupEvent = event;
+						popupElemObserver.observe(popupElem);
+
 						createPopup();
 
 						// wait for width calculation for popupElement
-						$timeout(function() {
+						/*$timeout(function() {
 							setPopupPosition(event);
-						}, setPosTimeout);
+						}, setPosTimeout);*/
 
 					}
 
@@ -410,12 +457,15 @@
 						return;
 					}
 
+					openPopupEvent = event;
+					popupElemObserver.observe(popupElem);
+
 					createPopup();
 
 					// wait for width calculation for popupElement
-					$timeout(function() {
+					/*$timeout(function() {
 						setPopupPosition(event);
-					}, setPosTimeout);
+					}, setPosTimeout);*/
 
 				};
 
@@ -515,12 +565,13 @@
 
 								let doNotUpdateScope = (argumentObj && argumentObj.doNotUpdateScope);
 
+								popupElemObserver.observe(popupElem);
 								createPopup(doNotUpdateScope);
 
 								// wait for width calculation for popupElement
-								$timeout(function() {
+								/*$timeout(function() {
 									setPopupPosition();
-								}, setPosTimeout);
+								}, setPosTimeout);*/
 
 							}
 
@@ -531,6 +582,10 @@
 				};
 
 				scope.init();
+
+				scope.$on("$destroy", function () {
+					popupElemObserver.disconnect();
+				});
 
 			}
 		}

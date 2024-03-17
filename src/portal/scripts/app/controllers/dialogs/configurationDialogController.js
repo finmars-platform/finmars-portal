@@ -184,7 +184,7 @@
                 skipHide: true,
                 multiple: true
             }).then(function (res) {
-                console.log('res', res);
+
                 if (res.status === 'agree') {
 
                     configurationService.update(vm.item.id, vm.item).then(function (data) {
@@ -210,6 +210,8 @@
 
                     })
 
+                } else if (res.status === 'disagree') {
+                    vm.processing = false;
                 }
             })
 

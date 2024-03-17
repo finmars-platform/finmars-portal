@@ -402,7 +402,7 @@
                         vm.entityViewerDataService.setActiveObjectActionData(null); */
                         vm.entityViewerDataService.setRowsActionData(null);
 
-                        if (res.status === 'agree') {
+                        /*if (res.status === 'agree') {
 
                             var objects = vm.entityViewerDataService.getObjects();
 
@@ -424,7 +424,7 @@
 
                             vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                        }
+                        }*/
                     });
 
                     break;
@@ -756,7 +756,6 @@
             });
 
             firstDleIndex = vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-                console.log("testing328.entityViewerController first DATA_LOAD_END");
                 /* *
                  * Fixes scenario when DATA_LOAD_END
                  * called inside evDataProviderService.updateDataStructure()

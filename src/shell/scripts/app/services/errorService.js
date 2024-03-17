@@ -165,6 +165,44 @@ export default function (toastNotificationService) {
                 timeOut: 0,
                 extendedTimeOut: 0
             });
+        } else if (error_object.status_code === 409) {
+
+            message = message + '<span class="toast-error-field">Title</span>: ' + error_object.message + '<br/>'
+            message = message + '<span class="toast-error-field">Code</span>: ' + error_object.status_code + '<br/>'
+            message = message + '<span class="toast-error-field">URL</span>: ' + error_object.url + '<br/>'
+            message = message + '<span class="toast-error-field">Username</span>: ' + error_object.username + '<br/>'
+            message = message + '<span class="toast-error-field">Date & Time</span>: ' + error_object.datetime + '<br/>'
+            message = message + '<span class="toast-error-field">Details</span>: <div><pre>' + JSON.stringify(error_object.details, null, 4) + '</pre></div>'
+
+            let raw_title = '<span class="glitch" data-text="Deleting this entity is prohibited.">Server Error</span>'
+
+            title = raw_title + '<span class="toast-click-to-copy">click to copy</span>'
+
+            toastNotificationService.error(message, title, {
+                progressBar: true,
+                closeButton: true,
+                tapToDismiss: false,
+                onclick: function (event) {
+
+                    var listener = function (e) {
+
+                        e.clipboardData.setData('text/plain', JSON.stringify(error_object, null, 4));
+
+                        e.preventDefault();
+                    };
+
+                    document.addEventListener('copy', listener, false);
+
+                    document.execCommand("copy");
+
+                    document.removeEventListener('copy', listener, false);
+
+                },
+                timeOut: '10000',
+                extendedTimeOut: '10000'
+                // timeOut: 0,
+                // extendedTimeOut: 0
+            });
 
         } else if (error_object.status_code === 500) {
 

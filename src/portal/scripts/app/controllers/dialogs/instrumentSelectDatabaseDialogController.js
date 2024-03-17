@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
+    var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService').default;
     var instrumentDatabaseSearchService = require('../../services/instrument/instrumentDatabaseSearchService');
     var tasksService = require('../../services/tasksService');
 
