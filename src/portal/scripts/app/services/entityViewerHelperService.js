@@ -1,11 +1,8 @@
 /**
  * Created by szhitenev on 06.05.2016.
  */
-// import uiService from "./uiService";
-var uiService = require("./uiService").default;
 // import ReportHelper from "../helpers/reportHelper";
-var ReportHelper = require("../helpers/reportHelper").default;
-const reportHelper = new ReportHelper();
+
 
 /**
  * Entity viewer helper service.
@@ -13,6 +10,13 @@ const reportHelper = new ReportHelper();
  */
 (function () {
 
+    const ReportHelper = require("../helpers/reportHelper").default;
+    const reportHelper = new ReportHelper();
+
+    const GFiltersHelper = require("../helpers/gFiltersHelper").default;
+    const gFiltersHelper = new GFiltersHelper();
+
+    const uiService = require("./uiService").default;
     const objectComparisonHelper = require('../helpers/objectsComparisonHelper');
     // const uiService = require('../services/uiService').default;
 
@@ -25,6 +29,7 @@ const reportHelper = new ReportHelper();
     const metaHelper = require('../helpers/meta.helper');
 
     'use strict';
+
     /**
      * Insert dynamic attributes' values into entity's root level
      *
@@ -447,6 +452,7 @@ const reportHelper = new ReportHelper();
                 attrTypeToAdd.entity = attrInstance.entity;
             }
 
+            // DEPRECATED
             if (attrInstance.hasOwnProperty('id')) {
                 attrTypeToAdd.id = attrInstance.id;
             }
@@ -499,7 +505,7 @@ const reportHelper = new ReportHelper();
 
                 attrTypeToAdd.filters = true;
 
-                if (!attrTypeToAdd.options.filter_type) {
+                /*if (!attrTypeToAdd.options.filter_type) {
                     attrTypeToAdd.options.filter_type = metaHelper.getDefaultFilterType(attrTypeToAdd.value_type);
                 }
 
@@ -509,7 +515,8 @@ const reportHelper = new ReportHelper();
 
                 if (!attrTypeToAdd.options.hasOwnProperty('exclude_empty_cells')) {
                     attrTypeToAdd.options.exclude_empty_cells = false;
-                }
+                }*/
+                attrTypeToAdd = gFiltersHelper.setFilterDefaultOptions(attrTypeToAdd);
 
                 break;
         }
