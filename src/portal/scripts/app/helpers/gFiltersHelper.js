@@ -1,59 +1,82 @@
-(function () {
 
-	'use strict';
-	const metaHelper = require("./meta.helper");
+const metaHelper = require("./meta.helper");
 
-	const evEvents = require('../services/entityViewerEvents');
+const evEvents = require('../services/entityViewerEvents');
 
-	/** @module: gFiltersHelper */
-	module.exports = function () {
+/** @module: gFiltersHelper */
+export default function () {
 
-		/**
-		 *
-		 * @param filter {Object}
-		 * @param isReport {Object=}
-		 * @returns {Object} - changed filter
-		 * @memberof gFiltersHelper
-		 */
-		const setFilterDefaultOptions = (filter, isReport) => {
+	/**
+	 *
+	 * @param filter {Object}
+	 * @param isReport {Object=}
+	 * @returns {Object} - changed filter
+	 * @memberof gFiltersHelper
+	 */
+	const setFilterDefaultOptions = (filter, isReport) => {
 
-			if (!filter.options) {
-				filter.options = {}
+		if (!filter.options) {
+			filter.options = {}
+		}
+
+		if (!filter.options.filter_type) {
+			filter.options.filter_type = metaHelper.getDefaultFilterType(filter.value_type);
+		}
+
+		if (!filter.options.filter_values) {
+			filter.options.filter_values = []
+		}
+
+		if (!filter.options.hasOwnProperty('exclude_empty_cells')) {
+			filter.options.exclude_empty_cells = false;
+		}
+
+		if (isReport) {
+
+			if (!filter.options.use_from_above) {
+				filter.options.use_from_above = {}
 			}
 
-			if (!filter.options.filter_type) {
-				filter.options.filter_type = metaHelper.getDefaultFilterType(filter.value_type);
-			}
+		}
 
-			if (!filter.options.filter_values) {
-				filter.options.filter_values = []
-			}
+		return filter;
 
-			if (!filter.options.hasOwnProperty('exclude_empty_cells')) {
-				filter.options.exclude_empty_cells = false;
-			}
+	};
+	/**
+	 *
+	 * @param filterType {string} - filter mode
+	 * @param filterOptions {Object}
+	 * @returns {Array} - array with filterType and emptied filterOptions
+	 * @memberof gFiltersHelper
+	 */
+	const emptyTextFilter = (filterType, filterOptions) => {
 
-			if (isReport) {
+		filterOptions.filter_type = filterType;
 
-				if (!filter.options.use_from_above) {
-					filter.options.use_from_above = {}
-				}
+		if (filterType === 'empty') {
+			filterOptions.exclude_empty_cells = false;
+		}
 
-			}
+		filterOptions.filter_values = [];
 
-			return filter;
+		return [filterType, filterOptions];
 
-		};
-		/**
-		 *
-		 * @param filterType {string} - filter mode
-		 * @param filterOptions {Object}
-		 * @returns {Array} - array with filterType and emptied filterOptions
-		 * @memberof gFiltersHelper
-		 */
-		const emptyTextFilter = (filterType, filterOptions) => {
+	};
+	/**
+	 * @param filterType {string} - filter mode
+	 * @param filterOptions {Object}
+	 * @returns {Array} - array with filterType and emptied filterOptions
+	 * @memberof gFiltersHelper
+	 */
+	const emptyNumberFilter = (filterType, filterOptions) => {
 
-			filterOptions.filter_type = filterType;
+		filterOptions.filter_type = filterType;
+
+		if (filterType === 'from_to' || filterType === 'out_of_range') {
+
+			filterOptions.filter_values = {}
+
+		} else {
 
 			if (filterType === 'empty') {
 				filterOptions.exclude_empty_cells = false;
@@ -61,227 +84,200 @@
 
 			filterOptions.filter_values = [];
 
-			return [filterType, filterOptions];
+		}
 
-		};
-		/**
-		 * @param filterType {string} - filter mode
-		 * @param filterOptions {Object}
-		 * @returns {Array} - array with filterType and emptied filterOptions
-		 * @memberof gFiltersHelper
-		 */
-		const emptyNumberFilter = (filterType, filterOptions) => {
+		return [filterType, filterOptions];
 
-			filterOptions.filter_type = filterType;
+	};
+	/**
+	 * @param filterType {string} - filter mode
+	 * @param filterOptions {Object}
+	 * @returns {Array} - array with filterType and emptied filterOptions
+	 * @memberof gFiltersHelper
+	 */
+	const emptyDateFilter = (filterType, filterOptions) => {
 
-			if (filterType === 'from_to' || filterType === 'out_of_range') {
+		filterOptions.filter_type = filterType;
 
-				filterOptions.filter_values = {}
+		if (filterType === 'date_tree') {
+			filterOptions.dates_tree = [];
 
-			} else {
+		}
+		else if (filterType === 'from_to' || filterType === 'out_of_range') {
 
-				if (filterType === 'empty') {
-					filterOptions.exclude_empty_cells = false;
-				}
+			filterOptions.filter_values = {}
 
-				filterOptions.filter_values = [];
+		} else {
+
+			if (filterType === 'empty') {
+				filterOptions.exclude_empty_cells = false;
+			}
+
+			filterOptions.filter_values = [];
+
+		}
+
+		return [filterType, filterOptions];
+
+	};
+	/**
+	 * Returns useFromAboveFilters without changing original array.
+	 *
+	 * @param filters {Array<Object>} - from entityViewerDataService
+	 * @returns {Array}
+	 * @memberof gFiltersHelper
+	 */
+	const filterUseFromAboveFilters = function (filters) {
+
+		console.log('filterUseFromAboveFilters.filters', filters)
+
+		const useFromAboveFilters = filters.filter((filter, index) => {
+
+			if (filter.options && filter.options.use_from_above && Object.keys(filter.options.use_from_above).length) {
+
+				filter.filtersListIndex = index;
+				return true;
 
 			}
 
-			return [filterType, filterOptions];
+			return false;
 
-		};
-		/**
-		 * @param filterType {string} - filter mode
-		 * @param filterOptions {Object}
-		 * @returns {Array} - array with filterType and emptied filterOptions
-		 * @memberof gFiltersHelper
-		 */
-		const emptyDateFilter = (filterType, filterOptions) => {
+		});
 
-			filterOptions.filter_type = filterType;
+		return useFromAboveFilters;
 
-			if (filterType === 'date_tree') {
-				filterOptions.dates_tree = [];
+	};
+	const insertActiveObjectDataIntoFilters = function (evDataService, evEventService) {
 
-			}
-			else if (filterType === 'from_to' || filterType === 'out_of_range') {
+		let filtersChangedFromAbove = false;
 
-				filterOptions.filter_values = {}
+		let filters = evDataService.getFilters();
 
-			} else {
+		let useFromAboveFilters = filterUseFromAboveFilters(filters);
+		const activeObjectFromAbove = evDataService.getActiveObjectFromAbove();
 
-				if (filterType === 'empty') {
-					filterOptions.exclude_empty_cells = false;
-				}
+		console.log('insertActiveObjectDataIntoFilters.useFromAboveFilters', useFromAboveFilters)
+		console.log('insertActiveObjectDataIntoFilters.activeObjectFromAbove', activeObjectFromAbove)
 
-				filterOptions.filter_values = [];
+		useFromAboveFilters.forEach(ufaFilter => {
 
+			let filter = filters[ufaFilter.filtersListIndex];
+			let key = filter.options.use_from_above; // for old layouts
+
+			if (typeof filter.options.use_from_above === 'object') {
+				key = filter.options.use_from_above.key;
 			}
 
-			return [filterType, filterOptions];
+			if (activeObjectFromAbove && typeof activeObjectFromAbove === 'object') {
 
-		};
-		/**
-		 * Returns useFromAboveFilters without changing original array.
-		 *
-		 * @param filters {Array<Object>} - from entityViewerDataService
-		 * @returns {Array}
-		 * @memberof gFiltersHelper
-		 */
-		const filterUseFromAboveFilters = function (filters) {
+				var value = activeObjectFromAbove[key];
+				filter.options.filter_values = [value]; // example value 'Bank 1 Notes 4% USD'
 
-			console.log('filterUseFromAboveFilters.filters', filters)
+				filtersChangedFromAbove = true;
 
-			const useFromAboveFilters = filters.filter((filter, index) => {
+			}
 
-				if (filter.options && filter.options.use_from_above && Object.keys(filter.options.use_from_above).length) {
+		});
 
-					filter.filtersListIndex = index;
-					return true;
+		if (filtersChangedFromAbove) {
+
+			evDataService.setFilters(filters);
+
+			var entityType = evDataService.getEntityType()
+
+			evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+
+			// Deprecated, now everything is on backend
+			// if (entityType === 'transaction-report') {
+			// 	// special logic, for heavy transaction report
+			// 	// backend filters enabled
+			//
+			// 	evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
+			// } else {
+			// 	evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+			// }
+
+		}
+
+		return filtersChangedFromAbove;
+
+	};
+	/**
+	 *
+	 * @param useFromAboveDialogPromise {Promise} - response of dialog window with use from above settings
+	 * @param filterOptions {Object}
+	 * @returns {Promise<Array>} - array with filterType and emptied filterOptions
+	 * @memberof gFiltersHelper
+	 */
+	const openUseFromAboveSettings = function (useFromAboveDialogPromise, filterOptions) {
+
+		return new Promise ((resolve, reject) => {
+
+			useFromAboveDialogPromise.then(filterData => {
+
+				let activeFilterType = filterData.options.filter_type;
+
+				if (filterData.options.use_from_above &&
+					Object.keys(filterData.options.use_from_above).length) {
+
+					activeFilterType = 'use_from_above';
 
 				}
 
-				return false;
+				resolve([activeFilterType, filterData.options]);
 
 			});
 
-			return useFromAboveFilters;
+		});
 
-		};
-		const insertActiveObjectDataIntoFilters = function (evDataService, evEventService) {
+	};
+	/**
+	 *
+	 * @param dateTree {Object}
+	 * @returns {Array} - selected dates
+	 */
+	const convertDatesTreeToFlatList = function (dateTree) {
 
-			let filtersChangedFromAbove = false;
+		var datesList = [];
 
-			let filters = evDataService.getFilters();
+		dateTree.map(function (yearGroup) {
 
-			let useFromAboveFilters = filterUseFromAboveFilters(filters);
-			const activeObjectFromAbove = evDataService.getActiveObjectFromAbove();
+			yearGroup.items.map(function (monthGroup) {
 
-			console.log('insertActiveObjectDataIntoFilters.useFromAboveFilters', useFromAboveFilters)
-			console.log('insertActiveObjectDataIntoFilters.activeObjectFromAbove', activeObjectFromAbove)
+				monthGroup.items.map(function (date) {
 
-			useFromAboveFilters.forEach(ufaFilter => {
+					delete date.dayNumber;
+					delete date.available;
 
-				let filter = filters[ufaFilter.filtersListIndex];
-				let key = filter.options.use_from_above; // for old layouts
+					date = JSON.parse(angular.toJson(date));
 
-				if (typeof filter.options.use_from_above === 'object') {
-					key = filter.options.use_from_above.key;
-				}
-
-				if (activeObjectFromAbove && typeof activeObjectFromAbove === 'object') {
-
-					var value = activeObjectFromAbove[key];
-					filter.options.filter_values = [value]; // example value 'Bank 1 Notes 4% USD'
-
-					filtersChangedFromAbove = true;
-
-				}
-
-			});
-
-			if (filtersChangedFromAbove) {
-
-				evDataService.setFilters(filters);
-
-				var entityType = evDataService.getEntityType()
-
-				evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-
-				// Deprecated, now everything is on backend
-				// if (entityType === 'transaction-report') {
-				// 	// special logic, for heavy transaction report
-				// 	// backend filters enabled
-				//
-				// 	evEventService.dispatchEvent(evEvents.REQUEST_REPORT);
-				// } else {
-				// 	evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-				// }
-
-			}
-
-			return filtersChangedFromAbove;
-
-		};
-		/**
-		 *
-		 * @param useFromAboveDialogPromise {Promise} - response of dialog window with use from above settings
-		 * @param filterOptions {Object}
-		 * @returns {Promise<Array>} - array with filterType and emptied filterOptions
-		 * @memberof gFiltersHelper
-		 */
-		const openUseFromAboveSettings = function (useFromAboveDialogPromise, filterOptions) {
-
-			return new Promise ((resolve, reject) => {
-
-				useFromAboveDialogPromise.then(filterData => {
-
-					let activeFilterType = filterData.options.filter_type;
-
-					if (filterData.options.use_from_above &&
-						Object.keys(filterData.options.use_from_above).length) {
-
-						activeFilterType = 'use_from_above';
-
+					if (date.active) {
+						datesList.push(date.value);
 					}
 
-					resolve([activeFilterType, filterData.options]);
-
 				});
 
 			});
 
-		};
-		/**
-		 *
-		 * @param dateTree {Object}
-		 * @returns {Array} - selected dates
-		 */
-		const convertDatesTreeToFlatList = function (dateTree) {
+		});
 
-			var datesList = [];
+		return datesList;
 
-			dateTree.map(function (yearGroup) {
+	};
 
-				yearGroup.items.map(function (monthGroup) {
+	return {
+		setFilterDefaultOptions: setFilterDefaultOptions,
 
-					monthGroup.items.map(function (date) {
+		emptyTextFilter: emptyTextFilter,
+		emptyNumberFilter: emptyNumberFilter,
+		emptyDateFilter: emptyDateFilter,
 
-						delete date.dayNumber;
-						delete date.available;
+		filterUseFromAboveFilters: filterUseFromAboveFilters,
+		insertActiveObjectDataIntoFilters: insertActiveObjectDataIntoFilters,
 
-						date = JSON.parse(angular.toJson(date));
+		openUseFromAboveSettings: openUseFromAboveSettings,
 
-						if (date.active) {
-							datesList.push(date.value);
-						}
+		convertDatesTreeToFlatList: convertDatesTreeToFlatList
+	};
 
-					});
-
-				});
-
-			});
-
-			return datesList;
-
-		};
-
-		return {
-			setFilterDefaultOptions: setFilterDefaultOptions,
-
-			emptyTextFilter: emptyTextFilter,
-			emptyNumberFilter: emptyNumberFilter,
-			emptyDateFilter: emptyDateFilter,
-
-			filterUseFromAboveFilters: filterUseFromAboveFilters,
-			insertActiveObjectDataIntoFilters: insertActiveObjectDataIntoFilters,
-
-			openUseFromAboveSettings: openUseFromAboveSettings,
-
-			convertDatesTreeToFlatList: convertDatesTreeToFlatList
-		};
-
-	}
-
-})();
+}
