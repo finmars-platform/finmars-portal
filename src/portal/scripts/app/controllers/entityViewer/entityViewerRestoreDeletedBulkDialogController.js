@@ -66,12 +66,12 @@
 
 			});
 
-            console.log('restoredItems', restoredItems);
+            console.log('restoredItems', itemsIds);
 
             vm.processing = true;
             vm.isDeleted = true;
 
-            entityResolverService.updateBulk(entityType, restoredItems).then(function (data) {
+            entityResolverService.restoreBulk(entityType, {ids:itemsIds}).then(function (data) {
 
                 vm.processing = false;
 

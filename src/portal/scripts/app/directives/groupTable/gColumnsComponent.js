@@ -2680,13 +2680,17 @@ const evEvents = require("../../services/entityViewerEvents");
 
                         collectMissingCustomFieldsErrors();
                         // setFiltersLayoutNames();
-                        var foldedGroup = scope.groups.find(group => group.report_settings && group.report_settings.is_level_folded);
+
+                        /*var foldedGroup = scope.groups.find(group => group.report_settings && group.report_settings.is_level_folded);
 
                         if (!foldedGroup) {
                             rvDataHelper.markHiddenColumnsBasedOnFoldedGroups(scope.evDataService);
-                        }
+                        }*/
+                        rvDataHelper.markHiddenColumnsBasedOnFoldedGroups(scope.evDataService)
 
-                        if (colsChanged) scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                        if (colsChanged) {
+                            scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                        }
 
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 

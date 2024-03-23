@@ -49,6 +49,7 @@ import transactionImportSchemeService from "./app/services/import/transactionImp
 import dashboardHelper from "./app/helpers/dashboard.helper.js";
 import evRvLayoutsHelper from "./app/helpers/evRvLayoutsHelper";
 import reportHelper from "./app/helpers/reportHelper";
+import gFiltersHelper from "./app/helpers/gFiltersHelper";
 import rvDataProviderService from "./app/services/rv-data-provider/rv-data-provider.service";
 import groupsService from "./app/services/rv-data-provider/groups.service";
 import objectsService from "./app/services/rv-data-provider/objects.service";
@@ -222,7 +223,7 @@ export default (function () {
     portal.service('evRvDomManagerService', [require('./app/services/evRvDomManagerService')]);
     portal.service('entityDataConstructorService', [require('./app/services/entity-data-constructor/entityDataConstructorService')]);
 
-    portal.service('gFiltersHelper', [require('./app/helpers/gFiltersHelper')]);
+    portal.service('gFiltersHelper', [gFiltersHelper]);
     portal.service('gridTableHelperService', ['multitypeFieldService', require('./app/helpers/gridTableHelperService')]);
 
     //# region desc="Helpers">
