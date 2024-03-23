@@ -172,6 +172,30 @@
             })
     };
 
+    var restoreBulk = function (data) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'portfolios/portfolio-register/bulk-restore/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(function (data) {
+                return new Promise(function (resolve, reject) {
+                    resolve({status: 'deleted'});
+                });
+            })
+    };
+
     module.exports = {
 
         getList: getList,
@@ -182,6 +206,7 @@
 
         updateBulk: updateBulk,
         deleteBulk: deleteBulk,
+        restoreBulk: restoreBulk,
 
         calculateRecords: calculateRecords
     }

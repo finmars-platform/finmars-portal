@@ -1029,6 +1029,24 @@ export default function (instrumentService, transactionTypeService, priceHistory
         }
     };
 
+    var restoreBulk = function (entityType, data) {
+        switch (entityType) {
+            case 'portfolio-register':
+                return portfolioRegisterService.restoreBulk(data);
+            case 'transaction-type':
+                return transactionTypeService.restoreBulk(data);
+            default:
+                return new Promise((resolve, reject) => {
+                    reject(
+                        {
+                            error_key: "invalid_arguments",
+                            description: `No restoreBulk function inside entityResolverServiceNew for entityType: ${entityType}`,
+                        }
+                    )
+                })
+        }
+    };
+
     const selectsMap = {
         'instrumentSelect': ['instrument'],
         'unifiedDataSelect': ['counterparty', 'currency'],
@@ -1125,6 +1143,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
         deleteByKey: deleteByKey,
         updateBulk: updateBulk,
         deleteBulk: deleteBulk,
+        restoreBulk: restoreBulk,
 
         getSelectByEntityType: getSelectByEntityType,
 
