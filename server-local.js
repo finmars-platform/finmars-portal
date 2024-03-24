@@ -23,6 +23,8 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 
 app.use('/realm00000/space00000/a', express.static('dist'));
+app.use('/realm00000/space00001/a', express.static('dist'));
+app.use('/realm00000/space00002/a', express.static('dist'));
 app.use('/space00000/a', express.static('dist'));
 
 
