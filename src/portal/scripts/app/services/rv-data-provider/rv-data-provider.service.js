@@ -236,7 +236,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 evDataService.setRequestParameters(requestParameters);
 
-                reject();
+                reject(error);
 
             })
 
@@ -339,6 +339,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         var requestParameters = evDataService.dequeueDataRequest();
         executeRequest(evDataService, evEventService, requestParameters);
+
     }
 
 
@@ -366,6 +367,12 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 processQueue(evDataService, evEventService)
 
+            }).catch(function (e) {
+                console.error(
+                    `[rvDataProviderService.executeRequest] ` +
+                    `${evDataService.getCurrentRequestId()} getGroups error`,
+                    e
+                );
             });
 
         } else {
@@ -380,6 +387,12 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 // enqueueNewRequests(evDataService, evEventService, data, requestParameters);
                 processQueue(evDataService, evEventService)
 
+            }).catch(function (e) {
+                console.error(
+                    `[rvDataProviderService.executeRequest] ` +
+                    `${evDataService.getCurrentRequestId()} getObjects error`,
+                    e
+                );
             });
 
         }
@@ -440,6 +453,8 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
     };
 
     var updateDataStructure = function (evDataService, evEventService) {
+
+        evDataService.incrementCurrentRequestId();
 
         var requestParameters = evDataService.getActiveRequestParameters();
 
