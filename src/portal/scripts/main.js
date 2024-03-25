@@ -18,8 +18,11 @@ import 'v-accordion/dist/v-accordion.min.css';
 import 'angular-paging'
 import 'ui-select/dist/select.min.js'
 import 'ui-select/dist/select.min.css'
-import 'pdfjs-dist/build/pdf.min.js'
+import * as pdfjsLib from "pdfjs-dist/build/pdf";
+window.pdfjsLib = pdfjsLib
+
 import 'pdfjs-dist/build/pdf.worker.min.js'
+
 
 import masterUserService from "./app/services/masterUserService";
 
