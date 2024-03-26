@@ -201,8 +201,11 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     scope.selectSubtotalType(column, 1);
 
-                    scope.evDataService.resetTableContent(scope.isReport);
-                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE); // cause we need go to backend to recalculate subtotals
+                    // scope.evDataService.resetTableContent(scope.isReport);
+
+                    // because we need go to backend to recalculate subtotals
+                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                 }
@@ -220,8 +223,11 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     }
 
-                    scope.evDataService.resetTableContent(scope.isReport);
-                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE); // cause we need go to backend to recalculate subtotals
+                    // scope.evDataService.resetTableContent(scope.isReport);
+
+                    // because we need go to backend to recalculate subtotals
+                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                 }
@@ -239,8 +245,11 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     }
 
-                    scope.evDataService.resetTableContent(scope.isReport);
-                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE); // cause we need go to backend to recalculate subtotals
+                    // scope.evDataService.resetTableContent(scope.isReport);
+
+                    // because we need go to backend to recalculate subtotals
+                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                 }
@@ -2670,7 +2679,7 @@ const evEvents = require("../../services/entityViewerEvents");
                         updateGroupFoldingState();
 
                         scope.groups = scope.evDataService.getGroups();
-                        scope.evDataService.resetTableContent(scope.isReport);
+                        // scope.evDataService.resetTableContent(scope.isReport);
 
                         const colsChanged = syncColumnsWithGroups();
 
@@ -2692,7 +2701,8 @@ const evEvents = require("../../services/entityViewerEvents");
                             scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
                         }
 
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                        // scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                        scope.evEventService.dispatchEvent(evEvents.CREATE_TABLE);
 
                     }
 

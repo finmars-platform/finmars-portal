@@ -454,8 +454,6 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
     var updateDataStructure = function (evDataService, evEventService) {
 
-        evDataService.incrementCurrentRequestId();
-
         var requestParameters = evDataService.getActiveRequestParameters();
 
         injectRegularFilters(requestParameters, evDataService, evEventService);

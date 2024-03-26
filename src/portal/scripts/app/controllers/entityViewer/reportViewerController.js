@@ -104,6 +104,14 @@
 
             });
 
+            vm.entityViewerEventService.addEventListener(evEvents.CREATE_TABLE, function () {
+
+                vm.entityViewerDataService.resetTableContent(true);
+
+                rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
+
+            });
+
             /* vm.entityViewerEventService.addEventListener(evEvents.LIST_LAYOUT_CHANGE, function () {
 
                 vm.getView();
