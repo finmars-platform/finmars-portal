@@ -30,11 +30,11 @@
 
     // var middlewareService = require('../../services/middlewareService');
 
-    module.exports = function ($scope, $mdDialog, $transitions, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, customFieldService, attributeTypeService, rvDataProviderService, uiService, pricesCheckerService, expressionService, reportHelper, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
+    module.exports = function ($scope, $mdDialog, $transitions, toastNotificationService, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, customFieldService, attributeTypeService, rvDataProviderService, uiService, pricesCheckerService, expressionService, reportHelper, parentEntityViewerDataService, parentEntityViewerEventService, splitPanelExchangeService) {
 
         var vm = this;
 
-        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper);
+        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, toastNotificationService, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper);
 
         console.log('parentEntityViewerDataService', parentEntityViewerDataService);
         console.log('parentEntityViewerEventService', parentEntityViewerEventService);
