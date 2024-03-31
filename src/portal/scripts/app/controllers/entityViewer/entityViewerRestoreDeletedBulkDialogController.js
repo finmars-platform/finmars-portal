@@ -15,14 +15,14 @@
 		var entityType = data.entityType;
 		var restoredItems = data.items;
 
-        vm.isDeleted = false;
+        vm.isRestored = false;
 
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
 
-        vm.delete = function ($event) {
+        vm.restore = async function () {
 
             /* var objects = evDataService.getObjects();
 
@@ -45,7 +45,7 @@
                     }
                 });*/
 
-			var itemsIds = [];
+			const itemsIds = [];
 
 			restoredItems = restoredItems.map(function (item) {
 
@@ -69,23 +69,48 @@
             console.log('restoredItems', itemsIds);
 
             vm.processing = true;
-            vm.isDeleted = true;
+            vm.isRestored = true;
 
-            entityResolverService.restoreBulk(entityType, {ids:itemsIds}).then(function (data) {
+            try {
+
+                const result = entityResolverService.restoreBulk(
+                    entityType, {ids:itemsIds}
+                );
+
+                const response = await result[0];
+
+                if (response.errors) {
+                    throw response.errors;
+                }
+
+                if (response.status === 'E') {
+                    throw {task: response.id, error_message: response.error_message};
+                }
 
                 vm.processing = false;
 
-
                 $mdDialog.hide({status: 'agree', data: {itemsIds: itemsIds}});
 
-            })
-			.catch(function (reason) {
+
+            } catch (reason) {
+
+                let description = "Something wrong. Please, try again later."
+
+                if (reason.error_key) {
+                    console.error(reason.description)
+
+                    description = reason.description;
+
+                    if (reason.error_key === "invalid_arguments") {
+                        description = "Restore unavailable for this type of entities for now."
+                    }
+
+                }
 
                 $mdDialog.show({
                     controller: 'InfoDialogController as vm',
                     templateUrl: 'views/info-dialog-view.html',
                     parent: angular.element(document.body),
-                    targetEvent: $event,
                     clickOutsideToClose: false,
                     preserveScope: true,
                     autoWrap: true,
@@ -94,16 +119,17 @@
                     locals: {
                         info: {
                             title: 'Warning',
-                            description: "Something wrong. Please, try again later."
+                            description: description
                         }
                     }
                 }).then(function (value) {
 
-                    $mdDialog.hide({status: 'agree', data: {}});
+                    $mdDialog.hide({status: 'disagree'});
 
                 })
 
-            });
+            }
+
 
         };
 

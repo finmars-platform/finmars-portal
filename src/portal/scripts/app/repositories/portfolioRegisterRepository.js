@@ -189,11 +189,6 @@
                 },
                 body: JSON.stringify(data)
             })
-            .then(function (data) {
-                return new Promise(function (resolve, reject) {
-                    resolve({status: 'deleted'});
-                });
-            })
     };
 
     module.exports = {

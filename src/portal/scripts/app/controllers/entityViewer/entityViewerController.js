@@ -696,13 +696,11 @@
                 }
             }).then(function (res) {
 
-                /* vm.entityViewerDataService.setActiveObjectAction(null);
-                vm.entityViewerDataService.setActiveObjectActionData(null); */
                 vm.entityViewerDataService.setRowsActionData(null);
 
                 if (res.status === 'agree') {
 
-                    var evOptions = vm.entityViewerDataService.getEntityViewerOptions();
+                    /*var evOptions = vm.entityViewerDataService.getEntityViewerOptions();
                     var objects = vm.entityViewerDataService.getObjects();
                     var restoredEntitiesIds = res.data.itemsIds;
 
@@ -737,7 +735,9 @@
 
                     });
 
-                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);*/
+                    vm.entityViewerDataService.resetTableContent();
+                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
                 }
             });
