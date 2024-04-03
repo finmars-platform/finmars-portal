@@ -1030,36 +1030,45 @@ export default function (instrumentService, transactionTypeService, priceHistory
         }
     };
 
-    const _restoreEntities = function (restoreProm, functionName) {
+    /**
+     *
+     * @param restoreProm {Promise<{task: Number, [errors]: String}>}
+     * @param [options] {Object}
+     * @property options.functionName {String}
+     * @property [options.intervalDelay] {Number}
+     * @return {{promise: Promise<Object>, stopIntervalFn: Function}}
+     * @private
+     */
+    const _restoreEntities = function (restoreProm, {functionName, intervalDelay}) {
         // in case of need of the additional processing of results
         // of the task's end
-        const test = tasksService.processPromiseWithTask(
+        return tasksService.processPromiseWithTask(
             restoreProm,
-            {functionName: functionName}
+            {functionName, intervalDelay}
         );
-
-        return test;
     }
 
     /**
      *
      * @param entityType
      * @param data
-     * @return {Promise<[Promise<Object>, Function]>}
+     * @param {Number} [intervalDelay]
+     * @return {{promise: Promise<Object>, stopIntervalFn: Function}}
      */
-    const restoreBulk = function (entityType, data) {
+    const restoreBulk = function (entityType, data, intervalDelay) {
         switch (entityType) {
             case 'portfolio-register':
-                const test = _restoreEntities(
+                return _restoreEntities(
                     portfolioRegisterService.restoreBulk(data),
-                    "portfolioRegisterService.restoreBulk"
+                    "portfolioRegisterService.restoreBulk",
+                    intervalDelay
                 );
-
-                return test;
 
             case 'transaction-type':
                 return _restoreEntities(
-                    transactionTypeService.restoreBulk(data)
+                    transactionTypeService.restoreBulk(data),
+                    "transactionTypeService.restoreBulk",
+                    intervalDelay
                 );
             default:
                 throw {

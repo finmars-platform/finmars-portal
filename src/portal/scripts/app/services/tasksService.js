@@ -141,7 +141,7 @@
      * @returns {{promise: Promise<Object>, stopInterval: Function}} - Promise
      * that is resolved when the task ends and a Function to call clearInterval()
      */
-    const awaitTaskEnd = function (id, {intervalTime=3000, functionName=''}) {
+    const awaitTaskEnd = function (id, {intervalDelay=2000, functionName=''}) {
 
         let taskInterval;
         let stopInterval = () => {
@@ -192,7 +192,7 @@
 
                 }
 
-            }, intervalTime);
+            }, intervalDelay);
 
         });
 
@@ -210,15 +210,16 @@
      * `errors` - error that occurred while trying to create celery task.
      *
      * @param {Object} [options]
-     * @property [options.functionName] - name of the function that caused
+     * @param {String} options.functionName - name of the function that caused
      * creation of the task to use in an error message.
      * E.g. importInstrumentCbondsService.download().
+     * @param {Number} [options.intervalDelay] - delay for setInterval
      *
-     * @returns {[Promise<Object>, Function]} - Promise that is resolves with
-     * data about celery task end.
+     * @returns {{promise: Promise<Object>, stopIntervalFn: Function}} - Promise
+     * that is resolves with data about celery task end.
      * Function that stops watching for celery task's execution status.
      */
-    const processPromiseWithTask = function (promise, {functionName=''}) {
+    const processPromiseWithTask = function (promise, {intervalDelay, functionName=''}) {
 
         let timeOutId;
         let stopIntervalCalled = false;
@@ -264,7 +265,13 @@
                         );
                     }, 60*1000)
 
-                    let atData = awaitTaskEnd(res.task, {functionName: functionName});
+                    let atData = awaitTaskEnd(
+                        res.task,
+                        {
+                            functionName: functionName,
+                            intervalDelay
+                        }
+                    );
 
                     stopIntervalFn = atData.stopInterval;
                     clearTimeout(timeOutId);
@@ -278,7 +285,7 @@
 
         })
 
-        return [prom, stopInterval];
+        return {promise: prom, stopIntervalFn: stopInterval};
 
     }
 

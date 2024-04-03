@@ -77,7 +77,7 @@
                     entityType, {ids:itemsIds}
                 );
 
-                const response = await result[0];
+                const response = await result.promise;
 
                 if (response.errors) {
                     throw response.errors;
