@@ -241,7 +241,6 @@
 						scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
 					}
-
 					else if (droppedItemData.itemOrigin === 'columns') {
 
 						const nextSibling = ev.target.closest('.gDraggableHead');
