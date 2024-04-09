@@ -2,6 +2,9 @@
  * Created by szhitenev on 05.05.2016.
  */
 const evEvents = require("../../services/entityViewerEvents");
+const {default: evDataHelper} = require("../../helpers/ev-data.helper");
+const {default: rvDataHelper} = require("../../helpers/rv-data.helper");
+const utilsHelper = require("../../helpers/utils.helper");
 (function () {
 
     'use strict';
@@ -2655,6 +2658,12 @@ const evEvents = require("../../services/entityViewerEvents");
                 };
 
                 let onGroupsChange;
+                const dispatchCreateTableD = utilsHelper.debounce(
+                    function () {
+                        scope.evEventService.dispatchEvent(evEvents.CREATE_TABLE);
+                    },
+                    3000,
+                )
 
                 if (scope.isReport) {
 
@@ -2697,14 +2706,22 @@ const evEvents = require("../../services/entityViewerEvents");
                         }*/
                         rvDataHelper.markHiddenColumnsBasedOnFoldedGroups(scope.evDataService)
 
+
                         if (colsChanged) {
                             scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
                         }
 
                         // scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
-                        scope.evEventService.dispatchEvent(evEvents.CREATE_TABLE);
 
-                    }
+
+                        if ( scope.dataIsLoading ) {
+                            dispatchCreateTableD();
+
+                        } else {
+                            scope.evEventService.dispatchEvent(evEvents.CREATE_TABLE);
+                        }
+
+                    };
 
                 } else {
 
@@ -2718,9 +2735,10 @@ const evEvents = require("../../services/entityViewerEvents");
 
                         collectMissingCustomFieldsErrors();
 
+                        // TODO: debounce for UPDATE_TABLE as for CREATE_TABLE for rv
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                    }
+                    };
 
                     scope.checkForFilteringBySameAttr = function (columnKey) {
 
