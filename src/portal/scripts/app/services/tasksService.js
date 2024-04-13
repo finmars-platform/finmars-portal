@@ -5,7 +5,8 @@
     'use strict';
 
     var baseUrlService = require("../services/baseUrlService").default;
-    const toastNotificationService = require('../../../../core/services/toastNotificationService').default;
+    const ToastNotificationService = require('../../../../shell/scripts/app/services/toastNotificationService').default;
+    const toastNotificationService = new ToastNotificationService();
 
     const cookieService = require('../../../../core/services/cookieService').default;
     const xhrService = require('../../../../core/services/xhrService').default;
@@ -131,10 +132,16 @@
      * Check for status of task until it is ended.
      *
      * @param {Number} id - task id
-     * @param {Number} [intervalTime]
-     * @returns {{promise: Promise<Object>, stopInterval: Function}} - Promise that is resolved when the task ends and a Function to force clear interval
+     *
+     * @param {Object} [options]
+     * @property [options.functionName] - name of the function that caused
+     * creation of the task to use in an error message.
+     * E.g. importInstrumentCbondsService.download().
+     *
+     * @returns {{promise: Promise<Object>, stopInterval: Function}} - Promise
+     * that is resolved when the task ends and a Function to call clearInterval()
      */
-    const awaitImportTask = function (id, intervalTime=3000) {
+    const awaitTaskEnd = function (id, {intervalDelay=2000, functionName=''}) {
 
         let taskInterval;
         let stopInterval = () => {
@@ -150,13 +157,24 @@
 
                     switch (res.status) {
                         case 'C':
-                            toastNotificationService.error("Task has been canceled");
+                            toastNotificationService.error("Task has been canceled", "Error");
+                            break;
                         case 'T':
-                            toastNotificationService.error("Task has been timed out");
+                            toastNotificationService.error("Task has been timed out", "Error");
                             break;
                         case 'E':
-                            console.error(`Task error: ${res.error}`);
-                            toastNotificationService.error(res.error)
+
+                            let errorTxt = 'Task error';
+
+                            if (functionName) {
+                                errorTxt = errorTxt + ` [${functionName}]`
+                            }
+
+                            errorTxt = errorTxt + `: ${res.error_message}`;
+
+                            console.error(errorTxt);
+                            toastNotificationService.error(res.error_message, "Error")
+
                             break;
                     }
 
@@ -174,11 +192,100 @@
 
                 }
 
-            }, intervalTime);
+            }, intervalDelay);
 
         });
 
         return {promise: prom, stopInterval};
+
+    }
+
+    /**
+     * Wait for celery task created by promise to complete.
+     *
+     * @param {Promise<{task: Number, [errors]: String}>} promise - promise
+     * that is resolved after celery task was created by server.
+     * Resolved object properties:
+     * `task` - contains id of the created celery task.
+     * `errors` - error that occurred while trying to create celery task.
+     *
+     * @param {Object} [options]
+     * @param {String} options.functionName - name of the function that caused
+     * creation of the task to use in an error message.
+     * E.g. importInstrumentCbondsService.download().
+     * @param {Number} [options.intervalDelay] - delay for setInterval
+     *
+     * @returns {{promise: Promise<Object>, stopIntervalFn: Function}} - Promise
+     * that is resolves with data about celery task end.
+     * Function that stops watching for celery task's execution status.
+     */
+    const processPromiseWithTask = function (promise, {intervalDelay, functionName=''}) {
+
+        let timeOutId;
+        let stopIntervalCalled = false;
+        let stopIntervalFn;
+        let stopInterval = function() {
+
+            if (stopIntervalFn) {
+                stopIntervalFn();
+            } else {
+                stopIntervalCalled = true;
+            }
+
+        };
+
+        let prom = new Promise(async (resolve, reject) => {
+
+            try {
+
+                const res = await promise;
+
+                if (res.errors) {
+
+                    console.error(
+                        "[tasksService.processPromiseWithTask] Error occurred " +
+                        `before celery task was created ${res.errors}`
+                    );
+
+                    toastNotificationService.error(res.errors, "Error");
+                    return resolve(res);
+
+                }
+                else {
+
+                    // stopInterval was called before running taskService.awaitTaskEnd()
+                    if (stopIntervalCalled) {
+                        return resolve( "Task status check stopped" );
+                    }
+
+                    timeOutId = setTimeout(() => {
+                        console.error(
+                            `Execution of the celery task: ${res.task}` +
+                            "takes too long"
+                        );
+                    }, 60*1000)
+
+                    let atData = awaitTaskEnd(
+                        res.task,
+                        {
+                            functionName: functionName,
+                            intervalDelay
+                        }
+                    );
+
+                    stopIntervalFn = atData.stopInterval;
+                    clearTimeout(timeOutId);
+
+                    return resolve( atData.promise );
+                }
+
+            } catch (e) {
+                reject(e);
+            }
+
+        })
+
+        return {promise: prom, stopIntervalFn: stopInterval};
 
     }
 
@@ -191,7 +298,8 @@
 
         abortTransactionImport: abortTransactionImport,
 
-        awaitImportTask: awaitImportTask,
+        awaitTaskEnd: awaitTaskEnd,
+        processPromiseWithTask: processPromiseWithTask,
     }
 
 }());

@@ -1860,9 +1860,9 @@
         });
     };
 
-    var updateTableAfterEntitiesDeletion = function (evDataService, evEventService, deletedEntitiesIds) {
+    var updateTableAfterEntitiesDeletion = function (evDataService, evEventService) {
 
-        var evOptions = evDataService.getEntityViewerOptions();
+        /*var evOptions = evDataService.getEntityViewerOptions();
         var objects = evDataService.getObjects();
 
         objects.forEach(function (obj) {
@@ -1896,7 +1896,10 @@
 
         });
 
-        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);*/
+        evDataService.resetTableContent(false);
+
+        evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
     };
 

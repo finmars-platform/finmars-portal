@@ -94,7 +94,14 @@
                 scope.toggleFilterBlock = function ($event) {
 
                     const elem = $event.currentTarget;
-                    $(elem).classList.contains('active') ? $(elem).classList.remove('active') : $(elem).classList.add('active');
+
+                    if ( elem.classList.contains('active') ) {
+
+                        elem.classList.remove('active');
+
+                    } else {
+                        elem.classList.add('active')
+                    }
 
                     scope.evEventService.dispatchEvent(evEvents.TOGGLE_FILTER_BLOCK);
 

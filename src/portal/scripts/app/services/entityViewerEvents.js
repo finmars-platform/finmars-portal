@@ -6,7 +6,28 @@ module.exports = {
     'CLEAR_USE_FROM_ABOVE_FILTERS': 'CLEAR_USE_FROM_ABOVE_FILTERS',
 	'FILTERS_RENDERED': 'FILTERS_RENDERED',
 
-    'UPDATE_TABLE': 'UPDATE_TABLE', // async download
+    /*
+     * Async download.
+     * Calls updateDataStructure inside
+     * rv-data-provider.service.js / ev-data-provider.service.js
+     */
+    'UPDATE_TABLE': 'UPDATE_TABLE',
+
+    /*
+     * Async download.
+     * Calls createDataStructure inside
+     * rv-data-provider.service.js.
+     * TODO: integrate into entity viewer
+     */
+    'CREATE_TABLE': 'CREATE_TABLE',
+
+    // Legacy. Use CREATE_TABLE instead
+    'REQUEST_REPORT': 'REQUEST_REPORT',
+
+    'DATA_LOAD_END': 'DATA_LOAD_END', // Data loaded. Server did not respond with an error.
+    'DATA_LOAD_START': 'DATA_LOAD_START',
+    'DATA_LOAD_ERROR': 'DATA_LOAD_ERROR',
+
     'REDRAW_TABLE': 'REDRAW_TABLE', // inmemory redraw
     'UPDATE_PROJECTION': 'UPDATE_PROJECTION',
     'FINISH_RENDER': 'FINISH_RENDER',
@@ -23,11 +44,6 @@ module.exports = {
     'UPDATE_COLUMNS_SIZE': 'UPDATE_COLUMNS_SIZE',
     'UPDATE_TABLE_HEAD_COLUMNS_SIZE': 'UPDATE_TABLE_HEAD_COLUMNS_SIZE',
     'START_CELLS_OVERFLOW': 'START_CELLS_OVERFLOW',
-
-    'REQUEST_REPORT': 'REQUEST_REPORT',
-    'DATA_LOAD_END': 'DATA_LOAD_END', // Data loaded. Server did not respond with an error.
-    'DATA_LOAD_START': 'DATA_LOAD_START',
-    'DATA_LOAD_ERROR': 'DATA_LOAD_ERROR',
 
     'ACTIVE_OBJECT_CHANGE': 'ACTIVE_OBJECT_CHANGE', // right click on object info
     'USER_REQUEST_AN_ACTION': 'USER_REQUEST_AN_ACTION', // user used a Add menu and want to Add Entity (portfolio, account,  etc)

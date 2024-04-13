@@ -56,9 +56,10 @@ var expressionProcedureService = require('./procedures/expressionProcedureServic
 var dataProcedureService = require('./procedures/dataProcedureService').default;
 var pricingProcedureService = require('./procedures/pricingProcedureService').default;
 
-var scheduleService = require('./scheduleService').default;
+const scheduleService = require('./scheduleService').default;
 const auditService = require('./auditService').default;
 const uiService = require('./uiService').default;
+const tasksService = require('./tasksService').default;
 
 var cookieService = require('../../../../core/services/cookieService').default;
 var xhrService = require('../../../../core/services/xhrService').default;
@@ -1029,21 +1030,51 @@ export default function (instrumentService, transactionTypeService, priceHistory
         }
     };
 
-    var restoreBulk = function (entityType, data) {
+    /**
+     *
+     * @param restoreProm {Promise<{task: Number, [errors]: String}>}
+     * @param [options] {Object}
+     * @property options.functionName {String}
+     * @property [options.intervalDelay] {Number}
+     * @return {{promise: Promise<Object>, stopIntervalFn: Function}}
+     * @private
+     */
+    const _restoreEntities = function (restoreProm, {functionName, intervalDelay}) {
+        // in case of need of the additional processing of results
+        // of the task's end
+        return tasksService.processPromiseWithTask(
+            restoreProm,
+            {functionName, intervalDelay}
+        );
+    }
+
+    /**
+     *
+     * @param entityType
+     * @param data
+     * @param {Number} [intervalDelay]
+     * @return {{promise: Promise<Object>, stopIntervalFn: Function}}
+     */
+    const restoreBulk = function (entityType, data, intervalDelay) {
         switch (entityType) {
             case 'portfolio-register':
-                return portfolioRegisterService.restoreBulk(data);
+                return _restoreEntities(
+                    portfolioRegisterService.restoreBulk(data),
+                    "portfolioRegisterService.restoreBulk",
+                    intervalDelay
+                );
+
             case 'transaction-type':
-                return transactionTypeService.restoreBulk(data);
+                return _restoreEntities(
+                    transactionTypeService.restoreBulk(data),
+                    "transactionTypeService.restoreBulk",
+                    intervalDelay
+                );
             default:
-                return new Promise((resolve, reject) => {
-                    reject(
-                        {
-                            error_key: "invalid_arguments",
-                            description: `No restoreBulk function inside entityResolverServiceNew for entityType: ${entityType}`,
-                        }
-                    )
-                })
+                throw {
+                    error_key: "invalid_arguments",
+                    description: `No restoreBulk function inside entityResolverServiceNew for entityType: ${entityType}`,
+                }
         }
     };
 

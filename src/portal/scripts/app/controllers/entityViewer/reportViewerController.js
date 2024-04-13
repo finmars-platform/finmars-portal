@@ -31,7 +31,7 @@
 
         var vm = this;
 
-        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper);
+        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, toastNotificationService, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper);
 
         vm.readyStatus = {
             attributes: false,
@@ -101,6 +101,14 @@
                 // } else {
                 //     rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
                 // }
+
+            });
+
+            vm.entityViewerEventService.addEventListener(evEvents.CREATE_TABLE, function () {
+
+                vm.entityViewerDataService.resetTableContent(true);
+
+                rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
 
             });
 

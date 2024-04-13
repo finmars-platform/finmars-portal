@@ -63,7 +63,7 @@
             },
             {
                 name: 'Edit Pricing FX Rate',
-                action: 'edit_pricing_currency_price'
+                action: 'edit_pricing_currency_fx_rate'
             },
             {
                 name: 'Edit Accrued FX Rate',
