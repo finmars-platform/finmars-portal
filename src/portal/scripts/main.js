@@ -18,12 +18,12 @@ import 'v-accordion/dist/v-accordion.min.css';
 import 'angular-paging'
 import 'ui-select/dist/select.min.js'
 import 'ui-select/dist/select.min.css'
-import * as pdfjsLib from 'pdfjs-dist/build/pdf.min';
+import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 // Ensure that the worker is imported as a module.
-import { getWorker } from 'pdfjs-dist/build/pdf.worker.min';
+import { pdfjsWorker } from 'pdfjs-dist/legacy/build/pdf.worker.entry';
 
 // Specify the workerSrc to PDF.js, which can now be imported directly as a module.
-pdfjsLib.GlobalWorkerOptions.workerSrc = getWorker;
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 // Set up pdfjsLib globally if necessary
 window.pdfjsLib = pdfjsLib;
