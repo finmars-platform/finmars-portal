@@ -18,7 +18,7 @@ import 'v-accordion/dist/v-accordion.min.css';
 import 'angular-paging'
 import 'ui-select/dist/select.min.js'
 import 'ui-select/dist/select.min.css'
-import * as pdfjsLib from 'pdfjs-dist/build/pdf';
+import * as pdfjsLib from 'pdfjs-dist/build/pdf.min';
 // Ensure that the worker is imported as a module.
 import { getWorker } from 'pdfjs-dist/build/pdf.worker.min';
 
