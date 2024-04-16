@@ -12,7 +12,7 @@
 
     const rvHelper = require('../helpers/rv.helper')
 
-    module.exports = function (viewModel, $scope, $mdDialog, toastNotificationService, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper) {
+    module.exports = function (viewModel, $scope, $mdDialog, toastNotificationService, globalDataService, pricingPolicyService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper) {
 
         const commonDialogsService = new CommonDialogsService($mdDialog);
 
@@ -490,31 +490,36 @@
 
         };
 
-        const offerToCreateEntity = function (warningDescription, createEntityLocals) {
+        const getTooManyError = function (serviceName, resultsLength) {
+            return `Error [rvSharedLogicHelper ${serviceName}.getList()] ` +
+                `Expected 0 or 1 objects got: ${resultsLength}`
+        };
 
-            /* $mdDialog.show({
-                controller: 'WarningDialogController as vm',
-                templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: event,
-                preserveScope: true,
-                autoWrap: true,
-                multiple: true,
-                skipHide: true,
-                locals: {
-                    warning: {
-                        title: 'Warning',
-                        description: warningDescription
-                    }
+        const getPricingPolicyByUserCode = async function (userCode) {
+
+            const opts = {
+                filters: {
+                    user_code: userCode,
                 }
+            }
 
-            }).then(function (res) {
-                if (res.status === 'agree') {
+            const ppRes = await pricingPolicyService.getListLight(opts);
 
-                    createEntity(event, createEntityLocals);
+            if ( !ppRes.results.length ) {
+                throw `Error [rvSharedLogicHelper pricingPolicyService.getListLight()] ` +
+                `No pricing_policy found with the following user_code: ${userCode}`;
+            }
 
-                }
-            }); */
+            if (ppRes.results.length > 1) {
+                throw `Error [rvSharedLogicHelper pricingPolicyService.getListLight()] ` +
+                `Expected 1 object got: ${ppRes.length}`;
+            }
+
+            return ppRes.results[0];
+
+        }
+
+        const offerToCreateEntity = async function (warningDescription, getDialogLocalsFn) {
 
             const warningLocals = {
                 warning: {
@@ -523,23 +528,20 @@
                 }
             };
 
-            commonDialogsService.warning(warningLocals).then(function (res) {
-                if (res.status === 'agree') {
+            const res = await commonDialogsService.warning(warningLocals);
 
-                    createEntity(createEntityLocals);
+            if (res.status === 'agree') {
 
-                }
-            });
+                const createEntityLocals = await getDialogLocalsFn();
 
-        };
+                createEntity(createEntityLocals);
+
+            }
+
+        }
 
 
         const executeRowAction = function () {
-
-            const getTooManyError = function (serviceName, resultsLength) {
-                return `Error [rvSharedLogicHelper ${serviceName}.getList()] ` +
-                    `Expected 0 or 1 objects got: ${resultsLength}`
-            };
 
             const actionData = viewModel.entityViewerDataService.getRowsActionData();
             const action = actionData.actionKey;
@@ -673,24 +675,30 @@
 
                             var warningDescription = 'No corresponding record in Price History. Do you want to add the record?';
 
-                            var createEntityLocals = {
-                                entityType: 'price-history',
-                                entity: {
-                                    instrument: actionData.object['instrument.id'],
-                                    instrument_object: {
-                                        id: actionData.object['instrument.id'],
-                                        name: actionData.object['instrument.name'],
-                                        user_code: actionData.object['instrument.user_code'],
-                                        short_name: actionData.object['instrument.short_name']
+                            var getDialogLocals = async function () {
+
+                                var pp = await getPricingPolicyByUserCode(reportOptions.pricing_policy);
+
+                                return {
+                                    entityType: 'price-history',
+                                    entity: {
+                                        instrument: actionData.object['instrument.id'],
+                                        instrument_object: {
+                                            id: actionData.object['instrument.id'],
+                                            name: actionData.object['instrument.name'],
+                                            user_code: actionData.object['instrument.user_code'],
+                                            short_name: actionData.object['instrument.short_name']
+                                        },
+                                        pricing_policy: pp.id,
+                                        pricing_policy_object: pp,
+                                        date: reportOptions.report_date
                                     },
-                                    pricing_policy: reportOptions.pricing_policy_object.id,
-                                    pricing_policy_object: reportOptions.pricing_policy_object,
-                                    date: reportOptions.report_date
-                                },
-                                data: {}
+                                    data: {}
+                                };
+
                             };
 
-                            offerToCreateEntity(warningDescription, createEntityLocals);
+                            offerToCreateEntity(warningDescription, getDialogLocals);
 
                         }
 
@@ -732,24 +740,31 @@
                         } else {
 
                             var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
-                            var createEntityLocals = {
-                                entityType: 'currency-history',
-                                entity: {
-                                    currency: actionData.object['currency.id'],
-                                    currency_object: {
-                                        id: actionData.object['currency.id'],
-                                        name: actionData.object['currency.name'],
-                                        short_name: actionData.object['currency.short_name'],
-                                        user_code: actionData.object['currency.user_code']
-                                    },
-                                    pricing_policy: reportOptions.pricing_policy_object.id,
-                                    pricing_policy_object: reportOptions.pricing_policy_object,
-                                    date: reportOptions.report_date
-                                },
-                                data: {}
-                            };
 
-                            offerToCreateEntity(warningDescription, createEntityLocals);
+                            var getDialogLocals = async function () {
+
+                                var pp = await getPricingPolicyByUserCode(reportOptions.pricing_policy);
+
+                                return {
+                                    entityType: 'currency-history',
+                                    entity: {
+                                        currency: actionData.object['currency.id'],
+                                        currency_object: {
+                                            id: actionData.object['currency.id'],
+                                            name: actionData.object['currency.name'],
+                                            short_name: actionData.object['currency.short_name'],
+                                            user_code: actionData.object['currency.user_code']
+                                        },
+                                        pricing_policy: pp.id,
+                                        pricing_policy_object: pp,
+                                        date: reportOptions.report_date
+                                    },
+                                    data: {}
+                                };
+
+                            }
+
+                            offerToCreateEntity(warningDescription, getDialogLocals);
 
                         }
 
@@ -788,20 +803,26 @@
 
                             var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
 
-                            var currency_object = getCurrencyObjectMockup('instrument.accrued_currency');
-                            var createEntityLocals = {
-                                entityType: 'currency-history',
-                                entity: {
-                                    currency: actionData.object['instrument.accrued_currency.id'],
-                                    currency_object: currency_object,
-                                    pricing_policy: reportOptions.pricing_policy_object.id,
-                                    pricing_policy_object: reportOptions.pricing_policy_object,
-                                    date: reportOptions.report_date
-                                },
-                                data: {}
+                            var getDialogLocals = async function () {
+
+                                var pp = await getPricingPolicyByUserCode(reportOptions.pricing_policy);
+                                var currency_object = getCurrencyObjectMockup('instrument.accrued_currency');
+
+                                return {
+                                    entityType: 'currency-history',
+                                    entity: {
+                                        currency: actionData.object['instrument.accrued_currency.id'],
+                                        currency_object: currency_object,
+                                        pricing_policy: pp.id,
+                                        pricing_policy_object: pp,
+                                        date: reportOptions.report_date
+                                    },
+                                    data: {}
+                                };
+
                             };
 
-                            offerToCreateEntity(warningDescription, createEntityLocals);
+                            offerToCreateEntity(warningDescription, getDialogLocals);
 
 
                         }
@@ -841,20 +862,26 @@
 
                             var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
 
-                            var currency_object = getCurrencyObjectMockup('instrument.pricing_currency');
-                            var createEntityLocals = {
-                                entityType: 'currency-history',
-                                entity: {
-                                    currency: actionData.object['instrument.pricing_currency.id'],
-                                    currency_object: currency_object,
-                                    pricing_policy: reportOptions.pricing_policy_object.id,
-                                    pricing_policy_object: reportOptions.pricing_policy_object,
-                                    date: reportOptions.report_date
-                                },
-                                data: {}
+                            var getDialogLocals = async function () {
+
+                                var pp = await getPricingPolicyByUserCode(reportOptions.pricing_policy);
+                                var currency_object = getCurrencyObjectMockup('instrument.pricing_currency');
+
+                                return {
+                                    entityType: 'currency-history',
+                                    entity: {
+                                        currency: actionData.object['instrument.pricing_currency.id'],
+                                        currency_object: currency_object,
+                                        pricing_policy: pp.id,
+                                        pricing_policy_object: pp,
+                                        date: reportOptions.report_date
+                                    },
+                                    data: {}
+                                };
+
                             };
 
-                            offerToCreateEntity(warningDescription, createEntityLocals);
+                            offerToCreateEntity(warningDescription, getDialogLocals);
 
 
                         }
