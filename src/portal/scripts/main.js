@@ -926,7 +926,7 @@ export default (function () {
     portal.directive('evNumberFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evOldNumberFilterDirective')]);
     portal.directive('evDateFilter', ['$mdDialog', require('./app/directives/entityViewer/userFilters/evOldDateFilterDirective')]); */
     portal.directive('gRowsBulkActions', ['$mdDialog', require('./app/directives/groupTable/gRowsBulkActionsDirective')]);
-    portal.directive('gEvRowsBulkActions', ['$mdDialog', require('./app/directives/groupTable/gEvRowsBulkActionsDirective')]);
+    portal.directive('gEvRowsBulkActions', ['evRvDomManagerService', require('./app/directives/groupTable/gEvRowsBulkActionsDirective')]);
 
     portal.directive('groupReportSettings', [require('./app/directives/groupTable/gReportSettingsComponent')]);
     portal.directive('groupGrouping', ['$mdDialog', require('./app/directives/groupTable/gGroupingComponent')]); //2021-12-17 DEPRECATED
