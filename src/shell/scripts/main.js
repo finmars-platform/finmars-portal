@@ -6,8 +6,9 @@
 
 /** fixes angular module import error */
 // require('../../forum/scripts/main.js');
-
 import angular from 'angular';
+
+
 
 import profile from '../../profile/scripts/main.js';
 import database from '../../database/scripts/main.js';
