@@ -978,8 +978,6 @@
 
         vm.valueTypeChanged = function (item) {
             item.content_type = null;
-            item.is_fill_from_context = false;
-            item.context_property = null;
 
             if (item.value_type === 100) {
                 item.content_type = "accounts.account";
