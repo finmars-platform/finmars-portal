@@ -10,6 +10,8 @@
 
         var models = {
             "portfolio": require('../models/portfolioPropsModel').getAttributes(),
+            "portfolio-type": require('../models/portfolioTypePropsModel').getAttributes(),
+            "portfolio-reconcile-group": require('../models/portfolioReconcileGroupPropsModel').getAttributes(),
             "audit-transaction": require('../models/auditTransactionPropsModel').getAttributes(),
             "audit-instrument": require('../models/auditInstrumentPropsModel').getAttributes(),
             "account": require('../models/accountPropsModel').getAttributes(),

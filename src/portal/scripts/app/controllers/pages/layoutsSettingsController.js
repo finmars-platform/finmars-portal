@@ -173,6 +173,11 @@
                     layoutsEntityType = 'transaction-type';
                     layoutState = 'app.portal.data.transaction-type';
                     break;
+                case 'portfolios.portfoliotype':
+                    layoutsArrayPropertyName = 'portfolioTypeLayouts';
+                    layoutsEntityType = 'portfolio-type';
+                    layoutState = 'app.portal.data.portfolio-type';
+                    break;
             }
 
             switch (typeOfData) {

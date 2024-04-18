@@ -10,12 +10,12 @@
     const popupEvents = require('../../../services/events/popupEvents');
 
     const evHelperService = require('../../../services/entityViewerHelperService');
-    const downloadFileHelper = require('../../../helpers/downloadFileHelper');
+    const downloadFileHelper = require('../../../helpers/downloadFileHelper').default;
 
     const convertReportHelper = require('../../../helpers/converters/convertReportHelper');
     const reportCopyHelper = require('../../../helpers/reportCopyHelper');
 
-    const exportExcelService = require('../../../services/exportExcelService');
+    const exportExcelService = require('../../../services/exportExcelService').default;
 
     const EventService = require('../../../services/eventService');
 
@@ -43,7 +43,14 @@
                 $scope.isRootEntityViewer = $scope.evDataService.isRootEntityViewer();
                 $scope.viewContext = $scope.evDataService.getViewContext();
 
-                $scope.isFiltersOpened = !$scope.hideFiltersBlock; // when inside dashboard or split panel
+                // filter area always shown inside dashboard
+                if ($scope.viewContext === "dashboard") {
+                    $scope.areFiltersOpened = true;
+
+                } else {
+                    $scope.areFiltersOpened = !$scope.hideFiltersBlock; // e.g. when inside split panel
+                }
+
                 vm.hideUseFromAboveFilters = $scope.hideUseFromAboveFilters;
 
                 vm.popupPosX = {value: null}
@@ -834,23 +841,27 @@
 
                     }); */
 
-                    $scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_BLOCK, function () {
+                    if ($scope.viewContext !== "dashboard") {
 
-                        $scope.isFiltersOpened = !$scope.isFiltersOpened;
+                        $scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_BLOCK, function () {
 
-                        setTimeout(() => {
+                            $scope.areFiltersOpened = !$scope.areFiltersOpened;
 
-                            const interfaceLayout = $scope.evDataService.getInterfaceLayout();
-                            const gFiltersHeight = gFiltersElem.clientHeight;
+                            setTimeout(() => {
 
-                            interfaceLayout.filterArea.height = gFiltersHeight;
-                            $scope.evDataService.setInterfaceLayout(interfaceLayout);
+                                const interfaceLayout = $scope.evDataService.getInterfaceLayout();
+                                const gFiltersHeight = gFiltersElem.clientHeight;
 
-                            $scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                                interfaceLayout.filterArea.height = gFiltersHeight;
+                                $scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-                        }, 500); // Transition time for .g-filters
+                                $scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-                    });
+                            }, 500); // Transition time for .g-filters
+
+                        });
+
+                    }
 
                     /* $scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
 

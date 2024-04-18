@@ -1611,7 +1611,7 @@ export default function (toastNotificationService, transactionTypeService, price
         }
 
 
-        if (obj['item_type'] === 1 && option.action === 'edit_pricing_currency_price') { // item_type = 1 - instrument
+        if (obj['item_type'] === 1 && option.action === 'edit_pricing_currency_fx_rate') { // item_type = 1 - instrument
             return true;
         }
 

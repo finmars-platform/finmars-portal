@@ -14,6 +14,7 @@
 
 (function () {
 
+    const pricingPolicyService = require("../../services/pricingPolicyService").default;
     var AutosaveLayoutService = require("../../services/autosaveLayoutService").default;
     var evHelperService = require("../../services/entityViewerHelperService");
     var metaService = require('../../services/metaService').default;
@@ -31,7 +32,7 @@
 
         var vm = this;
 
-        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper);
+        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, toastNotificationService, globalDataService, pricingPolicyService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper);
 
         vm.readyStatus = {
             attributes: false,
@@ -46,6 +47,7 @@
         // console.log("autosave77 autosaveLayoutOn", autosaveLayoutOn);
         // Functions for context menu
 
+        var firstDleIndex;
 
         vm.setEventListeners = function () {
 
@@ -60,6 +62,18 @@
                 //     rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
                 // }
 
+
+            });
+
+            firstDleIndex = vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                /* *
+                 * Fixes scenario when DATA_LOAD_END
+                 * called inside evDataProviderService.updateDataStructure()
+                 * before gTableBodyComponent initialized
+                 * */
+                vm.entityViewerDataService.setDataLoadStatus(true);
+
+                vm.entityViewerEventService.removeEventListener(evEvents.DATA_LOAD_END, firstDleIndex);
 
             });
 
@@ -88,6 +102,14 @@
                 // } else {
                 //     rvDataProviderService.requestReport(vm.entityViewerDataService, vm.entityViewerEventService);
                 // }
+
+            });
+
+            vm.entityViewerEventService.addEventListener(evEvents.CREATE_TABLE, function () {
+
+                vm.entityViewerDataService.resetTableContent(true);
+
+                rvDataProviderService.createDataStructure(vm.entityViewerDataService, vm.entityViewerEventService);
 
             });
 

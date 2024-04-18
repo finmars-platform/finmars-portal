@@ -8,7 +8,6 @@
     'use strict';
 
     var baseUrlService = require("../../../services/baseUrlService").default;
-    var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
     var importTransactionService = require('../../../services/import/importTransactionService');
 
     // var baseUrlService = require('../../../services/baseUrlService');
@@ -16,7 +15,7 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    module.exports = function transactionImportDialogController($scope, $mdDialog, data, usersService) {
+    module.exports = function transactionImportDialogController($scope, $mdDialog, data, usersService, transactionImportSchemeService) {
 
         var vm = this;
 

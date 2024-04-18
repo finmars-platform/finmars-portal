@@ -41,12 +41,12 @@
                 </div>
 
                 <div ng-if="components.filterArea" class="position-relative">
-                    <g-filters ev-data-service="evDataService"
-                               ev-event-service="evEventService"
-                               attribute-data-service="attributeDataService"
-                               content-wrap-element="contentWrapElem"
-                               hide-filters-block="hideFiltersBlock"
-                               hide-use-from-above-filters="hideUseFromAboveFilters">
+                    <g-filters data-ev-data-service="evDataService"
+                               data-ev-event-service="evEventService"
+                               data-attribute-data-service="attributeDataService"
+                               data-content-wrap-element="contentWrapElem"
+                               data-hide-filters-block="hideFiltersBlock"
+                               data-hide-use-from-above-filters="hideUseFromAboveFilters">
                     </g-filters>
                 </div>
 
@@ -54,11 +54,11 @@
 
                     <div ng-if="!isReport" class="g-ev-left-panel-holder gEvLeftPanelHolder">
                         <g-ev-left-panel class="height-100 display-block"
-                                         ev-data-service="evDataService"
-                                         ev-event-service="evEventService"
-                                         attribute-data-service="attributeDataService"
-                                         sp-exchange-service="spExchangeService"
-                                         content-wrap-element="contentWrapElem"></g-ev-left-panel>
+                                         data-ev-data-service="evDataService"
+                                         data-ev-event-service="evEventService"
+                                         data-attribute-data-service="attributeDataService"
+                                         data-sp-exchange-service="spExchangeService"
+                                         data-content-wrap-element="contentWrapElem"></g-ev-left-panel>
 
                         <div class="drop-area-wrap left-side-groups-drop-area display-none gLeftSideGroupsHolder">
                             <div class="g-drop-area gDropArea"></div>

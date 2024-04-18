@@ -1,8 +1,20 @@
 .tasks-page {
-
   font-family: "Roboto";
   font-size: 14px;
   color: #363636;
+
+  .tasks-page-container {
+    display: inline-grid;
+    grid-template-columns: 1fr 450px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .left-part, .right-part {
+    overflow: auto;
+    height: 100%;
+  }
 
   .md-raised.md-primary.tasks-refresh-button {
     height: 24px;
@@ -16,16 +28,25 @@
     background: #F05A22;
   }
 
+  .custom-input-container .custom-input-textarea-span-pan {
+    background-color: @mainBackgroundColor;
+  }
+
   .tasks-page-filters-date-from {
-    width: 80px;
+    flex: 0 0 80px;
   }
 
   .tasks-page-filters-date-to {
-    width: 80px;
+    flex: 0 0 80px;
   }
 
   .tasks-page-filters-search {
-    width: 400px;
+    flex-basis: 400px;
+  }
+
+  .task-page-filter1 {
+    min-width: 120px;
+    flex: 1 1 200px;
   }
 
 
@@ -87,7 +108,7 @@
   }
 
   .tasks-table-holder {
-    width: calc(100% - 450px);
+    width: 100%;
     position: relative;
   }
 

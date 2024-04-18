@@ -10,9 +10,12 @@
 
         var entityAttributesData = {
             "portfolio": require('../models/portfolioPropsModel').getAttributes(),
+            "portfolio-type": require('../models/portfolioTypePropsModel').getAttributes(),
+            "portfolio-reconcile-group": require('../models/portfolioReconcileGroupPropsModel').getAttributes(),
             "portfolio-register": require('../models/portfolioRegisterPropsModel').getAttributes(),
             "portfolio-register-record": require('../models/portfolioRegisterRecordPropsModel').getAttributes(),
             "portfolio-history": require('../models/portfolioHistoryPropsModel').getAttributes(),
+            "portfolio-reconcile-history": require('../models/portfolioReconcileHistoryPropsModel').getAttributes(),
             "audit-transaction": require('../models/auditTransactionPropsModel').getAttributes(),
             "audit-instrument": require('../models/auditInstrumentPropsModel').getAttributes(),
             "account": require('../models/accountPropsModel').getAttributes(),

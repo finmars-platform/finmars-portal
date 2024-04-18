@@ -11,7 +11,6 @@
 
     var baseUrlService = require("../../services/baseUrlService").default;
 
-    var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
     var importTransactionService = require('../../services/import/importTransactionService');
     var processesService = require('../../services/processesService');
     var explorerService = require('../../services/explorerService');
@@ -24,7 +23,7 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    module.exports = function transactionImportController($scope, $mdDialog, usersService, systemMessageService) {
+    module.exports = function transactionImportController($scope, $mdDialog, usersService, transactionImportSchemeService) {
 
         var vm = this;
 

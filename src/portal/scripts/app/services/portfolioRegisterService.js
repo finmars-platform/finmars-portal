@@ -34,6 +34,9 @@
         return portfolioRegisterRepository.deleteBulk(data);
     };
 
+    var restoreBulk = function (data) {
+        return portfolioRegisterRepository.restoreBulk(data);
+    };
 
     var calculateRecords = function (data) {
         return portfolioRegisterRepository.calculateRecords(data);
@@ -49,6 +52,8 @@
 
         updateBulk: updateBulk,
         deleteBulk: deleteBulk,
+        restoreBulk: restoreBulk,
+
 
         calculateRecords: calculateRecords
     }

@@ -3,7 +3,7 @@
 const instrumentTypeService = require('../../services/instrumentTypeService').default;
 const metaService = require("../../services/metaService").default;
 const portfolioRegisterService = require("../../services/portfolioRegisterService").default;
-const pricingPolicyService = require("../../services/pricingPolicyService");
+const pricingPolicyService = require("../../services/pricingPolicyService").default;
 
 export default function PortfolioRegisterDialogController ($scope, $mdDialog, data) {
 

@@ -97,6 +97,8 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
 
+                    console.log("DASHBOARD.MATRIX.INIT.scope.componentData", scope.componentData)
+
                     scope.showFiltersArea = scope.componentData.settings.filters.show_filters_area;
                     scope.showUseFromAboveFilters = scope.componentData.settings.filters.show_use_from_above_filters;
 
@@ -259,6 +261,8 @@ const evEvents = require("../../services/entityViewerEvents");
                 }
 
                 scope.dashboardInit = function () {
+
+                    scope.componentData = scope.dashboardDataService.getComponentById(scope.item.data.id);
 
                     // Component put himself in INIT Status
                     // so that dashboard manager can start processing it

@@ -2,19 +2,26 @@
 
     <div class="ev-left-panel-inner-container state-{{sliderButtonState}}">
 
-        <div class="ev-left-panel-grouping-menu-button" data-ng-click="groupSectionState = !groupSectionState">
-            <span class="material-icons">menu</span>
+        <div class="header-row">
+            <div class="flex-row flex-c-space-between flex-i-center p-b-8">
+                <h4>Groups</h4>
+
+                <div class="ev-left-panel-grouping-menu-button"
+                     data-ng-click="groupSectionState = !groupSectionState">
+                    <span class="material-icons">menu</span>
+                </div>
+            </div>
         </div>
 
-        <div class="flex-column height-100">
+        <div class="tree-wrap">
 
             <div class="flex-1-1-auto overflow-auto">
 
-                <g-ev-left-panel-tree-elem ng-if="groupTypes.length"
-                                           item="tree"
-                                           ev-data-service="evDataService"
-                                           ev-event-service="evEventService"
-                                           ev-content-element="evContentElement"></g-ev-left-panel-tree-elem>
+                <g-ev-left-panel-tree-elem data-ng-if="groupTypes.length"
+                                           data-item="tree"
+                                           data-ev-data-service="evDataService"
+                                           data-ev-event-service="evEventService"
+                                           data-ev-content-element="evContentElement"></g-ev-left-panel-tree-elem>
 
                 <div ng-if="!groupTypes.length" class="ev-left-panel-drag-msg">
                     <span class="material-icons">file_download</span>

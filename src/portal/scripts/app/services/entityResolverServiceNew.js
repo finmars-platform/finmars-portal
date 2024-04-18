@@ -3,6 +3,10 @@
  */
 
 var portfolioService = require('./portfolioService').default;
+var portfolioTypeService = require('./portfolioTypeService').default;
+var portfolioReconcileGroupService = require('./portfolioReconcileGroupService').default;
+var portfolioReconcileHistoryService = require('./portfolioReconcileHistoryService').default;
+var portfolioClassService = require('./portfolioClassService').default;
 var portfolioHistoryService = require('./portfolioHistoryService').default;
 var portfolioRegisterService = require('./portfolioRegisterService').default;
 var portfolioRegisterRecordService = require('./portfolioRegisterRecordService').default;
@@ -24,7 +28,8 @@ var complexTransactionService = require('./transaction/complexTransactionService
 
 var metaEventClassService = require('./metaEventClassService').default;
 var metaNotificationClassService = require('./metaNotificationClassService').default;
-var pricingPolicyService = require('./pricingPolicyService').default;;
+var pricingPolicyService = require('./pricingPolicyService').default;
+;
 var instrumentTypeService = require('./instrumentTypeService').default;
 var accrualCalculationModelService = require('./accrualCalculationModelService').default;
 var instrumentPeriodicityService = require('./instrumentPeriodicityService').default;
@@ -41,7 +46,6 @@ var instrumentClassService = require('./instrument/instrumentClassService').defa
 var priceDownloadSchemeService = require('./import/priceDownloadSchemeService').default;
 var csvImportSchemeService = require('./import/csvImportSchemeService').default;
 var complexImportSchemeService = require('./import/complexImportSchemeService').default;
-var complexTransactionImportSchemeService = require('./import/transactionImportSchemeService').default;
 
 var costMethodService = require('./instrument/instrumentCostMethodService').default;
 
@@ -52,16 +56,17 @@ var expressionProcedureService = require('./procedures/expressionProcedureServic
 var dataProcedureService = require('./procedures/dataProcedureService').default;
 var pricingProcedureService = require('./procedures/pricingProcedureService').default;
 
-var scheduleService = require('./scheduleService').default;
+const scheduleService = require('./scheduleService').default;
 const auditService = require('./auditService').default;
 const uiService = require('./uiService').default;
+const tasksService = require('./tasksService').default;
 
 var cookieService = require('../../../../core/services/cookieService').default;
 var xhrService = require('../../../../core/services/xhrService').default;
 var configureRepositoryUrlService = require('./configureRepositoryUrlService').default;
 var baseUrlService = require('./baseUrlService').default;
 
-export default function (instrumentService, transactionTypeService, priceHistoryService, currencyHistoryService, configurationService, reportService) {
+export default function (instrumentService, transactionTypeService, priceHistoryService, currencyHistoryService, configurationService, reportService, transactionImportSchemeService) {
 
     var getList = function (entityType, options) {
 
@@ -101,6 +106,12 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 break;
             case 'instrument':
                 return instrumentService.getList(options);
+                break;
+            case 'portfolio-type':
+                return portfolioTypeService.getList(options);
+                break;
+            case 'portfolio-reconcile-group':
+                return portfolioReconcileGroupService.getList(options);
                 break;
             case 'instrument-type':
                 return instrumentTypeService.getList(options);
@@ -152,7 +163,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return complexImportSchemeService.getList(options);
                 break;
             case 'complex-transaction-import-scheme':
-                return complexTransactionImportSchemeService.getList(options);
+                return transactionImportSchemeService.getList(options);
                 break;
             case 'transaction-type-group':
                 return transactionTypeGroupService.getList(options);
@@ -178,11 +189,17 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'instrument-class':
                 return instrumentClassService.getList(options);
                 break;
+            case 'portfolio-class':
+                return portfolioClassService.getList(options);
+                break;
             case 'price-history':
                 return priceHistoryService.getList(options);
                 break;
             case 'portfolio-history':
                 return portfolioHistoryService.getList(options);
+                break;
+            case 'portfolio-reconcile-history':
+                return portfolioReconcileHistoryService.getList(options);
                 break;
             case 'pricing-policy':
                 return pricingPolicyService.getList(options);
@@ -228,6 +245,10 @@ export default function (instrumentService, transactionTypeService, priceHistory
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.getListLight(options);
+            case 'portfolio-type':
+                return portfolioTypeService.getListLight(options);
+            case 'portfolio-reconcile-group':
+                return portfolioReconcileGroupService.getList(options);
             case 'portfolio-register':
                 return portfolioRegisterService.getListLight(options);
             case 'account':
@@ -246,6 +267,8 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return instrumentTypeService.getListLight(options);
             case 'instrument-class':
                 return instrumentClassService.getList(options);
+            case 'portfolio-class':
+                return portfolioClassService.getList(options);
             case 'transaction-type':
                 return transactionTypeService.getListLight(options);
             case 'strategy-1':
@@ -263,6 +286,12 @@ export default function (instrumentService, transactionTypeService, priceHistory
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.getByKey(id);
+                break;
+            case 'portfolio-type':
+                return portfolioTypeService.getByKey(id);
+                break;
+            case 'portfolio-reconcile-group':
+                return portfolioReconcileGroupService.getByKey(id);
                 break;
             case 'portfolio-register':
                 return portfolioRegisterService.getByKey(id);
@@ -322,6 +351,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'portfolio-history':
                 return portfolioHistoryService.getByKey(id);
                 break;
+            case 'portfolio-reconcile-history':
+                return portfolioReconcileHistoryService.getByKey(id);
+                break;
             case 'currency-history':
                 return currencyHistoryService.getByKey(id);
                 break;
@@ -365,7 +397,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return complexImportSchemeService.getByKey(id);
                 break;
             case 'complex-transaction-import-scheme':
-                return complexTransactionImportSchemeService.getByKey(id);
+                return transactionImportSchemeService.getByKey(id);
                 break;
             case 'expression-procedure':
                 return expressionProcedureService.getByKey(id);
@@ -393,7 +425,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return complexImportSchemeService.create(entity);
                 break;
             case 'complex-transaction-import-scheme':
-                return complexTransactionImportSchemeService.create(entity);
+                return transactionImportSchemeService.create(entity);
                 break;
             case 'portfolio':
                 entity.counterparties = entity.counterparties || [];
@@ -401,6 +433,12 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 entity.responsibles = entity.responsibles || [];
                 entity.transaction_types = entity.transaction_types || [];
                 return portfolioService.create(entity);
+                break;
+            case 'portfolio-type':
+                return portfolioTypeService.create(entity);
+                break;
+            case 'portfolio-reconcile-group':
+                return portfolioReconcileGroupService.create(entity);
                 break;
             case 'portfolio-register':
                 return portfolioRegisterService.create(entity);
@@ -450,6 +488,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 break;
             case 'portfolio-history':
                 return portfolioHistoryService.create(entity);
+                break;
+            case 'portfolio-reconcile-history':
+                return portfolioReconcileHistoryService.create(entity);
                 break;
             case 'currency-history':
                 return currencyHistoryService.create(entity);
@@ -523,10 +564,16 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return complexImportSchemeService.update(id, entity);
                 break;
             case 'complex-transaction-import-scheme':
-                return complexTransactionImportSchemeService.update(id, entity);
+                return transactionImportSchemeService.update(id, entity);
                 break;
             case 'portfolio':
                 return portfolioService.update(id, entity);
+                break;
+            case 'portfolio-type':
+                return portfolioTypeService.update(id, entity);
+                break;
+            case 'portfolio-reconcile-group':
+                return portfolioReconcileGroupService.update(id, entity);
                 break;
             case 'portfolio-register':
                 return portfolioRegisterService.update(id, entity);
@@ -606,6 +653,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'portfolio-history':
                 return portfolioHistoryService.update(id, entity);
                 break;
+            case 'portfolio-reconcile-history':
+                return portfolioReconcileHistoryService.update(id, entity);
+                break;
             case 'pricing-policy':
                 return pricingPolicyService.update(id, entity);
                 break;
@@ -670,6 +720,12 @@ export default function (instrumentService, transactionTypeService, priceHistory
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.updateBulk(entities);
+                break;
+            case 'portfolio-type':
+                return portfolioTypeService.updateBulk(entities);
+                break;
+            case 'portfolio-reconcile-group':
+                return portfolioReconcileGroupService.updateBulk(entities);
                 break;
             case 'portfolio-register':
                 return portfolioRegisterService.updateBulk(entities);
@@ -756,6 +812,12 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'portfolio':
                 return portfolioService.deleteByKey(id);
                 break;
+            case 'portfolio-type':
+                return portfolioTypeService.deleteByKey(id);
+                break;
+            case 'portfolio-reconcile-group':
+                return portfolioReconcileGroupService.deleteByKey(id);
+                break;
             case 'portfolio-register':
                 return portfolioRegisterService.deleteByKey(id);
                 break;
@@ -803,6 +865,9 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 break;
             case 'portfolio-history':
                 return portfolioHistoryService.deleteByKey(id);
+                break;
+            case 'portfolio-reconcile-history':
+                return portfolioReconcileHistoryService.deleteByKey(id);
                 break;
             case 'pricing-policy':
                 return pricingPolicyService.deleteByKey(id);
@@ -853,7 +918,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return complexImportSchemeService.deleteByKey(id);
                 break;
             case 'complex-transaction-import-scheme':
-                return complexTransactionImportSchemeService.deleteByKey(id);
+                return transactionImportSchemeService.deleteByKey(id);
                 break;
             case 'expression-procedure':
                 return expressionProcedureService.deleteByKey(id);
@@ -864,6 +929,15 @@ export default function (instrumentService, transactionTypeService, priceHistory
             case 'pricing-procedure':
                 return pricingProcedureService.deleteByKey(id);
                 break;
+            default:
+                return new Promise((resolve, reject) => {
+                    reject(
+                        {
+                            error_key: "invalid_arguments",
+                            description: `No delete function inside entityResolverServiceNew for entityType: ${entityType}`,
+                        }
+                    )
+                })
         }
     };
 
@@ -871,6 +945,10 @@ export default function (instrumentService, transactionTypeService, priceHistory
         switch (entityType) {
             case 'portfolio':
                 return portfolioService.deleteBulk(data);
+            case 'portfolio-type':
+                return portfolioTypeService.deleteBulk(data);
+            case 'portfolio-reconcile-group':
+                return portfolioReconcileGroupService.deleteBulk(data);
             case 'portfolio-register':
                 return portfolioRegisterService.deleteBulk(data);
             case 'portfolio-register-record':
@@ -905,6 +983,8 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return priceHistoryService.deleteBulk(data);
             case 'portfolio-history':
                 return portfolioHistoryService.deleteBulk(data);
+            case 'portfolio-reconcile-history':
+                return portfolioReconcileHistoryService.deleteBulk(data);
             case 'pricing-policy':
                 return pricingPolicyService.deleteBulk(data);
             case 'currency-history':
@@ -938,6 +1018,63 @@ export default function (instrumentService, transactionTypeService, priceHistory
                 return priceHistoryErrorService.deleteBulk(data);
             case 'currency-history-error':
                 return currencyHistoryErrorService.deleteBulk(data);
+            default:
+                return new Promise((resolve, reject) => {
+                    reject(
+                        {
+                            error_key: "invalid_arguments",
+                            description: `No deleteBulk function inside entityResolverServiceNew for entityType: ${entityType}`,
+                        }
+                    )
+                })
+        }
+    };
+
+    /**
+     *
+     * @param restoreProm {Promise<{task: Number, [errors]: String}>}
+     * @param [options] {Object}
+     * @property options.functionName {String}
+     * @property [options.intervalDelay] {Number}
+     * @return {{promise: Promise<Object>, stopIntervalFn: Function}}
+     * @private
+     */
+    const _restoreEntities = function (restoreProm, {functionName, intervalDelay}) {
+        // in case of need of the additional processing of results
+        // of the task's end
+        return tasksService.processPromiseWithTask(
+            restoreProm,
+            {functionName, intervalDelay}
+        );
+    }
+
+    /**
+     *
+     * @param entityType
+     * @param data
+     * @param {Number} [intervalDelay]
+     * @return {{promise: Promise<Object>, stopIntervalFn: Function}}
+     */
+    const restoreBulk = function (entityType, data, intervalDelay) {
+        switch (entityType) {
+            case 'portfolio-register':
+                return _restoreEntities(
+                    portfolioRegisterService.restoreBulk(data),
+                    "portfolioRegisterService.restoreBulk",
+                    intervalDelay
+                );
+
+            case 'transaction-type':
+                return _restoreEntities(
+                    transactionTypeService.restoreBulk(data),
+                    "transactionTypeService.restoreBulk",
+                    intervalDelay
+                );
+            default:
+                throw {
+                    error_key: "invalid_arguments",
+                    description: `No restoreBulk function inside entityResolverServiceNew for entityType: ${entityType}`,
+                }
         }
     };
 
@@ -1011,7 +1148,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
         }
     }
 
-    var getListReportItems =function (entityType, options) {
+    var getListReportItems = function (entityType, options) {
 
         switch (entityType) {
 
@@ -1037,6 +1174,7 @@ export default function (instrumentService, transactionTypeService, priceHistory
         deleteByKey: deleteByKey,
         updateBulk: updateBulk,
         deleteBulk: deleteBulk,
+        restoreBulk: restoreBulk,
 
         getSelectByEntityType: getSelectByEntityType,
 

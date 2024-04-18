@@ -24,19 +24,27 @@ export default function () {
 
     };
 
-    const warning = function (message) {
-        toastr.warning(message)
+    const warning = function (message, title, options) {
+        toastr.warning(message, title, options)
     };
 
     const info = function (message, title, options) {
         toastr.info(message, title, options);
     };
 
+    const clientError = function (message, options) {
+        const title = '<span data-text="Client Error">Warning</span>'
+        toastr.warning(message, title, options);
+    }
+
     return {
         success: success,
         error: error,
         info: info,
-        warning: warning
+        warning: warning,
+
+        // Custom
+        clientError: clientError
     }
 
 }

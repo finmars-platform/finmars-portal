@@ -26,7 +26,7 @@ export default function ($scope, $mdDialog, toastNotificationService, authorizer
         vm.readyStatus.stats = false;
 
         utilsService.getSystemInfo().then(function (data) {
-            vm.systemInfoItems = data.results;
+            vm.systemInfo = data.results;
             vm.readyStatus.stats = true;
             $scope.$apply();
         }).catch(function (error) {
@@ -35,6 +35,10 @@ export default function ($scope, $mdDialog, toastNotificationService, authorizer
         })
 
     }
+
+    vm.isObject = function (item) {
+        return angular.isObject(item) && !angular.isArray(item);
+    };
 
     vm.getLogs = function () {
 
@@ -184,7 +188,6 @@ export default function ($scope, $mdDialog, toastNotificationService, authorizer
         vm.versions = vm.getCurrentVersion();
 
         vm.readyStatus.data = true;
-
 
 
         vm.getTablesSize()
