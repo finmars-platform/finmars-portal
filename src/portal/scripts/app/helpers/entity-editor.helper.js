@@ -885,7 +885,7 @@
 
             } else {
 
-                if (['procedure_modified_datetime', 'maturity_date'].indexOf(key) === -1) {
+                if (['procedure_modified_datetime', 'maturity_date', 'first_cash_flow_date', 'first_transaction_date'].indexOf(key) === -1) {
                     validateEvField(key, fieldValue, entityAttr, tabs, fixedFieldsAttrs, entityType, errors);
                 }
             }

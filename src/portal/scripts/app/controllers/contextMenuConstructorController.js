@@ -59,8 +59,8 @@
                     },
                     {
                         name: 'Edit Pricing FX Rate',
-                        action: 'edit_pricing_currency_price',
-                        order: '5'
+                        action: 'edit_pricing_currency_fx_rate',
+                        order: '5',
                     },
                     {
                         name: 'Edit Accrued FX Rate',

@@ -108,6 +108,8 @@
 
         var contentType = metaContentTypesService.findContentTypeByEntity("complex-transaction", "ui");
 
+        const dialogsContainerElem = document.querySelector('.dialog-containers-wrap')
+
         vm.getContextParameters = function () {
 
             var result = {};
@@ -181,11 +183,12 @@
 
                     data = vm.mapValuesOnTransactionTypeChange(data);
 
-                    var keys = Object.keys(data.values);
+                    /*var keys = Object.keys(data.values);
 
                     keys.forEach(function (item) {
                         vm.entity[item] = data.values[item];
-                    });
+                    });*/
+                    vm.entity.values = data.values;
 
                     if (data.book_transaction_layout) {
 
@@ -625,7 +628,7 @@
                  $mdDialog.show({
                     controller: 'ComplexTransactionAddDialogController as vm',
                     templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
-                    parent: angular.element(document.body),
+                    parent: dialogsContainerElem,
                     locals: {
                         entityType: vm.entityType,
                         entity: entity,
@@ -646,12 +649,11 @@
 
         };
 
-        vm.editAsJson = function (ev) {
+        vm.editAsJson = function () {
 
             $mdDialog.show({
                 controller: 'EntityAsJsonEditorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
-                targetEvent: ev,
                 multiple: true,
                 locals: {
                     data: {
@@ -786,7 +788,7 @@
             $mdDialog.show({
                 controller: 'EntityViewerEditDialogController as vm',
                 templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: dialogsContainerElem,
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -1020,7 +1022,7 @@
                 controller: 'ValidationDialogController as vm',
                 templateUrl: 'views/dialogs/validation-dialog-view.html',
                 targetEvent: $event,
-                parent: angular.element(document.body),
+                parent: dialogsContainerElem,
                 multiple: true,
                 locals: {
                     validationData: {
@@ -1033,7 +1035,7 @@
 
         };
 
-        vm.toggleLockStatus = function ($event) {
+        vm.toggleLockStatus = function () {
 
             vm.entity.is_locked = !vm.entity.is_locked;
 
@@ -1074,18 +1076,13 @@
 
         };
 
-        vm.delete = function ($event) {
+        vm.delete = function () {
 
             $mdDialog.show({
                 controller: 'EntityViewerDeleteDialogController as vm',
                 templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                //clickOutsideToClose: false,
+                parent: dialogsContainerElem,
                 multiple: true,
-                preserveScope: true,
-                autoWrap: true,
-                skipHide: true,
                 locals: {
                     entity: vm.entity,
                     entityType: vm.entityType
@@ -1103,6 +1100,121 @@
 
             })
 
+        };
+
+        vm.footerPopupData = {
+            options: [
+                {
+                    icon: "list",
+                    name: "Edit Form",
+
+                    onClick: function (option, _$popup) {
+                        _$popup.cancel();
+                        vm.editLayout();
+                    },
+                },
+                {
+                    icon: "content_copy",
+                    name: "Make a copy",
+                    get isDisabled() {
+
+                        return !vm.checkReadyStatus() ||
+                            !vm.hasEditPermission ||
+                            vm.entity.is_canceled ||
+                            vm.processing;
+
+                    },
+
+                    onClick: function (option, _$popup) {
+                        _$popup.cancel();
+                        vm.copy('big-drawer');
+                    },
+                },
+                {
+                    icon: "edit",
+                    name: "Edit as JSON",
+
+                    onClick: function (option, _$popup) {
+                        _$popup.cancel();
+                        vm.editAsJson();
+                    },
+                },
+
+                {
+                    get icon() {
+                        if (vm.entity.is_locked === true) {
+                            return "lock_open"
+                        }
+
+                        return "lock_outline";
+                    },
+                    get name() {
+                        if (vm.entity.is_locked === true) {
+                            return "Unlock"
+                        }
+
+                        return "Lock"
+                    },
+                    get isDisabled() {
+                        return vm.entity.is_canceled === true ||
+                            !vm.hasEditPermission ||
+                            vm.processing;
+                    },
+
+                    onClick: function (option, _$popup) {
+                        _$popup.cancel();
+
+                        vm.toggleLockStatus();
+
+                    },
+                },
+
+                {
+                    get icon() {
+                        if (vm.entity.is_canceled === true) {
+                            return "check_circle"
+                        }
+
+                        return "album";
+                    },
+                    get name() {
+                        if (vm.entity.is_canceled === true) {
+                            return "Activate"
+                        }
+
+                        return "Ignore"
+                    },
+                    get isDisabled() {
+                        return vm.entity.is_locked === true ||
+                            !vm.hasEditPermission ||
+                            vm.processing;
+                    },
+
+                    onClick: function (option, _$popup) {
+                        _$popup.cancel();
+
+                        vm.toggleCancelStatus();
+
+                    },
+                },
+
+                {
+                    icon: "delete",
+                    name: "Delete",
+                    get isDisabled() {
+                        return vm.entity.is_locked === true ||
+                            !vm.hasEditPermission ||
+                            vm.processing;
+                    },
+
+                    onClick: function (option, _$popup) {
+                        _$popup.cancel();
+
+                        vm.delete();
+
+                    },
+                },
+            ]
         };
 
         vm.updatePermissions = function ($event) {
@@ -1140,7 +1252,7 @@
                 $mdDialog.show({
                     controller: 'InfoDialogController as vm',
                     templateUrl: 'views/info-dialog-view.html',
-                    parent: angular.element(document.body),
+                    parent: dialogsContainerElem,
                     targetEvent: $event,
                     clickOutsideToClose: false,
                     preserveScope: true,
@@ -1295,7 +1407,7 @@
                                         controller: 'BookUniquenessWarningDialogController as vm',
                                         templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
                                         targetEvent: $event,
-                                        parent: angular.element(document.body),
+                                        parent: dialogsContainerElem,
                                         multiple: true,
                                         locals: {
                                             data: {
@@ -1367,7 +1479,7 @@
                                         controller: 'ValidationDialogController as vm',
                                         templateUrl: 'views/dialogs/validation-dialog-view.html',
                                         targetEvent: $event,
-                                        parent: angular.element(document.body),
+                                        parent: dialogsContainerElem,
                                         multiple: true,
                                         locals: {
                                             validationData: {
@@ -1543,7 +1655,7 @@
                                         controller: 'BookUniquenessWarningDialogController as vm',
                                         templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
                                         targetEvent: $event,
-                                        parent: angular.element(document.body),
+                                        parent: dialogsContainerElem,
                                         multiple: true,
                                         locals: {
                                             data: {
@@ -1613,7 +1725,7 @@
                                         controller: 'ValidationDialogController as vm',
                                         templateUrl: 'views/dialogs/validation-dialog-view.html',
                                         targetEvent: $event,
-                                        parent: angular.element(document.body),
+                                        parent: dialogsContainerElem,
                                         multiple: true,
                                         locals: {
                                             validationData: {
@@ -1795,12 +1907,11 @@
 
         };
 
-        vm.editLayout = function (ev) {
+        vm.editLayout = function () {
 
             $mdDialog.show({
                 controller: 'EntityDataConstructorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
-                targetEvent: ev,
                 multiple: true,
                 locals: {
                     data: vm.dataConstructorData

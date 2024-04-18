@@ -121,6 +121,7 @@
         var data = {
 
             requestsQueue: [],
+            requestsQueueData: {},
             // needs in dashboard when user can quicly change active Objects
             // we just ignore old response data that not equal to currentRequestId
             currentRequestId: 0,
@@ -189,7 +190,7 @@
             projection: [],
             activeObject: null,
             activeObjectsCount: 0,
-            dataLoadEnded: false,
+            dataLoadEnded: false, // set to `false` by creating new instance of entityViewerDataService
             markedSubtotals: {},
             rowSettings: {},
             missingCustomFields: {
@@ -970,6 +971,8 @@
 
             setActiveRequestParametersId(rootGroup.___id);
 
+            data.requestsQueue = [];
+
             if (!isReport) setSelectedGroups([]);
 
             console.log('resetTableContent.data', data);
@@ -1691,6 +1694,7 @@
         }
 
         function setDataLoadStatus(isEnded) {
+            // data.dataLoadEnded set to `false` by creating new instance of entityViewerDataService
             data.dataLoadEnded = isEnded;
         }
 
@@ -1880,7 +1884,6 @@
         function enqueueDataRequest(request) {
 
             console.log("rv.queue.enqueueDataRequest", request)
-
             data.requestsQueue.push(request);
         }
 

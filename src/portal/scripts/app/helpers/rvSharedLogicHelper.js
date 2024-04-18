@@ -3,7 +3,6 @@
 // import CommonDialogsService from "../../../../shell/scripts/app/services/commonDialogsService";
 // import localStorageService from "../../../../shell/scripts/app/services/localStorageService";
 
-
 (function () {
 
     var CommonDialogsService = require("../../../../shell/scripts/app/services/commonDialogsService").default;
@@ -13,7 +12,7 @@
 
     const rvHelper = require('../helpers/rv.helper')
 
-    module.exports = function (viewModel, $scope, $mdDialog, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper) {
+    module.exports = function (viewModel, $scope, $mdDialog, toastNotificationService, globalDataService, pricingPolicyService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper) {
 
         const commonDialogsService = new CommonDialogsService($mdDialog);
 
@@ -392,15 +391,10 @@
 
                 if (res && res.status === 'agree') {
 
-                    /* viewModel.entityViewerDataService.resetData();
-                    viewModel.entityViewerDataService.resetRequestParameters();
+                    /*viewModel.entityViewerDataService.resetTableContent(true);
 
-                    var rootGroup = viewModel.entityViewerDataService.getRootGroupData();
-
-                    viewModel.entityViewerDataService.setActiveRequestParametersId(rootGroup.___id); */
-                    viewModel.entityViewerDataService.resetTableContent(true);
-
-                    viewModel.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
+                    viewModel.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);*/
+                    viewModel.entityViewerEventService.dispatchEvent(evEvents.CREATE_TABLE);
 
                     const viewContext = viewModel.entityViewerDataService.getViewContext();
                     if (viewContext === 'split_panel') viewModel.parentEntityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
@@ -441,7 +435,7 @@
                 }
 
 
-            });
+            })
 
         };
 
@@ -496,31 +490,36 @@
 
         };
 
-        const offerToCreateEntity = function (warningDescription, createEntityLocals) {
+        const getTooManyError = function (serviceName, resultsLength) {
+            return `Error [rvSharedLogicHelper ${serviceName}.getList()] ` +
+                `Expected 0 or 1 objects got: ${resultsLength}`
+        };
 
-            /* $mdDialog.show({
-                controller: 'WarningDialogController as vm',
-                templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
-                targetEvent: event,
-                preserveScope: true,
-                autoWrap: true,
-                multiple: true,
-                skipHide: true,
-                locals: {
-                    warning: {
-                        title: 'Warning',
-                        description: warningDescription
-                    }
+        const getPricingPolicyByUserCode = async function (userCode) {
+
+            const opts = {
+                filters: {
+                    user_code: userCode,
                 }
+            }
 
-            }).then(function (res) {
-                if (res.status === 'agree') {
+            const ppRes = await pricingPolicyService.getListLight(opts);
 
-                    createEntity(event, createEntityLocals);
+            if ( !ppRes.results.length ) {
+                throw `Error [rvSharedLogicHelper pricingPolicyService.getListLight()] ` +
+                `No pricing_policy found with the following user_code: ${userCode}`;
+            }
 
-                }
-            }); */
+            if (ppRes.results.length > 1) {
+                throw `Error [rvSharedLogicHelper pricingPolicyService.getListLight()] ` +
+                `Expected 1 object got: ${ppRes.length}`;
+            }
+
+            return ppRes.results[0];
+
+        }
+
+        const offerToCreateEntity = async function (warningDescription, getDialogLocalsFn) {
 
             const warningLocals = {
                 warning: {
@@ -529,15 +528,17 @@
                 }
             };
 
-            commonDialogsService.warning(warningLocals).then(function (res) {
-                if (res.status === 'agree') {
+            const res = await commonDialogsService.warning(warningLocals);
 
-                    createEntity(createEntityLocals);
+            if (res.status === 'agree') {
 
-                }
-            });
+                const createEntityLocals = await getDialogLocalsFn();
 
-        };
+                createEntity(createEntityLocals);
+
+            }
+
+        }
 
 
         const executeRowAction = function () {
@@ -549,23 +550,35 @@
             const activeRowIndex = flatList.findIndex(object => object.___is_activated);
             const activeRowExist = activeRowIndex > -1;
 
-            let currencies = reportOptions.item_currencies;
+            if (!reportOptions.pricing_policy ||
+                typeof reportOptions.pricing_policy === 'number') {
 
-            var getCurrencyObject = function (currencyKey) {
-                let currencyObj = {};
+                toastNotificationService.clientError(
+                    "Invalid 'Pricing Policy' inside Report options",
+                );
 
-                currencies.forEach(function (item) {
+                throw "Error [rvSharedLogicHelper.executeRowAction] invalid value inside " +
+                    `reportOptions.pricing_policy ${reportOptions.pricing_policy}`;
 
-                    if (item.id === actionData.object[currencyKey]) {
-                        currencyObj.id = item.id;
-                        currencyObj.name = item.name;
-                        currencyObj.short_name = item.short_name;
-                        currencyObj.user_code = item.user_code;
-                    }
+            }
 
-                });
+            var getCurrencyObjectMockup = function (currencyKeyStart) {
 
-                return currencyObj;
+                const wrongKey = ![
+                    'instrument.pricing_currency',
+                    'instrument.accrued_currency'
+                ].includes(currencyKeyStart);
+
+                if (wrongKey) {
+                    throw `Error [rvSharedLogicHelper getCurrencyObjectMockup] wrong key: ${currencyKeyStart}`
+                }
+
+                return {
+                    id: actionData.object[currencyKeyStart + '.id'],
+                    name: actionData.object[currencyKeyStart + '.name'],
+                    user_code: actionData.object[currencyKeyStart + '.user_code'],
+                    short_name: actionData.object[currencyKeyStart + '.short_name']
+                };
             };
 
             // if (activeObject) {
@@ -630,7 +643,8 @@
 
                     editEntity(actionData.event, locals);
 
-                } else if (action === 'edit_price') {
+                }
+                else if (action === 'edit_price') {
 
                     var filters = {
                         instrument: actionData.object['instrument.id'],
@@ -642,6 +656,10 @@
                     priceHistoryService.getList({filters: filters}).then(function (data) {
 
                         if (data.results.length) {
+
+                            if (data.results.length > 1) {
+                                throw `${ getTooManyError("priceHistoryService", data.results.length) }`;
+                            }
 
                             var item = data.results[0];
 
@@ -657,42 +675,53 @@
 
                             var warningDescription = 'No corresponding record in Price History. Do you want to add the record?';
 
-                            var createEntityLocals = {
-                                entityType: 'price-history',
-                                entity: {
-                                    instrument: actionData.object['instrument.id'],
-                                    instrument_object: {
-                                        id: actionData.object['instrument.id'],
-                                        name: actionData.object['instrument.name'],
-                                        user_code: actionData.object['instrument.user_code'],
-                                        short_name: actionData.object['instrument.short_name']
+                            var getDialogLocals = async function () {
+
+                                var pp = await getPricingPolicyByUserCode(reportOptions.pricing_policy);
+
+                                return {
+                                    entityType: 'price-history',
+                                    entity: {
+                                        instrument: actionData.object['instrument.id'],
+                                        instrument_object: {
+                                            id: actionData.object['instrument.id'],
+                                            name: actionData.object['instrument.name'],
+                                            user_code: actionData.object['instrument.user_code'],
+                                            short_name: actionData.object['instrument.short_name']
+                                        },
+                                        pricing_policy: pp.id,
+                                        pricing_policy_object: pp,
+                                        date: reportOptions.report_date
                                     },
-                                    pricing_policy: reportOptions.pricing_policy,
-                                    pricing_policy_object: reportOptions.pricing_policy_object,
-                                    date: reportOptions.report_date
-                                },
-                                data: {}
+                                    data: {}
+                                };
+
                             };
 
-                            offerToCreateEntity(warningDescription, createEntityLocals);
+                            offerToCreateEntity(warningDescription, getDialogLocals);
 
                         }
 
                     })
 
 
-                } else if (action === 'edit_fx_rate') {
+                }
+                else if (action === 'edit_fx_rate') {
 
                     var filters = {
                         currency: actionData.object['currency.id'],
                         pricing_policy: reportOptions.pricing_policy,
-                        date_0: reportOptions.report_date,
-                        date_1: reportOptions.report_date
+                        date_after: reportOptions.report_date,
+                        date_before: reportOptions.report_date
                     };
 
                     currencyHistoryService.getList({filters: filters}).then(function (data) {
 
                         if (data.results.length) {
+
+                            if (data.results.length > 1) {
+                                throw `${getTooManyError("currencyHistoryService", data.results.length)}`;
+                            }
 
                             var item = data.results[0];
                             // let contextData = getContextDataForRowAction(reportOptions, actionData.object);
@@ -711,89 +740,53 @@
                         } else {
 
                             var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
-                            var createEntityLocals = {
-                                entityType: 'currency-history',
-                                entity: {
-                                    currency: actionData.object['currency.id'],
-                                    currency_object: {
-                                        id: actionData.object['currency.id'],
-                                        name: actionData.object['currency.name'],
-                                        short_name: actionData.object['currency.short_name'],
-                                        user_code: actionData.object['currency.user_code']
+
+                            var getDialogLocals = async function () {
+
+                                var pp = await getPricingPolicyByUserCode(reportOptions.pricing_policy);
+
+                                return {
+                                    entityType: 'currency-history',
+                                    entity: {
+                                        currency: actionData.object['currency.id'],
+                                        currency_object: {
+                                            id: actionData.object['currency.id'],
+                                            name: actionData.object['currency.name'],
+                                            short_name: actionData.object['currency.short_name'],
+                                            user_code: actionData.object['currency.user_code']
+                                        },
+                                        pricing_policy: pp.id,
+                                        pricing_policy_object: pp,
+                                        date: reportOptions.report_date
                                     },
-                                    pricing_policy: reportOptions.pricing_policy,
-                                    pricing_policy_object: reportOptions.pricing_policy_object,
-                                    date: reportOptions.report_date
-                                },
-                                data: {}
-                            };
+                                    data: {}
+                                };
 
-                            offerToCreateEntity(warningDescription, createEntityLocals);
+                            }
+
+                            offerToCreateEntity(warningDescription, getDialogLocals);
 
                         }
 
                     })
 
-                } else if (action === 'edit_pricing_currency_price' && actionData.object.id) {
-
-                    var filters = {
-                        currency: actionData.object['instrument.pricing_currency'],
-                        instrument: actionData.object['instrument.id'],
-                        pricing_policy: reportOptions.pricing_policy,
-                        date_0: reportOptions.report_date,
-                        date_1: reportOptions.report_date
-                    };
-
-                    currencyHistoryService.getList({filters: filters}).then(function (data) {
-
-                        if (data.results.length) {
-
-                            var item = data.results[0];
-
-                            var locals = {
-                                entityType: 'currency-history',
-                                entityId: item.id,
-                                data: {}
-                            };
-
-                            editEntity(actionData.event, locals);
-
-                        } else {
-
-                            var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
-
-                            var currency_object = getCurrencyObject('instrument.pricing_currency.id');
-                            var createEntityLocals = {
-                                entityType: 'currency-history',
-                                entity: {
-                                    currency: actionData.object['instrument.pricing_currency'],
-                                    currency_object: currency_object,
-                                    pricing_policy: reportOptions.pricing_policy,
-                                    pricing_policy_object: reportOptions.pricing_policy_object,
-                                    date: reportOptions.report_date
-                                },
-                                data: {}
-                            };
-
-                            offerToCreateEntity(warningDescription, createEntityLocals);
-
-                        }
-
-                    })
-
-                } else if (action === 'edit_accrued_currency_fx_rate' && actionData.object.id) {
+                }
+                else if (action === 'edit_accrued_currency_fx_rate' && actionData.object.id) {
 
                     var filters = {
                         currency: actionData.object['instrument.accrued_currency.id'],
-                        // instrument: actionData.object['instrument.id'],
                         pricing_policy: reportOptions.pricing_policy,
-                        date_0: reportOptions.report_date,
-                        date_1: reportOptions.report_date
+                        date_after: reportOptions.report_date,
+                        date_before: reportOptions.report_date
                     };
 
                     currencyHistoryService.getList({filters: filters}).then(function (data) {
 
                         if (data.results.length) {
+
+                            if (data.results.length > 1) {
+                                throw `${getTooManyError("currencyHistoryService", data.results.length)}`;
+                            }
 
                             var item = data.results[0];
 
@@ -805,43 +798,54 @@
 
                             editEntity(actionData.event, locals);
 
-                        } else {
+                        }
+                        else {
 
                             var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
 
-                            var currency_object = getCurrencyObject('instrument.accrued_currency');
-                            var createEntityLocals = {
-                                entityType: 'currency-history',
-                                entity: {
-                                    currency: actionData.object['instrument.accrued_currency'],
-                                    currency_object: currency_object,
-                                    pricing_policy: reportOptions.pricing_policy,
-                                    pricing_policy_object: reportOptions.pricing_policy_object,
-                                    date: reportOptions.report_date
-                                },
-                                data: {}
+                            var getDialogLocals = async function () {
+
+                                var pp = await getPricingPolicyByUserCode(reportOptions.pricing_policy);
+                                var currency_object = getCurrencyObjectMockup('instrument.accrued_currency');
+
+                                return {
+                                    entityType: 'currency-history',
+                                    entity: {
+                                        currency: actionData.object['instrument.accrued_currency.id'],
+                                        currency_object: currency_object,
+                                        pricing_policy: pp.id,
+                                        pricing_policy_object: pp,
+                                        date: reportOptions.report_date
+                                    },
+                                    data: {}
+                                };
+
                             };
 
-                            offerToCreateEntity(warningDescription, createEntityLocals);
+                            offerToCreateEntity(warningDescription, getDialogLocals);
 
 
                         }
 
                     })
 
-                } else if (action === 'edit_pricing_currency_fx_rate' && actionData.object.id) {
+                }
+                else if (action === 'edit_pricing_currency_fx_rate' && actionData.object.id) {
 
                     var filters = {
                         currency: actionData.object['instrument.pricing_currency.id'],
-                        // instrument: actionData.object['instrument.id'],
                         pricing_policy: reportOptions.pricing_policy,
-                        date_0: reportOptions.report_date,
-                        date_1: reportOptions.report_date
+                        date_after: reportOptions.report_date,
+                        date_before: reportOptions.report_date
                     };
 
                     currencyHistoryService.getList({filters: filters}).then(function (data) {
 
                         if (data.results.length) {
+
+                            if (data.results.length > 1) {
+                                throw `${getTooManyError("currencyHistoryService", data.results.length)}`;
+                            }
 
                             var item = data.results[0];
 
@@ -853,31 +857,39 @@
 
                             editEntity(actionData.event, locals);
 
-                        } else {
+                        }
+                        else {
 
                             var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
 
-                            var currency_object = getCurrencyObject('instrument.pricing_currency.id');
-                            var createEntityLocals = {
-                                entityType: 'currency-history',
-                                entity: {
-                                    currency: actionData.object['instrument.pricing_currency.id'],
-                                    currency_object: currency_object,
-                                    pricing_policy: reportOptions.pricing_policy,
-                                    pricing_policy_object: reportOptions.pricing_policy_object,
-                                    date: reportOptions.report_date
-                                },
-                                data: {}
+                            var getDialogLocals = async function () {
+
+                                var pp = await getPricingPolicyByUserCode(reportOptions.pricing_policy);
+                                var currency_object = getCurrencyObjectMockup('instrument.pricing_currency');
+
+                                return {
+                                    entityType: 'currency-history',
+                                    entity: {
+                                        currency: actionData.object['instrument.pricing_currency.id'],
+                                        currency_object: currency_object,
+                                        pricing_policy: pp.id,
+                                        pricing_policy_object: pp,
+                                        date: reportOptions.report_date
+                                    },
+                                    data: {}
+                                };
+
                             };
 
-                            offerToCreateEntity(warningDescription, createEntityLocals);
+                            offerToCreateEntity(warningDescription, getDialogLocals);
 
 
                         }
 
                     })
 
-                } else if (action === 'book_transaction') {
+                }
+                else if (action === 'book_transaction') {
 
                     var locals = {
                         entityType: 'complex-transaction',
@@ -898,7 +910,8 @@
 
                     createEntity(locals);
 
-                } else if (action === 'book_transaction_specific') {
+                }
+                else if (action === 'book_transaction_specific') {
 
                     // const contextData = getContextDataForRowAction(reportOptions, actionData.object);
                     const contextData = rvHelper.getContextDataForRowAction(reportOptions, actionData.object, viewModel.entityType);

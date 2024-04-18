@@ -57,6 +57,7 @@
 
         if (Object.keys(entity).length) { // Make a copy option
             vm.entity = entity;
+
 			delete vm.entity.id; // lack of id indicates creation of entity
         }
 

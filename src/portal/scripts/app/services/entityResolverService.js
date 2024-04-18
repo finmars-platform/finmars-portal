@@ -2,6 +2,9 @@
  * Created by szhitenev on 16.06.2016.
  *
  * This service needed for modules that import entityResolverService by require()
+ *
+ * TODO: replace all entityResolverService imported by require() with
+ * entityResolverService from dependency injection
  */
 // import EntityResolverService from "./entityResolverServiceNew";
 // import CookieService from "../../../../shell/scripts/app/services/cookieService";
@@ -17,17 +20,20 @@
 
 (function () {
 
-    var EntityResolverService = require("./entityResolverServiceNew").default;
-    var CookieService = require("../../../../shell/scripts/app/services/cookieService").default;
-    var ToastNotificationService = require("../../../../shell/scripts/app/services/toastNotificationService").default;
-    var ErrorService = require("../../../../shell/scripts/app/services/errorService").default;
-    var XhrService = require("../../../../shell/scripts/app/services/xhrService").default;
-    var InstrumentService = require("./instrumentService").default;
-    var PriceHistoryService = require("./priceHistoryService").default;
-    var CurrencyHistoryService = require("./currencyHistoryService").default;
-    var ReportService = require("./reportService").default;
+    const EntityResolverService = require("./entityResolverServiceNew").default;
+    const CookieService = require("../../../../shell/scripts/app/services/cookieService").default;
+    const ToastNotificationService = require("../../../../shell/scripts/app/services/toastNotificationService").default;
+    const ErrorService = require("../../../../shell/scripts/app/services/errorService").default;
+    const XhrService = require("../../../../shell/scripts/app/services/xhrService").default;
+    const InstrumentService = require("./instrumentService").default;
+    const PriceHistoryService = require("./priceHistoryService").default;
+    const CurrencyHistoryService = require("./currencyHistoryService").default;
+    const ConfigurationService = require("./configurationService").default;
+    const ReportService = require("./reportService").default;
+    const TransactionImportSchemeService = require("./import/transactionImportSchemeService").default;
 
-    var GridTableHelperService = require("../helpers/gridTableHelperService");
+
+    const GridTableHelperService = require("../helpers/gridTableHelperService");
 
     const MultitypeFieldService = require('./multitypeFieldService');
     const uiService = require('./uiService').default;
@@ -46,8 +52,10 @@
     const instrumentService = new InstrumentService(cookieService, toastNotificationService, xhrService, uiService, gridTableHelperService, multitypeFieldService);
     const priceHistoryService = new PriceHistoryService(cookieService, xhrService);
     const currencyHistoryService = new CurrencyHistoryService(cookieService, xhrService);
+    const configurationService = new ConfigurationService(cookieService, xhrService);
     const reportService = new ReportService(cookieService, xhrService);
+    const transactionImportSchemeService = new TransactionImportSchemeService(cookieService, xhrService);
 
-    module.exports = new EntityResolverService(instrumentService, transactionTypeService, priceHistoryService, currencyHistoryService, reportService, uiService);
+    module.exports = new EntityResolverService(instrumentService, transactionTypeService, priceHistoryService, currencyHistoryService, configurationService, reportService, transactionImportSchemeService);
 
 }());

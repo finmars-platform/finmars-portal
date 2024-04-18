@@ -55,6 +55,9 @@
                         case 'app.data.portfolio':
                             return "PORTFOLIO";
                             break;
+                        case 'app.data.portfolio-type':
+                            return "PORTFOLIO TYPES";
+                            break;
                         case 'app.data.account':
                             return "ACCOUNT";
                             break;

@@ -27,7 +27,8 @@
                 attributeDataService: '=',
 				isDisabled: '=',
 
-				selectorLook: '@', // 'input'
+				selectorLook: '@', // 'input',
+				popupX: '=',
 
 				label: '@',
 				placeholderText: '@',

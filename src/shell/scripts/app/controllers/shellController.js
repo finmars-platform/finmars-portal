@@ -413,7 +413,17 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         if (pathname.includes('/space')) {
 
             var pathnamePartsList = pathname.split('/');
-            base_api_url = pathnamePartsList.find(part => part.startsWith('space'));
+            var realm_code = pathnamePartsList.find(part => part.startsWith('realm'));
+            var space_code = pathnamePartsList.find(part => part.startsWith('space'));
+
+            console.log('realm_code', realm_code);
+            console.log('space_code', space_code);
+
+            if (realm_code) {
+                base_api_url = realm_code + '/' + space_code
+            } else {
+                base_api_url = space_code;
+            }
 
             baseUrlService.setMasterUserPrefix(base_api_url);
 

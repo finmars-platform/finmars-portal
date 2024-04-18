@@ -6,49 +6,20 @@
 </div>
 
 <div style="margin-right: 10px;">
-    <!--            <md-button ng-click="" class="md-raised">-->
-    <!--                <div class="flex-row flex-c-center">-->
-    <!--                    <ng-md-icon icon="more_vert" class="flex-row"></ng-md-icon>-->
-    <!--                </div>-->
-    <!--                -->
-    <!--                -->
-    <!--                -->
-    <!--            </md-button>-->
 
-    <md-menu md-position-mode="target-right target">
+    <md-button data-custom-popup
+               data-popup-template-url="'views/popups/selector2-popup-view.html'"
+               data-popup-data="vm.footerPopupData"
+               data-open-on="click"
+               data-position-relative-to="element"
+               data-relative-position-y="top"
 
-        <md-button class="outline-button" ng-click="$mdOpenMenu($event)">
-            <div class="flex-row flex-c-center">
-                <ng-md-icon icon="more_vert" class="flex-row"></ng-md-icon>
-            </div>
-        </md-button>
-
-        <md-menu-content class="universal-editor-menu-content optional-entity-menu" width="3">
-
-            <md-menu-item >
-                <md-button ng-click="vm.editLayout($event)" ng-disabled="!vm.checkReadyStatus() || !vm.entity.transaction_type">
-                    <div class="flex-row flex-i-center">
-                        <ng-md-icon icon="edit" class="flex-row"></ng-md-icon>
-                        <span class="m-l-16">Edit Form</span>
-                    </div>
-
-                </md-button>
-            </md-menu-item>
-
-            <md-menu-item>
-
-                <md-button ng-click="vm.editAsJson($event)">
-                    <div class="flex-row flex-i-center">
-                        <ng-md-icon icon="edit" class="flex-row"></ng-md-icon>
-                        <span class="m-l-16">Edit as JSON</span>
-                    </div>
-
-                </md-button>
-
-            </md-menu-item>
-
-        </md-menu-content>
-    </md-menu>
+               data-ng-disabled="!vm.checkReadyStatus()"
+               class="outline-button">
+        <div class="flex-row flex-c-center color-grey">
+            <span class="material-icons">more_vert</span>
+        </div>
+    </md-button>
 
     <md-button data-ng-class="{'disabled-btn': !vm.formIsValid || vm.processing}"
                class="outline-button"

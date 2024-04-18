@@ -57,6 +57,10 @@
                 entityType: 'instrument-type'
             },
             {
+                name: 'Portfolio Types',
+                entityType: 'portfolio-type'
+            },
+            {
                 name: 'Account Type',
                 entityType: 'account-type'
             }

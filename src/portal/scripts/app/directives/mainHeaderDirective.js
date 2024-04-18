@@ -278,9 +278,9 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                 const changeMasterUser = function () {
 
                     if (window.PROJECT_ENV === 'local') {
-                        window.location.href = '/' + master.base_api_url + '/a/#!/'
+                        window.location.href = '/' + master.realm_code + '/' + master.space_code + '/a/#!/'
                     } else {
-                        window.location.href = '/' + master.base_api_url + '/v/home'
+                        window.location.href = '/' + master.realm_code + '/' + master.space_code + '/v/home'
                     }
 
                     /*if ($state.current.name.startsWith('app.portal')) {

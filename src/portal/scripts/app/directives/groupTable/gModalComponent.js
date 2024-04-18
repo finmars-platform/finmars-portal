@@ -900,8 +900,8 @@
                 drake.on('drop', function (elem, target, source, nextSibling) {
 
                     var attributeChanged = false; // needed to call view constructor data reload
-                    var attributeKey = $(elem).dataset.attributeKey;
-                    var attrsVmKey = $(elem).dataset.vmKey;
+                    var attributeKey = elem.dataset.attributeKey;
+                    var attrsVmKey = elem.dataset.vmKey;
 
                     /* var changeSelectedGroup = function (draggedTo) {
 
@@ -1245,7 +1245,7 @@
 
                 drake.on('shadow', function (elem, container, source) {
 
-                    var attrKey = $(elem).dataset.attributeKey;
+                    var attrKey = elem.dataset.attributeKey;
 
                     if (container.classList.contains('vcSelectedGroups')) {
                         if (attrsWithoutGroups.indexOf(attrKey) !== -1) {
@@ -1262,8 +1262,8 @@
 
                 drake.on('drop', function (elem, target, source, nextSibling) {
 
-                    var attributeKey = $(elem).dataset.attributeKey;
-                    var attrsVmKey = $(elem).dataset.vmKey;
+                    var attributeKey = elem.dataset.attributeKey;
+                    var attrsVmKey = elem.dataset.vmKey;
 
                     // dragging from groups
                     if (source.classList.contains('vcSelectedGroups')) {

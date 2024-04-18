@@ -402,7 +402,7 @@
                         vm.entityViewerDataService.setActiveObjectActionData(null); */
                         vm.entityViewerDataService.setRowsActionData(null);
 
-                        if (res.status === 'agree') {
+                        /*if (res.status === 'agree') {
 
                             var objects = vm.entityViewerDataService.getObjects();
 
@@ -424,7 +424,7 @@
 
                             vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                        }
+                        }*/
                     });
 
                     break;
@@ -696,13 +696,11 @@
                 }
             }).then(function (res) {
 
-                /* vm.entityViewerDataService.setActiveObjectAction(null);
-                vm.entityViewerDataService.setActiveObjectActionData(null); */
                 vm.entityViewerDataService.setRowsActionData(null);
 
                 if (res.status === 'agree') {
 
-                    var evOptions = vm.entityViewerDataService.getEntityViewerOptions();
+                    /*var evOptions = vm.entityViewerDataService.getEntityViewerOptions();
                     var objects = vm.entityViewerDataService.getObjects();
                     var restoredEntitiesIds = res.data.itemsIds;
 
@@ -737,12 +735,16 @@
 
                     });
 
-                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);*/
+                    vm.entityViewerDataService.resetTableContent();
+                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
                 }
             });
 
         };
+
+        var firstDleIndex;
 
         var setEventListeners = function () {
 
@@ -750,6 +752,18 @@
                 // difference from reportViewerController
                 // here updateDataStructure called because method entityViewerDataService.resetData() not needed (loading only next pages)
                 evDataProviderService.updateDataStructure(vm.entityViewerDataService, vm.entityViewerEventService, vm.attributeDataService);
+
+            });
+
+            firstDleIndex = vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
+                /* *
+                 * Fixes scenario when DATA_LOAD_END
+                 * called inside evDataProviderService.updateDataStructure()
+                 * before gTableBodyComponent initialized
+                 * */
+                vm.entityViewerDataService.setDataLoadStatus(true);
+
+                vm.entityViewerEventService.removeEventListener(evEvents.DATA_LOAD_END, firstDleIndex);
 
             });
 

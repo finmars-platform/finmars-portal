@@ -157,6 +157,7 @@
             promises.push(getEntityAttributes('strategy-3'));
             promises.push(getEntityAttributes('account-type'));
             promises.push(getEntityAttributes('instrument-type'));
+            promises.push(getEntityAttributes('portfolio-type'));
             promises.push(getEntityAttributes('transaction-type'));
 
             Promise.all(promises).then(function () {

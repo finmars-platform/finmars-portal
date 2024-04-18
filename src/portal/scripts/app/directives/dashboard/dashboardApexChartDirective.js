@@ -10,7 +10,7 @@
     var evEvents = require('../../services/entityViewerEvents');
     var dashboardComponentStatuses = require('../../services/dashboard/dashboardComponentStatuses');
 
-    var utilsHelper = require('../../helpers/utils.helper');
+    var utilsHelper = require('../../helpers/utils.helper').default;
 
     module.exports = function ($mdDialog, dashboardHelper, entityResolverService) {
         return {
@@ -163,7 +163,7 @@
 
                 // Needs for user chart logic
                 // TODO probably need to move to separate service
-                const utils = {
+                var utils = {
                     getMonthsList: function (date_from, date_to) {
                         let startDate = new Date(date_from);
                         let endDate = new Date(date_to);
@@ -432,8 +432,11 @@
                     }
                     chartElement.innerHTML = '';
 
-                    setTimeout(function () {
+                    utils['_finmars_prevent_from_builder_remove'] = true; // it needed to prevent build remove of utils (of unused variable) it need to be use inside eval
+
+                    setTimeout( () => {
                         console.warn("Evaluating Chart source code")
+                        console.log('utils', utils);
                         eval(scope.vm.componentData.source) // TODO dangerous operation, consider refactor
                     }, 100);
 
