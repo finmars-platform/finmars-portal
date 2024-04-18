@@ -15,6 +15,7 @@
 
     var evHelperService = require( "../../services/entityViewerHelperService");
 
+    const pricingPolicyService = require("../../services/pricingPolicyService").default;
     var AutosaveLayoutService = require("../../services/autosaveLayoutService").default;
     var evEvents = require("../../services/entityViewerEvents");
 
@@ -34,7 +35,7 @@
 
         var vm = this;
 
-        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, toastNotificationService, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper);
+        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, toastNotificationService, globalDataService, pricingPolicyService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper);
 
         console.log('parentEntityViewerDataService', parentEntityViewerDataService);
         console.log('parentEntityViewerEventService', parentEntityViewerEventService);
