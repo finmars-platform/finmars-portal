@@ -95,6 +95,8 @@
 
         vm.currencies = []; // need for instrument pricing tab;
 
+        vm.isRestorable = evHelperService.isRestorable(vm.entityType);
+
         // Victor 20020.11.20 #59: fields below needs for new design an fixed area popup
         vm.action = 'edit';
         vm.typeFieldName = 'type';

@@ -1968,6 +1968,10 @@
 
     };
 
+    function isRestorable(entityType) {
+        return !['complex-transaction', 'price-history', 'currency-history', 'portfolio-register'].includes(entityType);
+    }
+
     module.exports = {
         transformItem: transformItem,
         checkForLayoutConfigurationChanges: checkForLayoutConfigurationChanges,
@@ -2006,6 +2010,7 @@
         postAdditionActions: postAdditionActions,
 
         onPricingSchemeChangeInsidePricingPolicy: onPricingSchemeChangeInsidePricingPolicy,
+        isRestorable: isRestorable,
     }
 
 }());
