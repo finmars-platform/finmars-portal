@@ -5,7 +5,7 @@
 
 	const evEvents = require('../../services/entityViewerEvents');
 
-	module.exports = function () {
+	module.exports = function (evRvDomManagerService) {
 		return {
 			require: '^^gRowsBulkActions',
 			restrict: 'E',
@@ -63,10 +63,11 @@
 						}
 					]);
 
-					optionsList.push(bulkRestoreDeleted);
+					// optionsList.push(bulkRestoreDeleted);
 
 				}
-				else if (!['complex-transaction', 'price-history', 'currency-history'].includes(entityType)) {
+
+				if ( evRvDomManagerService.isRestorable(entityType) ) {
 
 					optionsList.push(bulkRestoreDeleted);
 

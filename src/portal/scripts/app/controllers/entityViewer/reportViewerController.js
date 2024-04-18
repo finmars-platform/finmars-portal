@@ -14,6 +14,7 @@
 
 (function () {
 
+    const pricingPolicyService = require("../../services/pricingPolicyService").default;
     var AutosaveLayoutService = require("../../services/autosaveLayoutService").default;
     var evHelperService = require("../../services/entityViewerHelperService");
     var metaService = require('../../services/metaService').default;
@@ -31,7 +32,7 @@
 
         var vm = this;
 
-        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, toastNotificationService, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper);
+        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, toastNotificationService, globalDataService, pricingPolicyService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper);
 
         vm.readyStatus = {
             attributes: false,
