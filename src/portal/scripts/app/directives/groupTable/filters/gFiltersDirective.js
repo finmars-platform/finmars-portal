@@ -413,6 +413,8 @@
                 vm.exportAsCSV = function () {
 
                     var flatList = $scope.evDataService.getFlatList();
+                    var filteredList = reportCopyHelper.filterSelected($scope.evDataService, flatList, $scope.isReport);
+                    flatList = filteredList.length ? filteredList : flatList;
                     var columns = $scope.evDataService.getColumns();
                     var groups = $scope.evDataService.getGroups();
 
@@ -421,6 +423,9 @@
                 };
 
                 vm.exportAsExcel = function () {
+                    var flatList = $scope.evDataService.getFlatList();
+                    var filteredList = reportCopyHelper.filterSelected($scope.evDataService, flatList, $scope.isReport);
+                    flatList = filteredList.length ? filteredList : flatList;
 
                     var data = {
                         entityType: vm.entityType,
@@ -428,7 +433,7 @@
                             columns: $scope.evDataService.getColumns(),
                             groups: $scope.evDataService.getGroups()
                         },
-                        content: $scope.evDataService.getFlatList()
+                        content: flatList
                     };
 
                     exportExcelService.generateExcel(data).then(function (blob) {
