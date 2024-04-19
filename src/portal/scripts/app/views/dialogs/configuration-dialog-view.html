@@ -83,6 +83,14 @@
                                 <input aria-label="description" type="text" data-ng-model="vm.item.version">
                             </md-input-container>
 
+                            <md-input-container class="md-block">
+                                <label>Version</label>
+                                <md-select data-ng-model="vm.item.channel">
+                                    <md-option value="stable">Stable</md-option>
+                                    <md-option value="rc">Release Candidate</md-option>
+                                </md-select>
+                            </md-input-container>
+
 
                             <md-checkbox ng-model="vm.item.is_primary" aria-label="override">
                                 Is Primary
