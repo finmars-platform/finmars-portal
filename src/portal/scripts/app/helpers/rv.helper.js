@@ -108,7 +108,7 @@
 
     };
 
-	const getContextDataForRowAction = function (reportOptions, rowObject, entityType) {
+	const getContextDataForRowAction = async function (reportOptions, rowObject, entityType, pricingPolicyService) {
 
 		let effective_date = reportOptions.report_date;
 		let report_date = null;
@@ -169,9 +169,16 @@
 			contextData.position_size = rowObject['position_size'];
 		}
 
-		if (reportOptions['pricing_policy']) {
+		if (entityType !== 'transaction-report' && reportOptions['pricing_policy']) {
+
+			if (!pricingPolicyService) {
+				throw "Error [rv.helper.getContextDataForRowAction] pricingPolicyService not provided"
+			}
+
+			const res = await pricingPolicyService.getByUserCode(reportOptions.pricing_policy);
+
 			contextData.pricing_policy = reportOptions.pricing_policy;
-			contextData.pricing_policy_object = Object.assign({}, reportOptions.pricing_policy_object)
+			contextData.pricing_policy_object = res;
 		}
 
 		/* if (rowObject['pricing_currency.id']) {

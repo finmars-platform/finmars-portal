@@ -495,31 +495,15 @@
                 `Expected 0 or 1 objects got: ${resultsLength}`
         };
 
-        const getPricingPolicyByUserCode = async function (userCode) {
-
-            const opts = {
-                filters: {
-                    user_code: userCode,
-                }
-            }
-
-            const ppRes = await pricingPolicyService.getListLight(opts);
-
-            if ( !ppRes.results.length ) {
-                throw `Error [rvSharedLogicHelper pricingPolicyService.getListLight()] ` +
-                `No pricing_policy found with the following user_code: ${userCode}`;
-            }
-
-            if (ppRes.results.length > 1) {
-                throw `Error [rvSharedLogicHelper pricingPolicyService.getListLight()] ` +
-                `Expected 1 object got: ${ppRes.length}`;
-            }
-
-            return ppRes.results[0];
-
-        }
-
-        const offerToCreateEntity = async function (warningDescription, getDialogLocalsFn) {
+        /**
+         *
+         * @param {String} warningDescription
+         * @param {String} entityType
+         * @param {Object} localsData - dota for locals for $mdDialog
+         * @param {String} pricingPolicyUc - user code of pricing policy
+         * @return {Promise<void>}
+         */
+        const offerToCreateEntity = async function (warningDescription, entityType, localsData, pricingPolicyUc) {
 
             const warningLocals = {
                 warning: {
@@ -532,16 +516,23 @@
 
             if (res.status === 'agree') {
 
-                const createEntityLocals = await getDialogLocalsFn();
+                if (entityType !== "transaction-report") {
 
-                createEntity(createEntityLocals);
+                    var pp = await pricingPolicyService.getByUserCode(pricingPolicyUc);
+
+                    localsData.entity.pricing_policy = pp.id;
+                    localsData.entity.pricing_policy_object = pp;
+
+                }
+
+                createEntity(localsData);
 
             }
 
         }
 
 
-        const executeRowAction = function () {
+        const executeRowAction = async function () {
 
             const actionData = viewModel.entityViewerDataService.getRowsActionData();
             const action = actionData.actionKey;
@@ -550,8 +541,8 @@
             const activeRowIndex = flatList.findIndex(object => object.___is_activated);
             const activeRowExist = activeRowIndex > -1;
 
-            if (!reportOptions.pricing_policy ||
-                typeof reportOptions.pricing_policy === 'number') {
+            if (viewModel.entityType !== 'transaction-report' &&
+                (!reportOptions.pricing_policy || typeof reportOptions.pricing_policy !== 'string') ) {
 
                 toastNotificationService.clientError(
                     "Invalid 'Pricing Policy' inside Report options",
@@ -562,7 +553,7 @@
 
             }
 
-            var getCurrencyObjectMockup = function (currencyKeyStart) {
+            var getCurrencyObjectFromActionData = function (currencyKeyStart) {
 
                 const wrongKey = ![
                     'instrument.pricing_currency',
@@ -570,7 +561,7 @@
                 ].includes(currencyKeyStart);
 
                 if (wrongKey) {
-                    throw `Error [rvSharedLogicHelper getCurrencyObjectMockup] wrong key: ${currencyKeyStart}`
+                    throw `Error [rvSharedLogicHelper.getCurrencyObjectFromActionData] wrong key: ${currencyKeyStart}`
                 }
 
                 return {
@@ -648,10 +639,13 @@
 
                     var filters = {
                         instrument: actionData.object['instrument.id'],
-                        pricing_policy: reportOptions.pricing_policy,
                         date_after: reportOptions.report_date,
                         date_before: reportOptions.report_date
                     };
+
+                    if (viewModel.entityType) {
+                        filters.pricing_policy = reportOptions.pricing_policy;
+                    }
 
                     priceHistoryService.getList({filters: filters}).then(function (data) {
 
@@ -675,30 +669,22 @@
 
                             var warningDescription = 'No corresponding record in Price History. Do you want to add the record?';
 
-                            var getDialogLocals = async function () {
-
-                                var pp = await getPricingPolicyByUserCode(reportOptions.pricing_policy);
-
-                                return {
-                                    entityType: 'price-history',
-                                    entity: {
-                                        instrument: actionData.object['instrument.id'],
-                                        instrument_object: {
-                                            id: actionData.object['instrument.id'],
-                                            name: actionData.object['instrument.name'],
-                                            user_code: actionData.object['instrument.user_code'],
-                                            short_name: actionData.object['instrument.short_name']
-                                        },
-                                        pricing_policy: pp.id,
-                                        pricing_policy_object: pp,
-                                        date: reportOptions.report_date
+                            let localsData = {
+                                entityType: 'price-history',
+                                entity: {
+                                    instrument: actionData.object['instrument.id'],
+                                    instrument_object: {
+                                        id: actionData.object['instrument.id'],
+                                        name: actionData.object['instrument.name'],
+                                        user_code: actionData.object['instrument.user_code'],
+                                        short_name: actionData.object['instrument.short_name']
                                     },
-                                    data: {}
-                                };
-
+                                    date: reportOptions.report_date
+                                },
+                                data: {}
                             };
 
-                            offerToCreateEntity(warningDescription, getDialogLocals);
+                            offerToCreateEntity(warningDescription, viewModel.entityType, localsData, reportOptions.pricing_policy);
 
                         }
 
@@ -715,7 +701,7 @@
                         date_before: reportOptions.report_date
                     };
 
-                    currencyHistoryService.getList({filters: filters}).then(function (data) {
+                    currencyHistoryService.getList({filters: filters}).then(async function (data) {
 
                         if (data.results.length) {
 
@@ -724,8 +710,8 @@
                             }
 
                             var item = data.results[0];
-                            // let contextData = getContextDataForRowAction(reportOptions, actionData.object);
-                            let contextData = rvHelper.getContextDataForRowAction(reportOptions, actionData.object, viewModel.entityType);
+
+                            let contextData = await rvHelper.getContextDataForRowAction(reportOptions, actionData.object, viewModel.entityType, pricingPolicyService);
                             contextData.date = reportOptions.report_date
 
                             var locals = {
@@ -741,30 +727,22 @@
 
                             var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
 
-                            var getDialogLocals = async function () {
-
-                                var pp = await getPricingPolicyByUserCode(reportOptions.pricing_policy);
-
-                                return {
-                                    entityType: 'currency-history',
-                                    entity: {
-                                        currency: actionData.object['currency.id'],
-                                        currency_object: {
-                                            id: actionData.object['currency.id'],
-                                            name: actionData.object['currency.name'],
-                                            short_name: actionData.object['currency.short_name'],
-                                            user_code: actionData.object['currency.user_code']
-                                        },
-                                        pricing_policy: pp.id,
-                                        pricing_policy_object: pp,
-                                        date: reportOptions.report_date
+                            let localsData = {
+                                entityType: 'currency-history',
+                                entity: {
+                                    currency: actionData.object['currency.id'],
+                                    currency_object: {
+                                        id: actionData.object['currency.id'],
+                                        name: actionData.object['currency.name'],
+                                        short_name: actionData.object['currency.short_name'],
+                                        user_code: actionData.object['currency.user_code']
                                     },
-                                    data: {}
-                                };
+                                    date: reportOptions.report_date
+                                },
+                                data: {}
+                            };
 
-                            }
-
-                            offerToCreateEntity(warningDescription, getDialogLocals);
+                            offerToCreateEntity(warningDescription, viewModel.entityType, localsData, reportOptions.pricing_policy);
 
                         }
 
@@ -801,28 +779,19 @@
                         }
                         else {
 
-                            var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
+                            const warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
 
-                            var getDialogLocals = async function () {
-
-                                var pp = await getPricingPolicyByUserCode(reportOptions.pricing_policy);
-                                var currency_object = getCurrencyObjectMockup('instrument.accrued_currency');
-
-                                return {
-                                    entityType: 'currency-history',
-                                    entity: {
-                                        currency: actionData.object['instrument.accrued_currency.id'],
-                                        currency_object: currency_object,
-                                        pricing_policy: pp.id,
-                                        pricing_policy_object: pp,
-                                        date: reportOptions.report_date
-                                    },
-                                    data: {}
-                                };
-
+                            let localsData = {
+                                entityType: 'currency-history',
+                                entity: {
+                                    currency: actionData.object['instrument.accrued_currency.id'],
+                                    currency_object: getCurrencyObjectFromActionData('instrument.accrued_currency'),
+                                    date: reportOptions.report_date
+                                },
+                                data: {}
                             };
 
-                            offerToCreateEntity(warningDescription, getDialogLocals);
+                            offerToCreateEntity(warningDescription, viewModel.entityType, localsData, reportOptions.pricing_policy);
 
 
                         }
@@ -862,27 +831,17 @@
 
                             var warningDescription = 'No corresponding record in FX Rates History. Do you want to add the record?';
 
-                            var getDialogLocals = async function () {
-
-                                var pp = await getPricingPolicyByUserCode(reportOptions.pricing_policy);
-                                var currency_object = getCurrencyObjectMockup('instrument.pricing_currency');
-
-                                return {
-                                    entityType: 'currency-history',
-                                    entity: {
-                                        currency: actionData.object['instrument.pricing_currency.id'],
-                                        currency_object: currency_object,
-                                        pricing_policy: pp.id,
-                                        pricing_policy_object: pp,
-                                        date: reportOptions.report_date
-                                    },
-                                    data: {}
-                                };
-
+                            const localsData = {
+                                entityType: 'currency-history',
+                                entity: {
+                                    currency: actionData.object['instrument.pricing_currency.id'],
+                                    currency_object: getCurrencyObjectFromActionData('instrument.pricing_currency'),
+                                    date: reportOptions.report_date
+                                },
+                                data: {}
                             };
 
-                            offerToCreateEntity(warningDescription, getDialogLocals);
-
+                            offerToCreateEntity(warningDescription, viewModel.entityType, localsData, reportOptions.pricing_policy);
 
                         }
 
@@ -904,9 +863,7 @@
                     }
 
                     // const contextData = getContextDataForRowAction(reportOptions, actionData.object);
-                    const contextData = rvHelper.getContextDataForRowAction(reportOptions, actionData.object, viewModel.entityType);
-                    locals.data.contextData = contextData;
-
+                    locals.data.contextData = await rvHelper.getContextDataForRowAction(reportOptions, actionData.object, viewModel.entityType, pricingPolicyService);
 
                     createEntity(locals);
 
@@ -914,7 +871,7 @@
                 else if (action === 'book_transaction_specific') {
 
                     // const contextData = getContextDataForRowAction(reportOptions, actionData.object);
-                    const contextData = rvHelper.getContextDataForRowAction(reportOptions, actionData.object, viewModel.entityType);
+                    const contextData = await rvHelper.getContextDataForRowAction(reportOptions, actionData.object, viewModel.entityType, pricingPolicyService);
 
                     var locals = {
                         entityType: 'complex-transaction',
