@@ -441,7 +441,7 @@
 						reportOptions.accounts_position = [];
 						// reportOptions.accounts_position[0] = 1;
 						reportOptions.approach_multiplier = 0.5;
-						reportOptions.calculationGroup = 'portfolio';
+						reportOptions.calculation_group = 'no_grouping';
 
 						if (scope.entityType !== 'transaction-report') {
 

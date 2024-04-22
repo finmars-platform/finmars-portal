@@ -1023,7 +1023,7 @@ export default function (expressionService) {
         "allocation_mode",
         "approach_multiplier",
         "calculate_pl",
-        "calculationGroup",
+        "calculation_group",
         "complex_transaction_statuses_filter",
         "cost_method",
         "cost_method_object",
