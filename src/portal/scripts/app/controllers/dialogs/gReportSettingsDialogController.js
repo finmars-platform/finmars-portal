@@ -152,11 +152,15 @@
 
         vm.calculationGroupOptions = [
             {
-                id: 'portfolio',
+                id: 'no_grouping',
+                name: 'No Grouping'
+            },
+            {
+                id: 'portfolio.id',
                 name: 'Portfolio'
             },
             {
-                id: 'account',
+                id: 'account.id',
                 name: 'Account'
             },
             {
