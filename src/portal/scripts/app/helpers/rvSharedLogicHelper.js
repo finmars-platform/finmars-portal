@@ -516,14 +516,10 @@
 
             if (res.status === 'agree') {
 
-                if (entityType !== "transaction-report") {
+                var pp = await pricingPolicyService.getByUserCode(pricingPolicyUc);
 
-                    var pp = await pricingPolicyService.getByUserCode(pricingPolicyUc);
-
-                    localsData.entity.pricing_policy = pp.id;
-                    localsData.entity.pricing_policy_object = pp;
-
-                }
+                localsData.entity.pricing_policy = pp.id;
+                localsData.entity.pricing_policy_object = pp;
 
                 createEntity(localsData);
 
@@ -635,17 +631,14 @@
                     editEntity(actionData.event, locals);
 
                 }
-                else if (action === 'edit_price') {
+                else if (action === 'edit_price') { // TODO: hide option for transaction report
 
                     var filters = {
                         instrument: actionData.object['instrument.id'],
                         date_after: reportOptions.report_date,
-                        date_before: reportOptions.report_date
+                        date_before: reportOptions.report_date,
+                        pricing_policy: reportOptions.pricing_policy
                     };
-
-                    if (viewModel.entityType) {
-                        filters.pricing_policy = reportOptions.pricing_policy;
-                    }
 
                     priceHistoryService.getList({filters: filters}).then(function (data) {
 
@@ -698,7 +691,7 @@
                         currency: actionData.object['currency.id'],
                         pricing_policy: reportOptions.pricing_policy,
                         date_after: reportOptions.report_date,
-                        date_before: reportOptions.report_date
+                        date_before: reportOptions.report_date,
                     };
 
                     currencyHistoryService.getList({filters: filters}).then(async function (data) {
@@ -749,7 +742,7 @@
                     })
 
                 }
-                else if (action === 'edit_accrued_currency_fx_rate' && actionData.object.id) {
+                else if (action === 'edit_accrued_currency_fx_rate' && actionData.object.id) { // TODO: hide for transaction-report
 
                     var filters = {
                         currency: actionData.object['instrument.accrued_currency.id'],
@@ -799,7 +792,7 @@
                     })
 
                 }
-                else if (action === 'edit_pricing_currency_fx_rate' && actionData.object.id) {
+                else if (action === 'edit_pricing_currency_fx_rate' && actionData.object.id) { // TODO: hide for transaction-report
 
                     var filters = {
                         currency: actionData.object['instrument.pricing_currency.id'],
