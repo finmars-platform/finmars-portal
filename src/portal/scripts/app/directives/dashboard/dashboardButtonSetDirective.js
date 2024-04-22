@@ -17,7 +17,7 @@
 
     var rvHelper = require('../../helpers/rv.helper');
 
-    module.exports = function dashboardButtonSetDirective($mdDialog, $state, transactionImportSchemeService) {
+    module.exports = function dashboardButtonSetDirective($mdDialog, $state, transactionImportSchemeService, pricingPolicyService) {
         return {
             restriction: 'E',
             templateUrl: 'views/directives/dashboard/dashboard-button-set-view.html',
@@ -37,7 +37,7 @@
                     return scope.componentName;
                 }
 
-                scope.handleAction = function ($event, item) {
+                scope.handleAction = async function ($event, item) {
 
                     setTimeout(function () {
                         scope.componentName = scope.componentData.custom_component_name; // important after click thing
@@ -74,7 +74,7 @@
                             if (lastChangedComp.type === 'report_viewer' && lastOutput && lastOutput.data && typeof lastOutput.data === 'object') {
 
                                 var reportOptions = lastOutput.data.reportOptions;
-                                contextData = rvHelper.getContextDataForRowAction(reportOptions, lastOutput.data, lastChangedComp.settings.entityType);
+                                contextData = await rvHelper.getContextDataForRowAction(reportOptions, lastOutput.data, lastChangedComp.settings.entityType, pricingPolicyService);
 
                             }
 

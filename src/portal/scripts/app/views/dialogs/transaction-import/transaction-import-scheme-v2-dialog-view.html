@@ -11,7 +11,8 @@
                 — Processing
             </div>
 
-            <draft-button data-user-code="vm.draftUserCode"
+            <draft-button data-ng-if="vm.draftUserCode"
+                          data-user-code="vm.draftUserCode"
                           data-on-export-to-draft-callback="vm.exportToDraft($event)"
                           data-on-draft-apply-callback="vm.applyDraft(event, data)"></draft-button>
         </div>
