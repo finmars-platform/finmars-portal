@@ -152,22 +152,6 @@ export default function ($scope, $mdDialog, toastNotificationService, authorizer
 
     }
 
-    vm.updateFinmars = function () {
-
-        vm.processing = true;
-
-        authorizerService.updateFinmars(vm.currentMasterUser.id).then(function (data) {
-
-            vm.processing = false;
-
-            toastNotificationService.info("Update Initialized");
-
-            $scope.$apply();
-
-        })
-
-    }
-
     vm.getCurrentVersion = function () {
 
         var currentMasterUser = globalDataService.getMasterUser();
