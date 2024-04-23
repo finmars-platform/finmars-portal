@@ -45,28 +45,8 @@
                     }
                 });*/
 
-			const itemsIds = [];
-
-			restoredItems = restoredItems.map(function (item) {
-
-				var name = item.name.split('(del) ')[1];
-				var short_name = item.short_name.split('(del) ')[1];
-
-				itemsIds.push(item.id);
-
-				return {
-					id: item.id,
-					name: name,
-					short_name: short_name,
-					user_code: item.deleted_user_code,
-					is_deleted: false,
-					is_enabled: true,
-					is_active: true
-				};
-
-			});
-
-            console.log('restoredItems', itemsIds);
+			const userCodes = restoredItems.map((item) => item.user_code);
+            console.log('restoredItems', userCodes);
 
             vm.processing = true;
             vm.isRestored = true;
@@ -74,7 +54,7 @@
             try {
 
                 const result = entityResolverService.restoreBulk(
-                    entityType, {ids:itemsIds}
+                    entityType, {user_codes:userCodes}
                 );
 
                 const response = await result.promise;
@@ -89,13 +69,16 @@
 
                 vm.processing = false;
 
-                $mdDialog.hide({status: 'agree', data: {itemsIds: itemsIds}});
+                $mdDialog.hide({status: 'agree', data: {itemsIds: userCodes}});
 
 
             } catch (reason) {
 
                 let description = "Something wrong. Please, try again later."
 
+                if (reason.error) {
+                    reason = reason.error;
+                }
                 if (reason.error_key) {
                     console.error(reason.description)
 

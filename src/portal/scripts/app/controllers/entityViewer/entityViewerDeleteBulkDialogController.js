@@ -13,10 +13,10 @@
 
         vm.isDeleted = false;
 
-		var idsToDelete = [];
+		var itemsToDelete = [];
 
 		if (data) {
-			idsToDelete = data.idsToDelete || [];
+			itemsToDelete = data.itemsToDelete || [];
 		}
 
 
@@ -28,34 +28,24 @@
 
             var objects = evDataService.getObjects();
 
-            var ids = objects
+            itemsToDelete = itemsToDelete.concat(objects
                 .filter(function (item) {
                     return item.___is_activated
-                }).map(function (item) {
-                    return item.id
-                });
+                }));
 
-			idsToDelete.forEach(function (id) {
-
-				if (ids.indexOf(id) === -1) {
-					ids.push(id);
-				}
-
-			});
-
-            console.log('ids', ids);
+            const userCodes = Array.from(new Set(itemsToDelete.map((item) => item.user_code)));
+            const ids = Array.from(new Set(itemsToDelete.map((item) => item.id)));
+            console.log('userCodes', userCodes);
 
             vm.processing = true;
             vm.isDeleted = true;
 
             var deleteProm;
 
-            if (ids.length > 1) {
-
-                deleteProm = entityResolverService.deleteBulk(vm.entityType, {ids: ids});
-
+            if (userCodes.length > 1) {
+                deleteProm = entityResolverService.deleteBulk(vm.entityType, {user_codes: userCodes});
             } else {
-                deleteProm = entityResolverService.deleteByKey(vm.entityType, ids[0]);
+                deleteProm = entityResolverService.deleteByKey(vm.entityType, ids[0].id);
             }
 
             deleteProm.then(function (data) {
@@ -73,7 +63,7 @@
 
                     description = reason.description;
 
-                    if (ids.length > 1) {
+                    if (userCodes.length > 1) {
                         description = "Bulk delete unavailable for this type of entities for now."
                     }
 

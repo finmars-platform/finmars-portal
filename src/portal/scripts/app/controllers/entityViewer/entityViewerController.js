@@ -931,8 +931,8 @@
                     switch (actionData.actionKey) {
                         case 'delete':
                             // in case of deleting row with ___is_active === false from context menu, add its id manually
-                            var idsToDelete = [];
-                            if (actionData.object && actionData.object.id) idsToDelete.push(actionData.object.id);
+                            var itemsToDelete = [];
+                            if (actionData.object && actionData.object.user_code) itemsToDelete.push(actionData.object);
 
                             $mdDialog.show({
                                 controller: 'EntityViewerDeleteBulkDialogController as vm',
@@ -944,7 +944,7 @@
                                     evDataService: vm.entityViewerDataService,
                                     evEventService: vm.entityViewerEventService,
                                     data: {
-                                        idsToDelete: idsToDelete
+                                        itemsToDelete: itemsToDelete
                                     }
                                 }
                             }).then(function (res) {
