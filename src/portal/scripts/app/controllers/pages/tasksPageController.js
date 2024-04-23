@@ -979,6 +979,10 @@
                 vm.filters.result = $state.params.result.split(",");
             }
 
+            if ($state.params.id) {
+                vm.filters.id = $state.params.id;
+            }
+
             vm.getData();
             vm.getStats();
 

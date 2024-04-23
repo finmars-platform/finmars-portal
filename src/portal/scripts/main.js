@@ -910,7 +910,7 @@ export default (function () {
     portal.directive('rvDateFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvDateFilterDirective')]); */
 
     portal.directive('gFilters', ['$mdDialog', 'uiService', 'evRvLayoutsHelper', 'gFiltersHelper', require('./app/directives/groupTable/filters/gFiltersDirective')]);
-    portal.directive('gEvFilters', ['$mdDialog', '$state', '$bigDrawer', require('./app/directives/groupTable/filters/entityViewer/gEvFiltersDirective')]);
+    portal.directive('gEvFilters', ['$mdDialog', '$state', '$bigDrawer', 'toastNotificationService', require('./app/directives/groupTable/filters/entityViewer/gEvFiltersDirective')]);
     portal.directive('evFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evFilterDirective')]);
     portal.directive('evTextFilter', ['specificDataService', 'userFilterService', 'gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evTextFilterDirective')]);
     portal.directive('evBooleanFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evBooleanFilterDirective')]);
