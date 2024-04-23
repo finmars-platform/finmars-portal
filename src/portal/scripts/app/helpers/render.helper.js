@@ -389,6 +389,22 @@
 
     };
 
+    function shouldProcessSuffixValue(value) {
+      // Convert value to a string and trim any whitespace
+      const stringValue = String(value).trim();
+
+      const preventedChars = ['0', '0.0', '0.00', '-'];
+      // Check for non-zero, non-empty, and not specifically excluded values
+      return !preventedChars.includes(stringValue);
+    }
+
+    function processSuffixValue(value, suffix) {
+      if (shouldProcessSuffixValue(value)) {
+        return value + suffix;
+      }
+      return value;
+    }
+
     var formatValue = function (obj, column) {
 
         var value = obj[column.key];
@@ -418,9 +434,7 @@
                 value = numberFormat.number_prefix + value;
             }
 
-            if (numberFormat.number_suffix) {
-                value = value + numberFormat.number_suffix;
-            }
+          value = processSuffixValue(value, numberFormat.number_suffix);
         }
 
         return value;
