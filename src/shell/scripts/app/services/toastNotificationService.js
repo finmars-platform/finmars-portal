@@ -8,8 +8,8 @@ export default function () {
 
     // toastr.options.onclick = function() { console.log('clicked'); }
 
-    const success = function (message) {
-        toastr.success(message);
+    const success = function (message, title, options) {
+        toastr.success(message, title, options);
     };
 
     const error = function (message, title, options) {
