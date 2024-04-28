@@ -207,7 +207,7 @@
     width: 100px;
 
     //background: #ddd;
-    background: #eff4f7;
+    background: var(--page-background-color);
     margin-top: 14px;
 
   }
@@ -402,12 +402,14 @@
   // TODO refactor class names
   .ec-tab-btn {
     opacity: 1;
+
     &:hover {
       opacity: .6;
     }
   }
 
 }
+
 .accordion-constructor-row {
 
   height: 50px;
@@ -415,6 +417,7 @@
   // TODO refactor class names
   .ec-tab-btn {
     opacity: 1;
+
     &:hover {
       opacity: .6;
     }
@@ -475,7 +478,7 @@
   position: fixed;
   bottom: 0;
   width: calc(100% - 181px);
-  background: #fff;
+  background-color: var(--dialog-background-color);
   border-top: 1px solid var(--secondary-color);
   margin-left: -10px;
   padding-left: 8px;

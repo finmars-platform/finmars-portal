@@ -70,7 +70,7 @@
 
 .md-button.align-button {
   background-color: var(--page-background-color);
-  color: @g-top-part-color;
+  color: var(--secondary-color);
 
   &:hover {
     color: @md-primary-color;
@@ -106,5 +106,30 @@ button.md-raised.md-warn.md-button {
 
   &:not([disabled]):hover {
     background-color: var(--state-active-background-color);
+  }
+}
+
+.icon-button-small {
+  min-width: 2px;
+  margin: 2px;
+  height: 32px;
+  min-height: 32px;
+  box-sizing: border-box;
+
+  font-size: 12px;
+  padding: 0 8px;
+  line-height: 40px;
+
+  color: var(--secondary-color);
+
+  .material-icons {
+    font-size: 20px;
+    line-height: 1.5;
+  }
+
+
+  &:not([disabled]):hover {
+    background: var(--state-active-background-color);
+    opacity: .8;
   }
 }

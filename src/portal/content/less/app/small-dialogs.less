@@ -227,16 +227,16 @@ md-card.tab-editor-tab-card {
     padding: 10px;
     margin-bottom: 16px;
     cursor: pointer;
-    background-color: #fff;
+    background-color: var(--page-background-color);
     transition: background-color .2s linear 0s;
 
     &:hover {
-      background-color: #ffeee8;
+      background-color: var(--state-active-background-color);
     }
   }
 
   .expandable-item.selected {
-    background-color: #ffeee8;
+    background-color: var(--state-active-background-color);
   }
 
   .empty-space-for-button {
@@ -247,7 +247,7 @@ md-card.tab-editor-tab-card {
 
 .expandable-items-subitems-toggle {
   margin: 0 10px 0 0;
-  border: var(--table-border-color)000;
+  border: 1px solid var(--table-border-color);
 }
 
 .expandable-items-subitems-wrap {

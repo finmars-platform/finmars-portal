@@ -62,13 +62,16 @@
 
   .dashboard-top-row {
     position: relative;
-    height: 31px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     // -webkit-box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.0470588235294118);
     // box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.0470588235294118);
     // z-index: 1;
     //border-bottom: 1px solid @borderPale;
     //box-shadow: 0 1px 22px -12px #607D8B;
-    border: 1px solid var(--table-border-color);
+    border-bottom: 1px solid var(--table-border-color);
   }
 
   .dashboard-title {
@@ -233,7 +236,7 @@
       right: 5px;
     }
 
-    .md-button.dashboard-comp-h-btn {
+    /*.md-button.dashboard-comp-h-btn {
       min-width: 0;
       min-height: 0;
       //height: 23px;
@@ -265,7 +268,7 @@
         }
       }
     }
-
+*/
   }
 
   /*.dashboard-component-settings-btn {
@@ -297,9 +300,10 @@
   }
 
   .dashboard-tabs-control-panel {
-    position: absolute;
-    right: 6px;
-    top: 0;
+    //position: absolute;
+    //right: 6px;
+    //top: 0;
+    padding-right: 0.5rem;
     z-index: 1;
   }
 
@@ -328,22 +332,22 @@
     width: 40px;
   }
 
-  .dashboard-control-button {
-    min-width: 2px;
-    width: 24px;
-    //background: #ddd;
-    margin: 2px;
-    height: 24px;
-    min-height: 24px;
-    box-sizing: border-box;
-
-    padding: 0;
-
-    &:not([disabled]):hover {
-      //background: #ccc;
-      opacity: .8;
-    }
-  }
+  //.dashboard-control-button {
+  //  min-width: 2px;
+  //  width: 24px;
+  //  //background: #ddd;
+  //  margin: 2px;
+  //  height: 24px;
+  //  min-height: 24px;
+  //  box-sizing: border-box;
+  //
+  //  padding: 0;
+  //
+  //  &:not([disabled]):hover {
+  //    //background: #ccc;
+  //    opacity: .8;
+  //  }
+  //}
 
 
   .dashboard-no-layout-box {
@@ -511,15 +515,15 @@
     background: var(--page-background-color);
 
 
-    .g-dashboard-top-button {
-      font-size: 12px;
-      padding: 0 8px;
-      line-height: 40px;
-
-      .material-icons {
-        font-size: 20px;
-      }
-    }
+    //.g-dashboard-top-button {
+    //  font-size: 12px;
+    //  padding: 0 8px;
+    //  line-height: 40px;
+    //
+    //  .material-icons {
+    //    font-size: 20px;
+    //  }
+    //}
   }
 
 
