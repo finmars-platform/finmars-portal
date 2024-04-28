@@ -890,7 +890,7 @@
                                         controller: 'BookUniquenessWarningDialogController as vm',
                                         templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
                                         targetEvent: $event,
-                                        parent: angular.element(document.body),
+                                        parent: document.querySelector('.dialog-containers-wrap'),
                                         multiple: true,
                                         locals: {
                                             data: {

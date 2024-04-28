@@ -496,7 +496,7 @@
                         $mdDialog.show({
                             controller: 'gModalController as vm', // ../directives/gTable/gModalComponents
                             templateUrl: 'views/directives/groupTable/g-modal-view.html',
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             targetEvent: ev,
                             locals: {
                                 attributeDataService: $scope.attributeDataService,

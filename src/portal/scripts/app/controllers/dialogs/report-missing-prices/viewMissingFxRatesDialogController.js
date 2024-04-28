@@ -21,7 +21,7 @@
             $mdDialog.show({
                 controller: 'EntityViewerEditDialogController as vm',
                 templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 multiple: true,
                 locals: {
@@ -38,7 +38,7 @@
             $mdDialog.show({
                 controller: 'EntityViewerAddDialogController as vm',
                 templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 multiple: true,
                 locals: {

@@ -96,7 +96,7 @@
             $mdDialog.show({
                 controller: 'TransactionImportSchemeSelectorValuesDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-selector-values-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -132,7 +132,7 @@
             $mdDialog.show({
                 controller: 'TransactionImportSchemeScenarioFieldsDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-scenario-fields-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -278,7 +278,7 @@
             $mdDialog.show({
                 controller: 'TransactionImportSchemeInputsDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-inputs-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -603,7 +603,7 @@
             var copyPromise = $mdDialog.show({
                 controller: 'TransactionImportSchemeAddDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 locals: {
                     data: {
@@ -620,7 +620,7 @@
             $mdDialog.show({
                 controller: 'EntityTypeMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -637,7 +637,7 @@
             $mdDialog.show({
                 controller: 'TransactionTypeEditDialogController as vm',
                 templateUrl: 'views/entity-viewer/transaction-type-edit-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 multiple: true,
                 locals: {

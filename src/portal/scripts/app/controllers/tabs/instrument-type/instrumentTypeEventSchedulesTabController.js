@@ -450,7 +450,7 @@
             $mdDialog.show({
                 controller: 'InstrumentEventActionParameterDialogController as vm',
                 templateUrl: 'views/dialogs/instrument-event-action-parameter-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -684,7 +684,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -1160,7 +1160,7 @@
             $mdDialog.show({
                 controller: 'InstrumentEventParameterDialogController as vm',
                 templateUrl: 'views/dialogs/instrument-event-parameter-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,

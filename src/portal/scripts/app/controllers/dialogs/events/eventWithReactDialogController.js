@@ -76,7 +76,7 @@
                     $mdDialog.show({
                         controller: 'InfoDialogController as vm',
                         templateUrl: 'views/info-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         clickOutsideToClose: false,
                         locals: {
@@ -128,7 +128,7 @@
             return $mdDialog.show({
                 controller: 'EventWithReactApplyDefaultConfirmDialogController as vm',
                 templateUrl: 'views/dialogs/events/event-with-react-apply-default-confirm-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 locals: {
                     data: {

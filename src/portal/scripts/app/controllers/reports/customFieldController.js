@@ -30,7 +30,7 @@
             $mdDialog.show({
                 controller: 'CustomFieldAddDialogController as vm',
                 templateUrl: 'views/dialogs/custom-field/custom-field-add-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: ev,
                 locals: {
                     data: {
@@ -49,7 +49,7 @@
             $mdDialog.show({
                 controller: 'CustomFieldEditDialogController as vm',
                 templateUrl: 'views/dialogs/custom-field/custom-field-edit-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: ev,
                 locals: {
                     data: {
@@ -73,7 +73,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: ev,
                 clickOutsideToClose: false,
                 locals: {
@@ -94,7 +94,7 @@
                             $mdDialog.show({
                                 controller: 'InfoDialogController as vm',
                                 templateUrl: 'views/info-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: document.querySelector('.dialog-containers-wrap'),
                                 targetEvent: ev,
                                 clickOutsideToClose: false,
                                 locals: {

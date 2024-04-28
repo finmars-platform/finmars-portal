@@ -110,7 +110,7 @@
                 $mdDialog.show({
                     controller: 'InfoDialogController as vm',
                     templateUrl: 'views/info-dialog-view.html',
-                    parent: angular.element(document.body),
+                    parent: document.querySelector('.dialog-containers-wrap'),
                     clickOutsideToClose: false,
                     preserveScope: true,
                     autoWrap: true,

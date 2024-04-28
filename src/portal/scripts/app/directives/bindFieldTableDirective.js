@@ -298,7 +298,7 @@
 					$mdDialog.show({
 						controller: 'InstrumentEventParameterDialogController as vm',
 						templateUrl: 'views/dialogs/instrument-event-parameter-dialog-view.html',
-						parent: angular.element(document.body),
+						parent: document.querySelector('.dialog-containers-wrap'),
 						targetEvent: $event,
 						multiple: true,
 						locals: {
@@ -521,7 +521,7 @@
 					return $mdDialog.show({
 						controller: 'AddRowToTableInsideEvUserTabDialogController as vm',
 						templateUrl: templateUrl,
-						parent: angular.element(document.body),
+						parent: document.querySelector('.dialog-containers-wrap'),
 						clickOutsideToClose: false,
 						multiple: true,
 						locals: {
