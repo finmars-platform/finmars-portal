@@ -39,7 +39,7 @@
   button.md-button:not([disabled]) {
     min-height: 36px;
     height: 36px;
-    color: #f05a22;
+    color: var(--primary-color);;
     border-radius: 4px;
     font-size: 13px;
     font-weight: 700;
@@ -57,7 +57,9 @@
 
 .popup-container {
   position: absolute;
-  background-color: #fff;
+  //background-color: #fff;
+  background-color: var(--dropdown-background-color);
+  color: var(--secondary-color);
   z-index: 54;
   box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.3);
   box-sizing: border-box;
@@ -270,7 +272,7 @@
           margin: 5px;
           line-height: 48px;
           border-radius: 100%;
-          color: #000;
+          color: var(--secondary-color);
 
           &.pmu-selected {
             background-color: @orange;
@@ -310,7 +312,7 @@
           font-size: 12px;
           box-sizing: border-box;
           margin: 4px;
-          color: #000;
+          color: var(--secondary-color);
 
           &.pmu-not-in-month {
             // visibility: hidden;
@@ -565,7 +567,7 @@
     input {
       width: 100%;
       height: 23px;
-      color: #000;
+      color: var(--secondary-color);
       font-weight: 700;
       padding: 0px 8px;
       border: initial;
@@ -581,7 +583,8 @@
   .popup-menu-item {
     height: 27px;
     padding: 4px 10px;
-    color: #000;
+    //color: var(--secondary-color);
+    color: var(--secondary-color);
   }
 }
 
@@ -608,7 +611,8 @@
 
       height: 48px;
 
-      color: @gray;
+      //color: @gray;
+      color: var(--secondary-color);
 
       &:not([disabled]) {
         cursor: pointer;
@@ -653,11 +657,13 @@
           color: white;
 
           &.default-layout {
-            color: @gray;
+            //color: @gray;
+            color: var(--secondary-color);
           }
 
           &:hover {
-            color: @gray;
+            //color: @gray;
+            color: var(--secondary-color);
           }
         }
       }
@@ -668,7 +674,8 @@
         flex-grow: 1;
         line-height: @layout-manager-item-height;
         text-decoration: none;
-        color: @gray;
+        //color: @gray;
+        color: var(--secondary-color);
 
         width: 100%;
         text-overflow: ellipsis;

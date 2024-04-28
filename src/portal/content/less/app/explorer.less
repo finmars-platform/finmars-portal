@@ -13,10 +13,10 @@
 
   .explorer-table {
     tr {
-      border: 1px solid #ddd;
+      border: 1px solid var(--table-border-color);
 
       &:hover {
-        background: #ddd;
+        background: var(--state-active-background-color);
 
         .explorer-item-name {
           text-decoration: underline;
@@ -56,7 +56,7 @@
     padding: 0;
     font-size: 10px;
     margin-top: 5px;
-    background: #F05A22;
+    background: var(--primary-color);
   }
 
 
@@ -99,7 +99,7 @@
     padding: 8px;
 
     &:hover {
-      background: #ddd;
+      background: var(--state-active-background-color);
       opacity: 7;
       text-decoration: underline;
     }
@@ -138,11 +138,11 @@
     }
 
     &.selected {
-      background: #ddd;
+      background: var(--state-active-background-color);
 
       .explorer-item-name {
-        background: dodgerblue;
-        color: #fff;
+        //background: dodgerblue;
+        color: var(--secondary-color);
       }
     }
 
@@ -160,7 +160,8 @@
   span.explorer-breadcrumbs-item-divider {
     float: left;
     font-weight: bold;
-    margin-top: 18px;
+    margin-top: 14px;
+    font-size: 20px;
   }
 
   .explorer-toolbar {
@@ -191,8 +192,8 @@
     z-index: 2;
     height: 50px;
     width: 100%;
-    box-shadow: 0 1px 22px -12px #607D8B;
-    background-color: #fff;
+    //box-shadow: 0 1px 22px -12px #607D8B;
+    background-color: var(--page-background-color);
   }
 
   .explorer-item-menu-button {
@@ -224,14 +225,14 @@
 
   .explorer-file-upload-status-holder {
     padding: 16px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--table-border-color);
     max-height: 300px;
     overflow: auto;
   }
 
   .explorer-file-upload-status-item {
     margin: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--table-border-color);
     padding: 8px;
     display: flex;
     align-items: end;
@@ -240,7 +241,7 @@
   .explorer-file-upload-status-size {
     font-size: 11px;
     margin-left: 5px;
-    color: #aaa;
+    color: var(--secondary-color);
   }
 
   .explorer-file-upload-status-item-status {
@@ -326,7 +327,7 @@
 
   .status-init {
     background: grey;
-    border: 1px solid #000;
+    border: 1px solid var(--table-border-color);
   }
 
 
