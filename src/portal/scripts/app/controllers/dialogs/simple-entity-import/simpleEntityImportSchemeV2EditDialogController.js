@@ -323,7 +323,7 @@
             $mdDialog.show({
                 controller: 'SimpleEntityImportSchemeCreateDialogController as vm',
                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 locals: {
                     data: {
@@ -544,7 +544,7 @@
             $mdDialog.show({
                 controller: 'ClassificationEditorDialogController as vm',
                 templateUrl: 'views/classification-editor-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: ev,
                 multiple: true,
                 locals: {

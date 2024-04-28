@@ -1164,7 +1164,7 @@
 				$mdDialog.show({
 					controller: addEvController + ' as vm',
 					templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-					parent: angular.element(document.body),
+					parent: document.querySelector('.dialog-containers-wrap'),
 					locals: {
 						entityType: viewModel.entityType,
 						entity: entity,
