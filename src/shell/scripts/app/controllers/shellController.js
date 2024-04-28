@@ -95,7 +95,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                     $mdDialog.show({
                         controller: 'TwoFactorLoginDialogController as vm',
                         templateUrl: 'views/dialogs/two-factor-login-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         locals: {
                             username: vm.username,
                             password: vm.password

@@ -334,7 +334,7 @@
                     $mdDialog.show({
                         controller: 'ReportPriceCheckerDialogController as vm',
                         templateUrl: 'views/dialogs/report-missing-prices/report-price-checker-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             data: {
@@ -351,7 +351,7 @@
                     $mdDialog.show({
                         controller: 'PeriodsEditorDialogController as vm',
                         templateUrl: 'views/dialogs/periods-editor-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             options: {
@@ -539,7 +539,7 @@
                     $mdDialog.show({
                         controller: 'RenameFieldDialogController as vm',
                         templateUrl: 'views/dialogs/rename-field-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             data: filter
@@ -804,7 +804,7 @@
                         $mdDialog.show({
                             controller: 'WarningDialogController as vm',
                             templateUrl: 'views/dialogs/warning-dialog-view.html',
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             targetEvent: $event,
                             clickOutsideToClose: false,
                             multiple: true,
@@ -828,7 +828,7 @@
                     $mdDialog.show({
                         controller: 'RenameDialogController as vm',
                         templateUrl: 'views/dialogs/rename-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             data: {
@@ -877,7 +877,7 @@
                     $mdDialog.show({
                         controller: 'UiLayoutListDialogController as vm',
                         templateUrl: 'views/dialogs/ui/ui-layout-list-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         preserveScope: false,
                         locals: {
@@ -922,7 +922,7 @@
                     $mdDialog.show({
                         controller: 'LayoutExportDialogController as vm',
                         templateUrl: 'views/dialogs/layout-export-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             data: {layout: layout, isReport: scope.isReport}
@@ -978,7 +978,7 @@
                         $mdDialog.show({
                             controller: 'gModalController as vm', // ../directives/gTable/gModalComponents
                             templateUrl: 'views/directives/groupTable/g-modal-view.html',
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             targetEvent: ev,
                             locals: {
                                 attributeDataService: scope.attributeDataService,
@@ -1007,7 +1007,7 @@
                         $mdDialog.show({
                             controller: 'GReportSettingsDialogController as vm',
                             templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             targetEvent: $event,
                             locals: {
                                 reportOptions: reportOptions,
@@ -1032,7 +1032,7 @@
                         $mdDialog.show({
                             controller: 'GEntityViewerSettingsDialogController as vm',
                             templateUrl: 'views/dialogs/g-entity-viewer-settings-dialog-view.html',
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             targetEvent: $event,
                             locals: {
                                 entityViewerDataService: scope.evDataService,

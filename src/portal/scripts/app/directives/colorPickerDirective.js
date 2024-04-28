@@ -86,7 +86,7 @@
                     $mdDialog.show({
                         controller: 'SelectColorDialogController as vm',
                         templateUrl: 'views/colorPicker/select-color-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         multiple: true,
                         locals: {

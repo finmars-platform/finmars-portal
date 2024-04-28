@@ -118,7 +118,7 @@
                         quote: quote
                     }
                 },
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: ev
             }).then(function (res) {
                 if (res.status === 'agree') {

@@ -291,7 +291,7 @@
                     dialogOptions = {
                         controller: 'PriceHistoryErrorEditDialogController as vm',
                         templateUrl: 'views/entity-viewer/price-history-error-edit-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: actionData.event,
                         locals: {
                             entityId: actionData.object.id
@@ -342,7 +342,7 @@
                     dialogOptions = {
                         controller: 'CurrencyHistoryErrorEditDialogController as vm',
                         templateUrl: 'views/entity-viewer/currency-history-error-edit-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         locals: {
                             entityId: actionData.object.id
                         }
@@ -388,7 +388,7 @@
                     dialogOptions = {
                         controller: 'TransactionImportSchemeV2EditDialogController as vm',
                         templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-v2-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         locals: {
                             schemeId: actionData.object.id
                         }
@@ -434,7 +434,7 @@
                     dialogOptions = {
                         controller: 'SimpleEntityImportSchemeV2EditDialogController as vm',
                         templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-v2-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         locals: {
                             data: {
                                 schemeId: actionData.object.id
@@ -547,7 +547,7 @@
                     /* $mdDialog.show({
                         controller: 'EntityViewerEditDialogController as vm',
                         templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: activeObject.event,
                         //clickOutsideToClose: false,
                         locals: {
@@ -683,7 +683,7 @@
             $mdDialog.show({
                 controller: 'EntityViewerRestoreDeletedBulkDialogController as vm',
                 templateUrl: 'views/entity-viewer/entity-viewer-entity-restore-deleted-bulk-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: event,
                 //clickOutsideToClose: false,
                 locals: {
@@ -937,7 +937,7 @@
                             $mdDialog.show({
                                 controller: 'EntityViewerDeleteBulkDialogController as vm',
                                 templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-bulk-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: document.querySelector('.dialog-containers-wrap'),
                                 targetEvent: actionData.event,
                                 //clickOutsideToClose: false,
                                 locals: {
@@ -1027,7 +1027,7 @@
                             /* $mdDialog.show({
                                 controller: 'EntityViewerEditDialogController as vm',
                                 templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: document.querySelector('.dialog-containers-wrap'),
                                 targetEvent: activeObject.event,
                                 locals: {
                                     entityType: 'instrument',
@@ -1258,7 +1258,7 @@
                     $mdDialog.show({
                         controller: 'InfoDialogController as vm',
                         templateUrl: 'views/info-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         clickOutsideToClose: false,
                         preserveScope: true,
                         autoWrap: true,
@@ -1522,7 +1522,7 @@
                         $mdDialog.show({
                             controller: 'LayoutChangesLossWarningDialogController as vm',
                             templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             preserveScope: true,
                             autoWrap: true,
                             multiple: true,

@@ -589,6 +589,7 @@
             $mdDialog.show({
                 controller: 'AttributesManagerDialogController as vm',
                 templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: ev,
                 multiple: true,
                 locals: {

@@ -309,7 +309,7 @@
                             $mdDialog.show({
                                 controller: 'ReconMatchViewLineDialogController as vm',
                                 templateUrl: 'views/dialogs/reconciliation/recon-match-view-line-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: document.querySelector('.dialog-containers-wrap'),
                                 targetEvent: activeObject.event,
                                 clickOutsideToClose: false,
                                 locals: {

@@ -270,7 +270,7 @@
                         $mdDialog.show({
                             controller: 'ReportViewerMatrixSettingsDialogController as vm',
                             templateUrl: 'views/dialogs/report-viewer-matrix-settings-dialog-view.html',
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             clickOutsideToClose: false,
                             targetEvent: $event,
                             preserveScope: true,
@@ -315,7 +315,7 @@
                     $mdDialog.show({
                         controller: 'ExportPdfDialogController as vm',
                         templateUrl: 'views/dialogs/export-pdf-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             evDataService: scope.evDataService,
@@ -338,7 +338,7 @@
                     $mdDialog.show({
                         controller: 'CustomFieldDialogController as vm',
                         templateUrl: 'views/dialogs/custom-field/custom-field-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         clickOutsideToClose: false,
                         preserveScope: true,
@@ -528,7 +528,7 @@
                     $mdDialog.show({
                         controller: 'GReportSettingsDialogController as vm',
                         templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         multiple: true,
                         locals: {
@@ -562,7 +562,7 @@
                     $mdDialog.show({
                         controller: 'GEntityViewerSettingsDialogController as vm',
                         templateUrl: 'views/dialogs/g-entity-viewer-settings-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             entityViewerDataService: scope.evDataService,
