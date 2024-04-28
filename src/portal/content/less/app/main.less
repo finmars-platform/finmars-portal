@@ -103,7 +103,7 @@ md-toolbar.header {
   // padding-left: 160px;
   //background-color: #4c334d;
   //background-color: #000;
-  z-index: 51;
+  //z-index: 51;
   background: #f2f2f2;
   min-height: 53px;
   height: 53px;
@@ -498,7 +498,8 @@ a.md-button.md-fab,
   background-color: #4c334d;
 }
 
-.md-dialog-container {
+// 2024-04-28 szhitenev z-index reset
+/*.md-dialog-container {
   //z-index: 11000;
   z-index: 51;
 }
@@ -521,7 +522,7 @@ md-backdrop.md-select-backdrop {
 .md-select-menu-container {
   //z-index: 11010;
   z-index: 54;
-}
+}*/
 
 .pickmeup {
   z-index: 55;
@@ -532,9 +533,9 @@ md-backdrop.md-select-backdrop {
   overflow: visible;
 }
 
-.md-dialog-backdrop {
-  display: none;
-}
+//.md-dialog-backdrop {
+//  display: none;
+//}
 
 .md-button.md-fab.md-mini {
   line-height: 1;
@@ -2385,7 +2386,8 @@ md-menu-content.dropdown-buttons-menu {
 
   div.md-dialog-container,
   div.popup-area-backdrop, div.popup-container {
-    z-index: 55;
+    //z-index: 55;
+    z-index: 81;
   }
 
 }
@@ -3065,7 +3067,6 @@ md-tabs [role="tabpanel"] {
 md-checkbox.md-indeterminate .md-icon:after {
   .checkboxUntouched(#ff4081, 12px, -46%, -55%);
 }
-
 
 
 @font-face {
@@ -3877,4 +3878,11 @@ a.finmars-site-link {
       height: 100%;
     }
   }
+}
+
+md-dialog.entity-editor-dialog {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: inherit;
 }

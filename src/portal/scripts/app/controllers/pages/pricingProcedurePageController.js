@@ -47,7 +47,7 @@
             $mdDialog.show({
                 controller: 'PricingProcedureEditDialogController as vm',
                 templateUrl: 'views/dialogs/procedures/pricing-procedure-edit-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 preserveScope: true,
@@ -75,7 +75,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 locals: {
@@ -107,7 +107,7 @@
             $mdDialog.show({
                 controller: 'PricingProcedureAddDialogController as vm',
                 templateUrl: 'views/dialogs/procedures/pricing-procedure-add-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 preserveScope: true,
