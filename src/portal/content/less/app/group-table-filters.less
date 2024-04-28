@@ -287,6 +287,7 @@ md-checkbox.g-filter-options-checkbox {
     //background-color: var(--primary-color);;
     background-color: var(--state-active-background-color);
     &:hover {
+      background-color: var(--state-active-background-color);
       opacity: .9;
     }
   }
@@ -589,13 +590,13 @@ md-checkbox.g-filter-options-checkbox {
   .g-filters {
 
     .md-button.chain-button {
-      color: @orange;
+      color: var(--primary-color);
 
       &.g-use-from-above-filters-hidden {
-        color: @gray;
+        color: var(--secondary-color);
 
         ng-md-icon svg {
-          fill: @gray;
+          fill: var(--secondary-color);
         }
       }
     }

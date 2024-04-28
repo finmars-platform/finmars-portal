@@ -15,15 +15,15 @@
             </div>
             <div class="sidenav-btn-resize-holder">
                 <md-button data-ng-show="vm.sideNavStatus == 'expand'" aria-label="resize"
-                           class="to-small-btn sidenav-btn fab  md-raised"
+                           class="to-small-btn sidenav-btn fab md-raised"
                            data-ng-click="vm.resizeSideNav('collapse')">
-                    <ng-md-icon icon="chevron_left"></ng-md-icon>
+                    <span class="material-icons">chevron_left</span>
                 </md-button>
                 <md-button data-ng-show="vm.sideNavStatus == 'collapse'"
                            aria-label="resize"
-                           class="expand-sidenav-btn sidenav-btn fab  md-raised"
+                           class="expand-sidenav-btn to-small-btn sidenav-btn fab md-raised"
                            data-ng-click="vm.resizeSideNav('expand')">
-                    <ng-md-icon icon="chevron_right"></ng-md-icon>
+                    <span class="material-icons">chevron_right</span>
                 </md-button>
             </div>
         </div>

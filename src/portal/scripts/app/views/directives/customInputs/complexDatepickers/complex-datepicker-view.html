@@ -53,7 +53,7 @@
 
         <div class="flex-column">
 
-            <div class="flex-row m-b-10" style="margin-left: 18px;">
+            <div class="flex-row m-b-10" style="margin-left: 18px; margin-right: 18px;">
 
                 <div class="complex-datepicker-date-input-holder"
                      ng-class="{'expression-mode': datepickerOptions.datepickerMode === 'expression'}">
@@ -64,8 +64,8 @@
                                 class="expression-builder-btn"
                                 ng-click="openEditExpressionDialog($event, 1)"
                                 ng-disabled="dateIsDisabled">
-<!--                            <span class="material-icons">functions</span>-->
-                            <img class="btn-icon" src="portal/content/img/fx-icon.png" alt="fx">
+                            <span class="material-icons">functions</span>
+<!--                            <img class="btn-icon" src="portal/content/img/fx-icon.png" alt="fx">-->
                         </button>
 
                         <date-input model="inputsModels.date"
@@ -95,8 +95,8 @@
                         <button ng-show="modeIsActive(['datepicker', 'expression'])"
                                 class="expression-builder-btn"
                                 ng-click="openEditExpressionDialog($event, 2)">
-<!--                            <span class="material-icons">functions</span>-->
-                            <img class="btn-icon" src="portal/content/img/fx-icon.png" alt="fx">
+                            <span class="material-icons">functions</span>
+<!--                            <img class="btn-icon" src="portal/content/img/fx-icon.png" alt="fx">-->
                         </button>
 
                         <date-input model="inputsModels.secondDate"

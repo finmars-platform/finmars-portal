@@ -106,11 +106,12 @@
 //<editor-fold desc="Complex datepicker">
 .complex-datepicker {
   width: 562px;
+  background-color: var(--page-background-color);
 
   .complex-datepicker-left {
     padding-top: 5px;
     width: 228px;
-    border-right: solid 2px @borderPale;
+    border-right: solid 2px var(--table-border-color);
     box-sizing: border-box;
 
     .complex-datepicker-mode-container {
@@ -125,14 +126,15 @@
       cursor: pointer;
 
       &.active {
-        border-left-color: @orange;
-        border-top-color: @borderPale;
-        border-bottom-color: @borderPale;
-        background-color: #f2f2f2;
+        border-left-color: var(--primary-color);
+        border-top-color: var(--table-border-color);
+        border-bottom-color: var(--table-border-color);
+        background-color: var(--state-active-background-color);
+        color: var(--secondary-color);
       }
 
       &:hover {
-        background-color: #f2f2f2;
+        background-color: var(--state-active-background-color);
       }
 
       &:focus {
@@ -150,7 +152,8 @@
 
   .complex-datepicker-date-input-holder {
     position: relative;
-    width: 145px;
+    //width: 145px;
+    width: 100%;
     padding-top: 6px;
 
     .expression-builder-btn {
@@ -161,14 +164,17 @@
       min-height: 24px;
       padding: 0;
       margin: 0;
-      top: 8px;
-      left: 0;
-      fill: #7d7d7d;
-      color: #7d7d7d;
+      top: 14px;
+      left: 4px;
+      fill: var(--secondary-color);
+      color: var(--secondary-color);
       z-index: 1;
 
       &:disabled {
         opacity: .5;
+      }
+      &:hover {
+        opacity: .8;
       }
 
       img.btn-icon {
@@ -249,7 +255,7 @@
 .datepicker-container {
 
   .pickmeup {
-    background: #fff;
+    background: var(--page-background-color);
 
     .pmu-instance {
       // width: 340px;
@@ -258,11 +264,11 @@
       padding: 8px 0;
 
       .pmu-today {
-        background-color: #fff;
+        background-color: var(--page-background-color);
       }
 
       .pmu-button {
-        color: @gray;
+        color: var(--secondary-color);
       }
 
       .pmu-months, .pmu-years {
@@ -275,8 +281,8 @@
           color: var(--secondary-color);
 
           &.pmu-selected {
-            background-color: @orange;
-            color: #fff;
+            background-color: var(--primary-color);
+            color: var(--on-primary-color);
 
             &:hover {
               opacity: .5;
@@ -284,17 +290,17 @@
           }
 
           &:not(.pmu-selected):hover {
-            background-color: @paleOrange;
+            background-color: var(--state-active-background-color);
           }
         }
       }
 
       .pmu-day-of-week {
         padding: 0 13px;
-        border-bottom: 2px solid @borderPale;
+        border-bottom: 2px solid var(--table-border-color);
 
         & > div {
-          color: @gray;
+          color: var(--secondary-color);
           width: 44px;
         }
       }
@@ -320,7 +326,7 @@
           }
 
           &.pmu-selected {
-            background: @orange;
+            background: var(--state-active-background-color);
             color: #fff;
           }
 
@@ -330,14 +336,14 @@
           } */
 
           &:not(.pmu-selected):hover {
-            background-color: @paleOrange;
+            background-color: var(--state-active-background-color);
           }
         }
 
       }
 
       .ax_default {
-        color: #333333;
+        color: var(--secondary-color);
       }
 
     }
@@ -353,7 +359,7 @@
         box-sizing: content-box;
 
         &:hover {
-          color: @orange;
+          color: var(--primary-color);
         }
       }
 
@@ -368,7 +374,7 @@
         margin: 0 16px;
 
         &:hover {
-          color: @orange;
+          color: var(--primary-color);
         }
 
       }
@@ -381,7 +387,7 @@
         box-sizing: content-box;
 
         &:hover {
-          color: @orange;
+          color: var(--primary-color);
         }
       }
 
@@ -427,7 +433,7 @@
         .pmu-button.pmu-selected:not(.custom-pmu-date-from-to) {
 
           &.custom-pmu-date-from {
-            background-color: @orange;
+            background-color: var(--state-active-background-color);
             /*border-top-left-radius: 100%;
             border-bottom-left-radius: 100%;*/
             border-top-right-radius: 0;
@@ -436,7 +442,7 @@
           }
 
           &.custom-pmu-date-to {
-            background-color: @orange;
+            background-color:var(--state-active-background-color);
             /*border-top-right-radius: 100%;
             border-bottom-right-radius: 100%;*/
             border-top-left-radius: 0;
@@ -450,7 +456,7 @@
 
           &.custom-pmu-day-in-range {
             width: 44px;
-            background-color: #fcd7ca;
+            background-color: var(--state-active-background-color);
             border-radius: 0;
             margin-right: 0;
             margin-left: 0;

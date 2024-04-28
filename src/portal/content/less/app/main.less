@@ -73,10 +73,23 @@ md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolb
   background: var(--page-background-color);
 }
 
+.md-button.md-default-theme:not([disabled]).md-focused, .md-button:not([disabled]).md-focused, .md-button.md-default-theme:not([disabled]):hover, .md-button:not([disabled]):hover {
+  background: var(--state-active-background-color);
+}
+
 input {
   color: var(--secondary-color);
   border: 1px solid var(--table-border-color);
   background: var(--page-background-color);
+}
+
+::placeholder {
+  color: var(--secondary-color);
+  opacity: 1; /* Firefox */
+}
+
+::-ms-input-placeholder { /* Edge 12 -18 */
+  color: var(--secondary-color);
 }
 
 ::-webkit-resizer {
@@ -93,6 +106,10 @@ input {
 
 ::-webkit-scrollbar-thumb {
   background: var(--table-border-color);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--card-background-color);
 }
 
 md-tabs.md-default-theme .md-tab, md-tabs .md-tab {
@@ -130,6 +147,53 @@ button {
   &:focus {
     outline: none;
   }
+}
+
+md-select.md-default-theme[disabled] .md-select-icon, md-select[disabled] .md-select-icon, md-select.md-default-theme[disabled] .md-select-value, md-select[disabled] .md-select-value, md-select.md-default-theme[disabled] .md-select-value.md-select-placeholder, md-select[disabled] .md-select-value.md-select-placeholder {
+  color: var(--secondary-color);
+  opacity: .8;
+}
+
+md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md-select-value.md-select-placeholder {
+  color: var(--secondary-color);
+  opacity: .9;
+}
+
+md-select-menu:not(.md-overflow) md-content {
+  background-color: var(--dropdown-background-color);
+}
+
+md-select-menu.md-default-theme md-content md-option[selected], md-select-menu md-content md-option[selected] {
+  background: var(--state-active-background-color);
+  color: var(--secondary-color);
+}
+
+md-select-menu.md-default-theme md-content md-option:not([disabled]):focus, md-select-menu md-content md-option:not([disabled]):focus, md-select-menu.md-default-theme md-content md-option:not([disabled]):hover, md-select-menu md-content md-option:not([disabled]):hover {
+  background: var(--state-active-background-color);
+  color: var(--secondary-color);
+}
+
+md-select.md-default-theme .md-select-icon, md-select .md-select-icon {
+  color: var(--secondary-color);
+}
+
+md-select.md-default-theme:not([disabled]):focus .md-select-value, md-select:not([disabled]):focus .md-select-value {
+  color: var(--secondary-color);
+  border-bottom-color: var(--secondary-color);
+}
+
+md-select-menu.md-default-theme md-content md-option, md-select-menu md-content md-option {
+  color: var(--secondary-color);
+  background-color: var(--dropdown-background-color);
+}
+
+
+md-checkbox.md-default-theme:not(.md-checked) .md-icon, md-checkbox:not(.md-checked) .md-icon {
+  border-color: var(--table-border-color);
+}
+
+select, button, textarea, input {
+  background-color: var(--page-background-color);
 }
 
 .md-button.md-fab {
@@ -348,7 +412,8 @@ md-sidenav {
   top: -5px;
   right: -200px;
   padding-left: 0;
-  border-top: 5px solid transparent; // makes mouseover to submenu easier
+  //border-top: 5px solid transparent; // makes mouseover to submenu easier
+  border: 1px solid var(--table-border-color);
   z-index: 1;
 
   .sidenav-dropdown-menu-btn {
@@ -1103,8 +1168,9 @@ md-menu-bar.header-logout-menu {
     position: relative;
     width: 200px;
     height: 100%;
-    border-top: 2px solid var(--table-border-color);
-    border-left: 2px solid var(--table-border-color);
+    border-top: 1px solid var(--table-border-color);
+    border-left: 1px solid var(--table-border-color);
+    border-right: 1px solid var(--table-border-color);
     box-sizing: border-box;
   }
 
@@ -1599,19 +1665,19 @@ mdp-time-picker.custom-time-picker {
   width: 100%;
   height: 100%;
   text-align: center;
-  color: #666666;
+  color: var(--secondary-color);
   padding-top: 40px;
 
   ng-md-icon {
     opacity: 0.5;
-    color: #666666;
+    color: var(--secondary-color);
   }
 
   h3 {
     width: 400px;
     margin: 15px auto;
     opacity: 0.5;
-    color: #666666;
+    color: var(--secondary-color);
   }
 }
 
@@ -2401,7 +2467,7 @@ md-menu-content.dropdown-buttons-menu {
   width: 300px;
   outline: none;
   border: none;
-  border-bottom: 2px solid #666666;
+  border-bottom: 2px solid var(--secondary-color);
   margin-bottom: 25px;
   margin-left: 7px;
   background-color: transparent;
@@ -3452,7 +3518,7 @@ button.missing-prices-warning-button.md-button {
 
 .complex-datepicker-popup-footer {
   height: 60px;
-  border-top: solid 2px @borderPale;
+  border-top: solid 2px var(--table-border-color);
   box-sizing: border-box;
 }
 
