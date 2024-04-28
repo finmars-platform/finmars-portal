@@ -23,10 +23,10 @@
                     <md-tooltip data-md-direction="top"> Warning ({{missingPricesData.items.length}})</md-tooltip>
                 </md-button>
 
-                <md-button class="md-button dashboard-component-settings-btn dashboard-comp-h-btn"
+                <md-button class="md-button dashboard-component-settings-btn icon-button-small dashboard-comp-h-btn"
                            aria-label="dashboard component settings btn"
                            data-ng-click="openComponentSettingsDialog($event)">
-                    <ng-md-icon size="20" icon="settings"></ng-md-icon>
+                    <span class="material-icons">settings</span>
                     <md-tooltip md-direction="top">Edit component settings</md-tooltip>
                 </md-button>
 
@@ -39,7 +39,7 @@
             <div data-ng-if="readyStatus.data == 'processing'"
                  class="dashboard-recalculate-loader-holder">
                 <div layout="row" layout-sm="column" layout-align="space-around" class="dashboard-component-loader">
-                    <progress-circular diameter="40"></progress-circular>
+                    <progress-circular diameter="50"></progress-circular>
                 </div>
             </div>
 

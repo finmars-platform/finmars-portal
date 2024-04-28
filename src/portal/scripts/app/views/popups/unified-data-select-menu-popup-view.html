@@ -13,7 +13,7 @@
                 <div
                         data-ng-repeat="option in popupData.localItems"
                         data-ng-click="popupData.selectLocalItem(option)"
-                        class="unified-data-select-input-sel-option"
+                        class="unified-data-select-input-sel-option md-select-option"
                 >
 
                     <div class="unified-data-select-name text-overflow-ellipsis" data-ng-bind-html="popupData.getHighlighted(option.name)"></div>
@@ -35,7 +35,7 @@
                 <div
                         data-ng-repeat="option in popupData.databaseItems"
                         data-ng-click="popupData.selectDatabaseItem(option)"
-                        class="unified-data-select-input-sel-option"
+                        class="unified-data-select-input-sel-option md-select-option"
                 >
 
                     <div class="unified-data-select-name text-overflow-ellipsis" data-ng-bind-html="popupData.getHighlighted(option.name)"></div>
@@ -66,7 +66,7 @@
              layout-sm="column"
              layout-align="center center"
              style="padding-top: 25px;">
-            <progress-circular data-diameter="50"></progress-circular>
+            <progress-circular data-diameter="30"></progress-circular>
         </div>
 
     </div>

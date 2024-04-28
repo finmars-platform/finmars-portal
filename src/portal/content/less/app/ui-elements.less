@@ -1,5 +1,4 @@
 
-
 .cancel-small-btn {
   min-width: 24px;
   width: 24px;
@@ -143,5 +142,46 @@ span.material-icons.unread-notifications {
     height: 40px;
     display: flex;
     justify-content: center;
+  }
+}
+
+// 2024-04-28 szhitenev, unified styles for dropdown select option
+.popup-menu-item, .md-select-option, .instrument-select-input-sel-option {
+  min-height: 2rem;
+  color: var(--secondary-color);
+  text-align: left;
+  display: flex;
+  align-items: center;
+  border-radius: 0;
+  font-size: 15px;
+  text-transform: none;
+  font-weight: 400;
+  margin: auto 0;
+  padding: 6px 16px;
+  width: 100%;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--state-active-background-color);
+  }
+}
+
+.custom-input-sel-menu-block .custom-input-sel-option {
+  min-height: 2rem;
+  color: var(--secondary-color);
+  text-align: left;
+  display: flex;
+  align-items: center;
+  border-radius: 0;
+  font-size: 15px;
+  text-transform: none;
+  font-weight: 400;
+  margin: auto 0;
+  padding: 6px 16px;
+  width: 100%;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--state-active-background-color);
   }
 }
