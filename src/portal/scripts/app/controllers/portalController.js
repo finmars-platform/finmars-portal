@@ -73,6 +73,10 @@ export default function ($scope, $state, authorizerService, usersService, global
                     globalDataService.disableThemeDarkMode()
                     // Light mode preferred
                 }
+            } else if (memberLayout.data.isThemeInDarkMode === true) {
+                globalDataService.enableThemeDarkMode()
+            } else {
+                globalDataService.disableThemeDarkMode()
             }
 
             // memberLayout.data.theme = 'com.finmars.default-theme' // for debug

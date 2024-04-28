@@ -338,24 +338,24 @@
                                     <span>Add Relation Control</span>
                                 </md-button>
                             </md-menu-item>
-<!--                            <md-menu-item>-->
-<!--                                <md-button ng-click="vm.createComponent('control', $event)"-->
-<!--                                           class="g-settings-option-btn">-->
-<!--                                    <span>Add Control (Deprecated)</span>-->
-<!--                                </md-button>-->
-<!--                            </md-menu-item>-->
+                            <!--                            <md-menu-item>-->
+                            <!--                                <md-button ng-click="vm.createComponent('control', $event)"-->
+                            <!--                                           class="g-settings-option-btn">-->
+                            <!--                                    <span>Add Control (Deprecated)</span>-->
+                            <!--                                </md-button>-->
+                            <!--                            </md-menu-item>-->
                             <md-menu-item>
                                 <md-button ng-click="vm.createComponent('button_set', $event)"
                                            class="g-settings-option-btn">
                                     <span>Add Button set</span>
                                 </md-button>
                             </md-menu-item>
-<!--                            <md-menu-item>-->
-<!--                                <md-button ng-click="vm.createComponent('input_form', $event)"-->
-<!--                                           class="g-settings-option-btn disabled-btn">-->
-<!--                                    <span>Add Input Form</span>-->
-<!--                                </md-button>-->
-<!--                            </md-menu-item>-->
+                            <!--                            <md-menu-item>-->
+                            <!--                                <md-button ng-click="vm.createComponent('input_form', $event)"-->
+                            <!--                                           class="g-settings-option-btn disabled-btn">-->
+                            <!--                                    <span>Add Input Form</span>-->
+                            <!--                                </md-button>-->
+                            <!--                            </md-menu-item>-->
                             <md-menu-item>
                                 <md-button ng-click="vm.createComponent('report_viewer', $event)"
                                            class="g-settings-option-btn">
@@ -368,37 +368,37 @@
                                     <span>Report Viewer Matrix</span>
                                 </md-button>
                             </md-menu-item>
-<!--                            <md-menu-item>-->
-<!--                                <md-button ng-click="vm.createComponent('entity_viewer', $event)"-->
-<!--                                           class="g-settings-option-btn disabled-btn">-->
-<!--                                    <span>Entity Viewer</span>-->
-<!--                                </md-button>-->
-<!--                            </md-menu-item>-->
-<!--                            <md-menu-item>-->
-<!--                                <md-button ng-click="vm.createComponent('entity_viewer_split_panel', $event)"-->
-<!--                                           class="g-settings-option-btn disabled-btn">-->
-<!--                                    <span>Entity Viewer Split Panel</span>-->
-<!--                                </md-button>-->
-<!--                            </md-menu-item>-->
-<!--                            <md-menu-item>-->
-<!--                                <md-button ng-click="vm.importComponent('entity_viewer_split_panel', $event)"-->
-<!--                                           class="g-settings-option-btn">-->
-<!--                                    <span>Import from another dashboard</span>-->
-<!--                                </md-button>-->
-<!--                            </md-menu-item>-->
+                            <!--                            <md-menu-item>-->
+                            <!--                                <md-button ng-click="vm.createComponent('entity_viewer', $event)"-->
+                            <!--                                           class="g-settings-option-btn disabled-btn">-->
+                            <!--                                    <span>Entity Viewer</span>-->
+                            <!--                                </md-button>-->
+                            <!--                            </md-menu-item>-->
+                            <!--                            <md-menu-item>-->
+                            <!--                                <md-button ng-click="vm.createComponent('entity_viewer_split_panel', $event)"-->
+                            <!--                                           class="g-settings-option-btn disabled-btn">-->
+                            <!--                                    <span>Entity Viewer Split Panel</span>-->
+                            <!--                                </md-button>-->
+                            <!--                            </md-menu-item>-->
+                            <!--                            <md-menu-item>-->
+                            <!--                                <md-button ng-click="vm.importComponent('entity_viewer_split_panel', $event)"-->
+                            <!--                                           class="g-settings-option-btn">-->
+                            <!--                                    <span>Import from another dashboard</span>-->
+                            <!--                                </md-button>-->
+                            <!--                            </md-menu-item>-->
 
-<!--                            <md-menu-item>-->
-<!--                                <md-button ng-click="vm.createComponent('superset_dashboard', $event)"-->
-<!--                                           class="g-settings-option-btn">-->
-<!--                                    <span>Superset Dashboard</span>-->
-<!--                                </md-button>-->
-<!--                            </md-menu-item>-->
-<!--                            <md-menu-item>-->
-<!--                                <md-button ng-click="vm.createComponent('finmars_widget', $event)"-->
-<!--                                           class="g-settings-option-btn">-->
-<!--                                    <span>Finmars Widget</span>-->
-<!--                                </md-button>-->
-<!--                            </md-menu-item>-->
+                            <!--                            <md-menu-item>-->
+                            <!--                                <md-button ng-click="vm.createComponent('superset_dashboard', $event)"-->
+                            <!--                                           class="g-settings-option-btn">-->
+                            <!--                                    <span>Superset Dashboard</span>-->
+                            <!--                                </md-button>-->
+                            <!--                            </md-menu-item>-->
+                            <!--                            <md-menu-item>-->
+                            <!--                                <md-button ng-click="vm.createComponent('finmars_widget', $event)"-->
+                            <!--                                           class="g-settings-option-btn">-->
+                            <!--                                    <span>Finmars Widget</span>-->
+                            <!--                                </md-button>-->
+                            <!--                            </md-menu-item>-->
                             <md-menu-item>
                                 <md-button ng-click="vm.createComponent('apex_chart', $event)"
                                            class="g-settings-option-btn">
@@ -458,7 +458,7 @@
 
                     <div layout="row">
 
-                        <md-button ng-click="vm.goToDashboard($event)" class="outline-button">
+                        <md-button ng-click="vm.goToDashboard($event)" class="link-button">
                             Go to Dashboard
                         </md-button>
 
@@ -476,7 +476,7 @@
 
                     <md-button ng-click="vm.saveLayout()"
                                ng-class="{'disabled-btn': !vm.layout.name || (vm.layout.sourced_from_global_layout && !vm.layout.origin_for_global_layout)}"
-                               class="outline-button">
+                               class="md-raised md-primary">
                         Save
                     </md-button>
 
