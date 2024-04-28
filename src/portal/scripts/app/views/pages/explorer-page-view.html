@@ -3,7 +3,7 @@
     <div class="explorer-explorer-section ">
 
         <div layout="row">
-            <h1 style="margin-top: 5px; font-family: 'Roboto Light'; font-size: 20px">Explorer</h1>
+            <h1 style="margin-top: 5px; font-size: 20px">Explorer</h1>
 
             <md-button data-ng-class="{'disabled-btn': vm.processing}"
                        data-ng-click="vm.listFiles()"
@@ -385,10 +385,12 @@
                         <div layout="row" class="explorer-file-edit-section-toolbar" layout-align="space-between">
 
                             <div layout="row">
-                                <md-button class="outline-button" data-ng-click="vm.saveFileEditor($event)" layout="row"
-                                           layout-align="center">Save
+                                <md-button class="outline-button" style="align-items: center" data-ng-click="vm.saveFileEditor($event)" layout="row"
+                                           layout-align="center">
+
+                                    Save
                                     <div layout="row" layout-sm="column" layout-align="space-around"
-                                         style="margin-left: 4px; padding-top: 10px;"
+                                         style="margin-left: 4px;"
                                          data-ng-if="vm.fileSaveProcessing">
                                         <progress-circular diameter="10"></progress-circular>
                                     </div>

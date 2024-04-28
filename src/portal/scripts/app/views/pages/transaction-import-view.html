@@ -53,7 +53,7 @@
             <div class="input-upload-file-container">
                 <p class="importDataUploadInput">Entity</p>
                 <label for="importDataUploadInput" class="md-button md-raised md-primary IFUlabel">
-                    <span>BROWSE...</span></label>
+                    <span>Browse</span></label>
             </div>
         </div>
 
@@ -75,13 +75,12 @@
             <md-button
                     class="link-button {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
                     data-ng-click="vm.validateImport($event)">
-                VALIDATE
+                Validate
             </md-button>
             <md-button
-                    style="font-size: 8px;"
                     class="md-raised import-button {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"
                     data-ng-click="vm.startImport($event)">
-                IMPORT
+                Import
             </md-button>
 
         </div>
@@ -89,7 +88,6 @@
         <!--        <div layout="row" layout-align="end center" class="m-t-8">-->
 
         <!--            <md-button-->
-        <!--                    style="font-size: 8px;"-->
         <!--                    class="md-raised import-button {{vm.loadIsAvailable() ? '' : 'disabled-btn' }}"-->
         <!--                    data-ng-click="vm.preprocessFile($event)">-->
         <!--                Preprocess only-->
