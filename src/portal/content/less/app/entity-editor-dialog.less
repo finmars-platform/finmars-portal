@@ -50,7 +50,8 @@
 
   .dropdown-input-container {
     .custom-input-side-items {
-      background-color: #fff7e1;
+      //background-color: #fff7e1;
+      background-color: transparent;
     }
   }
 
@@ -116,7 +117,7 @@
   }
 
   md-input-container.md-default-theme .md-input, md-input-container .md-input {
-    border-color: #4C334D;
+    border-color: var(--table-border-color);
   }
 
   md-input-container.md-default-theme .md-input, md-input-container .md-input.negative-red {
@@ -233,7 +234,7 @@
   div {
     width: 100%;
     height: 4px;
-    background: #4C334D;
+    background: var(--table-border-color);
     margin-top: 5px;
   }
 
@@ -243,7 +244,8 @@
 .tabs-colored {
   md-tabs-wrapper {
     //background-color: #f5f5f5;
-    background-color: #eff4f7;
+    //background-color: #eff4f7;
+    background-color: var(--page-background-color);
   }
 
   md-tab-item {
@@ -256,13 +258,17 @@
   }
 
   .md-tab.md-active {
-    color: #f05a22;
-    font-weight: bold;
+    //color: var(--primary-color);;
+    color: var(--secondary-color);
+    background: var(--state-active-background-color);
+    //border: 1px solid var(--card-border-color);
+    font-weight: 500;
   }
 
   md-ink-bar {
-    color: #f05a22;
-    background-color: #f05a22;
+    //color: var(--primary-color);;
+    //background-color: var(--primary-color);;
+    display: none;
   }
 }
 
@@ -278,17 +284,19 @@
     margin-top: 5px;
 
     &.error-tab {
-      fill: #fa393e;
+      fill: var(--color-error);;
     }
   }
 
   &.active {
-    color: #f05a22;
-    border-bottom: 2px solid #f05a22;
+    //color: var(--primary-color);;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
     box-sizing: border-box;
 
     ng-md-icon svg {
-      fill: #f05a22;
+      //fill: var(--primary-color);;
+      fill: var(--primary-color);
     }
   }
 
@@ -297,7 +305,8 @@
     position: absolute;
     top: 4px;
     right: 4px;
-    color: @orange;
+    //color: @orange;
+    color: var(--primary-color);
 
     .material-icons {
       font-size: 16px;
@@ -310,7 +319,7 @@
 .entity-tabs-menu.error-tab {
 
   button.entity-tabs-menu-btn {
-    fill: #fa393e;
+    fill: var(--color-error);;
   }
 
   .tabs-menu-error-icon {
@@ -322,7 +331,7 @@
 // }
 
 .universal-editor-menu-content .active-tab-button {
-  border-left: 5px solid #f05a22;
+  border-left: 5px solid var(--primary-color);;
 }
 
 .universal-editor-menu-content.optional-entity-menu {
@@ -332,10 +341,10 @@
   }
 
   .color-delete {
-    color: #f05a22;
+    color: var(--primary-color);;
 
     ng-md-icon svg {
-      fill: #f05a22;
+      fill: var(--primary-color);;
     }
   }
 
@@ -353,7 +362,7 @@
     }
 
     &.error-menu-option {
-      color: #fa393e;
+      color: var(--color-error);;
     }
 
     .tab-option-error-icon {

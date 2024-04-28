@@ -3,6 +3,12 @@
         <div class="md-toolbar-tools">
             <div class="sidenav-logo-wrapper">
                 <img src="portal/content/img/logo.png"
+                     data-ng-if="!vm.isThemeInDarkMode()"
+                     alt=""
+                     height="40"
+                     class="sidenav-logo">
+                <img src="portal/content/img/logo-dark.png"
+                     data-ng-if="vm.isThemeInDarkMode()"
                      alt=""
                      height="40"
                      class="sidenav-logo">

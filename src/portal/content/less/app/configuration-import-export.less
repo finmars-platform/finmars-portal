@@ -97,14 +97,17 @@
     min-width: 120px;
     margin: 16px auto 0;
     box-shadow: none;
+    color: var(--on-primary-color);
 
     label.IFUlabel.md-button.md-primary.md-raised {
       padding: 0;
       width: 120px;
-      background: rgba(240, 90, 34, 1);
+      //background: var(--primary-color);
+      background: var(--primary-color);
 
       &:hover {
-        background: rgba(240, 90, 34, 1);
+        //background: var(--primary-color);
+        background: var(--primary-color);
         opacity: .7;
       }
     }
@@ -115,18 +118,18 @@
 .import-configuration-page-mode-settings {
   font-size: 14px;
   margin-right: 40px;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
+  border-top: 1px solid var(--secondary-color);
+  border-bottom: 1px solid var(--secondary-color);
   padding: 20px 0;
   width: 600px;
   margin-top: 16px;
 }
 
 .start-import-button.md-button.md-primary.md-raised {
-  background: rgba(240, 90, 34, 1);
+  background: var(--primary-color);
 
   &:hover {
-    background: rgba(240, 90, 34, 1);
+    background: var(--primary-color);
     opacity: .7;
   }
 }
@@ -156,7 +159,7 @@
 
 .import-configuration-page-progress-container {
   background: #fff;
-  border: 1px solid #ddd;
+  border: 1px solid var(--table-border-color);
   margin: 24px;
   width: 680px;
   height: 187px;
@@ -170,7 +173,7 @@
 
 .import-configuration-page-complete-container, .import-configuration-page-error-container {
   background: #fff;
-  border: 1px solid #ddd;
+  border: 1px solid var(--table-border-color);
   margin: 24px;
   width: 680px;
   height: 140px;

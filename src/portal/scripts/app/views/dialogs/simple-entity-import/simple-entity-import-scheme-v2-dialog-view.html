@@ -11,7 +11,7 @@
             </div>
         </div>
     </md-toolbar>
-    <md-dialog-content style="background: #E5E5E5;">
+    <md-dialog-content>
         <md-content class="height-100">
 
             <div data-ng-if="vm.checkReadyStatus()" class="position-relative height-100">
@@ -459,20 +459,20 @@
         </md-content>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button class="md-raised" ng-click="vm.editAsJson($event)">
+        <md-button class="outline-button" ng-click="vm.editAsJson($event)">
             Edit as JSON
         </md-button>
-        <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
+        <md-button class="outline-button" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
                    data-ng-if="vm.scheme.id">
             Make a copy
         </md-button>
-        <md-button class="md-raised" ng-click="vm.cancel()">
+        <md-button class="link-button" ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;"
+        <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;"
                    data-ng-class="{'disabled-btn': vm.processing}">
             <span data-ng-if="!vm.scheme.id">Create</span>
-            <span data-ng-if="vm.scheme.id">Update</span>
+            <span data-ng-if="vm.scheme.id">Save</span>
         </md-button>
     </md-dialog-actions>
 </md-dialog>

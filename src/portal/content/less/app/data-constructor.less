@@ -232,7 +232,8 @@ bind-field-control {
 }
 
 textarea.bordered {
-  border: 1px solid #4C334D;
+  //border: 1px solid #4C334D;
+  border: 1px solid var(--table-border-color);
   position: relative;
   width: 98%;
 }
@@ -303,8 +304,9 @@ md-checkbox.checkbox-bind-field {
       width: 100%;
       //top: 50%;
       height: 2px;
-      //background: #4C334D;
-      background: #e0e0e0;
+      //background: var(--page-background-color);
+      //background: #e0e0e0;
+      background: var(--table-border-color);
       display: block;
       margin: 15px 0 30px;
     }
@@ -337,7 +339,7 @@ md-checkbox.checkbox-bind-field {
         width: 100%;
         top: 50%;
         height: 4px;
-        background: #4C334D;
+        background: var(--page-background-color);
         display: block;
       }*/
     }
@@ -347,7 +349,7 @@ md-checkbox.checkbox-bind-field {
 .field-date-pick {
   .md-button {
     /*padding: 0;
-    background: #4C334D;
+    background: var(--page-background-color);
     color: #fff;
     font-size: 9px;
     min-height: 0;
@@ -355,7 +357,7 @@ md-checkbox.checkbox-bind-field {
     line-height: initial;*/
 
     &:hover {
-      background: #4C334D;
+      //background: var(--page-background-color);
       opacity: .9;
     }
   }
@@ -498,12 +500,12 @@ button.ec-manage-row-btn {
   fill: #fff;
   font-size: 9px;
   border-radius: 50%;
-  background: #4C334D;
+  //background: var(--page-background-color);
   margin: 0 4px 0 0;
   line-height: initial;
 
   &:not([disabled]):hover {
-    background: #4C334D;
+    //background: var(--page-background-color);
     opacity: 0.8;
   }
 }
