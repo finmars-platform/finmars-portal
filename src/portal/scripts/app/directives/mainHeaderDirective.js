@@ -42,6 +42,13 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
                 scope.isThemeInDarkMode = globalDataService.isThemeInDarkMode(); // to update title in the switcher
 
+                const memberLayout = globalDataService.getMemberLayout();
+                memberLayout.data.isThemeInDarkMode = scope.isThemeInDarkMode;
+
+                uiService.updateMemberLayout(memberLayout.id, memberLayout).then(() => {
+
+                });
+
             }
 
             scope.showAutosaveLayout = false;
