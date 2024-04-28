@@ -28,6 +28,22 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
             scope.currentMasterUser = globalDataService.getMasterUser();
             scope.userName = '';
 
+            scope.isThemeInDarkMode = globalDataService.isThemeInDarkMode();
+
+            scope.toggleDarkMode = function () {
+
+                scope.isThemeInDarkMode = globalDataService.isThemeInDarkMode()
+
+                if (scope.isThemeInDarkMode) {
+                    globalDataService.disableThemeDarkMode()
+                } else {
+                    globalDataService.enableThemeDarkMode();
+                }
+
+                scope.isThemeInDarkMode = globalDataService.isThemeInDarkMode(); // to update title in the switcher
+
+            }
+
             scope.showAutosaveLayout = false;
 
             scope.member = globalDataService.getMember();

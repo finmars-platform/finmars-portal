@@ -624,11 +624,17 @@
                 templateUrl: 'views/dialogs/create-folder-dialog-view.html',
                 parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
+                preserveScope: true,
+                multiple: true,
+                autoWrap: true,
+                skipHide: true,
                 locals: {
                     data: {}
                 }
 
             }).then(function (res) {
+
+                console.log('res', res);
 
                 if (res.status === 'agree') {
 

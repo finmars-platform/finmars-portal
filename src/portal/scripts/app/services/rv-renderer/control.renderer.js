@@ -89,7 +89,7 @@
                                 front-line-default
                                 back-line-default"
 
-                         style="border-top-color: #F05A22; border-right-color: #F05A22"
+                         style="border-top-color: var(--primary-color); border-right-color: #F05A22"
                     ></div>
                 
                 </div>

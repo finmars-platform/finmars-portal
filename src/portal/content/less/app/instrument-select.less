@@ -5,7 +5,7 @@
   }
 
   .control-button {
-    color: #f05a22;
+    color: var(--primary-color);;
     margin: 2px;
     height: 29px;
     border: 0;
@@ -20,7 +20,7 @@
   }
 
   span.highlight {
-    color: #F05A22;
+    color: var(--primary-color);
     font-weight: bold;
   }
 
@@ -55,7 +55,7 @@
   width: 100%;
 
   span.highlight {
-    color: #F05A22;
+    color: var(--primary-color);
     font-weight: bold;
   }
 
@@ -155,7 +155,7 @@ instrument-select {
 
 .instrument-select-option-detail-label {
   font-size: 12px;
-  color: #747474;
+  color: var(--secondary-color);
 }
 
 .instrument-select-option-detail-value {
@@ -190,21 +190,21 @@ instrument-select {
   height: 47px;
   box-sizing: border-box;
   padding: 0 10px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid var(--secondary-color);
 
   &.active {
-    color: #F05A22;
+    color: var(--primary-color);
 
     .instrument-select-instrument-name {
-      color: #F05A22;
+      color: var(--primary-color);
     }
 
     .instrument-select-instrument-isin {
-      color: #F05A22;
+      color: var(--primary-color);
     }
 
     .instrument-select-instrument-type {
-      color: #F05A22;
+      color: var(--primary-color);
     }
 
   }
@@ -268,7 +268,7 @@ instrument-select {
   background: #F6F6F6;
   z-index: 52;
   box-shadow: none;
-  border: 1px solid #ddd;
+  border: 1px solid var(--table-border-color);
   padding: 11px 16px 2px;
   box-sizing: border-box;
 }
@@ -282,15 +282,15 @@ instrument-select {
   box-sizing: border-box;
   height: 56px;
   padding-top: 13px;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
+  border-top: 1px solid var(--secondary-color);
+  border-bottom: 1px solid var(--secondary-color);
 }
 
 .instrument-select-database-dialog-view {
 
   md-toolbar-tools {
     h2 {
-      color: #000;
+      color: var(--secondary-color);
       //font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
       font-weight: 500;
       font-style: normal;
@@ -313,7 +313,7 @@ instrument-select {
   .instrument-select-options-group-title {
     font-size: 14px;
     letter-spacing: normal;
-    color: #333;
+    color: var(--secondary-color);
     display: block;
     /* margin: 8px; */
     padding-left: 10px;
@@ -339,7 +339,7 @@ instrument-select {
   width: 200px;
   text-align: left;
   padding-top: 12px;
-  color: #f05a22;
+  color: var(--primary-color);;
 
   span {
     cursor: pointer;
