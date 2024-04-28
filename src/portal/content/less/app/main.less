@@ -6,7 +6,7 @@ iframe {
 
 body {
   // font-family: 'Roboto-Regular', 'Roboto', sans-serif;
-  font-family: 'Roboto', sans-serif;
+  //font-family: 'Roboto', sans-serif;
   color: @text;
 }
 
@@ -130,7 +130,7 @@ md-toolbar.header {
 
     .current-location-title {
       text-transform: capitalize;
-      font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
+      //font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
       font-weight: 500;
       font-style: normal;
       letter-spacing: 0.4px;
@@ -201,7 +201,7 @@ md-sidenav {
   fill: #737373;
   overflow: visible;
 
-  font-family: 'Roboto-Regular', 'Roboto', sans-serif;
+  //font-family: 'Roboto-Regular', 'Roboto', sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 12px;
@@ -599,7 +599,7 @@ md-backdrop.md-select-backdrop {
     margin-left: 8px;
     font-size: 14px;
     //color: #ffffff;
-    font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
+    //font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
     font-weight: 500;
     font-style: normal;
     color: #747474;
@@ -1195,7 +1195,7 @@ h3.toolbar-layout-info {
   //left: 260px;
   left: 515px;
 
-  font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
+  //font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
   font-weight: 500;
   font-style: normal;
   letter-spacing: 0.4px;
@@ -1927,13 +1927,14 @@ md-menu-content md-menu.md-menu {
   }
 }
 
-.IFUlabel {
+.IFUlabel.md-button.md-primary {
   display: block;
   float: right;
   height: 36px;
   border-radius: 5px;
   margin: 0;
   padding-left: 35px;
+  line-height: 2.5;
 
   ng-md-icon {
     position: absolute;
@@ -2161,7 +2162,7 @@ div.header-masteruser {
 }
 
 .header-masteruser-name {
-  font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
+  //font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
   font-weight: 500;
   font-style: normal;
   color: #747474;
@@ -3065,77 +3066,7 @@ md-checkbox.md-indeterminate .md-icon:after {
   .checkboxUntouched(#ff4081, 12px, -46%, -55%);
 }
 
-.md-button.primary-button {
-  padding: 0 15px;
 
-  font-weight: 700;
-  color: #fff;
-  background-color: #f05a22;
-
-  border-radius: 3px;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
-
-  &:not([disabled]):hover {
-    opacity: 0.5;
-    background-color: #f05a22;
-  }
-
-  &:not([disabled]).md-focused {
-    opacity: 0.5;
-    background-color: #f05a22;
-  }
-}
-
-.md-button.outline-button {
-  min-width: auto;
-  max-height: 36px;
-  background-color: #ffffff;
-  color: #f05a22;
-  font-weight: 700;
-
-  border: 1px solid #7d7d7d;
-  border-radius: 3px;
-
-  &:not([disabled]):hover {
-    background-color: #FDECE5
-  }
-
-  span.material-icons {
-    color: @text-lighten;
-  }
-
-  ng-md-icon svg {
-    fill: @text-lighten;
-  }
-}
-
-.md-button.align-button {
-  background-color: #ffffff;
-  color: @g-top-part-color;
-
-  &:hover {
-    color: @primary-button-color;
-  }
-
-  &.active {
-    color: @primary-button-color;
-    background-color: rgba(240, 90, 34, 0.1);
-  }
-
-}
-
-button.md-raised.md-warn.md-button {
-  fill: #fff;
-}
-
-.classifier-select-dialog-view {
-  width: 500px;
-}
-
-.icon-btn-basics {
-  background-color: transparent;
-  border: none;
-}
 
 @font-face {
   // prevents showing of text of icons before they are loaded
@@ -3262,7 +3193,7 @@ button.md-raised.md-warn.md-button {
 
 
 @g-top-part-color: #747474;
-@primary-button-color: #f05a22;
+@md-primary-color: #f05a22;
 //@g-top-part-color: rgb(51, 51, 51);
 
 .homepage-messages-container {
@@ -3533,7 +3464,7 @@ span.highlight {
       background: rgba(240, 90, 34, 1);
       border-radius: 0;
 
-      font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
+      //font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
       font-weight: 500;
       font-style: normal;
       color: #FFFFFF;
@@ -3885,7 +3816,7 @@ button.md-raised.pagination-bar-button.md-button {
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
   z-index: 100;
 
-  font-family: 'Roboto Light';
+  //font-family: 'Roboto Light';
 }
 
 .help-link {

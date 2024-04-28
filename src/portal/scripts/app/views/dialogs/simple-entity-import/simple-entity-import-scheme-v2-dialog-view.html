@@ -299,13 +299,11 @@
                                                     <div
                                                             ng-click="vm.openProviderFieldExpressionBuilder(item, $event)"
                                                             ng-class="vm.checkForUserExpr(item)"
-                                                            class="simple-entity-import-scheme-v2-input-expression">
-                                                        {{item.name_expr}}
-                                                    </div>
+                                                            class="simple-entity-import-scheme-v2-input-expression">{{item.name_expr}}</div>
                                                     <div>
                                                         <md-button style="min-width: 40px;"
                                                                    data-ng-click="vm.removeCsvField(item, $index)"
-                                                                   class="md-raised"
+                                                                   class="outline-button"
                                                                    style="line-height: 1">x
                                                         </md-button>
                                                     </div>
@@ -351,9 +349,7 @@
                                                             </md-input-container>
 
                                                             <div ng-click="vm.openEntityFieldExpressionBuilder(item, $event)"
-                                                                 class="simple-entity-import-scheme-v2-input-expression">
-                                                                {{item.expression}}
-                                                            </div>
+                                                                 class="simple-entity-import-scheme-v2-input-expression">{{item.expression}}</div>
 
                                                             <div style="min-width: 48px">
 
@@ -392,9 +388,7 @@
                                                             </md-input-container>
 
                                                             <div ng-click="vm.openEntityFieldExpressionBuilder(item, $event)"
-                                                                 class="simple-entity-import-scheme-v2-input-expression">
-                                                                {{item.expression}}
-                                                            </div>
+                                                                 class="simple-entity-import-scheme-v2-input-expression">{{item.expression}}</div>
                                                             <div layout="row">
 
                                                                 <!--                                                                <div ng-if="vm.checkForClassifierMapping(item.attribute_user_code)"-->
@@ -436,9 +430,7 @@
 
                                                 <div ng-click="vm.openItemPostProcessScriptExpressionBuilder($event)"
                                                      style="min-height: 48px; max-width: 100%; width: 100%;"
-                                                     class="simple-entity-import-scheme-v2-input-expression">
-                                                    {{vm.scheme.item_post_process_script}}
-                                                </div>
+                                                     class="simple-entity-import-scheme-v2-input-expression">{{vm.scheme.item_post_process_script}}</div>
 
                                             </div>
 
