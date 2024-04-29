@@ -36,7 +36,7 @@
             $mdDialog.show({
                 controller: 'ReferenceTableEditDialogController as vm',
                 templateUrl: 'views/dialogs/reference-table/reference-table-edit-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -61,7 +61,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -115,7 +115,7 @@
             $mdDialog.show({
                 controller: 'ReferenceTableEditDialogController as vm',
                 templateUrl: 'views/dialogs/reference-table/reference-table-edit-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -140,7 +140,7 @@
             $mdDialog.show({
                 controller: 'ReferenceTableExportDialogController as vm',
                 templateUrl: 'views/dialogs/reference-table/reference-table-export-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -163,7 +163,7 @@
             $mdDialog.show({
                 controller: 'ReferenceTableImportDialogController as vm',
                 templateUrl: 'views/dialogs/reference-table/reference-table-import-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,

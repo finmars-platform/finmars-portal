@@ -38,7 +38,7 @@
             $mdDialog.show({
                 controller: 'AttributeTypeDialogController as vm',
                 templateUrl: 'views/attribute-type-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: ev,
                 locals: {
                     data: {
@@ -81,7 +81,7 @@
             $mdDialog.show({
                 controller: 'ClassificationEditorDialogController as vm',
                 templateUrl: 'views/classification-editor-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: ev,
                 locals: {
                     data: {
@@ -107,7 +107,7 @@
             $mdDialog.show({
                 controller: 'EntityTypeClassifierMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-classifier-mapping-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -127,7 +127,7 @@
             $mdDialog.show({
                 controller: 'ClassifierImportDialogController as vm',
                 templateUrl: 'views/dialogs/classifier-import-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -148,7 +148,7 @@
             $mdDialog.show({
                 controller: 'ClassifierExportDialogController as vm',
                 templateUrl: 'views/dialogs/classifier-export-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -168,7 +168,7 @@
             $mdDialog.show({
                 controller: 'AttributesTypeDialogController as vm',
                 templateUrl: 'views/attribute-type-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: ev,
                 locals: {
                     data: {
@@ -233,7 +233,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: ev,
                 clickOutsideToClose: false,
                 locals: {
@@ -254,7 +254,7 @@
                             $mdDialog.show({
                                 controller: 'InfoDialogController as vm',
                                 templateUrl: 'views/info-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: document.querySelector('.dialog-containers-wrap'),
                                 targetEvent: ev,
                                 clickOutsideToClose: false,
                                 locals: {
@@ -285,7 +285,7 @@
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
                     templateUrl: 'views/dialogs/warning-dialog-view.html',
-                    parent: angular.element(document.body),
+                    parent: document.querySelector('.dialog-containers-wrap'),
                     targetEvent: $event,
                     clickOutsideToClose: false,
                     locals: {
@@ -307,7 +307,7 @@
                             $mdDialog.show({
                                 controller: 'InfoDialogController as vm',
                                 templateUrl: 'views/info-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: document.querySelector('.dialog-containers-wrap'),
                                 targetEvent: $event,
                                 clickOutsideToClose: false,
                                 locals: {

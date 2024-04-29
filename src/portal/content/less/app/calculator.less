@@ -25,7 +25,7 @@
   md-toolbar {
     min-height: 40px;
     height: auto;
-    background-color: #4C334D;
+    background-color: var(--page-background-color);
     padding-bottom: 5px;
 
     .md-toolbar-tools {
@@ -38,12 +38,14 @@
 
   md-dialog-actions {
     padding: 0 8px;
-    background-color: #4C334D;
-    border-top: 1px solid rgba(255,255,255,.87);
+    background-color: var(--dialog-background-color);
+    //border-top: 1px solid rgba(255,255,255,.87);
+    border-top: 1px solid var(--table-border-color);
 
     button.md-button {
       min-width: 0;
-      color: rgba(255,255,255,.87);
+      //color: rgba(255,255,255,.87);
+      //color: rgba(255,255,255,.87);
       padding: 0 8px;
       margin: 8px;
     }
@@ -59,7 +61,8 @@
 }
 
 .calculator-dialog-content {
-  background-color: #4C334D;
+  //background-color: #4C334D;
+  background-color: var(--dialog-background-color);
   width: 240px;
   height: 350px
 }

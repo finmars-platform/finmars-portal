@@ -252,7 +252,7 @@
             $mdDialog.show({
                 controller: 'ReconMatchViewLineDialogController as vm',
                 templateUrl: 'views/dialogs/reconciliation/recon-match-view-line-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 locals: {
@@ -273,7 +273,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 locals: {
@@ -439,7 +439,7 @@
             $mdDialog.show({
                 controller: 'ComplexTransactionEditDialogController as vm',
                 templateUrl: 'views/entity-viewer/complex-transaction-edit-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,

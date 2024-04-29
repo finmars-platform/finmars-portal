@@ -850,7 +850,7 @@
             $mdDialog.show({
                 controller: 'CustomFieldDialogController as vm',
                 templateUrl: 'views/dialogs/custom-field/custom-field-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 multiple: true,
@@ -954,7 +954,7 @@
             $mdDialog.show({
                 controller: 'CustomFieldDialogController as vm',
                 templateUrl: 'views/dialogs/custom-field/custom-field-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 clickOutsideToClose: false,
                 preserveScope: true,
                 multiple: true,

@@ -280,7 +280,7 @@ const utilsHelper = require("../../helpers/utils.helper");
                     $mdDialog.show({
                         controller: 'NumberFormatSettingsDialogController as vm',
                         templateUrl: 'views/dialogs/number-format-settings-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         locals: {
                             data: dialogData
                         }
@@ -467,7 +467,7 @@ const utilsHelper = require("../../helpers/utils.helper");
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
                         templateUrl: 'views/dialogs/warning-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         multiple: true,
                         locals: {
@@ -1159,7 +1159,7 @@ const utilsHelper = require("../../helpers/utils.helper");
                     $mdDialog.show({
                         controller: 'RenameFieldDialogController as vm',
                         templateUrl: 'views/dialogs/rename-field-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             data: column
@@ -1254,7 +1254,7 @@ const utilsHelper = require("../../helpers/utils.helper");
                     $mdDialog.show({
                         controller: 'ResizeFieldDialogController as vm',
                         templateUrl: 'views/dialogs/resize-field-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             data: column
@@ -2277,7 +2277,7 @@ const utilsHelper = require("../../helpers/utils.helper");
                         $mdDialog.show({
                             controller: 'WarningDialogController as vm',
                             templateUrl: 'views/dialogs/warning-dialog-view.html',
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             // targetEvent: $event,
                             multiple: true,
                             locals: {

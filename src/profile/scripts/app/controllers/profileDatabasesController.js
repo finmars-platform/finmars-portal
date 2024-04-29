@@ -56,7 +56,7 @@
             $mdDialog.show({
                 controller: 'CreateMasterUserDialogController as vm',
                 templateUrl: 'views/dialogs/create-master-user-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: {
                     data: {
                         ecosystemConfigurations: vm.ecosystemConfigurations
@@ -78,7 +78,7 @@
             $mdDialog.show({
                 controller: 'RenameMasterUserDialogController as vm',
                 templateUrl: 'views/dialogs/rename-master-user-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: {
                     data: {
                         master_user: Object.assign({}, item)
@@ -109,7 +109,7 @@
             $mdDialog.show({
                 controller: 'CreateMasterUserFromDumpDialogController as vm',
                 templateUrl: 'views/dialogs/create-master-user-from-dump-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: {
                     data: {}
                 },
@@ -128,7 +128,7 @@
             $mdDialog.show({
                 controller: 'RollbackMasterUserFromBackupDialogController as vm',
                 templateUrl: 'views/dialogs/rollback-master-user-from-backup-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: {
                     data: {
                         item: item
@@ -160,7 +160,7 @@
             /* $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: {
                     warning: {
                         title: 'Warning!',
@@ -198,7 +198,7 @@
             $mdDialog.show({
                 controller: 'DeleteMasterUserDialogController as vm',
                 templateUrl: 'views/dialogs/delete-master-user-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: {
                     data: {
                         masterUser: item
@@ -223,7 +223,7 @@
             $mdDialog.show({
                 controller: 'CopyMasterUserDialogController as vm',
                 templateUrl: 'views/dialogs/copy-master-user-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: {
                     data: {
                         referenceMasterUser: item

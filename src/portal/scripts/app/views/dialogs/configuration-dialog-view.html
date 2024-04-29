@@ -14,7 +14,7 @@
             </div>
         </div>
     </md-toolbar>
-    <md-dialog-content style="background: #E5E5E5;">
+    <md-dialog-content>
         <md-content>
             <div data-ng-if="vm.checkReadyStatus()" class="position-relative">
 
@@ -24,7 +24,7 @@
 
                             <div>
 
-                                <div style="border: 1px solid #ddd; margin-bottom: 32px;" class="m-16 p-16"
+                                <div style="border: 1px solid var(--table-border-color); margin-bottom: 32px;" class="m-16 p-16"
                                      data-ng-if="!vm.item.id">
                                     <p>
                                         Configuration code pattern:

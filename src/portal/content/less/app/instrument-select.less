@@ -5,7 +5,7 @@
   }
 
   .control-button {
-    color: #f05a22;
+    color: var(--primary-color);;
     margin: 2px;
     height: 29px;
     border: 0;
@@ -20,7 +20,7 @@
   }
 
   span.highlight {
-    color: #F05A22;
+    color: var(--primary-color);
     font-weight: bold;
   }
 
@@ -50,18 +50,20 @@
 }
 
 .instrument-select-input-sel-option {
-  padding: 11px 16px 2px 16px;
+  padding: 11px 16px 11px 16px;
   box-sizing: border-box;
   width: 100%;
+  flex-direction: column;
+  align-items: start;
 
   span.highlight {
-    color: #F05A22;
+    color: var(--primary-color);
     font-weight: bold;
   }
 
   &:hover {
-    background: inherit;
-    background-color: rgba(0, 0, 0, 0.027450980392156862);
+    //background: inherit;
+    //background-color: rgba(0, 0, 0, 0.027450980392156862);
     border: none;
     border-radius: 0px;
     -moz-box-shadow: none;
@@ -71,21 +73,21 @@
 }
 
 .instrument-select-instrument-name {
-  font-family: 'Roboto-Regular', 'Roboto', sans-serif;
+  //font-family: 'Roboto-Regular', 'Roboto', sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 14px;
   letter-spacing: normal;
-  color: #333333;
+  color: var(--secondary-color);
 }
 
 .instrument-select-instrument-isin {
-  color: rgb(161, 161, 161);
+  color: var(--primary-color);
   font-size: 12px;
 }
 
 .instrument-select-instrument-ticker {
-  color: rgb(161, 161, 161);
+  color: var(--secondary-color);
   font-size: 12px;
 }
 
@@ -121,15 +123,16 @@ instrument-select {
   top: 0;
   position: absolute;
   height: 100%;
-  background: #F6F6F6;
+  background: var(--dropdown-background-color);
   z-index: 52;
-  box-shadow: 0 0 2px #000;
+  box-shadow: 0 0 2px var(--table-border-color);
   padding: 11px 16px 2px 16px;
   box-sizing: border-box;
 
   &.locate-left {
     left: -@detailBoxWidth;
   }
+
   &.locate-right {
     left: initial;
     right: 330px;
@@ -137,34 +140,33 @@ instrument-select {
 }
 
 
-
 .instrument-select-options-group-title {
   font-size: 14px;
   letter-spacing: normal;
-  color: #333333;
+  color: var(--secondary-color);
   display: block;
-  margin: 8px;
-  padding-left: 10px;
+  //margin: 8px;
+  padding: 16px 10px;
   position: sticky;
-  background: #fff;
+  background: var(--card-background-color);
   cursor: pointer;
-  height: 30px;
-  padding-top: 9px;
+  //height: 30px;
+  //padding-top: 9px;
   box-sizing: border-box;
 }
 
 .instrument-select-option-detail-label {
   font-size: 12px;
-  color: #747474;
+  color: var(--secondary-color);
 }
 
 .instrument-select-option-detail-value {
-  font-family: 'Roboto-Regular', 'Roboto', sans-serif;
+  //font-family: 'Roboto-Regular', 'Roboto', sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 14px;
   letter-spacing: normal;
-  color: #333333;
+  color: var(--secondary-color);
 }
 
 .instrument-select-option-detail-field {
@@ -190,28 +192,28 @@ instrument-select {
   height: 47px;
   box-sizing: border-box;
   padding: 0 10px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid var(--secondary-color);
 
   &.active {
-    color: #F05A22;
+    color: var(--primary-color);
 
     .instrument-select-instrument-name {
-      color: #F05A22;
+      color: var(--primary-color);
     }
 
     .instrument-select-instrument-isin {
-      color: #F05A22;
+      color: var(--primary-color);
     }
 
     .instrument-select-instrument-type {
-      color: #F05A22;
+      color: var(--primary-color);
     }
 
   }
 
   &:hover {
     background: inherit;
-    background-color: rgba(0, 0, 0, 0.027450980392156862);
+    background-color: var(--state-active-background-color);
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
     box-shadow: none;
@@ -223,7 +225,7 @@ instrument-select {
     font-style: normal;
     font-size: 14px;
     letter-spacing: normal;
-    color: #333333;
+    color: var(--secondary-color);
     padding: 5px;
   }
 
@@ -233,7 +235,7 @@ instrument-select {
     font-style: normal;
     font-size: 14px;
     letter-spacing: normal;
-    color: #333333;
+    color: var(--secondary-color);
     padding: 5px;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -246,7 +248,7 @@ instrument-select {
     font-style: normal;
     font-size: 14px;
     letter-spacing: normal;
-    color: #333333;
+    color: var(--secondary-color);
     padding: 5px;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -265,10 +267,10 @@ instrument-select {
   top: 59px;
   position: absolute;
   height: 417px;
-  background: #F6F6F6;
+  background: var(--dropdown-background-color);
   z-index: 52;
   box-shadow: none;
-  border: 1px solid #ddd;
+  border: 1px solid var(--table-border-color);
   padding: 11px 16px 2px;
   box-sizing: border-box;
 }
@@ -278,20 +280,20 @@ instrument-select {
   width: 713px;
   padding: 0 10px;
   font-size: 13px;
-  color: #666;
+  color: var(--secondary-color);
   box-sizing: border-box;
   height: 56px;
   padding-top: 13px;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
+  border-top: 1px solid var(--secondary-color);
+  border-bottom: 1px solid var(--secondary-color);
 }
 
 .instrument-select-database-dialog-view {
 
   md-toolbar-tools {
     h2 {
-      color: #000;
-      font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
+      color: var(--secondary-color);
+      //font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
       font-weight: 500;
       font-style: normal;
       font-size: 20px;
@@ -313,7 +315,7 @@ instrument-select {
   .instrument-select-options-group-title {
     font-size: 14px;
     letter-spacing: normal;
-    color: #333;
+    color: var(--secondary-color);
     display: block;
     /* margin: 8px; */
     padding-left: 10px;
@@ -321,7 +323,7 @@ instrument-select {
     box-sizing: border-box;
     padding-top: 15px;
     position: sticky;
-    background: #fff;
+    background: var(--card-background-color);
     cursor: pointer;
   }
 
@@ -339,7 +341,7 @@ instrument-select {
   width: 200px;
   text-align: left;
   padding-top: 12px;
-  color: #f05a22;
+  color: var(--primary-color);;
 
   span {
     cursor: pointer;
