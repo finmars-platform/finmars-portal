@@ -241,7 +241,7 @@
             $mdDialog.show({
                 controller: 'SingleInstrumentGenerateEventDialogController as vm',
                 templateUrl: 'views/dialogs/single-instrument-generate-event-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 preserveScope: true,
@@ -262,7 +262,7 @@
                     $mdDialog.show({
                         controller: 'InfoDialogController as vm',
                         templateUrl: 'views/info-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         clickOutsideToClose: false,
                         preserveScope: true,
@@ -290,7 +290,7 @@
             return $mdDialog.show({
                 controller: 'SingleInstrumentAddEventToTableDialogController as vm',
                 templateUrl: 'views/dialogs/single-instrument-add-event-to-table-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 // targetEvent: $event,
                 clickOutsideToClose: false,
                 multiple: true,
