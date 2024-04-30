@@ -94,6 +94,7 @@ export default function (uiService, dashboardHelper) {
         const {status, selected: targetDashboardLayouts} = await $mdDialog.show({
             controller: "ExpandableItemsSelectorDialogController as vm",
             templateUrl: "views/dialogs/expandable-items-selector-dialog-view.html",
+            parent: document.querySelector('.dialog-containers-wrap'),
             multiple: true,
             locals: {
                 data: {
