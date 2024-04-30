@@ -178,6 +178,9 @@ export default function ($scope, $mdDialog, toastNotificationService, authorizer
         vm.getMasterUser()
 
     };
+    vm.alert = function (message) {
+        alert("Test" + message);
+    }
 
     vm.init();
 

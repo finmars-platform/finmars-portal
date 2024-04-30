@@ -205,6 +205,7 @@
                             controller: contrName,
                             templateUrl: templateUrl,
                             targetEvent: $event,
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             multiple: true,
                             preserveScope: true,
                             autoWrap: true,
