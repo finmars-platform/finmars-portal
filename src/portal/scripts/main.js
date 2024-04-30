@@ -18,17 +18,12 @@ import 'v-accordion/dist/v-accordion.min.css';
 import 'angular-paging'
 import 'ui-select/dist/select.min.js'
 import 'ui-select/dist/select.min.css'
+
+import '@finmars/ui/dist/finmars-ui.css';
+
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 // Ensure that the worker is imported as a module.
-import { pdfjsWorker } from 'pdfjs-dist/legacy/build/pdf.worker.entry';
-
-// Specify the workerSrc to PDF.js, which can now be imported directly as a module.
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
-
-// Set up pdfjsLib globally if necessary
-window.pdfjsLib = pdfjsLib;
-
-
+import {pdfjsWorker} from 'pdfjs-dist/legacy/build/pdf.worker.entry';
 import masterUserService from "./app/services/masterUserService";
 
 import uiService from "./app/services/uiServiceNew";
@@ -99,6 +94,16 @@ import closeDialogButtonDirective from "./app/directives/closeDialogButtonDirect
 
 import * as Sentry from "@sentry/browser";
 import {Angular as AngularIntegration} from "@sentry/integrations";
+
+// Specify the workerSrc to PDF.js, which can now be imported directly as a module.
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+
+// Set up pdfjsLib globally if necessary
+window.pdfjsLib = pdfjsLib;
+
+// VUE 3 Integration
+import {FinmarsButton} from '@finmars/ui';
+import {vueClassConverter} from './vue-helper.js';
 
 // noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
@@ -748,7 +753,7 @@ export default (function () {
 
     portal.directive('bindFieldControl', ['$mdDialog', require('./app/directives/bindFieldControlDirective')]);
     portal.directive('bindFieldTable', ['$mdDialog', 'instrumentService', 'gridTableHelperService', 'multitypeFieldService', 'entityDataConstructorService', require('./app/directives/bindFieldTableDirective')]);
-    portal.directive('bindFieldAttachment', ['$mdDialog',  require('./app/directives/bindFieldAttachmentDirective')]);
+    portal.directive('bindFieldAttachment', ['$mdDialog', require('./app/directives/bindFieldAttachmentDirective')]);
     portal.directive('layoutConstructorField', ['$mdDialog', require('./app/directives/layoutConstructorFieldDirective')]);
     // portal.directive('newLayoutConstructorField', ['$mdDialog', require('./app/directives/newLayoutConstructorFieldDirective')]);
     portal.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirective')]);
@@ -1071,6 +1076,8 @@ export default (function () {
         return this.charAt(0).toUpperCase() + this.slice(1);
     };
 
+    // portal.directive('finmarsButton', ['$rootScope', vueClassConverter(FinmarsButton)]);
+    // portal.directive('finmarsExpressionInput', ['$rootScope', vueClassConverter(FinmarsButton)]);
 
     window.onerror = function (error) {
 

@@ -189,6 +189,7 @@
             $mdDialog.show({
                 controller: 'ExpressionEditorDialogController as vm',
                 templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 multiple: true,
                 autoWrap: true,
