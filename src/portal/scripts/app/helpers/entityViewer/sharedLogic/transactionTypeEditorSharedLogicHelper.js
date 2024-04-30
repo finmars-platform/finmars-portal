@@ -1100,6 +1100,7 @@
             const data = await $mdDialog.show({
                 controller: 'TransactionTypeValidationErrorsDialogController as vm',
                 templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
                 clickOutsideToClose: false,
                 multiple: true,
                 locals: {
@@ -4262,6 +4263,7 @@
                 $mdDialog.show({
                     controller: 'InputTemplateLayoutViewerDialogController as vm',
                     templateUrl: 'views/dialogs/input-template-layout-viewer-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
                     targetEvent: $event,
                     locals: {
                         data: {
@@ -4388,6 +4390,7 @@
             $mdDialog.show({
                 controller: 'EnterUserCodeDialogController as vm',
                 templateUrl: 'views/dialogs/enter-user-code-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 locals: {
                     data: {
