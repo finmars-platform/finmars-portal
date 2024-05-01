@@ -65,7 +65,7 @@ export default function ($scope, $mdDialog, toastNotificationService, authorizer
             $mdDialog.show({
                 controller: 'FilePreviewDialogController as vm',
                 templateUrl: 'views/dialogs/file-preview-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 preserveScope: true,
@@ -147,22 +147,6 @@ export default function ($scope, $mdDialog, toastNotificationService, authorizer
             $scope.$apply();
 
             vm.getMasterUser();
-
-        })
-
-    }
-
-    vm.updateFinmars = function () {
-
-        vm.processing = true;
-
-        authorizerService.updateFinmars(vm.currentMasterUser.id).then(function (data) {
-
-            vm.processing = false;
-
-            toastNotificationService.info("Update Initialized");
-
-            $scope.$apply();
 
         })
 

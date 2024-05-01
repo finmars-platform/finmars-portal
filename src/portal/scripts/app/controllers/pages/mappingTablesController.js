@@ -69,7 +69,7 @@
                     $mdDialog.show({
                         controller: 'SettingGeneralMappingPreviewFileDialogController as vm',
                         templateUrl: 'views/dialogs/settings-general-mapping-preview-file-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         preserveScope: true,
                         autoWrap: true,
@@ -88,7 +88,7 @@
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
                         templateUrl: 'views/dialogs/warning-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         clickOutsideToClose: false,
                         locals: {
@@ -115,7 +115,7 @@
             $mdDialog.show({
                 controller: 'SettingGeneralMappingExportFileDialogController as vm',
                 templateUrl: 'views/dialogs/settings-general-mapping-export-file-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -131,7 +131,7 @@
             $mdDialog.show({
                 controller: 'EntityTypeMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,

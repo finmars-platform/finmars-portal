@@ -49,7 +49,7 @@
             $mdDialog.show({
                 controller: 'DataProcedureEditDialogController as vm',
                 templateUrl: 'views/dialogs/procedures/data-procedure-edit-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 preserveScope: true,

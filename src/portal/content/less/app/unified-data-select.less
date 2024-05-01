@@ -5,7 +5,7 @@
   }
 
   .control-button {
-    color: #f05a22;
+    color: var(--primary-color);;
     margin: 2px;
     height: 29px;
     border: 0;
@@ -20,25 +20,27 @@
   }
 
   span.highlight {
-    color: #F05A22;
+    color: var(--primary-color);
     font-weight: bold;
   }
 
 }
 
 .unified-data-select-input-sel-option {
-  padding: 11px 16px 2px 16px;
+  padding: 11px 16px 11px 16px;
   box-sizing: border-box;
   width: 100%;
+  flex-direction: column;
+  align-items: start;
 
   span.highlight {
-    color: #F05A22;
+    color: var(--primary-color);
     font-weight: bold;
   }
 
   &:hover {
-    background: inherit;
-    background-color: rgba(0, 0, 0, 0.027450980392156862);
+    //background: inherit;
+    //background-color: rgba(0, 0, 0, 0.027450980392156862);
     border: none;
     border-radius: 0px;
     -moz-box-shadow: none;
@@ -48,7 +50,7 @@
 }
 
 .unified-data-select-unified-data-name {
-  font-family: 'Roboto-Regular', 'Roboto', sans-serif;
+  //font-family: 'Roboto-Regular', 'Roboto', sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 14px;
@@ -86,7 +88,7 @@ unified-data-select {
   top: 0;
   position: absolute;
   height: 380px;
-  background: #F6F6F6;
+  background: var(--dialog-background-color);
   z-index: 52;
   box-shadow: 0 0 2px #000;
   padding: 11px 16px 2px 16px;
@@ -96,30 +98,31 @@ unified-data-select {
 .unified-data-select-options-group-title {
   font-size: 14px;
   letter-spacing: normal;
-  color: #333333;
+  color: var(--secondary-color);
   display: block;
-  margin: 8px;
-  padding-left: 10px;
+  //margin: 8px;
+  padding: 16px 10px;
+  //padding-left: 10px;
   position: sticky;
-  background: #fff;
+  background: var(--dialog-background-color);
   cursor: pointer;
-  height: 30px;
-  padding-top: 9px;
+  //height: 30px;
+  //padding-top: 9px;
   box-sizing: border-box;
 }
 
 .unified-data-select-option-detail-label {
   font-size: 12px;
-  color: #747474;
+  color: var(--secondary-color);
 }
 
 .unified-data-select-option-detail-value {
-  font-family: 'Roboto-Regular', 'Roboto', sans-serif;
+  //font-family: 'Roboto-Regular', 'Roboto', sans-serif;
   font-weight: 400;
   font-style: normal;
   font-size: 14px;
   letter-spacing: normal;
-  color: #333333;
+  color: var(--secondary-color);
 }
 
 .unified-data-select-option-detail-field {
@@ -148,10 +151,10 @@ unified-data-select {
   top: 123px;
   position: absolute;
   height: 417px;
-  background: #F6F6F6;
+  background: var(--dialog-background-color);
   z-index: 52;
   box-shadow: none;
-  border: 1px solid #ddd;
+  border: 1px solid var(--table-border-color);
   padding: 11px 16px 2px;
   box-sizing: border-box;
 }
@@ -161,20 +164,20 @@ unified-data-select {
   width: 713px;
   padding: 0 10px;
   font-size: 13px;
-  color: #666;
+  color: var(--secondary-color);
   box-sizing: border-box;
   height: 56px;
   padding-top: 13px;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
+  border-top: 1px solid var(--secondary-color);
+  border-bottom: 1px solid var(--secondary-color);
 }
 
 .unified-data-select-database-dialog-view {
 
   md-toolbar-tools {
     h2 {
-      color: #000;
-      font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
+      color: var(--secondary-color);
+      //font-family: 'Roboto-Medium', 'Roboto Medium', 'Roboto', sans-serif;
       font-weight: 500;
       font-style: normal;
       font-size: 20px;
@@ -196,15 +199,16 @@ unified-data-select {
   .unified-data-select-options-group-title {
     font-size: 14px;
     letter-spacing: normal;
-    color: #333;
+    color: var(--secondary-color);
     display: block;
     /* margin: 8px; */
-    padding-left: 10px;
-    height: 46px;
+    //padding-left: 10px;
+    padding: 16px 10px;
+    //height: 46px;
     box-sizing: border-box;
-    padding-top: 15px;
+    //padding-top: 15px;
     position: sticky;
-    background: #fff;
+    background: --var(dialog-background-color);
     cursor: pointer;
   }
 
@@ -222,6 +226,7 @@ unified-data-select {
   right: 15px;
   top: 15px;
   cursor: pointer;
+
   &:hover {
     opacity: .7;
   }
@@ -234,21 +239,21 @@ unified-data-select {
     height: 47px;
     box-sizing: border-box;
     padding: 0 10px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--secondary-color);
 
     &.active {
-      color: #F05A22;
+      color: var(--primary-color);
 
       .unified-data-select-instrument-name {
-        color: #F05A22;
+        color: var(--primary-color);
       }
 
       .unified-data-select-instrument-isin {
-        color: #F05A22;
+        color: var(--primary-color);
       }
 
       .unified-data-select-instrument-type {
-        color: #F05A22;
+        color: var(--primary-color);
       }
 
     }
@@ -307,7 +312,7 @@ unified-data-select {
   float: left;
   width: 200px;
   text-align: left;
-  color: #f05a22;
+  color: var(--primary-color);;
 
   span {
     cursor: pointer;

@@ -288,6 +288,7 @@
             configurationService.installConfiguration({
                 configuration_code: item.configuration_code,
                 version: item.latest_release_object.version,
+                channel: item.latest_release_object.channel,
                 is_package: item.is_package
             }).then(function (data) {
 

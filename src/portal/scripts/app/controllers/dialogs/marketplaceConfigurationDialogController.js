@@ -13,6 +13,7 @@
         var vm = this;
 
         vm.processing = false;
+        vm.channel = 'stable';
 
         vm.readyStatus = {data: false};
 
@@ -78,6 +79,8 @@
 
                 })
 
+                vm.getVersions();
+
                 $scope.$apply();
 
             });
@@ -132,7 +135,8 @@
 
             configurationService.installConfiguration({
                 configuration_code: item.configuration_code,
-                version: item.latest_release_object.version,
+                channel: vm.channel,
+                version: vm.version,
                 is_package: item.is_package
             }).then(function (data) {
 
@@ -150,7 +154,36 @@
 
                 vm.getItem(vm.id);
 
+
             })
+        }
+
+        vm.getVersions = function () {
+
+            vm.versions = []
+
+            marketplaceService.getVersions(
+                {
+                    pageSize: 10,
+                    page: 1,
+                    filters: {configuration_code: vm.item.configuration_code, channel: vm.channel},
+                    sort: {
+                        direction: "DESC",
+                        key: "created"
+                    }
+                }
+            ).then(function (data) {
+
+                vm.versions = data.results;
+
+                if (vm.versions && vm.versions.length) {
+                    vm.version = vm.versions[0].version
+                }
+
+                $scope.$apply();
+
+            });
+
         }
 
 
@@ -159,6 +192,7 @@
             vm.id = data.id;
 
             vm.getLocalConfigurations();
+
 
             vm.member = globalDataService.getMember()
 

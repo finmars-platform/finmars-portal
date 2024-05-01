@@ -141,7 +141,7 @@
      * @returns {{promise: Promise<Object>, stopInterval: Function}} - Promise
      * that is resolved when the task ends and a Function to call clearInterval()
      */
-    const awaitTaskEnd = function (id, {intervalDelay=2000, functionName=''}) {
+    const awaitTaskEnd = function (id, {intervalDelay=2000, functionName='', showErrorPopup=true}) {
 
         let taskInterval;
         let stopInterval = () => {
@@ -173,7 +173,26 @@
                             errorTxt = errorTxt + `: ${res.error_message}`;
 
                             console.error(errorTxt);
-                            toastNotificationService.error(res.error_message, "Error")
+                            if (showErrorPopup) toastNotificationService.error(
+                                res.error_message,
+                                "Error",
+                                {
+                                    onclick: function (event) {
+
+                                        const listener = function (e) {
+
+                                            e.clipboardData.setData('text/plain', res.error_message);
+
+                                            e.preventDefault();
+                                        };
+
+                                        document.addEventListener('copy', listener, {once: true});
+
+                                        document.execCommand("copy");
+
+                                    },
+                                }
+                            );
 
                             break;
                     }
@@ -214,12 +233,13 @@
      * creation of the task to use in an error message.
      * E.g. importInstrumentCbondsService.download().
      * @param {Number} [options.intervalDelay] - delay for setInterval
+     * @param {Boolean} [options.showErrorPopup]
      *
      * @returns {{promise: Promise<Object>, stopIntervalFn: Function}} - Promise
      * that is resolves with data about celery task end.
      * Function that stops watching for celery task's execution status.
      */
-    const processPromiseWithTask = function (promise, {intervalDelay, functionName=''}) {
+    const processPromiseWithTask = function (promise, {intervalDelay, functionName='', showErrorPopup=true}) {
 
         let timeOutId;
         let stopIntervalCalled = false;
@@ -269,7 +289,8 @@
                         res.task,
                         {
                             functionName: functionName,
-                            intervalDelay
+                            intervalDelay,
+                            showErrorPopup
                         }
                     );
 
