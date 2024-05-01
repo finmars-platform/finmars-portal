@@ -63,17 +63,17 @@ export default function ($scope, $state, authorizerService, usersService, global
                 memberLayout.data = {}
             }
 
-            if (memberLayout.data.isThemeInDarkMode == null || memberLayout.data.isThemeInDarkMode == undefined) {
+            if (memberLayout.data.dark_mode == null || memberLayout.data.dark_mode == undefined) {
                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                     // Dark mode preferred
-                    memberLayout.data.isThemeInDarkMode = true;
+                    memberLayout.data.dark_mode = true;
                     globalDataService.enableThemeDarkMode()
                 } else {
-                    memberLayout.data.isThemeInDarkMode = false;
+                    memberLayout.data.dark_mode = false;
                     globalDataService.disableThemeDarkMode()
                     // Light mode preferred
                 }
-            } else if (memberLayout.data.isThemeInDarkMode === true) {
+            } else if (memberLayout.data.dark_mode === true) {
                 globalDataService.enableThemeDarkMode()
             } else {
                 globalDataService.disableThemeDarkMode()
