@@ -48,7 +48,7 @@
                     $mdDialog.show({
                         controller: 'RenameFieldDialogController as vm',
                         templateUrl: 'views/dialogs/rename-field-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         multiple: true,
                         locals: {
@@ -73,7 +73,7 @@
                     $mdDialog.show({
                         controller: 'ResizeFieldDialogController as vm',
                         templateUrl: 'views/dialogs/resize-field-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         multiple: true,
                         locals: {

@@ -966,7 +966,7 @@ const processesService = require("../../../services/processesService");
                 $mdDialog.show({
                     controller: 'FilePreviewDialogController as vm',
                     templateUrl: 'views/dialogs/file-preview-dialog-view.html',
-                    parent: angular.element(document.body),
+                    parent: document.querySelector('.dialog-containers-wrap'),
                     targetEvent: $event,
                     clickOutsideToClose: false,
                     preserveScope: true,

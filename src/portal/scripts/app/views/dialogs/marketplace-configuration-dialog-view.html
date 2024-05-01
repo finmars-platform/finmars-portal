@@ -14,7 +14,7 @@
             </div>
         </div>
     </md-toolbar>
-    <md-dialog-content style="background: #E5E5E5;">
+    <md-dialog-content>
         <md-content>
             <div data-ng-if="vm.checkReadyStatus()" class="position-relative">
 
@@ -45,7 +45,22 @@
                                         <h3 class="configuration-card-name" style="margin: 4px 0">{{vm.item.name}}</h3>
                                     </div>
 
+                                    <div layout="row" data-ng-if="vm.item.localItem">
+                                        Current: ({{vm.item.localItem.version}} {{vm.item.localItem.channel}})
+                                    </div>
+
                                     <div layout="row">
+
+                                        <md-select data-ng-model="vm.channel" data-ng-change="vm.getVersions()">
+                                            <md-option value="stable">Stable</md-option>
+                                            <md-option value="rc">Release Candidate</md-option>
+                                        </md-select>
+
+                                        <md-select data-ng-model="vm.version">
+                                            <md-option data-ng-repeat="versionItem in vm.versions"
+                                                       ng-value="versionItem.version">{{versionItem.version}}
+                                            </md-option>
+                                        </md-select>
 
                                         <div data-ng-if="!vm.item.localItem">
                                             <md-button class="md-primary md-raised configuration-card-open"

@@ -49,7 +49,7 @@ export default function ($state, commonDialogsService) {
 							templateUrl: '../../../portal/scripts/app/views/dialogs/configuration-import/configuration-import-dialog-view.html',
 							//controller: 'SettingGeneralConfigurationPreviewFileDialogController as vm',
 							//templateUrl: 'views/dialogs/settings-general-configuration-preview-file-dialog-view.html',
-							parent: angular.element(document.body),
+							parent: document.querySelector('.dialog-containers-wrap'),
 							preserveScope: true,
 							autoWrap: true,
 							skipHide: true,
@@ -81,7 +81,7 @@ export default function ($state, commonDialogsService) {
 						/* $mdDialog.show({
 							controller: 'WarningDialogController as vm',
 							templateUrl: 'views/dialogs/warning-dialog-view.html',
-							parent: angular.element(document.body),
+							parent: document.querySelector('.dialog-containers-wrap'),
 							clickOutsideToClose: false,
 							locals: {
 								warning: {
@@ -163,7 +163,7 @@ export default function ($state, commonDialogsService) {
 								/* $mdDialog.show({
 									controller: 'WarningDialogController as vm',
 									templateUrl: 'views/dialogs/warning-dialog-view.html',
-									parent: angular.element(document.body),
+									parent: document.querySelector('.dialog-containers-wrap'),
 									targetEvent: ev,
 									clickOutsideToClose: false,
 									locals: {

@@ -548,7 +548,7 @@
             $mdDialog.show({
                 controller: 'EntityTypeMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-mapping-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,
@@ -591,7 +591,7 @@
             $mdDialog.show({
                 controller: 'EntityTypeClassifierMappingDialogController as vm',
                 templateUrl: 'views/dialogs/entity-type-classifier-mapping-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -621,7 +621,7 @@
             $mdDialog.show({
                 controller: 'ExpressionEditorDialogController as vm',
                 templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,
