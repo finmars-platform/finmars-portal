@@ -19,7 +19,11 @@ import 'angular-paging'
 import 'ui-select/dist/select.min.js'
 import 'ui-select/dist/select.min.css'
 
-import '@finmars/ui/dist/finmars-ui.css';
+
+// VUE 3 Integration
+// import {FinmarsButton} from '@finmars/ui';
+// import '@finmars/ui/dist/finmars-ui.css';
+import {vueClassConverter} from './vue-helper.js';
 
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 // Ensure that the worker is imported as a module.
@@ -100,10 +104,6 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 // Set up pdfjsLib globally if necessary
 window.pdfjsLib = pdfjsLib;
-
-// VUE 3 Integration
-import {FinmarsButton} from '@finmars/ui';
-import {vueClassConverter} from './vue-helper.js';
 
 // noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
