@@ -19,7 +19,7 @@ import 'angular-paging'
 import 'ui-select/dist/select.min.js'
 import 'ui-select/dist/select.min.css'
 
-import '@finmars/ui/dist/finmars-ui.css';
+// import '@finmars/ui/dist/finmars-ui.css';
 
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 // Ensure that the worker is imported as a module.
