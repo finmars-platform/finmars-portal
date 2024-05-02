@@ -389,17 +389,10 @@
 
     };
 
-    function shouldProcessAffix(value) {
-      const numericValue = parseFloat(value);
-      return numericValue !== 0 && !isNaN(numericValue);
-    }
-
     function processAffix(value, prefix, suffix) {
-      if (shouldProcessAffix(value)) {
         if (prefix) value = prefix + value;
         if (suffix) value = value + suffix;
-      }
-      return value;
+        return value;
     }
 
     var formatValue = function (obj, column) {
@@ -414,6 +407,8 @@
             value = '';
         }
 
+        var applyAffix = !!value;
+
         value = formatPercentage(value, column, false); // also applies multiplier
 
         value = formatRounding(value, column);
@@ -426,7 +421,7 @@
 
         var numberFormat = getNumberFormatSettings(column);
 
-        if (numberFormat) {
+        if (numberFormat && applyAffix) {
           value = processAffix(value, numberFormat.number_prefix, numberFormat.number_suffix);
         }
 
