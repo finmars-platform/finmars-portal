@@ -389,18 +389,15 @@
 
     };
 
-    function shouldProcessSuffixValue(value) {
-      // Convert value to a string and trim any whitespace
-      const stringValue = String(value).trim();
-
-      const preventedChars = ['0', '0.0', '0.00', '-'];
-      // Check for non-zero, non-empty, and not specifically excluded values
-      return !preventedChars.includes(stringValue);
+    function shouldProcessAffix(value) {
+      const numericValue = parseFloat(value);
+      return numericValue !== 0 && !isNaN(numericValue);
     }
 
-    function processSuffixValue(value, suffix) {
-      if (shouldProcessSuffixValue(value)) {
-        return value + suffix;
+    function processAffix(value, prefix, suffix) {
+      if (shouldProcessAffix(value)) {
+        if (prefix) value = prefix + value;
+        if (suffix) value = value + suffix;
       }
       return value;
     }
@@ -430,11 +427,7 @@
         var numberFormat = getNumberFormatSettings(column);
 
         if (numberFormat) {
-            if (numberFormat.number_prefix) {
-                value = numberFormat.number_prefix + value;
-            }
-
-          value = processSuffixValue(value, numberFormat.number_suffix);
+          value = processAffix(value, numberFormat.number_prefix, numberFormat.number_suffix);
         }
 
         return value;
