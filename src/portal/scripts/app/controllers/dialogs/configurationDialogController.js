@@ -22,6 +22,9 @@
             return vm.readyStatus.data;
         };
 
+        vm.eventObj = {
+            event: {},
+        };
 
         vm.getItem = function (id) {
 
@@ -42,6 +45,13 @@
             $mdDialog.hide({status: 'disagree'});
         };
 
+        vm.onChangeCallback = (changedValue) => {
+            const key = (changedValue.length === 100) ? "error" : "reset";
+            vm.eventObj.event = {
+                key,
+                ...(key === "error" && { error: "Length limit has been reached" })
+            };
+        }
         vm.generateManifestIfNotExists = function () {
 
             vm.item.manifest = {
