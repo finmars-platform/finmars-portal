@@ -102,8 +102,8 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 window.pdfjsLib = pdfjsLib;
 
 // VUE 3 Integration
-import {FinmarsButton} from '@finmars/ui';
-import {vueClassConverter} from './vue-helper.js';
+// import {FinmarsButton} from '@finmars/ui';
+// import {vueClassConverter} from './vue-helper.js';
 
 // noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
