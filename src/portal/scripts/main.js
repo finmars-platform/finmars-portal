@@ -23,7 +23,7 @@ import 'ui-select/dist/select.min.css'
 // VUE 3 Integration
 // import {FinmarsButton} from '@finmars/ui';
 // import '@finmars/ui/dist/finmars-ui.css';
-import {vueClassConverter} from './vue-helper.js';
+// import {vueClassConverter} from './vue-helper.js';
 
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 // Ensure that the worker is imported as a module.
