@@ -12,6 +12,7 @@
 				label: "@",
 				placeholderText: "@",
 				model: "=",
+				maxLength:"@",
 				customButtons: '=',
 				customStyles: "=",
 				eventSignal: "=",
