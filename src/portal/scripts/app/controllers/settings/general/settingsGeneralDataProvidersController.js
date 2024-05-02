@@ -163,7 +163,7 @@
                     $mdDialog.show({
                         controller: 'InfoDialogController as vm',
                         templateUrl: 'views/dialogs/info-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         preserveScope: true,
                         autoWrap: true,
@@ -215,7 +215,7 @@
             $mdDialog.show({
                 controller: 'SettingsPersonalDataProviderController as vm',
                 templateUrl: 'views/settings/personal-data-provider-config-settings-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: {
                     provider: provider
                 },

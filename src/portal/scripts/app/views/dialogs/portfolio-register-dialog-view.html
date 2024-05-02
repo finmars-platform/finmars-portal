@@ -63,7 +63,7 @@
 
         <div ng-if="!vm.readyStatus" class="flex-row fc-center fi-center" style="height: 350px;">
             <div class="flex-row fc-space-around">
-                <progress-circular diameter="80"></progress-circular>
+                <progress-circular diameter="100"></progress-circular>
             </div>
         </div>
     </md-dialog-content>
@@ -74,7 +74,7 @@
                 CANCEL
             </md-button>
 
-            <md-button class="primary-button"
+            <md-button class="md-primary"
                        ng-click="vm.agree()"
                        ng-disabled="!vm.readyStatus"
                        style="margin-right:20px;">

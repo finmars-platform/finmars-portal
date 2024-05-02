@@ -179,7 +179,7 @@
                             dialogOptions = {
                                 controller: 'SimpleEntityImportSchemeV2EditDialogController as vm',
                                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-v2-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: document.querySelector('.dialog-containers-wrap'),
                                 locals: {
                                     data: {
 
@@ -196,7 +196,7 @@
                             dialogOptions = {
                                 controller: 'TransactionImportSchemeV2EditDialogController as vm',
                                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-v2-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: document.querySelector('.dialog-containers-wrap'),
                                 locals: {
                                 }
                             };
@@ -439,6 +439,7 @@
                     $mdDialog.show({
                         controller: 'AttributesManagerDialogController as vm',
                         templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         multiple: true,
                         locals: {

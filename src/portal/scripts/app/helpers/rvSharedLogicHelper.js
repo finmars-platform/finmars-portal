@@ -418,7 +418,7 @@
             $mdDialog.show({
                 controller: dialogController,
                 templateUrl: dialogTemplateUrl,
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: locals
             }).then(function (res) {
 
@@ -454,7 +454,7 @@
             $mdDialog.show({
                 controller: dialogController,
                 templateUrl: dialogTemplateUrl,
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: activeObject.event,
                 locals: locals
 

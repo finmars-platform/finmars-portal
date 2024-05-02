@@ -1279,7 +1279,7 @@
                     $mdDialog.show({
                         controller: 'InfoDialogController as vm',
                         templateUrl: 'views/info-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         clickOutsideToClose: false,
                         preserveScope: true,
@@ -1325,7 +1325,7 @@
                         $mdDialog.show({
                             controller: 'InfoDialogController as vm',
                             templateUrl: 'views/info-dialog-view.html',
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             targetEvent: $event,
                             clickOutsideToClose: false,
                             preserveScope: true,
@@ -1377,7 +1377,7 @@
                             $mdDialog.show({
                                 controller: 'InfoDialogController as vm',
                                 templateUrl: 'views/info-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: document.querySelector('.dialog-containers-wrap'),
                                 targetEvent: $event,
                                 clickOutsideToClose: false,
                                 preserveScope: true,
@@ -1429,7 +1429,7 @@
                         $mdDialog.show({
                             controller: 'InfoDialogController as vm',
                             templateUrl: 'views/info-dialog-view.html',
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             targetEvent: $event,
                             clickOutsideToClose: false,
                             preserveScope: true,
@@ -1460,7 +1460,7 @@
             $mdDialog.show({
                 controller: 'CurrencyPricingSchemeEditDialogController as vm',
                 templateUrl: 'views/dialogs/pricing/currency-pricing-scheme-edit-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 preserveScope: true,
@@ -1721,7 +1721,7 @@
             $mdDialog.show({
                 controller: 'PricingMultipleParametersDialogController as vm',
                 templateUrl: 'views/dialogs/pricing/pricing-multiple-parameter-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 preserveScope: true,
@@ -1752,7 +1752,7 @@
                     $mdDialog.show({
                         controller: 'RunPricingInstrumentDialogController as vm',
                         templateUrl: 'views/dialogs/pricing/run-pricing-instrument-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         clickOutsideToClose: false,
                         preserveScope: true,
@@ -1773,7 +1773,7 @@
                             $mdDialog.show({
                                 controller: 'InfoDialogController as vm',
                                 templateUrl: 'views/info-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: document.querySelector('.dialog-containers-wrap'),
                                 targetEvent: $event,
                                 clickOutsideToClose: false,
                                 preserveScope: true,
@@ -1799,7 +1799,7 @@
             $mdDialog.show({
                 controller: 'RunPricingCurrencyDialogController as vm',
                 templateUrl: 'views/dialogs/pricing/run-pricing-currency-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 preserveScope: true,
@@ -1820,7 +1820,7 @@
                     $mdDialog.show({
                         controller: 'InfoDialogController as vm',
                         templateUrl: 'views/info-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         clickOutsideToClose: false,
                         preserveScope: true,

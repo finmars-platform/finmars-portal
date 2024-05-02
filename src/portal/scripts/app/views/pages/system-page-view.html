@@ -4,44 +4,47 @@
 
     <div>
 
+<!--        <finmars-button class="fm-primary fm-raised" ng-click="vm.alert('Hello World')">Test</finmars-button>-->
+
         <div layout="column">
 
 
             <div data-ng-if="vm.readyStatus.data">
 
-                <md-card style="max-width: 400px;">
+<!--                Deprecated -->
+<!--                <md-card style="max-width: 400px;">-->
 
-                    <md-card-content layout="column">
+<!--                    <md-card-content layout="column">-->
 
-                        <h3>Finmars Update Center</h3>
+<!--                        <h3>Finmars Update Center</h3>-->
 
-                        <div>
-                            <div data-ng-if="!vm.currentMasterUser.is_update_available"
-                                 class="m-b-16">Your ecosystem is up to date</div>
+<!--                        <div>-->
+<!--                            <div data-ng-if="!vm.currentMasterUser.is_update_available"-->
+<!--                                 class="m-b-16">Your ecosystem is up to date</div>-->
 
-                            <h2>Current Version</h2>
+<!--                            <h2>Current Version</h2>-->
 
-                            <div>
-                                <div data-ng-repeat="version in vm.versions">
+<!--                            <div>-->
+<!--                                <div data-ng-repeat="version in vm.versions">-->
 
 
-                                    <div>{{version.app}}:{{version.version}}
-                                        <md-tooltip md-direction="top">
-                                            {{version.notes}}&nbsp;{{version.modified | date: 'yyyy-MM-dd HH:mm'}}
-                                        </md-tooltip>
-                                    </div>
+<!--                                    <div>{{version.app}}:{{version.version}}-->
+<!--                                        <md-tooltip md-direction="top">-->
+<!--                                            {{version.notes}}&nbsp;{{version.modified | date: 'yyyy-MM-dd HH:mm'}}-->
+<!--                                        </md-tooltip>-->
+<!--                                    </div>-->
 
-                                </div>
-                            </div>
+<!--                                </div>-->
+<!--                            </div>-->
 
-                            <div data-ng-if="vm.currentMasterUser.is_update_available" class="orange-text">
-                                UPDATE IS AVAILABLE
-                            </div>
-                        </div>
+<!--                            <div data-ng-if="vm.currentMasterUser.is_update_available" class="orange-text">-->
+<!--                                UPDATE IS AVAILABLE-->
+<!--                            </div>-->
+<!--                        </div>-->
 
-                    </md-card-content>
+<!--                    </md-card-content>-->
 
-                </md-card>
+<!--                </md-card>-->
 
                 <md-card layout="column">
 
