@@ -411,6 +411,7 @@
             $mdDialog.show({
                 controller: 'AttributesManagerDialogController as vm',
                 templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: ev,
                 multiple: true,
                 locals: {
@@ -442,7 +443,7 @@
                 $mdDialog.show({
                     controller: 'ComplexTransactionAddDialogController as vm',
                     templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
-                    parent: angular.element(document.body),
+                    parent: document.querySelector('.dialog-containers-wrap'),
                     locals: {
                         entityType: vm.entityType,
                         entity: entity,
@@ -572,7 +573,7 @@
             $mdDialog.show({
                 controller: 'EntityViewerEditDialogController as vm',
                 templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -835,7 +836,7 @@
             $mdDialog.show({
                 controller: 'EntityViewerDeleteDialogController as vm',
                 templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 //clickOutsideToClose: false,
                 multiple: true,
@@ -896,7 +897,7 @@
                 $mdDialog.show({
                     controller: 'InfoDialogController as vm',
                     templateUrl: 'views/info-dialog-view.html',
-                    parent: angular.element(document.body),
+                    parent: document.querySelector('.dialog-containers-wrap'),
                     targetEvent: $event,
                     clickOutsideToClose: false,
                     preserveScope: true,

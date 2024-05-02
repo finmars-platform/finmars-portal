@@ -307,7 +307,7 @@
             $mdDialog.show({
                 controller: 'ScheduleAddDialogController as vm',
                 templateUrl: 'views/dialogs/schedules/schedule-add-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 preserveScope: true,

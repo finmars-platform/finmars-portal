@@ -79,7 +79,7 @@ const dashboardComponentStatuses = require("../../services/dashboard/dashboardCo
                     $mdDialog.show({
                         controller: 'DashboardReportViewerComponentSettingsDialogController as vm',
                         templateUrl: 'views/dialogs/dashboard/component-settings/dashboard-report-viewer-component-settings-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         autoWrap: true,
                         multiple: true,
@@ -123,7 +123,7 @@ const dashboardComponentStatuses = require("../../services/dashboard/dashboardCo
                     $mdDialog.show({
                         controller: 'ReportPriceCheckerDialogController as vm',
                         templateUrl: 'views/dialogs/report-missing-prices/report-price-checker-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             data: {

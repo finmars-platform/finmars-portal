@@ -83,7 +83,7 @@
             $mdDialog.show({
                 controller: 'ViewMissingPriceHistoryDialogController as vm',
                 templateUrl: 'views/dialogs/report-missing-prices/view-missing-price-history-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 multiple: true,
                 locals: {
@@ -101,7 +101,7 @@
             $mdDialog.show({
                 controller: 'ViewMissingFxRatesDialogController as vm',
                 templateUrl: 'views/dialogs/report-missing-prices/view-missing-fx-rates-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 multiple: true,
                 locals: {
@@ -119,7 +119,7 @@
             $mdDialog.show({
                 controller: 'ViewMissingHistoricalFxRatesDialogController as vm',
                 templateUrl: 'views/dialogs/report-missing-prices/view-missing-historical-fx-rates-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 multiple: true,
                 locals: {
@@ -137,7 +137,7 @@
             $mdDialog.show({
                 controller: 'ViewMissingCustomFieldsDialogController as vm',
                 templateUrl: 'views/dialogs/report-missing-prices/view-missing-custom-fields-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 multiple: true,
                 locals: {

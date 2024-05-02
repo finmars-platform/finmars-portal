@@ -23,7 +23,7 @@
                     $mdDialog.show({
                         controller: 'InstrumentSelectDialogController as vm',
                         templateUrl: 'views/instrument-select-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: event,
                         preserveScope: true,
                         autoWrap: true,

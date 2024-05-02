@@ -92,7 +92,7 @@
             $mdDialog.show({
                 controller: 'BookmarksWizardDialogController as vm',
                 templateUrl: 'views/dialogs/bookmarks-wizard-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,

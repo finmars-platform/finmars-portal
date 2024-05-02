@@ -1100,6 +1100,7 @@
             const data = await $mdDialog.show({
                 controller: 'TransactionTypeValidationErrorsDialogController as vm',
                 templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
                 clickOutsideToClose: false,
                 multiple: true,
                 locals: {
@@ -1512,7 +1513,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 preserveScope: true,
                 autoWrap: true,
                 multiple: true,
@@ -1580,7 +1581,7 @@
             $mdDialog.show({
                 controller: 'TransactionTypeAddInputDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-type-add-input-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 multiple: true,
                 locals: {
                     data: {
@@ -2133,7 +2134,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -4084,7 +4085,7 @@
             $mdDialog.show({
                 controller: 'SaveAsDialogController as vm',
                 templateUrl: 'views/dialogs/save-as-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 preserveScope: true,
@@ -4206,7 +4207,7 @@
                             $mdDialog.show({
                                 controller: 'InfoDialogController as vm',
                                 templateUrl: 'views/info-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: document.querySelector('.dialog-containers-wrap'),
                                 targetEvent: $event,
                                 clickOutsideToClose: false,
                                 preserveScope: true,
@@ -4262,6 +4263,7 @@
                 $mdDialog.show({
                     controller: 'InputTemplateLayoutViewerDialogController as vm',
                     templateUrl: 'views/dialogs/input-template-layout-viewer-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
                     targetEvent: $event,
                     locals: {
                         data: {
@@ -4388,6 +4390,7 @@
             $mdDialog.show({
                 controller: 'EnterUserCodeDialogController as vm',
                 templateUrl: 'views/dialogs/enter-user-code-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 locals: {
                     data: {
