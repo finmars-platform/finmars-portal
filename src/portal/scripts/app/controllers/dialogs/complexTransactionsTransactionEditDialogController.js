@@ -43,6 +43,7 @@
                         $mdDialog.show({
                             controller: 'ValidationDialogController as vm',
                             templateUrl: 'views/dialogs/validation-dialog-view.html',
+                            parent: document.querySelector(".dialog-containers-wrap"),
                             targetEvent: $event,
                             locals: {
                                 validationData: reason
@@ -68,6 +69,7 @@
                         $mdDialog.show({
                             controller: 'ValidationDialogController as vm',
                             templateUrl: 'views/dialogs/validation-dialog-view.html',
+                            parent: document.querySelector(".dialog-containers-wrap"),
                             targetEvent: $event,
                             locals: {
                                 validationData: reason
