@@ -86,6 +86,7 @@
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
                         templateUrl: 'views/dialogs/success-dialog-view.html',
+                        parent: document.querySelector(".dialog-containers-wrap"),
                         targetEvent: $event,
                         locals: {
                             success: {
@@ -126,6 +127,7 @@
             $mdDialog.show({
                 controller: 'SimpleEntityImportSchemeCreateDialogController as vm',
                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,
@@ -147,6 +149,7 @@
             $mdDialog.show({
                 controller: 'SimpleEntityImportSchemeEditDialogController as vm',
                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,
@@ -172,6 +175,7 @@
             $mdDialog.show({
                 controller: 'SimpleEntityImportSchemeV2EditDialogController as vm',
                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-v2-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 locals: {
                     data: {
                         schemeId: vm.config.scheme
@@ -340,6 +344,7 @@
                         $mdDialog.show({
                             controller: 'SuccessDialogController as vm',
                             templateUrl: 'views/dialogs/success-dialog-view.html',
+                            parent: document.querySelector(".dialog-containers-wrap"),
                             targetEvent: $event,
                             preserveScope: true,
                             multiple: true,
@@ -371,6 +376,7 @@
                         $mdDialog.show({
                             controller: 'SimpleEntityImportErrorsDialogController as vm',
                             templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-errors-dialog-view.html',
+                            parent: document.querySelector(".dialog-containers-wrap"),
                             targetEvent: $event,
                             preserveScope: true,
                             multiple: true,
@@ -559,6 +565,7 @@
                         $mdDialog.show({
                             controller: 'SimpleEntityImportErrorsDialogController as vm',
                             templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-errors-dialog-view.html',
+                            parent: document.querySelector(".dialog-containers-wrap"),
                             targetEvent: $event,
                             preserveScope: true,
                             multiple: true,
