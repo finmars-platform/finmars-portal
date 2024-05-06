@@ -121,6 +121,7 @@
             $mdDialog.show({
                 controller: 'BookmarksEditSelectedDialogController as vm',
                 templateUrl: 'views/dialogs/bookmarks-edit-selected-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 targetEvent: $event,
                 autoWrap: true,
                 multiple: true,
