@@ -406,6 +406,7 @@
             $mdDialog.show({
                 controller: 'EntityViewerAddDialogController as vm',
                 templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 targetEvent: $event,
                 multiple: true,
                 parent: dialogParent,
@@ -429,6 +430,7 @@
             $mdDialog.show({
                 controller: 'InstrumentDownloadDialogController as vm',
                 templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 targetEvent: $event,
                 multiple: true,
                 parent: dialogParent,

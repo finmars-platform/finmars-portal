@@ -68,6 +68,7 @@
                         $mdDialog.show({
                             controller: 'SuccessDialogController as vm',
                             templateUrl: 'views/dialogs/success-dialog-view.html',
+                            parent: document.querySelector(".dialog-containers-wrap"),
                             locals: {
                                 success: {
                                     title: "",

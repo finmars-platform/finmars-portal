@@ -552,6 +552,7 @@
             $mdDialog.show({
                 controller: 'SaveConfigurationExportLayoutDialogController as vm',
                 templateUrl: 'views/dialogs/save-configuration-export-layout-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 targetEvent: $event,
                 locals: {
                     data: {
