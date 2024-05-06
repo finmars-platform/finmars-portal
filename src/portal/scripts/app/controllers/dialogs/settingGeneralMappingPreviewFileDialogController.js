@@ -561,6 +561,7 @@
                     $mdDialog.show({
                         controller: 'SettingGeneralMappingPreviewFileErrorsDialogController as vm',
                         templateUrl: 'views/dialogs/settings-general-mapping-preview-file-errors-dialog-view.html',
+                        parent: document.querySelector(".dialog-containers-wrap"),
                         targetEvent: $event,
                         preserveScope: true,
                         multiple: true,
@@ -587,6 +588,7 @@
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
                         templateUrl: 'views/dialogs/success-dialog-view.html',
+                        parent: document.querySelector(".dialog-containers-wrap"),
                         targetEvent: $event,
                         preserveScope: true,
                         multiple: true,
