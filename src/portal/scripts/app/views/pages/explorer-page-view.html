@@ -3,7 +3,7 @@
     <div class="explorer-explorer-section ">
 
         <div layout="row">
-            <h1 style="margin-top: 5px; font-family: 'Roboto Light'; font-size: 20px">Explorer</h1>
+            <h1 style="margin-top: 5px; font-size: 20px">Explorer</h1>
 
             <md-button data-ng-class="{'disabled-btn': vm.processing}"
                        data-ng-click="vm.listFiles()"
@@ -20,20 +20,20 @@
             <div class="explorer-toolbar" layout="row">
 
                 <md-menu>
-                    <md-button class="outline-button" data-ng-click="$mdOpenMenu($event)">
+                    <md-button class="md-primary md-raised" data-ng-click="$mdOpenMenu($event)">
                         Create
                     </md-button>
 
                     <md-menu-content>
                         <md-menu-item>
-                            <md-button class="md-raised" data-ng-click="vm.createFile($event)">Create File</md-button>
+                            <md-button class="" data-ng-click="vm.createFile($event)">Create File</md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button class="md-raised" data-ng-click="vm.createFolder($event)">Create Folder
+                            <md-button class="" data-ng-click="vm.createFolder($event)">Create Folder
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button class="md-raised" data-ng-click="vm.uploadFiles($event)">Upload Files</md-button>
+                            <md-button class="" data-ng-click="vm.uploadFiles($event)">Upload Files</md-button>
                         </md-menu-item>
                     </md-menu-content>
 
@@ -57,12 +57,12 @@
 
                         <md-menu-content>
                             <md-menu-item>
-                                <md-button class="md-raised" data-ng-click="vm.downloadZip($event)">Download Selected as
+                                <md-button class="" data-ng-click="vm.downloadZip($event)">Download Selected as
                                     .zip
                                 </md-button>
                             </md-menu-item>
                             <md-menu-item>
-                                <md-button class="md-raised md-warn" data-ng-click="vm.deleteSelected($event)">Delete
+                                <md-button class="md-warn" data-ng-click="vm.deleteSelected($event)">Delete
                                     Selected
                                 </md-button>
                             </md-menu-item>
@@ -84,7 +84,7 @@
 
                 <div class="explorer-breadcrumbs-item" data-ng-click="vm.breadcrumbsNavigation(-1)">My Finmars</div>
 
-                <span class="explorer-breadcrumbs-item-divider" data-ng-if="vm.currentPath.length">></span>
+                <span class="explorer-breadcrumbs-item-divider" data-ng-if="vm.currentPath.length">/</span>
 
                 <div data-ng-repeat="item in vm.currentPath track by $index">
 
@@ -92,7 +92,7 @@
                           class="explorer-breadcrumbs-item">{{item}}</span>
 
                     <span class="explorer-breadcrumbs-item-divider"
-                          data-ng-if="$index < vm.currentPath.length - 1">></span>
+                          data-ng-if="$index < vm.currentPath.length - 1">/</span>
 
                 </div>
 
@@ -184,7 +184,7 @@
                                    box-sizing: border-box;
                                     font-size: 12px;
                                     height: 24px;
-                                    border: 1px solid #ddd; border-bottom: 0;"
+                                    border: 1px solid var(--table-border-color); border-bottom: 0;"
                             >
                         </md-select-header>
                     </div>
@@ -328,23 +328,23 @@
 
                                     <md-menu-content>
                                         <md-menu-item>
-                                            <md-button class="md-raised" data-ng-click="vm.openInNewTab($event, item)">
+                                            <md-button class="" data-ng-click="vm.openInNewTab($event, item)">
                                                 Open In New Tab
                                             </md-button>
                                         </md-menu-item>
                                         <md-menu-item>
-                                            <md-button class="md-raised" data-ng-click="vm.copyLink($event, item)">Copy
+                                            <md-button class="" data-ng-click="vm.copyLink($event, item)">Copy
                                                 Link
                                             </md-button>
                                         </md-menu-item>
                                         <md-menu-item>
-                                            <md-button class="md-raised" data-ng-click="vm.copyFilePath($event, item)">
+                                            <md-button class="" data-ng-click="vm.copyFilePath($event, item)">
                                                 Copy
                                                 Explorer File Path
                                             </md-button>
                                         </md-menu-item>
                                         <md-menu-item>
-                                            <md-button class="md-raised" data-ng-click="vm.editFile($event, item)">Edit
+                                            <md-button class="" data-ng-click="vm.editFile($event, item)">Edit
                                             </md-button>
                                         </md-menu-item>
                                         <!--                                        <md-menu-item>-->
@@ -352,7 +352,7 @@
                                         <!--                                            </md-button>-->
                                         <!--                                        </md-menu-item>-->
                                         <md-menu-item>
-                                            <md-button class="md-raised" data-ng-click="vm.downloadFile($event, item)">
+                                            <md-button class="" data-ng-click="vm.downloadFile($event, item)">
                                                 Download
                                             </md-button>
                                         </md-menu-item>
@@ -385,10 +385,13 @@
                         <div layout="row" class="explorer-file-edit-section-toolbar" layout-align="space-between">
 
                             <div layout="row">
-                                <md-button class="outline-button" data-ng-click="vm.saveFileEditor($event)" layout="row"
-                                           layout-align="center">Save
+                                <md-button class="outline-button" style="align-items: center"
+                                           data-ng-click="vm.saveFileEditor($event)" layout="row"
+                                           layout-align="center">
+
+                                    Save
                                     <div layout="row" layout-sm="column" layout-align="space-around"
-                                         style="margin-left: 4px; padding-top: 10px;"
+                                         style="margin-left: 4px;"
                                          data-ng-if="vm.fileSaveProcessing">
                                         <progress-circular diameter="10"></progress-circular>
                                     </div>
@@ -433,7 +436,8 @@
                         </div>
 
                         <div
-                                class="file-preview-content-wrap"><div class="ace-editor" id="fileEditorAceEditor"></div>
+                                class="file-preview-content-wrap">
+                            <div class="ace-editor" id="fileEditorAceEditor"></div>
                         </div>
 
                     </div>

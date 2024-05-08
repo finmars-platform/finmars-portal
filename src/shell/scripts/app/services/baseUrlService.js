@@ -22,10 +22,18 @@ const getAuthorizerUrl = () => {
 	return window.AUTHORIZER_URL
 }
 
-const setMasterUserPrefix = function (_prefix) {
-	window.base_api_url = _prefix;
+/**
+ * Actually sets current realm and space
+ *
+ * @param realmAndSpace
+ */
+const setMasterUserPrefix = function (realmAndSpace) {
+	window.base_api_url = realmAndSpace;
 }
 
+/**
+ * @return {String|undefined} - realm and space in form of ${realm}/${space}
+ */
 const getMasterUserPrefix = () => {
 	return window.base_api_url
 }

@@ -69,7 +69,7 @@
             $mdDialog.show({
                 controller: 'SelectLayoutDialogController as vm',
                 templateUrl: 'views/dialogs/select-layout-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,

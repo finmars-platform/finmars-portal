@@ -151,7 +151,7 @@
             $mdDialog.show({
                 controller: 'ExpressionProcedureAddDialogController as vm',
                 templateUrl: 'views/dialogs/procedures/expression-procedure-add-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 preserveScope: true,

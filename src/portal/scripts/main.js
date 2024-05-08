@@ -18,17 +18,16 @@ import 'v-accordion/dist/v-accordion.min.css';
 import 'angular-paging'
 import 'ui-select/dist/select.min.js'
 import 'ui-select/dist/select.min.css'
+
+
+// VUE 3 Integration
+// import {FinmarsButton} from '@finmars/ui';
+// import '@finmars/ui/dist/finmars-ui.css';
+// import {vueClassConverter} from './vue-helper.js';
+
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 // Ensure that the worker is imported as a module.
-import { pdfjsWorker } from 'pdfjs-dist/legacy/build/pdf.worker.entry';
-
-// Specify the workerSrc to PDF.js, which can now be imported directly as a module.
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
-
-// Set up pdfjsLib globally if necessary
-window.pdfjsLib = pdfjsLib;
-
-
+import {pdfjsWorker} from 'pdfjs-dist/legacy/build/pdf.worker.entry';
 import masterUserService from "./app/services/masterUserService";
 
 import uiService from "./app/services/uiServiceNew";
@@ -99,6 +98,12 @@ import closeDialogButtonDirective from "./app/directives/closeDialogButtonDirect
 
 import * as Sentry from "@sentry/browser";
 import {Angular as AngularIntegration} from "@sentry/integrations";
+
+// Specify the workerSrc to PDF.js, which can now be imported directly as a module.
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+
+// Set up pdfjsLib globally if necessary
+window.pdfjsLib = pdfjsLib;
 
 // noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
@@ -287,7 +292,7 @@ export default (function () {
     portal.directive('dashboardGridAligner', [require('./app/directives/dashboard/dashboardGridAlignerDirective')]);
 
     portal.directive('dashboardAccordion', ['$mdDialog', '$state', require('./app/directives/dashboard/dashboardAccordionDirective')]);
-    portal.directive('dashboardButtonSet', ['$mdDialog', '$state', 'transactionImportSchemeService', require('./app/directives/dashboard/dashboardButtonSetDirective')]);
+    portal.directive('dashboardButtonSet', ['$mdDialog', '$state', 'transactionImportSchemeService', 'pricingPolicyService', require('./app/directives/dashboard/dashboardButtonSetDirective')]);
     portal.directive('dashboardControl', ['metaContentTypesService', 'entityResolverService', 'uiService', 'reportHelper', require('./app/directives/dashboard/dashboardControlDirective')]);
     portal.directive('dashboardControlDate', ['metaContentTypesService', 'entityResolverService', 'uiService', 'reportHelper', require('./app/directives/dashboard/dashboardControlDateDirective')]);
     portal.directive('dashboardControlRelation', ['metaContentTypesService', 'entityResolverService', 'uiService', 'reportHelper', require('./app/directives/dashboard/dashboardControlRelationDirective')]);
@@ -748,7 +753,7 @@ export default (function () {
 
     portal.directive('bindFieldControl', ['$mdDialog', require('./app/directives/bindFieldControlDirective')]);
     portal.directive('bindFieldTable', ['$mdDialog', 'instrumentService', 'gridTableHelperService', 'multitypeFieldService', 'entityDataConstructorService', require('./app/directives/bindFieldTableDirective')]);
-    portal.directive('bindFieldAttachment', ['$mdDialog',  require('./app/directives/bindFieldAttachmentDirective')]);
+    portal.directive('bindFieldAttachment', ['$mdDialog', require('./app/directives/bindFieldAttachmentDirective')]);
     portal.directive('layoutConstructorField', ['$mdDialog', require('./app/directives/layoutConstructorFieldDirective')]);
     // portal.directive('newLayoutConstructorField', ['$mdDialog', require('./app/directives/newLayoutConstructorFieldDirective')]);
     portal.directive('addTabEc', ['$compile', require('./app/directives/addTabEcDirective')]);
@@ -910,7 +915,7 @@ export default (function () {
     portal.directive('rvDateFilter', ['$mdDialog', require('./app/directives/reportViewer/userFilters/rvDateFilterDirective')]); */
 
     portal.directive('gFilters', ['$mdDialog', 'uiService', 'evRvLayoutsHelper', 'gFiltersHelper', require('./app/directives/groupTable/filters/gFiltersDirective')]);
-    portal.directive('gEvFilters', ['$mdDialog', '$state', '$bigDrawer', require('./app/directives/groupTable/filters/entityViewer/gEvFiltersDirective')]);
+    portal.directive('gEvFilters', ['$mdDialog', '$state', '$bigDrawer', 'toastNotificationService', require('./app/directives/groupTable/filters/entityViewer/gEvFiltersDirective')]);
     portal.directive('evFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evFilterDirective')]);
     portal.directive('evTextFilter', ['specificDataService', 'userFilterService', 'gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evTextFilterDirective')]);
     portal.directive('evBooleanFilter', ['gFiltersHelper', require('./app/directives/groupTable/filters/entityViewer/evBooleanFilterDirective')]);
@@ -1071,6 +1076,8 @@ export default (function () {
         return this.charAt(0).toUpperCase() + this.slice(1);
     };
 
+    // portal.directive('finmarsButton', ['$rootScope', vueClassConverter(FinmarsButton)]);
+    // portal.directive('finmarsExpressionInput', ['$rootScope', vueClassConverter(FinmarsButton)]);
 
     window.onerror = function (error) {
 

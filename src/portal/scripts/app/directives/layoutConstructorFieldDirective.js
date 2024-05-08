@@ -278,6 +278,7 @@
 						// controller: 'EvFormInstrumentAccrualsSettingsDialogController as vm',
 						controller: 'EvFormInstrumentTableSettingsDialogController as vm',
 						templateUrl: 'views/dialogs/ev-form-instrument-table-settings-dialog-view.html',
+                        parent: document.querySelector('.dialog-containers-wrap'),
 						targetEvent: $event,
 						multiple: true,
 						locals: {
@@ -839,6 +840,7 @@
                     $mdDialog.show({
                         controller: 'NumberFormatSettingsDialogController as vm',
                         templateUrl: 'views/dialogs/number-format-settings-dialog-view.html',
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         multiple: true,
                         locals: {

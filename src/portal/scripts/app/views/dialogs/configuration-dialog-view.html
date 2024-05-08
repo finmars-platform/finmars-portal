@@ -14,7 +14,7 @@
             </div>
         </div>
     </md-toolbar>
-    <md-dialog-content style="background: #E5E5E5;">
+    <md-dialog-content>
         <md-content>
             <div data-ng-if="vm.checkReadyStatus()" class="position-relative">
 
@@ -24,7 +24,7 @@
 
                             <div>
 
-                                <div style="border: 1px solid #ddd; margin-bottom: 32px;" class="m-16 p-16"
+                                <div style="border: 1px solid var(--table-border-color); margin-bottom: 32px;" class="m-16 p-16"
                                      data-ng-if="!vm.item.id">
                                     <p>
                                         Configuration code pattern:
@@ -220,10 +220,14 @@
                                     <p>It means you cannot push multiple times the same version</p>
                                     <p>Each push should create new unique version</p>
 
-                                    <md-input-container class="md-block">
-                                        <label>Changelog (optional)</label>
-                                        <input aria-label="description" type="text" data-ng-model="vm.changelog" maxlength="100">
-                                    </md-input-container>
+                                    <text-input
+                                            data-label="Changelog (optional) ({{ vm.changelog ? vm.changelog.length : 0 }} / 100)"
+                                            data-model="vm.changelog"
+                                            data-event-signal="vm.eventObj.event"
+                                            data-on-change-callback="vm.onChangeCallback(changedValue)"
+                                            data-max-length="100"
+                                        >
+                                    </text-input>
 
                                     <span style="color: orange">Warning. Before pushing new version, please, check if it was exported to your System Storage</span>
 

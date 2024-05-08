@@ -19,7 +19,7 @@
   .expression-functions-block {
 
     padding: 16px;
-    border: 1px solid #4C334D;
+    border: 1px solid var(--table-border-color);
     margin: 16px;
 
     .expression-editor-column {
@@ -53,20 +53,19 @@
       padding: 4px 8px;
 
       &.selected {
-        background: #4C334D;
-        color: #fff;
+        background: var(--table-border-color);
+        color: var(--secondary-color);
       }
 
       &:hover {
-        background: #4C334D;
-        color: #fff;
+        opacity: .9;
       }
     }
 
   }
 
   .expression-editor-cols-resizer {
-    background-color: #4C334D;
+    background-color: var(--table-border-color);
     height: 320px;
     width: 3px;
     cursor: col-resize;
@@ -75,7 +74,7 @@
 
   .description-column-header {
     padding: 16px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--secondary-color);
   }
 
   .description-column-body {
@@ -103,7 +102,7 @@
   }
 
   .expression-editor-groups-column {
-    border-right: 1px solid #000;
+    border-right: var(--table-border-color);
     padding-right: 16px;
 
     .help-item-menu-item:first-child {
@@ -114,7 +113,7 @@
 
   .help-search-control {
     height: 32px;
-    border-bottom: 1px solid #4C334D;
+    border-bottom: 1px solid var(--table-border-color);
     margin: 0 0 8px;
 
     input {
@@ -151,7 +150,7 @@
 
   .eb-highlight-property {
     font-weight: bold;
-    color: #363636;
+    color: var(--secondary-color);
   }
 
   .eb-highlight-input {
@@ -171,7 +170,7 @@
   }
 
   .eb-circle-property {
-    background: #363636;
+    background: var(--secondary-color);
   }
 
   .eb-circle-input {

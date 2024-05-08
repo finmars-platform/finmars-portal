@@ -65,7 +65,7 @@
             /* $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: {
                     warning: {
                         title: 'Warning!',
@@ -107,7 +107,7 @@
             $mdDialog.show({
                 controller: 'TwoFactorSetupDialogController as vm',
                 templateUrl: 'views/dialogs/two-factor-setup-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: {
                     data: {}
                 },

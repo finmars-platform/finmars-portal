@@ -11,7 +11,6 @@
         vm.name = '';
         vm.valueType = data.valueType;
         vm.contentType = data.contentType;
-        vm.fillFromContext = data.fillFromContext;
         vm.defaultValue = data.defaultValue;
         vm.relationItems = data.relationItems;
         vm.valueTypeOptions = data.valueTypeOptions;
@@ -79,7 +78,6 @@
 		};
 
         vm.onContentTypeChange = function () {
-            vm.fillFromContext = null
             vm.contextProperties = []
             vm.defaultValuesItems = []
 
@@ -136,11 +134,6 @@
             return true;
 
         };
-
-        vm.unselectContextProperties = function () {
-            vm.fillFromContext = null
-        };
-
 
         vm.validateInputName = function () {
 
@@ -235,7 +228,6 @@
                     tooltip: vm.tooltip,
                     valueType: vm.valueType,
                     contentType: vm.contentType,
-                    context_property: vm.fillFromContext,
                     value: vm.defaultValue,
                     value_expr: vm.valueExpression,
                     linked_inputs_names: vm.linkedInputsNames,

@@ -667,6 +667,10 @@
                 vm.getSessionRemainingTime();
             }, 1000);
 
+            vm.isThemeInDarkMode = function () {
+                return globalDataService.isThemeInDarkMode();
+            }
+
 
             // if (toastr) {
             //     toastr.options.onclick = function (event) {

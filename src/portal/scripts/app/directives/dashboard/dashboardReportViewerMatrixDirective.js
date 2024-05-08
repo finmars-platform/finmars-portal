@@ -41,7 +41,7 @@ const evEvents = require("../../services/entityViewerEvents");
                     $mdDialog.show({
                         controller: 'DashboardReportViewerMatrixComponentSettingsDialogController as vm',
                         templateUrl: 'views/dialogs/dashboard/component-settings/dashboard-report-viewer-matrix-component-settings-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         autoWrap: true,
                         multiple: true,
@@ -77,7 +77,7 @@ const evEvents = require("../../services/entityViewerEvents");
                     $mdDialog.show({
                         controller: 'ReportPriceCheckerDialogController as vm',
                         templateUrl: 'views/dialogs/report-missing-prices/report-price-checker-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             data: {

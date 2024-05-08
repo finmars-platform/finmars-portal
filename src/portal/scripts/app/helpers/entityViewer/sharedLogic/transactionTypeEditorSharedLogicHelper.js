@@ -1100,6 +1100,7 @@
             const data = await $mdDialog.show({
                 controller: 'TransactionTypeValidationErrorsDialogController as vm',
                 templateUrl: 'views/entity-viewer/transaction-type-validation-errors-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
                 clickOutsideToClose: false,
                 multiple: true,
                 locals: {
@@ -1203,7 +1204,6 @@
                 verbose_name: null,
                 value_type: null,
                 content_type: null,
-                is_fill_from_context: false,
                 reference_table: null,
                 account: null,
                 instrument_type: null,
@@ -1225,12 +1225,6 @@
             }
 
             newInput.name = newRow.key
-
-            // if there is is_fill_from_context, enable it
-            var fillFromContext = gridTableHelperService.getCellFromRowByKey(newRow, 'is_fill_from_context');
-            if (fillFromContext.settings.value) {
-                newInput.is_fill_from_context = true;
-            }
 
             viewModel.entity.inputs.unshift(newInput);
 
@@ -1376,7 +1370,6 @@
 
             var valueType = gridTableHelperService.getCellFromRowByKey(row, 'value_type'),
                 contentType = gridTableHelperService.getCellFromRowByKey(row, 'content_type'),
-                fillFromContext = gridTableHelperService.getCellFromRowByKey(row, 'is_fill_from_context'),
                 defaultValue = gridTableHelperService.getCellFromRowByKey(row, 'default_value');
 
             switch (valueType.settings.value) {
@@ -1392,17 +1385,6 @@
 
                         defaultValue.cellType = 'expression'
                         defaultValue.settings = {value: '', exprData: viewModel.expressionData}
-
-                    }
-
-                    // fillFromContext.settings.value = null
-                    // fillFromContext.cellType = 'empty'
-
-
-                    if (fillFromContext.cellType === 'selector') {
-
-                        fillFromContext.cellType = 'expression'
-                        fillFromContext.settings = {value: '', exprData: viewModel.expressionData}
 
                     }
 
@@ -1437,15 +1419,6 @@
 
                     }
 
-                    // fillFromContext.settings.value = null
-
-                    if (fillFromContext.cellType === 'selector') {
-
-                        fillFromContext.cellType = 'expression'
-                        fillFromContext.settings = {value: '', exprData: viewModel.expressionData}
-
-                    }
-
                     break;
 
                 default:
@@ -1459,16 +1432,6 @@
                         defaultValue.settings = {value: '', exprData: viewModel.expressionData}
 
                     }
-
-                    if (fillFromContext.cellType === 'selector') {
-
-                        fillFromContext.cellType = 'expression'
-                        fillFromContext.settings = {value: '', exprData: viewModel.expressionData}
-
-                    }
-
-                    // fillFromContext.settings.value = null
-                    // fillFromContext.cellType = 'empty'
 
                     break;
 
@@ -1512,7 +1475,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 preserveScope: true,
                 autoWrap: true,
                 multiple: true,
@@ -1580,7 +1543,7 @@
             $mdDialog.show({
                 controller: 'TransactionTypeAddInputDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-type-add-input-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 multiple: true,
                 locals: {
                     data: {
@@ -1615,7 +1578,6 @@
                             tooltip = gridTableHelperService.getCellFromRowByKey(newRow, 'tooltip'),
                             valueType = gridTableHelperService.getCellFromRowByKey(newRow, 'value_type'),
                             contentType = gridTableHelperService.getCellFromRowByKey(newRow, 'content_type'),
-                            fillFromContext = gridTableHelperService.getCellFromRowByKey(newRow, 'is_fill_from_context'),
                             defaultValue = gridTableHelperService.getCellFromRowByKey(newRow, 'default_value'),
                             inputCalcExpression = gridTableHelperService.getCellFromRowByKey(newRow, 'input_calc_expr'),
                             linkedInputs = gridTableHelperService.getCellFromRowByKey(newRow, 'linked_inputs_names');
@@ -1626,7 +1588,6 @@
                         expression_iterations_count.settings.value = res.data.expression_iterations_count;
                         valueType.settings.value = res.data.valueType;
                         contentType.settings.value = res.data.contentType;
-                        fillFromContext.settings.value = res.data.context_property;
 
                         defaultValue.settings.value = res.data.value;
                         defaultValue.settings.exprData = viewModel.expressionData;
@@ -1764,21 +1725,6 @@
                         }
                     },*/
                     {
-                        key: 'is_fill_from_context',
-                        objPath: ['context_property'],
-                        columnName: 'Use Default Value from Context',
-                        order: 5,
-                        cellType: 'expression',
-                        settings: {
-                            value: '',
-                            exprData: null,
-                            closeOnMouseOut: false
-                        },
-                        styles: {
-                            'grid-table-cell': {'width': '180px'}
-                        }
-                    },
-                    {
                         key: 'default_value',
                         objPath: ['value'],
                         columnName: 'Default value',
@@ -1910,22 +1856,20 @@
                 }
 
                 rowObj.columns[4].settings.isDisabled = true
-                // is_fill_from_context
-                rowObj.columns[5].settings.value = input.context_property
                 // default_value
-                rowObj.columns[6].settings.value = input.value
-                rowObj.columns[6].settings.exprData = viewModel.expressionData
+                rowObj.columns[5].settings.value = input.value
+                rowObj.columns[5].settings.exprData = viewModel.expressionData
 
                 changeCellsBasedOnValueType(rowObj);
 
                 // input_calc_expr
-                rowObj.columns[7].settings.value = input.value_expr
-                rowObj.columns[7].settings.exprData = viewModel.expressionData;
+                rowObj.columns[6].settings.value = input.value_expr
+                rowObj.columns[6].settings.exprData = viewModel.expressionData;
 
                 //# region linked_inputs_names
-                rowObj.columns[8].settings.value = [];
+                rowObj.columns[7].settings.value = [];
 
-                rowObj.columns[9].settings.value = input.expression_iterations_count
+                rowObj.columns[8].settings.value = input.expression_iterations_count
 
                 if (input.settings && input.settings.linked_inputs_names) {
 
@@ -1939,12 +1883,12 @@
 
                     if (input.value_type === 120) { // Button
 
-                        rowObj.columns[8].settings.optionsCheckboxes = null; // linked inputs for Button have no checkboxes
-                        rowObj.columns[8].settings.value = structuredClone(input.settings.linked_inputs_names);
+                        rowObj.columns[7].settings.optionsCheckboxes = null; // linked inputs for Button have no checkboxes
+                        rowObj.columns[7].settings.value = structuredClone(input.settings.linked_inputs_names);
 
                     } else {
 
-                        rowObj.columns[8].settings.value = input.settings.linked_inputs_names.map(function (linkedInputName) {
+                        rowObj.columns[7].settings.value = input.settings.linked_inputs_names.map(function (linkedInputName) {
 
                             var linkedInput = {
                                 id: linkedInputName,
@@ -1965,7 +1909,7 @@
 
                 }
 
-                rowObj.columns[8].settings.selectorOptions = viewModel.inputsForMultiselector
+                rowObj.columns[7].settings.selectorOptions = viewModel.inputsForMultiselector
                 //# endregion linked_inputs_names
 
                 viewModel.inputsGridTableData.body.push(rowObj)
@@ -2133,7 +2077,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -4084,7 +4028,7 @@
             $mdDialog.show({
                 controller: 'SaveAsDialogController as vm',
                 templateUrl: 'views/dialogs/save-as-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 preserveScope: true,
@@ -4206,7 +4150,7 @@
                             $mdDialog.show({
                                 controller: 'InfoDialogController as vm',
                                 templateUrl: 'views/info-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: document.querySelector('.dialog-containers-wrap'),
                                 targetEvent: $event,
                                 clickOutsideToClose: false,
                                 preserveScope: true,
@@ -4262,6 +4206,7 @@
                 $mdDialog.show({
                     controller: 'InputTemplateLayoutViewerDialogController as vm',
                     templateUrl: 'views/dialogs/input-template-layout-viewer-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
                     targetEvent: $event,
                     locals: {
                         data: {
@@ -4388,6 +4333,7 @@
             $mdDialog.show({
                 controller: 'EnterUserCodeDialogController as vm',
                 templateUrl: 'views/dialogs/enter-user-code-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 locals: {
                     data: {
