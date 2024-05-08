@@ -100,7 +100,7 @@
             $mdDialog.show({
                 controller: 'TwoInputsDialogController as vm',
                 templateUrl: 'views/dialogs/two-inputs-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 multiple: true,
                 locals: {
@@ -142,7 +142,7 @@
             $mdDialog.show({
                 controller: 'TwoInputsDialogController as vm',
                 templateUrl: 'views/dialogs/two-inputs-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 multiple: true,
                 locals: {
@@ -201,7 +201,7 @@
             $mdDialog.show({
                 controller: 'RenameColorDialogController as vm',
                 templateUrl: 'views/dialogs/rename-color-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 multiple: true,
                 locals: {
@@ -240,7 +240,7 @@
             $mdDialog.show({
                 controller: 'ColorPickerDialogController as vm',
                 templateUrl: 'views/colorPicker/color-picker-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 multiple: true,
                 locals: {

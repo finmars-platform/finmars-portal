@@ -75,6 +75,33 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'in
             })
     };
 
+    var getByUserCode = function (userCode) {
+
+        if (!userCode || typeof userCode !== 'string') {
+            throw "Error [pricingPolicyRepository.getByUserCode] invalid userCode provided";
+        }
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        var options = {
+            filters: {
+                user_code: userCode,
+            }
+        }
+
+        return xhrService.fetch(configureRepositoryUrlService.configureUrl(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'instruments/pricing-policy/light/', options),
+            {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                }
+            })
+    };
+
     var create = function (policy) {
 
 var prefix = baseUrlService.getMasterUserPrefix();
@@ -165,6 +192,7 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'in
         getList: getList,
         getListLight: getListLight,
         getByKey: getByKey,
+        getByUserCode: getByUserCode,
         create: create,
         update: update,
         deleteByKey: deleteByKey,

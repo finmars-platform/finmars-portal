@@ -505,7 +505,7 @@
                         $mdDialog.show({
                             controller: 'InfoDialogController as vm',
                             templateUrl: 'views/info-dialog-view.html',
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             targetEvent: $event,
                             clickOutsideToClose: false,
                             preserveScope: true,
@@ -587,7 +587,7 @@
                                 $mdDialog.show({
                                     controller: 'InfoDialogController as vm',
                                     templateUrl: 'views/info-dialog-view.html',
-                                    parent: angular.element(document.body),
+                                    parent: document.querySelector('.dialog-containers-wrap'),
                                     targetEvent: $event,
                                     clickOutsideToClose: false,
                                     preserveScope: true,
@@ -641,7 +641,7 @@
                 $mdDialog.show({
                     controller: 'InfoDialogController as vm',
                     templateUrl: 'views/info-dialog-view.html',
-                    parent: angular.element(document.body),
+                    parent: document.querySelector('.dialog-containers-wrap'),
                     targetEvent: $event,
                     clickOutsideToClose: false,
                     preserveScope: true,
@@ -747,7 +747,7 @@
                 $mdDialog.show({
                     controller: 'InfoDialogController as vm',
                     templateUrl: 'views/info-dialog-view.html',
-                    parent: angular.element(document.body),
+                    parent: document.querySelector('.dialog-containers-wrap'),
                     targetEvent: $event,
                     clickOutsideToClose: false,
                     preserveScope: true,

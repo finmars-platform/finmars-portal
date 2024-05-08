@@ -96,7 +96,7 @@
             $mdDialog.show({
                 controller: 'ReconMatchViewFileFieldDialogController as vm',
                 templateUrl: 'views/dialogs/reconciliation/recon-match-file-field-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,

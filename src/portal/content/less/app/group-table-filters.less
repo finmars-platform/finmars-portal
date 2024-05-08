@@ -244,9 +244,11 @@ md-checkbox.g-filter-options-checkbox {
   height: 0;
   overflow: hidden;
   box-sizing: border-box;
-  color: @gray;
+  //color: @gray;
+  color: var(--secondary-color);
   font-size: 14px;
-  background-color: white;
+  //background-color: white;
+  background-color: var(--page-background-color);
 
   &.open-filters {
     height: auto;
@@ -278,9 +280,16 @@ md-checkbox.g-filter-options-checkbox {
     }
   }
 
-  .g-filter-settings-big-left-btn {
+  .g-filter-settings-big-left-btn.md-primary {
     display: flex;
     justify-content: center;
+    color: var(--secondary-color);
+    //background-color: var(--primary-color);;
+    background-color: var(--state-active-background-color);
+    &:hover {
+      background-color: var(--state-active-background-color);
+      opacity: .9;
+    }
   }
 
   .g-toggle-filters-btn {
@@ -377,11 +386,13 @@ md-checkbox.g-filter-options-checkbox {
   .add-chip-wrap {
 
     .chip-div {
-      color: @orange;
+      //color: @orange;
+      color: var(--primary-color);
       background-color: initial;
 
       &:hover {
-        background-color: rgba(240, 90, 34, 0.1);
+        //background-color: rgba(240, 90, 34, 0.1);
+        opacity: .8;
       }
     }
 
@@ -579,13 +590,13 @@ md-checkbox.g-filter-options-checkbox {
   .g-filters {
 
     .md-button.chain-button {
-      color: @orange;
+      color: var(--primary-color);
 
       &.g-use-from-above-filters-hidden {
-        color: @gray;
+        color: var(--secondary-color);
 
         ng-md-icon svg {
-          fill: @gray;
+          fill: var(--secondary-color);
         }
       }
     }

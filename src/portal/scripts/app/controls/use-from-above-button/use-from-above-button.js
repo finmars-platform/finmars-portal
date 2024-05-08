@@ -23,7 +23,7 @@
                     $mdDialog.show({
                         controller: 'UseFromAboveDialogController as vm',
                         templateUrl: 'views/dialogs/use-from-above-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         preserveScope: true,
                         multiple: true,
