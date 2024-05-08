@@ -1,12 +1,9 @@
 <md-dialog class="entity-search-dialog draggable-dialog entityEditorElemToResize" drag-dialog
   aria-label="entity search dialog">
   <md-toolbar>
-    <div class="md-toolbar-tools">
-      <is-draggable-sign></is-draggable-sign>
-
-      <h2>Search {{vm.entityType}}</h2>
-      <span flex></span>
-    </div>
+    <dialog-header data-title="Search {{vm.entityType}}"
+                   cancel-dialog="vm.cancel()">
+    </dialog-header>
   </md-toolbar>
 
   <div ng-if="vm.recentlyCreatedItems.length > 0">

@@ -2,10 +2,9 @@
            class="draggable-dialog width-50"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>Matrix Component Editor</h2>
-            <span flex></span>
-        </div>
+        <dialog-header data-title="Matrix Component Editor"
+                       cancel-dialog="vm.cancel()">
+        </dialog-header>
     </md-toolbar>
 
     <md-dialog-content>
