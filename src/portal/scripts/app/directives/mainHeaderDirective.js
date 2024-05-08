@@ -32,8 +32,6 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
             scope.toggleDarkMode = function () {
 
-                scope.isThemeInDarkMode = globalDataService.isThemeInDarkMode()
-
                 if (scope.isThemeInDarkMode) {
                     globalDataService.disableThemeDarkMode()
                 } else {
@@ -42,12 +40,9 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
 
                 scope.isThemeInDarkMode = globalDataService.isThemeInDarkMode(); // to update title in the switcher
 
-                const memberLayout = globalDataService.getMemberLayout();
-                memberLayout.data.dark_mode = scope.isThemeInDarkMode;
+                const user = globalDataService.getUser();
 
-                uiService.updateMemberLayout(memberLayout.id, memberLayout).then(() => {
-
-                });
+                authorizerService.updateUser(user.id, user);
 
             }
 

@@ -18,8 +18,8 @@ import 'v-accordion/dist/v-accordion.min.css';
 import 'angular-paging'
 import 'ui-select/dist/select.min.js'
 import 'ui-select/dist/select.min.css'
-
-import '@finmars/ui/dist/finmars-ui.css';
+// VUE 3 Integration
+// import '@finmars/ui/dist/finmars-ui.css';
 
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 // Ensure that the worker is imported as a module.
@@ -102,8 +102,8 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 window.pdfjsLib = pdfjsLib;
 
 // VUE 3 Integration
-import {FinmarsButton} from '@finmars/ui';
-import {vueClassConverter} from './vue-helper.js';
+// import {FinmarsButton} from '@finmars/ui';
+// import {vueClassConverter} from './vue-helper.js';
 
 // noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
@@ -1075,7 +1075,7 @@ export default (function () {
     String.prototype.capitalizeFirstLetter = function () {
         return this.charAt(0).toUpperCase() + this.slice(1);
     };
-
+    // VUE 3 Integration
     // portal.directive('finmarsButton', ['$rootScope', vueClassConverter(FinmarsButton)]);
     // portal.directive('finmarsExpressionInput', ['$rootScope', vueClassConverter(FinmarsButton)]);
 
