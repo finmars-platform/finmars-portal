@@ -2,10 +2,9 @@
            class="draggable-dialog width-50"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>Report Component Editor</h2>
-            <span flex></span>
-        </div>
+        <dialog-header data-title="Report Component Editor"
+                       cancel-dialog="vm.cancel()">
+        </dialog-header>
     </md-toolbar>
 
     <md-dialog-content>

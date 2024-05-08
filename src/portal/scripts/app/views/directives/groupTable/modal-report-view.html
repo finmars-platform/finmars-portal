@@ -2,19 +2,12 @@
            class="g-modal-dialog draggable-dialog view-constructor"
            g-dialog-draggable>
     <md-toolbar>
-        <div class="md-toolbar-tools" layout="row" layout-align="start center">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2 style="user-select: none; position: relative;">View Constructor
-                <ng-md-icon class="tooltips-sign" icon="info" size="20" style="fill: #fff">
-                    <md-tooltip md-direction="top">tooltip text</md-tooltip>
-                </ng-md-icon>
-            </h2>
-            <!-- <span class="tooltips-sign white">
-                (i)
-                <md-tooltip md-direction="top">tooltip text</md-tooltip>
-            </span> -->
-        </div>
+        <dialog-header
+                data-title="View Constructor"
+                data-tooltip="tooltip text"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
 
     <md-dialog-content class="vc-dnd-scrollable-elem">

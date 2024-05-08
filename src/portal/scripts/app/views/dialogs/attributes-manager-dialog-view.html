@@ -2,20 +2,9 @@
            class="attributes-manager-dialog dialog-actions-bottom draggable-dialog manageAttrsElemToResize"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h1 class="entity-data-constructor-title">
-                <span class="ec-entity-type">
-                    {{vm.entityType}}
-                    <ng-md-icon icon="chevron_right"
-                                size="24"
-                                style="fill:#8B8B8B;"></ng-md-icon>
-                </span>
-                MANAGE ATTRIBUTES
-            </h1>
-            <span flex></span>
-        </div>
+        <dialog-header data-title="{{vm.entityType.toUpperCase()}} &#8250 MANAGE ATTRIBUTES"
+                       cancel-dialog="vm.cancel()">
+        </dialog-header>
     </md-toolbar>
 
     <md-dialog-content class="height-100">
