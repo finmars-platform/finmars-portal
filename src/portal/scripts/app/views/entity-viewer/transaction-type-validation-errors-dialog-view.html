@@ -3,10 +3,11 @@
            style="width: 40%;"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>Transaction Type Validation Errors</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Transaction Type Validation Errors"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content>
         <md-content>
