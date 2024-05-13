@@ -2,10 +2,11 @@
            class="ace-editor-dialog draggable-dialog dialog-actions-bottom"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2 >JSON Editor</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="JSON Editor"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content>
         <div class="ace-editor" id="aceEditor">

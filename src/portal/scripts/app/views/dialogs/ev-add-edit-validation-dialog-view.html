@@ -3,12 +3,11 @@
            style="width: 40%;"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Errors list</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Errors list"
+                cancel-dialog="vm.agree()"
+        >
+        </dialog-header>
     </md-toolbar>
 
     <md-dialog-content>
