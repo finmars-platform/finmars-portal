@@ -1,10 +1,11 @@
 <md-dialog aria-label="context menu option settings dialog"
            class="success-dialog">
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>Option Settings</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Option Settings"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content>
         <div class="p-24">

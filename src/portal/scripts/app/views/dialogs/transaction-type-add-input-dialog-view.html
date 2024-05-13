@@ -3,12 +3,11 @@
            drag-dialog
            style="min-height: 90%;">
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Add transaction type input</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Add transaction type input"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
 
     <md-dialog-content class="p-16">
