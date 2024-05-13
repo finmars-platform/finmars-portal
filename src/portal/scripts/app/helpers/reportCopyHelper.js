@@ -26,44 +26,47 @@
 
     };*/
 
+    var filterSelected = function(evDataService, flatList, isReport) {
+        if (isReport) {
+
+            flatList = flatList.filter(function (row) {
+
+                if (row.___type === 'subtotal') {
+
+                    var parentGroup = evDataService.getData(row.___parentId);
+
+                    if (row.___subtotal_type === "line" && parentGroup.___is_line_subtotal_activated) {
+                        return true;
+                    }
+
+                    if (row.___subtotal_type === "area" && parentGroup.___is_area_subtotal_activated) {
+                        return true;
+                    }
+
+                } else if (row.___is_activated) {
+                    return true;
+                }
+
+                return false;
+
+            });
+
+        } else {
+
+            flatList = flatList.filter(function (row) {
+                return row.___is_activated;
+            });
+
+        }
+        return flatList
+    }
+
     var copy = function (evDataService, isReport, copyType) {
 
         var flatList = evDataService.getFlatList();
 
         if (copyType === 'selected') {
-
-            if (isReport) {
-
-                flatList = flatList.filter(function (row) {
-
-                    if (row.___type === 'subtotal') {
-
-                        var parentGroup = evDataService.getData(row.___parentId);
-
-                        if (row.___subtotal_type === "line" && parentGroup.___is_line_subtotal_activated) {
-                            return true;
-                        }
-
-                        if (row.___subtotal_type === "area" && parentGroup.___is_area_subtotal_activated) {
-                            return true;
-                        }
-
-                    } else if (row.___is_activated) {
-                        return true;
-                    }
-
-                    return false;
-
-                });
-
-            } else {
-
-                flatList = flatList.filter(function (row) {
-                    return row.___is_activated;
-                });
-
-            }
-
+            flatList = filterSelected(evDataService, flatList, isReport)
         }
 
         if (flatList.length) {
@@ -92,7 +95,8 @@
     };
 
     module.exports = {
-        copy: copy
+        copy: copy,
+        filterSelected: filterSelected
     }
 
 }());
