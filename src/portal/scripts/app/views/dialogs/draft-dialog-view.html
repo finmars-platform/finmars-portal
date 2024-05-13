@@ -3,10 +3,11 @@
            drag-dialog>
 
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>Draft</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Draft"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
 
     <md-dialog-content>
