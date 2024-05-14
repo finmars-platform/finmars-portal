@@ -60,7 +60,6 @@ const app = angular.module('finmars', [
     'finmars.profile',
     'finmars.database',
     'finmars.portal',
-    // 'finmars.forum'
 ]);
 
 // app.config(['$stateProvider', '$urlServiceProvider', require('./app/router.js')]);
