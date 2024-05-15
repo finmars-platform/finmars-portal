@@ -69,6 +69,7 @@
             $mdDialog.show({
                 controller: "TableAttributeSelectorDialogController as vm",
                 templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
+                parent: document.querySelector(".dialog-containers-wrap"),
                 targetEvent: $event,
                 multiple: true,
                 locals: {
@@ -116,6 +117,7 @@
             $mdDialog.show({
                 controller: "TableAttributeSelectorDialogController as vm",
                 templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
+                parent: document.querySelector(".dialog-containers-wrap"),
                 targetEvent: $event,
                 multiple: true,
                 locals: {
