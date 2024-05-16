@@ -295,7 +295,8 @@
 						$mdDialog.show({
 							controller: "TwoFieldsMultiselectDialogController as vm",
 							templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
-							parent: parent,
+							// parent: parent,
+							parent: document.querySelector('.dialog-containers-wrap'),
 							targetEvent: event,
 							multiple: true,
 							locals: {
