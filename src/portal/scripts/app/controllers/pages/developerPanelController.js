@@ -23,6 +23,7 @@
             $mdDialog.show({
                 controller: 'ComplexImportDialogController as vm',
                 templateUrl: 'views/dialogs/complex-import/complex-import-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 targetEvent: $event,
                 multiple: true,
                 locals: {
@@ -37,6 +38,7 @@
             $mdDialog.show({
                 controller: 'SimpleEntityImportDialogController as vm',
                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-dialog-view.html',
+
                 targetEvent: $event,
                 multiple: true,
                 locals: {
