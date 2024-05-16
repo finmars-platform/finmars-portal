@@ -93,23 +93,23 @@ input {
 }
 
 ::-webkit-resizer {
-  background: var(--card-background-color);
+  background: var(--scroll-backgroundColor);
 }
 
 ::-webkit-scrollbar {
-  background: var(--card-background-color);
+  background: var(--scroll-backgroundColor);
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--card-background-color);
+  background: var(--scroll-backgroundColor);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--table-border-color);
+  background: var(--scroll-color);
 }
 
 ::-webkit-scrollbar-corner {
-  background: var(--card-background-color);
+  background: var(--scroll-backgroundColor);
 }
 
 md-tabs.md-default-theme .md-tab, md-tabs .md-tab {
@@ -192,7 +192,12 @@ md-checkbox.md-default-theme:not(.md-checked) .md-icon, md-checkbox:not(.md-chec
   border-color: var(--table-border-color);
 }
 
-select, button, textarea, input {
+button {
+  background-color: transparent;
+  color: var(--secondary-color);
+}
+
+select, textarea, input {
   background-color: var(--page-background-color);
   color: var(--secondary-color);
 }
@@ -960,7 +965,7 @@ md-tooltip.md-tooltip.md-panel.tooltip_1 {
 md-tooltip.md-panel.md-tooltip.md-default-theme,
 md-tooltip.md-panel.md-tooltip {
   &.red-text {
-    color: var(--color-error);;
+    color: var(--error-color);;
   }
 }
 
@@ -1508,7 +1513,7 @@ th {
   position: relative;
 
   &.error-tab {
-    color: var(--color-error);;
+    color: var(--error-color);;
   }
 }
 
@@ -2710,7 +2715,7 @@ button.md-button.toggle-calculator-block-btn {
 }
 
 .negative-red {
-  color: var(--color-error);;
+  color: var(--error-color);;
 }
 
 .processing-overlay {
@@ -3890,7 +3895,7 @@ md-dialog.ace-editor-dialog {
 
 //region vue styles
 .fm_list {
-  background: @separ;
+  background: var(--card-background-color);
 }
 
 //endregion

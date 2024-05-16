@@ -424,6 +424,7 @@
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
                     templateUrl: 'views/dialogs/warning-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
                     // targetEvent: $event,
                     autoWrap: true,
                     skipHide: true,
@@ -1512,6 +1513,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 autoWrap: true,
                 skipHide: true,
