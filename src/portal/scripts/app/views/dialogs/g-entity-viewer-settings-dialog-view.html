@@ -45,14 +45,19 @@
         </div>-->
 
         <div layout="row" >
-            <md-input-container flex="100">
+            <!--<md-input-container flex="100">
                 <label>Filter items by statuses</label>
                 <md-select data-ng-model="vm.entityFilters" multiple>
                     <md-option data-ng-repeat="option in vm.multiselectorOptions"
                                ng-value="option.value"
                                data-ng-bind="option.name"></md-option>
                 </md-select>
-            </md-input-container>
+            </md-input-container>-->
+            <two-fields-multiselect data-model="vm.entityFilters"
+                                    data-items="vm.multiselectorOptions"
+                                    data-title="Filter items by statuses"
+                                    data-selected-items-indication="chips"
+                                    class="width-100"></two-fields-multiselect>
         </div>
 
         <div layout="row" data-ng-if="vm.entityType === 'complex-transaction'" class="m-t-16">
