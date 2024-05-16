@@ -45,12 +45,24 @@
     width: 400px;
   }
 
-  md-card.configuration-card {
+  .configuration-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 240px);
+    align-items: stretch;
+  }
 
-    box-shadow: none;
+
+
+  md-card.configuration-card {
+    max-width: 240px;
+    width: 240px;
+    min-height: 160px;
+
+    padding: 16px 16px 46px;
     border: 1px solid var(--table-border-color);
     margin: 1px;
     position: relative;
+    box-shadow: none;
 
     cursor: pointer;
 
