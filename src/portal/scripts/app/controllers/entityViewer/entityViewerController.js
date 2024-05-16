@@ -639,6 +639,7 @@
                 $mdDialog.show({
                     controller: 'EntityAsJsonEditorDialogController as vm',
                     templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                    parent: document.querySelector(".dialog-containers-wrap"),
                     multiple: true,
                     locals: {
                         data: {
@@ -664,6 +665,7 @@
             $mdDialog.show({
                 controller: 'BulkJsonViewDialogController as vm',
                 templateUrl: 'views/dialogs/bulk-json-view-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 multiple: true,
                 locals: {
                     data: {

@@ -1177,6 +1177,7 @@
                     $mdDialog.show({
                         controller: "WarningDialogController as vm",
                         templateUrl: "views/dialogs/warning-dialog-view.html",
+                        parent: document.querySelector(".dialog-containers-wrap"),
                         multiple: true,
                         clickOutsideToClose: false,
                         locals: {

@@ -504,6 +504,7 @@
             $mdDialog.show({
                 controller: 'EntityDataConstructorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 targetEvent: ev,
                 multiple: true,
                 locals: {
@@ -910,6 +911,7 @@
                     $mdDialog.show({
                         controller: "WarningDialogController as vm",
                         templateUrl: "views/dialogs/warning-dialog-view.html",
+                        parent: document.querySelector(".dialog-containers-wrap"),
                         multiple: true,
                         clickOutsideToClose: false,
                         locals: {
