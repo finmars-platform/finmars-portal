@@ -232,7 +232,7 @@ export default function () {
         },
 
         isThemeInDarkMode() {
-            return data.user.data.dark_mode
+            return data.user.data?.dark_mode || false;
         }
     }
 
