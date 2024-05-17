@@ -939,7 +939,6 @@ export default (function () {
     // portal.directive('groupClipboardHandler', [require('./app/directives/groupTable/gClipboardHandlerComponent')]); // potentially deprecated
     portal.directive('groupColumnResizer', [require('./app/directives/groupTable/gColumnResizerComponent')]);
     portal.directive('groupLayoutResizer', [require('./app/directives/groupTable/gLayoutResizerComponent')]);
-    portal.directive('gDialogDraggable', [require('./app/directives/groupTable/gDialogDraggableComponent')]);
     portal.directive('gHeightAligner', [require('./app/directives/groupTable/gHeightAlignerComponent')]);
     portal.directive('groupWidthAligner', [require('./app/directives/groupTable/gWidthAlignerComponent')]);
     portal.directive('groupEditorBinder', ['$templateCache', '$compile', '$controller', '$mdDialog', '$state', require('./app/directives/groupTable/groupEditorBinderComponent')]);
