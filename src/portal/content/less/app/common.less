@@ -1,6 +1,11 @@
 @import "variables";
 @import "./mixins.less";
 
+html, body {
+  font-size: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", sans-serif;
+}
+
 .p-0 {
   padding: 0 !important;
 }
@@ -581,19 +586,19 @@ md-progress-circular.progress-circular-white {
 }
 
 .border-top-black {
-  border-top-color: #000;
+  border-top-color: var(--secondary-color);
 }
 
 .border-left-black {
-  border-left-color: #000;
+  border-left-color: var(--secondary-color);
 }
 
 .border-right-black {
-  border-right-color: #000;
+  border-right-color: var(--secondary-color);
 }
 
 .border-bottom-black {
-  border-bottom-color: #000;
+  border-bottom-color: var(--secondary-color);
 }
 
 .menu-divider-top {
@@ -822,7 +827,7 @@ md-input-container:not(.md-input-focused):not(.md-input-has-value) {
 }
 
 .red-text {
-  color: #fa393e;
+  color: var(--color-error);;
 }
 
 .orange-text {
@@ -922,4 +927,8 @@ button.md-button[disabled] {
 
 .z-index-56 {
   z-index: 56;
+}
+
+.md-tab {
+  text-transform: none;
 }

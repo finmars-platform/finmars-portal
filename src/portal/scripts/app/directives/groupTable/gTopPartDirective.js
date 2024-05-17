@@ -79,7 +79,7 @@
                     $mdDialog.show({
                         controller: 'ReportPriceCheckerDialogController as vm',
                         templateUrl: 'views/dialogs/report-missing-prices/report-price-checker-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             data: {
@@ -114,7 +114,7 @@
                     $mdDialog.show({
                         controller: 'GReportSettingsDialogController as vm',
                         templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         multiple: true,
                         locals: {
@@ -148,7 +148,7 @@
                     $mdDialog.show({
                         controller: 'GEntityViewerSettingsDialogController as vm',
                         templateUrl: 'views/dialogs/g-entity-viewer-settings-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             entityViewerDataService: scope.evDataService,

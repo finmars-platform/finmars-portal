@@ -1,9 +1,11 @@
-@import "fonts/roboto";
+//@import "fonts/roboto";
+@import 'base-theme';
 @import 'app/variables';
 
 @import 'app/main';
 @import 'app/data-constructor';
-@import 'app/group-table'; // should be imported before entity-viewer.less and report-viewer.less
+@import 'app/group-table';
+// should be imported before entity-viewer.less and report-viewer.less
 @import 'app/group-table-filters';
 @import 'app/notifications';
 @import 'app/attributes-manager.less';
@@ -13,8 +15,10 @@
 @import 'app/bookmarks.less';
 @import 'app/custom-field-config-dialog.less';
 @import 'app/dashboard.less';
-@import "app/entity-viewer.less"; // should be imported after group-table.less
-@import "app/report-viewer.less"; // should be imported after group-table.less
+@import "app/entity-viewer.less";
+// should be imported after group-table.less
+@import "app/report-viewer.less";
+// should be imported after group-table.less
 @import "app/two-fields-multiselector";
 @import "app/actions-block.less";
 @import "app/configuration-import-export";
@@ -60,7 +64,6 @@
 @import "app/task-card";
 @import "app/export-pdf";
 
-
 @import "app/loaders";
 @import "app/complex-transaction-dialog";
 @import "app/two-factor-login-dialog";
@@ -90,7 +93,7 @@
 @import "app/toastr";
 @import "app/draft";
 @import "app/user-profile";
-
+@import "app/button";
 
 // сommon styles should always be at the end to overwrite other styles
 @import "app/common";

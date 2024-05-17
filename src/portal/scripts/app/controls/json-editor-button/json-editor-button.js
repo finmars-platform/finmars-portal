@@ -23,7 +23,7 @@
                     $mdDialog.show({
                         controller: 'JsonEditorDialogController as vm',
                         templateUrl: 'views/dialogs/json-editor-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         preserveScope: true,
                         multiple: true,

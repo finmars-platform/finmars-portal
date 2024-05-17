@@ -254,36 +254,30 @@
 
         <div>
             <md-button data-ng-if="vm.attributesAvailable(vm.entityType)"
-                       class="md-raised md-primary manage-attrs-btn"
+                       class="md-raised outline-button manage-attrs-btn"
                        data-ng-click="vm.manageAttrs($event)">
                 Manage attributes
             </md-button>
-            <md-button class="md-raised manage-attrs-btn"
+            <md-button class="md-raised outline-button manage-attrs-btn"
                        data-ng-click="vm.openFormPreview($event)"
                        ng-disabled="!vm.readyStatus.constructor">
                 Preview Form
             </md-button>
 
-            <md-button class="md-raised"
-                       package-manager-button
-                       content-type="'ui.editlayout'"
-                       target-content-type="vm.targetContentType">
-                Select from List
-            </md-button>
         </div>
 
         <div style="padding-right: 10px">
 
-            <md-button ng-click="vm.cancel()" class="md-raised">
+            <md-button ng-click="vm.cancel()" class="link-button">
                 Cancel
             </md-button>
-            <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
+            <md-button class="md-raised outline-button" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
                        data-ng-if="vm.ui.id">
                 Make a copy
             </md-button>
             <md-button data-ng-click="vm.saveLayout()"
                        data-ng-disabled="vm.processing"
-                       class="md-raised">
+                       class="md-raised md-primary">
                 <span>Save & Return</span>
                 <span></span>
             </md-button>

@@ -1101,6 +1101,7 @@
 			return $mdDialog.show({
 				controller: 'EntityAsJsonEditorDialogController as vm',
 				templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+				parent: document.querySelector('.dialog-containers-wrap'),
 				multiple: true,
 				locals: {
 					data: {
@@ -1164,7 +1165,7 @@
 				$mdDialog.show({
 					controller: addEvController + ' as vm',
 					templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-					parent: angular.element(document.body),
+					parent: document.querySelector('.dialog-containers-wrap'),
 					locals: {
 						entityType: viewModel.entityType,
 						entity: entity,
@@ -1654,6 +1655,7 @@
 			$mdDialog.show({
 				controller: 'EntityDataConstructorDialogController as vm',
 				templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+				parent: document.querySelector('.dialog-containers-wrap'),
 				targetEvent: ev,
 				multiple: true,
 				locals: {
@@ -1682,6 +1684,7 @@
 			$mdDialog.show({
 				controller: 'EntityDataConstructorDialogController as vm',
 				templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+				parent: document.querySelector('.dialog-containers-wrap'),
 				targetEvent: ev,
 				multiple: true,
 				locals: {

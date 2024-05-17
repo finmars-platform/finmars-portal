@@ -881,7 +881,7 @@
                     $mdDialog.show({
                         controller: 'FilePreviewDialogController as vm',
                         templateUrl: 'views/dialogs/file-preview-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         clickOutsideToClose: false,
                         preserveScope: true,
@@ -977,6 +977,10 @@
 
             if ($state.params.result) {
                 vm.filters.result = $state.params.result.split(",");
+            }
+
+            if ($state.params.id) {
+                vm.filters.id = $state.params.id;
             }
 
             vm.getData();

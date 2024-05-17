@@ -29,7 +29,7 @@
                     $mdDialog.show({
                         controller: 'UiLayoutSaveAsDialogController as vm',
                         templateUrl: 'views/dialogs/ui/ui-layout-save-as-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         clickOutsideToClose: false,
                         multiple: true,

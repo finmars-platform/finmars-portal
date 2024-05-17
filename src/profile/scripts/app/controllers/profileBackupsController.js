@@ -56,7 +56,7 @@
             $mdDialog.show({
                 controller: 'RenameMasterUserBackupDialogController as vm',
                 templateUrl: 'views/dialogs/rename-master-user-backup-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: {
                     data: {
                         backup: Object.assign({}, item)
@@ -79,7 +79,7 @@
             $mdDialog.show({
                 controller: 'RestoreMasterUserFromBackupDialogController as vm',
                 templateUrl: 'views/dialogs/restore-master-user-from-backup-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: {
                     data: {
                         backup: item
@@ -102,7 +102,7 @@
             $mdDialog.show({
                 controller: 'DeleteMasterUserBackupDialogController as vm',
                 templateUrl: 'views/dialogs/delete-master-user-backup-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: {
                     data: {
                         backup: item

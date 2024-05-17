@@ -52,7 +52,7 @@
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
                         templateUrl: 'views/dialogs/warning-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: ev,
                         clickOutsideToClose: false,
                         locals: {
@@ -169,7 +169,7 @@
                     $mdDialog.show({
                         controller: 'UiLayoutSaveAsDialogController as vm',
                         templateUrl: 'views/dialogs/ui/ui-layout-save-as-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         multiple: true,
                         clickOutsideToClose: false,
@@ -210,7 +210,7 @@
                     $mdDialog.show({
                         controller: 'UiShareLayoutDialogController as vm',
                         templateUrl: 'views/dialogs/ui/ui-share-layout-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         multiple: true,
                         clickOutsideToClose: false,
@@ -306,7 +306,7 @@
                     $mdDialog.show({
                         controller: 'DashboardLayoutExportDialogController as vm',
                         templateUrl: 'views/dialogs/dashboard/dashboard-layout-export-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             data: {layout: scope.layout}
@@ -322,7 +322,7 @@
                     $mdDialog.show({
                         controller: 'UiLayoutListInvitesDialogController as vm',
                         templateUrl: 'views/dialogs/ui/ui-layout-list-invites-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         preserveScope: false,
                         locals: {
@@ -342,7 +342,7 @@
                     $mdDialog.show({
                         controller: 'DashboardLayoutListDialogController as vm',
                         templateUrl: 'views/dialogs/dashboard/layout-list-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         preserveScope: false,
                         locals: {

@@ -9,16 +9,18 @@
 
             <div data-ng-if="isReport" layout="row">
 
-                <!--<md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
+                <!--<md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
                            ng-click="calculateReport()">
                     <span class="material-icons">refresh</span>
                     <md-tooltip md-direction="top">Calculate</md-tooltip>
                 </md-button>-->
                 <md-menu>
-                    <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
-                               ng-click="$mdOpenMenu($event)">
+                    <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
+                               ng-click="$mdOpenMenu($event)"
+                               ng-disabled="viewContext === 'split_panel'"
+                    >
                         <span class="material-icons">add</span>
-                        <md-tooltip md-direction="top">Add</md-tooltip>
+                        <md-tooltip data-ng-if="viewContext !== 'split_panel'" md-direction="top">Add</md-tooltip>
                     </md-button>
 
                     <md-menu-content width="4">
@@ -41,7 +43,7 @@
 
             <div data-ng-if="!isReport" layout="row">
 
-                <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
+                <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
                            data-ng-click="evAddEntity($event)"
                            data-ng-if="entityType != 'instrument' && entityType != 'instrument-type' && entityType != 'account-type' && entityType != 'transaction-type'">
                     <span class="material-icons">add</span>
@@ -49,7 +51,7 @@
                 </md-button>
 
                 <md-menu data-ng-if="entityType == 'instrument'">
-                    <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
+                    <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
                                data-ng-click="$mdOpenMenu($event)">
                         <span class="material-icons">add</span>
                         <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
@@ -80,7 +82,7 @@
                 </md-menu>
 
                 <md-menu data-ng-if="entityType == 'instrument-type'">
-                    <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
+                    <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
                                data-ng-click="$mdOpenMenu($event)">
                         <span class="material-icons">add</span>
                         <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
@@ -103,7 +105,7 @@
                 </md-menu>
 
                 <md-menu data-ng-if="entityType == 'account-type'">
-                    <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
+                    <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
                                data-ng-click="$mdOpenMenu($event)">
                         <span class="material-icons">add</span>
                         <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
@@ -126,7 +128,7 @@
                 </md-menu>
 
                 <md-menu data-ng-if="entityType == 'transaction-type'">
-                    <md-button class="g-filter-settings-big-left-btn md-icon-button primary-button rounded"
+                    <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
                                data-ng-click="$mdOpenMenu($event)">
                         <span class="material-icons">add</span>
                         <md-tooltip md-direction="top">ADD {{evGetEntityNameByState()}}</md-tooltip>
