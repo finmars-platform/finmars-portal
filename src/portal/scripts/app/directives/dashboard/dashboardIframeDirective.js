@@ -84,8 +84,13 @@
                     if (scope.vm.componentData.url_type == 'absolute_url') {
                         scope.vm.url = scope.vm.componentData.url
                     } else {
-                        // componentData.url must start from /
-                        scope.vm.url = window.location.origin + '/' + scope.vm.currentMasterUser.realm_code + '/' + scope.vm.currentMasterUser.space_code + scope.vm.componentData.url
+
+                        if (scope.vm.currentMasterUser.realm_code) {
+                            scope.vm.url = window.location.origin + '/' + scope.vm.currentMasterUser.realm_code + '/' + scope.vm.currentMasterUser.space_code + scope.vm.componentData.url
+                        } else {
+                            // componentData.url must start from /
+                            scope.vm.url = window.location.origin + '/' + scope.vm.currentMasterUser.base_api_url + scope.vm.componentData.url
+                        }
                     }
 
                 }

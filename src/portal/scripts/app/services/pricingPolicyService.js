@@ -246,7 +246,7 @@
 		$mdDialog.show({
 			controller: 'PricingMultipleParametersDialogController as vm',
 			templateUrl: 'views/dialogs/pricing/pricing-multiple-parameter-dialog-view.html',
-			parent: angular.element(document.body),
+			parent: document.querySelector('.dialog-containers-wrap'),
 			// targetEvent: $event,
 			clickOutsideToClose: false,
 			preserveScope: true,

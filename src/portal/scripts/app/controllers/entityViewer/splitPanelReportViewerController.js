@@ -256,7 +256,7 @@
             $mdDialog.show({
                 controller: dialogController,
                 templateUrl: dialogTemplateUrl,
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: activeObject.event,
                 locals: locals
             }).then(function (res) {
@@ -279,7 +279,7 @@
             $mdDialog.show({
                 controller: dialogController,
                 templateUrl: dialogTemplateUrl,
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: activeObject.event,
                 locals: locals
             }).then(function (res) {
@@ -305,7 +305,7 @@
             $mdDialog.show({
                 controller: dialogController,
                 templateUrl: dialogTemplateUrl,
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: activeObject.event,
                 locals: locals
 
@@ -326,7 +326,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: activeObject.event,
                 preserveScope: true,
                 autoWrap: true,

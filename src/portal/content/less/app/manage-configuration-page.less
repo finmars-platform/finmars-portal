@@ -1,6 +1,6 @@
 .manage-configuration-page {
 
-  font-family: "Roboto Light";
+  //font-family: "Roboto Light";
   font-size: 14px;
   padding: 8px;
 
@@ -22,15 +22,15 @@
     padding: 0;
     font-size: 10px;
     margin-top: 5px;
-    background: #F05A22;
+    background: var(--primary-color);
 
     &:hover {
-      background: #F05A22;
+      background: var(--primary-color);
     }
   }
 
   .md-raised.pagination-bar-button.md-primary {
-    background: #F05A22;
+    background: var(--primary-color);
   }
 
   .manage-configuration-page-filters-date-from {
@@ -48,7 +48,7 @@
   md-card.configuration-card {
 
     box-shadow: none;
-    border: 1px solid #ddd;
+    border: 1px solid var(--table-border-color);
     margin: 1px;
     padding-top: 40px;
     position: relative;
@@ -88,7 +88,7 @@
     }
 
     .configuration-card-open {
-      background: #F05A22;
+      background: var(--primary-color);
       font-size: 14px;
       position: absolute;
       bottom: 16px;
@@ -102,7 +102,7 @@
 
       &:hover {
         opacity: .7;
-        background: #F05A22;
+        background: var(--primary-color);
       }
     }
 
@@ -111,10 +111,10 @@
 
   .create-configuration-button {
 
-    background: #F05A22;
+    background: var(--primary-color);
 
     &:hover {
-      background: #F05A22;
+      background: var(--primary-color);
     }
 
   }

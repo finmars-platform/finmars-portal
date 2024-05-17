@@ -454,7 +454,7 @@
                         .show({
                             controller: "EntityViewerAddDialogController as vm",
                             templateUrl: "views/entity-viewer/entity-viewer-add-dialog-view.html",
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             targetEvent: $event,
                             multiple: true,
                             locals: {

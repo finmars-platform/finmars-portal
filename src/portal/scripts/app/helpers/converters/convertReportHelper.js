@@ -210,7 +210,7 @@
 
             var colValueType = column.value_type;
 
-            if (colValueType === 'field') {
+            if (colValueType === 'field' || colValueType === 'attachment') {
 
                 var attrObjName = column.key + '_object';
                 var attrObj = flatListItem[attrObjName];

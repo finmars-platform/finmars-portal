@@ -22,6 +22,9 @@
             return vm.readyStatus.data;
         };
 
+        vm.eventObj = {
+            event: {},
+        };
 
         vm.getItem = function (id) {
 
@@ -42,6 +45,13 @@
             $mdDialog.hide({status: 'disagree'});
         };
 
+        vm.onChangeCallback = (changedValue) => {
+            const key = (changedValue.length === 100) ? "error" : "reset";
+            vm.eventObj.event = {
+                key,
+                ...(key === "error" && { error: "Length limit has been reached" })
+            };
+        }
         vm.generateManifestIfNotExists = function () {
 
             vm.item.manifest = {
@@ -125,7 +135,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 locals: {
@@ -173,7 +183,7 @@
             $mdDialog.show({
                 controller: 'SimpleLoginDialogController as vm',
                 templateUrl: 'views/dialogs/simple-login-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 locals: {
@@ -222,7 +232,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 locals: {

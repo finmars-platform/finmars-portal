@@ -32,7 +32,7 @@
                     $mdDialog.show({
                         controller: 'ClassifierSelectDialogController as vm',
                         templateUrl: 'views/classifier-select-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: event,
                         preserveScope: true,
                         autoWrap: true,

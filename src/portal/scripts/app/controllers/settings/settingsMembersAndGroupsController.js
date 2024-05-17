@@ -144,7 +144,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 locals: {
@@ -178,7 +178,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 locals: {
@@ -219,7 +219,7 @@
             $mdDialog.show({
                 controller: 'CreateInviteDialogController as vm',
                 templateUrl: 'views/dialogs/create-invite-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: ev
             }).then(function (res) {
 
@@ -240,7 +240,7 @@
             $mdDialog.show({
                 controller: 'CreateGroupDialogController as vm',
                 templateUrl: 'views/dialogs/create-group-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: ev
             }).then(function (res) {
 
@@ -259,7 +259,7 @@
             $mdDialog.show({
                 controller: 'ManageMemberDialogController as vm',
                 templateUrl: 'views/dialogs/manage-member-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: ev,
                 locals: {
                     memberId: memberId
@@ -279,7 +279,7 @@
             $mdDialog.show({
                 controller: 'ManageGroupDialogController as vm',
                 templateUrl: 'views/dialogs/manage-group-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: ev,
                 locals: {
                     groupId: groupId
@@ -317,7 +317,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 locals: {

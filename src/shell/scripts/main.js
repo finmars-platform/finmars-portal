@@ -60,7 +60,6 @@ const app = angular.module('finmars', [
     'finmars.profile',
     'finmars.database',
     'finmars.portal',
-    // 'finmars.forum'
 ]);
 
 // app.config(['$stateProvider', '$urlServiceProvider', require('./app/router.js')]);
@@ -130,7 +129,8 @@ app.run(['$rootScope', function ($rootScope) {
 
         console.log("State changed")
 
-        if (window.activeNote) {
+        // szhitenev 2024-04-28 tmp disabled
+        /*if (window.activeNote) {
 
             clearTimeout(activeNoteTimeout);
 
@@ -141,13 +141,13 @@ app.run(['$rootScope', function ($rootScope) {
                     console.error("Could not fetch notes from ActiveNote", e)
                 }
             }, 5000)
-        }
+        }*/
 
         // called every time the state transition is attempted
 
     });
 
-    setTimeout(function () {
+    /*setTimeout(function () {
         try {
             window.activeNote.getNotes();
         } catch (e) {
@@ -161,7 +161,7 @@ app.run(['$rootScope', function ($rootScope) {
             window.activeNote.renderNotes();
         }
 
-    }, 6000)
+    }, 6000)*/
 
     app._invokeQueue.forEach(function (item) {
 
