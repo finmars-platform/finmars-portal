@@ -684,9 +684,29 @@
                         }
 
                     })
-					.catch(function (data) {
+					.catch(function (error) {
 
-                        console.log('error request requestParameters', requestParameters);
+                        console.error(
+                            `plat691 [evDataProviderService.getGroups] ` +
+                            `${requestParameters.id} getGroups error`,
+                            error
+                        );
+                        console.error(
+                            `plat691 [evDataProviderService.getGroups] ` +
+                            `${requestParameters.id} getGroups requestParameters`,
+                            requestParameters
+                        );
+
+                        console.error(
+                            `[evDataProviderService.getGroups] ` +
+                            `${requestParameters.id} getGroups error`,
+                            error
+                        );
+                        console.error(
+                            `[evDataProviderService.getGroups] ` +
+                            `${requestParameters.id} getGroups requestParameters`,
+                            requestParameters
+                        );
 
                         requestParameters.loadAll = false;
 
