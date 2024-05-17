@@ -755,9 +755,34 @@
             }
         }
 
-        obj.results = obj.results.filter(function (item) {
-            return item.___type !== 'control'
-        });
+        try { // temporary for debugging plat691
+
+            obj.results = obj.results.filter(function (item) {
+                return item.___type !== 'control'
+            });
+
+        } catch (e) {
+
+            console.error(
+                `plat691 [evDataHelper.deleteDefaultGroups] event.___id`,
+                event.___id
+            );
+
+            console.error(
+                `plat691 [evDataHelper.deleteDefaultGroups] obj`,
+                obj
+            );
+
+            if (obj) {
+                console.error(
+                    `plat691 [evDataHelper.deleteDefaultGroups] obj immutable`,
+                    JSON.parse(JSON.stringify(obj))
+                );
+            }
+
+            throw e;
+        }
+
 
         var controlObj = {
             ___errorMessage: errorMessage,
