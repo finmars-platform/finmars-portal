@@ -12,8 +12,8 @@
         vm.readyStatus = false;
         vm.iframeId = metaHelper.generateUniqueId("attributeSelector");
 
-        vm.iframeSrc = `${urlBeginning}/${base_api_url}realm03va3/space027ho/v/external/components/number_format?iframeId=${vm.iframeId}`;
-        // vm.iframeSrc = `http://localhost:3000/realm03va3/space027ho/v/external/components/number_format?iframeId=${vm.iframeId}`; // for development
+        vm.iframeSrc = `${urlBeginning}/${base_api_url}realm03va3/space027ho/v/external/components/number_format_wrapper?iframeId=${vm.iframeId}`;
+        // vm.iframeSrc = `http://localhost:3000/realm03va3/space027ho/v/external/components/number_format_wrapper?iframeId=${vm.iframeId}`; // for development
         let iframeElem;
         let iframeWindow;
         const windowOrigin = window.origin;
@@ -57,9 +57,14 @@
         const initializationSettingsTransmission = () => {
             iframeElem = document.querySelector("#id_" + vm.iframeId);
             iframeWindow = iframeElem.contentWindow;
+            adjustIframeHeight()
             iframeWindow.postMessage({ action: 'INITIALIZATION_SETTINGS_TRANSMISSION', payload: {selectedAttributes: vm.settings} }, windowOrigin );
         }
 
+        const adjustIframeHeight = () => {
+            iframeElem = document.querySelector("#id_" + vm.iframeId);
+            iframeElem.style.height = document.body.scrollHeight * 0.6 + 'px';
+        }
         const iframeReadyHandler = (event) => {
             if (event.data &&
               event.data.iframeId === vm.iframeId &&
@@ -68,6 +73,7 @@
                 $scope.$apply();
                 window.addEventListener("message", processMessagesFromIframe);
                 initializationSettingsTransmission();
+                window.addEventListener('resize', adjustIframeHeight);
                 window.removeEventListener("message", iframeReadyHandler);
             }
         }

@@ -1,8 +1,10 @@
 <div>
     <iframe
         id="{{ 'id_' + vm.iframeId}}"
-        height="668px" width="570px"
-        src="{{ vm.iframeSrc | trustAsUrl }}">
+        width="570" height="100%"
+        src="{{ vm.iframeSrc | trustAsUrl }}"
+        class="format-number-iframe"
+    >
     </iframe>
     <div
         data-ng-if="!vm.readyStatus"
