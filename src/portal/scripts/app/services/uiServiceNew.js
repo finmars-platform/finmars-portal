@@ -349,7 +349,7 @@ export default function (cookieService, xhrService, ecosystemDefaultService, met
 
             const reportOptions = {
                 "account_mode": 1,
-                "calculationGroup": "portfolio",
+                "calculation_group": "no_grouping",
                 "cost_method": 1,
                 "report_date" : new Date().toISOString().slice(0, 10),
                 "portfolio_mode": 1,

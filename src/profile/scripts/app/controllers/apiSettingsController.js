@@ -22,7 +22,7 @@
                 "accounts_position": [],
                 "allocation_detailing": true,
                 "approach_multiplier": 0.5,
-                "calculationGroup": "portfolio",
+                "calculation_group": "no_grouping",
                 "complex_transaction_statuses_filter": "booked",
                 "cost_method": 1,
                 "custom_fields_to_calculate": "",
