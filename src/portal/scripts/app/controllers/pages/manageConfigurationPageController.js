@@ -192,6 +192,7 @@
             $mdDialog.show({
                 controller: 'ConfigurationDialogController as vm',
                 templateUrl: 'views/dialogs/configuration-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: {
                     data: {
                         id: item.id
@@ -219,6 +220,7 @@
             $mdDialog.show({
                 controller: 'ConfigurationDialogController as vm',
                 templateUrl: 'views/dialogs/configuration-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: {
                     data: {}
                 },
