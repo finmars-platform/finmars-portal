@@ -25,14 +25,14 @@
         <md-button ng-click="vm.cancel()">
             Close
         </md-button>
-        <md-button class="md-raised"
+        <md-button class=""
                    ng-click="vm.save()"
                    style="margin-right:20px;">
             <span ng-if="vm.layout.id">Rename And Save</span>
             <span ng-if="!vm.layout.id">Save</span>
         </md-button>
         <md-button ng-if="vm.layout.id"
-                   class="md-raised"
+                   class=""
                    ng-click="vm.saveAs()"
                    style="margin-right:20px;">
             Save as new

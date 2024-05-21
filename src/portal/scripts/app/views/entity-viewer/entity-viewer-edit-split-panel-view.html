@@ -222,11 +222,11 @@
 
                                         <div data-ng-if="vm.entityType === 'account-type'">
 
-                                            <md-button ng-click="vm.recalculateAccountPermissions()" class="md-raised">
+                                            <md-button ng-click="vm.recalculateAccountPermissions()" class="">
                                                 Save and Recalculate Account Permissions
                                             </md-button>
 
-                                            <md-button ng-click="vm.recalculateAccountWithTransactionPermissions()" class="md-raised">
+                                            <md-button ng-click="vm.recalculateAccountWithTransactionPermissions()" class="">
                                                 Save Recalculate Account Permissions and Transaction Permissions
                                             </md-button>
 
@@ -234,13 +234,13 @@
 
                                         <div data-ng-if="vm.entityType === 'instrument-type'">
 
-                                            <md-button ng-click="vm.recalculateInstrumentsPermissions()" class="md-raised">
+                                            <md-button ng-click="vm.recalculateInstrumentsPermissions()" class="">
                                                 Save and Recalculate Instruments Permissions
                                             </md-button>
 
                                         </div>
 
-                                        <md-button ng-click="vm.recalculatePermissions()" class="md-raised"
+                                        <md-button ng-click="vm.recalculatePermissions()" class=""
                                                    data-ng-if="vm.entityType === 'portfolio' || vm.entityType === 'account'">
                                             Save and Recalculate Transaction Permissions
                                         </md-button>
@@ -285,7 +285,7 @@
             <md-button class="md-raised m-r-24" ng-click="vm.copy()" ng-disabled="!vm.checkReadyStatus()">
                 Make a copy
             </md-button>
-            <md-button class="md-raised" ng-click="vm.cancel()">
+            <md-button class="" ng-click="vm.cancel()">
                 Cancel
             </md-button>
             <md-button class="md-raised m-r-24"

@@ -93,12 +93,12 @@
             Close
         </md-button>
 
-        <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
+        <md-button class="" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
         >
             Make a copy
         </md-button>
 
-        <md-button class="md-raised" ng-click="vm.agree($event)" style="margin-right:20px;">
+        <md-button class="" ng-click="vm.agree($event)" style="margin-right:20px;">
             <span data-ng-if="!vm.referenceTable.id">Create</span>
             <span data-ng-if="vm.referenceTable.id">Update</span>
         </md-button>

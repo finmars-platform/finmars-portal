@@ -310,11 +310,11 @@
                     <md-card flex="100" class="inm-card-special">
                         <md-card-content layout="row" layout-align="end center">
 
-                            <md-button class="md-raised" data-ng-click="vm.addSimpleEntityImportAction()">Add Simple
+                            <md-button class="" data-ng-click="vm.addSimpleEntityImportAction()">Add Simple
                                 Entity
                                 Import Action
                             </md-button>
-                            <md-button class="md-raised" data-ng-click="vm.addTransactionImportAction()">Add Transaction
+                            <md-button class="" data-ng-click="vm.addTransactionImportAction()">Add Transaction
                                 Import Action
                             </md-button>
 
@@ -338,13 +338,13 @@
         </md-content>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}">
+        <md-button class="" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}">
             Make a copy
         </md-button>
-        <md-button class="md-raised" ng-click="vm.cancel()">
+        <md-button class="" ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;" data-ng-class="{'disabled-btn': vm.processing}">
+        <md-button class="" ng-click="vm.agree()" style="margin-right:20px;" data-ng-class="{'disabled-btn': vm.processing}">
             Save
         </md-button>
     </md-dialog-actions>
