@@ -225,10 +225,7 @@
                     data: {}
                 },
                 targetEvent: $event,
-                preserveScope: true,
                 multiple: true,
-                autoWrap: true,
-                skipHide: true
             }).then(function (res) {
 
                 if (res.status === 'agree') {
