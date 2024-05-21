@@ -44,19 +44,19 @@
             </md-input-container>
 
             <div data-ng-if="!attr.is_default" layout="row" class="button-group1">
-                <md-button class="md-raised" data-ng-click="vm.moveUp(attr.order)">
+                <md-button class="" data-ng-click="vm.moveUp(attr.order)">
                     <ng-md-icon icon="expand_less">
                         <md-tooltip md-direction="bottom">Move up</md-tooltip>
                     </ng-md-icon>
                 </md-button>
 
-                <md-button class="md-raised" data-ng-click="vm.moveDown(attr.order)">
+                <md-button class="" data-ng-click="vm.moveDown(attr.order)">
                     <ng-md-icon icon="expand_more">
                         <md-tooltip md-direction="bottom">Move down</md-tooltip>
                     </ng-md-icon>
                 </md-button>
 
-                <md-button class="md-raised"
+                <md-button class=""
                            data-ng-click="vm.deleteAttr($index, attr.attribute_data)">
                     <ng-md-icon icon="close">
                         <md-tooltip md-direction="bottom">Delete Column</md-tooltip>
@@ -65,7 +65,7 @@
             </div>
         </div>
 
-        <md-button class="md-raised"
+        <md-button class=""
                    data-ng-click="vm.openAttributeSelector($event)">Add Columns</md-button>
     </md-dialog-content>
 
