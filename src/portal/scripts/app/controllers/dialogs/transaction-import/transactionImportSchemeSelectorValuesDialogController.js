@@ -13,13 +13,15 @@
 
         var vm = this;
 
-        vm.scheme = data.scheme;
-
         vm.dragAndDropInited = false;
 
         vm.selectorValues = {
-            value: JSON.parse(angular.toJson(vm.scheme.selector_values))
+            value: []
         };
+
+        if (data.selector_values?.length) {
+            vm.selectorValues.value = JSON.parse(angular.toJson(data.selector_values));
+        }
 
         vm.filterTerms = {
             value: "",

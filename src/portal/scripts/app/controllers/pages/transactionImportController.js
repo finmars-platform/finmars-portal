@@ -732,16 +732,15 @@
         vm.editSchemeV2 = function ($event) {
 
             $mdDialog.show({
-                controller: 'TransactionImportSchemeV2EditDialogController as vm',
+                controller: 'TransactionImportSchemeV2DialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-v2-dialog-view.html',
                 locals: {
-                    schemeId: vm.config.scheme
+                    data: {
+                        schemeId: vm.config.scheme,
+                    }
                 },
                 targetEvent: $event,
-                preserveScope: true,
                 multiple: true,
-                autoWrap: true,
-                skipHide: true
             }).then(function (res) {
 
                 if (res.status === 'agree') {
