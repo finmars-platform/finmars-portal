@@ -87,7 +87,7 @@
 
                 scope.init();
 
-                scope.$on('destroy', function () {
+                scope.$on('$destroy', function () {
 
                     // clearInterval(scope.progressInterval);
                     $interval.cancel(scope.progressInterval);
