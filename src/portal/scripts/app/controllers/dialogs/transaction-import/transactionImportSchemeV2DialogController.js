@@ -1,4 +1,5 @@
 const importTransactionService = require("../../../services/import/importTransactionService");
+const {default: metaHelper} = require("../../../helpers/meta.helper");
 /**
  * Created by szhitenev on 07.02.2023.
  */
@@ -7,6 +8,7 @@ const importTransactionService = require("../../../services/import/importTransac
     'use strict';
 
     const metaService = require('../../../services/metaService').default;
+    const metaHelper = require('../../../helpers/meta.helper').default;
 
     module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, toastNotificationService, transactionTypeService, transactionImportSchemeService, importSchemesMethodsService, data) {
 
@@ -16,9 +18,13 @@ const importTransactionService = require("../../../services/import/importTransac
             throw `Invalid data passed as 'data'. Expected an object got: ${data}`;
         }
 
-        let defaultTType = null;
-
         const ttypeNotFoundErrorMsg = "⚠️ Transaction Type is not found";
+
+        let schemeToCopy = null
+
+        if (data.scheme) {
+            schemeToCopy = JSON.parse(angular.toJson(data.scheme));
+        }
 
         vm.processing = false;
 
@@ -307,14 +313,61 @@ const importTransactionService = require("../../../services/import/importTransac
 
         }
 
+        const applySchemeCopy = function (scheme) {
+
+            delete scheme.id;
+
+            scheme = metaHelper.clearFrontendOptions(scheme);
+
+            scheme["user_code"] = scheme["user_code"] + '_copy';
+
+            const deleteIds = function(item) {
+                delete item.id;
+            };
+
+            if (scheme.inputs.length) {
+                scheme.inputs.forEach(deleteIds);
+            }
+
+            if (scheme.calculated_inputs?.length) {
+                scheme.calculated_inputs.forEach(deleteIds);
+            }
+
+            if (scheme.rule_scenarios.length) {
+                scheme.rule_scenarios.forEach(deleteIds);
+            }
+
+            return scheme;
+
+        };
+
+        const createRequiredProps = function (scheme) {
+
+            const properties = ["inputs", "calculated_inputs", "rule_scenarios"];
+
+            properties.forEach(key => {
+                if ( !scheme[key] ) scheme[key] = [];
+            })
+
+            return scheme;
+
+        }
+
         vm.getItem = async function (doNotUpdateScope) {
 
             if (vm.editingScheme) {
+
                 vm.scheme = await transactionImportSchemeService.getByKey(schemeId);
+
+            } else if (schemeToCopy) { // copying scheme
+
+                vm.scheme = applySchemeCopy(schemeToCopy);
 
             } else {
                 vm.scheme = {};
             }
+
+            vm.scheme = createRequiredProps(vm.scheme);
 
             vm.draftUserCode = vm.generateUserCodeForDraft();
 
@@ -499,10 +552,7 @@ const importTransactionService = require("../../../services/import/importTransac
             result.calculated_inputs = vm.calculatedInputs;
             result.inputs = vm.schemeInputs;
             result.rule_scenarios = JSON.parse(angular.toJson(vm.ruleScenarios));
-            console.log(
-                "testing127 vm.transformSchemeToBackendLogic rule_scenarios",
-                result.rule_scenarios,
-            );
+
             result.rule_scenarios = result.rule_scenarios.map(mapRuleScenario)
 
 
@@ -593,7 +643,7 @@ const importTransactionService = require("../../../services/import/importTransac
 
             }
             else {
-                console.log("testing127 result", result);
+
                 vm.processing = true;
 
                 let savePromise;
@@ -625,19 +675,14 @@ const importTransactionService = require("../../../services/import/importTransac
 
         vm.makeCopy = function ($event) {
 
-            var scheme = JSON.parse(JSON.stringify(vm.scheme));
-
-            delete scheme.id;
-            scheme["user_code"] = scheme["user_code"] + '_copy';
-
             var copyPromise = $mdDialog.show({
-                controller: 'TransactionImportSchemeAddDialogController as vm',
-                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-dialog-view.html',
+                controller: 'TransactionImportSchemeV2DialogController as vm',
+                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-v2-dialog-view.html',
                 parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 locals: {
                     data: {
-                        scheme: scheme
+                        scheme: vm.scheme
                     }
                 }
             });
