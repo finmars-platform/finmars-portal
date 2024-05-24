@@ -5,8 +5,6 @@
 
     'use strict';
 
-    var priceHistoryErrorService = require('../../services/pricing/priceHistoryErrorService');
-
     module.exports = function($scope){
 
         var vm = this;
@@ -19,12 +17,6 @@
         vm.readyStatus = {content: false};
 
         vm.entityViewer = {extraFeatures: []};
-
-        vm.getList = function(options){
-            return priceHistoryErrorService.getList(options).then(function(data){
-                return data;
-            })
-        };
 
         vm.init = function(){
             vm.readyStatus.content = true
