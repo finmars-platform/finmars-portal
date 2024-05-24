@@ -41,6 +41,8 @@
                 },
                 post: function (scope, elem, attr) {
 
+                    var dialogParent = document.querySelector('.dialog-containers-wrap');
+
                     scope.error = '';
                     scope.inputValue = '';
                     //scope.placeholderText = 'Relation';
@@ -77,7 +79,7 @@
                             var indicatorBtnIcon = scope.smallOptions.indicatorBtnIcon;
                         } */
 
-                        scope.dialogParent = scope.smallOptions.dialogParent
+                        // scope.dialogParent = scope.smallOptions.dialogParent
                     }
 
                     scope.locateDetailsLeft = false;
@@ -599,19 +601,6 @@
                         $event.stopPropagation();
 
                         closeDropdownMenu();
-                        // Victor 2020.11.09 If body is parent, then modal window under popup
-                        // var dialogParent = angular.element(document.body);
-                        var dialogParent = document.querySelector('.dialog-containers-wrap');
-
-                        if (scope.dialogParent) {
-
-                            var dialogParentElem = document.querySelector(scope.dialogParent);
-
-                            if (dialogParentElem) {
-                                dialogParent = dialogParentElem
-                            }
-
-                        }
 
                         $mdDialog.show({
                             controller: "InstrumentSelectDatabaseDialogController as vm",
