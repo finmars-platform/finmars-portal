@@ -68,6 +68,7 @@ import specificDataService from "./app/services/specificDataService";
 import userFilterService from "./app/services/rv-data-provider/user-filter.service";
 import dashboardConstructorMethodsService
     from "./app/services/dashboard-constructor/dashboardConstructorMethodsService";
+import priceHistoryErrorService from "./app/services/pricing/priceHistoryErrorService";
 
 import utilsService from "./app/services/utilsService";
 //# endregion Services and helpers for them
@@ -212,7 +213,7 @@ export default (function () {
     portal.service('priceHistoryService', ['cookieService', 'xhrService', priceHistoryService]);
     portal.service('currencyHistoryService', ['cookieService', 'xhrService', currencyHistoryService]);
     portal.service('pricesCheckerService', ['cookieService', 'xhrService', pricesCheckerService]);
-    portal.service('entityResolverService', ['instrumentService', 'transactionTypeService', 'priceHistoryService', 'currencyHistoryService', 'configurationService', 'reportService', 'transactionImportSchemeService', entityResolverService]);
+    portal.service('entityResolverService', ['instrumentService', 'transactionTypeService', 'priceHistoryService', 'currencyHistoryService', 'configurationService', 'reportService', 'transactionImportSchemeService', 'priceHistoryErrorService', entityResolverService]);
     portal.service('fieldResolverService', ['instrumentService', 'transactionTypeService', 'metaContentTypesService', fieldResolverService]);
     portal.service('expressionService', ['cookieService', 'xhrService', expressionService]);
     portal.service('dashboardConstructorMethodsService', ['uiService', 'dashboardHelper', dashboardConstructorMethodsService]);
@@ -222,6 +223,7 @@ export default (function () {
     portal.service('userFilterService', [userFilterService]);
     portal.service('finmarsDatabaseService', ['cookieService', 'xhrService', finmarsDatabaseService]);
     portal.service('customInputsService', [customInputsService]);
+    portal.service('priceHistoryErrorService', ['cookieService', 'xhrService', priceHistoryErrorService]);
 
     //# region Services for import and export
     portal.service('configurationImportGetService', ['entityResolverService', 'customFieldService', 'attributeTypeService', 'transactionTypeService', configurationImportGetService]);
@@ -536,7 +538,7 @@ export default (function () {
 
     portal.controller('EntityViewerPermissionEditorController', ['$scope', '$mdDialog', '$transitions', 'parentEntityViewerDataService', 'parentEntityViewerEventService', 'usersService', 'usersGroupService', require('./app/controllers/entityViewer/entityViewerPermissionEditorController')]);
 
-    portal.controller('PriceHistoryErrorEditDialogController', ['$scope', '$mdDialog', '$state', 'entityId', require('./app/controllers/entityViewer/priceHistoryErrorEditDialogController')]);
+    portal.controller('PriceHistoryErrorEditDialogController', ['$scope', '$mdDialog', '$state', 'priceHistoryErrorService', 'entityId', require('./app/controllers/entityViewer/priceHistoryErrorEditDialogController')]);
     portal.controller('CurrencyHistoryErrorEditDialogController', ['$scope', '$mdDialog', '$state', 'entityId', require('./app/controllers/entityViewer/currencyHistoryErrorEditDialogController')]);
 
     portal.controller('ListLayoutExportDialogController', ['$scope', '$mdDialog', 'data', require('./app/controllers/dialogs/listLayoutExportDialogController')]);
@@ -650,7 +652,7 @@ export default (function () {
     portal.controller('TransactionsAuditController', ['$scope', '$stateParams', require('./app/controllers/system/auditTransactionsController')]);
     portal.controller('InstrumentsAuditController', ['$scope', '$stateParams', require('./app/controllers/system/auditInstrumentsController')]);
     portal.controller('DataCurrencyHistoryErrorController', ['$scope', '$stateParams', require('./app/controllers/data/dataCurrencyHistoryErrorController')]);
-    portal.controller('DataPriceHistoryErrorController', ['$scope', '$stateParams', require('./app/controllers/data/dataPriceHistoryErrorController')]);
+    portal.controller('DataPriceHistoryErrorController', ['$scope', require('./app/controllers/data/dataPriceHistoryErrorController')]);
 
 
     // Reports

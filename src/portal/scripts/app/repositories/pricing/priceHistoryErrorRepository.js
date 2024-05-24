@@ -2,19 +2,12 @@
  * Created by szhitenev on 03.03.2020.
  */
 
-// import baseUrlService from "../../services/baseUrlService";
-(function () {
+import baseUrlService from "../../../../../shell/scripts/app/services/baseUrlService";
+import configureRepositoryUrlService from "../../../../../shell/scripts/app/services/configureRepositoryUrlService";
 
-    'use strict';
-
-    var baseUrlService = require("../../services/baseUrlService").default;
-    var cookieService = require('../../../../../core/services/cookieService').default;
-    var xhrService = require('../../../../../core/services/xhrService').default;
-    var configureRepositoryUrlService = require('../../services/configureRepositoryUrlService').default;
-    // var baseUrlService = require('../../services/baseUrlService');
+export default function (cookieService, xhrService) {
 
     var baseUrl = baseUrlService.resolve();
-
 
     var getList = function (options) {
         
@@ -117,12 +110,12 @@ return xhrService.fetch(baseUrl   +  '/' + prefix + '/' + apiVersion + '/' + 'pr
             })
     };
 
-    module.exports = {
+    return {
         getList: getList,
         getByKey: getByKey,
         update: update,
         deleteByKey: deleteByKey,
         deleteBulk: deleteBulk
-    }
+    };
 
-}());
+};
