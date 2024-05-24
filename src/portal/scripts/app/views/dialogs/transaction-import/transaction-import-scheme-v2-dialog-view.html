@@ -922,9 +922,10 @@
     </md-dialog-content>
 
     <md-dialog-actions layout="row" class="position-relative">
-        <md-button class="outline-button" ng-click="vm.editAsJson($event)">
+        <!--<md-button class="outline-button"
+                   data-ng-click="vm.editAsJson($event)">
             Edit as JSON
-        </md-button>
+        </md-button>-->
         <md-button class="outline-button" ng-click="vm.makeCopy($event)" data-ng-if="vm.scheme.id"
                    data-ng-class="{'disabled-btn': vm.processing}">
             Make a copy
@@ -932,8 +933,8 @@
         <md-button class="link-button" ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;"
-                   data-ng-class="{'disabled-btn': vm.processing}">
+        <md-button class="md-raised md-primary m-r-20" ng-click="vm.agree()"
+                   data-ng-disabled="vm.processing">
             <span data-ng-if="vm.scheme.id">Save</span>
             <span data-ng-if="!vm.scheme.id">Create</span>
         </md-button>
