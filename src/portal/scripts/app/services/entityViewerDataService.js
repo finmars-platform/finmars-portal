@@ -430,6 +430,11 @@
         }
 
         function setAdditions(additions) {
+
+            if (additions.isOpen && !additions.type) {
+                throw `Error trying to open split panel. Invalid type: ${additions.type}`
+            }
+
             data.additions = additions;
         }
 
