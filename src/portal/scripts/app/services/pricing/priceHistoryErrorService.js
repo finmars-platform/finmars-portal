@@ -1,9 +1,11 @@
 /**
  * Created by szhitenev on 03.03.2020.
  */
-(function () {
+import PriceHistoryErrorRepository from "../../repositories/pricing/priceHistoryErrorRepository";
 
-    var priceHistoryErrorRepository = require('../../repositories/pricing/priceHistoryErrorRepository');
+export default function (cookieService, xhrService) {
+
+    var priceHistoryErrorRepository = new PriceHistoryErrorRepository(cookieService, xhrService);
 
     var getList = function (options) {
         return priceHistoryErrorRepository.getList(options);
@@ -26,13 +28,13 @@
     };
 
 
-    module.exports = {
+    return {
 
         getList: getList,
         getByKey: getByKey,
         update: update,
         deleteByKey: deleteByKey,
         deleteBulk: deleteBulk
-    }
+    };
 
-}());
+};

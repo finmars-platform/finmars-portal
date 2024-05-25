@@ -219,7 +219,8 @@
 
             return result;
 
-        } else if (columnNumber === obj.___level - 1) {
+        }
+        else if (columnNumber === obj.___level - 1) {
 
             var foldButton = '';
             var foldButtonStr = '';
@@ -267,7 +268,8 @@
 
             }
 
-        } else if (columnNumber > obj.___level - 1) {
+        }
+        else if (columnNumber > obj.___level - 1) {
 
             var showTotal;
             var totalCalculationOn = column.report_settings && column.report_settings.subtotal_formula_id; // if subtotal_formula_id === 0, it means no formula has been chosen

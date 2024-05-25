@@ -191,18 +191,17 @@
 
                             break;
 
-                        case 'transaction-import-scheme':
-
+                        case 'complex-transaction-import-scheme':
                             dialogOptions = {
-                                controller: 'TransactionImportSchemeV2EditDialogController as vm',
+                                controller: 'TransactionImportSchemeV2DialogController as vm',
                                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-v2-dialog-view.html',
                                 parent: document.querySelector('.dialog-containers-wrap'),
                                 locals: {
+                                    data: {}
                                 }
                             };
 
                             $mdDialog.show(dialogOptions)
-
                             break;
 
                         default:

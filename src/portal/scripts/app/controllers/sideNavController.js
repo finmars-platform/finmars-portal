@@ -699,7 +699,7 @@
 
         vm.init();
 
-        $scope.$on('destroy', function () {
+        $scope.$on('$destroy', function () {
 
             // clearInterval(vm.sessionRemainingInterval);
             $interval.cancel(vm.sessionRemainingInterval);

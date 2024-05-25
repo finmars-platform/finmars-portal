@@ -1,4 +1,5 @@
 const importTransactionService = require("../../../services/import/importTransactionService");
+const {default: metaHelper} = require("../../../helpers/meta.helper");
 /**
  * Created by szhitenev on 07.02.2023.
  */
@@ -7,10 +8,23 @@ const importTransactionService = require("../../../services/import/importTransac
     'use strict';
 
     const metaService = require('../../../services/metaService').default;
+    const metaHelper = require('../../../helpers/meta.helper').default;
 
-    module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, toastNotificationService, transactionTypeService, transactionImportSchemeService, importSchemesMethodsService, schemeId) {
+    module.exports = function transactionImportSchemeEditDialogController($scope, $mdDialog, toastNotificationService, transactionTypeService, transactionImportSchemeService, importSchemesMethodsService, data) {
 
-        var vm = this;
+        const vm = this;
+
+        if (!data || typeof data !== 'object') {
+            throw `Invalid data passed as 'data'. Expected an object got: ${data}`;
+        }
+
+        const ttypeNotFoundErrorMsg = "⚠️ Transaction Type is not found";
+
+        let schemeToCopy = null
+
+        if (data.scheme) {
+            schemeToCopy = JSON.parse(angular.toJson(data.scheme));
+        }
 
         vm.processing = false;
 
@@ -25,24 +39,32 @@ const importTransactionService = require("../../../services/import/importTransac
         vm.dryRunData = JSON.stringify([{"user_code": "example"}], null, 4)
         vm.activeDryRunResultItem = null;
 
+        const getRuleScenarioTplt = function () {
+            return {
+                value: '',
+                transaction_type: null,
+                is_default_rule_scenario: false,
+                is_error_rule_scenario: false,
+                fields: [],
+                selector_values: [],
+                frontOptions: {
+                    transactionTypeInputs: []
+                }
+            }
+        };
+
         vm.ruleScenarioInputsOpts = {
             noIndicatorBtn: true,
             readonly: true,
         }
 
-        vm.defaultRuleScenario = {
-            name: '-',
-            is_default_rule_scenario: true,
-            is_error_rule_scenario: false,
-            inputs: [],
-        };
+        vm.defaultRuleScenario = getRuleScenarioTplt();
+        vm.defaultRuleScenario.name = '-';
+        vm.defaultRuleScenario.is_default_rule_scenario = true;
 
-        vm.errorRuleScenario = {
-            name: '-',
-            is_error_rule_scenario: true,
-            is_default_rule_scenario: false,
-            inputs: [],
-        }
+        vm.errorRuleScenario = getRuleScenarioTplt();
+        vm.errorRuleScenario.name = '-';
+        vm.errorRuleScenario.is_error_rule_scenario = true;
 
         vm.inputsFunctions = [];
         vm.selector_values_projection = [];
@@ -52,9 +74,15 @@ const importTransactionService = require("../../../services/import/importTransac
             noIndicatorBtn: true,
         }
 
+        const schemeId = data.schemeId || null;
+
+        if (schemeId) {
+            vm.editingScheme = true;
+        }
+
         vm.getFunctions = function () {
 
-            return vm.providerFields.map(function (input) {
+            return vm.schemeInputs.map(function (input) {
 
                 return {
                     "name": "Imported: " + input.name + " (column #" + input.column + ")",
@@ -70,10 +98,13 @@ const importTransactionService = require("../../../services/import/importTransac
 
         };
 
-        vm.scenarios = [];
-        vm.providerFields = [];
-        vm.calculatedFields = [];
-        vm.reconFields = [];
+        vm.ruleScenarios = [];
+
+        // called `vm.schemeInputs` to prevent confusion with TType inputs
+        vm.schemeInputs = [];
+
+        vm.calculatedInputs = [];
+        vm.reconScenarios = [];
 
         vm.openSelectorManager = function ($event) {
 
@@ -90,7 +121,7 @@ const importTransactionService = require("../../../services/import/importTransac
                 multiple: true,
                 locals: {
                     data: {
-                        scheme: vm.scheme
+                        selector_values: vm.scheme.selector_values
                     }
                 }
 
@@ -133,9 +164,9 @@ const importTransactionService = require("../../../services/import/importTransac
 
         };
 
-        vm.addScenario = function ($event) {
+        /*vm.addReconScenario = function ($event) {
 
-            vm.reconFields.push({
+            vm.reconScenarios.push({
                 scenario_name: '',
                 selector_values: [],
                 line_reference_id: '',
@@ -143,23 +174,31 @@ const importTransactionService = require("../../../services/import/importTransac
                 fields: []
             })
 
+        };*/
+
+        vm.deleteReconScenario = function (item, $index) {
+            vm.reconScenarios.splice($index, 1);
         };
 
-        vm.deleteScenario = function (item, $index) {
-            vm.reconFields.splice($index, 1);
-        };
+        const getTTypeInputsForScenario = function (transactionTypeInputs) {
+
+            return transactionTypeInputs.filter(function (input) {
+                return input.value_type !== 120;
+            });
+
+        }
 
         vm.transformSourceSchemeToFrontendLogic = function() {
 
-            if (vm.scheme.inputs.length) {
+            if (vm.scheme.inputs?.length) {
 
-                vm.providerFields = [];
+                vm.schemeInputs = [];
 
                 vm.scheme.inputs.forEach(function (input) {
-                    vm.providerFields.push(input);
+                    vm.schemeInputs.push(input);
                 });
 
-                vm.providerFields = vm.providerFields.sort(function (a, b) {
+                vm.schemeInputs = vm.schemeInputs.sort(function (a, b) {
                     if (a.column > b.column) {
                         return 1;
                     }
@@ -174,15 +213,15 @@ const importTransactionService = require("../../../services/import/importTransac
 
             }
 
-            if (vm.scheme.calculated_inputs && vm.scheme.calculated_inputs.length) {
+            if (vm.scheme.calculated_inputs?.length) {
 
-                vm.calculatedFields = [];
+                vm.calculatedInputs = [];
 
                 vm.scheme.calculated_inputs.forEach(function (input) {
-                    vm.calculatedFields.push(input);
+                    vm.calculatedInputs.push(input);
                 });
 
-                vm.calculatedFields = vm.calculatedFields.sort(function (a, b) {
+                vm.calculatedInputs = vm.calculatedInputs.sort(function (a, b) {
                     if (a.column > b.column) {
                         return 1;
                     }
@@ -197,35 +236,35 @@ const importTransactionService = require("../../../services/import/importTransac
 
             }
 
-            if (vm.scheme.rule_scenarios.length) {
+            if (vm.scheme.rule_scenarios?.length) {
 
-                vm.scenarios = [];
+                vm.ruleScenarios = [];
 
                 vm.scheme.rule_scenarios.forEach(function (scenario) {
 
-                    if (scenario.transaction_type_object) {
+                    const scenarioCopy = structuredClone(scenario);
 
-                        scenario.inputs = scenario.transaction_type_object.inputs;
-
-                        scenario.transaction_type_object.inputs =
-                            scenario.transaction_type_object.inputs.filter(function (input) {
-                                return input.value_type !== 120;
-                            });
-
-
-                    } else {
-                        scenario.error_message = "⚠️ Transaction Type is not found"
+                    if (!scenarioCopy.frontOptions) {
+                        scenarioCopy.frontOptions = {};
                     }
 
-                    if (scenario.inputs) {
+                    if (scenarioCopy.transaction_type_object) {
 
-                        scenario.inputs.forEach(function (input_item) {
+                        scenarioCopy.frontOptions.transactionTypeInputs = getTTypeInputsForScenario(scenario.transaction_type_object.inputs);
 
-                            scenario.fields.forEach(function (field) {
+                    } else {
+                        scenarioCopy.error_message = ttypeNotFoundErrorMsg;
+                    }
 
-                                if (field.transaction_type_input === input_item.name) {
+                    if (scenarioCopy.frontOptions.transactionTypeInputs) {
 
-                                    input_item.expression = field.value_expr
+                        scenarioCopy.frontOptions.transactionTypeInputs.forEach(function (ttypeInput) {
+
+                            scenarioCopy.fields.forEach(function (field) {
+
+                                if (field.transaction_type_input === ttypeInput.name) {
+
+                                    ttypeInput.expression = field.value_expr
 
                                 }
 
@@ -235,91 +274,131 @@ const importTransactionService = require("../../../services/import/importTransac
                         })
 
                     } else {
-                        scenario.inputs = []
+                        scenarioCopy.frontOptions.transactionTypeInputs = [];
                     }
 
-                    if (scenario.is_default_rule_scenario) {
-                        vm.defaultRuleScenario = scenario
+                    if (scenarioCopy.is_default_rule_scenario) {
+                        vm.defaultRuleScenario = scenarioCopy;
+
+                    } else if (scenarioCopy.is_error_rule_scenario) {
+                        vm.errorRuleScenario = scenarioCopy;
 
                     } else {
-
-                        if (scenario.is_error_rule_scenario) {
-
-                            vm.errorRuleScenario = scenario
-
-
-                        } else {
-
-
-
-
-                            vm.scenarios.push(scenario);
-
-                        }
+                        vm.ruleScenarios.push(scenarioCopy);
                     }
 
 
                 })
 
-
             }
 
-            if (vm.scheme.recon_scenarios.length) {
-                vm.reconFields = [];
+            if (vm.scheme.recon_scenarios?.length) {
+                vm.reconScenarios = [];
 
                 vm.scheme.recon_scenarios.forEach(function (item) {
-                    vm.reconFields.push(item)
+                    vm.reconScenarios.push(item)
                 })
             }
 
+            if (vm.scheme.selector_values?.length) {
 
-            vm.selector_values_projection = vm.scheme.selector_values.map(function (item) {
-                return {
-                    id: item.value,
-                    value: item.value
-                }
-            });
+                vm.selector_values_projection = vm.scheme.selector_values.map(function (item) {
+                    return {
+                        id: item.value,
+                        value: item.value
+                    }
+                });
 
-            console.log('selector_values_projection', vm.selector_values_projection);
-            console.log('mapFields', vm.scenarios);
-            console.log('reconFields', vm.reconFields);
+            }
 
         }
 
-        vm.getItem = function () {
+        const applySchemeCopy = function (scheme) {
 
-            transactionImportSchemeService.getByKey(schemeId).then(function (data) {
+            delete scheme.id;
 
-                vm.scheme = data;
-                vm.draftUserCode = vm.generateUserCodeForDraft();
+            scheme = metaHelper.clearFrontendOptions(scheme);
 
-                vm.transformSourceSchemeToFrontendLogic();
+            scheme["user_code"] = scheme["user_code"] + '_copy';
 
-                vm.readyStatus.scheme = true;
-                $scope.$apply();
-            });
+            const deleteIds = function(item) {
+                delete item.id;
+            };
+
+            if (scheme.inputs.length) {
+                scheme.inputs.forEach(deleteIds);
+            }
+
+            if (scheme.calculated_inputs?.length) {
+                scheme.calculated_inputs.forEach(deleteIds);
+            }
+
+            if (scheme.rule_scenarios.length) {
+                scheme.rule_scenarios.forEach(deleteIds);
+            }
+
+            return scheme;
 
         };
 
-        vm.getTransactionTypes = function () {
+        const createRequiredProps = function (scheme) {
 
-            metaService.loadDataFromAllPages(
+            const properties = ["inputs", "calculated_inputs", "rule_scenarios"];
+
+            properties.forEach(key => {
+                if ( !scheme[key] ) scheme[key] = [];
+            })
+
+            return scheme;
+
+        }
+
+        vm.getItem = async function (doNotUpdateScope) {
+
+            if (vm.editingScheme) {
+
+                vm.scheme = await transactionImportSchemeService.getByKey(schemeId);
+
+            } else if (schemeToCopy) { // copying scheme
+
+                vm.scheme = applySchemeCopy(schemeToCopy);
+
+            } else {
+                vm.scheme = {};
+            }
+
+            vm.scheme = createRequiredProps(vm.scheme);
+
+            vm.draftUserCode = vm.generateUserCodeForDraft();
+
+            vm.transformSourceSchemeToFrontendLogic();
+
+            // vm.inputsFunctions is set inside vm.transformSourceSchemeToFrontendLogic()
+            vm.exprEditorBtnData = {groups: [vm.inputsGroup], functions: [vm.inputsFunctions]};
+
+            vm.readyStatus.scheme = true;
+
+            if (vm.editingScheme && !doNotUpdateScope) {
+                $scope.$apply();
+            }
+
+        };
+
+        vm.getTransactionTypes = async function () {
+
+            const data = await metaService.loadDataFromAllPages(
                 transactionTypeService.getListLight,
                 [{pageSize: 1000, page: 1}]
             )
-                .then(function (data) {
 
-                    vm.transactionTypesOpts = data.map(ttype => {
-                        return {
-                            id: ttype.user_code,
-                            name: `${ttype.name} (${ttype.user_code})`
-                        }
-                    });
+            vm.transactionTypesOpts = data.map(ttype => {
+                return {
+                    id: ttype.user_code,
+                    name: `${ttype.name} (${ttype.user_code})`
+                }
+            });
 
-                    vm.readyStatus.transactionTypes = true;
-                    $scope.$apply();
-
-                });
+            vm.readyStatus.transactionTypes = true;
 
         };
 
@@ -327,69 +406,63 @@ const importTransactionService = require("../../../services/import/importTransac
             return vm.readyStatus.scheme && vm.readyStatus.transactionTypes;
         };
 
-        vm.addProviderField = function () {
+        vm.addSchemeInput = function () {
 
-            var fieldsLength = vm.providerFields.length;
+            var fieldsLength = vm.schemeInputs.length;
             var lastFieldNumber;
             var nextFieldNumber;
             if (fieldsLength === 0) {
                 nextFieldNumber = 1;
             } else {
-                lastFieldNumber = parseInt(vm.providerFields[fieldsLength - 1].column);
+                lastFieldNumber = parseInt(vm.schemeInputs[fieldsLength - 1].column);
                 if (isNaN(lastFieldNumber) || lastFieldNumber === null) {
                     lastFieldNumber = 0
                 }
                 nextFieldNumber = lastFieldNumber + 1;
             }
 
-            vm.providerFields.push({
+            vm.schemeInputs.push({
                 name: '',
                 column: nextFieldNumber
             })
 
         };
 
-        vm.addCalculatedField = function () {
+        vm.addCalculatedInput = function () {
 
-            var fieldsLength = vm.calculatedFields.length;
+            var fieldsLength = vm.calculatedInputs.length;
             var lastFieldNumber;
             var nextFieldNumber;
             if (fieldsLength === 0) {
                 nextFieldNumber = 1;
             } else {
-                lastFieldNumber = parseInt(vm.calculatedFields[fieldsLength - 1].column);
+                lastFieldNumber = parseInt(vm.calculatedInputs[fieldsLength - 1].column);
                 if (isNaN(lastFieldNumber) || lastFieldNumber === null) {
                     lastFieldNumber = 0
                 }
                 nextFieldNumber = lastFieldNumber + 1;
             }
 
-            vm.calculatedFields.push({
+            vm.calculatedInputs.push({
                 name: '',
                 column: nextFieldNumber
             })
 
         };
 
-        vm.addScenario = function () {
-            vm.scenarios.push({
-                value: '',
-                transaction_type: null,
-                is_default_rule_scenario: false,
-                fields: [],
-                selector_values: [],
-            })
+        vm.addRuleScenario = function () {
+            vm.ruleScenarios.push( getRuleScenarioTplt() );
         };
 
         vm.exprInputOpts = {
             readonly: true
         }
 
-        vm.setProviderFieldExpression = function (item) {
+        vm.setSchemeInputExpression = function (item) {
             importSchemesMethodsService.setProviderFieldExpression(vm, item);
         }
 
-        vm.openProviderFieldExpressionBuilder = function (item, $event) {
+        vm.openSchemeInputExpressionBuilder = function (item, $event) {
             importSchemesMethodsService.openFxBtnExprBuilder(item, vm, $event);
         }
 
@@ -397,7 +470,7 @@ const importTransactionService = require("../../../services/import/importTransac
             importSchemesMethodsService.openCalcFieldFxBtnExprBuilder(item, vm, $event);
         }
 
-        vm.onCalculatedFieldNameBlur = function (item) {
+        vm.onCalculatedInputNameBlur = function (item) {
             importSchemesMethodsService.onTTypeCalcFielNamedBlur(item);
         }
 
@@ -409,54 +482,66 @@ const importTransactionService = require("../../../services/import/importTransac
             return importSchemesMethodsService.checkForUserExpr(item);
         }
 
-        vm.removeProviderField = function (item, $index) {
-            vm.providerFields.splice($index, 1);
+        vm.removeSchemeInput = function (item, $index) {
+            vm.schemeInputs.splice($index, 1);
         };
 
-        vm.removeCalculatedField = function (item, $index) {
-            vm.calculatedFields.splice($index, 1);
+        vm.removeCalculatedInput = function (item, $index) {
+            vm.calculatedInputs.splice($index, 1);
         };
 
-        vm.removeScenario = function (item, $index) {
-            vm.scenarios.splice($index, 1);
+        vm.removeRuleScenario = function (item, $index) {
+            vm.ruleScenarios.splice($index, 1);
         };
 
         vm.cancel = function () {
             $mdDialog.hide({status: 'disagree'});
         };
 
-        function mapInput (scenario) {
+        /**
+         * Function-helper for vm.transformSchemeToBackendLogic.
+         * @see vm.transformSchemeToBackendLogic
+         *
+         * @param {Object} ruleScenario
+         * @return {Object} - ruleScenario prepared to send to back-end
+         */
+        function mapRuleScenario (ruleScenario) {
 
-            scenario.inputs = scenario.inputs.filter(function (input) {
+            /*scenario.inputs = scenario.inputs.filter(function (input) {
                 return input.value_type !== 120;
-            })
+            })*/
 
-            scenario.inputs.forEach(function (input_item) {
+            ruleScenario.frontOptions.transactionTypeInputs.forEach(function (ttypeInput) {
 
                 var found = false;
 
-                scenario.fields.forEach(function (field) {
+                ruleScenario.fields.forEach(function (field) {
 
-                    if (field.transaction_type_input === input_item.name) {
-                        field.value_expr = input_item.expression
+                    if (field.transaction_type_input === ttypeInput.name) {
+                        field.value_expr = ttypeInput.expression
                         found = true
                     }
 
                 })
+
                 if (!found) {
-                    scenario.fields.push({
-                        transaction_type_input: input_item.name,
-                        value_expr: input_item.expression
+
+                    ruleScenario.fields.push({
+                        transaction_type_input: ttypeInput.name,
+                        value_expr: ttypeInput.expression
                     })
+
                 }
 
-                scenario.fields = scenario.fields.filter(function (field) {
+                ruleScenario.fields = ruleScenario.fields.filter(function (field) {
                     return field.value_expr
-                })
+                });
 
             })
 
-            return scenario;
+            delete ruleScenario.frontOptions;
+
+            return ruleScenario;
 
         }
 
@@ -464,20 +549,23 @@ const importTransactionService = require("../../../services/import/importTransac
 
             var result = JSON.parse(JSON.stringify(vm.scheme));
 
-            result.calculated_inputs = vm.calculatedFields;
-            result.inputs = vm.providerFields;
-            result.rule_scenarios = vm.scenarios;
+            result.calculated_inputs = vm.calculatedInputs;
+            result.inputs = vm.schemeInputs;
+            result.rule_scenarios = JSON.parse(angular.toJson(vm.ruleScenarios));
 
-            result.rule_scenarios = result.rule_scenarios.map(mapInput)
+            result.rule_scenarios = result.rule_scenarios.map(mapRuleScenario)
 
 
-            vm.defaultRuleScenario = mapInput(vm.defaultRuleScenario)
-            vm.errorRuleScenario = mapInput(vm.errorRuleScenario)
+            let defScenario = JSON.parse(angular.toJson(vm.defaultRuleScenario));
+            defScenario = mapRuleScenario(defScenario);
 
-            result.rule_scenarios.push(vm.defaultRuleScenario)
-            result.rule_scenarios.push(vm.errorRuleScenario)
+            let errorScenario = JSON.parse(angular.toJson(vm.errorRuleScenario));
+            errorScenario = mapRuleScenario(errorScenario)
 
-            result.recon_scenarios = vm.reconFields;
+            result.rule_scenarios.push(defScenario)
+            result.rule_scenarios.push(errorScenario)
+
+            result.recon_scenarios = vm.reconScenarios;
 
             return result
 
@@ -485,17 +573,17 @@ const importTransactionService = require("../../../services/import/importTransac
 
         vm.agree = function ($event) {
 
-            var result = vm.transformSchemeToBackendLogic();
+            let result = vm.transformSchemeToBackendLogic();
 
-            var warningMessage = '';
-            var warningTitle = '';
+            let warningMessage = '';
+            let warningTitle = '';
 
-            var importedColumnsNumberZero = false;
-            var importedColumnsNumberEmpty = false;
+            let importedColumnsNumberZero = false;
+            let importedColumnsNumberEmpty = false;
 
 
-            for (var i = 0; i < vm.providerFields.length; i++) {
-                var field = vm.providerFields[i];
+            for (let i = 0; i < vm.schemeInputs.length; i++) {
+                const field = vm.schemeInputs[i];
 
                 if (field.column === 0 && !importedColumnsNumberZero) {
                     warningMessage = "should not have value 0 (column's count starts from 1)";
@@ -553,11 +641,21 @@ const importTransactionService = require("../../../services/import/importTransac
                     multiple: true
                 });
 
-            } else {
+            }
+            else {
 
                 vm.processing = true;
 
-                transactionImportSchemeService.update(result.id, result).then(function (data) {
+                let savePromise;
+
+                if (vm.editingScheme) {
+                    savePromise = transactionImportSchemeService.update(result.id, result);
+
+                } else {
+                    savePromise = transactionImportSchemeService.create(result);
+                }
+
+                savePromise.then(function (data) {
 
                     toastNotificationService.success("Transaction Import Scheme " + vm.scheme.user_code + ' was successfully saved');
 
@@ -568,42 +666,23 @@ const importTransactionService = require("../../../services/import/importTransac
                 }).catch(function (reason) {
 
                     vm.processing = false;
+                    console.error(`[transactionImportSchemeV2DialogController agree] error trying to save scheme`, reason)
 
-                    $mdDialog.show({
-                        controller: 'ValidationDialogController as vm',
-                        templateUrl: 'views/dialogs/validation-dialog-view.html',
-                        targetEvent: $event,
-                        locals: {
-                            validationData: {
-                                errorData: {
-                                    message: reason.message
-                                }
-                            }
-                        },
-                        preserveScope: true,
-                        autoWrap: true,
-                        multiple: true,
-                        skipHide: true
-                    })
                 })
             }
+
         };
 
         vm.makeCopy = function ($event) {
 
-            var scheme = JSON.parse(JSON.stringify(vm.scheme));
-
-            delete scheme.id;
-            scheme["user_code"] = scheme["user_code"] + '_copy';
-
             var copyPromise = $mdDialog.show({
-                controller: 'TransactionImportSchemeAddDialogController as vm',
-                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-dialog-view.html',
+                controller: 'TransactionImportSchemeV2DialogController as vm',
+                templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-v2-dialog-view.html',
                 parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 locals: {
                     data: {
-                        scheme: scheme
+                        scheme: vm.scheme
                     }
                 }
             });
@@ -708,13 +787,13 @@ const importTransactionService = require("../../../services/import/importTransac
 
             console.log('vm.activeDryRunResultItem', vm.activeDryRunResultItem)
 
-            vm.providerFields.forEach(function (providerField) {
+            vm.schemeInputs.forEach(function (input) {
 
                 Object.keys(vm.activeDryRunResultItem.conversion_inputs).forEach(function (key) {
 
-                    if (providerField.name === key) {
+                    if (input.name === key) {
 
-                        providerField.dryRunResult = vm.activeDryRunResultItem.conversion_inputs[key]
+                        input.dryRunResult = vm.activeDryRunResultItem.conversion_inputs[key]
 
                     }
 
@@ -722,13 +801,13 @@ const importTransactionService = require("../../../services/import/importTransac
 
             })
 
-            vm.calculatedFields.forEach(function (calculatedField) {
+            vm.calculatedInputs.forEach(function (cInput) {
 
                 Object.keys(vm.activeDryRunResultItem.inputs).forEach(function (key) {
 
-                    if (calculatedField.name === key) {
+                    if (cInput.name === key) {
 
-                        calculatedField.dryRunResult = vm.activeDryRunResultItem.inputs[key]
+                        cInput.dryRunResult = vm.activeDryRunResultItem.inputs[key]
 
                     }
 
@@ -737,19 +816,20 @@ const importTransactionService = require("../../../services/import/importTransac
 
             })
 
-            vm.scenarios.forEach(function (scenario) {
+            vm.ruleScenarios.forEach(function (scenario) {
 
                 var transaction_type_user_code = scenario.transaction_type_object.user_code
 
                 if (vm.activeDryRunResultItem.transaction_inputs[transaction_type_user_code]) {
 
-                    scenario.transaction_type_object.inputs.forEach(function (input) {
+                    // scenario.transaction_type_object.inputs.forEach(function (input) {
+                    scenario.frontOptions.transactionTypeInputs.forEach(function (ttypeInput) {
 
                         Object.keys(vm.activeDryRunResultItem.transaction_inputs[transaction_type_user_code]).forEach(function (key) {
 
-                            if (input.name === key) {
+                            if (ttypeInput.name === key) {
 
-                                input.dryRunResult = vm.activeDryRunResultItem.transaction_inputs[transaction_type_user_code][key]
+                                ttypeInput.dryRunResult = vm.activeDryRunResultItem.transaction_inputs[transaction_type_user_code][key]
 
                             }
 
@@ -772,11 +852,12 @@ const importTransactionService = require("../../../services/import/importTransac
             { id: 'skip', name: 'Skip' },
         ];
 
-        vm.onTransactionTypeChange = function ($event, item) {
+        vm.onTransactionTypeChange = function (changedValue, item) {
 
-            item.inputs = []
+            item.frontOptions.transactionTypeInputs = []
 
-            item.processing = true;
+            item.frontOptions.processing = true;
+
             transactionTypeService.getList({
                 filters: {
                     user_code: item.transaction_type
@@ -785,14 +866,18 @@ const importTransactionService = require("../../../services/import/importTransac
 
                 if (data.results) {
 
-                    item.transaction_type_object = data.results[0];
-                    item.inputs = item.transaction_type_object.inputs.filter(function (input) {
-                        return input.value_type !== 120;
-                    });
+                    delete item.error_message;
 
-                    item.processing = false;
+                    item.transaction_type_object = data.results[0];
+
+                    item.frontOptions.transactionTypeInputs = getTTypeInputsForScenario(item.transaction_type_object.inputs);
+
+                    item.frontOptions.processing = false;
+
                     $scope.$apply();
+
                 } else{
+                    item.error_message = ttypeNotFoundErrorMsg;
                     toastNotificationService.error("Transaction type not found");
                 }
             });
@@ -814,7 +899,7 @@ const importTransactionService = require("../../../services/import/importTransac
                 multiple: true,
                 locals: {
                     data: {
-                        fields: vm.providerFields,
+                        fields: vm.schemeInputs,
                         item: item
                     }
                 }
@@ -859,7 +944,7 @@ const importTransactionService = require("../../../services/import/importTransac
 
         // DRAFT ENDED
 
-        vm.init = function () {
+        const init = async function () {
 
             setTimeout(function () {
                 vm.dialogElemToResize = document.querySelector('.transactionSchemeManagerDialogElemToResize');
@@ -869,14 +954,11 @@ const importTransactionService = require("../../../services/import/importTransac
                 vm.editingScheme = true;
             }
 
-            vm.getItem();
-            vm.getTransactionTypes();
-
-            vm.exprEditorBtnData = {groups: [vm.inputsGroup], functions: [vm.inputsFunctions]};
+            await Promise.all([vm.getTransactionTypes(), vm.getItem()]);
 
         };
 
-        vm.init()
+        init();
 
     };
 

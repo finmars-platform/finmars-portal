@@ -49,7 +49,6 @@ var complexImportSchemeService = require('./import/complexImportSchemeService').
 
 var costMethodService = require('./instrument/instrumentCostMethodService').default;
 
-var priceHistoryErrorService = require('./pricing/priceHistoryErrorService').default;
 var currencyHistoryErrorService = require('./pricing/currencyHistoryErrorService').default;
 
 var expressionProcedureService = require('./procedures/expressionProcedureService').default;
@@ -66,7 +65,7 @@ var xhrService = require('../../../../core/services/xhrService').default;
 var configureRepositoryUrlService = require('./configureRepositoryUrlService').default;
 var baseUrlService = require('./baseUrlService').default;
 
-export default function (instrumentService, transactionTypeService, priceHistoryService, currencyHistoryService, configurationService, reportService, transactionImportSchemeService) {
+export default function (instrumentService, transactionTypeService, priceHistoryService, currencyHistoryService, configurationService, reportService, transactionImportSchemeService, priceHistoryErrorService) {
 
     var getList = function (entityType, options) {
 
