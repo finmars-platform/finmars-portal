@@ -19,32 +19,27 @@
             link: function (scope, elem, attrs) {
 
                 var container = $(elem).find('.split-panel-controller-container');
+                var templateScope;
+                var splitPanelAdditions;
 
-                async function createController() {
+                async function createControllerAndTemplate() {
 
-                    var additions = scope.evDataService.getAdditions();
+                    splitPanelAdditions = JSON.parse(JSON.stringify( scope.evDataService.getAdditions() ));
 
-                    console.log('create report Controller', additions);
+                    container.html('');
 
-                    var editorTemplateUrl;
-                    var tpl;
-                    var templateScope;
-                    var ctrl;
-
-                    $(container).html('');
-
-                    editorTemplateUrl = 'views/entity-viewer/split-panel-report-viewer-view.html';
+                    const editorTemplateUrl = 'views/entity-viewer/split-panel-report-viewer-view.html';
                     // tpl = $templateCache.get(editorTemplateUrl);
-                    tpl = await templateLoader.loadTemplate(editorTemplateUrl)
+                    const tpl = await templateLoader.loadTemplate(editorTemplateUrl)
 
                     templateScope = scope.$new();
 
                     templateScope.$parent.vm = {};
-                    templateScope.$parent.vm.entityType = additions.type;
+                    templateScope.$parent.vm.entityType = splitPanelAdditions.type;
                     // templateScope.$parent.vm.contentType = metaContentTypesService.findContentTypeByEntity( additions.type);
-                    templateScope.$parent.vm.contentType = additions.layoutData.content_type;
+                    templateScope.$parent.vm.contentType = splitPanelAdditions.layoutData.content_type;
 
-                    ctrl = $controller('SplitPanelReportViewerController as vm', {
+                    const ctrl = $controller('SplitPanelReportViewerController as vm', {
                         '$scope': templateScope,
                         '$mdDialog': $mdDialog,
                         '$transitions': $transitions,
@@ -56,14 +51,39 @@
                     container.html(tpl);
                     container.children().data('$ngControllerController', ctrl);
 
-                    console.log('container', container);
-
                     $compile(elem.contents())(templateScope);
-
 
                 }
 
-                createController();
+                createControllerAndTemplate();
+
+                const acIndex = scope.evEventService.addEventListener(evEvents.ADDITIONS_CHANGE, function () {
+
+                    const additions = scope.evDataService.getAdditions();
+
+                    if (!additions.isOpen) {
+                        /* without this `if` when closing split panel
+                        this function will be executed before eventListener
+                        is removed by scope.$on("$destroy", function)*/
+                        return;
+                    }
+
+                    delete templateScope.vm;
+                    templateScope.$destroy();
+
+                    if (
+                        additions.type !== splitPanelAdditions.type ||
+                        ( additions.layoutData?.content_type !== splitPanelAdditions.layoutData.content_type )
+                    ) {
+                        // report viewer is inside split panel and type of report changed
+                        createControllerAndTemplate();
+                    }
+
+                });
+
+                scope.$on("$destroy", function () {
+                    scope.evEventService.removeEventListener(evEvents.ADDITIONS_CHANGE, acIndex);
+                })
 
             }
         }
