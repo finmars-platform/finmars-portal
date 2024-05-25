@@ -5,9 +5,7 @@
 
     'use strict';
 
-    var priceHistoryErrorService = require('../../services/pricing/priceHistoryErrorService');
-
-    module.exports = function ($scope, $mdDialog, $state, entityId) {
+    module.exports = function ($scope, $mdDialog, $state, priceHistoryErrorService, entityId) {
 
         var vm = this;
 

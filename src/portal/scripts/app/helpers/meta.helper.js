@@ -1,5 +1,7 @@
 (function () {
 
+    'use strict';
+
 	const md5Helper = require('../helpers/md5.helper');
     const toastNotificationService = require('../../../../core/services/toastNotificationService').default;
 
