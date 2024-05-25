@@ -1,11 +1,10 @@
 <md-dialog aria-label="" ng-cloak class="draggable-dialog width-50" drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Celery Worker Manager</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Celery Worker Manager"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content class="p-24">
         <div layout="column">

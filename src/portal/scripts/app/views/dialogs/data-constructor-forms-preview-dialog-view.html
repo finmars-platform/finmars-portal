@@ -2,12 +2,11 @@
            class="entity-editor-dialog draggable-dialog dialog-actions-bottom evEditorPreviewElemToResize"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Input Form Editor Preview</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Input Form Editor Preview"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
 
     <md-dialog-content class="height-100">

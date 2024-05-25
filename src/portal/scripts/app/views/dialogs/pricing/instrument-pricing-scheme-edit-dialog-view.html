@@ -1,11 +1,10 @@
 <md-dialog aria-label="instrument pricing scheme edit dialog" ng-cloak class="draggable-dialog width-50" drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Edit Instrument Pricing Scheme</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Edit Instrument Pricing Scheme"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content class="p-24">
 

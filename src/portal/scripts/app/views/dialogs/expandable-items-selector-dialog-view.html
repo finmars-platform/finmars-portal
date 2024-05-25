@@ -2,14 +2,12 @@
            aria-label="expandable items selector dialog"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
+        <dialog-header data-title="{{vm.dialogTitle}}"
+                       cancel-dialog="vm.cancel()">
+        </dialog-header>
 
-            <h2 ng-bind="vm.dialogTitle"></h2>
-            <span flex></span>
-        </div>
     </md-toolbar>
-    <md-dialog-content class="m-t-16 p-16" style="min-width: 350px">
+    <md-dialog-content class="p-t-32" style="min-width: 350px">
 
         <div ng-class="{'bookmarks-layout-without-fold': vm.noFolding}">
 

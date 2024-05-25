@@ -2,10 +2,11 @@
            class="ace-editor-dialog entity-as-json-editor-dialog draggable-dialog dialog-actions-bottom entityAsJsonEditorDialogElemToResize"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>JSON Editor - {{vm.entityTypeSlug()}}</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="JSON Editor - {{vm.entityTypeSlug()}}"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content>
         <div class="ace-editor" id="aceEditor">

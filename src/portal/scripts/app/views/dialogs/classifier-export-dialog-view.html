@@ -1,9 +1,10 @@
 <md-dialog aria-label="" ng-cloak class="success-dialog">
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>Export Classifiers</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                title="Export Classifiers"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content>
         <div class="p-24">

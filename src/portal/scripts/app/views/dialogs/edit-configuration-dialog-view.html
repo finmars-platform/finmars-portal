@@ -1,11 +1,10 @@
 <md-dialog aria-label="" ng-cloak class="warning-dialog width-50" drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Edit New Member Setup Configuration</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Edit New Member Setup Configuration"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content   class="custom-scrollbar p-24">
 

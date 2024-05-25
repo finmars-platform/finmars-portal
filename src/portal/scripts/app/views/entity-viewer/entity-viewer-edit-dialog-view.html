@@ -6,15 +6,15 @@
         <div data-ng-if="vm.checkReadyStatus()"
              class="md-toolbar-tools"
              data-ng-class="{'disabled-input-form': !vm.hasEditPermission}">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2 data-ng-if="vm.hasEditPermission">Edit {{vm.entityTypeSlug()}}: {{vm.getEntityPropertyByDefault()}}</h2>
-            <h2 data-ng-if="!vm.hasEditPermission">View {{vm.entityTypeSlug()}}: {{vm.getEntityPropertyByDefault()}}</h2>
-            <span data-ng-if="!vm.hasEditPermission" style="margin-left: 12px;">
-                <ng-md-icon icon="lock" size="24">
-                        <md-tooltip md-direction="bottom">You don't have permission to edit this form</md-tooltip>
-                </ng-md-icon>
-            </span>
+            <dialog-header
+                    class="width-100"
+                    data-title="{{vm.hasEditPermission ? 'Edit ' + vm.entityTypeSlug() + ': '
+                     + vm.getEntityPropertyByDefault() : 'View ' + vm.entityTypeSlug() + ': '
+                     + vm.getEntityPropertyByDefault()}}"
+                    data-tooltip="You don't have permission to edit this form"
+                    cancel-dialog="vm.cancel()"
+            >
+            </dialog-header>
             <div data-ng-if="vm.processing" layout="row" class="m-l-16">
                 <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
                     <progress-circular diameter="20"></progress-circular>

@@ -2,12 +2,10 @@
            aria-label="text editor dialog"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2 data-ng-bind-html="vm.dialogTitle"></h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                title="text"
+                cancel-dialog="vm.cancel()"
+        ></dialog-header>
     </md-toolbar>
 
     <md-dialog-content class="p-16 height-100">

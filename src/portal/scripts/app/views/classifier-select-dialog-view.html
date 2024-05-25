@@ -1,10 +1,11 @@
 <md-dialog class="classifier-select-dialog-view dialog-actions-bottom classifierSelectorElemToDrag"
            aria-label="classifier selector dialog">
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2 ng-bind="vm.label"></h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="{{vm.label}}"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
 
     <md-dialog-content>
