@@ -11,15 +11,15 @@
 
     <div class="number-format-preset-container">
         <div class="preset-selector"
-             custom-popup
-             popup-template-url="'views/popups/selector-popup-view.html'"
-             popup-data="vm.presetSelectorData"
-             position-relative-to="element"
-             relative-popup-x="left"
-             relative-popup-y="top"
-             open-on="click"
-             popup-classes="preset-options"
-             close-on-click-outside="true">
+             data-custom-popup
+             data-popup-template-url="'views/popups/selector-popup-view.html'"
+             data-popup-data="vm.presetSelectorData"
+             data-position-relative-to="element"
+             data-relative-popup-x="left"
+             data-relative-popup-y="top"
+             data-open-on="click"
+             data-popup-classes="preset-options"
+             data-close-on-click-outside="true">
 
             <span>{{vm.currentPresetName}}</span>
             <span class="material-icons">arrow_drop_down</span>
@@ -33,9 +33,12 @@
                     'low-font-size': vm.settings.percentage_format_id >= 3 && vm.settings.percentage_format_id < 5,
                     'small-font-size': vm.settings.percentage_format_id === 5
                     }">
-                <div>{{vm.positiveNumberExample}}</div>
-                <div>{{vm.zeroExample}}</div>
-                <div data-ng-class="{red: vm.negativeFormat % 2 === 1}">{{vm.negativeNumberExample}}</div>
+                <div class="text-overflow-ellipsis">{{vm.positiveNumberExample}}</div>
+                <div class="text-overflow-ellipsis">{{vm.zeroExample}}</div>
+                <div class="text-overflow-ellipsis"
+                     data-ng-class="{red: vm.negativeFormat % 2 === 1}">
+                    {{vm.negativeNumberExample}}
+                </div>
             </div>
 
         </div>
@@ -315,8 +318,10 @@
                  layout="row"
                  ng-click="multiplierCollapsed = !multiplierCollapsed">
                 <div class="parameter">Multiplier</div>
-                <div class="example" data-ng-if="multiplierCollapsed"></div>
-                <div class="example" data-ng-if="!multiplierCollapsed">Enter multiplier</div>
+                <div data-ng-if="multiplierCollapsed"
+                     data-ng-bind="vm.settings.number_multiplier"
+                     class="example"></div>
+                <div data-ng-if="!multiplierCollapsed" class="example">Enter multiplier</div>
                 <div class="collapse-icon">
                     <span class="material-icons">expand_more</span>
                 </div>
@@ -329,10 +334,10 @@
 
                     <div class="settings">
                         <div layout="column">
-                            <number-input model="vm.settings.number_multiplier"
-                                          placeholder-text="Multiplier"
-                                          small-options="{noIndicatorBtn: true}"
-                                          on-change-callback="vm.onNumberFormatChange()"></number-input>
+                            <number-input data-model="vm.settings.number_multiplier"
+                                          data-placeholder-text="Multiplier"
+                                          data-small-options="{noIndicatorBtn: true}"
+                                          data-on-change-callback="vm.onNumberFormatChange()"></number-input>
                         </div>
                     </div>
 
