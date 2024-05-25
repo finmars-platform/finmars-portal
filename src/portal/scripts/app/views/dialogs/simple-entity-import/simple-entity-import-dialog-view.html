@@ -1,11 +1,10 @@
 <md-dialog aria-label="" ng-cloak class="transaction-import-manager-dialog-view draggable-dialog width-80" drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Simple Import</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Simple Import"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content style="min-height: 50vh;" >
         <div data-ng-if="vm.readyStatus.schemes"

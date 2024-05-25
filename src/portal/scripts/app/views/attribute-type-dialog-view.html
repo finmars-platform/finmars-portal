@@ -3,17 +3,13 @@
            drag-dialog
            style="width: 60%">
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-            <h2>Attribute manager</h2>
-            <span flex></span>
-            <div data-ng-if="vm.processing" layout="row" class="m-l-16">
-                <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
-                    <progress-circular diameter="20"></progress-circular>
-                </div>
-                — Processing
-            </div>
-        </div>
+        <dialog-header
+                data-title="Attribute manager"
+                class="width-100"
+                data-processing="vm.processing"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content>
         <div layout="row">

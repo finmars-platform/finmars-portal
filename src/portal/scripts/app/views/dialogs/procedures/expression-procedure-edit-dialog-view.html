@@ -1,11 +1,10 @@
 <md-dialog aria-label="" ng-cloak class="draggable-dialog width-70 edit-expression-procedure" drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Update Expression Procedure</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Update Expression Procedure"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content>
 

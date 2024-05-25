@@ -1,9 +1,10 @@
 <md-dialog aria-label="" ng-cloak class="success-dialog draggable-dialog" drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>Import Reference Table</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Import Reference Table"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content>
         <div class="p-24">

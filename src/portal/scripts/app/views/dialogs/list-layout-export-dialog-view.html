@@ -1,9 +1,10 @@
 <md-dialog aria-label="" ng-cloak class="success-dialog width-40">
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>Export Layout</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Export Layout"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content>
         <div class="p-24">

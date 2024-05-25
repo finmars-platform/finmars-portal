@@ -1,10 +1,8 @@
 <md-dialog aria-label="custom field add dialog" ng-cloak class="width-40 draggable-dialog" drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools" style="height: 64px;">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Create Custom Column</h2>
-        </div>
+        <dialog-header data-title="Create Custom Column"
+                       cancel-dialog="vm.cancel()">
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content>
         <div layout="column">

@@ -2,12 +2,11 @@
            aria-label="success dialog"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2 data-ng-bind-html="vm.success.title"></h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="{{vm.success.title}}"
+                cancel-dialog="vm.agree()"
+        >
+        </dialog-header>
     </md-toolbar>
 
     <md-dialog-content>

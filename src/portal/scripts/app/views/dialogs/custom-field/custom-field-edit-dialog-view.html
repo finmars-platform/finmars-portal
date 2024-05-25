@@ -2,12 +2,9 @@
            class="width-40 draggable-dialog"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools" style="height: 64px;">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Edit Custom Column</h2>
-            <span flex></span>
-        </div>
+        <dialog-header data-title="Edit Custom Column"
+                       cancel-dialog="vm.cancel()">
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content>
         <div layout="column">

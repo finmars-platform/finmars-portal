@@ -1,11 +1,10 @@
 <md-dialog aria-label="" ng-cloak class="draggable-dialog width-50 pricing-schedules" drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Create Schedule</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Create Schedule"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content class="p-24 pricingSchedulesScrollElemOnDrag">
 
