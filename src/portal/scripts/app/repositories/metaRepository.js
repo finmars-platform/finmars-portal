@@ -201,6 +201,10 @@
                 "value": "attachment",
                 "display_name": "Attachment"
             },
+            {
+                "value": "json",
+                "display_name": "JSON"
+            },
         ];
     };
 

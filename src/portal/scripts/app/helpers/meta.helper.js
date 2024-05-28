@@ -250,7 +250,7 @@
 
 		for (const prop in object) {
 
-			if (object[prop] && typeof object[prop] === 'object') {
+			if (object[prop] && typeof object[prop] === 'object' && prop !== 'identifier') {
 
 				object[prop] = clearFrontendOptions(object[prop]);
 
