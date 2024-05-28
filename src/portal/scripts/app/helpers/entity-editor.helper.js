@@ -67,7 +67,7 @@
     };
 
     var fieldsThatCanBeNullData = {
-        'instrument': ['maturity_date'],
+        'instrument': ['maturity_date', "identifier"],
         'instrument-type': ['maturity_date'],
     };
 
