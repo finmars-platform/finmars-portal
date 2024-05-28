@@ -38,6 +38,8 @@
             {id: 'stock', name: 'Stocks'}
         ]
 
+        var dialogParent = document.querySelector('.dialog-containers-wrap');
+
         var reqPageSize = 40;
 
         vm.clearHoverInstrument = function () {
@@ -399,16 +401,14 @@
 
         }
 
-        var dialogParent = document.querySelector('.dialog-containers-wrap');
-
         vm.addInstrument = function ($event) {
 
             $mdDialog.show({
                 controller: 'EntityViewerAddDialogController as vm',
                 templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
+                parent: dialogParent,
                 targetEvent: $event,
                 multiple: true,
-                parent: dialogParent,
                 locals: {
                     entityType: 'instrument',
                     entity: {},
@@ -429,9 +429,9 @@
             $mdDialog.show({
                 controller: 'InstrumentDownloadDialogController as vm',
                 templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+                parent: dialogParent,
                 targetEvent: $event,
                 multiple: true,
-                parent: dialogParent,
                 locals: {
                     data: {}
                 }

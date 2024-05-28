@@ -13,8 +13,8 @@ export default function ($scope, $mdDialog, toastNotificationService, uiService,
     const urlBeginning = baseUrlService.resolve();
     const base_api_url = baseUrlService.getMasterUserPrefix();
 
-    vm.iframeSrc = `${urlBeginning}/${base_api_url}/v/external/components/modal_add_columns?iframeId=${vm.iframeId}`;
-    // vm.iframeSrc = `http://localhost:3000/space0fxf3/v/external/components/modal_add_columns?iframeId=${vm.iframeId}`; // for development
+    vm.iframeSrc = `${urlBeginning}/${base_api_url}/v/external/components/modal_add_columns?iframeId=${vm.iframeId}&dark_mode=${globalDataService.isThemeInDarkMode()}`;
+    // vm.iframeSrc = `http://localhost:3000/ealm03va3/space027ho/v/external/components/modal_add_columns?iframeId=${vm.iframeId}&dark_mode=${globalDataService.isThemeInDarkMode()}`; // for development
 
     const windowOrigin = window.origin;
     // const windowOrigin = 'http://localhost:3000'; // for development

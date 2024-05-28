@@ -395,26 +395,41 @@
       }
 
       &.g-row-marked-red {
-        background-color: #FDECE5;
+        background-color: rgb(226 141 170);
+        opacity: .8;
 
         div.g-row-color-picker span.label-icon {
           color: var(--primary-color);;
+        }
+
+        .g-cell {
+          color: var(--on-primary-color);
         }
       }
 
       &.g-row-marked-yellow {
         background-color: #FEF9EF;
+        opacity: .8;
 
         div.g-row-color-picker span.label-icon {
           color: #fac878;
+        }
+
+        .g-cell {
+          color: var(--on-primary-color);
         }
       }
 
       &.g-row-marked-green {
         background-color: #E1FEF5;
+        opacity: .8;
 
         div.g-row-color-picker span.label-icon {
           color: #a5d9c9;
+        }
+
+        .g-cell {
+          color: var(--on-primary-color);
         }
       }
 
@@ -1132,7 +1147,7 @@
       position: relative;
       right: 5px;
       opacity: 0;
-      color: @gray;
+      color: var(--secondary-color);
     }
 
     &[disabled] {
@@ -1142,11 +1157,11 @@
     &:not([disabled]):hover {
 
       .label-icon, span.material-icons:not(.arrow-icon) {
-        color: @gray;
+        color: var(--secondary-color);
       }
 
       & > svg {
-        fill: @gray;
+        fill: var(--secondary-color);
       }
 
       .arrow-icon {
@@ -1522,11 +1537,11 @@
     .g-row-settings-btn {
 
       & > span {
-        fill: @gray;
+        fill: var(--secondary-color);
       }
 
       .label-icon, span.material-icons:not(.arrow-icon) {
-        color: @gray;
+        color: var(--secondary-color);
       }
 
     }

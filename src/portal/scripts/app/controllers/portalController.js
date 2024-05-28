@@ -41,7 +41,10 @@ export default function ($scope, $state, authorizerService, usersService, global
 
     }*/
 
+
+
     const getMemberData = async function () {
+
 
         try {
 
@@ -50,82 +53,19 @@ export default function ($scope, $state, authorizerService, usersService, global
                 uiService.getDefaultMemberLayout(),
             ]);
 
-            /*const member = res[0]
-
-            // enable by default list layout autosave
-            if (member.data && typeof member.data.autosave_layouts !== 'boolean') {
-                member.data.autosave_layouts = true;
-                globalDataService.setMember(member);
-            }*/
             const memberLayout = res[1];
 
-            if (!memberLayout.data) {
-                memberLayout.data = {}
-            }
-
-            if (memberLayout.data.isThemeInDarkMode == null || memberLayout.data.isThemeInDarkMode == undefined) {
-                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    // Dark mode preferred
-                    memberLayout.data.isThemeInDarkMode = true;
-                    globalDataService.enableThemeDarkMode()
-                } else {
-                    memberLayout.data.isThemeInDarkMode = false;
-                    globalDataService.disableThemeDarkMode()
-                    // Light mode preferred
-                }
-            } else if (memberLayout.data.isThemeInDarkMode === true) {
-                globalDataService.enableThemeDarkMode()
-            } else {
-                globalDataService.disableThemeDarkMode()
-            }
-
-            memberLayout.data.theme = 'com.finmars.default-theme' // for debug
-
-            if (memberLayout.data.theme) {
-                globalDataService.setTheme(memberLayout.data.theme);
-
-                let themePath = memberLayout.data.theme.split('.').join('/')
-
-                let itemPath = `.system/ui/themes/${themePath}/theme.css`
-
-                explorerService.viewFile(itemPath).then((blob) => {
-
-                    const reader = new FileReader();
-
-                    reader.addEventListener("loadend", function (e) {
-                        const content = reader.result;
-
-                        var styleElement = document.createElement('style');
-                        styleElement.textContent = content;
-
-                        document.head.appendChild(styleElement);
-
-                    });
-
-                    reader.readAsText(blob);
-
-                }).catch((error) => {
-
-                    console.error("Could not fetch theme", error);
-
-                    globalDataService.setTheme('base-theme')
-
-                })
-            } else {
-                globalDataService.setTheme('base-theme')
-            }
-
-
             // enable by default list layout autosave
-            if (typeof memberLayout.data.autosave_layouts !== 'boolean') {
+            if ( typeof memberLayout.data.autosave_layouts !== 'boolean' ) {
                 memberLayout.data.autosave_layouts = true;
                 globalDataService.setMemberLayout(memberLayout);
             }
 
-        } catch (error) {
+        } catch(error) {
             console.error(error);
             throw error;
         }
+
 
     }
 

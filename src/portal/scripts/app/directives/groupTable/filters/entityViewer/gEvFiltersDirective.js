@@ -43,6 +43,8 @@
                 const baseUrl = baseUrlService.resolve();
                 const urlPrefix = baseUrlService.getMasterUserPrefix();
 
+                const dialogsWrapElem = document.querySelector('.dialog-containers-wrap');
+
                 const gFiltersLeftPartWidth = elem[0].querySelector('.gFiltersLeftPart').clientWidth;
                 const gFiltersRightPartWidth = elem[0].querySelector('.gFiltersRightPart').clientWidth;
                 let filtersChipsContainer = elem[0].querySelector(".gFiltersContainer");
@@ -179,7 +181,7 @@
                             dialogOptions = {
                                 controller: 'SimpleEntityImportSchemeV2EditDialogController as vm',
                                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-v2-dialog-view.html',
-                                parent: document.querySelector('.dialog-containers-wrap'),
+                                parent: dialogsWrapElem,
                                 locals: {
                                     data: {
 
@@ -195,7 +197,7 @@
                             dialogOptions = {
                                 controller: 'TransactionImportSchemeV2DialogController as vm',
                                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-v2-dialog-view.html',
-                                parent: document.querySelector('.dialog-containers-wrap'),
+                                parent: dialogsWrapElem,
                                 locals: {
                                     data: {}
                                 }
@@ -222,12 +224,12 @@
 
                 };
 
-                scope.addFromProvider = function ($event) {
+                scope.addFromProvider = function () {
 
                     $mdDialog.show({
                         controller: "InstrumentSelectDatabaseDialogController as vm",
                         templateUrl: "views/dialogs/instrument-select-database-dialog-view.html",
-                        targetEvent: $event,
+                        parent: dialogsWrapElem,
                         multiple: true,
                         locals: {
                             data: {
@@ -438,7 +440,7 @@
                     $mdDialog.show({
                         controller: 'AttributesManagerDialogController as vm',
                         templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
-                        parent: document.querySelector('.dialog-containers-wrap'),
+                        parent: dialogsWrapElem,
                         targetEvent: $event,
                         multiple: true,
                         locals: {

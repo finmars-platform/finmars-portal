@@ -106,6 +106,10 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 // Set up pdfjsLib globally if necessary
 window.pdfjsLib = pdfjsLib;
 
+// VUE 3 Integration
+// import {FinmarsButton} from '@finmars/ui';
+// import {vueClassConverter} from './vue-helper.js';
+
 // noinspection JSVoidFunctionReturnValueUsed
 export default (function () {
 
@@ -1077,7 +1081,7 @@ export default (function () {
     String.prototype.capitalizeFirstLetter = function () {
         return this.charAt(0).toUpperCase() + this.slice(1);
     };
-
+    // VUE 3 Integration
     // portal.directive('finmarsButton', ['$rootScope', vueClassConverter(FinmarsButton)]);
     // portal.directive('finmarsExpressionInput', ['$rootScope', vueClassConverter(FinmarsButton)]);
 

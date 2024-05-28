@@ -493,6 +493,7 @@
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
                     templateUrl: 'views/dialogs/warning-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
                     targetEvent: $event,
                     clickOutsideToClose: false,
                     locals: {
@@ -529,6 +530,7 @@
                     $mdDialog.show({
                         controller: 'ValidationDialogController as vm',
                         templateUrl: 'views/dialogs/validation-dialog-view.html',
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             validationData: reason.message
@@ -723,6 +725,7 @@
             $mdDialog.show({
                 controller: 'EntityAsJsonEditorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: ev,
                 multiple: true,
                 locals: {

@@ -31,10 +31,10 @@
                 case "instrument":
 
                     result.optionsList = [
-                        {value: 'active', name: 'Active', activeByDefault: ''},
-                        {value: 'inactive', name: 'Inactive', activeByDefault: ''},
-                        {value: 'disabled', name: 'Disabled', activeByDefault: ''},
-                        {value: 'deleted', name: 'Deleted', activeByDefault: ''}
+                        {id: 'active', name: 'Active', activeByDefault: ''},
+                        {id: 'inactive', name: 'Inactive', activeByDefault: ''},
+                        {id: 'disabled', name: 'Disabled', activeByDefault: ''},
+                        {id: 'deleted', name: 'Deleted', activeByDefault: ''}
                     ]
 
                     result.selectedByDefault = ['active', 'inactive', 'disabled']
@@ -44,10 +44,10 @@
                 case "complex-transaction":
 
                     result.optionsList = [
-                        {value: 'locked', name: 'Locked'},
-                        {value: 'unlocked', name: 'Unlocked'},
-                        {value: 'ignored', name: 'Ignored'},
-                        {value: 'partially_visible', name: 'Partially Visible'}
+                        {id: 'locked', name: 'Locked'},
+                        {id: 'unlocked', name: 'Unlocked'},
+                        {id: 'ignored', name: 'Ignored'},
+                        {id: 'partially_visible', name: 'Partially Visible'}
                     ]
 
                     result.selectedByDefault = ['locked', 'unlocked']
@@ -57,9 +57,9 @@
                 default:
 
                     result.optionsList = [
-                        {value: 'enabled', name: 'Enabled'},
-                        {value: 'disabled', name: 'Disabled'},
-                        {value: 'deleted', name: 'Deleted'}
+                        {id: 'enabled', name: 'Enabled'},
+                        {id: 'disabled', name: 'Disabled'},
+                        {id: 'deleted', name: 'Deleted'}
                     ]
 
                     result.selectedByDefault = ['enabled', 'disabled']
@@ -90,7 +90,7 @@
             if (vm.entityType === 'complex-transaction') {
                 entityViewerOptions.complex_transaction_filters = vm.complexTransactionFilters;
             }
-            console.log("ev settings entityViewerOptions", entityViewerOptions);
+
             entityViewerDataService.setEntityViewerOptions(entityViewerOptions);
 
             $mdDialog.hide({status: 'agree'});
