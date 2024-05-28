@@ -46,7 +46,7 @@
                             </td>
                             <td style="min-width: 350px">
                                 <md-button class="md-raised md-primary" data-ng-click="vm.executeProcedure($event, item)">Execute</md-button>
-                                <md-button class="md-raised" data-ng-click="vm.editProcedure($event, item)">Edit</md-button>
+                                <md-button class="" data-ng-click="vm.editProcedure($event, item)">Edit</md-button>
                                 <md-button class="md-raised md-warn" data-ng-click="vm.deleteProcedure($event, item)">Delete</md-button>
 
                             </td>
@@ -57,25 +57,25 @@
             </div>
 
             <div>
-                <md-button ui-sref="app.portal.pricing-parent-procedure" class="md-raised">Check Procedure Status</md-button>
+                <md-button ui-sref="app.portal.pricing-parent-procedure" class="">Check Procedure Status</md-button>
             </div>
 
             <div class="m-t-16">
 
                 <md-menu>
-                    <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
+                    <md-button class="" data-ng-click="$mdOpenMenu($event)">
                         Add New
                     </md-button>
 
                     <md-menu-content>
                         <md-menu-item>
-                            <md-button class="md-raised"
+                            <md-button class=""
                                        data-ng-click="vm.addProcedure($event)">Add Blank
                             </md-button>
                         </md-menu-item>
 
                         <md-menu-item>
-                            <md-button class="md-raised"
+                            <md-button class=""
                                        package-manager-button
                                        content-type="'procedures.pricingprocedure'">
                                 Select from List

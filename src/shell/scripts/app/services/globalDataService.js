@@ -13,8 +13,6 @@ export default function () {
     };
 
     let iframeMode = false; // used when app inside iframe
-    let _theme = 'base-theme'; // no theme installed in marketplace by default
-    let _isThemeDark = false;
 
     const doUserHasCurrentMasterUser = function () {
         return userHaveCurrentMasterUser;
@@ -211,30 +209,30 @@ export default function () {
         getDefaultConfigurationCode: getDefaultConfigurationCode,
 
         setTheme: function (theme) {
-            _theme = theme
+            data.user.data.theme = theme
 
-            document.body.dataset.theme = _theme
+            document.body.dataset.theme = data.user.data.theme;
 
 
         },
         getTheme: function () {
-            return _theme
+            return data.user.data.theme
         },
 
         enableThemeDarkMode() {
-            _isThemeDark = true
+            data.user.data.dark_mode = true
             document.body.classList.add('dark-mode'); // TODO probably should be moved to some other place?
             document.body.classList.remove('light-mode'); // TODO probably should be moved to some other place?
         },
 
         disableThemeDarkMode() {
-            _isThemeDark = false
+            data.user.data.dark_mode = false
             document.body.classList.remove('dark-mode'); // TODO probably should be moved to some other place?
             document.body.classList.add('light-mode'); // TODO probably should be moved to some other place?
         },
 
         isThemeInDarkMode() {
-            return _isThemeDark
+            return data.user.data?.dark_mode || false;
         }
     }
 

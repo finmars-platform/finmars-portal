@@ -73,7 +73,7 @@
 
                     <div layout="row">
 
-                        <md-button class="md-raised" data-ng-click="group.folded = !group.folded">
+                        <md-button class="" data-ng-click="group.folded = !group.folded">
                             <span data-ng-if="group.folded">+</span>
                             <span data-ng-if="!group.folded">-</span>
                         </md-button>
@@ -94,7 +94,7 @@
 
                             <div>
 
-                                <md-button class="md-raised" data-ng-click="vm.viewCurrency($event, group)">View
+                                <md-button class="" data-ng-click="vm.viewCurrency($event, group)">View
                                     Currency
                                 </md-button>
 
@@ -127,7 +127,7 @@
 
                         </div>
 
-                        <md-button class="md-raised" data-ng-class="{'disabled-btn': group.processing}"
+                        <md-button class="" data-ng-class="{'disabled-btn': group.processing}"
                                    data-ng-click="vm.saveGroup($event, group)">Save
                         </md-button>
 
@@ -142,7 +142,7 @@
 
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button class="" ng-click="vm.agree()" style="margin-right:20px;">
             Ok
         </md-button>
     </md-dialog-actions>

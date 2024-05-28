@@ -34,7 +34,7 @@
                 <span data-ng-bind="vm.getEntityName(item)"></span> <span class="cie-dependency"
                                                                           data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
                 ({{item.count}})
-                <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems" aria-label="display item button"><span
+                <md-button class="" ng-click="item.displayItems = !item.displayItems" aria-label="display item button"><span
                         data-ng-if="!item.displayItems">Show</span><span data-ng-if="item.displayItems">Hide</span>
                 </md-button>
             </div>
@@ -82,11 +82,11 @@
 
         <div layout="row">
 
-            <md-button class="md-raised" ng-click="vm.cancel()" aria-label="cancel button">
+            <md-button class="" ng-click="vm.cancel()" aria-label="cancel button">
                 Close
             </md-button>
 
-            <md-button class="md-raised" ng-click="vm.agree($event)" style="margin-right:20px;" aria-label="import button">
+            <md-button class="" ng-click="vm.agree($event)" style="margin-right:20px;" aria-label="import button">
                 Import
             </md-button>
 

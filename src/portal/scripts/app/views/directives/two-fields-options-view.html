@@ -126,7 +126,9 @@
                                          class="two-fields-options-checkbox"></md-checkbox>
                         </div>
 
-                        <span ng-if="sOption.error_data" class="material-icons error">info</span>
+                        <span ng-if="sOption.error_data"
+                              data-ng-class="{'no-left-items': !strictOrder && !selOptionsCheckboxes}"
+                              class="material-icons error">info</span>
                     </div>
 
                     <p class="two-fields-option-text" ng-bind="sOption['{{nameProperty}}']"></p>

@@ -113,12 +113,12 @@
                                         <div>
                                             <md-button style="min-width: 40px;"
                                                        data-ng-click="vm.removeProviderField(item, $index)"
-                                                       class="md-raised"
+                                                       class=""
                                                        style="line-height: 1">x
                                             </md-button>
                                         </div>
                                         <div>
-                                            <md-button class="md-raised"
+                                            <md-button class=""
                                                        ng-click="vm.openProviderFieldExpressionBuilder(item, $event)"
                                                        ng-class="vm.checkForUserExpr(item)"
                                                        style="min-width: 40px;">f(x)
@@ -130,7 +130,7 @@
                         </md-card>
                     </div>
                     <div layout="row">
-                        <md-button class="md-raised" data-ng-click="vm.addProviderField()">
+                        <md-button class="" data-ng-click="vm.addProviderField()">
                             Add field
                         </md-button>
                     </div>
@@ -183,7 +183,7 @@
                                                             class="custom-small-icon-btn md-raised"
                                                             data-ng-click="vm.removeMappingField(item, $index)"
                                                             data-ng-if="!item.required"
-                                                            class="md-raised"
+                                                            class=""
                                                             style="line-height: 1">x
                                                     </md-button>
                                                 </div>
@@ -265,7 +265,7 @@
                                                             class="custom-small-icon-btn md-raised"
                                                             data-ng-click="vm.removeMappingField(item, $index)"
                                                             data-ng-if="!item.required"
-                                                            class="md-raised"
+                                                            class=""
                                                             style="line-height: 1">x
                                                     </md-button>
                                                 </div>
@@ -391,7 +391,7 @@
                                                             class="custom-small-icon-btn md-raised"
                                                             data-ng-click="vm.removeMappingField(item, $index)"
                                                             data-ng-if="!item.required"
-                                                            class="md-raised"
+                                                            class=""
                                                             style="line-height: 1">x
                                                     </md-button>
                                                 </div>
@@ -405,7 +405,7 @@
                     </div>
 
                     <div layout="row">
-                        <md-button class="md-raised" data-ng-click="vm.addMapField()">Add field</md-button>
+                        <md-button class="" data-ng-click="vm.addMapField()">Add field</md-button>
                     </div>
 
                 </div>
@@ -509,10 +509,10 @@
     </md-dialog-content>
 
     <md-dialog-actions layout="row">
-        <md-button class="md-raised" ng-click="vm.cancel()">
+        <md-button class="" ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button class="" ng-click="vm.agree()" style="margin-right:20px;">
             Save
         </md-button>
     </md-dialog-actions>

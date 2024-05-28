@@ -341,7 +341,7 @@
                         // Victor 2020.11.09 If body is parent, then modal window under popup
                         var dialogParent =  document.querySelector('.dialog-containers-wrap');
 
-                        if (scope.dialogParent) {
+                        /*if (scope.dialogParent) {
 
                             var dialogParentElem = document.querySelector(scope.dialogParent);
 
@@ -349,7 +349,7 @@
                                 dialogParent = dialogParentElem;
                             }
 
-                        }
+                        }*/
 
                         if (scope.loadMenuOptions) {
                             // scope.menuOptions = await scope.loadMenuOptions();

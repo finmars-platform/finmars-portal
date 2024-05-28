@@ -194,7 +194,7 @@
                                         configurations/{{vm.item.configuration_code}}/{{vm.item.version}}/
                                     </b></div>
 
-                                    <md-button class="md-raised" data-ng-click="vm.exportToStorage($event)">Export to
+                                    <md-button class="" data-ng-click="vm.exportToStorage($event)">Export to
                                         Storage
                                     </md-button>
 
@@ -226,7 +226,7 @@
 
                                     <span style="color: orange">Warning. Before pushing new version, please, check if it was exported to your System Storage</span>
 
-                                    <md-button class="md-raised" data-ng-click="vm.pushConfiguration($event)">Push
+                                    <md-button class="" data-ng-click="vm.pushConfiguration($event)">Push
                                         Configuration to Marketplace
                                     </md-button>
 
@@ -302,17 +302,17 @@
 
         <div layout="row">
 
-            <md-button class="md-raised" ng-click="vm.editAsJson($event)" data-ng-if="vm.item.id">
+            <md-button class="" ng-click="vm.editAsJson($event)" data-ng-if="vm.item.id">
                 Edit as JSON
             </md-button>
-            <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
+            <md-button class="" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
                        data-ng-if="vm.item.id">
                 Make a copy
             </md-button>
-            <md-button class="md-raised" ng-click="vm.cancel()">
+            <md-button class="" ng-click="vm.cancel()">
                 Cancel
             </md-button>
-            <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;"
+            <md-button class="" ng-click="vm.agree()" style="margin-right:20px;"
                        data-ng-class="{'disabled-btn': vm.processing}">
                 <span data-ng-if="vm.item.id">Update</span>
                 <span data-ng-if="!vm.item.id">Create</span>
