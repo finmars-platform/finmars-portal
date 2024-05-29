@@ -69,7 +69,7 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
         vm.errorRuleScenario.is_error_rule_scenario = true;
 
         vm.inputsFunctions = [];
-        vm.selector_values_projection = [];
+        vm.selectorValuesOpts = [];
         vm.editingScheme = false;
 
         vm.inputsOpts = {
@@ -133,7 +133,7 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
 
                     vm.scheme.selector_values = res.data;
 
-                    vm.selector_values_projection = vm.scheme.selector_values.map(function (item) {
+                    vm.selectorValuesOpts = vm.scheme.selector_values.map(function (item) {
                         return {
                             id: item.value,
                             value: item.value
@@ -227,7 +227,7 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
 
                 vm.calculatedInputs = [];
 
-                vm.calculatedInputs = vm.scheme.calculated_inputs.forEach(formatItemForFrontEnd);
+                vm.calculatedInputs = vm.scheme.calculated_inputs.map(formatItemForFrontEnd);
 
                 vm.calculatedInputs = vm.calculatedInputs.sort(function (a, b) {
                     if (a.column > b.column) {
@@ -306,7 +306,7 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
 
             if (vm.scheme.selector_values?.length) {
 
-                vm.selector_values_projection = vm.scheme.selector_values.map(function (item) {
+                vm.selectorValuesOpts = vm.scheme.selector_values.map(function (item) {
                     return {
                         id: item.value,
                         value: item.value
@@ -641,6 +641,8 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
             result.rule_scenarios.push(errorScenario)
 
             result.recon_scenarios = vm.reconScenarios;
+
+            result = metaHelper.clearFrontendOptions(result);
 
             return result
 
