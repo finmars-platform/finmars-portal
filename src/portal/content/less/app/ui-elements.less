@@ -185,3 +185,20 @@ span.material-icons.unread-notifications {
     background-color: var(--state-active-background-color);
   }
 }
+
+@cardBackgroundColor: var(--card-background-color);
+
+//# region Cards
+md-card.md-default-theme, md-card {
+  background: @cardBackgroundColor;
+  color: var(--secondary-color);
+}
+
+md-card {
+  .custom-input-container {
+    .custom-input-textarea-span-pan {
+      background: @cardBackgroundColor;
+    }
+  }
+}
+//# endregion Cards

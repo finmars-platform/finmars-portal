@@ -25,6 +25,10 @@ import 'dragula/dist/dragula.css';
 import dragula from 'dragula/dist/dragula.js';
 window.dragula = dragula;
 
+import Pickr from '@simonwep/pickr'
+import '@simonwep/pickr/dist/themes/classic.min.css'
+window.Pickr = Pickr;
+
 import './src/core/keycloak/keycloak.js';
 
 // import './src/profile/scripts/app/services/baseUrlService.js';

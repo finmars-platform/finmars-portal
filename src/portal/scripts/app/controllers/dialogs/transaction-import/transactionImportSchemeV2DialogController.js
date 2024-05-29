@@ -18,6 +18,7 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
             throw `Invalid data passed as 'data'. Expected an object got: ${data}`;
         }
 
+        const dialogsWrapElem = document.querySelector('.dialog-containers-wrap');
         const ttypeNotFoundErrorMsg = "⚠️ Transaction Type is not found";
 
         let schemeToCopy = null
@@ -39,7 +40,7 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
         vm.dryRunData = JSON.stringify([{"user_code": "example"}], null, 4)
         vm.activeDryRunResultItem = null;
 
-        const getRuleScenarioTplt = function () {
+        const getRuleScenarioTplt = function (ruleScenarioKey) {
             return {
                 value: '',
                 transaction_type: null,
@@ -48,6 +49,7 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
                 fields: [],
                 selector_values: [],
                 frontOptions: {
+                    key: metaHelper.generateUniqueId(ruleScenarioKey),
                     transactionTypeInputs: []
                 }
             }
@@ -58,11 +60,11 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
             readonly: true,
         }
 
-        vm.defaultRuleScenario = getRuleScenarioTplt();
+        vm.defaultRuleScenario = getRuleScenarioTplt("default");
         vm.defaultRuleScenario.name = '-';
         vm.defaultRuleScenario.is_default_rule_scenario = true;
 
-        vm.errorRuleScenario = getRuleScenarioTplt();
+        vm.errorRuleScenario = getRuleScenarioTplt("error");
         vm.errorRuleScenario.name = '-';
         vm.errorRuleScenario.is_error_rule_scenario = true;
 
@@ -113,7 +115,7 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
             $mdDialog.show({
                 controller: 'TransactionImportSchemeSelectorValuesDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-selector-values-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
+                parent: dialogsWrapElem,
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -149,7 +151,7 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
             $mdDialog.show({
                 controller: 'TransactionImportSchemeScenarioFieldsDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-scenario-fields-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
+                parent: dialogsWrapElem,
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -188,15 +190,23 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
 
         }
 
+        const formatItemForFrontEnd = function (item, index) {
+
+            const itemCopy = structuredClone(item);
+
+            itemCopy.frontOptions = {
+                key: metaHelper.generateUniqueId(index),
+            }
+
+            return itemCopy;
+
+        }
+
         vm.transformSourceSchemeToFrontendLogic = function() {
 
             if (vm.scheme.inputs?.length) {
 
-                vm.schemeInputs = [];
-
-                vm.scheme.inputs.forEach(function (input) {
-                    vm.schemeInputs.push(input);
-                });
+                vm.schemeInputs = vm.scheme.inputs.map(formatItemForFrontEnd);
 
                 vm.schemeInputs = vm.schemeInputs.sort(function (a, b) {
                     if (a.column > b.column) {
@@ -217,9 +227,7 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
 
                 vm.calculatedInputs = [];
 
-                vm.scheme.calculated_inputs.forEach(function (input) {
-                    vm.calculatedInputs.push(input);
-                });
+                vm.calculatedInputs = vm.scheme.calculated_inputs.forEach(formatItemForFrontEnd);
 
                 vm.calculatedInputs = vm.calculatedInputs.sort(function (a, b) {
                     if (a.column > b.column) {
@@ -240,13 +248,9 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
 
                 vm.ruleScenarios = [];
 
-                vm.scheme.rule_scenarios.forEach(function (scenario) {
+                vm.scheme.rule_scenarios.forEach(function (scenario, index) {
 
-                    const scenarioCopy = structuredClone(scenario);
-
-                    if (!scenarioCopy.frontOptions) {
-                        scenarioCopy.frontOptions = {};
-                    }
+                    const scenarioCopy = formatItemForFrontEnd(scenario, index);
 
                     if (scenarioCopy.transaction_type_object) {
 
@@ -353,6 +357,71 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
 
         }
 
+        vm.filterSchemeInputs = function (value) {
+
+            if (!vm.schemeInputsQuery) {
+                return true;
+            }
+
+            const query = vm.schemeInputsQuery.toLowerCase();
+
+            return value.name.toLowerCase().includes(query) ||
+                value.name_expr?.toLowerCase().includes(query) ||
+                value.column_name?.toLowerCase().includes(query);
+        }
+
+        vm.filterCalculatedInputs = function (value) {
+
+            if (!vm.calculatedInputsQuery) {
+                return true;
+            }
+
+            return value.name.includes(vm.calculatedInputsQuery) ||
+                value.name_expr?.includes(vm.calculatedInputsQuery);
+        }
+
+        /*
+        {
+            "id": 53,
+            "is_default_rule_scenario": false,
+            "is_error_rule_scenario": false,
+            "name": "Buy",
+            "selector_values": [
+                "Buy"
+            ],
+            "transaction_type": "com.finmars.standard-transaction-type:buy_with_fx_trade",
+            "fields": [
+	            {
+                    "id": 689,
+                    "transaction_type_input": "account_cash",
+                    "value_expr": "account_cash",
+                    "transaction_type_input_object": {
+                        "id": 1106,
+                        "name": "account_cash",
+                        "verbose_name": "Account (Cash)",
+                        "value_type": 100,
+                        "content_type": "accounts.account",
+                        "order": 0
+                    }
+                },
+            ],
+            "status": "active",
+            "transaction_type_object": {
+                "id": 37,
+                "name": "Buy",
+                "user_code": "com.finmars.standard-transaction-type:buy_with_fx_trade",
+                "inputs": [
+                    {
+                        "id": 1106,
+                        "name": "account_cash",
+                        "verbose_name": "Account (Cash)",
+                        "value_type": 100
+                    },
+                ]
+            }
+        },
+        * */
+
         vm.getItem = async function (doNotUpdateScope) {
 
             if (vm.editingScheme) {
@@ -423,7 +492,10 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
 
             vm.schemeInputs.push({
                 name: '',
-                column: nextFieldNumber
+                column: nextFieldNumber,
+                frontOptions: {
+                    key: metaHelper.generateUniqueId(vm.schemeInputs.length)
+                }
             })
 
         };
@@ -445,13 +517,16 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
 
             vm.calculatedInputs.push({
                 name: '',
-                column: nextFieldNumber
+                column: nextFieldNumber,
+                frontOptions: {
+                    key: metaHelper.generateUniqueId(vm.calculatedInputs.length)
+                }
             })
 
         };
 
         vm.addRuleScenario = function () {
-            vm.ruleScenarios.push( getRuleScenarioTplt() );
+            vm.ruleScenarios.push( getRuleScenarioTplt(vm.ruleScenarios.length) );
         };
 
         vm.exprInputOpts = {
@@ -486,7 +561,7 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
             vm.schemeInputs.splice($index, 1);
         };
 
-        vm.removeCalculatedInput = function (item, $index) {
+        vm.removeCalculatedInput = function ($index) {
             vm.calculatedInputs.splice($index, 1);
         };
 
@@ -678,7 +753,7 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
             var copyPromise = $mdDialog.show({
                 controller: 'TransactionImportSchemeV2DialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-v2-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
+                parent: dialogsWrapElem,
                 targetEvent: $event,
                 locals: {
                     data: {
@@ -696,7 +771,7 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
             $mdDialog.show({
                 controller: 'TransactionTypeEditDialogController as vm',
                 templateUrl: 'views/entity-viewer/transaction-type-edit-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
+                parent: dialogsWrapElem,
                 targetEvent: $event,
                 multiple: true,
                 locals: {
@@ -891,7 +966,7 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
             $mdDialog.show({
                 controller: 'TransactionImportSchemeInputsDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-inputs-dialog-view.html',
-                parent: document.querySelector('.dialog-containers-wrap'),
+                parent: dialogsWrapElem,
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,

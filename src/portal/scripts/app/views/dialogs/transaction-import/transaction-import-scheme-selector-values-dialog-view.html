@@ -32,7 +32,7 @@
 
             <div class="transactionImportSchemeSelectorValues">
 <!--        <div data-ng-repeat="selector in vm.selectorValues track by $index" layout="row">-->
-                <div data-ng-repeat="selector in vm.selectorValues.value | orderBy: 'order' | filter: vm.filterTerms as results track by $index"
+                <div data-ng-repeat="selector in vm.selectorValues.value | orderBy: 'order' | filter: vm.filterTerms as results track by selector.frontOptions.key"
                      data-ng-init="$last && !vm.dragAndDropInited && vm.dragAndDrop.init()"
                      data-row-order="{{selector.order}}">
 
@@ -48,7 +48,7 @@
                         </md-input-container>
 
                         <md-button class="md-warn"
-                                   data-ng-click="vm.deleteSelector($event, selector.order)"
+                                   data-ng-click="vm.deleteSelector(selector.order)"
                                    style="min-width: 42px">
                             Delete
                         </md-button>
