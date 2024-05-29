@@ -5,9 +5,10 @@
 
     'use strict';
 
-    var ScrollHelper = require('../../../helpers/scrollHelper');
+    const metaHelper = require('../../../helpers/meta.helper').default;
+    const ScrollHelper = require('../../../helpers/scrollHelper').default;
 
-    var scrollHelper = new ScrollHelper();
+    const scrollHelper = new ScrollHelper();
 
     module.exports = function transactionImportSchemeSelectorValuesDialogController($scope, $mdDialog, commonDialogsService, data) {
 
@@ -19,8 +20,22 @@
             value: []
         };
 
+        const formatForFrontEnd = function (item, index) {
+
+            const copy = JSON.parse(angular.toJson(item));
+
+            copy.order = index;
+
+            copy.frontOptions = {
+                key: metaHelper.generateUniqueId(vm.selectorValues.value.length),
+            }
+
+            return copy;
+
+        };
+
         if (data.selector_values?.length) {
-            vm.selectorValues.value = JSON.parse(angular.toJson(data.selector_values));
+            vm.selectorValues.value = data.selector_values.map(formatForFrontEnd);
         }
 
         vm.filterTerms = {
@@ -33,7 +48,7 @@
             return item;
         };
 
-        vm.deleteSelector = function($event, $index) {
+        vm.deleteSelector = function($index) {
             vm.selectorValues.value.splice($index, 1);
             vm.selectorValues.value = vm.selectorValues.value.map(updateOrder);
         };
@@ -41,9 +56,12 @@
         vm.addSelector = function () {
 
             vm.selectorValues.value.push({
-               value: '',
-               notes: '',
-               order: vm.selectorValues.value.length
+                value: '',
+                notes: '',
+                order: vm.selectorValues.value.length,
+                frontOptions: {
+                    key: metaHelper.generateUniqueId(vm.selectorValues.value.length),
+                }
             });
 
         };
@@ -194,12 +212,7 @@
             var DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
             scrollHelper.setDnDScrollElem(DnDScrollElem);
 
-            /* vm.selectorValues.value.forEach(function (row, index) {
-                if (!row.order) {
-                    row.order = index;
-                }
-            }); */
-            vm.selectorValues.value = vm.selectorValues.value.map(updateOrder);
+            // vm.selectorValues.value = vm.selectorValues.value.map(updateOrder);
         };
 
         init();

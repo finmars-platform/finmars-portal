@@ -260,7 +260,7 @@
                                                        class="transaction-import-scheme-v2-card-header-search">
                                             </div>
 
-                                            <div data-ng-repeat="item in vm.schemeInputs | filter: {$: vm.schemeInputsQuery} track by $index"
+                                            <div data-ng-repeat="item in vm.schemeInputs | filter: vm.filterSchemeInputs as results track by item.frontOptions.key"
                                                  class="rows-container transaction-import-scheme-v2-file-input"
                                             >
 
@@ -350,7 +350,7 @@
                                                        class="transaction-import-scheme-v2-card-header-search">
                                             </div>
 
-                                            <div data-ng-repeat="item in vm.calculatedInputs | filter: {$: vm.calculatedInputsQuery} track by $index"
+                                            <div data-ng-repeat="item in vm.calculatedInputs | filter: vm.filterCalculatedInputs as results track by item.frontOptions.key"
                                                  class="rows-container transaction-import-scheme-v2-calculated-input"
                                             >
 
@@ -405,7 +405,7 @@
                                                 </div>
 
                                                 <div class="p-l-8">
-                                                    <md-button data-ng-click="vm.removeCalculatedInput(item, $index)"
+                                                    <md-button data-ng-click="vm.removeCalculatedInput($index)"
                                                                class="action-btn m-0 outline-button">
                                                         <span class="material-icons">close</span>
                                                     </md-button>
