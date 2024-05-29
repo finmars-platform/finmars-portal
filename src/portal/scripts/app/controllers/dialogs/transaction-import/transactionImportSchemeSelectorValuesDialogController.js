@@ -27,7 +27,7 @@
             copy.order = index;
 
             copy.frontOptions = {
-                key: metaHelper.generateUniqueId(vm.selectorValues.value.length),
+                key: metaHelper.generateUniqueId(index),
             }
 
             return copy;
