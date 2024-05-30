@@ -69,7 +69,12 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
         vm.errorRuleScenario.is_error_rule_scenario = true;
 
         vm.inputsFunctions = [];
+
         vm.selectorValuesOpts = [];
+        vm.selectorValuesMultiselectOpts = {
+            optionsOrdering: false
+        }
+
         vm.editingScheme = false;
 
         vm.inputsOpts = {
@@ -202,6 +207,17 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
 
         }
 
+        const sortItemsByProp = function (valueA, valueB) {
+            if (valueA > valueB) {
+                return 1;
+            }
+            if (valueA < valueB) {
+                return -1;
+            }
+
+            return 0;
+        }
+
         vm.transformSourceSchemeToFrontendLogic = function() {
 
             if (vm.scheme.inputs?.length) {
@@ -230,14 +246,7 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
                 vm.calculatedInputs = vm.scheme.calculated_inputs.map(formatItemForFrontEnd);
 
                 vm.calculatedInputs = vm.calculatedInputs.sort(function (a, b) {
-                    if (a.column > b.column) {
-                        return 1;
-                    }
-                    if (a.column < b.column) {
-                        return -1;
-                    }
-
-                    return 0;
+                    return sortItemsByProp(a.column, b.column);
                 });
 
                 vm.inputsFunctions = vm.getFunctions();
@@ -434,6 +443,14 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
 
             } else {
                 vm.scheme = {};
+            }
+
+            if (vm.scheme.selector_values?.length) {
+
+                vm.scheme.selector_values = vm.scheme.selector_values.sort(function (a, b) {
+                    return sortItemsByProp(a.order, b.order);
+                })
+
             }
 
             vm.scheme = createRequiredProps(vm.scheme);

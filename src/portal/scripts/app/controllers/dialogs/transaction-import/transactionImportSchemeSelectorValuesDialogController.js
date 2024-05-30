@@ -101,9 +101,10 @@
                     }
 
                     var rowToInsert = vm.selectorValues.value[draggedRowOrder];
+
                     vm.selectorValues.value.splice(draggedRowOrder, 1);
 
-                    if (siblingRowOrder) {
+                    if (siblingRowOrder || siblingRowOrder === 0) {
 
                         for (var i = 0; i < vm.selectorValues.value.length; i++) {
                             if (vm.selectorValues.value[i].order === siblingRowOrder) {
@@ -121,6 +122,7 @@
                     /*for (var i = 0; i < vm.selectorValues.value.length; i++) {
                         vm.selectorValues.value[i].order = i;
                     }*/
+
                     vm.selectorValues.value = vm.selectorValues.value.map(updateOrder);
 
                 });
@@ -203,6 +205,8 @@
                 return;
 
             }
+
+            vm.selectorValues.value = metaHelper.clearFrontendOptions(vm.selectorValues.value);
 
             $mdDialog.hide({status: 'agree', data: vm.selectorValues.value});
 

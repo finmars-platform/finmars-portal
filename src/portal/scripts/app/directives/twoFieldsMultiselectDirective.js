@@ -79,10 +79,12 @@
 					}
 
 					if (scope.smallOptions.optionsOrdering === false) {
+						// disable alphabetic ordering for available options
 						scope.orderOptions.options = false;
 					}
 
 					if (scope.smallOptions.selectedOptionsOrdering === false) {
+						// disable alphabetic ordering for selected options
 						scope.orderOptions.selectedOptions = false;
 					}
 
@@ -461,11 +463,14 @@
 						scope.menuFilterTerms[scope.nameProperty] = "";
 
 						scope.dropdownMenuOptions = [];
+
+						//# region Order settings
 						scope.orderMenuOptions = scope.nameProperty;
 
 						if (scope.orderOptions.options === false) {
 							scope.orderMenuOptions = null;
 						}
+						//# endregion
 
 						chipElem = elem[0].querySelector("chips-list");
 
