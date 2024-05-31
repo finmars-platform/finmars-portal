@@ -133,10 +133,6 @@
 
     var _processGroupForNull = function(obj, groupData) {
 
-        if (groupData.___group_name === "") {
-            obj.___group_name = '""';
-        }
-
         if ( [null, undefined, ""].includes(groupData.___group_name) ) {
             obj.___group_name = 'None';
         }
