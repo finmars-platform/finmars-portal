@@ -131,6 +131,20 @@
 
     };
 
+    var _processGroupForNull = function(obj, groupData) {
+
+        if (groupData.___group_name === "") {
+            obj.___group_name = '""';
+        }
+
+        if ( [null, undefined, ""].includes(groupData.___group_name) ) {
+            obj.___group_name = 'None';
+        }
+
+        return obj;
+
+    }
+
     var deserializeObjects = function (entityViewerDataService, entityViewerEventService, attributeDataService, data, requestParameters, page) {
 
         var step = requestParameters.pagination.page_size;
@@ -169,10 +183,7 @@
 
                 obj = Object.assign({}, groupData);
 
-                obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
-                obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
-                obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
-                // obj.___items_count = groupData.___items_count ? groupData.___items_count : 0;
+                obj = _processGroupForNull(obj, groupData);
                 obj.___items_count = data.count;
 
                 obj.count = data.count;
@@ -189,9 +200,7 @@
             else {
 
                 obj = Object.assign({}, data);
-                obj.___group_name = event.groupName ? event.groupName : '-';
-                obj.___group_id = event.groupId ? event.groupId : '-';
-                obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
+                obj = _processGroupForNull(obj, event);
                 // obj.___items_count = event.itemsCount ? event.itemsCount : 0;
                 obj.___items_count = data.count;
                 obj.___is_open = true;
@@ -219,10 +228,8 @@
 
             if (item.___type !== 'placeholder_object') {
 
-                item.___group_name = item.___group_name ? item.___group_name : '-';
-                item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
+                item = _processGroupForNull(item, item);
                 item.___items_count = item.___items_count ? item.___items_count : 0;
-                item.___group_id = item.___group_id ? item.___group_id : '-';
                 item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
 
                 item.___parentId = obj.___id;
@@ -323,11 +330,9 @@
 
                 obj = Object.assign({}, groupData);
 
-                obj.___group_name = groupData.___group_name ? groupData.___group_name : '-';
-                obj.___group_identifier = groupData.___group_identifier ? groupData.___group_identifier : '-';
+                obj = _processGroupForNull(obj, groupData);
                 obj.___items_count = groupData.___items_count ? groupData.___items_count : 0;
                 // obj.___items_count = data.count;
-                obj.___group_id = groupData.___group_id ? groupData.___group_id : '-';
 
                 obj.count = data.count;
                 obj.next = data.next;
@@ -345,12 +350,10 @@
             else {
 
                 obj = Object.assign({}, data);
-                obj.___group_name = event.groupName ? event.groupName : '-';
-                obj.___group_identifier = event.groupIdentifier ? event.groupIdentifier : '-';
+                obj = _processGroupForNull(obj, event);
                 // obj.___items_count = event.itemsCount ? event.itemsCount : 0;
                 obj.___items_count = data.count;
-                obj.___group_id = event.groupId ? event.groupId : '-';
-                // obj.___group_identifier = event.groupId;
+
                 obj.___is_open = true;
                 obj.___is_activated = evDataHelper.isGroupSelected(event.___id, event.parentGroupId, entityViewerDataService);
 
@@ -389,11 +392,8 @@
             if (item.___type !== 'placeholder_group') {
 
                 item.___parentId = obj.___id;
-                item.___group_name = item.___group_name ? item.___group_name : '-';
-                item.___group_identifier = item.___group_identifier ? item.___group_identifier : '-';
+                item = _processGroupForNull(item, item);
                 item.___items_count = item.___items_count ? item.___items_count : 0;
-                item.___group_id = item.___group_id ? item.___group_id : '-';
-
 
                 item.___is_activated = evDataHelper.isSelected(entityViewerDataService);
 
@@ -585,6 +585,21 @@
 
     };
 
+    var _checkItemForRequiredProps = function (item) {
+
+        var reqProps = ["group_name", "group_identifier", "items_count"];
+
+        reqProps.forEach(function (propName) {
+
+            if ( !item.hasOwnProperty(propName) ) {
+                console.error(item);
+                throw `[evDataProviderService getGroups] item lacks required property "${propName}"`;
+            }
+
+        })
+
+    }
+
     var getGroups = function (requestParameters, entityViewerDataService, entityViewerEventService) {
 
         entityViewerEventService.dispatchEvent(evEvents.DATA_LOAD_START);
@@ -655,10 +670,12 @@
 
                             var result = {};
 
+                            _checkItemForRequiredProps(item);
+
                             result.___group_name = item.group_name;
                             result.___group_identifier = item.group_identifier;
                             result.___items_count = item.items_count;
-                            result.___group_type_key = groupType.key; // TODO assign ___group_type_key from a 'item' after backend starts to return it
+                            result.___group_type_key = groupType.key; // TODO assign ___group_type_key from an 'item' after backend starts to return it
 
 
                             return result
