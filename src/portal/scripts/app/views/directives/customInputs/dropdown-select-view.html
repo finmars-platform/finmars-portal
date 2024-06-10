@@ -71,7 +71,10 @@
                                                         icon="{{button.iconObj.icon}}"
                                                         class="ci-custom-btn-icon"></ng-md-icon>
 
-                                <span data-ng-if="button.iconObj.type === 'angular-material'"
+                                <span data-ng-if="
+                                        button.iconObj &&
+                                        !button.iconObj.type || button.iconObj.type === 'angular-material'
+                                      "
                                       class="material-icons ci-icon-color">{{button.iconObj.icon}}</span>
 
                                 <md-tooltip data-ng-if="button.tooltip"
