@@ -15,7 +15,8 @@
                     <md-tooltip md-direction="top">Calculate</md-tooltip>
                 </md-button>-->
                 <md-menu>
-                    <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
+                    <md-button data-ng-if="viewContext !== 'dashboard'"
+                               class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
                                ng-click="$mdOpenMenu($event)"
                                ng-disabled="viewContext === 'split_panel'"
                     >
