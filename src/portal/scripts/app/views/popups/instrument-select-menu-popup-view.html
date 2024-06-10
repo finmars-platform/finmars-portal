@@ -95,16 +95,16 @@
 
         <div data-ng-show="popupData.hoverInstrument">
 
-            <div data-ng-if="popupData.hoverInstrument.available_for_update"
-                 data-ng-disabled="loadingEntity || processing || updatingEntities"
-                 class="instrument-select-update-instrument-button"
+            <button data-ng-if="popupData.hoverInstrument.available_for_update"
+                 data-ng-disabled="popupData.loadingEntity || popupData.processing || popupData.updatingEntities"
+                 class="display-block small-button-icon instrument-select-update-instrument-button"
                  data-ng-click="popupData.updateLocalInstrument(popupData.hoverInstrument)">
                 <span class="material-icons">autorenew</span>
 
                 <md-tooltip data-ng-if="popupData.updatingEntities"
                             class="tooltip_1"
                             data-md-direction="top">Updating local instrument</md-tooltip>
-            </div>
+            </button>
 
             <div class="instrument-select-option-detail-field">
 

@@ -39,16 +39,23 @@
             options.pageSize = 40;
         }
 
-        return xhrService.fetch(configureRepositoryUrlService.configureUrl('https://database.finmars.com/api/v1/instrument-narrow/', options),
-            {
-                method: 'GET',
-                // credentials: 'include',
-                headers: {
-                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                }
-            })
+        const requestParamsObj = {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            }
+        };
+
+        if (options.abortSignal) {
+            requestParamsObj.signal = options.abortSignal;
+        }
+
+        return xhrService.fetch(
+            configureRepositoryUrlService.configureUrl('https://database.finmars.com/api/v1/instrument-narrow/', options),
+            requestParamsObj
+        )
     };
 
 
