@@ -35,6 +35,8 @@
                 },
                 post: function (scope, elem, attr) {
 
+                    const dialogParent =  document.querySelector('.dialog-containers-wrap');
+
                     scope.error = '';
                     scope.inputValue = '';
                     //scope.placeholderText = 'Relation';
@@ -51,7 +53,6 @@
                         tooltipText: custom tooltip text
                         noIndicatorBtn: whether to show button at the right part of input
                         notNull: selector should not be empty
-                        dialogParent: 'string' - querySelector content for element to insert mdDialog into
                         popupWidth:
                     */
 
@@ -63,7 +64,6 @@
                             var indicatorBtnIcon = scope.smallOptions.indicatorBtnIcon;
                         } */
 
-                        scope.dialogParent = scope.smallOptions.dialogParent;
                         scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
                         scope.popupWidth = scope.smallOptions.popupWidth || scope.popupWidth;
                         scope.popupMinWidth = scope.smallOptions.popupMinWidth;
@@ -337,19 +337,6 @@
                         $event.preventDefault();
 
                         closeDropdownMenu();
-
-                        // Victor 2020.11.09 If body is parent, then modal window under popup
-                        var dialogParent =  document.querySelector('.dialog-containers-wrap');
-
-                        /*if (scope.dialogParent) {
-
-                            var dialogParentElem = document.querySelector(scope.dialogParent);
-
-                            if (dialogParentElem) {
-                                dialogParent = dialogParentElem;
-                            }
-
-                        }*/
 
                         if (scope.loadMenuOptions) {
                             // scope.menuOptions = await scope.loadMenuOptions();
