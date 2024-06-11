@@ -38,6 +38,10 @@
                 scope.sorted = true;
                 scope.customStyles = null;
 
+                scope.disabledObj = {
+                    value: false
+                }
+
                 scope.modelObj = {
                     model: null
                 };
@@ -711,6 +715,8 @@
                 };
 
                 var init = function () {
+
+                    scope.disabledObj.value = bfcVm.disabled;
 
                     var tooltipsList = [];
 
