@@ -16,7 +16,7 @@
          data-offset-y="2"
          data-open-on="click"
          data-close-on-click-outside="false"
-         data-is-disabled="isDisabled"
+         data-is-disabled="disabledObj.value"
          data-popup-classes="unified-data-select-popup mh-100vh-popup"
          data-on-cancel="onMenuClose()"
 
@@ -36,7 +36,7 @@
                             data-ng-hide="loadingEntity"
                             class="custom-input-indicator-btn"
                             data-ng-click="openSelectorDialog($event)"
-                            data-ng-disabled="isDisabled">
+                            data-ng-disabled="disabledObj.value">
                         <span class="material-icons">menu</span>
                     </button>
 
@@ -50,7 +50,7 @@
                            data-ng-model="inputText"
                            data-ng-model-options="{debounce: 1000}"
                            data-ng-change="onInputTextChange(inputText)"
-                           data-ng-disabled="isDisabled"
+                           data-ng-disabled="disabledObj.value"
                            class="custom-input unified-data-input unifiedDataSelectInputElem" />
 
                 </div>

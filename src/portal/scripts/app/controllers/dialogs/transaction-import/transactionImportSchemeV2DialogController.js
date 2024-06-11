@@ -641,8 +641,8 @@ const {default: metaHelper} = require("../../../helpers/meta.helper");
 
             var result = JSON.parse(JSON.stringify(vm.scheme));
 
-            result.calculated_inputs = vm.calculatedInputs;
-            result.inputs = vm.schemeInputs;
+            result.calculated_inputs = JSON.parse(angular.toJson(vm.calculatedInputs));
+            result.inputs = JSON.parse(angular.toJson( vm.schemeInputs ));
             result.rule_scenarios = JSON.parse(angular.toJson(vm.ruleScenarios));
 
             result.rule_scenarios = result.rule_scenarios.map(mapRuleScenario)
