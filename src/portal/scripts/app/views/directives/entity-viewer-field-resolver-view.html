@@ -12,6 +12,7 @@
                         data-model="modelObj.model"
                         data-item-object="entity[fieldKey + '_object']"
                         data-item-name="inputTextObj.value"
+                        data-is-disabled="disabledObj.value"
                         data-custom-buttons="item.buttons"
                         data-custom-styles="customStyles"
                         data-event-signal="ciEventObj.event"
@@ -29,6 +30,7 @@
                         data-model-value="{{ valueEntity == 'currency' ? 'user_code' : 'id' }}"
                         data-item-object="entity[fieldKey + '_object']"
                         data-item-name="inputTextObj.value"
+                        data-is-disabled="disabledObj.value"
                         data-custom-buttons="item.buttons"
                         data-custom-styles="customStyles"
                         data-event-signal="ciEventObj.event"
@@ -120,6 +122,7 @@
                                          data-placeholder-text="{{getName()}}"
                                          data-event-signal="ciEventObj.event"
                                          data-menu-options="selectorOptions"
+                                         data-is-disabled="disabledObj.value"
                                          data-small-options="{
                                             notNull: options.notNull,
                                             tooltipText: '{{getName()}}',
@@ -140,8 +143,8 @@
                                          data-entity-type="crudEntityType"
                                          data-options="fields"
                                          data-ng-click="getDataApply()"
-                                         event-signal="ciEventObj.event"
-                                         small-options="{notNull: options.notNull}"
+                                         data-event-signal="ciEventObj.event"
+                                         data-small-options="{notNull: options.notNull}"
                             ></crud-select>
                         </div>
 
@@ -184,6 +187,7 @@
                                      data-placeholder-text="{{getName()}}"
                                      data-event-signal="ciEventObj.event"
                                      data-menu-options="schemeSortedFields"
+                                     data-is-disabled="disabledObj.value"
                                      data-small-options="{notNull: options.notNull, tooltipText: '{{getName()}}', dialogParent: '.dialog-containers-wrap'}"
                                      data-custom-styles="customStyles"
                                      data-sorted="sorted"
@@ -204,6 +208,7 @@
                                     data-title="{{getName()}}"
                                     data-model="modelObj.model"
                                     data-items="selectorOptions"
+                                    data-is-disabled="disabledObj.value"
                                     data-name-property="bindFieldsName"
                                     data-selected-items-indication="chips"
                                     data-small-options="{dialogParent: '.dialog-containers-wrap'}"
@@ -221,6 +226,7 @@
                                         data-model="modelObj.model"
                                         data-name-property="bindFieldsName"
                                         data-items="selectorOptions"
+                                        data-is-disabled="disabledObj.value"
                                         data-data-selected-items-indication="chips"
                                         data-small-options="{dialogParent: '.dialog-containers-wrap'}"
                                         data-on-change-callback="changeHandler()"></two-fields-multiselect>
@@ -234,6 +240,7 @@
                                  data-placeholder-text="{{getName()}}"
                                  data-event-signal="ciEventObj.event"
                                  data-menu-options="selectorOptions"
+                                 data-is-disabled="disabledObj.value"
                                  data-small-options="{
                                     notNull: options.notNull,
                                     tooltipText: '{{getName()}}',

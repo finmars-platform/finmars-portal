@@ -5,9 +5,10 @@
 
     'use strict';
 
-    var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService').default;
-    var instrumentDatabaseSearchService = require('../../services/instrument/instrumentDatabaseSearchService');
-    var tasksService = require('../../services/tasksService');
+    const importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService').default;
+    const instrumentDatabaseSearchService = require('../../services/instrument/instrumentDatabaseSearchService').default;
+    const tasksService = require('../../services/tasksService').default;
+    const utilsHelper = require('../../helpers/utils.helper').default;
 
     module.exports = function ($scope, $mdDialog, toastNotificationService, instrumentService, data) {
 
@@ -205,7 +206,35 @@
             $mdDialog.hide({status: 'disagree'});
         };
 
-        vm.onInputTextChange = function () {
+        let abortController = new AbortController();
+
+        // TODO: use utilsHelper.debounce
+        vm.onInputTextChange = function(changedValue) {
+
+            vm.inputText = changedValue;
+
+            vm.getList();
+
+        }
+
+        vm.instrTypeSelBtns = [
+            {
+                iconObj: {
+                    icon: 'close'
+                },
+                tooltip: "Clear selected value",
+                action: {
+                    callback: function () {
+                        vm.onInstrTypeFilterChange("");
+                    },
+                }
+
+            }
+        ]
+
+        vm.onInstrTypeFilterChange = function (changedValue) {
+
+            vm.instrument_type = changedValue.id;
 
             vm.getList();
 
@@ -506,6 +535,11 @@
 
         vm.getList = function () {
 
+            abortController.abort({key: "ABORTED_BY_CLIENT"});
+
+            abortController = new AbortController();
+            const abortSignal = abortController.signal;
+
             vm.processing = true;
 
             var promises = []
@@ -524,7 +558,8 @@
                         filters: {
                             page: 1,
                             instrument_type: vm.instrument_type,
-                        }
+                        },
+                        abortSignal
                     };
 
                     instrumentDatabaseSearchService.getList(vm.inputText, opts)
@@ -554,8 +589,13 @@
                         })
                         .catch(function (error) {
 
-                            console.log("Instrument Database error occurred", error)
+                            if (abortSignal.aborted) {
+                                return reject(abortSignal.reason);
+                            }
 
+                            console.error("[instrumentSelectDatabaseDialogController getList] Instrument Database error occurred", error)
+
+                            vm.databaseInstrumentsTotal = null;
                             vm.databaseInstruments = [];
 
                             $scope.$apply();
@@ -575,69 +615,91 @@
                     filters: {
                         query: vm.inputText,
                         instrument_type: vm.instrument_type
-                    }
+                    },
+                    abortSignal
+                })
+                    .then(function (data) {
 
-                }).then(function (data) {
+                        vm.localInstrumentsTotal = data.count;
 
-                    vm.localInstrumentsTotal = data.count;
+                        vm.localInstruments = data.results;
 
-                    vm.localInstruments = data.results;
+                        vm.localInstruments = vm.localInstruments.map(function (item) {
 
-                    vm.localInstruments = vm.localInstruments.map(function (item) {
+                            item.pretty_date = moment(item.modified).format("DD.MM.YYYY");
 
-                        item.pretty_date = moment(item.modified).format("DD.MM.YYYY");
+                            item.frontOptions = {
+                                type: 'local',
+                            };
 
-                        item.frontOptions = {
-                            type: 'local',
-                        };
+                            return item;
 
-                        return item;
+                        })
+
+                        resolve()
 
                     })
+                    .catch(function (error) {
 
-                    resolve()
+                        if (abortSignal.aborted) {
+                            return reject(abortSignal.reason);
+                        }
 
-                })
+                        console.error("[instrumentSelectDatabaseDialogController getList] Error occurred while getting local instruments", error)
+                        vm.localInstruments = [];
+                        vm.localInstrumentsTotal = null;
+
+                        $scope.$apply();
+                        resolve();
+
+                    })
 
             }))
 
-            Promise.all(promises).then(function (data) {
+            Promise.all(promises)
+                .then(function (data) {
 
-                vm.databaseInstruments = vm.databaseInstruments.filter(function (databaseInstrument) {
+                    vm.databaseInstruments = vm.databaseInstruments.filter(function (databaseInstrument) {
 
-                    var exist = false;
+                        var exist = false;
 
-                    vm.localInstruments.forEach(function (localInstrument) {
+                        vm.localInstruments.forEach(function (localInstrument) {
 
-                        if (localInstrument.user_code === databaseInstrument.reference) {
-                            exist = true;
-                        }
+                            if (localInstrument.user_code === databaseInstrument.reference) {
+                                exist = true;
+                            }
 
-                        if (localInstrument.reference_for_pricing === databaseInstrument.reference) {
-                            exist = true;
-                        }
+                            if (localInstrument.reference_for_pricing === databaseInstrument.reference) {
+                                exist = true;
+                            }
+
+                        })
+
+                        return !exist;
 
                     })
 
-                    return !exist;
+                    vm.processing = false;
+
+                    $scope.$apply();
+
+                    setTimeout(function () {
+
+                        $('.instrument-select-options-group-title').on('click', function () {
+
+                            $(this).next()[0].scrollIntoView({block: 'start', behavior: 'smooth'});
+                        });
+
+                    }, 100)
 
                 })
+                .catch(function (error) {
 
-                vm.processing = false;
+                    if (!abortSignal.aborted) {
+                        throw error;
+                    }
 
-                $scope.$apply();
-
-                setTimeout(function () {
-
-                    $('.instrument-select-options-group-title').on('click', function () {
-
-                        $(this).next()[0].scrollIntoView({block: 'start', behavior: 'smooth'});
-                    });
-
-                }, 100)
-
-            })
-
+                });
 
         }
 

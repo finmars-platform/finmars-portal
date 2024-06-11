@@ -29,6 +29,7 @@
                 eventSignal: '=',
                 smallOptions: '=',
                 sorted: '=',
+                isDisabled: "=",
                 onChangeCallback: '&?',
                 // used to show selected entity, if its data is not loaded
                 itemName: '=',
@@ -45,15 +46,23 @@
 
                     scope.error = '';
                     scope.inputValue = '';
-                    //scope.placeholderText = 'Relation';
-                    // scope.dropdownMenuShown = false;
-                    /*scope.menuPopupData.processing = false;
-                    scope.menuPopupData.loadingEntity = false;
-                    scope.menuPopupData.updatingEntities = false;
 
-                    scope.menuPopupData.localInstrumentsTotal = 0;
-                    scope.menuPopupData.databaseInstrumentsTotal = 0;
-                    scope.menuPopupData.hoverInstrument = null;*/
+                    /**
+                     * Used to disable instrumentSelect temporary.
+                     * E.g. while importing instrument from a provider.
+                     *
+                     * @type {boolean}
+                     */
+                    var localIsDisabled = false;
+
+                    scope.disabledObj = {
+                        get value() {
+                            return scope.isDisabled || localIsDisabled;
+                        },
+                        set value(newVal) {
+                            localIsDisabled = newVal;
+                        }
+                    }
 
                     /** Used to store name of selected entity and show it inside tooltip. */
                     scope.selItemName = '';
@@ -157,11 +166,45 @@
                         }, 100)
                     }
 
+                    var updateLocalInstrument = function (item) {
+
+                        /*var config = {
+                            user_code: item.user_code,
+                            name: item.name,
+                            instrument_type_user_code: item.instrument_type_object.user_code,
+                            mode: 1
+                        };
+
+                        scope.isUpdatingInstrument = true;
+
+                        importInstrumentCbondsService.download(config).then(function (data) {
+
+                            scope.isUpdatingInstrument = false;
+
+                            scope.getList();
+
+                            scope.$apply();
+
+                            if (data.errors) {
+
+                                toastNotificationService.error(data.errors);
+
+                            } else {
+                                toastNotificationService.success('Instrument ' + item.reference + ' was updated');
+                            }
+
+                        })*/
+                        scope.menuPopupData.updatingEntities = true;
+
+                        importInstrument(item);
+
+                    }
+
                     scope.getInputContainerClasses = function () {
 
                         var classes = '';
 
-                        if (scope.isDisabled) {
+                        if (scope.disabledObj.value) {
                             classes += "custom-input-is-disabled";
 
                         } else if (scope.error) {
@@ -240,9 +283,8 @@
                         scope.itemName = '';
                         scope.inputText = '';*/
 
-                        scope.menuPopupData.processing = false;
                         scope.menuPopupData.loadingEntity = false;
-                        scope.isDisabled = false;
+                        scope.disabledObj.value = false;
 
                         scope.menuPopupData.updatingEntities = false;
 
@@ -297,9 +339,8 @@
                                     switch (taskData.status) {
                                         case 'D':
 
-                                            scope.isDisabled = false;
+                                            scope.disabledObj.value = false;
                                             scope.menuPopupData.loadingEntity = false;
-                                            scope.menuPopupData.processing = false;
                                             scope.menuPopupData.updatingEntities = false;
 
                                             applyInstrument(resultData);
@@ -355,9 +396,8 @@
                                     clearInterval(taskIntervalId);
                                     toastNotificationService.error(error);
 
-                                    scope.menuPopupData.processing = false;
                                     scope.menuPopupData.loadingEntity = false;
-                                    scope.isDisabled = false;
+                                    scope.disabledObj.value = false;
 
                                     scope.menuPopupData.updatingEntities = false;
 
@@ -440,9 +480,8 @@
 
                                 console.log("selectDatabaseInstrument.error ", e)
 
-                                scope.menuPopupData.processing = false;
                                 scope.menuPopupData.loadingEntity = false;
-                                scope.isDisabled = false;
+                                scope.disabledObj.value = false;
 
                                 scope.menuPopupData.updatingEntities = false;
 
@@ -481,9 +520,8 @@
                         scope.selItemName = item.name;
                         scope.inputText = scope.selItemName;
 
-                        scope.menuPopupData.processing = true;
                         scope.menuPopupData.loadingEntity = true;
-                        scope.isDisabled = true;
+                        scope.disabledObj.value = true;
 
                         importInstrument(item);
 
@@ -561,40 +599,6 @@
 
                     };
 
-                    scope.updateLocalInstrument = function (item) {
-
-                        /*var config = {
-                            user_code: item.user_code,
-                            name: item.name,
-                            instrument_type_user_code: item.instrument_type_object.user_code,
-                            mode: 1
-                        };
-
-                        scope.isUpdatingInstrument = true;
-
-                        importInstrumentCbondsService.download(config).then(function (data) {
-
-                            scope.isUpdatingInstrument = false;
-
-                            scope.getList();
-
-                            scope.$apply();
-
-                            if (data.errors) {
-
-                                toastNotificationService.error(data.errors);
-
-                            } else {
-                                toastNotificationService.success('Instrument ' + item.reference + ' was updated');
-                            }
-
-                        })*/
-                        scope.menuPopupData.updatingEntities = true;
-
-                        importInstrument(item);
-
-                    }
-
                     scope.openSelectorDialog = function ($event) {
 
                         $event.preventDefault();
@@ -628,9 +632,8 @@
 
                             if ( res.data.hasOwnProperty('task') ) { // database item selected
 
-                                scope.menuPopupData.processing = true;
                                 scope.menuPopupData.loadingEntity = true;
-                                scope.isDisabled = true;
+                                scope.disabledObj.value = true;
 
                                 taskIntervalId = awaitInstrumentImport(res.data.task, currentName);
 
@@ -909,8 +912,15 @@
 
                     scope.menuPopupData = {
                         isOpened: false,
+                        /**
+                         * `true` when loading instruments after either opening popup menu
+                         * or changing filter for instruments */
                         processing: false,
-                        /** For selection of database instrument */
+                        /**
+                         * `true` while importing instrument from database
+                         * after it was selected
+                         *
+                         */
                         loadingEntity: false,
                         /** For updating local instrument from database */
                         updatingEntities: false,
@@ -926,6 +936,8 @@
                         getHighlighted: getHighlighted,
                         hoverInstrument: null,
                         setHoverInstrument: setHoverInstrument,
+
+                        updateLocalInstrument: updateLocalInstrument,
 
                         onInit: async function () {
 
