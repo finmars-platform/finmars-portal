@@ -176,11 +176,7 @@
         vm.onRoundingChange = function () {
             if (vm.settings.round_format_id !== 0) {
                 vm.settings.percentage_format_id = 0;
-
                 vm.settings.number_multiplier = null;
-                vm.settings.number_suffix = "";
-                vm.settings.number_prefix = "";
-
             }
 
             vm.onNumberFormatChange();
