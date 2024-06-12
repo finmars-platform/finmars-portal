@@ -480,17 +480,6 @@
 
             vm.globalPage = vm.globalPage + 1
 
-            // var instrumentDatabaseUrl = 'https://finmars.com/instrument-database/instr/find/name/' + vm.inputText
-            //
-            // if (vm.instrument_type){
-            //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?instrument_type=' + vm.instrument_type
-            //
-            //     instrumentDatabaseUrl = instrumentDatabaseUrl + '&page=' + vm.globalPage
-            // } else {
-            //
-            //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?page=' + vm.globalPage
-            // }
-            //
             var opts = {
                 pageSize: reqPageSize,
                 filters: {
@@ -533,6 +522,66 @@
 
         }
 
+        /**
+         * Helper function for the function vm.getList()
+         *
+         * @param abortSignal {AbortSignal}
+         * @return {Promise<void>}
+         */
+        const getDatabaseInstrsList = async function (abortSignal) {
+
+            var opts = {
+                pageSize: reqPageSize,
+                filters: {
+                    page: 1,
+                    instrument_type: vm.instrument_type,
+                },
+                abortSignal
+            };
+
+            try {
+
+                const data = await instrumentDatabaseSearchService.getList(vm.inputText, opts);
+
+                vm.databaseInstrumentsTotal = data.count;
+
+                vm.databaseInstruments = data.results;
+
+                vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
+
+                    item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY");
+
+                    item.frontOptions = {
+                        type: 'database',
+                    };
+
+                    return item;
+
+                })
+
+                vm.totalPages = Math.round(data.count / reqPageSize);
+
+                $scope.$apply();
+
+
+            } catch (e) {
+
+                if (abortSignal.aborted) {
+                    throw abortSignal.reason;
+                }
+
+                console.error("[instrumentSelectDatabaseDialogController getList] Instrument Database error occurred", e)
+
+                vm.databaseInstrumentsTotal = null;
+                vm.databaseInstruments = [];
+
+                $scope.$apply();
+
+            }
+
+
+        }
+
         vm.getList = function () {
 
             abortController.abort({key: "ABORTED_BY_CLIENT"});
@@ -544,71 +593,14 @@
 
             var promises = []
 
+            vm.databaseInstrumentsTotal = null;
+            vm.databaseInstruments = [];
+
             if (vm.inputText.length > 2) {
-
-                promises.push(new Promise(function (resolve, reject) {
-
-                    // var instrumentDatabaseUrl = 'https://finmars.com/instrument-database/instr/find/name/' + vm.inputText
-                    //
-                    // if (vm.instrument_type){
-                    //     instrumentDatabaseUrl = instrumentDatabaseUrl + '?instrument_type=' + vm.instrument_type
-                    // }
-                    var opts = {
-                        pageSize: reqPageSize,
-                        filters: {
-                            page: 1,
-                            instrument_type: vm.instrument_type,
-                        },
-                        abortSignal
-                    };
-
-                    instrumentDatabaseSearchService.getList(vm.inputText, opts)
-                        .then(function (data) {
-
-                            vm.databaseInstrumentsTotal = data.count;
-
-                            vm.databaseInstruments = data.results;
-
-                            vm.databaseInstruments = vm.databaseInstruments.map(function (item) {
-
-                                item.pretty_date = moment(item.last_cbnnds_update).format("DD.MM.YYYY");
-
-                                item.frontOptions = {
-                                    type: 'database',
-                                };
-
-                                return item;
-
-                            })
-
-                            vm.totalPages = Math.round(data.count / reqPageSize);
-
-                            $scope.$apply();
-                            resolve();
-
-                        })
-                        .catch(function (error) {
-
-                            if (abortSignal.aborted) {
-                                return reject(abortSignal.reason);
-                            }
-
-                            console.error("[instrumentSelectDatabaseDialogController getList] Instrument Database error occurred", error)
-
-                            vm.databaseInstrumentsTotal = null;
-                            vm.databaseInstruments = [];
-
-                            $scope.$apply();
-                            resolve()
-
-                        });
-
-                }))
-
+                promises.push( getDatabaseInstrsList(abortSignal) );
             }
 
             promises.push(new Promise(function (resolve, reject) {
-
 
                 instrumentService.getListForSelect({
                     pageSize: 1000,
