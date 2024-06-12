@@ -390,7 +390,6 @@
     };
 
     function processAffix(value, prefix, suffix) {
-        if (value === '-') return value;
         if (prefix) value = prefix + value;
         if (suffix) value = value + suffix;
         return value;
