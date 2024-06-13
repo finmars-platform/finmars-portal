@@ -31,6 +31,7 @@
                 eventSignal: '=',
                 smallOptions: '=',
                 sorted: '=',
+                isDisabled: '=',
                 itemName: '=',
                 itemObject: '=',
                 entityType: '=',
@@ -46,17 +47,31 @@
 
                     scope.error = '';
                     scope.inputValue = '';
-                    //scope.placeholderText = 'Relation';
-                    /*scope.dropdownMenuShown = false;
-                    scope.dropdownMenuFilter = '';
-                    scope.processing = false;
+
+                    /**
+                     * `true` while importing entity from database
+                     * after it was selected
+                     *
+                     */
                     scope.loadingEntity = false;
 
-                    scope.menuPopupData.localItemsTotal = 0;
-                    scope.databaseItemsTotal = 0;
-                    scope.selectedItem = null;*/
-                    /** For selection of database instrument */
-                    scope.loadingEntity = false;
+                    /**
+                     * Used to disable instrumentSelect temporary.
+                     * E.g. while importing instrument from a provider.
+                     *
+                     * @type {boolean}
+                     */
+                    var localIsDisabled = false;
+
+                    scope.disabledObj = {
+                        get value() {
+                            return scope.isDisabled || localIsDisabled;
+                        },
+                        set value(newVal) {
+                            localIsDisabled = newVal;
+                        }
+                    }
+
 
                     var itemName = scope.itemName || '';
                     scope.inputText = itemName;
@@ -115,7 +130,7 @@
 
                         var classes = '';
 
-                        if (scope.isDisabled) {
+                        if (scope.disabledObj.value) {
                             classes += "custom-input-is-disabled";
 
                         } else if (scope.error) {
@@ -209,7 +224,7 @@
 
                         scope.menuPopupData.processing = false;
                         scope.loadingEntity = false;
-                        scope.isDisabled = false;
+                        scope.disabledObj.value = false;
 
                         setTimeout(function () {
 
@@ -269,13 +284,13 @@
 
                                         case 'D':
 
-                                            scope.isDisabled = false;
+                                            scope.disabledObj.value = false;
                                             scope.loadingEntity = false;
                                             scope.menuPopupData.processing = false;
 
                                             applyItem(resultData);
 
-                                            toastNotificationService.success("Instrument has been loaded");
+                                            toastNotificationService.success("Entity has been loaded");
 
                                             scope.$apply();
 
@@ -327,7 +342,7 @@
 
                                     scope.menuPopupData.processing = false;
                                     scope.loadingEntity = false;
-                                    scope.isDisabled = false;
+                                    scope.disabledObj.value = false;
 
                                     throw error;
 
@@ -349,108 +364,8 @@
 
                         scope.menuPopupData.processing = true;
                         scope.loadingEntity = true;
-                        scope.isDisabled = true;
+                        scope.disabledObj.value = true;
 
-                        /*if (scope.entityType === 'currency') {
-
-                            var config = {
-                                currency_code: item.code,
-                                mode: 1
-                            };
-
-                            importCurrencyCbondsService.download(config).then(function (data) {
-
-                                scope.isDisabled = false;
-
-                                if (data.errors.length) {
-
-                                    toastNotificationService.error(data.errors[0])
-
-                                    scope.model = null;
-
-                                    itemName = ''
-                                    scope.inputText = ''
-
-                                    scope.menuPopupData.processing = false;
-
-                                    setTimeout(function () {
-
-                                        if (scope.onChangeCallback) scope.onChangeCallback();
-
-                                        scope.$apply();
-
-                                    }, 0);
-
-
-                                }
-                                else {
-
-                                    scope.model = data.result_id;
-                                    scope.itemObject = {id: data.result_id, name: item.name, user_code: item.code}
-
-                                    scope.menuPopupData.processing = false;
-
-                                    scope.valueIsValid = true;
-
-                                    setTimeout(function () {
-
-                                        if (scope.onChangeCallback) scope.onChangeCallback();
-
-                                        scope.$apply();
-
-                                    }, 0);
-
-                                }
-
-                            })
-
-                        }
-                        else if (scope.entityType === 'counterparty') {
-
-                            finmarsDatabaseService.downloadCounterparty(config).then(function (data) {
-
-                                scope.isDisabled = false;
-
-                                if (data.errors.length) {
-
-                                    toastNotificationService.error(data.errors[0])
-
-                                    scope.model = null;
-
-                                    itemName = ''
-                                    scope.inputText = ''
-
-                                    setTimeout(function () {
-
-                                        if (scope.onChangeCallback) scope.onChangeCallback();
-
-                                        scope.$apply();
-
-                                    }, 0);
-
-
-                                } else {
-
-                                    scope.model = data.id;
-                                    scope.itemObject = {id: data.id, name: item.name, user_code: item.user_code}
-
-                                    scope.menuPopupData.processing = false;
-
-                                    scope.valueIsValid = true;
-
-                                    setTimeout(function () {
-
-                                        if (scope.onChangeCallback) scope.onChangeCallback();
-
-                                        scope.$apply();
-
-                                    }, 0);
-
-                                }
-
-                            })
-
-                        }*/
                         var promise;
 
                         if (scope.entityType === 'currency') {
@@ -586,7 +501,7 @@
 
                                 scope.menuPopupData.processing = true;
                                 scope.loadingEntity = true;
-                                scope.isDisabled = true;
+                                scope.disabledObj.value = true;
 
                                 taskIntervalId = awaitItemImport(res.data.task, currentName);
 

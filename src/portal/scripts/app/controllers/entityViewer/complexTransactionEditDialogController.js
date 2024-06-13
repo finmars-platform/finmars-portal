@@ -1914,6 +1914,7 @@
             $mdDialog.show({
                 controller: 'EntityDataConstructorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+                parent: dialogsContainerElem,
                 multiple: true,
                 locals: {
                     data: vm.dataConstructorData

@@ -39,6 +39,7 @@
         }
 
         var init = function () {
+
             setTimeout(function () {
 
                 var pickrObj = {
