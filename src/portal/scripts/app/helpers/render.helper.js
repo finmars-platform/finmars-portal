@@ -407,22 +407,29 @@
             value = '';
         }
 
-        var applyAffix = !!value;
-
-        value = formatPercentage(value, column, false); // also applies multiplier
-
-        value = formatRounding(value, column);
-
-        value = formatThousandsSeparator(value, column);
-
-        value = formatZero(value, column);
-
-        value = formatNegative(value, column);
-
         var numberFormat = getNumberFormatSettings(column);
 
-        if (numberFormat && applyAffix) {
-          value = processAffix(value, numberFormat.number_prefix, numberFormat.number_suffix);
+        if (!value && numberFormat && numberFormat.zero_format_id) {
+            // show zero as "-" or emptiness
+            value = formatZero(value, column);
+
+        }
+        else {
+
+            var applyAffix = !!value;
+
+            value = formatPercentage(value, column, false); // also applies multiplier
+
+            value = formatRounding(value, column);
+
+            value = formatThousandsSeparator(value, column);
+
+            value = formatNegative(value, column);
+
+            if (numberFormat && applyAffix) {
+                value = processAffix(value, numberFormat.number_prefix, numberFormat.number_suffix);
+            }
+
         }
 
         return value;

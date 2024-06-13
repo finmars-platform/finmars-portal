@@ -14,10 +14,11 @@
                     <span class="material-icons">refresh</span>
                     <md-tooltip md-direction="top">Calculate</md-tooltip>
                 </md-button>-->
-                <md-menu>
-                    <md-button class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
-                               ng-click="$mdOpenMenu($event)"
-                               ng-disabled="viewContext === 'split_panel'"
+                <md-menu data-ng-if="viewContext !== 'dashboard'">
+                    <md-button
+                        class="g-filter-settings-big-left-btn md-icon-button md-primary rounded"
+                        ng-click="$mdOpenMenu($event)"
+                        ng-disabled="viewContext === 'split_panel'"
                     >
                         <span class="material-icons">add</span>
                         <md-tooltip data-ng-if="viewContext !== 'split_panel'" md-direction="top">Add</md-tooltip>

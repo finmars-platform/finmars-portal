@@ -10,23 +10,21 @@
 
                 <div style="width: 383px;">
                     <text-input
-                            on-change-callback="vm.onInputTextChange()"
-                            placeholder-text="Search"
-                            model="vm.inputText"
-                            small-options="{dialogParent: '.dialog-containers-wrap'}"
+                            data-model="vm.inputText"
+                            data-placeholder-text="Search"
+                            data-on-change-callback="vm.onInputTextChange(changedValue)"
                             class="m-r-8"></text-input>
                 </div>
 
                 <div class="m-l-8">
 
-                    <dropdown-select class="p-r-8"
-                                     model="vm.instrument_type"
-                                     placeholder-text="Instrument Type"
-                                     menu-options="vm.instrumentTypeOptions"
-                                     small-options="{tooltipText: 'Instrument Type'}"
-                                     class="custom-input-bottom-space"
-                                     on-change-callback="vm.onInputTextChange()"
-                                     small-options="{dialogParent: '.dialog-containers-wrap'}"
+                    <dropdown-select data-model="vm.instrument_type"
+                                     data-placeholder-text="Instrument Type"
+                                     data-menu-options="vm.instrumentTypeOptions"
+                                     data-small-options="{tooltipText: 'Instrument Type'}"
+                                     data-custom-buttons="vm.instrTypeSelBtns"
+                                     data-on-change-callback="vm.onInstrTypeFilterChange(changedValue)"
+                                     class="custom-input-bottom-space p-r-8"
                                      style="width: 50%">
                     </dropdown-select>
 
@@ -83,8 +81,11 @@
 
                     </div>
 
-                    <b data-ng-if="vm.databaseInstruments.length" style=" bottom: 0px;"  class="instrument-select-options-group-title">Global Instruments
-                        ({{vm.databaseInstrumentsTotal}})</b>
+                    <b data-ng-if="vm.databaseInstruments.length"
+                       class="instrument-select-options-group-title"
+                       style=" bottom: 0px;" >
+                        Global Instruments ({{vm.databaseInstrumentsTotal}})
+                    </b>
 
                     <div data-ng-if="vm.databaseInstruments.length">
 
