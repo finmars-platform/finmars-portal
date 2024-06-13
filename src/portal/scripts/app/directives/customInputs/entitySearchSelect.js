@@ -225,7 +225,8 @@
 
                     if (!scope.isDisabled) {
 
-                        var dialogParent = angular.element(document.body);
+                        // var dialogParent = angular.element(document.body);
+                        var dialogParent = document.querySelector(".dialog-containers-wrap");
 
                         if (scope.dialogParent) {
 
@@ -481,6 +482,7 @@
                     $mdDialog.show({
                         controller: 'InstrumentDownloadDialogController as vm',
                         templateUrl: 'views/dialogs/instrument-download/instrument-download-dialog-view.html',
+                        parent: document.querySelector(".dialog-containers-wrap"),
                         targetEvent: $event,
                         multiple: true,
                         locals: {
