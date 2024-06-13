@@ -213,7 +213,7 @@ export default function (cookieService, toastNotificationService, xhrService, ui
 						console.error(`Importing instrument: ${user_code} takes over a minute`);
 					}, 60*1000)
 
-					let atData = taskService.awaitTaskEnd(res.task);
+					let atData = taskService.awaitTaskEnd(res.task, {});
 
 					stopIntervalFn = atData.stopInterval;
 					clearTimeout(timeOutId);
