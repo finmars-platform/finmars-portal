@@ -9,7 +9,7 @@
 
         var vm = this;
 
-        vm.draft = data.draft
+        vm.draft = JSON.parse(JSON.stringify(data.draft));
 
         vm.dataPretty = JSON.stringify(vm.draft.data, null, 4);
 

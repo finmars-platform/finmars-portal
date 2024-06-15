@@ -10,7 +10,7 @@
         return $mdDialog.show({
             controller: 'EventDoNotReactDialogController as vm',
             templateUrl: 'views/dialogs/events/event-do-not-react-dialog-view.html',
-            parent: angular.element(document.body),
+            parent: document.querySelector('.dialog-containers-wrap'),
             targetEvent: $event,
             locals: {
                 data: {
@@ -30,7 +30,7 @@
         return $mdDialog.show({
             controller: 'EventApplyDefaultDialogController as vm',
             templateUrl: 'views/dialogs/events/event-apply-default-dialog-view.html',
-            parent: angular.element(document.body),
+            parent: document.querySelector('.dialog-containers-wrap'),
             targetEvent: $event,
             locals: {
                 data: {
@@ -50,7 +50,7 @@
         return $mdDialog.show({
             controller: 'EventWithReactDialogController as vm',
             templateUrl: 'views/dialogs/events/event-with-react-dialog-view.html',
-            parent: angular.element(document.body),
+            parent: document.querySelector('.dialog-containers-wrap'),
             targetEvent: $event,
             locals: {
                 data: {

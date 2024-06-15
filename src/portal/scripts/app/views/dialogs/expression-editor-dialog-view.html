@@ -2,11 +2,11 @@
            class="expression-editor-dialog draggable-dialog"
            drag-dialog style="width: 75%">
     <md-toolbar>
-        <div class="md-toolbar-tools" style="height: 64px;">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Expression editor</h2>
-        </div>
+        <dialog-header
+                data-title="Expression editor"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content>
 
@@ -25,7 +25,8 @@
                     <label>Expression</label>
                     <textarea id="editorExpressionInput" cols="30" rows="4"
                               data-ng-model="vm.item.expression"
-                              data-ng-change="vm.error = false; vm.success = false; vm.showValidation = false;"></textarea>
+                              data-ng-change="vm.error = false; vm.success = false; vm.showValidation = false;"
+                              md-autofocus=""></textarea>
                 </md-input-container>
             </div>
 
@@ -127,7 +128,7 @@
                 </div>
 
                 <div class="description-column-footer">
-                    <md-button class="md-raised" data-ng-click="vm.appendFunction(vm.selectedHelpItem)">Add
+                    <md-button class="" data-ng-click="vm.appendFunction(vm.selectedHelpItem)">Add
                     </md-button>
                 </div>
             </div>
@@ -142,7 +143,7 @@
 
             <md-button ng-click="vm.validate($event)"
                        data-ng-if="!vm.codeEditorInExpressionBuilder"
-                       class="md-raised">
+                       class="">
                 Validate
             </md-button>
 

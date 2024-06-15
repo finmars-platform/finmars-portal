@@ -13,12 +13,11 @@
 
     var complexImportSchemeService = require('../../../services/import/complexImportSchemeService');
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService');
-    var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService');
 
     var toastNotificationService = require('../../../../../../core/services/toastNotificationService').default;
 
 
-    module.exports = function complexImportSchemeEditDialogController($scope, $mdDialog, schemeId) {
+    module.exports = function complexImportSchemeEditDialogController($scope, $mdDialog, transactionImportSchemeService, schemeId) {
 
         var vm = this;
 
@@ -157,7 +156,7 @@
             $mdDialog.show({
                 controller: 'ComplexImportSchemeCreateDialogController as vm',
                 templateUrl: 'views/dialogs/complex-import/complex-import-scheme-create-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 locals: {
                     data: {

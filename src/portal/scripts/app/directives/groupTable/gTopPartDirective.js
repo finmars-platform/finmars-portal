@@ -79,7 +79,7 @@
                     $mdDialog.show({
                         controller: 'ReportPriceCheckerDialogController as vm',
                         templateUrl: 'views/dialogs/report-missing-prices/report-price-checker-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             data: {
@@ -94,7 +94,14 @@
                 scope.toggleFilterBlock = function ($event) {
 
                     const elem = $event.currentTarget;
-                    $(elem).classList.contains('active') ? $(elem).classList.remove('active') : $(elem).classList.add('active');
+
+                    if ( elem.classList.contains('active') ) {
+
+                        elem.classList.remove('active');
+
+                    } else {
+                        elem.classList.add('active')
+                    }
 
                     scope.evEventService.dispatchEvent(evEvents.TOGGLE_FILTER_BLOCK);
 
@@ -107,7 +114,7 @@
                     $mdDialog.show({
                         controller: 'GReportSettingsDialogController as vm',
                         templateUrl: 'views/dialogs/g-report-settings-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         multiple: true,
                         locals: {
@@ -141,7 +148,7 @@
                     $mdDialog.show({
                         controller: 'GEntityViewerSettingsDialogController as vm',
                         templateUrl: 'views/dialogs/g-entity-viewer-settings-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             entityViewerDataService: scope.evDataService,

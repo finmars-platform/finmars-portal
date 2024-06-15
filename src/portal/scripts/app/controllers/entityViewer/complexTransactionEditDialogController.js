@@ -589,6 +589,7 @@
             $mdDialog.show({
                 controller: 'AttributesManagerDialogController as vm',
                 templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: ev,
                 multiple: true,
                 locals: {
@@ -654,6 +655,7 @@
             $mdDialog.show({
                 controller: 'EntityAsJsonEditorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 multiple: true,
                 locals: {
                     data: {
@@ -1912,6 +1914,7 @@
             $mdDialog.show({
                 controller: 'EntityDataConstructorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-data-constructor-dialog-view.html',
+                parent: dialogsContainerElem,
                 multiple: true,
                 locals: {
                     data: vm.dataConstructorData

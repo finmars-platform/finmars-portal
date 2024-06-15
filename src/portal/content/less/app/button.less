@@ -1,0 +1,140 @@
+.md-button {
+  text-transform: none;
+  font-weight: 600;
+  //line-height: 1;
+  border-radius: 100px;
+}
+
+.md-button.md-raised {
+  box-shadow: 0px 1px 3px 1px #00000026;
+  box-shadow: 0px 1px 2px 0px #0000004D;
+}
+
+.md-button.signed-button {
+  border-radius: initial;
+}
+
+.md-button.md-raised {
+  color: var(--secondary-color);
+  background-color: var(--outline-background-color);
+}
+
+.md-button.md-primary.md-raised {
+  padding: 0 15px;
+
+  //font-weight: 700;
+  color: var(--on-primary-color);
+  //background-color: var(--primary-color);;
+  background-color: var(--primary-color);
+
+  //border-radius: 3px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .26);
+
+  &:not([disabled]):hover {
+    opacity: 0.5;
+    background-color: var(--primary-color);
+  }
+
+  &:not([disabled]).md-focused {
+    opacity: 0.5;
+    background-color: var(--primary-color);
+  }
+}
+
+.md-button.md-primary {
+  color: var(--primary-color);
+}
+
+.md-button.outline-button {
+  min-width: auto;
+  max-height: 36px;
+  background-color: var(--outline-background-color);
+  color: var(--primary-color);
+  //font-weight: 700;
+
+  border: 1px solid var(--outline-color);
+  //border-radius: 3px;
+
+  &:not([disabled]):hover {
+    opacity: .8;
+  }
+
+  span.material-icons {
+    color: var(--primary-color);
+  }
+
+  ng-md-icon svg {
+    fill: var(--primary-color);
+  }
+}
+
+.md-button.align-button {
+  background-color: var(--page-background-color);
+  color: var(--secondary-color);
+
+  &:hover {
+    color: @md-primary-color;
+  }
+
+  &.active {
+    color: @md-primary-color;
+    background-color: rgba(240, 90, 34, 0.1);
+  }
+
+}
+
+button.md-raised.md-warn.md-button {
+  fill: var(--error-color);
+}
+
+.classifier-select-dialog-view {
+  width: 500px;
+}
+
+.icon-btn-basics {
+  background-color: transparent;
+  border: none;
+}
+
+
+.md-button.link-button {
+  background-color: transparent;
+  color: var(--primary-color);
+  // font-weight: 700;
+  font-weight: 500;
+  //border-radius: 3px;
+
+  &:not([disabled]):hover {
+    background-color: var(--state-active-background-color);
+  }
+}
+
+.icon-button-small {
+  min-width: 2px;
+  margin: 2px;
+  height: 32px;
+  min-height: 32px;
+  box-sizing: border-box;
+
+  font-size: 12px;
+  padding: 0 8px;
+  line-height: 40px;
+
+  color: var(--secondary-color);
+
+  .material-icons {
+    font-size: 20px;
+    line-height: 1.5;
+  }
+
+
+  &:not([disabled]):hover {
+    background: var(--state-active-background-color);
+    opacity: .8;
+  }
+}
+
+.md-button.md-default-theme.md-raised:not([disabled]):hover, .md-button.md-raised:not([disabled]):hover {
+    background-color: var(--state-active-background-color);
+    opacity: .8;
+}

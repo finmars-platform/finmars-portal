@@ -77,7 +77,21 @@ export default defineConfig({
             output: {
                 dir: 'dist', // Output directory
                 // format: 'esm', // Format of the modules (esm for ES Modules)
-                format: 'cjs',
+                format: 'es',
+                chunkFileNames: 'chunks/[name]-[hash].js',
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        // Return the directory name under node_modules as the chunk name
+
+                        // const modules = ['pdfjs']; // Specify your major dependencies here
+                        // const match = modules.find(module => id.includes(`/node_modules/${module}`));
+                        // if (match) {
+                        //     return match; // Return the module name as the chunk name
+                        // }
+
+                        return 'vendor';
+                    }
+                }
                 // globals: {
                 //     jquery: 'window.jQuery', // not needed, see bootstrap.js
                 // }

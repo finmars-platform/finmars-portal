@@ -334,6 +334,7 @@
             $mdDialog.show({
                 controller: 'EntityAsJsonEditorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 targetEvent: ev,
                 multiple: true,
                 locals: {
@@ -363,7 +364,7 @@
             $mdDialog.show({
                 controller: 'InstrumentPricingSchemeAddDialogController as vm',
                 templateUrl: 'views/dialogs/pricing/instrument-pricing-scheme-add-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 locals: {
                     data: {

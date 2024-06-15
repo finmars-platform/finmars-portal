@@ -6,6 +6,7 @@
 
 const localStorageService = require('../../../../shell/scripts/app/services/localStorageService'); // TODO inject localStorageService into angular dependencies
 
+var explorerService = require('../services/explorerService');
 
 export default function ($scope, $state, authorizerService, usersService, globalDataService, redirectionService, middlewareService, uiService) {
 
@@ -40,7 +41,10 @@ export default function ($scope, $state, authorizerService, usersService, global
 
     }*/
 
+
+
     const getMemberData = async function () {
+
 
         try {
 
@@ -49,13 +53,6 @@ export default function ($scope, $state, authorizerService, usersService, global
                 uiService.getDefaultMemberLayout(),
             ]);
 
-            /*const member = res[0]
-
-            // enable by default list layout autosave
-            if (member.data && typeof member.data.autosave_layouts !== 'boolean') {
-                member.data.autosave_layouts = true;
-                globalDataService.setMember(member);
-            }*/
             const memberLayout = res[1];
 
             // enable by default list layout autosave
@@ -68,6 +65,7 @@ export default function ($scope, $state, authorizerService, usersService, global
             console.error(error);
             throw error;
         }
+
 
     }
 
@@ -88,7 +86,7 @@ export default function ($scope, $state, authorizerService, usersService, global
     };
 
 
-    const initAlertSideNavListeners = function (){
+    const initAlertSideNavListeners = function () {
 
         setTimeout(function () {
 
@@ -125,7 +123,7 @@ export default function ($scope, $state, authorizerService, usersService, global
             promises.push(getCurrentMasterUser());
         }
 
-        promises.push( getMemberData() );
+        promises.push(getMemberData());
 
         Promise.all(promises).then(resData => {
 

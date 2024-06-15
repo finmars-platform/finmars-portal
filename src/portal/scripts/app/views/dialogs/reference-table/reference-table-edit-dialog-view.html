@@ -1,11 +1,10 @@
 <md-dialog class="reference-table draggable-dialog" aria-label="reference table edit dialog" drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Reference Table: {{vm.referenceTable.name}}</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Reference Table: {{vm.referenceTable.name}}"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content class="custom-scrollbar p-24 dndScrollableElem">
 
@@ -93,12 +92,12 @@
             Close
         </md-button>
 
-        <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
+        <md-button class="" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
         >
             Make a copy
         </md-button>
 
-        <md-button class="md-raised" ng-click="vm.agree($event)" style="margin-right:20px;">
+        <md-button class="" ng-click="vm.agree($event)" style="margin-right:20px;">
             <span data-ng-if="!vm.referenceTable.id">Create</span>
             <span data-ng-if="vm.referenceTable.id">Update</span>
         </md-button>

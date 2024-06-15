@@ -5,9 +5,7 @@
 
     'use strict';
 
-    var entityResolverService = require('../../services/entityResolverService');
-
-    module.exports = function EntityViewerDeleteBulkDialogController($scope, $mdDialog, evDataService, evEventService, data) {
+    module.exports = function EntityViewerDeleteBulkDialogController($scope, $mdDialog, entityResolverService, evDataService, evEventService, data) {
 
         var vm = this;
 
@@ -53,6 +51,7 @@
             var deleteProm;
 
             if (ids.length > 1) {
+
                 deleteProm = entityResolverService.deleteBulk(vm.entityType, {ids: ids});
 
             } else {
@@ -67,20 +66,30 @@
 
             }).catch(function (reason) {
 
+                let description = "Something wrong. Please, try again later."
+
+                if (reason.error_key) {
+                    console.error(reason.description)
+
+                    description = reason.description;
+
+                    if (ids.length > 1) {
+                        description = "Bulk delete unavailable for this type of entities for now."
+                    }
+
+                }
+
                 $mdDialog.show({
                     controller: 'InfoDialogController as vm',
                     templateUrl: 'views/info-dialog-view.html',
-                    parent: angular.element(document.body),
+                    parent: document.querySelector('.dialog-containers-wrap'),
                     targetEvent: $event,
                     clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
                     multiple: true,
                     locals: {
                         info: {
                             title: 'Warning',
-                            description: "Something wrong. Please, try again later."
+                            description: description
                         }
                     }
                 }).then(function (value) {

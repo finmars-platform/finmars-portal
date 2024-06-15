@@ -2,10 +2,10 @@
            class="tab-editor-dialog draggable-dialog"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>Tabs Editor</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                title="Tabs Editor"
+                cancel-dialog="vm.cancel()"
+        ></dialog-header>
     </md-toolbar>
 
     <md-dialog-content class="p-16">

@@ -11,6 +11,7 @@ import baseUrlService from "../services/baseUrlService.js";
 import crossTabEvents from "../services/events/crossTabEvents";
 
 import Keycloak from '../../../../core/keycloak/keycloak.js'
+import explorerService from "../../../../portal/scripts/app/services/explorerService";
 
 export default function ($scope, $state, $transitions, $urlService, $uiRouterGlobals, $mdDialog, toastNotificationService, cookieService, broadcastChannelService, middlewareService, authorizerService, globalDataService, redirectionService) {
 
@@ -95,7 +96,7 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                     $mdDialog.show({
                         controller: 'TwoFactorLoginDialogController as vm',
                         templateUrl: 'views/dialogs/two-factor-login-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         locals: {
                             username: vm.username,
                             password: vm.password
@@ -131,11 +132,88 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
 
     };
 
+    /**
+     * Function globalDataService.setTheme change `user` inside globalDataService
+     *
+     * @param userData
+     * @return {Promise<*>}
+     */
+    const getTheme = async function (userData) {
+
+        // memberLayout.data.theme = 'com.finmars.default-theme' // for debug
+
+        if (!userData.data.theme) { // if no theme selected, use default one
+            globalDataService.setTheme('base-theme');
+            return globalDataService.getUser();
+        }
+
+        // User selected specific theme
+
+        const themePath = userData.data.theme.split('.').join('/');
+        const itemPath = `.system/ui/themes/${themePath}/theme.css`;
+
+        try {
+
+            const blob = await explorerService.viewFile(itemPath);
+
+            const reader = new FileReader();
+
+            reader.addEventListener("loadend", function (e) {
+
+                var styleElement = document.createElement('style');
+                styleElement.textContent = reader.result;
+
+                document.head.appendChild(styleElement);
+
+            });
+
+            reader.readAsText(blob);
+
+        } catch (error) {
+            console.error("[portalController loadTheme] Could not fetch theme", error);
+            globalDataService.setTheme('base-theme')
+        }
+
+        return globalDataService.getUser();
+
+    }
+
+    /**
+     * Functions globalDataService.enableThemeDarkMode and globalDataService.disableThemeDarkMode
+     * change `user` inside globalDataService
+     *
+     * @param user
+     * @return {Promise<*>} - user with filled properties related to theme
+     */
+    const applyTheme = async function (user) {
+
+        user = await getTheme(user);
+
+        if (typeof user.data.dark_mode !== 'boolean') {
+
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                // Dark mode preferred
+                globalDataService.enableThemeDarkMode()
+            } else {
+                globalDataService.disableThemeDarkMode()
+                // Light mode preferred
+            }
+
+        } else if (user.data.dark_mode === true) {
+            globalDataService.enableThemeDarkMode()
+        } else {
+            globalDataService.disableThemeDarkMode()
+        }
+
+        return globalDataService.getUser();
+
+    }
+
     const getUser = function () {
 
         return new Promise(function (resolve, reject) {
 
-            authorizerService.getMe().then(function (userData) {
+            authorizerService.getMe().then(async function (userData) {
 
                 vm.user = userData;
 
@@ -145,6 +223,8 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
                 }
 
                 globalDataService.setUser(vm.user);
+
+                vm.user = await applyTheme(vm.user);
 
                 resolve();
 
@@ -413,7 +493,17 @@ export default function ($scope, $state, $transitions, $urlService, $uiRouterGlo
         if (pathname.includes('/space')) {
 
             var pathnamePartsList = pathname.split('/');
-            base_api_url = pathnamePartsList.find(part => part.startsWith('space'));
+            var realm_code = pathnamePartsList.find(part => part.startsWith('realm'));
+            var space_code = pathnamePartsList.find(part => part.startsWith('space'));
+
+            console.log('realm_code', realm_code);
+            console.log('space_code', space_code);
+
+            if (realm_code) {
+                base_api_url = realm_code + '/' + space_code
+            } else {
+                base_api_url = space_code;
+            }
 
             baseUrlService.setMasterUserPrefix(base_api_url);
 

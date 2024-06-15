@@ -156,6 +156,7 @@
                             $mdDialog.show({
                                 controller: 'SuccessDialogController as vm',
                                 templateUrl: 'views/dialogs/success-dialog-view.html',
+                                parent: document.querySelector(".dialog-containers-wrap"),
                                 targetEvent: $event,
                                 preserveScope: true,
                                 multiple: true,
@@ -209,6 +210,7 @@
                             $mdDialog.show({
                                 controller: 'SuccessDialogController as vm',
                                 templateUrl: 'views/dialogs/success-dialog-view.html',
+                                parent: document.querySelector(".dialog-containers-wrap"),
                                 targetEvent: $event,
                                 preserveScope: true,
                                 multiple: true,
@@ -309,7 +311,7 @@
                             $mdDialog.show({
                                 controller: 'ReconMatchViewLineDialogController as vm',
                                 templateUrl: 'views/dialogs/reconciliation/recon-match-view-line-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: document.querySelector('.dialog-containers-wrap'),
                                 targetEvent: activeObject.event,
                                 clickOutsideToClose: false,
                                 locals: {

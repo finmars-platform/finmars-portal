@@ -2,12 +2,11 @@
            aria-label="enter user code dialog"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2 ng-bind="vm.title"></h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="{{vm.title}}"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
 
     <md-dialog-content class="p-16">

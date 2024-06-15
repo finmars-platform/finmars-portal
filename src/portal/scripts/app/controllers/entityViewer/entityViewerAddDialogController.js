@@ -57,6 +57,7 @@
 
         if (Object.keys(entity).length) { // Make a copy option
             vm.entity = entity;
+
 			delete vm.entity.id; // lack of id indicates creation of entity
         }
 
@@ -1106,7 +1107,7 @@
                                 controller: 'ValidationDialogController as vm',
                                 templateUrl: 'views/dialogs/validation-dialog-view.html',
                                 targetEvent: $event,
-                                parent: angular.element(document.body),
+                                parent: document.querySelector('.dialog-containers-wrap'),
                                 multiple: true,
                                 locals: {
                                     validationData: {
@@ -1150,7 +1151,7 @@
                             controller: 'ValidationDialogController as vm',
                             templateUrl: 'views/dialogs/validation-dialog-view.html',
                             targetEvent: $event,
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             multiple: true,
                             locals: {
                                 validationData: {
@@ -1176,6 +1177,7 @@
                     $mdDialog.show({
                         controller: "WarningDialogController as vm",
                         templateUrl: "views/dialogs/warning-dialog-view.html",
+                        parent: document.querySelector(".dialog-containers-wrap"),
                         multiple: true,
                         clickOutsideToClose: false,
                         locals: {
@@ -1668,7 +1670,7 @@
             $mdDialog.show({
                 controller: 'PricingMultipleParametersDialogController as vm',
                 templateUrl: 'views/dialogs/pricing/pricing-multiple-parameter-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 preserveScope: true,

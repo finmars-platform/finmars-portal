@@ -76,6 +76,9 @@
                 case 'Attachment':
                     item['caption_name'] = 'Attachment';
                     break;
+                case 'JSON':
+                    item['caption_name'] = 'JSON';
+                    break;
                 default:
                     item['caption_name'] = item['display_name'];
                     break;

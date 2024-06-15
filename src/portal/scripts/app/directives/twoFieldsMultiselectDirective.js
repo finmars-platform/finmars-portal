@@ -60,7 +60,7 @@
 				let selOptionsIdsList = [];
 				let chipElem;
 				let customInputContent;
-				let dialogParent;
+				let dialogParent = document.querySelector('.dialog-containers-wrap');
 
 				// TIPS
 				// scope.smallOptions probable properties
@@ -73,13 +73,18 @@
 
 					scope.tooltipText = scope.smallOptions.tooltipText;
 					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
-					dialogParent = scope.smallOptions.dialogParent;
+
+					if (scope.smallOptions.dialogParent) {
+						dialogParent = scope.smallOptions.dialogParent;
+					}
 
 					if (scope.smallOptions.optionsOrdering === false) {
+						// disable alphabetic ordering for available options
 						scope.orderOptions.options = false;
 					}
 
 					if (scope.smallOptions.selectedOptionsOrdering === false) {
+						// disable alphabetic ordering for selected options
 						scope.orderOptions.selectedOptions = false;
 					}
 
@@ -276,7 +281,7 @@
 
 					if (scope.isDisabled) return;
 
-					let parent = angular.element(document.body);
+					/*let parent = angular.element(document.body);
 
 					if (dialogParent) {
 
@@ -286,7 +291,7 @@
 							parent = parentElem
 						}
 
-					}
+					}*/
 
 					getItems().then(function (data) {
 
@@ -295,7 +300,7 @@
 						$mdDialog.show({
 							controller: "TwoFieldsMultiselectDialogController as vm",
 							templateUrl: "views/dialogs/two-fields-multiselect-dialog-view.html",
-							parent: parent,
+							parent: dialogParent,
 							targetEvent: event,
 							multiple: true,
 							locals: {
@@ -458,11 +463,14 @@
 						scope.menuFilterTerms[scope.nameProperty] = "";
 
 						scope.dropdownMenuOptions = [];
+
+						//# region Order settings
 						scope.orderMenuOptions = scope.nameProperty;
 
 						if (scope.orderOptions.options === false) {
 							scope.orderMenuOptions = null;
 						}
+						//# endregion
 
 						chipElem = elem[0].querySelector("chips-list");
 

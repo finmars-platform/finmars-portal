@@ -6,9 +6,10 @@
     const evEvents = require('../../../../services/entityViewerEvents');
 
     const evHelperService = require('../../../../services/entityViewerHelperService');
+    const baseUrlService = require('../../../../services/baseUrlService').default;
     // const EventService = require('../../../../services/eventService');
 
-    module.exports = function ($mdDialog, $state, $bigDrawer) {
+    module.exports = function ($mdDialog, $state, $bigDrawer, toastNotificationService) {
         return {
             require: '^^gFilters',
             restrict: 'E',
@@ -39,6 +40,10 @@
                 scope.popupPosY = gFiltersVm.popupPosY;
                /* scope.fpBackClasses = gFiltersVm.fpBackClasses;
                 scope.fpClasses = gFiltersVm.fpClasses;*/
+                const baseUrl = baseUrlService.resolve();
+                const urlPrefix = baseUrlService.getMasterUserPrefix();
+
+                const dialogsWrapElem = document.querySelector('.dialog-containers-wrap');
 
                 const gFiltersLeftPartWidth = elem[0].querySelector('.gFiltersLeftPart').clientWidth;
                 const gFiltersRightPartWidth = elem[0].querySelector('.gFiltersRightPart').clientWidth;
@@ -176,7 +181,7 @@
                             dialogOptions = {
                                 controller: 'SimpleEntityImportSchemeV2EditDialogController as vm',
                                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-v2-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: dialogsWrapElem,
                                 locals: {
                                     data: {
 
@@ -188,18 +193,17 @@
 
                             break;
 
-                        case 'transaction-import-scheme':
-
+                        case 'complex-transaction-import-scheme':
                             dialogOptions = {
-                                controller: 'TransactionImportSchemeV2EditDialogController as vm',
+                                controller: 'TransactionImportSchemeV2DialogController as vm',
                                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-v2-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: dialogsWrapElem,
                                 locals: {
+                                    data: {}
                                 }
                             };
 
                             $mdDialog.show(dialogOptions)
-
                             break;
 
                         default:
@@ -220,11 +224,12 @@
 
                 };
 
-                scope.addFromProvider = function ($event) {
+                scope.addFromProvider = function () {
+
                     $mdDialog.show({
                         controller: "InstrumentSelectDatabaseDialogController as vm",
                         templateUrl: "views/dialogs/instrument-select-database-dialog-view.html",
-                        targetEvent: $event,
+                        parent: dialogsWrapElem,
                         multiple: true,
                         locals: {
                             data: {
@@ -233,6 +238,18 @@
                                 },
                                 inputText: ''
                             }
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.status === "agree" && res.data.hasOwnProperty('task') ) { // database item selected
+
+                            let url = `${baseUrl}/${urlPrefix}/a/`;
+                            url = url + $state.href('app.portal.tasks-page', {id: res.data.task});
+
+                            const message = `<span class="f-s-11">You can see import progress <a href="${url}">here</a></span>`
+                            toastNotificationService.success(message, "Instrument import started.")
+
                         }
 
                     })
@@ -423,6 +440,7 @@
                     $mdDialog.show({
                         controller: 'AttributesManagerDialogController as vm',
                         templateUrl: 'views/dialogs/attributes-manager-dialog-view.html',
+                        parent: dialogsWrapElem,
                         targetEvent: $event,
                         multiple: true,
                         locals: {

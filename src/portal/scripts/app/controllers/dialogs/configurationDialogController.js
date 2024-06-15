@@ -22,6 +22,9 @@
             return vm.readyStatus.data;
         };
 
+        vm.eventObj = {
+            event: {},
+        };
 
         vm.getItem = function (id) {
 
@@ -42,6 +45,13 @@
             $mdDialog.hide({status: 'disagree'});
         };
 
+        vm.onChangeCallback = (changedValue) => {
+            const key = (changedValue.length === 100) ? "error" : "reset";
+            vm.eventObj.event = {
+                key,
+                ...(key === "error" && { error: "Length limit has been reached" })
+            };
+        }
         vm.generateManifestIfNotExists = function () {
 
             vm.item.manifest = {
@@ -99,6 +109,7 @@
             $mdDialog.show({
                 controller: 'EntityAsJsonEditorDialogController as vm',
                 templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 targetEvent: ev,
                 multiple: true,
                 locals: {
@@ -125,7 +136,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 locals: {
@@ -173,7 +184,7 @@
             $mdDialog.show({
                 controller: 'SimpleLoginDialogController as vm',
                 templateUrl: 'views/dialogs/simple-login-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 locals: {
@@ -184,7 +195,7 @@
                 skipHide: true,
                 multiple: true
             }).then(function (res) {
-                console.log('res', res);
+
                 if (res.status === 'agree') {
 
                     configurationService.update(vm.item.id, vm.item).then(function (data) {
@@ -210,6 +221,8 @@
 
                     })
 
+                } else if (res.status === 'disagree') {
+                    vm.processing = false;
                 }
             })
 
@@ -220,7 +233,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 locals: {

@@ -3,12 +3,13 @@
            style="width: 40%;"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>Transaction Type Validation Errors</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Transaction Type Validation Errors"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
-    <md-dialog-content style="background: #E5E5E5;">
+    <md-dialog-content>
         <md-content>
             <md-card>
                 <md-card-content>
@@ -73,8 +74,8 @@
     </md-dialog-content>
 
     <md-dialog-actions layout="row">
-        <md-button class="md-raised" ng-click="vm.cancel()">
-            {{ vm.proceedButton ? 'CANCEL' : 'CLOSE' }}
+        <md-button class="" ng-click="vm.cancel()">
+            {{ vm.proceedButton ? 'Cancel' : 'Close' }}
         </md-button>
         <md-button data-ng-if="vm.proceedButton"
                    class="md-raised md-warn"

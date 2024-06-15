@@ -183,7 +183,7 @@
                 <md-button ng-click="vm.toggleLockStatus($event)"
                            ng-if="vm.entity.is_locked == false"
                            ng-disabled="vm.entity.is_canceled == true || !vm.hasEditPermission || vm.processing"
-                           class="md-raised">
+                           class="">
                     Lock
                 </md-button>
 
@@ -191,14 +191,14 @@
                         ng-click="vm.toggleLockStatus($event)"
                         ng-if="vm.entity.is_locked == true"
                         ng-disabled="vm.entity.is_canceled == true || !vm.hasEditPermission || vm.processing"
-                        class="md-raised">
+                        class="">
                     Unlock
                 </md-button>
 
                 <md-button ng-click="vm.toggleCancelStatus($event)"
                            ng-if="vm.entity.is_canceled == true"
                            ng-disabled="vm.entity.is_locked == true || !vm.hasEditPermission || vm.processing"
-                           class="md-raised">
+                           class="">
                     Activate
                 </md-button>
 
@@ -206,7 +206,7 @@
                         ng-click="vm.toggleCancelStatus($event)"
                         ng-if="vm.entity.is_canceled == false"
                         ng-disabled="vm.entity.is_locked == true || !vm.hasEditPermission || vm.processing"
-                        class="md-raised">
+                        class="">
                     Ignore
                 </md-button>
 
@@ -227,7 +227,7 @@
                 Make a copy
             </md-button>
 
-            <md-button class="md-raised" ng-click="vm.cancel()">
+            <md-button class="" ng-click="vm.cancel()">
                 <span data-ng-show="!vm.entity.is_locked && !vm.entity.is_canceled">Cancel</span>
                 <span data-ng-show="vm.entity.is_locked || vm.entity.is_canceled">Ok</span>
             </md-button>

@@ -32,7 +32,7 @@
 
             <div class="transactionImportSchemeSelectorValues">
 <!--        <div data-ng-repeat="selector in vm.selectorValues track by $index" layout="row">-->
-                <div data-ng-repeat="selector in vm.selectorValues.value | orderBy: 'order' | filter: vm.filterTerms as results track by $index"
+                <div data-ng-repeat="selector in vm.selectorValues.value | orderBy: 'order' | filter: vm.filterTerms as results track by selector.frontOptions.key"
                      data-ng-init="$last && !vm.dragAndDropInited && vm.dragAndDrop.init()"
                      data-row-order="{{selector.order}}">
 
@@ -48,7 +48,7 @@
                         </md-input-container>
 
                         <md-button class="md-warn"
-                                   data-ng-click="vm.deleteSelector($event, selector.order)"
+                                   data-ng-click="vm.deleteSelector(selector.order)"
                                    style="min-width: 42px">
                             Delete
                         </md-button>
@@ -64,7 +64,7 @@
             </div>
 
             <div style="margin-top: 10px;">
-                <md-button class="md-raised"
+                <md-button class=""
                            data-ng-click="vm.addSelector()">Add Selector</md-button>
             </div>
 
@@ -73,10 +73,10 @@
     </md-dialog-content>
 
     <md-dialog-actions layout="row">
-        <md-button class="md-raised" ng-click="vm.cancel()">
+        <md-button class="" ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button class="" ng-click="vm.agree()" style="margin-right:20px;">
             Ok
         </md-button>
     </md-dialog-actions>

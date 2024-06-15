@@ -19,6 +19,22 @@
         return pricingPolicyRepository.getByKey(id);
     };
 
+	var getByUserCode = async function (userCode) {
+
+		if (!userCode || typeof userCode !== 'string') {
+			throw "Error [pricingPolicyService.getByUserCode] invalid userCode provided";
+		}
+
+		const res = await pricingPolicyRepository.getByUserCode(userCode);
+
+		if (res.results.length > 1) {
+			throw `Error [pricingPolicyService.getByUserCode] ` +
+			`Expected 1 object got: ${res.results.length}`;
+		}
+
+		return res.results[0];
+	}
+
     var create = function (policy) {
         return pricingPolicyRepository.create(policy);
     };
@@ -230,7 +246,7 @@
 		$mdDialog.show({
 			controller: 'PricingMultipleParametersDialogController as vm',
 			templateUrl: 'views/dialogs/pricing/pricing-multiple-parameter-dialog-view.html',
-			parent: angular.element(document.body),
+			parent: document.querySelector('.dialog-containers-wrap'),
 			// targetEvent: $event,
 			clickOutsideToClose: false,
 			preserveScope: true,
@@ -262,6 +278,7 @@
         getList: getList,
         getListLight: getListLight,
         getByKey: getByKey,
+		getByUserCode: getByUserCode,
         create: create,
         update: update,
         deleteByKey: deleteByKey,

@@ -67,7 +67,7 @@
     };
 
     var fieldsThatCanBeNullData = {
-        'instrument': ['maturity_date'],
+        'instrument': ['maturity_date', "identifier"],
         'instrument-type': ['maturity_date'],
     };
 
@@ -1435,6 +1435,7 @@
         $mdDialog.show({
             controller: 'EvAddEditValidationDialogController as vm',
             templateUrl: 'views/dialogs/ev-add-edit-validation-dialog-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
             targetEvent: $event,
             multiple: true,
             locals: {
@@ -1529,6 +1530,7 @@
         $mdDialog.show({
             controller: 'EvAddEditValidationDialogController as vm',
             templateUrl: 'views/dialogs/ev-add-edit-validation-dialog-view.html',
+            parent: document.querySelector('.dialog-containers-wrap'),
             targetEvent: $event,
             multiple: true,
             locals: {

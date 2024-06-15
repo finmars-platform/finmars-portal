@@ -57,14 +57,14 @@
 
                 <div layout="row" class="m-8">
 
-                    <md-button class="md-raised" data-ng-click="item.show_options = !item.show_options">
+                    <md-button class="" data-ng-click="item.show_options = !item.show_options">
 
                         <span data-ng-if="!item.show_options">Show Options</span>
                         <span data-ng-if="item.show_options">Hide Options</span>
 
                     </md-button>
 
-                    <md-button class="md-raised" data-ng-click="vm.requestTaskStatus($event, item)">
+                    <md-button class="" data-ng-click="vm.requestTaskStatus($event, item)">
                         Request status
                     </md-button>
 
@@ -145,20 +145,20 @@
 
                         <div layout="row" class="m-8">
 
-                            <md-button class="md-raised" data-ng-click="item.show_options = !item.show_options">
+                            <md-button class="" data-ng-click="item.show_options = !item.show_options">
 
                                 <span data-ng-if="!item.show_options">Show Options</span>
                                 <span data-ng-if="item.show_options">Hide Options</span>
 
                             </md-button>
-                            <md-button class="md-raised" data-ng-click="item.show_result = !item.show_result">
+                            <md-button class="" data-ng-click="item.show_result = !item.show_result">
 
                                 <span data-ng-if="!item.show_result">Show Result</span>
                                 <span data-ng-if="item.show_result">Hide Result</span>
 
                             </md-button>
 
-                            <md-button class="md-raised" data-ng-click="vm.requestTaskStatus($event, item)">
+                            <md-button class="" data-ng-click="vm.requestTaskStatus($event, item)">
                                 Request status
                             </md-button>
 
@@ -170,7 +170,7 @@
 
                         <div data-ng-if="item.file_report" style="min-width: 120px" class="m-8">
                             <a href="{{vm.getFileUrl(item.file_report)}}" download
-                               style="text-decoration: none; color: #000; display: block; margin-top: 15px; padding: 0 20px;">Download</a>
+                               style="text-decoration: none; color: var(--secondary-color); display: block; margin-top: 15px; padding: 0 20px;">Download</a>
                         </div>
 
                     </div>
@@ -209,7 +209,7 @@
             </div>
 
             <div layout="row" class="m-t-16">
-                <md-button class="md-raised" data-ng-show="vm.currentPage != 1" data-ng-click="vm.openPreviousPage()">
+                <md-button class="" data-ng-show="vm.currentPage != 1" data-ng-click="vm.openPreviousPage()">
                     Previous
                 </md-button>
 
@@ -230,7 +230,7 @@
 
                 </div>
 
-                <md-button class="md-raised" data-ng-show="vm.currentPage < vm.totalPages"
+                <md-button class="" data-ng-show="vm.currentPage < vm.totalPages"
                            data-ng-click="vm.openNextPage()">Next
                 </md-button>
             </div>

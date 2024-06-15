@@ -731,6 +731,7 @@
                             $mdDialog.show({
                                 controller: 'ValidationDialogController as vm',
                                 templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                parent: document.querySelector(".dialog-containers-wrap"),
                                 targetEvent: $event,
                                 locals: {
                                     validationData: {
@@ -890,7 +891,7 @@
                                         controller: 'BookUniquenessWarningDialogController as vm',
                                         templateUrl: 'views/dialogs/book-uniqueness-warning-dialog-view.html',
                                         targetEvent: $event,
-                                        parent: angular.element(document.body),
+                                        parent: document.querySelector('.dialog-containers-wrap'),
                                         multiple: true,
                                         locals: {
                                             data: {
@@ -988,6 +989,7 @@
                             $mdDialog.show({
                                 controller: 'ValidationDialogController as vm',
                                 templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                parent: document.querySelector(".dialog-containers-wrap"),
                                 targetEvent: $event,
                                 locals: {
                                     validationData: {
@@ -1087,6 +1089,7 @@
                             $mdDialog.show({
                                 controller: 'ValidationDialogController as vm',
                                 templateUrl: 'views/dialogs/validation-dialog-view.html',
+                                parent: document.querySelector(".dialog-containers-wrap"),
                                 targetEvent: $event,
                                 locals: {
                                     validationData: {

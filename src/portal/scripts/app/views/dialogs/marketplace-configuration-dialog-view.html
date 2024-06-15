@@ -2,19 +2,14 @@
            class="marketplace-configuration-dialog draggable-dialog"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Marketplace</h2>
-            <div data-ng-if="vm.processing" layout="row" class="m-l-16">
-                <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
-                    <progress-circular diameter="20"></progress-circular>
-                </div>
-                — Processing
-            </div>
-        </div>
+        <dialog-header
+                data-title="Marketplace"
+                data-processing="vm.processing"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
-    <md-dialog-content style="background: #E5E5E5;">
+    <md-dialog-content>
         <md-content>
             <div data-ng-if="vm.checkReadyStatus()" class="position-relative">
 
@@ -45,7 +40,22 @@
                                         <h3 class="configuration-card-name" style="margin: 4px 0">{{vm.item.name}}</h3>
                                     </div>
 
+                                    <div layout="row" data-ng-if="vm.item.localItem">
+                                        Current: ({{vm.item.localItem.version}} {{vm.item.localItem.channel}})
+                                    </div>
+
                                     <div layout="row">
+
+                                        <md-select data-ng-model="vm.channel" data-ng-change="vm.getVersions()">
+                                            <md-option value="stable">Stable</md-option>
+                                            <md-option value="rc">Release Candidate</md-option>
+                                        </md-select>
+
+                                        <md-select data-ng-model="vm.version">
+                                            <md-option data-ng-repeat="versionItem in vm.versions"
+                                                       ng-value="versionItem.version">{{versionItem.version}}
+                                            </md-option>
+                                        </md-select>
 
                                         <div data-ng-if="!vm.item.localItem">
                                             <md-button class="md-primary md-raised configuration-card-open"
@@ -129,7 +139,7 @@
     <md-dialog-actions layout="row" layout-align="space-between">
 
         <div layout="row">
-            <md-button class="md-raised" ng-click="vm.cancel()" style="margin: 0">
+            <md-button class="" ng-click="vm.cancel()" style="margin: 0">
                 Close
             </md-button>
         </div>

@@ -117,13 +117,17 @@ export default function (errorService, cookieService) {
 
             return params.method !== "DELETE" ? await response.json() : response;
         } catch (error) {
-            console.log('xhrService.reason', error);
+
+            if (params.signal?.aborted) {
+                throw params.signal.reason;
+            }
+
+            console.error('XHR Service catch error', error);
 
             if (notifyError) {
                 await errorService.notifyError(error);
             }
 
-            console.error('XHR Service catch error', error);
             throw error;
         }
     };

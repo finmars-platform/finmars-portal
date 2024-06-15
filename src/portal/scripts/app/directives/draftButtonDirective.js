@@ -5,7 +5,8 @@
 
     'use strict';
 
-    var draftService = require('../services/draftService');
+    const draftService = require('../services/draftService').default;
+    const metaHelper = require('../helpers/meta.helper').default;
 
     module.exports = function ($mdDialog, toastNotificationService) {
         return {
@@ -17,6 +18,8 @@
             },
             templateUrl: 'views/directives/draft-button-view.html',
             link: function (scope, elem) {
+
+                let draftInterval;
 
                 scope.draft = null;
                 scope.lastSavedDraftData = null;
@@ -79,9 +82,6 @@
 
                     return new Promise(function (resolve, reject) {
 
-                        console.log("going to save draft", scope.draft)
-
-
                         if (scope.draft.id) {
 
                             draftService.update(scope.draft.id, scope.draft).then(function (data) {
@@ -133,7 +133,7 @@
                     $mdDialog.show({
                         controller: 'DraftDialogController as vm',
                         templateUrl: 'views/dialogs/draft-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         clickOutsideToClose: false,
                         preserveScope: true,
@@ -170,8 +170,8 @@
 
                     if (data) {
 
-                        scope.draft.data = scope.onExportToDraftCallback()
-                        scope.lastSavedDraftData = scope.draft.data;
+                        scope.draft.data = scope.onExportToDraftCallback();
+                        scope.lastSavedDraftData = metaHelper.recursiveDeepCopy(scope.draft.data);
 
                         scope.saveDraft().then(function () {
                             scope.$apply();
@@ -188,7 +188,7 @@
 
                 }
 
-                scope.init = function () {
+                const init = function () {
 
                     console.log("Draft Inited")
 
@@ -216,18 +216,18 @@
 
                             scope.$apply();
 
-                            scope.draftInteval = setInterval(function () {
+                            draftInterval = setInterval(function () {
 
                                 var data = scope.onExportToDraftCallback();
 
                                 if (data) {
 
-                                    scope.draft.data = scope.onExportToDraftCallback()
+                                    scope.draft.data = scope.onExportToDraftCallback();
 
 
                                     if (!scope.lastSavedDraftData) {
 
-                                        scope.lastSavedDraftData = JSON.parse(JSON.stringify(scope.draft.data))
+                                        scope.lastSavedDraftData = metaHelper.recursiveDeepCopy(scope.draft.data);
 
                                         scope.saveDraft().then(function () {
                                             scope.$apply();
@@ -240,7 +240,7 @@
                                         if (diff) {
 
                                             scope.saveDraft().then(function () {
-                                                scope.lastSavedDraftData = scope.draft.data;
+                                                scope.lastSavedDraftData = metaHelper.recursiveDeepCopy(scope.draft.data);
                                                 scope.$apply();
                                             })
 
@@ -266,11 +266,11 @@
 
                 }
 
-                scope.init();
+                init();
 
-                scope.$on('destroy', function () {
+                scope.$on('$destroy', function () {
 
-                    clearInterval(scope.draftInteval);
+                    clearInterval(draftInterval);
 
                 })
 

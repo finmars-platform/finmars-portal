@@ -1,5 +1,7 @@
 (function () {
 
+    'use strict';
+
 	const md5Helper = require('../helpers/md5.helper');
     const toastNotificationService = require('../../../../core/services/toastNotificationService').default;
 
@@ -248,7 +250,7 @@
 
 		for (const prop in object) {
 
-			if (object[prop] && typeof object[prop] === 'object') {
+			if (object[prop] && typeof object[prop] === 'object' && prop !== 'identifier') {
 
 				object[prop] = clearFrontendOptions(object[prop]);
 

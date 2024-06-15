@@ -470,15 +470,19 @@
             })
 
             .state('app.portal.tasks-page', {
-                url: '/tasks?date_from&date_to&query&page',
+                url: '/tasks?id&date_from&date_to&query&types&statuses&result&page',
                 templateUrl: 'views/pages/tasks-page-view.html',
                 controller: 'TasksPageController as vm',
                 reloadOnSearch: false,
                 params: {
+                    id: null,
                     date_from: null,
                     date_to: null,
                     query: null,
-                    page: null
+                    statuses: null,
+                    types: null,
+                    result: null,
+                    page: null,
                 }
             })
 

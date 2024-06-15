@@ -2,15 +2,12 @@
            class="draggable-dialog width-90 dialog-actions-bottom dcReportViewerElemToDrag dashboard-constructor-dialog"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>Report Viewer Component</h2>
-            <span flex></span>
-
-            <div data-ng-if="vm.processing" class="dialog-toolbar-loader">
-                <progress-circular diameter="20"></progress-circular>
-            </div>
-
-        </div>
+        <dialog-header
+                data-title="Report Viewer Component"
+                data-processing="vm.processing"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
 
     <md-dialog-content>
@@ -151,7 +148,7 @@
 
 <!--                                <div layout="row">-->
 
-<!--                                    &lt;!&ndash;<md-button class="md-raised"&ndash;&gt;-->
+<!--                                    &lt;!&ndash;<md-button class=""&ndash;&gt;-->
 <!--                                    &lt;!&ndash;ng-class="{'disabled-btn': !filterLink.componentId || !filterLink.key}"&ndash;&gt;-->
 <!--                                    &lt;!&ndash;ng-click="vm.updateFilterLink(filterLink)"&ndash;&gt;-->
 <!--                                    &lt;!&ndash;style="margin-right:20px;">&ndash;&gt;-->

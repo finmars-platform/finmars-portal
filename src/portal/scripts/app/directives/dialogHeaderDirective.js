@@ -5,6 +5,8 @@ export default function () {
         restrict: 'E',
         scope: {
             title: '@',
+            tooltip: '@',
+            processing: '=',
             cancelDialog: '&',
         },
         templateUrl: 'views/directives/dialog-header-view.html',

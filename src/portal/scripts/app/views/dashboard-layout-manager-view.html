@@ -7,19 +7,19 @@
         <div>
 
             <md-menu>
-                <md-button class="md-raised" data-ng-click="$mdOpenMenu($event)">
+                <md-button class="" data-ng-click="$mdOpenMenu($event)">
                     Add New
                 </md-button>
 
                 <md-menu-content>
                     <md-menu-item>
-                        <md-button class="md-raised"
+                        <md-button class=""
                                    data-ui-sref="app.portal.dashboard-constructor({id: 'new'})">Add Blank
                         </md-button>
                     </md-menu-item>
 
                     <md-menu-item>
-                        <md-button class="md-raised"
+                        <md-button class=""
                                    package-manager-button
                                    content-type="'ui.dashboardlayout'">
                             Select from List
@@ -37,7 +37,7 @@
 
                 {{item.name}}
 
-                <md-button class="md-raised" data-ui-sref="app.portal.dashboard-constructor({id: item.id})">Edit</md-button>
+                <md-button class="" data-ui-sref="app.portal.dashboard-constructor({id: item.id})">Edit</md-button>
                 <md-button class="md-raised md-warn" data-ng-click="vm.deleteItem($event, item)">Delete</md-button>
 
             </div>

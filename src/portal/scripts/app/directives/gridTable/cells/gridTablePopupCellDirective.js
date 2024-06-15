@@ -23,7 +23,7 @@
             link: function (scope, elem, attrs) {
 
                 var cellMethods;
-                var bodyElem = document.querySelector("body");
+                var wrapElem =  document.querySelector('.dialog-containers-wrap');
                 var cellTextContainer;
 
                 var popupBackdropElem = document.createElement("div");
@@ -97,8 +97,8 @@
 
                     $compile($(popUpElem))(scope);
 
-                    bodyElem.appendChild(popupBackdropElem);
-                    $(bodyElem).append($(popUpElem));
+                    wrapElem.appendChild(popupBackdropElem);
+                    $(wrapElem).append($(popUpElem));
 
                     scope.$apply();
 
@@ -203,8 +203,8 @@
                 };
 
                 function closePopupArea () {
-                    bodyElem.removeChild(popupBackdropElem);
-                    bodyElem.removeChild(popUpElem);
+                    wrapElem.removeChild(popupBackdropElem);
+                    wrapElem.removeChild(popUpElem);
                 }
 
                 scope.cancelPopupArea = function () {
@@ -343,7 +343,7 @@
 					$mdDialog.show({
 						controller: 'ExpressionEditorDialogController as vm',
 						templateUrl: 'views/dialogs/expression-editor-dialog-view.html',
-						parent: angular.element(document.body),
+						parent: document.querySelector('.dialog-containers-wrap'),
 						targetEvent: e,
 						preserveScope: true,
 						multiple: true,

@@ -1,4 +1,4 @@
-<md-dialog aria-label="" ng-cloak class="delete-portfolio-dialog width-50">
+<md-dialog aria-label="entity viewer restore bulk dialog" class="delete-portfolio-dialog width-50">
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Warning</h2>
@@ -20,7 +20,7 @@
         <md-button ng-click="vm.cancel()" data-ng-class="{'disabled-btn': vm.processing}">
             Cancel
         </md-button>
-        <md-button ng-click="vm.delete($event)" data-ng-class="{'disabled-btn': vm.processing || vm.isDeleted}" style="margin-right:20px;">
+        <md-button ng-click="vm.restore()" data-ng-class="{'disabled-btn': vm.processing || vm.isRestored}" style="margin-right:20px;">
             Restore
         </md-button>
     </md-dialog-actions>

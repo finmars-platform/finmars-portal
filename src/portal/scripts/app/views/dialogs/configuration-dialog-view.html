@@ -2,19 +2,14 @@
            class="draggable-dialog"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Configuration Manager</h2>
-            <div data-ng-if="vm.processing" layout="row" class="m-l-16">
-                <div layout="row" layout-sm="column" layout-align="space-around" class="m-r-8">
-                    <progress-circular diameter="20"></progress-circular>
-                </div>
-                — Processing
-            </div>
-        </div>
+        <dialog-header
+                data-title="Configuration Manager"
+                data-processing="vm.processing"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
-    <md-dialog-content style="background: #E5E5E5;">
+    <md-dialog-content>
         <md-content>
             <div data-ng-if="vm.checkReadyStatus()" class="position-relative">
 
@@ -24,7 +19,7 @@
 
                             <div>
 
-                                <div style="border: 1px solid #ddd; margin-bottom: 32px;" class="m-16 p-16"
+                                <div style="border: 1px solid var(--table-border-color); margin-bottom: 32px;" class="m-16 p-16"
                                      data-ng-if="!vm.item.id">
                                     <p>
                                         Configuration code pattern:
@@ -81,6 +76,14 @@
                             <md-input-container class="md-block">
                                 <label>Version</label>
                                 <input aria-label="description" type="text" data-ng-model="vm.item.version">
+                            </md-input-container>
+
+                            <md-input-container class="md-block">
+                                <label>Version</label>
+                                <md-select data-ng-model="vm.item.channel">
+                                    <md-option value="stable">Stable</md-option>
+                                    <md-option value="rc">Release Candidate</md-option>
+                                </md-select>
                             </md-input-container>
 
 
@@ -191,7 +194,7 @@
                                         configurations/{{vm.item.configuration_code}}/{{vm.item.version}}/
                                     </b></div>
 
-                                    <md-button class="md-raised" data-ng-click="vm.exportToStorage($event)">Export to
+                                    <md-button class="" data-ng-click="vm.exportToStorage($event)">Export to
                                         Storage
                                     </md-button>
 
@@ -212,14 +215,18 @@
                                     <p>It means you cannot push multiple times the same version</p>
                                     <p>Each push should create new unique version</p>
 
-                                    <md-input-container class="md-block">
-                                        <label>Changelog (optional)</label>
-                                        <input aria-label="description" type="text" data-ng-model="vm.changelog">
-                                    </md-input-container>
+                                    <text-input
+                                            data-label="Changelog (optional) ({{ vm.changelog ? vm.changelog.length : 0 }} / 100)"
+                                            data-model="vm.changelog"
+                                            data-event-signal="vm.eventObj.event"
+                                            data-on-change-callback="vm.onChangeCallback(changedValue)"
+                                            data-max-length="100"
+                                        >
+                                    </text-input>
 
                                     <span style="color: orange">Warning. Before pushing new version, please, check if it was exported to your System Storage</span>
 
-                                    <md-button class="md-raised" data-ng-click="vm.pushConfiguration($event)">Push
+                                    <md-button class="" data-ng-click="vm.pushConfiguration($event)">Push
                                         Configuration to Marketplace
                                     </md-button>
 
@@ -295,17 +302,17 @@
 
         <div layout="row">
 
-            <md-button class="md-raised" ng-click="vm.editAsJson($event)" data-ng-if="vm.item.id">
+            <md-button class="" ng-click="vm.editAsJson($event)" data-ng-if="vm.item.id">
                 Edit as JSON
             </md-button>
-            <md-button class="md-raised" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
+            <md-button class="" ng-click="vm.makeCopy($event)" data-ng-class="{'disabled-btn': vm.processing}"
                        data-ng-if="vm.item.id">
                 Make a copy
             </md-button>
-            <md-button class="md-raised" ng-click="vm.cancel()">
+            <md-button class="" ng-click="vm.cancel()">
                 Cancel
             </md-button>
-            <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;"
+            <md-button class="" ng-click="vm.agree()" style="margin-right:20px;"
                        data-ng-class="{'disabled-btn': vm.processing}">
                 <span data-ng-if="vm.item.id">Update</span>
                 <span data-ng-if="!vm.item.id">Create</span>

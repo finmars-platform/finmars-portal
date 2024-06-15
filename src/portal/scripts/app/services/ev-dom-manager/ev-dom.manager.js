@@ -1117,7 +1117,7 @@
             }
 
 
-            if (['complex-transaction', 'price-history', 'currency-history'].indexOf(entityType) === -1) {
+            if ( evRvDomManagerService.isRestorable(entityType) ) {
 
                 if (obj.is_deleted) {
 

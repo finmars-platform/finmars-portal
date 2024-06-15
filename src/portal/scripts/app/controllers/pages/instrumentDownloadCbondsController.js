@@ -6,7 +6,7 @@
     'use strict';
 
 
-    var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService');
+    var importInstrumentCbondsService = require('../../services/import/importInstrumentCbondsService').default;
     var toastNotificationService = require('../../../../../core/services/toastNotificationService').default;
 
     module.exports = function instrumentDownloadCbondsController($scope, $mdDialog) {
@@ -53,7 +53,7 @@
                 $mdDialog.show({
                     controller: 'WarningDialogController as vm',
                     templateUrl: 'views/dialogs/warning-dialog-view.html',
-                    parent: angular.element(document.body),
+                    parent: document.querySelector('.dialog-containers-wrap'),
                     targetEvent: $event,
                     clickOutsideToClose: false,
                     locals: {

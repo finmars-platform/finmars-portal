@@ -667,6 +667,10 @@
                 vm.getSessionRemainingTime();
             }, 1000);
 
+            vm.isThemeInDarkMode = function () {
+                return globalDataService.isThemeInDarkMode();
+            }
+
 
             // if (toastr) {
             //     toastr.options.onclick = function (event) {
@@ -695,7 +699,7 @@
 
         vm.init();
 
-        $scope.$on('destroy', function () {
+        $scope.$on('$destroy', function () {
 
             // clearInterval(vm.sessionRemainingInterval);
             $interval.cancel(vm.sessionRemainingInterval);

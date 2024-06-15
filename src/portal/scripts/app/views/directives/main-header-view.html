@@ -118,7 +118,8 @@
                             <a href="/documentation" class="help-link" target="_blank">Documentation</a>
                         </md-menu-item>
                         <md-menu-item>
-                            <a href="{{'/' + currentMasterUser.base_api_url + '/docs/api/v1/'}}" target="_blank" class="help-link">API Reference</a>
+                            <a href="{{'/' + currentMasterUser.realm_code + '/' + currentMasterUser.space_code + '/docs/api/v1/'}}"
+                               target="_blank" class="help-link">API Reference</a>
                         </md-menu-item>
                     </md-menu-content>
                 </md-menu>
@@ -184,10 +185,16 @@
                             <user-profile></user-profile>
                         </md-button>
                         <md-menu-content>
-                            <md-menu-item style="border-bottom: 1px solid #ddd;">
+                            <md-menu-item >
                                 <a class="md-button" href="{{profileUrl}}">Profile</a>
                             </md-menu-item>
-                            <md-menu-item style="border-bottom: 1px solid #ddd;">
+                            <md-menu-item >
+                                <a class="md-button" data-ng-click="toggleDarkMode()" data-ng-if="isThemeInDarkMode">Disable
+                                    Dark Theme</a>
+                                <a class="md-button" data-ng-click="toggleDarkMode()" data-ng-if="!isThemeInDarkMode">Enable
+                                    Dark Theme</a>
+                            </md-menu-item>
+                            <md-menu-item >
                                 <a class="md-button" data-ng-click="openAccManager()">Account Security</a>
                             </md-menu-item>
                             <md-menu-item>
