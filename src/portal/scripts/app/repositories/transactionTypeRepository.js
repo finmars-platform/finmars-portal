@@ -352,6 +352,25 @@ export default function (cookieService, xhrService) {
             })
     };
 
+    var restoreBulk = function (data) {
+
+        var prefix = baseUrlService.getMasterUserPrefix();
+        var apiVersion = baseUrlService.getApiVersion();
+
+        return xhrService.fetch(baseUrl + '/' + prefix + '/' + apiVersion + '/' + 'transactions/transaction-type/bulk-restore/',
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'X-CSRFToken': cookieService.getCookie('csrftoken'),
+                    'Authorization': 'Token ' + cookieService.getCookie('access_token'),
+                    Accept: 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+    };
+
     var recalculateUserFields = function (id, data) {
 
         var prefix = baseUrlService.getMasterUserPrefix();
@@ -399,6 +418,7 @@ export default function (cookieService, xhrService) {
         updateBulkLight: updateBulkLight,
         updateBulk: updateBulk,
         deleteBulk: deleteBulk,
+        restoreBulk: restoreBulk,
 
         recalculateUserFields: recalculateUserFields
     }

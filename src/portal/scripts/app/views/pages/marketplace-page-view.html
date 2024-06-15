@@ -1,7 +1,7 @@
 <div class="marketplace-page">
 
     <div layout="row">
-        <h1 style="margin-top: 5px; font-family: 'Roboto Light'; font-size: 20px">Marketplace</h1>
+        <h1 style="margin-top: 5px; font-size: 20px">Marketplace</h1>
 
         <md-button data-ng-class="{'disabled-btn': !vm.readyStatus.data}"
                    data-ng-click="vm.getData()"
@@ -39,14 +39,12 @@
     </div>
 
 
-    <div data-ng-if="vm.readyStatus.data" style="display: flex;
-    width: 100%;
-    flex-wrap: wrap;">
+    <div data-ng-if="vm.readyStatus.data"
+         class="configuration-cards-container">
 
-        <div data-ng-repeat="item in vm.items">
-
-            <md-card class="configuration-card p-16" data-ng-click="vm.openConfigurationItem($event, item)"
-                     style="max-width: 240px; width: 240px; min-height: 160px">
+        <md-card data-ng-repeat="item in vm.items"
+                 class="configuration-card"
+                 data-ng-click="vm.openConfigurationItem($event, item)">
 
                 <div layout="row">
 
@@ -95,7 +93,11 @@
                     </md-button>
                 </div>
 
-                <div data-ng-if="item.localItem">
+                <div data-ng-if="item.localItem" class="m-b-8">
+
+                    <div style="margin-top: 1rem;">
+                        Current: ({{item.localItem.version}} {{item.localItem.channel}})
+                    </div>
 
                     <div data-ng-if="item.latest_release_object.version == item.localItem.version">
                         <!--                        <span style="background: #00cc7d; padding: 4px; border-radius: 4px; display: inline-block; margin: 4px;">Installed</span>-->
@@ -115,8 +117,6 @@
                 </div>
 
             </md-card>
-
-        </div>
 
     </div>
 

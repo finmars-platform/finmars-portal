@@ -291,7 +291,7 @@
                     dialogOptions = {
                         controller: 'PriceHistoryErrorEditDialogController as vm',
                         templateUrl: 'views/entity-viewer/price-history-error-edit-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: actionData.event,
                         locals: {
                             entityId: actionData.object.id
@@ -342,7 +342,7 @@
                     dialogOptions = {
                         controller: 'CurrencyHistoryErrorEditDialogController as vm',
                         templateUrl: 'views/entity-viewer/currency-history-error-edit-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         locals: {
                             entityId: actionData.object.id
                         }
@@ -386,11 +386,13 @@
                 case 'complex-transaction-import-scheme':
 
                     dialogOptions = {
-                        controller: 'TransactionImportSchemeV2EditDialogController as vm',
+                        controller: 'TransactionImportSchemeV2DialogController as vm',
                         templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-v2-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         locals: {
-                            schemeId: actionData.object.id
+                            data: {
+                                schemeId: actionData.object.id
+                            }
                         }
                     };
 
@@ -402,7 +404,7 @@
                         vm.entityViewerDataService.setActiveObjectActionData(null); */
                         vm.entityViewerDataService.setRowsActionData(null);
 
-                        if (res.status === 'agree') {
+                        /*if (res.status === 'agree') {
 
                             var objects = vm.entityViewerDataService.getObjects();
 
@@ -424,7 +426,7 @@
 
                             vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
-                        }
+                        }*/
                     });
 
                     break;
@@ -434,7 +436,7 @@
                     dialogOptions = {
                         controller: 'SimpleEntityImportSchemeV2EditDialogController as vm',
                         templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-v2-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         locals: {
                             data: {
                                 schemeId: actionData.object.id
@@ -547,7 +549,7 @@
                     /* $mdDialog.show({
                         controller: 'EntityViewerEditDialogController as vm',
                         templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: activeObject.event,
                         //clickOutsideToClose: false,
                         locals: {
@@ -639,6 +641,7 @@
                 $mdDialog.show({
                     controller: 'EntityAsJsonEditorDialogController as vm',
                     templateUrl: 'views/dialogs/entity-as-json-editor-dialog-view.html',
+                    parent: document.querySelector(".dialog-containers-wrap"),
                     multiple: true,
                     locals: {
                         data: {
@@ -664,6 +667,7 @@
             $mdDialog.show({
                 controller: 'BulkJsonViewDialogController as vm',
                 templateUrl: 'views/dialogs/bulk-json-view-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 multiple: true,
                 locals: {
                     data: {
@@ -683,7 +687,7 @@
             $mdDialog.show({
                 controller: 'EntityViewerRestoreDeletedBulkDialogController as vm',
                 templateUrl: 'views/entity-viewer/entity-viewer-entity-restore-deleted-bulk-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: event,
                 //clickOutsideToClose: false,
                 locals: {
@@ -696,13 +700,11 @@
                 }
             }).then(function (res) {
 
-                /* vm.entityViewerDataService.setActiveObjectAction(null);
-                vm.entityViewerDataService.setActiveObjectActionData(null); */
                 vm.entityViewerDataService.setRowsActionData(null);
 
                 if (res.status === 'agree') {
 
-                    var evOptions = vm.entityViewerDataService.getEntityViewerOptions();
+                    /*var evOptions = vm.entityViewerDataService.getEntityViewerOptions();
                     var objects = vm.entityViewerDataService.getObjects();
                     var restoredEntitiesIds = res.data.itemsIds;
 
@@ -737,7 +739,9 @@
 
                     });
 
-                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+                    vm.entityViewerEventService.dispatchEvent(evEvents.REDRAW_TABLE);*/
+                    vm.entityViewerDataService.resetTableContent();
+                    vm.entityViewerEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
                 }
             });
@@ -756,7 +760,6 @@
             });
 
             firstDleIndex = vm.entityViewerEventService.addEventListener(evEvents.DATA_LOAD_END, function () {
-                console.log("testing328.entityViewerController first DATA_LOAD_END");
                 /* *
                  * Fixes scenario when DATA_LOAD_END
                  * called inside evDataProviderService.updateDataStructure()
@@ -938,7 +941,7 @@
                             $mdDialog.show({
                                 controller: 'EntityViewerDeleteBulkDialogController as vm',
                                 templateUrl: 'views/entity-viewer/entity-viewer-entity-delete-bulk-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: document.querySelector('.dialog-containers-wrap'),
                                 targetEvent: actionData.event,
                                 //clickOutsideToClose: false,
                                 locals: {
@@ -1028,7 +1031,7 @@
                             /* $mdDialog.show({
                                 controller: 'EntityViewerEditDialogController as vm',
                                 templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: document.querySelector('.dialog-containers-wrap'),
                                 targetEvent: activeObject.event,
                                 locals: {
                                     entityType: 'instrument',
@@ -1259,7 +1262,7 @@
                     $mdDialog.show({
                         controller: 'InfoDialogController as vm',
                         templateUrl: 'views/info-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         clickOutsideToClose: false,
                         preserveScope: true,
                         autoWrap: true,
@@ -1523,7 +1526,7 @@
                         $mdDialog.show({
                             controller: 'LayoutChangesLossWarningDialogController as vm',
                             templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             preserveScope: true,
                             autoWrap: true,
                             multiple: true,

@@ -196,7 +196,7 @@
                                         </div>
 
                                         <div>
-                                            <md-button ng-click="vm.recalculatePermissions()" class="md-raised">
+                                            <md-button ng-click="vm.recalculatePermissions()" class="">
                                                 Save and Recalculate Complex Transaction Permissions
                                             </md-button>
                                         </div>
@@ -262,7 +262,7 @@
                        data-ng-disabled="!vm.checkMainDataReadyStatus()" ng-class="{'disabled-btn': vm.processing || !vm.hasEditPermission}">
                 Make a copy
             </md-button>
-            <md-button class="md-raised" ng-click="vm.cancel()">
+            <md-button class="" ng-click="vm.cancel()">
                 Cancel
             </md-button>
             <md-button class="md-raised m-r-24"
@@ -271,7 +271,7 @@
                        style="margin-left:20px;">
                 Save
             </md-button>
-            <md-button class="md-raised"
+            <md-button class="md-raised md-primary"
                        ng-click="vm.saveAndExit()"
                        data-ng-disabled="!vm.checkMainDataReadyStatus() || vm.processing || !vm.hasEditPermission">
                 Save and Exit

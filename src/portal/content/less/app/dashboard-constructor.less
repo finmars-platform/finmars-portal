@@ -163,7 +163,7 @@
   }
 
   .dashboard-constructor-empty-cell {
-    border: 1px dotted #000;
+    border: 1px dotted var(--table-border-color);
     padding: 6px 8px;
     text-align: center;
     fill: #898989;
@@ -207,7 +207,7 @@
     width: 100px;
 
     //background: #ddd;
-    background: #eff4f7;
+    background: var(--page-background-color);
     margin-top: 14px;
 
   }
@@ -392,7 +392,7 @@
 
 .constructor-button-set-grid-elem {
   float: left;
-  border: 1px solid #ddd;
+  border: 1px solid var(--table-border-color);
   margin: 8px;
   padding: 16px;
 }
@@ -402,12 +402,14 @@
   // TODO refactor class names
   .ec-tab-btn {
     opacity: 1;
+
     &:hover {
       opacity: .6;
     }
   }
 
 }
+
 .accordion-constructor-row {
 
   height: 50px;
@@ -415,13 +417,14 @@
   // TODO refactor class names
   .ec-tab-btn {
     opacity: 1;
+
     &:hover {
       opacity: .6;
     }
   }
 
   .dashboard-constructor-empty-cell {
-    border: 1px dotted #000;
+    border: 1px dotted var(--table-border-color);
     padding: 6px 8px;
     text-align: center;
     fill: #898989;
@@ -475,8 +478,8 @@
   position: fixed;
   bottom: 0;
   width: calc(100% - 181px);
-  background: #fff;
-  border-top: 1px solid #ddd;
+  background-color: var(--dialog-background-color);
+  border-top: 1px solid var(--secondary-color);
   margin-left: -10px;
   padding-left: 8px;
 }

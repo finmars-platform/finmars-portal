@@ -21,7 +21,7 @@
             <span class="material-icons">save</span>
         </md-button>
 
-        <md-button ng-if="!isRootEntityViewer"
+        <md-button ng-if="!isRootEntityViewer && viewContext !== 'dashboard'"
                    class="g-filter-area-toggle active margin-0"
                    data-ng-click="toggleFilterBlock($event)">
             <div class="flex-column flex-i-center">
@@ -143,7 +143,6 @@
                                            data-ev-event-service="evEventService"
                                            data-attribute-data-service="attributeDataService"
                                            data-is-disabled="viewContext === 'split_panel' && reportLayoutOptions.useDateFromAbove"
-                                           data-popup-x="cDatepickerPosX"
                     ></complex-zh-datepicker>
                 </div>
             </div>
@@ -159,8 +158,7 @@
                                            data-ev-event-service="evEventService"
                                            data-attribute-data-service="attributeDataService"
                                            data-is-disabled="viewContext === 'split_panel' && reportLayoutOptions.useDateFromAbove"
-                                           data-popup-x="cDatepickerPosX">
-                    </complex-zh-datepicker>
+                    ></complex-zh-datepicker>
                 </div>
             </div>
 

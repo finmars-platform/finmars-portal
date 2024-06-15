@@ -192,6 +192,7 @@
             $mdDialog.show({
                 controller: 'ConfigurationDialogController as vm',
                 templateUrl: 'views/dialogs/configuration-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: {
                     data: {
                         id: item.id
@@ -219,14 +220,12 @@
             $mdDialog.show({
                 controller: 'ConfigurationDialogController as vm',
                 templateUrl: 'views/dialogs/configuration-dialog-view.html',
+                parent: document.querySelector('.dialog-containers-wrap'),
                 locals: {
                     data: {}
                 },
                 targetEvent: $event,
-                preserveScope: true,
                 multiple: true,
-                autoWrap: true,
-                skipHide: true
             }).then(function (res) {
 
                 if (res.status === 'agree') {

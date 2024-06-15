@@ -7,7 +7,7 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content style="background: #E5E5E5;">
+    <md-dialog-content>
         <div data-ng-if="vm.readyStatus.schemes" layout="column">
             <div layout="row">
                 <md-card style="width: 100%; min-height: 450px;">
@@ -119,7 +119,7 @@
                     <div layout="column">
                         <h2 class="title-padding">Instrument data</h2>
                         <div layout="row">
-                            <md-button class="md-raised" data-ng-click="vm.recalculate()">Recalculate</md-button>
+                            <md-button class="" data-ng-click="vm.recalculate()">Recalculate</md-button>
                             <md-button class="md-raised md-primary" ng-click="vm.agree()" style="margin-right:20px;">
                                 Add to database
                             </md-button>
@@ -802,7 +802,7 @@
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button class="md-raised" ng-click="vm.cancel()">
+        <md-button class="" ng-click="vm.cancel()">
             Cancel
         </md-button>
     </md-dialog-actions>

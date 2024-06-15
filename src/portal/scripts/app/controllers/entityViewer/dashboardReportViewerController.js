@@ -8,6 +8,7 @@
 
     var localStorageService = require('../../../../../shell/scripts/app/services/localStorageService');
     var evEvents = require('../../services/entityViewerEvents');
+    const pricingPolicyService = require("../../services/pricingPolicyService").default;
     // var usersService = require('../../services/usersService');
     var objectComparison = require('../../helpers/objectsComparisonHelper');
 
@@ -27,7 +28,7 @@
 
         var vm = this;
 
-        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, globalDataService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper);
+        var sharedLogicHelper = new RvSharedLogicHelper(vm, $scope, $mdDialog, toastNotificationService, globalDataService, pricingPolicyService, priceHistoryService, currencyHistoryService, metaContentTypesService, pricesCheckerService, expressionService, rvDataProviderService, reportHelper);
 
         vm.readyStatus = {
             attributes: false,

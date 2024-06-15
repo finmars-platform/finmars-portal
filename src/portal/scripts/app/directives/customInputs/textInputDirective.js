@@ -12,10 +12,11 @@
 				label: "@",
 				placeholderText: "@",
 				model: "=",
+				maxLength:"@",
 				customButtons: '=',
 				customStyles: "=",
 				eventSignal: "=",
-				smallOptions: "=",
+				smallOptions: "<",
 
 				isDisabled: "=",
 				isLocked: "@",
@@ -32,6 +33,7 @@
 
 				let inputElem; // = elem[0].querySelector(".textInputElem");
 				let stylePreset;
+				const dialogParent = document.querySelector('.dialog-containers-wrap');
 
 				/* TEXTAREA CODE
 
@@ -59,13 +61,11 @@
 					notNull: turn on error mode if field is not filled
 					noIndicatorBtn: whether to show button at the right part of input
 					readonly: making input readonly
-					dialogParent: 'string' - querySelector content for element to insert mdDialog into
 				*/
 				if (scope.smallOptions) {
 
 					scope.tooltipText = scope.smallOptions.tooltipText;
 					scope.isReadonly = scope.smallOptions.readonly;
-					scope.dialogParent = scope.smallOptions.dialogParent;
 					scope.noIndicatorBtn = scope.smallOptions.noIndicatorBtn;
 
 				}
@@ -187,18 +187,6 @@
 				};
 
 				scope.openTextInDialog = function ($event) {
-
-					var dialogParent = angular.element(document.body);
-
-					if (scope.dialogParent) {
-
-						var dialogParentElem = document.querySelector(scope.dialogParent);
-
-						if (dialogParentElem) {
-							dialogParent = dialogParentElem
-						}
-
-					}
 
 					$mdDialog.show({
 						controller: "TextEditorDialogController as vm",

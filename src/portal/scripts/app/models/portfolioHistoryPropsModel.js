@@ -71,6 +71,11 @@
                 "value_type": 20
             },
             {
+                "key": "gav",
+                "name": "GAV",
+                "value_type": 20
+            },
+            {
                 "key": "total",
                 "name": "Total",
                 "value_type": 20

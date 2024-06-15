@@ -1,14 +1,3 @@
-.md-button.link-button {
-  background-color: #ffffff;
-  color: #f05a22;
-  // font-weight: 700;
-  font-weight: 500;
-  border-radius: 3px;
-
-  &:not([disabled]):hover {
-    background-color: @btnHover;
-  }
-}
 
 .cancel-small-btn {
   min-width: 24px;
@@ -24,7 +13,7 @@
   }
 
   .material-icons {
-    color: #747474;
+    color: var(--secondary-color);
     font-size: 24px;
   }
 }
@@ -123,7 +112,7 @@ span.material-icons.unread-notifications {
     width: 11px;
     height: 11px;
     border-radius: 50%;
-    background: #f05a22;
+    background: var(--primary-color);;
     border: 2px solid #f2f1f1;
   }
 }
@@ -155,3 +144,61 @@ span.material-icons.unread-notifications {
     justify-content: center;
   }
 }
+
+// 2024-04-28 szhitenev, unified styles for dropdown select option
+.popup-menu-item, .md-select-option, .instrument-select-input-sel-option {
+  min-height: 2rem;
+  color: var(--secondary-color);
+  text-align: left;
+  display: flex;
+  align-items: center;
+  border-radius: 0;
+  font-size: 15px;
+  text-transform: none;
+  font-weight: 400;
+  margin: auto 0;
+  padding: 6px 16px;
+  width: 100%;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--state-active-background-color);
+  }
+}
+
+.custom-input-sel-menu-block .custom-input-sel-option {
+  min-height: 2rem;
+  color: var(--secondary-color);
+  text-align: left;
+  display: flex;
+  align-items: center;
+  border-radius: 0;
+  font-size: 15px;
+  text-transform: none;
+  font-weight: 400;
+  margin: auto 0;
+  padding: 6px 16px;
+  width: 100%;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--state-active-background-color);
+  }
+}
+
+@cardBackgroundColor: var(--card-background-color);
+
+//# region Cards
+md-card.md-default-theme, md-card {
+  background: @cardBackgroundColor;
+  color: var(--secondary-color);
+}
+
+md-card {
+  .custom-input-container {
+    .custom-input-textarea-span-pan {
+      background: @cardBackgroundColor;
+    }
+  }
+}
+//# endregion Cards

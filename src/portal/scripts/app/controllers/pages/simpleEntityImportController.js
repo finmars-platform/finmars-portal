@@ -86,6 +86,7 @@
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
                         templateUrl: 'views/dialogs/success-dialog-view.html',
+                        parent: document.querySelector(".dialog-containers-wrap"),
                         targetEvent: $event,
                         locals: {
                             success: {
@@ -126,6 +127,7 @@
             $mdDialog.show({
                 controller: 'SimpleEntityImportSchemeCreateDialogController as vm',
                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,
@@ -147,6 +149,7 @@
             $mdDialog.show({
                 controller: 'SimpleEntityImportSchemeEditDialogController as vm',
                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 targetEvent: $event,
                 preserveScope: true,
                 multiple: true,
@@ -172,6 +175,7 @@
             $mdDialog.show({
                 controller: 'SimpleEntityImportSchemeV2EditDialogController as vm',
                 templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-scheme-v2-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 locals: {
                     data: {
                         schemeId: vm.config.scheme
@@ -340,6 +344,7 @@
                         $mdDialog.show({
                             controller: 'SuccessDialogController as vm',
                             templateUrl: 'views/dialogs/success-dialog-view.html',
+                            parent: document.querySelector(".dialog-containers-wrap"),
                             targetEvent: $event,
                             preserveScope: true,
                             multiple: true,
@@ -371,6 +376,7 @@
                         $mdDialog.show({
                             controller: 'SimpleEntityImportErrorsDialogController as vm',
                             templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-errors-dialog-view.html',
+                            parent: document.querySelector(".dialog-containers-wrap"),
                             targetEvent: $event,
                             preserveScope: true,
                             multiple: true,
@@ -559,6 +565,7 @@
                         $mdDialog.show({
                             controller: 'SimpleEntityImportErrorsDialogController as vm',
                             templateUrl: 'views/dialogs/simple-entity-import/simple-entity-import-errors-dialog-view.html',
+                            parent: document.querySelector(".dialog-containers-wrap"),
                             targetEvent: $event,
                             preserveScope: true,
                             multiple: true,
@@ -873,27 +880,40 @@
         vm.downloadFile = function ($event, item) {
 
             // TODO WTF why systemMessage Service, replace with FilePreview Service later
-            systemMessageService.viewFile(item.file_report).then(function (data) {
+            systemMessageService.viewFile(item.file_report).then(function (blob) {
 
-                console.log('data', data);
+                var reader = new FileReader();
 
-                $mdDialog.show({
-                    controller: 'FilePreviewDialogController as vm',
-                    templateUrl: 'views/dialogs/file-preview-dialog-view.html',
-                    parent: angular.element(document.body),
-                    targetEvent: $event,
-                    clickOutsideToClose: false,
-                    preserveScope: true,
-                    autoWrap: true,
-                    skipHide: true,
-                    multiple: true,
-                    locals: {
-                        data: {
-                            content: data,
-                            info: item
-                        }
+                reader.addEventListener("loadend", function (e) {
+
+                    var content = reader.result;
+
+                    if (item.file_report_object.file_url.indexOf('.json') !== -1) {
+                        content = JSON.parse(content)
                     }
+
+                    $mdDialog.show({
+                        controller: 'FilePreviewDialogController as vm',
+                        templateUrl: 'views/dialogs/file-preview-dialog-view.html',
+                        parent: document.querySelector('.dialog-containers-wrap'),
+                        targetEvent: $event,
+                        clickOutsideToClose: false,
+                        preserveScope: true,
+                        autoWrap: true,
+                        skipHide: true,
+                        multiple: true,
+                        locals: {
+                            data: {
+                                content: content,
+                                info: item
+                            }
+                        }
+                    });
+
+
                 });
+
+                reader.readAsText(blob);
 
             })
 

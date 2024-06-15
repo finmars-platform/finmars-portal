@@ -109,19 +109,6 @@
 
                     </td>
 
-                    <td class="edit-state-td ttype-inputs-checkbox-td">
-
-                        <md-input-container class="no-error-spacer" data-ng-if="input.value_type == 100">
-                            <md-checkbox data-ng-model="input.is_fill_from_context"
-                            ></md-checkbox>
-                        </md-input-container>
-
-                        <div data-ng-if="input.value_type != 100">
-                            &nbsp;
-                        </div>
-
-                    </td>
-
                     <td>
                         <div data-ng-if="input.value_type != 100">
 
@@ -131,25 +118,7 @@
 
                         </div>
 
-                        <div data-ng-if="input.is_fill_from_context && input.value_type == 100">
-
-                            <md-select ng-model="input.context_property"
-                                       md-container-class="common-select-container">
-
-                                <div class="select-options-holder">
-
-                                    <md-option
-                                            data-ng-repeat="item in vm.contextProperties[input.content_type]"
-                                            ng-value="item.key">
-                                        {{item.name}}
-                                    </md-option>
-
-                                </div>
-                            </md-select>
-
-                        </div>
-
-                        <div data-ng-if="!input.is_fill_from_context && input.value_type == 100">
+                        <div data-ng-if="input.value_type == 100">
 
                             <md-input-container class="no-error-spacer m-0">
                                 <input type="text" data-ng-model="input.value" disabled>
@@ -176,7 +145,7 @@
         <md-button ng-click="vm.cancel()">
             Close
         </md-button>
-        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button class="" ng-click="vm.agree()" style="margin-right:20px;">
             Ok
         </md-button>
     </md-dialog-actions>

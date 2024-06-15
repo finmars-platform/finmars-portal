@@ -1,0 +1,22 @@
+<div class="bind-field-attachment-content overflow-auto">
+    <div class="bind-field-json-content-button" data-ng-click="openJsonEditor($event, entity)">
+
+        <table>
+            <thead>
+            <tr>
+                <th>Identifier</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+
+                    <tr data-ng-repeat="item in items" >
+                        <td>{{item.key}}</td>
+                        <td>{{item.value}}</td>
+                    </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+</div>

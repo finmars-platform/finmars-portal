@@ -7,7 +7,6 @@
 
     var transactionTypeService = require('../../services/transactionTypeService');
     var csvImportSchemeService = require('../../services/import/csvImportSchemeService');
-    var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
     var complexImportSchemeService = require('../../services/import/complexImportSchemeService');
 
     var instrumentDownloadSchemeService = require('../../services/import/instrumentDownloadSchemeService');
@@ -18,7 +17,7 @@
 
     var rvHelper = require('../../helpers/rv.helper');
 
-    module.exports = function dashboardButtonSetDirective($mdDialog, $state) {
+    module.exports = function dashboardButtonSetDirective($mdDialog, $state, transactionImportSchemeService, pricingPolicyService) {
         return {
             restriction: 'E',
             templateUrl: 'views/directives/dashboard/dashboard-button-set-view.html',
@@ -38,7 +37,7 @@
                     return scope.componentName;
                 }
 
-                scope.handleAction = function ($event, item) {
+                scope.handleAction = async function ($event, item) {
 
                     setTimeout(function () {
                         scope.componentName = scope.componentData.custom_component_name; // important after click thing
@@ -75,7 +74,7 @@
                             if (lastChangedComp.type === 'report_viewer' && lastOutput && lastOutput.data && typeof lastOutput.data === 'object') {
 
                                 var reportOptions = lastOutput.data.reportOptions;
-                                contextData = rvHelper.getContextDataForRowAction(reportOptions, lastOutput.data, lastChangedComp.settings.entityType);
+                                contextData = await rvHelper.getContextDataForRowAction(reportOptions, lastOutput.data, lastChangedComp.settings.entityType, pricingPolicyService);
 
                             }
 
@@ -99,7 +98,7 @@
                                     $mdDialog.show({
                                         controller: 'ComplexTransactionAddDialogController as vm',
                                         templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
-                                        parent: angular.element(document.body),
+                                        parent: document.querySelector('.dialog-containers-wrap'),
                                         targetEvent: $event,
                                         locals: {
                                             entityType: 'complex-transaction',
@@ -119,7 +118,7 @@
                                     $mdDialog.show({
                                         controller: 'ComplexTransactionAddDialogController as vm',
                                         templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
-                                        parent: angular.element(document.body),
+                                        parent: document.querySelector('.dialog-containers-wrap'),
                                         targetEvent: $event,
                                         locals: {
                                             entityType: 'complex-transaction',
@@ -138,7 +137,7 @@
                             $mdDialog.show({
                                 controller: 'ComplexTransactionAddDialogController as vm',
                                 templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
-                                parent: angular.element(document.body),
+                                parent: document.querySelector('.dialog-containers-wrap'),
                                 targetEvent: $event,
                                 locals: {
                                     entityType: 'complex-transaction',
@@ -155,7 +154,7 @@
                         $mdDialog.show({
                             controller: 'EntityViewerAddDialogController as vm',
                             templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             targetEvent: $event,
                             locals: {
                                 entityType: item.target,
@@ -181,7 +180,7 @@
                                     $mdDialog.show({
                                         controller: 'InfoDialogController as vm',
                                         templateUrl: 'views/info-dialog-view.html',
-                                        parent: angular.element(document.body),
+                                        parent: document.querySelector('.dialog-containers-wrap'),
                                         targetEvent: $event,
                                         clickOutsideToClose: false,
                                         preserveScope: true,

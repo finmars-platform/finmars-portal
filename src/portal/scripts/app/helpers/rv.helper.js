@@ -108,7 +108,7 @@
 
     };
 
-	const getContextDataForRowAction = function (reportOptions, rowObject, entityType) {
+	const getContextDataForRowAction = async function (reportOptions, rowObject, entityType, pricingPolicyService) {
 
 		let effective_date = reportOptions.report_date;
 		let report_date = null;
@@ -169,21 +169,6 @@
 			contextData.position_size = rowObject['position_size'];
 		}
 
-		if (reportOptions['pricing_policy']) {
-			contextData.pricing_policy = reportOptions.pricing_policy;
-			contextData.pricing_policy_object = Object.assign({}, reportOptions.pricing_policy_object)
-		}
-
-		/* if (rowObject['pricing_currency.id']) {
-			contextData.pricing_currency = rowObject['pricing_currency.id'];
-			contextData.pricing_currency_object = {
-				id: rowObject['pricing_currency.id'],
-				name: rowObject['pricing_currency.name'],
-				user_code: rowObject['pricing_currency.user_code'],
-				content_type: "currencies.currency"
-			};
-		} */
-
 		if (rowObject['instrument.pricing_currency.id']) {
 			contextData.pricing_currency = rowObject['instrument.pricing_currency.id'];
 			contextData.pricing_currency_object = {
@@ -210,26 +195,6 @@
 				id: rowObject['instrument.id'],
 				name: rowObject['instrument.name'],
 				user_code: rowObject['instrument.user_code'],
-				content_type: "instruments.instrument"
-			};
-		}
-
-		if (rowObject['allocation_balance.id']) {
-			contextData.allocation_balance = rowObject['allocation_balance.id'];
-			contextData.allocation_balance_object = {
-				id: rowObject['allocation_balance.id'],
-				name: rowObject['allocation_balance.name'],
-				user_code: rowObject['allocation_balance.user_code'],
-				content_type: "instruments.instrument"
-			};
-		}
-
-		if (rowObject['allocation_pl.id']) {
-			contextData.allocation_pl = rowObject['allocation_pl.id'];
-			contextData.allocation_pl_object = {
-				id: rowObject['allocation_pl.id'],
-				name: rowObject['allocation_pl.name'],
-				user_code: rowObject['allocation_pl.user_code'],
 				content_type: "instruments.instrument"
 			};
 		}
@@ -282,6 +247,43 @@
 				user_code: rowObject['strategy3.user_code'],
 				content_type: "strategies.strategy3"
 			};
+		}
+
+		if (entityType !== "transaction-report") {
+
+			if (reportOptions['pricing_policy']) {
+
+				if (!pricingPolicyService) {
+					throw "Error [rv.helper.getContextDataForRowAction] pricingPolicyService not provided"
+				}
+
+				const res = await pricingPolicyService.getByUserCode(reportOptions.pricing_policy);
+
+				contextData.pricing_policy = reportOptions.pricing_policy;
+				contextData.pricing_policy_object = res;
+
+			}
+
+			if (rowObject['allocation_balance.id']) { //
+				contextData.allocation_balance = rowObject['allocation_balance.id'];
+				contextData.allocation_balance_object = {
+					id: rowObject['allocation_balance.id'],
+					name: rowObject['allocation_balance.name'],
+					user_code: rowObject['allocation_balance.user_code'],
+					content_type: "instruments.instrument"
+				};
+			}
+
+			if (  rowObject['allocation_pl.id'] ) {
+				contextData.allocation_pl = rowObject['allocation_pl.id'];
+				contextData.allocation_pl_object = {
+					id: rowObject['allocation_pl.id'],
+					name: rowObject['allocation_pl.name'],
+					user_code: rowObject['allocation_pl.user_code'],
+					content_type: "instruments.instrument"
+				};
+			}
+
 		}
 
 		return contextData;

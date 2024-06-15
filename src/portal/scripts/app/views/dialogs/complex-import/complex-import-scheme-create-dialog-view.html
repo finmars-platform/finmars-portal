@@ -14,7 +14,7 @@
             </div>
         </div>
     </md-toolbar>
-    <md-dialog-content style="background: #E5E5E5;">
+    <md-dialog-content>
         <md-content>
             <div data-ng-if="vm.checkReadyStatus()" class="position-relative">
 
@@ -67,12 +67,12 @@
                                                        data-ng-click="vm.deleteAction(item, $index)">
                                                 Delete
                                             </md-button>
-                                            <md-button class="md-raised"
+                                            <md-button class=""
                                                        data-ng-class="{'disabled-btn': $index == 0}"
                                                        data-ng-click="vm.moveUp(item, $index)">
                                                 Move up
                                             </md-button>
-                                            <md-button class="md-raised"
+                                            <md-button class=""
                                                        data-ng-class="{'disabled-btn': $index == vm.scheme.actions.length - 1}"
                                                        data-ng-click="vm.moveDown(item, $index)">
                                                 Move down
@@ -313,11 +313,11 @@
                     <md-card flex="100" class="inm-card-special">
                         <md-card-content layout="row" layout-align="end center">
 
-                            <md-button class="md-raised" data-ng-click="vm.addSimpleEntityImportAction()">Add Simple
+                            <md-button class="" data-ng-click="vm.addSimpleEntityImportAction()">Add Simple
                                 Entity
                                 Import Action
                             </md-button>
-                            <md-button class="md-raised" data-ng-click="vm.addTransactionImportAction()">Add Transaction
+                            <md-button class="" data-ng-click="vm.addTransactionImportAction()">Add Transaction
                                 Import Action
                             </md-button>
 
@@ -342,10 +342,10 @@
         </md-content>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button class="md-raised" ng-click="vm.cancel()">
+        <md-button class="" ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;" data-ng-class="{'disabled-btn': vm.processing}">
+        <md-button class="" ng-click="vm.agree()" style="margin-right:20px;" data-ng-class="{'disabled-btn': vm.processing}">
             Create
         </md-button>
     </md-dialog-actions>

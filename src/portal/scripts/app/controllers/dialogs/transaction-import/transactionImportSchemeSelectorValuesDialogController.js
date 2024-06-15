@@ -5,21 +5,38 @@
 
     'use strict';
 
-    var ScrollHelper = require('../../../helpers/scrollHelper');
+    const metaHelper = require('../../../helpers/meta.helper').default;
+    const ScrollHelper = require('../../../helpers/scrollHelper').default;
 
-    var scrollHelper = new ScrollHelper();
+    const scrollHelper = new ScrollHelper();
 
     module.exports = function transactionImportSchemeSelectorValuesDialogController($scope, $mdDialog, commonDialogsService, data) {
 
         var vm = this;
 
-        vm.scheme = data.scheme;
-
         vm.dragAndDropInited = false;
 
         vm.selectorValues = {
-            value: JSON.parse(angular.toJson(vm.scheme.selector_values))
+            value: []
         };
+
+        const formatForFrontEnd = function (item, index) {
+
+            const copy = JSON.parse(angular.toJson(item));
+
+            copy.order = index;
+
+            copy.frontOptions = {
+                key: metaHelper.generateUniqueId(index),
+            }
+
+            return copy;
+
+        };
+
+        if (data.selector_values?.length) {
+            vm.selectorValues.value = data.selector_values.map(formatForFrontEnd);
+        }
 
         vm.filterTerms = {
             value: "",
@@ -31,7 +48,7 @@
             return item;
         };
 
-        vm.deleteSelector = function($event, $index) {
+        vm.deleteSelector = function($index) {
             vm.selectorValues.value.splice($index, 1);
             vm.selectorValues.value = vm.selectorValues.value.map(updateOrder);
         };
@@ -39,9 +56,12 @@
         vm.addSelector = function () {
 
             vm.selectorValues.value.push({
-               value: '',
-               notes: '',
-               order: vm.selectorValues.value.length
+                value: '',
+                notes: '',
+                order: vm.selectorValues.value.length,
+                frontOptions: {
+                    key: metaHelper.generateUniqueId(vm.selectorValues.value.length),
+                }
             });
 
         };
@@ -81,9 +101,10 @@
                     }
 
                     var rowToInsert = vm.selectorValues.value[draggedRowOrder];
+
                     vm.selectorValues.value.splice(draggedRowOrder, 1);
 
-                    if (siblingRowOrder) {
+                    if (siblingRowOrder || siblingRowOrder === 0) {
 
                         for (var i = 0; i < vm.selectorValues.value.length; i++) {
                             if (vm.selectorValues.value[i].order === siblingRowOrder) {
@@ -101,6 +122,7 @@
                     /*for (var i = 0; i < vm.selectorValues.value.length; i++) {
                         vm.selectorValues.value[i].order = i;
                     }*/
+
                     vm.selectorValues.value = vm.selectorValues.value.map(updateOrder);
 
                 });
@@ -184,6 +206,8 @@
 
             }
 
+            vm.selectorValues.value = metaHelper.clearFrontendOptions(vm.selectorValues.value);
+
             $mdDialog.hide({status: 'agree', data: vm.selectorValues.value});
 
         };
@@ -192,12 +216,7 @@
             var DnDScrollElem = document.querySelector('.vc-dnd-scrollable-elem');
             scrollHelper.setDnDScrollElem(DnDScrollElem);
 
-            /* vm.selectorValues.value.forEach(function (row, index) {
-                if (!row.order) {
-                    row.order = index;
-                }
-            }); */
-            vm.selectorValues.value = vm.selectorValues.value.map(updateOrder);
+            // vm.selectorValues.value = vm.selectorValues.value.map(updateOrder);
         };
 
         init();

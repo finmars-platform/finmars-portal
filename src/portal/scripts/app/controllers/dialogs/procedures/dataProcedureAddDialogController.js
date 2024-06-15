@@ -8,12 +8,11 @@
     var dataProcedureService = require('../../../services/procedures/dataProcedureService').default;
     var dataProvidersService = require('../../../services/import/dataProvidersService');
 
-    var transactionImportSchemeService = require('../../../services/import/transactionImportSchemeService')
     var csvImportSchemeService = require('../../../services/import/csvImportSchemeService')
 
     var entityResolverService = require('../../../services/entityResolverService')
 
-    module.exports = function ($scope, $mdDialog, data) {
+    module.exports = function ($scope, $mdDialog, transactionImportSchemeService, data) {
 
         var vm = this;
 

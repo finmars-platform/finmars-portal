@@ -43,7 +43,14 @@
                 $scope.isRootEntityViewer = $scope.evDataService.isRootEntityViewer();
                 $scope.viewContext = $scope.evDataService.getViewContext();
 
-                $scope.isFiltersOpened = !$scope.hideFiltersBlock; // when inside dashboard or split panel
+                // filter area always shown inside dashboard
+                if ($scope.viewContext === "dashboard") {
+                    $scope.areFiltersOpened = true;
+
+                } else {
+                    $scope.areFiltersOpened = !$scope.hideFiltersBlock; // e.g. when inside split panel
+                }
+
                 vm.hideUseFromAboveFilters = $scope.hideUseFromAboveFilters;
 
                 vm.popupPosX = {value: null}
@@ -406,6 +413,8 @@
                 vm.exportAsCSV = function () {
 
                     var flatList = $scope.evDataService.getFlatList();
+                    var filteredList = reportCopyHelper.filterSelected($scope.evDataService, flatList, $scope.isReport);
+                    flatList = filteredList.length ? filteredList : flatList;
                     var columns = $scope.evDataService.getColumns();
                     var groups = $scope.evDataService.getGroups();
 
@@ -414,6 +423,9 @@
                 };
 
                 vm.exportAsExcel = function () {
+                    var flatList = $scope.evDataService.getFlatList();
+                    var filteredList = reportCopyHelper.filterSelected($scope.evDataService, flatList, $scope.isReport);
+                    flatList = filteredList.length ? filteredList : flatList;
 
                     var data = {
                         entityType: vm.entityType,
@@ -421,7 +433,7 @@
                             columns: $scope.evDataService.getColumns(),
                             groups: $scope.evDataService.getGroups()
                         },
-                        content: $scope.evDataService.getFlatList()
+                        content: flatList
                     };
 
                     exportExcelService.generateExcel(data).then(function (blob) {
@@ -489,7 +501,7 @@
                         $mdDialog.show({
                             controller: 'gModalController as vm', // ../directives/gTable/gModalComponents
                             templateUrl: 'views/directives/groupTable/g-modal-view.html',
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             targetEvent: ev,
                             locals: {
                                 attributeDataService: $scope.attributeDataService,
@@ -834,23 +846,27 @@
 
                     }); */
 
-                    $scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_BLOCK, function () {
+                    if ($scope.viewContext !== "dashboard") {
 
-                        $scope.isFiltersOpened = !$scope.isFiltersOpened;
+                        $scope.evEventService.addEventListener(evEvents.TOGGLE_FILTER_BLOCK, function () {
 
-                        setTimeout(() => {
+                            $scope.areFiltersOpened = !$scope.areFiltersOpened;
 
-                            const interfaceLayout = $scope.evDataService.getInterfaceLayout();
-                            const gFiltersHeight = gFiltersElem.clientHeight;
+                            setTimeout(() => {
 
-                            interfaceLayout.filterArea.height = gFiltersHeight;
-                            $scope.evDataService.setInterfaceLayout(interfaceLayout);
+                                const interfaceLayout = $scope.evDataService.getInterfaceLayout();
+                                const gFiltersHeight = gFiltersElem.clientHeight;
 
-                            $scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
+                                interfaceLayout.filterArea.height = gFiltersHeight;
+                                $scope.evDataService.setInterfaceLayout(interfaceLayout);
 
-                        }, 500); // Transition time for .g-filters
+                                $scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE_VIEWPORT);
 
-                    });
+                            }, 500); // Transition time for .g-filters
+
+                        });
+
+                    }
 
                     /* $scope.evEventService.addEventListener(evEvents.ACTIVE_OBJECT_FROM_ABOVE_CHANGE, function () {
 

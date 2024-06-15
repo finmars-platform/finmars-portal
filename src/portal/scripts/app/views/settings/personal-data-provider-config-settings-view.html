@@ -2,10 +2,11 @@
            class="draggable-dialog width-50"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>Edit identification config for {{vm.provider.name}}</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="dit identification config for {{vm.provider.name}}"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content>
         <form class="p-24" name="credentialForm">

@@ -1,11 +1,10 @@
 <md-dialog class="draggable-dialog width-50" aria-label="instr pricing scheme add dialog" drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Create Instrument Pricing Scheme</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Create Instrument Pricing Scheme"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content class="p-24">
 
@@ -347,7 +346,7 @@
                 </div>
 
                 <div>
-                    <md-button class="md-raised" data-ng-click="vm.addParameter($event)">Add Parameter</md-button>
+                    <md-button class="" data-ng-click="vm.addParameter($event)">Add Parameter</md-button>
                 </div>
 
                 <div class="pricing-scheme-help-box">
@@ -1247,7 +1246,7 @@
                 </div>
 
                 <div>
-                    <md-button class="md-raised" data-ng-click="vm.addParameter($event)">Add Parameter</md-button>
+                    <md-button class="" data-ng-click="vm.addParameter($event)">Add Parameter</md-button>
                 </div>
 
                 <div class="pricing-scheme-help-box">
@@ -1346,7 +1345,7 @@
 
                             <div>
 
-                                <md-button class="md-raised" data-ng-click="vm.removeTenor($event, item)">Delete
+                                <md-button class="" data-ng-click="vm.removeTenor($event, item)">Delete
                                 </md-button>
 
                             </div>
@@ -1356,7 +1355,7 @@
                     </div>
 
                     <div>
-                        <md-button class="md-raised" data-ng-click="vm.addTenor($event)">Add</md-button>
+                        <md-button class="" data-ng-click="vm.addTenor($event)">Add</md-button>
                     </div>
 
                 </div>
@@ -1680,7 +1679,7 @@
         <md-button ng-click="vm.cancel()">
             Close
         </md-button>
-        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button class="" ng-click="vm.agree()" style="margin-right:20px;">
             Create
         </md-button>
     </md-dialog-actions>

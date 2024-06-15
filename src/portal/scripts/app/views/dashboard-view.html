@@ -87,7 +87,7 @@
 
                     </md-button>
 
-                    <md-button class="g-dashboard-top-button g-top-button" data-ng-click="vm.saveDashboardLayout()">
+                    <md-button class="icon-button-small" data-ng-click="vm.saveDashboardLayout()">
                         <span class="material-icons">save</span>
                         <md-tooltip class="tooltip_1" md-direction="bottom">Save</md-tooltip>
                     </md-button>
@@ -97,13 +97,11 @@
                 <div class="dashboard-tabs-control-panel">
 
                     <md-menu>
-                        <md-button class="dashboard-control-button"
+                        <md-button class="dashboard-control-button icon-button-small"
                                    ng-click="$mdOpenMenu($event)">
-                            <ng-md-icon icon="settings"
-                                        size="20"
-                                        style="fill: #777777">
-                                <md-tooltip class="tooltip_1" md-direction="bottom">Settings</md-tooltip>
-                            </ng-md-icon>
+
+                            <span class="material-icons">settings</span>
+                            <md-tooltip class="tooltip_1" md-direction="bottom">Settings</md-tooltip>
                         </md-button>
 
                         <md-menu-content width="3">
@@ -118,14 +116,11 @@
                     </md-menu>
 
 
-                    <md-button class="dashboard-control-button"
+                    <md-button class="dashboard-control-button icon-button-small"
                                data-ng-click="vm.refresh()"
                                ng-disabled="vm.processing">
-                        <ng-md-icon icon="loop"
-                                    size="20"
-                                    style="fill: #777777">
-                            <md-tooltip class="tooltip_1" md-direction="bottom">Refresh</md-tooltip>
-                        </ng-md-icon>
+                        <span class="material-icons">refresh</span>
+                        <md-tooltip class="tooltip_1" md-direction="bottom">Refresh</md-tooltip>
                     </md-button>
 
                 </div>
@@ -643,7 +638,7 @@
                     Layout
                 </md-button>
                 or select
-                <md-button class="md-raised" ng-click="vm.openLayoutList($event)">Default Layout</md-button>
+                <md-button class="" ng-click="vm.openLayoutList($event)">Default Layout</md-button>
 
             </div>
 

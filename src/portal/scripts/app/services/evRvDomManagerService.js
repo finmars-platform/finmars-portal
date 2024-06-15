@@ -493,6 +493,11 @@
 
 		}
 
+		// TODO: move to entityViewerHelperService.js
+		function isRestorable(entityType) {
+			return !['complex-transaction', 'price-history', 'currency-history', 'portfolio-register'].includes(entityType);
+		}
+
 		//endregion
 
         return {
@@ -512,7 +517,9 @@
 
 			markRowByColor: markRowByColor,
 			removeColorMarkFromAllRows: removeColorMarkFromAllRows,
-			createRowColorPickerMenu: createRowColorPickerMenu
+			createRowColorPickerMenu: createRowColorPickerMenu,
+
+			isRestorable: isRestorable,
 			//endregion
         };
 

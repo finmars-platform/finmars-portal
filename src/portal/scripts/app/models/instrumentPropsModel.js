@@ -216,7 +216,12 @@
                 "value_entity": "country",
                 "code": "user_code",
                 "value_type": "field"
-            }
+            },
+            {
+                "key": "identifier",
+                "name": "Identifier",
+                "value_type": "json"
+            },
         ]
     };
 

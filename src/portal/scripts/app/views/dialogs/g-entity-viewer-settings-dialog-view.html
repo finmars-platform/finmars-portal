@@ -2,12 +2,11 @@
            drag-dialog
            aria-label="entity viewer settings dialog">
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Entity viewer settings</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                title="Entity viewer settings"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
 
     <md-dialog-content class="p-24">
@@ -45,14 +44,19 @@
         </div>-->
 
         <div layout="row" >
-            <md-input-container flex="100">
+            <!--<md-input-container flex="100">
                 <label>Filter items by statuses</label>
                 <md-select data-ng-model="vm.entityFilters" multiple>
                     <md-option data-ng-repeat="option in vm.multiselectorOptions"
                                ng-value="option.value"
                                data-ng-bind="option.name"></md-option>
                 </md-select>
-            </md-input-container>
+            </md-input-container>-->
+            <two-fields-multiselect data-model="vm.entityFilters"
+                                    data-items="vm.multiselectorOptions"
+                                    data-title="Filter items by statuses"
+                                    data-selected-items-indication="chips"
+                                    class="width-100"></two-fields-multiselect>
         </div>
 
         <div layout="row" data-ng-if="vm.entityType === 'complex-transaction'" class="m-t-16">
@@ -68,10 +72,10 @@
     </md-dialog-content>
 
     <md-dialog-actions layout="row" layout-align="space-between center">
-        <md-button class="md-raised" ng-click="vm.cancel()">
+        <md-button class="" ng-click="vm.cancel()">
             Close
         </md-button>
-        <md-button class="md-raised" ng-click="vm.saveSettings()">
+        <md-button class="" ng-click="vm.saveSettings()">
             Save
         </md-button>
     </md-dialog-actions>

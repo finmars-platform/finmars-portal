@@ -191,6 +191,10 @@
             <bind-field-attachment item="item" entity="entity"></bind-field-attachment>
         </div>
 
+        <div ng-if="vm.fieldType['display_name'] === 'JSON'" style="padding: 0 10px;">
+            <bind-field-json item="item" entity="entity" data-on-change-callback="vm.itemChangeDeb(changedValue)">></bind-field-json>
+        </div>
+
     </div>
 
     <div ng-if="!vm.readyStatus.content" class="bind-field-loader" style="height: 42px; margin-bottom: 13px;">

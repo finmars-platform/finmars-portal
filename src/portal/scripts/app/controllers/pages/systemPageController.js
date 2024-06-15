@@ -26,7 +26,7 @@ export default function ($scope, $mdDialog, toastNotificationService, authorizer
         vm.readyStatus.stats = false;
 
         utilsService.getSystemInfo().then(function (data) {
-            vm.systemInfoItems = data.results;
+            vm.systemInfo = data.results;
             vm.readyStatus.stats = true;
             $scope.$apply();
         }).catch(function (error) {
@@ -35,6 +35,10 @@ export default function ($scope, $mdDialog, toastNotificationService, authorizer
         })
 
     }
+
+    vm.isObject = function (item) {
+        return angular.isObject(item) && !angular.isArray(item);
+    };
 
     vm.getLogs = function () {
 
@@ -61,7 +65,7 @@ export default function ($scope, $mdDialog, toastNotificationService, authorizer
             $mdDialog.show({
                 controller: 'FilePreviewDialogController as vm',
                 templateUrl: 'views/dialogs/file-preview-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 clickOutsideToClose: false,
                 preserveScope: true,
@@ -148,22 +152,6 @@ export default function ($scope, $mdDialog, toastNotificationService, authorizer
 
     }
 
-    vm.updateFinmars = function () {
-
-        vm.processing = true;
-
-        authorizerService.updateFinmars(vm.currentMasterUser.id).then(function (data) {
-
-            vm.processing = false;
-
-            toastNotificationService.info("Update Initialized");
-
-            $scope.$apply();
-
-        })
-
-    }
-
     vm.getCurrentVersion = function () {
 
         var currentMasterUser = globalDataService.getMasterUser();
@@ -186,11 +174,13 @@ export default function ($scope, $mdDialog, toastNotificationService, authorizer
         vm.readyStatus.data = true;
 
 
-
         vm.getTablesSize()
         vm.getMasterUser()
 
     };
+    vm.alert = function (message) {
+        alert("Test" + message);
+    }
 
     vm.init();
 

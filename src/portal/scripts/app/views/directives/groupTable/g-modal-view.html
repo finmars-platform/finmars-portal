@@ -1,15 +1,14 @@
-<md-dialog aria-label="entity viewer view constructor dialog" class="g-modal-dialog draggable-dialog view-constructor" g-dialog-draggable>
+<md-dialog aria-label="entity viewer view constructor dialog"
+           class="draggable-dialog view-constructor dialog-actions-bottom"
+           drag-dialog>
 
     <md-toolbar>
-        <div class="md-toolbar-tools" layout="row" layout-align="start center">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2 style="user-select: none; position: relative;">View Constructor
-                <ng-md-icon class="tooltips-sign" icon="info" size="20" style="fill: #fff">
-                    <md-tooltip md-direction="top">tooltip text</md-tooltip>
-                </ng-md-icon>
-            </h2>
-        </div>
+        <dialog-header
+                data-title="View Constructor"
+                data-tooltip="tooltip text"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
 
     <md-dialog-content class="vc-dnd-scrollable-elem">
@@ -563,14 +562,14 @@
                 Manage attributes
             </md-button>
 
-            <md-button class="md-raised"
+            <md-button class=""
                        ng-click="vm.cardsDividedIntoTabs = !vm.cardsDividedIntoTabs">
                 <span ng-if="vm.cardsDividedIntoTabs">See All</span>
                 <span ng-if="!vm.cardsDividedIntoTabs">See Tabs</span>
             </md-button>
         </div>
 
-        <md-button class="md-raised" ng-click="vm.cancel()">
+        <md-button class="" ng-click="vm.cancel()">
             OK
         </md-button>
     </md-dialog-actions>

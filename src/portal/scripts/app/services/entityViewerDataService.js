@@ -121,6 +121,7 @@
         var data = {
 
             requestsQueue: [],
+            requestsQueueData: {},
             // needs in dashboard when user can quicly change active Objects
             // we just ignore old response data that not equal to currentRequestId
             currentRequestId: 0,
@@ -429,6 +430,11 @@
         }
 
         function setAdditions(additions) {
+
+            if (additions.isOpen && !additions.type) {
+                throw `Error trying to open split panel. Invalid type: ${additions.type}`
+            }
+
             data.additions = additions;
         }
 
@@ -969,6 +975,8 @@
             var rootGroup = getRootGroupData();
 
             setActiveRequestParametersId(rootGroup.___id);
+
+            data.requestsQueue = [];
 
             if (!isReport) setSelectedGroups([]);
 
@@ -1881,7 +1889,6 @@
         function enqueueDataRequest(request) {
 
             console.log("rv.queue.enqueueDataRequest", request)
-
             data.requestsQueue.push(request);
         }
 

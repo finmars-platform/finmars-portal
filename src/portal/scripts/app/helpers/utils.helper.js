@@ -25,15 +25,6 @@
 
     }
 
-    /* function throttle(fn, wait) {
-        var time = Date.now();
-        return function () {
-            if ((time + wait - Date.now()) < 0) {
-                fn();
-                time = Date.now();
-            }
-        }
-    } */
     /**
      *
      * @param fn {Function}
@@ -154,11 +145,35 @@
 
                 if (data[key].hasOwnProperty('results')) {
 
-                    data[key].results.forEach(function (item) {
-                        if (!data[item.___id]) {
-                            data[item.___id] = item;
-                        }
-                    });
+                        data[key].results.forEach(function (item, index) {
+
+                            try { // temporary for debugging plat691
+
+                                if (!data[item.___id]) {
+                                    data[item.___id] = item;
+                                }
+
+                            } catch (e) {
+
+                                console.error(
+                                    `plat691 [utilsHelper.convertToTree] ` +
+                                    "data " +
+                                    JSON.parse(JSON.stringify(data))
+                                );
+                                console.error(
+                                    `plat691 [utilsHelper.convertToTree] ` +
+                                    "key, data[key] " +
+                                    key, JSON.parse(JSON.stringify( data[key] ))
+                                );
+                                console.error(
+                                    `plat691 [utilsHelper.convertToTree] ` +
+                                    `item index ${index}`
+                                );
+                                throw e;
+                            }
+
+                        });
+
 
                 }
 

@@ -3,12 +3,11 @@
            drag-dialog
            style="min-height: 90%;">
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Add transaction type input</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Add transaction type input"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
 
     <md-dialog-content class="p-16">
@@ -70,28 +69,6 @@
         </div>
 
         <div layout="row" class="m-t-8">
-
-            <div class="flex-row context-selector-container width-50 p-r-8">
-
-                <dropdown-select label="Use Default Value from Context"
-                                 placeholder-text="Choose Context"
-                                 model="vm.fillFromContext"
-                                 menu-options="vm.contextProperties"
-                                 small-options="{tooltipText: 'Input Context for Default value'}"
-                                 is-disabled="vm.isFillFromContentDisabled()"
-                                 class="custom-input-bottom-space"
-                                 style="width: 240px;"></dropdown-select>
-
-                <div ng-if="!vm.isFillFromContentDisabled()"
-                     class="unselect-btn-holder">
-                    <md-button class="unselect-btn"
-                               data-ng-click="vm.unselectContextProperties()">
-                        <span class="material-icons">close</span>
-
-                        <md-tooltip md-direction="top">Discard selected option.</md-tooltip>
-                    </md-button>
-                </div>
-            </div>
 
             <div class="flex-row width-50 p-l-8">
 

@@ -28,6 +28,24 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
             scope.currentMasterUser = globalDataService.getMasterUser();
             scope.userName = '';
 
+            scope.isThemeInDarkMode = globalDataService.isThemeInDarkMode();
+
+            scope.toggleDarkMode = function () {
+
+                if (scope.isThemeInDarkMode) {
+                    globalDataService.disableThemeDarkMode()
+                } else {
+                    globalDataService.enableThemeDarkMode();
+                }
+
+                scope.isThemeInDarkMode = globalDataService.isThemeInDarkMode(); // to update title in the switcher
+
+                const user = globalDataService.getUser();
+
+                authorizerService.updateUser(user.id, user);
+
+            }
+
             scope.showAutosaveLayout = false;
 
             scope.member = globalDataService.getMember();
@@ -198,6 +216,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                 $mdDialog.show({
                     controller: "WarningDialogController as vm",
                     templateUrl: "views/dialogs/warning-dialog-view.html",
+                    parent: document.querySelector('.dialog-containers-wrap'),
                     multiple: true,
                     clickOutsideToClose: false,
                     locals: {
@@ -278,9 +297,9 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                 const changeMasterUser = function () {
 
                     if (window.PROJECT_ENV === 'local') {
-                        window.location.href = '/' + master.base_api_url + '/a/#!/'
+                        window.location.href = '/' + master.realm_code + '/' + master.space_code + '/a/#!/'
                     } else {
-                        window.location.href = '/' + master.base_api_url + '/v/home'
+                        window.location.href = '/' + master.realm_code + '/' + master.space_code + '/v/home'
                     }
 
                     /*if ($state.current.name.startsWith('app.portal')) {
@@ -367,6 +386,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                     $mdDialog.show({
                         controller: "WarningDialogController as vm",
                         templateUrl: "views/dialogs/warning-dialog-view.html",
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         multiple: true,
                         clickOutsideToClose: false,
                         locals: {
@@ -467,6 +487,7 @@ export default function ($mdDialog, $state, $transitions, cookieService, broadca
                 $mdDialog.show({
                     controller: 'UniversalInputDialogController as vm',
                     templateUrl: 'views/dialogs/universal-input-dialog-view.html',
+                    parent: document.querySelector('.dialog-containers-wrap'),
                     targetEvent: $event,
                     locals: {
                         data: {}

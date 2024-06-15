@@ -2,6 +2,9 @@
  * Created by szhitenev on 05.05.2016.
  */
 const evEvents = require("../../services/entityViewerEvents");
+const {default: evDataHelper} = require("../../helpers/ev-data.helper");
+const {default: rvDataHelper} = require("../../helpers/rv-data.helper");
+const utilsHelper = require("../../helpers/utils.helper");
 (function () {
 
     'use strict';
@@ -201,8 +204,11 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     scope.selectSubtotalType(column, 1);
 
-                    scope.evDataService.resetTableContent(scope.isReport);
-                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE); // cause we need go to backend to recalculate subtotals
+                    // scope.evDataService.resetTableContent(scope.isReport);
+
+                    // because we need go to backend to recalculate subtotals
+                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                 }
@@ -220,8 +226,11 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     }
 
-                    scope.evDataService.resetTableContent(scope.isReport);
-                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE); // cause we need go to backend to recalculate subtotals
+                    // scope.evDataService.resetTableContent(scope.isReport);
+
+                    // because we need go to backend to recalculate subtotals
+                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                 }
@@ -239,8 +248,11 @@ const evEvents = require("../../services/entityViewerEvents");
 
                     }
 
-                    scope.evDataService.resetTableContent(scope.isReport);
-                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE); // cause we need go to backend to recalculate subtotals
+                    // scope.evDataService.resetTableContent(scope.isReport);
+
+                    // because we need go to backend to recalculate subtotals
+                    scope.evEventService.dispatchEvent(evEvents.GROUPS_CHANGE);
+
                     scope.evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
 
                 }
@@ -268,7 +280,7 @@ const evEvents = require("../../services/entityViewerEvents");
                     $mdDialog.show({
                         controller: 'NumberFormatSettingsDialogController as vm',
                         templateUrl: 'views/dialogs/number-format-settings-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         locals: {
                             data: dialogData
                         }
@@ -455,7 +467,7 @@ const evEvents = require("../../services/entityViewerEvents");
                     $mdDialog.show({
                         controller: 'WarningDialogController as vm',
                         templateUrl: 'views/dialogs/warning-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         multiple: true,
                         locals: {
@@ -1147,7 +1159,7 @@ const evEvents = require("../../services/entityViewerEvents");
                     $mdDialog.show({
                         controller: 'RenameFieldDialogController as vm',
                         templateUrl: 'views/dialogs/rename-field-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             data: column
@@ -1242,7 +1254,7 @@ const evEvents = require("../../services/entityViewerEvents");
                     $mdDialog.show({
                         controller: 'ResizeFieldDialogController as vm',
                         templateUrl: 'views/dialogs/resize-field-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         locals: {
                             data: column
@@ -2265,7 +2277,7 @@ const evEvents = require("../../services/entityViewerEvents");
                         $mdDialog.show({
                             controller: 'WarningDialogController as vm',
                             templateUrl: 'views/dialogs/warning-dialog-view.html',
-                            parent: angular.element(document.body),
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             // targetEvent: $event,
                             multiple: true,
                             locals: {
@@ -2560,20 +2572,6 @@ const evEvents = require("../../services/entityViewerEvents");
                     const allAttrs = scope.attributeDataService.getForAttributesSelector(scope.entityType);
                     const selectedAttrs = scope.columns.map(col => col.key);
 
-                    /*$mdDialog.show({
-                        controller: "TableAttributeSelectorDialogController as vm",
-                        templateUrl: "views/dialogs/table-attribute-selector-dialog-view.html",
-                        targetEvent: $event,
-                        multiple: true,
-                        locals: {
-                            data: {
-                                availableAttrs: availableAttrs,
-                                title: 'Choose column to add',
-                                isReport: scope.isReport,
-                                multiselector: true
-                            }
-                        }
-                    })*/
                     $mdDialog.show({
                         controller: "AttributesSelectorDialogController as vm",
                         templateUrl: "views/dialogs/attributes-selector-dialog-view.html",
@@ -2660,6 +2658,12 @@ const evEvents = require("../../services/entityViewerEvents");
                 };
 
                 let onGroupsChange;
+                const dispatchCreateTableD = utilsHelper.debounce(
+                    function () {
+                        scope.evEventService.dispatchEvent(evEvents.CREATE_TABLE);
+                    },
+                    3000,
+                )
 
                 if (scope.isReport) {
 
@@ -2684,7 +2688,7 @@ const evEvents = require("../../services/entityViewerEvents");
                         updateGroupFoldingState();
 
                         scope.groups = scope.evDataService.getGroups();
-                        scope.evDataService.resetTableContent(scope.isReport);
+                        // scope.evDataService.resetTableContent(scope.isReport);
 
                         const colsChanged = syncColumnsWithGroups();
 
@@ -2694,17 +2698,30 @@ const evEvents = require("../../services/entityViewerEvents");
 
                         collectMissingCustomFieldsErrors();
                         // setFiltersLayoutNames();
-                        var foldedGroup = scope.groups.find(group => group.report_settings && group.report_settings.is_level_folded);
+
+                        /*var foldedGroup = scope.groups.find(group => group.report_settings && group.report_settings.is_level_folded);
 
                         if (!foldedGroup) {
                             rvDataHelper.markHiddenColumnsBasedOnFoldedGroups(scope.evDataService);
+                        }*/
+                        rvDataHelper.markHiddenColumnsBasedOnFoldedGroups(scope.evDataService)
+
+
+                        if (colsChanged) {
+                            scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
                         }
 
-                        if (colsChanged) scope.evEventService.dispatchEvent(evEvents.COLUMNS_CHANGE);
+                        // scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                        scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                    }
+                        if ( scope.dataIsLoading ) {
+                            dispatchCreateTableD();
+
+                        } else {
+                            scope.evEventService.dispatchEvent(evEvents.CREATE_TABLE);
+                        }
+
+                    };
 
                 } else {
 
@@ -2718,9 +2735,10 @@ const evEvents = require("../../services/entityViewerEvents");
 
                         collectMissingCustomFieldsErrors();
 
+                        // TODO: debounce for UPDATE_TABLE as for CREATE_TABLE for rv
                         scope.evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
-                    }
+                    };
 
                     scope.checkForFilteringBySameAttr = function (columnKey) {
 

@@ -2,10 +2,11 @@
            class="draggable-dialog width-90 dialog-actions-bottom dcMatrixElemToDrag dashboard-constructor-dialog"
            drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>New Report Viewer Matrix Component</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="New Report Viewer Matrix Component"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
 
     <md-dialog-content>
@@ -167,7 +168,7 @@
                             </md-select>
                         </md-input-container>
 
-                        <md-button data-ng-click="vm.item.settings.hide_empty_lines = ''" class="md-raised">clear
+                        <md-button data-ng-click="vm.item.settings.hide_empty_lines = ''" class="">clear
                         </md-button>
                     </div>
 

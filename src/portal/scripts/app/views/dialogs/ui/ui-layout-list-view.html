@@ -1,11 +1,10 @@
 <md-dialog aria-label="ui layout list" ng-cloak class="list-layouts-dialog draggable-dialog" style="width: 50%" drag-dialog>
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <is-draggable-sign></is-draggable-sign>
-
-            <h2>Layouts</h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="Layouts"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
     <md-dialog-content>
 
@@ -45,7 +44,7 @@
 
                     <md-button class="md-raised md-primary" data-ng-click="vm.acceptInvite($event, item)">Accept
                     </md-button>
-                    <md-button class="md-raised" data-ng-click="vm.declineInvite($event, item)">Decline</md-button>
+                    <md-button class="" data-ng-click="vm.declineInvite($event, item)">Decline</md-button>
 
                 </div>
             </div>

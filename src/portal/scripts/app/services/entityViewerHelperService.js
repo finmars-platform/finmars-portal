@@ -1,11 +1,8 @@
 /**
  * Created by szhitenev on 06.05.2016.
  */
-// import uiService from "./uiService";
-var uiService = require("./uiService").default;
 // import ReportHelper from "../helpers/reportHelper";
-var ReportHelper = require("../helpers/reportHelper").default;
-const reportHelper = new ReportHelper();
+
 
 /**
  * Entity viewer helper service.
@@ -13,6 +10,13 @@ const reportHelper = new ReportHelper();
  */
 (function () {
 
+    const ReportHelper = require("../helpers/reportHelper").default;
+    const reportHelper = new ReportHelper();
+
+    const GFiltersHelper = require("../helpers/gFiltersHelper").default;
+    const gFiltersHelper = new GFiltersHelper();
+
+    const uiService = require("./uiService").default;
     const objectComparisonHelper = require('../helpers/objectsComparisonHelper');
     // const uiService = require('../services/uiService').default;
 
@@ -25,6 +29,7 @@ const reportHelper = new ReportHelper();
     const metaHelper = require('../helpers/meta.helper');
 
     'use strict';
+
     /**
      * Insert dynamic attributes' values into entity's root level
      *
@@ -272,7 +277,7 @@ const reportHelper = new ReportHelper();
             $mdDialog.show({
                 controller: 'LayoutChangesLossWarningDialogController as vm',
                 templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 preserveScope: true,
                 autoWrap: true,
                 multiple: true,
@@ -314,7 +319,7 @@ const reportHelper = new ReportHelper();
             $mdDialog.show({
                 controller: 'LayoutChangesLossWarningDialogController as vm',
                 templateUrl: 'views/dialogs/layout-changes-loss-warning-dialog.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 preserveScope: true,
                 autoWrap: true,
                 multiple: true,
@@ -447,6 +452,7 @@ const reportHelper = new ReportHelper();
                 attrTypeToAdd.entity = attrInstance.entity;
             }
 
+            // DEPRECATED
             if (attrInstance.hasOwnProperty('id')) {
                 attrTypeToAdd.id = attrInstance.id;
             }
@@ -499,7 +505,7 @@ const reportHelper = new ReportHelper();
 
                 attrTypeToAdd.filters = true;
 
-                if (!attrTypeToAdd.options.filter_type) {
+                /*if (!attrTypeToAdd.options.filter_type) {
                     attrTypeToAdd.options.filter_type = metaHelper.getDefaultFilterType(attrTypeToAdd.value_type);
                 }
 
@@ -509,7 +515,8 @@ const reportHelper = new ReportHelper();
 
                 if (!attrTypeToAdd.options.hasOwnProperty('exclude_empty_cells')) {
                     attrTypeToAdd.options.exclude_empty_cells = false;
-                }
+                }*/
+                attrTypeToAdd = gFiltersHelper.setFilterDefaultOptions(attrTypeToAdd);
 
                 break;
         }
@@ -722,7 +729,7 @@ const reportHelper = new ReportHelper();
                     $mdDialog.show({
                         controller: 'InfoDialogController as vm',
                         templateUrl: 'views/info-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         clickOutsideToClose: false,
                         preserveScope: true,
                         autoWrap: true,
@@ -1257,7 +1264,7 @@ const reportHelper = new ReportHelper();
         /* $mdDialog.show({
             controller: 'ComplexTransactionAddDialogController as vm',
             templateUrl: 'views/entity-viewer/complex-transaction-add-dialog-view.html',
-            parent: angular.element(document.body),
+            parent: document.querySelector('.dialog-containers-wrap'),
             targetEvent: ev,
             locals: {
                 entityType: scope.entityType,
@@ -1314,7 +1321,7 @@ const reportHelper = new ReportHelper();
         /* $mdDialog.show({
                     controller: 'ComplexTransactionEditDialogController as vm',
                     templateUrl: 'views/entity-viewer/complex-transaction-edit-dialog-view.html',
-                    parent: angular.element(document.body),
+                    parent: document.querySelector('.dialog-containers-wrap'),
                     targetEvent: activeObject.event,
                     //clickOutsideToClose: false,
                     locals: {
@@ -1464,7 +1471,7 @@ const reportHelper = new ReportHelper();
         /*							$mdDialog.show({
                                         controller: 'TransactionTypeAddDialogController as vm',
                                         templateUrl: 'views/entity-viewer/transaction-type-add-dialog-view.html',
-                                        parent: angular.element(document.body),
+                                        parent: document.querySelector('.dialog-containers-wrap'),
                                         targetEvent: ev,
                                         locals: {
                                             entityType: scope.entityType,
@@ -1512,7 +1519,7 @@ const reportHelper = new ReportHelper();
         /*						$mdDialog.show({
                                     controller: 'TransactionTypeEditDialogController as vm',
                                     templateUrl: 'views/entity-viewer/transaction-type-edit-dialog-view.html',
-                                    parent: angular.element(document.body),
+                                    parent: document.querySelector('.dialog-containers-wrap'),
                                     targetEvent: activeObject.event,
                                     //clickOutsideToClose: false,
                                     locals: {
@@ -1723,7 +1730,7 @@ const reportHelper = new ReportHelper();
         /* $mdDialog.show({
             controller: 'EntityViewerAddDialogController as vm',
             templateUrl: 'views/entity-viewer/entity-viewer-add-dialog-view.html',
-            parent: angular.element(document.body),
+            parent: document.querySelector('.dialog-containers-wrap'),
             targetEvent: ev,
             locals: {
                 entityType: scope.entityType,
@@ -1768,7 +1775,7 @@ const reportHelper = new ReportHelper();
         /* $mdDialog.show({
             controller: 'EntityViewerEditDialogController as vm',
             templateUrl: 'views/entity-viewer/entity-viewer-edit-dialog-view.html',
-            parent: angular.element(document.body),
+            parent: document.querySelector('.dialog-containers-wrap'),
             targetEvent: activeObject.event,
             //clickOutsideToClose: false,
             locals: {
@@ -1853,9 +1860,9 @@ const reportHelper = new ReportHelper();
         });
     };
 
-    var updateTableAfterEntitiesDeletion = function (evDataService, evEventService, deletedEntitiesIds) {
+    var updateTableAfterEntitiesDeletion = function (evDataService, evEventService) {
 
-        var evOptions = evDataService.getEntityViewerOptions();
+        /*var evOptions = evDataService.getEntityViewerOptions();
         var objects = evDataService.getObjects();
 
         objects.forEach(function (obj) {
@@ -1889,7 +1896,10 @@ const reportHelper = new ReportHelper();
 
         });
 
-        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);
+        evEventService.dispatchEvent(evEvents.REDRAW_TABLE);*/
+        evDataService.resetTableContent(false);
+
+        evEventService.dispatchEvent(evEvents.UPDATE_TABLE);
 
     };
 
@@ -1958,6 +1968,10 @@ const reportHelper = new ReportHelper();
 
     };
 
+    function isRestorable(entityType) {
+        return !['complex-transaction', 'price-history', 'currency-history', 'portfolio-register'].includes(entityType);
+    }
+
     module.exports = {
         transformItem: transformItem,
         checkForLayoutConfigurationChanges: checkForLayoutConfigurationChanges,
@@ -1996,6 +2010,7 @@ const reportHelper = new ReportHelper();
         postAdditionActions: postAdditionActions,
 
         onPricingSchemeChangeInsidePricingPolicy: onPricingSchemeChangeInsidePricingPolicy,
+        isRestorable: isRestorable,
     }
 
 }());

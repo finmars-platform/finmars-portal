@@ -236,7 +236,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 evDataService.setRequestParameters(requestParameters);
 
-                reject();
+                reject(error);
 
             })
 
@@ -339,6 +339,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         var requestParameters = evDataService.dequeueDataRequest();
         executeRequest(evDataService, evEventService, requestParameters);
+
     }
 
 
@@ -366,6 +367,12 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
                 processQueue(evDataService, evEventService)
 
+            }).catch(function (e) {
+                console.error(
+                    `[rvDataProviderService.executeRequest] ` +
+                    `${evDataService.getCurrentRequestId()} getGroups error`,
+                    e
+                );
             });
 
         } else {
@@ -380,6 +387,12 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 // enqueueNewRequests(evDataService, evEventService, data, requestParameters);
                 processQueue(evDataService, evEventService)
 
+            }).catch(function (e) {
+                console.error(
+                    `[rvDataProviderService.executeRequest] ` +
+                    `${evDataService.getCurrentRequestId()} getObjects error`,
+                    e
+                );
             });
 
         }
@@ -495,6 +508,9 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
 
         Promise.all(promises).then(function () {
             evEventService.dispatchEvent(evEvents.DATA_LOAD_END);
+
+        }).catch(function() {
+            evEventService.dispatchEvent(evEvents.DATA_LOAD_ERROR);
         })
 
     };
@@ -564,6 +580,7 @@ export default function (entityResolverService, pricesCheckerService, reportHelp
                 resolve();
 
             }).catch(function (error) {
+                evEventService.dispatchEvent(evEvents.DATA_LOAD_ERROR);
                 reject(error)
             })
 

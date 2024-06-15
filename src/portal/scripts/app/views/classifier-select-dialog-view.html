@@ -1,10 +1,11 @@
 <md-dialog class="classifier-select-dialog-view dialog-actions-bottom classifierSelectorElemToDrag"
            aria-label="classifier selector dialog">
     <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2 ng-bind="vm.label"></h2>
-            <span flex></span>
-        </div>
+        <dialog-header
+                data-title="{{vm.label}}"
+                cancel-dialog="vm.cancel()"
+        >
+        </dialog-header>
     </md-toolbar>
 
     <md-dialog-content>
@@ -112,12 +113,12 @@
 
         <div>
             <md-button ng-click="vm.cancel()" class="link-button">
-                <span>CANCEL</span>
+                <span>Cancel</span>
             </md-button>
 
             <md-button ng-click="vm.agree()"
                        ng-disabled="!vm.readyStatus" class="link-button" ng-disabled="vm.isEdit">
-                <span>OK</span>
+                <span>Ok</span>
             </md-button>
         </div>
 

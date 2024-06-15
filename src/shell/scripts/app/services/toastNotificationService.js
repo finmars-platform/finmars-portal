@@ -8,8 +8,8 @@ export default function () {
 
     // toastr.options.onclick = function() { console.log('clicked'); }
 
-    const success = function (message) {
-        toastr.success(message);
+    const success = function (message, title, options) {
+        toastr.success(message, title, options);
     };
 
     const error = function (message, title, options) {
@@ -32,11 +32,19 @@ export default function () {
         toastr.info(message, title, options);
     };
 
+    const clientError = function (message, options) {
+        const title = '<span data-text="Client Error">Warning</span>'
+        toastr.warning(message, title, options);
+    }
+
     return {
         success: success,
         error: error,
         info: info,
-        warning: warning
+        warning: warning,
+
+        // Custom
+        clientError: clientError
     }
 
 }

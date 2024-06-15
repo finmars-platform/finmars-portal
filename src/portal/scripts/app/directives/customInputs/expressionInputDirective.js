@@ -136,7 +136,8 @@
 
                 scope.openExpressionBuilder = function ($event) {
 
-                    var dialogParent = angular.element(document.body);
+                    // var dialogParent = angular.element(document.body);
+                    var dialogParent = document.querySelector(".dialog-containers-wrap");
 
                     if (scope.dialogParent) {
 

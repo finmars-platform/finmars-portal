@@ -3,7 +3,7 @@
  */
 
 const evEditorEvents = require('./ev-editor/entityViewerEditorEvents');
-const importInstrumentCbondsService = require('./import/importInstrumentCbondsService');
+const importInstrumentCbondsService = require('./import/importInstrumentCbondsService').default;
 const taskService = require('./tasksService');
 
 import InstrumentRepository from "../repositories/instrumentRepository";
@@ -160,13 +160,15 @@ export default function (cookieService, toastNotificationService, xhrService, ui
 	};
 
 	/**
+	 * TODO: use tasksService.processPromiseWithTask()
+	 *
 	 * Return three types of data. All should be processed.
 	 *
 	 * @param {String} user_code - instrument.user_code
 	 * @param {String} name - instrument.name
 	 * @param {String} instrumentTypeUserCode
 	 * @param {Number} mode
-	 * @returns {{promise: Promise<Object>, stopInterval: Function}} - promise is either importInstrumentCbondsService.download() or taskService.awaitImportTask()
+	 * @returns {{promise: Promise<Object>, stopInterval: Function}} - promise is either importInstrumentCbondsService.download() or taskService.awaitTaskEnd()
 	 */
 	const importFromCbonds = function (user_code, name, instrumentTypeUserCode, mode=1) {
 
@@ -202,7 +204,7 @@ export default function (cookieService, toastNotificationService, xhrService, ui
 
 				} else {
 
-					// stopInterval was called before running taskService.awaitImportTask()
+					// stopInterval was called before running taskService.awaitTaskEnd()
 					if (stopIntervalCalled) {
 						return resolve( "Task status check stopped" );
 					}
@@ -211,7 +213,7 @@ export default function (cookieService, toastNotificationService, xhrService, ui
 						console.error(`Importing instrument: ${user_code} takes over a minute`);
 					}, 60*1000)
 
-					let atData = taskService.awaitImportTask(res.task);
+					let atData = taskService.awaitTaskEnd(res.task, {});
 
 					stopIntervalFn = atData.stopInterval;
 					clearTimeout(timeOutId);

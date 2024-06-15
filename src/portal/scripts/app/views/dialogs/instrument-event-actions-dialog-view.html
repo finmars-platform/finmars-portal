@@ -7,7 +7,7 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content   style="background: #E5E5E5;">
+    <md-dialog-content >
         <md-content style="background: #fff; padding: 20px;">
             <div data-ng-if="vm.checkReadyStatus()">
                 <table class="bordered event-actions-table">
@@ -296,10 +296,10 @@
         </md-content>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button class="md-raised" ng-click="vm.cancel()">
+        <md-button class="" ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button class="md-raised" ng-click="vm.agree()" style="margin-right:20px;">
+        <md-button class="" ng-click="vm.agree()" style="margin-right:20px;">
             Save
         </md-button>
     </md-dialog-actions>

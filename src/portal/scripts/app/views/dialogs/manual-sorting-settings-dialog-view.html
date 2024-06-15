@@ -63,12 +63,12 @@
 
                     <div class="flex-row">
 
-                        <md-button class="md-raised"
+                        <md-button class=""
                                    data-ng-disabled="item.order === 0"
                                    data-ng-click="vm.moveUp(item)">
                             Move up
                         </md-button>
-                        <md-button class="md-raised"
+                        <md-button class=""
                                    data-ng-disabled="item.order === vm.layout.data.items.length - 1"
                                    data-ng-click="vm.moveDown(item)">Move down
                         </md-button>
@@ -98,7 +98,7 @@
                     </div>
 
                     <div>
-                        <md-button data-ng-class="{'disabled-btn': !vm.newValue}" class="md-raised"
+                        <md-button data-ng-class="{'disabled-btn': !vm.newValue}" class=""
                                    data-ng-click="vm.addNewValue()">Add
                         </md-button>
                     </div>
@@ -125,7 +125,7 @@
                             Value
                         </div>
                         <div class="m-8">
-                            <md-button class="md-raised" data-ng-click="vm.addSelectedValues()">Add Selected</md-button>
+                            <md-button class="" data-ng-click="vm.addSelectedValues()">Add Selected</md-button>
                         </div>
                     </div>
 
@@ -160,7 +160,7 @@
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="space-between center">
 
-        <md-button class="md-raised" data-ng-click="vm.cancel()">Close</md-button>
+        <md-button class="" data-ng-click="vm.cancel()">Close</md-button>
 
         <md-button class="md-raised md-primary"
                    data-ng-click="vm.agree()"

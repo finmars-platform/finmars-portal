@@ -40,14 +40,14 @@
                             </div>
 
                             <div class="width-30">
-                                <md-button class="md-raised" data-ng-click="vm.updateLayout()">Save layout
+                                <md-button class="" data-ng-click="vm.updateLayout()">Save layout
                                 </md-button>
                             </div>
 
 
                         </div>
                         <div data-ng-if="!vm.layouts.length">
-                            <md-button class="md-raised" data-ng-click="vm.createLayout()">Save layout
+                            <md-button class="" data-ng-click="vm.createLayout()">Save layout
                             </md-button>
                         </div>
                     </div>
@@ -104,7 +104,7 @@
                         class="cie-dependency"
                         data-ng-bind="vm.getEntityDependenciesCaptions(item)"></span>
                     ({{item.count}})
-                    <md-button class="md-raised" ng-click="item.displayItems = !item.displayItems"
+                    <md-button class="" ng-click="item.displayItems = !item.displayItems"
                                aria-label="checkboxes show hide button"><span
                             data-ng-if="!item.displayItems">Show</span><span data-ng-if="item.displayItems">Hide</span>
                     </md-button>
@@ -141,7 +141,7 @@
 
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button class="md-raised" ng-click="vm.cancel()" aria-label="cancel button">
+        <md-button class="" ng-click="vm.cancel()" aria-label="cancel button">
             Cancel
         </md-button>
 

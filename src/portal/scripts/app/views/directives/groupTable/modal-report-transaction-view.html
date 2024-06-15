@@ -1,4 +1,6 @@
-<md-dialog aria-label="Report fields modal" ng-cloak class="g-modal-dialog draggable-dialog view-constructor" g-dialog-draggable>
+<md-dialog aria-label="transaction report view consturctor"
+           class="draggable-dialog view-constructor dialog-actions-bottom"
+           drag-dialog>
     <md-toolbar>
         <div class="md-toolbar-tools" layout="row" layout-align="start center">
             <is-draggable-sign></is-draggable-sign>
@@ -1494,14 +1496,14 @@
 
     <md-dialog-actions layout="row" layout-align="space-between center">
         <div>
-            <md-button class="md-raised"
+            <md-button class=""
                        ng-click="vm.cardsDividedIntoTabs = !vm.cardsDividedIntoTabs">
                 <span ng-if="vm.cardsDividedIntoTabs">See All</span>
                 <span ng-if="!vm.cardsDividedIntoTabs">See Tabs</span>
             </md-button>
         </div>
 
-        <md-button class="md-raised" ng-click="vm.cancel()">
+        <md-button class="" ng-click="vm.cancel()">
             OK
         </md-button>
     </md-dialog-actions>

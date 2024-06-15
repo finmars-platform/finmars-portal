@@ -7,7 +7,7 @@
             <span flex></span>
         </div>
     </md-toolbar>
-    <md-dialog-content   style="background: #E5E5E5;">
+    <md-dialog-content>
         <md-content>
             <div data-ng-if="vm.readyStatus.dataTypes">
                 <div layout="row" layout-align="center center">
@@ -61,7 +61,7 @@
                                         <div>
                                             <md-button style="min-width: 40px;"
                                                        data-ng-click="vm.removeProviderField(item, $index)"
-                                                       class="md-raised">x
+                                                       class="">x
                                             </md-button>
                                         </div>
                                     </div>
@@ -69,7 +69,7 @@
                             </md-card-content>
                         </md-card>
                         <div>
-                            <md-button class="md-raised" data-ng-click="vm.addProviderField()">
+                            <md-button class="" data-ng-click="vm.addProviderField()">
                                 Add field
                             </md-button>
                         </div>
@@ -131,10 +131,10 @@
         </md-content>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button class="md-raised" data-ng-click="vm.cancel()">
+        <md-button class="" data-ng-click="vm.cancel()">
             Cancel
         </md-button>
-        <md-button class="md-raised" data-ng-click="vm.create()" style="margin-right:20px;">
+        <md-button class="" data-ng-click="vm.create()" style="margin-right:20px;">
             Save
         </md-button>
     </md-dialog-actions>

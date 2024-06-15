@@ -389,6 +389,12 @@
 
     };
 
+    function processAffix(value, prefix, suffix) {
+        if (prefix) value = prefix + value;
+        if (suffix) value = value + suffix;
+        return value;
+    }
+
     var formatValue = function (obj, column) {
 
         var value = obj[column.key];
@@ -401,26 +407,29 @@
             value = '';
         }
 
-        value = formatPercentage(value, column, false); // also applies multiplier
-
-        value = formatRounding(value, column);
-
-        value = formatThousandsSeparator(value, column);
-
-        value = formatZero(value, column);
-
-        value = formatNegative(value, column);
-
         var numberFormat = getNumberFormatSettings(column);
 
-        if (numberFormat) {
-            if (numberFormat.number_prefix) {
-                value = numberFormat.number_prefix + value;
+        if (!value && numberFormat && numberFormat.zero_format_id) {
+            // show zero as "-" or emptiness
+            value = formatZero(value, column);
+
+        }
+        else {
+
+            var applyAffix = !!value;
+
+            value = formatPercentage(value, column, false); // also applies multiplier
+
+            value = formatRounding(value, column);
+
+            value = formatThousandsSeparator(value, column);
+
+            value = formatNegative(value, column);
+
+            if (numberFormat && applyAffix) {
+                value = processAffix(value, numberFormat.number_prefix, numberFormat.number_suffix);
             }
 
-            if (numberFormat.number_suffix) {
-                value = value + numberFormat.number_suffix;
-            }
         }
 
         return value;

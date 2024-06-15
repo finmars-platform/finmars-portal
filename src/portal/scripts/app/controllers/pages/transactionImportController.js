@@ -11,7 +11,6 @@
 
     var baseUrlService = require("../../services/baseUrlService").default;
 
-    var transactionImportSchemeService = require('../../services/import/transactionImportSchemeService');
     var importTransactionService = require('../../services/import/importTransactionService');
     var processesService = require('../../services/processesService');
     var explorerService = require('../../services/explorerService');
@@ -24,7 +23,7 @@
 
     var baseUrl = baseUrlService.resolve();
 
-    module.exports = function transactionImportController($scope, $mdDialog, usersService, systemMessageService) {
+    module.exports = function transactionImportController($scope, $mdDialog, usersService, transactionImportSchemeService) {
 
         var vm = this;
 
@@ -67,6 +66,7 @@
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
                         templateUrl: 'views/dialogs/success-dialog-view.html',
+                        parent: document.querySelector(".dialog-containers-wrap"),
                         targetEvent: $event,
                         locals: {
                             success: {
@@ -147,6 +147,7 @@
                         $mdDialog.show({
                             controller: 'TransactionImportErrorsDialogController as vm',
                             templateUrl: 'views/dialogs/transaction-import/transaction-import-errors-dialog-view.html',
+                            parent: document.querySelector(".dialog-containers-wrap"),
                             locals: {
                                 data: {
                                     validationResult: data,
@@ -169,6 +170,7 @@
                         $mdDialog.show({
                             controller: 'SuccessDialogController as vm',
                             templateUrl: 'views/dialogs/success-dialog-view.html',
+                            parent: document.querySelector(".dialog-containers-wrap"),
                             targetEvent: $event,
                             preserveScope: true,
                             multiple: true,
@@ -226,6 +228,7 @@
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
                         templateUrl: 'views/dialogs/success-dialog-view.html',
+                        parent: document.querySelector(".dialog-containers-wrap"),
                         targetEvent: $event,
                         preserveScope: true,
                         multiple: true,
@@ -279,6 +282,7 @@
                     $mdDialog.show({
                         controller: 'SuccessDialogController as vm',
                         templateUrl: 'views/dialogs/success-dialog-view.html',
+                        parent: document.querySelector(".dialog-containers-wrap"),
                         targetEvent: $event,
                         preserveScope: true,
                         multiple: true,
@@ -363,6 +367,7 @@
                         $mdDialog.show({
                             controller: 'TransactionImportErrorsDialogController as vm',
                             templateUrl: 'views/dialogs/transaction-import/transaction-import-errors-dialog-view.html',
+                            parent: document.querySelector(".dialog-containers-wrap"),
                             locals: {
                                 data: {
                                     validationResult: data,
@@ -574,7 +579,7 @@
                     $mdDialog.show({
                         controller: 'FilePreviewDialogController as vm',
                         templateUrl: 'views/dialogs/file-preview-dialog-view.html',
-                        parent: angular.element(document.body),
+                        parent: document.querySelector('.dialog-containers-wrap'),
                         targetEvent: $event,
                         clickOutsideToClose: false,
                         preserveScope: true,
@@ -667,6 +672,7 @@
                 $mdDialog.show({
                     controller: 'ValidationDialogController as vm',
                     templateUrl: 'views/dialogs/validation-dialog-view.html',
+                    parent: document.querySelector(".dialog-containers-wrap"),
                     locals: {
                         validationData: "An error occurred. Please try again later"
                     },
@@ -700,6 +706,7 @@
             $mdDialog.show({
                 controller: 'TransactionImportSchemeEditDialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 locals: {
                     schemeId: vm.config.scheme
                 },
@@ -733,16 +740,16 @@
         vm.editSchemeV2 = function ($event) {
 
             $mdDialog.show({
-                controller: 'TransactionImportSchemeV2EditDialogController as vm',
+                controller: 'TransactionImportSchemeV2DialogController as vm',
                 templateUrl: 'views/dialogs/transaction-import/transaction-import-scheme-v2-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 locals: {
-                    schemeId: vm.config.scheme
+                    data: {
+                        schemeId: vm.config.scheme,
+                    }
                 },
                 targetEvent: $event,
-                preserveScope: true,
                 multiple: true,
-                autoWrap: true,
-                skipHide: true
             }).then(function (res) {
 
                 if (res.status === 'agree') {

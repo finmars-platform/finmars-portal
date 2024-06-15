@@ -101,6 +101,7 @@
             $mdDialog.show({
                 controller: 'ManualSortingSettingsDialogController as vm',
                 templateUrl: 'views/dialogs/manual-sorting-settings-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 targetEvent: $event,
                 multiple: true,
                 locals: {
@@ -139,7 +140,7 @@
             $mdDialog.show({
                 controller: 'WarningDialogController as vm',
                 templateUrl: 'views/dialogs/warning-dialog-view.html',
-                parent: angular.element(document.body),
+                parent: document.querySelector('.dialog-containers-wrap'),
                 targetEvent: $event,
                 preserveScope: true,
                 autoWrap: true,
@@ -184,6 +185,7 @@
             $mdDialog.show({
                 controller: 'ManualSortingSettingsDialogController as vm',
                 templateUrl: 'views/dialogs/manual-sorting-settings-dialog-view.html',
+                parent: document.querySelector(".dialog-containers-wrap"),
                 targetEvent: $event,
                 multiple: true,
                 locals: {

@@ -52,6 +52,7 @@
                         $mdDialog.show({
                             controller: "ExpandableItemsSelectorDialogController as vm",
                             templateUrl: "views/dialogs/expandable-items-selector-dialog-view.html",
+                            parent: document.querySelector('.dialog-containers-wrap'),
                             targetEvent: event,
                             multiple: true,
                             locals: {
