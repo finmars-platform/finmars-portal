@@ -143,6 +143,9 @@ button {
     outline: none;
   }
 }
+md-select-menu.md-default-theme md-content md-option[disabled] .md-text, md-select-menu md-content md-option[disabled] .md-text {
+  color: var(--disable-primary);
+}
 
 md-select.md-default-theme[disabled] .md-select-icon, md-select[disabled] .md-select-icon, md-select.md-default-theme[disabled] .md-select-value, md-select[disabled] .md-select-value, md-select.md-default-theme[disabled] .md-select-value.md-select-placeholder, md-select[disabled] .md-select-value.md-select-placeholder {
   color: var(--secondary-color);
@@ -4099,4 +4102,63 @@ md-dialog.entity-editor-dialog {
   height: 100vh;
   max-width: 100vw;
   max-height: inherit;
+}
+
+
+//styles for toggle button
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 32px;
+  margin-top: 10px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--primary-color);
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 24px;
+  width: 24px;
+  left: 2px;
+  bottom: 4px;
+  background-color: var(--on-primary-color);
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: var(--primary-color); /* Adjust the color to match the image */
+}
+
+input:checked + .slider:before {
+  left: 0px;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
